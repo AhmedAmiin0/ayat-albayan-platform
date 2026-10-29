@@ -1,27 +1,17 @@
-import { formatPhone, messageStatusStyle, type ThreadView } from '@ab/shared';
+import { formatPhone, type ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
-import { memo, type ReactNode, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { kindLabel } from '../shared/format';
 import { DeliveryTicks } from '../messages/components/DeliveryTicks';
 import { threadPreview } from '../messages/hooks/message-text';
 import { ThreadTags } from './ThreadTags';
-import { UnreadCount } from './UnreadCount';
+import { ThreadTrailing } from './ThreadTrailing';
 import { threadLink, type ThreadMode } from '../thread/hooks/thread-mode';
-
-/** Our last send failed (the admin's turn), else the unread count (WhatsApp's green circle), else nothing. */
-function turnChip(th: ThreadView): ReactNode {
-  if (th.last_direction === 'outbound' && th.last_status === 'failed') {
-    return <StatusChip {...messageStatusStyle.failed} label={t.enums.messageStatus.failed} size="sm" />;
-  }
-  if (th.unread_count > 0) return <UnreadCount n={th.unread_count} />;
-  return null;
-}
 
 /**
  * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
@@ -58,7 +48,7 @@ const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, onOpen }:
       subtitleLeading={th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} inList /> : undefined}
       subtitleLabel={ticksWord(th)}
       tags={tags ? <ThreadTags thread={th} /> : undefined}
-      trailing={turnChip(th)}
+      trailing={<ThreadTrailing thread={th} />}
       onPress={open}
     />
   );
