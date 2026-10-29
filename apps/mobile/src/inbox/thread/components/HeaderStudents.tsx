@@ -2,12 +2,16 @@ import type { ThreadStudentView } from '@ab/shared';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
-import { type TreeBase, useTreeBase } from '@/core/nav/tree-base';
+import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { ThreadMenu, type ThreadMenuItem } from './ThreadMenu';
 
-/** «تفاصيل الطالب» in the sales tree, the student file in the admin's; none in the assistant's tree. */
+/**
+ * «تفاصيل الطالب» in the sales tree, the student file in the admin's, both inside the chat group
+ * (app/(sales-chat)/sales/inbox/student, app/(admin-chat)/inbox/student) so «رجوع» returns to the chat,
+ * not to the tabs (owner 2026-10-29). None in the assistant's tree.
+ */
 const detailsHref = (base: TreeBase, id: string): Href | null =>
-  base === '/assistant' ? null : ((base === '/sales' ? `/sales/students/${id}` : `/students/${id}`) as Href);
+  base === '/assistant' ? null : inTree(base, `/inbox/student/${id}` as Href);
 
 /**
  * Tapping the chat's name or number opens the student's details, as WhatsApp opens the contact
