@@ -10,7 +10,7 @@ const durations = {
   'tests/c.spec.ts': { desktop: 30_000 },
 };
 const shards = (p) => p.matrix.include.map((m) => `${m.shard}/${m.total}`);
-const FULL = ['1/4', '2/4', '3/4', '4/4', 'single/4'];
+const FULL = [...Array.from({ length: 8 }, (_, i) => `${i + 1}/8`), 'single/8'];
 
 test("the full suite, a bad or a missing selection: today's matrix, no spec list", () => {
   for (const sel of [
@@ -25,7 +25,7 @@ test("the full suite, a bad or a missing selection: today's matrix, no spec list
   }
 });
 
-test('shards follow the measured time, never more than the spec files or 4', () => {
+test('shards follow the measured time, never more than the spec files or 8', () => {
   assert.deepEqual(shards(plan({ full: false, specs: ['b.spec.ts'] }, durations)), [
     '1/1',
     'single/1',
