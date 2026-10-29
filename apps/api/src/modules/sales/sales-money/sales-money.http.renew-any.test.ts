@@ -4,7 +4,7 @@ import { systemResolver } from '../../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../../common/auth/permissions';
 import { STUDENT_ID, SUB_ID } from '../../finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '../../finance/subscriptions/test-app';
-import { CREATE, FAMILY_PHONE, PAY, salesDefaults } from './sales-money.fakes';
+import { CREATE, FAMILY_PHONE, MSG, PAY, salesDefaults } from './sales-money.fakes';
 
 // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): salesB owns nothing (an imported family).
 const OTHER_PHONE = '+966552220000';
@@ -14,6 +14,8 @@ const WRITES = (phone?: string): InjectArgs[] => [
   { method: 'POST', url: '/sales/subscriptions', body: { ...CREATE, phone } },
   { method: 'POST', url: '/sales/payments', body: { ...PAY, phone } },
   { method: 'POST', url: '/sales/payments/receipt-upload-url', body: { subscriptionId: SUB_ID, mime: 'image/jpeg', size: 1000, phone } },
+  { method: 'POST', url: '/sales/payments/receipt-from-chat', body: { subscriptionId: SUB_ID, messageId: MSG, phone } },
+  { method: 'GET', url: `/sales/money/chat-receipts/${MSG}?studentId=${STUDENT_ID}${phone ? `&phone=${encodeURIComponent(phone)}` : ''}` },
 ];
 
 function suite(resolver: PermissionResolver) {
@@ -37,6 +39,8 @@ const refused = async (ctx: ReturnType<typeof suite>, routes: InjectArgs[]) => {
   expect(ctx.m.subs.insert).not.toHaveBeenCalled();
   expect(ctx.m.payments.insert).not.toHaveBeenCalled();
   expect(ctx.m.storage.signedUpload).not.toHaveBeenCalled();
+  expect(ctx.m.storage.copy).not.toHaveBeenCalled();
+  expect(ctx.m.media.load).not.toHaveBeenCalled();
 };
 
 describe('without sales.renew_any (the system sales role): unchanged, the chat phone opens nothing', () => {
