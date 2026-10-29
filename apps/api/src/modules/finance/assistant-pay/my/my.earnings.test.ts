@@ -1,7 +1,7 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { buildEarnings, commissionsTotal } from './my.earnings';
-import type { MyAdjustment } from './my.queries';
+import type { MyAdjustment, MyWalletCommission } from './my.queries';
 
 const NOW = '2026-10-15T10:00:00Z';
 const TERMS = {
@@ -16,7 +16,7 @@ const statement = (over: Partial<AssistantStatementView> = {}): AssistantStateme
   totals: { SAR: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 } },
   lines: [], approved_at: null, paid_at: null, method: null, note: null, has_receipt: false, ...over,
 });
-const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], adjustments: [], statements: [] };
+const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], wallet: [], adjustments: [], statements: [] };
 
 describe('commissionsTotal', () => {
   it('sums per currency in exact cents and never across currencies', () => {
@@ -44,7 +44,7 @@ describe('buildEarnings: this month so far', () => {
   });
 
   it('an open negative adjustment lowers it; a frozen one does not', () => {
-    const adj = (id: string, statement: MyAdjustment['statement']) => ({ id, amount: -4, currency: 'SAR', effective_month: '2026-10-01', statement });
+    const adj = (id: string, statement: MyAdjustment['statement']) => ({ id, kind: 'manual', amount: -4, currency: 'SAR', effective_month: '2026-10-01', statement });
     const out = buildEarnings({ ...base, adjustments: [adj('x', null), adj('y', { status: 'approved' })] });
     expect(out.this_month['SAR']).toMatchObject({ adjustments: -4, total: 996 });
   });
@@ -66,5 +66,29 @@ describe('buildEarnings: this month so far', () => {
     const out = buildEarnings({ ...base, commissions: [commission('c1', 29, { statement: { status: 'approved' } })], statements: [frozen, statement()] });
     expect(out.this_month).toEqual(frozen.totals);
     expect(out.statements.map((s) => s.month)).toEqual(['2026-10-01', '2026-09-01']);
+  });
+});
+
+describe('buildEarnings: «محفظتي» (owner 2026-10-29)', () => {
+  const row = (amount: number, over: Partial<MyWalletCommission> = {}): MyWalletCommission =>
+    ({ amount, currency: 'EGP', earned_at: '2026-10-05T10:00:00Z', status: 'earned', statement: null, ...over });
+  const reversal = (statement: MyAdjustment['statement']): MyAdjustment =>
+    ({ id: 'r1', kind: 'reversal', amount: -50, currency: 'EGP', effective_month: '2026-11-01', statement });
+
+  it('owed, paid and this month per currency from the wallet rows; the admin’s own adjustments stay out', () => {
+    const wallet = [row(50), row(30, { statement: { status: 'paid' }, earned_at: '2026-09-05T10:00:00Z' })];
+    const bonus = { id: 'b1', kind: 'manual', amount: 100, currency: 'EGP', effective_month: '2026-10-01', statement: null };
+    expect(buildEarnings({ ...base, wallet, adjustments: [bonus] }).wallet).toEqual({ EGP: { due: 50, paid: 30, this_month: 50 } });
+  });
+
+  it('voided after its statement was paid: paid stays, the pending reversal makes owed negative, not this month', () => {
+    const voided = row(50, { status: 'voided', statement: { status: 'paid' } });
+    expect(buildEarnings({ ...base, wallet: [voided], adjustments: [reversal(null)] }).wallet).toEqual({ EGP: { due: -50, paid: 50, this_month: 0 } });
+  });
+
+  it('voided inside an approved statement: nothing owed; nothing at all: an empty wallet', () => {
+    const voided = row(50, { status: 'voided', statement: { status: 'approved' } });
+    expect(buildEarnings({ ...base, wallet: [voided], adjustments: [reversal(null)] }).wallet).toEqual({ EGP: { due: 0, paid: 0, this_month: 0 } });
+    expect(buildEarnings(base).wallet).toEqual({});
   });
 });

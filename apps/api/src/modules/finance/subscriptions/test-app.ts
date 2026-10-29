@@ -27,6 +27,7 @@ import { AdminTasksQueries } from './alerts/admin-tasks.queries';
 import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
 import { AlertsQueries } from './alerts/alerts.queries';
 import { BalanceQueries } from './money/balance.queries';
+import { CommissionBell } from './money/commission-bell';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentActivation } from './student-lifecycle/student-activation';
@@ -64,6 +65,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
+    .overrideProvider(CommissionBell).useValue(m.commissionBell)
     .overrideProvider(StudentStatusQueries).useValue(m.statuses)
     .overrideProvider(StudentTrialQueries).useValue(m.trials)
     .overrideProvider(AlertsQueries).useValue(m.alerts)

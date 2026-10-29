@@ -17,7 +17,7 @@ describe('SalesNav', () => {
       ['جدول الحلقات', '/sales/schedule'],
       ['الاشتراكات', '/sales/subscriptions'],
       ['الاجتماعات', '/sales/meetings'],
-      ['أرباحي', '/sales/earnings'],
+      ['محفظتي', '/sales/earnings'],
     ]);
   });
 

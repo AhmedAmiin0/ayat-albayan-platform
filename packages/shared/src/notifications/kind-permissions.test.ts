@@ -14,6 +14,11 @@ describe('PUSH_KIND_PERMISSIONS (R-NOT-01)', () => {
     expect(mayReceivePush('reminder_failed', ['inbox.read'])).toBe(false);
   });
 
+  it('commission_earned («محفظتي») also needs self.sales_earnings: a role without it is told nothing', () => {
+    expect(mayReceivePush('commission_earned', ['notifications.push', 'self.sales_earnings'])).toBe(true);
+    expect(mayReceivePush('commission_earned', ['notifications.push', 'self.sales'])).toBe(false);
+  });
+
   it('other kinds need only the bell', () => {
     expect(mayReceivePush('new_student', ['notifications.push'])).toBe(true);
     expect(mayReceivePush('new_student', [])).toBe(false);

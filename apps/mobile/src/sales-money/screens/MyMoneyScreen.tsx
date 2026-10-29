@@ -7,22 +7,25 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { MyEarningsView } from './MyEarningsView';
 import { MyPaymentsView } from './MyPaymentsView';
+import { MyWalletView } from '../wallet/MyWalletView';
 
-export type MoneyView = 'earnings' | 'payments';
+export type MoneyView = 'wallet' | 'statements' | 'payments';
 
 const VIEWS = (): { value: MoneyView; label: string }[] => [
-  { value: 'earnings', label: t.assistantPortal.nav.earnings },
+  { value: 'wallet', label: t.assistantPortal.wallet.views.commissions },
+  { value: 'statements', label: t.assistantPortal.wallet.views.statements },
   { value: 'payments', label: t.assistantPortal.nav.payments },
 ];
 
 /**
- * «أرباحي» of the salesperson (web /sales/earnings, SalesMoney): my terms, commissions and statements,
- * or «مدفوعاتي» (the payments I recorded) as a filter of the same page. Read-only.
+ * «محفظتي» of the salesperson (web /sales/earnings, SalesMoney), read-only: «العمولات» (the balance and
+ * every commission, live after each payment), «الكشوف» (my terms, this month and my statements) and
+ * «مدفوعاتي» (the payments I recorded) as filters of the same page.
  */
 export function MyMoneyScreen() {
   // ?view=payments opens «مدفوعاتي» directly (the sales transfer's success screen links here).
   const params = useLocalSearchParams<{ view?: string }>();
-  const [view, setView] = useState<MoneyView>(params.view === 'payments' ? 'payments' : 'earnings');
+  const [view, setView] = useState<MoneyView>(params.view === 'payments' ? 'payments' : params.view === 'statements' ? 'statements' : 'wallet');
   return (
     <Screen>
       <ScreenHeader
@@ -30,7 +33,7 @@ export function MyMoneyScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <FilterPills items={VIEWS()} value={view} onChange={setView} accessibilityLabel={t.sales.views.money} />
-      {view === 'payments' ? <MyPaymentsView /> : <MyEarningsView />}
+      {view === 'payments' ? <MyPaymentsView /> : view === 'statements' ? <MyEarningsView /> : <MyWalletView />}
     </Screen>
   );
 }

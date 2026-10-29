@@ -1324,11 +1324,6 @@
       "count": 2
     }
   },
-  "src/features/sales/sales/teachers/MyEarnings.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/sales/sales/teachers/SalesTeachers.tsx": {
     "ab/module-boundaries": {
       "count": 1

@@ -17,12 +17,14 @@ describe('parseSalesSubscriptionsSearch', () => {
   });
 });
 
-describe('the view filters of «الطلاب» and «أرباحي»', () => {
+describe('the view filters of «الطلاب» and «محفظتي»', () => {
   it('keep only the non-default view in the URL', () => {
     expect(parseStudentsSearch({ view: 'mine' })).toEqual({ view: 'mine' });
     expect(parseStudentsSearch({ view: 'all' })).toEqual({});
     expect(parseStudentsSearch({})).toEqual({});
     expect(parseMoneySearch({ view: 'payments' })).toEqual({ view: 'payments' });
+    expect(parseMoneySearch({ view: 'statements' })).toEqual({ view: 'statements' });
+    expect(parseMoneySearch({ view: 'earnings' })).toEqual({});
     expect(parseMoneySearch({ view: 'mine' })).toEqual({});
   });
 });

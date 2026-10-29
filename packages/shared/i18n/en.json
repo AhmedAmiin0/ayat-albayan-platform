@@ -1517,7 +1517,7 @@
     "title": "Sales",
     "nav": {
       "students": "My students",
-      "earnings": "My earnings",
+      "earnings": "My wallet",
       "payments": "My payments"
     },
     "register": {
@@ -1541,7 +1541,7 @@
       "voided": "Voided"
     },
     "earnings": {
-      "title": "My earnings",
+      "title": "My wallet",
       "terms": "My terms",
       "noTerms": "Your salary and commission terms are not set yet. Contact the administration.",
       "salary": "Monthly salary",
@@ -1583,6 +1583,24 @@
       "method": "Method",
       "paidAt": "Paid on",
       "note": "Note"
+    },
+    "wallet": {
+      "views": {
+        "commissions": "Commissions",
+        "statements": "Statements"
+      },
+      "due": "Owed to you",
+      "thisMonth": "This month {amount}",
+      "paid": "Paid to you {amount}",
+      "none": "Nothing owed right now",
+      "list": "My commissions",
+      "empty": "No commissions yet",
+      "emptyHint": "Each commission shows here as soon as a student you brought pays a package in full.",
+      "state": {
+        "in_statement": "In the {month} statement",
+        "paid": "Paid"
+      },
+      "voidedByAdmin": "Voided by the admin"
     }
   },
   "reports": {
@@ -3472,6 +3490,10 @@
     "channel_message": {
       "title": "New message from a student's family",
       "body": "{student}: {text}"
+    },
+    "commission_earned": {
+      "title": "New commission",
+      "body": "{amount} — {code} {student}"
     }
   },
   "bell": {
@@ -3695,7 +3717,8 @@
       "new_student": "New student",
       "meeting_invite": "Meeting invitation",
       "google_sync_alert": "Google sync alert",
-      "channel_message": "Student channel message"
+      "channel_message": "Student channel message",
+      "commission_earned": "New commission"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -5920,6 +5943,10 @@
       "channel_message": {
         "name": "Family message in the student channel",
         "trigger": "When the student or guardian writes in the student channel"
+      },
+      "commission_earned": {
+        "name": "New assistant commission",
+        "trigger": "When a student the assistant brought pays a package in full"
       }
     }
   },

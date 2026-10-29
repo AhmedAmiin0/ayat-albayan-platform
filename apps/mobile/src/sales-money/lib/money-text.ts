@@ -1,8 +1,14 @@
-import { formatAmount, type AssistantStatementLineView, type AssistantStatementView, type AssistantTermsView } from '@ab/shared';
+import {
+  formatAmount,
+  type AssistantStatementLineView,
+  type AssistantStatementView,
+  type AssistantTermsView,
+  type MyCommissionRow,
+} from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay, instantDay, money } from '@/payments/format';
+import { currencyName, localDay, instantDay, money } from '@/payments/format';
 import { monthLabel } from '@/teacher/lib/payout-text';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 
 // The words of the salesperson's money (web EarningsTerms, StatementCard, terms-summary). Pure.
 
@@ -59,3 +65,27 @@ export function statementWhen(s: Pick<AssistantStatementView, 'paid_at' | 'appro
 /** Entries of a per-currency record, sorted by currency (never one number across them). */
 export const byCurrency = <V>(totals: Readonly<Record<string, V>>): [string, V][] =>
   Object.entries(totals).sort(([a], [b]) => a.localeCompare(b));
+
+// «محفظتي» (owner 2026-10-29): one commission entry in two lines.
+
+const W = t.assistantPortal.wallet;
+
+/** «‎+50‎ ج.م» with `plus` (the sign inside the number's isolate, so RTL keeps it before the digits), else «50 ج.م». */
+export const walletMoney = (amount: number, currency: string, plus = false): string =>
+  `${ltr(`${plus ? '+' : ''}${formatAmount(amount)}`)} ${currencyName(currency)}`;
+
+/** «AB-1022 · lmkl · أول اشتراك · بطاقة (دفع إلكتروني) · 29 أكتوبر 2026»; a voided one ends with why instead. */
+export function commissionLine(c: MyCommissionRow): string {
+  const who = [ltr(c.student.code), isolate(c.student.name)];
+  if (c.state === 'voided') return [...who, c.void_reason ? t.assistantReasons[c.void_reason] : W.voidedByAdmin].join(' · ');
+  const kind = c.kind === 'renewal' ? t.assistants.ledger.kind.renewal.replace('{n}', String(c.share_percent)) : t.assistants.ledger.kind.first;
+  return [...who, kind, ...(c.method ? [t.enums.paymentMethod[c.method]] : []), instantDay(c.earned_at)].join(' · ');
+}
+
+/** The chip: «مستحقة», «في كشف أكتوبر 2026», «مدفوعة» or «ملغاة». */
+export function walletStateText(c: Pick<MyCommissionRow, 'state' | 'statement_month'>): string {
+  if (c.state === 'paid') return W.state.paid;
+  if (c.state === 'voided') return t.assistantPortal.commission.voided;
+  if (c.state === 'in_statement' && c.statement_month) return W.state.in_statement.replace('{month}', monthLabel(c.statement_month.slice(0, 7)));
+  return t.assistantPortal.commission.earned;
+}

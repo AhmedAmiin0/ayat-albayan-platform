@@ -1,5 +1,15 @@
-import { fromCents, monthOf, planStatement, toCents, type AssistantStatementView, type AssistantTermsView, type MyEarnings } from '@ab/shared';
-import type { MyAdjustment, MyCommission, StatementState } from './my.queries';
+import {
+  fromCents,
+  monthOf,
+  planStatement,
+  toCents,
+  walletTotals,
+  type AssistantStatementView,
+  type AssistantTermsView,
+  type MyEarnings,
+  type WalletLine,
+} from '@ab/shared';
+import type { MyAdjustment, MyCommission, MyWalletCommission, StatementState } from './my.queries';
 
 const frozen = (r: StatementState): boolean => r.statement?.status === 'approved' || r.statement?.status === 'paid';
 
@@ -11,15 +21,28 @@ export function commissionsTotal(commissions: readonly Pick<MyCommission, 'amoun
 }
 
 /**
+ * «محفظتي»'s lines: each counted commission (this month only while earned) and every reversal adjustment with
+ * its own sign. The admin's other adjustments (bonus, deduction) are statement matters, not commissions.
+ */
+function walletLines(wallet: readonly MyWalletCommission[], adjustments: readonly MyAdjustment[]): WalletLine[] {
+  return [
+    ...wallet.map((c) => ({ amount: c.amount, currency: c.currency, statement: c.statement, earned_at: c.status === 'earned' ? c.earned_at : null })),
+    ...adjustments.filter((a) => a.kind === 'reversal').map((a) => ({ amount: a.amount, currency: a.currency, statement: a.statement, earned_at: null })),
+  ];
+}
+
+/**
  * The assistant's own money page: the terms (read-only), what this month's statement would hold so far
  * (the frozen statement's totals once the month has one, else planStatement over what no frozen
- * statement holds yet), all earned commissions and the statements already approved or paid.
+ * statement holds yet), all earned commissions, «محفظتي» (walletTotals) and the statements already approved or paid.
  */
 export function buildEarnings(i: {
   now: string;
   tz: string;
   terms: AssistantTermsView | null;
   commissions: readonly MyCommission[];
+  /** The wallet's commissions (MyQueries.walletRows): earned, or voided inside a frozen statement. */
+  wallet: readonly MyWalletCommission[];
   adjustments: readonly MyAdjustment[];
   /** Approved and paid only: a draft is the admin's to change. */
   statements: readonly AssistantStatementView[];
@@ -38,6 +61,7 @@ export function buildEarnings(i: {
     terms: i.terms,
     this_month: issued ? issued.totals : plan.totals,
     commissions_total: commissionsTotal(i.commissions),
+    wallet: walletTotals(walletLines(i.wallet, i.adjustments), { month, tz: i.tz }),
     statements: [...i.statements],
   };
 }

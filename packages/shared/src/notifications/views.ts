@@ -26,6 +26,15 @@ export interface NotificationsPage {
 
 export const NOTIFICATIONS_PAGE_MAX = 50;
 
+/**
+ * The id of the newest bell row of `kind` on a page (rows come newest first), or null: the wallet refreshes
+ * when it changes (owner 2026-10-29). A body that is not a page (an older API, a stub) reads as none.
+ */
+export function newestOfKind(page: NotificationsPage | undefined, kind: PushKind): string | null {
+  const items = page?.items;
+  return Array.isArray(items) ? (items.find((n) => n.kind === kind)?.id ?? null) : null;
+}
+
 export const notificationsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).max(10_000).default(1),
   pageSize: z.coerce.number().int().min(1).max(NOTIFICATIONS_PAGE_MAX).default(20),

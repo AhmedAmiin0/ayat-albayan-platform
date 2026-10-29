@@ -5590,7 +5590,8 @@ export type Database = {
         | 'new_student'
         | 'meeting_invite'
         | 'google_sync_alert'
-        | 'channel_message';
+        | 'channel_message'
+        | 'commission_earned';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -5787,6 +5788,7 @@ export const Constants = {
         'meeting_invite',
         'google_sync_alert',
         'channel_message',
+        'commission_earned',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

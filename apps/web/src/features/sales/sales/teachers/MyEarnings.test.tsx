@@ -38,6 +38,7 @@ const EARNINGS: Earnings = {
     USD: { salary: 0, commissions: 50, adjustments: 0, total: 50 },
   },
   commissions_total: { SAR: 420, USD: 50 },
+  wallet: { SAR: { due: 420, paid: 0, this_month: 120 } },
   statements: [statement({})],
 };
 
@@ -52,7 +53,7 @@ function open(data: Earnings) {
 
 afterEach(() => apiFetch.mockReset());
 
-describe('MyEarnings «أرباحي»', () => {
+describe('MyEarnings «الكشوف» of «محفظتي»', () => {
   it('shows my terms: the monthly salary and the percent commission with its start', async () => {
     open(EARNINGS);
     expect(await screen.findByRole('heading', { name: t.assistantPortal.earnings.terms })).toBeTruthy();
@@ -87,6 +88,13 @@ describe('MyEarnings «أرباحي»', () => {
     expect(screen.queryByText('470')).toBeNull();
   });
 
+  it('no commissions total any more: the balance and the commissions are «العمولات» (MyWallet)', async () => {
+    open(EARNINGS);
+    await screen.findByRole('heading', { name: t.assistantPortal.earnings.thisMonth });
+    expect(screen.queryByText(new RegExp(t.assistantPortal.earnings.commissionsTotal))).toBeNull();
+    expect(screen.queryByText('420')).toBeNull();
+  });
+
   it('lists my statements with status, per-currency totals and lines', async () => {
     open(EARNINGS);
     const month = await screen.findByRole('heading', { level: 3 });
@@ -115,7 +123,7 @@ describe('MyEarnings «أرباحي»', () => {
   });
 
   it('empty states: no terms yet, no statements yet', async () => {
-    open({ terms: null, this_month: {}, commissions_total: {}, statements: [] });
+    open({ terms: null, this_month: {}, commissions_total: {}, wallet: {}, statements: [] });
     expect(await screen.findByText(t.assistantPortal.earnings.noTerms)).toBeTruthy();
     expect(screen.getByText(t.assistantPortal.earnings.statementsEmpty)).toBeTruthy();
     expect(screen.getByText(t.assistantPortal.earnings.statementsEmptyHint)).toBeTruthy();

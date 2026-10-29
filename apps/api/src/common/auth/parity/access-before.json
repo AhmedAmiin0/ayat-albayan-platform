@@ -193,6 +193,7 @@
   "MeetingRecordingsController.list": ["admin","assistant","sales","teacher"],
   "MeetingShareController.share": ["admin","assistant","sales","teacher"],
   "MessagesController.gate": ["admin","sales","teacher"],
+  "MyController.commissions": ["sales"],
   "MyController.earnings": ["sales"],
   "MyController.payments": ["sales"],
   "MyController.paymentAttachments": ["sales"],

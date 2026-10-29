@@ -9,7 +9,8 @@ import { AlertsJob } from './alerts/alerts.job';
 import { AlertsQueries } from './alerts/alerts.queries';
 import { AlertsEnv, SubscriptionAlertsService } from './alerts/alerts.service';
 import { BalanceQueries } from './money/balance.queries';
-import { MoneyFollowUps } from './money/money-follow-ups';
+import { CommissionBell } from './money/commission-bell';
+import { FollowUpEnv, MoneyFollowUps } from './money/money-follow-ups';
 import { MoneyWrites } from './money/money-writes';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
@@ -46,6 +47,8 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     AlertsJob,
     AlertsQueries,
     BalanceQueries,
+    CommissionBell,
+    FollowUpEnv,
     LeadConversion,
     MoneyFollowUps,
     MoneyWrites,

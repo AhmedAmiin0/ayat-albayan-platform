@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { A, assistantApp, B, statementRow } from '../assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
-const ROUTES = ['/sales/me/students', '/sales/me/earnings', '/sales/me/payments'];
+const ROUTES = ['/sales/me/students', '/sales/me/earnings', '/sales/me/payments', '/sales/me/commissions'];
 const keys = (v: unknown): string[] =>
   v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
 
@@ -28,6 +28,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     t.my.payments.mockImplementation(async (id: string) => (id === A ? [dirtyPayment] : []));
     t.my.tz.mockResolvedValue('Asia/Riyadh');
     t.my.commissions.mockResolvedValue([]);
+    t.my.walletRows.mockResolvedValue([]);
     t.my.adjustments.mockResolvedValue([]);
     t.terms.get.mockResolvedValue(null);
     t.statements.list.mockResolvedValue([]);
@@ -39,6 +40,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     }
     expect(t.my.students).not.toHaveBeenCalled();
     expect(t.my.payments).not.toHaveBeenCalled();
+    expect(t.my.commissionPage).not.toHaveBeenCalled();
     expect(t.statements.list).not.toHaveBeenCalled();
   });
 
@@ -100,8 +102,8 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
 
   it('earnings: B has no rows of A; this month is built from B terms only', async () => {
     const res = await t.call({ method: 'GET', url: '/sales/me/earnings', token: 'salesB' });
-    expect(res.json()).toMatchObject({ terms: null, statements: [], commissions_total: {} });
-    for (const fn of [t.my.tz, t.my.commissions, t.my.adjustments, t.terms.get]) expect(fn).toHaveBeenCalledWith(B);
+    expect(res.json()).toMatchObject({ terms: null, statements: [], commissions_total: {}, wallet: {} });
+    for (const fn of [t.my.tz, t.my.commissions, t.my.walletRows, t.my.adjustments, t.terms.get]) expect(fn).toHaveBeenCalledWith(B);
     expect(t.statements.list).toHaveBeenCalledWith({ assistantId: B, hideDrafts: true });
   });
 });
