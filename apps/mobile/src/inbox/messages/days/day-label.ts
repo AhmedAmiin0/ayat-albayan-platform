@@ -27,8 +27,9 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
   return (day.year === null ? dayMonth : dayMonthYear).format(at);
 }
 
-/** A chat row's time, as WhatsApp's chat list: the clock today, else the day's words (dayLabel). */
-export function rowTime(iso: string, cycle: ClockCycle, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
+/** A chat row's time, as WhatsApp's chat list: the clock today, else the day's words (dayLabel); '' without a valid time. */
+export function rowTime(iso: string | null | undefined, cycle: ClockCycle, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return '';
   return chatDay(new Date(iso), { now, tz }).kind === 'today' ? clock(iso, cycle, tz) : dayLabel(iso, { now, tz });
 }
 

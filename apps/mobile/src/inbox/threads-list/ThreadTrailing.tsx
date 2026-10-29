@@ -27,15 +27,18 @@ export function ThreadTrailing({ thread: th }: { thread: ThreadView }) {
   const cycle = useClockCycle();
   const { color } = useTheme();
   const unread = th.unread_count > 0;
+  const time = rowTime(th.last_message_at, cycle);
   return (
     <View style={{ alignItems: 'flex-end', gap: 6 }}>
-      <AppText
-        testID="thread-time"
-        numberOfLines={1}
-        style={{ fontFamily: type.ui[unread ? 600 : 500], fontSize: type.size['2xs'], color: unread ? color.lapis : color.ink3, fontVariant: ['tabular-nums'] }}
-      >
-        {rowTime(th.last_message_at, cycle)}
-      </AppText>
+      {time ? (
+        <AppText
+          testID="thread-time"
+          numberOfLines={1}
+          style={{ fontFamily: type.ui[unread ? 600 : 500], fontSize: type.size['2xs'], color: unread ? color.lapis : color.ink3, fontVariant: ['tabular-nums'] }}
+        >
+          {time}
+        </AppText>
+      ) : null}
       {turnChip(th)}
     </View>
   );

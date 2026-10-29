@@ -43,3 +43,9 @@ test('a chat row: the clock today, else the day as the separators word it', () =
   expect(rowTime('2026-10-26T05:00:00Z', '24', RIYADH)).toBe(t.inbox.dayYesterday);
   expect(rowTime('2026-09-29T05:00:00Z', '24', RIYADH)).toBe('29 سبتمبر');
 });
+
+test('a chat row without a valid time shows no time (never a crash)', () => {
+  expect(rowTime(undefined, '24', RIYADH)).toBe('');
+  expect(rowTime('', '24', RIYADH)).toBe('');
+  expect(rowTime('not a date', '24', RIYADH)).toBe('');
+});
