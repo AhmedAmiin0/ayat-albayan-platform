@@ -1,4 +1,4 @@
-import { canLinkFamily, canPickTrialDate, type SalesStudentRef, type ThreadView } from '@ab/shared';
+import { canLinkFamily, canPickTrialDate, type SalesFamilyStudent, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -6,7 +6,6 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
-import { useStripeFeature } from '@/features/sales/payment-links';
 import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
 import { LinkFamilyDialog } from '../lead/LinkFamilyDialog';
@@ -14,13 +13,14 @@ import { useInboxMode } from '../shared/mode';
 import { SalesRegisterButton, SalesRegisterDialog } from '../sales/SalesRegisterAction';
 import { canRegisterFrom } from '../sales/sales-register';
 import { salesFamilyQuery } from './api';
+import { ChildChoiceDialog } from './ChildChoiceDialog';
 import { SalesCourseDialog } from './course/SalesCourseDialog';
 import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
-import { PaymentLinkDialog } from './payment-link/PaymentLinkDialog';
 import { SalesPrimaryAction } from './SalesPrimaryAction';
 import { hasCourse } from './SalesSubscribeAction';
 
 type Opened = { start: FlowStart; studentId?: string; renew?: boolean };
+type Choice = 'course' | 'trial';
 type LeadThread = ThreadView & { lead_id: string };
 
 export interface SalesFamilyActions {
@@ -36,10 +36,10 @@ export interface SalesFamilyActions {
  * The sales chat's header actions (R-ASST-01/04, W3), split into one visible action and the rest.
  * Family (GET /sales/money/family, her students only): «جدّد الاشتراك» is the visible action while one
  * of them is `renew_due` (owner 2026-10-26: one tap, prefilled from `renewal`; several due → the step
- * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed, «أيام الحلقات» per student with a course
- * (hasCourse), «موعد تجريبي جديد» per student with no running subscription (canPickTrialDate, with
- * the trial dates' history in its dialog); several children are named on each (the visible text is the accessible name).
- * «رابط دفع» (docs/30) only in the Stripe test build with the API's feature on (useStripeFeature).
+ * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed. No
+ * child is named on any action (owner 2026-10-29): ONE «أيام الحلقات» (hasCourse) and ONE «موعد تجريبي جديد»
+ * (canPickTrialDate, with the trial dates' history in its dialog), with several children ChildChoiceDialog
+ * picks one first. The payment method (a Stripe link in the test build) is chosen inside «اشتراك جديد».
  * «تحقق من التسجيل» (students.check_registration) always goes in the menu; «ربط بطالب موجود» (leads.link_family) on a
  * lead chat with no family (canLinkFamily), its done text a toast here. `compact` (phones):
  * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open
@@ -57,10 +57,9 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const [registering, setRegistering] = useState<LeadThread | null>(null);
   const [checking, setChecking] = useState(false);
   const [trialFor, setTrialFor] = useState<SalesStudentRef | null>(null);
-  const [linking, setLinking] = useState(false);
+  const [choosing, setChoosing] = useState<Choice | null>(null);
   const [linkingFamily, setLinkingFamily] = useState<string | null>(null);
   const [linked, setLinked] = useState<string | null>(null);
-  const stripe = useStripeFeature();
   const linkDone = (text: string) => {
     setLinkingFamily(null);
     setLinked(text);
@@ -69,6 +68,16 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const students = sales ? (family.data?.students ?? []) : [];
   // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money only, the rest stays hers.
   const own = students.filter((s) => s.mine !== false);
+  // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
+  const choices: Record<Choice, { title: string; list: SalesFamilyStudent[]; open: (s: SalesFamilyStudent) => void }> = {
+    course: { title: t.booking.courseDays, list: own.filter(hasCourse), open: (s) => setCourse(s.id) },
+    trial: { title: t.trialDate.action, list: own.filter((s) => canPickTrialDate(s.status)), open: (s) => setTrialFor({ id: s.id, name: s.name, code: s.code }) },
+  };
+  const chosen = choosing ? choices[choosing] : null;
+  const pickChild = (s: SalesFamilyStudent) => {
+    setChoosing(null);
+    chosen?.open(s);
+  };
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
   // One shape for the lead and the family alike: booking a lead makes it a family on the next poll,
   // and a moved slot would re-mount the open «تسجيل طالب جديد» (its «تم الحجز» lost, journey 7).
@@ -78,8 +87,10 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {checking && <RegistrationCheckDialog phone={thread.phone_e164} onClose={() => setChecking(false)} />}
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
-      {opened && <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} onClose={() => setOpened(null)} />}
-      {linking && <PaymentLinkDialog thread={thread} students={own} onClose={() => setLinking(false)} />}
+      {opened && (
+        <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} sessionOpen={thread.session_open} onClose={() => setOpened(null)} />
+      )}
+      {chosen && <ChildChoiceDialog title={chosen.title} students={chosen.list} onPick={pickChild} onClose={() => setChoosing(null)} />}
       {linkingFamily && (
         <LinkFamilyDialog leadId={linkingFamily} phone={thread.phone_e164} onClose={() => setLinkingFamily(null)} onDone={linkDone} />
       )}
@@ -97,7 +108,6 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
     return { primary, items: [...checkItem, ...linkItem], dialogs };
   }
 
-  const named = (label: string, name: string) => (students.length > 1 ? `${label} — ${name}` : label);
   const item = (key: string, label: string, onClick: () => void) => (
     <Button key={key} type="button" size="sm" variant="ghost" onClick={onClick}>
       {label}
@@ -107,20 +117,23 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const due = students.filter((s) => s.renew_due);
   const single = due.length === 1 ? due[0] : undefined;
   const renew = () => setOpened({ start: 'subscribe', renew: true, ...(single ? { studentId: single.id } : {}) });
+  // One entry per action: the only child opens it straight away, several are picked in ChildChoiceDialog.
+  const entry = (kind: Choice) => {
+    const { title, list, open } = choices[kind];
+    const [only] = list;
+    if (!only) return [];
+    return [item(kind, title, () => (list.length === 1 ? open(only) : setChoosing(kind)))];
+  };
   const items = [
     ...checkItem,
     ...(due.length > 0 ? [item('subscribe', t.salesMoney.newSubscription, subscribe)] : []),
     ...(students.some((s) => s.open.length > 0) ? [item('transfer', t.salesMoney.recordTransfer, () => setOpened({ start: 'transfer' }))] : []),
-    ...(stripe && own.length > 0 ? [item('payment-link', t.paymentLinks.action, () => setLinking(true))] : []),
-    ...own.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
-    // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
-    ...own
-      .filter((s) => canPickTrialDate(s.status))
-      .map((s) => item(`trial-${s.id}`, named(t.trialDate.action, s.name), () => setTrialFor({ id: s.id, name: s.name, code: s.code }))),
+    ...entry('course'),
+    ...entry('trial'),
   ];
   const primary =
     due.length > 0 ? (
-      <SalesPrimaryAction compact={compact} icon="box" label={single ? named(t.students.renew, single.name) : t.students.renew} onClick={renew} />
+      <SalesPrimaryAction compact={compact} icon="box" label={t.students.renew} onClick={renew} />
     ) : (
       <SalesPrimaryAction compact={compact} icon="plus" label={t.salesMoney.newSubscription} onClick={subscribe} />
     );

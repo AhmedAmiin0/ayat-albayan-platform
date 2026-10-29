@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { localDate } from '../../schemas/index.js';
 import type { PaymentMethod } from '../../enums/index.js';
-import { currencyIso, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '../../money/index.js';
+import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '../../money/index.js';
 
 // «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; TEST BUILD ONLY): the assistant agrees an amount with
 // the family in the chat and sends a Stripe Checkout link; the verified webhook records the payment. Strict
@@ -18,15 +18,21 @@ export const PAYMENT_LINK_CURRENCIES = ['SAR', 'USD'] as const;
 export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: subscriptionPricingSchema });
 
 /**
- * POST /sales/payment-links: the package as the sales subscribe flow takes it (pricing, start day) plus the
- * agreed amount (free, > 0, at most settings max_discount_pct below the calculator price when set).
+ * POST /sales/payment-links: the package as the sales subscribe flow takes it (pricing, start day, used
+ * lessons, teacher: «اشتراك جديد» then «دفع إلكتروني», owner 2026-10-29) plus the agreed amount (free, > 0,
+ * at most settings max_discount_pct below the calculator price when set).
  */
 export const paymentLinkCreateSchema = z.strictObject({
   studentId: z.uuid(),
-  kind: z.enum(PAYMENT_LINK_KINDS),
+  /** Optional (owner 2026-10-29): the API stores 'renewal' once the student has a priced package, else 'new'. */
+  kind: z.enum(PAYMENT_LINK_KINDS).optional(),
   pricing: subscriptionPricingSchema,
   startsOn: localDate.optional(),
   alreadyStarted: z.boolean().optional(),
+  /** «حلقات مستخدمة من الباقة»: only with alreadyStarted (salesStartsOn), at most usedBeforeMax (the creator). */
+  lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
+  /** «المعلم/ة»: students.teacher_id once the link is made, as POST /sales/subscriptions. */
+  teacherId: z.uuid().optional(),
   amount: moneyAmount,
   currency: currencyIso,
   clientRequestId: z.uuid(),

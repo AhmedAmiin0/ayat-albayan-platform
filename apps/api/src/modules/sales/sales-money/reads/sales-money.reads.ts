@@ -42,8 +42,11 @@ export class SalesMoneyReads {
     return { students };
   }
 
+  /** A package a payment link is still open for is the link's to pay (docs/30), never offered for a transfer too. */
   private async open(studentId: string): Promise<SalesMoneySubscriptionView[]> {
     const page = await this.subs.list({ ...OPEN_PAGE, studentId, status: 'unpaid' });
-    return page.items.map(toSalesSubscription).filter((s) => s.due > 0);
+    const owed = page.items.map(toSalesSubscription).filter((s) => s.due > 0);
+    const linked = new Set(await this.family.linkPackages(owed.map((s) => s.id)));
+    return owed.filter((s) => !linked.has(s.id));
   }
 }

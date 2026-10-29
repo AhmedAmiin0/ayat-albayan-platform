@@ -43,4 +43,16 @@ describe('SalesFamilyQueries', () => {
     expect(await q.studentStatus('s1')).toBe('active');
     await expect(q.studentStatus('x')).rejects.toThrow();
   });
+
+  it('linkPackages: the packages with an open, unexpired link; no read for none', async () => {
+    const now = new Date('2026-10-29T10:00:00Z');
+    const t = fakeDb({ payment_links: [{ data: [{ subscription_id: 'sub1' }, { subscription_id: null }] }] });
+    const q = new SalesFamilyQueries(t.db);
+    expect(await q.linkPackages(['sub1', 'sub2'], now)).toEqual(['sub1']);
+    expect(t.argsOf('payment_links', 'in')).toEqual(['subscription_id', ['sub1', 'sub2']]);
+    expect(t.argsOf('payment_links', 'eq')).toEqual(['status', 'open']);
+    expect(t.argsOf('payment_links', 'gt')).toEqual(['expires_at', now.toISOString()]);
+    expect(await q.linkPackages([])).toEqual([]);
+    expect(t.trips).toEqual(['payment_links']);
+  });
 });

@@ -1,5 +1,5 @@
 import type { StudentStatus } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/teaching/booking/trial-date/trial-fixture';
 import { t } from '@/lib/i18n/i18n';
@@ -15,7 +15,8 @@ vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () =>
 
 const FAMILY = thread({ guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' });
 const JUD = 'f7c1a0de-3333-4a8e-9b00-000000000003';
-const trialOf = (name: string) => ({ name: `${t.trialDate.action} — ${name}` });
+const TRIAL = { name: t.trialDate.action };
+const trialFor = (name: string) => ({ name: t.trialDate.title.replace('{name}', name) });
 
 function renderFamily(statuses: [StudentStatus, StudentStatus]) {
   const students = [student({ status: statuses[0] }), student({ id: JUD, name: 'جود', status: statuses[1] })];
@@ -39,18 +40,22 @@ const openMenu = async () => {
 describe('«موعد تجريبي جديد» in the sales family chat (R-ASST-01, owner 2026-10-25)', () => {
   afterEach(() => apiFetch.mockReset());
 
-  it.each<StudentStatus>(['new', 'trial', 'pending_subscription'])('offers it for a %s child, not for a subscriber', async (status) => {
+  it.each<StudentStatus>(['new', 'trial', 'pending_subscription'])('ONE entry, no name: a %s child beside a subscriber opens straight away', async (status) => {
     renderFamily([status, 'active']);
     await openMenu();
-    expect(screen.getByRole('button', trialOf('سهيلة'))).toBeTruthy();
-    expect(screen.queryByRole('button', trialOf('جود'))).toBeNull();
+    expect(screen.getAllByRole('button', TRIAL)).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: / — / })).toBeNull();
+    fireEvent.click(screen.getByRole('button', TRIAL));
+    expect(await screen.findByRole('dialog', trialFor('سهيلة'))).toBeTruthy();
   });
 
-  it('opens the dialog for that child, with the history’s count', async () => {
+  it('several children: «لأيّ طالب؟» first, then the dialog for the one picked, with the history’s count', async () => {
     renderFamily(['trial', 'trial']);
     await openMenu();
-    fireEvent.click(screen.getByRole('button', trialOf('جود')));
-    expect(await screen.findByRole('dialog', { name: t.trialDate.title.replace('{name}', 'جود') })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', TRIAL));
+    const choice = within(await screen.findByRole('dialog', TRIAL));
+    fireEvent.click(choice.getByRole('button', { name: /جود/ }));
+    expect(await screen.findByRole('dialog', trialFor('جود'))).toBeTruthy();
     expect(await screen.findByTestId('trial-date-count')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith(`/sales/booking/trial-dates?studentId=${JUD}`);
   });

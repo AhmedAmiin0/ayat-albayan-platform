@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { chosenOpen, familyPath, openPackages, renewTargets, withOpenPackage } from './family';
+import { chosenOpen, familyPath, openPackages, ownStudents, withOpenPackage } from './family';
 import { familyOf, KID2, kid, openSub, SUB } from '../testing/fixtures';
 
 test('the family path carries the E.164 number url-encoded', () => {
@@ -26,10 +25,6 @@ test('a just-created package joins its student once; nothing cached stays nothin
   expect(withOpenPackage(undefined, openSub())).toBeUndefined();
 });
 
-test('«جدّد الاشتراك»: only her students the API marks renew_due; the child named when she has several', () => {
-  expect(renewTargets(familyOf(kid({ status: 'expired' })))).toEqual([]);
-  expect(renewTargets(familyOf(kid({ status: 'active', renew_due: true })))).toEqual([{ studentId: kid().id, label: t.students.renew }]);
-  const two = familyOf(kid({ status: 'active' }), kid({ id: KID2, name: 'سلمى', status: 'pending_renewal', renew_due: true }));
-  expect(renewTargets(two)).toEqual([{ studentId: KID2, label: `${t.students.renew} — سلمى` }]);
-  expect(renewTargets(undefined)).toEqual([]);
+test('her own students: a child listed through sales.renew_any (mine: false) is left out', () => {
+  expect(ownStudents([kid(), kid({ id: KID2, mine: false })]).map((s) => s.id)).toEqual([kid().id]);
 });
