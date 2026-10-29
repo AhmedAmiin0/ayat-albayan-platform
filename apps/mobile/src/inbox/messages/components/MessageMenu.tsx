@@ -11,7 +11,7 @@ import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
 import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { ReactionBar } from '../reactions/ReactionBar';
-import { MenuSheet } from '../../shared/MenuSheet';
+import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
