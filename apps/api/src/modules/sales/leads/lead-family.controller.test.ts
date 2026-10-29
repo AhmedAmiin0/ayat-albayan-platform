@@ -10,7 +10,7 @@ import { LeadFamilyController } from './lead-family.controller';
 import { LeadFamilyService } from './lead-family.service';
 
 const ID = '11111111-1111-4111-8111-111111111111';
-const URL = `/leads/${ID}/link-family`;
+const LINK_URL = `/leads/${ID}/link-family`;
 const service = { link: vi.fn() };
 const verify: TokenVerifier = async (token) => ({ id: `${token}-1`, email: null, role: token === 'granted' ? 'sales' : (token as 'admin' | 'sales' | 'teacher') });
 // A custom sales role the admin granted leads.link_family (the system sales role does not hold it).
@@ -20,7 +20,7 @@ const resolver: PermissionResolver = async (user) =>
 describe('POST /leads/:id/link-family «ربط بطالب موجود» (leads.link_family)', () => {
   let app: NestFastifyApplication;
   const call = (token: string, payload: unknown) =>
-    app.inject({ method: 'POST', url: URL, headers: { authorization: `Bearer ${token}` }, payload: payload as Record<string, unknown> });
+    app.inject({ method: 'POST', url: LINK_URL, headers: { authorization: `Bearer ${token}` }, payload: payload as Record<string, unknown> });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({
