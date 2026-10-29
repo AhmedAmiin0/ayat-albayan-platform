@@ -27,9 +27,9 @@ export interface PillProps {
 }
 
 /**
- * The pill's contents in reading order. Staff (owner 2026-10-27: «remove every thing in the chat bar
- * except for the tag and the clips icons»): [text][«عرض سعر»][paperclip]; the emoji, camera, template
- * and quick replies are tiles in the paperclip's sheet. Teacher: [emoji][text][قالب] (no files).
+ * The pill's contents in reading order. Staff, as WhatsApp (owner 2026-10-29: «some typing options are
+ * missing»): [emoji][text][«عرض سعر»][paperclip][camera, only while the box is empty]; template and
+ * quick replies stay tiles in the paperclip's sheet. Teacher: [emoji][text][قالب] (no files).
  * An emoji goes in at the caret through onText (the «/» check runs too).
  */
 export function PillContents(p: PillProps) {
@@ -48,21 +48,32 @@ export function PillContents(p: PillProps) {
   };
   const box = <ComposerInput value={p.text} onChange={p.onText} onBlur={p.onLeave} inputRef={input} onSelection={(s) => (sel.current = s)} />;
   const sheet = <EmojiSheet visible={emoji} onPick={pick} onClose={close} />;
+  const smile = (
+    <IconButton label={t.inbox.composer.emoji} onPress={() => setEmoji(true)}>
+      <EmojiIcon color={color.ink3} />
+    </IconButton>
+  );
   if (p.staff) {
     return (
       <>
+        {smile}
         {box}
         {p.onQuote ? <QuoteButton onPress={p.onQuote} /> : null}
-        <AttachFile phone={p.phone} onError={p.onFileError} onTemplate={p.onTemplate} onReplies={p.onReplies} onEmoji={() => setEmoji(true)} />
+        <AttachFile
+          phone={p.phone}
+          onError={p.onFileError}
+          onTemplate={p.onTemplate}
+          onReplies={p.onReplies}
+          onEmoji={() => setEmoji(true)}
+          camera={p.text.length === 0}
+        />
         {sheet}
       </>
     );
   }
   return (
     <>
-      <IconButton label={t.inbox.composer.emoji} onPress={() => setEmoji(true)}>
-        <EmojiIcon color={color.ink3} />
-      </IconButton>
+      {smile}
       {box}
       <IconButton label={t.inbox.composer.sendTemplate} onPress={p.onTemplate}>
         <TemplateIcon color={color.lapis} />
