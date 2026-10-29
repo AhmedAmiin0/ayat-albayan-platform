@@ -9,7 +9,7 @@ import { PricingSteps } from '@/finance';
 import { ErrorLine } from '../../ErrorLine';
 import { ClosedNote } from '../../thread/components/ClosedNote';
 import { ReplySheetFrame } from '../../saved-replies/quick-list/ReplySheetFrame';
-import { setComposerText, getComposerText } from '../draft-store';
+import { appendComposerText } from '../draft-store';
 import { QuoteActions } from './QuoteActions';
 import { useQuoteSend, useQuoteSheet } from './use-quote-sheet';
 
@@ -35,8 +35,7 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const ready = text !== null && !sheet.stale;
   const edit = () => {
     if (!text) return;
-    const now = getComposerText(phone).trim();
-    setComposerText(phone, now ? `${now}\n${text}` : text);
+    appendComposerText(phone, text);
     onClose();
   };
   return (

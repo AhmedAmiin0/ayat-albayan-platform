@@ -1,12 +1,13 @@
 import { INBOX_LIST_REFRESH_MS, liveInterval } from '@ab/client-core';
 import type { LeadStatus, ThreadView } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { nextPageParam, type Page } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { useInboxLive, useLiveWatch } from '../thread/live';
+import { waitingForReply } from './chat-filter';
 
 const PAGE_SIZE = 25;
 
@@ -50,4 +51,19 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   }, [pages]);
   const { loadMore, refresh } = usePagedActions(query);
   return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh });
+}
+
+/**
+ * The rows the list shows: «بانتظار ردّك» swaps in the waiting chats of the loaded pages, over the query
+ * result (its tracked fields: isRefetching for the pull). `seeking`: none waiting yet and more pages,
+ * so it pages on by itself (an empty list never reaches its end) and holds the empty title back.
+ */
+export function useChoiceRows(list: ReturnType<typeof useThreadList>, waiting: boolean) {
+  const items = useMemo(() => (waiting ? waitingForReply(list.items) : []), [waiting, list.items]);
+  const seeking = waiting && items.length === 0 && list.hasNextPage;
+  const { loadMore } = list;
+  useEffect(() => {
+    if (seeking) loadMore();
+  }, [seeking, loadMore, list.items]);
+  return { rows: waiting ? withTracked(list, { items }) : list, seeking };
 }

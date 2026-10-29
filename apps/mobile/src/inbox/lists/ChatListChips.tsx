@@ -25,7 +25,7 @@ export interface ChatListChipsProps {
   onChange: (choice: ChatChoice) => void;
   /** The academy's lists in the row (admin and sales); a teacher's row is «الكل» · «غير مقروءة» only. */
   lists?: boolean;
-  /** More choices after «غير مقروءة» (staff: «بانتظار ردّك» and the lead stages, threads-list/LeadChips). */
+  /** More choices after the lists, before «＋» (staff: «بانتظار ردّك» and the lead stages, threads-list/LeadChips). */
   children?: ReactNode;
 }
 
@@ -68,7 +68,8 @@ function ListExtras({ active, loadError, creating, editing, onCreated, onClose }
 
 /**
  * The chats' ONE chip row (docs/22 §5, owner 2026-10-27, like WhatsApp: All · Unread · lists · +):
- * «الكل», «غير مقروءة», the caller's extra choices, the academy's lists oldest first, then «＋» (a new list). It scrolls sideways
+ * «الكل», «غير مقروءة», the academy's lists oldest first (her own lists stay in reach), the caller's
+ * extra choices, then «＋» (a new list). It scrolls sideways
  * (RTL order). The lists only for a holder of inbox.lists outside teacher mode. An active list that
  * is gone (deleted here or by another assistant) falls back to «الكل». Loading or failing stays
  * quiet: the chats never wait for the lists.
@@ -94,7 +95,6 @@ export function ChatListChips({ value, onChange, lists: wanted = false, children
       >
         <ListChip label={t.inbox.filterAll} selected={value === 'all' || gone} onPress={() => onChange('all')} />
         <ListChip label={t.inbox.filterUnread} selected={value === 'unread'} onPress={() => onChange('unread')} />
-        {children}
         {lists.map((list) => (
           <ListChip
             key={list.id}
@@ -104,6 +104,7 @@ export function ChatListChips({ value, onChange, lists: wanted = false, children
             onEdit={() => setEditing(list)}
           />
         ))}
+        {children}
         {allowed ? <ListChip action label="＋" name={t.inbox.lists.new} onPress={() => setCreating(true)} /> : null}
       </ScrollView>
       {allowed ? (

@@ -1,12 +1,11 @@
 import type { ThreadView } from '@ab/shared';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { withTracked } from '@/core/lib/query/paged-result';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { clockAt } from '../shared/format';
@@ -14,10 +13,10 @@ import { InboxHeaderActions } from './InboxHeaderActions';
 import { FAB, NewChatSheet } from './NewChatSheet';
 import { type ChatChoice, ChatListChips } from '../lists/ChatListChips';
 import { useThreadMode } from '../thread/hooks/thread-mode';
-import { choiceQuery, threadsEmptyTitle, waitingForReply } from './chat-filter';
+import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
 import { useThreadRow } from './ThreadRow';
-import { useThreadList } from './use-thread-list';
+import { useChoiceRows, useThreadList } from './use-thread-list';
 import { useClockCycle } from '@/core/lib/clock';
 
 /**
@@ -25,7 +24,7 @@ import { useClockCycle } from '@/core/lib/clock';
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
  * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
  * sales (the same tabs) start a chat by number: «محادثة جديدة». Both trees show the lead / family tags
- * (sales without «مش مدفوع», review 2026-10-29 #2) and filter by «بانتظار ردّك», the lead stage and
+ * (sales without «غير مدفوع», review 2026-10-29 #2) and filter by «بانتظار ردّك», the lead stage and
  * the academy's chat lists «القوائم» (docs/22); a teacher gets none of them.
  * The top is compact as WhatsApp's (owner 2026-10-27, «This topbar takes alot of space»): a one-line
  * h2 title with its icon actions, a pill search, ONE chip row (All · Unread · Waiting · stages · lists · ＋), 8pt apart.
@@ -39,10 +38,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const [search, setSearch] = useState('');
   const [choice, setChoice] = useState<ChatChoice>('all');
   const list = useThreadList({ search, ...choiceQuery(choice), live: true });
-  const waiting = choice === 'waiting';
-  const waitingItems = useMemo(() => (waiting ? waitingForReply(list.items) : []), [waiting, list.items]);
-  // Over the query result (its tracked fields: isRefetching for the pull), only the rows swapped.
-  const rows = waiting ? withTracked(list, { items: waitingItems }) : list;
+  const { rows, seeking } = useChoiceRows(list, choice === 'waiting');
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
@@ -69,7 +65,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         renderItem={renderItem}
         endSpace={admin ? FAB + 16 : 0}
         ListEmptyComponent={
-          list.isPending ? null : loaded ? (
+          list.isPending || seeking ? null : loaded ? (
             <EmptyState title={threadsEmptyTitle(choice, search)} />
           ) : (
             <ErrorState onRetry={list.refresh} />

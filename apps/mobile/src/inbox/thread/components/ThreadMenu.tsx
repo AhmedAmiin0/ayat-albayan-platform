@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
@@ -24,9 +25,14 @@ interface ThreadMenuProps {
  * secondary button per action (no primary: none outranks the others), then «إلغاء»; 48pt each.
  */
 export function ThreadMenu({ open, items, onClose }: ThreadMenuProps) {
+  // A chat left within the wait never runs its pending action (a push from a closed chat).
+  const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (pending.current) clearTimeout(pending.current);
+  }, []);
   const run = (item: ThreadMenuItem) => {
     onClose();
-    setTimeout(item.onPress, AFTER_MENU_MS);
+    pending.current = setTimeout(item.onPress, AFTER_MENU_MS);
   };
   return (
     <MenuSheet open={open} label={t.inbox.chatMenu} testID="thread-menu" onClose={onClose}>

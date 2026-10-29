@@ -21,7 +21,7 @@ const statusChip = (status: string) =>
 /**
  * A thread row's tags, like the web inbox row: a lead's status chip, else who the number is
  * («ولي أمر», «معلم/ة»); then the family's package tags; then where the lead came from. ListRow's
- * tags line wraps them. `money` false (the sales tree, docs/16): never «مش مدفوع», whatever the payload says.
+ * tags line wraps them. `money` false (the sales tree, docs/16): never «غير مدفوع», whatever the payload says.
  */
 export function ThreadTags({ thread: th, money = true }: { thread: ThreadView; money?: boolean }) {
   const { color } = useTheme();

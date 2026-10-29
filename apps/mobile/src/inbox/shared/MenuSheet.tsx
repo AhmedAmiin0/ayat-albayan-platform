@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 
@@ -14,23 +14,24 @@ interface MenuSheetProps {
 
 /**
  * The chat's bottom menus (a bubble's long press, the header's «⋮»): a sheet over a scrim that a tap
- * outside closes («إلغاء» to a screen reader), its rows 8pt apart.
+ * outside closes («إلغاء» to a screen reader, after the sheet's rows), its rows 8pt apart.
  */
 export function MenuSheet({ open, label, testID, onClose, children }: MenuSheetProps) {
   const { color } = useTheme();
   return (
     <Modal visible={open} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t.common.cancel}
-        onPress={onClose}
-        style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color.scrim }}
-      >
-        {/* A tap on the sheet itself does not close it. */}
+      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+        {/* A sibling, not a parent: VoiceOver reaches each row instead of one «إلغاء» over the sheet. */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t.common.cancel}
+          onPress={onClose}
+          style={[StyleSheet.absoluteFill, { backgroundColor: color.scrim }]}
+        />
         <View
           testID={testID}
           accessibilityLabel={label}
-          onStartShouldSetResponder={() => true}
+          accessibilityViewIsModal
           style={{
             gap: 8,
             padding: 16,
@@ -42,7 +43,7 @@ export function MenuSheet({ open, label, testID, onClose, children }: MenuSheetP
         >
           {children}
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 }

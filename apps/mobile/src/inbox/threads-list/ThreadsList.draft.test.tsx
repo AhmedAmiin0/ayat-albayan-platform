@@ -46,7 +46,7 @@ test('the draft survives leaving the chat: the row reads «مسوّدة:» in th
   await typeAndLeave(`${DRAFT}\nهو`);
   await renderWithQuery(<ThreadsList />);
   await screen.findByText(NAME);
-  const word = row().getByText(t.inbox.draft);
+  const word = row().getByText(t.inbox.draft, { includeHiddenElements: true }); // the label reads it once
   expect(StyleSheet.flatten(word.props.style)).toMatchObject({ color: palette.light.act });
   expect(row().getByText(`${DRAFT} هو`)).toBeTruthy(); // one line
   expect(row().getByLabelText(`${t.inbox.draft} ${DRAFT} هو`)).toBeTruthy();

@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { chatWindowOpen, ErrorLine, setComposerText } from '@/inbox';
+import { appendComposerText, chatWindowOpen, ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { instantDay } from '@/payments';
 import { fill } from '@/sales';
@@ -39,7 +39,8 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
       setClosed(true);
       return;
     }
-    setComposerText(phone, linkMessage(link));
+    // After a reply she had half-written (drafts outlive the chat), never over it.
+    appendComposerText(phone, linkMessage(link));
     onSent();
   };
   return (

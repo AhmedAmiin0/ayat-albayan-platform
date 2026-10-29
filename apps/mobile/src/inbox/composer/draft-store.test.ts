@@ -1,5 +1,13 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { clearComposerDrafts, getComposerText, setComposerText, useComposerDraft, useComposerText } from './draft-store';
+import {
+  appendComposerText,
+  clearComposerDrafts,
+  getComposerText,
+  setComposerText,
+  useComposerDraft,
+  useComposerText,
+  useForgetDraftOnLeave,
+} from './draft-store';
 
 const A = '+966501234567';
 const B = '+971501234567';
@@ -40,5 +48,25 @@ describe('composer draft store («عرض سعر» fills the box; drafts kept unt
     await act(() => clearComposerDrafts());
     expect(row.result.current).toBe('');
     expect(getComposerText(B)).toBe('');
+  });
+
+  it('another screen appends after her draft, never over it', () => {
+    appendComposerText(A, 'link');
+    expect(getComposerText(A)).toBe('link');
+    setComposerText(A, 'half ');
+    appendComposerText(A, 'link');
+    expect(getComposerText(A)).toBe('half\nlink');
+  });
+
+  it('leaving with a saved reply’s file staged forgets the text; without one it stays', async () => {
+    setComposerText(A, 'with file');
+    const bound = await renderHook(({ on }: { on: boolean }) => useForgetDraftOnLeave(A, on), { initialProps: { on: false } });
+    await bound.rerender({ on: true });
+    await bound.unmount();
+    expect(getComposerText(A)).toBe('');
+    setComposerText(B, 'plain');
+    const free = await renderHook(() => useForgetDraftOnLeave(B, false));
+    await free.unmount();
+    expect(getComposerText(B)).toBe('plain');
   });
 });

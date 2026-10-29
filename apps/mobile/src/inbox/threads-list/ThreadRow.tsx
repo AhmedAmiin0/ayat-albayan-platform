@@ -29,7 +29,11 @@ function ticksWord(th: ThreadView): string | undefined {
 function DraftWord() {
   const { color } = useTheme();
   return (
-    <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
+    // Hidden from the reader: the row's subtitleLabel already starts with «مسوّدة:».
+    <AppText
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
       {t.inbox.draft}
     </AppText>
   );
@@ -54,7 +58,7 @@ interface ThreadRowProps {
   teacher: boolean;
   /** Staff trees (admin and sales): the lead status + source chips. */
   tags: boolean;
-  /** The admin's own tree: «مش مدفوع» too (never in the sales tree, docs/16). */
+  /** The admin's own tree: «غير مدفوع» too (never in the sales tree, docs/16). */
   money: boolean;
   /** Stable (useCallback): opens the thread by its phone. */
   onOpen: (phone: string) => void;

@@ -82,6 +82,16 @@ test('nothing waiting: its own empty title', async () => {
   expect(screen.getByText(t.inbox.emptyWaiting)).toBeTruthy();
 });
 
+test('nothing waiting on the first page: it pages on by itself until a waiting chat shows', async () => {
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p.includes('page=2') ? { ...page([old]), page: 2, total: 26 } : { ...page([answered]), total: 26 },
+  );
+  await openSales();
+  await fireEvent.press(chips().getByRole('tab', { name: t.inbox.filterWaiting }));
+  expect(await screen.findByText(old.display_name ?? '')).toBeTruthy();
+  expect(screen.queryByText(t.inbox.emptyWaiting)).toBeNull();
+});
+
 test('a stage chip asks GET /threads?status= (the sales scope reads every lead) and is selected', async () => {
   await openSales();
   await fireEvent.press(chips().getByRole('tab', { name: t.enums.leadStatus.trial_booked }));

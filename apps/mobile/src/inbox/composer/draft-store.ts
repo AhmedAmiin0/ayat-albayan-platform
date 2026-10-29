@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 
 // The reply box's unsent text per chat (owner 2026-10-26 «عرض سعر»): lifted out of Composer so the
 // quote sheet's «عدّل قبل الإرسال» can fill it. Kept when she leaves the chat, as WhatsApp's draft
@@ -16,6 +16,12 @@ export function setComposerText(phone: string, text: string): void {
   if (text) drafts.set(phone, text);
   else drafts.delete(phone);
   listeners.forEach((l) => l());
+}
+
+/** Another screen's text after her unsent draft, a new line between (never overwrites what she typed). */
+export function appendComposerText(phone: string, text: string): void {
+  const now = getComposerText(phone).trim();
+  setComposerText(phone, now ? `${now}\n${text}` : text);
 }
 
 /** A sign-out (the gate is out): nobody else on this phone reads the last user's half-written replies. */
@@ -45,4 +51,21 @@ export function useComposerText(phone: string): [string, (next: Next) => void] {
     [phone],
   );
   return [text, set];
+}
+
+/**
+ * Leaving the chat while `bound` (a saved reply's file waits in its chip): the text goes too, as before
+ * drafts were kept, so it never comes back to be sent without the file it was picked with.
+ */
+export function useForgetDraftOnLeave(phone: string, bound: boolean): void {
+  const now = useRef(bound);
+  useEffect(() => {
+    now.current = bound;
+  }, [bound]);
+  useEffect(
+    () => () => {
+      if (now.current) setComposerText(phone, '');
+    },
+    [phone],
+  );
 }
