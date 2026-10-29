@@ -16,7 +16,11 @@ let bell: NotificationItem[] = [];
 
 function serve(rows = [myCommission()], over: { wallet?: object; total?: number } = {}) {
   mockApiFetch.mockImplementation((path: string) => {
-    if (path.startsWith('/sales/me/commissions')) return Promise.resolve(commissionPage(rows, over.total));
+    if (path.startsWith('/sales/me/commissions')) {
+      // Each page answers as itself, so the list knows when it has them all.
+      const page = Number(/page=(\d+)/.exec(path)?.[1] ?? 1);
+      return Promise.resolve(commissionPage(page === 1 ? rows : [], over.total ?? rows.length, page));
+    }
     if (path.startsWith('/me/notifications')) return Promise.resolve({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 });
     return Promise.resolve(earnings(over.wallet ? { wallet: over.wallet as never } : {}));
   });
@@ -72,8 +76,8 @@ test('a voided entry: «ملغاة», no sign, and why: the system reason, or «
   expect(screen.queryByText(/\+50/)).toBeNull();
 });
 
-test('the end of the list asks for page 2', async () => {
-  serve(Array.from({ length: 20 }, (_, i) => myCommission({ id: `c${i}` })), { total: 25 });
+test('the end of the list asks for page 2 (25 in all, 20 a page)', async () => {
+  serve([myCommission(), myCommission({ id: 'c2' })], { total: 25 });
   await renderWithQuery(<MyWalletView />);
   await screen.findAllByText(/AB-1022/);
   const nativeEvent = { contentOffset: { x: 0, y: 2000 }, contentSize: { width: 400, height: 2300 }, layoutMeasurement: { width: 400, height: 900 } };
