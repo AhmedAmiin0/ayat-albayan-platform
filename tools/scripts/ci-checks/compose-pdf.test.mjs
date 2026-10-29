@@ -31,7 +31,7 @@ test('nothing worth stealing: no env_file, no secret, no network, no port', () =
   assert.equal(pdf.ports, undefined);
 });
 
-test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tmp, few pids', () => {
+test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tmp, few pids, tini, a small log', () => {
   assert.equal(pdf.read_only, true);
   assert.deepEqual(pdf.cap_drop, ['ALL']);
   assert.equal(pdf.cap_add, undefined);
@@ -42,10 +42,18 @@ test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tm
   const { cpus, pids } = pdf.deploy.resources.limits;
   assert.ok(cpus && pids > 0 && pids <= 64);
   assert.equal(pdf.restart, 'unless-stopped');
+  // tini as PID 1 reaps orphans: zombies never eat the pids (node reaps only its own children).
+  assert.equal(pdf.init, true);
+  // Its own stdout is writable from inside: rotated, small.
+  assert.deepEqual(pdf.logging, { driver: 'json-file', options: { 'max-size': '1m', 'max-file': '2' } });
 });
 
-test('the socket volume: only ayat-pdf and the two API copies (read-only there), never the worker', () => {
-  assert.ok('pdf-sock' in compose.volumes);
+test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the two API copies (read-only there), never the worker', () => {
+  // Never on the host disk the CRM shares: the one path ayat-pdf can write besides its /tmp, bounded.
+  assert.deepEqual(compose.volumes['pdf-sock'], {
+    driver: 'local',
+    driver_opts: { type: 'tmpfs', device: 'tmpfs', o: 'size=64k,uid=1000,gid=1000,mode=0700' },
+  });
   const mounting = Object.entries(services)
     .filter(([, s]) => (s.volumes ?? []).some((v) => String(v).startsWith('pdf-sock:')))
     .map(([n]) => n)
@@ -53,14 +61,16 @@ test('the socket volume: only ayat-pdf and the two API copies (read-only there),
   assert.deepEqual(mounting, ['ayat-api-a', 'ayat-api-b', 'ayat-pdf']);
   assert.deepEqual(pdf.volumes, [SOCK]);
   for (const name of ['ayat-api-a', 'ayat-api-b']) assert.ok(services[name].volumes.includes(`${SOCK}:ro`), name);
-  assert.match(dockerfile, /install -d -o node -g node -m 0700 \/run\/pdf/, 'a fresh volume is node-owned');
+  assert.match(dockerfile, /install -d -o node -g node -m 0700 \/run\/pdf/, 'the mount point, node-owned like the tmpfs');
+  assert.match(dockerfile, /^FROM node:[\d.]+-slim$/m, 'the official node image: node is uid 1000 (the tmpfs uid)');
 });
 
-test('healthy once it listens (the roll waits for it), rolled before the copies, stopped by the old-layout rollback', () => {
+test('healthy once it listens, rolled before the copies but never gating them, stopped by the old-layout rollback', () => {
   assert.deepEqual(pdf.healthcheck.test, ['CMD', 'test', '-S', '/run/pdf/pdf.sock']);
   for (const branch of roll.split(/\nelse\n/)) {
     const at = (s) => branch.indexOf(s);
     assert.ok(at('roll ayat-pdf') >= 0 && at('roll ayat-pdf') < at('roll ayat-api-a'), branch.slice(0, 80));
+    assert.match(branch, /\n {2}roll ayat-pdf \|\| echo '::warning::ayat-pdf not healthy/, branch.slice(0, 80));
   }
   assert.match(rollback, /stop ayat-api-a ayat-api-b ayat-pdf/);
 });

@@ -31,6 +31,15 @@ test('a normal roll: one build, worker → pdf sandbox → api-a → api-b (each
   assert.ok(r.text('.lb.sha256'));
 });
 
+test('a PDF sandbox that never gets healthy only warns: api-a, api-b and the LB still roll, the deploy succeeds', () => {
+  const r = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], fail: ['up -d --no-deps ayat-pdf'] });
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable/);
+  const idx = ['up -d --no-deps ayat-pdf', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-b', 'up -d --no-deps ayat-lb', 'curl']
+    .map((o) => at(r.log, o));
+  assert.ok(idx.every((i, n) => i >= 0 && (n === 0 || i > idx[n - 1])), `order: ${r.log.join('\n')}`);
+});
+
 test('first switch: LB pulled and Caddyfile validated, copies up, then `stop <legacy>` BEFORE the worker starts', () => {
   const r = run('roll.sh', { up: ['ayat-api'] });
   assert.equal(r.code, 0, r.out);

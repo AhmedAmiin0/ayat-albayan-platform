@@ -2,10 +2,17 @@
 # /opt/ayat-albayan-staging. Only ayat-lb is published, on localhost: the host Caddy (not in this repo,
 # shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
-# Memory (8 GB VPS shared with the CRM): 2 × 480 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
-# PDF sandbox + 64 MB LB + 96 MB Redis = 2272 MB ≈ 2.2 GB. After a deploy, measure the worker's RSS during a report
-# PDF and ayat-pdf's during a scanned chat PDF (docker stats) and adjust.
+# Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
+# PDF sandbox + 64 MB LB + 96 MB Redis = 2336 MB ≈ 2.3 GB. After a deploy, measure (docker stats) the worker's RSS
+# during a report PDF, and ayat-pdf's and an API copy's while a scanned 10 MB chat PDF previews, and adjust.
 name: ayat-albayan-staging
+
+# Every container's log rotates here, not in the daemon (shared with the CRM): never the whole disk.
+x-log: &log
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
 
 x-app: &app
   # One image per deploy (built by ayat-worker's build:), reused by every app service. Never pulled:
@@ -14,6 +21,7 @@ x-app: &app
   pull_policy: never
   env_file: .env
   restart: unless-stopped
+  logging: *log
   # SIGTERM: Fastify stops taking connections and finishes the requests in flight (main.ts).
   stop_grace_period: 30s
   healthcheck:
@@ -61,7 +69,6 @@ services:
           # 512 MB heap + Chromium's own processes (outside the heap): 768 MB left Chromium too little.
           memory: 1024M
 
-  # 480M, not 512M: poppler (chat PDF previews) left these copies for ayat-pdf, which took the 2 × 32M.
   ayat-api-a:
     <<: *app
     environment:
@@ -73,7 +80,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 480M
+          memory: 512M
 
   ayat-api-b:
     <<: *app
@@ -85,18 +92,21 @@ services:
     deploy:
       resources:
         limits:
-          memory: 480M
+          memory: 512M
 
   # Chat PDF previews (docs/09 «PDF sandbox»): pdfinfo / pdftoppm parse a stranger's bytes HERE, never in an
   # API copy. Same image (poppler-utils), its own command, and nothing worth stealing: no env_file (no
   # secret), no network at all, a read-only root, no capabilities, no setuid. The API copies reach it only
   # through the unix socket /run/pdf/pdf.sock on the pdf-sock volume (read-only on their side). Not `<<: *app`:
-  # that anchor carries env_file. Its node runs as PID 1 and handles SIGTERM (finishes the render in flight).
+  # that anchor carries env_file.
   ayat-pdf:
     image: ayat-api:staging
     pull_policy: never
     command: ["node", "dist/modules/messaging/inbox/files/pdf/pdf-sandbox.js"]
     user: node
+    # tini as PID 1: reaps any orphan (a zombie would hold one of the 64 pids for good) and forwards SIGTERM to
+    # node, which finishes the render in flight.
+    init: true
     environment:
       NODE_ENV: production
       # Node's own heap stays small: the container's memory is for poppler (the OOM killer's first pick, choom).
@@ -112,6 +122,12 @@ services:
       - pdf-sock:/run/pdf
     restart: unless-stopped
     stop_grace_period: 30s
+    # Smaller than the others: whatever runs as node here can write to its own stdout.
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "2"
     # The socket exists only once this run listens (a stale one is removed first): no second node in 128 MB.
     healthcheck:
       test: ["CMD", "test", "-S", "/run/pdf/pdf.sock"]
@@ -138,6 +154,7 @@ services:
       # The directory, not the file: roll.sh rewrites lb/Caddyfile in place and reloads.
       - ./lb:/etc/caddy:ro
     restart: unless-stopped
+    logging: *log
     deploy:
       resources:
         limits:
@@ -149,6 +166,7 @@ services:
     image: redis:7-alpine
     command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
     restart: unless-stopped
+    logging: *log
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -160,5 +178,11 @@ services:
           memory: 96M
 
 volumes:
-  # The PDF sandbox's socket only (no data): node-owned on first use, from /run/pdf in the image (apps/api/Dockerfile).
+  # The PDF sandbox's socket only (no data). tmpfs, 64 KB: the one path ayat-pdf can write that is not its own
+  # /tmp can never fill the disk the CRM shares; owned by node (uid 1000, apps/api/Dockerfile), owner only.
   pdf-sock:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=64k,uid=1000,gid=1000,mode=0700"

@@ -1,5 +1,6 @@
 // A scratch /opt/ayat-albayan-staging for roll.test.mjs: deploy/staging's scripts with a fake `docker` and `curl`
-// that log every call and succeed (a container is «up» once `up -d` named it; `inspect` reports healthy).
+// (and a `sleep` that returns at once) that log every call and succeed (a container is «up» once `up -d` named it;
+// `inspect` reports healthy).
 import { execFileSync } from 'node:child_process';
 import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -49,7 +50,9 @@ export function run(script, { args = [], up = [], files = {}, fail = [], roles =
     for (const s of up) writeFileSync(join(fake, `up-${s}`), '');
     writeFileSync(join(fake, 'bin/docker'), DOCKER);
     writeFileSync(join(fake, 'bin/curl'), '#!/bin/sh\necho "curl $*" >> "$FAKE/log"\n');
-    for (const b of ['docker', 'curl']) chmodSync(join(fake, 'bin', b), 0o755);
+    // healthy()'s 90 waits of 2 s, at once: a container that never gets healthy fails in a moment, not 3 minutes.
+    writeFileSync(join(fake, 'bin/sleep'), '#!/bin/sh\n');
+    for (const b of ['docker', 'curl', 'sleep']) chmodSync(join(fake, 'bin', b), 0o755);
     const env = { ...process.env, FAKE: fake, FAKE_FAIL: fail.join('\n'), PATH: `${join(fake, 'bin')}:${process.env.PATH}` };
     let out = '';
     let code = 0;

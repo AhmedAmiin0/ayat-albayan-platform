@@ -33,8 +33,7 @@ stop() {
 
 if grep -q '^  ayat-lb:' docker-compose.yml; then
   # The previous layout was this one: roll it again (roll.sh refuses code from before APP_ROLE). A previous
-  # compose file without ayat-pdf: its roll.sh removes that container as an orphan (the copies of then render
-  # in their own process).
+  # compose file without ayat-pdf had no chat PDF previews: its roll.sh removes that container as an orphan.
   sh roll.sh
 else
   # The previous layout was the single ayat-api container (every job + 3110). Build first (the new copies keep

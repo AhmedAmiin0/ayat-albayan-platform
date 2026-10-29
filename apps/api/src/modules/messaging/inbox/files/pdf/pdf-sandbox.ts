@@ -8,7 +8,7 @@ import { serve } from './pdf-sandbox.handler';
 serve().then(
   (server) => {
     process.stdout.write('pdf sandbox listening\n');
-    // PID 1 ignores SIGTERM unless handled: finish the render in flight (≤ 20 s, inside the 30 s grace), then exit.
+    // SIGTERM (forwarded by tini, init: true): finish the render in flight (≤ 20 s, inside the 30 s grace), then exit.
     process.once('SIGTERM', () => server.close(() => process.exit(0)));
   },
   (e: unknown) => {
