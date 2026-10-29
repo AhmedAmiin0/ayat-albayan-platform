@@ -62,21 +62,31 @@ test.each([
   await open(family(c.kids));
   expect(await screen.findByText(c.word)).toBeTruthy();
   expect(screen.getByTestId(c.chip)).toBeTruthy();
-  expect(screen.getByRole('button', { name: c.button })).toBeTruthy();
+  // One child: the short pill shows the kind, its spoken name says who.
+  expect(screen.getByRole('button', { name: `${c.button} — يوسف` })).toBeTruthy();
 });
 
-test('each child like the web: name, «غير مدفوع» while money is owed, the package, then «عليه X» on its own line', async () => {
+test('a family is ONE folded row (the messages get the room); a tap opens a line per package and one «بلا باقة»', async () => {
   const paid = child({
     id: 'c2',
     name: 'سارة',
     subscription: sub({ due_amount: 0, lessons_used: 2 }),
   });
-  await open(family([child(), paid]));
-  expect(await screen.findByText('يوسف')).toBeTruthy();
+  await open(family([child(), paid, child({ id: 'c3', name: 'علي', subscription: null })]));
+  expect(await screen.findByText(s.subscribedOf.replace('{n}', '2').replace('{total}', '3'))).toBeTruthy();
+  // Folded: what needs the admin stays in sight, the rows do not.
+  expect(screen.getAllByText(t.enums.subscriptionStatus.unpaid)).toHaveLength(1);
+  expect(screen.queryByText('سارة')).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: new RegExp(`^${s.showStudents} — `), expanded: false }));
+  expect(screen.getByText('يوسف')).toBeTruthy();
   expect(screen.getAllByText(t.enums.subscriptionStatus.unpaid)).toHaveLength(1);
   expect(screen.getByText(`${t.enums.packageSize['8']} · بقيت حلقتان`)).toBeTruthy();
   expect(screen.getByText(s.due.replace('{amount}', money(120, 'SAR')))).toBeTruthy();
   expect(screen.getByText(`${t.enums.packageSize['8']} · بقيت 6 حلقات`)).toBeTruthy();
+  expect(screen.getByText(s.noPackage.replace('{names}', 'علي'))).toBeTruthy();
+  expect(screen.queryByText(t.subscriptions.empty)).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: new RegExp(`^${s.hideStudents} — `), expanded: true }));
+  expect(screen.queryByText('سارة')).toBeNull();
 });
 
 test('guardian: «جدّد الاشتراك — يوسف» names the child whose package ended and opens the renewal', async () => {
