@@ -1,4 +1,4 @@
-import { cancelOffered, type SalesPaymentView } from '@ab/shared';
+import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
@@ -34,6 +34,8 @@ export function SalesTransferScreen() {
   const [picked, setPicked] = useState(params.subscriptionId);
   const [done, setDone] = useState<SalesPaymentView | null>(null);
   const sub = chosenOpen(open, picked);
+  // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
+  const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   return (
@@ -59,14 +61,14 @@ export function SalesTransferScreen() {
         ) : (
           <>
             <OpenPackagePicker packages={open} value={sub} onChange={setPicked} />
-            {sub && cancelOffered(sub) ? (
+            {sub && cancelOffered(sub) && !bind.phone ? (
               <CancelPackage
                 key={`cancel-${sub.id}`}
                 cancel={(body) => apiSend('POST', `/sales/subscriptions/${sub.id}/cancel`, body)}
                 stale={[familyKey(phone)]}
               />
             ) : null}
-            {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} onDone={setDone} /> : null}
+            {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} /> : null}
           </>
         )}
       </ScrollView>

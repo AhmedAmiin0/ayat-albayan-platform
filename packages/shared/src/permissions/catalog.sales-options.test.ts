@@ -76,3 +76,18 @@ describe('courses.pause', () => {
     }
   });
 });
+
+// Owner 2026-10-29 (docs/16 row 38): «تجديد اشتراك أي طالب من المحادثة», narrow, never a sales default.
+describe('sales.renew_any', () => {
+  it('is grantable, held by the admin only by default (never sales, a teacher, an assistant or the portal)', () => {
+    expect(isGrantable('sales.renew_any')).toBe(true);
+    expect(systemPermissionsOf('admin')).toContain('sales.renew_any');
+    for (const role of ['sales', 'teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('sales.renew_any');
+  });
+
+  it('has a label and a hint in Arabic and English', () => {
+    expect(ar.permissions.items['sales.renew_any']).toBe('تجديد اشتراك أي طالب من المحادثة');
+    for (const dict of [ar, en]) expect((dict.permissions.hints as Record<string, string>)['sales.renew_any']?.trim()).toBeTruthy();
+    expect((en.permissions.items as Record<string, string>)['sales.renew_any']?.trim()).toBeTruthy();
+  });
+});

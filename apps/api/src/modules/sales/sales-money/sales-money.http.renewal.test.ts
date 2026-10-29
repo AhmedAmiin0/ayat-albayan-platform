@@ -37,7 +37,7 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
     expect(m.subs.forStudent).not.toHaveBeenCalledWith(SIBLING);
     expect(student.renew_due).toBe(false);
     expect(student.renewal).toEqual({ pkg: 'premium', count: CUSTOM_COUNT_DEFAULT, duration: 60, discount: 10, country: 'AE' });
-    expect(Object.keys(student)).toEqual(['id', 'code', 'name', 'status', 'open', 'renew_due', 'renewal']);
+    expect(Object.keys(student)).toEqual(['id', 'code', 'name', 'status', 'mine', 'open', 'renew_due', 'renewal']);
   });
 
   it('active at the threshold (settings.renewal_alert_remaining) is due; a higher threshold widens it', async () => {

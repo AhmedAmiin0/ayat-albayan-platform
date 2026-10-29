@@ -7,7 +7,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
-import { useSalesFamily } from '../lib/family';
+import { ownStudents, useSalesFamily } from '../lib/family';
 import { STRIPE_FEATURE } from './flag';
 import { PaymentLinkForm } from './PaymentLinkForm';
 import { useStripeOn } from './use-stripe';
@@ -16,8 +16,8 @@ import { useStripeOn } from './use-stripe';
 function FamilyForm({ phone, onSent }: { phone: string; onSent: () => void }) {
   const family = useSalesFamily(phone);
   if (family.isError) return <ErrorState onRetry={() => void family.refetch()} />;
-  const students = family.data?.students;
-  if (!students) return null;
+  if (!family.data) return null;
+  const students = ownStudents(family.data.students);
   if (students.length === 0) return <EmptyState title={t.salesMoney.noOwnStudents} />;
   return <PaymentLinkForm phone={phone} students={students} onSent={onSent} />;
 }

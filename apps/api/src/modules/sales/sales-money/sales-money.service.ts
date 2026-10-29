@@ -1,11 +1,11 @@
 import {
-  type ReceiptUpload,
   type SalesFamilyView,
   type SalesMoneySubscriptionView,
   type SalesPaymentCreate,
   type SalesPaymentView,
   type SalesQuote,
   type SalesQuoteView,
+  type SalesReceiptUpload,
   type SalesSubscriptionCreate,
   type SignedUpload,
 } from '@ab/shared';
@@ -13,14 +13,14 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { badRequest, conflict } from '../../../common/http/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
-import { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
+import { assertSalesDiscount, renewsAny, SalesMoneyScope } from './sales-money.scope';
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneyReads } from './reads/sales-money.reads';
 import { salesStartsOn } from './sales-start';
 
 /**
  * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one
- * checks the student is hers (403 not_your_student), then REUSES the admin's services with her as the actor
+ * checks the student is hers (403 not_your_student; any of the chat's family with sales.renew_any, row 38), then REUSES the admin's services with her as the actor
  * (SubscriptionCreator: catalog quote, replay, audit, lead conversion; PaymentsService: replay, receipt
  * path, audit, recompute, trial → «مشترك»). It counts at once: no admin confirmation. Whitelisted views.
  * Narrower than the admin (owner 2026-10-12): only the site's discount pills, and the transfer in the package
@@ -35,14 +35,14 @@ export class SalesMoney {
   ) {}
 
   async quote(input: SalesQuote, user: AuthUser): Promise<SalesQuoteView> {
-    await this.scope.assertOwns(user, input.studentId);
+    await this.scope.assertOwns(user, input.studentId, input.phone);
     assertSalesDiscount(input.pricing);
-    return toSalesQuote(await this.services.creator.quote(input));
+    return toSalesQuote(await this.services.creator.quote({ studentId: input.studentId, pricing: input.pricing }));
   }
 
   /** The start day: salesStartsOn (docs/16 row 24). */
   async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
-    await this.scope.assertOwns(user, input.studentId);
+    await this.scope.assertOwns(user, input.studentId, input.phone);
     assertSalesDiscount(input.pricing);
     const startsOn = salesStartsOn(input, user, now);
     const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input; // alreadyStarted is not a column
@@ -58,22 +58,24 @@ export class SalesMoney {
    * package's, uploaded files; the currency must be the package's (400 currency_mismatch; the field stays).
    */
   async pay(input: SalesPaymentCreate, user: AuthUser): Promise<SalesPaymentView> {
+    const { phone, ...payment } = input; // the chat's phone is the scope's, never a payment column
     const sub = await this.services.receipts.subscription(input.subscriptionId);
-    await this.scope.assertOwns(user, sub.student_id);
+    await this.scope.assertOwns(user, sub.student_id, phone);
     if (input.currency !== sub.currency) throw badRequest('currency_mismatch', { currency: sub.currency });
-    const view = await this.services.payments.create({ ...input, kind: 'payment', method: 'bank' }, user.id);
+    const view = await this.services.payments.create({ ...payment, kind: 'payment', method: 'bank' }, user.id);
     if (view.subscription_id !== sub.id) throw conflict('client_request_reused');
     return toSalesPayment(view, await this.reads.studentStatus(sub.student_id));
   }
 
-  async uploadUrl(input: ReceiptUpload, ctx: { user: AuthUser; maxBytes: number }): Promise<SignedUpload> {
+  async uploadUrl(input: SalesReceiptUpload, ctx: { user: AuthUser; maxBytes: number }): Promise<SignedUpload> {
+    const { phone, ...upload } = input;
     const sub = await this.services.receipts.subscription(input.subscriptionId);
-    await this.scope.assertOwns(ctx.user, sub.student_id);
-    return this.services.receipts.uploadUrl(input, ctx.maxBytes);
+    await this.scope.assertOwns(ctx.user, sub.student_id, phone);
+    return this.services.receipts.uploadUrl(upload, ctx.maxBytes);
   }
 
-  /** Her students of this chat's family (none of the family's other children) with the packages still owed. */
+  /** Her students of this chat's family (every child with sales.renew_any) with the packages still owed. */
   async familyOf(phone: string, user: AuthUser): Promise<SalesFamilyView> {
-    return this.reads.familyOf(phone, await this.scope.ownership(user));
+    return this.reads.familyOf(phone, { own: await this.scope.ownership(user), all: renewsAny(user) });
   }
 }

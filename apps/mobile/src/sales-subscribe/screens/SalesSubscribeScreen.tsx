@@ -31,7 +31,8 @@ export function SalesSubscribeScreen() {
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const own = students.find((s) => s.id === params.studentId);
   const renew = params.renew === '1' && !!own;
-  const courseDays = own
+  // «أيام الحلقات» stays hers only: a child listed through sales.renew_any (`mine: false`) gets the package only.
+  const courseDays = own && own.mine !== false
     ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
     : undefined;
   return (

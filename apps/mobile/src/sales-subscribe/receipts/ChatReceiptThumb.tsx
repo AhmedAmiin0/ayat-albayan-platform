@@ -7,9 +7,9 @@ import { useChatReceiptThumb } from './chat-receipts';
 const SIZE = 56;
 
 /** The image's signed thumbnail once it answers; a PDF (or a file not loaded) is a labelled box. */
-export function ChatReceiptThumb({ studentId, item }: { studentId: string; item: SalesChatReceipt }) {
+export function ChatReceiptThumb({ studentId, item, bind }: { studentId: string; item: SalesChatReceipt; bind?: { phone?: string } }) {
   const { color } = useTheme();
-  const file = useChatReceiptThumb(studentId, item);
+  const file = useChatReceiptThumb(studentId, item, bind);
   const box = {
     width: SIZE,
     height: SIZE,

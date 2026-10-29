@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import { useUploadOnce } from '@/features/finance/payments/attachments/attachments';
-import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt } from '../api';
+import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt, type Bind } from '../api';
 import type { ReceiptChoice } from './receipt';
 
 export interface TransferForm {
@@ -19,12 +19,13 @@ export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferFor
 /**
  * The «سجّل التحويل» save (R-ASST-04): one clientRequestId per open step, re-sent on every retry, and each
  * uploaded attachment sent to storage once per file (a chat file is already copied). «المرفقات» are optional
- * (owner 2026-10-12). Never kind / method; the currency is always the package's.
+ * (owner 2026-10-12). Never kind / method; the currency is always the package's. `bind`: the chat's phone for a
+ * child not hers (chatBinding, sales.renew_any); none for hers.
  */
-export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
+export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bind: Bind = {}) {
   const queryClient = useQueryClient();
   const [requestId] = useState(() => crypto.randomUUID());
-  const uploadOnce = useUploadOnce(uploadSalesReceipt);
+  const uploadOnce = useUploadOnce((input) => uploadSalesReceipt({ ...input, bind }));
 
   async function attachmentPaths(sub: SalesMoneySubscriptionView, list: ReceiptChoice[]): Promise<string[]> {
     const paths: string[] = [];
@@ -44,6 +45,7 @@ export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
         attachments: await attachmentPaths(sub, attachments),
         note: form.note.trim() || null,
         clientRequestId: requestId,
+        ...bind,
       });
     },
     onSuccess: async (payment) => {

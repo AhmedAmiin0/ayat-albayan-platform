@@ -57,6 +57,8 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const stripe = useStripeFeature();
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
+  // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money only, the rest stays hers.
+  const own = students.filter((s) => s.mine !== false);
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
   // One shape for the lead and the family alike: booking a lead makes it a family on the next poll,
   // and a moved slot would re-mount the open «تسجيل طالب جديد» (its «تم الحجز» lost, journey 7).
@@ -66,8 +68,8 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {checking && <RegistrationCheckDialog phone={thread.phone_e164} onClose={() => setChecking(false)} />}
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
-      {opened && <SalesMoneyFlow {...opened} students={students} onClose={() => setOpened(null)} />}
-      {linking && <PaymentLinkDialog thread={thread} students={students} onClose={() => setLinking(false)} />}
+      {opened && <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} onClose={() => setOpened(null)} />}
+      {linking && <PaymentLinkDialog thread={thread} students={own} onClose={() => setLinking(false)} />}
     </>
   );
   if (students.length === 0) {
@@ -90,10 +92,10 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
     ...checkItem,
     ...(due.length > 0 ? [item('subscribe', t.salesMoney.newSubscription, subscribe)] : []),
     ...(students.some((s) => s.open.length > 0) ? [item('transfer', t.salesMoney.recordTransfer, () => setOpened({ start: 'transfer' }))] : []),
-    ...(stripe ? [item('payment-link', t.paymentLinks.action, () => setLinking(true))] : []),
-    ...students.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
+    ...(stripe && own.length > 0 ? [item('payment-link', t.paymentLinks.action, () => setLinking(true))] : []),
+    ...own.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
     // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
-    ...students
+    ...own
       .filter((s) => canPickTrialDate(s.status))
       .map((s) => item(`trial-${s.id}`, named(t.trialDate.action, s.name), () => setTrialFor({ id: s.id, name: s.name, code: s.code }))),
   ];

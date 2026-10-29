@@ -17,6 +17,8 @@ import { useSalesPayment } from '../hooks/use-sales-payment';
 interface TransferFormProps {
   sub: SalesMoneySubscriptionView;
   phone: string;
+  /** The chat's phone for a child not hers (chatBinding, sales.renew_any); none for hers. */
+  bind?: { phone?: string };
   onDone: (payment: SalesPaymentView) => void;
 }
 
@@ -24,9 +26,9 @@ interface TransferFormProps {
  * The bank transfer for one package: «المرفقات» (optional, up to 5), amount (the due, prefilled) in the
  * package currency (shown, never asked), day, note. Errors show once a save was tried; a refused save keeps everything entered.
  */
-export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
+export function TransferForm({ sub, phone, bind = {}, onDone }: TransferFormProps) {
   const now = useNow();
-  const pay = useSalesPayment(phone);
+  const pay = useSalesPayment(phone, bind);
   const [draft, setDraft] = useState(() => draftFor(sub));
   const [tried, setTried] = useState(false);
   const check = checkTransfer(draft, { sub, now });
@@ -41,7 +43,7 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
   return (
     <View style={{ gap: 20 }}>
       <SalesReceiptField
-        target={{ studentId: sub.student.id, subscriptionId: sub.id }}
+        target={{ studentId: sub.student.id, subscriptionId: sub.id, bind }}
         value={draft.attachments}
         onChange={(attachments) => set({ attachments })}
       />
