@@ -1,7 +1,7 @@
-import { chatDay, chatDayKey, dayParts, intlLocale } from '@ab/shared';
+import { chatDay, chatDayKey, type ClockCycle, dayParts, intlLocale } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { deviceTimeZone } from '../hooks/message-text';
+import { clock, deviceTimeZone } from '../hooks/message-text';
 
 // The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within
 // the last 6 days, else «29 سبتمبر» (and the year when it is not this year). The device's zone, as
@@ -25,6 +25,12 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
   // The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone.
   const at = new Date(Date.UTC(day.year ?? dayParts(now, tz).year, day.month - 1, day.day, 12));
   return (day.year === null ? dayMonth : dayMonthYear).format(at);
+}
+
+/** A chat row's time, as WhatsApp's chat list: the clock today, else the day's words (dayLabel); '' without a valid time. */
+export function rowTime(iso: string | null | undefined, cycle: ClockCycle, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return '';
+  return chatDay(new Date(iso), { now, tz }).kind === 'today' ? clock(iso, cycle, tz) : dayLabel(iso, { now, tz });
 }
 
 /**
