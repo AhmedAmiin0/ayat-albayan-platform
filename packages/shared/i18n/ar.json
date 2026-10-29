@@ -2670,7 +2670,7 @@
       "notFound": "تعذر فتح الحلقة، فقد تغيّر موعدها أو أُلغيت. حدّث المحادثة وحاول مرة أخرى."
     },
     "composer": {
-      "placeholder": "اكتب رسالة…",
+      "placeholder": "رسالة",
       "placeholderDesktop": "اكتب رسالة — Enter للإرسال، Shift+Enter لسطر جديد",
       "send": "أرسل",
       "sending": "جارٍ الإرسال…",

@@ -49,7 +49,7 @@ export function PillContents(p: PillProps) {
   const box = <ComposerInput value={p.text} onChange={p.onText} onBlur={p.onLeave} inputRef={input} onSelection={(s) => (sel.current = s)} />;
   const sheet = <EmojiSheet visible={emoji} onPick={pick} onClose={close} />;
   const smile = (
-    <IconButton label={t.inbox.composer.emoji} onPress={() => setEmoji(true)}>
+    <IconButton label={t.inbox.composer.emoji} onPress={() => setEmoji(true)} compact>
       <EmojiIcon color={color.ink3} />
     </IconButton>
   );
@@ -58,7 +58,7 @@ export function PillContents(p: PillProps) {
       <>
         {smile}
         {box}
-        {p.onQuote ? <QuoteButton onPress={p.onQuote} /> : null}
+        {p.onQuote ? <QuoteButton onPress={p.onQuote} compact /> : null}
         <AttachFile
           phone={p.phone}
           onError={p.onFileError}

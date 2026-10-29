@@ -2670,7 +2670,7 @@
       "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
-      "placeholder": "Type a message…",
+      "placeholder": "Message",
       "placeholderDesktop": "Type a message — Enter to send, Shift+Enter for a new line",
       "send": "Send",
       "sending": "Sending…",

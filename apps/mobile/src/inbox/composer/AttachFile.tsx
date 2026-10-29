@@ -35,11 +35,11 @@ export function AttachFile({ phone, onError, camera = false, ...actions }: Attac
   if (teacher) return null;
   return (
     <>
-      <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)}>
+      <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)} compact>
         <AttachIcon color={color.lapis} />
       </IconButton>
       {camera ? (
-        <IconButton label={t.inbox.composer.camera} disabled={pending} onPress={() => void pick('camera')}>
+        <IconButton label={t.inbox.composer.camera} disabled={pending} onPress={() => void pick('camera')} compact>
           <CameraIcon color={color.lapis} />
         </IconButton>
       ) : null}
