@@ -17,24 +17,18 @@ export const LINE = {
 /** About four rows: a big family scrolls inside the panel, the messages keep the screen. */
 const LIST_MAX_HEIGHT = 124;
 
-interface ChildLinesProps {
-  student: ThreadStudentView;
-  /** An only child: the chat is the family's, its name is in the title sheet. */
-  named?: boolean;
-}
-
 /**
  * One child as the web panel, display only (the title opens the child's file): «يوسف [غير مدفوع]
  * 8 حلقات في الشهر · بقيت حلقتان عليه 145 ر.س», wrapping onto a second line on a narrow phone.
  */
-export function ChildLines({ student, named = true }: ChildLinesProps) {
+export function ChildLines({ student }: { student: ThreadStudentView }) {
   const { color } = useTheme();
   const sub = student.subscription;
   const chip = childChip(sub);
   const due = dueLine(sub);
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 2, flexShrink: 1 }}>
-      {named ? <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.ink }}>{student.name}</AppText> : null}
+      <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.ink }}>{student.name}</AppText>
       {chip ? <StatusChip {...chip} size="sm" /> : null}
       <AppText numberOfLines={2} style={{ ...LINE, flexShrink: 1, color: color.ink2 }}>
         {packageText(sub)}

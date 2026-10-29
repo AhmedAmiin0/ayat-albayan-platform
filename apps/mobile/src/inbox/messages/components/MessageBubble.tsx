@@ -11,8 +11,8 @@ import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { bubbleSide } from '../hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
-import { MessageMeta, useSmall } from './MessageMeta';
-import { errorLine, mediaLine, templateLine } from '../hooks/message-text';
+import { FailReason, MessageMeta, useSmall } from './MessageMeta';
+import { mediaLine, templateLine } from '../hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
 import { LinkedText } from '../text/LinkedText';
@@ -59,7 +59,7 @@ export interface MessageBubbleProps {
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API; links in the text open (LinkedText). Ours say who sent them
  * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
- * outboundNotes); retry / sent-by-hand stay the admin's, behind a tap on «! لم تُرسل» as WhatsApp (FailedSheet, R-MSG-05).
+ * outboundNotes); retry / sent-by-hand stay the admin's, behind a tap on «! لم تُرسل» or the reason, as WhatsApp (FailedSheet, R-MSG-05).
  */
 export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
   const { color } = useTheme();
@@ -115,12 +115,13 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
       </TemplateFrame>
       {/* What a quick reply did, or «تأكيد الحلقة» / «تغيير الموعد» for its lesson (owner 2026-10-28). */}
       <ReplyNoteLine message={m} />
+      {/* A held hand-off's «!» too, on purpose: its sheet reopens WhatsApp if the admin left before sending. */}
       <MessageMeta message={m} onTicksPress={stuck ? () => openFailed(m) : undefined} />
       {/* Right under the time, as WhatsApp; a failed send's reason (and «هل أرسلتها؟») below them. */}
       {m.template ? (
         <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || asking ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />
       ) : null}
-      {why ? <AppText numberOfLines={2} style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
+      {why ? <FailReason message={m} onPress={stuck ? () => openFailed(m) : undefined} /> : null}
       {asking ? <MessageActions message={m} phone={phone} /> : null}
     </>
   );

@@ -23,6 +23,8 @@ jest.mock('expo-router', () => ({
 }));
 
 const word = t.enums.messageStatus;
+/** A queued row the API gave a wa.me link: its clock is a button that says what it offers. */
+const parkedClock = `${word.queued} — ${t.messages.clickToChat}`;
 
 async function open(rows = [inbound, delivered, failed]) {
   mockApiFetch.mockResolvedValue(detail(rows));
@@ -46,9 +48,12 @@ test('a failed reminder: template name, «لم تُرسل», why in words, and n
   await open();
   expect(screen.getByText(t.inbox.templateLine.replace('{name}', t.templates.names.lesson_reminder_plain))).toBeTruthy();
   expect(screen.getByText(word.failed)).toBeTruthy();
-  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
+  const why = t.messages.errorLine.replace('{reason}', t.messages.errors['131049']);
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
+  // The reason is a way into the same sheet, a wider target than the «!».
+  await fireEvent.press(screen.getByRole('button', { name: why }));
+  expect(within(screen.getByTestId('failed-sheet')).getByRole('button', { name: t.messages.retry })).toBeTruthy();
 });
 
 test('no «حاول مرة أخرى» where it cannot help (not on WhatsApp): the sheet offers sending it by hand', async () => {
@@ -66,7 +71,7 @@ test('«حاول مرة أخرى» puts it back in the queue and the row says so
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, retried]));
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.retry }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
-  expect(await screen.findByLabelText(ticksLabel(word.queued))).toBeTruthy();
+  expect(await screen.findByRole('button', { name: parkedClock })).toBeTruthy();
   expect(screen.queryByText(word.failed)).toBeNull();
 });
 
@@ -120,7 +125,7 @@ test('queued with sending off: a tap on the clock offers sending by hand, no ret
   await open([inbound, parked, later]);
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   // Only the parked row's clock is a button (the later one has no wa.me link): getBy finds exactly one.
-  await fireEvent.press(screen.getByRole('button', { name: ticksLabel(word.queued) }));
+  await fireEvent.press(screen.getByRole('button', { name: parkedClock }));
   const sheet = within(screen.getByTestId('failed-sheet'));
   expect(sheet.getByRole('button', { name: t.messages.clickToChat })).toBeTruthy();
   expect(sheet.queryByRole('button', { name: t.messages.retry })).toBeNull();

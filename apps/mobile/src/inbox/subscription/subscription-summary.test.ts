@@ -1,5 +1,6 @@
 import { counted, subscriptionStatusStyle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { child, sub, usedUp } from './people-fixtures';
 import { familySummary } from './subscription-summary';
 
@@ -14,7 +15,7 @@ test('nobody has a package: the count, no chips, one «بلا باقة» naming 
     chips: [],
     count: counted(s.students, 3),
     packaged: [],
-    noPackage: s.noPackage.replace('{names}', 'أحمد · سارة · علي'),
+    noPackage: s.noPackage.replace('{names}', ['أحمد', 'سارة', 'علي'].map(isolate).join(' · ')),
   });
   expect(counted(s.students, 3)).toBe('3 طلاب');
   expect(counted(s.students, 2)).toBe('طالبان');
@@ -31,7 +32,7 @@ test('mixed: «مشترك: 1 من 3», the ended package keeps its line, the chi
   const summary = familySummary([running, ended, kid('c', null)]);
   expect(summary.count).toBe(s.subscribedOf.replace('{n}', '1').replace('{total}', '3'));
   expect(summary.packaged).toEqual([running, ended]);
-  expect(summary.noPackage).toBe(s.noPackage.replace('{names}', 'c'));
+  expect(summary.noPackage).toBe(s.noPackage.replace('{names}', isolate('c')));
 });
 
 test('money owed: one «غير مدفوع» for the family (the rows’ packageChip, not the DB status)', () => {
@@ -52,4 +53,10 @@ test('paused and unpaid both show while folded, once each', () => {
 test('every package ended: the plain count (no «مشترك: 0 من 2»), each line kept', () => {
   const kids = [kid('a', usedUp), kid('b', usedUp)];
   expect(familySummary(kids)).toEqual({ chips: [], count: counted(s.students, 2), packaged: kids, noPackage: null });
+});
+
+test('Latin names (the owner’s own family) never merge into one run read backwards in RTL: each isolated', () => {
+  const noPackage = familySummary([kid('ahmed amin', null), kid('saf', null)]).noPackage;
+  // FSI … PDI around each name.
+  expect(noPackage).toBe(s.noPackage.replace('{names}', '\u2068ahmed amin\u2069 · \u2068saf\u2069'));
 });

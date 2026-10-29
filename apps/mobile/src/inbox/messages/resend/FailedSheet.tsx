@@ -34,6 +34,9 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
   const retry = useMessageAction(phone, 'retry');
   const handOff = useMessageAction(phone, 'hand-off');
   const failed = m?.status === 'failed';
+  // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending' is the
+  // sender's claim, not a reason.
+  const why = failed || (!!m?.error_code && m.error_code !== 'sending');
   const link = m?.click_to_chat ?? null;
   const fail = (e: unknown) => onError(claimed(e) ? t.messages.alreadySending : t.common.error);
   const tryAgain = (row: MessageView) => {
@@ -47,7 +50,7 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
   };
   return (
     <MenuSheet open={m !== null} label={t.messages.failedMenu} testID="failed-sheet" onClose={onClose}>
-      {m && failed ? (
+      {m && why ? (
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
           {errorLine(m)}
         </AppText>

@@ -1,5 +1,6 @@
 import { subscriptionStatusStyle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 import { money, partPaidLine } from '@/payments/format';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './people-fixtures';
 import { badgeChip, childChip, dueLine, packageText, subscribeAction } from './subscription-words';
@@ -48,14 +49,14 @@ test('a guardian: the one child whose package ended gets «جدّد الاشتر
 });
 
 test('several children qualify: «لأيّ طالب؟» rows, each with its code and its own new / renew', () => {
-  // Two children named يوسف (the API allows it): the code tells them apart.
+  // Two children named يوسف (the API allows it): the code tells them apart. Both isolated (bidi).
   const twin = child({ id: 'c2', code: 'AB-0184', subscription: null });
   const action = subscribeAction({ people: family([twin, child({ subscription: usedUp })]), phone: PHONE });
   expect(action).toEqual({
     label: t.subscriptions.new,
     targets: [
-      { label: `يوسف · AB-0184 — ${t.subscriptions.new}`, href: { pathname: '/inbox/subscribe', params: { studentId: 'c2', phone: PHONE } } },
-      { label: `يوسف · AB-0183 — ${s.renew}`, href: { pathname: '/inbox/subscribe', params: { studentId: CHILD_ID, phone: PHONE, renew: '1' } } },
+      { label: `${isolate('يوسف')} · ${ltr('AB-0184')} — ${t.subscriptions.new}`, href: { pathname: '/inbox/subscribe', params: { studentId: 'c2', phone: PHONE } } },
+      { label: `${isolate('يوسف')} · ${ltr('AB-0183')} — ${s.renew}`, href: { pathname: '/inbox/subscribe', params: { studentId: CHILD_ID, phone: PHONE, renew: '1' } } },
     ],
   });
   // Every one of them renews: the pill says so.

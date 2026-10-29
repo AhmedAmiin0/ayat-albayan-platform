@@ -33,3 +33,10 @@ test('LTR: prev points left as drawn, next is mirrored', async () => {
   expect(scaleOf('chevron-prev')).toBe(1);
   expect(scaleOf('chevron-next')).toBe(-1);
 });
+
+test('down: a quarter turn back from the left-pointing path, the same in RTL', async () => {
+  Object.defineProperty(I18nManager, 'isRTL', { value: true, configurable: true });
+  await render(<Chevron to="down" color="#000" />);
+  const style = StyleSheet.flatten(screen.getByTestId('chevron-down', { includeHiddenElements: true }).props.style);
+  expect(style.transform).toEqual([{ rotate: '-90deg' }]);
+});

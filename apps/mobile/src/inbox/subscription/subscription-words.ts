@@ -13,6 +13,7 @@ import {
 } from '@ab/shared';
 import type { Href } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 import { money, partPaidLine } from '@/payments/format';
 
 // A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
@@ -109,7 +110,8 @@ function guardianAction(students: readonly ThreadStudentView[], phone: string): 
   const [only] = kinds;
   if (!only) return null;
   if (kinds.length === 1) return { label: only.word, accessibilityLabel: `${only.word} — ${only.child.name}`, href: only.href };
-  // The code tells same-name children apart (and keeps the sheet's keys unique).
-  const targets = kinds.map((k) => ({ label: `${k.child.name} · ${k.child.code} — ${k.word}`, href: k.href }));
+  // The code tells same-name children apart (and keeps the sheet's keys unique); isolated, a Latin name
+  // and the code never merge into one LTR run in an Arabic row.
+  const targets = kinds.map((k) => ({ label: `${isolate(k.child.name)} · ${ltr(k.child.code)} — ${k.word}`, href: k.href }));
   return { label: kinds.every((k) => k.renew) ? s().renew : t.subscriptions.new, targets };
 }

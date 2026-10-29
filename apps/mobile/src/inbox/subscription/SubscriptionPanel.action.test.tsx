@@ -2,6 +2,7 @@ import type { ThreadPeople } from '@ab/shared';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 import { child, CHILD_ID, family, usedUp } from './people-fixtures';
 import { SubscriptionPanel } from './SubscriptionPanel';
 
@@ -30,14 +31,15 @@ test('one child: a short pill at the row’s end (never a full-width button); it
 });
 
 test('one renewal and one new child: «لأيّ طالب؟» lists each with its own kind and form', async () => {
-  const sara = child({ id: 'c2', name: 'سارة', code: 'AB-0184', subscription: null });
+  const sara = child({ id: 'c2', name: 'sara', code: 'AB-0184', subscription: null });
   await panel(family([sara, child({ subscription: usedUp })]));
   // Not every child renews: the pill says «اشتراك جديد» and names no one.
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.new }));
   const sheet = screen.getByTestId('thread-menu');
-  expect(sheet.props.accessibilityLabel).toBe(t.trialDate.mobile.pickStudent);
-  expect(within(sheet).getByRole('button', { name: `سارة · AB-0184 — ${t.subscriptions.new}` })).toBeTruthy();
-  await fireEvent.press(within(sheet).getByRole('button', { name: `يوسف · AB-0183 — ${s.renew}` }));
+  expect(sheet.props.accessibilityLabel).toBe(s.pickStudent);
+  // A Latin name and the code stay apart in an Arabic row: each in its own isolate.
+  expect(within(sheet).getByRole('button', { name: `${isolate('sara')} · ${ltr('AB-0184')} — ${t.subscriptions.new}` })).toBeTruthy();
+  await fireEvent.press(within(sheet).getByRole('button', { name: `${isolate('يوسف')} · ${ltr('AB-0183')} — ${s.renew}` }));
   await waitFor(() =>
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/inbox/subscribe',

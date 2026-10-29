@@ -79,3 +79,9 @@ test('a queued row with a wa.me link: no reason line, only sending it by hand; n
   await renderWithQuery(<FailedSheet phone={PHONE} message={null} onClose={onClose} onError={onError} />);
   expect(screen.queryByTestId('failed-sheet')).toBeNull();
 });
+
+test('a queued row held by a refused token (190): the sheet says why it waits, still no retry', async () => {
+  const s = await sheet({ ...failed, status: 'queued', error_code: '190' });
+  expect(s.getByText(why('190'))).toBeTruthy();
+  expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
+});

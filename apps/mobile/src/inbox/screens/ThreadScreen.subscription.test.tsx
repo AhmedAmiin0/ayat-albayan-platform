@@ -1,6 +1,7 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '../subscription/people-fixtures';
@@ -83,7 +84,7 @@ test('a family is ONE folded row (the messages get the room); a tap opens a line
   expect(screen.getByText(`${t.enums.packageSize['8']} · بقيت حلقتان`)).toBeTruthy();
   expect(screen.getByText(s.due.replace('{amount}', money(120, 'SAR')))).toBeTruthy();
   expect(screen.getByText(`${t.enums.packageSize['8']} · بقيت 6 حلقات`)).toBeTruthy();
-  expect(screen.getByText(s.noPackage.replace('{names}', 'علي'))).toBeTruthy();
+  expect(screen.getByText(s.noPackage.replace('{names}', isolate('علي')))).toBeTruthy();
   expect(screen.queryByText(t.subscriptions.empty)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: new RegExp(`^${s.hideStudents} — `), expanded: true }));
   expect(screen.queryByText('سارة')).toBeNull();

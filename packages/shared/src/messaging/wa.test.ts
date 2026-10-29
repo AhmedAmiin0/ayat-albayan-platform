@@ -132,6 +132,8 @@ describe('token / permission errors and the admin retry button', () => {
     // This row can never go out as it is: the template is disabled for good.
     ['132016', false],
     ['131057', true],
+    // The test allow-list: once the number is added, the same row goes out.
+    ['131030', true],
     ['131049', true],
     ['132001', true],
     ['uncertain', true],

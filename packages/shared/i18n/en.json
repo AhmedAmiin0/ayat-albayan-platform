@@ -2813,7 +2813,8 @@
       "subscribedOf": "Subscribed: {n} of {total}",
       "noPackage": "No package: {names}",
       "showStudents": "Show students",
-      "hideStudents": "Hide students"
+      "hideStudents": "Hide students",
+      "pickStudent": "Which student?"
     },
     "convertedLead": "Became a student",
     "sentBy": "Sent by: {name}",
@@ -3371,7 +3372,7 @@
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
       "stale": "No longer needed: the lesson was cancelled or changed, or the lead replied or asked to stop messages",
-      "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then press “Try again”",
+      "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then try again",
       "uncertain": "We're not sure it was sent — check WhatsApp before sending it again",
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",

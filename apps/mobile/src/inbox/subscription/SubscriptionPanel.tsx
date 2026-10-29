@@ -6,9 +6,9 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { Chevron } from '@/core/ui/primitives/Chevron';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ChevronDownIcon } from '../thread/calls/screen/call-icons';
 import { ThreadMenu } from '../thread/components/ThreadMenu';
 import { ChildLines, FamilyList, LINE } from './ChildLines';
 import { type FamilySummary, familySummary } from './subscription-summary';
@@ -23,7 +23,8 @@ interface SubscriptionPanelProps {
 /**
  * Over a guardian's or a lead's chat (R-SUB-01), ONE row so the messages get the room (owner
  * 2026-10-29): «مشترك» / «انتهت الباقة» / «غير مشترك» (none for a converted lead with no family on this
- * number) and one subscribe pill. An only child's package sits beside the chip; a family folds into
+ * number) and one subscribe pill. An only child's name and package sit beside the chip (the guardian's
+ * name in the title is often not the child's); a family folds into
  * «غير مدفوع · مشترك: 2 من 5 ⌄», opened in place (a line per package, one «بلا باقة: …»). A
  * teacher's or an unknown number's chat shows nothing.
  */
@@ -48,7 +49,7 @@ export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
             {chip ? <StatusChip {...chip} size="sm" /> : null}
             {/* No package: the chip alone says «غير مشترك». */}
-            {only?.subscription ? <ChildLines student={only} named={false} /> : null}
+            {only?.subscription ? <ChildLines student={only} /> : null}
           </View>
         )}
         {action ? <SubscribePill action={action} /> : null}
@@ -89,7 +90,7 @@ function FamilyToggle({ chip, summary, open, onToggle }: FamilyToggleProps) {
         {summary.count}
       </AppText>
       <View style={{ transform: [{ rotate: open ? '180deg' : '0deg' }] }}>
-        <ChevronDownIcon color={color.ink2} size={16} />
+        <Chevron to="down" color={color.ink2} size={14} />
       </View>
     </Pressable>
   );
@@ -109,7 +110,7 @@ function SubscribePill({ action }: { action: SubscribeAction }) {
       {targets ? (
         <ThreadMenu
           open={picking}
-          label={t.trialDate.mobile.pickStudent}
+          label={t.inbox.subscription.pickStudent}
           items={targets.map((target) => ({ label: target.label, onPress: () => router.push(target.href) }))}
           onClose={() => setPicking(false)}
         />

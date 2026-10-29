@@ -1,5 +1,6 @@
 import { counted, type ThreadStudentView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { childChip, running } from './subscription-words';
 
 // A family's one folded line over the chat (owner 2026-10-29: the messages get the room): pure.
@@ -30,7 +31,8 @@ export function familySummary(students: readonly ThreadStudentView[]): FamilySum
     on > 0 && on < total
       ? s.subscribedOf.replace('{n}', String(on)).replace('{total}', String(total))
       : counted(s.students, total);
-  const bare = students.filter((st) => st.subscription === null).map((st) => st.name);
+  // Each name isolated: adjacent Latin names never merge into one run read backwards in RTL.
+  const bare = students.filter((st) => st.subscription === null).map((st) => isolate(st.name));
   return {
     chips: [...chips.values()],
     count,

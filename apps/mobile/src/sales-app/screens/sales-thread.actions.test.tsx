@@ -35,7 +35,10 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   );
   await screen.findByText(inbound.body ?? '');
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
-  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
+  // No sheet to read the rest in: the reason is never cut, its «أو أرسلها بنفسك» stays, and is no button.
+  const why = t.messages.errorLine.replace('{reason}', t.messages.errors['131049']);
+  expect(screen.getByText(why).props.numberOfLines).toBeUndefined();
+  expect(screen.queryByRole('button', { name: why })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByText(t.messages.handedOff)).toBeNull();
