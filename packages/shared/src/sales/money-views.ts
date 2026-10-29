@@ -59,6 +59,14 @@ export interface SalesFamilyStudent extends SalesStudentRef {
   renew_due: boolean;
   /** The renewal's calculator inputs, from the last priced package (renewalPricing; pill discounts only). */
   renewal: RenewalPricing;
+  /** students.teacher_id (the trial's teacher until she picks another): «المعلم/ة»'s default. */
+  teacher_id: string | null;
+}
+
+/** GET /sales/subscriptions/teachers: the active teachers «المعلم/ة» offers (names only). */
+export interface SalesTeacherOption {
+  id: string;
+  name: string;
 }
 
 export interface SalesFamilyView {

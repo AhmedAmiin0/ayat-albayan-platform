@@ -4,7 +4,7 @@ import { pickMoneyAction } from './money-action';
 const PHONE = '+966501112223';
 const owed = (id: string) => ({ id }) as SalesMoneySubscriptionView;
 const kid = (over: Partial<SalesFamilyStudent> = {}): SalesFamilyStudent => ({
-  id: 'st1', code: 'AB-0201', name: 'ريم', status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...over,
+  id: 'st1', code: 'AB-0201', name: 'ريم', status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, teacher_id: null, ...over,
 });
 const family = (...students: SalesFamilyStudent[]) => ({ students });
 

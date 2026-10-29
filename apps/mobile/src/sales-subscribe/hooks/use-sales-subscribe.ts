@@ -24,6 +24,8 @@ interface SalesSubscribeInput {
   alreadyStarted?: true;
   /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted, only above 0. */
   lessonsUsedBefore?: number;
+  /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed; omitted = no teacher yet. */
+  teacherId?: string;
   /** The chat's phone for a child not hers (chatBinding, sales.renew_any). */
   phone?: string;
 }

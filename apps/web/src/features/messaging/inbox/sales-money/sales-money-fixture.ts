@@ -17,7 +17,7 @@ export const OPEN_SUB: SalesMoneySubscriptionView = {
 };
 
 export function student(patch: Partial<SalesFamilyStudent> = {}): SalesFamilyStudent {
-  return { ...OPEN_SUB.student, status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...patch };
+  return { ...OPEN_SUB.student, status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, teacher_id: null, ...patch };
 }
 
 export const SALES_QUOTE: SalesQuoteView = (() => {

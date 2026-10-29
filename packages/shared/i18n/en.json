@@ -4567,13 +4567,18 @@
       "too_many_attachments": "At most 5 attachments.",
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package.",
+      "teacher_not_found": "The chosen teacher is not available now. Choose another."
     },
     "usedBefore": "Lessons already used from the package",
     "usedBeforeHint": "Counted from the package; only the rest is booked",
     "usedBeforeLess": "One lesson fewer",
     "usedBeforeMore": "One lesson more",
-    "noCommissionStarted": "No commission: the course started before it was recorded"
+    "noCommissionStarted": "No commission: the course started before it was recorded",
+    "teacher": "Teacher",
+    "teacherHint": "The teacher–student chat opens after the subscription.",
+    "teacherNone": "No teacher assigned yet",
+    "teacherSearch": "Search teachers"
   },
   "registrationCheck": {
     "title": "Registration check",
@@ -6965,7 +6970,9 @@
     "back": "All students",
     "students": "Students",
     "noMessageYet": "No messages yet",
-    "hide": "Hide the chat"
+    "hide": "Hide the chat",
+    "closed": "The chat with the teacher opens after the subscription",
+    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher."
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",

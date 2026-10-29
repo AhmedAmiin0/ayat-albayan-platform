@@ -14,3 +14,12 @@ export {
   TEACHER_CHANNELS_PATH,
   threadMessages,
 } from './channels.js';
+export {
+  CHANNEL_LIVE_FALLBACK_MS,
+  type ChannelRealtimeLike,
+  channelMode,
+  channelPollMs,
+  liveChannelId,
+  subscribeChannelMessages,
+} from './channel-live.js';
+export { type TeacherPick, teacherChoice } from './teacher-pick.js';

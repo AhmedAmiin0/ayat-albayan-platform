@@ -36,7 +36,7 @@ export class SalesMoneyReads {
       listed.map(async (s) => {
         const open = await this.open(s.id);
         const due = renewals.get(s.id) ?? NOT_DUE;
-        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, mine: isMine(s.id), open, ...due };
+        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, teacher_id: s.teacher_id, mine: isMine(s.id), open, ...due };
       }),
     );
     return { students };

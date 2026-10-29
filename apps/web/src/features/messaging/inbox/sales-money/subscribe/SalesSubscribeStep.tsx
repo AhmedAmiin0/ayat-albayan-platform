@@ -14,6 +14,7 @@ import { ChildPicker } from './ChildPicker';
 import { salesErrorText } from '../errors';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { SalesStartField, type StartValue } from './SalesStartField';
+import { SalesTeacherField, useTeacherPick } from './SalesTeacherField';
 import { startBody } from './start-body';
 
 type Props = {
@@ -34,6 +35,7 @@ type Props = {
  * One clientRequestId per body: a retry gets the first package back. A renewal (owner 2026-10-26) opens on
  * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
  * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
+ * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
  */
 export function SalesSubscribeStep({ students, phone = '', picked, renew = false, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
@@ -42,6 +44,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   const seedOf = (id: string): PricingForm => (renew ? students.find((s) => s.id === id)?.renewal : undefined) ?? INITIAL_PRICING;
   const [studentId, setStudentId] = useState(() => picked ?? (choices.length === 1 ? (choices[0]?.id ?? '') : ''));
   const [form, setForm] = useState<PricingForm>(() => seedOf(studentId));
+  const teacher = useTeacherPick(students, studentId);
   const pick = (id: string) => {
     setStudentId(id);
     if (renew) setForm(seedOf(id));
@@ -71,7 +74,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     const checked = startBody(startShown, { canSet, today, lessonsTotal });
     setStartError(checked.ok ? null : t.salesMoney.error[checked.code]);
     if (!checked.ok) return;
-    const body = { studentId, pricing, ...checked.body, ...bind };
+    const body = { studentId, pricing, ...checked.body, ...teacher.body, ...bind };
     const key = JSON.stringify(body);
     if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
     save.mutate({ ...body, clientRequestId: request.current.id });
@@ -96,6 +99,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
         <ChildPicker students={choices} value={studentId} onChange={pick} />
         <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
         {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />}
+        {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}
         <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
         {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
       </form>

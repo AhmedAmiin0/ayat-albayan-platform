@@ -1,13 +1,16 @@
-import type { ChannelMessageView, ChannelPage, ChannelUnread, TeacherChannelRow } from '@ab/shared';
+import { CHANNEL_NOT_OPEN, type ChannelMessageView, type ChannelPage, type ChannelUnread, type TeacherChannelRow } from '@ab/shared';
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
+import { conflict, notFound } from '../../../common/http/errors';
 import type { ChannelActor } from './channel-access';
 import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import { toMessageView, toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
 import { ChannelQueries } from './channel.queries';
 import { TeachersQueries } from '../../people/teachers';
+
+/** A participant's write on a closed channel (before the subscription or the teacher's assignment). */
+const closed = (actor: ChannelActor): boolean => actor.mode === 'participant' && !actor.open;
 
 /** The student channel (docs/31 §2) once ChannelAccess has resolved the caller. */
 @Injectable()
@@ -20,17 +23,22 @@ export class ChannelService {
     private readonly notify: ChannelNotify,
   ) {}
 
-  /** A page, oldest first within it; a monitor's says read_only. Reading never marks anything read. */
+  /**
+   * A page, oldest first within it; a monitor's says read_only. Reading never marks anything read. Closed
+   * for a participant: no messages at all (`open` false), the apps show the closed line.
+   */
   async page(actor: ChannelActor, before?: string): Promise<ChannelPage> {
     const channelId = await this.queries.channelOf(actor.studentId);
-    const [rows, [student]] = await Promise.all([this.queries.page({ channelId, before }), this.people.students([actor.studentId])]);
+    const [rows, [student]] = await Promise.all([closed(actor) ? [] : this.queries.page({ channelId, before }), this.people.students([actor.studentId])]);
     const names = await this.people.names(rows.flatMap((r) => (r.sender_profile_id ? [r.sender_profile_id] : [])));
-    return toPage(rows, { me: actor.profileId, names, readOnly: actor.mode === 'monitor', studentName: student?.name ?? '' });
+    const ctx = { me: actor.profileId, names, readOnly: actor.mode === 'monitor', studentName: student?.name ?? '' };
+    return toPage(rows, { ...ctx, open: actor.open, channelId });
   }
 
-  /** 403 for a monitor (read-only in v1); the push goes after the row is stored. */
+  /** 403 for a monitor (read-only in v1), 409 channel_not_open while closed; the push goes after the row is stored. */
   async post(actor: ChannelActor, body: string): Promise<ChannelMessageView> {
     if (actor.mode !== 'participant') throw new ForbiddenException();
+    if (!actor.open) throw conflict(CHANNEL_NOT_OPEN);
     const channelId = await this.queries.channelOf(actor.studentId);
     const row = await this.queries.insert({ channel_id: channelId, sender_profile_id: actor.profileId, sender_role: actor.role, body });
     await this.queries.setReadMark({ channelId, profileId: actor.profileId, at: row.created_at });
@@ -45,11 +53,13 @@ export class ChannelService {
    */
   async read(actor: ChannelActor, at?: string, now = new Date()): Promise<void> {
     if (actor.mode !== 'participant') throw new ForbiddenException();
+    if (!actor.open) throw conflict(CHANNEL_NOT_OPEN);
     const upTo = at && Date.parse(at) < now.getTime() ? new Date(at).toISOString() : now.toISOString();
     await this.queries.setReadMark({ channelId: await this.queries.channelOf(actor.studentId), profileId: actor.profileId, at: upTo });
   }
 
   async unread(actor: ChannelActor): Promise<ChannelUnread> {
+    if (closed(actor)) return { unread: 0 };
     const countRoles = unreadRolesFor(actor.mode === 'participant' ? actor.role : null);
     const [sum] = await this.queries.summaries({ profileId: actor.profileId, studentIds: [actor.studentId], countRoles });
     return { unread: sum?.unread ?? 0 };

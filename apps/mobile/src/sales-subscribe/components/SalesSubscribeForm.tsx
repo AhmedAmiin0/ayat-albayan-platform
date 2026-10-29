@@ -15,6 +15,7 @@ import { SalesPriceSection } from './SalesPriceSection';
 import { salesErrorText } from '../lib/sales-errors';
 import { checkStart, type StartDraft } from '../lib/start-date';
 import { StartDateField } from './StartDateField';
+import { SalesTeacherPills, useTeacherPick } from './SalesTeacherPills';
 import { useSalesCreateSubscription, useSalesQuote } from '../hooks/use-sales-subscribe';
 
 interface SalesSubscribeFormProps {
@@ -36,6 +37,7 @@ const firstChild = (students: readonly SalesFamilyStudent[], first: string | und
  * subscriptions.set_start_date, StartDateField), «احفظ الاشتراك»; once saved, on to booking the
  * package's weekly days (owner 2026-10-18), then the family's transfer (the screen is replaced). The first
  * day of a renewal is the same default as any package (today, Riyadh), like the admin's renewal.
+ * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
  */
 export function SalesSubscribeForm({ phone, students, studentId: first, renew = false }: SalesSubscribeFormProps) {
   const [picked, setPicked] = useState(() => firstChild(students, first));
@@ -45,6 +47,7 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
     return seed ? renewalForm(seed) : INITIAL_FORM;
   };
   const [form, setForm] = useState(() => seedOf(picked));
+  const teacher = useTeacherPick(students, studentId);
   const pick = (id: string) => {
     setPicked(id);
     if (renew) setForm(seedOf(id));
@@ -68,7 +71,7 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
     setTried(true);
     if (!starts.ok) return;
     save.mutate(
-      { studentId, pricing, ...starts.body, ...bind },
+      { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
       {
         onSuccess: (sub) =>
           router.replace(
@@ -88,6 +91,7 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
       <ChildPills students={students} value={studentId} onChange={pick} />
       <PricingInputs form={form} freeDiscount={false} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
       <SalesPriceSection quote={quote} />
+      <SalesTeacherPills hidden={studentId === ''} value={teacher.teacherId} onChange={teacher.setTeacher} />
       <StartDateField
         canSet={canSet}
         days={startDays(now, RIYADH_TZ)}

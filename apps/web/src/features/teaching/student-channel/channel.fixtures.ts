@@ -9,5 +9,7 @@ export const channelPage = (over: Partial<ChannelPage> = {}): ChannelPage => ({
   ],
   has_more: false,
   read_only: false,
+  open: true,
+  channel_id: '',
   ...over,
 });
