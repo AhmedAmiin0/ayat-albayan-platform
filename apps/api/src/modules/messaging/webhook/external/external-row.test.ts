@@ -62,4 +62,15 @@ describe('externalRow', () => {
     expect(row).not.toHaveProperty('number_id');
     expect(templateKeyFor('follow_up_slots')).toBe('follow_up_slots');
   });
+
+  it('a sign-in code (account_code) is stored without its text or params: the code never reaches the chat', () => {
+    const code = msg({
+      type: 'template',
+      text: { body: '123456 هو رمز التحقق' },
+      template: { name: 'account_code', components: [{ type: 'body', parameters: [{ type: 'text', text: '123456' }] }] },
+    });
+    const row = externalRow({ msg: code, phone: '+1', who: nobody(), from, at: SENT_AT });
+    expect(row).toMatchObject({ template_key: 'account_code', body: null, template_params: null });
+    expect(JSON.stringify(row)).not.toContain('123456');
+  });
 });
