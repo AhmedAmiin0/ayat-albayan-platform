@@ -25,16 +25,15 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(answer({ me: withLists, threads: (p) => (p.includes('list=') ? page([]) : page()) }));
 });
 
-test('ONE row: «الكل» selected, «غير مقروءة», the lists oldest first, then «＋» (named «قائمة جديدة»)', async () => {
+test('ONE row: «الكل» selected, «غير مقروءة», «بانتظار ردّك», the stages, the lists oldest first, then «＋»', async () => {
   await renderWithQuery(<ThreadsList />);
   const chips = await row();
   await chips.findByRole('tab', { name: PAID.name });
-  expect(chips.getAllByRole('tab').map((c) => c.props.accessibilityState)).toEqual([
-    { selected: true },
-    { selected: false },
-    { selected: false },
-    { selected: false },
-  ]);
+  const tabs = chips.getAllByRole('tab');
+  expect(tabs.map((c) => c.props.accessibilityState)).toEqual([{ selected: true }, ...Array(10).fill({ selected: false })]);
+  const words: unknown[] = tabs.map((c) => within(c).getByText(/./).props.children);
+  expect(words.slice(2, 4)).toEqual([t.inbox.filterWaiting, t.enums.leadStatus.new]);
+  expect(words.slice(9)).toEqual([PAID.name, TRIAL.name]);
   expect(chips.getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(chips.getByRole('tab', { name: t.inbox.filterUnread, selected: false })).toBeTruthy();
   expect(chips.getByRole('tab', { name: TRIAL.name, selected: false })).toBeTruthy();

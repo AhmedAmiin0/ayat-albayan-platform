@@ -6,6 +6,7 @@ import { Composer } from '../Composer';
 import { threadKey } from '../../thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '../../thread/hooks/thread-mode';
+import { clearComposerDrafts } from '../draft-store';
 
 // The pill (owner 2026-10-27): the emoji and camera tiles of the paperclip's sheet, and the teacher's own pill.
 const mockApiSend = jest.fn();
@@ -41,6 +42,9 @@ async function show(mode: ThreadMode = { kind: 'admin' }) {
     client,
   );
 }
+
+// Drafts outlive a chat until sign-out: each test starts with an empty box.
+afterEach(() => clearComposerDrafts());
 
 beforeEach(() => jest.clearAllMocks());
 
