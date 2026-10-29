@@ -33,10 +33,10 @@ const resigned = new Set<string>();
 
 /**
  * Staff sent it from the platform (sender_name: never an echo, an import or a family's file; a teacher
- * sends no files), so page 1 renders as the bubble shows. Any other PDF waits for a tap: poppler parses
- * the sender's bytes inside the API (docs/09 «Known risk»), never on a mere scroll.
+ * sends no files; not a forward, which may be a family's), so page 1 renders as the bubble shows. Any
+ * other PDF waits for a tap: poppler parses the sender's bytes inside the API (docs/09 «Known risk»).
  */
-const staffSent = (m: MessageView): boolean => m.direction === 'outbound' && Boolean(m.sender_name);
+const staffSent = (m: MessageView): boolean => m.direction === 'outbound' && Boolean(m.sender_name) && !m.forwarded;
 /** Page 1 was asked before: an answer or a failure in the cache (a disabled query's entry is still pending). */
 const askedBefore = (state: { status: string } | undefined): boolean => state !== undefined && state.status !== 'pending';
 

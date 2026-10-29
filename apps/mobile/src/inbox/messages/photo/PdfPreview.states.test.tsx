@@ -29,6 +29,7 @@ beforeEach(() => mockApiFetch.mockReset());
 test.each([
   ['a family’s PDF', pdfDoc()],
   ['an echo (sent from the phone, no staff behind it)', pdfDoc({ direction: 'outbound', sender_name: null })],
+  ['a forward (it may be a family’s file)', staffPdf({ forwarded: true })],
 ])('%s asks nothing on render: a large «PDF» and «اضغط لمعاينة الملف»; a tap asks page 1 and opens the viewer', async (_, row) => {
   serve(async () => pdfPage(1));
   await show(row);
