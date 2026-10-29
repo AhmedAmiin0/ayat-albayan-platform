@@ -1,5 +1,6 @@
+import { ApiError } from '@/core/lib/http/api';
 import { createTestQueryClient } from '@/test/query';
-import { signedStaleTime, threadFilePath, threadFileQuery } from './thread-file';
+import { pdfPagePath, pdfPageQuery, signedStaleTime, threadFilePath, threadFileQuery } from './thread-file';
 import { PHONE } from '../../shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
@@ -47,8 +48,8 @@ test('a thumbnail remount never asks again after a 410: no retry on mount, an ho
   expect(q.gcTime).toBe(60 * 60_000);
 });
 
-/** A refetch option, as TanStack resolves it for one query. */
-const resolve = (option: unknown, query: unknown): unknown => (typeof option === 'function' ? Reflect.apply(option, undefined, [query]) : option);
+/** A refetch or retry option, as TanStack resolves it (for one query, or a failure count and error). */
+const resolve = (option: unknown, ...args: unknown[]): unknown => (typeof option === 'function' ? Reflect.apply(option, undefined, args) : option);
 
 test('a failure is not asked again on mount, focus or reconnect; a success follows the defaults', async () => {
   mockApiFetch.mockRejectedValue(new Error('410'));
@@ -63,4 +64,37 @@ test('a failure is not asked again on mount, focus or reconnect; a success follo
   mockApiFetch.mockResolvedValue(FILE);
   await client.fetchQuery({ ...q, staleTime: 0 });
   expect(resolve(q.refetchOnWindowFocus, query)).toBe(true);
+});
+
+// A chat PDF's pages (owner 2026-10-29).
+test('a PDF page: its own key and path, off the disk cache, an hour of cache', () => {
+  const q = pdfPageQuery(PHONE, 'm1', 3);
+  expect(q.queryKey).toEqual(['thread-pdf', PHONE, 'm1', 3]);
+  expect(pdfPagePath(PHONE, 'm1', 3)).toBe('/threads/%2B966552147730/messages/m1/pdf/3');
+  expect(q.meta).toEqual({ noPersist: true });
+  expect(q.gcTime).toBe(60 * 60_000);
+});
+
+test('a PDF page: a 503 is retried 3 times; a 4xx, a 500 or no answer never', () => {
+  const { retry } = pdfPageQuery(PHONE, 'm1', 1);
+  const busy = new ApiError(503, { code: 'pdf_busy' });
+  expect([0, 1, 2, 3].map((n) => resolve(retry, n, busy))).toEqual([true, true, true, false]);
+  for (const e of [new ApiError(422, { code: 'pdf_no_preview' }), new ApiError(410), new ApiError(500), new Error('offline')]) {
+    expect(resolve(retry, 0, e)).toBe(false);
+  }
+});
+
+test('a PDF page: a 503 is asked again when the bubble mounts again; a 4xx stays', async () => {
+  const client = createTestQueryClient();
+  const q = pdfPageQuery(PHONE, 'm1', 1);
+  const onMount = async (e: Error) => {
+    mockApiFetch.mockRejectedValue(e);
+    await client.fetchQuery({ ...q, retry: false }).catch(() => undefined);
+    const query = client.getQueryCache().find({ queryKey: q.queryKey });
+    if (!query) throw new Error('no query');
+    return resolve(q.retryOnMount, query);
+  };
+  expect(await onMount(new ApiError(503, { code: 'pdf_render_failed' }))).toBe(true);
+  expect(await onMount(new ApiError(422, { code: 'pdf_no_preview' }))).toBe(false);
+  expect(await onMount(new ApiError(410, { code: 'media_expired' }))).toBe(false);
 });

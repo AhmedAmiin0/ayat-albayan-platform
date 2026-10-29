@@ -1,5 +1,7 @@
+import { QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ChatUploadError, chatSendMime, sendFile, uploadChatFile } from './api.files';
+import { ApiError, apiFetch } from '@/lib/http/api';
+import { ChatUploadError, chatSendMime, sendFile, threadPdfPageQuery, uploadChatFile } from './api.files';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
@@ -69,5 +71,25 @@ describe('sendFile', () => {
       filename: 'صورة.png',
       caption: 'تفضلي',
     });
+  });
+});
+
+describe('threadPdfPageQuery (owner 2026-10-29)', () => {
+  it('GETs one page of the chat PDF under its own key', async () => {
+    const page = { url: 'https://s.test/p3.jpg', expires_at: '2026-10-29T12:00:00Z', page: 3, pages: 12, bytes: 1024 };
+    vi.mocked(apiFetch).mockResolvedValue(page);
+    const q = threadPdfPageQuery(PHONE, 'm-1', 3);
+    expect(q.queryKey).toEqual(['thread-pdf', PHONE, 'm-1', 3]);
+    await expect(new QueryClient().fetchQuery(q)).resolves.toEqual(page);
+    expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/messages/m-1/pdf/3');
+  });
+
+  it('retries a 503 (busy, a failed render) twice; a 4xx or another failure never', () => {
+    const { retry } = threadPdfPageQuery(PHONE, 'm-1', 1);
+    if (typeof retry !== 'function') throw new Error('retry is a function');
+    const busy = new ApiError(503, { code: 'pdf_busy' });
+    expect([0, 1, 2].map((n) => retry(n, busy))).toEqual([true, true, false]);
+    expect(retry(0, new ApiError(422, { code: 'pdf_no_preview' }))).toBe(false);
+    expect(retry(0, new ApiError(502, { code: 'meta_error' }))).toBe(false);
   });
 });
