@@ -2,7 +2,7 @@ import type { SavedReply, SavedReplyCreate, SavedReplyUpdate, SignedUpload } fro
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { supabase } from '@/core/lib/http/supabase';
-import { ChatFileError, type ChatFilePick } from '../composer/send-file';
+import { ChatFileError, type ChatFilePick } from '../../composer/send-file';
 
 // «الردود السريعة» (owner 2026-10-25): GET /saved-replies answers the shared list then the caller's
 // own; every write refetches it. The API decides who may write the shared list (403 otherwise).

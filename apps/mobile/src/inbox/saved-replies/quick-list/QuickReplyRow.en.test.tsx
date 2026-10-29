@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
-import { PRICES } from '../fixtures';
+import { PRICES } from '../testing/fixtures';
 import { QuickReplyRow } from './QuickReplyRow';
 
 // An English phone (LTR): an Arabic reply aligns right, an English one keeps the start.

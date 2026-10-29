@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
-import { MINE, REPLIES, WELCOME } from './fixtures';
+import { MINE, REPLIES, WELCOME } from './testing/fixtures';
 import { clearComposerDrafts } from '../composer/draft-store';
 
 const mockApiFetch = jest.fn();

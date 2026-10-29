@@ -1,6 +1,6 @@
 import { replyNeedsInput, resolveSavedReply, type SavedReply, type SavedReplyValues, type ThreadView } from '@ab/shared';
 import { useMyProfile } from '@/account/hooks/queries';
-import type { ReplyFill } from '../use-saved-reply';
+import type { ReplyFill } from '../hooks/use-saved-reply';
 
 export interface ReplyContact {
   thread: ThreadView | null;

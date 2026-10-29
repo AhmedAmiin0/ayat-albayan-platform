@@ -8,13 +8,13 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useSavedReplies } from './api';
-import { ManageReplies } from './quick-list/ManageReplies';
-import { QuickReplyRow } from './quick-list/QuickReplyRow';
-import { filterReplies } from './reply-text';
-import { FILL_FRAME } from './quick-list/FillReplyForm';
-import { ReplySheetFrame } from './quick-list/ReplySheetFrame';
-import { ScopeTabs } from './quick-list/ScopeTabs';
+import { useSavedReplies } from '../hooks/api';
+import { ManageReplies } from '../quick-list/ManageReplies';
+import { QuickReplyRow } from '../quick-list/QuickReplyRow';
+import { filterReplies } from '../lib/reply-text';
+import { FILL_FRAME } from '../quick-list/FillReplyForm';
+import { ReplySheetFrame } from '../quick-list/ReplySheetFrame';
+import { ScopeTabs } from '../quick-list/ScopeTabs';
 
 interface SavedRepliesSheetProps {
   onClose: () => void;
