@@ -101,19 +101,16 @@ jobs:
     needs: changes
     if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # PROBE (do not merge): lint + typecheck only, every package to the end, no cache.
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
         include:
           - { name: lint, task: lint, key: lint }
           - { name: typecheck, task: typecheck, key: typecheck }
-          - { name: test web 1/2, task: test, key: web-1, filter: --filter=web, args: '-- --shard=1/2' }
-          - { name: test web 2/2, task: test, key: web-2, filter: --filter=web, args: '-- --shard=2/2' }
-          - { name: test api 1/2, task: test, key: api-1, filter: --filter=api, args: '-- --shard=1/2' }
-          - { name: test api 2/2, task: test, key: api-2, filter: --filter=api, args: '-- --shard=2/2' }
-          - { name: test mobile, task: test, key: mobile, filter: --filter=mobile }
-          - { name: test others, task: test, key: others, filter: '--filter=!web --filter=!api --filter=!mobile' }
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -121,21 +118,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - run: pnpm i --frozen-lockfile
-      - uses: actions/cache@v4
-        with:
-          path: .turbo/cache
-          key: turbo-${{ matrix.key }}-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            turbo-${{ matrix.key }}-${{ runner.os }}-
-      - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} --cache-dir=.turbo/cache ${{ matrix.args }}
+      # PROBE: new devDependencies (eslint-plugin-jsx-a11y, tools/scripts eslint) without a local lockfile update.
+      - run: pnpm i --no-frozen-lockfile
+      - run: pnpm turbo ${{ matrix.task }} --force --continue=always --concurrency=3
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
   # that grew, a stale allow-list entry). Pure-move check: only for the move PRs of the refactor chain
   # (cloud/refactor-a*, b*, c*, d* heads); it fails on any hunk that is not a rename, a module path, a new
   # index.ts barrel or path-dependent config. No install, no secrets.
   refactor:
-    if: github.event_name == 'pull_request'
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -162,7 +154,7 @@ jobs:
   # e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -213,7 +205,7 @@ jobs:
     needs: changes
     # On again (owner, 2026-10-05) now that the suite is fast. To pause it without a code change, set the
     # repository variable RUN_E2E to 'false' (Settings → Secrets and variables → Actions → Variables).
-    if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     # The matrix comes from «changes» (plan.mjs): on a PR only the shards its selected specs need, plus

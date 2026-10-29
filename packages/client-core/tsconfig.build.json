@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": false, "declaration": true, "outDir": "dist", "rootDir": "src" },
+  // PROBE: the build ignores the new flags so dependents' lint/typecheck still run; typecheck carries them.
+  "compilerOptions": {
+    "noEmit": false, "declaration": true, "outDir": "dist", "rootDir": "src",
+    "verbatimModuleSyntax": false, "isolatedModules": true, "noImplicitReturns": false, "allowUnreachableCode": true, "allowUnusedLabels": true
+  },
   "include": ["src"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test-util.ts"]
 }
