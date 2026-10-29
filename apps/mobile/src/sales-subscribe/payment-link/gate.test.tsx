@@ -6,6 +6,7 @@ import { seedFullAccess } from '@/test/staff-me';
 import { PHONE } from '../testing/fixtures';
 import { PaymentLinksRow } from './list/PaymentLinksRow';
 import { PaymentLinksScreen } from './list/PaymentLinksScreen';
+import { PaymentDoneScreen } from './PaymentDoneScreen';
 import { PaymentLinkPill } from './PaymentLinkPill';
 import { PaymentLinkScreen } from './PaymentLinkScreen';
 
@@ -33,6 +34,7 @@ const ALL = [
   <PaymentLinkScreen key="screen" />,
   <PaymentLinksScreen key="list" />,
   <PaymentLinksRow key="row" />,
+  <PaymentDoneScreen key="done" />,
 ];
 
 /** Signed in as a salesperson (self.sales_money): the row's own permission. */

@@ -37,6 +37,25 @@ export function useLinks() {
   });
 }
 
+const byToken = (rows: PaymentLinkView[] | undefined, token: string) =>
+  token ? rows?.find((link) => link.url.endsWith(`/pay/${token}`)) : undefined;
+
+/**
+ * Back from Stripe (/pay-done): the link of `token` among hers (GET /sales/payment-links: only the links she
+ * made, all for an admin), from our API, never from Stripe. While `wait` and the link is still open (the
+ * webhook may land after Stripe's redirect) it asks again every 2 s, for a minute at most.
+ */
+export function useLinkByToken(token: string, wait: boolean) {
+  const [since] = useState(Date.now);
+  const query = useQuery({
+    queryKey: [...LINKS, 'list'],
+    queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
+    refetchInterval: (q) =>
+      wait && Date.now() - since < 60_000 && byToken(q.state.data, token)?.status === 'open' ? 2000 : false,
+  });
+  return { ...query, link: byToken(query.data, token) };
+}
+
 /** POST /sales/payment-links/:id/cancel (409 link_not_open). */
 export function useCancelLink() {
   const client = useQueryClient();

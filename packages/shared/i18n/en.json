@@ -7068,7 +7068,8 @@
       "kind": "Subscription type",
       "agreed": "Agreed amount: {amount} {currency}",
       "cancelling": "Cancelling the link…",
-      "cancelFailed": "Could not cancel the link; try again."
+      "cancelFailed": "Could not cancel the link; try again.",
+      "confirming": "Confirming the payment…"
     },
     "pay": {
       "title": "Pay Ayat Al-Bayan Academy",
@@ -7087,7 +7088,8 @@
       "doneTitle": "Payment received, thank you",
       "cancelTitle": "The payment was not made",
       "packageLine": "Package: {lessons}",
-      "backToPage": "Back to the payment page"
+      "backToPage": "Back to the payment page",
+      "backToApp": "Back to the app"
     },
     "bell": {
       "paidTitle": "Paid through a payment link",

@@ -13,6 +13,14 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
+const mockStripe = { on: false };
+jest.mock('@/core/lib/stripe-flag', () => ({
+  ...jest.requireActual('@/core/lib/stripe-flag'),
+  get STRIPE_FEATURE() {
+    return mockStripe.on;
+  },
+}));
+
 const BODY = 'رابط الحلقة https://meet.test/ab. والموقع www.x.com';
 const row = (body: string) => message({ id: 'm1', direction: 'inbound', status: 'delivered', body, replyable: true, forwardable: true });
 const show = (body = BODY) =>
@@ -24,6 +32,7 @@ const show = (body = BODY) =>
 const openURL = jest.spyOn(Linking, 'openURL');
 
 beforeEach(() => {
+  mockStripe.on = false;
   mockApiFetch.mockReset().mockResolvedValue(null);
   openURL.mockReset().mockResolvedValue(true);
 });
@@ -44,6 +53,16 @@ test('www. opens over https', async () => {
   await show();
   await fireEvent.press(screen.getByRole('link', { name: 'www.x.com' }));
   expect(openURL).toHaveBeenCalledWith('https://www.x.com');
+});
+
+test('the Stripe test build opens a pay link marked ?from=app (its page brings the payer back); others as they are', async () => {
+  mockStripe.on = true;
+  const pay = `https://api.example.test/pay/${'t'.repeat(32)}`;
+  await show(`ادفع هنا ${pay} والموقع www.x.com`);
+  await fireEvent.press(screen.getByRole('link', { name: pay }));
+  expect(openURL).toHaveBeenLastCalledWith(`${pay}?from=app`);
+  await fireEvent.press(screen.getByRole('link', { name: 'www.x.com' }));
+  expect(openURL).toHaveBeenLastCalledWith('https://www.x.com');
 });
 
 test('a link the phone cannot open shows the generic error, never a crash', async () => {

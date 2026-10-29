@@ -35,6 +35,12 @@ export function effectiveLinkStatus(link: { status: PaymentLinkStatus; expires_a
   return link.status === 'open' && Date.parse(link.expires_at) <= now.getTime() ? 'expired' : link.status;
 }
 
+/**
+ * The Stripe test app's Android package (apps/mobile app.config.ts: app.json's package + '.stripetest'; its
+ * app-config.stripe.test.ts pins this): the pay page names it to bring the payer back into that app.
+ */
+export const STRIPE_TEST_APP_PACKAGE = 'com.ayatalbayan.admin.stripetest';
+
 /** The platform link the assistant sends: https://<web>/pay/<token> (WEB_ORIGIN's first origin). */
 export function paymentLinkUrl(webOrigin: string, token: string): string {
   const base = (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');
