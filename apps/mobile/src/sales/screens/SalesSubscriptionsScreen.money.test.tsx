@@ -44,9 +44,10 @@ test('a pending row with its package owed: «تسجيل تحويل» on that pac
 
 test('a pending row with nothing owed or due: no action on the row', async () => {
   serve([]);
-  await render();
+  const { client } = await render();
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(FAMILY));
+  // The family has answered (not just been asked): the hidden action is the picker's call.
+  await waitFor(() => expect(client.getQueryData(['sales', 'money', 'family', PHONE])).toBeDefined());
   expect(screen.queryByText(t.sales.money.transfer)).toBeNull();
   expect(screen.queryByText(t.sales.money.renew)).toBeNull();
 });

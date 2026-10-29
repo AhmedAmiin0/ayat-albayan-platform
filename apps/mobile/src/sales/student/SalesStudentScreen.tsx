@@ -33,7 +33,7 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
  * also the subscription (start, renewal / end, lessons used / left, past ones folded) and the sent reports
  * as the teacher sees them; move / cancel only on her students' lessons (the sheet checks `mine`).
  * No price or payment shown. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that
- * family's chat; above it the one money action of hers (UX review #9: «تسجيل تحويل» / «تجديد»). An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
+ * family's chat; under it (it loads after the page: nothing shifts) the one money action of hers (UX review #9: «تسجيل تحويل» / «تجديد»). An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
  * for ANY student, as in the admin's file.
  */
 export function SalesStudentScreen() {
@@ -54,11 +54,10 @@ export function SalesStudentScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 20 }}>
           <Note>{about.join(' · ')}</Note>
-          {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          {mine ? null : <Note>{t.sales.student.notMine}</Note>}
+          {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : <Note>{t.sales.student.notMine}</Note>}
           <CoursePauseSection studentId={data.student.id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           {mine ? <SubscriptionSection data={data} /> : null}

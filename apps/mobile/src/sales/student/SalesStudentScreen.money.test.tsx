@@ -49,8 +49,9 @@ test('nothing owed, renewal due: «تجديد» opening the subscribe screen wit
 
 test('nothing owed or due: no money action', async () => {
   serve(kid({}));
-  await open();
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(FAMILY));
+  const { client } = await open();
+  // The family has answered (not just been asked): the hidden action is the picker's call.
+  await waitFor(() => expect(client.getQueryData(['sales', 'money', 'family', PHONE])).toBeDefined());
   expect(screen.queryByText(m.transfer)).toBeNull();
   expect(screen.queryByText(m.renew)).toBeNull();
 });

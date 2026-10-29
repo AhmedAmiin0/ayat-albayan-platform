@@ -1,4 +1,4 @@
-import { localizedName, type SalesScheduleLesson } from '@ab/shared';
+import { lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
@@ -66,7 +66,12 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const row = useCallback(({ item }: ListRenderItemInfo<SalesScheduleLesson>) => <SalesLessonRow lesson={item} onOpen={open} />, [open]);
   const all = day.data?.lessons ?? [];
   const counts = scheduleStatusCounts(all);
-  const statuses = SCHEDULE_STATUSES.map((value) => ({ value, label: t.sales.academySchedule.status[value], count: day.data ? counts[value] : undefined }));
+  const statuses = SCHEDULE_STATUSES.map((value) => ({
+    value,
+    label: t.sales.academySchedule.status[value],
+    count: day.data ? counts[value] : undefined,
+    ...(value === 'all' ? {} : lessonStatusStyle[value === 'cancelled' ? 'cancelled_by_admin' : value]),
+  }));
   const lessons = byScheduleStatus(all, status);
   const cells = useInsetRows(row, lessons.length);
   return (
