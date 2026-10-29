@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, assistantApp, B, statementRow } from '../assistant-pay.fakes';
+import { A, assistantApp, B, statementRow } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 const ROUTES = ['/sales/me/students', '/sales/me/earnings', '/sales/me/payments', '/sales/me/commissions'];

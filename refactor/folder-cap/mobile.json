@@ -10,9 +10,5 @@
   "apps/mobile/src/inbox/qualification": {
     "files": 13,
     "dirs": 0
-  },
-  "apps/mobile/src/inbox/saved-replies": {
-    "files": 16,
-    "dirs": 1
   }
 }

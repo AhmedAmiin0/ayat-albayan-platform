@@ -1,6 +1,6 @@
 import type { Json, Tables } from '@ab/db';
 import { isCommissionKind, type AssistantStatementLineView, type AssistantStatementView, type CurrencyTotals, type StatementLineKind } from '@ab/shared';
-import { reasonText } from '../reasons';
+import { reasonText } from '../shared/reasons';
 
 type LineRow = {
   kind: string;

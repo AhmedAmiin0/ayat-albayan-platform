@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
-import type { CommissionsQuery } from '../assistant-pay.dto';
+import type { CommissionsQuery } from '../shared/assistant-pay.dto';
 import { COMMISSION_SELECT, type CommissionRow } from './commissions.mapper';
 
 /** The admin's ledger cap: the newest rows first; narrow by assistant, status or date for more. */

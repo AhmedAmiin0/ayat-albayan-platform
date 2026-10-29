@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
-import { PRICES, WELCOME } from '../fixtures';
+import { PRICES, WELCOME } from '../testing/fixtures';
 import { QuickReplyRow, slashTitle } from './QuickReplyRow';
 
 const row = (id: string) => screen.getByTestId(`quick-reply-${id}`);

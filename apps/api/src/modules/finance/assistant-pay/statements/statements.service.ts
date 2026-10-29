@@ -2,8 +2,8 @@ import { monthStart, type AssistantStatementView, type SignedDownload, type Sign
 import { Injectable } from '@nestjs/common';
 import { notFound } from '../../../../common/http/errors';
 import { EarningsReceipts } from '../../teacher-earnings/earnings.receipts';
-import type { StatementPay as Pay, StatementsQuery as Query } from '../assistant-pay.dto';
-import { AssistantRpc } from '../assistant-pay.rpc';
+import type { StatementPay as Pay, StatementsQuery as Query } from '../shared/assistant-pay.dto';
+import { AssistantRpc } from '../shared/assistant-pay.rpc';
 import { StatementsQueries } from './statements.queries';
 import { toStatementView, type StatementRow } from './statements.mapper';
 

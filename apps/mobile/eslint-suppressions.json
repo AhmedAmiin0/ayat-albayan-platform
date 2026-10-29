@@ -784,7 +784,7 @@
       "count": 1
     }
   },
-  "src/inbox/saved-replies/SavedRepliesSheet.tsx": {
+  "src/inbox/saved-replies/components/SavedRepliesSheet.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
