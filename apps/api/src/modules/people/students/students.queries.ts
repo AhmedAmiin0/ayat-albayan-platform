@@ -17,7 +17,7 @@ import { applyStudentColumnFilters, STUDENT_SORT, type StudentColumnFilters, typ
 
 // One literal each: supabase-js infers the row type from the select string.
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
-const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status)), teacher:teachers(id, display_name_ar, display_name_en, meeting_link)`;
+const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status), phones:guardian_phones(phone_e164, is_primary)), teacher:teachers(id, display_name_ar, display_name_en, meeting_link)`;
 
 type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
 
@@ -47,9 +47,10 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
 async function searchFilter(db: Db, term: string): Promise<string | null> {
   const digits = searchDigits(term);
   if (!digits) return studentNameOrCodeFilter(term);
-  const { data, error } = await db.from('guardians').select('id').ilike('phone_e164', `%${digits}%`).limit(100);
+  // Every family number, main and second (guardian_phones, owner 2026-10-29).
+  const { data, error } = await db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100);
   if (error) throw dbError(error);
-  return studentPhoneOrCodeFilter(data.map((g) => g.id), digits);
+  return studentPhoneOrCodeFilter([...new Set(data.map((g) => g.guardian_id))], digits);
 }
 
 type StatusCounts = Record<StudentStatus, number>;

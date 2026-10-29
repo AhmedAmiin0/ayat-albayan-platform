@@ -2,6 +2,7 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../../common/db/db.module';
+import { familyOfPhone } from '../../../common/db/family-of-phone';
 import { guardianOwnerIds } from '../../sales/sales/sales-ownership';
 import { refillUnsupported } from './inbound/inbound-refill';
 import { WebhookSettings } from './webhook.settings';
@@ -28,12 +29,12 @@ export class WebhookQueries {
 
   async identify(phone: string): Promise<Contact> {
     const [g, t, l] = await Promise.all([
-      this.db.from('guardians').select('id, name').eq('phone_e164', phone).maybeSingle(),
+      familyOfPhone(this.db, phone),
       this.db.from('teachers').select('id, name:display_name_ar').eq('phone_e164', phone).maybeSingle(),
       this.db.from('leads').select('id, name, follow_up_stage').eq('phone_e164', phone).maybeSingle(),
     ]);
-    [g, t, l].forEach((r) => check(r.error));
-    return { guardian: g.data, teacher: t.data, lead: l.data };
+    [t, l].forEach((r) => check(r.error));
+    return { guardian: g && { id: g.id, name: g.name }, teacher: t.data, lead: l.data };
   }
 
   /**

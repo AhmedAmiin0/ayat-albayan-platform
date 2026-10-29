@@ -1,6 +1,7 @@
 import type { StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { familyOfPhone } from '../../../../common/db/family-of-phone';
 import { notFound } from '../../../../common/http/errors';
 import { dbError } from '../../../../common/http/http';
 
@@ -11,15 +12,31 @@ export type FamilyStudentRow = { id: string; code: string | null; name: string; 
 export class SalesFamilyQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The children of the guardian whose phone is this chat, oldest first; [] for a lead or an unknown number. */
+  /**
+   * The children of the family whose number (main or second, familyOfPhone) is this chat, oldest first; [] for
+   * a lead or an unknown number.
+   */
   async studentsOfPhone(phone: string): Promise<FamilyStudentRow[]> {
+    const family = await familyOfPhone(this.db, phone);
+    if (!family) return [];
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, status, teacher_id, guardian:guardians!inner(phone_e164)')
-      .eq('guardian.phone_e164', phone)
+      .select('id, code, name, status, teacher_id')
+      .eq('guardian_id', family.id)
       .order('created_at');
     if (error) throw dbError(error);
-    return data.map(({ id, code, name, status, teacher_id }) => ({ id, code, name, status, teacher_id }));
+    return data;
+  }
+
+  /** Every number of the student's family (main and second, guardian_phones); [] for an unknown student. */
+  async phonesOf(studentId: string): Promise<string[]> {
+    const { data, error } = await this.db
+      .from('students')
+      .select('guardian:guardians(phones:guardian_phones(phone_e164))')
+      .eq('id', studentId)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return (data?.guardian?.phones ?? []).map((p) => p.phone_e164);
   }
 
   /** The phone of the student's family chat (guardians.phone_e164); 404 student_not_found. */

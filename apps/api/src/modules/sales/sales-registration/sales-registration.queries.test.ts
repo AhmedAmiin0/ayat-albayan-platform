@@ -6,16 +6,22 @@ const dbRow = { name: 'ياسمين', code: 'AB-0101', status: 'churned', teache
 const MATCH = { name: 'ياسمين', code: 'AB-0101', status: 'churned', teacher_name: 'أبرار' };
 
 describe('SalesRegistrationQueries', () => {
-  it('byPhone: the guardian’s children by phone, by name, 11 rows at most, without the join columns', async () => {
-    const t = fakeDb({ students: [{ data: [dbRow] }] });
-    expect(await new SalesRegistrationQueries(t.db).byPhone('+966551110000')).toEqual([MATCH]);
-    expect(t.argsOf('students', 'eq')).toEqual(['guardian.phone_e164', '+966551110000']);
+  it('byPhone: the children of the family of that number (main or second), by name, 11 rows at most', async () => {
+    const family = { id: 'g1', name: 'أم ياسمين', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
+    const t = fakeDb({ guardian_phones: [{ data: { guardian: family } }], students: [{ data: [dbRow] }] });
+    expect(await new SalesRegistrationQueries(t.db).byPhone('+966552220000')).toEqual([MATCH]);
+    expect(t.argsOf('guardian_phones', 'eq')).toEqual(['phone_e164', '+966552220000']);
+    expect(t.argsOf('students', 'eq')).toEqual(['guardian_id', 'g1']);
     expect(t.argsOf('students', 'order')).toEqual(['name']);
     expect(t.argsOf('students', 'limit')).toEqual([11]);
-    const select = String(t.argsOf('students', 'select')?.[0]);
-    expect(select).toContain('guardians!inner(phone_e164)');
-    expect(select).not.toMatch(/\bid\b|notes|price/);
+    expect(String(t.argsOf('students', 'select')?.[0])).not.toMatch(/\bid\b|notes|price|guardian/);
     expect(t.calls.some((c) => c.method === 'in' || c.method === 'neq')).toBe(false); // every status
+  });
+
+  it('byPhone: a number of no family → [] without reading students', async () => {
+    const t = fakeDb({ guardian_phones: [{ data: null }] });
+    expect(await new SalesRegistrationQueries(t.db).byPhone('+966559990000')).toEqual([]);
+    expect(t.trips).toEqual(['guardian_phones']);
   });
 
   it('byName: the admin list’s name-or-code filter (Arabic-normalised), by name, 11 rows at most', async () => {
