@@ -6,6 +6,7 @@ import { seedFullAccess } from '@/test/staff-me';
 import { PHONE } from '../testing/fixtures';
 import { PaymentLinksRow } from './list/PaymentLinksRow';
 import { PaymentLinksScreen } from './list/PaymentLinksScreen';
+import { PaymentDoneScreen } from './PaymentDoneScreen';
 import { PaymentLinkPill } from './PaymentLinkPill';
 import { PaymentLinkScreen } from './PaymentLinkScreen';
 
@@ -23,7 +24,12 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
+const mockRedirect = jest.fn();
 jest.mock('expo-router', () => ({
+  Redirect: (props: { href: string }) => {
+    mockRedirect(props.href);
+    return null;
+  },
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966501112223' }),
 }));
@@ -33,6 +39,7 @@ const ALL = [
   <PaymentLinkScreen key="screen" />,
   <PaymentLinksScreen key="list" />,
   <PaymentLinksRow key="row" />,
+  <PaymentDoneScreen key="done" />,
 ];
 
 /** Signed in as a salesperson (self.sales_money): the row's own permission. */
@@ -53,6 +60,13 @@ test.each(ALL.map((ui) => [ui.key, ui]))('a normal build (flag false): %s render
   expect(toJSON()).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalled();
   expect(mockApiSend).not.toHaveBeenCalled();
+});
+
+test('a normal build: /pay-done (an ayatalbayan:// link) goes to the app start, never a blank screen', async () => {
+  mockFlag.on = false;
+  await renderWithQuery(<PaymentDoneScreen />);
+  expect(mockRedirect).toHaveBeenCalledWith('/');
+  expect(mockApiFetch).not.toHaveBeenCalled();
 });
 
 test('the test build on a server without Stripe (404): no pill, no row', async () => {

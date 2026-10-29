@@ -1,3 +1,4 @@
+import { STRIPE_TEST_APP_PACKAGE } from '@ab/shared';
 import type { ExpoConfig } from 'expo/config';
 import app from '../app.json';
 import eas from '../eas.json';
@@ -53,6 +54,8 @@ test('APP_VARIANT=stripetest: the .stripetest ids and the test name; nothing els
   expect(test.android?.package).toBe(`${app.expo.android.package}.stripetest`);
   expect(test.ios?.bundleIdentifier).toBe(`${app.expo.ios.bundleIdentifier}.stripetest`);
   expect(test.name).toBe('Ayat – Stripe test');
+  // The API's pay page names this package to bring the payer back into the test app (pay-return.ts).
+  expect(test.android?.package).toBe(STRIPE_TEST_APP_PACKAGE);
   expect({ ...test, name: normal.name, android: normal.android, ios: normal.ios }).toEqual(normal);
 });
 

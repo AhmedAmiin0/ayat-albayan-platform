@@ -1,6 +1,6 @@
 import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView, SubscriptionPricing } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
 
@@ -35,6 +35,36 @@ export function useLinks() {
     queryKey: [...LINKS, 'list'],
     queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
   });
+}
+
+const byToken = (rows: PaymentLinkView[] | undefined, token: string) =>
+  token ? rows?.find((link) => link.url.endsWith(`/pay/${token}`)) : undefined;
+
+const WAIT_MS = 60_000;
+
+/**
+ * Back from Stripe (/pay-done): the link of `token` among hers (GET /sales/payment-links: only the links she
+ * made, all for an admin), from our API, never from Stripe. While `wait` and the link is still open (the
+ * webhook may land after Stripe's redirect) it asks again every 2 s, for a minute at most; then `timedOut`
+ * (the screen says so) until `retry` asks at once and waits another minute.
+ */
+export function useLinkByToken(token: string, wait: boolean) {
+  const [timedOut, setTimedOut] = useState(false);
+  useEffect(() => {
+    if (!wait || timedOut) return undefined;
+    const timer = setTimeout(() => setTimedOut(true), WAIT_MS);
+    return () => clearTimeout(timer);
+  }, [wait, timedOut]);
+  const query = useQuery({
+    queryKey: [...LINKS, 'list'],
+    queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
+    refetchInterval: (q) => (wait && !timedOut && byToken(q.state.data, token)?.status === 'open' ? 2000 : false),
+  });
+  const retry = () => {
+    setTimedOut(false);
+    void query.refetch();
+  };
+  return { ...query, link: byToken(query.data, token), timedOut, retry };
 }
 
 /** POST /sales/payment-links/:id/cancel (409 link_not_open). */

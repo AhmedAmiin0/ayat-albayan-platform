@@ -14,8 +14,15 @@ import { linkErrorText, linkStatusStyle } from '../link-text';
 
 const pl = t.paymentLinks;
 
+interface PaymentLinkItemProps {
+  link: PaymentLinkView;
+  now: Date;
+  /** No «إلغاء الرابط» (/pay-done: a payment may still be on its way from Stripe). */
+  readOnly?: boolean;
+}
+
 /** «يوسف · 250 ر.س · ينتهي 1 نوفمبر 2026» with its status (an open link past its expiry reads expired). */
-export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Date }) {
+export function PaymentLinkItem({ link, now, readOnly = false }: PaymentLinkItemProps) {
   const status = effectiveLinkStatus(link, now);
   const cancel = useCancelLink();
   const [asking, setAsking] = useState(false);
@@ -30,7 +37,7 @@ export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Dat
         subtitle={`${money(link.amount, link.currency)} · ${when}`}
         trailing={<StatusChip {...linkStatusStyle[status]} label={pl.status[status]} size="sm" />}
       />
-      {status === 'open' ? (
+      {status === 'open' && !readOnly ? (
         <View style={{ paddingHorizontal: 16, paddingVertical: 8, gap: 6 }}>
           {asking ? (
             <InlineConfirm
