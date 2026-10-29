@@ -12,7 +12,9 @@ const PHONE = '+966552147730';
 const panel = (people: ThreadPeople) =>
   render(<SubscriptionPanel data={{ pages: [{ people }], pageParams: [undefined] }} phone={PHONE} />);
 
-beforeEach(() => jest.mocked(router.push).mockClear());
+beforeEach(() => {
+  jest.mocked(router.push).mockClear();
+});
 
 test('one child: a short pill at the row’s end (never a full-width button); its spoken name names the child', async () => {
   await panel(family([child({ subscription: usedUp })]));
