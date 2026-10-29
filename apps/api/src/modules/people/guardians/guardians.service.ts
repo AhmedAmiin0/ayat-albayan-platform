@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { GuardianCreate, GuardianUpdate } from '@ab/shared';
+import { searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
@@ -7,7 +7,9 @@ import { dbError, pageRange, type ListQuery, type Page } from './http';
 
 export type Guardian = Tables<'guardians'>;
 type Sibling = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
-export type GuardianWithStudents = Guardian & { students: Sibling[] };
+type FamilyNumber = Pick<Tables<'guardian_phones'>, 'phone_e164' | 'is_primary' | 'created_at'>;
+/** phones: every family number, the main one (is_primary) and a second one (guardian_phones, 2026-10-29). */
+export type GuardianWithStudents = Guardian & { students: Sibling[]; phones: FamilyNumber[] };
 
 /** Guardians CRUD (R-STU-02, R-STU-04). A guardian owns many students (siblings). */
 @Injectable()
@@ -19,7 +21,9 @@ export class GuardiansService {
       .from('guardians')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
-    const filter = guardianSearchFilter(q.search);
+    const digits = searchDigits(q.search);
+    if (digits) query = query.in('id', await this.idsByNumber(digits));
+    const filter = digits ? null : guardianSearchFilter(q.search);
     if (filter) query = query.or(filter);
     const [from, to] = pageRange(q);
     const { data, error, count } = await query.range(from, to);
@@ -27,10 +31,20 @@ export class GuardiansService {
     return { items: data, total: count ?? 0, page: q.page, pageSize: q.pageSize };
   }
 
+  /**
+   * The families with a number (main or second, guardian_phones) holding these digits.
+   * ponytail: the first 100 (the ids go into the URL), as the students' digit search.
+   */
+  private async idsByNumber(digits: string): Promise<string[]> {
+    const { data, error } = await this.db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100);
+    if (error) throw dbError(error);
+    return [...new Set(data.map((p) => p.guardian_id))];
+  }
+
   async get(id: string): Promise<GuardianWithStudents> {
     const { data, error } = await this.db
       .from('guardians')
-      .select('*, students(id, code, name, status)')
+      .select('*, students(id, code, name, status), phones:guardian_phones(phone_e164, is_primary, created_at)')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

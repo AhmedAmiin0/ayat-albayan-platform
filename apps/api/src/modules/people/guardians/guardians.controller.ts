@@ -1,4 +1,4 @@
-import { guardianCreateSchema, guardianUpdateSchema } from '@ab/shared';
+import { guardianCreateSchema, guardianUpdateSchema, phoneE164 } from '@ab/shared';
 import {
   Body,
   Controller,
@@ -14,6 +14,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
+import { GuardianPhonesService } from './guardian-phones.service';
 import { GuardiansService } from './guardians.service';
 import { blankToNull, listQuerySchema, parse } from './http';
 
@@ -23,7 +24,10 @@ import { blankToNull, listQuerySchema, parse } from './http';
 @Permissions('guardians.write')
 @Controller('guardians')
 export class GuardiansController {
-  constructor(private readonly guardians: GuardiansService) {}
+  constructor(
+    private readonly guardians: GuardiansService,
+    private readonly phones: GuardianPhonesService,
+  ) {}
 
   @Get()
   @Permissions('guardians.read')
@@ -51,5 +55,12 @@ export class GuardiansController {
   @HttpCode(204)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.guardians.remove(id);
+  }
+
+  /** The family's second number (owner 2026-10-29), `phone` URL-encoded (%2B…); 404 phone_not_found. */
+  @Delete(':id/phones/:phone')
+  @HttpCode(204)
+  removePhone(@Param('id', ParseUUIDPipe) id: string, @Param('phone') phone: string, @CurrentUser() user: AuthUser) {
+    return this.phones.removeSecond({ guardianId: id, phone: parse(phoneE164, phone), actorId: user.id });
   }
 }
