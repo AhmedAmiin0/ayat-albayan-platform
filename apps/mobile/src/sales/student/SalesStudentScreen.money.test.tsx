@@ -15,7 +15,7 @@ const PHONE = '+201001112223';
 const FAMILY = `/sales/money/family?phone=${encodeURIComponent(PHONE)}`;
 const m = t.sales.money;
 const kid = (over: Partial<SalesFamilyStudent>): SalesFamilyStudent => ({
-  id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...over,
+  id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, teacher_id: null, ...over,
 });
 
 function serve(student: SalesFamilyStudent, permissions = ['self.sales', 'self.sales_money']) {
