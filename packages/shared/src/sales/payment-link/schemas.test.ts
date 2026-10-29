@@ -13,7 +13,7 @@ describe('payment link commands', () => {
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, price: 1 }).success).toBe(false);
   });
 
-  it('the subscribe step's fields too: a teacher (uuid) and the lessons used before', () => {
+  it('the subscribe step’s fields too: a teacher (uuid) and the lessons used before', () => {
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, teacherId: ID, alreadyStarted: true, lessonsUsedBefore: 3 }).success).toBe(true);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, teacherId: 'x' }).success).toBe(false);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, lessonsUsedBefore: -1 }).success).toBe(false);
