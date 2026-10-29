@@ -1,11 +1,11 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { detail, PHONE } from '../testing/inbox-fixture';
 import { InboxModeContext } from '../shared/mode';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
 import { ThreadPane } from '../threads/pane/ThreadPane';
-import { LINK_QUOTE } from './payment-link/link-dialog.fixture';
+import { answer } from './payment-link/link.fixture';
 import { student } from './sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -22,9 +22,10 @@ function open(stripe: boolean) {
     ['/leads?', { items: [], total: 0, page: 1, pageSize: 5 }],
     ['/settings', {}],
     ['/sales/money/family', { students: [student({ status: 'active' })] }],
+    ['/sales/subscriptions/teachers', []],
     ['/stripe/feature', { stripe }],
   ]);
-  apiSend.mockResolvedValue(LINK_QUOTE);
+  answer(apiSend);
   renderWithClient(
     <InboxModeContext.Provider value="sales">
       <ThreadPane phone={PHONE} listSearch={{ page: 1 }} />
@@ -33,36 +34,45 @@ function open(stripe: boolean) {
 }
 
 const asked = (path: string) => apiFetch.mock.calls.some(([p]) => String(p).startsWith(path));
-const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
 
-describe('«رابط دفع» in a sales chat (docs/30, TEST BUILD ONLY)', () => {
+/** The one «اشتراك جديد» (no separate «رابط دفع» anywhere, owner 2026-10-29), its step open. */
+async function subscribe() {
+  fireEvent.click(await screen.findByRole('button', { name: t.salesMoney.newSubscription }));
+  return within(await screen.findByRole('dialog', { name: t.salesMoney.newSubscription }));
+}
+
+describe('the payment method inside «اشتراك جديد» (docs/30, the online one in the TEST BUILD ONLY)', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
     vi.unstubAllEnvs();
   });
 
-  it('a normal build: no «رابط دفع», and /stripe/feature is never asked', async () => {
+  it('a normal build: no «طريقة الدفع», and /stripe/feature is never asked', async () => {
     open(true);
-    await openMore();
-    expect(screen.getByRole('button', { name: t.booking.courseDays })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: t.paymentLinks.action })).toBeNull();
+    const step = await subscribe();
+    expect(await step.findByText(t.salesMoney.price)).toBeTruthy();
+    expect(step.queryByRole('group', { name: t.payments.method })).toBeNull();
+    expect(step.queryByRole('button', { name: t.paymentLinks.create })).toBeNull();
     expect(asked('/stripe/feature')).toBe(false);
   });
 
-  it('the test build with the API off: still none', async () => {
+  it('the test build with the API off: still the bank transfer only', async () => {
     vi.stubEnv('VITE_FEATURE_STRIPE', '1');
     open(false);
-    await openMore();
-    expect(asked('/stripe/feature')).toBe(true);
-    expect(screen.queryByRole('button', { name: t.paymentLinks.action })).toBeNull();
+    const step = await subscribe();
+    await vi.waitFor(() => expect(asked('/stripe/feature')).toBe(true));
+    expect(await step.findByText(t.salesMoney.price)).toBeTruthy();
+    expect(step.queryByRole('group', { name: t.payments.method })).toBeNull();
   });
 
-  it('both on: «رابط دفع» in «المزيد» opens its dialog', async () => {
+  it('both on: «اشتراك جديد» offers «تحويل بنكي» (picked) and «دفع إلكتروني»', async () => {
     vi.stubEnv('VITE_FEATURE_STRIPE', '1');
     open(true);
-    await openMore();
-    fireEvent.click(await screen.findByRole('button', { name: t.paymentLinks.action }));
-    expect(await screen.findByRole('dialog', { name: t.paymentLinks.title })).toBeTruthy();
+    const step = await subscribe();
+    const method = within(await step.findByRole('group', { name: t.payments.method }));
+    expect(method.getByRole('button', { name: t.enums.paymentMethod.bank, pressed: true })).toBeTruthy();
+    fireEvent.click(method.getByRole('button', { name: t.salesMoney.payOnline }));
+    expect(await step.findByRole('button', { name: t.paymentLinks.create })).toBeTruthy();
   });
 });

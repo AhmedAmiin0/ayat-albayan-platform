@@ -1,7 +1,6 @@
 import type { SalesFamilyView, SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
 
 // GET /sales/money/family?phone (R-ASST-01): HER students in this chat's family, each with the
 // packages still owed. Only hers: an empty list means nothing of the family is hers to sell.
@@ -22,7 +21,7 @@ export function useSalesFamily(phone: string, enabled = true) {
 
 /**
  * Her own students of the family: with sales.renew_any the view also lists the others (`mine: false`, docs/16
- * row 38) for subscribe / renew / transfer only; the trial date, the payment link and «إلغاء الباقة» stay hers.
+ * row 38) for subscribe / renew / transfer only; the trial date, «دفع إلكتروني» and «إلغاء الباقة» stay hers.
  */
 export function ownStudents<S extends { mine?: boolean }>(students: readonly S[]): S[] {
   return students.filter((s) => s.mine !== false);
@@ -31,18 +30,6 @@ export function ownStudents<S extends { mine?: boolean }>(students: readonly S[]
 /** Every package still owed, over all her students of the family. */
 export function openPackages(family: SalesFamilyView | undefined): SalesMoneySubscriptionView[] {
   return family?.students.flatMap((s) => s.open) ?? [];
-}
-
-/**
- * «جدّد الاشتراك» (owner 2026-10-15): one per student of hers due for a renewal (the API's `renew_due`,
- * owner 2026-10-26: the package ended or is down to the renewal alert), naming the child when the
- * family has several of hers.
- */
-export function renewTargets(family: SalesFamilyView | undefined): { studentId: string; label: string }[] {
-  const students = family?.students ?? [];
-  return students
-    .filter((s) => s.renew_due)
-    .map((s) => ({ studentId: s.id, label: students.length > 1 ? `${t.students.renew} — ${s.name}` : t.students.renew }));
 }
 
 /** The picked package while still owed, else the only one owed, else none yet. */

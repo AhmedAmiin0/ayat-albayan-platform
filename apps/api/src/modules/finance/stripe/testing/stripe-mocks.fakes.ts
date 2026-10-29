@@ -24,6 +24,8 @@ export function stripeMocks() {
     events: { begin: vi.fn(), done: vi.fn() },
     limit: { check: vi.fn() },
     push: { notifyProfiles: vi.fn(), notifyAdmins: vi.fn(), notifySales: vi.fn() },
+    /** SalesTeacherAssign: «المعلم/ة» of the subscribe step, sent with a link too. */
+    teachers: { ensureActive: vi.fn(), assign: vi.fn(), options: vi.fn() },
     stripe: {
       checkout: { sessions: { create: vi.fn(), retrieve: vi.fn(), expire: vi.fn(), list: vi.fn() } },
       refunds: { list: vi.fn() },
@@ -52,8 +54,10 @@ export function linkRow(patch: Partial<LinkRow> = {}): LinkRow {
 
 /** Gate ON (DB switch on, sandbox keys saved), the link open, no event seen yet. */
 export function stripeDefaults(s: StripeMocks): void {
-  for (const group of [s.settings, s.links, s.events, s.limit, s.push, s.stripe.checkout.sessions, s.stripe.refunds])
+  for (const group of [s.settings, s.links, s.events, s.limit, s.push, s.teachers, s.stripe.checkout.sessions, s.stripe.refunds])
     for (const fn of Object.values(group)) fn.mockReset();
+  s.teachers.ensureActive.mockResolvedValue(undefined);
+  s.teachers.assign.mockResolvedValue(true);
   s.settings.read.mockResolvedValue({ stripe_enabled: true, max_discount_pct: null });
   s.settings.secret.mockImplementation(async (name: string) => (name === 'api_key' ? 'rk_test_abc123' : WHSEC));
   s.settings.secretDates.mockResolvedValue(new Map());

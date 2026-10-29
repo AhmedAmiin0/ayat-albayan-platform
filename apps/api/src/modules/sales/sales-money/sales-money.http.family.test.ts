@@ -44,6 +44,14 @@ describe('GET /sales/money/family: her students of this chat, with the packages 
     expect(res.json().students[0].open).toEqual([]);
   });
 
+  it('a package a payment link is still open for is the link’s to pay: never offered for a transfer too', async () => {
+    m.subs.list.mockResolvedValue({ items: [subRow()], total: 1, page: 1, pageSize: 20 });
+    m.family.linkPackages.mockResolvedValue([SUB_ID]);
+    const res = await call({ method: 'GET', url: URL, token: 'salesA' });
+    expect(m.family.linkPackages).toHaveBeenCalledWith([SUB_ID]);
+    expect(res.json().students[0].open).toEqual([]);
+  });
+
   it('a phone that is not E.164 → 400', async () => {
     expect((await call({ method: 'GET', url: '/sales/money/family?phone=abc', token: 'salesA' })).statusCode).toBe(400);
   });

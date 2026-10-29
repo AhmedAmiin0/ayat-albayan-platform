@@ -32,7 +32,6 @@ function open(students: ReturnType<typeof student>[]) {
   );
 }
 
-const renewOf = (name: string) => ({ name: `${t.students.renew} — ${name}` });
 const PREMIUM = { pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' } as const;
 
 /** The header's «المزيد» (W3): the secondary sales actions live in it. */
@@ -54,9 +53,11 @@ describe('«جدّد الاشتراك» in a sales chat: the visible action whil
     expect(screen.getAllByRole('button', { name: new RegExp(t.students.renew) })).toHaveLength(1);
   });
 
-  it('opens the subscribe step for that student, prefilled from `renewal`; still editable', async () => {
+  it('one due among several: «جدّد الاشتراك» (no name) opens on that student, prefilled from `renewal`; still editable', async () => {
     open([student({ status: 'trial' }), student({ id: JUD, name: 'جود', status: 'expired', renew_due: true, renewal: PREMIUM })]);
-    fireEvent.click(await screen.findByRole('button', renewOf('جود')));
+    const renew = await screen.findByRole('button', { name: t.students.renew });
+    expect(renew.textContent).not.toContain('جود');
+    fireEvent.click(renew);
     const dialog = subscribeDialog(t.students.renew);
     expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);
     expect(dialog.getByLabelText(t.subscriptions.package)).toHaveProperty('value', 'premium');

@@ -1,6 +1,7 @@
 // HTTP harness of the Stripe test build (test-only). The test file sets FEATURE_STRIPE first (vi.hoisted),
 // so AppModule mounts StripeTestModule; the money harness's mocks plus the Stripe module's own.
 import { PushService } from '../../../../common/push/push.service';
+import { SalesTeacherAssign } from '../../../sales/sales-money';
 import { moneyApp } from '../../subscriptions/test-app';
 import { STRIPE_FACTORY } from '../gate/stripe-clients';
 import { StripeSettingsQueries } from '../gate/stripe-settings.queries';
@@ -18,6 +19,7 @@ export async function stripeApp() {
       .overrideProvider(StripeEventsQueries).useValue(s.events)
       .overrideProvider(PayLimit).useValue(s.limit)
       .overrideProvider(PushService).useValue(s.push)
+      .overrideProvider(SalesTeacherAssign).useValue(s.teachers)
       .overrideProvider(STRIPE_FACTORY).useValue(() => s.stripe),
   );
   /** A webhook POST with Stripe's header (no bearer token). */
