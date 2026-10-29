@@ -92,7 +92,7 @@ student that is monitored by assistant and all authorized users.»
 Owner, 2026-10-29: «chat between teacher and student will be using socket it will not use whatsapp» and
 «Assistant assigns the student to the teacher when the student take the trial and decided to subscribe so he
 can start chatting with the teacher this is if in case the student had no guardians». Decisions 2, 3, 6 and 8
-below are updated accordingly (migrations `20261029000961`–`962`).
+below are updated accordingly (migrations `20261029000971`–`972`).
 
 ### Decisions
 
@@ -129,7 +129,7 @@ below are updated accordingly (migrations `20261029000961`–`962`).
 5. **Text only**, 1–2000 characters (trimmed), links clickable with the shared `splitLinks`.
 6. **Live over a socket, never WhatsApp** (owner 2026-10-29). Supabase Realtime `postgres_changes` (INSERT on
    `channel_messages`, filtered `channel_id=eq.<id>` from the page's `channel_id`); the table joins the
-   `supabase_realtime` publication (migration 961) and Realtime tells each subscriber only what RLS
+   `supabase_realtime` publication (migration 971) and Realtime tells each subscriber only what RLS
    (`can_read_channel`) lets them read, so it works behind both API copies with no new server. A new row is a
    nudge: the thread re-reads through the API (`subscribeChannelMessages`, `@ab/client-core`). The poll stays
    as the fallback: 60 s while the socket is joined (`CHANNEL_LIVE_FALLBACK_MS`), 15 s while it is down;
@@ -179,10 +179,10 @@ key both)`. RLS on all three: a participant, the owning assistant and the admin 
 against a local stack when written: the trigger, the backfill, a teacher change, another family refused, a
 merge.
 
-`20261029000961_channel_after_subscribe.sql` (owner 2026-10-29): `channel_is_open(student)`; `can_read_channel`
+`20261029000971_channel_after_subscribe.sql` (owner 2026-10-29): `channel_is_open(student)`; `can_read_channel`
 gates the teacher and the family on it (monitors unchanged) and lets a student login in only with
 `contact_is_self`; `teacher_channel_student_ids` keeps open channels; `channel_messages` joins
-`supabase_realtime` (guarded). `20261029000962_assign_student_teacher.sql`: `assign_student_teacher` (docs/16
+`supabase_realtime` (guarded). `20261029000972_assign_student_teacher.sql`: `assign_student_teacher` (docs/16
 row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/channel-after-subscribe.sql.spec.ts`.
 
 ### Apps

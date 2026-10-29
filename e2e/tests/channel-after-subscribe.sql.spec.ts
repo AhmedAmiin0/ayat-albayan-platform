@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../support/rls';
 import { USERS } from '../support/users';
 
-// Migrations 20261029000961–962 (owner 2026-10-29): the student channel opens once the student is
+// Migrations 20261029000971–972 (owner 2026-10-29): the student channel opens once the student is
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
 // the guardian's login, or the student's own login only when they are their own contact (contact_is_self).
@@ -34,7 +34,7 @@ async function seed(tx: Tx) {
 const reads = (tx: Tx, uid: string) =>
   as(tx, uid, async () => (await tx<{ id: string }[]>`select id from public.channel_messages where body = 'السلام عليكم'`).length);
 
-test.describe('student channel opens after the subscription (20261029000961–962)', () => {
+test.describe('student channel opens after the subscription (20261029000971–972)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('closed during the trial even with the trial teacher; open once active; closed again without a teacher', async () => {

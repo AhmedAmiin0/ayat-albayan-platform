@@ -66,7 +66,7 @@ export const CHANNEL_GUARDIAN_ONLY = 'channel_guardian_only';
 /** students.status before the subscription: the channel stays closed (never during the trial). */
 const BEFORE_SUBSCRIPTION: readonly string[] = ['new', 'trial', 'pending_subscription'];
 
-/** Migration 961 channel_is_open: subscribed (past the trial) and students.teacher_id assigned. */
+/** Migration 971 channel_is_open: subscribed (past the trial) and students.teacher_id assigned. */
 export const channelOpen = (s: { status: string; teacher_id: string | null }): boolean =>
   s.teacher_id !== null && !BEFORE_SUBSCRIPTION.includes(s.status);
 

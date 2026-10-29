@@ -7,7 +7,7 @@ const dbWith = (result: { data: unknown; error: { message: string; code: string 
   return { db: { rpc } as unknown as Db, rpc };
 };
 
-describe('SalesTeacherAssign.assign (migration 962)', () => {
+describe('SalesTeacherAssign.assign (migration 972)', () => {
   it('calls assign_student_teacher with the student, the teacher and her as the actor', async () => {
     const { db, rpc } = dbWith({ data: true, error: null });
     await expect(new SalesTeacherAssign(db).assign({ studentId: 's', teacherId: 't', actorId: 'a' })).resolves.toBe(true);

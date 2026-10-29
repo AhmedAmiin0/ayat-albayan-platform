@@ -6,7 +6,7 @@ import { dbError } from '../../../../common/http/http';
 
 /**
  * «المعلم/ة» of the assistant's subscribe step (owner 2026-10-29, docs/31 §2, docs/16 row 16): the active
- * teachers she may pick (names only) and the assignment itself (assign_student_teacher, migration 962:
+ * teachers she may pick (names only) and the assignment itself (assign_student_teacher, migration 972:
  * students.teacher_id + one audit row, nothing when unchanged). The caller checked the student is hers.
  */
 @Injectable()

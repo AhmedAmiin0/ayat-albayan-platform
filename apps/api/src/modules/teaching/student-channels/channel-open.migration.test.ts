@@ -2,14 +2,14 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 961–962 (owner 2026-10-29, docs/31 §2), read as text: no database in unit tests.
+// Migrations 971–972 (owner 2026-10-29, docs/31 §2), read as text: no database in unit tests.
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
-const open = strip(readFileSync(join(dir, '20261029000961_channel_after_subscribe.sql'), 'utf8'));
-const assign = strip(readFileSync(join(dir, '20261029000962_assign_student_teacher.sql'), 'utf8'));
+const open = strip(readFileSync(join(dir, '20261029000971_channel_after_subscribe.sql'), 'utf8'));
+const assign = strip(readFileSync(join(dir, '20261029000972_assign_student_teacher.sql'), 'utf8'));
 const body = (code: string, fn: string) => new RegExp(`function public\\.${fn}[\\s\\S]*?\\$\\$([\\s\\S]*?)\\$\\$`).exec(code)?.[1] ?? '';
 
-describe('migration 961: the channel opens after the subscription', () => {
+describe('migration 971: the channel opens after the subscription', () => {
   it('channel_is_open: a teacher assigned and the status past the trial', () => {
     const fn = body(open, 'channel_is_open');
     expect(fn).toContain('s.teacher_id is not null');
@@ -37,11 +37,11 @@ describe('migration 961: the channel opens after the subscription', () => {
   it('definer helpers with an empty search_path; nothing for anon; a rollback note', () => {
     expect([...open.matchAll(/security definer set search_path = ''/g)].length).toBe([...open.matchAll(/create or replace function/g)].length);
     expect(open).toContain('revoke execute on function public.channel_is_open(uuid) from public, anon, authenticated;');
-    expect(readFileSync(join(dir, '20261029000961_channel_after_subscribe.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
+    expect(readFileSync(join(dir, '20261029000971_channel_after_subscribe.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
   });
 });
 
-describe('migration 962: assign_student_teacher', () => {
+describe('migration 972: assign_student_teacher', () => {
   it('an active teacher only, one audit row, nothing when unchanged; service role only', () => {
     const fn = body(assign, 'assign_student_teacher');
     expect(fn).toContain("t.status = 'active'");

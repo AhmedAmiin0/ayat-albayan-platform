@@ -4,7 +4,7 @@ import { channelOpen, familyChats } from './channel.js';
 
 // Owner 2026-10-29: the chat opens once the student subscribed AND the assistant assigned the teacher;
 // the guardian chats for a child, the student only when they are their own contact.
-describe('channelOpen (migration 961 channel_is_open)', () => {
+describe('channelOpen (migration 971 channel_is_open)', () => {
   it('never at registration or during the trial, even with the trial teacher assigned', () => {
     for (const status of ['new', 'trial', 'pending_subscription']) expect(channelOpen({ status, teacher_id: 't1' })).toBe(false);
   });

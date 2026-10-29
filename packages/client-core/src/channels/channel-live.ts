@@ -3,7 +3,7 @@ import { CHANNEL_REFRESH_MS, CHANNEL_WRITES } from './channels.js';
 
 // Realtime for the student channel (owner 2026-10-29: «chat between teacher and student will be using
 // socket it will not use whatsapp»): Supabase Realtime postgres_changes on channel_messages, filtered by
-// the channel, told only to the viewers RLS lets read it (can_read_channel, migration 961). A nudge, not a
+// the channel, told only to the viewers RLS lets read it (can_read_channel, migration 971). A nudge, not a
 // data path: a new row makes the thread re-read through the API. The poll stays as the fallback.
 
 /** The poll while the socket is live: a safety net only (a missed event, a return from the background). */

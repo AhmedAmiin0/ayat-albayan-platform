@@ -61,7 +61,7 @@ export class ChannelQueries {
     if (error) throw dbError(error);
   }
 
-  /** channelOpen, the rule of channel_is_open (migration 961): subscribed (past the trial) and a teacher assigned. */
+  /** channelOpen, the rule of channel_is_open (migration 971): subscribed (past the trial) and a teacher assigned. */
   async isOpen(studentId: string): Promise<boolean> {
     const { data, error } = await this.db.from('students').select('status, teacher_id').eq('id', studentId).maybeSingle();
     if (error) throw dbError(error);
