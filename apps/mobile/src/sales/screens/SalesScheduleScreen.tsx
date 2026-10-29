@@ -23,6 +23,7 @@ import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesSchedule, useSalesTeachers } from '../lib/sales-api';
 import { SalesLessonRow } from '../components/SalesLessonRow';
 import { SalesLessonSheet } from '../components/SalesLessonSheet';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -42,6 +43,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const [date, setDate] = useFollowingDay(today, params.date && DATE.test(params.date) ? params.date : undefined);
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const day = useSalesSchedule(date, teacherId);
+  const pull = usePullRefresh(day.refetch);
   const teachers = useSalesTeachers();
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
@@ -78,8 +80,8 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         data={lessons}
         keyExtractor={(l) => l.id}
         {...cells}
-        refreshing={day.isRefetching}
-        onRefresh={() => void day.refetch()}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           day.data ? (
             <EmptyState title={emptyTitle} />
