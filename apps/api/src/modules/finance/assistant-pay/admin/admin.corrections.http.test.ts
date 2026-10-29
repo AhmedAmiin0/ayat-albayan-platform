@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict, notFound } from '../../../common/http/errors';
-import { A, ADMIN, assistantApp, ID, STUDENT } from './assistant-pay.fakes';
+import { conflict, notFound } from '../../../../common/http/errors';
+import { A, ADMIN, assistantApp, ID, STUDENT } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 

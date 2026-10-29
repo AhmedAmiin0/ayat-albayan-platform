@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, assistantApp, B } from '../assistant-pay.fakes';
+import { A, assistantApp, B } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 

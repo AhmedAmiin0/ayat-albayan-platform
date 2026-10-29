@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, assistantApp, ID, STUDENT } from './assistant-pay.fakes';
+import { A, assistantApp, ID, STUDENT } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 type Route = { method: 'GET' | 'POST' | 'PUT'; url: string; body?: object };

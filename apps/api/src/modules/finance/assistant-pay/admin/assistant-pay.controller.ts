@@ -11,12 +11,12 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
-import { commissionsQuery } from './assistant-pay.dto';
-import { CorrectionsService } from './statements/corrections.service';
-import { TermsService } from './terms/terms.service';
+import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { parseOrThrow } from '../../../../common/http/http';
+import { commissionsQuery } from '../shared/assistant-pay.dto';
+import { CorrectionsService } from '../statements/corrections.service';
+import { TermsService } from '../terms/terms.service';
 
 /**
  * The admin side of the assistants' pay (R-ASST-02, R-ASST-03, R-ASST-05): terms per assistant, the

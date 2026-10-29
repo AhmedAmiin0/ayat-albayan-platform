@@ -12,7 +12,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../../common/http/http';
-import { assistantReceiptUploadSchema } from '../assistant-pay.dto';
+import { assistantReceiptUploadSchema } from '../shared/assistant-pay.dto';
 import { StatementsService } from './statements.service';
 
 /**

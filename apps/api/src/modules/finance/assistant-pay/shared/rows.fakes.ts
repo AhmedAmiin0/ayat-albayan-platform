@@ -1,5 +1,5 @@
 // Light fixtures of the assistant-pay module (test-only; no AppModule, so unit tests stay fast).
-import type { StatementRow } from './statements/statements.mapper';
+import type { StatementRow } from '../statements/statements.mapper';
 
 export const A = 'a1000000-0000-4000-8000-00000000000a';
 export const B = 'b1000000-0000-4000-8000-00000000000b';

@@ -1,8 +1,8 @@
 import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { CommissionBell } from '../../subscriptions';
-import type { CommissionsQuery } from '../assistant-pay.dto';
-import { AssistantRpc } from '../assistant-pay.rpc';
+import type { CommissionsQuery } from '../shared/assistant-pay.dto';
+import { AssistantRpc } from '../shared/assistant-pay.rpc';
 import { toCommissionView } from '../commissions/commissions.mapper';
 import { CommissionsQueries } from '../commissions/commissions.queries';
 

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { toCommissionView, type CommissionRow } from './commissions/commissions.mapper';
-import { toMyPayment, toMyStudent } from './my/my.mapper';
-import { statementRow } from './rows.fakes';
-import { readTotals, toStatementView } from './statements/statements.mapper';
-import { termsColumns, toTermsView, type TermsRow } from './terms/terms.mapper';
+import { toCommissionView, type CommissionRow } from '../commissions/commissions.mapper';
+import { toMyPayment, toMyStudent } from '../my/my.mapper';
+import { statementRow } from '../shared/rows.fakes';
+import { readTotals, toStatementView } from './statements.mapper';
+import { termsColumns, toTermsView, type TermsRow } from '../terms/terms.mapper';
 
 const terms = (over: Partial<TermsRow> = {}): TermsRow =>
   ({
