@@ -1,5 +1,5 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
-import { Linking, StyleSheet } from 'react-native';
+import { Linking, Platform, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
@@ -56,12 +56,12 @@ test('www. opens over https', async () => {
   expect(openURL).toHaveBeenCalledWith('https://www.x.com');
 });
 
-test('the Stripe test build opens a pay link marked ?from=app (its page brings the payer back); others as they are', async () => {
+test('the Stripe test build opens a pay link marked ?from=<platform> (its page brings the payer back); others as they are', async () => {
   mockStripe.on = true;
   const pay = `https://api.example.test/pay/${'t'.repeat(32)}`;
   await show(`ادفع هنا ${pay} والموقع www.x.com`);
   await fireEvent.press(screen.getByRole('link', { name: pay }));
-  expect(openURL).toHaveBeenLastCalledWith(`${pay}?from=app`);
+  expect(openURL).toHaveBeenLastCalledWith(`${pay}?from=${Platform.OS}`);
   await fireEvent.press(screen.getByRole('link', { name: 'www.x.com' }));
   expect(openURL).toHaveBeenLastCalledWith('https://www.x.com');
 });

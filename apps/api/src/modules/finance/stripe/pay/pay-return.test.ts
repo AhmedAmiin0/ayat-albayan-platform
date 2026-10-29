@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appCookie, appReturnUrl, fromApp } from './pay-return';
+import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 
 const T = 'a'.repeat(32);
 const ORIGIN = 'https://api.test.example';
@@ -13,24 +13,38 @@ describe('back into the test app after Stripe (pay-return)', () => {
     expect(fallback).toBe(`https%3A%2F%2Fapi.test.example%2Fpay%2F${T}%2Fdone%3Fauto%3D0`);
   });
 
-  it('iOS and others: the bare scheme, the kind carried', () => {
+  it('iOS: the bare scheme, the kind carried', () => {
     expect(appReturnUrl({ token: T, kind: 'cancelled', payOrigin: ORIGIN, android: false })).toBe(`ayatalbayan://pay-done?token=${T}&r=cancelled`);
   });
 
-  it('the cookie: this link’s pages only, an hour, HttpOnly, Secure, SameSite=Lax', () => {
-    expect(appCookie(T)).toBe(`ab_pay_app=1; Path=/pay/${T}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax`);
+  it('the cookie: the platform, this link’s pages only, a day (a session lasts 23 h at most), HttpOnly, Secure, SameSite=Lax', () => {
+    expect(appCookie(T, 'android')).toBe(`ab_pay_app=android; Path=/pay/${T}; Max-Age=86400; HttpOnly; Secure; SameSite=Lax`);
+    expect(appCookie(T, 'ios')).toBe(`ab_pay_app=ios; Path=/pay/${T}; Max-Age=86400; HttpOnly; Secure; SameSite=Lax`);
   });
 
   it.each([
-    ['ab_pay_app=1', true],
-    ['a=1; ab_pay_app=1', true],
-    ['ab_pay_app=1;b=2', true],
-    ['ab_pay_app=10', false],
-    ['xab_pay_app=1', false],
-    ['ab_pay_app=0', false],
-    ['', false],
-    [undefined, false],
-  ])('fromApp(%o) is %s', (cookie, expected) => {
+    ['android', 'android'],
+    ['ios', 'ios'],
+    ['app', null],
+    ['web', null],
+    ['Android', null],
+    [['android'], null],
+    [undefined, null],
+  ])('appPlatform(%o) is %o', (from, expected) => {
+    expect(appPlatform(from)).toBe(expected);
+  });
+
+  it.each([
+    ['ab_pay_app=android', 'android'],
+    ['a=1; ab_pay_app=ios', 'ios'],
+    ['ab_pay_app=ios;b=2', 'ios'],
+    ['ab_pay_app=1', null],
+    ['ab_pay_app=androidx', null],
+    ['xab_pay_app=android', null],
+    ['ab_pay_app=web', null],
+    ['', null],
+    [undefined, null],
+  ])('fromApp(%o) is %o', (cookie, expected) => {
     expect(fromApp(cookie)).toBe(expected);
   });
 });

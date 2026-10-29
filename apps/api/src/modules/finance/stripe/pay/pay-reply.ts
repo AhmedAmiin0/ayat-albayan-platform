@@ -10,9 +10,9 @@ export interface HtmlReply {
 export interface PayRequest {
   ip: string;
   params: { token?: string };
-  /** ?from=app (the app opened the link) and ?auto=0 (the app's fallback: no automatic try); never echoed. */
+  /** ?from=android|ios (the app opened the link) and ?auto=0 (the app's fallback: no automatic try); never echoed. */
   query?: { from?: unknown; auto?: unknown };
-  headers: { accept?: string | string[]; cookie?: string; 'user-agent'?: string };
+  headers: { accept?: string | string[]; cookie?: string };
 }
 
 /** A token as the API makes them (link-ids.ts); anything else is not looked up. */

@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { PHONE } from '../testing/fixtures';
@@ -18,13 +18,13 @@ beforeEach(() => {
   openURL.mockReset().mockResolvedValue(true);
 });
 
-test('«افتح الرابط» opens the page marked as from the app (?from=app), so Stripe brings her back here', async () => {
+test('«افتح الرابط» opens the page marked as from the app (?from=<platform>), so Stripe brings her back here', async () => {
   await show();
   await fireEvent.press(screen.getByRole('button', { name: t.studentLists.openLink }));
-  expect(openURL).toHaveBeenCalledWith(`${link.url}?from=app`);
+  expect(openURL).toHaveBeenCalledWith(`${link.url}?from=${Platform.OS}`);
   // What «إرسال في المحادثة» / «نسخ» give the family stays unmarked (PaymentLinkScreen.test: the box gets it).
   expect(linkMessage(link)).toContain(link.url);
-  expect(linkMessage(link)).not.toContain('from=app');
+  expect(linkMessage(link)).not.toContain('from=');
 });
 
 test('a page the phone cannot open says so, never a crash', async () => {

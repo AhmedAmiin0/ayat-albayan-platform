@@ -10,7 +10,7 @@ import { PaymentLinksQueries } from '../links/payment-links.queries';
 import { CheckoutService } from './checkout.service';
 import { notFoundPageHtml, payPageHtml, resultPageHtml } from './pay-html';
 import { PayLimit } from './pay-limit';
-import { appCookie, appReturnUrl, fromApp } from './pay-return';
+import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from './pay-reply';
 
 /**
@@ -46,7 +46,8 @@ export class PayController {
     }
     if (!view) return html(res, { status: 404, body: notFoundPageHtml() });
     // Opened from the app: Stripe's way back to /done or /cancelled carries this mark (pay-return.ts).
-    if (req.query?.from === 'app') res.header('Set-Cookie', appCookie(token));
+    const os = appPlatform(req.query?.from);
+    if (os) res.header('Set-Cookie', appCookie(token, os));
     return html(res, { status: 200, body: payPageHtml(view, token) });
   }
 
@@ -72,8 +73,8 @@ export class PayController {
     const token = r.req.params.token ?? '';
     await this.limit.check(r.req.ip, token);
     if (!isLinkToken(token) || !(await this.links.byToken(token))) return html(r.res, { status: 404, body: notFoundPageHtml() });
-    const android = /Android/i.test(String(r.req.headers['user-agent'] ?? ''));
-    const app = fromApp(r.req.headers.cookie) ? appReturnUrl({ token, kind: r.kind, payOrigin: apiPublicOrigin(), android }) : null;
+    const os = fromApp(r.req.headers.cookie);
+    const app = os ? appReturnUrl({ token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android' }) : null;
     const auto = r.req.query?.auto !== '0';
     return html(r.res, { status: 200, body: resultPageHtml({ kind: r.kind, token, app, auto }) });
   }

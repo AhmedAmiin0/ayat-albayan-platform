@@ -30,7 +30,7 @@ const pl = t.paymentLinks;
  * The link made: the reference vs the agreed amount, the link, then «إرسال في المحادثة» (the text goes into
  * the chat's box for HER to send: never sent for her; within the 24 h window only, else the template note)
  * and «نسخ» (the clipboard, else the share sheet). «افتح الرابط» opens the page here, marked as from the app
- * (?from=app): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
+ * (?from=<platform>): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
  */
 export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const { color } = useTheme();

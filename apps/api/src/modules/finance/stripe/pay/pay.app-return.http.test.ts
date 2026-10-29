@@ -8,33 +8,36 @@ vi.hoisted(() => {
   process.env.API_PUBLIC_URL = 'https://api.test.example';
 });
 
-const COOKIE = `ab_pay_app=1; Path=/pay/${TOKEN}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax`;
+const cookie = (os: string) => `ab_pay_app=${os}; Path=/pay/${TOKEN}; Max-Age=86400; HttpOnly; Secure; SameSite=Lax`;
 const ANDROID = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36';
+/** Chrome's «Request desktop site» (the default on large Android tablets): no 'Android' token. */
+const DESKTOP = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36';
 const HTML = 'text/html,application/xhtml+xml,*/*;q=0.8';
 const META = /<meta http-equiv="refresh"/;
 
-// A pay link the Stripe test app opened (?from=app) brings the payer back into the app (owner 2026-10-29).
-describe('back to the app: GET /pay/:token?from=app, then /done and /cancelled', () => {
+// A pay link the Stripe test app opened (?from=<its Platform.OS>) brings the payer back into the app (owner 2026-10-29).
+describe('back to the app: GET /pay/:token?from=android|ios, then /done and /cancelled', () => {
   let app: NestFastifyApplication;
   let s: StripeMocks;
   const open = (url: string, headers: Record<string, string> = {}) => app.inject({ method: 'GET', url, headers: { accept: HTML, ...headers } });
-  const fromApp = (url: string) => open(url, { cookie: 'ab_pay_app=1', 'user-agent': ANDROID });
+  const fromApp = (url: string) => open(url, { cookie: 'ab_pay_app=android', 'user-agent': DESKTOP });
 
   beforeAll(async () => ({ app, s } = await stripeApp()));
   afterAll(() => app.close());
   beforeEach(() => stripeDefaults(s));
 
-  it('?from=app on the HTML page leaves the mark; any other value, JSON or an unknown link leave none', async () => {
-    expect([(await open(`/pay/${TOKEN}?from=app`)).headers['set-cookie']].flat()).toEqual([COOKIE]);
-    expect((await open(`/pay/${TOKEN}?from=x`)).headers['set-cookie']).toBeUndefined();
+  it('?from=android|ios on the HTML page leaves the mark; any other value, JSON or an unknown link leave none', async () => {
+    expect([(await open(`/pay/${TOKEN}?from=android`)).headers['set-cookie']].flat()).toEqual([cookie('android')]);
+    expect([(await open(`/pay/${TOKEN}?from=ios`)).headers['set-cookie']].flat()).toEqual([cookie('ios')]);
+    for (const from of ['app', 'web', 'x']) expect((await open(`/pay/${TOKEN}?from=${from}`)).headers['set-cookie']).toBeUndefined();
     expect((await open(`/pay/${TOKEN}`)).headers['set-cookie']).toBeUndefined();
-    expect((await open(`/pay/${TOKEN}?from=app`, { accept: 'application/json' })).headers['set-cookie']).toBeUndefined();
+    expect((await open(`/pay/${TOKEN}?from=android`, { accept: 'application/json' })).headers['set-cookie']).toBeUndefined();
     s.links.byToken.mockResolvedValue(null);
-    const unknown = await open(`/pay/${TOKEN}?from=app`);
+    const unknown = await open(`/pay/${TOKEN}?from=android`);
     expect([unknown.statusCode, unknown.headers['set-cookie']]).toEqual([404, undefined]);
   });
 
-  it('/done with the mark (Android): tried at once and «العودة إلى التطبيق», the intent escaped; no script, same CSP', async () => {
+  it('/done with the Android mark (even a desktop-mode browser): tried at once and «العودة إلى التطبيق», the intent escaped; no script, same CSP', async () => {
     const plain = await open(`/pay/${TOKEN}/done`);
     const res = await fromApp(`/pay/${TOKEN}/done`);
     expect(res.statusCode).toBe(200);
@@ -58,14 +61,15 @@ describe('back to the app: GET /pay/:token?from=app, then /done and /cancelled',
     expect(cancelled.body).not.toMatch(META);
   });
 
-  it('not Android: the bare scheme', async () => {
-    const res = await open(`/pay/${TOKEN}/done`, { cookie: 'ab_pay_app=1', 'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' });
+  it('the iOS mark: the bare scheme, whatever the User-Agent says', async () => {
+    const res = await open(`/pay/${TOKEN}/done`, { cookie: 'ab_pay_app=ios', 'user-agent': ANDROID });
     expect(res.body).toContain(`href="ayatalbayan://pay-done?token=${TOKEN}&amp;r=done"`);
+    expect(res.body).not.toContain('intent://');
   });
 
   it('without the mark (a link opened from WhatsApp): the pages are exactly as before', async () => {
     for (const kind of ['done', 'cancelled']) {
-      const res = await open(`/pay/${TOKEN}/${kind}`, { 'user-agent': ANDROID, cookie: 'other=1' });
+      const res = await open(`/pay/${TOKEN}/${kind}`, { 'user-agent': ANDROID, cookie: 'other=1; ab_pay_app=1' });
       expect(res.statusCode).toBe(200);
       expect(res.body).not.toContain('العودة إلى التطبيق');
       expect(res.body).not.toMatch(META);

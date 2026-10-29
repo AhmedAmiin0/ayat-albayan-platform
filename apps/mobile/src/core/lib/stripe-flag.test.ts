@@ -1,15 +1,18 @@
+import { Platform } from 'react-native';
 import { appOpenUrl } from './stripe-flag';
 
 const PAY = `https://api.example.test/pay/${'a'.repeat(32)}`;
 
-test('the test build opens a pay page with ?from=app (its page then brings the payer back)', () => {
-  expect(appOpenUrl(PAY, true)).toBe(`${PAY}?from=app`);
-  expect(appOpenUrl(`http://localhost:3000/pay/${'A_-9'.repeat(10)}`, true)).toBe(`http://localhost:3000/pay/${'A_-9'.repeat(10)}?from=app`);
+test('the test build opens a pay page with ?from=<its platform> (its page then brings the payer back)', () => {
+  expect(['android', 'ios']).toContain(Platform.OS);
+  expect(appOpenUrl(PAY, true)).toBe(`${PAY}?from=${Platform.OS}`);
+  const local = `http://localhost:3000/pay/${'A_-9'.repeat(10)}`;
+  expect(appOpenUrl(local, true)).toBe(`${local}?from=${Platform.OS}`);
 });
 
 test.each([
   [PAY, false],
-  [`${PAY}?from=app`, true],
+  [`${PAY}?from=ios`, true],
   [`${PAY}/done`, true],
   ['https://api.example.test/pay/short', true],
   ['https://meet.test/ab', true],

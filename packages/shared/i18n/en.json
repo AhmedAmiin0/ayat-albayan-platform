@@ -7069,7 +7069,11 @@
       "agreed": "Agreed amount: {amount} {currency}",
       "cancelling": "Cancelling the link…",
       "cancelFailed": "Could not cancel the link; try again.",
-      "confirming": "Confirming the payment…"
+      "confirming": "Confirming the payment…",
+      "paid": "Paid",
+      "notConfirmed": "The payment is not confirmed yet",
+      "refresh": "Refresh",
+      "openStudent": "Open the student's file"
     },
     "pay": {
       "title": "Pay Ayat Al-Bayan Academy",
