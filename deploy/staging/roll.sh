@@ -1,7 +1,7 @@
 #!/bin/sh
 # Rolling deploy of the staging API (docs/09 «Two API copies + one worker»). Run in /opt/ayat-albayan-staging:
-#   sh roll.sh             build the image once, roll ayat-worker → ayat-api-a → ayat-api-b (each healthy before
-#                          the next; ayat-lb keeps serving from the other copy), reload ayat-lb if its config changed
+#   sh roll.sh             build the image once, roll ayat-worker → ayat-pdf → ayat-api-a → ayat-api-b (each healthy
+#                          before the next; ayat-lb keeps serving from the other copy), reload ayat-lb if its config changed
 #   sh roll.sh --env-only  no build: recreate the same way so every container reads the new .env
 # Touches only this compose project (ayat-albayan-staging): never another container, image, the host Caddy or /opt/wacrm.
 set -eu
@@ -86,6 +86,7 @@ if [ -n "$legacy" ]; then
   dc pull ayat-lb
   # Before anything stops: a Caddyfile Caddy refuses must never cost the old container its port.
   lb_valid || { echo '::error::lb/Caddyfile is invalid: the single container keeps 3110'; exit 1; }
+  roll ayat-pdf || echo '::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable'
   roll ayat-api-a
   roll ayat-api-b
   # shellcheck disable=SC2086
@@ -94,6 +95,9 @@ if [ -n "$legacy" ]; then
   roll ayat-worker
 else
   roll ayat-worker
+  # The PDF sandbox before the copies that ask it (docs/09 «PDF sandbox»); while it restarts they answer 503
+  # pdf_unavailable and the apps ask again. One that never gets healthy only warns: previews never gate a deploy.
+  roll ayat-pdf || echo '::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable'
   roll ayat-api-a
   roll ayat-api-b
   lb

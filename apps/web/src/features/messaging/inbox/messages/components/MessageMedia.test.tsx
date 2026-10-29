@@ -15,6 +15,12 @@ const FILE_PATH = '/threads/%2B966501234567/messages/m-1/file';
 const row = (patch: Partial<MessageView>) => message({ id: 'm-1', body: 'صورة الاستمارة', ...patch });
 const renderAt = (m: MessageView) => renderWithClient(<MessageMedia message={m} />);
 const view = (kind: string) => screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind) });
+/** The opened PDF; its page 1 has no preview (422), so it stays today's named link (PdfCard.test.tsx has the card). */
+const servePdf = () =>
+  apiFetch.mockImplementation(async (path: string) => {
+    if (path.endsWith('/pdf/1')) throw new ApiError(422, { code: 'pdf_no_preview' });
+    return { url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'application/pdf' };
+  });
 
 describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   afterEach(() => apiFetch.mockReset());
@@ -32,8 +38,8 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
     expect(link?.getAttribute('target')).toBe('_blank');
   });
 
-  it('a PDF becomes a named link, not an image', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'application/pdf' });
+  it('a PDF with no preview becomes a named link, not an image', async () => {
+    servePdf();
     renderAt(row({ media_mime: 'application/pdf' }));
     fireEvent.click(view(t.inbox.media.document));
     const link = await screen.findByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.document) });
@@ -71,7 +77,7 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   });
 
   it('an outbound PDF we sent opens too, its link named by media_name', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'application/pdf' });
+    servePdf();
     renderAt(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'جدول الحلقات.pdf' }));
     expect(apiFetch).not.toHaveBeenCalled();
     fireEvent.click(view(t.inbox.media.document));

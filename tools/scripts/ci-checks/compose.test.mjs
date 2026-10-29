@@ -26,6 +26,7 @@ test('the project and its services', () => {
     'ayat-api-a',
     'ayat-api-b',
     'ayat-lb',
+    'ayat-pdf',
     'ayat-redis',
     'ayat-worker',
   ]);
@@ -76,11 +77,21 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-worker': 1024,
     'ayat-api-a': 512,
     'ayat-api-b': 512,
+    'ayat-pdf': 128,
     'ayat-lb': 64,
     'ayat-redis': 96,
   });
-  // ≈ 2.2 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium, docs/09).
-  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2272);
+  // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
+  // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
+  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2336);
+});
+
+test('every container log rotates (json-file, size-capped): never the disk the CRM shares', () => {
+  for (const [name, s] of Object.entries(services)) {
+    assert.equal(s.logging?.driver, 'json-file', name);
+    assert.match(s.logging.options['max-size'], /^\d+m$/, name);
+    assert.match(s.logging.options['max-file'], /^\d$/, name);
+  }
 });
 
 test('the shared cache: every app process on ayat-redis, never published, started before the roll', () => {
@@ -134,10 +145,11 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
     assert.match(text, /PROJECT=ayat-albayan-staging/);
   }
   assert.doesNotMatch(roll, /force-recreate ayat-lb/, 'a refused Caddyfile is never forced in');
-  const order = ['roll ayat-worker\n  roll ayat-api-a\n  roll ayat-api-b\n  lb'];
-  assert.ok(
-    order.every((o) => roll.includes(o)),
-    'worker → api-a → api-b → lb',
+  // Comment lines may sit between the rolls; the order may not change.
+  assert.match(
+    roll,
+    /\n  roll ayat-worker\n(\s*#.*\n)*  roll ayat-pdf \|\| echo [^\n]*\n  roll ayat-api-a\n  roll ayat-api-b\n  lb\n/,
+    'worker → pdf sandbox → api-a → api-b → lb',
   );
   assert.match(
     deploy,

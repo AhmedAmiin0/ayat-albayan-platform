@@ -2,8 +2,8 @@ import type { SignedDownload, ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries } from '../../whatsapp/messages/inbound-media.queries';
-import { baseMime, chatServable, InboundMedia, isInvoiceMime, mediaExpired } from '../../whatsapp/messages/inbound-media.service';
+import { InboundMediaQueries, type MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
+import { baseMime, chatServable, InboundMedia, type InboundFile, isInvoiceMime, mediaExpired } from '../../whatsapp/messages/inbound-media.service';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
 import { downloadName } from './download-name';
 
@@ -64,15 +64,19 @@ export class ThreadMediaService {
    * the file under downloadName (Content-Disposition) instead of opening it.
    */
   async bubbleFile(input: { phone: string; messageId: string; download?: boolean }): Promise<ThreadFile> {
-    const msg = await this.queries.message(input.messageId);
-    if (!msg || msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    const { msg, file } = await this.bubbleObject(input);
     const named = input.download ? { download: downloadName(msg) } : {};
-    if (msg.direction === 'outbound' && msg.media_path) {
-      const signed = await this.storage.signedDownload({ bucket: BUCKETS.waMedia, path: msg.media_path, ...named });
-      return { ...signed, mime: baseMime(msg.media_mime) };
-    }
-    const file = await this.media.cache(chatServable(msg));
     const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path, ...named });
     return { ...signed, mime: file.mime };
+  }
+
+  /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
+  async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
+    const msg = await this.queries.message(input.messageId);
+    if (!msg || msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (msg.direction === 'outbound' && msg.media_path) {
+      return { msg, file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) } };
+    }
+    return { msg, file: await this.media.cache(chatServable(msg)) };
   }
 }

@@ -22,8 +22,9 @@ beforeEach(() => {
   openURL.mockReset().mockResolvedValue(true);
 });
 
-test('the chip’s «تنزيل» signs nothing on render, then asks ?download=1 and opens it', async () => {
+test('the PDF card’s «تنزيل»: a family’s PDF signs nothing on render (not even page 1), then it asks ?download=1 and opens it', async () => {
   await renderWithQuery(<MessageFile message={pdf} phone={PHONE} />);
+  expect(screen.getByText(t.inbox.pdf.tapToPreview)).toBeTruthy();
   expect(mockApiFetch).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name }));
   expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966552147730/messages/f1/file?download=1');

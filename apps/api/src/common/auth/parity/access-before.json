@@ -396,6 +396,7 @@
   "TemplatesController.setStarter": ["admin"],
   "TemplatesController.submit": ["admin"],
   "ThreadFileController.file": ["admin","sales","teacher"],
+  "ThreadFileController.pdf": ["admin","sales","teacher"],
   "ThreadFileSendController.send": ["admin","sales","teacher"],
   "ThreadFileSendController.uploadUrl": ["admin","sales","teacher"],
   "ThreadForwardController.forward": ["admin","sales","teacher"],

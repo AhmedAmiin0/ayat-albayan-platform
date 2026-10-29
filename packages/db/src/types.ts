@@ -2661,9 +2661,11 @@ export type Database = {
           lead_id: string | null;
           lesson_id: string | null;
           line: Database['public']['Enums']['wa_line'] | null;
+          media_bytes: number | null;
           media_id: string | null;
           media_mime: string | null;
           media_name: string | null;
+          media_pages: number | null;
           number_id: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
@@ -2705,9 +2707,11 @@ export type Database = {
           lead_id?: string | null;
           lesson_id?: string | null;
           line?: Database['public']['Enums']['wa_line'] | null;
+          media_bytes?: number | null;
           media_id?: string | null;
           media_mime?: string | null;
           media_name?: string | null;
+          media_pages?: number | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
@@ -2749,9 +2753,11 @@ export type Database = {
           lead_id?: string | null;
           lesson_id?: string | null;
           line?: Database['public']['Enums']['wa_line'] | null;
+          media_bytes?: number | null;
           media_id?: string | null;
           media_mime?: string | null;
           media_name?: string | null;
+          media_pages?: number | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;

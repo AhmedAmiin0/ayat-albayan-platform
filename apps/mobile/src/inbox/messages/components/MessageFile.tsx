@@ -1,4 +1,4 @@
-import { baseMime, isPlayableMime, type MessageView } from '@ab/shared';
+import { baseMime, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,11 +13,15 @@ import { VideoTile } from '../media/VideoTile';
 import { VoiceNote } from '../media/VoiceNote';
 import { MediaNote, problemText } from '../photo/MediaNote';
 import { mediaProblem, type MediaProblem, photoBox } from '../photo/media-problem';
+import { PdfPreview } from '../photo/PdfPreview';
 import { PhotoPreview } from '../photo/PhotoPreview';
 
 type State = { step: 'idle' | 'loading' } | { step: 'problem'; problem: MediaProblem };
 
-/** Asked only on the tap: rendering or refetching the thread never signs a PDF (W6); it opens in the phone's viewer. */
+/**
+ * Asked only on the tap (W6): the file opens in the phone's viewer. HEIC, and a PDF the preview
+ * cannot show (PdfPreview's fallback on a 4xx: no preview, a bad request).
+ */
 function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: string; kind: string }) {
   const { color } = useTheme();
   const small = useSmall();
@@ -78,10 +82,12 @@ interface MessageFileProps {
 /**
  * A bubble's photo, PDF, voice note or video (owner 2026-10-19 #1, W6), ours or theirs. A photo shows
  * its thumbnail as the bubble renders (PhotoPreview, owner 2026-10-26: supersedes W6's «signed only on
- * the tap» for photos only); HEIC keeps «عرض صورة» (Android does not decode it reliably), which opens
- * it in the phone's viewer as a PDF does; a voice note and a video look as on WhatsApp (owner
- * 2026-10-27: VoiceNote, VideoTile); «تنزيل» under each saves it (DownloadLink). A teacher gets the label only: the API refuses
- * the file (403 media_forbidden; a photo may be a payment proof), so no request is made.
+ * the tap» for photos), and so does a PDF staff sent its first page (PdfPreview, owner 2026-10-29; any
+ * other PDF shows it after a tap); HEIC keeps
+ * «عرض صورة» (Android does not decode it reliably), which opens it in the phone's viewer; a voice note
+ * and a video look as on WhatsApp (owner 2026-10-27: VoiceNote, VideoTile); «تنزيل» under each saves it
+ * (DownloadLink). A teacher gets the label only: the API refuses the file (403 media_forbidden; a photo
+ * may be a payment proof), so no request is made.
  */
 export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps) {
   const teacher = useThreadMode().kind === 'teacher';
@@ -92,5 +98,7 @@ export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps
   const playable = isPlayableMime(m.media_mime);
   if (playable && baseMime(m.media_mime).startsWith('audio/')) return <VoiceNote message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
   if (playable) return <VideoTile message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
-  return <FileOpener message={m} phone={phone} kind={kind} />;
+  const opener = <FileOpener message={m} phone={phone} kind={kind} />;
+  if (isPdfMime(m.media_mime)) return <PdfPreview message={m} phone={phone} kind={kind} onLongPress={onLongPress} fallback={opener} />;
+  return opener;
 }
