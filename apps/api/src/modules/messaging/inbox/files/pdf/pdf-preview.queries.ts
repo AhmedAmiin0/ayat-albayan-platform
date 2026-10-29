@@ -5,7 +5,7 @@ import { DB, type Db } from '../../../../../common/db/db.module';
 export type PdfDoc = { pages: number; bytes: number };
 
 /**
- * messages.media_pages / media_bytes (migration 20261029000981), read and written only here: the shared
+ * messages.media_pages / media_bytes (migration 20261030000982), read and written only here: the shared
  * select of InboundMediaQueries stays without them, so a deploy that skipped the migration breaks only
  * the preview, never /file, the picker or a forward.
  */
