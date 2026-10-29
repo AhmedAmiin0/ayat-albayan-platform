@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '../../../../common/db/db.module';
 import { assistantError } from './assistant-pay.errors';
 
 type PaidArgs = { paidAt: string; method: string | null; note: string | null; receiptPath: string | null };

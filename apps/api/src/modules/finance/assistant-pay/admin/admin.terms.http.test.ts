@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { badRequest } from '../../../common/http/errors';
-import { A, ADMIN, assistantApp, STUDENT } from './assistant-pay.fakes';
+import { badRequest } from '../../../../common/http/errors';
+import { A, ADMIN, assistantApp, STUDENT } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 const PUT = `/assistant-pay/terms/${A}`;

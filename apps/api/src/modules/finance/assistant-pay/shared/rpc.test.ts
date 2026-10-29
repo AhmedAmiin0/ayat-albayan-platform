@@ -1,12 +1,12 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeDb } from '../../../people/guardians/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
+import { fakeSettings } from '../../../../common/settings/settings.fakes';
 import { AssistantPaySettings } from './assistant-pay.settings';
-import { TermsQueries } from './terms/terms.queries';
+import { TermsQueries } from '../terms/terms.queries';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
 const thrown = (p: Promise<unknown>): Promise<Error> => p.then(() => new Error('did not throw'), (e: Error) => e);

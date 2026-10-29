@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { badRequest, conflict, notFound } from '../../../common/http/errors';
-import { A, ADMIN, assistantApp, ID, statementRow } from './assistant-pay.fakes';
+import { badRequest, conflict, notFound } from '../../../../common/http/errors';
+import { A, ADMIN, assistantApp, ID, statementRow } from '../shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 const S = `/assistant-pay/statements`;
