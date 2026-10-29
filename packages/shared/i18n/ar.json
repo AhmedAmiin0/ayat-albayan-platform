@@ -7091,7 +7091,12 @@
     "mobile": {
       "agreed": "المبلغ المتفق عليه: {amount} {currency}",
       "cancelling": "جارٍ إلغاء الرابط…",
-      "cancelFailed": "تعذّر إلغاء الرابط؛ حاول مرة أخرى."
+      "cancelFailed": "تعذّر إلغاء الرابط؛ حاول مرة أخرى.",
+      "confirming": "جارٍ تأكيد الدفع…",
+      "paid": "تم الدفع",
+      "notConfirmed": "لم يصل تأكيد الدفع بعد",
+      "refresh": "تحديث",
+      "openStudent": "فتح ملف الطالب"
     },
     "pay": {
       "title": "الدفع لأكاديمية آيات البيان",
@@ -7110,7 +7115,8 @@
       "doneTitle": "تم استلام الدفع، شكرًا",
       "cancelTitle": "لم يتم الدفع",
       "packageLine": "الباقة: {lessons}",
-      "backToPage": "العودة إلى صفحة الدفع"
+      "backToPage": "العودة إلى صفحة الدفع",
+      "backToApp": "العودة إلى التطبيق"
     },
     "bell": {
       "paidTitle": "تم الدفع عبر رابط الدفع",

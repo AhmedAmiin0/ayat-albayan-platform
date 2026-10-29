@@ -45,6 +45,7 @@ const app = {
   'assistant/lessons/index': stub('assistant-lessons'),
   'assistant/more/_layout': TabStack,
   'assistant/more/index': stub('assistant-more'),
+  'pay-done': stub('pay-done'),
 };
 
 async function open(gate: string, url: string) {
@@ -102,6 +103,14 @@ test.each([['admin'], ['teacher'], ['out']])('%s never reaches the sales or assi
   expect(screen.queryByText('sales-inbox')).toBeNull();
   await open(gate, '/assistant/lessons');
   expect(screen.queryByText('assistant-lessons')).toBeNull();
+});
+
+// Back from Stripe into the test app (pay-return): only those who make payment links reach /pay-done.
+test.each([['sales', true], ['admin', true], ['teacher', false], ['assistant', false], ['out', false]])('%s opening /pay-done: %s', async (gate, reached) => {
+  mockMe.answer = { role: gate, permissions: gate === 'sales' ? SALES : [] };
+  await open(gate, '/pay-done?token=t&r=done');
+  if (reached) expect(await screen.findByText('pay-done')).toBeTruthy();
+  else expect(screen.queryByText('pay-done')).toBeNull();
 });
 
 test('the new trees register no push without notifications.push', async () => {

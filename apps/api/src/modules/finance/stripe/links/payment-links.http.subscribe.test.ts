@@ -82,6 +82,12 @@ describe('POST /sales/payment-links with the subscribe step’s «المعلم/�
     expect(s.links.insert).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'new' }));
   });
 
+  it('a retry that replays its own orphan package (the link insert failed) stays new', async () => {
+    s.links.student.mockResolvedValueOnce({ broughtBy: null, priced: [subRow({ price: 120 }).id] });
+    expect((await create({})).statusCode).toBe(201);
+    expect(s.links.insert).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'new' }));
+  });
+
   it('no teacher sent: nothing checked or assigned', async () => {
     expect((await create({})).statusCode).toBe(201);
     expect(s.teachers.ensureActive).not.toHaveBeenCalled();

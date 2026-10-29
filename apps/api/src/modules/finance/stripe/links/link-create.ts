@@ -42,7 +42,6 @@ export class LinkCreate {
     const student = await this.deps.links.student(input.studentId);
     if (!student) throw notFound('student_not_found');
     if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
-    const kind = student.priced.length > 0 ? 'renewal' : 'new';
     const { quote, min_amount } = await this.quote(input);
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
@@ -53,6 +52,8 @@ export class LinkCreate {
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
     const sub = await this.creator.create(create, user.id, { price: input.amount });
     if (sub.student.id !== input.studentId) throw conflict('client_request_reused');
+    // After create: a retry that replays its own orphan package (the link insert failed) must not count it as a renewal.
+    const kind = student.priced.some((id) => id !== sub.id) ? 'renewal' : 'new';
     const row = await this.deps.links.insert({
       token: newLinkToken(),
       student_id: input.studentId,

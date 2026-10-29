@@ -7,6 +7,7 @@ import { SalesSubscribeScreen } from '../screens/SalesSubscribeScreen';
 import { familyOf, kid, salesQuote } from '../testing/fixtures';
 import { PaymentLinksRow } from './list/PaymentLinksRow';
 import { PaymentLinksScreen } from './list/PaymentLinksScreen';
+import { PaymentDoneScreen } from './PaymentDoneScreen';
 
 // The owner's hard rule (docs/30): Stripe exists only in the test build. The build flag is read first.
 const mockFlag = { on: false };
@@ -22,12 +23,17 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
+const mockRedirect = jest.fn();
 jest.mock('expo-router', () => ({
+  Redirect: (props: { href: string }) => {
+    mockRedirect(props.href);
+    return null;
+  },
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966501112223' }),
 }));
 
-const ALL = [<PaymentLinksScreen key="list" />, <PaymentLinksRow key="row" />];
+const ALL = [<PaymentLinksScreen key="list" />, <PaymentLinksRow key="row" />, <PaymentDoneScreen key="done" />];
 const FAMILY = '/sales/money/family?phone=%2B966501112223';
 
 /** Signed in as a salesperson (self.sales_money): the row's own permission. */
@@ -60,6 +66,13 @@ test('a normal build: «اشتراك جديد» has no «طريقة الدفع»
   expect(screen.queryByRole('radio', { name: t.salesMoney.payOnline })).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/stripe/feature');
   expect(mockApiSend.mock.calls.some((c: unknown[]) => String(c[1]).startsWith('/sales/payment-links'))).toBe(false);
+});
+
+test('a normal build: /pay-done (an ayatalbayan:// link) goes to the app start, never a blank screen', async () => {
+  mockFlag.on = false;
+  await renderWithQuery(<PaymentDoneScreen />);
+  expect(mockRedirect).toHaveBeenCalledWith('/');
+  expect(mockApiFetch).not.toHaveBeenCalled();
 });
 
 test('the test build on a server without Stripe (404): no row', async () => {
