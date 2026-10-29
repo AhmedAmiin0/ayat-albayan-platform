@@ -6786,6 +6786,7 @@
     "close": "إغلاق",
     "showHistory": "عرض المواعيد",
     "mobile": {
+      "pickStudent": "لأيّ طالب؟",
       "showAll": "عرض الكل ({n})",
       "showLess": "عرض أقل",
       "newTime": "الموعد الجديد"

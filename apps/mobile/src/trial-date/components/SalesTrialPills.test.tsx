@@ -1,12 +1,12 @@
 import type { StudentStatus } from '@ab/shared';
-import { fireEvent, screen, within } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The salesperson's family chat: «موعد تجريبي جديد» per student of hers with no running subscription.
+// The salesperson's family chat: one «موعد تجريبي جديد» for her students with no running subscription.
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -45,10 +45,14 @@ test.each(['active', 'pending_renewal', 'expired'] as StudentStatus[])('%s: no t
   expect(strip.queryByRole('button', { name: new RegExp(`^${t.trialDate.action}`) })).toBeNull();
 });
 
-test('two of hers: one pill per allowed child, named', async () => {
-  serve(kid(), kid({ id: KID2, name: 'سلمى', status: 'active' }), kid({ id: 'k3', name: 'نور', status: 'new' }));
+// Owner 2026-10-29 («Many trial buttons»): one pill, then «لأيّ طالب؟» names each allowed child.
+test('several of hers: ONE pill; its sheet lists each allowed child and opens the one picked', async () => {
+  serve(kid(), kid({ id: KID2, name: 'سلمى', status: 'active' }), kid({ id: 'k3', code: 'AB-0202', name: 'نور', status: 'new' }));
   const strip = await open();
-  expect(strip.getByText(`${t.trialDate.action} — ريم`)).toBeTruthy();
-  expect(strip.getByText(`${t.trialDate.action} — نور`)).toBeTruthy();
-  expect(strip.queryByText(`${t.trialDate.action} — سلمى`)).toBeNull();
+  expect(strip.getAllByRole('button', { name: new RegExp(`^${t.trialDate.action}`) })).toHaveLength(1);
+  await fireEvent.press(strip.getByRole('button', { name: t.trialDate.action }));
+  const sheet = within(screen.getByTestId('trial-student-sheet'));
+  expect(sheet.queryByRole('button', { name: /سلمى/ })).toBeNull();
+  await fireEvent.press(sheet.getByRole('button', { name: 'نور · AB-0202' }));
+  await waitFor(() => expect(mockPush).toHaveBeenCalledWith({ pathname: '/sales/inbox/trial-date', params: { studentId: 'k3', name: 'نور' } }));
 });

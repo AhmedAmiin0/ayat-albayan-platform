@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { MenuSheet } from '../../shared/MenuSheet';
+import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 
 /** iOS presents one modal at a time: what an item opens (the copy sheet, «القوائم») waits for this one to close. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
