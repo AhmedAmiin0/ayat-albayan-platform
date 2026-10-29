@@ -22,19 +22,19 @@ import { chatStudentHref } from './tree-base';
 // Review 2026-10-30: every route the student file opened from a chat links to (useStudentHref) has its copy in
 // the chat group, showing the tab's screen; a missing copy would open «unmatched route» instead.
 test.each([
-  ['/students/s1', '/inbox/student/s1', AdminFile, StudentScreen],
-  ['/students/s1/attendance', '/inbox/student/s1/attendance', AdminAttendance, AttendanceLogScreen],
-  ['/students/reports/s1', '/inbox/student/reports/s1', AdminReports, AdminStudentReportsScreen],
-  ['/students/reports/view/r1', '/inbox/student/reports/view/r1', AdminReport, AdminReportScreen],
-  ['/students/payment/s1', '/inbox/student/payment/s1', AdminPayment, PaymentScreen],
-  ['/students/money/s1', '/inbox/student/money/s1', AdminMoney, StudentMoneyScreen],
-  ['/students/channel/s1', '/inbox/student/channel/s1', AdminChannel, AdminChannelScreen],
-  ['/students/recordings/s1', '/inbox/student/recordings/s1', AdminRecordings, StudentRecordingsScreen],
-  ['/students/subscribe', '/inbox/student/subscribe', AdminSubscribe, SubscribeScreen],
-  ['/students/trial-date/s1', '/inbox/student/trial-date/s1', AdminTrialDate, TrialDateScreen],
-  ['/sales/students/s1', '/sales/inbox/student/s1', SalesFile, SalesStudentScreen],
-  ['/sales/students/s1/attendance', '/sales/inbox/student/s1/attendance', SalesAttendance, AttendanceLogScreen],
-] as const)('%s from a chat opens %s, the same screen', (tab, chat, copy, screen) => {
+  ['/students/s1', '/inbox/student/s1', [AdminFile, StudentScreen]],
+  ['/students/s1/attendance', '/inbox/student/s1/attendance', [AdminAttendance, AttendanceLogScreen]],
+  ['/students/reports/s1', '/inbox/student/reports/s1', [AdminReports, AdminStudentReportsScreen]],
+  ['/students/reports/view/r1', '/inbox/student/reports/view/r1', [AdminReport, AdminReportScreen]],
+  ['/students/payment/s1', '/inbox/student/payment/s1', [AdminPayment, PaymentScreen]],
+  ['/students/money/s1', '/inbox/student/money/s1', [AdminMoney, StudentMoneyScreen]],
+  ['/students/channel/s1', '/inbox/student/channel/s1', [AdminChannel, AdminChannelScreen]],
+  ['/students/recordings/s1', '/inbox/student/recordings/s1', [AdminRecordings, StudentRecordingsScreen]],
+  ['/students/subscribe', '/inbox/student/subscribe', [AdminSubscribe, SubscribeScreen]],
+  ['/students/trial-date/s1', '/inbox/student/trial-date/s1', [AdminTrialDate, TrialDateScreen]],
+  ['/sales/students/s1', '/sales/inbox/student/s1', [SalesFile, SalesStudentScreen]],
+  ['/sales/students/s1/attendance', '/sales/inbox/student/s1/attendance', [SalesAttendance, AttendanceLogScreen]],
+] as const)('%s from a chat opens %s, the same screen', (tab, chat, [copy, screen]) => {
   expect(chatStudentHref(tab)).toBe(chat);
   expect(copy).toBe(screen);
 });
