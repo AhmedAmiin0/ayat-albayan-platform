@@ -62,7 +62,7 @@ test.each(ALL.map((ui) => [ui.key, ui]))('a normal build (flag false): %s render
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('a normal build: /pay-done (an ayatalbayan:// link) goes to the app's start, never a blank screen', async () => {
+test('a normal build: /pay-done (an ayatalbayan:// link) goes to the app start, never a blank screen', async () => {
   mockFlag.on = false;
   await renderWithQuery(<PaymentDoneScreen />);
   expect(mockRedirect).toHaveBeenCalledWith('/');
