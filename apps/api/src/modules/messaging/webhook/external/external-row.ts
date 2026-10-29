@@ -1,5 +1,5 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import type { WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, type WaLine } from '@ab/shared';
 import type { StatusEvent } from '../webhook.events';
 import type { Contact } from '../webhook.types';
 import { statusPatch } from '../status/webhook.status';
@@ -47,6 +47,10 @@ function delivery(msg: ExternalMessage, event: StatusEvent | undefined): TablesU
 const origin = ({ line, numberId }: ExternalRowInput['from']) => ({ ...(line ? { line } : {}), ...(numberId ? { number_id: numberId } : {}) });
 
 export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInput): TablesInsert<'messages'> {
+  const templateKey = msg.templateName ? templateKeyFor(msg.templateName) : null;
+  // A sign-in code (docs/30 §4, on the chat line since 2026-10-29) is kept as a bare marker: its text
+  // and params hold the code, which staff must never read in the chat.
+  const secret = templateKey === ACCOUNT_CODE_TEMPLATE;
   return {
     ...delivery(msg, event),
     ...origin(from),
@@ -54,9 +58,9 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     phone_e164: phone,
     guardian_id: who.guardian?.id ?? null,
     lead_id: who.guardian ? null : (who.lead?.id ?? null),
-    body: bodyOf(msg),
-    template_key: msg.templateName ? templateKeyFor(msg.templateName) : null,
-    template_params: msg.templateParams,
+    body: secret ? null : bodyOf(msg),
+    template_key: templateKey,
+    template_params: secret ? null : msg.templateParams,
     wa_message_id: msg.waMessageId,
     reply_to_wa_id: msg.replyTo,
     media_id: msg.mediaId,

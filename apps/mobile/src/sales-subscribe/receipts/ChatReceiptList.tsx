@@ -8,14 +8,16 @@ import { useChatReceipts } from './chat-receipts';
 
 interface ChatReceiptListProps {
   studentId: string;
+  /** The chat's phone for a child not hers (chatBinding). */
+  bind?: { phone?: string };
   /** The message being copied, if any. */
   busyId: string | undefined;
   onPick: (item: SalesChatReceipt) => void;
 }
 
 /** The family's recent images and PDFs (GET /sales/money/chat-receipts), newest as the API sends them. */
-export function ChatReceiptList({ studentId, busyId, onPick }: ChatReceiptListProps) {
-  const list = useChatReceipts(studentId, true);
+export function ChatReceiptList({ studentId, bind, busyId, onPick }: ChatReceiptListProps) {
+  const list = useChatReceipts(studentId, true, bind);
   if (list.isError) return <ErrorState onRetry={() => void list.refetch()} />;
   if (!list.data) return <Note>{t.common.loading}</Note>;
   if (list.data.length === 0) return <Note>{t.salesMoney.noChatReceipts}</Note>;
@@ -25,6 +27,7 @@ export function ChatReceiptList({ studentId, busyId, onPick }: ChatReceiptListPr
         <ChatReceiptRow
           key={item.message_id}
           studentId={studentId}
+          {...(bind ? { bind } : {})}
           item={item}
           busy={busyId === item.message_id}
           onPick={onPick}

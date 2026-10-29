@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
 import { ClosedRow } from '../threads-list/ClosedRow';
-import { useComposerText } from './draft-store';
+import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
 import { ErrorLine } from '../ErrorLine';
@@ -50,6 +50,7 @@ export function Composer({
   const [quoting, setQuoting] = useState(false);
   const [text, setText] = useComposerText(phone);
   const replies = useSavedReplyDraft({ text, setText, enabled: staff });
+  useForgetDraftOnLeave(phone, replies.staged !== null);
   const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
   const [picking, setPicking] = useState(false);
   // Why a photo / PDF did not go (AttachFile), until the next pick.

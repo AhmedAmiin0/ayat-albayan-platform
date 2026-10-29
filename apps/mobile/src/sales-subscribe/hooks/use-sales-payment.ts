@@ -13,12 +13,12 @@ import { uploadSalesReceipt } from './upload-sales-receipt';
  * per file (a retry after a failed POST reuses its path); a chat file is already copied. None is
  * fine (owner 2026-10-12). ONE clientRequestId per open screen, so a retry after a lost reply never
  * records the transfer twice (rule 8). Never sends kind, method or invoiceId: the API's bank
- * transfer. Then the chat and the family refetch.
+ * transfer. `bind`: the chat's phone for a child not hers (chatBinding). Then the chat and the family refetch.
  */
-export function useSalesPayment(phone: string) {
+export function useSalesPayment(phone: string, bind: { phone?: string } = {}) {
   const client = useQueryClient();
   const [clientRequestId] = useState(requestId);
-  const attachmentPaths = useAttachmentPaths(uploadSalesReceipt);
+  const attachmentPaths = useAttachmentPaths((id, receipt) => uploadSalesReceipt(id, receipt, bind));
 
   return useMutation({
     mutationKey: ['sales', 'payments', 'create'],
@@ -32,6 +32,7 @@ export function useSalesPayment(phone: string) {
         ...(attachments.length ? { attachments } : {}),
         ...(input.note === null ? {} : { note: input.note }),
         clientRequestId,
+        ...bind,
       });
     },
     onSettled: () => refreshFamily(client, phone),

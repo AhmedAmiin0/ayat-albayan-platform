@@ -24,7 +24,7 @@ export class SalesMoneyReadsController {
     private readonly receipts: SalesChatReceipts,
   ) {}
 
-  /** Her students in the family of this chat (none of its other children), each with the packages still owed. */
+  /** Her students in the family of this chat (every child with sales.renew_any), each with the packages still owed. */
   @Get('family')
   family(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesFamilyView> {
     return this.money.familyOf(parseOrThrow(salesFamilyQuerySchema, query).phone, user);
@@ -33,7 +33,7 @@ export class SalesMoneyReadsController {
   /** The images / PDFs her student's family sent in its chat (last 30 days, metadata only). */
   @Get('chat-receipts')
   chatReceipts(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesChatReceipt[]> {
-    return this.receipts.list(parseOrThrow(salesChatReceiptsQuerySchema, query).studentId, user);
+    return this.receipts.list(parseOrThrow(salesChatReceiptsQuerySchema, query), user);
   }
 
   /** One of those files as a short-lived signed URL (a thumbnail). */
@@ -43,7 +43,7 @@ export class SalesMoneyReadsController {
     @Query() query: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<SalesChatReceiptFile> {
-    const { studentId } = parseOrThrow(salesChatReceiptsQuerySchema, query);
-    return this.receipts.file({ studentId, messageId }, user);
+    const { studentId, phone } = parseOrThrow(salesChatReceiptsQuerySchema, query);
+    return this.receipts.file({ studentId, messageId, phone }, user);
   }
 }

@@ -13,6 +13,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesLive } from '../lib/sales-api';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 type Row = ReturnType<typeof joinableRows>[number];
 
@@ -25,6 +26,7 @@ type Row = ReturnType<typeof joinableRows>[number];
 export function SalesLiveScreen() {
   const { color } = useTheme();
   const live = useSalesLive();
+  const pull = usePullRefresh(live.refetch);
   const rows = joinableRows(live.data ?? []);
   const inset = useTabBarInset();
   const row = useCallback(
@@ -51,8 +53,8 @@ export function SalesLiveScreen() {
         data={rows}
         keyExtractor={(r) => r.view.lesson_id}
         {...cells}
-        refreshing={live.isRefetching}
-        onRefresh={() => void live.refetch()}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           live.data ? (
             <EmptyState title={t.sales.live.empty} />

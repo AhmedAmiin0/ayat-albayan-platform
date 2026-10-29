@@ -7,10 +7,12 @@ import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from './wa-stub'
 // code as the stub captured it. Example data only; «Meta» is tools/wa-stub.
 
 const TEMPLATE = 'account_code';
+/** Codes leave from the CHAT line (owner 2026-10-29): the template lives on the chat WABA (= playwright.config.ts). */
+const CHAT_WABA = 'e2e-chat-waba';
 
-/** Codes can go out: the template exists and is approved (stub + DB), sending and family sign-in are on. */
+/** Codes can go out (two-line runs only: no chat line = no codes): the template exists and is approved (stub + DB), sending and family sign-in are on. */
 export async function openCodes(): Promise<void> {
-  const created = await fetch(`${STUB_URL}/v21.0/e2e-waba/message_templates`, {
+  const created = await fetch(`${STUB_URL}/v21.0/${CHAT_WABA}/message_templates`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer e2e-token' },
     body: JSON.stringify({
@@ -29,7 +31,7 @@ export async function openCodes(): Promise<void> {
     }),
   });
   expect([200, 400]).toContain(created.status); // 400 = left from an earlier run
-  await stubTemplateStatus(TEMPLATE, 'APPROVED');
+  await stubTemplateStatus(TEMPLATE, 'APPROVED', CHAT_WABA);
   await withSql((sql) => sql`update public.message_templates set status = 'approved' where key = ${TEMPLATE}`);
   await setMessaging(true);
   await setSetting('family_login_enabled', true);

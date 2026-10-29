@@ -24,12 +24,17 @@ export class SalesFamilyQueries {
 
   /** The phone of the student's family chat (guardians.phone_e164); 404 student_not_found. */
   async familyPhone(studentId: string): Promise<string> {
-    const { data, error } = await this.db.from('students').select('guardian:guardians(phone_e164)').eq('id', studentId).maybeSingle();
-    if (error) throw dbError(error);
-    if (!data) throw notFound('student_not_found');
-    const phone = data.guardian?.phone_e164;
+    const phone = await this.phoneOf(studentId);
+    if (phone === undefined) throw notFound('student_not_found');
     if (!phone) throw notFound('family_phone_not_found');
     return phone;
+  }
+
+  /** guardians.phone_e164 of the student's family; null without one, undefined for an unknown student. */
+  async phoneOf(studentId: string): Promise<string | null | undefined> {
+    const { data, error } = await this.db.from('students').select('guardian:guardians(phone_e164)').eq('id', studentId).maybeSingle();
+    if (error) throw dbError(error);
+    return data ? (data.guardian?.phone_e164 ?? null) : undefined;
   }
 
   /** students.status right now (after a payment may have turned a trial active). */

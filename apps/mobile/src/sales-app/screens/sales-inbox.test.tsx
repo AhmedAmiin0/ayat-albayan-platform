@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
@@ -17,8 +17,12 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 // Even a salesperson granted leads.read gets no leads list in the sales tree (its rows are admin routes).
 const ME = { role: 'sales', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'leads.read', 'self.sales'] };
 
+// A family on file whose running package owes money: the payload's flag, as an admin's list carries it.
+const owing = { ...thread, phone_e164: '+966552147731', display_name: 'أم إيمان', guardian_id: 'g-1', lead_status: null, unpaid: true };
+const rowOf = (name: string) => within(screen.getByRole('button', { name: new RegExp(name) }));
+
 async function open(base: '' | '/sales') {
-  const threads = { items: [thread], total: 1 };
+  const threads = { items: [thread, owing], total: 2 };
   mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? ME : p.startsWith('/threads') ? threads : { items: [], total: 0 }));
   await renderWithQuery(
     <TreeBaseProvider value={base}>
@@ -31,11 +35,14 @@ async function open(base: '' | '/sales') {
 
 beforeEach(() => jest.clearAllMocks());
 
-test('sales tree: no leads switcher and no lead / family tags on the rows; a row opens /sales/inbox/thread', async () => {
+test('sales tree: no leads switcher; rows show the lead stage + source, never «غير مدفوع»; a row opens /sales/inbox/thread', async () => {
   await open('/sales');
   expect(screen.queryByRole('tab', { name: t.nav.leads })).toBeNull();
-  expect(screen.queryByText(t.enums.leadStatus.new)).toBeNull();
-  expect(screen.queryByText(new RegExp(t.enums.leadSource.facebook_ad))).toBeNull();
+  const lead = rowOf(thread.display_name ?? '');
+  expect(lead.getByText(t.enums.leadStatus.new)).toBeTruthy();
+  expect(lead.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
+  expect(rowOf('أم إيمان').getByText(t.inbox.kind.guardian)).toBeTruthy();
+  expect(screen.queryByText(t.enums.subscriptionStatus.unpaid)).toBeNull();
   await fireEvent.press(screen.getByText(thread.display_name ?? ''));
   expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/inbox\/thread\//));
 });
@@ -43,5 +50,6 @@ test('sales tree: no leads switcher and no lead / family tags on the rows; a row
 test('admin tree (a double-role admin): the leads switcher and the tags stay', async () => {
   await open('');
   expect(await screen.findByRole('tab', { name: t.nav.leads })).toBeTruthy();
-  expect(screen.getAllByText(t.enums.leadStatus.new).length).toBeGreaterThan(0);
+  expect(rowOf(thread.display_name ?? '').getByText(t.enums.leadStatus.new)).toBeTruthy();
+  expect(rowOf('أم إيمان').getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
 });

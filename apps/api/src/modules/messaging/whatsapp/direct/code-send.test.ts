@@ -16,7 +16,7 @@ const ACCOUNT_CODE = templateRow({
 });
 
 const gate = { open: vi.fn() };
-const queries = { approvedTemplates: vi.fn(), chatConfigured: false };
+const queries = { approvedTemplates: vi.fn(), chatConfigured: true };
 const dispatch = { ready: vi.fn(), send: vi.fn() };
 const make = () => new CodeSend(gate as unknown as SendGate, queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch);
 
@@ -29,12 +29,12 @@ describe('CodeSend — the account_code template, sent now, never queued (docs/3
     dispatch.send.mockResolvedValue({ waMessageId: 'wamid.c' });
   });
 
-  it('sends the code in {{1}} and the copy-code button, from the notifications line', async () => {
+  it('sends the code in {{1}} and the copy-code button, from the chat line (owner 2026-10-29)', async () => {
     await expect(make().send({ phone: '+966500000001', code: '123456' })).resolves.toEqual({ status: 'sent' });
     const [row, template, via] = dispatch.send.mock.calls[0] ?? [];
     expect(row).toMatchObject({ phone_e164: '+966500000001', template_key: 'account_code', template_params: { '1': '123456', button: '123456' } });
     expect(template).toBe(ACCOUNT_CODE);
-    expect(via).toBe('notifications');
+    expect(via).toBe('chat');
   });
 
   it('is unavailable while the template is not approved, the gate is closed or the line cannot send', async () => {
@@ -47,8 +47,8 @@ describe('CodeSend — the account_code template, sent now, never queued (docs/3
     expect(dispatch.send).not.toHaveBeenCalled();
   });
 
-  it('never over a crm line (its inbox would show the code)', async () => {
-    vi.stubEnv('WA_PROVIDER', 'crm');
+  it('never over a crm chat line (its inbox would show the code)', async () => {
+    vi.stubEnv('WA_CHAT_PROVIDER', 'crm');
     try {
       await expect(make().send({ phone: '+966500000001', code: '1' })).resolves.toEqual({ status: 'unavailable' });
     } finally {

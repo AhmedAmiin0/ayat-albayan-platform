@@ -2538,6 +2538,12 @@
     "filterAll": "All",
     "filterUnread": "Unread",
     "filterRow": "Filter chats",
+    "filterWaiting": "Awaiting your reply",
+    "emptyWaiting": "No chats are awaiting your reply",
+    "emptyStage": "No chats at this stage",
+    "draft": "Draft:",
+    "studentDetails": "Student details",
+    "chatMenu": "Chat options",
     "empty": "No messages yet",
     "emptyUnread": "No new messages",
     "unknownNumber": "Unknown number",
@@ -2670,7 +2676,7 @@
       "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
-      "placeholder": "Type a message…",
+      "placeholder": "Message",
       "placeholderDesktop": "Type a message — Enter to send, Shift+Enter for a new line",
       "send": "Send",
       "sending": "Sending…",
@@ -4410,7 +4416,8 @@
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",
-        "teacher": "with {name}"
+        "teacher": "with {name}",
+        "again": "New trial date for {name}"
       },
       "log": {
         "title": "Attendance log",
@@ -4469,7 +4476,15 @@
       "lessonsCount": "Lessons: {n}",
       "liveNow": "Running now",
       "makeupTag": "Makeup",
-      "lessonLabel": "Lesson at {time} with {teacher}"
+      "lessonLabel": "Lesson at {time} with {teacher}",
+      "status": {
+        "label": "Lesson status",
+        "all": "All",
+        "scheduled": "Needs confirmation",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "empty": "No lessons with this status on this day"
+      }
     },
     "views": {
       "students": "Students view",
@@ -4478,6 +4493,12 @@
     "renewalCommission": {
       "label": "Renewal commission share",
       "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
+    },
+    "money": {
+      "transfer": "Record transfer",
+      "renew": "Renew",
+      "transferFor": "Record a transfer for {name}",
+      "renewFor": "Renew {name}'s subscription"
     }
   },
   "salesMoney": {
@@ -5117,7 +5138,8 @@
       "notifications.manage": "Manage notifications",
       "saved_replies.manage": "Manage shared quick replies",
       "student_channels.monitor": "Read student–teacher channels",
-      "courses.pause": "Pause and resume any student's course"
+      "courses.pause": "Pause and resume any student's course",
+      "sales.renew_any": "Renew any student's subscription from the chat"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5127,7 +5149,8 @@
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
       "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
       "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
-      "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent."
+      "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
+      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent."
     },
     "page": {
       "title": "Roles and permissions",

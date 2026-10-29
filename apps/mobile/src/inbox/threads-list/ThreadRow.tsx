@@ -5,10 +5,13 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme } from '@/theme';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { kindLabel } from '../shared/format';
 import { DeliveryTicks } from '../messages/components/DeliveryTicks';
 import { threadPreview } from '../messages/hooks/message-text';
+import { useComposerDraft } from '../composer/draft-store';
 import { ThreadTags } from './ThreadTags';
 import { ThreadTrailing } from './ThreadTrailing';
 import { threadLink, type ThreadMode } from '../thread/hooks/thread-mode';
@@ -22,32 +25,60 @@ function ticksWord(th: ThreadView): string | undefined {
   return `${t.enums.messageStatus[th.last_status]} · ${threadPreview(th)}`;
 }
 
+/** «مسوّدة:» in the act colour before the unsent text, as WhatsApp's «Draft:» (review 2026-10-29 #4). */
+function DraftWord() {
+  const { color } = useTheme();
+  return (
+    // Hidden from the reader: the row's subtitleLabel already starts with «مسوّدة:».
+    <AppText
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
+      {t.inbox.draft}
+    </AppText>
+  );
+}
+
+/** The second line: her unsent text when the chat has one, else the last message with its ticks. */
+function previewOf(th: ThreadView, draft: string) {
+  if (draft) {
+    const text = draft.replace(/\s+/g, ' ').trim();
+    return { subtitle: text, subtitleLeading: <DraftWord />, subtitleLabel: `${t.inbox.draft} ${text}` };
+  }
+  return {
+    subtitle: threadPreview(th),
+    subtitleLeading: th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} inList /> : undefined,
+    subtitleLabel: ticksWord(th),
+  };
+}
+
 interface ThreadRowProps {
   thread: ThreadView;
   /** A teacher's list: no phone beside the name, the chat's kind when it has none. */
   teacher: boolean;
-  /** The admin's own tree: the lead status + source chips. */
+  /** Staff trees (admin and sales): the lead status + source chips. */
   tags: boolean;
+  /** The admin's own tree: «غير مدفوع» too (never in the sales tree, docs/16). */
+  money: boolean;
   /** Stable (useCallback): opens the thread by its phone. */
   onOpen: (phone: string) => void;
 }
 
 /**
- * One chat in «المحادثات». Memo: a poll that changes one thread (a new message, a tick) hands the
+ * One chat in «المحادثات». Memo (the draft store redraws only the row whose draft changed): a poll that changes one thread (a new message, a tick) hands the
  * others the same object (TanStack's structural sharing), so only that row redraws.
  */
-const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, onOpen }: ThreadRowProps) {
+const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, money, onOpen }: ThreadRowProps) {
   const phone = formatPhone(th.phone_e164);
+  const draft = useComposerDraft(th.phone_e164);
   const open = useCallback(() => onOpen(th.phone_e164), [onOpen, th.phone_e164]);
   return (
     <ListRow
       leading={<Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />}
       title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
       meta={th.display_name && !teacher ? phone : undefined}
-      subtitle={threadPreview(th)}
-      subtitleLeading={th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} inList /> : undefined}
-      subtitleLabel={ticksWord(th)}
-      tags={tags ? <ThreadTags thread={th} /> : undefined}
+      {...previewOf(th, draft)}
+      tags={tags ? <ThreadTags thread={th} money={money} /> : undefined}
       trailing={<ThreadTrailing thread={th} />}
       onPress={open}
     />
@@ -60,10 +91,12 @@ const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, onOpen }:
  */
 export function useThreadRow(mode: ThreadMode, base: TreeBase) {
   const teacher = mode.kind === 'teacher';
-  const tags = mode.kind === 'admin' && !base;
+  // The sales tree too (review 2026-10-29 #2): new / no-reply / trial-booked chats look different.
+  const tags = mode.kind === 'admin';
+  const money = tags && !base;
   const open = useCallback((phone: string) => router.push(inTree(base, threadLink(phone, mode))), [base, mode]);
   return useCallback(
-    ({ item }: { item: ThreadView }) => <ThreadRow thread={item} teacher={teacher} tags={tags} onOpen={open} />,
-    [teacher, tags, open],
+    ({ item }: { item: ThreadView }) => <ThreadRow thread={item} teacher={teacher} tags={tags} money={money} onOpen={open} />,
+    [teacher, tags, money, open],
   );
 }

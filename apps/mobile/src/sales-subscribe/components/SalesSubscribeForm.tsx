@@ -1,4 +1,4 @@
-import { RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
+import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useHolds } from '@/auth/use-permissions';
@@ -60,7 +60,9 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
   const [tried, setTried] = useState(false);
   const base = useTreeBase();
   const pricing = pricingOf(form);
-  const quote = useSalesQuote(studentId, pricing);
+  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; «أيام الحلقات» stays hers only.
+  const bind = chatBinding(students, { studentId, phone });
+  const quote = useSalesQuote(studentId, pricing, bind);
   const lessonsTotal = quoteLessons(quote.data);
   const starts = checkStart(start, { canSet, today: academyToday, lessonsTotal });
   const save = useSalesCreateSubscription(phone);
@@ -69,11 +71,16 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
     setTried(true);
     if (!starts.ok) return;
     save.mutate(
-      { studentId, pricing, ...starts.body, ...teacher.body },
+      { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
       {
         onSuccess: (sub) =>
           router.replace(
-            inTree(base, { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } }),
+            inTree(
+              base,
+              bind.phone
+                ? { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId: sub.id } }
+                : { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } },
+            ),
           ),
       },
     );

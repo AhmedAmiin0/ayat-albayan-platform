@@ -25,6 +25,7 @@ const LATER = [
   '20261028000890_sales_lesson_moves.sql',
   '20261028000936_sales_lesson_confirm.sql',
   '20261028000958_courses_pause_permission.sql',
+  '20261029000970_sales_renew_any_permission.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -39,7 +40,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 953)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 958, 970)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -93,6 +94,13 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
   it('seeds courses.pause «إيقاف الدورة مؤقتًا» (2026-10-28) for admin and sales only, idempotently', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('courses.pause'))).toEqual(['admin', 'sales']);
     const sql = readFileSync(join(MIGRATIONS, '20261028000958_courses_pause_permission.sql'), 'utf8');
+    expect(sql.match(/on conflict do nothing;/g)).toHaveLength(1);
+  });
+
+  it('seeds sales.renew_any (2026-10-29) for the system admin only (never sales by default), idempotently', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('sales.renew_any'))).toEqual(['admin']);
+    const sql = readFileSync(join(MIGRATIONS, '20261029000970_sales_renew_any_permission.sql'), 'utf8');
+    expect(sql).toMatch(/where r\.is_system and r\.key in \('admin'\)\s+on conflict do nothing;/);
     expect(sql.match(/on conflict do nothing;/g)).toHaveLength(1);
   });
 

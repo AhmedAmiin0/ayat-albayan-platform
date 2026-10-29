@@ -20,6 +20,14 @@ export function useSalesFamily(phone: string, enabled = true) {
   });
 }
 
+/**
+ * Her own students of the family: with sales.renew_any the view also lists the others (`mine: false`, docs/16
+ * row 38) for subscribe / renew / transfer only; the trial date, the payment link and «إلغاء الباقة» stay hers.
+ */
+export function ownStudents<S extends { mine?: boolean }>(students: readonly S[]): S[] {
+  return students.filter((s) => s.mine !== false);
+}
+
 /** Every package still owed, over all her students of the family. */
 export function openPackages(family: SalesFamilyView | undefined): SalesMoneySubscriptionView[] {
   return family?.students.flatMap((s) => s.open) ?? [];

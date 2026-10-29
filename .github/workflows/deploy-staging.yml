@@ -154,7 +154,9 @@ jobs:
     # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
     if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # A build, four health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
+    # (failure() false) would skip the rollback.
+    timeout-minutes: 60
     environment: develop
     permissions:
       contents: read
@@ -208,7 +210,7 @@ jobs:
             echo "::warning::SSH_KNOWN_HOSTS is not set: the host key is fetched with ssh-keyscan on every run, so a man-in-the-middle on the runner network would go unnoticed. Pin it: ssh-keyscan -t ed25519 <host> and save the line as the secret SSH_KNOWN_HOSTS."
             ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
           fi
-          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n' \
+          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n  ServerAliveCountMax 6\n' \
             "$SSH_HOST" "$SSH_USER" > ~/.ssh/config
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
@@ -222,6 +224,7 @@ jobs:
           WA_APP_SECRET: ${{ secrets.WA_APP_SECRET }}
           WA_VERIFY_TOKEN: ${{ secrets.WA_VERIFY_TOKEN }}
           FEEDBACK_TOKEN_SECRET: ${{ secrets.FEEDBACK_TOKEN_SECRET }}
+          LOGIN_CODE_PEPPER: ${{ secrets.LOGIN_CODE_PEPPER }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           RECORDING_S3_ACCESS_KEY: ${{ secrets.RECORDING_S3_ACCESS_KEY }}
@@ -246,7 +249,7 @@ jobs:
           ssh target "if [ -e $DEST/.env ]; then cat $DEST/.env; fi" > current.env
           keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
             WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
-            FEEDBACK_TOKEN_SECRET LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
+            FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else
@@ -254,21 +257,61 @@ jobs:
             echo "server .env updated (backup kept next to it)"; fi
           rm -f current.env new.env
 
-      - name: Ship the API and rebuild its container
+      # docs/09 «Two API copies + one worker»: the code, the compose file, roll.sh, rollback.sh and the load balancer
+      # config go up as *.new. The next step swaps them in with ONE command (the server never pairs a new layout with
+      # old code; the previous ones stay as *.old) and rolls: roll.sh builds the image ONCE and rolls ayat-worker →
+      # ayat-api-a → ayat-api-b (each healthy first; ayat-lb serves from the other copy), reloads ayat-lb only when its
+      # validated config changed and prunes this project's old images only (no global prune; the build cache is shared
+      # with the CRM and cannot be scoped to one project, so it is left alone).
+      - name: Ship the API code and the compose files
+        id: ship
         if: ${{ !inputs.env_only }}
         run: |
-          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
+          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new $DEST/lb"
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
-          scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml"
-          ssh target "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
-            && docker compose up -d --build --remove-orphans \
-            && docker image prune -f --filter 'label=com.docker.compose.project=ayat-albayan-staging' >/dev/null"
+          scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml.new"
+          scp -q deploy/staging/roll.sh "target:$DEST/roll.sh.new"
+          scp -q deploy/staging/rollback.sh "target:$DEST/rollback.sh.new"
+          scp -q deploy/staging/lb/Caddyfile "target:$DEST/lb/Caddyfile.new"
 
+      # Swap and roll under the deploy lock (flock -n: a second deploy refuses at once, before any change), and a failed
+      # roll rolls back in the SAME command (rollback.sh, docs/09 «Roll back»), so 127.0.0.1:3110 keeps serving.
+      # setsid -w, output to $DEST/.deploy.log: an ssh drop never kills the roll or its rollback halfway (they run to
+      # the end on the server; the log is printed here once done). lb/Caddyfile in place (cat >, same inode): ayat-lb
+      # mounts the lb/ directory and reloads the file. Exit codes: 75 lock held (nothing changed), 1 rolled back,
+      # 3 the rollback failed too, 255 ssh lost.
+      - name: Swap in and roll the API (one build, one container at a time)
+        id: roll
+        if: ${{ !inputs.env_only }}
+        run: |
+          ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh -c '
+            for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done &&
+            rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src &&
+            mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh &&
+            cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new || exit 4
+            { sh roll.sh || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
+            rc=$?
+            case "$rc" in
+              75) echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed" ;;
+              1) echo "::error::the roll failed: rollback.sh put the previous version back (bad code kept in src.bad)" ;;
+              3) echo "::error::the roll failed AND rollback.sh failed: 127.0.0.1:3110 may be down, fix by hand (docs/09 «Roll back»)" ;;
+              4) echo "::error::the swap failed partway: nothing was rolled; check $DEST by hand (src, src.old, *.new)" ;;
+              255) echo "::error::ssh lost: the roll (and any rollback) goes on on the server, see $DEST/.deploy.log" ;;
+              *) echo "::error::the roll step failed ($rc), see $DEST/.deploy.log" ;;
+            esac
+            exit "$rc"
+          }
+
+      # One container at a time too (roll.sh --env-only, no build), under the same lock; a server still on the
+      # single-container layout restarts it.
       - name: Restart the API with the new .env
         if: ${{ inputs.env_only }}
-        run: ssh target "cd $DEST && docker compose up -d --force-recreate --remove-orphans"
+        run: |
+          ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh -c 'if [ -f roll.sh ] && grep -q ayat-lb roll.sh && grep -q \"^  ayat-lb:\" docker-compose.yml; then sh roll.sh --env-only; \
+            else docker compose up -d --force-recreate --remove-orphans; fi'"
 
       - name: Upload the web app (atomic swap)
+        id: web
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
@@ -285,15 +328,21 @@ jobs:
           else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
           echo; echo "staging is up"
 
-      # The API or web swap broke staging: put the previous code and web build back. Database
-      # migrations are not undone (they only add); the next good deploy picks up from here.
+      # The roll succeeded but the public health check failed: the same rollback.sh (under the deploy lock) puts the
+      # previous code, compose files and Caddyfile back and rolls the previous layout; the web build is swapped back
+      # only when this run swapped it. Database migrations are not undone (they only add). A failed roll already
+      # rolled back in its own step.
       - name: Roll back to the previous version
-        if: ${{ failure() && steps.health.conclusion == 'failure' && !inputs.env_only }}
+        if: ${{ failure() && steps.roll.outcome == 'success' && steps.health.outcome == 'failure' && !inputs.env_only }}
+        env:
+          WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
         run: |
-          ssh target "cd $DEST && { [ ! -d src.old ] || { rm -rf src.bad && mv src src.bad && mv src.old src; }; } \
-            && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; } \
-            && docker compose up -d --build --remove-orphans"
-          echo "::error::health check failed: staging rolled back to the previous version (bad build kept in src.bad / web.bad)"
+          # Detached like the roll (setsid, output in .deploy.log): an ssh drop or a cancel never stops it halfway.
+          ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh rollback.sh > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc"
+          if [ "$WEB_SWAPPED" = "true" ]; then
+            ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
+          fi
+          echo "::error::staging failed its health check: rolled back to the previous version (bad build kept in src.bad / web.bad)"
 
       - name: Summary
         if: always()

@@ -6,10 +6,10 @@ import { requestId } from '@/core/lib/http/request-id';
 import { familyKey, refreshFamily, withOpenPackage } from '../lib/family';
 
 /** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */
-export function useSalesQuote(studentId: string, pricing: SubscriptionPricing) {
+export function useSalesQuote(studentId: string, pricing: SubscriptionPricing, bind: { phone?: string } = {}) {
   return useQuery({
-    queryKey: ['sales', 'subscriptions', 'quote', studentId, pricing],
-    queryFn: () => apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', { studentId, pricing }),
+    queryKey: ['sales', 'subscriptions', 'quote', studentId, pricing, bind],
+    queryFn: () => apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', { studentId, pricing, ...bind }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -26,6 +26,8 @@ interface SalesSubscribeInput {
   lessonsUsedBefore?: number;
   /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed; omitted = no teacher yet. */
   teacherId?: string;
+  /** The chat's phone for a child not hers (chatBinding, sales.renew_any). */
+  phone?: string;
 }
 
 /**

@@ -4,6 +4,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 import { MINE, REPLIES, WELCOME } from './fixtures';
+import { clearComposerDrafts } from '../composer/draft-store';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -31,6 +32,9 @@ const docked = () => screen.queryByTestId('slash-suggestions');
 async function type(...steps: string[]) {
   for (const step of steps) await fireEvent.changeText(box(), step);
 }
+
+// Drafts outlive a chat until sign-out: each test starts with an empty box.
+afterEach(() => clearComposerDrafts());
 
 beforeEach(() => {
   mockApiFetch.mockReset();

@@ -56,8 +56,7 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
   // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/16 row 37c): the course pause routes, ANY student.
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
-  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
-  // chat, migration 20261026000760); teachers never.
+  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
@@ -96,9 +95,10 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (owner 2026-10-12, docs/16 row 24): an inline check of the sales subscribe
-  // (no route gate). Without it the package starts on the default day (today, Riyadh).
+  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe, no route gate.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
+  // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
+  { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },
   { key: 'receivables.read', area: 'finance', grants: [] },
   { key: 'payouts.read', area: 'finance', grants: [] },
