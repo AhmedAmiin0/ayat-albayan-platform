@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { dayLabel, opensDay } from './day-label';
-import { deviceTimeZone } from '../hooks/message-text';
+import { dayLabel, opensDay, rowTime } from './day-label';
+import { clock, deviceTimeZone } from '../hooks/message-text';
 
 // Day separators as WhatsApp (owner 2026-10-27), in the device's zone, as `stamp` counts days.
 const now = new Date('2026-10-27T09:00:00Z'); // Tuesday, 12:00 in Riyadh
@@ -35,4 +35,17 @@ test('opensDay: newest first, a row opens its day when the older row above it is
   expect(rows.map((_r, i) => opensDay(rows, i, 'Asia/Riyadh'))).toEqual([false, true, true]);
   expect(rows.map((_r, i) => opensDay(rows, i, 'UTC'))).toEqual([true, false, true]);
   expect(opensDay(rows, 3, 'UTC')).toBe(false);
+});
+
+test('a chat row: the clock today, else the day as the separators word it', () => {
+  expect(rowTime('2026-10-27T05:00:00Z', '24', RIYADH)).toBe(clock('2026-10-27T05:00:00Z', '24', 'Asia/Riyadh'));
+  expect(rowTime('2026-10-27T05:00:00Z', '24', RIYADH)).toBe('08:00');
+  expect(rowTime('2026-10-26T05:00:00Z', '24', RIYADH)).toBe(t.inbox.dayYesterday);
+  expect(rowTime('2026-09-29T05:00:00Z', '24', RIYADH)).toBe('29 سبتمبر');
+});
+
+test('a chat row without a valid time shows no time (never a crash)', () => {
+  expect(rowTime(undefined, '24', RIYADH)).toBe('');
+  expect(rowTime('', '24', RIYADH)).toBe('');
+  expect(rowTime('not a date', '24', RIYADH)).toBe('');
 });
