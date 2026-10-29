@@ -4416,7 +4416,8 @@
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",
-        "teacher": "with {name}"
+        "teacher": "with {name}",
+        "again": "New trial date for {name}"
       },
       "log": {
         "title": "Attendance log",
@@ -4475,7 +4476,15 @@
       "lessonsCount": "Lessons: {n}",
       "liveNow": "Running now",
       "makeupTag": "Makeup",
-      "lessonLabel": "Lesson at {time} with {teacher}"
+      "lessonLabel": "Lesson at {time} with {teacher}",
+      "status": {
+        "label": "Lesson status",
+        "all": "All",
+        "scheduled": "Needs confirmation",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "empty": "No lessons with this status on this day"
+      }
     },
     "views": {
       "students": "Students view",
@@ -4484,6 +4493,12 @@
     "renewalCommission": {
       "label": "Renewal commission share",
       "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
+    },
+    "money": {
+      "transfer": "Record transfer",
+      "renew": "Renew",
+      "transferFor": "Record a transfer for {name}",
+      "renewFor": "Renew {name}'s subscription"
     }
   },
   "salesMoney": {
