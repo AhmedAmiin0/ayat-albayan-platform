@@ -25,7 +25,7 @@ const mockSetText = jest.fn();
 jest.mock('@/inbox', () => ({
   ...jest.requireActual('@/inbox'),
   chatWindowOpen: () => mockWindow.open,
-  setComposerText: (...mockArgs: unknown[]) => mockSetText(...mockArgs),
+  appendComposerText: (...mockArgs: unknown[]) => mockSetText(...mockArgs),
 }));
 
 const pl = t.paymentLinks;

@@ -21,9 +21,9 @@ const statusChip = (status: string) =>
 /**
  * A thread row's tags, like the web inbox row: a lead's status chip, else who the number is
  * («ولي أمر», «معلم/ة»); then the family's package tags; then where the lead came from. ListRow's
- * tags line wraps them.
+ * tags line wraps them. `money` false (the sales tree, docs/16): never «غير مدفوع», whatever the payload says.
  */
-export function ThreadTags({ thread: th }: { thread: ThreadView }) {
+export function ThreadTags({ thread: th, money = true }: { thread: ThreadView; money?: boolean }) {
   const { color } = useTheme();
   const word: TextStyle = { fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink3 };
   // A guardian / teacher on file outranks the lead row they once came from.
@@ -37,7 +37,7 @@ export function ThreadTags({ thread: th }: { thread: ThreadView }) {
           {kindWord(th)}
         </AppText>
       )}
-      <FamilyTags thread={th} />
+      <FamilyTags thread={th} money={money} />
       {th.lead_source ? (
         <AppText numberOfLines={1} style={word}>
           {leadSourceWord(th.lead_source)}
@@ -51,12 +51,12 @@ export function ThreadTags({ thread: th }: { thread: ThreadView }) {
  * «مشترك» or «الباقة خلصت» (renew, the admin's turn), and «مش مدفوع» while a running package owes
  * money. A list cached before `badge` existed falls back to `subscribed`.
  */
-function FamilyTags({ thread: th }: { thread: ThreadView }) {
+function FamilyTags({ thread: th, money }: { thread: ThreadView; money: boolean }) {
   const badge = th.badge ?? (th.subscribed ? 'subscribed' : null);
   return (
     <>
       {badge === 'subscribed' || badge === 'expired' ? <StatusChip {...badgeChip(badge)} size="sm" /> : null}
-      {th.unpaid ? (
+      {money && th.unpaid ? (
         <StatusChip {...subscriptionStatusStyle.unpaid} label={t.enums.subscriptionStatus.unpaid} size="sm" />
       ) : null}
     </>

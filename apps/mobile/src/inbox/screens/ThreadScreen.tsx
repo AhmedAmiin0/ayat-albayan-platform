@@ -21,6 +21,7 @@ import { SalesChatActions } from '../leads/sales/SalesChatActions';
 import { SendRating } from '../rating/SendRating';
 import { SubscriptionPanel } from '../subscription/SubscriptionPanel';
 import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
+import { useHeaderStudents } from '../thread/components/HeaderStudents';
 import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
@@ -80,6 +81,7 @@ export function ThreadScreen() {
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
   const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
+  const students = useHeaderStudents(mode.kind === 'admin' ? (query.data?.pages[0]?.people?.students ?? []) : []);
   const back = () =>
     router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
@@ -91,6 +93,7 @@ export function ThreadScreen() {
           subtitle={subtitleOf(phone, query, { teacher, cycle })}
           onBack={back}
           avatar={contactAvatar(thread, phone)}
+          onTitlePress={students.onPress}
           trailing={
             mode.kind === 'admin' ? (
               <>
@@ -102,6 +105,7 @@ export function ThreadScreen() {
             )
           }
         />
+        {students.sheet}
         {mode.kind !== 'admin' ? null : sales ? (
           <SalesChatActions thread={thread} />
         ) : (
