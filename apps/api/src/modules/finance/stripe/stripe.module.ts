@@ -1,4 +1,5 @@
 import { type DynamicModule, Module } from '@nestjs/common';
+import { SalesTeacherAssign } from '../../sales/sales-money';
 import { PaymentsModule } from '../payments';
 import { SubscriptionsModule } from '../subscriptions';
 import { StripeAdminController } from './admin/stripe-admin.controller';
@@ -43,7 +44,7 @@ export class StripeTestModule {
       controllers: [StripeFeatureController, StripeAdminController, PaymentLinksController, PayController, StripeWebhookController],
       providers: [
         { provide: STRIPE_FACTORY, useValue: stripeFactory },
-        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel],
+        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel, SalesTeacherAssign],
         ...[CheckoutService, PayLimit, LinkAlerts, LinkFulfilment, LinkRefunds, StripeEventsQueries, StripeWebhookService],
         ...[WebhookDeps, WebhookHandlers],
       ],

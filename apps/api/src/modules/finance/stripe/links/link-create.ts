@@ -9,9 +9,9 @@ import { LinkCreateDeps, LinkDeps } from './link-deps';
 
 /**
  * «رابط دفع» (owner 2026-10-28, docs/30): ANY student (the 2026-10-28 any-student decision). The package is
- * created now exactly like «اشتراك جديد» (catalog quote, the site's discount pills, the start-day rules,
- * unpaid) except its price, which is the agreed amount, so paying the link in full makes it paid and the
- * commission triggers run on what the family paid. The agreed amount is free (> 0) unless the admin set
+ * created now exactly like «اشتراك جديد» (catalog quote, the site's discount pills, the start-day rules and
+ * used lessons, unpaid) except its price, which is the agreed amount, so paying the link in full makes it paid
+ * and the commission triggers run on what the family paid. The agreed amount is free (> 0) unless the admin set
  * max_discount_pct. A retry of the same form (clientRequestId) returns the link it already made.
  */
 @Injectable()
@@ -41,7 +41,8 @@ export class LinkCreate {
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct: (await this.extra.settings.read()).max_discount_pct });
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
-    const create = { studentId: input.studentId, pricing: input.pricing, clientRequestId: input.clientRequestId, startsOn };
+    const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input;
+    const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
     const sub = await this.creator.create(create, user.id, { price: input.amount });
     if (sub.student.id !== input.studentId) throw conflict('client_request_reused');
     const row = await this.deps.links.insert({
