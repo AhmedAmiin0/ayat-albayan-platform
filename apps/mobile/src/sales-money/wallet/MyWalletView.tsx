@@ -18,8 +18,9 @@ const renderEntry = ({ item }: { item: MyCommissionRow }) => <CommissionEntry en
 /**
  * «العمولات» of «محفظتي» (owner 2026-10-29, web MyWallet): the balance per currency, then my commissions
  * newest first, 20 a page. A new «عمولة جديدة» on the bell refreshes both (useBellSignal: no extra
- * request), so does a pull; coming back to the screen or the app refetches as every query does. The
- * balance has its own spinner and retry: the rows never show under a blank header.
+ * request), so does a pull; coming back to the screen or the app refetches as every query does. Once the
+ * rows are in, the balance has its own spinner and retry (never rows under a blank header); before that the
+ * list's one spinner or error stands for both, and its retry reloads both.
  */
 export function MyWalletView() {
   const earnings = useMyEarnings();
@@ -39,10 +40,14 @@ export function MyWalletView() {
       keyExtractor={keyOf}
       renderItem={renderEntry}
       ListHeaderComponent={
-        earnings.data ? <WalletCard wallet={earnings.data.wallet ?? {}} /> : <LoadState status={earnings} empty={false} emptyTitle="" />
+        earnings.data ? (
+          <WalletCard wallet={earnings.data.wallet ?? {}} />
+        ) : list.data ? (
+          <LoadState status={earnings} empty={false} emptyTitle="" />
+        ) : null
       }
       ListEmptyComponent={
-        <LoadState status={{ data: list.data, isError: list.isError, refetch: list.refresh }} empty emptyTitle={W.empty} emptyHint={W.emptyHint} />
+        <LoadState status={{ data: list.data, isError: list.isError, refetch: pull }} empty emptyTitle={W.empty} emptyHint={W.emptyHint} />
       }
     />
   );
