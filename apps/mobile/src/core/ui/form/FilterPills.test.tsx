@@ -1,6 +1,7 @@
 import { leadStatusStyle } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { palette } from '@/theme';
 import { FilterPills, type FilterPill } from './FilterPills';
 
 type Filter = 'all' | 'new' | 'lost';
@@ -60,4 +61,11 @@ test('a value setter is a radiogroup: radios with checked, not tabs', async () =
   expect(screen.queryAllByRole('tab')).toHaveLength(0);
   expect(screen.getAllByRole('radio')).toHaveLength(3);
   expect(screen.getByRole('radio', { checked: true })).toHaveTextContent(t.enums.leadStatus.lost);
+});
+
+test('the selected pill is the action green on its wash (option A), the others stay plain', async () => {
+  await setup('new');
+  const theme = palette.light;
+  expect(screen.getByRole('tab', { selected: true })).toHaveStyle({ backgroundColor: theme.lapisWash, borderColor: theme.lapisWash });
+  expect(screen.getByRole('tab', { name: new RegExp(t.leads.filterAll) })).toHaveStyle({ backgroundColor: theme.raised });
 });

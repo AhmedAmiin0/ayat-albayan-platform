@@ -66,7 +66,13 @@ export function ListRow(props: ListRowProps) {
           </AppText>
           {meta ? (
             <Ltr
-              style={{ fontFamily: type.ui[500], fontSize: type.size[metaStrong ? 'xs' : '2xs'], color: metaStrong ? color.ink2 : color.ink3 }}
+              style={{
+                fontFamily: type.ui[metaStrong ? 500 : 400],
+                fontSize: type.size[metaStrong ? 'xs' : '2xs'],
+                color: metaStrong ? color.ink2 : color.ink3,
+                // The quiet meta (a phone beside a name) steps back so the name leads (owner 2026-10-29, option A).
+                opacity: metaStrong ? 1 : 0.85,
+              }}
             >
               {meta}
             </Ltr>
