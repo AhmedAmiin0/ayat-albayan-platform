@@ -21,7 +21,7 @@ export function linkFamilyErrorText(error: unknown): string {
 
 /**
  * Links the lead's number to the family of the student with this code. Then the chat (it now carries the
- * family: no «تسجيل طالب جديد», the family's pills), the chats list, the leads and the family views refetch.
+ * family: no «تسجيل طالب جديد» in «⋮», the family's pills), the chats list, the leads and the family views refetch.
  */
 export function useLinkFamily(leadId: string) {
   const client = useQueryClient();

@@ -59,13 +59,13 @@ function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; 
  * it shows the saved thread and when it was fetched (R-MOB-03). Opened from a lead or a push.
  * Over the messages: whether the family is subscribed, and the button to subscribe (R-SUB-01).
  * A teacher (R-TCH-03) gets no subscription panel, and her own chat with the academy is read-only.
- * A salesperson (self.sales, docs/16) gets «تسجيل طالب جديد» on a lead's chat instead of the panel,
- * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04); her header
- * has «تحقق من التسجيل» for this number (students.check_registration). Admin and assistant headers
- * get «القوائم» with inbox.lists (docs/22: the chat's lists; never a teacher's).
+ * A salesperson (self.sales, docs/16) gets no panel: on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا»
+ * (SalesChatMoney, R-ASST-01/04); her header's «⋮» has «تسجيل طالب جديد» first on a lead's chat (owner
+ * 2026-10-30) and «تحقق من التسجيل» for this number (students.check_registration). Admin and assistant
+ * headers get «القوائم» with inbox.lists (docs/22: the chat's lists; never a teacher's).
  * Room to read (owner 2026-10-18), the same in every tree: a full screen above the tabs (its tree's
  * chat group, owner 2026-10-24: a hidden tab bar still took the bottom touches, react-native-screens#4132),
- * a one-line header, the sales actions in one row of pills, and a one-row composer.
+ * a one-line header, the family's sales actions in one row of pills, and a one-row composer.
  */
 export function ThreadScreen() {
   const cycle = useClockCycle();

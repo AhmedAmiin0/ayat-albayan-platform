@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { fakeBookingApi, walkToConfirm } from '@/booking/testing/test-utils';
 import { t } from '@/core/lib/i18n/i18n';
@@ -28,11 +28,16 @@ async function openLeadChat(backend: ReturnType<typeof salesBackend>) {
   return app;
 }
 
+/** «تسجيل طالب جديد» lives in the chat header's «⋮» (owner 2026-10-30). */
+const openMenu = async () =>
+  fireEvent.press(within(await screen.findByTestId('chat-header')).getByRole('button', { name: t.inbox.chatMenu }));
+
 test('a salesperson registers a new student from the chat: sales wizard → POST /sales/booking → back on the same chat', async () => {
   const backend = salesBackend();
   const app = await openLeadChat(backend);
-  await fireEvent.press(await screen.findByRole('button', { name: t.inbox.registerNew }));
-  expect(app.pathname()).toBe('/inbox/book');
+  await openMenu();
+  await fireEvent.press(await within(screen.getByTestId('thread-menu')).findByRole('button', { name: t.inbox.registerNew }));
+  await waitFor(() => expect(app.pathname()).toBe('/inbox/book'));
   expect(await screen.findByRole('header', { name: t.inbox.registerNew })).toBeTruthy();
   // A trial only: no booking type to pick; the number comes from the chat.
   expect(screen.queryByLabelText(t.booking.kind.label)).toBeNull();
@@ -54,8 +59,11 @@ test('a salesperson registers a new student from the chat: sales wizard → POST
   await waitFor(() => expect(app.pathname()).toBe(`/inbox/thread/${PHONE}`));
 });
 
-test('without self.sales (the admin) the chat has no «تسجيل طالب جديد»', async () => {
+test('without self.sales (the admin) the chat’s «⋮» has no «تسجيل طالب جديد»', async () => {
   await openLeadChat(salesBackend(['inbox.read', 'leads.read']));
   expect(await screen.findByText(inbound.body ?? '')).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.registerNew })).toBeNull();
+  await openMenu();
+  const menu = within(screen.getByTestId('thread-menu'));
+  expect(menu.getByRole('button', { name: t.inbox.copy.phone })).toBeTruthy();
+  expect(menu.queryByRole('button', { name: t.inbox.registerNew })).toBeNull();
 });
