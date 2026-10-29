@@ -84,6 +84,22 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     expect((await call({ method: 'POST', url: `/sales/payment-links/${linkRow().id}/cancel`, token: 'salesB' })).statusCode).toBe(404);
   });
 
+  it('cancel never orphans a payment under way: processing is 409, a completed or unknown session keeps the package', async () => {
+    const url = `/sales/payment-links/${linkRow().id}/cancel`;
+    s.links.get.mockResolvedValue(linkRow({ processing: true }));
+    const processing = await call({ method: 'POST', url, token: 'salesA' });
+    expect([processing.statusCode, processing.json().code]).toEqual([409, 'link_processing']);
+    expect(s.links.cancel).not.toHaveBeenCalled();
+    s.links.get.mockResolvedValue(linkRow());
+    s.links.cancel.mockResolvedValue(linkRow({ status: 'cancelled', stripe_session_id: 'cs_paid' }));
+    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_paid', status: 'complete' });
+    expect((await call({ method: 'POST', url, token: 'salesA' })).statusCode).toBe(200);
+    s.stripe.checkout.sessions.retrieve.mockRejectedValue(new Error('stripe down'));
+    expect((await call({ method: 'POST', url, token: 'salesA' })).statusCode).toBe(200);
+    expect(s.stripe.checkout.sessions.expire).not.toHaveBeenCalled();
+    expect(m.cancels.cancel).not.toHaveBeenCalled();
+  });
+
   it('a new link first cancels the unpaid packages of her earlier expired or cancelled links (never a paid one)', async () => {
     const stale = linkRow({ id: '7a000000-0000-4000-8000-000000000003', status: 'cancelled', subscription_id: 'old-sub' });
     s.links.forStudent.mockResolvedValue([stale, linkRow({ status: 'paid', paid_payment_id: 'p1' }), linkRow()]);
