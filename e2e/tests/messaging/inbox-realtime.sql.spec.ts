@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { assistant } from '../../support/assistant';
+import { assistant } from '../../support/sales/assistant';
 import { as, rolledBack, userId, type Tx } from '../../support/rls';
 import { USERS } from '../../support/users';
 

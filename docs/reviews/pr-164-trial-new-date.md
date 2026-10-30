@@ -28,7 +28,7 @@ Totals: **Critical 0 · Important 5 (all fixed) · Minor 23 (11 fixed, 12 not fi
 | M8 | `apps/mobile/src/trial-date/lib/trial-date-body.ts:42` | Mobile booked in `family_tz`, while web used `student_tz ?? family_tz`. So a student whose own zone differs got different `byday` and local time per platform. | Mobile now uses `student_tz ?? family_tz`. Test added. |
 | M9 | web `history-text.ts:25`, mobile `trial-date-text.ts:41` | A zone with Riyadh's clock (Asia/Kuwait, or Cairo in summer time) printed the same time twice. | The family line is hidden when both clocks read the same. Tests added. |
 | M10 | `trial-date.history.test.ts:13,27` | The fixture had a lesson ending before it starts, and an assertion locked that in. | The fixture's `ends_at` is consistent. |
-| M11 | `e2e/tests/pick-trial-date.sql.spec.ts` | The booking case seeded an upcoming trial, which the M1 guard now correctly refuses. | The booking case cancels the seeded trial first. A new `pick-trial-date.guards.sql.spec.ts` covers I1, M1 and M2. |
+| M11 | `e2e/tests/sales/pick-trial-date.sql.spec.ts` | The booking case seeded an upcoming trial, which the M1 guard now correctly refuses. | The booking case cancels the seeded trial first. A new `pick-trial-date.guards.sql.spec.ts` covers I1, M1 and M2. |
 
 ## Minor: not fixed
 

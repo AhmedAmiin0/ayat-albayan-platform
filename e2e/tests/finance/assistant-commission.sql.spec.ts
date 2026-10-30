@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { assistant, brought, code, commissionOf, iso, one, pay, student, subscription, today } from '../../support/assistant';
+import { assistant, brought, code, commissionOf, iso, one, pay, student, subscription, today } from '../../support/sales/assistant';
 import { rolledBack } from '../../support/rls';
 
 // Assistant commission (migrations 270-274, 750-751) against the real database: ONE first commission per

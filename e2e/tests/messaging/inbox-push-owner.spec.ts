@@ -1,4 +1,4 @@
-import { freshPhone, leadOf, makeAssistant } from '../../support/assistant-api';
+import { freshPhone, leadOf, makeAssistant } from '../../support/sales/assistant-api';
 import { expect, test } from '../../support/fixtures';
 import { pushesForProfile } from '../../support/messaging/inbox';
 import { withSql } from '../../support/schedule';

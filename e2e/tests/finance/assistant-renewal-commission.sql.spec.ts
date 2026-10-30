@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { assistant, brought, code, commissionOf, openMonth, paidStatement, pay, renewalOf, subscription } from '../../support/assistant';
+import { assistant, brought, code, commissionOf, openMonth, paidStatement, pay, renewalOf, subscription } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/rls';
 
 // Renewal commission (migrations 20261027000750-751, owner 2026-10-26): «half of the value» = half of her

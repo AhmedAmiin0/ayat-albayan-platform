@@ -19,7 +19,7 @@
   "desktop": 67,
   "mobile": 5
  },
- "tests/assistant-auto-assign-off.api.spec.ts": {
+ "tests/sales/assistant-auto-assign-off.api.spec.ts": {
   "desktop": 309,
   "mobile": 8
  },
@@ -35,15 +35,15 @@
   "desktop": 258,
   "mobile": 9
  },
- "tests/assistant-course-renew.api.spec.ts": {
+ "tests/sales/assistant-course-renew.api.spec.ts": {
   "desktop": 411,
   "mobile": 8
  },
- "tests/assistant-course-subscription.sql.spec.ts": {
+ "tests/sales/assistant-course-subscription.sql.spec.ts": {
   "desktop": 83,
   "mobile": 4
  },
- "tests/assistant-course.api.spec.ts": {
+ "tests/sales/assistant-course.api.spec.ts": {
   "desktop": 399,
   "mobile": 13
  },
@@ -51,7 +51,7 @@
   "desktop": 937,
   "mobile": 14
  },
- "tests/assistant-portal.spec.ts": {
+ "tests/sales/assistant-portal.spec.ts": {
   "desktop": 9940,
   "mobile": 17599
  },
@@ -59,15 +59,15 @@
   "desktop": 365,
   "mobile": 19
  },
- "tests/assistant-reopen.sql.spec.ts": {
+ "tests/sales/assistant-reopen.sql.spec.ts": {
   "desktop": 103,
   "mobile": 6
  },
- "tests/assistant-scope.api.spec.ts": {
+ "tests/sales/assistant-scope.api.spec.ts": {
   "desktop": 223,
   "mobile": 7
  },
- "tests/assistant-scope.sql.spec.ts": {
+ "tests/sales/assistant-scope.sql.spec.ts": {
   "desktop": 182,
   "mobile": 7
  },
@@ -79,11 +79,11 @@
   "desktop": 205,
   "mobile": 11
  },
- "tests/assistant-terms.sql.spec.ts": {
+ "tests/sales/assistant-terms.sql.spec.ts": {
   "desktop": 129,
   "mobile": 5
  },
- "tests/assistant-trial-date.api.spec.ts": {
+ "tests/sales/assistant-trial-date.api.spec.ts": {
   "desktop": 344,
   "mobile": 10
  },
@@ -123,7 +123,7 @@
   "desktop": 438,
   "mobile": 21
  },
- "tests/channel-after-subscribe.sql.spec.ts": {
+ "tests/sales/channel-after-subscribe.sql.spec.ts": {
   "desktop": 137,
   "mobile": 9
  },
@@ -147,7 +147,7 @@
   "desktop": 99,
   "mobile": 7
  },
- "tests/chat-subscribe.spec.ts": {
+ "tests/sales/chat-subscribe.spec.ts": {
   "desktop": 15318,
   "mobile": 18207
  },
@@ -287,7 +287,7 @@
   "desktop": 7605,
   "mobile": 10463
  },
- "tests/journey-1-lead-to-trial.spec.ts": {
+ "tests/sales/journey-1-lead-to-trial.spec.ts": {
   "desktop": 5613,
   "mobile": 7613
  },
@@ -311,7 +311,7 @@
   "desktop": 3859,
   "mobile": 5095
  },
- "tests/journey-7-assistant-cycle.spec.ts": {
+ "tests/sales/journey-7-assistant-cycle.spec.ts": {
   "desktop": 30407,
   "mobile": 23
  },
@@ -319,19 +319,19 @@
   "desktop": 9731,
   "mobile": 609
  },
- "tests/lead-qualification.spec.ts": {
+ "tests/sales/lead-qualification.spec.ts": {
   "desktop": 5431,
   "mobile": 8755
  },
- "tests/lead-register.spec.ts": {
+ "tests/sales/lead-register.spec.ts": {
   "desktop": 3044,
   "mobile": 4618
  },
- "tests/lead-to-subscription.spec.ts": {
+ "tests/sales/lead-to-subscription.spec.ts": {
   "desktop": 5918,
   "mobile": 8752
  },
- "tests/leads-applicants.spec.ts": {
+ "tests/sales/leads-applicants.spec.ts": {
   "desktop": 5184,
   "mobile": 7286
  },
@@ -395,11 +395,11 @@
   "desktop": 47400,
   "mobile": 44390
  },
- "tests/pick-trial-date.guards.sql.spec.ts": {
+ "tests/sales/pick-trial-date.guards.sql.spec.ts": {
   "desktop": 162,
   "mobile": 3
  },
- "tests/pick-trial-date.sql.spec.ts": {
+ "tests/sales/pick-trial-date.sql.spec.ts": {
   "desktop": 183,
   "mobile": 4
  },
@@ -471,27 +471,27 @@
   "desktop": 5858,
   "mobile": 6140
  },
- "tests/sales-check-start.api.spec.ts": {
+ "tests/sales/sales-check-start.api.spec.ts": {
   "desktop": 247,
   "mobile": 0
  },
- "tests/sales-double-role.spec.ts": {
+ "tests/sales/sales-double-role.spec.ts": {
   "desktop": 19119,
   "mobile": 21981
  },
- "tests/sales-meetings.spec.ts": {
+ "tests/sales/sales-meetings.spec.ts": {
   "desktop": 6730,
   "mobile": 5808
  },
- "tests/sales-start-date-revoke.spec.ts": {
+ "tests/sales/sales-start-date-revoke.spec.ts": {
   "desktop": 14961,
   "mobile": 1
  },
- "tests/sales-starter.spec.ts": {
+ "tests/sales/sales-starter.spec.ts": {
   "desktop": 13665,
   "mobile": 10703
  },
- "tests/sales-subscribe.api.spec.ts": {
+ "tests/sales/sales-subscribe.api.spec.ts": {
   "desktop": 821,
   "mobile": 9
  },

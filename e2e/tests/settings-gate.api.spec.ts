@@ -1,5 +1,5 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { API, tokenOf } from '../support/assistant-api';
+import { API, tokenOf } from '../support/sales/assistant-api';
 import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 import { USERS } from '../support/users';
 

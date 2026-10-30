@@ -502,7 +502,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
   - a replay means neither is called.
 - `sales-ownership.test.ts`: a case for `guardianOwnerIds`.
 - e2e `e2e/tests/messaging/inbox-push-owner.spec.ts`, API-level against wa-stub with push delivery off in CI (only bell rows are checked):
-  - Use `makeAssistant` ×2 (A, B), `freshPhone()` and `leadOf(A, phone)` from `e2e/support/assistant-api.ts`.
+  - Use `makeAssistant` ×2 (A, B), `freshPhone()` and `leadOf(A, phone)` from `e2e/support/sales/assistant-api.ts`.
   - Add `pushesForProfile({ profileId, kind, phone })` next to `pushesForPhone` in `e2e/support/messaging/inbox.ts`.
   - Inbound from that phone: A has a `new_message` row, B has none, the admin has one.
   - SQL sets `assigned_to = null`, then a second inbound: B gains a row (a new dedup key), and A's is deduplicated.
