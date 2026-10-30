@@ -1,6 +1,6 @@
 import { basePrice } from '@ab/shared';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 
 // docs/08: the staff price calculator quotes the site's catalog in the guardian's currency, and
 // any other country in USD at the stored rate. The API's FX_API_URL is unroutable in e2e, so the

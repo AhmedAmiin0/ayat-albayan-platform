@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar } from '../fixtures';
+import { ar } from '../core/fixtures';
 import { withSql } from '../schedule';
 
 // «القوائم» (docs/22): the chip row above the conversations and the database rows behind it.

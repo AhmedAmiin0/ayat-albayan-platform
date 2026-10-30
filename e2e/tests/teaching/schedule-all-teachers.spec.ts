@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../../support/people/admin-extra';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../../support/schedule';
 

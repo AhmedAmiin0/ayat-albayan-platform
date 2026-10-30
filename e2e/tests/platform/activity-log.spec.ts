@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { apiStatus } from '../../support/messages';
 import { thisMonthStart } from '../../support/finance/money-extra';
 import { openNav } from '../../support/core/nav';

@@ -1,4 +1,4 @@
-import { expect } from '../fixtures';
+import { expect } from '../core/fixtures';
 import { API, setSetting } from '../messages';
 import { seedFamily, withSql } from '../schedule';
 import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../wa-stub';

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { guardianPhoneOf, uniqueName } from '../../support/finance/money-extra';
 import { seedFamily, withSql } from '../../support/schedule';
 

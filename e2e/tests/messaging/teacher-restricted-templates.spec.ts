@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { accessToken } from '../../support/messages';
 import { dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs } from '../../support/messaging/restricted-templates';
 import { resetAbrar, seedFamily, withSql } from '../../support/schedule';

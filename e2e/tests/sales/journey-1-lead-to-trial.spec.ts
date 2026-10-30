@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../../support/wa-stub';

@@ -1,6 +1,6 @@
 import { AVATAR_PNG } from '../../support/account';
 import { makeAssistant } from '../../support/sales/assistant-api';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { backdateInbound, bubble, inboundRows, lastOutbound } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
 import { signInSales } from '../../support/sales/sales-portal';

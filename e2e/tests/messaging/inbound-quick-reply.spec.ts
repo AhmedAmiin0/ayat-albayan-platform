@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import {
   auditActions, guardianName, guardianPhone, inboundFor, lessonView, pushesLike, seedSentConfirmation,
 } from '../../support/messaging/inbound';

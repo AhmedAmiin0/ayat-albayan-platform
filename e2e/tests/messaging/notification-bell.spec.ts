@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer, freshDigits } from '../../support/messages';
 import { openNav } from '../../support/core/nav';
 import {

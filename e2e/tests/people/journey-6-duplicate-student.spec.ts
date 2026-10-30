@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 
 // Journey 6 (docs/03 §5): duplicate student creation blocked and merged. R-STU-02, R-STU-03.
 

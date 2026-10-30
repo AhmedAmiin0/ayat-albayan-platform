@@ -1,5 +1,5 @@
 import { REPORT_RUBRICS } from '@ab/shared';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf, reportOf, seedPackageStudent } from '../../support/finance/money';
 import { queuedFor, resetAbrar } from '../../support/schedule';
 

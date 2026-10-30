@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { brought, one, pay, student, subscription } from '../../support/sales/assistant';
 import { leadOf } from '../../support/sales/assistant-api';
 import { seedUser } from '../../support/core/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { openNav } from '../../support/core/nav';
 import { resetAbrar, setAvailability, withSql } from '../../support/schedule';

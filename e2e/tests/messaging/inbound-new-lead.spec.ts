@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { inboundFor, leadsByPhone, pushesLike } from '../../support/messaging/inbound';
 import { freshDigits } from '../../support/messages';
 import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';

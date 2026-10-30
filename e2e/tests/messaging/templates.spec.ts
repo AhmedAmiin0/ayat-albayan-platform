@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { syncNumber } from '../../support/messaging/template-numbers';
 import {
   restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, type TemplateRow,

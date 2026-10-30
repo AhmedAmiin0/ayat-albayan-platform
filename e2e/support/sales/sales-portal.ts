@@ -1,7 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import { family, paymentBy } from './assistant-api';
 import { one } from './assistant';
-import { ar } from '../fixtures';
+import { ar } from '../core/fixtures';
 import { openNav } from '../core/nav';
 import { withSql } from '../schedule';
 import { AR_LOCALE } from '../core/locale';

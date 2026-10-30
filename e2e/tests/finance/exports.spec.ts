@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { BOM, parseCsv, readDownload } from '../../support/finance/exports-csv';
 import { seedPackageStudent } from '../../support/finance/money';
 import { riyadhToday, uniqueName } from '../../support/finance/money-extra';

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, setAvailability } from '../../support/schedule';
 import {
   bookTrial,

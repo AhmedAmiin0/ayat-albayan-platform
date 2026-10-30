@@ -1,7 +1,7 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
-import { authFile, USERS } from './users';
-import { AR_LOCALE } from './core/locale';
+import { authFile, USERS } from '../users';
+import { AR_LOCALE } from './locale';
 
 type Role = keyof typeof USERS;
 

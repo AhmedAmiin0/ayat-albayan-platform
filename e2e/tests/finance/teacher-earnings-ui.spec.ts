@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, withSql } from '../../support/schedule';
 
 // «مستحقات المعلم» (admin) and «أرباحي» (teacher), owner 2026-10-05: a completed lesson is owed,

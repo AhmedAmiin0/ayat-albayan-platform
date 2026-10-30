@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { resolve } from 'node:path';
-import { ar, expect } from './fixtures';
+import { ar, expect } from './core/fixtures';
 import { withSql } from './schedule';
 import { stamp } from './people/users-control';
 

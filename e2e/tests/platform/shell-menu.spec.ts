@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 
 // Owner, 2026-10-05: "enhance the responsive view and make it simpler". Below 900px every area has

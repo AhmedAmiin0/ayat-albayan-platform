@@ -1,5 +1,5 @@
 import { freshPhone, leadOf, makeAssistant } from '../../support/sales/assistant-api';
-import { expect, test } from '../../support/fixtures';
+import { expect, test } from '../../support/core/fixtures';
 import { pushesForProfile } from '../../support/messaging/inbox';
 import { withSql } from '../../support/schedule';
 import { USERS } from '../../support/users';

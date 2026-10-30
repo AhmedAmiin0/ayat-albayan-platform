@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { accountRow, accountUser, AVATAR_PNG, avatarAlt, currentPassword, openAccount, phoneOf, region, save } from '../../support/account';
 import { seedUser } from '../../support/core/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectSignedIn, signInAs } from '../../support/people/users-control';
 
 // «حسابي» (R-ACC-01/02/05): a dedicated assistant opens /account, renames themself, changes the

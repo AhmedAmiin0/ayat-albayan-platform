@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { expect, test } from '../../support/fixtures';
+import { expect, test } from '../../support/core/fixtures';
 import { API, bearer, messagesFor } from '../../support/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/schedule';
 import { setMessaging, stubReset, stubSent } from '../../support/wa-stub';

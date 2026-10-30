@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
 import {

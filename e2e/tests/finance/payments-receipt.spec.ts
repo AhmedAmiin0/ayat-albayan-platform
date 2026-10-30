@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent, subscriptionStatus } from '../../support/finance/money';
 import { RECEIPT_PNG, uniqueName } from '../../support/finance/money-extra';
 import { resetAbrar, withSql } from '../../support/schedule';

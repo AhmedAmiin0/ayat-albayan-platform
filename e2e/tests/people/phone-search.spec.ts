@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { bearer, API } from '../../support/messages';
 import { dropPeople, people, seedPeople, type Kind, type Person } from '../../support/people/admin-extra-phone';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 
 // A14, phone search (searchDigits): the list endpoints of inbox, leads, students, job applicants
 // and teachers find a person by a local 05…, 00966…, +966 with spaces, partial Arabic digits or

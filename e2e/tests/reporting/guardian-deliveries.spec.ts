@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer, setSetting } from '../../support/messages';
 import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, withSql } from '../../support/schedule';

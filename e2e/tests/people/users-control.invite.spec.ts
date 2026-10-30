@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectSignedIn, fillIdentity, openCreateDialog, profileOf, signInAs, stamp, takeIssued } from '../../support/people/users-control';
 import { AR_LOCALE } from '../../support/core/locale';
 
