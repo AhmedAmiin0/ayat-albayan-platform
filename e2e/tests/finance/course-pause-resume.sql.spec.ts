@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { day, groupOf, pauseOf, resume, seedPause, start, statuses } from '../../support/finance/course-pause';
-import { rolledBack } from '../../support/edit-time';
+import { rolledBack } from '../../support/teaching/edit-time';
 
 // «إيقاف الدورة مؤقتًا» resume edge cases (docs/11 §7b, migration 20261028000956) against the real database, rolled
 // back: siblings both paused on one group rule, and a course that began inside the pause.

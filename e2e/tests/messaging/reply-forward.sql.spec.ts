@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/edit-time';
+import { rolledBack, type Tx } from '../../support/teaching/edit-time';
 
 // «رد» / «إعادة توجيه» (migration 20261025000690, owner 2026-10-25): an inbound reply is linked to our
 // row of the SAME chat by its context wamid; a deleted original leaves the reply and the copy standing.

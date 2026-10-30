@@ -15,7 +15,7 @@
   "desktop": 9594,
   "mobile": 12276
  },
- "tests/apply-lesson-changes-v3.sql.spec.ts": {
+ "tests/teaching/apply-lesson-changes-v3.sql.spec.ts": {
   "desktop": 67,
   "mobile": 5
  },
@@ -95,27 +95,27 @@
   "desktop": 118,
   "mobile": 14
  },
- "tests/booking-day-times.spec.ts": {
+ "tests/teaching/booking-day-times.spec.ts": {
   "desktop": 3460,
   "mobile": 3
  },
- "tests/booking-day-times.sql.spec.ts": {
+ "tests/teaching/booking-day-times.sql.spec.ts": {
   "desktop": 170,
   "mobile": 8
  },
- "tests/booking-group.spec.ts": {
+ "tests/teaching/booking-group.spec.ts": {
   "desktop": 3388,
   "mobile": 3806
  },
- "tests/booking-makeup-group.spec.ts": {
+ "tests/teaching/booking-makeup-group.spec.ts": {
   "desktop": 8653,
   "mobile": 10238
  },
- "tests/booking-makeup-invoice.spec.ts": {
+ "tests/teaching/booking-makeup-invoice.spec.ts": {
   "desktop": 15484,
   "mobile": 18296
  },
- "tests/booking-override.spec.ts": {
+ "tests/teaching/booking-override.spec.ts": {
   "desktop": 3909,
   "mobile": 4001
  },
@@ -151,15 +151,15 @@
   "desktop": 15318,
   "mobile": 18207
  },
- "tests/classroom-live-phone.spec.ts": {
+ "tests/teaching/classroom-live-phone.spec.ts": {
   "desktop": 0,
   "mobile": 0
  },
- "tests/classroom-live.moderation.spec.ts": {
+ "tests/teaching/classroom-live.moderation.spec.ts": {
   "desktop": 0,
   "mobile": 0
  },
- "tests/classroom-live.spec.ts": {
+ "tests/teaching/classroom-live.spec.ts": {
   "desktop": 0,
   "mobile": 0
  },
@@ -187,15 +187,15 @@
   "desktop": 3947,
   "mobile": 4571
  },
- "tests/edit-session-time.held.spec.ts": {
+ "tests/teaching/edit-session-time.held.spec.ts": {
   "desktop": 11847,
   "mobile": 13288
  },
- "tests/edit-session-time.spec.ts": {
+ "tests/teaching/edit-session-time.spec.ts": {
   "desktop": 9255,
   "mobile": 9575
  },
- "tests/edit-time.sql.spec.ts": {
+ "tests/teaching/edit-time.sql.spec.ts": {
   "desktop": 344,
   "mobile": 7
  },
@@ -283,7 +283,7 @@
   "desktop": 93,
   "mobile": 6
  },
- "tests/internal-meeting.spec.ts": {
+ "tests/teaching/internal-meeting.spec.ts": {
   "desktop": 7605,
   "mobile": 10463
  },
@@ -299,11 +299,11 @@
   "desktop": 6365,
   "mobile": 8587
  },
- "tests/journey-4-reschedule-conflict.spec.ts": {
+ "tests/teaching/journey-4-reschedule-conflict.spec.ts": {
   "desktop": 3786,
   "mobile": 4189
  },
- "tests/journey-5-availability-wizard.spec.ts": {
+ "tests/teaching/journey-5-availability-wizard.spec.ts": {
   "desktop": 4404,
   "mobile": 7149
  },
@@ -347,15 +347,15 @@
   "desktop": 14971,
   "mobile": 23615
  },
- "tests/meeting-link-auto.spec.ts": {
+ "tests/teaching/meeting-link-auto.spec.ts": {
   "desktop": 5667,
   "mobile": 5900
  },
- "tests/meeting-recordings-rls.sql.spec.ts": {
+ "tests/teaching/meeting-recordings-rls.sql.spec.ts": {
   "desktop": 44,
   "mobile": 3
  },
- "tests/meetings.spec.ts": {
+ "tests/teaching/meetings.spec.ts": {
   "desktop": 9860,
   "mobile": 15058
  },
@@ -419,11 +419,11 @@
   "desktop": 134,
   "mobile": 0
  },
- "tests/proposals-reject.spec.ts": {
+ "tests/teaching/proposals-reject.spec.ts": {
   "desktop": 8468,
   "mobile": 8297
  },
- "tests/proposals.spec.ts": {
+ "tests/teaching/proposals.spec.ts": {
   "desktop": 9136,
   "mobile": 9142
  },
@@ -499,23 +499,23 @@
   "desktop": 178,
   "mobile": 9
  },
- "tests/schedule-all-teachers.spec.ts": {
+ "tests/teaching/schedule-all-teachers.spec.ts": {
   "desktop": 29928,
   "mobile": 20065
  },
- "tests/schedule-cancel.spec.ts": {
+ "tests/teaching/schedule-cancel.spec.ts": {
   "desktop": 20894,
   "mobile": 13506
  },
- "tests/schedule-overview.spec.ts": {
+ "tests/teaching/schedule-overview.spec.ts": {
   "desktop": 17069,
   "mobile": 12779
  },
- "tests/schedule-series.spec.ts": {
+ "tests/teaching/schedule-series.spec.ts": {
   "desktop": 9164,
   "mobile": 6319
  },
- "tests/schedule-stale.spec.ts": {
+ "tests/teaching/schedule-stale.spec.ts": {
   "desktop": 3837,
   "mobile": 33
  },
@@ -555,11 +555,11 @@
   "desktop": 6890,
   "mobile": 9588
  },
- "tests/student-recordings-api.spec.ts": {
+ "tests/teaching/student-recordings-api.spec.ts": {
   "desktop": 112,
   "mobile": 12
  },
- "tests/student-recordings-rls.sql.spec.ts": {
+ "tests/teaching/student-recordings-rls.sql.spec.ts": {
   "desktop": 66,
   "mobile": 8
  },
@@ -595,7 +595,7 @@
   "desktop": 79,
   "mobile": 0
  },
- "tests/teacher-meeting-mode.sql.spec.ts": {
+ "tests/teaching/teacher-meeting-mode.sql.spec.ts": {
   "desktop": 76,
   "mobile": 0
  },
@@ -639,7 +639,7 @@
   "desktop": 8089,
   "mobile": 9488
  },
- "tests/teachers-always-available.spec.ts": {
+ "tests/teaching/teachers-always-available.spec.ts": {
   "desktop": 3097,
   "mobile": 3829
  },

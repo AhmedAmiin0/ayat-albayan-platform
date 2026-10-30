@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { dayTimesPayload, seedSiblings, type DaySeed } from '../day-times';
-import { BASE, iso, MIN, type Tx } from '../edit-time';
+import { dayTimesPayload, seedSiblings, type DaySeed } from '../teaching/day-times';
+import { BASE, iso, MIN, type Tx } from '../teaching/edit-time';
 
 // Helpers of e2e/tests/change-course.sql.spec.ts: change_course (migration 480, «تغيير أيام الحلقات») on a
 // two-rule assistant course, payloads in the shape the API's changePayload builds, rolled back.

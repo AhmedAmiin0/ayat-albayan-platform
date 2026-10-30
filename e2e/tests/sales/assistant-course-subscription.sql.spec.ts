@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import { book, dayTimesPayload, seedSiblings, type DaySeed } from '../../support/day-times';
-import { rolledBack, type Tx } from '../../support/edit-time';
+import { book, dayTimesPayload, seedSiblings, type DaySeed } from '../../support/teaching/day-times';
+import { rolledBack, type Tx } from '../../support/teaching/edit-time';
 
 // create_booking v6 (migration 20261018000470, PR #113 review M3): every rule of the assistant's course
 // carries the subscription it books, the first rule and its siblings, so one paid plan books one course.
