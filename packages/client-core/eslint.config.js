@@ -3,6 +3,6 @@ import { boundaries, config, TESTS } from '@ab/config/eslint';
 // eslint-suppressions.json). src/index.ts is the package's public API and re-exports the folders.
 export default config(
   import.meta.dirname,
-  boundaries({ root: import.meta.dirname, files: ['src/**/*.ts'], module: 'src/[^/.]+', ignores: ['src/index.ts'] }),
+  boundaries({ root: import.meta.dirname, files: ['src/**/*.ts'], module: 'src/[^/.]+/[^/.]+', ignores: ['src/index.ts'] }),
   { files: ['src/**/*.ts'], ignores: TESTS, rules: { '@typescript-eslint/explicit-module-boundary-types': 'error' } },
 );
