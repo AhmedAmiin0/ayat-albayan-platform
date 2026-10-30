@@ -509,6 +509,7 @@
     "finance/change-course.sql.spec.ts",
     "sales/channel-after-subscribe.sql.spec.ts",
     "messaging/chat-files.sql.spec.ts",
+    "messaging/chat-markers.sql.spec.ts",
     "messaging/chat-list-auto-rules.sql.spec.ts",
     "messaging/chat-list-auto-triggers.sql.spec.ts",
     "messaging/chat-lists.sql.spec.ts",

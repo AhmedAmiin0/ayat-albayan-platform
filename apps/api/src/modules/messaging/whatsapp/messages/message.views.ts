@@ -1,16 +1,17 @@
-import { templateBlock, type MessageTemplateBlock, type MessageView } from '@ab/shared';
+import { templateBlock, withMarks, type MessageTemplateBlock, type MessageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { documentLink } from '../sender/message.dispatch';
+import { StorageService } from '@/common/storage/storage.service';
+import { documentLink } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import { needsManualSend, toMessageView, type ThreadMessageRow } from './message.mapper';
-import { renderable } from '../templates/catalog/template.mapper';
-import { TemplatesQueries } from '../templates/catalog/templates.queries';
+import { renderable } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
 import { templateButtons, templateDisplay, templateParams } from './wa-json';
-import type { TemplateRow } from '../whatsapp.types';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
- * hand, the report PDF link (7 days) in the wa.me text. B2's threads can reuse it per row.
+ * hand, the report PDF link (7 days) in the wa.me text. B2's threads can reuse it per row. An
+ * edited or deleted message is marked (withMarks, migration 985): a deleted one shows nothing.
  */
 @Injectable()
 export class MessageViews {
@@ -24,7 +25,8 @@ export class MessageViews {
     const params = templateParams(row.template_params);
     const documentUrl = template && needsManualSend(row) ? await documentLink(this.storage, params.document) : null;
     const block = template ? blockOf(row, template) : null;
-    return toMessageView({ row, template: template ? renderable(template) : null, documentUrl, mediaUrl, block });
+    const shown = template ? renderable(template) : null;
+    return withMarks(toMessageView({ row, template: shown, documentUrl, mediaUrl, block }), row);
   }
 }
 

@@ -1,5 +1,16 @@
 import { sendErrorReason } from '@ab/client-core';
-import { type ClockCycle, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, type ThreadView } from '@ab/shared';
+import {
+  type ClockCycle,
+  dayParts,
+  isUnavailableMessage,
+  isUnsupportedMessage,
+  type MessageView,
+  noteText,
+  type NoteWords,
+  previewNote,
+  reactionText,
+  type ThreadView,
+} from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -8,6 +19,13 @@ import { t } from '@/core/lib/i18n/i18n';
 // All Arabic comes from ar.json; times are the device's zone, Western digits.
 
 type MediaKind = keyof typeof t.inbox.media;
+
+/** A deleted message, the ad's welcome, an unsupported echo (owner 2026-10-30, marker-notes). */
+const NOTES: NoteWords = {
+  deleted: t.inbox.deletedMessage,
+  adWelcome: t.inbox.adWelcome,
+  unsupported: t.inbox.unsupportedEcho,
+};
 
 /** inbox.media.<kind> for a WhatsApp mime type. WhatsApp stickers are webp images. */
 export function mediaKind(mime: string | null): MediaKind {
@@ -19,13 +37,19 @@ export function mediaKind(mime: string | null): MediaKind {
   return 'other';
 }
 
+type LineOf = Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'> &
+  Partial<Pick<MessageView, 'direction' | 'deleted'>>;
+
 /**
  * The attachment line: its kind when there is a file; when there is neither file nor text (Meta's
  * `unsupported`, a location, a contact card…) as the web's: Meta's `unsupported` asks the
  * sender to send it again («هذه الرسالة غير متاحة» for 131060), anything else (a location, a contact
- * card…) arrived but cannot be shown here; null for a plain text message.
+ * card…) arrived but cannot be shown here; null for a plain text message. A note comes first: a
+ * deleted message, the ad's welcome or an unsupported echo (owner 2026-10-30).
  */
-export function mediaLine(m: Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'>): string | null {
+export function mediaLine(m: LineOf): string | null {
+  const note = noteText({ ...m, direction: m.direction ?? 'inbound' }, NOTES);
+  if (note) return note;
   if (m.media_mime) return t.inbox.media[mediaKind(m.media_mime)];
   if (m.body) return null;
   const reacted = reactionText(m.interactive_payload, { reacted: t.inbox.reacted, removed: t.inbox.reactionRemoved });
@@ -45,6 +69,8 @@ export function templateLine(key: string): string {
  * (131060 on a new number's first message) is «رسالة لم يصل محتواها», not the generic line.
  */
 export function threadPreview(th: ThreadView): string {
+  const note = previewNote(th, NOTES);
+  if (note) return th.last_direction === 'outbound' ? `${t.inbox.you} ${note}` : note;
   const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
   const other = th.last_unsupported ? t.inbox.previewUnsupported : t.inbox.media.other;
   const text = media

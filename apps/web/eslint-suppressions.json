@@ -3011,9 +3011,6 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MessageContent.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 5
     }

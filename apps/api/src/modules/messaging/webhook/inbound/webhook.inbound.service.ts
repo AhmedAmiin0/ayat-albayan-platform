@@ -1,11 +1,11 @@
-import { waIdToE164, type LessonRating, type PushKind } from '@ab/shared';
+import { isMarkerType, waIdToE164, type LessonRating, type PushKind } from '@ab/shared';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
-import { PushService, type PushEvent } from '../../../../common/push/push.service';
-import { OwnNumbers } from '../../numbers';
-import type { InboundEvent } from '../webhook.events';
+import { PushService, type PushEvent } from '@/common/push/push.service';
+import { OwnNumbers } from '@/modules/messaging/numbers';
+import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
 import { InboundStore, type Sender } from './webhook.inbound.store';
-import type { Contact } from '../webhook.queries';
+import type { Contact } from '@/modules/messaging/webhook/webhook.queries';
 import { QuickReplies } from './webhook.quick-reply';
 import { InboundReactions } from './webhook.reaction';
 
@@ -32,7 +32,7 @@ interface InboundOptions {
  * deadline Meta already has its 200 and will not re-send, so the row stays (the message is in the
  * inbox; only the confirm / pause and the push are lost) and the error is only logged.
  * ponytail: a pending flag on the row + a sweeper would retry those too; add it if logs show any.
- * A reaction stops first: it only sets their_reaction (InboundReactions), no row, lead, reply or push.
+ * A reaction, edit or revoke stops first (marker()): no lead, reply, push or unread.
  * The ONE gate for the academy's own numbers (owner 2026-10-27): a message from one of them is stored
  * (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
  */
@@ -57,10 +57,7 @@ export class InboundService {
       this.log.warn(`inbound ${m.waMessageId}: wa_id ${m.from} is not a phone`);
       return false;
     }
-    if (m.type === 'reaction') {
-      await this.reactions?.apply(m, phone);
-      return false;
-    }
+    if (isMarkerType(m.type)) return this.marker(m, phone);
     if (await this.own?.has(phone)) return this.store.saveOwn(m, phone);
     const { who, lead } = await this.store.sender({ m, phone });
     const intent = intentOf(m);
@@ -81,6 +78,18 @@ export class InboundService {
     await this.push.notifyAdmins(kind, event);
     await this.notifySalesFor(kind, event, { who, lead });
     return true;
+  }
+
+  /**
+   * A reaction sets their_reaction (InboundReactions, no row) when its message is stored; else,
+   * and for an edit or a revoke, a hidden marker row the database applies (migration 985). False:
+   * never a new message (no catch-up alert counts it).
+   */
+  private async marker(m: InboundEvent, phone: string): Promise<false> {
+    const reacted = m.type === 'reaction' ? await this.reactions?.apply(m, phone) : 'unknown';
+    if (reacted !== 'unknown') return false;
+    await this.store.saveMarker(m, phone);
+    return false;
   }
 
   /** The assistants' alert (docs/21 §6): none for a teacher; a new lead → every assistant. */

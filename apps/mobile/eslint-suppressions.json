@@ -4753,9 +4753,6 @@
     }
   },
   "src/inbox/messages/components/MessageMeta.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 7
     }
@@ -4933,9 +4930,6 @@
     }
   },
   "src/inbox/messages/hooks/message-text.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -4989,9 +4983,6 @@
     }
   },
   "src/inbox/messages/hooks/thread-preview.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

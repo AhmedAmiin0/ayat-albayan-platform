@@ -1,10 +1,12 @@
+import type { Json } from '@ab/db';
+import { chatMarkerOf, markerPayload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { LeadsService } from '../../../sales/leads/leads.service';
-import { RatingStore } from '../../../teaching/lesson-rating/rating.store';
-import type { RatingTap } from '../../../teaching/lesson-rating/rating.rows';
-import type { InboundEvent } from '../webhook.events';
+import { LeadsService } from '@/modules/sales/leads/leads.service';
+import { RatingStore } from '@/modules/teaching/lesson-rating/rating.store';
+import type { RatingTap } from '@/modules/teaching/lesson-rating/rating.rows';
+import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
-import { WebhookQueries, type Contact } from '../webhook.queries';
+import { WebhookQueries, type Contact } from '@/modules/messaging/webhook/webhook.queries';
 
 export interface LeadLink {
   id: string | null;
@@ -17,6 +19,8 @@ export interface LeadLink {
 }
 
 const NOBODY: Contact = { guardian: null, teacher: null, lead: null };
+
+const asObject = (v: unknown): object => (typeof v === 'object' && v !== null ? v : {});
 
 export interface Sender {
   who: Contact;
@@ -39,12 +43,20 @@ export class InboundStore {
   async sender(input: { m: InboundEvent; phone: string }): Promise<Sender> {
     const { m, phone } = input;
     const who = await this.queries.identify(phone);
-    const known = { id: who.lead?.id ?? null, created: null, stage: who.lead?.follow_up_stage ?? 0, owner: null };
+    const known = {
+      id: who.lead?.id ?? null,
+      created: null,
+      stage: who.lead?.follow_up_stage ?? 0,
+      owner: null,
+    };
     if (who.guardian || who.teacher) return { who, lead: known };
     const row = await this.leads.upsertByPhone({ phone, name: m.name, at: m.at });
     if (!row) return { who, lead: known };
     const created = who.lead ? null : row.id;
-    return { who, lead: { id: row.id, created, stage: row.follow_up_stage, owner: row.assigned_to } };
+    return {
+      who,
+      lead: { id: row.id, created, stage: row.follow_up_stage, owner: row.assigned_to },
+    };
   }
 
   /** The assistants an inbound alert goes to (docs/21 §6): the lead's, plus the family's owners. */
@@ -74,6 +86,32 @@ export class InboundStore {
    */
   saveOwn(m: InboundEvent, phone: string): Promise<boolean> {
     return this.save({ m, phone, who: NOBODY, leadId: null, lessonId: null, stage: 0, read: true });
+  }
+
+  /**
+   * A family's edit, revoke or reaction kept as a hidden marker row (migration 985 applies it to
+   * the message it names, now or when that arrives): already read, no lead, no text; false = a
+   * replay.
+   */
+  saveMarker(m: InboundEvent, phone: string): Promise<boolean> {
+    const marker = chatMarkerOf({ ...asObject(m.payload), context: { id: m.replyTo } });
+    if (!marker) return Promise.resolve(false);
+    const row = {
+      ...m,
+      body: null,
+      mediaId: null,
+      mediaMime: null,
+      payload: markerPayload(marker) as Json,
+    };
+    return this.save({
+      m: row,
+      phone,
+      who: NOBODY,
+      leadId: null,
+      lessonId: null,
+      stage: 0,
+      read: true,
+    });
   }
 
   /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */

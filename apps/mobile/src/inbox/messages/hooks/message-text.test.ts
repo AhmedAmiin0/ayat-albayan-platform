@@ -10,7 +10,7 @@ import {
   stamp,
   templateLine,
 } from './message-text';
-import { delivered, inbound, message } from '../../shared/thread-fixtures';
+import { delivered, inbound, message } from '@/inbox/shared/thread-fixtures';
 
 const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh', cycle: '24' as const };
 
@@ -125,4 +125,17 @@ describe('deliveryTimes: what the long press on our ticks shows', () => {
     expect(deliveryTimes(m, RIYADH)).toBe([reached('2026-10-02T08:05:10Z'), read('2026-10-02T08:07:00Z')].join(' · '));
     expect(deliveryTimes({ ...m, delivered_at: null, read_at: null }, RIYADH)).toBe('');
   });
+});
+
+test('notes come before the file line: deleted, the ad’s welcome, an unsupported echo', () => {
+  const out = { body: null, media_mime: null, direction: 'outbound' as const };
+  const line = (interactive_payload: unknown, deleted?: boolean) =>
+    mediaLine({ ...out, interactive_payload, ...(deleted ? { deleted } : {}) });
+  expect(line(null, true)).toBe(t.inbox.deletedMessage);
+  expect(line({ type: 'errors', welcome: 'أهلًا' })).toBe('أهلًا');
+  expect(line({ type: 'errors', welcome: null })).toBe(t.inbox.adWelcome);
+  expect(line({ type: 'unsupported' })).toBe(t.inbox.unsupportedEcho);
+  // Theirs keeps Meta's «content never arrived» wording.
+  const theirs = { ...out, direction: 'inbound' as const, interactive_payload: { type: 'unsupported' } };
+  expect(mediaLine(theirs)).toBe(t.inbox.unsupported);
 });

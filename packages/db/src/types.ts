@@ -2649,8 +2649,10 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           dedup_key: string | null;
+          deleted_at: string | null;
           delivered_at: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at: string | null;
           error_code: string | null;
           error_text: string | null;
           expires_at: string | null;
@@ -2695,8 +2697,10 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
@@ -2741,8 +2745,10 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction?: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
@@ -5552,6 +5558,10 @@ export type Database = {
         }[];
       };
       message_is_reaction: { Args: { p: Json }; Returns: boolean };
+      message_markers_apply: {
+        Args: { p_phone: string; p_since: string; p_wamid: string };
+        Returns: number;
+      };
       messages_reaction_backfill: { Args: never; Returns: number };
       teacher_unread: {
         Args: { p_phones: string[]; p_teacher_id: string };

@@ -41,6 +41,7 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
     interactive_payload: null, wa_conversation_id: null,
     wa_pricing_category: null, sent_by_teacher_id: null, line: null, number_id: null, reply_to_message_id: null, forwarded_from_id: null,
     their_reaction: null, our_reaction: null, our_reaction_by: null, our_reaction_at: null,
+    edited_at: null, deleted_at: null,
     ...over,
   };
 }

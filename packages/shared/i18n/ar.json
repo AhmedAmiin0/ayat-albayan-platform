@@ -2609,6 +2609,10 @@
     "previewUnsupported": "رسالة لم يصل محتواها",
     "reacted": "تفاعل: {emoji}",
     "reactionRemoved": "أُزيل التفاعل",
+    "edited": "تم التعديل",
+    "deletedMessage": "تم حذف هذه الرسالة",
+    "adWelcome": "رسالة الترحيب من الإعلان",
+    "unsupportedEcho": "رسالة غير مدعومة",
     "reactions": {
       "react": "تفاعل",
       "bar": "التفاعل مع الرسالة",

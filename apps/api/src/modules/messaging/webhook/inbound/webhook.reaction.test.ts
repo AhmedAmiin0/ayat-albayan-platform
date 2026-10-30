@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
-import { event, services } from '../webhook.fakes';
+import type { Db } from '@/common/db/db.module';
+import { event, services } from '@/modules/messaging/webhook/webhook.fakes';
 import { InboundReactions } from './webhook.reaction';
 
 // Example numbers only.
@@ -60,7 +60,8 @@ describe('InboundReactions', () => {
   });
 
   it('a failed write is logged, never thrown (the webhook answers 200)', async () => {
-    await expect(new InboundReactions(fakeDb(seeded(), true)).apply(reaction('👍'), FAMILY)).resolves.toBeUndefined();
+    const reactions = new InboundReactions(fakeDb(seeded(), true));
+    await expect(reactions.apply(reaction('👍'), FAMILY)).resolves.toBe('ignored');
   });
 });
 

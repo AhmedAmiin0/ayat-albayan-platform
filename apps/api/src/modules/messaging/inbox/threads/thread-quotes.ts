@@ -11,6 +11,8 @@ export interface QuotedRow {
   body: string | null;
   media_mime: string | null;
   template_key: string | null;
+  /** Deleted for everyone (migration 985): the quote shows nothing of it. */
+  deleted_at?: string | null;
   sender?: { full_name: string } | null;
 }
 
@@ -30,19 +32,20 @@ export function sameNumber(quoted: SendFrom, from: SendFrom): boolean {
   return !(from.line && quoted.line && from.line !== quoted.line);
 }
 
-const QUOTE_SELECT = 'id, direction, body, media_mime, template_key, sender:profiles!messages_created_by_fkey(full_name)' as const;
+const QUOTE_SELECT = 'id, direction, body, media_mime, template_key, deleted_at, sender:profiles!messages_created_by_fkey(full_name)' as const;
 
 /**
  * A template's text is never quoted (a signed link could be in it): the bubble names it a template.
  * Nor an old-CRM file's body (only its storage link): the quote names the media.
  */
 export function quoteOf(row: QuotedRow): MessageQuote {
-  const hidden = row.template_key || looksCrmHistory(row);
+  const gone = Boolean(row.deleted_at);
+  const hidden = gone || row.template_key || looksCrmHistory(row);
   return {
     id: row.id,
     direction: row.direction,
     body: hidden ? null : (row.body?.slice(0, QUOTE_BODY_MAX) ?? null),
-    media_mime: row.media_mime,
+    media_mime: gone ? null : row.media_mime,
     template_key: row.template_key,
     sender_name: row.direction === 'outbound' ? (row.sender?.full_name ?? null) : null,
   };

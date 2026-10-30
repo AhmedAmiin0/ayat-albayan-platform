@@ -1,13 +1,13 @@
-import type { MessageView } from '@ab/shared';
+import type { ClockCycle, MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { DeliveryTicks } from './DeliveryTicks';
-import { lineWord } from '../../shared/line-words';
-import { clock, deliveryTimes, errorLine, queuedLine } from '../hooks/message-text';
-import { senderText } from '../../thread/hooks/thread-mode';
+import { lineWord } from '@/inbox/shared/line-words';
+import { clock, deliveryTimes, errorLine, queuedLine } from '@/inbox/messages/hooks/message-text';
+import { senderText } from '@/inbox/thread/hooks/thread-mode';
 import { useClockCycle } from '@/core/lib/clock';
 
 export function useSmall() {
@@ -28,6 +28,10 @@ export function useSmall() {
  * `onTicksPress`: the admin's row that did not go out (a tap on «! لم تُرسل» or the queued clock opens
  * FailedSheet); the reader hears why it failed, or «أرسلها بنفسك» for a queued one.
  */
+/** The time, after «تم التعديل» for an edited message (owner 2026-10-30), as WhatsApp. */
+const timeOf = (m: MessageView, cycle: ClockCycle): string =>
+  m.edited ? `${t.inbox.edited} · ${clock(m.created_at, cycle)}` : clock(m.created_at, cycle);
+
 export function MessageMeta({ message: m, onTicksPress }: { message: MessageView; onTicksPress?: () => void }) {
   const cycle = useClockCycle();
   const small = useSmall();
@@ -42,7 +46,7 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
         {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <AppText style={small}>{clock(m.created_at, cycle)}</AppText>
+          <AppText style={small}>{timeOf(m, cycle)}</AppText>
           {m.direction === 'outbound' ? (
             <DeliveryTicks
               status={m.status}
