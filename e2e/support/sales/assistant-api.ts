@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { APIRequestContext } from '@playwright/test';
-import { seedUser } from '../db';
+import { seedUser } from '../core/db';
 import { nextWeekSaturday, withSql } from '../schedule';
 
 // Helpers of the assistant API specs (real API on :3100, real database): logins, a typed call wrapper,

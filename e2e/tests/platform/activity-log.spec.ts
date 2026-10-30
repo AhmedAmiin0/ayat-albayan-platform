@@ -1,8 +1,8 @@
-import { ar, expect, test } from '../support/fixtures';
-import { apiStatus } from '../support/messages';
-import { thisMonthStart } from '../support/finance/money-extra';
-import { openNav } from '../support/nav';
-import { withSql } from '../support/schedule';
+import { ar, expect, test } from '../../support/fixtures';
+import { apiStatus } from '../../support/messages';
+import { thisMonthStart } from '../../support/finance/money-extra';
+import { openNav } from '../../support/core/nav';
+import { withSql } from '../../support/schedule';
 
 // «سجل النشاط» (owner, 2026-10-05): the admin adds an expense; the API's ActivityInterceptor logs
 // it (flushed within a few seconds) and it shows on /admin/activity with its Arabic label and

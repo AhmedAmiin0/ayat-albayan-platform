@@ -1,14 +1,14 @@
 import type { Page } from '@playwright/test';
 import { brought, one, pay, student, subscription } from '../../support/sales/assistant';
 import { leadOf } from '../../support/sales/assistant-api';
-import { seedUser } from '../../support/db';
+import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/fixtures';
-import { fillStable } from '../../support/fill';
-import { openNav } from '../../support/nav';
+import { fillStable } from '../../support/core/fill';
+import { openNav } from '../../support/core/nav';
 import { resetAbrar, setAvailability, withSql } from '../../support/schedule';
 import { USERS } from '../../support/users';
 import { stubInbound } from '../../support/wa-stub';
-import { AR_LOCALE } from '../../support/locale';
+import { AR_LOCALE } from '../../support/core/locale';
 
 // The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): «تسجيل طالب جديد»
 // in a chat, and the pages «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only

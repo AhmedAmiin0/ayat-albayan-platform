@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { existsSync } from 'node:fs';
-import { AR_LOCALE } from './support/locale';
+import { AR_LOCALE } from './support/core/locale';
 
 // Written by `pnpm env:local` (local) or the CI step after `supabase start`.
 if (existsSync('.env')) process.loadEnvFile('.env');

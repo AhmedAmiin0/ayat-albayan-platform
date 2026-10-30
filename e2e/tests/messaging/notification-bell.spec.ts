@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/fixtures';
 import { API, bearer, freshDigits } from '../../support/messages';
-import { openNav } from '../../support/nav';
+import { openNav } from '../../support/core/nav';
 import {
   addDays,
   nextWeekSaturday,

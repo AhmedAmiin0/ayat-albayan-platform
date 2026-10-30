@@ -1,6 +1,6 @@
-import { ar, expect, loginViaUi, test } from '../support/fixtures';
-import { openNav } from '../support/nav';
-import { USERS } from '../support/users';
+import { ar, expect, loginViaUi, test } from '../../support/fixtures';
+import { openNav } from '../../support/core/nav';
+import { USERS } from '../../support/users';
 
 test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
   test('page is Arabic and RTL', async ({ page }) => {

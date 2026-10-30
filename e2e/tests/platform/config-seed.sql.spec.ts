@@ -1,7 +1,7 @@
 import { SEED_ENTRIES } from '@ab/shared';
 import { expect, test } from '@playwright/test';
-import { runConfigSeed } from '../support/config-seed';
-import { rolledBack, type Tx } from '../support/rls';
+import { runConfigSeed } from '../../support/platform/config-seed';
+import { rolledBack, type Tx } from '../../support/rls';
 
 // 26-P2 «Copy» (docs/26 §2b, §4) against the real database, every test rolled back: the seeder's real
 // payload (SEED_ENTRIES + the Arabic hints) booted twice changes no value, version or updated_at, and a

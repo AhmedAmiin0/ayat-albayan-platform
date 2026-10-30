@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { resetAbrar, seedFamily, seedLesson } from '../support/schedule';
-import { restingBox } from '../support/finance/settle';
-import { stubInbound, stubReset } from '../support/wa-stub';
-import { AR_LOCALE } from '../support/locale';
+import { ar, expect, test } from '../../support/fixtures';
+import { resetAbrar, seedFamily, seedLesson } from '../../support/schedule';
+import { restingBox } from '../../support/finance/settle';
+import { stubInbound, stubReset } from '../../support/wa-stub';
+import { AR_LOCALE } from '../../support/core/locale';
 
 // Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll
 // sideways on a phone (390px) or a tablet (768px), in RTL. Tables and tab strips scroll inside

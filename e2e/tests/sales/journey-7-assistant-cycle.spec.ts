@@ -1,4 +1,4 @@
-import { seedUser } from '../../support/db';
+import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/fixtures';
 import { freshDigits } from '../../support/messages';
 import { salesNav, signInSales } from '../../support/sales/sales-portal';

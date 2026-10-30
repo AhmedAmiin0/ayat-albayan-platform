@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, type Page } from '@playwright/test';
-import { API, bearer } from './messages';
-import { withSql } from './schedule';
+import { API, bearer } from '../messages';
+import { withSql } from '../schedule';
 
 // The Google sync's e2e helpers (docs/24 §5): tools/google-stub stands in for Google, so nothing
 // in e2e ever reaches a real account. Fake ids and names only.

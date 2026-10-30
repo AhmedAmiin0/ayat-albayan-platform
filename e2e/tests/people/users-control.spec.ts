@@ -1,6 +1,6 @@
 import { seedFamily, withSql } from '../../support/schedule';
 import { ar, expect, test } from '../../support/fixtures';
-import { openNav } from '../../support/nav';
+import { openNav } from '../../support/core/nav';
 import {
   dropLogins, expectSignedIn, fillIdentity, openCreateDialog, openUser, detailDialog, profileOf, signInAs, stamp, takeIssued,
 } from '../../support/people/users-control';

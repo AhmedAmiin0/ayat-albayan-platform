@@ -1198,7 +1198,7 @@ Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundati
   - The side-foot email now aligns to the page start in both directions (it had stuck to the logout button in LTR).
   - The admin's «طلبات تغيير الميعاد» rows read `lessons.proposal.change`: «{from} ← {to}» in Arabic and «{from} → {to}» in English (verifier fix: the arrow had pointed new → old in LTR).
   - Component tests cover these, and `schedule.en.test.tsx` covers the proposal arrow.
-- **Playwright locale e2e** (`e2e/tests/locale.spec.ts`), on desktop and Pixel 7:
+- **Playwright locale e2e** (`e2e/tests/platform/locale.spec.ts`), on desktop and Pixel 7:
   - Admin: switches to English (dir ltr, English dashboard heading and nav, the pricing form's groups), then switches back (dir rtl).
   - Teacher: switches from the top bar and back.
   - Login page: switches to English and back.
@@ -1429,7 +1429,7 @@ Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_m
 
 ## Integration
 - All five wave-a branches were already merged into develop (fd30aec, 2b5d90b, a7949be, 5d52f7b, f91f6a2) with the UI-local stand-in types replaced by `@ab/shared`; migration 164 applied with no `gen:types` drift.
-- Final fix: `BookingPage` waits on `lead.isPending` instead of `isLoading`; e2e `fillStable` (e2e/support/fill.ts) for the wizard's first-paint remount in journeys 1 and chat-subscribe.
+- Final fix: `BookingPage` waits on `lead.isPending` instead of `isLoading`; e2e `fillStable` (e2e/support/core/fill.ts) for the wizard's first-paint remount in journeys 1 and chat-subscribe.
 - Merged worktrees removed (branches kept).
 
 ## Gate (measured, `pnpm turbo lint typecheck test e2e` after `supabase db reset` (164 applied) + `gen:types` + `pnpm env:local`)
@@ -1669,7 +1669,7 @@ Owner: "payments, teacher payments and expenses need to be re-managed". Contract
 - **Expenses:** categories table (admin can add), paid day / vendor / method / receipt, monthly-repeat drafts (job), 12-month table in the reporting currency, CSV.
 - **Overview:** «مستحقات المعلمين» summary, receivables with aging, dashboard KPIs, `/admin/finance` yearly P&L, teacher-ledger and receivables CSV, «المالية» nav section, teacher nav «أرباحي» / «كشوف الشهر».
 - **Verified:** `pnpm turbo lint typecheck test` green; SQL specs (pay-rule, teacher-corrections, teacher-earnings, teacher-payments, RLS) and desktop e2e (payouts, payments-receipt, subscriptions, journey-2/3, expenses, exports, dashboard, settings, booking-makeup-invoice, lead-to-subscription, student-profile, teachers-admin, teacher-mode, edit-session-time, new teacher-earnings-ui and finance-money) green on the local stack.
-- **Shared-DB note:** `e2e/support/db.ts` now keeps `expense_categories` on reset; a branch without this change truncates it and then cannot insert expenses (FK) until the 9 seed rows are put back.
+- **Shared-DB note:** `e2e/support/core/db.ts` now keeps `expense_categories` on reset; a branch without this change truncates it and then cannot insert expenses (FK) until the 9 seed rows are put back.
 - **Not done / left:** mobile shows voided teacher payments without the struck-through style; no mobile screens for refunds or other currencies (the API accepts the old body unchanged).
 
 ## Recordings in the teacher-student file (cloud branch `cloud/student-recordings`, 2026-10-05)

@@ -128,7 +128,7 @@
       "count": 8
     }
   },
-  "support/config-seed.ts": {
+  "support/platform/config-seed.ts": {
     "max-len": {
       "count": 1
     }
@@ -160,7 +160,7 @@
       "count": 9
     }
   },
-  "support/db.ts": {
+  "support/core/db.ts": {
     "max-len": {
       "count": 1
     }
@@ -204,7 +204,7 @@
       "count": 6
     }
   },
-  "support/google.ts": {
+  "support/platform/google.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
@@ -311,7 +311,7 @@
       "count": 3
     }
   },
-  "support/settings.ts": {
+  "support/platform/settings.ts": {
     "max-len": {
       "count": 3
     }
@@ -566,7 +566,7 @@
       "count": 4
     }
   },
-  "tests/config-expand.sql.spec.ts": {
+  "tests/platform/config-expand.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
@@ -580,7 +580,7 @@
       "count": 5
     }
   },
-  "tests/config-parity.api.spec.ts": {
+  "tests/platform/config-parity.api.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
     },
@@ -588,7 +588,7 @@
       "count": 3
     }
   },
-  "tests/config-seed.sql.spec.ts": {
+  "tests/platform/config-seed.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -615,7 +615,7 @@
       "count": 8
     }
   },
-  "tests/dashboard.spec.ts": {
+  "tests/platform/dashboard.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 9
     },
@@ -675,12 +675,12 @@
       "count": 2
     }
   },
-  "tests/forms-parity.spec.ts": {
+  "tests/platform/forms-parity.spec.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "tests/google-calendar-handover.sql.spec.ts": {
+  "tests/platform/google-calendar-handover.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -691,7 +691,7 @@
       "count": 1
     }
   },
-  "tests/google-sync.spec.ts": {
+  "tests/platform/google-sync.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
@@ -705,7 +705,7 @@
       "count": 4
     }
   },
-  "tests/google-sync.sql.spec.ts": {
+  "tests/platform/google-sync.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
@@ -761,7 +761,7 @@
       "count": 2
     }
   },
-  "tests/integration-config.sql.spec.ts": {
+  "tests/platform/integration-config.sql.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -810,7 +810,7 @@
       "count": 1
     }
   },
-  "tests/locale.spec.ts": {
+  "tests/platform/locale.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -830,7 +830,7 @@
       "count": 5
     }
   },
-  "tests/mobile-form-sheets.spec.ts": {
+  "tests/platform/mobile-form-sheets.spec.ts": {
     "complexity": {
       "count": 1
     }
@@ -954,12 +954,12 @@
       "count": 3
     }
   },
-  "tests/responsive-dashboard.spec.ts": {
+  "tests/platform/responsive-dashboard.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/responsive-frame.spec.ts": {
+  "tests/platform/responsive-frame.spec.ts": {
     "complexity": {
       "count": 1
     },
@@ -967,7 +967,7 @@
       "count": 1
     }
   },
-  "tests/responsive.spec.ts": {
+  "tests/platform/responsive.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -1051,12 +1051,12 @@
       "count": 3
     }
   },
-  "tests/settings-academy.spec.ts": {
+  "tests/platform/settings-academy.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/settings-gate.api.spec.ts": {
+  "tests/platform/settings-gate.api.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 6
     },
@@ -1064,12 +1064,12 @@
       "count": 2
     }
   },
-  "tests/settings-switches.spec.ts": {
+  "tests/platform/settings-switches.spec.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "tests/shell-focus.spec.ts": {
+  "tests/platform/shell-focus.spec.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     }

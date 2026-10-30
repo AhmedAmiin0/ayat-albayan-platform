@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { seedTeacherRow, seedUser } from '../../support/db';
+import { seedTeacherRow, seedUser } from '../../support/core/db';
 import { seedFamily, withSql } from '../../support/schedule';
 import { USERS } from '../../support/users';
 

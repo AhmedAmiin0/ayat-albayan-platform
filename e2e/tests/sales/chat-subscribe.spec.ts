@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/fixtures';
 import { resetAbrar, seedFamily, setAvailability, withSql } from '../../support/schedule';
-import { fillStable } from '../../support/fill';
+import { fillStable } from '../../support/core/fill';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';

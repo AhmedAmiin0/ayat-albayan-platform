@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { resetAbrar, seedFamily } from '../support/schedule';
-import { stubInbound, stubReset } from '../support/wa-stub';
+import { ar, expect, test } from '../../support/fixtures';
+import { resetAbrar, seedFamily } from '../../support/schedule';
+import { stubInbound, stubReset } from '../../support/wa-stub';
 
 // Owner, 2026-10-05: "give the layout of the conversations a max height and make the tables inside
 // scrollable, don't make the page scroll" + "make tables have a static height". The admin frame is

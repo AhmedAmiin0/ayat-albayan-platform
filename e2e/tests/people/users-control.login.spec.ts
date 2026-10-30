@@ -1,4 +1,4 @@
-import { seedUser } from '../../support/db';
+import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/fixtures';
 import { dropLogins, detailDialog, expectRefused, expectSignedIn, openUser, signInAs, stamp, takeIssued } from '../../support/people/users-control';
 

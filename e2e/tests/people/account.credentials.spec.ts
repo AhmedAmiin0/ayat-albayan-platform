@@ -1,5 +1,5 @@
 import { accountUser, currentPassword, openAccount, region, save } from '../../support/account';
-import { seedUser } from '../../support/db';
+import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/fixtures';
 import { dropLogins, expectRefused, expectSignedIn, profileOf, signInAs } from '../../support/people/users-control';
 
