@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../../support/admin-extra';
+import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../../support/people/admin-extra';
 import { ar, expect, test } from '../../support/fixtures';
 import { openFilters, showResults } from '../../support/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../../support/schedule';

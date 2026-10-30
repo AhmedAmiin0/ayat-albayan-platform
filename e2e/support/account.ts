@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { resolve } from 'node:path';
 import { ar, expect } from './fixtures';
 import { withSql } from './schedule';
-import { stamp } from './users-control';
+import { stamp } from './people/users-control';
 
 // Helpers of the «حسابي» specs (account*.spec.ts, R-ACC-01..05). Every run gets its own stamp,
 // so the desktop and mobile projects never share an email, a phone or a name.

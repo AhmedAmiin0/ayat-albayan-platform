@@ -1,13 +1,13 @@
 {
- "tests/account.api.spec.ts": {
+ "tests/people/account.api.spec.ts": {
   "desktop": 2811,
   "mobile": 2
  },
- "tests/account.credentials.spec.ts": {
+ "tests/people/account.credentials.spec.ts": {
   "desktop": 17943,
   "mobile": 21045
  },
- "tests/account.spec.ts": {
+ "tests/people/account.spec.ts": {
   "desktop": 19699,
   "mobile": 22813
  },
@@ -87,11 +87,11 @@
   "desktop": 344,
   "mobile": 10
  },
- "tests/assistants-admin.spec.ts": {
+ "tests/people/assistants-admin.spec.ts": {
   "desktop": 8920,
   "mobile": 10326
  },
- "tests/avatars.sql.spec.ts": {
+ "tests/people/avatars.sql.spec.ts": {
   "desktop": 118,
   "mobile": 14
  },
@@ -207,11 +207,11 @@
   "desktop": 3050,
   "mobile": 3233
  },
- "tests/family-sign-in.api.spec.ts": {
+ "tests/people/family-sign-in.api.spec.ts": {
   "desktop": 1642,
   "mobile": 1312
  },
- "tests/family-sign-in.spec.ts": {
+ "tests/people/family-sign-in.spec.ts": {
   "desktop": 5200,
   "mobile": 6079
  },
@@ -307,7 +307,7 @@
   "desktop": 4404,
   "mobile": 7149
  },
- "tests/journey-6-duplicate-student.spec.ts": {
+ "tests/people/journey-6-duplicate-student.spec.ts": {
   "desktop": 3859,
   "mobile": 5095
  },
@@ -391,7 +391,7 @@
   "desktop": 6094,
   "mobile": 7481
  },
- "tests/phone-search.spec.ts": {
+ "tests/people/phone-search.spec.ts": {
   "desktop": 47400,
   "mobile": 44390
  },
@@ -403,7 +403,7 @@
   "desktop": 183,
   "mobile": 4
  },
- "tests/portal-views.sql.spec.ts": {
+ "tests/people/portal-views.sql.spec.ts": {
   "desktop": 27,
   "mobile": 0
  },
@@ -415,7 +415,7 @@
   "desktop": 3250,
   "mobile": 3407
  },
- "tests/profiles-disabled.sql.spec.ts": {
+ "tests/people/profiles-disabled.sql.spec.ts": {
   "desktop": 134,
   "mobile": 0
  },
@@ -435,7 +435,7 @@
   "desktop": 43,
   "mobile": 0
  },
- "tests/rate-limit-take.sql.spec.ts": {
+ "tests/people/rate-limit-take.sql.spec.ts": {
   "desktop": 47,
   "mobile": 0
  },
@@ -463,11 +463,11 @@
   "desktop": 94550,
   "mobile": 0
  },
- "tests/roles-permissions.sql.spec.ts": {
+ "tests/people/roles-permissions.sql.spec.ts": {
   "desktop": 182,
   "mobile": 0
  },
- "tests/roles.spec.ts": {
+ "tests/people/roles.spec.ts": {
   "desktop": 5858,
   "mobile": 6140
  },
@@ -543,15 +543,15 @@
   "desktop": 7486,
   "mobile": 8141
  },
- "tests/student-filters.spec.ts": {
+ "tests/people/student-filters.spec.ts": {
   "desktop": 9203,
   "mobile": 6864
  },
- "tests/student-lists.spec.ts": {
+ "tests/people/student-lists.spec.ts": {
   "desktop": 9658,
   "mobile": 12916
  },
- "tests/student-profile.spec.ts": {
+ "tests/people/student-profile.spec.ts": {
   "desktop": 6890,
   "mobile": 9588
  },
@@ -563,7 +563,7 @@
   "desktop": 66,
   "mobile": 8
  },
- "tests/student-statuses.spec.ts": {
+ "tests/people/student-statuses.spec.ts": {
   "desktop": 6761,
   "mobile": 2
  },
@@ -587,11 +587,11 @@
   "desktop": 183,
   "mobile": 0
  },
- "tests/teacher-isolation.spec.ts": {
+ "tests/people/teacher-isolation.spec.ts": {
   "desktop": 14959,
   "mobile": 0
  },
- "tests/teacher-isolation.sql.spec.ts": {
+ "tests/people/teacher-isolation.sql.spec.ts": {
   "desktop": 79,
   "mobile": 0
  },
@@ -599,7 +599,7 @@
   "desktop": 76,
   "mobile": 0
  },
- "tests/teacher-mode.spec.ts": {
+ "tests/people/teacher-mode.spec.ts": {
   "desktop": 17102,
   "mobile": 20861
  },
@@ -627,7 +627,7 @@
   "desktop": 6135,
   "mobile": 8271
  },
- "tests/teacher-rls.sql.spec.ts": {
+ "tests/people/teacher-rls.sql.spec.ts": {
   "desktop": 198,
   "mobile": 228
  },
@@ -635,7 +635,7 @@
   "desktop": 5000,
   "mobile": 6765
  },
- "tests/teachers-admin.spec.ts": {
+ "tests/people/teachers-admin.spec.ts": {
   "desktop": 8089,
   "mobile": 9488
  },
@@ -671,23 +671,23 @@
   "desktop": 102,
   "mobile": 0
  },
- "tests/users-control.delete.spec.ts": {
+ "tests/people/users-control.delete.spec.ts": {
   "desktop": 7141,
   "mobile": 6894
  },
- "tests/users-control.invite.spec.ts": {
+ "tests/people/users-control.invite.spec.ts": {
   "desktop": 8507,
   "mobile": 8496
  },
- "tests/users-control.login.spec.ts": {
+ "tests/people/users-control.login.spec.ts": {
   "desktop": 22219,
   "mobile": 21407
  },
- "tests/users-control.spec.ts": {
+ "tests/people/users-control.spec.ts": {
   "desktop": 15304,
   "mobile": 15231
  },
- "tests/users-control.sql.spec.ts": {
+ "tests/people/users-control.sql.spec.ts": {
   "desktop": 267,
   "mobile": 17
  },

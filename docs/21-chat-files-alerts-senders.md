@@ -209,7 +209,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 - `MESSAGE_SELECT` becomes `'*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name)'`.
 - `ThreadMessageRow` gains `sender?: { full_name: string } | null`.
 - `toMessageView` adds:
-  - `sender_name`: when outbound, `row.sent_by_teacher?.display_name_ar ?? row.sender?.full_name ?? null`; otherwise null. The teacher's name wins, so «أرسلها: أبرار» in `e2e/tests/teacher-mode.spec.ts:104` still passes.
+  - `sender_name`: when outbound, `row.sent_by_teacher?.display_name_ar ?? row.sender?.full_name ?? null`; otherwise null. The teacher's name wins, so «أرسلها: أبرار» in `e2e/tests/people/teacher-mode.spec.ts:104` still passes.
   - `automatic`: `row.direction === 'outbound' && row.created_by === null && row.dedup_key !== null`.
 - `sent_by_teacher_name` stays as it is.
 - Every caller inherits this with no service change: admin `threads.service.ts:51`, `sales-threads.service.ts:47`, `teacher-threads.service.ts:53`, Outbox and messages.service.

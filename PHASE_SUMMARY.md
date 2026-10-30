@@ -1685,7 +1685,7 @@ Owner request: every online meeting is recorded; a student-teacher lesson goes i
 
 ## Integration: admin suite (integrate/admin-suite)
 
-- Merged fix/config, fix/recordings, fix/mobile-money, fix/mobile-ops, fix/mobile-finance, feat/web-polish. fix/roles was merged with strategy `ours`: it carried a second implementation of dynamic roles superseded by #50 on develop; its review hardening was ported onto #50 (migration 225, `permission_not_held`, guard resilience, `e2e/tests/roles-permissions.sql.spec.ts`).
+- Merged fix/config, fix/recordings, fix/mobile-money, fix/mobile-ops, fix/mobile-finance, feat/web-polish. fix/roles was merged with strategy `ours`: it carried a second implementation of dynamic roles superseded by #50 on develop; its review hardening was ported onto #50 (migration 225, `permission_not_held`, guard resilience, `e2e/tests/people/roles-permissions.sql.spec.ts`).
 - `/config/meta` and `/config/custom` use `@Permissions('settings.read'|'settings.write')`; frozen parity table updated.
 - `packages/db/src/types.ts` was NOT fully regenerated: the local CLI marks every view column nullable, which breaks 4 API call sites; the four missing function signatures were added by hand.
 - Mobile: one `useReceivables` (money/queries), `riyadhToday` from calendar/week, the finance summary has its own cache key.
