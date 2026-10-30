@@ -1,16 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '@/common/http/errors';
-import {
-  ADMIN,
-  NOW,
-  REQ,
-  SALES,
-  stamped,
-  STUDENT,
-  stopApp,
-  SUB,
-  subRow,
-} from './course-stop.fakes';
+import { ADMIN, NOW, REQ, SALES, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
 // «إلغاء الاشتراك» over HTTP (owner 2026-10-30): stop the course, keep the money.
 type App = Awaited<ReturnType<typeof stopApp>>;

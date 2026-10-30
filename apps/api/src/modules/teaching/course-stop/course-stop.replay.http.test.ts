@@ -1,7 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { conflict } from '@/common/http/errors';
 import {
-  ADMIN,
   NOW,
   REQ,
   SALES,
