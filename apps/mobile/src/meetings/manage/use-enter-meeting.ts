@@ -1,5 +1,6 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { useRef, useState } from 'react';
+import { useRoomsInApp } from '@/classroom';
 import { enterMeeting } from './api';
 import { meetingError } from './meeting-text';
 
@@ -8,13 +9,14 @@ export function useEnterMeeting(tz: string = RIYADH_TZ) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inFlight = useRef(false);
+  const inApp = useRoomsInApp();
   const run = async (id: string) => {
     if (inFlight.current) return;
     inFlight.current = true;
     setPending(true);
     setError(null);
     try {
-      await enterMeeting(id);
+      await enterMeeting(id, inApp);
     } catch (e) {
       setError(meetingError(e, tz));
     } finally {

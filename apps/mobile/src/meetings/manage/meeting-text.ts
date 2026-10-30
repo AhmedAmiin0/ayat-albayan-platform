@@ -1,14 +1,10 @@
 import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
 import { clockCycle, clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
-import { webOrigin } from '@/classroom/links/web-origin';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 
 const errors: Record<string, string | undefined> = t.classroom.error;
-
-/** The web room of an internal meeting (`/meeting/<id>`), where the WebRTC page lives. */
-export const meetingUrl = (id: string): string => `${webOrigin()}/meeting/${id}`;
 
 /** «5 أكتوبر، 14:30» / «5 أكتوبر، 2:30 م» in the viewer's zone, Western digits. */
 export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): string {

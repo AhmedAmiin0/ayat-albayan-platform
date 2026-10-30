@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-admin",
     "owner": "holdmycup",
     "scheme": "ayatalbayan",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -41,15 +41,15 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة.",
+          "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة، وللظهور بالفيديو في الحلقات والاجتماعات من داخل التطبيق.",
           "photosPermission": "نحتاج إلى الصور لاختيار صورة إيصال التحويل وتسجيلها مع الدفعة.",
-          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق."
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر، وللتحدث في الحلقات والاجتماعات من داخل التطبيق."
         }
       ],
       [
         "expo-audio",
         {
-          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق.",
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر، وللتحدث في الحلقات والاجتماعات من داخل التطبيق.",
           "recordAudioAndroid": false,
           "enableBackgroundPlayback": false
         }
@@ -58,8 +58,16 @@
       [
         "@config-plugins/react-native-webrtc",
         {
-          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق.",
-          "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة."
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر، وللتحدث في الحلقات والاجتماعات من داخل التطبيق.",
+          "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة، وللظهور بالفيديو في الحلقات والاجتماعات من داخل التطبيق."
+        }
+      ],
+      [
+        "@livekit/react-native-expo-plugin",
+        {
+          "android": {
+            "audioType": "communication"
+          }
         }
       ]
     ],
