@@ -1,9 +1,17 @@
 // e2e/areas.json: which page routes and API modules each e2e spec drives (the PR spec selection).
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export const AREAS_FILE = 'e2e/areas.json';
 export const SPEC_DIR = 'e2e/tests/';
+
+/** Spec files under e2e/tests/, relative to it, sub-folders included (`messaging/inbox.spec.ts`, D8). */
+export function listSpecs(root) {
+  return readdirSync(join(root, SPEC_DIR), { recursive: true, encoding: 'utf8' })
+    .map((f) => f.split('\\').join('/'))
+    .filter((f) => f.endsWith('.spec.ts'))
+    .sort();
+}
 
 /** The map, checked: every area has paths and specs, every list holds strings. Throws otherwise. */
 export function loadAreas(root) {

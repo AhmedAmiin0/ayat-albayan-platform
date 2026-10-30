@@ -26,12 +26,12 @@ const UNIT =
 const GRAPHED =
   /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(shared|client-core)\/src\/)/;
 const ROUTES = 'apps/web/src/routes/';
-const SPEC = /^e2e\/tests\/[^/]+\.spec\.ts$/;
+const SPEC = /^e2e\/tests\/(?:[^/]+\/)*[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
 const REGISTRY = /^apps\/web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
 /** Code between a changed file and a page or module: followed further, never decides by itself. */
 const PASS =
-  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(shared|client-core)\/src\/|e2e\/(scripts|support\/(?!global-setup|durations-reporter))|e2e\/tests\/(?!auth\.setup)[^/]+\.ts$)/;
+  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
 /** The area whose page lists every UI string: runs on any key change. */
 const EVERY_KEY_AREA = 'translations';
 
