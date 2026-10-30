@@ -7,7 +7,7 @@ import { isTimeZone } from '@ab/shared';
 export const PROFILE_DEFAULT_TZ = 'Asia/Riyadh';
 
 /** The zones stored for one profile: its teacher row, its guardian row and the profile itself. */
-export interface MeZoneRows {
+interface MeZoneRows {
   teacher: string | null;
   guardian: string | null;
   profile: string | null;
