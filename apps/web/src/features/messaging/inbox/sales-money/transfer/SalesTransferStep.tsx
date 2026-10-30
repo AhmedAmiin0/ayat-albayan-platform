@@ -29,6 +29,7 @@ type Props = {
   bindOf?: ((studentId: string) => Bind) | undefined;
 };
 
+// academy day (docs/34 b): the transfer day is a Riyadh day, like a payment's
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
   amount: s ? String(s.due || s.price) : '',

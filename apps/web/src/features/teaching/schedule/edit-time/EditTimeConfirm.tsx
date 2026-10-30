@@ -1,12 +1,12 @@
-import { clockTime, type LessonView } from '@ab/shared';
+import { sameClockAt, type LessonView } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import type { Change } from './edit-time';
 import { whenWithLength } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
 import { durationMin, studentTimes, timeInCity } from '../lesson/lessons';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface EditTimeConfirmProps {
   lesson: LessonView;
@@ -35,19 +35,20 @@ function Note({ children }: { children: string }) {
 const Side = ({ children }: { children: string }) => <span className="whitespace-nowrap">{children}</span>;
 
 /**
- * What saving does, before the admin presses it (R-SCH-11): «قبل ← بعد» in Riyadh time with the
+ * What saving does, before the admin presses it (R-SCH-11): «قبل ← بعد» in the viewer's time with the
  * teacher's and students' clocks, that it is the same lesson, and for a correction the effects on
  * the teacher's payout and the report file. Shown once something differs.
  */
 export function EditTimeConfirm(p: EditTimeConfirmProps) {
   const clock = useClock();
+  const tz = useViewerTz();
   const { lesson, mode, next, change, canNotify, notify, onNotify, payoutLocked = false } = p;
   const teacherTz = lesson.teacher.tz;
-  // The teacher's own clock is only worth a line when it reads differently from Riyadh's.
-  const sameClock = clockTime(new Date(next.startsAt), teacherTz) === clockTime(new Date(next.startsAt), RIYADH_TZ);
+  // The teacher's own clock is only worth a line when it reads differently from the viewer's.
+  const sameClock = sameClockAt(new Date(next.startsAt), { a: teacherTz, b: tz });
   const clocks = [
     ...(sameClock ? [] : [t.schedule.teacherTime.replace('{time}', timeInCity(next.startsAt, teacherTz, clock))]),
-    ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, RIYADH_TZ, clock),
+    ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, tz, clock),
   ];
   const correct = mode === 'correct';
   const sides = { '{from}': whenWithLength(lesson.starts_at, durationMin(lesson), clock), '{to}': whenWithLength(next.startsAt, next.durationMin, clock) };
@@ -58,7 +59,7 @@ export function EditTimeConfirm(p: EditTimeConfirmProps) {
           const side = sides[part as keyof typeof sides];
           return side ? <Side key={i}>{side}</Side> : part;
         })}
-        <span className="ms-1.5 text-xs font-normal text-ink-3">{t.schedule.riyadhTime}</span>
+        <span className="ms-1.5 text-xs font-normal text-ink-3">{t.schedule.viewerTime}</span>
       </p>
       {clocks.map((line, i) => (
         <p key={`${i}-${line}`} className="text-xs text-ink-2">{line}</p>

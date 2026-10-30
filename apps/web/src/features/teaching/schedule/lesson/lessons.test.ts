@@ -12,7 +12,7 @@ import {
   teacherRows,
   timeInCity,
 } from './lessons';
-import { RIYADH_TZ } from '../tz';
+import { RIYADH_TZ } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
@@ -68,11 +68,16 @@ describe('times with their zone (R-SCH-01)', () => {
     expect(timeInCity('2026-10-04T14:00:00.000Z', 'Pacific/Fiji', C24)).toContain('Pacific/Fiji');
   });
 
-  it('studentTimes lists each other zone once', () => {
-    const group = lesson({ students: [SUHAILA, { ...SUHAILA, id: 's-9' }, JOUD] });
+  it('studentTimes lists each other zone once (Cairo in winter, UTC+2)', () => {
+    const students = [SUHAILA, { ...SUHAILA, id: 's-9' }, JOUD];
+    const group = lesson({ starts_at: '2026-12-06T14:00:00.000Z', students });
     const cairo = t.schedule.studentTime.replace('{time}', timeInCity(group.starts_at, 'Africa/Cairo', C24));
     expect(studentTimes(group, RIYADH_TZ, C24)).toEqual([cairo]);
     expect(studentTimes(lesson({ students: [JOUD] }), RIYADH_TZ, C24)).toEqual([]);
+  });
+
+  it('studentTimes skips a zone on the same clock at that instant (Cairo summer time)', () => {
+    expect(studentTimes(lesson({ students: [SUHAILA] }), RIYADH_TZ, C24)).toEqual([]);
   });
 });
 

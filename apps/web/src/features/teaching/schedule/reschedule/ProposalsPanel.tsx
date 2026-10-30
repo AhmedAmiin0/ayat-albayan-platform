@@ -1,3 +1,4 @@
+import { viewerTz } from '@ab/client-core';
 import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
@@ -5,10 +6,9 @@ import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { proposalsQuery } from '../api';
 import { studentNames } from '../lesson/lessons';
-import { RIYADH_TZ } from '../tz';
 import { type Clock, useClock } from '@/lib/clock';
 
-const when = (iso: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz: RIYADH_TZ, ...clock });
+const when = (iso: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz: viewerTz(), ...clock });
 
 /**
  * «طلبات تغيير الميعاد» above the week (R-SCH-08): every lesson a teacher proposed to move, in any

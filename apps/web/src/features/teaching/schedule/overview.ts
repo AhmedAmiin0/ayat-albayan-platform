@@ -1,13 +1,15 @@
+import { viewerTz } from '@ab/client-core';
 import { clockTime, type Gender, type Program, type LessonView, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import type { Range } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import { teacherRows } from './lesson/lessons';
-import { addDays, RIYADH_TZ, zonedToUtc } from './tz';
+import { addDays, zonedToUtc } from './tz';
 import type { Clock } from '@/lib/clock';
 import { hhmmText } from '@/lib/clock-text';
 
 // All-teachers calendar view logic (R-SCH-01): filters on the one cached overview, and a teacher's
-// spans cut to a Riyadh day as "HH:MM" ranges for the 08–24 track. Pure, unit-tested.
+// spans cut to a day of the viewer's zone (docs/34) as "HH:MM" ranges for the 08–24 track.
+// Pure, unit-tested.
 
 const MIN = 60_000;
 const QUARTER = 15 * MIN;
@@ -33,7 +35,7 @@ export function filterTeachers(teachers: readonly OverviewTeacher[], f: TeacherF
 
 export interface BoardRow {
   teacher: OverviewTeacher;
-  /** Riyadh day → that day's lessons by start time. */
+  /** Viewer's day → that day's lessons by start time. */
   days: Map<string, LessonView[]>;
   /** The teacher's photo (OverviewTeacher.avatar_url, so a teacher without lessons in the window still has it); null = initials. */
   photo: string | null;
@@ -45,12 +47,13 @@ export function boardRows(teachers: readonly OverviewTeacher[], lessons: readonl
   return teachers.map((teacher) => ({ teacher, days: byTeacher.get(teacher.id) ?? new Map(), photo: teacher.avatar_url ?? null }));
 }
 
-/** [from, to) of a Riyadh day, epoch ms. */
-export function dayBounds(day: string): { from: number; to: number } {
-  return { from: zonedToUtc(day, '00:00', RIYADH_TZ).getTime(), to: zonedToUtc(addDays(day, 1), '00:00', RIYADH_TZ).getTime() };
+/** [from, to) of a day in `tz` (the viewer's), epoch ms. */
+export function dayBounds(day: string, tz: string = viewerTz()): { from: number; to: number } {
+  const at = (d: string) => zonedToUtc(d, '00:00', tz).getTime();
+  return { from: at(day), to: at(addDays(day, 1)) };
 }
 
-/** Spans cut to one Riyadh day; with `after`, only what is left after that instant. */
+/** Spans cut to one viewer's day; with `after`, only what is left after that instant. */
 export function clipSpans(spans: readonly Span[], day: string, after?: number): Span[] {
   const bounds = dayBounds(day);
   const from = Math.max(bounds.from, after ?? bounds.from);
@@ -61,10 +64,10 @@ export function clipSpans(spans: readonly Span[], day: string, after?: number): 
   });
 }
 
-/** A span of `day` as Riyadh "HH:MM" keys (freeText shows them in the viewer's cycle); one that runs to midnight ends at "24:00", not "00:00". */
-export function spanRange(span: Span, day: string): Range {
-  const end = Date.parse(span.ends_at) >= dayBounds(day).to ? '24:00' : clockTime(new Date(span.ends_at), RIYADH_TZ);
-  return { start: clockTime(new Date(span.starts_at), RIYADH_TZ), end };
+/** A span of `day` as viewer's "HH:MM" keys (freeText shows them in the viewer's cycle); one that runs to midnight ends at "24:00", not "00:00". */
+export function spanRange(span: Span, day: string, tz: string = viewerTz()): Range {
+  const end = Date.parse(span.ends_at) >= dayBounds(day, tz).to ? '24:00' : clockTime(new Date(span.ends_at), tz);
+  return { start: clockTime(new Date(span.starts_at), tz), end };
 }
 
 /** "3:30" for 210 minutes (the free total). */
@@ -96,7 +99,7 @@ export interface DayInput {
   now: Date;
 }
 
-/** One teacher's Riyadh day: availability, time off, lesson ticks and what is still free. */
+/** One teacher's viewer-zone day: availability, time off, lesson ticks and what is still free. */
 export function teacherDay(teacher: OverviewTeacher, { day, lessons, now }: DayInput): TeacherDay {
   const ranges = (spans: readonly Span[]) => clipSpans(spans, day).map((s) => spanRange(s, day));
   const after = Math.ceil(now.getTime() / QUARTER) * QUARTER;
@@ -114,8 +117,8 @@ export function teacherDay(teacher: OverviewTeacher, { day, lessons, now }: DayI
   };
 }
 
-/** [from, to) of a Riyadh day as Dates (the day view's request window). */
-export function dayWindow(day: string): { from: Date; to: Date } {
-  const b = dayBounds(day);
+/** [from, to) of a viewer's day as Dates (the day view's request window). */
+export function dayWindow(day: string, tz: string = viewerTz()): { from: Date; to: Date } {
+  const b = dayBounds(day, tz);
   return { from: new Date(b.from), to: new Date(b.to) };
 }

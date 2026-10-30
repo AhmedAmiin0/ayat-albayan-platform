@@ -55,5 +55,6 @@ export async function downloadPayoutsCsv(month: string): Promise<void> {
 
 /** This month in Riyadh, YYYY-MM (the academy's reporting clock). */
 export function currentMonth(now = new Date()): string {
+  // academy day (docs/34 b): the payroll month is a Riyadh month
   return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' }).slice(0, 7);
 }

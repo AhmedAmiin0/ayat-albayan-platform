@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './slots';
-import { RIYADH_TZ } from '../tz';
+import { RIYADH_TZ } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */

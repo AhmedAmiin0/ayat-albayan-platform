@@ -1,8 +1,8 @@
-import { lessonWhenAt } from '@ab/shared';
+import { viewerTz } from '@ab/client-core';
+import { lessonWhenAt, sameClockAt } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
-import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { pickPatch, type BookingDraft } from '../../draft/draft';
 import { SeriesCheck } from '../review/SeriesCheck';
@@ -14,13 +14,14 @@ export interface SlotStepProps {
   onChange: (patch: Pick<BookingDraft, 'startsAt' | 'extra'>) => void;
 }
 
-/** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض» (+ the family's wall clock when it differs). */
+/** «الأحد 4 أكتوبر 17:00 بتوقيتك» (+ the family's wall clock `tz` when it differs then). */
 export function pickedText(startsAt: string, tz: string, clock: Clock): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenAt(at, { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`;
-  if (tz === RIYADH_TZ) return riyadh;
+  const viewer = viewerTz();
+  const mine = `${lessonWhenAt(at, { tz: viewer, ...clock })} ${t.schedule.viewerTime}`;
+  if (sameClockAt(at, { a: tz, b: viewer })) return mine;
   const local = t.schedule.inCity.replace('{time}', lessonWhenAt(at, { tz, ...clock })).replace('{city}', tzCity(tz) ?? tz);
-  return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
+  return `${mine}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /** A course's grid opens near its subscription's start: max(now, starts_on) (the picker never opens before this week). */

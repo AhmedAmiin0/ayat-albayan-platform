@@ -1,11 +1,9 @@
-import { addDays, clockTime, intlLocale, RIYADH_TZ, weekdayOf, weekStart } from '@ab/shared';
+import { addDays, clockTime, intlLocale, weekdayOf, weekStart } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 // Wall-clock math for the schedule screens (R-SCH-01, rule 6). The DB and the API speak UTC
 // instants; these helpers turn them into a person's local day / time with Intl only (no tz library,
 // same approach as apps/api zoned-time.ts). Local dates are "YYYY-MM-DD", times "HH:MM".
-
-export { RIYADH_TZ };
 
 /** Academy-week math on "YYYY-MM-DD" (same as the mobile calendar): shared since docs/27 E6. */
 export { addDays, weekdayOf, weekStart };

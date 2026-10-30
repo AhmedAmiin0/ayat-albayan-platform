@@ -45,7 +45,6 @@ export {
   addDays,
   dateLabel,
   dayMonthLabel,
-  type RIYADH_TZ,
   weekdayOf,
   weekDays,
   weekStart,

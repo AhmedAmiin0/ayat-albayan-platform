@@ -1,10 +1,11 @@
+import { viewerTz } from '@ab/client-core';
 import { counted, type BookingResult } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { RIYADH_TZ, weekStart, zonedParts } from '@/features/teaching/schedule/tz';
+import { weekStart, zonedParts } from '@/features/teaching/schedule/tz';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n/i18n';
@@ -29,10 +30,10 @@ export interface BookedPanelProps {
   chatPhone?: string | null;
 }
 
-/** The first lesson and the Riyadh week it falls in (the «افتح الجدول» link). */
+/** The first lesson and its week in the viewer's zone, as the calendar (the «افتح الجدول» link). */
 function firstLesson(result: BookingResult) {
   const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-  return { first, week: first ? weekStart(zonedParts(new Date(first.starts_at), RIYADH_TZ).date) : undefined };
+  return { first, week: first ? weekStart(zonedParts(new Date(first.starts_at), viewerTz()).date) : undefined };
 }
 
 /**

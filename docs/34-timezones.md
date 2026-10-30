@@ -86,7 +86,49 @@ zone is a later API change.
 
 ## 5. apps/web
 
-Filled by the web PR (`cloud/review-viewer-tz-web`).
+Branch `cloud/review-viewer-tz-web`, base `d56c00b8`. One hook, `useViewerTz()` (`src/lib/viewer-tz.ts`,
+`useSyncExternalStore` over the client-core store); `meQuery` sets `setViewerPersonTz(me.tz)` (web `Me`
+gains `tz`), no session / `signOut` clears it. Pure helpers that take no zone read client-core
+`viewerTz()` (as a default parameter where a function already had one); components pass the hook's
+value. Unit tests pin the viewer to Asia/Riyadh in `test-setup.ts` (`beforeEach`), so no expectation
+depends on the CI machine's zone.
+
+| File | Use | Class | Outcome |
+|---|---|---|---|
+| `lib/viewer-tz.ts` (new), `people/auth/me.ts`, `sign-in.ts` | the viewer's zone | — | the hook and the `/auth/me` wiring |
+| `classroom/student-link/student-link.ts` `viewerTz` (device only) and its 8 users (`StudentLessonPanel`, `MeetingGuestPage`, `InternalMeetingsList`, `ScheduledMeetingDialog`, `meeting-join-errors`, `MonitorChannel`, `MonitorChannelButton`, `TeacherMessagesPage`) | the browser's zone | a | removed; the hook / client-core `viewerTz()` (person → device → academy) |
+| `schedule/grid/WeekSchedule.tsx`, `overview.ts` (`dayBounds`, `spanRange`, `dayWindow`, `teacherDay`), `lesson/lessons.ts` `teacherRows`, `reschedule/slots.ts` (`currentWeekStart`, `bookableWindow`), `ScheduleNav.tsx` | the admin calendar's week / day window, day buckets, 08–24 track, «بتوقيت الرياض» | a | all in the viewer's zone together: the client computes the UTC window (`GET /lessons/overview?from&to` instants), so window, buckets and labels stay one zone; label «بتوقيتك» |
+| `teacher/lessons/MyWeek.tsx` | the teacher's week window and label | a | the viewer's week; card zone `me.tz ?? viewer` |
+| `grid/SlotGrid.tsx`, `reschedule/SlotPicker.tsx` | slot picker: Riyadh day columns, big Riyadh time, small student time, legend | a | picker in the viewer's zone (window from `bookableWindow(week, now, tz)`, `GET /booking/slots` gets instants); legend `schedule.zoneNote` (same zone) or new `booking.slotLegendViewer`; the small label is the student's clock only when it differs (`zoneLabel` base = viewer) |
+| `lesson/LessonChip.tsx`, `LessonDetails.tsx`, `lessons.ts` `studentTimes`, `grid/TeacherCell.tsx` | chip / drawer time, student and teacher clocks | a | viewer's time «بتوقيتك»; a student's or teacher's clock only when it reads differently at that instant (`sameClockAt`, so Cairo in summer adds nothing) |
+| `reschedule/ProposalBox.tsx`, `ProposalsPanel.tsx`, `MakeupAction.tsx`, `ConflictNotice.tsx` (`conflictText`, zone note) | proposal / makeup / clash times | a | viewer's zone; the conflict note says `schedule.zoneNote` with the viewer's city; teacher clock only when it differs |
+| `edit-time/edit-time-text.ts`, `EditTimeConfirm.tsx`, `EditTimeFields.tsx` | before ← after line, «= 18:00 بتوقيت الرياض» hint | a | viewer's time; the picker stays on the teacher's clock (its label names the city) and the hint becomes `lessons.timeEdit.viewerEquiv` «= {time} بتوقيتك» (`riyadhEquiv` removed: web-only) |
+| `booking/steps/slots/SlotStep.tsx` `pickedText`, `GapChip.tsx`, `DayTimesList.tsx` `dayAtText`, `review/BookedPanel.tsx` (week link) | wizard's picked time, gap chip, picked days, «افتح الجدول» week | a | viewer's time «بتوقيتك» + the family's clock when it differs; picked days stay on the family's clock with its city when it is not the viewer's; week link in the viewer's zone like the calendar |
+| `booking/trial-date/history/history-text.ts`, `TrialHistoryTable.tsx` | trial dates' times | a | viewer's zone by default, always «بتوقيتك»; family line unchanged |
+| `teacher-students/next-lesson.ts`, `teacher/reports/MyReports.tsx`, `routes/teacher/reports.$studentId.tsx`, `routes/admin/students/$studentId_.reports.tsx`, `reporting/reports/ReportFormPage.tsx` | next lesson, report pages' zone (`me.tz ?? RIYADH_TZ`, admin = Riyadh) | a | viewer's zone (teacher: `me.tz ?? viewer`) |
+| `sales/schedule/SalesLessonDetails.tsx`, `SalesDayNav.tsx`, `teachers/teacher-view.ts` (`riyadhWhen` → `viewerWhen`), `TeacherStudentItem.tsx`, `TeacherStudentsByKind.tsx` | sales drawer and teacher list times, «بتوقيت الرياض» | a | viewer's zone «بتوقيتك»; student / teacher clocks only when they differ |
+| `reporting/dashboard/shared/format.ts` (`whenRiyadh` → `whenViewer`, `rateDate`), `reporting/activity/activity-format.ts`, `platform/google-sync/google-format.ts` | dashboard, activity log and Google log timestamps | a | viewer's zone |
+| `people/portal/lessons/LessonWhen.tsx` | family portal: family clock + Riyadh line | a | family-facing, kept on the family's clock; the second line is the viewer's «بتوقيتك», only when it differs |
+| `sales/schedule/SalesSchedule.tsx` | today for `GET /sales/schedule?date` | b | kept: the API reads `date` as a Riyadh day (times inside are the viewer's; limit in §4) |
+| `reporting/dashboard/search.ts`, `index.ts`, `DashboardPage.tsx`, `finance/finance/FinanceSummaryPage.tsx`, `finance/payments/PaymentsPage.tsx` | `riyadhToday` for `?from&to` ranges, CSV range | b | kept with a comment |
+| `finance/payments/api.ts` `paidAtFor`, `record/pay-day.ts`, `RecordPaymentDialog.tsx`, `inbox/sales-money/transfer/SalesTransferStep.tsx`, `finance/payouts/api.ts` | payment day (noon Riyadh), payroll month | b | kept with a comment |
+| `teaching/course-pause/CoursePauseSheet.tsx`, `CoursePauseBanner.tsx`, `ChangeUntilDialog.tsx`, `finance/subscriptions/create/use-start-day.ts`, `inbox/sales-money/subscribe/SalesSubscribeStep.tsx` | pause days, start day / used-before cut-off | b | kept with a comment |
+| `components/ui/layout/running-head.tsx` | Riyadh **and** Cairo clocks, each named | b | kept (named cities) |
+| `booking/draft/draft.ts`, `people/students/create/create-student.ts`, `schedule/reschedule/reschedule.ts` `familyTz`, `booking/steps/review/SeriesCheck.tsx` | a family's zone before one is picked / a never-sent placeholder body | — | kept as data defaults (`ACADEMY_TZ` / `'Asia/Riyadh'`), commented |
+| `schedule/tz.ts`, `schedule/index.ts` | `RIYADH_TZ` re-export | — | removed (no user left; tests import it from `@ab/shared`) |
+
+Counts (grep of §3 on `d56c00b8`, tests, fixtures and test kits excluded): **135 matching lines in
+59 files** — **a 36 files**, **b 17**, **c 0** (the web sends no messages), **— 6** (data defaults
+and the removed re-export); plus the 8 files on the old device-only `viewerTz`, moved to the store. 9
+fixture / test-kit files keep `'Asia/Riyadh'` as test data. e2e: `schedule-all-teachers.spec.ts` and
+`journey-4-reschedule-conflict.spec.ts` now expect «بتوقيتك» (the browsers run in Asia/Riyadh and
+the staff's profile tz is the column default, so their viewer zone is the device's).
+
+Tests: `lib/viewer-tz.test.tsx` (hook, `me.tz` → store, sign-out / no session clear it),
+`schedule/lesson/LessonDetails.viewer-tz.test.tsx` (a Cairo viewer reads the Riyadh family's 18:00
+lesson on 2026-11-05 as 17:00 with «عند الطالب 18:00 بتوقيت الرياض»; a Riyadh viewer and the Cairo
+viewer on 2026-10-22 (summer time) see no family line; drawer and chip), `teacher-view.test.ts`
+(Cairo winter), `lessons.test.ts`, `TeacherCell.test.tsx`, `schedule.en.test.tsx` (winter / summer).
 
 ## 6. apps/mobile
 

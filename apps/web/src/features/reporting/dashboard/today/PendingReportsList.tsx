@@ -4,7 +4,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { whenRiyadh } from '../shared/format';
+import { whenViewer } from '../shared/format';
 import type { PendingReportRow } from '../types';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';
@@ -24,7 +24,7 @@ export function PendingReportsList({ items }: { items: readonly PendingReportRow
           <span className="font-semibold">{r.student.name}</span>
           {r.student.code && <Ltr className="text-2xs text-ink-3">{r.student.code}</Ltr>}
           <span className="text-xs text-ink-2">
-            {t.students.withTeacher.replace('{teacher}', teacherLabel(r.teacher))} · {whenRiyadh(r.starts_at, clock)}
+            {t.students.withTeacher.replace('{teacher}', teacherLabel(r.teacher))} · {whenViewer(r.starts_at, clock)}
           </span>
           <StatusChip {...lessonStatusStyle[r.status]} label={t.enums.lessonStatus[r.status]} size="sm" />
           <Link

@@ -11,6 +11,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from '../api';
@@ -25,7 +26,7 @@ import { ScheduleNav } from '../ScheduleNav';
 import { SyncScheduleButton } from '../SyncScheduleButton';
 import type { ScheduleSearch } from '../filters/search';
 import { currentWeekStart } from '../reschedule/slots';
-import { RIYADH_TZ, weekWindow, zonedParts } from '../tz';
+import { weekWindow, zonedParts } from '../tz';
 import { WeekGrid } from './WeekGrid';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 
@@ -36,15 +37,17 @@ export interface WeekScheduleProps {
 
 /**
  * /admin/schedule (R-SCH-01, R-SCH-03, R-SCH-08): the teachers' pending proposals, then every
- * teacher's Riyadh week (or one day) with hours, time off, load and free time, filters in the URL,
- * one GET /lessons/overview per window. A chip opens its drawer; writes refresh the calendar.
+ * teacher's week (or one day) in the viewer's zone (docs/34) with hours, time off, load and free
+ * time, filters in the URL, one GET /lessons/overview per window. A chip opens its drawer;
+ * writes refresh the calendar.
  */
 export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const now = useNow();
-  const today = zonedParts(now, RIYADH_TZ).date;
+  const tz = useViewerTz();
+  const today = zonedParts(now, tz).date;
   const day = search.view === 'day' ? (search.day ?? today) : null;
-  const week = search.week ?? currentWeekStart(now);
-  const overview = useQuery(overviewQuery(day ? dayWindow(day) : weekWindow(week, RIYADH_TZ)));
+  const week = search.week ?? currentWeekStart(now, tz);
+  const overview = useQuery(overviewQuery(day ? dayWindow(day, tz) : weekWindow(week, tz)));
   const proposals = useQuery(proposalsQuery);
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);

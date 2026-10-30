@@ -33,6 +33,7 @@ const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind ==
 /** What a payment in `currency` still owes (owner 2026-10-28: less stays unpaid); null for a refund or another currency. */
 const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
   s && opts.kind === 'payment' && opts.currency === s.currency ? Math.max(0, s.price - s.paid) : null;
+// academy day (docs/34 b): the payment day is a Riyadh day (paidAtFor stores its noon)
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 
 /** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt, and «المرفقات» for a bank payment. */
