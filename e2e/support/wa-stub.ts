@@ -1,4 +1,4 @@
-import { withSql } from './schedule';
+import { withSql } from './core/schedule';
 
 // Drives tools/wa-stub during e2e (docs/12 §5). The stub runs on STUB_URL (playwright.config.ts
 // STUB_PORT) and signs every simulated webhook with the e2e app secret the API was started with.

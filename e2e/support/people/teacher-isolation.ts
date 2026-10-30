@@ -1,5 +1,5 @@
 import { startedToday } from '../finance/money';
-import { seedFamily, seedLesson, withSql } from '../schedule';
+import { seedFamily, seedLesson, withSql } from '../core/schedule';
 
 // A second, login-less teacher «هبة» with her own family, lesson, sent report, chat and payout:
 // everything «أبرار» must never reach (R-NFR-02, rule 9). dropHiba removes it again.

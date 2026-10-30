@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
-import { resetAbrar } from '../../support/schedule';
+import { resetAbrar } from '../../support/core/schedule';
 import { fillTexts, pickAttendance, reportRow } from '../../support/reporting/teacher-extra';
 
 // «تقرير الحلقة» drafts (R-REP-02): the form autosaves while it is a draft and a reopened form

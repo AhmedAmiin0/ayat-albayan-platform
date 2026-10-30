@@ -5,7 +5,7 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { openNav } from '../../support/core/nav';
-import { resetAbrar, setAvailability, withSql } from '../../support/schedule';
+import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 import { stubInbound } from '../../support/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';

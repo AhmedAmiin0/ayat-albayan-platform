@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/messages';
 import { seedPackageStudent } from '../../support/finance/money';
-import { queuedFor, resetAbrar, withSql } from '../../support/schedule';
+import { queuedFor, resetAbrar, withSql } from '../../support/core/schedule';
 import { backdateSubmit, fillAttended, fillTexts, reportRow, storedObject, TEXTS } from '../../support/reporting/teacher-extra';
 
 // Edit window and versions (R-REP-02/04, R-NFR-03): inside report_teacher_edit_hours (24) the

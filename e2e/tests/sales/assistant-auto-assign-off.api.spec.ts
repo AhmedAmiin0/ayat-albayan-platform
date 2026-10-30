@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import type { BookingResult } from '@ab/shared';
 import { call, family, freshPhone, leadOf, makeAssistant, trialBody, type Assistant } from '../../support/sales/assistant-api';
 import { seedLead, setSetting } from '../../support/messages';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 
 // settings.sales_auto_assign OFF (owner 2026-10-12, docs/16 row 13), through the REAL API and database:
 // a salesperson registers from any chat, a lead of another salesperson or of nobody (new leads stay

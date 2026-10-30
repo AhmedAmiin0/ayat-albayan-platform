@@ -3,7 +3,7 @@ import type { Page, TestInfo } from '@playwright/test';
 import { chatMore, fromChatMore } from '../messaging/chat-more';
 import { ar, expect } from '../core/fixtures';
 import { bearer, API } from '../messages';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { studentStatusOf } from '../people/student-statuses';
 import { stubSent } from '../wa-stub';
 

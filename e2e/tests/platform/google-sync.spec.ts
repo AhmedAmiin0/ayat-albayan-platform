@@ -1,6 +1,6 @@
 import { expect, test, ar } from '../../support/core/fixtures';
 import { googleApi, itemsOf, readyReport, resetGoogle, STUB_TEACHER_CAL, stubState } from '../../support/platform/google';
-import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 
 // docs/24 §5: connect (stubbed OAuth) → map one teacher + one student → a platform lesson is a
 // dry-run item → live writes both events to the stub → cancel deletes them → a report gives a PDF,

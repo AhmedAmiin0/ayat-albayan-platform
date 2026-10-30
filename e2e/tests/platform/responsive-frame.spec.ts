@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { resetAbrar, seedFamily } from '../../support/schedule';
+import { resetAbrar, seedFamily } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 
 // Owner, 2026-10-05: "give the layout of the conversations a max height and make the tables inside

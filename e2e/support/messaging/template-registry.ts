@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { STUB_URL } from '../wa-stub';
 
 // A6 helpers: put the template registry back after a spec changed it, and read what the wa-stub

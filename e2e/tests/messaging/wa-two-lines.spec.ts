@@ -1,7 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { messagesWithLine, SINGLE_LINE, stubInboundOn } from '../../support/messaging/wa-lines';
 import { stubReset } from '../../support/wa-stub';
 

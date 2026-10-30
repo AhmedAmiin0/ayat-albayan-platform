@@ -1,7 +1,7 @@
 import { normalizeArabic } from '@ab/shared';
 import { dropTeacher, insertTeacher } from './admin-extra';
 import { seedLead } from '../messages';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // Four people with synthetic Saudi numbers for the phone-search spec (A14): the digit after the
 // leading 5 says which kind (1 guardian, 2 lead, 3 job applicant, 4 teacher); six digits come

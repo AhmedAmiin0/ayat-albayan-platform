@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
-import { resetAbrar, withSql } from '../../support/schedule';
+import { resetAbrar, withSql } from '../../support/core/schedule';
 import { apiSubmit, backdateSubmit, fillTexts, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 import { USERS } from '../../support/users';
 

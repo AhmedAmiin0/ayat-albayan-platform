@@ -5,7 +5,7 @@ import { call, makeAssistant, type Assistant } from '../../support/sales/assista
 import { stubInboundMedia } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
 import { PNG, statusFacts, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { stubReset } from '../../support/wa-stub';
 
 // Owner 2026-10-12 «how can assistants move student from trial to subscribed», through the REAL API and

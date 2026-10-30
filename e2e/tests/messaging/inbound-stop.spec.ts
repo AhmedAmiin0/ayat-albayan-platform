@@ -1,7 +1,7 @@
 import { expect, test } from '../../support/core/fixtures';
 import { auditActions, guardianPhone, inboundFor, leadsByPhone, pushesLike } from '../../support/messaging/inbound';
 import { freshDigits, seedLead } from '../../support/messages';
-import { seedFamily } from '../../support/schedule';
+import { seedFamily } from '../../support/core/schedule';
 import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
 
 // «وقف الرسايل» (R-MSG-04, docs/12 §3.5): from a lead it pauses the follow-ups (the marketing

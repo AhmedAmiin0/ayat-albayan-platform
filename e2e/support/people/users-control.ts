@@ -1,6 +1,6 @@
 import type { Browser, Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { AR_LOCALE } from '../core/locale';
 
 // Helpers of the «المستخدمون» specs (users-control*.spec.ts). Every run uses its own stamp, so the

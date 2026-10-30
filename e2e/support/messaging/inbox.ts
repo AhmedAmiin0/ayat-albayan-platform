@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { STUB_URL } from '../wa-stub';
 
 // Inbox edge-path helpers (A4/A5): media inbound and one-shot send failures on tools/wa-stub,

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 
 // The update trigger of migration 20261028000921 (thread_summaries) must refresh a phone on every status / text tick,
 // with no unlocked "is it the newest?" pre-filter: here one session deletes the phone's newest row

@@ -303,7 +303,7 @@
       "count": 4
     }
   },
-  "support/schedule.ts": {
+  "support/core/schedule.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },

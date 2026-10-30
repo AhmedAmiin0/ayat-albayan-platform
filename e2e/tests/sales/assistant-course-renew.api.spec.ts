@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import type { BookingResult, CourseChangeCheck, CourseChangeResult, SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { countedLessons, courseAudit, courseRules, renewal } from '../../support/finance/course-renew';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
 // Owner 2026-10-18, through the REAL API and database: the assistant books an 8-lesson course (Sun 17:00 +
 // Tue 19:30), changes its days from the second week (Mon 18:00 + Wed 20:00: the course still has exactly 8

@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../../support/schedule';
+import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 
 // Two siblings in ONE group lesson on a two-day series (R-STU-04, R-SCH-02/06): the wizard ticks the
 // sibling, a second pick on the grid adds Wednesday at the same time, SeriesCheck is clean, and the booking writes one rule with both

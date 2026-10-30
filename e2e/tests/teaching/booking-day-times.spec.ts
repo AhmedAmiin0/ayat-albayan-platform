@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { lessonsOf, resetAbrar, seedFamily, setAvailability, withSql } from '../../support/schedule';
+import { lessonsOf, resetAbrar, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 
 // A time per weekday (owner 2026-10-18, R-SCH-06): the admin wizard picks Sunday 16:00 AND Wednesday
 // 18:00 on the slot grid (one pick per weekday, each at its own time). «الأيام المتاحة» lists both,

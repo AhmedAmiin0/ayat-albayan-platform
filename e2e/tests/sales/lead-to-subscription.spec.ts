@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { guardianPhoneOf, uniqueName } from '../../support/finance/money-extra';
-import { seedFamily, withSql } from '../../support/schedule';
+import { seedFamily, withSql } from '../../support/core/schedule';
 
 // The link no other spec covers (R-LEAD-01, R-SUB-01, R-PAY-01): a lead whose trial is done became
 // a guardian + student; the admin subscribes from the STUDENT PROFILE (chat-subscribe.spec does it

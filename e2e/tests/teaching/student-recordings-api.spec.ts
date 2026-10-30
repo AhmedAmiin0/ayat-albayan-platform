@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import { seedTeacherRow, seedUser } from '../../support/core/db';
-import { seedFamily, withSql } from '../../support/schedule';
+import { seedFamily, withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 
 // GET /students/:id/recordings against the real API and database: a group lesson's file shows only

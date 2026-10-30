@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // DB reads/seeds for the inbound-WhatsApp specs (R-MSG-04, R-LEAD-01, R-SCH-03). The webhook
 // stores async after the stub's POST, so every read here is meant to be polled.

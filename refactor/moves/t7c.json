@@ -1,0 +1,16 @@
+{
+  "id": "t7c",
+  "seq": 119,
+  "moves": [
+    {
+      "from": "e2e/support/schedule.ts",
+      "to": "e2e/support/core/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/schedule.ts",
+      "e2e/support/core/schedule.ts"
+    ]
+  ]
+}

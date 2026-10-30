@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { API } from '../messages';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { stubTemplateStatus } from '../wa-stub';
 
 // trial_reschedule (owner 2026-10-18), seeded by migration 460 on the chat line, not submitted, on the

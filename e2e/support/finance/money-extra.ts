@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { API, bearer } from '../messages';
 import { seedPackageStudent, type PackageSeed } from './money';
-import { addDays, riyadh, seedLesson, withSql } from '../schedule';
+import { addDays, riyadh, seedLesson, withSql } from '../core/schedule';
 
 // Extra money-journey helpers (A7–A10): near-empty package, dashboard summary, in-memory receipt.
 

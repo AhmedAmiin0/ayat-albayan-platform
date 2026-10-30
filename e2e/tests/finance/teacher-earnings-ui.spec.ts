@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { resetAbrar, withSql } from '../../support/schedule';
+import { resetAbrar, withSql } from '../../support/core/schedule';
 
 // «مستحقات المعلم» (admin) and «أرباحي» (teacher), owner 2026-10-05: a completed lesson is owed,
 // the admin pays it, then voids the payment with a reason — the payment stays in the history

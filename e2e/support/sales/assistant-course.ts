@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // «أيام الحلقات» in journey 7 (owner 2026-10-18): right after «اشتراك جديد» the assistant books the weekly
 // course of the subscription she sold: the plan's days a week (the weekly plan = 1), each with its time from

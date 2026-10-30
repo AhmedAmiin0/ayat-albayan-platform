@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { makeAssistant } from '../../support/sales/assistant-api';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { signInSales } from '../../support/sales/sales-portal';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../../support/people/student-filters';
 
 // «مشترك / تجريبي» (owner 2026-10-12): the sales «المعلمون» drawer splits a teacher's students and

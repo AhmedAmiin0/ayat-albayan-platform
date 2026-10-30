@@ -3,7 +3,7 @@ import { expect, test, type APIRequestContext } from '@playwright/test';
 import type { BookingResult, SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { setSetting } from '../../support/messages';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
 // Owner 2026-10-18 «the assistant books the course of a subscription she sold», through the REAL API and
 // database: an 8-lesson (2 a week) unpaid subscription of her student, booked as Sun 17:00 + Tue 19:30

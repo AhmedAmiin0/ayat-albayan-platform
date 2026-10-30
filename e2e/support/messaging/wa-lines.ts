@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { stub, stubSent, type StubSent } from '../wa-stub';
 
 // Two WhatsApp lines in e2e (docs/12 §13.12): the stub runs both numbers (playwright.config.ts

@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 

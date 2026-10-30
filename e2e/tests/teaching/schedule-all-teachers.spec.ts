@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../../support/people/admin-extra';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../../support/core/schedule';
 
 // R-SCH-01/03, all-teachers week (schedule-overview.spec.ts has the day board, the gender filter
 // and book-from-gap): no ?teacher=, teacher / program / status / closed filters, the lesson drawer

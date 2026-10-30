@@ -11,7 +11,7 @@ import {
   seedFamily,
   setAvailability,
   withSql,
-} from '../../support/schedule';
+} from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 
 // The bell (R-NOT-01) and the teacher's new-student alert (R-NOT-03). WEB_PUSH_* stay unset here:

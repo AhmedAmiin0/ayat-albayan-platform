@@ -1,5 +1,5 @@
 import type { TransactionSql } from 'postgres';
-import { withSql } from './schedule';
+import { withSql } from './core/schedule';
 import { USERS } from './users';
 
 // Helpers of e2e/tests/edit-time.sql.spec.ts: edit_lesson_time (migration 174, R-SCH-11) against
