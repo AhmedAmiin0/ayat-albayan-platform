@@ -1,9 +1,9 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message, PHONE } from '../../testing/inbox-fixture';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
-import { clearOwnSends, recordOwnSend } from '../../composer/lib/own-send';
+import { clearOwnSends, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 
 // jsdom has no layout: every box holds 1000px of content in a 400px window, with a real scrollTop.
 const tops = new WeakMap<Element, number>();
@@ -97,6 +97,15 @@ describe('MessageLog: jump to the latest message (W4)', () => {
     expect(el.scrollTop).toBe(100);
     recordOwnSend(PHONE, 'mine');
     rerender(<MessageLog {...base} messages={[A, B, { ...MINE }]} />);
+    expect(el.scrollTop).toBe(1000);
+    expect(jump()).toBeNull();
+  });
+
+  it('compiled: recording her send re-renders the log by itself (own-send is subscribed)', () => {
+    const { el, rerender } = scrolledUp();
+    rerender(<MessageLog {...base} messages={[A, B, MINE]} />);
+    expect(jump()?.textContent).toBe('1');
+    act(() => recordOwnSend(PHONE, 'mine'));
     expect(el.scrollTop).toBe(1000);
     expect(jump()).toBeNull();
   });

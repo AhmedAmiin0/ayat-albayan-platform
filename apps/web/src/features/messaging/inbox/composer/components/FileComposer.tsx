@@ -1,6 +1,6 @@
 import { WA_CAPTION_MAX } from '@ab/shared';
 import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
@@ -8,12 +8,12 @@ import { errorCode } from '@/features/teaching/schedule/api';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { ChatUploadError, sendFile, uploadChatFile } from '../../api/api.files';
+import { ChatUploadError, sendFile, uploadChatFile } from '@/features/messaging/inbox/api/api.files';
 import { ComposerError } from './ComposerError';
 import { ReplyStrip } from './ReplyStrip';
-import { sendErrorCode, sendErrorCodeText } from '../lib/send-error';
-import { sendStart, settleOwnSend } from '../lib/send-start';
-import { useReplyTarget } from '../lib/use-reply-target';
+import { sendErrorCode, sendErrorCodeText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 type FileSend = { phone: string; clientRequestId: string; file: File; caption: string; replyTo?: string | undefined };
 
@@ -33,7 +33,7 @@ const fileErrorText = (e: unknown): string => sendErrorCodeText(e instanceof Cha
 
 /** An image's thumbnail (an object URL, revoked on unmount) or the PDF's name and size. */
 function Chip({ file }: { file: File }) {
-  const url = useMemo(() => (file.type.startsWith('image/') ? URL.createObjectURL(file) : null), [file]);
+  const url = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
   useEffect(() => () => void (url && URL.revokeObjectURL(url)), [url]);
   if (url) return <img src={url} alt={file.name} className="h-11 w-auto max-w-24 rounded-md border border-rule object-cover" />;
   return (

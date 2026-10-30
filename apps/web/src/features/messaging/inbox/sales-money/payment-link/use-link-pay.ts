@@ -11,7 +11,7 @@ type LinkExtra = Omit<PaymentLinkCreate, 'studentId' | 'pricing' | 'amount' | 'c
 type Opts = {
   /** '' while «دفع إلكتروني» is not picked: nothing is asked. */
   studentId: string;
-  /** Memoized by the step: the debounce settles on this very object. */
+  /** One object per form (the step keeps it): the debounce settles on this very object. */
   pricing: SubscriptionPricing;
   onCreated: (link: PaymentLinkView) => Promise<void>;
 };

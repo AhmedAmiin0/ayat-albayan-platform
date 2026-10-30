@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -44,14 +44,11 @@ export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & 
   const [saved] = useState(() => resumable(registerDrafts.get(phone), thread.lead_id, new Date()));
   // The «first lesson passed» line stays only until she picks a new time (round 3).
   const [pastShown, setPastShown] = useState(saved?.droppedPast ?? false);
-  const onProgress = useCallback<NonNullable<BookingWizardProps['onProgress']>>(
-    ({ draft, step, booked }) => {
-      if (draft.startsAt) setPastShown(false);
-      if (booked) registerDrafts.clear(phone);
-      else registerDrafts.set(phone, { draft, step });
-    },
-    [phone],
-  );
+  const onProgress: NonNullable<BookingWizardProps['onProgress']> = ({ draft, step, booked }) => {
+    if (draft.startsAt) setPastShown(false);
+    if (booked) registerDrafts.clear(phone);
+    else registerDrafts.set(phone, { draft, step });
+  };
   const close = () => {
     onClose();
     for (const key of ['threads', 'leads']) void queryClient.invalidateQueries({ queryKey: [key] });
