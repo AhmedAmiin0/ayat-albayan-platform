@@ -1,0 +1,128 @@
+{
+  "id": "t3",
+  "seq": 113,
+  "moves": [
+    {
+      "from": "e2e/tests/report-admin.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/teacher-report-attachments.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/teacher-report-draft.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/teacher-report-edit-window.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/teacher-report-form-fields.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/teacher-week-history.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/journey-2-report.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/guardian-deliveries.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/lesson-rating.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/feedback.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/tests/report-outcome.sql.spec.ts",
+      "to": "e2e/tests/reporting/"
+    },
+    {
+      "from": "e2e/support/feedback.ts",
+      "to": "e2e/support/reporting/"
+    },
+    {
+      "from": "e2e/support/lesson-rating.ts",
+      "to": "e2e/support/reporting/"
+    },
+    {
+      "from": "e2e/support/teacher-extra.ts",
+      "to": "e2e/support/reporting/"
+    },
+    {
+      "from": "e2e/support/teacher-templates.ts",
+      "to": "e2e/support/reporting/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/feedback.ts",
+      "e2e/support/reporting/feedback.ts"
+    ],
+    [
+      "e2e/support/lesson-rating.ts",
+      "e2e/support/reporting/lesson-rating.ts"
+    ],
+    [
+      "e2e/support/teacher-extra.ts",
+      "e2e/support/reporting/teacher-extra.ts"
+    ],
+    [
+      "e2e/support/teacher-templates.ts",
+      "e2e/support/reporting/teacher-templates.ts"
+    ],
+    [
+      "e2e/tests/feedback.spec.ts",
+      "e2e/tests/reporting/feedback.spec.ts"
+    ],
+    [
+      "e2e/tests/guardian-deliveries.spec.ts",
+      "e2e/tests/reporting/guardian-deliveries.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-2-report.spec.ts",
+      "e2e/tests/reporting/journey-2-report.spec.ts"
+    ],
+    [
+      "e2e/tests/lesson-rating.spec.ts",
+      "e2e/tests/reporting/lesson-rating.spec.ts"
+    ],
+    [
+      "e2e/tests/report-admin.spec.ts",
+      "e2e/tests/reporting/report-admin.spec.ts"
+    ],
+    [
+      "e2e/tests/report-outcome.sql.spec.ts",
+      "e2e/tests/reporting/report-outcome.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-report-attachments.spec.ts",
+      "e2e/tests/reporting/teacher-report-attachments.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-report-draft.spec.ts",
+      "e2e/tests/reporting/teacher-report-draft.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-report-edit-window.spec.ts",
+      "e2e/tests/reporting/teacher-report-edit-window.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-report-form-fields.spec.ts",
+      "e2e/tests/reporting/teacher-report-form-fields.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-week-history.spec.ts",
+      "e2e/tests/reporting/teacher-week-history.spec.ts"
+    ]
+  ]
+}

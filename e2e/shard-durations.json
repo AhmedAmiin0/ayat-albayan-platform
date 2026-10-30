@@ -215,7 +215,7 @@
   "desktop": 5200,
   "mobile": 6079
  },
- "tests/feedback.spec.ts": {
+ "tests/reporting/feedback.spec.ts": {
   "desktop": 20750,
   "mobile": 20005
  },
@@ -239,7 +239,7 @@
   "desktop": 242,
   "mobile": 0
  },
- "tests/guardian-deliveries.spec.ts": {
+ "tests/reporting/guardian-deliveries.spec.ts": {
   "desktop": 7301,
   "mobile": 34
  },
@@ -291,7 +291,7 @@
   "desktop": 5613,
   "mobile": 7613
  },
- "tests/journey-2-report.spec.ts": {
+ "tests/reporting/journey-2-report.spec.ts": {
   "desktop": 5886,
   "mobile": 8323
  },
@@ -335,7 +335,7 @@
   "desktop": 5184,
   "mobile": 7286
  },
- "tests/lesson-rating.spec.ts": {
+ "tests/reporting/lesson-rating.spec.ts": {
   "desktop": 8490,
   "mobile": 115
  },
@@ -443,11 +443,11 @@
   "desktop": 52,
   "mobile": 0
  },
- "tests/report-admin.spec.ts": {
+ "tests/reporting/report-admin.spec.ts": {
   "desktop": 11922,
   "mobile": 12393
  },
- "tests/report-outcome.sql.spec.ts": {
+ "tests/reporting/report-outcome.sql.spec.ts": {
   "desktop": 163,
   "mobile": 1
  },
@@ -607,19 +607,19 @@
   "desktop": 214,
   "mobile": 1
  },
- "tests/teacher-report-attachments.spec.ts": {
+ "tests/reporting/teacher-report-attachments.spec.ts": {
   "desktop": 8290,
   "mobile": 12991
  },
- "tests/teacher-report-draft.spec.ts": {
+ "tests/reporting/teacher-report-draft.spec.ts": {
   "desktop": 7551,
   "mobile": 10089
  },
- "tests/teacher-report-edit-window.spec.ts": {
+ "tests/reporting/teacher-report-edit-window.spec.ts": {
   "desktop": 22305,
   "mobile": 27212
  },
- "tests/teacher-report-form-fields.spec.ts": {
+ "tests/reporting/teacher-report-form-fields.spec.ts": {
   "desktop": 4400,
   "mobile": 6614
  },
@@ -631,7 +631,7 @@
   "desktop": 198,
   "mobile": 228
  },
- "tests/teacher-week-history.spec.ts": {
+ "tests/reporting/teacher-week-history.spec.ts": {
   "desktop": 5000,
   "mobile": 6765
  },

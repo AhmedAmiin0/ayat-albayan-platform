@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
-import { withSql } from '../support/schedule';
-import { USERS } from '../support/users';
+import { withSql } from '../../support/schedule';
+import { USERS } from '../../support/users';
 
 // submit_report (migrations 130 + 131) against the real database, in a transaction that is rolled
 // back: a report re-derives the lesson's outcome from all its students' attendance (R-REP-03),

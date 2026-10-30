@@ -1,5 +1,5 @@
-import { resetAbrar, seedFamily, seedLesson, withSql } from './schedule';
-import { stubSent, type StubSent } from './wa-stub';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../schedule';
+import { stubSent, type StubSent } from '../wa-stub';
 
 // Seed and read helpers for tests/lesson-rating.spec.ts (migration 195).
 

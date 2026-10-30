@@ -1,8 +1,8 @@
 import { REPORT_RUBRICS, type Grade, type Rubric } from '@ab/shared';
-import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/finance/money';
-import { resetAbrar } from '../support/schedule';
-import { fillTexts, pickAttendance, pickGrade, reportRow, TEXTS } from '../support/teacher-extra';
+import { ar, expect, test } from '../../support/fixtures';
+import { seedPackageStudent } from '../../support/finance/money';
+import { resetAbrar } from '../../support/schedule';
+import { fillTexts, pickAttendance, pickGrade, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 
 // «تقرير الحلقة» field → column mapping (docs/13-forms-spec.md form 2). forms-parity checks the
 // titles, options, order and stars; journey 2 sends five texts and one grade for all. This sends

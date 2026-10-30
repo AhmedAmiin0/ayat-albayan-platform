@@ -251,7 +251,7 @@
   "e2e/support/assistant.ts types CommissionRow",
   "e2e/support/finance/earnings.ts types EarningRow",
   "e2e/support/edit-time.ts types Edit",
-  "e2e/support/feedback.ts exports TEMPLATE",
+  "e2e/support/reporting/feedback.ts exports TEMPLATE",
   "e2e/support/google.ts exports GOOGLE_STUB",
   "e2e/support/google.ts types StubEvent",
   "e2e/support/google.ts types StubState",

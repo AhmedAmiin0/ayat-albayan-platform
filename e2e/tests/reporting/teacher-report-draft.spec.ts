@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/finance/money';
-import { resetAbrar } from '../support/schedule';
-import { fillTexts, pickAttendance, reportRow } from '../support/teacher-extra';
+import { ar, expect, test } from '../../support/fixtures';
+import { seedPackageStudent } from '../../support/finance/money';
+import { resetAbrar } from '../../support/schedule';
+import { fillTexts, pickAttendance, reportRow } from '../../support/reporting/teacher-extra';
 
 // «تقرير الحلقة» drafts (R-REP-02): the form autosaves while it is a draft and a reopened form
 // shows what was typed; an absence needs no grades and no texts (the Google Form's rule for a
