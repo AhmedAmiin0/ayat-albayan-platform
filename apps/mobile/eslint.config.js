@@ -1,4 +1,8 @@
-import { boundaries, reactConfig, reactRestrictions } from '@ab/config/eslint';
+import { boundaries, domainModuleRegex, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
+
+// docs/32 g1: the domains already regrouped into `src/<domain>/<module>` (two-level modules). Each c-row move
+// adds its domain here in the same PR; empty = every feature is a one-level module, as before.
+const DOMAINS = [];
 export default reactConfig(
   import.meta.dirname,
   { ignores: ['jest.config.cjs', 'jest.setup.cjs'] },
@@ -7,7 +11,7 @@ export default reactConfig(
   ...reactRestrictions({ files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], effects: ['src/**/*.tsx', 'app/**/*.tsx'], compiler: false, react19: true }),
   // docs/27 §1 rule 6: another feature (and a route file in app/) only through its index.ts; core/ and test/ are shared
   // (existing deep imports: eslint-suppressions.json).
-  boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: 'src/(?!core/|test/)[^/]+', alias: { '@/': 'src/' } }),
+  boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: domainModuleRegex({ base: 'src', exempt: ['core', 'test'], domains: DOMAINS }), alias: { '@/': 'src/' } }),
   {
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1). Use AppText.
     files: ['app/**/*.tsx', 'src/**/*.tsx'],
@@ -28,7 +32,7 @@ export default reactConfig(
         'error',
         {
           paths: [{ name: 'react-native', importNames: ['Text'], message: 'Use AppText from @/core/ui/primitives/AppText.' }],
-          patterns: [{ group: ['@/*/**', '!@/core/**'], message: 'Import the feature index (@/<feature>), not its internals.' }],
+          patterns: [{ group: routeImportGroup({ prefix: '@/', exempt: ['core'], domains: DOMAINS }), message: 'Import the feature index (@/<feature>), not its internals.' }],
         },
       ],
     },
