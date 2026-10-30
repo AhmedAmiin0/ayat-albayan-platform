@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import type { PaymentAttachmentView, SalesMoneySubscriptionView } from '@ab/shared';
-import { call, makeAssistant, tokenOf, type Assistant } from '../../support/assistant-api';
+import { call, makeAssistant, tokenOf, type Assistant } from '../../support/sales/assistant-api';
 import { freshDigits } from '../../support/messages';
-import { PNG, trialFamily, uploadReceipt } from '../../support/sales-money';
+import { PNG, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
 import { USERS } from '../../support/users';
 
 // «المرفقات» of a bank transfer (owner 2026-10-12, docs/16 row 25, docs/11 §7), through the REAL API,

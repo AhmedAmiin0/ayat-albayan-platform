@@ -1,5 +1,5 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { API, tokenOf } from '../support/assistant-api';
+import { API, tokenOf } from '../support/sales/assistant-api';
 import { runConfigSeed } from '../support/config-seed';
 import { withSql } from '../support/schedule';
 import { restoreSettings, snapshotSettings } from '../support/settings';

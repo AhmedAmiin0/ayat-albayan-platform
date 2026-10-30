@@ -2,7 +2,7 @@ import { expect, type Page } from '@playwright/test';
 import { ar } from '../fixtures';
 import { accessToken, API } from '../messages';
 import { approveReschedule, RESCHEDULE } from './reschedule-template';
-import { dropTemplate } from '../sales-portal';
+import { dropTemplate } from '../sales/sales-portal';
 import { withSql } from '../schedule';
 import { syncNumber } from './template-numbers';
 

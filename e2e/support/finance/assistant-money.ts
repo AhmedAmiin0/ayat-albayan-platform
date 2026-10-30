@@ -1,6 +1,6 @@
 import type { APIRequestContext } from '@playwright/test';
 import type { AssistantCommissionView } from '@ab/shared';
-import { call, dayOffset } from '../assistant-api';
+import { call, dayOffset } from '../sales/assistant-api';
 
 // Admin-side money steps of the assistant API specs: a package for a student, a payment, the ledger.
 

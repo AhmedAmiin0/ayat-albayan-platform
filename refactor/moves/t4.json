@@ -1,0 +1,288 @@
+{
+  "id": "t4",
+  "seq": 114,
+  "moves": [
+    {
+      "from": "e2e/tests/assistant-auto-assign-off.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-course-renew.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-course.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-course-subscription.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-portal.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-scope.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-scope.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-reopen.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-terms.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/assistant-trial-date.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/journey-1-lead-to-trial.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/journey-7-assistant-cycle.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/lead-qualification.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/lead-register.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/lead-to-subscription.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/leads-applicants.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-check-start.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-double-role.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-meetings.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-start-date-revoke.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-starter.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/sales-subscribe.api.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/chat-subscribe.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/channel-after-subscribe.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/pick-trial-date.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/tests/pick-trial-date.guards.sql.spec.ts",
+      "to": "e2e/tests/sales/"
+    },
+    {
+      "from": "e2e/support/assistant.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/assistant-api.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/assistant-course.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/assistant-journey.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/assistant-journey-ui.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/sales-money.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/sales-options.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/sales-portal.ts",
+      "to": "e2e/support/sales/"
+    },
+    {
+      "from": "e2e/support/trial-date.ts",
+      "to": "e2e/support/sales/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/assistant-api.ts",
+      "e2e/support/sales/assistant-api.ts"
+    ],
+    [
+      "e2e/support/assistant-course.ts",
+      "e2e/support/sales/assistant-course.ts"
+    ],
+    [
+      "e2e/support/assistant-journey-ui.ts",
+      "e2e/support/sales/assistant-journey-ui.ts"
+    ],
+    [
+      "e2e/support/assistant-journey.ts",
+      "e2e/support/sales/assistant-journey.ts"
+    ],
+    [
+      "e2e/support/assistant.ts",
+      "e2e/support/sales/assistant.ts"
+    ],
+    [
+      "e2e/support/sales-money.ts",
+      "e2e/support/sales/sales-money.ts"
+    ],
+    [
+      "e2e/support/sales-options.ts",
+      "e2e/support/sales/sales-options.ts"
+    ],
+    [
+      "e2e/support/sales-portal.ts",
+      "e2e/support/sales/sales-portal.ts"
+    ],
+    [
+      "e2e/support/trial-date.ts",
+      "e2e/support/sales/trial-date.ts"
+    ],
+    [
+      "e2e/tests/assistant-auto-assign-off.api.spec.ts",
+      "e2e/tests/sales/assistant-auto-assign-off.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-course-renew.api.spec.ts",
+      "e2e/tests/sales/assistant-course-renew.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-course-subscription.sql.spec.ts",
+      "e2e/tests/sales/assistant-course-subscription.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-course.api.spec.ts",
+      "e2e/tests/sales/assistant-course.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-portal.spec.ts",
+      "e2e/tests/sales/assistant-portal.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-reopen.sql.spec.ts",
+      "e2e/tests/sales/assistant-reopen.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-scope.api.spec.ts",
+      "e2e/tests/sales/assistant-scope.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-scope.sql.spec.ts",
+      "e2e/tests/sales/assistant-scope.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-terms.sql.spec.ts",
+      "e2e/tests/sales/assistant-terms.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-trial-date.api.spec.ts",
+      "e2e/tests/sales/assistant-trial-date.api.spec.ts"
+    ],
+    [
+      "e2e/tests/channel-after-subscribe.sql.spec.ts",
+      "e2e/tests/sales/channel-after-subscribe.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/chat-subscribe.spec.ts",
+      "e2e/tests/sales/chat-subscribe.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-1-lead-to-trial.spec.ts",
+      "e2e/tests/sales/journey-1-lead-to-trial.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-7-assistant-cycle.spec.ts",
+      "e2e/tests/sales/journey-7-assistant-cycle.spec.ts"
+    ],
+    [
+      "e2e/tests/lead-qualification.spec.ts",
+      "e2e/tests/sales/lead-qualification.spec.ts"
+    ],
+    [
+      "e2e/tests/lead-register.spec.ts",
+      "e2e/tests/sales/lead-register.spec.ts"
+    ],
+    [
+      "e2e/tests/lead-to-subscription.spec.ts",
+      "e2e/tests/sales/lead-to-subscription.spec.ts"
+    ],
+    [
+      "e2e/tests/leads-applicants.spec.ts",
+      "e2e/tests/sales/leads-applicants.spec.ts"
+    ],
+    [
+      "e2e/tests/pick-trial-date.guards.sql.spec.ts",
+      "e2e/tests/sales/pick-trial-date.guards.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/pick-trial-date.sql.spec.ts",
+      "e2e/tests/sales/pick-trial-date.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-check-start.api.spec.ts",
+      "e2e/tests/sales/sales-check-start.api.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-double-role.spec.ts",
+      "e2e/tests/sales/sales-double-role.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-meetings.spec.ts",
+      "e2e/tests/sales/sales-meetings.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-start-date-revoke.spec.ts",
+      "e2e/tests/sales/sales-start-date-revoke.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-starter.spec.ts",
+      "e2e/tests/sales/sales-starter.spec.ts"
+    ],
+    [
+      "e2e/tests/sales-subscribe.api.spec.ts",
+      "e2e/tests/sales/sales-subscribe.api.spec.ts"
+    ]
+  ]
+}

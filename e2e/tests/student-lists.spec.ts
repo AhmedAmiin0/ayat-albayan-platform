@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
-import { makeAssistant } from '../support/assistant-api';
+import { makeAssistant } from '../support/sales/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
-import { signInSales } from '../support/sales-portal';
+import { signInSales } from '../support/sales/sales-portal';
 import { withSql } from '../support/schedule';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../support/student-filters';
 

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { assistant, brought, code, commissionOf, generate, iso, lastMonth, one, paidStatement, pay } from '../../support/assistant';
+import { assistant, brought, code, commissionOf, generate, iso, lastMonth, one, paidStatement, pay } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/rls';
 
 // Assistant statements and reversals (migrations 271-274) against the real database: salary + commissions

@@ -183,7 +183,7 @@ merge.
 gates the teacher and the family on it (monitors unchanged) and lets a student login in only with
 `contact_is_self`; `teacher_channel_student_ids` keeps open channels; `channel_messages` joins
 `supabase_realtime` (guarded). `20261029000972_assign_student_teacher.sql`: `assign_student_teacher` (docs/16
-row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/channel-after-subscribe.sql.spec.ts`.
+row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/sales/channel-after-subscribe.sql.spec.ts`.
 
 ### Apps
 
