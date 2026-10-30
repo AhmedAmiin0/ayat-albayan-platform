@@ -3,13 +3,16 @@ import { Link } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { listTime } from '../../format';
-import { inboxBase, useInboxMode } from '../../shared/mode';
-import { callerName, callGlyph, callTone } from '../entries/call-text';
+import { listTime } from '@/features/messaging/inbox/format';
+import { inboxBase, useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { callerName, callGlyph, callTone } from '@/features/messaging/inbox/calls/entries/call-text';
 import { useClock } from '@/lib/clock';
 
-/** One call of «المكالمات»: name, the direction glyph and word, the time and the talk time; opens the chat. */
-export function CallsLogRow({ call }: { call: CallView }) {
+/**
+ * One call of «المكالمات»: name, the direction glyph and word, the time and the talk time; opens the
+ * chat. `now` is the log's one ticking clock (CallsLog).
+ */
+export function CallsLogRow({ call, now }: { call: CallView; now: Date }) {
   const mode = useInboxMode();
   const kind = callEntryKind(call);
   const name = callerName(call, mode);
@@ -29,7 +32,7 @@ export function CallsLogRow({ call }: { call: CallView }) {
           <span className="block text-2xs text-ink-3">{t.calls.entry[kind]}</span>
         </span>
         <span className="shrink-0 text-end text-2xs text-ink-3 tabular-nums">
-          <span className="block">{listTime(call.started_at, clock)}</span>
+          <span className="block">{listTime(call.started_at, clock, now)}</span>
           {call.duration_seconds !== null && <span className="block" dir="ltr">{formatCallDuration(call.duration_seconds)}</span>}
         </span>
       </Link>

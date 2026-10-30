@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native';
 import { bookFailure, isCodedRefusal } from '@/booking/shared/booking-errors';
 import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
@@ -12,10 +13,10 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { CourseChangeFlow } from '../change/CourseChangeFlow';
-import { CurrentCourse } from '../change/CurrentCourse';
-import { CourseWizard } from '../components/CourseWizard';
-import { useCourseView, type CourseViewState } from '../hooks/use-course-view';
+import { CourseChangeFlow } from '@/sales-course/change/CourseChangeFlow';
+import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
+import { CourseWizard } from '@/sales-course/components/CourseWizard';
+import { useCourseView, type CourseViewState } from '@/sales-course/hooks/use-course-view';
 
 /** The student; the chat's number and the new package, when «اشتراك جديد» goes on to its transfer. */
 type Params = { studentId?: string; phone?: string; subscriptionId?: string };
@@ -81,9 +82,10 @@ interface CourseStatusProps {
  * (403 not_your_student, 404 student_not_found) shows its line with no retry, anything else retries.
  */
 function CourseStatus({ course, block, missing }: CourseStatusProps) {
+  const cycle = useClockCycle();
   if (missing) return <EmptyState title={t.common.notFound} />;
   if (course.isError) {
-    const failure = bookFailure(course.error);
+    const failure = bookFailure(course.error, cycle);
     if (failure.kind === 'error' && isCodedRefusal(course.error)) return <EmptyState title={failure.text} />;
     const message = failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
     return <ErrorState message={message} onRetry={() => void course.refetch()} />;

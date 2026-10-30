@@ -8,13 +8,13 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { kindLabel } from '../shared/format';
-import { DeliveryTicks } from '../messages/components/DeliveryTicks';
-import { threadPreview } from '../messages/hooks/message-text';
-import { useComposerDraft } from '../composer/draft-store';
+import { kindLabel } from '@/inbox/shared/format';
+import { DeliveryTicks } from '@/inbox/messages/components/DeliveryTicks';
+import { threadPreview } from '@/inbox/messages/hooks/message-text';
+import { useComposerDraft } from '@/inbox/composer/draft-store';
 import { ThreadTags } from './ThreadTags';
 import { ThreadTrailing } from './ThreadTrailing';
-import { threadLink, type ThreadMode } from '../thread/hooks/thread-mode';
+import { threadLink, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 
 /**
  * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
@@ -62,13 +62,15 @@ interface ThreadRowProps {
   money: boolean;
   /** Stable (useCallback): opens the thread by its phone. */
   onOpen: (phone: string) => void;
+  /** The list's one clock (useToday): a new Date only at midnight, so the day words switch then. */
+  now: Date;
 }
 
 /**
  * One chat in «المحادثات». Memo (the draft store redraws only the row whose draft changed): a poll that changes one thread (a new message, a tick) hands the
  * others the same object (TanStack's structural sharing), so only that row redraws.
  */
-const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, money, onOpen }: ThreadRowProps) {
+const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, money, onOpen, now }: ThreadRowProps) {
   const phone = formatPhone(th.phone_e164);
   const draft = useComposerDraft(th.phone_e164);
   const open = useCallback(() => onOpen(th.phone_e164), [onOpen, th.phone_e164]);
@@ -79,24 +81,25 @@ const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, money, on
       meta={th.display_name && !teacher ? phone : undefined}
       {...previewOf(th, draft)}
       tags={tags ? <ThreadTags thread={th} money={money} /> : undefined}
-      trailing={<ThreadTrailing thread={th} />}
+      trailing={<ThreadTrailing thread={th} now={now} />}
       onPress={open}
     />
   );
 });
 
 /**
- * The list's renderItem: stable until the mode or tree changes, so a poll or a clock tick redraws
- * no row whose thread is unchanged (FlashList and ThreadRow's memo both see the same props).
+ * The list's renderItem: stable until the mode, the tree or the day (`now`, useToday) changes, so a
+ * poll or a minute tick redraws no row whose thread is unchanged (FlashList and ThreadRow's memo
+ * both see the same props); midnight redraws them all, their «اليوم» times becoming «أمس».
  */
-export function useThreadRow(mode: ThreadMode, base: TreeBase) {
+export function useThreadRow(mode: ThreadMode, base: TreeBase, now: Date) {
   const teacher = mode.kind === 'teacher';
   // The sales tree too (review 2026-10-29 #2): new / no-reply / trial-booked chats look different.
   const tags = mode.kind === 'admin';
   const money = tags && !base;
   const open = useCallback((phone: string) => router.push(inTree(base, threadLink(phone, mode))), [base, mode]);
   return useCallback(
-    ({ item }: { item: ThreadView }) => <ThreadRow thread={item} teacher={teacher} tags={tags} money={money} onOpen={open} />,
-    [teacher, tags, money, open],
+    ({ item }: { item: ThreadView }) => <ThreadRow thread={item} teacher={teacher} tags={tags} money={money} onOpen={open} now={now} />,
+    [teacher, tags, money, open, now],
   );
 }

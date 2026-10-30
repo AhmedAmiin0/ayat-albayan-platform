@@ -2047,17 +2047,11 @@
     }
   },
   "src/features/messaging/inbox/calls/log/CallsLog.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/calls/log/CallsLogRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -3857,9 +3851,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -4386,22 +4377,11 @@
     }
   },
   "src/features/messaging/inbox/threads/list/ThreadList.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
   },
-  "src/features/messaging/inbox/threads/list/ThreadRow.ticks.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "complexity": {
       "count": 1
     },
@@ -4571,9 +4551,6 @@
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -4581,9 +4558,6 @@
   "src/features/messaging/inbox/threads/pane/ThreadPane.privacy.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 1
@@ -4634,11 +4608,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.sales.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    }
-  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.salesRegister.en.test.tsx": {
     "ab/no-parent-imports": {
       "count": 4
@@ -4655,11 +4624,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.teacher.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
@@ -4987,11 +4951,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/messaging/notification-rules/rule-timing.ts": {
@@ -5082,9 +5043,6 @@
   "src/features/messaging/notification-rules/table/use-rule-row.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 5
@@ -9469,9 +9427,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -11814,9 +11769,6 @@
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 5
     }
@@ -11861,11 +11813,8 @@
     }
   },
   "src/features/teaching/classroom/join/StaffClassroomPage.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/teaching/classroom/join/StaffJoinButton.tsx": {
@@ -12392,9 +12341,6 @@
     }
   },
   "src/features/teaching/classroom/student-link/StudentLessonPanel.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }

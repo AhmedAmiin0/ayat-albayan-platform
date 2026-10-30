@@ -10,7 +10,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { type, useTheme } from '@/theme';
-import { daysText } from '../lib/course-days';
+import { daysText } from '@/sales-course/lib/course-days';
 import { changeRequest, withOverride, withTeacher, type ChangeTarget } from './change-body';
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
@@ -88,7 +88,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
         target={target}
         saving={{
           busy: change.isPending,
-          failure: change.isError ? bookFailure(change.error) : null,
+          failure: change.isError ? bookFailure(change.error, cycle) : null,
           submit: (reason) => (body ? change.mutate(withOverride(body, reason)) : undefined),
         }}
         onChangeSlot={() => go('slot')}
