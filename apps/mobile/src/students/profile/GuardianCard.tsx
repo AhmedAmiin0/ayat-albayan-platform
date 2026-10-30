@@ -1,7 +1,6 @@
-import { formatPhone, secondPhoneOf } from '@ab/shared';
+import { clickToChatLink, formatPhone, secondPhoneOf } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { whatsappLink } from '@/core/lib/phone';
 import { shape, type, useTheme } from '@/theme';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
@@ -54,7 +53,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       </Ltr>
       <ButtonRow>
         <Button variant="secondary" label={t.mobile.call} onPress={() => void Linking.openURL(`tel:${phone}`)} />
-        <Button label={t.mobile.whatsapp} onPress={() => void Linking.openURL(whatsappLink(phone))} />
+        <Button label={t.mobile.whatsapp} onPress={() => void Linking.openURL(clickToChatLink(phone))} />
       </ButtonRow>
       {guardian.phones ? <SecondPhone guardianId={guardian.id} phones={guardian.phones} /> : null}
     </View>

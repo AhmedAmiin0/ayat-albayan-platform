@@ -5,18 +5,19 @@ import { useState } from 'react';
 import { useTabOpen } from '@/auth/use-tab-open';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BookedPanel } from '../shared/BookedPanel';
-import { bookFailure } from '../shared/booking-errors';
-import { InvoiceStep } from '../invoice/InvoiceStep';
+import { BookedPanel } from '@/booking/shared/BookedPanel';
+import { bookFailure } from '@/booking/shared/booking-errors';
+import { InvoiceStep } from '@/booking/invoice/InvoiceStep';
 import { makeupDraft, type MakeupDraft, type MakeupSource } from './makeup-draft';
 import { MakeupConfirm } from './MakeupConfirm';
 import { MissedHeader } from './MissedHeader';
-import { SlotStep } from '../trial/components/SlotStep';
-import { stepsFor, type Step } from '../trial/lib/steps';
-import { TeacherStep } from '../trial/components/TeacherStep';
+import { SlotStep } from '@/booking/trial/components/SlotStep';
+import { stepsFor, type Step } from '@/booking/trial/lib/steps';
+import { TeacherStep } from '@/booking/trial/components/TeacherStep';
 import { useBookMakeup } from './use-book-makeup';
 import { locale } from '@/core/lib/i18n/locale';
 
@@ -30,6 +31,7 @@ type Filter = { program: Program; gender: Gender | null };
  * quran (LessonView has no program); pass it down when the row grows one.
  */
 export function MakeupWizard({ source }: { source: MakeupSource }) {
+  const cycle = useClockCycle();
   const toSchedule = useTabOpen('schedule');
   const [draft, setDraft] = useState<MakeupDraft>(() => makeupDraft(source));
   const [requestId] = useState(newRequestId);
@@ -109,7 +111,7 @@ export function MakeupWizard({ source }: { source: MakeupSource }) {
           <MakeupConfirm
             draft={draft}
             busy={book.isPending}
-            failure={book.isError ? bookFailure(book.error) : null}
+            failure={book.isError ? bookFailure(book.error, cycle) : null}
             onSubmit={() => book.mutate(draft)}
             onChangeSlot={() => {
               patch({ startsAt: null });

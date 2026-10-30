@@ -1,12 +1,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { API_SRC } from '@/common/db/repo-paths.test-util';
 
 // Settings, custom values and the public config are three modules with a one-way graph:
 // public-config → custom-config and public-config → settings. Settings knows neither; custom
 // values know neither settings nor the public config. The old shared config folder stays gone.
 
-const COMMON = __dirname;
+const COMMON = join(API_SRC, 'common');
 
 /** Every .ts file under common/<folder>. */
 function sources(folder: string): string[] {
