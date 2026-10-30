@@ -33,12 +33,15 @@ const rule = {
   create(context) {
     const bans = context.options[0].bans.map((ban) => ({ ...ban, re: new RegExp(ban.regex) }));
     const imported = (spec) => spec.imported?.name ?? spec.local?.name;
+    const reaches = (spec, names) =>
+      spec.type === 'ImportNamespaceSpecifier' || names.includes(imported(spec));
     const check = (node) => {
       const source = node.source?.value;
       if (typeof source !== 'string') return;
       for (const ban of bans.filter((b) => b.re.test(source))) {
-        const named = (node.specifiers ?? []).filter((s) => ban.names?.includes(imported(s)));
-        const hits = ban.names ? named : [node];
+        // `import * as x` and `export * from` reach every name, the banned ones included.
+        const whole = node.type === 'ExportAllDeclaration' || !ban.names;
+        const hits = whole ? [node] : (node.specifiers ?? []).filter((s) => reaches(s, ban.names));
         for (const hit of hits) context.report({ node: hit, messageId: 'banned', data: { message: ban.message } });
       }
     };

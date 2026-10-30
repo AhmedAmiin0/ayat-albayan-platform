@@ -1,14 +1,16 @@
 // Lint ratchet (docs/31a §5.1): the violations that predate a rule sit in each package's
-// eslint-suppressions.json (`eslint . --suppress-all`); refactor/guards/lint.json holds their per-rule totals.
-// Fails when a total grew or a rule is new (a count raised by hand), and when one shrank without the
-// baseline (then `pnpm guard:lint -- --write`), so a fixed violation cannot come back unnoticed.
-// Per rule over the whole repo, not per file: ESLint itself enforces the per-file counts. On a PR, CI also passes
-// the base branch's lint.json (--base): no total may rise above it, so re-running `eslint --suppress-all` and
-// `--write` cannot raise both files and pass. Also fails on an entry whose file is gone (ESLint lints only files that
-// exist, so it never reports those), and when the root .oxlintrc.json (the first lint pass, no bulk suppressions)
-// runs a rule that has suppressed violations.
-// Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write] [--base <the base branch's lint.json>]
-//   [--configs <base ESLint config sources> <head ESLint config sources>] (a rule the PR turns on: newRule)
+// eslint-suppressions.json (`eslint . --suppress-all`); refactor/guards/lint.json holds their
+// per-rule totals. Fails when a total grew or a rule is new (a count raised by hand), and when one
+// shrank without the baseline (then `pnpm guard:lint -- --write`), so a fixed violation cannot come
+// back unnoticed. Per rule over the whole repo, not per file: ESLint itself enforces the per-file
+// counts. On a PR, CI also passes the base branch's lint.json (--base): no total may rise above it,
+// so re-running `eslint --suppress-all` and `--write` cannot raise both files and pass. Also fails
+// on an entry whose file is gone (ESLint lints only files that exist, so it never reports those),
+// and when the root .oxlintrc.json (the first lint pass, no bulk suppressions) runs a rule that has
+// suppressed violations.
+// Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write]
+//   [--base <the base branch's lint.json>]
+//   [--configs <base ESLint config sources> <head ones>] (a rule the PR turns on: newRule)
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -16,10 +18,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
 const FILES = DIRS.map((dir) => `${dir}/eslint-suppressions.json`);
 
-/** Per-rule totals (sorted by rule) of suppressions files shaped `{ file: { rule: { count } } }`. */
+/** Per-rule totals (sorted by rule) of suppressions files `{ file: { rule: { count } } }`. */
 export function totals(files) {
   const out = {};
-  const entries = files.flatMap((byFile) => Object.values(byFile).flatMap((rules) => Object.entries(rules)));
+  const entries = files.flatMap((byFile) =>
+    Object.values(byFile).flatMap((rules) => Object.entries(rules)),
+  );
   for (const [rule, { count }] of entries) out[rule] = (out[rule] ?? 0) + count;
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => (a < b ? -1 : 1)));
 }
@@ -36,8 +40,8 @@ export function differences(now, baseline) {
 }
 
 /**
- * On a PR: one line per rule whose total is above the base branch's (a rule the base lacks counts from 0,
- * unless `isNew(rule)`: its one-time baseline, docs/32 §1).
+ * On a PR: one line per rule whose total is above the base branch's (a rule the base lacks
+ * counts from 0, unless `isNew(rule)`: its one-time baseline, docs/32 §1).
  */
 export function aboveBase(now, base, isNew = () => false) {
   return Object.keys(now)
@@ -46,15 +50,21 @@ export function aboveBase(now, base, isNew = () => false) {
     .map((rule) => `above the base branch: ${rule} ${base[rule] ?? 0} -> ${now[rule]} (fix the new violations)`);
 }
 
-const named = (text, rule) => text.includes(`'${rule}'`) || text.includes(`"${rule}"`);
+// Quoted anywhere (`'max-len': …`, `"ab/x"`), or an unquoted key (`complexity: 10`).
+const named = (text, rule) =>
+  text.includes(`'${rule}'`) ||
+  text.includes(`"${rule}"`) ||
+  (/^[\w-]+$/.test(rule) && new RegExp(`(^|[\\s{,])${rule}\\s*:`, 'm').test(text));
 
 /**
- * A rule this PR turns on: its quoted name is in the head's ESLint config sources and in none of the base's.
- * A preset rule that no config names stays at its base total until a reviewed config edit names it.
+ * A rule this PR turns on: its quoted name is in the head's ESLint config sources and in none of
+ * the base's. A preset rule that no config names keeps its base total until a reviewed config edit
+ * names it.
  */
-export const newRule = (configs) => (rule) => named(configs.head, rule) && !named(configs.base, rule);
+export const newRule = (configs) => (rule) =>
+  named(configs.head, rule) && !named(configs.base, rule);
 
-/** Entries of the suppressions file in package folder `dir` whose file is gone (deleted or moved). */
+/** Entries of the suppressions file in package folder `dir` whose file is gone (deleted, moved). */
 export function gone(dir, byFile, exists) {
   return Object.keys(byFile)
     .filter((key) => !exists(`${dir}/${key}`))
@@ -64,8 +74,9 @@ export function gone(dir, byFile, exists) {
 const bare = (rule) => rule.replace(/^(eslint|typescript|@typescript-eslint)\//, '');
 
 /**
- * Rules the root .oxlintrc.json runs that still have suppressed violations. Oxlint has no bulk suppressions,
- * so such a rule must stay in ESLint. `typescript/x`, `@typescript-eslint/x` and `x` are one rule here
+ * Rules the root .oxlintrc.json runs that still have suppressed violations. Oxlint has no bulk
+ * suppressions, so such a rule must stay in ESLint. `typescript/x`, `@typescript-eslint/x` and `x`
+ * are one rule here
  * (eslint-plugin-oxlint turns the base rule and its typescript-eslint extension off together).
  */
 export function oxlintSuppressed(oxlintrc, now) {
@@ -76,7 +87,7 @@ export function oxlintSuppressed(oxlintrc, now) {
     .map((rule) => `oxlint runs ${rule}, which has ${now[rule]} suppressed: keep it in ESLint`);
 }
 
-/** `--configs <base> <head>`: the ESLint config sources of both sides, concatenated (empty: no new rule). */
+/** `--configs <base> <head>`: both sides' ESLint config sources (none given: no new rule). */
 function configTexts(args) {
   const at = args.indexOf('--configs');
   if (at === -1) return { base: '', head: '' };

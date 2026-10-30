@@ -65,7 +65,8 @@ test('aboveBase: a rule the PR turns on gets its one-time baseline; a known or p
   // Named on both sides (already configured): its base total, here 0, still holds.
   const both = newRule({ base: "'max-len': 'off'", head: configs.head });
   assert.equal(aboveBase({ 'max-len': 1 }, {}, both).length, 1);
+  // An unquoted key in the base (`complexity: …`) is named too.
+  assert.equal(aboveBase({ complexity: 1 }, {}, newRule({ base: '{ complexity: 10 }', head: "'complexity'" })).length, 1);
   // Once in the base's lint.json, a new rule only shrinks.
   assert.equal(aboveBase({ 'max-len': 901 }, { 'max-len': 900 }, isNew).length, 1);
 });
-

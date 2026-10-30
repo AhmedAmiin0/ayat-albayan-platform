@@ -134,11 +134,6 @@
       "count": 3
     }
   },
-  "ci-checks/lint/lint-gate.mjs": {
-    "max-len": {
-      "count": 13
-    }
-  },
   "ci-checks/lint/lint-gate.test.mjs": {
     "max-len": {
       "count": 1

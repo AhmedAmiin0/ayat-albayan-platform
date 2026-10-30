@@ -76,7 +76,7 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
 
 test('ci: a red lint prints the pruned suppressions to commit', () => {
   const step = ci.jobs.verify.steps.find((s) => s.name?.startsWith('Suppressions to prune'));
-  assert.equal(step?.if, "failure() && matrix.task == 'lint'");
+  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
   assert.match(step.run, /pnpm lint:prune .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
 });
 
