@@ -6,10 +6,10 @@ import { boundaries, domainModuleRegex, reactConfig, reactRestrictions, routeImp
 const DOMAINS = [];
 export default reactConfig(
   import.meta.dirname,
-  { ignores: ['jest.config.cjs', 'jest.setup.cjs'] },
-  // React 19.2: no forwardRef / useContext / .Provider; effects in hooks. No React Compiler yet (jest never runs the
-  // compiled code, docs/31a §3.2), so manual memo stays allowed.
-  ...reactRestrictions({ files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], effects: ['src/**/*.tsx', 'app/**/*.tsx'], compiler: false, react19: true }),
+  { ignores: ['babel.config.cjs', 'jest.config.cjs', 'jest.setup.cjs'] },
+  // React 19.2: no forwardRef / useContext / .Provider; effects in hooks. The React Compiler builds every file
+  // (babel.config.cjs, jest included), so no useMemo / useCallback / memo by hand.
+  ...reactRestrictions({ files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], effects: ['src/**/*.tsx', 'app/**/*.tsx'], compiler: true, react19: true }),
   // docs/27 §1 rule 6: another feature (and a route file in app/) only through its index.ts; core/ and test/ are shared
   // (existing deep imports: eslint-suppressions.json).
   boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: domainModuleRegex({ base: 'src', exempt: ['core', 'test'], domains: DOMAINS }), alias: { '@/': 'src/' } }),

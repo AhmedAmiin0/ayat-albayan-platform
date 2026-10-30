@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "test": "jest",
     "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build"
   },
@@ -52,6 +52,7 @@
     "@testing-library/react-native": "^14.0.1",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.2.2",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "jest": "^30.5.2",
     "jest-expo": "~57.0.5",

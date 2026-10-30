@@ -87,7 +87,8 @@ test('secrets are only used in jobs that bind an environment (or call a workflow
   const allowed = { 'claude-tasks.yml': ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_OAUTH_TOKEN'] };
   for (const w of workflows) {
     const top = secretsIn({ env: w.doc.env });
-    assert.deepEqual(top.filter((n) => n !== 'TURBO_TOKEN'), [], `${w.file}: workflow-level secret`);
+    // No exception left: the Turborepo cache is the GitHub Actions cache, no TURBO_TOKEN (2026-10-30).
+    assert.deepEqual(top, [], `${w.file}: workflow-level secret`);
     for (const [name, j] of jobsOf(w)) {
       const used = secretsIn(j);
       if (j.environment || j.uses || used.length === 0) continue;

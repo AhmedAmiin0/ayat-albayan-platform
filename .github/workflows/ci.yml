@@ -15,12 +15,6 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-# Remote Turborepo cache: with both set, unchanged packages skip lint, typecheck and test.
-# Unset (forks, no secret) = a normal uncached run, nothing breaks.
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-
 jobs:
   # Which parts changed. e2e drives apps/web against the API and database, so a change that only touches
   # the mobile app, docs, the migration tool or other scripts skips the e2e machines; a docs-only change
@@ -109,8 +103,12 @@ jobs:
 
   # Lint, typecheck and the unit tests on parallel machines. The tests used to be one 13-minute job where
   # web (13 min), api (9.5 min) and mobile (5 min) fought over 4 CPUs; each now has its own machine(s),
-  # web and api split in halves (vitest --shard). Turborepo's local cache is kept between runs, so
-  # packages a change did not touch are replayed from cache instead of re-run.
+  # web and api split in halves (vitest --shard). Turborepo's remote cache lives in the GitHub Actions cache
+  # (rharkor/caching-for-turbo: a local cache server, one cache entry per task hash, no token or outside service),
+  # shared by every job and run, so a task a change did not touch is replayed instead of re-run.
+  # Lint: Oxlint first (seconds, the rules of .oxlintrc.json), then ESLint for the type-aware, custom and
+  # react-hooks rules. Typecheck: tsgo (TypeScript 7, @typescript/native-preview); e2e lints and typechecks
+  # against @ab/shared only (e2e/turbo.json), so neither job builds api or web.
   verify:
     name: verify (${{ matrix.name }})
     needs: changes
@@ -122,14 +120,14 @@ jobs:
       matrix:
         include:
           # Type-aware lint (docs/31a): more heap, fewer packages at once.
-          - { name: lint, task: lint, key: lint, opts: --concurrency=3, heap: --max-old-space-size=6144 }
-          - { name: typecheck, task: typecheck, key: typecheck }
-          - { name: test web 1/2, task: test, key: web-1, filter: --filter=web, args: '-- --shard=1/2' }
-          - { name: test web 2/2, task: test, key: web-2, filter: --filter=web, args: '-- --shard=2/2' }
-          - { name: test api 1/2, task: test, key: api-1, filter: --filter=api, args: '-- --shard=1/2' }
-          - { name: test api 2/2, task: test, key: api-2, filter: --filter=api, args: '-- --shard=2/2' }
-          - { name: test mobile, task: test, key: mobile, filter: --filter=mobile }
-          - { name: test others, task: test, key: others, filter: '--filter=!web --filter=!api --filter=!mobile' }
+          - { name: lint, task: lint, opts: --concurrency=3, heap: --max-old-space-size=6144 }
+          - { name: typecheck, task: typecheck }
+          - { name: test web 1/2, task: test, filter: --filter=web, args: '-- --shard=1/2' }
+          - { name: test web 2/2, task: test, filter: --filter=web, args: '-- --shard=2/2' }
+          - { name: test api 1/2, task: test, filter: --filter=api, args: '-- --shard=1/2' }
+          - { name: test api 2/2, task: test, filter: --filter=api, args: '-- --shard=2/2' }
+          - { name: test mobile, task: test, filter: --filter=mobile }
+          - { name: test others, task: test, filter: '--filter=!web --filter=!api --filter=!mobile' }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -138,12 +136,11 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm i --frozen-lockfile
-      - uses: actions/cache@v4
-        with:
-          path: .turbo/cache
-          key: turbo-${{ matrix.key }}-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            turbo-${{ matrix.key }}-${{ runner.os }}-
+      - name: Oxlint
+        if: matrix.task == 'lint'
+        run: pnpm lint:ox --format github
+      - name: Turbo cache (GitHub Actions cache)
+        uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
       - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
@@ -177,9 +174,10 @@ jobs:
 
   # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
   # more clones, duplicated lines or cross-app clones), knip (no new unused file, export, type or
-  # dependency) and lint (docs/31a: per-rule totals of every eslint-suppressions.json; the lint job fails on a
-  # new violation, this gate on a count raised by hand or a stale baseline). The e2e area guard: every
-  # e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
+  # dependency) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a
+  # new violation, this gate on a count raised by hand, a stale baseline or an entry whose file is gone; on a PR no
+  # total may rise above the base branch's lint.json either, so rewriting both files cannot pass). The e2e area
+  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -187,6 +185,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -195,7 +195,18 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm guard:dup
       - run: pnpm guard:knip
-      - run: pnpm guard:lint
+      # A base without lint.json (before the ratchet) has nothing to compare with; a git error fails the step.
+      - name: pnpm guard:lint (on a PR, also against the base branch)
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then pnpm guard:lint; exit; fi
+          base=$(git merge-base "origin/$BASE_REF" HEAD)
+          if ! git cat-file -e "$base:refactor/guards/lint.json" 2>/dev/null; then
+            echo "::notice::no lint.json on $BASE_REF: in-tree check only"; pnpm guard:lint; exit
+          fi
+          git show "$base:refactor/guards/lint.json" > "$RUNNER_TEMP/lint-base.json"
+          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change
@@ -316,13 +327,8 @@ jobs:
         with:
           path: ${{ runner.temp }}/pw-debs
           key: ${{ steps.deb-cache.outputs.cache-primary-key }}
-      - name: Restore the build cache
-        uses: actions/cache@v4
-        with:
-          path: .turbo/cache
-          key: turbo-e2e-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            turbo-e2e-${{ runner.os }}-
+      - name: Turbo cache (GitHub Actions cache, shared with verify)
+        uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
       - name: Build what the e2e servers run
         run: pnpm turbo build --filter=e2e^... --cache-dir=.turbo/cache
       - name: Wait for local Supabase

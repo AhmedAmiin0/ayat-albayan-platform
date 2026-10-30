@@ -61,5 +61,5 @@
   "jsx-a11y/role-supports-aria-props": 1,
   "max-depth": 14,
   "no-console": 2,
-  "no-restricted-syntax": 158
+  "no-restricted-syntax": 241
 }

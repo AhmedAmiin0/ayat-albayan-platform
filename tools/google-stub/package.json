@@ -6,12 +6,13 @@
     "dev": "node --watch src/server.ts",
     "start": "node src/server.ts",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
     "@types/node": "^24.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "typescript": "~6.0.3",
     "vitest": "^5.0.3"

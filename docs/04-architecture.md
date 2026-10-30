@@ -173,12 +173,20 @@ complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqe
 // + typescript-eslint strictTypeChecked + stylisticTypeChecked (projectService), react-hooks (all errors) on web/mobile,
 //   jsx-a11y on web, and reactRestrictions (eslint-react.js):
 //   web + mobile: no raw useEffect / useLayoutEffect outside use-*.ts(x) / hooks/
-//   web (React Compiler): no useMemo / useCallback / memo
+//   web + mobile (React Compiler): no useMemo / useCallback / memo
 //   mobile (React 19): no forwardRef (ref is a prop), use(Context) not useContext, <Context value> not <Context.Provider>
 ```
 React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset({ target: '18' })`, runtime from
-`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: not yet, jest does not run compiled
+`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs the
+compiler for every Babel caller while app.json `experiments.reactCompiler` is true, so jest also runs the compiled
 code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
+Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
+violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
+them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is
+`// oxlint-disable-next-line <rule> -- why`. Oxlint fails on every directive that hid nothing in its own run
+(`--report-unused-disable-directives-severity=error`), an `eslint-disable` included, so an ESLint-only rule gets no
+inline disable: its exception goes in `eslint-suppressions.json`, where `pnpm guard:lint` counts it. `typecheck` runs
+`tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
 Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:
@@ -189,7 +197,7 @@ Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseli
 | Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split) |
 | Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside) | `refactor/guards/jscpd.json` | `pnpm guard:dup` (`-- --write` after a dedup PR) |
 | Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` | `pnpm guard:knip` (`-- --write` after a clean-up) |
-| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package (a total that grew, a new rule or a stale baseline fails) | `refactor/guards/lint.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write` (docs/31a §5.3) |
+| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package (a total that grew, a new rule, a stale baseline or an entry whose file is gone fails; on a PR also a total above the base branch's `lint.json`) | `refactor/guards/lint.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write` (docs/31a §5.3) |
 
 Code used by two apps goes to `packages/shared` (pure TS) or `packages/client-core` (web + mobile), never a copy.
 

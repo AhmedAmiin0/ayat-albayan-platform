@@ -1,7 +1,7 @@
 import { DRIVE } from '../../google-format';
 
 /** A file name never carries a path separator or a control character. */
-// eslint-disable-next-line no-control-regex -- control characters are exactly what is stripped
+// oxlint-disable-next-line no-control-regex -- control characters are exactly what is stripped
 const clean = (s: string): string => s.replace(/[\\/\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim();
 
 /**

@@ -63,8 +63,12 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip and lint 
       (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
     ),
   );
-  const runs = ci.jobs.guards.steps.map((s) => s.run);
-  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip') && runs.includes('pnpm guard:lint'));
+  const runs = ci.jobs.guards.steps.map((s) => s.run ?? '');
+  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
+  // guard:lint on every run; on a PR also against the base branch's lint.json (docs/31a §5.1), so the full history.
+  const lint = runs.find((r) => r.includes('pnpm guard:lint -- --base'));
+  assert.ok(lint?.includes('git merge-base "origin/$BASE_REF" HEAD') && lint.includes('then pnpm guard:lint; exit'));
+  assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
 });
 

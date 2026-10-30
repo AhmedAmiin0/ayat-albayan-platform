@@ -61,5 +61,7 @@ export function useClockCycle(): ClockCycle {
 
 /** «تنسيق الوقت»: [saved choice, choose]. */
 export function useClockPref(): [ClockPref, (next: ClockPref) => void] {
-  return [useSyncExternalStore(subscribe, clockPref), setClockPref];
+  // The hook on its own line, not inside the array: the React Compiler skipped hooks nested in an array literal (use-voice).
+  const pref = useSyncExternalStore(subscribe, clockPref);
+  return [pref, setClockPref];
 }
