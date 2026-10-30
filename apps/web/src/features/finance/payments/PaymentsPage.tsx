@@ -1,3 +1,4 @@
+import { riyadhToday } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
@@ -29,7 +30,7 @@ type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlS
 /** «yyyy-01-01 … today»: a CSV needs a range; the filter's own, else this year so far. */
 function csvRange(f: PaymentFilters): { from: string; to: string } {
   // academy day (docs/34 b): the CSV's ?from&to are Riyadh days
-  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
+  const today = riyadhToday();
   const to = f.to ?? today;
   return { from: f.from ?? `${to.slice(0, 4)}-01-01`, to };
 }

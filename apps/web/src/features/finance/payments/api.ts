@@ -1,4 +1,14 @@
-import type { PaymentAttachmentView, PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
+import {
+  RIYADH_TZ,
+  riyadhToday,
+  wallInstant,
+  type PaymentAttachmentView,
+  type PaymentKind,
+  type PaymentMethod,
+  type PaymentView,
+  type SignedDownload,
+  type SignedUpload,
+} from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
@@ -87,6 +97,6 @@ export async function uploadReceipt(input: { subscriptionId: string; file: File 
 /** Today → now; an earlier day → noon Riyadh on that day (never in the future: paid_at_future). */
 export function paidAtFor(day: string, now = new Date()): string {
   // academy day (docs/34 b): a payment day is a Riyadh day, stored at its noon
-  const today = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
-  return day >= today ? now.toISOString() : new Date(`${day}T12:00:00+03:00`).toISOString();
+  const today = riyadhToday(now);
+  return day >= today ? now.toISOString() : wallInstant(day, '12:00', RIYADH_TZ).toISOString();
 }

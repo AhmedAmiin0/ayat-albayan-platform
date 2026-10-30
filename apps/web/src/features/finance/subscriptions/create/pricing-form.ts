@@ -4,6 +4,7 @@ import {
   CUSTOM_COUNT_MIN,
   DEFAULT_DURATION,
   lessonsOf,
+  localDateIn,
   type PackageId,
   type PricingDuration,
   type SiteCountry,
@@ -50,5 +51,5 @@ export function pricingLessons(p: SubscriptionPricing): number {
 
 /** Today as a local YYYY-MM-DD in `tz` (the package's first day, in the student's tz). */
 export function todayIn(tz: string, now = new Date()): string {
-  return now.toLocaleDateString('en-CA', { timeZone: tz });
+  return localDateIn(now, tz);
 }

@@ -51,16 +51,14 @@ export interface ZonedFields {
   day: number;
   hour: number;
   minute: number;
+  second: number;
 }
 
 /** The wall-clock fields of `at` in `zone`, as numbers. */
 export function zonedFieldsIn(at: Date | number, zone: string): ZonedFields {
-  const [year = 0, month = 1, day = 1, hour = 0, minute = 0] = format(at, 'yyyy M d H m', {
-    in: tz(zone),
-  })
-    .split(' ')
-    .map(Number);
-  return { year, month, day, hour, minute };
+  const fields = format(at, 'yyyy M d H m s', { in: tz(zone) }).split(' ').map(Number);
+  const [year = 0, month = 1, day = 1, hour = 0, minute = 0, second = 0] = fields;
+  return { year, month, day, hour, minute, second };
 }
 
 /** 0 = الأحد … 6 = السبت: the weekday `at` falls on in `zone` (the DB `byday` numbering). */
