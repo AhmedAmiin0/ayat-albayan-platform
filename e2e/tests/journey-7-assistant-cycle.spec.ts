@@ -7,7 +7,7 @@ import { resetAbrar, setAvailability } from '../support/schedule';
 import { completeLesson, profileChip, startNow } from '../support/student-statuses';
 import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
 import { expectInMyPayments, registerWithTrial, renewFromChat, saveSubscription, saveTransfer } from '../support/assistant-journey-ui';
-import { chatRenew, expectRenewVisible } from '../support/chat-more';
+import { chatRenew, expectRenewVisible } from '../support/messaging/chat-more';
 import { bookCourseDays, courseOf } from '../support/assistant-course';
 import {
   apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,

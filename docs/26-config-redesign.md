@@ -404,7 +404,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   route, no stored value). Tests: `send-gate.fail-closed.test.ts` (missing row, JSON null, string, number, object,
   array, malformed rows, failed read; ON only for `true`; one read per call), `send-gate.test.ts`,
   `whatsapp.settings.test.ts`, `settings-readers.app.test.ts` (the cached store says ON, the gate stays OFF); the
-  read is listed in `config-store.boundaries.test.ts`. e2e: `e2e/tests/send-gate-boot.api.spec.ts` boots a second
+  read is listed in `config-store.boundaries.test.ts`. e2e: `e2e/tests/messaging/send-gate-boot.api.spec.ts` boots a second
   API (`e2e/support/api-boot.ts`) twice on staging-shaped fake data: no `messages` row created or changed, nothing
   reaches the stub, both switches stay `false`. Rollback: revert `whatsapp.settings.ts`.
   Still owner-gated / time-gated (not built): the `VALIDATE` migration, the read switch to `ConfigStore`, 23-P7 +

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import type { MyPaymentRow, SalesChatReceipt, SalesMoneySubscriptionView, SalesPaymentView, SalesQuoteView } from '@ab/shared';
 import { call, makeAssistant, type Assistant } from '../support/assistant-api';
-import { stubInboundMedia } from '../support/inbox';
+import { stubInboundMedia } from '../support/messaging/inbox';
 import { freshDigits } from '../support/messages';
 import { PNG, statusFacts, trialFamily, uploadReceipt } from '../support/sales-money';
 import { withSql } from '../support/schedule';

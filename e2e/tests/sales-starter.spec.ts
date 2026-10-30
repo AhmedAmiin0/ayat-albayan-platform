@@ -1,11 +1,11 @@
 import { makeAssistant } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
 import { freshDigits } from '../support/messages';
-import { chatRows, dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs, UNFLAGGED } from '../support/restricted-templates';
-import { RESCHEDULE } from '../support/reschedule-template';
-import { syncNumber } from '../support/template-numbers';
+import { chatRows, dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs, UNFLAGGED } from '../support/messaging/restricted-templates';
+import { RESCHEDULE } from '../support/messaging/reschedule-template';
+import { syncNumber } from '../support/messaging/template-numbers';
 import { signInSales } from '../support/sales-portal';
-import { CHAT_PN, messagesWithLine, NOTIF_PN, sentVia, SINGLE_LINE } from '../support/wa-lines';
+import { CHAT_PN, messagesWithLine, NOTIF_PN, sentVia, SINGLE_LINE } from '../support/messaging/wa-lines';
 import { setMessaging, stubReset } from '../support/wa-stub';
 
 // The restricted allow-list (owner 2026-10-12: «all roles except the ones allowed to have all

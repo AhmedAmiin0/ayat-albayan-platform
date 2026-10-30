@@ -4,7 +4,7 @@ import { resetAbrar, seedFamily, setAvailability, withSql } from '../support/sch
 import { fillStable } from '../support/fill';
 import { uploadInvoice } from '../support/invoice';
 import { stubInbound, stubReset } from '../support/wa-stub';
-import { sidePanel } from '../support/thread-panel';
+import { sidePanel } from '../support/messaging/thread-panel';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
 // thread says «غير مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل

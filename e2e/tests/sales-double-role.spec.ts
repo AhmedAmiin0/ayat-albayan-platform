@@ -1,7 +1,7 @@
 import type { Browser } from '@playwright/test';
 import { family, makeAssistant, message, TAG } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
-import { lastOutbound } from '../support/inbox';
+import { lastOutbound } from '../support/messaging/inbox';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../support/sales-portal';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.

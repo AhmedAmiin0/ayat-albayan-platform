@@ -1,10 +1,10 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { openThread } from '../support/inbox';
+import { openThread } from '../support/messaging/inbox';
 import { freshDigits } from '../support/messages';
 import { withSql } from '../support/schedule';
 import { stubInbound, stubReset } from '../support/wa-stub';
-import { sidePanel } from '../support/thread-panel';
+import { sidePanel } from '../support/messaging/thread-panel';
 
 // Lead qualification in the thread (R-LEAD-03, L1) and the funnel's state machine (R-LEAD-01):
 // every «بيانات الطالب» question by its registration-form label lands in leads.qualification, and

@@ -2,7 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../support/wa-stub';
-import { sidePanel } from '../support/thread-panel';
+import { sidePanel } from '../support/messaging/thread-panel';
 
 // Journey 1 (docs/03 §5): a lead writes on WhatsApp → appears in the inbox → the admin replies →
 // books a trial through the wizard → the confirmation goes out → the lesson is on the teacher's

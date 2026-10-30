@@ -1,9 +1,9 @@
 import { ar, expect, test } from '../support/fixtures';
-import { openThread } from '../support/inbox';
+import { openThread } from '../support/messaging/inbox';
 import { freshDigits } from '../support/messages';
 import { withSql } from '../support/schedule';
 import { stubInbound, stubReset } from '../support/wa-stub';
-import { sidePanel } from '../support/thread-panel';
+import { sidePanel } from '../support/messaging/thread-panel';
 
 // «تسجيل الطالب» from the thread's short aside (R-LEAD-06, R-STU-02): the essentials pre-filled
 // from the lead, the thread's number as the guardian's; the lead is converted and linked to the

@@ -413,7 +413,7 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | `e2e/tests/edit-session-time.helpers.ts:58` | `update public.settings set value = … where key = 'auto_messages_enabled'` | plain UPDATE |
 | `e2e/tests/google-sync.sql.spec.ts:22,32-34` | upsert `google_sync_enabled` = `'true'`; `delete … where key like 'google\_%'`; asserts `google_sync_on()` = false and `google_sync_window_days()` = 60 on missing rows | |
 | `e2e/tests/teacher-earnings.sql.spec.ts:21` | `update public.settings set value = 'true'::jsonb where key = 'payout_count_late'` | |
-| `e2e/support/kapso.ts:30-33` | upsert / delete `integration_config` `WA_PROVIDER`, `KAPSO_API_BASE` | |
+| `e2e/support/messaging/kapso.ts:30-33` | upsert / delete `integration_config` `WA_PROVIDER`, `KAPSO_API_BASE` | |
 | `e2e/tests/integration-config.sql.spec.ts:32-89` | RLS spec: admin can SELECT, non-admin sees nothing, admin INSERT denied, anon `42501`; service-role calls of all five secret RPCs; blank secret `22023` | pins RLS + grants + error codes |
 
 No e2e SQL touches `custom_config`.
