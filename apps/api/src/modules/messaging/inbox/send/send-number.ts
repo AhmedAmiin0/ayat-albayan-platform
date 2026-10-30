@@ -1,8 +1,8 @@
 import { isWaLine, mergeWindows, replyNumber, type NumberWindow, type WaLine } from '@ab/shared';
 import { Logger } from '@nestjs/common';
-import { overlayNumbers, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
+import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { pickSendLine, type SendLineCode } from './send-line';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /** One v_thread_numbers row: a number's newest inbound, or (numberId null) a line's unstamped history. */
 export interface ThreadWindow {

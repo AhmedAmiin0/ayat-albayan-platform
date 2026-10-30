@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setIntegrationOverlay } from '../../../common/integrations/integration-overlay';
-import { loadEnv } from '../../../config/env/env';
+import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import { loadEnv } from '@/config/env/env';
 import { liveWebhookConfig } from './webhook.config';
 
 // The provider's WEBHOOK_CONFIG reads loadEnv() on every access (integration config in the DB).

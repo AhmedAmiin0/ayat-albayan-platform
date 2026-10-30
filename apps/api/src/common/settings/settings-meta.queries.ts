@@ -1,7 +1,7 @@
 import type { SettingMeta } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { neverWritten } from '../config-store/config-store.types';
-import { DB, type Db } from '../db/db.module';
+import { neverWritten } from '@/common/configuration/config-store/config-store.types';
+import { DB, type Db } from '@/common/db/db.module';
 
 /**
  * Who last changed each stored setting. Rows that were never written have no entry: a missing row, and

@@ -1,8 +1,8 @@
 import type { Database } from '@ab/db';
 import { isIntegrationSecretKey } from '@ab/shared';
 import { createClient } from '@supabase/supabase-js';
-import { IntegrationConfigQueries } from '../common/integrations/integration-config.queries';
-import { loadEnv } from '../config/env/env';
+import { IntegrationConfigQueries } from '@/common/configuration/integrations/integration-config.queries';
+import { loadEnv } from '@/config/env/env';
 import { importEnv, type ImportStore } from './import-env';
 
 // `pnpm --filter api config:import-env` (local), or inside the API container:

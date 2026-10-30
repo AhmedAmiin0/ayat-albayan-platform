@@ -397,7 +397,7 @@
       "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-ownership.test.ts": {
+  "src/common/configuration/config-store/boundaries/config-ownership.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -405,7 +405,7 @@
       "count": 3
     }
   },
-  "src/common/config-store/boundaries/config-ownership.ts": {
+  "src/common/configuration/config-store/boundaries/config-ownership.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -413,7 +413,7 @@
       "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-parity.test.ts": {
+  "src/common/configuration/config-store/boundaries/config-parity.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -421,7 +421,7 @@
       "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-parity.ts": {
+  "src/common/configuration/config-store/boundaries/config-parity.ts": {
     "ab/no-parent-imports": {
       "count": 4
     },
@@ -429,7 +429,7 @@
       "count": 3
     }
   },
-  "src/common/config-store/boundaries/config-seeder.test.ts": {
+  "src/common/configuration/config-store/boundaries/config-seeder.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
     },
@@ -440,7 +440,7 @@
       "count": 2
     }
   },
-  "src/common/config-store/boundaries/config-seeder.ts": {
+  "src/common/configuration/config-store/boundaries/config-seeder.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
@@ -454,27 +454,27 @@
       "count": 3
     }
   },
-  "src/common/config-store/config-store.di.test.ts": {
+  "src/common/configuration/config-store/config-store.di.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
     }
   },
-  "src/common/config-store/config-store.fakes.ts": {
+  "src/common/configuration/config-store/config-store.fakes.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/config-store.module.ts": {
+  "src/common/configuration/config-store/config-store.module.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/common/config-store/config-store.types.ts": {
+  "src/common/configuration/config-store/config-store.types.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/io/config-entries.audit.ts": {
+  "src/common/configuration/config-store/io/config-entries.audit.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -482,7 +482,7 @@
       "count": 1
     }
   },
-  "src/common/config-store/io/config-entries.controller.ts": {
+  "src/common/configuration/config-store/io/config-entries.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -490,7 +490,7 @@
       "count": 3
     }
   },
-  "src/common/config-store/io/config-entries.mapper.ts": {
+  "src/common/configuration/config-store/io/config-entries.mapper.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
@@ -501,7 +501,7 @@
       "count": 4
     }
   },
-  "src/common/config-store/io/config-entries.patch.http.test.ts": {
+  "src/common/configuration/config-store/io/config-entries.patch.http.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -509,7 +509,7 @@
       "count": 3
     }
   },
-  "src/common/config-store/io/config-entries.read.http.test.ts": {
+  "src/common/configuration/config-store/io/config-entries.read.http.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -526,7 +526,7 @@
       "count": 2
     }
   },
-  "src/common/config-store/io/config-entries.service.ts": {
+  "src/common/configuration/config-store/io/config-entries.service.ts": {
     "ab/no-parent-imports": {
       "count": 6
     },
@@ -534,7 +534,7 @@
       "count": 9
     }
   },
-  "src/common/config-store/io/config-entries.test-util.ts": {
+  "src/common/configuration/config-store/io/config-entries.test-util.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
@@ -548,7 +548,7 @@
       "count": 2
     }
   },
-  "src/common/config-store/store/config-cache.bridge.ts": {
+  "src/common/configuration/config-store/store/config-cache.bridge.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -556,17 +556,17 @@
       "count": 3
     }
   },
-  "src/common/config-store/store/config-decode.test.ts": {
+  "src/common/configuration/config-store/store/config-decode.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/store/config-decode.ts": {
+  "src/common/configuration/config-store/store/config-decode.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/store/config-defs.ts": {
+  "src/common/configuration/config-store/store/config-defs.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
@@ -574,7 +574,7 @@
       "count": 2
     }
   },
-  "src/common/config-store/store/config-store.queries.test.ts": {
+  "src/common/configuration/config-store/store/config-store.queries.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -582,7 +582,7 @@
       "count": 1
     }
   },
-  "src/common/config-store/store/config-store.queries.ts": {
+  "src/common/configuration/config-store/store/config-store.queries.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -590,12 +590,12 @@
       "count": 3
     }
   },
-  "src/common/config-store/store/config-store.service.test.ts": {
+  "src/common/configuration/config-store/store/config-store.service.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
     }
   },
-  "src/common/config-store/store/config-store.service.ts": {
+  "src/common/configuration/config-store/store/config-store.service.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -603,7 +603,7 @@
       "count": 4
     }
   },
-  "src/common/custom-config/custom-config.controller.test.ts": {
+  "src/common/configuration/custom-config/custom-config.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -611,12 +611,12 @@
       "count": 5
     }
   },
-  "src/common/custom-config/custom-config.controller.ts": {
+  "src/common/configuration/custom-config/custom-config.controller.ts": {
     "ab/no-parent-imports": {
       "count": 5
     }
   },
-  "src/common/custom-config/custom-config.service.test.ts": {
+  "src/common/configuration/custom-config/custom-config.service.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -624,7 +624,7 @@
       "count": 1
     }
   },
-  "src/common/custom-config/custom-config.service.ts": {
+  "src/common/configuration/custom-config/custom-config.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -641,7 +641,7 @@
       "count": 4
     }
   },
-  "src/common/custom-config/custom-config.shared.test.ts": {
+  "src/common/configuration/custom-config/custom-config.shared.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -683,12 +683,12 @@
       "count": 2
     }
   },
-  "src/common/integrations/calls-number.ts": {
+  "src/common/configuration/integrations/calls-number.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/common/integrations/integration-config.controller.test.ts": {
+  "src/common/configuration/integrations/integration-config.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -702,7 +702,7 @@
       "count": 2
     }
   },
-  "src/common/integrations/integration-config.controller.ts": {
+  "src/common/configuration/integrations/integration-config.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
     },
@@ -710,12 +710,12 @@
       "count": 3
     }
   },
-  "src/common/integrations/integration-config.fakes.ts": {
+  "src/common/configuration/integrations/integration-config.fakes.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/integrations/integration-config.module.ts": {
+  "src/common/configuration/integrations/integration-config.module.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -723,12 +723,12 @@
       "count": 1
     }
   },
-  "src/common/integrations/integration-config.queries.test.ts": {
+  "src/common/configuration/integrations/integration-config.queries.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/common/integrations/integration-config.queries.ts": {
+  "src/common/configuration/integrations/integration-config.queries.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -739,7 +739,7 @@
       "count": 2
     }
   },
-  "src/common/integrations/integration-config.service.test.ts": {
+  "src/common/configuration/integrations/integration-config.service.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -747,7 +747,7 @@
       "count": 1
     }
   },
-  "src/common/integrations/integration-config.service.ts": {
+  "src/common/configuration/integrations/integration-config.service.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -755,22 +755,22 @@
       "count": 6
     }
   },
-  "src/common/integrations/integration-config.shared.test.ts": {
+  "src/common/configuration/integrations/integration-config.shared.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
     }
   },
-  "src/common/integrations/integration-config.view.test.ts": {
+  "src/common/configuration/integrations/integration-config.view.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
     }
   },
-  "src/common/integrations/integration-config.view.ts": {
+  "src/common/configuration/integrations/integration-config.view.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/integrations/integration-refresh.test.ts": {
+  "src/common/configuration/integrations/integration-refresh.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -778,7 +778,7 @@
       "count": 2
     }
   },
-  "src/common/integrations/integration-refresh.ts": {
+  "src/common/configuration/integrations/integration-refresh.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -786,7 +786,7 @@
       "count": 5
     }
   },
-  "src/common/integrations/numbers-overlay.ts": {
+  "src/common/configuration/integrations/numbers-overlay.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -794,7 +794,7 @@
       "count": 8
     }
   },
-  "src/common/integrations/wacrm-driver.migration.test.ts": {
+  "src/common/configuration/integrations/wacrm-driver.migration.test.ts": {
     "@typescript-eslint/prefer-includes": {
       "count": 1
     }
@@ -812,12 +812,12 @@
       "count": 2
     }
   },
-  "src/common/public-config/public-config.controller.test.ts": {
+  "src/common/configuration/public-config/public-config.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 6
     }
   },
-  "src/common/public-config/public-config.controller.ts": {
+  "src/common/configuration/public-config/public-config.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -825,7 +825,7 @@
       "count": 1
     }
   },
-  "src/common/public-config/public-config.module.ts": {
+  "src/common/configuration/public-config/public-config.module.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }

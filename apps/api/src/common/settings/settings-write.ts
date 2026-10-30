@@ -1,4 +1,4 @@
-import { ConfigConflictError, type ConfigChange, type ConfigSnapshot } from '../config-store/config-store.types';
+import { ConfigConflictError, type ConfigChange, type ConfigSnapshot } from '@/common/configuration/config-store/config-store.types';
 
 /** The bit of ConfigStore the alias write needs. */
 interface WriteStore {

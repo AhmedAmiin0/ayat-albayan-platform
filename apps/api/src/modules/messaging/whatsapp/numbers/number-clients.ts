@@ -1,7 +1,7 @@
-import { overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { allowedRecipients, loadEnv } from '../../../../config/env/env';
-import { whatsappClient } from '../client-factory';
-import type { WhatsappClient } from '../whatsapp.types';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { allowedRecipients, loadEnv } from '@/config/env/env';
+import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
+import type { WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
  * One client per number (module mode, docs/23 phase 5, docs/23c), built from that number's own config

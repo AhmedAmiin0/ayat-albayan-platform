@@ -1,15 +1,15 @@
 import { retry, type WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { sleep } from '../../../../common/cache/sleep';
-import { activeNumberId } from '../../../../common/integrations/numbers-overlay';
-import { PushService } from '../../../../common/push/push.service';
+import { sleep } from '@/common/cache/sleep';
+import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
+import { PushService } from '@/common/push/push.service';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
-import type { NumberRoute } from '../numbers/number-route';
+import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
-import type { WaSent } from '../whatsapp.types';
+import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { SendJob, SendOutcome } from './message.job';
 

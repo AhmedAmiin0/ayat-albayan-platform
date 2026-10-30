@@ -1,6 +1,6 @@
 import { isWaLine, type WaLine } from '@ab/shared';
-import { numberByPhoneId, overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { lineEnvs, loadEnv, type KapsoLineEnv, type LineEnvs, type WhatsappEnv } from '../../../../config/env/env';
+import { numberByPhoneId, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { lineEnvs, loadEnv, type KapsoLineEnv, type LineEnvs, type WhatsappEnv } from '@/config/env/env';
 
 // Which of our numbers run on the Kapso driver, with the Kapso key the senders already use (the
 // integration config / Vault through loadEnv() or the numbers overlay; never a new env var). Holds

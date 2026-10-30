@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
-import { C1, N1, N2, routePass, THREE } from '../numbers/number-route.fakes';
-import type { NumberRoutes } from '../numbers/number-routes';
-import type { SendGate } from '../gate/send-gate';
+import { C1, N1, N2, routePass, THREE } from '@/modules/messaging/whatsapp/numbers/number-route.fakes';
+import type { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { dueMessage, fakeSwitches } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and pauses per number.
 

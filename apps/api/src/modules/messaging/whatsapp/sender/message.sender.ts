@@ -7,16 +7,16 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import { overlayNumbers, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../../../config/env/env';
+import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { loadEnv } from '@/config/env/env';
 import { MessageWorker, type SendOutcome } from './message.worker';
-import { routeOf } from '../numbers/number-route';
-import { NumberRoutes } from '../numbers/number-routes';
+import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
+import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { lineOf } from './send-line';
-import { SendGate } from '../gate/send-gate';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderQueries } from './sender.queries';
 import { senderTiming } from './sender-timing';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
 const BATCH = 50;
