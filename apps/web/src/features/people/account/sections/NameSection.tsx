@@ -1,5 +1,5 @@
 import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN } from '@ab/shared';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
@@ -18,7 +18,7 @@ const HINT = N.hint.replace('{min}', String(ACCOUNT_NAME_MIN)).replace('{max}', 
 export function NameSection({ profile, onDone }: SectionProps) {
   const [name, setName] = useState(profile.full_name);
   const save = useAccountSave({ save: updateProfile, toast: t.account.toast.name, onDone });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = nameErrors(name);
     save.setErrors(found);

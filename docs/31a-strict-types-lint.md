@@ -86,12 +86,12 @@ PR 1 also adds the owner's «avoid before React 19 practices» (2026-10-30) to t
 (`reactRestrictions` in `packages/config/eslint-react.js`, which replaces `noRawEffect`; one list per file, the
 effect block repeats the others so neither drops them). All of them count under one key, `no-restricted-syntax`.
 
-| rule                                                       | web (React 18.3)                         | mobile (React 19.2) |
+| rule                                                       | web (React 19.2)                         | mobile (React 19.2) |
 | ---------------------------------------------------------- | ---------------------------------------- | ------------------- |
-| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`), except `src/features/messaging/inbox/` | error: React Compiler on (`babel.config.cjs`, below) |
-| no `forwardRef` (ref is a prop)                            | after the React 19 upgrade               | error               |
-| `use(Context)`, not `useContext`                           | after the React 19 upgrade               | error               |
-| `<Context value>`, not `<Context.Provider>`                | after the React 19 upgrade               | error               |
+| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset()`, React 19's own runtime), except `src/features/messaging/inbox/` | error: React Compiler on (`babel.config.cjs`, below) |
+| no `forwardRef` (ref is a prop)                            | after x2–x5 remove the old uses          | error               |
+| `use(Context)`, not `useContext`                           | after x2–x5 remove the old uses          | error               |
+| `<Context value>`, not `<Context.Provider>`                | after x2–x5 remove the old uses          | error               |
 | raw `useEffect` / `useLayoutEffect` outside `use-*.ts(x)` and `hooks/` | error (`.tsx`)               | error (`.tsx`)      |
 
 The compiler caches what a component reads during render on the props and state it depends on. Code that

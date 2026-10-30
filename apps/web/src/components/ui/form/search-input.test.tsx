@@ -24,7 +24,7 @@ describe('SearchInput', () => {
 
   it('forwards the ref and keeps the caller\'s classes on the input', () => {
     let el: HTMLInputElement | null = null;
-    render(<SearchInput aria-label="بحث" className="w-full" ref={(n) => (el = n)} />);
+    render(<SearchInput aria-label="بحث" className="w-full" ref={(n) => { el = n; }} />);
     expect(el).toBe(screen.getByRole('searchbox'));
     expect(screen.getByRole('searchbox').className).toContain('w-full');
   });

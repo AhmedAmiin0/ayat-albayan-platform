@@ -11,7 +11,7 @@ Arabic-first (RTL) platform replacing Google Forms/Sheets/Calendar/Apps Script f
 - `docs/06-data-migration.md` — Sheets → Postgres mapping
 
 ## Stack (do not substitute)
-Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJS (Fastify) API · React 18 + Vite + TanStack (Router/Query/Table/Form) + Tailwind/shadcn web · Expo (expo-router) admin mobile · Meta WhatsApp Cloud API · Playwright (web e2e) · Vitest/Jest unit · jest-expo mobile.
+Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJS (Fastify) API · React 19 + Vite + TanStack (Router/Query/Table/Form) + Tailwind/shadcn web · Expo (expo-router) admin mobile · Meta WhatsApp Cloud API · Playwright (web e2e) · Vitest/Jest unit · jest-expo mobile.
 
 ## Hard code rules (CI fails otherwise)
 1. **Max 150 lines per file** (`max-lines`, blank lines & comments count) of **≤ 100 characters** (`max-len`; long strings and URLs may run on), functions ≤ 50 lines (`max-lines-per-function`, tests exempt). Split: `x.service.ts` / `x.repo.ts` (class `XRepo`: the only place that injects `DB`) / `x.mapper.ts` / one component per file / tests split by scenario. **No new `*queries.ts` file or `class XQueries`** (`pnpm guard:queries`; the old ones are listed in `refactor/guards/queries.json` until lane R renames them, docs/32 D2). Components call the API through hooks, never `apiFetch`/`apiSend` in a `.tsx`.

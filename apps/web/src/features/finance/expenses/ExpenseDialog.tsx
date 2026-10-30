@@ -1,6 +1,6 @@
 import { uploadOnce } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -41,7 +41,7 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
       onSaved();
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);

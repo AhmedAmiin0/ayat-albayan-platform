@@ -12,8 +12,8 @@ export default reactConfig(
     // role="admin" / "teacher" on our own components is a prop, not an ARIA role.
     rules: { ...jsxA11y.flatConfigs.recommended.rules, 'jsx-a11y/aria-role': ['error', { ignoreNonDOM: true }] },
   },
-  // React 18 + the React Compiler (vite.config.ts, target 18): no manual memo, effects in hooks. The React 19
-  // rules (forwardRef, useContext, .Provider) come with the React 19 upgrade.
+  // React 19 + the React Compiler (vite.config.ts): no manual memo, effects in hooks. The React 19
+  // rules (forwardRef, useContext, .Provider) turn on once docs/32 x2–x5 remove the old uses.
   ...reactRestrictions({ files: ['src/**/*.{ts,tsx}'], effects: ['src/**/*.tsx'], compiler: true, react19: false }),
   // The inbox is not compiled yet (vite.config.ts NOT_COMPILED): manual memo stays allowed there.
   ...reactRestrictions({ files: [`${INBOX}/**/*.{ts,tsx}`], effects: [`${INBOX}/**/*.tsx`], compiler: false, react19: false }),

@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
 export const Label = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => (
   <LabelPrimitive.Root ref={ref} className={cn('text-xs font-semibold text-ink-2', className)} {...props} />

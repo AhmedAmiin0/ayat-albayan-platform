@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent, type ReactNode } from 'react';
+import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -23,7 +23,7 @@ export function ConfirmDialog({ title, children, confirmLabel, withReason, pendi
   const formId = useId();
   const [reason, setReason] = useState('');
   const [missing, setMissing] = useState(false);
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const short = withReason === true && reason.trim().length < 3;
     setMissing(short);

@@ -1,6 +1,6 @@
 import { SAVED_REPLY_BODY_MAX, SAVED_REPLY_TITLE_MAX, type SavedReply, type SavedReplyScope } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useId, useRef, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -41,7 +41,7 @@ export function ReplyEditorDialog({ reply, scope, onClose }: ReplyEditorDialogPr
     },
   });
   const set = (patch: Partial<ReplyDraft>) => setDraft((d) => ({ ...d, ...patch }));
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const blank = !draft.title.trim() || !draft.body.trim();
     setMissing(blank);

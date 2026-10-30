@@ -8,7 +8,7 @@ import type { BoardController } from './use-board';
 interface Props {
   board: BoardController;
   /** Shared with «مشاركة السبورة» (canvas.captureStream). */
-  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasRef: RefObject<HTMLCanvasElement | null>;
 }
 
 const pointOf = (e: PointerEvent<HTMLCanvasElement>) =>

@@ -1,6 +1,6 @@
 import { parseAmount } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -30,7 +30,7 @@ export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; 
       onClose();
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const amount = parseAmount(form.amount);
     setAmountError(amount === null ? (form.amount.trim() ? t.payments.mobile.amountInvalid : t.common.required) : null);

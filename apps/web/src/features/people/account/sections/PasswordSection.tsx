@@ -1,5 +1,5 @@
 import { DEFAULT_PASSWORD_MIN } from '@ab/shared';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { passwordErrors, type PasswordForm } from '../account-validation';
@@ -18,7 +18,7 @@ export function PasswordSection({ onDone }: Pick<SectionProps, 'onDone'>) {
   const [form, setForm] = useState<PasswordForm>(EMPTY);
   const set = (key: keyof PasswordForm) => (value: string) => setForm((f) => ({ ...f, [key]: value }));
   const save = useAccountSave({ save: changePassword, toast: t.account.toast.password, onDone, onSaved: () => setForm(EMPTY) });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = passwordErrors(form);
     save.setErrors(found);

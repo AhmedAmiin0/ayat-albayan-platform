@@ -1,5 +1,5 @@
 import type { NumberView } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -30,7 +30,7 @@ export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose
   const save = useNumbersMutation(saveNumber, { onDone: onClose });
   const serverCode = numberErrorCode(save.error);
   const shown: DraftErrors = serverCode === 'phone_taken' ? { ...errors, phone_number_id: s.errors.phone_taken } : errors;
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = draftErrors(draft);
     setErrors(found);
