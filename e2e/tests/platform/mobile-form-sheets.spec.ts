@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { settled } from '../support/finance/settle';
-import { stubInbound, stubReset } from '../support/wa-stub';
+import { ar, expect, test } from '../../support/fixtures';
+import { settled } from '../../support/finance/settle';
+import { stubInbound, stubReset } from '../../support/wa-stub';
 
 // Owner, 2026-10-05: "on the mobile view of the dashboard don't make the bars for the forms; keep
 // them all as full-screen modals". On a phone (390×844) a form dialog fills the screen and its

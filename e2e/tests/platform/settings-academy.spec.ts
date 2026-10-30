@@ -1,8 +1,8 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { fillStable } from '../support/fill';
-import { setSetting } from '../support/messages';
-import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
+import { ar, expect, test } from '../../support/fixtures';
+import { fillStable } from '../../support/core/fill';
+import { setSetting } from '../../support/messages';
+import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
 
 // «القيم» /admin/settings/values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2): each row saves on its
 // own with its row «حفظ» (PATCH /config/entries/:key with the row's version, 26-P3); a value out of

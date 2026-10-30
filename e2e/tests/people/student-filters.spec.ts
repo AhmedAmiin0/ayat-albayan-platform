@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/fixtures';
-import { openFilters, showResults } from '../../support/filters';
+import { openFilters, showResults } from '../../support/core/filters';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../../support/people/student-filters';
 
 // R-STU-01: the students list filters live in the URL (shareable, survive a reload) and are applied

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../support/finance/money';
-import { queuedFor, resetAbrar } from '../support/schedule';
+import { ar, expect, test } from '../../support/fixtures';
+import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../../support/finance/money';
+import { queuedFor, resetAbrar } from '../../support/schedule';
 
 // Journey 3 (docs/03 §5): the admin records a payment → the package is active → lessons are
 // completed down to 2 left → a renewal reminder is queued for the guardian and an admin task is

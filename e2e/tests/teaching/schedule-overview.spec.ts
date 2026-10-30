@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/fixtures';
-import { openFilters, showResults } from '../../support/filters';
+import { openFilters, showResults } from '../../support/core/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/schedule';
 
 // All-teachers calendar (R-SCH-01, research-calendar item 15): rows come from the teachers table,

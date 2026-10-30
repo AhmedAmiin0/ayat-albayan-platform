@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/fixtures';
-import { openFilters, showResults } from '../../support/filters';
+import { openFilters, showResults } from '../../support/core/filters';
 import { freshDigits, seedLead } from '../../support/messages';
 import { riyadhToday, summaryOf, uniqueName } from '../../support/finance/money-extra';
 import { withSql } from '../../support/schedule';

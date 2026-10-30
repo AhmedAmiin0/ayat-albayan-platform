@@ -1,9 +1,9 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { API, tokenOf } from '../support/sales/assistant-api';
-import { runConfigSeed } from '../support/config-seed';
-import { withSql } from '../support/schedule';
-import { restoreSettings, snapshotSettings } from '../support/settings';
-import { USERS } from '../support/users';
+import { API, tokenOf } from '../../support/sales/assistant-api';
+import { runConfigSeed } from '../../support/platform/config-seed';
+import { withSql } from '../../support/schedule';
+import { restoreSettings, snapshotSettings } from '../../support/platform/settings';
+import { USERS } from '../../support/users';
 
 // 26-P2 «Copy» + «Parity» (docs/26 §4) through the REAL API: GET /admin/config/parity is empty on the
 // e2e database (CI runs this), and a missing row, a JSON null and a seeded null give the same

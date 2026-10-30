@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/fixtures';
-import { fillStable } from '../../support/fill';
+import { fillStable } from '../../support/core/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../../support/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';

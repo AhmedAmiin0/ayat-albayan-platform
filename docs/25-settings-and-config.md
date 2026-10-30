@@ -132,7 +132,7 @@ drops it. Its only writer is `POST /admin/communications/source` (`numbers.manag
 
 ## 8. Where the e2e settings writers live
 
-- `e2e/support/settings.ts`: `snapshotSettings`, `restoreSettings`, `settingText`.
+- `e2e/support/platform/settings.ts`: `snapshotSettings`, `restoreSettings`, `settingText`.
 - `e2e/support/messaging/template-registry.ts`: template snapshot/restore, `setTemplateStatus`, `templateRow`, `stubTemplates`.
 - `e2e/support/messaging/message-queue.ts`: `queuedCount`, `clearQueue`, `queueText`, `queueRenewal`, `messageState`, `sentToDigits`.
 - Older writers kept where they are, to avoid touching about 25 specs: `setSetting` (`support/messages.ts`), `setMessaging` (`support/wa-stub.ts`), `setSettingTx` (`support/pay-rule.ts`), `setLateCancelHours` (`support/schedule-extra.ts`), `seedSettings` (`support/db.ts`), `resetGoogle` (`support/google.ts`), `autoMessages` (`tests/edit-session-time.helpers.ts`). The e2e API runs with `SETTINGS_CACHE_MS=0`, so their SQL writes apply at once.

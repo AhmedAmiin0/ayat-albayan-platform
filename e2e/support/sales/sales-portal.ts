@@ -2,9 +2,9 @@ import type { Browser, Page } from '@playwright/test';
 import { family, paymentBy } from './assistant-api';
 import { one } from './assistant';
 import { ar } from '../fixtures';
-import { openNav } from '../nav';
+import { openNav } from '../core/nav';
 import { withSql } from '../schedule';
-import { AR_LOCALE } from '../locale';
+import { AR_LOCALE } from '../core/locale';
 
 // The sales portal e2e (docs/16, owner report 2026-10-12): sign-in, nav and the seeds it reads.
 

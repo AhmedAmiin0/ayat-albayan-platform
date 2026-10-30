@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../support/rls';
-import { USERS } from '../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/rls';
+import { USERS } from '../../support/users';
 
 // Migration 20261028000943 (docs/24 §7) against the real database, rolled back: teachers.calendar_owner,
 // the calendar-managed predicate, the switch's producer, the admin-only guard and the audit row.

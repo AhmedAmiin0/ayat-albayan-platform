@@ -1,7 +1,7 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { API, tokenOf } from '../support/sales/assistant-api';
-import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
-import { USERS } from '../support/users';
+import { API, tokenOf } from '../../support/sales/assistant-api';
+import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
+import { USERS } from '../../support/users';
 
 // docs/26 §2f / §5 (26-P0), through the REAL API and database: the send-gate switches have their own
 // routes (ON needs the exact confirmation text, OFF is always accepted) and PATCH /settings no longer

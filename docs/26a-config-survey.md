@@ -400,21 +400,21 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 
 | File:line | Op | Keys / shape |
 |---|---|---|
-| `e2e/support/settings.ts:9` | `select key, value from public.settings where key = any($keys)` | snapshot |
-| `e2e/support/settings.ts:19-22` | `insert … values ($key, $json::jsonb) on conflict (key) do update set value = excluded.value` / `delete … where key = $key` | restore (keeps JSON null) |
-| `e2e/support/settings.ts:32` | `select value #>> '{}' … where key = $key` | text read |
+| `e2e/support/platform/settings.ts:9` | `select key, value from public.settings where key = any($keys)` | snapshot |
+| `e2e/support/platform/settings.ts:19-22` | `insert … values ($key, $json::jsonb) on conflict (key) do update set value = excluded.value` / `delete … where key = $key` | restore (keeps JSON null) |
+| `e2e/support/platform/settings.ts:32` | `select value #>> '{}' … where key = $key` | text read |
 | `e2e/support/wa-stub.ts:59` | upsert `messaging_enabled` (`on conflict (key) do update`) | |
 | `e2e/support/finance/pay-rule.ts:56` | upsert any bool key (tx) | |
 | `e2e/support/teaching/schedule-extra.ts:32-35` | delete / upsert `late_cancel_hours` | null = delete, like the API |
-| `e2e/support/db.ts:60-67` (`seedSettings`) | multi-row upsert of 11 keys incl. `late_cancel_hours` JSON null | after `resetDb` |
-| `e2e/support/db.ts:23-27` (`resetDb`) | `truncate` every `pg_tables` row in `public` except 4 | **truncates settings/custom_config/integration_config**; a view is not in `pg_tables`, a new base table would be truncated automatically |
+| `e2e/support/core/db.ts:60-67` (`seedSettings`) | multi-row upsert of 11 keys incl. `late_cancel_hours` JSON null | after `resetDb` |
+| `e2e/support/core/db.ts:23-27` (`resetDb`) | `truncate` every `pg_tables` row in `public` except 4 | **truncates settings/custom_config/integration_config**; a view is not in `pg_tables`, a new base table would be truncated automatically |
 | `e2e/support/messages.ts:55` | upsert any key (`setSetting`) | |
-| `e2e/support/google.ts:37` | `delete … where key in (google_sync_enabled, google_sync_mode, google_calendar_window_days)`; `select public.google_token_clear()` | |
+| `e2e/support/platform/google.ts:37` | `delete … where key in (google_sync_enabled, google_sync_mode, google_calendar_window_days)`; `select public.google_token_clear()` | |
 | `e2e/tests/teaching/edit-session-time.helpers.ts:58` | `update public.settings set value = … where key = 'auto_messages_enabled'` | plain UPDATE |
-| `e2e/tests/google-sync.sql.spec.ts:22,32-34` | upsert `google_sync_enabled` = `'true'`; `delete … where key like 'google\_%'`; asserts `google_sync_on()` = false and `google_sync_window_days()` = 60 on missing rows | |
+| `e2e/tests/platform/google-sync.sql.spec.ts:22,32-34` | upsert `google_sync_enabled` = `'true'`; `delete … where key like 'google\_%'`; asserts `google_sync_on()` = false and `google_sync_window_days()` = 60 on missing rows | |
 | `e2e/tests/finance/teacher-earnings.sql.spec.ts:21` | `update public.settings set value = 'true'::jsonb where key = 'payout_count_late'` | |
 | `e2e/support/messaging/kapso.ts:30-33` | upsert / delete `integration_config` `WA_PROVIDER`, `KAPSO_API_BASE` | |
-| `e2e/tests/integration-config.sql.spec.ts:32-89` | RLS spec: admin can SELECT, non-admin sees nothing, admin INSERT denied, anon `42501`; service-role calls of all five secret RPCs; blank secret `22023` | pins RLS + grants + error codes |
+| `e2e/tests/platform/integration-config.sql.spec.ts:32-89` | RLS spec: admin can SELECT, non-admin sees nothing, admin INSERT denied, anon `42501`; service-role calls of all five secret RPCs; blank secret `22023` | pins RLS + grants + error codes |
 
 No e2e SQL touches `custom_config`.
 
@@ -429,7 +429,7 @@ Whatever replaces the two tables (new table + compat view, or a renamed table), 
 3. **The coalesce defaults in SQL must keep matching the registry:** `activity_retention_days` 180, `renewal_alert_remaining` 2, `payout_count_*` false, `academy_timezone` 'Asia/Riyadh', `google_sync_enabled` false, `google_calendar_window_days` 60 (clamped 7..180). Moving defaults into a `default_value` column would be a behaviour change for these readers unless they are rewritten.
 4. **Security-definer readers** (`prune_activity_log`, `sync_teacher_earning`, `set_assistant_terms`, `google_sync_on`, `google_sync_window_days`) run as the owner and bypass RLS. A compat view must be readable by the function owner (`postgres`) — automatic if owned by `postgres`.
 5. **Invoker readers keep the caller's RLS:** `lesson_counts_for_pay` (granted to authenticated), `v_teacher_payable_lessons`, `v_teacher_countable_earnings`, `v_student_list`. A compat view must be `security_invoker = true` and the base table must keep the **admin-read RLS** (`is_admin()`), or non-admin callers change behaviour (today they see defaults). Do not make a definer view (it would leak every value to `authenticated`, which has SELECT).
-6. **Grants:** anon none; authenticated SELECT only (RLS-filtered), no write; service_role full. `integration_config` RLS spec (`e2e/tests/integration-config.sql.spec.ts`) asserts admin SELECT ok, admin INSERT denied, anon `42501`.
+6. **Grants:** anon none; authenticated SELECT only (RLS-filtered), no write; service_role full. `integration_config` RLS spec (`e2e/tests/platform/integration-config.sql.spec.ts`) asserts admin SELECT ok, admin INSERT denied, anon `42501`.
 7. **Writes through the old name must keep working**, because e2e helpers and the API write `public.settings` / `public.custom_config` / `public.integration_config` directly: plain `INSERT`, `INSERT … ON CONFLICT (key) DO UPDATE` (e2e), PostgREST `upsert` (= `ON CONFLICT` on the PK), `UPDATE … WHERE key = …`, `DELETE … WHERE key = …`, `DELETE … WHERE key LIKE 'google\_%'`. Use a simple auto-updatable view (single table, no joins/aggregates) — Postgres supports `ON CONFLICT DO UPDATE` on auto-updatable views but **not on views with INSTEAD OF triggers**. A filtered view (e.g. `where kind = 'setting'`) needs a column default for the discriminator (`alter view … alter column kind set default …`) and `WITH CHECK OPTION`. PostgREST must resolve the PK through the view for `upsert` (it does for simple views; otherwise pass `onConflict: 'key'`).
 8. **`updated_at` trigger** (`set_updated_at()` BEFORE UPDATE) must move to the base table; `updated_by` stays nullable (import command writes null).
 9. **Key namespaces collide today:** `custom_config` keys (`^[a-z][a-z0-9_.-]{1,63}$`, reserved only against *registry* keys, `packages/shared/src/custom-config/schema.ts:12`) can equal a non-registry settings key such as `google_sync_enabled`. A merged table with a single PK on `key` needs either a `kind`/`scope` column in the PK or a reserved check that also covers `GOOGLE_SETTING_KEYS`. The `custom_config` key regex and 8 KB `value` check must keep applying to custom rows; settings rows currently have no key/size check.

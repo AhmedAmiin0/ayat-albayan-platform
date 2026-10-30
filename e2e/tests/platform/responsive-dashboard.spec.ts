@@ -1,9 +1,9 @@
 import { LOCALE_STORAGE_KEY } from '@ab/shared';
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { removeDashboardExpense, seedDashboard } from '../support/finance/money-dashboard';
-import { resetAbrar } from '../support/schedule';
+import { ar, expect, test } from '../../support/fixtures';
+import { removeDashboardExpense, seedDashboard } from '../../support/finance/money-dashboard';
+import { resetAbrar } from '../../support/schedule';
 
 // Owner, 2026-10-05: "fix the overflow in the dashboard". The admin frame is viewport-high and its
 // work page scrolls inside `[data-page-scroll]` (PageFrame), so sideways overflow shows up THERE,

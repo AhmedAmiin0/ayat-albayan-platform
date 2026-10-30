@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { openNav } from '../support/nav';
+import { ar, expect, test } from '../../support/fixtures';
+import { openNav } from '../../support/core/nav';
 
 // Phase 7: Arabic RTL is the default; the switch saves English, reloads, and the whole UI is
 // English LTR until switched back. Expected text comes from en.json / ar.json, never literals.

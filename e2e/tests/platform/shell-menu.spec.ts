@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { openNav } from '../support/nav';
+import { ar, expect, test } from '../../support/fixtures';
+import { openNav } from '../../support/core/nav';
 
 // Owner, 2026-10-05: "enhance the responsive view and make it simpler". Below 900px every area has
 // ONE compact bar (mark, page title, «القائمة»); the nav, theme, language and logout open in a
