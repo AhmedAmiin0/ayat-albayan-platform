@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 450 (docs/19): the Kapso secrets join the Vault allow-list. No database in unit tests.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const FILE = '20261017000450_kapso_secret_keys.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');
 

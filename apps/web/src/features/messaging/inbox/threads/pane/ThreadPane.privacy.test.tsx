@@ -2,15 +2,15 @@ import type { ThreadDetail, TeacherMe } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { detail, message, PHONE, thread } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from './ThreadPane';
-import { ThreadRow } from '../list/ThreadRow';
+import { ThreadRow } from '@/features/messaging/inbox/threads/list/ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null } as const;
@@ -33,7 +33,7 @@ function renderPane(mode: InboxMode, body: ThreadDetail) {
 function renderRow(mode: InboxMode, patch: Parameters<typeof thread>[0]) {
   renderWithClient(
     <InboxModeContext.Provider value={mode}>
-      <ul><ThreadRow thread={thread({ ...FAMILY, ...patch })} search={{ page: 1 }} active={false} /></ul>
+      <ul><ThreadRow thread={thread({ ...FAMILY, ...patch })} search={{ page: 1 }} active={false} now={new Date()} /></ul>
     </InboxModeContext.Provider>,
   );
 }

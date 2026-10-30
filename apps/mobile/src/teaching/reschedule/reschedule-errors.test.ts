@@ -10,7 +10,7 @@ test('409 conflict: one Arabic line per clash in Riyadh time', () => {
       { kind: 'nonsense', startsAt: 'x' },
     ],
   });
-  expect(rescheduleFailure(error)).toEqual({
+  expect(rescheduleFailure(error, '24')).toEqual({
     kind: 'conflict',
     lines: [t.booking.conflict.teacher_busy.replace('{when}', 'السبت 3 أكتوبر 17:00')],
   });
@@ -23,21 +23,21 @@ test.each([
   ['date_in_past', 400],
   ['no_occurrences', 400],
 ] as const)('%s reads as its lessons.error line', (code, status) => {
-  expect(rescheduleFailure(new ApiError(status, { code }))).toEqual({ kind: 'error', text: t.lessons.error[code] });
+  expect(rescheduleFailure(new ApiError(status, { code }), '24')).toEqual({ kind: 'error', text: t.lessons.error[code] });
 });
 
 test('offline: not sure it landed, so say so (a retry after a landed move is refused, not doubled)', () => {
-  expect(rescheduleFailure(new TypeError('Network request failed'))).toEqual({
+  expect(rescheduleFailure(new TypeError('Network request failed'), '24')).toEqual({
     kind: 'error',
     text: t.reschedule.offline,
   });
 });
 
 test('anything else: the general error', () => {
-  expect(rescheduleFailure(new ApiError(500))).toEqual({ kind: 'error', text: t.common.error });
-  expect(rescheduleFailure(new ApiError(400, { code: 'validation_failed' }))).toEqual({
+  expect(rescheduleFailure(new ApiError(500), '24')).toEqual({ kind: 'error', text: t.common.error });
+  expect(rescheduleFailure(new ApiError(400, { code: 'validation_failed' }), '24')).toEqual({
     kind: 'error',
     text: t.common.error,
   });
-  expect(rescheduleFailure(new Error('boom'))).toEqual({ kind: 'error', text: t.common.error });
+  expect(rescheduleFailure(new Error('boom'), '24')).toEqual({ kind: 'error', text: t.common.error });
 });

@@ -1,8 +1,7 @@
-import { formatPhone } from '@ab/shared';
+import { clickToChatLink, formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { whatsappLink } from '@/core/lib/phone';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -71,7 +70,7 @@ export function LeadDetailScreen() {
           <Button
             variant="secondary"
             label={t.mobile.openWhatsapp}
-            onPress={() => void Linking.openURL(whatsappLink(phone))}
+            onPress={() => void Linking.openURL(clickToChatLink(phone))}
           />
         </ButtonRow>
         <LeadProfileSection lead={lead.data} />

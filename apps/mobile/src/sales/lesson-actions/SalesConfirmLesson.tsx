@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { Button } from '@/core/ui/primitives/Button';
 import { confirmFailureText } from './confirm-lesson';
 import { useSalesConfirm } from './lesson-actions-api';
@@ -18,11 +19,12 @@ interface SalesConfirmLessonProps {
  * to the family or the teacher. The sheet decides when it shows (canSalesConfirm (@ab/shared)).
  */
 export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
+  const cycle = useClockCycle();
   const confirm = useSalesConfirm(lessonId);
   const a = t.sales.lessonActions;
   return (
     <View style={{ gap: 8 }}>
-      {confirm.isError ? <ErrorLine message={confirmFailureText(confirm.error)} /> : null}
+      {confirm.isError ? <ErrorLine message={confirmFailureText(confirm.error, cycle)} /> : null}
       <Button
         variant={secondary ? 'secondary' : 'primary'}
         label={confirm.isPending ? t.common.saving : a.confirm}

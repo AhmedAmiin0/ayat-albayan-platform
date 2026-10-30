@@ -12,6 +12,8 @@ export interface NotificationItemProps {
   item: Item;
   /** Called after the row is opened (the panel closes). */
   onPick: () => void;
+  /** The panel's one ticking clock (NotificationList): «منذ 5 دقائق» stays current. */
+  now: Date;
 }
 
 /**
@@ -19,7 +21,7 @@ export interface NotificationItemProps {
  * readers). Title and body are isolated (dir="auto"): a family's Latin name or message keeps its own
  * direction inside the Arabic UI. Opening it marks it read and goes where the push would (webNotificationPath).
  */
-export function NotificationItem({ item, onPick }: NotificationItemProps) {
+export function NotificationItem({ item, onPick, now }: NotificationItemProps) {
   const role = useQuery(meQuery).data?.role ?? null;
   const navigate = useNavigate();
   const markRead = useMarkRead();
@@ -56,7 +58,7 @@ export function NotificationItem({ item, onPick }: NotificationItemProps) {
             title={notificationStamp(item.created_at, clock)}
             className="text-2xs text-ink-3 tabular-nums"
           >
-            {notificationTime(item.created_at, clock)}
+            {notificationTime(item.created_at, clock, now)}
           </time>
         </span>
       </button>

@@ -2,9 +2,10 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 640 (docs/19 «crm driver»), read as text: no database in unit tests.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const FILE = '20261025000640_wacrm_driver.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');

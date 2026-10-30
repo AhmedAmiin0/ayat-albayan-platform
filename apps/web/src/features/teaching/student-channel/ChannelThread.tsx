@@ -6,6 +6,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { CHANNEL_COUNT_KEYS, channelQuery, markChannelRead, sendChannelMessage, type ChannelRef } from './api';
 import { ChannelBubble } from './ChannelBubble';
 import { ChannelComposer } from './ChannelComposer';
@@ -41,6 +42,8 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   const writes = mode === 'write';
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   const newest = first?.messages.at(-1);
+  // One ticking clock for every bubble (not new Date() in render, which the compiler would keep).
+  const now = useNow();
   const send = useMutation({
     mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),
     onSettled: () => Promise.all([client.invalidateQueries({ queryKey: channelKey(audience, studentId) }), refreshCounts(client)]),
@@ -80,7 +83,7 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
       ) : (
         <ol className="grid gap-2">
           {messages.map((m) => (
-            <ChannelBubble key={m.id} message={m} tz={tz} />
+            <ChannelBubble key={m.id} message={m} tz={tz} now={now} />
           ))}
         </ol>
       )}

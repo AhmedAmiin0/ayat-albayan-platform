@@ -3468,6 +3468,7 @@
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
+      "wa_payment_hold": "The WhatsApp Business account has no valid payment method — the messages wait in the queue and go out automatically once the admin fixes billing in Meta",
       "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
       "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
       "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
@@ -4489,7 +4490,8 @@
       "guardian": "Guardian",
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
-      "detailsHint": "Opens the student details"
+      "detailsHint": "Opens the student details",
+      "openStudent": "Open {name}'s student file"
     },
     "live": {
       "title": "Lessons running now",
