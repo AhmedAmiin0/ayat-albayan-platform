@@ -1,4 +1,4 @@
-import { normalizeArabic } from '../format/arabic.js';
+import { normalizeArabic } from '../core/format/arabic.js';
 import type { Gender, Program } from '../enums/index.js';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';

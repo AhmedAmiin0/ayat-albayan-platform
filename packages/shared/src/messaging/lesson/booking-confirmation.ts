@@ -1,5 +1,5 @@
 import { intlLocale, type Locale } from '../../i18n/locale.js';
-import { clockOf, type ClockOptions } from '../../format/index.js';
+import { clockOf, type ClockOptions } from '../../core/format/index.js';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with

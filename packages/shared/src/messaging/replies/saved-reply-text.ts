@@ -1,4 +1,4 @@
-import { normalizeArabic } from '../../format/arabic.js';
+import { normalizeArabic } from '../../core/format/arabic.js';
 
 // Placeholders of a saved reply «الردود السريعة» (owner 2026-10-25), filled on the client when the reply
 // goes into the composer (still editable before sending). A placeholder with no value is removed with

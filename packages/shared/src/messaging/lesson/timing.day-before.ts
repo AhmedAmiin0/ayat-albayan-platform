@@ -1,4 +1,4 @@
-import { utcOffsetMinutes } from '../../time-zone/time-zone.js';
+import { utcOffsetMinutes } from '../../time/time-zone.js';
 
 // The day-before reminder's send instant and expiry (docs/12 §7, docs/23b §8). Pure.
 

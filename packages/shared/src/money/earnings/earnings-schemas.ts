@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '../../enums/index.js';
-import { optionalText } from '../../schemas/common.js';
-import { listSortShape } from '../../schemas/list-sort.js';
+import { optionalText } from '../../core/schemas/common.js';
+import { listSortShape } from '../../core/schemas/list-sort.js';
 import { EARNING_STATUSES } from './earnings.js';
 import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts.js';
 import { moneyAmount, pastInstant, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../schemas.js';
