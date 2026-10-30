@@ -72,7 +72,7 @@ const rule = {
 export const boundariesPlugin = { rules: { 'module-boundaries': rule } };
 
 // Test code may import another module's fakes and fixtures and mock its internals by path.
-const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
+export const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
 
 /** Flat-config block: the rule as an error for `files` of the package at `root` (its config's directory). */
 export function boundaries({ root, files, module, alias, ignores = [] }) {

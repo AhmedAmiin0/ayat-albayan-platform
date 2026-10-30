@@ -6,7 +6,7 @@
   "scripts": {
     "gen:types": "supabase gen types typescript --local > src/types.ts && prettier --write src/types.ts",
     "reset": "supabase db reset",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

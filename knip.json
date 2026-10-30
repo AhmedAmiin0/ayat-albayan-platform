@@ -17,7 +17,8 @@
     "apps/web": {
       "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignore": ["src/routeTree.gen.ts"]
+      "ignore": ["src/routeTree.gen.ts"],
+      "ignoreDependencies": ["babel-plugin-react-compiler", "react-compiler-runtime"]
     },
     "apps/mobile": {
       "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],

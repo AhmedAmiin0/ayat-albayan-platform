@@ -57,14 +57,14 @@ test('ci: check covers changes, every verify job, the guards and the refactor jo
   );
 });
 
-test('ci: Wave F guards fail the build (folder cap strict, jscpd and knip gates)', () => {
+test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip and lint gates)', () => {
   assert.ok(
     ci.jobs.refactor.steps.some(
       (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
     ),
   );
   const runs = ci.jobs.guards.steps.map((s) => s.run);
-  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
+  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip') && runs.includes('pnpm guard:lint'));
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
 });
 

@@ -3,11 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "lint": "eslint . --max-warnings 0",
     "test": "node --test",
     "typecheck": "tsc -p tsconfig.json"
   },
   "devDependencies": {
+    "@ab/config": "workspace:*",
     "@types/node": "^24.19.0",
+    "eslint": "^10.0.0",
     "ts-morph": "28.0.0",
     "typescript": "~6.0.3",
     "yaml": "2.9.1"
