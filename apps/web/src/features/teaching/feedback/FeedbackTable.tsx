@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { DataTable, type DataTableFilters, type DataTableSort, type FilterOption } from '@/components/DataTable';
+import { DataTable, type DataTableFilters, type DataTableSort, type FilterOption } from '@/components/data-table/DataTable';
 import { t } from '@/lib/i18n/i18n';
 import { feedbackColumns } from './feedback-columns';
 import type { FeedbackListRow } from './types';

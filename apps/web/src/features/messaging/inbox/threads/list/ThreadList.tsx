@@ -1,5 +1,5 @@
 import type { ThreadView } from '@ab/shared';
-import { ColumnFilterText } from '@/components/ColumnFilterText';
+import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';

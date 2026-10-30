@@ -1,6 +1,6 @@
 import { formatPhone, PROGRAMS, TEACHER_STATUSES, teacherStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Link } from '@tanstack/react-router';
 import { memo } from 'react';
 import { Avatar } from '@/components/ui/display/avatar';

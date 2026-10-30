@@ -1,8 +1,8 @@
 import { PAYOUT_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { DataTable } from '@/components/DataTable';
-import { TableBox } from '@/components/TableBox';
+import { DataTable } from '@/components/data-table/DataTable';
+import { TableBox } from '@/components/data-table/TableBox';
 import { Button } from '@/components/ui/form/button';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
