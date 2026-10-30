@@ -16,8 +16,8 @@ export default defineConfig({
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     react(),
     // React Compiler (owner 2026-10-30): automatic memoization, so no useMemo / useCallback / memo by hand.
-    // target 18: React 18 has no built-in compiler runtime, react-compiler-runtime provides it.
-    babel({ presets: [reactCompilerPreset({ target: '18', sources: (file) => !NOT_COMPILED.test(file) })] }),
+    // Default target 19: React 19 ships the compiler runtime (react/compiler-runtime).
+    babel({ presets: [reactCompilerPreset({ sources: (file) => !NOT_COMPILED.test(file) })] }),
     tailwindcss(),
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },

@@ -1,6 +1,6 @@
 import { guestJoinSchema } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
@@ -44,7 +44,7 @@ export function GuestJoinPage(props: Props) {
   if (join.data) {
     return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
   }
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const parsed = guestJoinSchema.safeParse({ name });
     setMissing(!parsed.success);

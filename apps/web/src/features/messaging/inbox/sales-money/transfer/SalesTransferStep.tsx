@@ -1,5 +1,5 @@
 import { cancelOffered, parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -58,7 +58,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
     setPickedId(id);
     setForm(formFor(packages.find((p) => p.id === id)));
   };
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!sub || save.isPending) return;
     const amountOk = (parseAmount(form.amount) ?? 0) > 0;

@@ -1,5 +1,5 @@
 import { CURRENCY_ISOS, parseAmount, type PaymentKind } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -57,7 +57,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
     setForm((f) => ({ ...f, ...patch }));
     if (patch.method && patch.method !== 'bank') setAttachments([]);
   };
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);

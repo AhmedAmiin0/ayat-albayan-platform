@@ -1,6 +1,6 @@
 import type { RegistrationCheckView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -49,7 +49,7 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
     enabled: asked !== null,
     retry: false,
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const r = checkRequest(by, value[by]);
     setInvalid(r.ok ? null : r.code);

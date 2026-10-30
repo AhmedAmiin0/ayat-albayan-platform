@@ -1,7 +1,7 @@
 import { coursePauseErrorCode } from '@ab/client-core';
 import { riyadhToday, type CoursePauseView } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -32,7 +32,7 @@ export function ChangeUntilDialog({ studentId, pause, onClose, onDone }: ChangeU
     },
   });
   const wrong = until !== '' && until < pause.from_date;
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!wrong) save.mutate();
   };

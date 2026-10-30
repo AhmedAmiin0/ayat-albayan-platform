@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -20,7 +20,7 @@ export function PhoneSection({ profile, onDone }: SectionProps) {
   const [phone, setPhone] = useState(saved);
   const [password, setPassword] = useState('');
   const save = useAccountSave({ save: updateProfile, toast: t.account.toast.phone, onDone, onSaved: () => setPassword('') });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = phoneErrors({ phone, password });
     save.setErrors(found);

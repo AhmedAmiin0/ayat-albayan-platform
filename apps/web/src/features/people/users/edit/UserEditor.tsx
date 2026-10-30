@@ -1,6 +1,6 @@
 import type { UserDetail, UserRoleOption } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -39,7 +39,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       onDone(t.users.toast.saved);
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = editErrors(form);
     setErrors(found);

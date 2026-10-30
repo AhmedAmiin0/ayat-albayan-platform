@@ -10,10 +10,10 @@ const fromReact = (names, message) => [
   { selector: `MemberExpression[object.name='React'][property.name=/^(${names})$/]`, message },
 ];
 
-// Where the React Compiler memoizes (web: reactCompilerPreset target 18).
+// Where the React Compiler memoizes (web: vite.config.ts, mobile: babel.config.cjs).
 const COMPILER = fromReact('useMemo|useCallback|memo', 'React Compiler: it memoizes, drop useMemo / useCallback / memo.');
 
-// Need the React 19 runtime: web stays on React 18 until its upgrade.
+// React 19 idioms: web (React 19 since docs/32 x1) gets them once x2–x5 remove its old uses.
 const REACT_19 = [
   ...fromReact('forwardRef', 'React 19: ref is a prop, take `ref` in the props instead of forwardRef.'),
   ...fromReact('useContext', 'React 19: read a context with use(Context), not useContext.'),

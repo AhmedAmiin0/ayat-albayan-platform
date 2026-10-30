@@ -1,6 +1,6 @@
 import type { CredentialMode, IssuedCredential, UserDetail } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -27,7 +27,7 @@ export function ResetPasswordDialog({ user, onBack, onClose }: ResetPasswordDial
   const [error, setError] = useState<string | undefined>();
   const [issued, setIssued] = useState<{ credential: IssuedCredential | null } | null>(null);
   const reset = useMutation({ mutationFn: resetPassword, gcTime: 0, onSuccess: (r) => setIssued({ credential: r.credential }) });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const problem = mode === 'set' ? passwordError(password) : undefined;
     setError(problem);
