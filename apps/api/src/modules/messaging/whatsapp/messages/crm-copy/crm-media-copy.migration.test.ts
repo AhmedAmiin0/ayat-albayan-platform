@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CRM_MEDIA_PREFIX } from '../crm-history/crm-history-url';
+import { CRM_MEDIA_PREFIX } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // No database runs in unit tests: this pins migration 880's safety properties.
-const dir = join(__dirname, '../../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261028000891_crm_media_copy.sql'), 'utf8');
 const code = sql.replace(/--[^\n]*/g, '');
 const LINK = `m.body like 'https://%${CRM_MEDIA_PREFIX}%'`;

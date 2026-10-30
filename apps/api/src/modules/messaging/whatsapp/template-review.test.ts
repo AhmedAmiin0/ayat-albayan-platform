@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SEEDS } from './templates/catalog/seed-templates.fakes';
 import { bodyExamples, SAMPLE_REPORT, templateProblem } from './template-review';
 import { bodyVarCount, submitPayload } from './messages/wa-components';
 import { templateRow } from './whatsapp.fakes';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-const MIGRATION = join(__dirname, '../../../../../../packages/db/supabase/migrations/20261001000141_message_templates.sql');
+const MIGRATION = migrationPath('20261001000141_message_templates.sql');
 type Component = { type: string; text?: string; example?: { body_text?: string[][] }; buttons?: { type: string; text: string }[] };
 const components = (row: (typeof SEEDS)[number]) => submitPayload(row, 'h')['components'] as Component[];
 

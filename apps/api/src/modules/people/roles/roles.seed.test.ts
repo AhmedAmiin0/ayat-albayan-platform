@@ -2,10 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defaultGrantsOf, isGrantable } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The migrations seed the system roles' grants by hand; this keeps them equal to the catalog
 // (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table.
-const MIGRATIONS = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const MIGRATIONS = MIGRATIONS_DIR;
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
 const LATER = [

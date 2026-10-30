@@ -1,4 +1,5 @@
 import {
+  addDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -46,9 +47,6 @@ export function pricingOf(f: SubscribeForm): SubscriptionPricing {
   };
   return f.plan === 'custom' ? { ...common, count: f.count } : { ...common, tier: f.plan };
 }
-
-const addDays = (date: string, n: number) =>
-  new Date(Date.parse(`${date}T12:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
 
 /**
  * The package's first day, picked never typed (rule 6): today and the next 6 days in the family's
