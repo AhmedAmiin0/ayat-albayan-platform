@@ -88,7 +88,7 @@ effect block repeats the others so neither drops them). All of them count under 
 
 | rule                                                       | web (React 19.2)                         | mobile (React 19.2) |
 | ---------------------------------------------------------- | ---------------------------------------- | ------------------- |
-| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset()`, React 19's own runtime), except `src/features/messaging/inbox/` | error: React Compiler on (`babel.config.cjs`, below) |
+| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset()`, React 19's own runtime), inbox included | error: React Compiler on (`babel.config.cjs`, below) |
 | no `forwardRef` (ref is a prop)                            | after x2–x5 remove the old uses          | error               |
 | `use(Context)`, not `useContext`                           | after x2–x5 remove the old uses          | error               |
 | `<Context value>`, not `<Context.Provider>`                | after x2–x5 remove the old uses          | error               |
@@ -96,9 +96,9 @@ effect block repeats the others so neither drops them). All of them count under 
 
 The compiler caches what a component reads during render on the props and state it depends on. Code that
 reads mutable module state in render (a rules-of-React break the lint rules do not see) then shows stale values:
-on web that broke 3 inbox unit tests (`MessageLog` reads `lastOwnSend` from `own-send`; 2 `ReplyComposer` tests in the
-same folder). The inbox is left out (`vite.config.ts` `NOT_COMPILED`, the no-memo rule lifted there) until its
-stores subscribe through `useSyncExternalStore`. On mobile, `babel-preset-expo` turns the compiler on only for
+on web that broke 3 inbox unit tests (`MessageLog` read `lastOwnSend` from `own-send`; 2 `ReplyComposer` tests in the
+same folder). Those stores now subscribe through `useSyncExternalStore` (`useLastOwnSend`, staged-store), the log's
+"now" ticks through `useNow`, and the inbox is compiled like the rest of the web app (owner 2026-10-30). On mobile, `babel-preset-expo` turns the compiler on only for
 Metro (`supportsReactCompiler`, set from `experiments.reactCompiler`), and jest-expo never sets it. So
 `apps/mobile/babel.config.cjs` runs `babel-plugin-react-compiler` itself for every caller, jest included, while
 `experiments.reactCompiler` is true, and turns the preset's copy off (no double compile under Metro). The unit tests run
