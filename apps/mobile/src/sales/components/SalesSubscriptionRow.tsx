@@ -3,10 +3,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import type { SalesSubscription } from '../lib/sales-api';
-import { studentDetailsHref, useSalesHrefs } from '../lib/sales-href';
+import { useSalesHrefs } from '../lib/sales-href';
 import { startsLine, subscriptionSubtitle } from '../lib/sales-text';
 import { Note } from '@/more/Note';
-import { useTreeBase } from '@/core/nav/tree-base';
+import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { MoneyActionButton } from '../money-action';
 
 /**

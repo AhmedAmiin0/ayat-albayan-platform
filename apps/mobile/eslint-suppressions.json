@@ -2629,13 +2629,10 @@
   },
   "src/core/ui/layout/ListRow.tsx": {
     "ab/no-parent-imports": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 7
     },
     "max-lines-per-function": {
       "count": 1
@@ -10439,11 +10436,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-restricted-syntax": {
       "count": 1
@@ -10640,11 +10634,8 @@
     }
   },
   "src/sales/lib/sales-href.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/lib/sales-text.test.ts": {
@@ -10826,7 +10817,7 @@
       "count": 2
     },
     "ab/no-parent-imports": {
-      "count": 5
+      "count": 4
     },
     "max-len": {
       "count": 7

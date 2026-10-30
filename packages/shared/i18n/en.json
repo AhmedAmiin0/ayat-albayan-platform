@@ -4452,7 +4452,8 @@
       "guardian": "Guardian",
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
-      "detailsHint": "Opens the student details"
+      "detailsHint": "Opens the student details",
+      "openStudent": "Open {name}'s student file"
     },
     "live": {
       "title": "Lessons running now",
