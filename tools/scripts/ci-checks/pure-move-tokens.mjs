@@ -6,7 +6,7 @@ import { target } from './pure-move-paths.mjs';
 const stripExt = (p) => p.replace(/\.[cm]?[jt]sx?$/, '');
 
 /** Every `old folder → new folder` whose files all moved to one new folder and that is gone at head. */
-function folderRenames(renames, gone) {
+export function folderRenames(renames, gone) {
   const dirs = new Map();
   for (const [from, to] of renames) {
     for (let end = from.lastIndexOf('/'); end > 0; end = from.lastIndexOf('/', end - 1)) {

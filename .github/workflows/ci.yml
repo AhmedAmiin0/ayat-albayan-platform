@@ -134,9 +134,9 @@ jobs:
           NODE_OPTIONS: ${{ matrix.heap }}
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
-  # that grew, a stale allow-list entry). Pure-move check: only for the move PRs of the refactor chain
-  # (cloud/refactor-a*, b*, c*, d* heads); it fails on any hunk that is not a rename, a module path, a new
-  # index.ts barrel or path-dependent config. No install, no secrets.
+  # that grew, a stale allow-list entry). Pure-move check: only for move PRs (refactor/* and cloud/refactor-*
+  # heads, any lane); it fails on any hunk that is not a rename, a module path, a new index.ts barrel,
+  # path-dependent config or a baseline entry that follows its moved file. No install, no secrets.
   refactor:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -155,7 +155,7 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: |
           case "$HEAD_REF" in
-            cloud/refactor-[abcd][0-9]*) node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
+            refactor/*|cloud/refactor-*) node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
             *) echo "not a move PR ($HEAD_REF): skipped" ;;
           esac
 
