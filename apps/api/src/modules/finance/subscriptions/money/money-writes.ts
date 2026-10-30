@@ -31,6 +31,11 @@ export class MoneyWrites {
 
   async done(entry: Done, studentId: string | null): Promise<void> {
     await this.audit.record(entry);
+    await this.recorded(entry, studentId);
+  }
+
+  /** As done, for a write whose RPC already wrote its audit row in the same transaction (stop_course). */
+  async recorded(entry: Done, studentId: string | null): Promise<void> {
     // A deleted or cancelled package: its open tasks have nothing left to point at.
     if (entry.entity === 'subscriptions' && GONE.has(entry.action)) await this.alerts.closeTasksOf(entry.entityId);
     if (studentId) await this.followUp(entry, studentId);

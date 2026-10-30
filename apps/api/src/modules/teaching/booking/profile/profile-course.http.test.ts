@@ -92,6 +92,8 @@ describe('profile course changes: roles and routes', () => {
       startsAt: '2026-10-19T14:00:00Z',
     });
     expect(res.json().student.id).toBe(S1);
+    // Every rule of the course (course_rules_of), also one without subscription_id (review B2).
+    expect(t.m.repo.upcoming).toHaveBeenCalledWith(['ra', 'rb']);
   });
 
   it("the change's audit names the sales actor (change_course payload)", async () => {

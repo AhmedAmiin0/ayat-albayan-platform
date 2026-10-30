@@ -35,6 +35,7 @@ function mocks() {
     queries: {
       subscription: vi.fn(),
       rules: vi.fn(),
+      course: vi.fn(),
       others: vi.fn(),
       contacts: vi.fn(),
       teacherLink: vi.fn(),
@@ -61,6 +62,10 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.writer.apply.mockResolvedValue(RESULT);
   m.queries.subscription.mockResolvedValue(SUB);
   m.queries.rules.mockResolvedValue([RULE_A, RULE_B]);
+  m.queries.course.mockResolvedValue([
+    { rule_id: 'ra', linked: true, clean: true, from_on: null, until_on: null },
+    { rule_id: 'rb', linked: false, clean: true, from_on: '2026-10-01', until_on: null },
+  ]);
   m.queries.others.mockResolvedValue([]);
   m.queries.contacts.mockResolvedValue([]);
   m.queries.teacherLink.mockResolvedValue(null);

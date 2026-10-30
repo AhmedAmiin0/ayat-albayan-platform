@@ -3,9 +3,7 @@ import {
   changeEffectiveFrom,
   courseStopBlock,
   courseStopSchema,
-  stopEndsOn,
   stoppedLessons,
-  studentAfterStop,
 } from './course-stop.js';
 
 const SUB = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
@@ -72,36 +70,6 @@ describe('stoppedLessons: which lessons a stop cancels', () => {
 
   it('nothing to cancel is an empty list', () => {
     expect(stoppedLessons([], NOW)).toEqual([]);
-  });
-});
-
-describe('studentAfterStop: the status transition', () => {
-  it('every status becomes «توقف» (churned)', () => {
-    for (const s of [
-      'new',
-      'trial',
-      'pending_subscription',
-      'active',
-      'pending_renewal',
-      'expired',
-      'paused',
-    ] as const)
-      expect(studentAfterStop(s)).toBe('churned');
-  });
-
-  it('already churned: no move', () => {
-    expect(studentAfterStop('churned')).toBeNull();
-  });
-});
-
-describe('stopEndsOn: the rule ends on the cancel date in its zone', () => {
-  it('today in the rule zone', () => {
-    expect(stopEndsOn({ tz: 'Asia/Riyadh', ends_on: null }, NOW)).toBe('2026-10-31');
-    expect(stopEndsOn({ tz: 'Africa/Cairo', ends_on: '2026-12-31' }, NOW)).toBe('2026-10-30');
-  });
-
-  it('never lengthens a rule ending earlier', () => {
-    expect(stopEndsOn({ tz: 'Asia/Riyadh', ends_on: '2026-10-20' }, NOW)).toBe('2026-10-20');
   });
 });
 

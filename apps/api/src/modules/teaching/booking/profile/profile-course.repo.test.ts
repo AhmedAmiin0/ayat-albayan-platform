@@ -39,14 +39,15 @@ describe('ProfileCourseRepo', () => {
 
   it("upcoming: the course's next open lesson", async () => {
     const { q, repo } = setup({
-      data: [{ status: 'scheduled', starts_at: '2026-11-01T15:00:00Z', rule: {} }],
+      data: [{ status: 'scheduled', starts_at: '2026-11-01T15:00:00Z' }],
       error: null,
     });
-    expect(await repo.upcoming('s1')).toEqual([
+    expect(await repo.upcoming(['r1', 'r2'])).toEqual([
       { status: 'scheduled', starts_at: '2026-11-01T15:00:00Z' },
     ]);
-    expect(q.eq).toHaveBeenCalledWith('rule.subscription_id', 's1');
+    expect(q.in).toHaveBeenCalledWith('rule_id', ['r1', 'r2']);
     expect(q.limit).toHaveBeenCalledWith(1);
+    expect(await repo.upcoming([])).toEqual([]); // no rule: nothing read
   });
 
   it('assignTeacher: compare-and-set on the old teacher, audited teacher_change', async () => {

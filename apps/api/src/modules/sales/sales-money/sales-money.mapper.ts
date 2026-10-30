@@ -1,11 +1,12 @@
-import type {
-  PaymentView,
-  QuoteResponse,
-  SalesMoneySubscriptionView,
-  SalesPaymentView,
-  SalesQuoteView,
-  StudentStatus,
-  SubscriptionView,
+import {
+  countsForMoney,
+  type PaymentView,
+  type QuoteResponse,
+  type SalesMoneySubscriptionView,
+  type SalesPaymentView,
+  type SalesQuoteView,
+  type StudentStatus,
+  type SubscriptionView,
 } from '@ab/shared';
 
 // The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a spread of
@@ -38,8 +39,8 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    // A cancelled package is never owed (owner 2026-10-28).
-    due: s.status === 'cancelled' ? 0 : Math.max(0, cents(s.price - s.paid)),
+    // An unused-cancelled package is never owed (owner 2026-10-28); a stopped one still is (2026-10-30).
+    due: countsForMoney(s) ? Math.max(0, cents(s.price - s.paid)) : 0,
   };
 }
 

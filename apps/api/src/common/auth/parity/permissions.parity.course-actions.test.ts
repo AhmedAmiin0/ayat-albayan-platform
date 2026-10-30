@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 
 // Owner 2026-10-30: «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» from the student's
-// profile, one key each, held by the system admin and sales by default (migration 985), never a
+// profile, one key each, held by the system admin and sales by default (migration 990), never a
 // teacher or a family.
 describe('the student profile course actions', () => {
   let routes: RouteAccess[];

@@ -1,17 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '@/common/http/errors';
-import {
-  NOW,
-  REQ,
-  SALES,
-  stamped,
-  STUDENT,
-  stopApp,
-  SUB,
-  subRow,
-} from './course-stop.fakes';
+import { conflict, notFound } from '@/common/http/errors';
+import { NOW, REQ, STOPPED, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
-// «إلغاء الاشتراك» over HTTP (owner 2026-10-30): cancelled already, double submits, the preview.
+// «إلغاء الاشتراك» over HTTP (owner 2026-10-30): stop_course's 404 / 409s and the replay (review B3:
+// the clientRequestId is written with the stamp, so a retry after a crash or a double tap answers the
+// first stop instead of 409 already_cancelled).
 type App = Awaited<ReturnType<typeof stopApp>>;
 const URL = `/students/${STUDENT}/course-stop`;
 const BODY = { subscriptionId: SUB, reason: 'سفر الأسرة', clientRequestId: REQ };
@@ -28,96 +21,27 @@ describe('POST /students/:id/course-stop: 409s and replays', () => {
     vi.useFakeTimers({ now: NOW, toFake: ['Date'] });
   });
 
-  it('a cancelled package: 409 already_cancelled, nothing cancelled again', async () => {
-    t.m.repo.subscription.mockResolvedValue(stamped);
-    const res = await t.call({
-      method: 'POST',
-      url: URL,
-      token: 'sales',
-      body: { ...BODY, clientRequestId: 'f0000000-0000-4000-8000-0000000000f9' },
-    });
-    expect([res.statusCode, res.json().code]).toEqual([409, 'already_cancelled']);
-    expect(t.m.cancels.stopRule).not.toHaveBeenCalled();
-    expect(t.m.writes.done).not.toHaveBeenCalled();
-  });
-
-  it('a double submit (same clientRequestId) answers the first stop from its audit row', async () => {
-    t.m.repo.subscription.mockResolvedValue(stamped);
-    t.m.repo.replay.mockResolvedValue({
-      cancelled_lessons: ['l1', 'l2'],
-      ended_rules: ['r1'],
-      student_status: 'churned',
-    });
+  it('a double submit (same clientRequestId) answers the first stop and re-runs the idempotent follow-ups', async () => {
+    t.m.repo.stop.mockResolvedValue({ ...STOPPED, replayed: true });
     const res = await t.call({ method: 'POST', url: URL, token: 'sales', body: BODY });
-    expect([res.statusCode, res.json()]).toEqual([
+    expect([res.statusCode, res.json().cancelledLessons, res.json().stoppedAt]).toEqual([
       201,
-      {
-        subscriptionId: SUB,
-        cancelledLessons: 2,
-        endedRules: 1,
-        studentStatus: 'churned',
-        stoppedAt: NOW.toISOString(),
-      },
+      3,
+      NOW.toISOString(),
     ]);
-    expect(t.m.repo.replay).toHaveBeenCalledWith(SUB, REQ);
-    expect(t.m.repo.stamp).not.toHaveBeenCalled();
+    expect(t.m.writes.recorded).toHaveBeenCalledTimes(1);
   });
 
-  it("a race (stamped meanwhile) replays or answers 409; the guard's has_future_lessons is a 409", async () => {
-    t.m.repo.stamp.mockResolvedValueOnce(null);
-    expect(
-      (await t.call({ method: 'POST', url: URL, token: 'sales', body: BODY })).json().code,
-    ).toBe('already_cancelled');
-    t.m.repo.stamp.mockRejectedValueOnce(conflict('has_future_lessons'));
-    const res = await t.call({ method: 'POST', url: URL, token: 'sales', body: BODY });
-    expect([res.statusCode, res.json().code]).toEqual([409, 'has_future_lessons']);
-    expect(t.m.student.churn).not.toHaveBeenCalled();
-  });
-});
-
-describe('GET /students/:id/course-stop', () => {
-  let t: App;
-  beforeAll(async () => {
-    t = await stopApp();
-  }, 60_000);
-  afterAll(() => t.app.close());
-  beforeEach(() => t.reset());
-
-  it('what the sheet shows: future lessons, rules, the money kept', async () => {
-    const res = await t.call({
-      method: 'GET',
-      url: `${URL}?subscriptionId=${SUB}`,
-      token: 'sales',
-    });
-    expect(res.json()).toEqual({
-      subscriptionId: SUB,
-      futureLessons: 1,
-      activeRules: 2,
-      paid: 290,
-      currency: 'SAR',
-      stopped: null,
-    });
-  });
-
-  it('a stopped package shows who / when / why and nothing left to cancel', async () => {
-    t.m.repo.subscription.mockResolvedValue(stamped);
-    const res = await t.call({
-      method: 'GET',
-      url: `${URL}?subscriptionId=${SUB}`,
-      token: 'admin',
-    });
-    expect(res.json()).toMatchObject({
-      futureLessons: 0,
-      activeRules: 0,
-      stopped: { at: stamped.cancelled_at, by: SALES, reason: 'سفر' },
-    });
-    expect(subRow().status).toBe('active');
-  });
-
-  it("no subscriptionId: the student's current package (a sales file of a student not hers)", async () => {
-    const res = await t.call({ method: 'GET', url: URL, token: 'sales' });
-    expect([res.statusCode, res.json().subscriptionId]).toEqual([200, SUB]);
-    expect(t.m.repo.current).toHaveBeenCalledWith(STUDENT);
-    expect(t.m.repo.subscription).not.toHaveBeenCalled();
+  it.each([
+    ['already_cancelled', conflict('already_cancelled'), 409],
+    ['course_unattributed', conflict('course_unattributed'), 409],
+    ['has_future_lessons', conflict('has_future_lessons'), 409],
+    ['subscription_not_found', notFound('subscription_not_found'), 404],
+  ])('%s from stop_course: nothing followed up', async (code, error, status) => {
+    t.m.repo.stop.mockRejectedValue(error);
+    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: BODY });
+    expect([res.statusCode, res.json().code]).toEqual([status, code]);
+    expect(t.m.events.changed).not.toHaveBeenCalled();
+    expect(t.m.writes.recorded).not.toHaveBeenCalled();
   });
 });

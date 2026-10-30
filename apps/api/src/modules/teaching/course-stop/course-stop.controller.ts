@@ -13,7 +13,7 @@ import { CourseStop } from './course-stop.service';
 
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): subscriptions.stop (system admin and sales by default,
- * migration 985), ANY student; teachers and families never. 404 subscription_not_found; 409
+ * migration 990), ANY student; teachers and families never. 404 subscription_not_found; 409
  * already_cancelled / has_future_lessons; 400 a missing reason. The unused-package «إلغاء الباقة»
  * stays POST /subscriptions/:id/cancel.
  */

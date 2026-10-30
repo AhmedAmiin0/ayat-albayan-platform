@@ -46,7 +46,7 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
   // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/16 row 37c): the course pause routes, ANY student.
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
-  // The profile's course actions (owner 2026-10-30, migration 985): ANY student, audited.
+  // The profile's course actions (owner 2026-10-30, migration 990): ANY student, audited.
   { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
   { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
   { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },

@@ -45,7 +45,8 @@ export class ProfileCourse {
     const subscriptionId = picked ?? (await this.repo.currentSubscription(studentId));
     await this.ownedBy(studentId, subscriptionId);
     const view = await this.views.view(subscriptionId);
-    const upcoming = await this.repo.upcoming(subscriptionId);
+    const course = await this.queries.course(subscriptionId);
+    const upcoming = await this.repo.upcoming(course.map((r) => r.rule_id));
     return {
       ...view,
       nextLesson: changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() }),

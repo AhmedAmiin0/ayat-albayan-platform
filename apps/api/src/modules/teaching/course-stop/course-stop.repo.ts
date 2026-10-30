@@ -1,8 +1,10 @@
-import { currentPackage, OPEN_LESSON_STATUSES, type SubscriptionStatus } from '@ab/shared';
+import { currentPackage, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
+import { stopPlan, stopRow, type StopPlan, type StopRow } from './course-stop.mapper';
 
 /** The package a stop reads (subscriptions row). */
 export interface StopSub {
@@ -15,33 +17,36 @@ export interface StopSub {
   cancel_reason: string | null;
 }
 
-/** A weekly rule of the course that still reaches today or later. */
-interface StopRule {
-  id: string;
-  ends_on: string | null;
-}
-
-interface Stamp {
-  id: string;
+/** stop_course's input (migration 991). */
+export interface StopCall {
+  subscriptionId: string;
+  studentId: string;
+  requestId: string;
   actorId: string;
   reason: string;
-  now: Date;
 }
 
 const SUB = 'id, student_id, status, currency, cancelled_at, cancelled_by, cancel_reason';
+/** stop_course's raised codes (P0001) and the 409s among them; the rest is 404. */
+const RAISED = new Set(['subscription_not_found', 'already_cancelled', 'course_unattributed']);
 
-/** «إلغاء الاشتراك»'s reads and writes (service role; the route checks subscriptions.stop). */
+/** stop_course / the guard's errors → HTTP. */
+function stopError(error: PostgrestError): Error {
+  if (error.code === 'P0001' && RAISED.has(error.message))
+    return error.message === 'subscription_not_found' ? notFound(error.message) : conflict(error.message);
+  if (error.code === '23514' && error.message.startsWith('has_future_lessons'))
+    return conflict('has_future_lessons');
+  return dbError(error);
+}
+
+/** «إلغاء الاشتراك»'s reads and its one-transaction write (service role; the route checks subscriptions.stop). */
 @Injectable()
 export class CourseStopRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** 404 subscription_not_found (also for another student's package). */
   async subscription(id: string, studentId: string): Promise<StopSub> {
-    const { data, error } = await this.db
-      .from('subscriptions')
-      .select(SUB)
-      .eq('id', id)
-      .maybeSingle();
+    const { data, error } = await this.db.from('subscriptions').select(SUB).eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     if (data?.student_id !== studentId) throw notFound('subscription_not_found');
     return data;
@@ -62,31 +67,14 @@ export class CourseStopRepo {
   }
 
   /**
-   * The course's active rules (subscription_id, migration 470) not ended before `today` (UTC date).
+   * course_stop_plan: the rules a stop at `now` ends and the open lessons it cancels, found through
+   * course_rules_of (a rule without subscription_id counts when it runs in the package's period).
    */
-  async activeRules(subscriptionId: string, today: string): Promise<StopRule[]> {
-    const { data, error } = await this.db
-      .from('schedule_rules')
-      .select('id, ends_on')
-      .eq('subscription_id', subscriptionId)
-      .eq('status', 'active')
-      .or(`ends_on.is.null,ends_on.gte.${today}`)
-      .order('created_at');
+  async plan(subscriptionId: string, now: Date): Promise<StopPlan> {
+    const args = { p_subscription: subscriptionId, p_at: now.toISOString() };
+    const { data, error } = await this.db.rpc('course_stop_plan', args);
     if (error) throw dbError(error);
-    return data;
-  }
-
-  /** The course's open lessons from `now` on (any of its rules): what the stop cancels. */
-  async futureLessons(subscriptionId: string, now: Date): Promise<string[]> {
-    const { data, error } = await this.db
-      .from('lessons')
-      .select('id, rule:schedule_rules!lessons_rule_id_fkey!inner(subscription_id)')
-      .eq('rule.subscription_id', subscriptionId)
-      .in('status', [...OPEN_LESSON_STATUSES])
-      .gte('starts_at', now.toISOString())
-      .order('starts_at');
-    if (error) throw dbError(error);
-    return data.map((l) => l.id);
+    return stopPlan(data);
   }
 
   /** Net paid (payments − refunds): shown, never changed. */
@@ -100,43 +88,20 @@ export class CourseStopRepo {
   }
 
   /**
-   * Compare-and-set to cancelled (kind 'stopped', migration 985) with who / when / why; null when
-   * it was cancelled meanwhile. 409 has_future_lessons when the guard still finds an open lesson to
-   * come.
+   * stop_course: the whole stop in one transaction (its stamp carries requestId, so a retry or a
+   * double tap answers the first stop). 404 subscription_not_found, 409 already_cancelled /
+   * course_unattributed / has_future_lessons.
    */
-  async stamp(w: Stamp): Promise<StopSub | null> {
-    const patch = {
-      status: 'cancelled' as const,
-      cancel_kind: 'stopped',
-      cancelled_at: w.now.toISOString(),
-      cancelled_by: w.actorId,
-      cancel_reason: w.reason,
+  async stop(c: StopCall): Promise<StopRow> {
+    const p = {
+      subscription_id: c.subscriptionId,
+      student_id: c.studentId,
+      client_request_id: c.requestId,
+      actor: c.actorId,
+      reason: c.reason,
     };
-    const { data, error } = await this.db
-      .from('subscriptions')
-      .update(patch)
-      .eq('id', w.id)
-      .neq('status', 'cancelled')
-      .select(SUB)
-      .maybeSingle();
-    if (error?.code === '23514' && error.message.startsWith('has_future_lessons'))
-      throw conflict('has_future_lessons');
-    if (error) throw dbError(error);
-    return data;
-  }
-
-  /** The stop this clientRequestId already made (its audit row's after), or null. */
-  async replay(subscriptionId: string, requestId: string): Promise<Record<string, unknown> | null> {
-    const { data, error } = await this.db
-      .from('audit_log')
-      .select('after')
-      .eq('entity', 'subscriptions')
-      .eq('entity_id', subscriptionId)
-      .eq('action', 'cancel')
-      .eq('after->>client_request_id', requestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
-    const after = data?.after;
-    return after !== null && typeof after === 'object' && !Array.isArray(after) ? after : null;
+    const { data, error } = await this.db.rpc('stop_course', { p });
+    if (error) throw stopError(error);
+    return stopRow(data);
   }
 }

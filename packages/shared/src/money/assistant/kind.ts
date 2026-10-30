@@ -1,4 +1,5 @@
 import type { SubscriptionStatus } from '../../enums/index.js';
+import { countsForMoney } from '../ledger/usage/package-cancel.js';
 
 // Renewal commission (owner 2026-10-26, migrations 20261027000750-751): which kind a subscription's commission
 // is. Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
@@ -16,11 +17,16 @@ export interface OrderFact {
   id: string;
   price: number;
   created_at: string;
-  /** Absent = a live package. A cancelled one (migration 934) is no kind and never counts as earlier. */
+  /**
+   * Absent = a live package. An unused-cancelled one (migration 934) is no kind and never counts as
+   * earlier; a stopped one (cancel_kind 'stopped', migration 991) keeps its kind and counts.
+   */
   status?: SubscriptionStatus;
+  cancel_kind?: string | null;
 }
 
-const counts = (s: OrderFact): boolean => s.price > 0 && s.status !== 'cancelled';
+const counts = (s: OrderFact): boolean =>
+  s.price > 0 && (s.status === undefined || countsForMoney({ status: s.status, cancel_kind: s.cancel_kind }));
 
 /** created_at, then id (uuid order = lowercase hex order). */
 const before = (a: OrderFact, b: OrderFact): boolean =>

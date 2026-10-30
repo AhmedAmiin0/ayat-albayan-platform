@@ -4,9 +4,10 @@ import { OPEN_LESSON_STATUSES, wallParts } from '../../schedule/lessons/index.js
 
 // «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
 // Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
-// date, the student becomes «توقف» (churned) and the package «ملغاة» (cancel_kind 'stopped',
-// migration 985) with who / when / why. Payments, held lessons, reports and teacher earnings are
-// never touched. Pure.
+// date, the student becomes «توقف» (churned) unless another package still runs, and the package
+// «ملغاة» (cancel_kind 'stopped', migration 990) with who / when / why. Payments, held lessons,
+// reports, teacher earnings and the assistant's commission are never touched: a stopped package
+// stays in every money reader (countsForMoney, migration 991). Pure.
 
 export const COURSE_STOP_REASON_MAX = 300;
 
@@ -68,22 +69,6 @@ export function stoppedLessons<T extends { status: LessonStatus; starts_at: stri
 ): T[] {
   const open: readonly LessonStatus[] = OPEN_LESSON_STATUSES;
   return lessons.filter((l) => open.includes(l.status) && Date.parse(l.starts_at) >= now.getTime());
-}
-
-/**
- * The student after a stop: «توقف» (churned); null when already churned (no move, no audit row).
- */
-export function studentAfterStop(status: StudentStatus): StudentStatus | null {
-  return status === 'churned' ? null : 'churned';
-}
-
-/**
- * A stopped rule's last day: the cancel date in the rule's zone (owner: ends_on = the cancel date),
- * never later than the day it already ends on.
- */
-export function stopEndsOn(rule: { tz: string; ends_on: string | null }, now: Date): string {
-  const today = wallParts(now.toISOString(), rule.tz).date;
-  return rule.ends_on !== null && rule.ends_on < today ? rule.ends_on : today;
 }
 
 /**
