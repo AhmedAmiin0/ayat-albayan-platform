@@ -1,0 +1,27 @@
+{
+  "build.mjs": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "check.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "image.mjs": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "png.mjs": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "resample.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  }
+}

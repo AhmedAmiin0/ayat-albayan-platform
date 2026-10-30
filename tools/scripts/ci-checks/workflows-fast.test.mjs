@@ -57,19 +57,27 @@ test('ci: check covers changes, every verify job, the guards and the refactor jo
   );
 });
 
-test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip and lint gates)', () => {
+test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries and lint gates)', () => {
   assert.ok(
     ci.jobs.refactor.steps.some(
       (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
     ),
   );
   const runs = ci.jobs.guards.steps.map((s) => s.run ?? '');
-  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
+  assert.ok(['pnpm guard:dup', 'pnpm guard:knip', 'pnpm guard:queries'].every((r) => runs.includes(r)));
   // guard:lint on every run; on a PR also against the base branch's lint.json (docs/31a §5.1), so the full history.
   const lint = runs.find((r) => r.includes('pnpm guard:lint -- --base'));
   assert.ok(lint?.includes('git merge-base "origin/$BASE_REF" HEAD') && lint.includes('then pnpm guard:lint; exit'));
+  // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
+  assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
+});
+
+test('ci: a red lint prints the pruned suppressions to commit', () => {
+  const step = ci.jobs.verify.steps.find((s) => s.name?.startsWith('Suppressions to prune'));
+  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
+  assert.match(step.run, /pnpm lint:prune .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
 });
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {

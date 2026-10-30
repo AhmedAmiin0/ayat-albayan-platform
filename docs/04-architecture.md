@@ -187,7 +187,7 @@ them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An
 (`--report-unused-disable-directives-severity=error`), an `eslint-disable` included, so an ESLint-only rule gets no
 inline disable: its exception goes in `eslint-suppressions.json`, where `pnpm guard:lint` counts it. `typecheck` runs
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
-Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
+Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
 Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:
 

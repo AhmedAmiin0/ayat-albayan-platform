@@ -141,9 +141,20 @@ jobs:
         run: pnpm lint:ox --format github
       - name: Turbo cache (GitHub Actions cache)
         uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
-      - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
+      - id: turbo
+        run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
+      # ESLint fails on a suppression that no longer occurs (a fixed long line, a split function). On a red lint
+      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` and
+      # `pnpm guard:lint -- --write` locally, docs/31a §5).
+      - name: Suppressions to prune (commit this diff)
+        if: failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'
+        env:
+          NODE_OPTIONS: ${{ matrix.heap }}
+        run: |
+          pnpm lint:prune > /dev/null 2>&1 || true
+          git --no-pager diff -- '*eslint-suppressions.json'
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
   # that grew, a stale allow-list entry). Pure-move check: for move PRs (refactor/* and cloud/refactor-* heads
@@ -195,6 +206,7 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm guard:dup
       - run: pnpm guard:knip
+      - run: pnpm guard:queries
       # A base without lint.json (before the ratchet) has nothing to compare with; a git error fails the step.
       - name: pnpm guard:lint (on a PR, also against the base branch)
         env:
@@ -206,7 +218,15 @@ jobs:
             echo "::notice::no lint.json on $BASE_REF: in-tree check only"; pnpm guard:lint; exit
           fi
           git show "$base:refactor/guards/lint.json" > "$RUNNER_TEMP/lint-base.json"
-          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json"
+          # The ESLint config sources of both sides: a rule only the head names gets its one-time baseline.
+          configs() {
+            git ls-tree -r --name-only "$1" | grep -E '(^packages/config/[^/]+|(^|/)eslint\.config)\.[cm]?js$' \
+              | grep -v '\.test\.' | while read -r f; do git show "$1:$f"; done
+          }
+          configs "$base" > "$RUNNER_TEMP/configs-base.txt"
+          configs HEAD > "$RUNNER_TEMP/configs-head.txt"
+          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json" \
+            --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change

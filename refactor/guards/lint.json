@@ -48,6 +48,8 @@
   "@typescript-eslint/switch-exhaustiveness-check": 6,
   "@typescript-eslint/unbound-method": 15,
   "@typescript-eslint/use-unknown-in-catch-callback-variable": 81,
+  "ab/forbidden-imports": 147,
+  "ab/max-params": 2,
   "ab/module-boundaries": 2030,
   "complexity": 240,
   "jsx-a11y/click-events-have-key-events": 2,
@@ -60,6 +62,8 @@
   "jsx-a11y/no-static-element-interactions": 2,
   "jsx-a11y/role-supports-aria-props": 1,
   "max-depth": 14,
+  "max-len": 14474,
+  "max-lines-per-function": 268,
   "no-console": 2,
   "no-restricted-syntax": 241
 }

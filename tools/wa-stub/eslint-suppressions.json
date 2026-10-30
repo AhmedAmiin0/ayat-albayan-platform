@@ -8,6 +8,9 @@
     },
     "@typescript-eslint/require-await": {
       "count": 10
+    },
+    "max-len": {
+      "count": 6
     }
   },
   "src/diagnostics.ts": {
@@ -27,11 +30,17 @@
     },
     "complexity": {
       "count": 2
+    },
+    "max-len": {
+      "count": 6
     }
   },
   "src/providers/graph.ts": {
     "@typescript-eslint/require-await": {
       "count": 2
+    },
+    "max-len": {
+      "count": 3
     }
   },
   "src/providers/kapso-calls.ts": {
@@ -43,6 +52,9 @@
     },
     "@typescript-eslint/require-await": {
       "count": 1
+    },
+    "max-len": {
+      "count": 3
     }
   },
   "src/providers/kapso.ts": {
@@ -51,11 +63,17 @@
     },
     "@typescript-eslint/require-await": {
       "count": 2
+    },
+    "max-len": {
+      "count": 7
     }
   },
   "src/providers/meta.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "max-len": {
+      "count": 4
     }
   },
   "src/send.ts": {
@@ -67,15 +85,34 @@
     },
     "@typescript-eslint/no-base-to-string": {
       "count": 2
+    },
+    "max-len": {
+      "count": 7
     }
   },
   "src/state.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/stub.auth.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/stub.calls.test.ts": {
     "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/stub.crm.test.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -85,30 +122,68 @@
     },
     "@typescript-eslint/dot-notation": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/stub.kapso.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/stub.media.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/stub.templates.lines.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
       "count": 1
     }
   },
   "src/stub.templates.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "max-len": {
+      "count": 3
     }
   },
   "src/stub.templates.waba.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/stub.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/stub.uploads.test.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/stub.webhook.lines.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/stub.webhook.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
       "count": 1
     }
   },
@@ -118,10 +193,16 @@
     },
     "@typescript-eslint/no-base-to-string": {
       "count": 9
+    },
+    "max-len": {
+      "count": 5
     }
   },
   "src/test-server.ts": {
     "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "max-len": {
       "count": 1
     }
   },
@@ -139,6 +220,9 @@
   "src/webhook.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "max-len": {
+      "count": 1
     }
   }
 }

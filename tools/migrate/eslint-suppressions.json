@@ -1,4 +1,9 @@
 {
+  "src/cache.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/cli.args.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 2
@@ -10,10 +15,21 @@
     },
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "src/db/config-seed.test.ts": {
     "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/db/sql.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -23,6 +39,14 @@
     },
     "@typescript-eslint/no-empty-function": {
       "count": 1
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/db/unqueue-imported.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/delta/only.test.ts": {
@@ -46,11 +70,24 @@
   "src/delta/scope.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/delta/staging-delta.test.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    }
+  },
+  "src/entities/contract.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/keys.ts": {
+    "max-len": {
+      "count": 3
     }
   },
   "src/map/applicants/applicants.ts": {
@@ -102,10 +139,18 @@
     },
     "@typescript-eslint/no-base-to-string": {
       "count": 2
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/map/messages/messages.test.ts": {
     "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/messages/messages.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -138,6 +183,11 @@
       "count": 2
     },
     "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/collect.merge.test.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -177,11 +227,19 @@
     },
     "complexity": {
       "count": 1
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "src/map/people/status/bookings.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    }
+  },
+  "src/map/people/status/downgrade.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/map/people/status/facts.ts": {
@@ -202,6 +260,9 @@
   "src/map/people/students.status.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
+    },
+    "max-len": {
+      "count": 2
     }
   },
   "src/map/people/students.test.ts": {
@@ -259,6 +320,9 @@
   "src/map/reports/parse.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 8
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "src/map/reports/parse.who.ts": {
@@ -287,6 +351,9 @@
   "src/map/schedule/booking-slot.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/map/schedule/bookings.from.test.ts": {
@@ -307,6 +374,9 @@
   "src/map/schedule/heart.rules.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "src/map/schedule/one-offs.test.ts": {
@@ -360,6 +430,9 @@
       "count": 5
     },
     "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "max-len": {
       "count": 1
     }
   },
@@ -433,10 +506,34 @@
     },
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/report/report.ts": {
+    "max-len": {
+      "count": 1
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "src/report/review.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/crm.schema.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/crm.test.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -445,6 +542,9 @@
       "count": 4
     },
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "max-len": {
       "count": 1
     }
   },
@@ -456,6 +556,24 @@
   "src/sources/extract-crm.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/headers/headers.hub.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/headers/headers.ops.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/headers/headers.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/sources/rows.ts": {
@@ -464,11 +582,19 @@
     },
     "@typescript-eslint/no-misused-spread": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/sources/sheets/cells.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
+    }
+  },
+  "src/sources/sheets/issues.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/sources/sheets/siblings.ts": {
@@ -479,6 +605,16 @@
   "src/sources/teachers.dir.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    }
+  },
+  "src/sources/values.schedule.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/values.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/sources/zip.ts": {
@@ -495,16 +631,27 @@
     },
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
+    },
+    "max-len": {
+      "count": 4
     }
   },
   "src/types.ts": {
     "@typescript-eslint/consistent-indexed-object-style": {
       "count": 1
+    },
+    "max-len": {
+      "count": 5
     }
   },
   "src/validate.sources.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    }
+  },
+  "src/validate.ts": {
+    "max-len": {
+      "count": 1
     }
   }
 }

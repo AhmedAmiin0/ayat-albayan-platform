@@ -88,3 +88,13 @@ test('classifyBaseline: only baseline files, edited in place', () => {
   assert.equal(classifyBaseline({ status: 'M', from: 'apps/web/package.json', to: 'apps/web/package.json' }, read, ctx), null);
   assert.equal(classifyBaseline({ status: 'M', from: 'refactor/guards/jscpd.json', to: 'refactor/guards/jscpd.json' }, read, ctx), null);
 });
+
+test('classifyBaseline: the queries list follows moved paths and may only shrink', () => {
+  const [from, to] = RENAMES[1];
+  const file = 'refactor/guards/queries.json';
+  const at = (head) => (side) => JSON.stringify(side === 'base' ? [from, 'apps/web/src/a.queries.ts'] : head);
+  const kind = (head) => classifyBaseline({ status: 'M', from: file, to: file }, at(head), { renames: RENAMES }).kind;
+  assert.equal(kind([to, 'apps/web/src/a.queries.ts']), 'paths');
+  assert.equal(kind([to]), 'paths');
+  assert.equal(kind([to, 'apps/web/src/b.queries.ts']), 'bad');
+});

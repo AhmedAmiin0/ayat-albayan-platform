@@ -9,6 +9,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "pnpm lint:ox && turbo lint",
+    "lint:prune": "turbo lint --force --continue --concurrency=3 -- --prune-suppressions",
     "lint:ox": "oxlint --deny-warnings --report-unused-disable-directives-severity=error --ignore-pattern=packages/db/src/types.ts apps packages tools/google-stub tools/migrate tools/scripts tools/wa-stub e2e docs/design/brand/tools",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
@@ -24,7 +25,8 @@
     "test:all": "turbo lint typecheck test e2e --force",
     "guard:dup": "jscpd && node tools/scripts/ci-checks/jscpd-gate.mjs",
     "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs",
-    "guard:lint": "node tools/scripts/ci-checks/lint/lint-gate.mjs"
+    "guard:lint": "node tools/scripts/ci-checks/lint/lint-gate.mjs",
+    "guard:queries": "node tools/scripts/ci-checks/lint/queries-gate.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {
