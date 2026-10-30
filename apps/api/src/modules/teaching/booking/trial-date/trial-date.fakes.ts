@@ -64,7 +64,10 @@ export function fakeTrialDates(o: TrialSetup = {}) {
     }),
   };
   const alert = fakeTeacherAlert();
-  const events = { changed: vi.fn(async () => undefined) };
+  const events = {
+    changed: vi.fn(async () => undefined),
+    scheduleChanged: vi.fn(async () => undefined),
+  };
   const policy = fakePolicy({ settings: ruleSettingsOf({}) });
   const service = new TrialDates(
     queries as unknown as TrialDateQueries,

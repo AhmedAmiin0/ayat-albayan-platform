@@ -1,7 +1,7 @@
 import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { LessonEvents } from '../../../../common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '../../../../common/events/lesson-events';
 import { gateConfirmations } from '../../../../common/rules/confirmations';
 import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
 import { domainError } from '../booking.errors';
@@ -96,10 +96,18 @@ export class TrialDates {
   private async followUps(done: { req: BookingRequest; result: TrialDateResult; old: MovedTrial | null; actorId: string }): Promise<void> {
     const { req, result, old, actorId } = done;
     if (old) await this.deps.events.changed([old.id, result.lesson_id]);
+    // The move's own notice (owner 2026-10-30): the teacher and the family hear the new time.
+    if (old) await this.deps.events.scheduleChanged(movedTrial(old, result, actorId));
     // Always the new lesson's alert (dedup by its id): the old lesson's queued one goes stale, and a
     // same-teacher move has no moved-lesson notice, so this is how that teacher learns the new time.
     await this.deps.after.afterBooking({ req, result: asBooking(result, { req, alerted: [result] }), actorId });
   }
+}
+
+/** A trial moved to its new date: lesson_rescheduled from the old trial's start. */
+function movedTrial(old: MovedTrial, r: TrialDateResult, actorId: string): ScheduleChange {
+  const fromStartsAt = old.starts_at;
+  return { kind: 'lesson_rescheduled', lessonId: r.lesson_id, fromStartsAt, actorId };
 }
 
 /** The picked lesson in the BookingResult shape the booking follow-ups read (lessons: who is alerted). */

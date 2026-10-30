@@ -1,6 +1,7 @@
 import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { ScheduleChange } from '@/common/events/lesson-events';
 import type { TimeEditChange } from '../../scheduling/change-set';
 import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict, errorCode } from '../../../../common/http/errors';
@@ -44,7 +45,8 @@ export class LessonTimeService {
     const messages = plan.notify ? await this.notices(row, plan) : [];
     const overrideReason = clashes.length > 0 ? (body.override?.reason ?? null) : null;
     try {
-      await this.store.retime(changeOf({ row, plan, actor, messages, overrideReason }));
+      const change = changeOf({ row, plan, actor, messages, overrideReason });
+      await this.store.retime(change, movedNotice(row, actor));
     } catch (e) {
       // Two identical requests at once: the loser finds the edit it asked for already in place.
       if (errorCode(e) === 'stale_time' && (await this.alreadyHolds(lessonId, body))) return NOTHING;
@@ -98,6 +100,12 @@ function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
   }
   const zones = [row.teacher?.tz ?? 'UTC', ...row.lesson_students.map((s) => s.student?.tz ?? 'UTC')];
   return { mode, now: new Date(), current, request, zones };
+}
+
+/** The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody). */
+function movedNotice(row: LessonRow, actor: AuthUser): ScheduleChange {
+  const fromStartsAt = row.starts_at;
+  return { kind: 'lesson_rescheduled', lessonId: row.id, fromStartsAt, actorId: actor.id };
 }
 
 type ChangeInput = {

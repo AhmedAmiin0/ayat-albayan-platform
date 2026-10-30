@@ -3171,6 +3171,10 @@
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
       "teacher_new_student": "Teacher: new student alert",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed",
       "trial_reschedule": "Reschedule the trial lesson",
       "free_trial_invite": "Free trial lesson invitation",
       "welcome_greeting": "Welcome message"
@@ -3545,6 +3549,22 @@
     "commission_earned": {
       "title": "New commission",
       "body": "{amount} — {code} {student}"
+    },
+    "lesson_rescheduled": {
+      "title": "Lesson time changed",
+      "body": "{student}: from {from} to {when}"
+    },
+    "lesson_cancelled": {
+      "title": "Lesson cancelled",
+      "body": "{student}’s lesson on {when} was cancelled"
+    },
+    "course_paused": {
+      "title": "Lessons paused",
+      "body": "{student}’s lessons are paused from {when}"
+    },
+    "course_resumed": {
+      "title": "Lessons resumed",
+      "body": "{student}’s lessons resume; first lesson {when}"
     }
   },
   "bell": {
@@ -3769,7 +3789,11 @@
       "meeting_invite": "Meeting invitation",
       "google_sync_alert": "Google sync alert",
       "channel_message": "Student channel message",
-      "commission_earned": "New commission"
+      "commission_earned": "New commission",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -6000,6 +6024,22 @@
       "commission_earned": {
         "name": "New assistant commission",
         "trigger": "When a student the assistant brought pays a package in full"
+      },
+      "lesson_rescheduled": {
+        "name": "Lesson time changed",
+        "trigger": "When an upcoming lesson moves to a new time, to the teacher and the guardian"
+      },
+      "lesson_cancelled": {
+        "name": "Lesson cancelled",
+        "trigger": "When the academy team cancels an upcoming lesson, to the teacher and the guardian"
+      },
+      "course_paused": {
+        "name": "Lessons paused",
+        "trigger": "When a student’s course is paused: one message to the teacher and the guardian"
+      },
+      "course_resumed": {
+        "name": "Lessons resumed",
+        "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
       }
     }
   },
