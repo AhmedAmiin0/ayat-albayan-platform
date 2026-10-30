@@ -1,6 +1,6 @@
 import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { usePermissions } from '@/features/people/auth';
 import { useInboxMode } from '../../shared/mode';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';
@@ -26,16 +26,13 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const rights = replyRights(can, mode === 'teacher' ? null : mode);
   const reschedule = rights.reschedule && mode === 'admin';
   const { confirm } = rights;
-  const value = useMemo<ReplyActions>(
-    () => ({
-      phone,
-      lessons,
-      rights: { reschedule, confirm },
-      moved: moved.data,
-      reschedule: (messageId, lesson) => setMoving({ messageId, lesson }),
-    }),
-    [phone, lessons, reschedule, confirm, moved.data],
-  );
+  const value: ReplyActions = {
+    phone,
+    lessons,
+    rights: { reschedule, confirm },
+    moved: moved.data,
+    reschedule: (messageId, lesson) => setMoving({ messageId, lesson }),
+  };
   const done = () => {
     if (moving) client.setQueryData<string[]>(movedKey(phone), (ids = []) => [...ids, moving.messageId]);
     void client.invalidateQueries({ queryKey: ['threads', 'detail', phone] });

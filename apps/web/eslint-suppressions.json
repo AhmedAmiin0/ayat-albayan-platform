@@ -1829,9 +1829,6 @@
   "src/features/messaging/inbox/calls/state/use-call-session.ts": {
     "max-len": {
       "count": 6
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {
@@ -1999,11 +1996,6 @@
     }
   },
   "src/features/messaging/inbox/composer/lib/draft-store.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/own-send.ts": {
     "max-len": {
       "count": 2
     }
@@ -2484,9 +2476,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -11305,7 +11294,7 @@
   },
   "vite.config.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   }
 }

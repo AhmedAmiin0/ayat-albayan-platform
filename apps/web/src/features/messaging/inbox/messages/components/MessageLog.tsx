@@ -2,6 +2,7 @@ import type { MessageView, ThreadLesson } from '@ab/shared';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { withDays, type LogItem } from '../lib/day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
@@ -9,7 +10,7 @@ import { CallEntry } from '../../calls/entries/CallEntry';
 import type { CallView } from '@ab/shared';
 import { WithThreadCalls } from '../../calls/entries/use-thread-calls';
 import { useCallsEnabled } from '../../calls/state/call-context';
-import { lastOwnSend } from '../../composer/lib/own-send';
+import { useLastOwnSend } from '../../composer/lib/own-send';
 import { isNearBottom } from '../lib/stick-to-bottom';
 import { ReplyActionsProvider } from '../reply-actions';
 
@@ -68,8 +69,9 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
   const box = useRef<HTMLDivElement>(null);
   const pinned = useRef(true);
   const newest = messages.at(-1)?.id;
+  const mine = useLastOwnSend(phone);
   // Her send recorded before its row arrived, or (a poll first) after: either way the log follows it.
-  const own = !!newest && newest === lastOwnSend(phone);
+  const own = !!newest && newest === mine;
   // The newest id she had seen when she scrolled up; null while pinned at the bottom.
   const [awayAt, setAwayAt] = useState<string | null>(null);
   const [prev, setPrev] = useState({ newest, own });
@@ -90,7 +92,8 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
     pinned.current = true;
     setAwayAt(null);
   };
-  const now = new Date();
+  // A ticking clock, not new Date(): the compiler would keep one render's time.
+  const now = useNow();
   const from = hasMore ? (messages[0]?.created_at ?? null) : null;
   const items: LogItem[] = withDays(messages, now, calls && { list: calls, from });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);

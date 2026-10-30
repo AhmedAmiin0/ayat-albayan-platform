@@ -1,6 +1,6 @@
 import { chatBinding, DISCOUNTS, usedBeforeMax, type PaymentLinkView, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useMemo, useRef, useState, type SubmitEvent } from 'react';
+import { useId, useRef, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -67,7 +67,10 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   const [today] = useState(() => todayIn('Asia/Riyadh'));
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
-  const pricing = useMemo(() => pricingBody(form), [form]);
+  // One object per form (useLinkPay's debounce settles on it): kept in state, not useMemo.
+  const [priced, setPriced] = useState(() => ({ form, pricing: pricingBody(form) }));
+  if (priced.form !== form) setPriced({ form, pricing: pricingBody(form) });
+  const pricing = priced.form === form ? priced.pricing : pricingBody(form);
   const child = students.find((s) => s.id === studentId);
   const stripe = useStripeFeature();
   const canOnline = stripe && child !== undefined && child.mine !== false;

@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { type ReactNode, useCallback, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast } from '@/components/ui/overlay/toast';
 import { errorCode } from '@/features/teaching/schedule/api';
@@ -29,7 +29,7 @@ function downloadError(e: unknown): string {
 /** «نسخ» and «تنزيل» of the bubble menu and the file's own button (owner 2026-10-26). */
 export function useBubbleTools(): BubbleTools {
   const [said, say] = useState<Said | null>(null);
-  const done = useCallback(() => say(null), []);
+  const done = () => say(null);
   const copy = (m: MessageView) => {
     void copyText(m.body ?? '').then((ok) =>
       say(ok ? { text: t.inbox.copy.done, tone: 'info' } : { text: t.inbox.copy.failed, tone: 'error' }),

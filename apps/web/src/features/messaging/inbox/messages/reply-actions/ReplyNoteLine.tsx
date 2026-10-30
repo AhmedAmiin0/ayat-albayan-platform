@@ -2,6 +2,7 @@ import { replyLesson, replyNote, type MessageView, type ReplyNote } from '@ab/sh
 import { Button } from '@/components/ui/form/button';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';
 
@@ -32,7 +33,7 @@ function ActionButton({ message: m, note }: { message: MessageView; note: ReplyN
 export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
   const clock = useClock();
-  const now = new Date();
+  const now = useNow();
   const lesson = replyLesson(m, { lessons: actions.lessons, now });
   const note = replyNote(m, { lesson, rights: actions.rights, now, moved: actions.moved.includes(m.id), clock });
   if (!note) return null;

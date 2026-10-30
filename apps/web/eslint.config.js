@@ -1,7 +1,6 @@
 import { boundaries, forbiddenImports, reactConfig, reactRestrictions } from '@ab/config/eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
-const INBOX = 'src/features/messaging/inbox';
 // docs/27 §1 rule 6: another feature only through its index.ts (existing deep imports: eslint-suppressions.json).
 export default reactConfig(
   import.meta.dirname,
@@ -15,8 +14,6 @@ export default reactConfig(
   // React 19 + the React Compiler (vite.config.ts): no manual memo, effects in hooks. The React 19
   // rules (forwardRef, useContext, .Provider) turn on once docs/32 x2–x5 remove the old uses.
   ...reactRestrictions({ files: ['src/**/*.{ts,tsx}'], effects: ['src/**/*.tsx'], compiler: true, react19: false }),
-  // The inbox is not compiled yet (vite.config.ts NOT_COMPILED): manual memo stays allowed there.
-  ...reactRestrictions({ files: [`${INBOX}/**/*.{ts,tsx}`], effects: [`${INBOX}/**/*.tsx`], compiler: false, react19: false }),
   // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch / apiSend
   // (existing ones: eslint-suppressions.json).
   forbiddenImports({

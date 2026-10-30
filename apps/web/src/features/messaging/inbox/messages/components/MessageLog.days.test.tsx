@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { fullTime } from '../../format';
@@ -50,5 +50,17 @@ describe('MessageLog day separators (W10)', () => {
     expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at, C24));
     const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(/أكتوبر|Oct/);
     expect(visible.every((el) => el.classList.contains('sr-only'))).toBe(true);
+  });
+
+  it('compiled: the separators follow the clock (useNow): «اليوم» turns «أمس» after midnight, no new message', () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
+    vi.setSystemTime(new Date(2026, 9, 19, 23, 30));
+    render(<MessageLog {...base} messages={[T2]} fill="shell" />);
+    const first = () => screen.getByRole('log').querySelector('ol > li')?.textContent;
+    expect(first()).toBe(t.inbox.dayToday);
+    act(() => {
+      vi.advanceTimersByTime(60 * 60_000);
+    });
+    expect(first()).toBe(t.inbox.dayYesterday);
   });
 });

@@ -1,6 +1,6 @@
 import { WA_CAPTION_MAX } from '@ab/shared';
 import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
@@ -33,7 +33,7 @@ const fileErrorText = (e: unknown): string => sendErrorCodeText(e instanceof Cha
 
 /** An image's thumbnail (an object URL, revoked on unmount) or the PDF's name and size. */
 function Chip({ file }: { file: File }) {
-  const url = useMemo(() => (file.type.startsWith('image/') ? URL.createObjectURL(file) : null), [file]);
+  const url = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
   useEffect(() => () => void (url && URL.revokeObjectURL(url)), [url]);
   if (url) return <img src={url} alt={file.name} className="h-11 w-auto max-w-24 rounded-md border border-rule object-cover" />;
   return (

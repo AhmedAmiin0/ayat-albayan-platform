@@ -1,7 +1,7 @@
 import { CallStore, deriveCall, type CallDerived, type CallSession } from '@ab/client-core';
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { activeCallsQuery, CALLS_KEY } from '../api/calls-api';
 import type { RtcDeps } from '../rtc/media';
 import { peerMaker, webCalls } from './call-platform';
@@ -22,11 +22,11 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   const state = useSyncExternalStore(store.subscribe, store.get);
   const enabled = input.config?.enabled === true && input.config.canCall;
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null }));
-  const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
+  const rows: readonly ActiveCallView[] = active.data?.rows ?? [];
   const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0, enabled });
 
   const iceServers = input.config?.iceServers ?? NO_ICE;
-  const makePeer = useMemo(() => peerMaker(rtc, play), [rtc, play]);
+  const makePeer = peerMaker(rtc, play);
   useEffect(() => store.configure(makePeer, iceServers), [store, makePeer, iceServers]);
   useEffect(() => () => store.dispose(), [store]);
 

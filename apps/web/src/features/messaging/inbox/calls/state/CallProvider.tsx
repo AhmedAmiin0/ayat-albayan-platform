@@ -1,6 +1,6 @@
 import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
@@ -35,8 +35,8 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const client = useQueryClient();
   const config = useQuery(callConfigQuery).data;
   const audio = useRef<HTMLAudioElement>(null);
-  const deps = useMemo(() => (rtc === undefined ? browserRtc() : rtc), [rtc]);
-  const play = useCallback((stream: MediaStream) => playOn(audio.current, stream), []);
+  const deps = rtc === undefined ? browserRtc() : rtc;
+  const play = (stream: MediaStream) => playOn(audio.current, stream);
   const s = useCallSession({ config, rtc: deps, play });
   const [ask, setAsk] = useState<PermissionAsk | null>(null);
   const [sent, setSent] = useState(false);
