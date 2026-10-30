@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { riyadhToday, summaryOf, thisMonthStart } from '../../support/finance/money-extra';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 
 // Expenses (R-RPT-02, issue E4) on /admin/expenses for this month: add (ads, SAR = the reporting
 // currency, so no fx), edit the amount, delete. The rows, the total, the expenses table and the

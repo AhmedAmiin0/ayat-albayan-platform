@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectSignedIn, fillIdentity, openCreateDialog, profileOf, signInAs, stamp, takeIssued } from '../../support/people/users-control';
-import { AR_LOCALE } from '../../support/locale';
+import { AR_LOCALE } from '../../support/core/locale';
 
 // «المستخدمون»: an invite link (credential mode «link») opens /set-password with a recovery
 // session, the new user types a password there and signs in with it. The link is the one the API

@@ -1,8 +1,8 @@
 import { formatAmount } from '@ab/shared';
-import { freshDigits, seedLead } from '../messages';
+import { freshDigits, seedLead } from '../core/messages';
 import { riyadhToday, thisMonthStart } from './money-extra';
 import { seedPackageStudent } from './money';
-import { addDays, riyadh, seedLesson, withSql } from '../schedule';
+import { addDays, riyadh, seedLesson, withSql } from '../core/schedule';
 
 // Seed + helpers for the dashboard and exports specs (A8): leads in three statuses from one source,
 // a paid package (revenue), a second package still unpaid, two lessons with outcomes today, one expense.

@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { BOM, parseCsv, readDownload } from '../../support/finance/exports-csv';
 import { seedPackageStudent } from '../../support/finance/money';
 import { riyadhToday, uniqueName } from '../../support/finance/money-extra';
-import { addDays, resetAbrar, withSql } from '../../support/schedule';
+import { addDays, resetAbrar, withSql } from '../../support/core/schedule';
 
 // CSV exports (R-RPT-03) from the ExportsPanel on /admin: students, lessons, payments, payouts.
 // Each file starts with the U+FEFF BOM, has the ar.json header row, E.164 phones, AB-nnnn codes and

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { assistant } from '../../support/sales/assistant';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 20261028000860: messages broadcast ONE phone-only 'thread_changed' per phone per statement
 // on the private topic 'inbox:staff'; only admin / sales with inbox.read may join it. The e2e stack runs

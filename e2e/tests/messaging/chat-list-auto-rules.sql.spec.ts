@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { guardian, listOf, members, rerunMigration, someone, student, teacher } from '../../support/auto-lists';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Automatic chat lists (migration 20261025000710, docs/22 «القوائم التلقائية»): «مشترك» gains the guardian of
 // every active student (not pending_renewal, R-STU-05), «معلم» every active teacher; backfill + triggers, add only, never

@@ -1,10 +1,10 @@
 import { formatAmount, quote } from '@ab/shared';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
-import { API, bearer } from '../../support/messages';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { API, bearer } from '../../support/core/messages';
 import { subscriptionStatus, tasksFor } from '../../support/finance/money';
 import { guardianPhoneOf, riyadhToday, seedNearEmpty, uniqueName } from '../../support/finance/money-extra';
-import { addDays, resetAbrar, seedFamily, withSql } from '../../support/schedule';
+import { addDays, resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 
 // Subscriptions (R-SUB-01/02): a new package through the calculator dialog (the quote preview is
 // the stored price), pause / resume, and the last lesson of a PAID package → «غير مدفوع» + the

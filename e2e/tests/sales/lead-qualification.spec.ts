@@ -1,9 +1,9 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
-import { withSql } from '../../support/schedule';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { freshDigits } from '../../support/core/messages';
+import { withSql } from '../../support/core/schedule';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
 // Lead qualification in the thread (R-LEAD-03, L1) and the funnel's state machine (R-LEAD-01):

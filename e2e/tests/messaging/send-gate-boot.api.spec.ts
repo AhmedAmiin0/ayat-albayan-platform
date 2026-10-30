@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { bootApiOnce } from '../../support/api-boot';
-import { seedFamily, withSql } from '../../support/schedule';
-import { restoreSettings, snapshotSettings } from '../../support/settings';
-import { stubSent } from '../../support/wa-stub';
+import { seedFamily, withSql } from '../../support/core/schedule';
+import { restoreSettings, snapshotSettings } from '../../support/platform/settings';
+import { stubSent } from '../../support/core/wa-stub';
 
 // 26-P4 (docs/26 §5): on staging-shaped data (both sending switches OFF, a fake family with an old queued
 // message) the API boots twice and runs its sender (a 300 ms tick); the gate stays closed: the queued row is

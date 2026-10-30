@@ -1,9 +1,9 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { seedSentConfirmation } from '../../support/messaging/inbound';
 import { payloadsOf, quickRating, RATING, ratingRows, ratingsSentTo, startedLesson } from '../../support/reporting/lesson-rating';
-import { API, bearer, setSetting } from '../../support/messages';
+import { API, bearer, setSetting } from '../../support/core/messages';
 import { approveTemplates } from '../../support/reporting/teacher-templates';
-import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // «تقييم الحلقة» by WhatsApp buttons (owner 2026-10-05, migration 195): a completed lesson sends
 // lesson_rating; the guardian's tap is an inbound message, so it is stored as the rating and

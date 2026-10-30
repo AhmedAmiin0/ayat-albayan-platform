@@ -1,7 +1,7 @@
 import { REPORT_RUBRICS, type Grade, type Rubric } from '@ab/shared';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
-import { resetAbrar } from '../../support/schedule';
+import { resetAbrar } from '../../support/core/schedule';
 import { fillTexts, pickAttendance, pickGrade, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 
 // «تقرير الحلقة» field → column mapping (docs/13-forms-spec.md form 2). forms-parity checks the

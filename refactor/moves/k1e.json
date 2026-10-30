@@ -1,0 +1,72 @@
+{
+  "id": "k1e",
+  "seq": 205,
+  "moves": [
+    {
+      "from": "packages/shared/src/custom-config/",
+      "to": "packages/shared/src/settings/custom-config/"
+    },
+    {
+      "from": "packages/shared/src/numbers/",
+      "to": "packages/shared/src/messaging/numbers/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/custom-config/index.ts",
+      "packages/shared/src/settings/custom-config/index.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/public-config.test.ts",
+      "packages/shared/src/settings/custom-config/public-config.test.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/public-config.ts",
+      "packages/shared/src/settings/custom-config/public-config.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/public.test.ts",
+      "packages/shared/src/settings/custom-config/public.test.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/public.ts",
+      "packages/shared/src/settings/custom-config/public.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/schema.test.ts",
+      "packages/shared/src/settings/custom-config/schema.test.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/schema.ts",
+      "packages/shared/src/settings/custom-config/schema.ts"
+    ],
+    [
+      "packages/shared/src/custom-config/views.ts",
+      "packages/shared/src/settings/custom-config/views.ts"
+    ],
+    [
+      "packages/shared/src/numbers/index.ts",
+      "packages/shared/src/messaging/numbers/index.ts"
+    ],
+    [
+      "packages/shared/src/numbers/routing.test.ts",
+      "packages/shared/src/messaging/numbers/routing.test.ts"
+    ],
+    [
+      "packages/shared/src/numbers/routing.ts",
+      "packages/shared/src/messaging/numbers/routing.ts"
+    ],
+    [
+      "packages/shared/src/numbers/schemas.test.ts",
+      "packages/shared/src/messaging/numbers/schemas.test.ts"
+    ],
+    [
+      "packages/shared/src/numbers/schemas.ts",
+      "packages/shared/src/messaging/numbers/schemas.ts"
+    ],
+    [
+      "packages/shared/src/numbers/views.ts",
+      "packages/shared/src/messaging/numbers/views.ts"
+    ]
+  ]
+}

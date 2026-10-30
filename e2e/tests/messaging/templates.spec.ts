@@ -1,10 +1,10 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { syncNumber } from '../../support/messaging/template-numbers';
 import {
   restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, type TemplateRow,
 } from '../../support/messaging/template-registry';
-import { stubReset, stubTemplateStatus } from '../../support/wa-stub';
+import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
 // Template registry on «التواصل» › «القوالب» (/admin/settings/communications?tab=templates; R-MSG-01, T2/T3): the health check reads «Meta» (the
 // wa-stub), a paused template needs attention, a missing one and the document-header report_ready

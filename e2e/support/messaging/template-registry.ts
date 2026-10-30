@@ -1,5 +1,5 @@
-import { withSql } from '../schedule';
-import { STUB_URL } from '../wa-stub';
+import { withSql } from '../core/schedule';
+import { STUB_URL } from '../core/wa-stub';
 
 // A6 helpers: put the template registry back after a spec changed it, and read what the wa-stub
 // holds as «Meta's» templates. resetDb keeps message_templates, so a spec that moves a status

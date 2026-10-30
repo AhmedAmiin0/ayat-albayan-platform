@@ -1,5 +1,5 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { addDays, lessonsOf, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { addDays, lessonsOf, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 import { riyadhDay } from '../../support/teaching/schedule-extra';
 
 // A teacher's «اقترح موعدًا آخر» the admin answers «ارفض الاقتراح» (R-SCH-08): the proposal is

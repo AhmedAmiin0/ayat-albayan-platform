@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { quote } from '@ab/shared';
 import type { Locator, Page } from '@playwright/test';
-import { API, bearer } from '../messages';
+import { API, bearer } from '../core/messages';
 import { startedToday } from '../finance/money';
-import { addDays, nextWeekSaturday, riyadh, withSql } from '../schedule';
+import { addDays, nextWeekSaturday, riyadh, withSql } from '../core/schedule';
 
 // Helpers of the student status pipeline spec (owner 2026-10-15, docs/18): students.status, its
 // status_change audit trail, the admin profile chip, and the API calls that move a student along.

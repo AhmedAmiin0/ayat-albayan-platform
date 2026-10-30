@@ -2,7 +2,7 @@
 
 Build notes for docs/23 §3 phase 5 (branch `cloud/numbers-routing`). Owner answer 1 (2026-10-22): any number
 of live numbers; each template and each notification row picks its number; replies follow the number the
-family wrote to. The shared contract is code: `packages/shared/src/numbers/routing.ts` (`routeTemplate`,
+family wrote to. The shared contract is code: `packages/shared/src/messaging/numbers/routing.ts` (`routeTemplate`,
 `routeSession`, `roleOrder`), `packages/shared/src/messaging/replies/reply-number.ts` (`replyNumber`, `mergeWindows`);
 migration `packages/db/supabase/migrations/20261024000633_numbers_routing.sql`.
 

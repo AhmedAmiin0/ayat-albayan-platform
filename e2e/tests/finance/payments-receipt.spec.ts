@@ -1,8 +1,8 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent, subscriptionStatus } from '../../support/finance/money';
 import { RECEIPT_PNG, uniqueName } from '../../support/finance/money-extra';
-import { resetAbrar, withSql } from '../../support/schedule';
+import { resetAbrar, withSql } from '../../support/core/schedule';
 
 // Payments page + receipts (R-PAY-01): «تسجيل دفعة» from /admin/payments with a receipt picked
 // through the file input (an in-memory PNG), the row in the list, «عرض الإيصال» through the

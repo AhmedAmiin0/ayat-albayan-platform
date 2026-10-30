@@ -1,7 +1,7 @@
 import { accountRow, accountUser } from '../../support/account';
-import { seedUser } from '../../support/db';
-import { expect, test } from '../../support/fixtures';
-import { API, bearer } from '../../support/messages';
+import { seedUser } from '../../support/core/db';
+import { expect, test } from '../../support/core/fixtures';
+import { API, bearer } from '../../support/core/messages';
 import { dropLogins, expectSignedIn, signInAs } from '../../support/people/users-control';
 
 // «حسابي» API (R-ACC-02, rule 9): PATCH /me/profile edits only the caller's whitelisted fields.

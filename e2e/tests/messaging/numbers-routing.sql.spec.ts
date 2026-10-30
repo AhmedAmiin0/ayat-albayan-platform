@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { USERS } from '../../support/users';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
+import { USERS } from '../../support/core/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 
 // Migration 20261024000633 (docs/23 §3 phase 5, docs/23c): per-(phone, number) reply windows in
 // v_thread_numbers, per-number template approvals in message_template_numbers. Real database, rolled back.

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 730 (review of #177): PUT /me/push-tokens' takeover rule in one locked statement.
 // A token bound to another profile's live session moves only with that binding's device key.

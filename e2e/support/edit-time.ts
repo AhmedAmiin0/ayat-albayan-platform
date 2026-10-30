@@ -1,6 +1,6 @@
 import type { TransactionSql } from 'postgres';
-import { withSql } from './schedule';
-import { USERS } from './users';
+import { withSql } from './core/schedule';
+import { USERS } from './core/users';
 
 // Helpers of e2e/tests/edit-time.sql.spec.ts: edit_lesson_time (migration 174, R-SCH-11) against
 // the real database inside a transaction that is rolled back.

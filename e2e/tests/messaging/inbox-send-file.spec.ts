@@ -1,10 +1,10 @@
 import { AVATAR_PNG } from '../../support/account';
 import { makeAssistant } from '../../support/sales/assistant-api';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { backdateInbound, bubble, inboundRows, lastOutbound } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
 // docs/21 D2 (R-MSG-03): inside the 24 h window the assistant attaches an image in her chat, adds a
 // caption and sends it. It is stored in wa-media under her name, leaves «Meta» (tools/wa-stub) as

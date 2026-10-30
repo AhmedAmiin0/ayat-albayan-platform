@@ -1,6 +1,6 @@
-import { seedUser } from '../../support/db';
-import { ar, expect, test } from '../../support/fixtures';
-import { withSql } from '../../support/schedule';
+import { seedUser } from '../../support/core/db';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { withSql } from '../../support/core/schedule';
 import { dropLogins, openUser, profileOf, stamp } from '../../support/people/users-control';
 
 // «المستخدمون»: a user without history is deleted for good; one with history (a student it

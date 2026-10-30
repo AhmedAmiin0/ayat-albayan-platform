@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Migration 20261010000290, the two per-line windows of replyLine() (docs/12 §13.3 rule 2, §13.7):
 // v_threads.last_chat_inbound_at = newest inbound with line 'chat'; last_notifications_inbound_at =

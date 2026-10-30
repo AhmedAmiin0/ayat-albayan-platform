@@ -1,0 +1,256 @@
+{
+  "id": "t7a",
+  "seq": 117,
+  "moves": [
+    {
+      "from": "e2e/tests/activity-log.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/config-expand.sql.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/config-parity.api.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/config-seed.sql.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/dashboard.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/forms-parity.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/google-calendar-handover.sql.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/google-sync.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/google-sync.sql.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/integration-config.sql.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/locale.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/login.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/mobile-form-sheets.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/responsive.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/responsive-dashboard.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/responsive-frame.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/settings-academy.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/settings-gate.api.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/settings-switches.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/shell-focus.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/shell-menu.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/translations.spec.ts",
+      "to": "e2e/tests/platform/"
+    },
+    {
+      "from": "e2e/tests/journey-3-payment-renewal.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/support/config-seed.ts",
+      "to": "e2e/support/platform/"
+    },
+    {
+      "from": "e2e/support/google.ts",
+      "to": "e2e/support/platform/"
+    },
+    {
+      "from": "e2e/support/settings.ts",
+      "to": "e2e/support/platform/"
+    },
+    {
+      "from": "e2e/support/db.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/fill.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/filters.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/locale.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/nav.ts",
+      "to": "e2e/support/core/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/config-seed.ts",
+      "e2e/support/platform/config-seed.ts"
+    ],
+    [
+      "e2e/support/db.ts",
+      "e2e/support/core/db.ts"
+    ],
+    [
+      "e2e/support/fill.ts",
+      "e2e/support/core/fill.ts"
+    ],
+    [
+      "e2e/support/filters.ts",
+      "e2e/support/core/filters.ts"
+    ],
+    [
+      "e2e/support/google.ts",
+      "e2e/support/platform/google.ts"
+    ],
+    [
+      "e2e/support/locale.ts",
+      "e2e/support/core/locale.ts"
+    ],
+    [
+      "e2e/support/nav.ts",
+      "e2e/support/core/nav.ts"
+    ],
+    [
+      "e2e/support/settings.ts",
+      "e2e/support/platform/settings.ts"
+    ],
+    [
+      "e2e/tests/activity-log.spec.ts",
+      "e2e/tests/platform/activity-log.spec.ts"
+    ],
+    [
+      "e2e/tests/config-expand.sql.spec.ts",
+      "e2e/tests/platform/config-expand.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/config-parity.api.spec.ts",
+      "e2e/tests/platform/config-parity.api.spec.ts"
+    ],
+    [
+      "e2e/tests/config-seed.sql.spec.ts",
+      "e2e/tests/platform/config-seed.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/dashboard.spec.ts",
+      "e2e/tests/platform/dashboard.spec.ts"
+    ],
+    [
+      "e2e/tests/forms-parity.spec.ts",
+      "e2e/tests/platform/forms-parity.spec.ts"
+    ],
+    [
+      "e2e/tests/google-calendar-handover.sql.spec.ts",
+      "e2e/tests/platform/google-calendar-handover.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/google-sync.spec.ts",
+      "e2e/tests/platform/google-sync.spec.ts"
+    ],
+    [
+      "e2e/tests/google-sync.sql.spec.ts",
+      "e2e/tests/platform/google-sync.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/integration-config.sql.spec.ts",
+      "e2e/tests/platform/integration-config.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-3-payment-renewal.spec.ts",
+      "e2e/tests/finance/journey-3-payment-renewal.spec.ts"
+    ],
+    [
+      "e2e/tests/locale.spec.ts",
+      "e2e/tests/platform/locale.spec.ts"
+    ],
+    [
+      "e2e/tests/login.spec.ts",
+      "e2e/tests/platform/login.spec.ts"
+    ],
+    [
+      "e2e/tests/mobile-form-sheets.spec.ts",
+      "e2e/tests/platform/mobile-form-sheets.spec.ts"
+    ],
+    [
+      "e2e/tests/responsive-dashboard.spec.ts",
+      "e2e/tests/platform/responsive-dashboard.spec.ts"
+    ],
+    [
+      "e2e/tests/responsive-frame.spec.ts",
+      "e2e/tests/platform/responsive-frame.spec.ts"
+    ],
+    [
+      "e2e/tests/responsive.spec.ts",
+      "e2e/tests/platform/responsive.spec.ts"
+    ],
+    [
+      "e2e/tests/settings-academy.spec.ts",
+      "e2e/tests/platform/settings-academy.spec.ts"
+    ],
+    [
+      "e2e/tests/settings-gate.api.spec.ts",
+      "e2e/tests/platform/settings-gate.api.spec.ts"
+    ],
+    [
+      "e2e/tests/settings-switches.spec.ts",
+      "e2e/tests/platform/settings-switches.spec.ts"
+    ],
+    [
+      "e2e/tests/shell-focus.spec.ts",
+      "e2e/tests/platform/shell-focus.spec.ts"
+    ],
+    [
+      "e2e/tests/shell-menu.spec.ts",
+      "e2e/tests/platform/shell-menu.spec.ts"
+    ],
+    [
+      "e2e/tests/translations.spec.ts",
+      "e2e/tests/platform/translations.spec.ts"
+    ]
+  ]
+}

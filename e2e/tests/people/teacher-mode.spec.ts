@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // Teacher mode (R-TCH-03, R-MSG-05, owner 2026-10-02: "login as a teacher and see only my chats,
 // my calendar, my reports"): «أبرار» sees the chat of the family she teaches, never another

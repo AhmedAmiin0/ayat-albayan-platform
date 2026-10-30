@@ -1,5 +1,5 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { withSql } from '../../support/schedule';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { withSql } from '../../support/core/schedule';
 
 // «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05, owner 2026-10-06): the admin sets an assistant's
 // terms (salary + 10 % commission), a student the assistant brought pays their first package in

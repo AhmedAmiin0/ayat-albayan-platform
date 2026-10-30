@@ -1,9 +1,9 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { openFilters, showResults } from '../../support/filters';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { openFilters, showResults } from '../../support/core/filters';
 import { seedPackageStudent } from '../../support/finance/money';
 import { uniqueName } from '../../support/finance/money-extra';
-import { openNav } from '../../support/nav';
-import { resetAbrar, withSql } from '../../support/schedule';
+import { openNav } from '../../support/core/nav';
+import { resetAbrar, withSql } from '../../support/core/schedule';
 
 // «المالية» (owner, 2026-10-05): a part payment shows «مدفوع جزئيًا» and is found by that filter,
 // the rest is owed on «مستحق على الطلاب»; a refund («استرداد») counts against what was paid;

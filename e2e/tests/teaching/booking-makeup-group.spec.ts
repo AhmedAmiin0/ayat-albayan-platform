@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 // A makeup is per student (R-SCH-10, migration 173): in a group lesson both children can get theirs, and the
 // lesson says which one is booked. The device upload and the replace/error states of the invoice field are
 // unit-tested (InvoiceField.replace.test.tsx).

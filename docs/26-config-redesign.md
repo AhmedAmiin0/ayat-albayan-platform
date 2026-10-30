@@ -359,16 +359,16 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `packages/shared/src/settings/domains/*.ts` + `groups.ts`; `SEED_ENTRIES` / `REGISTRY_VERSION` in
   `packages/shared/src/settings/seed/seed-entries.ts` (+ `google-defs.ts`); tests `seed-entries*.test.ts`,
   `sql-defaults.migration.test.ts`, `apps/api/src/common/settings/config-expand.migration.test.ts`,
-  `e2e/tests/config-expand.sql.spec.ts`.
+  `e2e/tests/platform/config-expand.sql.spec.ts`.
 
 - **26-P2 — built (branch `cloud/config-p2`).** See the PR for the full file list. Migration
   `packages/db/supabase/migrations/20261024000631_config_describe.sql` (`config_describe` RPC + the one-time copy of
   ar overrides into `description`; pinned by `packages/shared/src/settings/config-describe.migration.test.ts`).
   Shared: `packages/shared/src/settings/seed/entries.ts` (the `/config/entries` and parity contract),
   `seed-payload.ts` (`seedPayload(bundleText(ar))`, the one payload the API boot, `pnpm migrate:apply`
-  (`tools/migrate/src/db/config-seed.ts`) and e2e (`e2e/support/config-seed.ts`) send). API:
+  (`tools/migrate/src/db/config-seed.ts`) and e2e (`e2e/support/platform/config-seed.ts`) send). API:
   `apps/api/src/common/config-store/` (ConfigStore, ConfigSeeder, parity, entries routes). e2e:
-  `e2e/tests/config-seed.sql.spec.ts` (two boots, null parity in SQL), `e2e/tests/config-parity.api.spec.ts`
+  `e2e/tests/platform/config-seed.sql.spec.ts` (two boots, null parity in SQL), `e2e/tests/platform/config-parity.api.spec.ts`
   (`GET /admin/config/parity` empty on the e2e DB; missing / JSON null / seeded null give the same `GET /settings`,
   `GET /settings/public` and a closed gate, no `messages` row). Web «القيم» description dialog and per-row
   `PATCH /config/entries/:key`; mobile bottom-sheet description editor.

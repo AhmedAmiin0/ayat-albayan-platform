@@ -11,7 +11,7 @@
   "desktop": 19699,
   "mobile": 22813
  },
- "tests/activity-log.spec.ts": {
+ "tests/platform/activity-log.spec.ts": {
   "desktop": 9594,
   "mobile": 12276
  },
@@ -163,15 +163,15 @@
   "desktop": 0,
   "mobile": 0
  },
- "tests/config-expand.sql.spec.ts": {
+ "tests/platform/config-expand.sql.spec.ts": {
   "desktop": 160,
   "mobile": 26
  },
- "tests/config-parity.api.spec.ts": {
+ "tests/platform/config-parity.api.spec.ts": {
   "desktop": 222,
   "mobile": 4
  },
- "tests/config-seed.sql.spec.ts": {
+ "tests/platform/config-seed.sql.spec.ts": {
   "desktop": 158,
   "mobile": 7
  },
@@ -183,7 +183,7 @@
   "desktop": 451,
   "mobile": 20
  },
- "tests/dashboard.spec.ts": {
+ "tests/platform/dashboard.spec.ts": {
   "desktop": 3947,
   "mobile": 4571
  },
@@ -223,19 +223,19 @@
   "desktop": 11452,
   "mobile": 10848
  },
- "tests/forms-parity.spec.ts": {
+ "tests/platform/forms-parity.spec.ts": {
   "desktop": 10023,
   "mobile": 9481
  },
- "tests/google-calendar-handover.sql.spec.ts": {
+ "tests/platform/google-calendar-handover.sql.spec.ts": {
   "desktop": 152,
   "mobile": 0
  },
- "tests/google-sync.spec.ts": {
+ "tests/platform/google-sync.spec.ts": {
   "desktop": 12939,
   "mobile": 0
  },
- "tests/google-sync.sql.spec.ts": {
+ "tests/platform/google-sync.sql.spec.ts": {
   "desktop": 242,
   "mobile": 0
  },
@@ -279,7 +279,7 @@
   "desktop": 4616,
   "mobile": 5678
  },
- "tests/integration-config.sql.spec.ts": {
+ "tests/platform/integration-config.sql.spec.ts": {
   "desktop": 93,
   "mobile": 6
  },
@@ -295,7 +295,7 @@
   "desktop": 5886,
   "mobile": 8323
  },
- "tests/journey-3-payment-renewal.spec.ts": {
+ "tests/finance/journey-3-payment-renewal.spec.ts": {
   "desktop": 6365,
   "mobile": 8587
  },
@@ -339,11 +339,11 @@
   "desktop": 8490,
   "mobile": 115
  },
- "tests/locale.spec.ts": {
+ "tests/platform/locale.spec.ts": {
   "desktop": 13901,
   "mobile": 22740
  },
- "tests/login.spec.ts": {
+ "tests/platform/login.spec.ts": {
   "desktop": 14971,
   "mobile": 23615
  },
@@ -363,7 +363,7 @@
   "desktop": 88,
   "mobile": 7
  },
- "tests/mobile-form-sheets.spec.ts": {
+ "tests/platform/mobile-form-sheets.spec.ts": {
   "desktop": 4904,
   "mobile": 4
  },
@@ -451,15 +451,15 @@
   "desktop": 163,
   "mobile": 1
  },
- "tests/responsive-dashboard.spec.ts": {
+ "tests/platform/responsive-dashboard.spec.ts": {
   "desktop": 26486,
   "mobile": 35
  },
- "tests/responsive-frame.spec.ts": {
+ "tests/platform/responsive-frame.spec.ts": {
   "desktop": 13361,
   "mobile": 0
  },
- "tests/responsive.spec.ts": {
+ "tests/platform/responsive.spec.ts": {
   "desktop": 94550,
   "mobile": 0
  },
@@ -523,23 +523,23 @@
   "desktop": 11419,
   "mobile": 1
  },
- "tests/settings-academy.spec.ts": {
+ "tests/platform/settings-academy.spec.ts": {
   "desktop": 12260,
   "mobile": 16483
  },
- "tests/settings-gate.api.spec.ts": {
+ "tests/platform/settings-gate.api.spec.ts": {
   "desktop": 191,
   "mobile": 7
  },
- "tests/settings-switches.spec.ts": {
+ "tests/platform/settings-switches.spec.ts": {
   "desktop": 8006,
   "mobile": 10898
  },
- "tests/shell-focus.spec.ts": {
+ "tests/platform/shell-focus.spec.ts": {
   "desktop": 6008,
   "mobile": 5
  },
- "tests/shell-menu.spec.ts": {
+ "tests/platform/shell-menu.spec.ts": {
   "desktop": 7486,
   "mobile": 8141
  },
@@ -659,7 +659,7 @@
   "desktop": 124,
   "mobile": 0
  },
- "tests/translations.spec.ts": {
+ "tests/platform/translations.spec.ts": {
   "desktop": 6564,
   "mobile": 6697
  },

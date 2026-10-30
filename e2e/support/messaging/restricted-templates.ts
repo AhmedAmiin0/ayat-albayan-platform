@@ -1,9 +1,9 @@
 import { expect, type Page } from '@playwright/test';
-import { ar } from '../fixtures';
-import { accessToken, API } from '../messages';
+import { ar } from '../core/fixtures';
+import { accessToken, API } from '../core/messages';
 import { approveReschedule, RESCHEDULE } from './reschedule-template';
 import { dropTemplate } from '../sales/sales-portal';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { syncNumber } from './template-numbers';
 
 // The restricted template allow-list (owner 2026-10-12): every role without templates.manage or

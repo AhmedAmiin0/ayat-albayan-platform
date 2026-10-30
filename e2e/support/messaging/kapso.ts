@@ -1,8 +1,8 @@
 import type { LineCheckView, WaProvider } from '@ab/shared';
 import { expect, type Page } from '@playwright/test';
-import { API, bearer } from '../messages';
-import { withSql } from '../schedule';
-import { stub, STUB_URL } from '../wa-stub';
+import { API, bearer } from '../core/messages';
+import { withSql } from '../core/schedule';
+import { stub, STUB_URL } from '../core/wa-stub';
 
 // The kapso driver in e2e (docs/19): the notifications line is switched in the database's
 // integration config (as «التكاملات» would), tools/wa-stub plays Kapso under /kapso, and its

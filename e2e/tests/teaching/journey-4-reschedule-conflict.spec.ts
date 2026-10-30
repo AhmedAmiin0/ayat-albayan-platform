@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import {
   addDays,
   lessonsOf,
@@ -9,7 +9,7 @@ import {
   seedFamily,
   seedLesson,
   setAvailability,
-} from '../../support/schedule';
+} from '../../support/core/schedule';
 
 // Journey 4 (docs/03 §5): admin reschedules one occurrence → conflict detected → chooses another
 // slot → guardian notified (a queued booking confirmation). R-SCH-07, R-SCH-04, R-SCH-01.

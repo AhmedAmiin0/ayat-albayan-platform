@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 import { seedPackageStudent, type PackageSeed } from '../finance/money';
-import { addDays, withSql } from '../schedule';
+import { addDays, withSql } from '../core/schedule';
 
 // Helpers of the cancel / series / stale / proposal-reject / booking-override / group specs.
 // Riyadh is UTC+3 all year, so wall clocks convert with a fixed offset.

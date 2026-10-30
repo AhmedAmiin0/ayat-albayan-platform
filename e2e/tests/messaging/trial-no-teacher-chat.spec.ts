@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { resetAbrar, seedFamily, withSql } from '../../support/schedule';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // Owner, 2026-10-11: «for the trial session, students and teachers cannot chat together; they will
 // need the sales to manage between them, or the system». «أبرار» teaches a trial student and an

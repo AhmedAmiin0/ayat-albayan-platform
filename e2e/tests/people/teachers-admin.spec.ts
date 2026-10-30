@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { dropTeacher, insertTeacher } from '../../support/people/admin-extra';
-import { ar, expect, test } from '../../support/fixtures';
-import { addDays, nextWeekSaturday, seedFamily, withSql } from '../../support/schedule';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { addDays, nextWeekSaturday, seedFamily, withSql } from '../../support/core/schedule';
 
 // R-TCH-01/02: create a teacher, rates, the admin availability grid, time off, and time off
 // blocking the booking wizard's slots. Not asserted: a students count (TeacherFacts has none).

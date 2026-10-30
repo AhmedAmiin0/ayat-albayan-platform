@@ -1,8 +1,8 @@
 import { REPORT_RUBRICS, type Attendance, type Grade, type ReportFormResponse, type TextKey } from '@ab/shared';
 import { expect, type Locator, type Page } from '@playwright/test';
-import { ar } from '../fixtures';
-import { API, bearer } from '../messages';
-import { withSql } from '../schedule';
+import { ar } from '../core/fixtures';
+import { API, bearer } from '../core/messages';
+import { withSql } from '../core/schedule';
 
 // Shared by the teacher report specs (B1, B4, B5): filling the real form, the API submit the
 // payouts spec uses, and the SQL views of one report. Labels come from ar.json, never typed.

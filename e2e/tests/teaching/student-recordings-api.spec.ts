@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import { seedTeacherRow, seedUser } from '../../support/db';
-import { seedFamily, withSql } from '../../support/schedule';
-import { USERS } from '../../support/users';
+import { seedTeacherRow, seedUser } from '../../support/core/db';
+import { seedFamily, withSql } from '../../support/core/schedule';
+import { USERS } from '../../support/core/users';
 
 // GET /students/:id/recordings against the real API and database: a group lesson's file shows only
 // the asked student's context, and the service decides who may ask (teacher who never taught the

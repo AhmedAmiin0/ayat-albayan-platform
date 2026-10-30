@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../../support/schedule';
+import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../../support/core/schedule';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those
 // slots. R-TCH-02, R-SCH-08 (teacher self-service), R-SCH-06 (slot grid from real availability).

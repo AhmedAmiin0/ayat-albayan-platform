@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropTeacher, insertTeacher, statusAudits, studentIdsOf, studentRow } from '../../support/people/admin-extra';
-import { seedFamily } from '../../support/schedule';
+import { seedFamily } from '../../support/core/schedule';
 
 // R-STU-04/05: the profile form edits every field (labels from ar.students, so forms parity does
 // not break it), a status change is audited, and the effective link falls back to the teacher's.

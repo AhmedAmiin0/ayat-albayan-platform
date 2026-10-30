@@ -1,7 +1,7 @@
-import { expect } from '../fixtures';
-import { API, setSetting } from '../messages';
-import { seedFamily, withSql } from '../schedule';
-import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../wa-stub';
+import { expect } from '../core/fixtures';
+import { API, setSetting } from '../core/messages';
+import { seedFamily, withSql } from '../core/schedule';
+import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../core/wa-stub';
 
 // Family accounts (docs/30): the account_code template on the stub, the switch, a fresh family, and the
 // code as the stub captured it. Example data only; «Meta» is tools/wa-stub.

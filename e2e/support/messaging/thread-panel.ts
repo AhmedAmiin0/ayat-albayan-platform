@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 
 // The open thread's side panel (owner, 2026-10-05: no form bars on the phone): beside / under the
 // chat from 900px, behind a thread-header button that opens a full-screen sheet below 900px (the

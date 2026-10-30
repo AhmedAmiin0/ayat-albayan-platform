@@ -1,6 +1,6 @@
-import { expect } from '../fixtures';
-import { addDays, nextWeekSaturday, riyadh, seedFamily, seedLesson, withSql } from '../schedule';
-import { STUB_URL, stubSent, stubTemplateStatus } from '../wa-stub';
+import { expect } from '../core/fixtures';
+import { addDays, nextWeekSaturday, riyadh, seedFamily, seedLesson, withSql } from '../core/schedule';
+import { STUB_URL, stubSent, stubTemplateStatus } from '../core/wa-stub';
 
 // Seed and capture helpers for the «رأيك يهمّنا» journey (tests/feedback.spec.ts).
 

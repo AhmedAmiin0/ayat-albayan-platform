@@ -277,12 +277,12 @@
       "count": 2
     }
   },
-  "src/custom-config/index.ts": {
+  "src/settings/custom-config/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
       "count": 1
     }
   },
-  "src/custom-config/public-config.ts": {
+  "src/settings/custom-config/public-config.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -290,7 +290,7 @@
       "count": 2
     }
   },
-  "src/custom-config/public.ts": {
+  "src/settings/custom-config/public.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -298,7 +298,7 @@
       "count": 2
     }
   },
-  "src/custom-config/schema.ts": {
+  "src/settings/custom-config/schema.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1137,12 +1137,12 @@
       "count": 2
     }
   },
-  "src/numbers/routing.test.ts": {
+  "src/messaging/numbers/routing.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/numbers/routing.ts": {
+  "src/messaging/numbers/routing.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1150,7 +1150,7 @@
       "count": 10
     }
   },
-  "src/numbers/schemas.ts": {
+  "src/messaging/numbers/schemas.ts": {
     "ab/module-boundaries": {
       "count": 3
     },
@@ -1158,7 +1158,7 @@
       "count": 3
     }
   },
-  "src/numbers/views.ts": {
+  "src/messaging/numbers/views.ts": {
     "ab/module-boundaries": {
       "count": 4
     },

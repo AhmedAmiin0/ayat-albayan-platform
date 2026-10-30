@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
-import { rolledBack } from '../../support/rls';
-import { resetAbrar } from '../../support/schedule';
+import { rolledBack } from '../../support/core/rls';
+import { resetAbrar } from '../../support/core/schedule';
 
 // record_teacher_payment and settle_payout_in_ledger (migration 178) against the real database.
 

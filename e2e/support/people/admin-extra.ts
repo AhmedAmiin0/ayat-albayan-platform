@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // Seed/read helpers for the admin-web profile, teachers and search specs (B6, B7, A14).
 

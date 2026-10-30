@@ -1,7 +1,7 @@
 import { DISCOUNTS } from '@ab/shared';
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
-import { fillStable } from '../fill';
+import { ar, expect } from '../core/fixtures';
+import { fillStable } from '../core/fill';
 
 // The assistant's buttons in a sales chat, driven like a person would (journey 7, owner 2026-10-15):
 // «تسجيل طالب جديد» (the booking wizard in sales mode: a free trial only), «اشتراك جديد» / «جدّد الاشتراك»

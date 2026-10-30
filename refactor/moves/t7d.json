@@ -1,0 +1,40 @@
+{
+  "id": "t7d",
+  "seq": 120,
+  "moves": [
+    {
+      "from": "e2e/support/messages.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/rls.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/users.ts",
+      "to": "e2e/support/core/"
+    },
+    {
+      "from": "e2e/support/wa-stub.ts",
+      "to": "e2e/support/core/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/messages.ts",
+      "e2e/support/core/messages.ts"
+    ],
+    [
+      "e2e/support/rls.ts",
+      "e2e/support/core/rls.ts"
+    ],
+    [
+      "e2e/support/users.ts",
+      "e2e/support/core/users.ts"
+    ],
+    [
+      "e2e/support/wa-stub.ts",
+      "e2e/support/core/wa-stub.ts"
+    ]
+  ]
+}

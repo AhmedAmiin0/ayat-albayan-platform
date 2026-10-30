@@ -1,7 +1,7 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { bubble, inboundRows, openThread, pushesForPhone, stubInboundMedia } from '../../support/messaging/inbox';
-import { freshDigits, seedLead } from '../../support/messages';
-import { stubReset } from '../../support/wa-stub';
+import { freshDigits, seedLead } from '../../support/core/messages';
+import { stubReset } from '../../support/core/wa-stub';
 
 // Inbound media (R-MSG-05, R-MSG-06): a photo and a file from a lead show as bubbles named by
 // kind with their caption (the file itself is fetched from Meta only when «عرض …» is clicked, W6), and

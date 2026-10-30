@@ -1,12 +1,12 @@
 import { makeAssistant, message, tokenOf } from '../../support/sales/assistant-api';
 import { fromChatMore } from '../../support/sales/assistant-journey';
-import { ar, expect, test } from '../../support/fixtures';
-import { freshDigits } from '../../support/messages';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { freshDigits } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { trialFamily } from '../../support/sales/sales-money';
 import { resetSales } from '../../support/sales/sales-options';
-import { withSql } from '../../support/schedule';
-import { USERS } from '../../support/users';
+import { withSql } from '../../support/core/schedule';
+import { USERS } from '../../support/core/users';
 
 // Owner 2026-10-12 (docs/16 rows 23, 24, 26), in the browser: in her family's chat the salesperson checks
 // the number («تحقق من التسجيل») and sees the start-date field of «اشتراك جديد»; the admin unticks

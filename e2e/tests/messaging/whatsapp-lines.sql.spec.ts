@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Migration 20261010000290 (two WhatsApp lines, docs/12 §13): messages.line and the columns
 // appended to v_threads; here last_inbound_line = the line of the newest inbound row (null when that

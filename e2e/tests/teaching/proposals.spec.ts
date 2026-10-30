@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import {
   addDays,
   lessonsOf,
@@ -9,7 +9,7 @@ import {
   seedLesson,
   setAvailability,
   withSql,
-} from '../../support/schedule';
+} from '../../support/core/schedule';
 
 // Teacher «اقترح موعدًا آخر» → admin «وافق على الموعد» (R-SCH-08, lesson-proposals.controller.ts):
 // «أبرار» moves her own lesson 90 minutes later on her own clock (Cairo), the admin approves it

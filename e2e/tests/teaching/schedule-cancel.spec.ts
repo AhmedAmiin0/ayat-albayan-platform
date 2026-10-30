@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf } from '../../support/finance/money';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson } from '../../support/core/schedule';
 import {
   cancelStateOf,
   openLessonDrawer,

@@ -1,7 +1,7 @@
 import type { WaLine } from '@ab/shared';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import {
   CHAT_PN,
   messagesWithLine,
@@ -13,7 +13,7 @@ import {
   stubInboundOn,
   stubReadsByLine,
 } from '../../support/messaging/wa-lines';
-import { setMessaging, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubReset } from '../../support/core/wa-stub';
 
 // Two WhatsApp lines, outbound side (docs/12 §13.3, R-MSG-01, R-MSG-02, R-LEAD-02): a session reply
 // prefers the chat line whenever its 24 h window is open, else the notifications line, and its row

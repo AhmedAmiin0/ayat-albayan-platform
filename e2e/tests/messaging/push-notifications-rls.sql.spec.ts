@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 185: a signed-in user reads only the push_notifications rows addressed to them.
 

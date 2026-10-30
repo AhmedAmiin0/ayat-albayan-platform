@@ -1,7 +1,7 @@
 import { REPORT_RUBRICS, type ReportFormResponse } from '@ab/shared';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
-import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 
 // Teacher payouts (R-PAY-02, R-TCH-04, issue E3) on /admin/payouts. Last month, because approving
 // waits until the month is over in the teacher's zone. A lesson counts once its report is in (the

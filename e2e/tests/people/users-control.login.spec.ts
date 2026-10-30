@@ -1,5 +1,5 @@
-import { seedUser } from '../../support/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { seedUser } from '../../support/core/db';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, detailDialog, expectRefused, expectSignedIn, openUser, signInAs, stamp, takeIssued } from '../../support/people/users-control';
 
 // «المستخدمون»: disabling a login refuses its sign-in, enabling brings it back, and a password

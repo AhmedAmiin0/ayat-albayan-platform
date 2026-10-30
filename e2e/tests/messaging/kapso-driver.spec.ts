@@ -1,12 +1,12 @@
 import type { Page } from '@playwright/test';
 import { AVATAR_PNG } from '../../support/account';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { kapsoInbound, stubRequests, switchNotifications } from '../../support/messaging/kapso';
 import { clearQueue } from '../../support/messaging/message-queue';
-import { freshDigits, messagesFor } from '../../support/messages';
+import { freshDigits, messagesFor } from '../../support/core/messages';
 import { NOTIF_PN, sentVia } from '../../support/messaging/wa-lines';
-import { setMessaging, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubReset } from '../../support/core/wa-stub';
 
 // The kapso driver end to end (docs/19): with the notifications line switched to kapso, an inbound
 // arrives through POST /webhooks/kapso (Kapso-signed raw Meta payload) and shows in the inbox, and

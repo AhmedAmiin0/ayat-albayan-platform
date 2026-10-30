@@ -2,10 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import type { RegistrationCheckView, SalesMoneySubscriptionView } from '@ab/shared';
 import { call, makeAssistant, tokenOf, type Assistant } from '../../support/sales/assistant-api';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { trialFamily } from '../../support/sales/sales-money';
 import { resetSales, revokeFromSales, riyadhDay } from '../../support/sales/sales-options';
-import { USERS } from '../../support/users';
+import { USERS } from '../../support/core/users';
 
 // Owner 2026-10-12 (docs/16 rows 23, 24, 26), through the REAL API and database: a salesperson checks a
 // registered number and a new one («التحقق من التسجيل»), sets the start date («تحديد تاريخ بداية الاشتراك»,

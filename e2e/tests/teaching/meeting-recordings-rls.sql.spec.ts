@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 212: an internal meeting's recordings: the admin reads all, the creator their own
 // meeting's, nobody else; a row belongs to exactly one lesson or one meeting.

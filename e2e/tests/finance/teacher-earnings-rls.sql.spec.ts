@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { earningId, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
-import { resetAbrar } from '../../support/schedule';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
+import { resetAbrar } from '../../support/core/schedule';
 
 // RLS of migration 176 (rule 9): admins all; a teacher only their own rows; nobody else.
 

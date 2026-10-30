@@ -1,9 +1,9 @@
-import { seedUser } from '../../support/db';
-import { ar, expect, test } from '../../support/fixtures';
-import { apiStatus } from '../../support/messages';
-import { openNav } from '../../support/nav';
-import { withSql } from '../../support/schedule';
-import { AR_LOCALE } from '../../support/locale';
+import { seedUser } from '../../support/core/db';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { apiStatus } from '../../support/core/messages';
+import { openNav } from '../../support/core/nav';
+import { withSql } from '../../support/core/schedule';
+import { AR_LOCALE } from '../../support/core/locale';
 
 // «الأدوار والصلاحيات» (owner, 2026-10-05): the admin creates «محاسب» with payments.read only and
 // gives it to a staff user. That user lands in the admin app on «المدفوعات», sees no «الطلاب» in

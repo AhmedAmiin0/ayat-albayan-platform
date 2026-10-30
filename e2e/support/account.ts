@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import { resolve } from 'node:path';
-import { ar, expect } from './fixtures';
-import { withSql } from './schedule';
+import { ar, expect } from './core/fixtures';
+import { withSql } from './core/schedule';
 import { stamp } from './people/users-control';
 
 // Helpers of the «حسابي» specs (account*.spec.ts, R-ACC-01..05). Every run gets its own stamp,

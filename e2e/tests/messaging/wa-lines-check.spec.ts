@@ -1,6 +1,6 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { CHAT_PN, SINGLE_LINE, stubLineHealth } from '../../support/messaging/wa-lines';
-import { stubReset } from '../../support/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
 
 // «افحص الخطوط» end to end (docs/12 §13.9–13.10, R-MSG-05, review C S2): LinesController →
 // LinesCheck → the stub's Graph diagnostics → the Lines card on «التواصل» › «الأرقام». Both lines run in

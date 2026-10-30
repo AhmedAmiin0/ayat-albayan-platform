@@ -1,6 +1,6 @@
 import { accountUser, currentPassword, openAccount, region, save } from '../../support/account';
-import { seedUser } from '../../support/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { seedUser } from '../../support/core/db';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectRefused, expectSignedIn, profileOf, signInAs } from '../../support/people/users-control';
 
 // «حسابي» (R-ACC-03/04): a dedicated assistant changes their email, then their password (both

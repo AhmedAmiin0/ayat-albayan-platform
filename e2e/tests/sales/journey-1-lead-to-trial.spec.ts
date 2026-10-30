@@ -1,7 +1,7 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { fillStable } from '../../support/fill';
-import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/schedule';
-import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../../support/wa-stub';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { fillStable } from '../../support/core/fill';
+import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
+import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
 // Journey 1 (docs/03 §5): a lead writes on WhatsApp → appears in the inbox → the admin replies →

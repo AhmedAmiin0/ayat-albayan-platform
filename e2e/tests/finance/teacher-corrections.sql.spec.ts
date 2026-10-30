@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
 import { approvedPayout } from '../../support/finance/pay-rule';
-import { rolledBack } from '../../support/rls';
-import { resetAbrar } from '../../support/schedule';
+import { rolledBack } from '../../support/core/rls';
+import { resetAbrar } from '../../support/core/schedule';
 
 // Correcting money out to a teacher (migration 20261005000201), each case rolled back.
 

@@ -1,9 +1,9 @@
-import { ar, expect, test } from '../../support/fixtures';
-import { accessToken } from '../../support/messages';
+import { ar, expect, test } from '../../support/core/fixtures';
+import { accessToken } from '../../support/core/messages';
 import { dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs } from '../../support/messaging/restricted-templates';
-import { resetAbrar, seedFamily, withSql } from '../../support/schedule';
+import { resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 import { CHAT_PN, sentVia, SINGLE_LINE } from '../../support/messaging/wa-lines';
-import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // Teacher mode and the restricted allow-list (owner 2026-10-12): «أبرار» lists and sends only
 // the three defaults (free_trial_invite, welcome_greeting, trial_reschedule once approved), to her own families; the lesson reminders are no longer

@@ -1,6 +1,6 @@
 import type { WaLine } from '@ab/shared';
-import { withSql } from '../schedule';
-import { stub, stubSent, type StubSent } from '../wa-stub';
+import { withSql } from '../core/schedule';
+import { stub, stubSent, type StubSent } from '../core/wa-stub';
 
 // Two WhatsApp lines in e2e (docs/12 §13.12): the stub runs both numbers (playwright.config.ts
 // E2E_WA / E2E_WA_CHAT), records which phone-number id every send and read used, and signs each
