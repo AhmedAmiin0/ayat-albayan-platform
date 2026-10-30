@@ -2135,9 +2135,6 @@
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "complexity": {
       "count": 1
     },
@@ -2176,14 +2173,8 @@
     }
   },
   "src/features/messaging/inbox/calls/state/use-call-session.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 6
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {
@@ -2281,9 +2272,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 7
@@ -2475,11 +2463,6 @@
     }
   },
   "src/features/messaging/inbox/composer/lib/draft-store.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/own-send.ts": {
     "max-len": {
       "count": 2
     }
@@ -3039,17 +3022,11 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.jump.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -3074,9 +3051,6 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.tsx": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "complexity": {
       "count": 1
     },
@@ -3230,12 +3204,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/pdf/PdfCard.test.tsx": {
@@ -3279,9 +3247,6 @@
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 6
     }
@@ -3768,9 +3733,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "complexity": {
       "count": 1
@@ -4301,9 +4263,6 @@
     }
   },
   "src/features/messaging/inbox/shared/ChatActionsProvider.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -4472,9 +4431,6 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/CopyPhoneButton.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -14474,7 +14430,7 @@
   },
   "vite.config.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   }
 }

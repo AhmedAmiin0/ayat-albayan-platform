@@ -1,6 +1,6 @@
 import { chatBinding, DISCOUNTS, usedBeforeMax, type PaymentLinkView, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useMemo, useRef, useState, type SubmitEvent } from 'react';
+import { useId, useRef, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -11,11 +11,11 @@ import { pricingLessons } from '@/features/finance/subscriptions';
 import { PricingFields } from '@/features/finance/subscriptions/create/PricingFields';
 import { useStripeFeature } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
-import { createSalesSubscription, refreshAfterSalesWrite } from '../api';
+import { createSalesSubscription, refreshAfterSalesWrite } from '@/features/messaging/inbox/sales-money/api';
 import { ChildPicker } from './ChildPicker';
-import { linkStepErrorText, salesErrorText } from '../errors';
-import { OnlinePayFields } from '../payment-link/OnlinePayFields';
-import { useLinkPay } from '../payment-link/use-link-pay';
+import { linkStepErrorText, salesErrorText } from '@/features/messaging/inbox/sales-money/errors';
+import { OnlinePayFields } from '@/features/messaging/inbox/sales-money/payment-link/OnlinePayFields';
+import { useLinkPay } from '@/features/messaging/inbox/sales-money/payment-link/use-link-pay';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { SalesStartField, type StartValue } from './SalesStartField';
 import { SalesTeacherField, useTeacherPick } from './SalesTeacherField';
@@ -68,7 +68,10 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   const [today] = useState(() => todayIn('Asia/Riyadh'));
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
-  const pricing = useMemo(() => pricingBody(form), [form]);
+  // One object per form (useLinkPay's debounce settles on it): kept in state, not useMemo.
+  const [priced, setPriced] = useState(() => ({ form, pricing: pricingBody(form) }));
+  if (priced.form !== form) setPriced({ form, pricing: pricingBody(form) });
+  const pricing = priced.form === form ? priced.pricing : pricingBody(form);
   const child = students.find((s) => s.id === studentId);
   const stripe = useStripeFeature();
   const canOnline = stripe && child !== undefined && child.mine !== false;
