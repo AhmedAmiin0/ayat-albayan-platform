@@ -17,6 +17,15 @@ test('moduleOf finds the module root, or null for shared folders', () => {
   assert.equal(moduleOf('src/theme.ts', mobile), 'src/theme.ts');
 });
 
+test('moduleOf with grouped folders (client-core, docs/32 d5): group/folder first, else src/<name>', () => {
+  const grouped = 'src/(?:core|messaging|people|teaching|finance)/[^/.]+|src/[^/.]+';
+  assert.equal(moduleOf('src/core/http/client.ts', grouped), 'src/core/http');
+  assert.equal(moduleOf('src/messaging/inbox/a/b.ts', grouped), 'src/messaging/inbox');
+  assert.equal(moduleOf('src/http/client.ts', grouped), 'src/http');
+  assert.equal(moduleOf('src/core/loose.ts', grouped), 'src/core');
+  assert.equal(moduleOf('src/index.ts', grouped), null);
+});
+
 test('isDeep: another module internals are deep; its index, the same module and shared code are not', () => {
   const from = at('src/modules/sales/leads/list/a.ts');
   assert.equal(isDeep('../../sales/sales.service.js', from), true);

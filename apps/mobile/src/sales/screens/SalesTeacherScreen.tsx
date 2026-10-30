@@ -15,11 +15,10 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '../lib/sales-api';
-import { studentDetailsHref } from '../lib/sales-href';
 import { SalesTeacherHeader } from '../components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '../lib/sales-text';
 import { useClockCycle } from '@/core/lib/clock';
-import { useTreeBase } from '@/core/nav/tree-base';
+import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { TeacherOverviewTab } from '../teacher/TeacherOverviewTab';
 

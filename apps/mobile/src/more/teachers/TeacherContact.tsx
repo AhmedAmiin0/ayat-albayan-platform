@@ -1,7 +1,6 @@
-import { formatPhone, teacherName } from '@ab/shared';
+import { clickToChatLink, formatPhone, teacherName } from '@ab/shared';
 import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { whatsappLink } from '@/core/lib/phone';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
@@ -29,7 +28,7 @@ export function TeacherContact({ teacher }: { teacher: Teacher }) {
       <Button
         variant="secondary"
         label={t.students.whatsappTo.replace('{name}', teacherName(teacher, locale))}
-        onPress={() => void Linking.openURL(whatsappLink(phone))}
+        onPress={() => void Linking.openURL(clickToChatLink(phone))}
       />
     </Section>
   );

@@ -44,25 +44,26 @@ function rekey(base, table) {
   return out;
 }
 
-// docs/32 R12: a move writes `@/` for the `../` paths of the files it touches, so the entries
-// of this rule may shrink or go (never grow, never appear); every other rule keeps its count.
-const SHRINKS = 'ab/no-parent-imports';
+// docs/32 R12: a move writes `@/` for the `../` paths of the files it touches, and a move into a
+// shared folder (docs/32 c12a–e: mobile `core/`) ends deep imports, so the entries of these rules
+// may shrink or go (never grow, never appear); every other rule keeps its count.
+const SHRINKS = ['ab/no-parent-imports', 'ab/module-boundaries'];
 const lowered = (was, now) =>
   Number.isInteger(now?.count) && now.count >= 1 && now.count <= was.count;
 
-/** A file's rules with head's lower SHRINKS entry, or without it when head dropped it. */
-function shrunkRules(rules, now) {
-  const was = rules[SHRINKS];
+/** A file's rules with head's lower `rule` entry, or without it when head dropped it. */
+function shrunkRule(rules, rule, now) {
+  const was = rules[rule];
   if (!isRecord(was) || (now !== undefined && !lowered(was, now))) return rules;
-  const rest = Object.entries(rules).filter(([rule]) => rule !== SHRINKS);
-  return Object.fromEntries(now === undefined ? rest : [...rest, [SHRINKS, now]]);
+  const rest = Object.entries(rules).filter(([name]) => name !== rule);
+  return Object.fromEntries(now === undefined ? rest : [...rest, [rule, now]]);
 }
 
 /** `moved` (the re-keyed base) with head's lower or dropped SHRINKS entries taken over. */
 export function shrunk(moved, head) {
   const files = [...moved].map(([key, rules]) => {
-    const now = isRecord(head[key]) ? head[key][SHRINKS] : undefined;
-    return [key, shrunkRules(rules, now)];
+    const now = isRecord(head[key]) ? head[key] : {};
+    return [key, SHRINKS.reduce((acc, rule) => shrunkRule(acc, rule, now[rule]), rules)];
   });
   return Object.fromEntries(files.filter(([, rules]) => Object.keys(rules).length > 0));
 }

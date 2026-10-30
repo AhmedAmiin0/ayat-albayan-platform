@@ -1,4 +1,5 @@
 import { isTimedKey, NOTIFICATION_CHANNELS, type NotificationChannel, type NotificationRuleView, type RulePatchInput } from '@ab/shared';
+import type { Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { channelWords, fillText, timingText } from './rule-text';
 import { parseTiming, sameTiming, timingDraft, type TimingDraft } from './rule-timing';
@@ -34,10 +35,12 @@ export interface DraftInput {
   draft: RuleDraft;
   /** The number's name for the «لم يُحفظ» line (null = the template's number). */
   numberName: (id: string | null) => string;
+  /** The cycle the row renders with (useClock), for the timing words. */
+  clock: Clock;
 }
 
 /** The changed fields as a PATCH body and in words («قبل الحلقة بـ45 دقيقة بدلًا من 60…»), or the first problem. */
-export function draftResult({ rule, draft, numberName }: DraftInput): DraftResult {
+export function draftResult({ rule, draft, numberName, clock }: DraftInput): DraftResult {
   const r = t.notificationRules;
   const patch: Omit<RulePatchInput, 'enabled' | 'confirmText'> = {};
   const changes: string[] = [];
@@ -47,7 +50,8 @@ export function draftResult({ rule, draft, numberName }: DraftInput): DraftResul
     if (!parsed.ok) return parsed;
     if (!sameTiming(parsed.value, rule.timing)) {
       patch.timing = parsed.value;
-      changes.push(instead(timingText(rule.key, parsed.value) ?? '', timingText(rule.key, rule.timing) ?? r.timing.sameAsFamily));
+      const was = timingText(rule.key, rule.timing, clock) ?? r.timing.sameAsFamily;
+      changes.push(instead(timingText(rule.key, parsed.value, clock) ?? '', was));
     }
   }
   if (!sameChannels(draft.channels, rule.channels)) {
