@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '../enums/index.js';
-import { optionalText } from '../schemas/common.js';
+import { optionalText } from '../core/schemas/common.js';
 import { localDate } from '../schemas/lessons/scheduling.js';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas.js';
 

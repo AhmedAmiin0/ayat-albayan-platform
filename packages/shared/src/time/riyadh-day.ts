@@ -1,5 +1,5 @@
-import { RIYADH_TZ } from '../format/running-head.js';
-import { clockOf, type ClockCycle } from '../format/index.js';
+import { RIYADH_TZ } from '../core/format/running-head.js';
+import { clockOf, type ClockCycle } from '../core/format/index.js';
 import { intlLocale, type Locale } from '../i18n/locale.js';
 
 // The academy's own calendar (docs/11 §3): Riyadh days and times of UTC instants, Western digits.

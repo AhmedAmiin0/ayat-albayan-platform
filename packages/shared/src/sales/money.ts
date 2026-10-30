@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { localDate } from '../schemas/lessons/scheduling.js';
-import { optionalText, phoneE164 } from '../schemas/common.js';
+import { optionalText, phoneE164 } from '../core/schemas/common.js';
 import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
 
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes

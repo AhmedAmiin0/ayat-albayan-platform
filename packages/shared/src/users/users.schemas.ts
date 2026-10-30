@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { phoneE164 } from '../schemas/common.js';
+import { phoneE164 } from '../core/schemas/common.js';
 import { USER_ROLES } from '../permissions/roles.js';
-import { isTimeZone } from '../schemas/common.js';
+import { isTimeZone } from '../core/schemas/common.js';
 import { needsExistingRecord, PASSWORD_MAX } from './validation.js';
 import { isFamilyEmail } from './sign-in.js';
 

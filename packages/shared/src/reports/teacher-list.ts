@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ATTENDANCES, GRADES } from '../enums/index.js';
-import { listSortShape } from '../schemas/list-sort.js';
+import { listSortShape } from '../core/schemas/list-sort.js';
 
 // GET /teachers/me/reports sort and column filters (teacher mode «تقارير أُرسلت», R-REP-02, R-NFR-08).
 
