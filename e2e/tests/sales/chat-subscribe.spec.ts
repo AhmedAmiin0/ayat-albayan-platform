@@ -3,7 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { fillStable } from '../../support/core/fill';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the

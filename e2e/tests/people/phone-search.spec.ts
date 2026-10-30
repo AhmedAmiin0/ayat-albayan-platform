@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { bearer, API } from '../../support/messages';
+import { bearer, API } from '../../support/core/messages';
 import { dropPeople, people, seedPeople, type Kind, type Person } from '../../support/people/admin-extra-phone';
 import { ar, expect, test } from '../../support/core/fixtures';
 

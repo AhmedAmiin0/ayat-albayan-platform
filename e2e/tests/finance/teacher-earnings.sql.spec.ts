@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 import { resetAbrar } from '../../support/core/schedule';
 
 // The per-session ledger (migrations 176-179) against the real database, each case in a

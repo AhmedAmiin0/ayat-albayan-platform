@@ -94,14 +94,26 @@ function pathFor(target: Target, file: string): string {
   return stripExt(file);
 }
 
-/** The specifier `from` (its new path) should write for `target` once it lives at `file`. */
-export function formatSpec(target: Target, opts: { from: string; file: string }): string {
+const covers = (a: Alias, from: string, path: string): boolean =>
+  under(from, a.scope) && under(path, a.dir);
+
+/**
+ * The specifier `from` (its new path) should write for `target` once it lives at `file`. An alias
+ * spec keeps its alias; a relative one that would climb (`../`) takes the app's alias from
+ * `aliases` when one covers both ends (docs/32 R12), so a move never writes `../`.
+ */
+export function formatSpec(
+  target: Target,
+  opts: { from: string; file: string; aliases?: Alias[] },
+): string {
   const path = pathFor(target, opts.file);
   const { alias } = target;
-  if (alias !== undefined && under(opts.from, alias.scope) && under(path, alias.dir)) {
+  if (alias !== undefined && covers(alias, opts.from, path)) {
     return alias.prefix + posix.relative(alias.dir, path);
   }
   const rel = posix.relative(posix.dirname(opts.from), path);
   if (rel === '') return '.';
+  const app = rel.startsWith('../') ? opts.aliases?.find((a) => covers(a, opts.from, path)) : undefined;
+  if (app !== undefined) return app.prefix + posix.relative(app.dir, path);
   return rel.startsWith('.') ? rel : `./${rel}`;
 }

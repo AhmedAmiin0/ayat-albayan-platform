@@ -29,7 +29,7 @@ export function rewriteFile(project: Project, r: Resolver, input: RewriteInput):
     if (target === undefined) return [];
     const newFile = r.renamed.get(target.file) ?? target.file;
     if (newFile === target.file && newFrom === file) return [];
-    const value = formatSpec(target, { from: newFrom, file: newFile });
+    const value = formatSpec(target, { from: newFrom, file: newFile, aliases: r.aliases });
     return value === s.value ? [] : [{ start: s.start, end: s.end, value }];
   });
   project.removeSourceFile(sf);

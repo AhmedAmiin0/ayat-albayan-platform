@@ -1,4 +1,4 @@
-import type { SeedUser } from './core/db';
+import type { SeedUser } from './db';
 
 /** Seed accounts (local/CI only). storageState per role lives in e2e/.auth/<role>.json. */
 export const USERS = {

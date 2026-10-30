@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, pay, renewalOf, riyadhDay, subscription } from '../../support/sales/assistant';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // «If the course already started so dont give commission» (owner 2026-10-28, migration 20261028000942): a
 // package whose starts_on is before the Riyadh day of its created_at, or with lessons_used_before > 0, earns

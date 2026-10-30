@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { API, bearer } from '../../support/messages';
+import { API, bearer } from '../../support/core/messages';
 import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 import { dropHiba, HIBA_AMOUNT, HIBA_MONTH, seedAbrarPayout, seedHiba, type HibaSeed } from '../../support/people/teacher-isolation';

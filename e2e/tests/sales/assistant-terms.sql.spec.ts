@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, one, openMonth, paidStatement, pay, riyadhDay } from '../../support/sales/assistant';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Terms start days, a student merge and a retried adjustment (migrations 20261006000272-273) against the
 // real database. Each case is rolled back.

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 20261012000370 (R-ACC-05, rule 9): the private 'avatars' bucket. A signed-in user
 // writes and reads only under their own folder `<uid>/…`; an admin reads every avatar; anon reads

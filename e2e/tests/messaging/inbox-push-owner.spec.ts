@@ -2,8 +2,8 @@ import { freshPhone, leadOf, makeAssistant } from '../../support/sales/assistant
 import { expect, test } from '../../support/core/fixtures';
 import { pushesForProfile } from '../../support/messaging/inbox';
 import { withSql } from '../../support/core/schedule';
-import { USERS } from '../../support/users';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { USERS } from '../../support/core/users';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // docs/21 D3 (R-NOT-01): the bell of a chat goes to its owning assistant only; an unowned chat and a
 // new lead go to every assistant; the admin is alerted as before. API level against tools/wa-stub, with

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 630 (docs/26 §2a, 26-P1 «Expand») against the real database, every test rolled back. Only
 // throwaway zz_e2e_* keys are written: never a messaging or gate key.

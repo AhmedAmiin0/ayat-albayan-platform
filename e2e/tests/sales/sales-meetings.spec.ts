@@ -1,10 +1,10 @@
 import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { API, bearer } from '../../support/messages';
+import { API, bearer } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { seedFamily, withSql } from '../../support/core/schedule';
-import { USERS } from '../../support/users';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';
+import { USERS } from '../../support/core/users';
+import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
 // R-MEET-01..03 (owner 2026-10-12): a salesperson schedules a meeting and invites a teacher (in-app
 // bell) and two families: one with an open 24 h window (a chat text reaches the stub, never a

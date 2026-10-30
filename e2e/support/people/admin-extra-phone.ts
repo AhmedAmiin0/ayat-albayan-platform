@@ -1,6 +1,6 @@
 import { normalizeArabic } from '@ab/shared';
 import { dropTeacher, insertTeacher } from './admin-extra';
-import { seedLead } from '../messages';
+import { seedLead } from '../core/messages';
 import { withSql } from '../core/schedule';
 
 // Four people with synthetic Saudi numbers for the phone-search spec (A14): the digit after the

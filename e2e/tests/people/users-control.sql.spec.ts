@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migrations 280-285 + 288 (users control): the student base role, one login per student, the disabled
 // columns, the service-role-only admin_list_users / user_references / revoke_user_sessions, and the

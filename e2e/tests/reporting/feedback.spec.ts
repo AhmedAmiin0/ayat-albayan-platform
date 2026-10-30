@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { approveTemplate, completedLesson, tokenSentTo, unapproveTemplate } from '../../support/reporting/feedback';
 import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
-import { setMessaging, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // «رأيك يهمّنا» (owner 2026-10-03): admin presses «أرسل طلب الرأي» on a completed lesson → the

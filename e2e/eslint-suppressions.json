@@ -237,7 +237,7 @@
       "count": 1
     }
   },
-  "support/messages.ts": {
+  "support/core/messages.ts": {
     "max-len": {
       "count": 1
     }
@@ -278,7 +278,7 @@
       "count": 6
     }
   },
-  "support/rls.ts": {
+  "support/core/rls.ts": {
     "max-len": {
       "count": 1
     }

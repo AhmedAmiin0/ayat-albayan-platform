@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migrations 286 + 287 (review of the users-control PR): a client session cannot write
 // profiles.disabled_*, a disabled admin is an admin no more for RLS, the service role (the API) can

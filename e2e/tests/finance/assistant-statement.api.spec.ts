@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import type { AssistantStatementView, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { call, dayOffset, family, makeAssistant, paymentBy, thisMonth, tokenOf, type Assistant, type Family } from '../../support/sales/assistant-api';
 import { money } from '../../support/finance/assistant-money';
-import { USERS } from '../../support/users';
+import { USERS } from '../../support/core/users';
 
 // The month's statement and the assistant's own pages through the REAL API and database (R-ASST-03,
 // R-ASST-04, R-ASST-06). P has a salary of 1000 SAR and 10 percent; two of her students pay in full, one

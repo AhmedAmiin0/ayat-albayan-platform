@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, generate, pay } from '../../support/sales/assistant';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // The second wall (RLS, migrations 271 and 274) against the real database: a salesperson who reads
 // PostgREST directly gets her own rows only, never a draft statement, never the subscription price,

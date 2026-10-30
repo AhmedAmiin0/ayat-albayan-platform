@@ -1,7 +1,7 @@
 import { REPORT_RUBRICS } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { API, bearer } from '../../support/messages';
+import { API, bearer } from '../../support/core/messages';
 import { seedPackageStudent } from '../../support/finance/money';
 import { queuedFor, resetAbrar, withSql } from '../../support/core/schedule';
 import { backdateSubmit, fillAttended, fillTexts, reportRow, storedObject, TEXTS } from '../../support/reporting/teacher-extra';

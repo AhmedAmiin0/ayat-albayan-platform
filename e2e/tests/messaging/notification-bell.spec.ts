@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { API, bearer, freshDigits } from '../../support/messages';
+import { API, bearer, freshDigits } from '../../support/core/messages';
 import { openNav } from '../../support/core/nav';
 import {
   addDays,
@@ -12,7 +12,7 @@ import {
   setAvailability,
   withSql,
 } from '../../support/core/schedule';
-import { USERS } from '../../support/users';
+import { USERS } from '../../support/core/users';
 
 // The bell (R-NOT-01) and the teacher's new-student alert (R-NOT-03). WEB_PUSH_* stay unset here:
 // browser push is off, nothing leaves the server; the bell reads push_notifications rows only.

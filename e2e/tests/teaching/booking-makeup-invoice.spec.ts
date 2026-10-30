@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
-import { STUB_URL, stubInbound, stubReset } from '../../support/wa-stub';
+import { STUB_URL, stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 // Booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06): a trial needs none; a package and a makeup do
 // (uploaded, or saved from the family's chat); only the admin sees it. «Meta» = wa-stub.

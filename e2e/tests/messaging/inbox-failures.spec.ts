@@ -1,8 +1,8 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { bubble, lastOutbound, openThread, pushesForMessage, stubFail, outboundRows } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';
+import { freshDigits } from '../../support/core/messages';
+import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
 // A send that fails (R-MSG-03, R-MSG-05, M1–M3): Meta's error in words on the bubble, «حاول مرة أخرى»,
 // the wa.me hand-off with its «بعتّها؟» question, sent-by-hand and undo. The stub's injected

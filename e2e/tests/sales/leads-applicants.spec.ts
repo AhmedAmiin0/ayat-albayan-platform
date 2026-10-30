@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
-import { freshDigits, seedLead } from '../../support/messages';
+import { freshDigits, seedLead } from '../../support/core/messages';
 import { riyadhToday, summaryOf, uniqueName } from '../../support/finance/money-extra';
 import { withSql } from '../../support/core/schedule';
 

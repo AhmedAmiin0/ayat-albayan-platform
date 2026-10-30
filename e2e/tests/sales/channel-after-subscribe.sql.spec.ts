@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, family, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migrations 20261029000971–972 (owner 2026-10-29): the student channel opens once the student is
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family

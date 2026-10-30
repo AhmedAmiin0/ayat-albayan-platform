@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, openMonth, paidStatement, pay, renewalOf, subscription } from '../../support/sales/assistant';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Renewal commission (migrations 20261027000750-751, owner 2026-10-26): «half of the value» = half of her
 // NORMAL commission on each renewal (settings.renewal_commission_percent, default 50), kind decided by

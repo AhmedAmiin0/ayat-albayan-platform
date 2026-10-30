@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, family, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Rule 9 behind the API, in a rolled-back transaction with a teacher's JWT (teacher-rls.sql.spec
 // has the messages and the draft payouts): lessons, students, reports, attachments and approved
