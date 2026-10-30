@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '../../support/core/fixtures';
-import { API, bearer, messagesFor } from '../../support/messages';
+import { API, bearer, messagesFor } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
-import { setMessaging, stubReset, stubSent } from '../../support/wa-stub';
+import { setMessaging, stubReset, stubSent } from '../../support/core/wa-stub';
 
 // The sender drops a queued booking confirmation whose lesson was cancelled meanwhile (send-stale.ts,
 // docs/12 §3.3): status failed, error_code 'stale', and nothing reaches «Meta». S6 / R-MSG-01.

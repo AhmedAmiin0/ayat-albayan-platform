@@ -1,12 +1,12 @@
 import { makeAssistant } from '../../support/sales/assistant-api';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { chatRows, dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs, UNFLAGGED } from '../../support/messaging/restricted-templates';
 import { RESCHEDULE } from '../../support/messaging/reschedule-template';
 import { syncNumber } from '../../support/messaging/template-numbers';
 import { signInSales } from '../../support/sales/sales-portal';
 import { CHAT_PN, messagesWithLine, NOTIF_PN, sentVia, SINGLE_LINE } from '../../support/messaging/wa-lines';
-import { setMessaging, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubReset } from '../../support/core/wa-stub';
 
 // The restricted allow-list (owner 2026-10-12: «all roles except the ones allowed to have all
 // templates»): the chat number's sync imports its approved templates and flags only free_trial_invite and

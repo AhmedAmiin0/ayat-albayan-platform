@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, test } from '../../support/core/fixtures';
 import { closeCodes, codeSentTo, codesSent, family, openCodes, post } from '../../support/people/family-sign-in';
-import { API } from '../../support/messages';
+import { API } from '../../support/core/messages';
 import { withSql } from '../../support/core/schedule';
-import { stubReset } from '../../support/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
 
 // Family accounts (docs/30) on the real API, the local GoTrue and the WhatsApp stub: the phone code
 // makes the guardian login on first use (a .invalid synthetic email), the session comes from

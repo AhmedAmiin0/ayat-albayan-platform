@@ -1,5 +1,5 @@
 import { formatAmount } from '@ab/shared';
-import { freshDigits, seedLead } from '../messages';
+import { freshDigits, seedLead } from '../core/messages';
 import { riyadhToday, thisMonthStart } from './money-extra';
 import { seedPackageStudent } from './money';
 import { addDays, riyadh, seedLesson, withSql } from '../core/schedule';

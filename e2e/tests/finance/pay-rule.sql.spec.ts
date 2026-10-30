@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
 import { countableIds, payableIds, ruleLesson, setSettingTx, studentOn } from '../../support/finance/pay-rule';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 import { resetAbrar } from '../../support/core/schedule';
 
 // The ONE teacher-pay rule (migration 20261005000200) against the real database: the ledger,

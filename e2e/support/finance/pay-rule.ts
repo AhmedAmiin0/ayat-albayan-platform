@@ -1,5 +1,5 @@
 import { MIN } from './earnings';
-import type { Tx } from '../rls';
+import type { Tx } from '../core/rls';
 
 // Helpers of the pay-rule SQL specs (migrations 20261005000200–202): a lesson on a rule with a
 // given package (trial or not), a student with a given status on it, a payout over lessons.

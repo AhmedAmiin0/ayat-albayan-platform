@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { STUB_URL } from './wa-stub';
+import { STUB_URL } from './core/wa-stub';
 
 // 26-P4 (docs/26 §5): a SECOND API process on its own port, booted from the same build and database as the
 // e2e API, then stopped. WhatsApp points at tools/wa-stub only (the e2e credentials); Google, Kapso and the

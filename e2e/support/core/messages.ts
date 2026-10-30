@@ -1,5 +1,5 @@
 import { expect, type Page } from '@playwright/test';
-import { withSql } from './core/schedule';
+import { withSql } from './schedule';
 
 /** The e2e API (playwright.config.ts webServer, port 3100). */
 export const API = 'http://localhost:3100';

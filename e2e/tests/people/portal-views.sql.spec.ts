@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // The family views are read-only (migration 981, review authz-db-1): portal_* and student_self are owner-rights
 // views (they bypass the RLS of the tables under them), so `authenticated` keeps SELECT only. Read from the

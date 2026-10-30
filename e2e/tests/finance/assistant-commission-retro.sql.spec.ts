@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, iso, openMonth, one, paidStatement, pay, renewalOf, student, subscription } from '../../support/sales/assistant';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272) against
 // the real database. Each case is rolled back.

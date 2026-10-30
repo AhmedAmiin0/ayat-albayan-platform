@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migrations 220 + 225 (dynamic roles): a client session (an admin-base user, whatever role it
 // holds) cannot write roles, role_permissions or profiles.role / role_id; the API (service role)

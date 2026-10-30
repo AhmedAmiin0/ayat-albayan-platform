@@ -8,7 +8,7 @@ import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
-import { USERS } from '../support/users.ts';
+import { USERS } from '../support/core/users.ts';
 
 const DEFAULT_ROUTES = [
   '/login',

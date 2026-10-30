@@ -1,5 +1,5 @@
 import { BASE, iso, MIN, type Tx } from '../edit-time';
-import { USERS } from '../users';
+import { USERS } from '../core/users';
 
 // Helpers of e2e/tests/booking-day-times.sql.spec.ts: create_booking with `siblings` (migration 465,
 // «اختر موعدًا لكل يوم»), payloads in the shape the API's bookingPayload builds, inside a rolled-back

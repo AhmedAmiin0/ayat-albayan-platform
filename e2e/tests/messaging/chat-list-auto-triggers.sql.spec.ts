@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { guardian, listOf, members, rerunMigration, someone, student, teacher } from '../../support/auto-lists';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // The automatic lists' triggers (migration 20261025000710, docs/22 §10): each path that adds a member, and
 // nothing ever removed (an ended subscription, an inactive teacher, a deleted student, a hand row). The

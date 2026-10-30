@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 20261022000600 (docs/23 phase 1): the last good line check per line. Admins read it,
 // only the service role writes, anon sees nothing; numbers must be E.164. Every test rolls back.

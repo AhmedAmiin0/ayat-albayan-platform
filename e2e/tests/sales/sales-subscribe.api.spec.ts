@@ -3,10 +3,10 @@ import { expect, test } from '@playwright/test';
 import type { MyPaymentRow, SalesChatReceipt, SalesMoneySubscriptionView, SalesPaymentView, SalesQuoteView } from '@ab/shared';
 import { call, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { stubInboundMedia } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { PNG, statusFacts, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
 import { withSql } from '../../support/core/schedule';
-import { stubReset } from '../../support/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
 
 // Owner 2026-10-12 «how can assistants move student from trial to subscribed», through the REAL API and
 // database (wa-stub for WhatsApp): A subscribes her trial student from the chat, records the family's bank

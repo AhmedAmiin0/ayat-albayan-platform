@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, generate, iso, lastMonth, one, paidStatement, pay } from '../../support/sales/assistant';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Assistant statements and reversals (migrations 271-274) against the real database: salary + commissions
 // + adjustments per currency, draft -> approved -> paid like teacher payouts, a void after the statement

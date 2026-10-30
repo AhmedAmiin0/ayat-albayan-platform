@@ -1,6 +1,6 @@
 import { test as setup } from '@playwright/test';
 import { loginViaUi } from '../support/core/fixtures';
-import { authFile, USERS } from '../support/users';
+import { authFile, USERS } from '../support/core/users';
 
 for (const role of Object.keys(USERS) as (keyof typeof USERS)[]) {
   setup(`authenticate ${role}`, async ({ page }) => {

@@ -6,8 +6,8 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { openNav } from '../../support/core/nav';
 import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
-import { USERS } from '../../support/users';
-import { stubInbound } from '../../support/wa-stub';
+import { USERS } from '../../support/core/users';
+import { stubInbound } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): «تسجيل طالب جديد»

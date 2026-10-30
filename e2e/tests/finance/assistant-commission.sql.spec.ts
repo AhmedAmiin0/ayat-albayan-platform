@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, iso, one, pay, student, subscription, today } from '../../support/sales/assistant';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Assistant commission (migrations 270-274, 750-751) against the real database: ONE first commission per
 // brought student, on the first fully paid subscription (renewals: assistant-renewal-commission.sql.spec.ts), from commission_starts_on, percent or fixed, reversed

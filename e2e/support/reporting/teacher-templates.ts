@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
-import { API, bearer } from '../messages';
+import { API, bearer } from '../core/messages';
 import { withSql } from '../core/schedule';
-import { stubSent, stubTemplateStatus, type StubSent } from '../wa-stub';
+import { stubSent, stubTemplateStatus, type StubSent } from '../core/wa-stub';
 
 // report_ready and renewal_due start «not_submitted» (migration 141) and the stub starts without
 // them (tools/wa-stub defaultTemplates), so nothing can be sent. approveTemplates walks the real

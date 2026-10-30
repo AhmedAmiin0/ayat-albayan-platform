@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, family, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 240: no guardian policy on lesson_recordings (a group lesson's file would expose every
 // student's session, its path and egress id). A guardian reads nothing, visible or not; the admin

@@ -1,6 +1,6 @@
 import type { Browser, BrowserContextOptions, Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
-import { authFile, USERS } from '../users';
+import { authFile, USERS } from '../core/users';
 import { AR_LOCALE } from '../core/locale';
 
 // The live classroom against a real LiveKit (`livekit-server --dev`), see tests/classroom-live.spec.ts.

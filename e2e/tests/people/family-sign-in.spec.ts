@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { closeCodes, codeSentTo, family, openCodes } from '../../support/people/family-sign-in';
-import { stubReset } from '../../support/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // /login «الأسرة والطلاب» (docs/30 §7) in a real browser: phone → the WhatsApp code from the stub →

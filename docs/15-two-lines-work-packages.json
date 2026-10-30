@@ -310,7 +310,7 @@
     "tools/wa-stub/src/stub.diagnostics.test.ts",
     "tools/wa-stub/src/stub.webhook.lines.test.ts",
     "e2e/playwright.config.ts",
-    "e2e/support/wa-stub.ts",
+    "e2e/support/core/wa-stub.ts",
     "e2e/support/messaging/wa-lines.ts",
     "e2e/tests/messaging/wa-two-lines.spec.ts",
     "e2e/tests/messaging/wa-two-lines.reply.spec.ts",

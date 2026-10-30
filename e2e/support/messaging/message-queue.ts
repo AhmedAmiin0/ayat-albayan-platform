@@ -1,5 +1,5 @@
 import { withSql } from '../core/schedule';
-import type { StubSent } from '../wa-stub';
+import type { StubSent } from '../core/wa-stub';
 
 // The outbound queue as the settings switches see it: count, clear and seed queued rows, read what
 // happened to a phone's rows, and filter what the wa-stub received.

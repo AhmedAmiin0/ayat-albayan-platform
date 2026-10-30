@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { setSetting } from '../../support/messages';
+import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 
 // Owner 2026-10-12 «make all the teachers available 24/7» (settings.teachers_always_available,

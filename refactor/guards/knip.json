@@ -260,7 +260,7 @@
   "e2e/support/messaging/inbox.ts types OutboundRow",
   "e2e/support/finance/invoice.ts exports PNG",
   "e2e/support/messaging/kapso.ts exports KAPSO_BASE",
-  "e2e/support/messages.ts types MessageRow",
+  "e2e/support/core/messages.ts types MessageRow",
   "e2e/support/finance/money.ts types BalanceRow",
   "e2e/support/sales/sales-options.ts exports salesRole",
   "e2e/support/core/schedule.ts types QueuedMessage",

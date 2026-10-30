@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
-import { setSetting } from '../../support/messages';
+import { setSetting } from '../../support/core/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
 
 // «القيم» /admin/settings/values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2): each row saves on its

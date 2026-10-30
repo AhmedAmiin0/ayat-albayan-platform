@@ -1,8 +1,8 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { clearQueue, messageState, queueRenewal, queueText, queuedCount, sentToDigits } from '../../support/messaging/message-queue';
-import { freshDigits, seedLead } from '../../support/messages';
+import { freshDigits, seedLead } from '../../support/core/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
 // «التواصل» › «نظرة عامة» switches (/admin/settings/communications; R-MSG-01, cut-over docs/09, docs/23 phases 2 and 6): the kill switch is the only
 // switch for sending (no env fuse) and asks first both ways (ON names the queue); the automatic-messages

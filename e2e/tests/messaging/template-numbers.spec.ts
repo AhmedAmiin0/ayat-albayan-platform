@@ -7,7 +7,7 @@ import { withSql } from '../../support/core/schedule';
 import { numberBlock, syncNumber } from '../../support/messaging/template-numbers';
 import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } from '../../support/messaging/template-registry';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
-import { stubReset, stubTemplateStatus } from '../../support/wa-stub';
+import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
 // Templates per number (owner 2026-10-18): each number syncs on its own, a template moves to the other
 // number, trial_reschedule is submitted to the chat number's WABA and, once «Meta» (the stub) approves
