@@ -34,5 +34,5 @@ export function zonedInstant(date: string, time: string, tz: string): string {
 /** `date` moved by `days` local days ("YYYY-MM-DD"). */
 export const addLocalDays = (date: string, days: number): string => new Date(utcOf(date) + days * DAY_MS).toISOString().slice(0, 10);
 
-/** 0 = الأحد … 6 = السبت of a local date. */
-export const weekdayOfDate = (date: string): number => new Date(utcOf(date)).getUTCDay();
+/** 0 = الأحد … 6 = السبت of a local date (the date-fns facade). */
+export { weekdayOfDate } from '../../../time/calendar.js';
