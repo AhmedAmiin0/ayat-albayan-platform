@@ -1,6 +1,6 @@
 import { effectiveLinkStatus, PAYMENT_LINK_KINDS, type Glyph, type PaymentLinkStatus, type PaymentLinkView, type Tone } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Button } from '@/components/ui/form/button';
 import { Amount } from '@/features/finance/subscriptions';

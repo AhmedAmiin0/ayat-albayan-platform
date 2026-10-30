@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
+import type { DataTableFeatures, FilterOption } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';

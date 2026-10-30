@@ -1,6 +1,6 @@
 import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { fullTime } from '@/features/messaging/inbox/format';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';

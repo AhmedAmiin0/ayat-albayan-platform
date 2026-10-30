@@ -1,7 +1,7 @@
 import { formatAmount } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';

@@ -7,7 +7,7 @@ import {
   type FilterSearch,
   type SortSearch,
 } from '@/lib/list/list-search';
-import type { DataTableFilters, DataTableSort } from '@/components/DataTable';
+import type { DataTableFilters, DataTableSort } from '@/components/data-table/DataTable';
 import { activeFilterCount, parseStudentFilters, type StudentsFilters } from './filters';
 
 /** The list's state: search, page, the R-STU-01 filters, the column sort and text filters. */

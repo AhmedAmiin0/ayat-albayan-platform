@@ -1,7 +1,7 @@
 import { STUDENT_PACKAGE_FILTERS, studentStatusStyle } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import type { StudentListItem } from '@/features/people/students/types';
