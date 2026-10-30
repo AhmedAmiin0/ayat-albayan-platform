@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Chat files (docs/21 §2): migration 500 lets wa-media take WhatsApp's audio/video up to 16 MiB,
 // 505 adds messages.media_name (a sent file's name, never blank), 510 points messages.created_by

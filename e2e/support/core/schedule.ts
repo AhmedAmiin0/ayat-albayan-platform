@@ -1,6 +1,6 @@
 import { normalizeArabic } from '@ab/shared';
 import postgres from 'postgres';
-import { USERS } from '../users';
+import { USERS } from './users';
 
 // Scheduling seed for journeys 4 and 5 (docs/03 §5). Deterministic without resetting the shared
 // DB: each journey wipes only the e2e teacher «أبرار»'s lessons, rules and availability, and

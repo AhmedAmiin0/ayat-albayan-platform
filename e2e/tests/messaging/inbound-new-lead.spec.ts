@@ -1,7 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { inboundFor, leadsByPhone, pushesLike } from '../../support/messaging/inbound';
-import { freshDigits } from '../../support/messages';
-import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
+import { freshDigits } from '../../support/core/messages';
+import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // An unknown number writes on WhatsApp (R-LEAD-01, R-MSG-04): the lead is created once, the text is
 // stored as an unread inbound row, the admin gets one new_lead push, and the thread is in the inbox.

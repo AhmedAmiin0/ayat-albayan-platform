@@ -3,7 +3,7 @@ import type { AssistantCommissionView, BookingResult } from '@ab/shared';
 import { call, dayOffset, freshPhone, leadOf, makeAssistant, tokenOf, trialBody, type Assistant } from '../../support/sales/assistant-api';
 import { cents, money } from '../../support/finance/assistant-money';
 import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
-import { USERS } from '../../support/users';
+import { USERS } from '../../support/core/users';
 
 // The money journey of an assistant through the REAL API and database (R-ASST-01, R-ASST-02): she
 // registers a student from her chat (POST /sales/booking, her as the actor), the student is credited

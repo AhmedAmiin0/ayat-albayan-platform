@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assistant, brought, code, generate, iso, lastMonth, one, openMonth, pay, subscription } from '../../support/sales/assistant';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Reopening an approved statement (migration 20261006000273): the guard and the clean-up follow the
 // statement's own LINES, so a commission that was voided and earned again cannot make it under-pay.

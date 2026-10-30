@@ -403,12 +403,12 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | `e2e/support/platform/settings.ts:9` | `select key, value from public.settings where key = any($keys)` | snapshot |
 | `e2e/support/platform/settings.ts:19-22` | `insert … values ($key, $json::jsonb) on conflict (key) do update set value = excluded.value` / `delete … where key = $key` | restore (keeps JSON null) |
 | `e2e/support/platform/settings.ts:32` | `select value #>> '{}' … where key = $key` | text read |
-| `e2e/support/wa-stub.ts:59` | upsert `messaging_enabled` (`on conflict (key) do update`) | |
+| `e2e/support/core/wa-stub.ts:59` | upsert `messaging_enabled` (`on conflict (key) do update`) | |
 | `e2e/support/finance/pay-rule.ts:56` | upsert any bool key (tx) | |
 | `e2e/support/teaching/schedule-extra.ts:32-35` | delete / upsert `late_cancel_hours` | null = delete, like the API |
 | `e2e/support/core/db.ts:60-67` (`seedSettings`) | multi-row upsert of 11 keys incl. `late_cancel_hours` JSON null | after `resetDb` |
 | `e2e/support/core/db.ts:23-27` (`resetDb`) | `truncate` every `pg_tables` row in `public` except 4 | **truncates settings/custom_config/integration_config**; a view is not in `pg_tables`, a new base table would be truncated automatically |
-| `e2e/support/messages.ts:55` | upsert any key (`setSetting`) | |
+| `e2e/support/core/messages.ts:55` | upsert any key (`setSetting`) | |
 | `e2e/support/platform/google.ts:37` | `delete … where key in (google_sync_enabled, google_sync_mode, google_calendar_window_days)`; `select public.google_token_clear()` | |
 | `e2e/tests/teaching/edit-session-time.helpers.ts:58` | `update public.settings set value = … where key = 'auto_messages_enabled'` | plain UPDATE |
 | `e2e/tests/platform/google-sync.sql.spec.ts:22,32-34` | upsert `google_sync_enabled` = `'true'`; `delete … where key like 'google\_%'`; asserts `google_sync_on()` = false and `google_sync_window_days()` = 60 on missing rows | |

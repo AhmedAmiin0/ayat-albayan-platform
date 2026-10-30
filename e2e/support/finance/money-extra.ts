@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import { API, bearer } from '../messages';
+import { API, bearer } from '../core/messages';
 import { seedPackageStudent, type PackageSeed } from './money';
 import { addDays, riyadh, seedLesson, withSql } from '../core/schedule';
 

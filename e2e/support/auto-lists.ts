@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { Tx } from './rls';
+import type { Tx } from './core/rls';
 
 // Helpers for the automatic chat lists spec (migration 20261025000710, docs/22 «القوائم التلقائية»).
 

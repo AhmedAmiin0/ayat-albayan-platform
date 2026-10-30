@@ -1,4 +1,4 @@
-import type { Tx } from '../rls';
+import type { Tx } from '../core/rls';
 
 // Helpers of the assistant (base role sales) SQL specs, migrations 270-274. Everything is written
 // inside the spec's rolled-back transaction, as the owner role (the triggers run as in production).

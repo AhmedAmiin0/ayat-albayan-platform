@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
-import { as, family, lesson, rolledBack, userId } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, family, lesson, rolledBack, userId } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migration 164 against the real database (rule 9: RLS on every table, defence in depth behind the
 // API), in a transaction that is rolled back. With a teacher's JWT, messages shows only the

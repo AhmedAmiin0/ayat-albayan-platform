@@ -10,7 +10,7 @@ The single source for the Phase 4 builders (API B1–B3, web, mobile), so they c
 
 | Area | Owner | Edits only | Migrations |
 |---|---|---|---|
-| Foundation (done, **read-only**) | — | migrations `140–143`; `packages/shared/src/messaging/*`, `enums/messaging.ts`, the Phase 4 settings keys; `apps/api/src/config/env/env.ts`, `main.ts` (rawBody), `common/push/*`, `modules/whatsapp/whatsapp.types.ts`, the three empty modules in `app.module.ts`; `tools/wa-stub`; `e2e/support/wa-stub.ts`, `playwright.config.ts` | — |
+| Foundation (done, **read-only**) | — | migrations `140–143`; `packages/shared/src/messaging/*`, `enums/messaging.ts`, the Phase 4 settings keys; `apps/api/src/config/env/env.ts`, `main.ts` (rawBody), `common/push/*`, `modules/whatsapp/whatsapp.types.ts`, the three empty modules in `app.module.ts`; `tools/wa-stub`; `e2e/support/core/wa-stub.ts`, `playwright.config.ts` | — |
 | WhatsApp core | **B1** | `apps/api/src/modules/whatsapp/**` (not `whatsapp.types.ts`) | `2026100100015[0-2]` |
 | Webhook + inbox API + lead routes | **B2** | `apps/api/src/modules/inbox/**`, `apps/api/src/modules/leads/**` | `2026100100015[3-5]` |
 | Jobs + push triggers | **B3** | `apps/api/src/modules/messaging-jobs/**`; the one-line `PushService` calls in `reports` (submit) and `subscriptions` (alerts) | `2026100100015[6-8]` |
@@ -150,7 +150,7 @@ Graph (bearer required; `WA_ACCESS_TOKEN` set on the stub → must match):
 - `POST /v*/{waba}/message_templates` → `{ id, status: 'PENDING', category }` (duplicate / bad name → 400).
 - `GET /v*/{media_id}` → `{ url, mime_type, … }`; `GET /__stub/media/{id}` → bytes (bearer).
 
-Control (no auth): `GET /__stub/health`, `GET|DELETE /__stub/messages`, `GET /__stub/reads`, `GET /__stub/templates`, `POST /__stub/reset`, `POST /__stub/inbound` `{ from, name?, text? | button?{text,payload} | interactive?{id,title} | media?{kind,mime,caption?,filename?,base64?}, context?, timestamp? }` → signed webhook to `WA_WEBHOOK_URL`, returns `{ forwarded, status, id, mediaId }`; `POST /__stub/status` `{ id, status, errorCode? }`; `POST /__stub/templates/{name}` `{ status, quality? }` (Meta's review); `POST /__stub/fail` `{ to, code }` (next send to that number fails). e2e helpers: `e2e/support/wa-stub.ts` (`stubReset`, `stubSent`, `stubInbound`, `stubStatus`, `stubTemplateStatus`, `setMessaging`).
+Control (no auth): `GET /__stub/health`, `GET|DELETE /__stub/messages`, `GET /__stub/reads`, `GET /__stub/templates`, `POST /__stub/reset`, `POST /__stub/inbound` `{ from, name?, text? | button?{text,payload} | interactive?{id,title} | media?{kind,mime,caption?,filename?,base64?}, context?, timestamp? }` → signed webhook to `WA_WEBHOOK_URL`, returns `{ forwarded, status, id, mediaId }`; `POST /__stub/status` `{ id, status, errorCode? }`; `POST /__stub/templates/{name}` `{ status, quality? }` (Meta's review); `POST /__stub/fail` `{ to, code }` (next send to that number fails). e2e helpers: `e2e/support/core/wa-stub.ts` (`stubReset`, `stubSent`, `stubInbound`, `stubStatus`, `stubTemplateStatus`, `setMessaging`).
 
 ## 6. Push (`common/push`, done)
 `PushService.notifyAdmins(kind, { subject, vars, data? })`: one `push_notifications` row per admin (`{kind}:{subject}:{profile}`, so a retry never pushes twice), title/body from `ar.json notifications.<kind>` with `vars`, Expo push to that admin's `profiles.push_tokens`, tickets stored, `DeviceNotRegistered` tokens pruned. Never throws. `data` for navigation: `{ kind, phone }` (messages), `{ kind, lessonId }`, `{ kind, subscriptionId }`.

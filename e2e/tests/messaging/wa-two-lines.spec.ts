@@ -1,9 +1,9 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { withSql } from '../../support/core/schedule';
 import { messagesWithLine, SINGLE_LINE, stubInboundOn } from '../../support/messaging/wa-lines';
-import { stubReset } from '../../support/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
 
 // Two WhatsApp lines, inbound side (docs/12 §13.6, R-MSG-04, R-LEAD-01): the chat number's webhook
 // is verified with ITS app secret and its rows are stamped 'chat'; the same phone on both numbers

@@ -3,7 +3,7 @@ import {
   auditActions, guardianName, guardianPhone, inboundFor, lessonView, pushesLike, seedSentConfirmation,
 } from '../../support/messaging/inbound';
 import { resetAbrar, seedFamily, seedLesson } from '../../support/core/schedule';
-import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // Quick replies from a guardian (R-MSG-04, R-SCH-03, docs/12 §3.5): «نعم» / the confirm button
 // confirms the lesson through the state machine (confirmed_by null = WhatsApp, audited); a button

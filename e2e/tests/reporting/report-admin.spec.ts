@@ -2,7 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 import { apiSubmit, backdateSubmit, fillTexts, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
-import { USERS } from '../../support/users';
+import { USERS } from '../../support/core/users';
 
 // Admin side of «تقرير الحلقة» (R-REP-02/03, R12, R-NFR-03): the teacher's window is closed (25 h
 // ago) and the admin still corrects the sent report → version 2 and an audit row; a PDF that

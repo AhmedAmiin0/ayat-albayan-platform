@@ -1,5 +1,5 @@
 import type { Tx } from '../edit-time';
-import { USERS } from '../users';
+import { USERS } from '../core/users';
 
 // Helpers of e2e/tests/course-pause.sql.spec.ts: the course pause RPCs (migrations 955–957, docs/11 §7b) against
 // the real database inside a transaction that is rolled back. Days are Riyadh days relative to the tx's now().

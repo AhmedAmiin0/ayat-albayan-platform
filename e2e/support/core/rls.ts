@@ -1,5 +1,5 @@
 import type { TransactionSql } from 'postgres';
-import { withSql } from './core/schedule';
+import { withSql } from './schedule';
 
 // Helpers for the SQL-level RLS specs: a rolled-back transaction, queries as a signed-in user.
 

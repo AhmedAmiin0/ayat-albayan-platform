@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
-import { rolledBack } from '../../support/rls';
+import { rolledBack } from '../../support/core/rls';
 
 // Migration 490 against the real database, in a transaction that is rolled back:
 // teachers.meeting_mode (null | 'static' | 'platform') and the relink trigger that carries a new

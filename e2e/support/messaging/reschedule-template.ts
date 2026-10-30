@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
-import { API } from '../messages';
+import { API } from '../core/messages';
 import { withSql } from '../core/schedule';
-import { stubTemplateStatus } from '../wa-stub';
+import { stubTemplateStatus } from '../core/wa-stub';
 
 // trial_reschedule (owner 2026-10-18), seeded by migration 460 on the chat line, not submitted, on the
 // allow-list. Only the admin's explicit submit sends it to the chat number's WABA; the stub then plays

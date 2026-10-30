@@ -1,6 +1,6 @@
 import { seedConfig } from './platform/config-seed';
 import { resetDb, seedFxRate, seedSettings, seedTeacherRow, seedUser } from './core/db';
-import { USERS } from './users';
+import { USERS } from './core/users';
 
 /**
  * Clean DB + default settings (then the seeder's metadata rows, as an API boot leaves them, docs/26

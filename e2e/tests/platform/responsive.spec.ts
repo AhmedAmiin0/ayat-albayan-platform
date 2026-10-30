@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson } from '../../support/core/schedule';
 import { restingBox } from '../../support/finance/settle';
-import { stubInbound, stubReset } from '../../support/wa-stub';
+import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll

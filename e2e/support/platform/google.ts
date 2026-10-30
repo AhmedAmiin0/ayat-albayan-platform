@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { expect, type Page } from '@playwright/test';
-import { API, bearer } from '../messages';
+import { API, bearer } from '../core/messages';
 import { withSql } from '../core/schedule';
 
 // The Google sync's e2e helpers (docs/24 §5): tools/google-stub stands in for Google, so nothing

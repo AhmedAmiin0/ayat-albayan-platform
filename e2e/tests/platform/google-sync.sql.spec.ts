@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Migrations 530–531 (docs/24 §2.2, §3) against the real database, rolled back: the platform-origin
 // predicate, the producers, the reconcile's idempotency, gone-handling and RLS.

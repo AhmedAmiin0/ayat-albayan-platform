@@ -1,6 +1,6 @@
-import type { Tx } from '../rls';
-import { userId } from '../rls';
-import { USERS } from '../users';
+import type { Tx } from '../core/rls';
+import { userId } from '../core/rls';
+import { USERS } from '../core/users';
 
 // Helpers of the teacher-earnings SQL specs (migrations 176-179): the e2e teacher with known
 // rates, a past lesson of a given length and status, a payment through record_teacher_payment.

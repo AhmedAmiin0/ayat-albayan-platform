@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/rls';
+import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Migration 20261028000935 (docs/09 «Two API copies + one worker»): rate_limit_take is the sign-in limits'
 // sliding window shared by every API copy. Run against Postgres: max hits pass, the next one is refused,

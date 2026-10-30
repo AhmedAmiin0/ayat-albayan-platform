@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { as, family, rolledBack, userId, type Tx } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Owner, 2026-10-11: «for the trial session, students and teachers cannot chat together; they will
 // need the sales to manage between them, or the system». Migration 20261007000001 against the real

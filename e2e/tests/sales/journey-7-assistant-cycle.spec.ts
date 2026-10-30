@@ -1,11 +1,11 @@
 import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { freshDigits } from '../../support/messages';
+import { freshDigits } from '../../support/core/messages';
 import { salesNav, signInSales } from '../../support/sales/sales-portal';
 import { riyadhDay } from '../../support/sales/sales-options';
 import { resetAbrar, setAvailability } from '../../support/core/schedule';
 import { completeLesson, profileChip, startNow } from '../../support/people/student-statuses';
-import { setMessaging, stubInbound, stubReset } from '../../support/wa-stub';
+import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 import { expectInMyPayments, registerWithTrial, renewFromChat, saveSubscription, saveTransfer } from '../../support/sales/assistant-journey-ui';
 import { chatRenew, expectRenewVisible } from '../../support/messaging/chat-more';
 import { bookCourseDays, courseOf } from '../../support/sales/assistant-course';

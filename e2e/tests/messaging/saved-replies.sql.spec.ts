@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { assistant, code } from '../../support/sales/assistant';
-import { as, rolledBack, userId } from '../../support/rls';
-import { USERS } from '../../support/users';
+import { as, rolledBack, userId } from '../../support/core/rls';
+import { USERS } from '../../support/core/users';
 
 // Saved replies «الردود السريعة» (owner 2026-10-25, migrations 670–672): shared rows (owner null) are
 // read by the admin and assistants; personal rows by their owner alone; a teacher sees nothing. Writes
