@@ -50,6 +50,11 @@ export interface Notice {
   /** Each teacher with the time their own message names (a pause: their own first lesson taken). */
   teachers: readonly { teacher: NoticeTeacher; at: Date }[];
   students: readonly NoticeStudent[];
+  /**
+   * The family gets this notice's WhatsApp. False only for a move whose booking confirmation went
+   * instead (FamilyMoveNotice): one family message per move. Their bells go either way.
+   */
+  familyWhatsApp: boolean;
   /** Who made the change: no push to them about it (they still get the WhatsApp, owner: «both»). */
   actorId: string | null;
 }

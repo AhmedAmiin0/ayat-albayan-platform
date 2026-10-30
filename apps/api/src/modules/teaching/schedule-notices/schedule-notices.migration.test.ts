@@ -4,10 +4,10 @@ import { PUSH_KINDS, TEMPLATE_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { NOTICE_KEYS } from './notice.types';
 
-// Migration 985 (owner 2026-10-30). No database runs in unit tests: this pins its shape and the
+// Migration 988 (owner 2026-10-30). No database runs in unit tests: this pins its shape and the
 // owner's exact bodies (the ones he pastes into the CRM).
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
-const sql = readFileSync(join(dir, '20261030000985_schedule_change_notices.sql'), 'utf8');
+const sql = readFileSync(join(dir, '20261030000988_schedule_change_notices.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trimStart().startsWith('--')).join('\n');
 
 const BODIES: Record<(typeof NOTICE_KEYS)[number], string> = {
@@ -20,7 +20,7 @@ const BODIES: Record<(typeof NOTICE_KEYS)[number], string> = {
   course_resumed: 'السلام عليكم {{1}}،\nتم استئناف حلقات {{2}}، وأول حلقة في {{3}}.\nأكاديمية آيات البيان',
 };
 
-describe('migration 985: the schedule-change notices', () => {
+describe('migration 988: the schedule-change notices', () => {
   it('adds the four push kinds re-runnably', () => {
     for (const key of NOTICE_KEYS) {
       expect(code).toContain(`alter type public.push_kind add value if not exists '${key}';`);
@@ -35,6 +35,8 @@ describe('migration 985: the schedule-change notices', () => {
       expect(code).toContain(`'${BODIES[key]}'`);
     }
     expect(code).not.toMatch(/'(approved|pending)'/);
-    expect(code).toContain('on conflict (key) do nothing;');
+    // Any unique key (key, or (meta_name, language) from migration 141) keeps the row: never a failure.
+    expect(code).toContain('on conflict do nothing;');
+    expect(code).not.toMatch(/on conflict \(key\)/);
   });
 });

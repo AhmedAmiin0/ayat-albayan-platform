@@ -13,6 +13,15 @@ describe('lessonNotice: which event → which key, and its subject', () => {
     expect(n.teachers).toEqual([{ teacher: teacher(), at: AT }]);
   });
 
+  it('a move gives the family WhatsApp only when FamilyMoveNotice chose it; a cancel always', () => {
+    const move = { kind: 'lesson_rescheduled', lessonId: 'L1', fromStartsAt: FROM.toISOString(), actorId: null } as const;
+    expect(lessonNotice({ ...move, familyNotice: true }, lessonRow()).familyWhatsApp).toBe(true);
+    expect(lessonNotice({ ...move, familyNotice: false }, lessonRow()).familyWhatsApp).toBe(false);
+    expect(lessonNotice(move, lessonRow()).familyWhatsApp).toBe(false);
+    const cancel = { kind: 'lesson_cancelled', lessonId: 'L1', actorId: null } as const;
+    expect(lessonNotice(cancel, lessonRow()).familyWhatsApp).toBe(true);
+  });
+
   it('a cancel names the lesson only; every student on it; a lesson without a teacher → no teacher', () => {
     const students = [{ student: student() }, { student: null }];
     const row = lessonRow({ teacher: null, lesson_students: students });

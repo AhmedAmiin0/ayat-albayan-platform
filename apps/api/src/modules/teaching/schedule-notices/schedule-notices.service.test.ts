@@ -1,46 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
-import type { NotificationRuleRow } from '@ab/shared';
-import { LessonEvents, type ScheduleChange } from '@/common/events/lesson-events';
-import type { PushService, PushTarget } from '@/common/push/push.service';
-import { NotificationPolicy, type RulesReader } from '@/modules/messaging/notification-rules';
-import type { MessageSender } from '@/modules/messaging/whatsapp';
+import { describe, expect, it } from 'vitest';
+import type { ScheduleChange } from '@/common/events/lesson-events';
 import type { TakenLessonRow } from './notice.build';
-import { FROM, lessonRow, NOW, student, teacher } from './schedule-notices.fakes';
-import type { ScheduleNoticesRepo } from './schedule-notices.repo';
-import { NoticeDeps, ScheduleNotices } from './schedule-notices.service';
-
-/** A policy over stored rows (legacy mode: these keys have no legacy switch, the row decides). */
-function policy(rows: Partial<NotificationRuleRow>[] = []): NotificationPolicy {
-  const map = new Map(rows.map((r) => [r.key ?? '', { channels: null, timing: null, number_id: null, ...r }]));
-  const reader = { snapshot: async () => ({ mode: 'legacy', rows: map, settings: {} }) };
-  return new NotificationPolicy(reader as unknown as RulesReader);
-}
-
-function harness(o: { rows?: Partial<NotificationRuleRow>[]; approved?: boolean } = {}) {
-  const seen = new Set<string>();
-  const repo = {
-    lesson: vi.fn(async () => lessonRow()),
-    student: vi.fn(async () => student()),
-    lessons: vi.fn(async (): Promise<TakenLessonRow[]> => []),
-    nextLesson: vi.fn(async (): Promise<TakenLessonRow | null> => null),
-    approved: vi.fn(async () => o.approved ?? true),
-    // insert … on conflict (dedup_key) do nothing.
-    queue: vi.fn(async (rows: readonly { dedup_key: string }[]) => {
-      const fresh = rows.filter((r) => !seen.has(r.dedup_key));
-      fresh.forEach((r) => seen.add(r.dedup_key));
-      return fresh.length;
-    }),
-  };
-  const push = { notifyProfiles: vi.fn(async (_target: PushTarget) => undefined) };
-  const sender = { kick: vi.fn(async () => undefined) };
-  const sends = sender as unknown as MessageSender;
-  const deps = new NoticeDeps(push as unknown as PushService, policy(o.rows), sends);
-  const events = new LessonEvents();
-  const notices = new ScheduleNotices(repo as unknown as ScheduleNoticesRepo, deps, events);
-  notices.onModuleInit();
-  const queued = () => repo.queue.mock.calls.flatMap(([rows]) => rows.map((r) => r.dedup_key));
-  return { repo, push, sender, events, notices, queued };
-}
+import { FROM, harness, lessonRow, NOW, teacher } from './schedule-notices.fakes';
 
 const CANCEL: ScheduleChange = { kind: 'lesson_cancelled', lessonId: 'L1', actorId: 'pADMIN' };
 
@@ -112,13 +73,14 @@ describe('ScheduleNotices: idempotent, one notice per pause', () => {
     const h = harness();
     h.repo.nextLesson.mockResolvedValue({ id: 'n1', starts_at: '2026-11-03T08:00:00Z', teacher: teacher() });
     await h.notices.handle({ kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null }, NOW);
-    expect(h.repo.nextLesson).toHaveBeenCalledWith('S1', NOW);
+    expect(h.repo.pauseRules).toHaveBeenCalledWith('P1');
+    expect(h.repo.nextLesson).toHaveBeenCalledWith({ studentId: 'S1', ruleIds: ['R1'], after: NOW });
     expect(h.queued()).toEqual(['course_resumed:P1:t:T1', 'course_resumed:P1:g:G1']);
   });
 
   it('a move: one notice per new start; moving it again is a new notice', async () => {
     const h = harness();
-    const move = { kind: 'lesson_rescheduled', lessonId: 'L1', fromStartsAt: FROM.toISOString(), actorId: null } as const;
+    const move = { kind: 'lesson_rescheduled', lessonId: 'L1', fromStartsAt: FROM.toISOString(), actorId: null, familyNotice: true } as const;
     await h.notices.handle(move, NOW);
     h.repo.lesson.mockResolvedValue(lessonRow({ starts_at: '2026-11-03T08:00:00Z' }));
     await h.notices.handle(move, NOW);

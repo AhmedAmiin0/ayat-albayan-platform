@@ -1,9 +1,9 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { LessonEvents, type ScheduleChange } from '@/common/events/lesson-events';
 import { PushService } from '@/common/push/push.service';
-import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { MessageSender } from '@/modules/messaging/whatsapp';
 import { lessonNotice, pausedNotice, resumedNotice } from './notice.build';
+import { NoticeGate } from './notice.gate';
 import { planNotice } from './notice.plan';
 import type { Notice } from './notice.types';
 import { ScheduleNoticesRepo } from './schedule-notices.repo';
@@ -13,7 +13,7 @@ import { ScheduleNoticesRepo } from './schedule-notices.repo';
 export class NoticeDeps {
   constructor(
     readonly push: PushService,
-    readonly policy: NotificationPolicy,
+    readonly gate: NoticeGate,
     readonly sender: MessageSender,
   ) {}
 }
@@ -24,7 +24,8 @@ export class NoticeDeps {
  * lesson's teacher and the student's family hear it: the bell / push of each one with a profile
  * (never the person who made the change; PushService applies the row's rule) and one WhatsApp each
  * on the notifications line, queued only while the row's rule is on and its template approved
- * (never a free-text fallback). The sender owns the send gate (messaging_enabled). The row is not
+ * (NoticeGate; never a free-text fallback). A move's family WhatsApp goes only when
+ * FamilyMoveNotice chose it over the booking confirmation (one family message). The sender owns the send gate (messaging_enabled). The row is not
  * automatic: auto_messages_enabled does not hold it. Never throws: the change is already saved.
  */
 @Injectable()
@@ -61,7 +62,9 @@ export class ScheduleNotices implements OnModuleInit {
       const lessons = await this.repo.lessons(change.lessonIds);
       return pausedNotice(change, { student, lessons, now });
     }
-    const next = await this.repo.nextLesson(change.studentId, now);
+    // The first lesson back of the course this pause held (its rules), not any course.
+    const ruleIds = await this.repo.pauseRules(change.pauseId);
+    const next = await this.repo.nextLesson({ studentId: change.studentId, ruleIds, after: now });
     return resumedNotice(change, { student, next });
   }
 
@@ -69,8 +72,13 @@ export class ScheduleNotices implements OnModuleInit {
     const plan = planNotice(notice, now);
     for (const target of plan.pushes) await this.deps.push.notifyProfiles(target);
     if (plan.messages.length === 0) return;
-    if (!(await this.deps.policy.channelOn(notice.key, 'whatsapp'))) return;
-    if (!(await this.repo.approved(notice.key))) return;
+    if (!promised(notice) && !(await this.deps.gate.usable(notice.key))) return;
     if ((await this.repo.queue(plan.messages)) > 0) void this.deps.sender.kick();
   }
 }
+
+/**
+ * A move whose family FamilyMoveNotice promised lesson_rescheduled: the gate passed then and their
+ * booking confirmation was dropped, so it is not asked again (the family hears the move once).
+ */
+const promised = (n: Notice): boolean => n.key === 'lesson_rescheduled' && n.familyWhatsApp;

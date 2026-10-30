@@ -18,6 +18,13 @@ const NEXT_SELECT =
 const STUDENT_SELECT =
   'id, name, tz, profile_id, guardian:guardians(id, name, phone_e164, tz, profile_id)' as const;
 
+/** A resume's first lesson back: the student's, on the rules its pause held. */
+interface NextLessonQuery {
+  studentId: string;
+  ruleIds: readonly string[];
+  after: Date;
+}
+
 /** Reads and the idempotent queue write of the schedule-change notices (owner 2026-10-30). */
 @Injectable()
 export class ScheduleNoticesRepo {
@@ -52,14 +59,27 @@ export class ScheduleNoticesRepo {
     return data;
   }
 
-  /** The student's first open lesson after `after`: the first lesson back after a resume. */
-  async nextLesson(studentId: string, after: Date): Promise<TakenLessonRow | null> {
+  /** The rules a pause held: its own (rule_ids) and the group ones it took the student out of. */
+  async pauseRules(pauseId: string): Promise<string[]> {
+    const { data, error } = await this.db
+      .from('course_pauses')
+      .select('rule_ids, shared_rule_ids')
+      .eq('id', pauseId)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data ? [...data.rule_ids, ...data.shared_rule_ids] : [];
+  }
+
+  /** The student's first open lesson of `ruleIds` after `after`: the first lesson back. */
+  async nextLesson(q: NextLessonQuery): Promise<TakenLessonRow | null> {
+    if (q.ruleIds.length === 0) return null;
     const { data, error } = await this.db
       .from('lessons')
       .select(NEXT_SELECT)
-      .eq('lesson_students.student_id', studentId)
+      .eq('lesson_students.student_id', q.studentId)
+      .in('rule_id', [...q.ruleIds])
       .in('status', ['scheduled', 'confirmed'])
-      .gt('starts_at', after.toISOString())
+      .gt('starts_at', q.after.toISOString())
       .order('starts_at')
       .limit(1);
     if (error) throw dbError(error);

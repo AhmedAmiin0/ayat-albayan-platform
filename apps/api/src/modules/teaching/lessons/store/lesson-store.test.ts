@@ -3,11 +3,12 @@ import { LessonEvents } from '../../../../common/events/lesson-events';
 import type { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import { LessonStore } from './lesson-store';
 import type { LessonsQueries } from '../lessons.queries';
+import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 describe('LessonStore.commit — the audit row rides in the same transaction (R-NFR-03)', () => {
   it('passes the audit inside the change set; there is no separate audit write to fail', async () => {
     const writer = { apply: vi.fn().mockResolvedValue(undefined) };
-    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, new LessonEvents());
+    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, new LessonEvents(), fakeFamilyMove().move);
     await store.commit({
       change: { actor: 'u1', changes: [] },
       audit: { entity: 'lessons', entityId: 'L1', action: 'cancel', before: { status: 'scheduled' }, after: { by: 'admin' } },
@@ -25,7 +26,7 @@ describe('LessonStore.commit — the audit row rides in the same transaction (R-
     const listener = vi.fn().mockResolvedValue(undefined);
     events.onChanged(listener);
     const writer = { apply: vi.fn().mockResolvedValue(undefined) };
-    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, events);
+    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, events, fakeFamilyMove().move);
     const commit = {
       change: { actor: 'u1', changes: [{ id: 'L1', from_status: 'scheduled' as const, to_status: 'completed' as const }] },
       audit: { entity: 'lessons', entityId: 'L1', action: 'status_change' },
@@ -43,7 +44,7 @@ describe('LessonStore.commit — the audit row rides in the same transaction (R-
     const listener = vi.fn().mockResolvedValue(undefined);
     events.onChanged(listener);
     const writer = { retime: vi.fn().mockResolvedValue(undefined) };
-    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, events);
+    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, events, fakeFamilyMove().move);
     const change = {
       actor: 'u1',
       lesson_id: 'L1',

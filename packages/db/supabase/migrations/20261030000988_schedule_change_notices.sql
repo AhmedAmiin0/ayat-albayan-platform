@@ -10,7 +10,9 @@
 --    recipient's own zone.
 --
 -- Idempotent and expand-only: add value if not exists (no new value is used in this migration); an
--- existing template row (edited by the admin or a sync) is kept. The previous API never writes them.
+-- existing template row (edited by the admin or a sync) is kept: `on conflict do nothing` covers both
+-- unique keys (key, and (meta_name, language) from migration 141), as migration 460 does. The previous
+-- API never writes them.
 
 alter type public.push_kind add value if not exists 'lesson_rescheduled';
 alter type public.push_kind add value if not exists 'lesson_cancelled';
@@ -43,7 +45,7 @@ insert into public.message_templates
    'السلام عليكم {{1}}،
 تم استئناف حلقات {{2}}، وأول حلقة في {{3}}.
 أكاديمية آيات البيان', null)
-on conflict (key) do nothing;
+on conflict do nothing;
 
 -- RLS / grants: unchanged (message_templates has RLS since migration 141; only the API's service role writes).
 --

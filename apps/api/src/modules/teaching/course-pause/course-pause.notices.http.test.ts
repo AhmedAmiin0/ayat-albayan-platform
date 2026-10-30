@@ -45,7 +45,8 @@ describe('course pause notices (owner 2026-10-30)', () => {
     t.m.queries.call.mockResolvedValue(rpcOut({ resumed: true, cancelled: [], left: [], reopened: ['l3'] }));
     t.m.notices.nextLesson.mockResolvedValue(lesson('l3', '2026-11-05T14:00:00Z'));
     expect((await t.post(`${URL}/resume`, 'admin')).statusCode).toBe(200);
-    expect(t.m.notices.nextLesson).toHaveBeenCalledWith(STUDENT, NOW);
+    expect(t.m.notices.pauseRules).toHaveBeenCalledWith(PAUSE);
+    expect(t.m.notices.nextLesson).toHaveBeenCalledWith({ studentId: STUDENT, ruleIds: ['R1'], after: NOW });
     expect(queued().map((r) => r.dedup_key)).toEqual([`course_resumed:${PAUSE}:t:T1`, `course_resumed:${PAUSE}:g:G1`]);
   });
 

@@ -7,6 +7,9 @@ import { NotificationPolicy } from '../../../messaging/notification-rules/policy
 import { domainError } from '../booking.errors';
 import { BookingFollowUps } from '../core/booking.follow-ups';
 import { BookingPlanner } from '../plan/booking.planner';
+import type { BookingPayload } from '../core/booking.mapper';
+import type { MessageDraft } from '../core/booking.messages';
+import { FamilyMoveNotice, familyMove, type FamilyMove } from '@/modules/teaching/schedule-notices';
 import { trialHistory, trialLessonsOf } from './trial-date.history';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
 import { TrialDateQueries } from './trial-date.queries';
@@ -19,6 +22,7 @@ export class TrialDateDeps {
     readonly policy: NotificationPolicy,
     readonly after: BookingFollowUps,
     readonly events: LessonEvents,
+    readonly move: FamilyMoveNotice,
   ) {}
 }
 
@@ -76,7 +80,10 @@ export class TrialDates {
   async pick(target: TrialTarget, actorId: string): Promise<TrialDateResult> {
     const { req, old } = target;
     const prepared = await this.planner.prepare(req, { excludeLessonIds: old ? [old.id] : [] });
-    const payload = { ...prepared.payload, messages: await gateConfirmations(this.deps.policy, prepared.payload.messages) };
+    const confirmations = await gateConfirmations(this.deps.policy, prepared.payload.messages);
+    const gated = { ...prepared.payload, messages: confirmations };
+    const family = await this.family(gated, old);
+    const payload = { ...gated, messages: family.messages };
     const lessonId = req.clientRequestId;
     const pick = old ? movePick({ payload, actorId, old, lessonId }) : bookPick({ payload, actorId });
     if (!pick) throw new Error('trial date planned no lesson');
@@ -89,25 +96,42 @@ export class TrialDates {
       if (!first) throw e;
       return first;
     }
-    await this.followUps({ req, result, old, actorId });
+    await this.followUps({ req, result, old, actorId, familyNotice: family.familyNotice });
     return result;
   }
 
-  private async followUps(done: { req: BookingRequest; result: TrialDateResult; old: MovedTrial | null; actorId: string }): Promise<void> {
-    const { req, result, old, actorId } = done;
+  /** A move: ONE family message, lesson_rescheduled or the confirmation (FamilyMoveNotice). */
+  private family(p: BookingPayload, old: MovedTrial | null): Promise<FamilyMove<MessageDraft>> {
+    const to = p.lessons[0]?.starts_at;
+    if (!old || !to) return Promise.resolve(familyMove(false, p.messages));
+    return this.deps.move.choose({ from: old.starts_at, to }, p.messages);
+  }
+
+  private async followUps(done: FollowUp): Promise<void> {
+    const { req, result, old, actorId, familyNotice } = done;
     if (old) await this.deps.events.changed([old.id, result.lesson_id]);
     // The move's own notice (owner 2026-10-30): the teacher and the family hear the new time.
-    if (old) await this.deps.events.scheduleChanged(movedTrial(old, result, actorId));
+    if (old) await this.deps.events.scheduleChanged(movedTrial({ old, result, actorId, familyNotice }));
     // Always the new lesson's alert (dedup by its id): the old lesson's queued one goes stale, and a
     // same-teacher move has no moved-lesson notice, so this is how that teacher learns the new time.
     await this.deps.after.afterBooking({ req, result: asBooking(result, { req, alerted: [result] }), actorId });
   }
 }
 
+type FollowUp = {
+  req: BookingRequest;
+  result: TrialDateResult;
+  old: MovedTrial | null;
+  actorId: string;
+  /** FamilyMoveNotice's choice: the family hears the move by lesson_rescheduled. */
+  familyNotice: boolean;
+};
+type Moved = { old: MovedTrial; result: TrialDateResult; actorId: string; familyNotice: boolean };
+
 /** A trial moved to its new date: lesson_rescheduled from the old trial's start. */
-function movedTrial(old: MovedTrial, r: TrialDateResult, actorId: string): ScheduleChange {
+function movedTrial({ old, result, actorId, familyNotice }: Moved): ScheduleChange {
   const fromStartsAt = old.starts_at;
-  return { kind: 'lesson_rescheduled', lessonId: r.lesson_id, fromStartsAt, actorId };
+  return { kind: 'lesson_rescheduled', lessonId: result.lesson_id, fromStartsAt, actorId, familyNotice };
 }
 
 /** The picked lesson in the BookingResult shape the booking follow-ups read (lessons: who is alerted). */
