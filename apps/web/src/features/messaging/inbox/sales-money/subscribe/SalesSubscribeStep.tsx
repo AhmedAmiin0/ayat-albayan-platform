@@ -64,6 +64,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     if (renew) setForm(seedOf(id));
   };
   const canSet = usePermissions().can('subscriptions.set_start_date');
+  // academy day (docs/34 b): the API checks starts_on / used-before against the Riyadh day
   const [today] = useState(() => todayIn('Asia/Riyadh'));
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);

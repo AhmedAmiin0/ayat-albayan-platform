@@ -1,4 +1,5 @@
 import {
+  ACADEMY_TZ,
   courseBodyPackage,
   type BookingTeacherOption,
   type Duration,
@@ -6,7 +7,7 @@ import {
   type PackageSize,
   type Program,
 } from '@ab/shared';
-import { RIYADH_TZ, zonedParts } from '@/features/teaching/schedule/tz';
+import { zonedParts } from '@/features/teaching/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';
@@ -75,7 +76,7 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
     students: [],
     leadId: o.leadId ?? null,
     newStudent: null,
-    tz: RIYADH_TZ,
+    tz: ACADEMY_TZ, // data default (docs/34 —): the family's zone until a guardian is picked
     program: 'quran',
     genderPref: null,
     country: null,

@@ -18,6 +18,7 @@ export function parseDashboardSearch(s: Record<string, unknown>): DashboardSearc
   return Object.fromEntries(Object.entries(out).filter(([, v]) => v !== undefined));
 }
 
+// academy day (docs/34 b): the API reads ?from&to as Riyadh days (docs/11 §3).
 /** Today in Riyadh, "YYYY-MM-DD" (ranges are Riyadh days, docs/11 §3); shared with the mobile calendar. */
 export { riyadhToday };
 

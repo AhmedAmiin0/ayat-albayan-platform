@@ -7,7 +7,7 @@ import { addDays, dayMonthLabel, weekdayOf, weekStart } from './tz';
 
 export interface ScheduleNavProps {
   search: ScheduleSearch;
-  /** Today's Riyadh date. */
+  /** Today's date in the viewer's zone. */
   today: string;
   onSearch: (patch: Partial<ScheduleSearch>) => void;
 }
@@ -24,8 +24,8 @@ const orDefault = (value: string, fallback: string) => (value === fallback ? und
 
 /**
  * «اليوم | الأسبوع», a day or a week back and forward, «النهارده» / «الأسبوع ده», and the date
- * shown (Riyadh, R-SCH-01). Day → week opens that day's week; week → day opens today when it is
- * in that week, else its Saturday.
+ * shown (the viewer's zone, R-SCH-01). Day → week opens that day's week; week → day opens today
+ * when it is in that week, else its Saturday.
  */
 export function ScheduleNav({ search, today, onSearch }: ScheduleNavProps) {
   const thisWeek = weekStart(today);
@@ -60,7 +60,7 @@ export function ScheduleNav({ search, today, onSearch }: ScheduleNavProps) {
       <span aria-live="polite" className="ms-1 text-sm font-semibold tabular-nums">
         {label}
       </span>
-      <span className="text-xs text-ink-3">{t.schedule.riyadhTime}</span>
+      <span className="text-xs text-ink-3">{t.schedule.viewerTime}</span>
     </div>
   );
 }

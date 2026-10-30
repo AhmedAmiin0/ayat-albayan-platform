@@ -19,13 +19,16 @@ export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: 
 const namesOf = (rows: TeacherLessonRow['lesson_students']): SalesOverviewStudent[] =>
   rows.flatMap((r) => (r.student ? [{ name: r.student.name, code: r.student.code ?? '' }] : []));
 
-/** One row per weekday of a weekly rule, read in Riyadh from its next start (DST-safe); a trial's one-lesson rule is left out. */
+/**
+ * One row per weekday of a weekly rule from its next start (DST-safe); a trial's one-lesson rule is
+ * left out. weekday/time stay Riyadh's for old clients; `at` lets the viewer's zone apply (docs/34).
+ */
 function slotsOf(rule: TeacherRuleRow, now: Date): SalesTeacherSlot[] {
   if (rule.package === 'trial') return [];
   const students = namesOf(rule.students);
   return nextStarts(rule, now).map((at) => {
     const wall = wallParts(at, RIYADH_TZ);
-    return { rule_id: rule.id, weekday: wall.weekday, time: wall.time, duration_min: rule.duration_min, students };
+    return { rule_id: rule.id, weekday: wall.weekday, time: wall.time, at, duration_min: rule.duration_min, students };
   });
 }
 

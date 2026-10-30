@@ -36,7 +36,7 @@ export function SalesDayNav({ date, today, onDate }: SalesDayNavProps) {
       <span aria-live="polite" className="ms-1 text-sm font-semibold tabular-nums">
         {`${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`}
       </span>
-      <span className="text-xs text-ink-3">{t.schedule.riyadhTime}</span>
+      <span className="text-xs text-ink-3">{t.schedule.viewerTime}</span>
     </div>
   );
 }

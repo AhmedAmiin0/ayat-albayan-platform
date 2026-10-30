@@ -1,17 +1,21 @@
+import { viewerTz } from '@ab/client-core';
 import { intlLocale, type StatusStyle } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { clockWithSeconds } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
-// Display helpers of «سجل النشاط». DB times are UTC; the log is the academy's, so it reads in the
-// academy's zone (Asia/Riyadh), 12 or 24 h as the viewer chose, Western digits.
+// Display helpers of «سجل النشاط». DB times are UTC; they read in the viewer's zone (docs/34),
+// 12 or 24 h as the viewer chose, Western digits.
 
-const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'Asia/Riyadh' });
 const JOIN = locale === 'ar' ? '، ' : ', ';
 
-export const formatAt = (iso: string, clock: Clock): string =>
-  `${DAY.format(new Date(iso))}${JOIN}${clockWithSeconds(new Date(iso), { ...clock, tz: 'Asia/Riyadh' })}`;
+export function formatAt(iso: string, clock: Clock): string {
+  const at = new Date(iso);
+  const tz = viewerTz();
+  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
+  return `${day.format(at)}${JOIN}${clockWithSeconds(at, { ...clock, tz })}`;
+}
 
 type Dict = Record<string, string | undefined>;
 const lookup = (dict: object, key: string): string | undefined => (dict as Dict)[key];

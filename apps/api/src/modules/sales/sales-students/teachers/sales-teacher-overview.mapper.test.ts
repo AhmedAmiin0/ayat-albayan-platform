@@ -7,10 +7,12 @@ describe('toTeacherOverview', () => {
     const out = toTeacherOverview({ rules: [teacherRule(), teacherRule({ id: 'rt', package: 'trial' })], lessons: [] }, NOW);
     const students = [{ name: 'ياسمين', code: 'AB-0101' }, { name: 'يوسف', code: '' }];
     expect(out.weekly).toEqual([
-      { rule_id: 'r1', weekday: 0, time: '20:00', duration_min: 45, students },
-      { rule_id: 'r1', weekday: 2, time: '20:00', duration_min: 45, students },
+      { rule_id: 'r1', weekday: 0, time: '20:00', at: expect.any(String), duration_min: 45, students },
+      { rule_id: 'r1', weekday: 2, time: '20:00', at: expect.any(String), duration_min: 45, students },
     ]);
     expect(JSON.stringify(out)).not.toMatch(/meet|secret|290|price/);
+    // `at` is the next start: 20:00 Riyadh = 17:00 UTC, so a Cairo viewer reads 19:00 (docs/34).
+    expect(out.weekly.map((s) => (s.at ?? '').slice(11, 16))).toEqual(['17:00', '17:00']);
   });
 
   it('a rule that ended is left out', () => {

@@ -28,6 +28,13 @@ describe('riyadhWhenText', () => {
     expect(riyadhWhenText('2026-10-12T22:30:00.000Z', arWords)).toBe('الثلاثاء 13 أكتوبر 01:30');
   });
 
+  it('reads in the viewer’s zone when given (docs/34): Cairo after its summer time', () => {
+    const cairo = { ...arWords, tz: 'Africa/Cairo' };
+    expect(riyadhWhenText('2026-11-02T15:00:00.000Z', cairo)).toBe('الاثنين 2 نوفمبر 17:00');
+    expect(riyadhWhenText('2026-10-26T15:00:00.000Z', cairo)).toBe('الاثنين 26 أكتوبر 18:00');
+    expect(riyadhWhenText('2026-11-02T21:30:00.000Z', cairo)).toBe('الاثنين 2 نوفمبر 23:30');
+  });
+
   it('reads the injected words: English month and weekday', () => {
     const text = riyadhWhenText('2026-10-12T15:00:00.000Z', { weekday: en.enums.weekday, locale: 'en' });
     expect(text.startsWith(`${en.enums.weekday['1']} `)).toBe(true);

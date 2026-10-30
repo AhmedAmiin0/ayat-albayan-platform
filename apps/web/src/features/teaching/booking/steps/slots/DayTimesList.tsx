@@ -1,7 +1,7 @@
+import { viewerTz } from '@ab/client-core';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import type { DayPick } from '../../draft/draft.days';
 import { type Clock, useClock } from '@/lib/clock';
@@ -10,7 +10,7 @@ import { clockOfHhmm } from '@ab/shared';
 export interface DayTimesListProps {
   /** Each picked day with its time in the family zone (dayPicks), Saturday first. */
   picks: readonly DayPick[];
-  /** The family's zone: its city follows the times when it is not Riyadh. */
+  /** The family's zone: its city follows the times when it is not the viewer's. */
   tz: string;
   /** Unpicks that day (its instant). */
   onRemove: (at: string) => void;
@@ -18,10 +18,13 @@ export interface DayTimesListProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/** «الأحد الساعة 17:00» for one picked day; «… 17:00 بتوقيت القاهرة» when the family is not in Riyadh. */
-export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, clock: Clock, tz: string = RIYADH_TZ): string {
+/**
+ * «الأحد الساعة 17:00» for one picked day (the family's clock); «… 17:00 بتوقيت القاهرة» when the
+ * family's zone is not the viewer's.
+ */
+export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, clock: Clock, tz: string = viewerTz()): string {
   const at = clockOfHhmm(p.time, clock.cycle, clock.locale);
-  const time = tz === RIYADH_TZ ? at : t.schedule.inCity.replace('{time}', at).replace('{city}', tzCity(tz) ?? tz);
+  const time = tz === viewerTz() ? at : t.schedule.inCity.replace('{time}', at).replace('{city}', tzCity(tz) ?? tz);
   return t.booking.dayAt.replace('{day}', weekday[String(p.weekday)] ?? '').replace('{time}', time);
 }
 

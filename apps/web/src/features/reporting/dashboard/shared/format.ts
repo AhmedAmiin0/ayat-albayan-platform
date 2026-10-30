@@ -1,10 +1,11 @@
-import { clockOf, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { viewerTz } from '@ab/client-core';
+import { clockOf, formatAmount, intlLocale } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import type { Clock } from '@/lib/clock';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
-// units (the table and the CSV keep the exact amounts), Riyadh times with the zone said once.
+// units (the table and the CSV keep the exact amounts), times in the viewer's zone (docs/34).
 
 const currencies: Readonly<Record<string, string>> = t.pricing.currencies;
 
@@ -31,17 +32,18 @@ export function monthLabel(month: string): string {
   return monthFormat.format(new Date(`${month}-01T00:00:00Z`));
 }
 
-const dayFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone: RIYADH_TZ });
+const dayFormat = (timeZone: string) =>
+  new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone });
 
-/** «الخميس، 1 أكتوبر 16:00» in Riyadh time. */
-export function whenRiyadh(iso: string, clock: Clock): string {
+/** «الخميس، 1 أكتوبر 16:00» in the viewer's zone. */
+export function whenViewer(iso: string, clock: Clock): string {
   const at = new Date(iso);
-  return `${dayFormat.format(at)} ${clockOf(at, { tz: RIYADH_TZ, ...clock })}`;
+  const tz = viewerTz();
+  return `${dayFormat(tz).format(at)} ${clockOf(at, { tz, ...clock })}`;
 }
 
-const dateFormat = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: RIYADH_TZ });
-
-/** A provider rate time as a Riyadh date. */
+/** A provider rate time as a date in the viewer's zone. */
 export function rateDate(iso: string): string {
-  return dateFormat.format(new Date(iso));
+  const opts = { day: 'numeric', month: 'long', year: 'numeric', timeZone: viewerTz() } as const;
+  return new Intl.DateTimeFormat(intlLocale(locale), opts).format(new Date(iso));
 }

@@ -87,7 +87,7 @@ const emptyBody: BookingBody = {
   teacherId: '',
   byday: [0],
   startTimeLocal: '00:00',
-  tz: 'Asia/Riyadh',
+  tz: 'Asia/Riyadh', // placeholder (docs/34 —): this body is never sent
   durationMin: 45,
   startsOn: '2026-01-01',
   package: 'trial',

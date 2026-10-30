@@ -44,7 +44,7 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
     expect(within(drawer).getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
     expect(within(drawer).getByText(t.schedule.trialTag)).toBeTruthy();
-    expect(within(drawer).getByText(new RegExp(t.schedule.riyadhTime))).toBeTruthy();
+    expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
     for (const line of salesClockLines(LATER, C24)) expect(within(drawer).getByText(line)).toBeTruthy();
     expect(within(drawer).getByText('أبرار')).toBeTruthy();
     expect(within(drawer).getByText('AB-0183')).toBeTruthy();

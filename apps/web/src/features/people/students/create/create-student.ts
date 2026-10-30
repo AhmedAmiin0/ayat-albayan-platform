@@ -26,7 +26,7 @@ export const EMPTY_STUDENT: CreateStudentValues = {
   age: '',
   gender: '',
   source: '',
-  tz: 'Asia/Riyadh',
+  tz: 'Asia/Riyadh', // data default (docs/34 —): the family's zone until one is picked
   program: 'quran',
   teacher_id: '',
   contactIsSelf: false,

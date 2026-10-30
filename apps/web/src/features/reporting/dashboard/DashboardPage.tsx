@@ -43,7 +43,7 @@ const card = 'rounded-md border border-rule p-4';
 export function DashboardPage({ search, onSearch }: DashboardPageProps) {
   const now = useNow();
   const win = useJoinWindow();
-  const today = riyadhToday();
+  const today = riyadhToday(); // academy day (docs/34 b): the period's ?from&to are Riyadh days
   const week = thisWeek(today);
   const period = periodOf(search, today);
   const weekQ = useQuery(summaryQuery(week));
