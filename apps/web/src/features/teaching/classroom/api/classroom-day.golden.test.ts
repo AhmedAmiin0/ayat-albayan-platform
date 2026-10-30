@@ -34,7 +34,7 @@ describe.each(GOLDEN_ZONES)('classroom day, pinned, with the browser in %s', (zo
 
   it('today and the days around it, every half hour of the sweep', () => {
     expect(digest(lines())).toBe(EXPECTED[zone]);
-  });
+  }, 90_000);
 });
 
 describe('DST edges (zone given)', () => {

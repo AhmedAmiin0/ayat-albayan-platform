@@ -1,4 +1,4 @@
-import { tz } from '@date-fns/tz';
+import { UTCDate } from '@date-fns/utc';
 import {
   addDays,
   addMonths,
@@ -21,28 +21,29 @@ export interface UtcRange {
   from: Date;
   to: Date;
 }
-const utc = tz('UTC');
-const ymd = (d: Date): string => format(d, 'yyyy-MM-dd', { in: utc });
-const atUtcMidnight = (date: string): Date => new Date(`${date}T00:00:00Z`);
+// Calendar dates are UTC midnights in a UTCDate: its getters and setters are the UTC ones, so
+// neither the device's zone nor a test that fakes Date's local getters can move a date.
+const ymd = (d: Date): string => format(d, 'yyyy-MM-dd');
+const atUtcMidnight = (date: string): Date => new UTCDate(`${date}T00:00:00Z`);
 
 /** The calendar date `days` later (negative: earlier); crosses months and years. */
 export function addCalendarDays(date: string, days: number): string {
-  return ymd(addDays(atUtcMidnight(date), days, { in: utc }));
+  return ymd(addDays(atUtcMidnight(date), days));
 }
 
 /** The first day of the calendar month `months` after the one of «YYYY-MM» (or a date). */
 export function addCalendarMonths(month: string, months: number): string {
-  return ymd(addMonths(atUtcMidnight(`${month.slice(0, 7)}-01`), months, { in: utc }));
+  return ymd(addMonths(atUtcMidnight(`${month.slice(0, 7)}-01`), months));
 }
 
 /** 0 = الأحد … 6 = السبت of a calendar date. */
 export function weekdayOfDate(date: string): number {
-  return getDay(atUtcMidnight(date), { in: utc });
+  return getDay(atUtcMidnight(date));
 }
 
 /** The first day of `date`'s week; `weekStartsOn` 6 = the academy week (السبت → الجمعة). */
 export function weekStartOfDate(date: string, weekStartsOn: Day = 6): string {
-  return ymd(startOfWeek(atUtcMidnight(date), { in: utc, weekStartsOn }));
+  return ymd(startOfWeek(atUtcMidnight(date), { weekStartsOn }));
 }
 
 /** Midnight that starts `at`'s local day in `zone`, as a UTC instant (Cairo: 00:00 or 01:00). */
@@ -74,7 +75,7 @@ export function monthRangeIn(month: string, zone: string): UtcRange {
  */
 export function addDaysIn(at: Date | number, days: number, zone: string): Date {
   const instant = new Date(at).getTime();
-  const naive = addDays(instant, days, { in: utc }).getTime();
+  const naive = addDays(instant, days).getTime();
   const shift = offsetMinutesIn(zone, instant) - offsetMinutesIn(zone, naive);
   return new Date(naive + shift * MINUTE);
 }
@@ -91,5 +92,5 @@ export function startOfWeekIn(at: Date | number, zone: string, weekStartsOn: Day
 
 /** Whole local days from `from` to `to` (calendar dates), e.g. 1 = tomorrow. */
 export function calendarDaysBetween(from: string, to: string): number {
-  return differenceInCalendarDays(atUtcMidnight(to), atUtcMidnight(from), { in: utc });
+  return differenceInCalendarDays(atUtcMidnight(to), atUtcMidnight(from));
 }

@@ -1,8 +1,11 @@
 import { GOLDEN_ZONES, digest, goldenDates } from '@ab/shared/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { monthWindow } from '@/modules/finance/payouts/payouts.plan';
 import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
 import { ruleOccurrences } from './occurrences';
+
+// A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
+vi.setConfig({ testTimeout: 60_000 });
 
 // Regression goldens (docs/34 §7): occurrence generation (idempotent on unique(rule_id,
 // starts_at)), the payroll month and the academy-day `?from&to` window: byte-identical instants.

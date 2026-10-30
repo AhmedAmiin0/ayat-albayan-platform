@@ -164,9 +164,11 @@ name). Messages (c) are composed by the API; the app sends none with a time.
 
 ## 7. date-fns facade
 
-Owner, 2026-10-30: «You can use date-fns instead of handling date». `date-fns` 4 and `@date-fns/tz`
-(pure JS, so mobile still ships by OTA: `tools/scripts/ci-checks/native-changes.mjs`) are
-dependencies of `packages/shared` only. Apps import date helpers through `@ab/shared`, never
+Owner, 2026-10-30: «You can use date-fns instead of handling date». `date-fns` 4, `@date-fns/tz`
+and `@date-fns/utc` (pure JS, so mobile still ships by OTA:
+`tools/scripts/ci-checks/native-changes.mjs`) are dependencies of `packages/shared` only.
+Calendar dates are computed on `UTCDate` (UTC getters and setters), so the device's zone, or a
+test that fakes `Date`'s local getters, cannot move a date. Apps import date helpers through `@ab/shared`, never
 `date-fns` directly. The facade is in `packages/shared/src/time/`:
 
 | file | what |
