@@ -45,7 +45,11 @@ function rekey(base, table) {
 export function suppressionsMoved(file, texts, renames) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!isRecord(base) || !isRecord(head)) return false;
-  const moved = rekey(base, new Map(relativePairs(posix.dirname(file), renames)));
+  const pairs = relativePairs(posix.dirname(file), renames);
+  const table = new Map(pairs);
+  // A file moved onto a stale key (its old file gone) would silently inherit that key's suppressions.
+  if (pairs.some(([, to]) => Object.hasOwn(base, to) && !table.has(to))) return false;
+  const moved = rekey(base, table);
   return moved !== null && canon(Object.fromEntries(moved)) === canon(head);
 }
 
@@ -78,7 +82,7 @@ export function folderCapMoved(texts, renames, gone) {
 export function classifyBaseline(entry, read, ctx = {}) {
   const { status, from, to } = entry;
   const kind = SUPPRESSIONS.test(to) ? 'suppressions' : KNIP.test(to) ? 'knip' : FOLDER_CAP.test(to) ? 'folder-cap' : null;
-  if (kind === null || status === 'R100') return null;
+  if (kind === null) return null;
   if (status !== 'M' || from !== to) return { kind: 'bad', why: `${status}: a move only edits a ${kind} baseline in place` };
   const texts = { base: read('base', from), head: read('head', to) };
   const renames = ctx.renames ?? [];

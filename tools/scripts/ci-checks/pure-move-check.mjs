@@ -85,9 +85,9 @@ const isConfig = (file) => CONFIG.some((re) => re.test(file));
 /** Why one `git diff --name-status` entry is not a pure move (null = fine), and its kind. */
 export function classify(entry, read, ctx = {}) {
   const { status, from, to } = entry;
-  if (status === 'R100') return { kind: 'rename' };
   const baseline = classifyBaseline(entry, read, ctx);
   if (baseline) return baseline;
+  if (status === 'R100') return { kind: 'rename' };
   if (TEXT.test(to) && !/^(\.github|refactor)\//.test(to) && status !== 'A' && status !== 'D') {
     const renamed = rewriteText(read('base', from), ctx.renames ?? []);
     return renamed === read('head', to) ? { kind: 'paths' } : { kind: 'bad', why: 'changes more than moved file paths' };

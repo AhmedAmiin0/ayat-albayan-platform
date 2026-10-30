@@ -46,9 +46,10 @@ test('suppressions: a changed count, an added or dropped key, an unmoved rename 
   assert.equal(suppressionsMoved('apps/mobile/eslint-suppressions.json', texts(SUPP, moved), RENAMES), false, 'other package');
 });
 
-test('suppressions: two entries landing on one key fail', () => {
+test('suppressions: two entries landing on one key, or a file moved onto a stale key, fail', () => {
   const base = { 'src/a.ts': entry(1), 'src/b.ts': entry(1) };
   assert.equal(suppressionsMoved(FILE, texts(base, { 'src/b.ts': entry(1) }), [['apps/web/src/a.ts', 'apps/web/src/b.ts']]), false);
+  assert.equal(suppressionsMoved(FILE, texts(base, base), [['apps/web/src/c.ts', 'apps/web/src/b.ts']]), false, 'stale key');
 });
 
 const KNIP = ['apps/web/src/features/payouts/use-pay.ts exports usePay', 'apps/api/src/x.ts types X'];
@@ -81,6 +82,8 @@ test('classifyBaseline: only baseline files, edited in place', () => {
   assert.deepEqual(classifyBaseline({ status: 'M', from: FILE, to: FILE }, read, ctx), { kind: 'paths' });
   assert.equal(classifyBaseline({ status: 'M', from: FILE, to: FILE }, read, { renames: [] }).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'A', from: FILE, to: FILE }, read, ctx).kind, 'bad');
+  assert.equal(classifyBaseline({ status: 'R100', from: FILE, to: 'packages/x/eslint-suppressions.json' }, read, ctx).kind, 'bad');
+  assert.equal(classifyBaseline({ status: 'D', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' }, read, ctx).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'M', from: 'refactor/guards/knip.json', to: 'refactor/guards/knip.json' }, read, ctx).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'M', from: 'apps/web/package.json', to: 'apps/web/package.json' }, read, ctx), null);
   assert.equal(classifyBaseline({ status: 'M', from: 'refactor/guards/jscpd.json', to: 'refactor/guards/jscpd.json' }, read, ctx), null);
