@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isSettingKey } from '../settings/registry.js';
+import { isSettingKey } from '../registry.js';
 
 /** Free-form entries (`custom_config` table): the key shape the table's check enforces. */
 export const CUSTOM_KEY_RE = /^[a-z][a-z0-9_.-]{1,63}$/;

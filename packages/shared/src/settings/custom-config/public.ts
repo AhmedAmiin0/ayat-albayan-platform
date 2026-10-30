@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { isSettingKey } from '../settings/registry.js';
+import { isSettingKey } from '../registry.js';
 
 interface CustomRow {
   key: string;
