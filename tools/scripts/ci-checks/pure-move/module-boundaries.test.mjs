@@ -19,16 +19,20 @@ const note = { 'src/core/ui/feedback/Note.tsx': { 'max-len': { count: 1 } } };
 
 test('a move may lower or drop module-boundaries entries, alongside no-parent-imports', () => {
   const inbox = { [RULE]: { count: 1 }, [PARENT]: { count: 2 }, 'max-len': { count: 1 } };
-  assert.equal(check({ ...note, 'src/inbox/a.tsx': inbox, 'src/sales/b.tsx': { [RULE]: { count: 1 } } }), true);
-  assert.equal(check({ ...note, 'src/inbox/a.tsx': { 'max-len': { count: 1 } } }), true, 'both rules and a file go');
+  const sales = { [RULE]: { count: 1 } };
+  assert.equal(check({ ...note, 'src/inbox/a.tsx': inbox, 'src/sales/b.tsx': sales }), true);
+  const gone = { ...note, 'src/inbox/a.tsx': { 'max-len': { count: 1 } } };
+  assert.equal(check(gone), true, 'both rules and a file go');
 });
 
 test('module-boundaries may not rise, appear or reach 0, and other rules stay', () => {
   const inbox = base['src/inbox/a.tsx'];
   const rest = { ...note, 'src/inbox/a.tsx': inbox };
   assert.equal(check({ ...rest, 'src/sales/b.tsx': { [RULE]: { count: 2 } } }), false, 'raised');
-  assert.equal(check({ ...rest, 'src/sales/b.tsx': { [RULE]: { count: 1 } }, 'src/c.tsx': { [RULE]: { count: 1 } } }), false, 'added');
+  const one = { [RULE]: { count: 1 } };
+  assert.equal(check({ ...rest, 'src/sales/b.tsx': one, 'src/c.tsx': one }), false, 'added');
   assert.equal(check({ ...rest, 'src/sales/b.tsx': { [RULE]: { count: 0 } } }), false, 'count 0');
   const noMaxLen = { [RULE]: { count: 3 }, [PARENT]: { count: 2 } };
-  assert.equal(check({ ...note, 'src/inbox/a.tsx': noMaxLen, 'src/sales/b.tsx': base['src/sales/b.tsx'] }), false, 'max-len dropped');
+  const dropped = { ...note, 'src/inbox/a.tsx': noMaxLen, 'src/sales/b.tsx': base['src/sales/b.tsx'] };
+  assert.equal(check(dropped), false, 'max-len dropped');
 });
