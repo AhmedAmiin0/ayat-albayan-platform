@@ -8,6 +8,7 @@
 // exist, so it never reports those), and when the root .oxlintrc.json (the first lint pass, no bulk suppressions)
 // runs a rule that has suppressed violations.
 // Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write] [--base <the base branch's lint.json>]
+//   [--configs <base ESLint config sources> <head ESLint config sources>] (a rule the PR turns on: newRule)
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -34,12 +35,24 @@ export function differences(now, baseline) {
   });
 }
 
-/** On a PR: one line per rule whose total is above the base branch's (a rule the base lacks counts from 0). */
-export function aboveBase(now, base) {
+/**
+ * On a PR: one line per rule whose total is above the base branch's (a rule the base lacks counts from 0,
+ * unless `isNew(rule)`: its one-time baseline, docs/32 §1).
+ */
+export function aboveBase(now, base, isNew = () => false) {
   return Object.keys(now)
     .filter((rule) => now[rule] > (base[rule] ?? 0))
+    .filter((rule) => Object.hasOwn(base, rule) || !isNew(rule))
     .map((rule) => `above the base branch: ${rule} ${base[rule] ?? 0} -> ${now[rule]} (fix the new violations)`);
 }
+
+const named = (text, rule) => text.includes(`'${rule}'`) || text.includes(`"${rule}"`);
+
+/**
+ * A rule this PR turns on: its quoted name is in the head's ESLint config sources and in none of the base's.
+ * A preset rule that no config names stays at its base total until a reviewed config edit names it.
+ */
+export const newRule = (configs) => (rule) => named(configs.head, rule) && !named(configs.base, rule);
 
 /** Entries of the suppressions file in package folder `dir` whose file is gone (deleted or moved). */
 export function gone(dir, byFile, exists) {
@@ -63,6 +76,13 @@ export function oxlintSuppressed(oxlintrc, now) {
     .map((rule) => `oxlint runs ${rule}, which has ${now[rule]} suppressed: keep it in ESLint`);
 }
 
+/** `--configs <base> <head>`: the ESLint config sources of both sides, concatenated (empty: no new rule). */
+function configTexts(args) {
+  const at = args.indexOf('--configs');
+  if (at === -1) return { base: '', head: '' };
+  return { base: readFileSync(args[at + 1], 'utf8'), head: readFileSync(args[at + 2], 'utf8') };
+}
+
 const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 
 function main(args) {
@@ -78,7 +98,7 @@ function main(args) {
   const exists = (path) => existsSync(join(root, path));
   const diff = [
     ...differences(now, baseline),
-    ...(at === -1 ? [] : aboveBase(now, read(args[at + 1]))),
+    ...(at === -1 ? [] : aboveBase(now, read(args[at + 1]), newRule(configTexts(args)))),
     ...paths.flatMap((p, i) => gone(dirname(p), files[i], exists)),
     ...oxlintSuppressed(read(join(root, '.oxlintrc.json')), now),
   ];

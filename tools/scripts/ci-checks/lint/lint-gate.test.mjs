@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { aboveBase, differences, gone, oxlintSuppressed, totals } from './lint-gate.mjs';
+import { aboveBase, differences, gone, newRule, oxlintSuppressed, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -54,3 +54,18 @@ test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, wha
   assert.deepEqual(oxlintSuppressed({ rules: { eqeqeq: 'error' } }, now), []);
   assert.deepEqual(oxlintSuppressed({}, now), []);
 });
+
+test('aboveBase: a rule the PR turns on gets its one-time baseline; a known or preset rule does not', () => {
+  const configs = { base: "complexity: ['error', 10]", head: "complexity: 10, 'max-len': ['error'], \"ab/x\": 'error'" };
+  const isNew = newRule(configs);
+  const now = { complexity: 3, 'max-len': 900, 'ab/x': 2, 'no-unsafe-call': 4 };
+  assert.deepEqual(aboveBase(now, { complexity: 3 }, isNew), [
+    'above the base branch: no-unsafe-call 0 -> 4 (fix the new violations)',
+  ]);
+  // Named on both sides (already configured): its base total, here 0, still holds.
+  const both = newRule({ base: "'max-len': 'off'", head: configs.head });
+  assert.equal(aboveBase({ 'max-len': 1 }, {}, both).length, 1);
+  // Once in the base's lint.json, a new rule only shrinks.
+  assert.equal(aboveBase({ 'max-len': 901 }, { 'max-len': 900 }, isNew).length, 1);
+});
+

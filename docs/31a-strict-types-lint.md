@@ -226,6 +226,10 @@ pnpm lint:prune                   # the same in every package (turbo, no cache)
 pnpm guard:lint -- --write        # lower refactor/guards/lint.json; the gate fails if this is skipped
 ```
 
+A new rule (docs/32 §1) enters with its one-time `eslint --suppress-rule` baseline: on a PR the gate also gets the
+ESLint config sources of both sides (`--configs`), and a rule that only the head's configs name may start above 0.
+After that PR its total only shrinks; a preset rule that no config names keeps its base total.
+
 A conflict in an `eslint-suppressions.json`: take develop's side, then re-run `--prune-suppressions` on the merge result.
 
 Since docs/32 g3 (`max-len` 100, `max-lines-per-function` 50, `ab/max-params`, the R8 import bans) most files

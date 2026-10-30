@@ -1,16 +1,65 @@
 {
+  "calendar/calendar-diff.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "calendar/calendar-ics.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "calendar/calendar-slots.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "calendar/calendar.fixture.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "ci-checks/compose/compose-pdf.test.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/compose/compose-roll.test.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/compose/compose.test.mjs": {
+    "max-len": {
+      "count": 3
     }
   },
   "ci-checks/e2e-areas/areas.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 2
     }
   },
   "ci-checks/e2e-areas/closure.mjs": {
     "@typescript-eslint/no-unused-expressions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/e2e-areas/fixture.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/e2e-areas/folders.test.mjs": {
+    "max-len": {
       "count": 1
     }
   },
@@ -20,11 +69,35 @@
     },
     "max-depth": {
       "count": 4
+    },
+    "max-len": {
+      "count": 3
+    },
+    "max-lines-per-function": {
+      "count": 1
     }
   },
   "ci-checks/e2e-areas/guard.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/e2e-areas/i18n.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/e2e-areas/parse.mjs": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "ci-checks/e2e-areas/plan.mjs": {
+    "max-len": {
+      "count": 4
     }
   },
   "ci-checks/e2e-areas/select.mjs": {
@@ -33,15 +106,79 @@
     },
     "max-depth": {
       "count": 4
+    },
+    "max-len": {
+      "count": 5
     }
   },
   "ci-checks/e2e-shards.mjs": {
     "max-depth": {
       "count": 1
+    },
+    "max-len": {
+      "count": 9
+    }
+  },
+  "ci-checks/folder-cap.mjs": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "ci-checks/jscpd-gate.mjs": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "ci-checks/jscpd-gate.test.mjs": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "ci-checks/lint/lint-gate.mjs": {
+    "max-len": {
+      "count": 13
+    }
+  },
+  "ci-checks/lint/lint-gate.test.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "ci-checks/lint/queries-gate.mjs": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "ci-checks/move-module.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "ci-checks/move-module/files.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "ci-checks/move-module/knip.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "ci-checks/move-module/map.ts": {
     "max-depth": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "ci-checks/move-module/renames.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "ci-checks/move-module/resolve.test.ts": {
+    "max-len": {
       "count": 1
     }
   },
@@ -54,11 +191,27 @@
     },
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
+    },
+    "max-len": {
+      "count": 3
     }
   },
   "ci-checks/move-module/rewrite.ts": {
     "@typescript-eslint/no-unsafe-enum-assignment": {
       "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/move-module/run.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "ci-checks/move-module/specifiers.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "ci-checks/native-changes.mjs": {
@@ -67,31 +220,119 @@
     },
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 18
+    }
+  },
+  "ci-checks/native-changes.test.mjs": {
+    "max-len": {
+      "count": 2
     }
   },
   "ci-checks/owned-keys-check.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 7
     }
   },
   "ci-checks/pure-move-check.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 13
+    }
+  },
+  "ci-checks/pure-move-ci.test.mjs": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "ci-checks/pure-move-paths.mjs": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "ci-checks/pure-move-paths.test.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "ci-checks/pure-move-suppressions.test.mjs": {
+    "max-len": {
+      "count": 2
     }
   },
   "ci-checks/pure-move-tokens.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 7
     }
   },
   "ci-checks/pure-move/baselines.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 11
+    }
+  },
+  "ci-checks/pure-move/baselines.test.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "ci-checks/pure-move/configs.mjs": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "ci-checks/pure-move/identifiers.mjs": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "ci-checks/pure-move/move-e2e.mjs": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "ci-checks/pure-move/move-e2e.test.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "ci-checks/release-tags/release-tag.mjs": {
+    "max-len": {
+      "count": 9
     }
   },
   "ci-checks/roll-fake.mjs": {
     "complexity": {
       "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "ci-checks/roll.test.mjs": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "ci-checks/rollback.test.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "ci-checks/workflows-fast.test.mjs": {
+    "max-len": {
+      "count": 3
     }
   },
   "ci-checks/workflows.test.mjs": {
@@ -100,10 +341,46 @@
     },
     "max-depth": {
       "count": 1
+    },
+    "max-len": {
+      "count": 5
     }
   },
   "env/deploy-baseline.mjs": {
     "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "seed/clear-demo.fk.test.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "seed/clear-demo.mjs": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "seed/clear-demo.plan.mjs": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "seed/seed-test-account.auth.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "seed/seed-test-account.data.mjs": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "seed/seed-test-account.mjs": {
+    "max-len": {
       "count": 1
     }
   }

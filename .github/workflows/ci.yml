@@ -217,7 +217,15 @@ jobs:
             echo "::notice::no lint.json on $BASE_REF: in-tree check only"; pnpm guard:lint; exit
           fi
           git show "$base:refactor/guards/lint.json" > "$RUNNER_TEMP/lint-base.json"
-          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json"
+          # The ESLint config sources of both sides: a rule only the head names gets its one-time baseline.
+          configs() {
+            git ls-tree -r --name-only "$1" | grep -E '(^packages/config/[^/]+|(^|/)eslint\.config)\.[cm]?js$' \
+              | grep -v '\.test\.' | while read -r f; do git show "$1:$f"; done
+          }
+          configs "$base" > "$RUNNER_TEMP/configs-base.txt"
+          configs HEAD > "$RUNNER_TEMP/configs-head.txt"
+          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json" \
+            --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change

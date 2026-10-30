@@ -1,0 +1,22 @@
+{
+  "eslint-boundaries.js": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "eslint-domains.js": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "eslint-react.js": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "eslint.js": {
+    "max-len": {
+      "count": 9
+    }
+  }
+}
