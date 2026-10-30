@@ -5,8 +5,8 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { Skeleton } from '@/components/ui/display/skeleton';
 import { usePermissions } from '@/features/people/auth/use-permissions';
-import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/api';
-import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/use-reply-dialogs';
+import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/lib/api';
+import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs';
 import { t } from '@/lib/i18n/i18n';
 import { SavedRepliesTable } from './SavedRepliesTable';
 

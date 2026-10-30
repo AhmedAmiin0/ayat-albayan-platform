@@ -1,10 +1,1 @@
-{
-  "apps/web/src/features/messaging/inbox/lists": {
-    "files": 17,
-    "dirs": 0
-  },
-  "apps/web/src/features/messaging/inbox/saved-replies": {
-    "files": 20,
-    "dirs": 1
-  }
-}
+{}
