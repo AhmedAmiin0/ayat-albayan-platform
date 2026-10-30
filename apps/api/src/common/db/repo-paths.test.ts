@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -22,6 +22,7 @@ describe('repo paths for tests', () => {
     mkdirSync(deep, { recursive: true });
     expect(findRepoRoot(deep)).toBe(root);
     expect(findRepoRoot(root)).toBe(root);
+    rmSync(root, { recursive: true, force: true });
   });
 
   it('throws when no workspace file is above', () => {
