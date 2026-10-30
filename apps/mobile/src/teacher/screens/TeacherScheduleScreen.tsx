@@ -6,7 +6,7 @@ import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
 import { useLessonDetails } from '@/calendar/details/use-lesson-details';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
-import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
+import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/more/Note';
@@ -23,24 +23,24 @@ const noMove = () => undefined;
 
 /**
  * «جدولي» (R-TCH-03, R-SCH-08): my week السبت → الجمعة from GET /teachers/me/lessons, the same
- * day-by-day agenda as the admin's teacher calendar (Riyadh time, my clock beside it when it
- * differs) with my availability as a faint line. ‹ › moves a week; offline the saved week stays. A tap
+ * day-by-day agenda as the admin's teacher calendar (my own days and clock, docs/34) with my availability as a faint line. ‹ › moves a week; offline the saved week stays. A tap
  * on a lesson opens «تفاصيل الحلقة» (its students, report state and «ادخل الحلقة»).
  */
 export function TeacherScheduleScreen() {
   const cycle = useClockCycle();
-  // academy day (docs/34 b): the week pages by Riyadh days; times read in the viewer's zone.
-  const today = riyadhToday(useNow());
+  const tz = useViewerTz();
+  // The viewer's days (docs/34): week window, day buckets and clock are one zone.
+  const today = viewerToday(useNow(), tz);
   const [start, setStart] = useFollowingDay(weekStart(today));
   const me = useTeacherMe();
-  const lessons = useMyLessons(weekWindow(start));
+  const lessons = useMyLessons(weekWindow(start, tz));
   const grid = useMyAvailability(me.data?.id);
   const inset = useTabBarInset();
   const details = useLessonDetails(lessons.data);
   const loaded = lessons.data !== undefined;
-  const days = agendaDays(lessons.data ?? [], start);
+  const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
-  const subtitle = headerLine([zoneNote(useViewerTz())], lessons, cycle);
+  const subtitle = headerLine([zoneNote(tz)], lessons, cycle);
   return (
     <Screen list>
       <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />

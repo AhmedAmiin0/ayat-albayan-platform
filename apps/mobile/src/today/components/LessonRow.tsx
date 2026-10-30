@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { lessonClock, rowSubtitle, studentNames } from '../lib/lesson-text';
+import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '../lib/lesson-text';
 import type { TodayLesson } from '../lib/today-lesson';
 
 interface LessonRowProps<L extends TodayLesson> {
@@ -27,7 +27,11 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
   const { color } = useTheme();
   const tone = toneColors(color, lessonStatusStyle[lesson.status].tone).fg;
   const cycle = useClockCycle();
-  const time = lessonClock(lesson.starts_at, useViewerTz(), cycle);
+  const tz = useViewerTz();
+  const time = lessonClock(lesson.starts_at, tz, cycle);
+  // A `?date` (Riyadh) day: a lesson on another day for the viewer names that day first.
+  const hint = viewerDayHint(lesson.starts_at, tz);
+  const subtitle = [hint, rowSubtitle(lesson)].filter(Boolean).join(' · ');
   const names = studentNames(lesson);
   const status = statusWord(lesson.status);
   return (
@@ -67,7 +71,7 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
           {names}
         </AppText>
         <AppText numberOfLines={1} style={{ fontFamily: type.ui[400], fontSize: 12, lineHeight: 18, color: color.ink3 }}>
-          {rowSubtitle(lesson)}
+          {subtitle}
         </AppText>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1, maxWidth: '38%' }}>

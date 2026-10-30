@@ -45,7 +45,7 @@ Words (ar.json `schedule`): `viewerTime` «بتوقيتك», `familyAt` «{time}
 
 ## 3. Audit method
 
-`grep -rnE "RIYADH_TZ|Asia/Riyadh|riyadhToday|riyadhWhenText|riyadhTime|REOPEN_TZ"` over non-test
+`grep -rnE "RIYADH_TZ|Asia/Riyadh|riyadhToday|zonedWhenText|riyadhTime|REOPEN_TZ"` over non-test
 code (fixtures, `*.fakes.ts` and tests excluded) on `origin/develop` @ `b6a9c3a6`. Each use is
 classified **(a)** display → viewer zone, **(b)** academy-wide rule → kept with a comment, **(c)**
 message to a recipient → recipient's zone. Counts per app are in §4–§6.
@@ -56,7 +56,7 @@ message to a recipient → recipient's zone. Counts per app are in §4–§6.
 |---|---|---|---|
 | shared `time/viewer-zone.ts` (new) | `ACADEMY_TZ` as the last fallback | — | the resolver |
 | shared `time/riyadh-day.ts` `riyadhToday` | the academy's day (ranges, cut-offs) | b | kept |
-| shared `time/riyadh-day.ts` `riyadhWhenText` | «الاثنين 12 أكتوبر 18:00» on screens | a | takes `words.tz` (viewer), academy when absent |
+| shared `time/riyadh-day.ts` `zonedWhenText` | «الاثنين 12 أكتوبر 18:00» on screens | a | `words.tz` (viewer) required |
 | shared `messaging/replies/reply-note.ts` | «تم تأكيد حلقة …» under a family reply | a | takes `clock.tz` (viewer), academy when absent |
 | shared `messaging/replies/reply-lesson.ts` | which lesson a «نعم» is about (same academy day) | b | kept: one rule for every viewer |
 | shared `messaging/chat/thread-reopen.ts` `REOPEN_TZ` | dedup key `reopen:<phone>:<day>` | b | kept (rule 8 dedup day) |
@@ -79,10 +79,14 @@ message to a recipient → recipient's zone. Counts per app are in §4–§6.
 | api `lessons/overview/overview.queries.ts`, `teachers/availability/availability.queries.ts` (`allDayRows(RIYADH_TZ)`) | «always available» rows | b | kept: a whole academy day |
 | api `booking/course-change/course-change.planner.ts`, `inbox/threads/thread-lessons.ts`, `people/users/*` | a person's tz with the academy default when missing | — | kept (data default; no tz is written) |
 
-Known limit (b): a screen that pages by **day** asks the API for academy days, so a Cairo viewer's
-day list runs 23:00 → 23:00 in winter; times inside it read in the viewer's zone. A lesson between
-00:00 and 01:00 Riyadh shows under the next day there. Moving the day parameter to the viewer's
-zone is a later API change.
+Known limit (b): a screen that pages by **day** through a `?date` endpoint (`GET /lessons/day`,
+`/sales/schedule`) asks the API for academy days, so a Cairo viewer's day list runs 23:00 → 23:00 in
+winter; times inside it read in the viewer's zone. A lesson between 00:00 and 01:00 Riyadh is on the
+evening before for that viewer: its row names the viewer's weekday (mobile `viewerDayHint`, web
+`otherDayNote`), and the web day nav says «يوم الأكاديمية بتوقيت الرياض». Moving the day parameter
+to the viewer's zone is a later API change. Screens that ask by `?from&to` instants (the mobile
+calendars, the web board) compute the window from the viewer's midnight (`utcOffsetMinutes`, never a
+fixed +03:00) and group by the viewer's day, so they have no such limit.
 
 ## 5. apps/web
 
@@ -109,7 +113,7 @@ depends on the CI machine's zone.
 | `sales/schedule/SalesLessonDetails.tsx`, `SalesDayNav.tsx`, `teachers/teacher-view.ts` (`riyadhWhen` → `viewerWhen`), `TeacherStudentItem.tsx`, `TeacherStudentsByKind.tsx` | sales drawer and teacher list times, «بتوقيت الرياض» | a | viewer's zone «بتوقيتك»; student / teacher clocks only when they differ |
 | `reporting/dashboard/shared/format.ts` (`whenRiyadh` → `whenViewer`, `rateDate`), `reporting/activity/activity-format.ts`, `platform/google-sync/google-format.ts` | dashboard, activity log and Google log timestamps | a | viewer's zone |
 | `people/portal/lessons/LessonWhen.tsx` | family portal: family clock + Riyadh line | a | family-facing, kept on the family's clock; the second line is the viewer's «بتوقيتك», only when it differs |
-| `sales/schedule/SalesSchedule.tsx` | today for `GET /sales/schedule?date` | b | kept: the API reads `date` as a Riyadh day (times inside are the viewer's; limit in §4) |
+| `sales/schedule/SalesSchedule.tsx`, `SalesDayNav.tsx`, `ScheduleLessonItem.tsx` | today for `GET /sales/schedule?date` | b | kept: the API reads `date` as a Riyadh day; the nav says so, a row on another viewer day names it (limit in §4) |
 | `reporting/dashboard/search.ts`, `index.ts`, `DashboardPage.tsx`, `finance/finance/FinanceSummaryPage.tsx`, `finance/payments/PaymentsPage.tsx` | `riyadhToday` for `?from&to` ranges, CSV range | b | kept with a comment |
 | `finance/payments/api.ts` `paidAtFor`, `record/pay-day.ts`, `RecordPaymentDialog.tsx`, `inbox/sales-money/transfer/SalesTransferStep.tsx`, `finance/payouts/api.ts` | payment day (noon Riyadh), payroll month | b | kept with a comment |
 | `teaching/course-pause/CoursePauseSheet.tsx`, `CoursePauseBanner.tsx`, `ChangeUntilDialog.tsx`, `finance/subscriptions/create/use-start-day.ts`, `inbox/sales-money/subscribe/SalesSubscribeStep.tsx` | pause days, start day / used-before cut-off | b | kept with a comment |
@@ -154,7 +158,8 @@ Tests run as a Riyadh viewer on a Riyadh phone (`jest.setup.cjs`), whatever the 
 | `ops/activity/activity-format.ts`, `ops/dashboard/work-text.ts`, `payments/format.ts` `instantDay`, `earnings/lib/format.ts` | log times, a pending report, an instant's day, a session | a | viewer's zone |
 | `teacher/screens/*` (`Today`, `Students`, `Reports`, `StudentReports`), `teacher/report/screens/ReportFormScreen`, `student-file/recordings/RecordingRow`, `classroom/recordings/recording-format.ts`, `meetings/manage/{use-viewer-tz,use-enter-meeting,meeting-text}.ts` | `teachers/me` tz or Riyadh | a | `useViewerTz()` (the teacher's tz via /auth/me; an admin's own zone) |
 | `inbox/shared/format.ts` `clockAt` (not in the grep) | «آخر تحديث» in the device's zone | a | viewer's zone |
-| `calendar/lib/week.ts` (`riyadhToday`, `riyadhMidnight`, `weekWindow`), `calendar/agenda/agenda.ts` `agendaDays`, `calendar/overview/overview.ts`, `DayScheduleScreen`, `TeacherCalendarScreen`, `teacher/screens/TeacherScheduleScreen`, `teaching/reschedule/{SlotPicker,queries}.ts`, `assistant-app/{AssistantHomeScreen,assistant-day}.ts`, `classroom/sessions/AdminSessionsScreen`, `today/lib/use-day-lessons.ts`, `today/components/QuietDay` (date), `booking/shared/BookedPanel`, `sales/lib/sales-api.ts` `useSalesDay`, `sales/screens/SalesScheduleScreen` (today), `ops/dashboard/dashboard-queries.ts` | the day / week a screen pages by, the `?date` / `?from&to` it asks for | b | kept: academy days, as the API's day params (§4 known limit); the times inside read in the viewer's zone and the subtitle names it |
+| `calendar/lib/week.ts` `weekWindow` / `zonedMidnight`, `calendar/agenda/agenda.ts` `agendaDays`, `calendar/overview/overview.ts`, `DayScheduleScreen`, `TeacherCalendarScreen`, `teacher/screens/TeacherScheduleScreen` | the calendars' week / day window and day buckets | a | the viewer's days: window from the viewer's midnight, lessons under the viewer's date (review of #462) |
+| `calendar/lib/week.ts` (`riyadhToday`, `riyadhMidnight`), `teaching/reschedule/{SlotPicker,queries}.ts`, `assistant-app/{AssistantHomeScreen,assistant-day}.ts`, `classroom/sessions/AdminSessionsScreen`, `today/lib/use-day-lessons.ts`, `today/components/QuietDay` (date), `booking/shared/BookedPanel`, `sales/lib/sales-api.ts` `useSalesDay`, `sales/screens/SalesScheduleScreen` (today), `ops/dashboard/dashboard-queries.ts` | the day / week a screen pages by, the `?date` / `?from&to` it asks for | b | kept: academy days, as the API's day params (§4 known limit); the times inside read in the viewer's zone and the subtitle names it |
 | `finance/shared/month.ts`, `money/payments/PaymentFilters`, `finance/expenses/expense-draft.ts`, `payments/lib/paid-day.ts`, `assistants/terms/terms-form.ts`, `sales-subscribe/components/SalesSubscribeForm`, `subscribe/UsedBeforeField`, `students/course-pause/*` (3), `inbox/messages/reply-actions/reply-lesson-read.ts` | finance month, paid / expense / terms day, subscribe start day, used-before and pause cut-offs, a reply's lesson day | b | kept with `// academy day (docs/34 b)` |
 | `subscribe/SubscribeScreen`, `sales/lesson-actions/SalesRescheduleForm`, `teaching/reschedule/reschedule-body.ts`, `booking/trial/lib/draft.ts` (`COUNTRY_TZ`), `details-text` `seriesLine`, availability `teacherTz` fallbacks | a family's or teacher's tz with the academy's when missing | b | kept: a data default for the other person's zone, not a display zone |
 

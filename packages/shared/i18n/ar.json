@@ -4581,6 +4581,8 @@
       "emptyTeacher": "لا توجد حلقات لهذا المعلم في هذا اليوم",
       "lessonsCount": "عدد الحلقات: {n}",
       "liveNow": "جارية الآن",
+      "riyadhDay": "يوم الأكاديمية بتوقيت الرياض، والأوقات بتوقيتك",
+      "otherDay": "{day} بتوقيتك",
       "makeupTag": "تعويضية",
       "lessonLabel": "حلقة {time} مع {teacher}",
       "status": {

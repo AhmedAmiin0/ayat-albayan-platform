@@ -1,4 +1,4 @@
-import { RIYADH_TZ, sameClockAt, type ClockCycle, type LessonView } from '@ab/shared';
+import { sameClockAt, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
@@ -8,22 +8,28 @@ import type { AvailabilityRow } from '@/more/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { addDays, weekdayOf } from '../lib/week';
 
-// What the agenda lays out (R-SCH-01, R-TCH-02): lessons by Riyadh day or by teacher, the
+// What the agenda lays out (R-SCH-01, R-TCH-02): lessons by the viewer's day or by teacher, the
 // teacher's own clock beside the viewer's, a day's availability. Closed lessons (cancelled,
 // moved) stay hidden, as on Today. Pure, unit-tested.
 
 export interface AgendaDay {
-  /** Riyadh calendar day, YYYY-MM-DD. */
+  /** The viewer's calendar day, YYYY-MM-DD. */
   date: string;
   lessons: LessonView[];
 }
 
-/** `count` days from `start`, each with its lessons on the Riyadh calendar, earliest first. */
-export function agendaDays(lessons: readonly LessonView[], start: string, count = 7): AgendaDay[] {
-  const days: AgendaDay[] = Array.from({ length: count }, (_, i) => ({ date: addDays(start, i), lessons: [] }));
+/**
+ * The 7 days from `start`, each with its lessons on the viewer's calendar `tz`, earliest first: the
+ * day a lesson sits under is the day its clock reads in (a Cairo teacher's 00:30 Riyadh Sunday
+ * lesson is Saturday 23:30 for them, so under السبت). The week window is the same zone's (weekWindow).
+ */
+export function agendaDays(lessons: readonly LessonView[], start: string, tz: string): AgendaDay[] {
+  const days: AgendaDay[] = Array.from({ length: 7 }, (_, i) => ({
+    date: addDays(start, i),
+    lessons: [],
+  }));
   for (const lesson of visibleLessons(lessons)) {
-    // academy day (docs/34 b): the week window and the `?date` param are Riyadh days.
-    const date = localDate(new Date(lesson.starts_at), RIYADH_TZ);
+    const date = localDate(new Date(lesson.starts_at), tz);
     days.find((d) => d.date === date)?.lessons.push(lesson);
   }
   return days;

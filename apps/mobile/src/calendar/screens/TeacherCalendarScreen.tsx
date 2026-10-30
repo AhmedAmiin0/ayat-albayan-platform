@@ -21,7 +21,7 @@ import { LessonDetailsSheet } from '../details/LessonDetailsSheet';
 import { useLessonDetails } from '../details/use-lesson-details';
 import { PeriodSwitcher } from '../overview/PeriodSwitcher';
 import { useAvailability, useTeacher, useWeekLessons } from '../lib/queries';
-import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/week';
+import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '../lib/week';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /**
@@ -32,20 +32,21 @@ import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
  */
 export function TeacherCalendarScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
-  // academy day (docs/34 b): the week pages by Riyadh days; times read in the viewer's zone.
-  const today = riyadhToday(useNow());
+  // The viewer's days (docs/34): week window, day buckets and clock are one zone.
+  const today = viewerToday(useNow(), tz);
   const [start, setStart] = useFollowingDay(weekStart(today));
-  const lessons = useWeekLessons({ ...weekWindow(start), teacherId: id });
+  const lessons = useWeekLessons({ ...weekWindow(start, tz), teacherId: id });
   const teacher = useTeacher(id);
   const grid = useAvailability(id);
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
   const details = useLessonDetails(lessons.data);
   const loaded = lessons.data !== undefined;
-  const days = agendaDays(lessons.data ?? [], start);
+  const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
-  const zone = zoneNote(useViewerTz());
+  const zone = zoneNote(tz);
   const subtitle = headerLine([t.calendar.teacherCalendar, zone], lessons, cycle);
 
   return (

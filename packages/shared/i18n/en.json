@@ -4581,6 +4581,8 @@
       "emptyTeacher": "No lessons for this teacher on this day",
       "lessonsCount": "Lessons: {n}",
       "liveNow": "Running now",
+      "riyadhDay": "Academy day (Riyadh time); times in your time",
+      "otherDay": "{day} in your time",
       "makeupTag": "Makeup",
       "lessonLabel": "Lesson at {time} with {teacher}",
       "status": {

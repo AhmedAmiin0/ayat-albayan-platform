@@ -14,7 +14,7 @@ const show = (items: AgendaItem[]) =>
   );
 
 test('a day: every teacher by name, even with nothing booked; lessons and free gaps by time', () => {
-  const day = teacherAgendas(OVERVIEW, { start: THU, view: 'day', filter: ALL });
+  const day = teacherAgendas(OVERVIEW, { start: THU, tz: 'Asia/Riyadh', view: 'day', filter: ALL });
   expect(day.map((a) => a.teacher.display_name_ar)).toEqual(['أبرار', 'سارة', 'عمر']);
   const [a, s, o] = day;
   // The cancelled 16:00 stays hidden; the free gap sits between the held 10:00 and the 16:00.
@@ -39,13 +39,13 @@ test('a day: every teacher by name, even with nothing booked; lessons and free g
 });
 
 test('another day keeps the teachers but not Thursday’s lessons, gaps or time off', () => {
-  const day = teacherAgendas(OVERVIEW, { start: SAT, view: 'day', filter: ALL });
+  const day = teacherAgendas(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh', view: 'day', filter: ALL });
   expect(day.map((a) => show(a.items))).toEqual([['sat'], [], []]);
   expect(day.every((a) => a.windows.length === 0 && a.timeOff.length === 0)).toBe(true);
 });
 
 test('a week: each teacher’s lessons under their Riyadh day, no free gaps', () => {
-  const week = teacherAgendas(OVERVIEW, { start: SAT, view: 'week', filter: ALL });
+  const week = teacherAgendas(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh', view: 'week', filter: ALL });
   expect(show(week[0]?.items ?? [])).toEqual([SAT, 'sat', THU, 'l-done', 'l-pending', 'l-muscat']);
   expect(week[2]?.items).toEqual([]);
   expect(week[1]?.timeOff).toHaveLength(1);
@@ -53,13 +53,13 @@ test('a week: each teacher’s lessons under their Riyadh day, no free gaps', ()
 
 test('program and gender narrow the teachers; the day pills count only theirs', () => {
   const names = (filter: TeacherFilter) =>
-    teacherAgendas(OVERVIEW, { start: THU, view: 'day', filter }).map((a) => a.teacher.id);
+    teacherAgendas(OVERVIEW, { start: THU, tz: 'Asia/Riyadh', view: 'day', filter }).map((a) => a.teacher.id);
   expect(names({ program: 'arabic', gender: 'all' })).toEqual([sara.id]);
   expect(names({ program: 'quran', gender: 'male' })).toEqual([omar.id]);
   expect(names({ program: 'islamic_studies', gender: 'female' })).toEqual([]);
-  expect(dayCounts(OVERVIEW, SAT, ALL).map((d) => d.count)).toEqual([1, 0, 0, 0, 0, 3, 0]);
+  expect(dayCounts(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh' }, ALL).map((d) => d.count)).toEqual([1, 0, 0, 0, 0, 3, 0]);
   expect(
-    dayCounts(OVERVIEW, SAT, { program: 'arabic', gender: 'all' }).every((d) => d.count === 0),
+    dayCounts(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh' }, { program: 'arabic', gender: 'all' }).every((d) => d.count === 0),
   ).toBe(true);
 });
 
