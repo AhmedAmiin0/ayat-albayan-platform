@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { approvedOn, routeOf } from './number-route';
 import { N1, overlayNum, routePass } from './number-route.fakes';
-import { dueMessage } from '../sender/sender.fakes';
-import { syncNumber, type NumberSyncDeps } from '../templates/sync/template-number-sync';
-import type { ApprovalWrite } from '../templates/catalog/templates.queries';
-import { templateRow } from '../whatsapp.fakes';
-import type { MetaTemplate } from '../whatsapp.types';
+import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { syncNumber, type NumberSyncDeps } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
+import type { ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/19 «crm driver» in module mode: a crm number's approval is the hand-set message_templates.status.
 

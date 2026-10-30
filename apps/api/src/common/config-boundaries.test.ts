@@ -26,8 +26,8 @@ const specifiers = (source: string): string[] =>
 
 /** The three config folders, relative to common/ (posix). */
 const SETTINGS = 'settings';
-const CUSTOM = 'custom-config';
-const PUBLIC = 'public-config';
+const CUSTOM = 'configuration/custom-config';
+const PUBLIC = 'configuration/public-config';
 
 /** The config folder a `./`, `../` or `@/` import of `file` lands in; null for anything else. */
 function landsIn(file: string, spec: string): string | null {
@@ -72,9 +72,9 @@ describe('settings / custom-config / public-config boundaries', () => {
 
   it('the scanner sees a crossing when there is one', () => {
     const file = join(COMMON, SETTINGS, 'settings.module.ts');
-    expect(landsIn(file, '../custom-config/custom-config.module')).toBe(CUSTOM);
-    expect(landsIn(file, '../../common/public-config/public-config.module')).toBe(PUBLIC);
-    expect(landsIn(file, '@/common/custom-config/custom-config.module')).toBe(CUSTOM);
+    expect(landsIn(file, '../configuration/custom-config/custom-config.module')).toBe(CUSTOM);
+    expect(landsIn(file, '../../common/configuration/public-config/public-config.module')).toBe(PUBLIC);
+    expect(landsIn(file, '@/common/configuration/custom-config/custom-config.module')).toBe(CUSTOM);
     expect(landsIn(file, './settings.service')).toBe(SETTINGS);
     expect(landsIn(file, '@/common/db/db.module')).toBeNull();
     expect(landsIn(file, '../../modules/teachers/http')).toBeNull();

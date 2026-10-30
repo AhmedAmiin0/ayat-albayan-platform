@@ -1,6 +1,6 @@
 [
   "apps/api/src/common/auth/auth.module.ts exports AuthController",
-  "apps/api/src/common/config-store/io/config-entries.test-util.ts types Call",
+  "apps/api/src/common/configuration/config-store/io/config-entries.test-util.ts types Call",
   "apps/api/src/modules/finance/expenses/expenses.settings.ts types ExpensesSettingsValues",
   "apps/api/src/modules/finance/fx/fx.settings.ts types FxSettingsValues",
   "apps/api/src/modules/finance/invoices/invoices.service.ts types InvoiceFilter",

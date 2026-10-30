@@ -1,14 +1,14 @@
 import { ACCOUNT_CODE_TEMPLATE } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { lineProvider, loadEnv } from '../../../../config/env/env';
-import { SendGate } from '../gate/send-gate';
-import { routeOf } from '../numbers/number-route';
-import { NumberRoutes } from '../numbers/number-routes';
-import { MessageDispatch, type SendVia } from '../sender/message.dispatch';
-import type { DueMessage } from '../sender/sender.due';
-import { SenderQueries } from '../sender/sender.queries';
-import { WaError, type TemplateRow } from '../whatsapp.types';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { lineProvider, loadEnv } from '@/config/env/env';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
+import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
+import { MessageDispatch, type SendVia } from '@/modules/messaging/whatsapp/sender/message.dispatch';
+import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
+import { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
+import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** The line every sign-in / password code leaves from (docs/30 §4). */
 const CODE_LINE = 'chat' as const;

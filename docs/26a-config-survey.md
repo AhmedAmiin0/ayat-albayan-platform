@@ -156,13 +156,13 @@ Shared (`packages/shared/src/custom-config/`):
 - `customKeySchema` refuses registry keys (`reserved_key`) — `schema.ts:9-12`. It does **not** reserve `GOOGLE_SETTING_KEYS` (different table, so no collision today — but a merged store would collide).
 - `customConfigUpsertSchema` `schema.ts:26-30`: `value` any JSON except null, ≤8 KB; `description` ≤300 nullable; `isPublic` default false.
 - `publicCustom(rows)` `public.ts:11`: public rows only, drops any row shadowing a registry key → `GET /settings/public` `custom` (`packages/shared/src/settings/custom-config/public-config.ts:8`).
-- API: `apps/api/src/common/custom-config/custom-config.controller.ts` (`GET /config/custom`, `PUT/DELETE /config/custom/:key`, `settings.read`/`settings.write`, audit entity `custom_config`).
+- API: `apps/api/src/common/configuration/custom-config/custom-config.controller.ts` (`GET /config/custom`, `PUT/DELETE /config/custom/:key`, `settings.read`/`settings.write`, audit entity `custom_config`).
 
 Seeded rows: **none** (no migration or `seed.sql` inserts into `custom_config`). Consumers: **none** in web/mobile/api beyond the admin panel and the `custom` block of `/settings/public` — no code reads any custom key.
 
 ### 5. Integrations (`public.integration_config` + Vault)
 
-Table `M/20261012000310_integration_config.sql:10-15`: `key text pk check (key ~ '^[A-Z][A-Z0-9_]{2,63}$'), value text not null check (octet_length(value) <= 4096), updated_at, updated_by`; RLS admin read `:22-26`. Secrets: Vault name **`integration:<KEY>`** via `integration_secret_set/clear/secrets_read/secrets_status` (`:38-89`), whitelisted by `public.integration_secret_key_ok()` — redefined 4 times: `M/…000310:29` (8 keys) → `M/20261012000380_notification_bell.sql:50` (+`WEB_PUSH_VAPID_PRIVATE_KEY`) → `M/20261017000450_kapso_secret_keys.sql:13` (+`KAPSO_API_KEY`, `KAPSO_WEBHOOK_SECRET`) → `M/20261022000610_google_sync.sql:132` (+`GOOGLE_CLIENT_SECRET`) = 12. Pinned by `apps/api/src/common/integrations/secret-keys.migration.test.ts`.
+Table `M/20261012000310_integration_config.sql:10-15`: `key text pk check (key ~ '^[A-Z][A-Z0-9_]{2,63}$'), value text not null check (octet_length(value) <= 4096), updated_at, updated_by`; RLS admin read `:22-26`. Secrets: Vault name **`integration:<KEY>`** via `integration_secret_set/clear/secrets_read/secrets_status` (`:38-89`), whitelisted by `public.integration_secret_key_ok()` — redefined 4 times: `M/…000310:29` (8 keys) → `M/20261012000380_notification_bell.sql:50` (+`WEB_PUSH_VAPID_PRIVATE_KEY`) → `M/20261017000450_kapso_secret_keys.sql:13` (+`KAPSO_API_KEY`, `KAPSO_WEBHOOK_SECRET`) → `M/20261022000610_google_sync.sql:132` (+`GOOGLE_CLIENT_SECRET`) = 12. Pinned by `apps/api/src/common/configuration/integrations/secret-keys.migration.test.ts`.
 
 Groups in page order `packages/shared/src/catalog/integrations/keys.ts:7`: `wa_notifications, wa_chat, kapso, wa_safety, livekit, expo, web_push, fx, google`. Plain list `keys.ts:10-31` (20), secret list `keys.ts:34-47` (12), `GROUP_OF` `keys.ts:62-96`, enums `keys.ts:115-120`, value checks `checks.ts:28-49` (max 4096 `checks.ts:9`). i18n `integrations.keys.<KEY>.label/.hint`. Env fallback: a non-empty DB value wins over `process.env` (`apps/api/src/config/env/env.ts` `loadEnv` / `validOverlay`); env schema location given.
 
@@ -219,7 +219,7 @@ Integration keys (all 32 above) are also env keys (fallback). Env-only keys:
 | `MESSAGE_SENDER_POLL_MS` | `env.ts:92` | sender tick |
 | `RECORDING_S3_ENDPOINT`, `_REGION`, `_BUCKET`, `_ACCESS_KEY`, `_SECRET` | `env.ts:97-101`, shape `env.recording.ts:15-19` | recording upload target (secrets **not** in integrations) |
 | `SETTINGS_CACHE_MS` | `env.ts:107` | settings cache TTL (default 30 s; e2e 0); consumer `apps/api/src/common/settings/settings.module.ts:18` |
-| `INTEGRATION_REFRESH_MS` | `env.ts:109` | integration reload period; unset → `SETTINGS_CACHE_MS` (`apps/api/src/common/integrations/integration-refresh.ts:12-13`) |
+| `INTEGRATION_REFRESH_MS` | `env.ts:109` | integration reload period; unset → `SETTINGS_CACHE_MS` (`apps/api/src/common/configuration/integrations/integration-refresh.ts:12-13`) |
 | `INTEGRATION_CONFIG_FROM_DB` | `env.ts:111` | `false` = env only, no DB overlay (default true) |
 | `AUTH_PASSWORD_MIN_LENGTH` | `env.ts:116` | 6..72, default 8 |
 | `GOOGLE_API_BASE` | `env.google.ts:15` | stub base, env-only by design |
@@ -362,7 +362,7 @@ All in `M/20261012000310_integration_config.sql` unless noted; all `search_path=
 | `integration_secrets_read()` → (key, value) | 310:74-80 | — | DEFINER | read `vault.decrypted_secrets` where name like `integration:%` and key_ok |
 | `integration_secrets_status()` → (key, updated_at) | 310:83-89 | — | DEFINER | read `vault.secrets` (no values) |
 
-Tests pin these: `apps/api/src/common/integrations/secret-keys.migration.test.ts` (latest `integration_secret_key_ok` must equal `INTEGRATION_SECRET_KEYS`), `kapso-secret-keys.migration.test.ts`, `apps/api/src/common/push/notification-bell.migration.test.ts:32`, `apps/api/src/modules/platform/google-sync/google-sync.migration.test.ts:14`.
+Tests pin these: `apps/api/src/common/configuration/integrations/secret-keys.migration.test.ts` (latest `integration_secret_key_ok` must equal `INTEGRATION_SECRET_KEYS`), `kapso-secret-keys.migration.test.ts`, `apps/api/src/common/push/notification-bell.migration.test.ts:32`, `apps/api/src/modules/platform/google-sync/google-sync.migration.test.ts:14`.
 
 ### 5. API (PostgREST / RPC) readers and writers
 
@@ -373,10 +373,10 @@ Tests pin these: `apps/api/src/common/integrations/secret-keys.migration.test.ts
 | `apps/api/src/common/settings/settings-meta.queries.ts:11` | `settings` `select('key, updated_at, updated_by')` | read | `GET /config/meta` — needs `updated_at`, `updated_by` columns |
 | `apps/api/src/modules/platform/google-sync/google-settings.ts:25` | `settings` `select('key, value').in('key', google keys)` | read (uncached) | |
 | `google-settings.ts:34` | `settings` `upsert({key, value, updated_by})` | write | `PUT /admin/google/settings` |
-| `apps/api/src/common/custom-config/custom-config.service.ts:13,19,26` | `custom_config` select `CUSTOM_COLUMNS` / `.eq('key')` / `.eq('is_public', true)` | read | `order('key')`; `maybeSingle()` |
+| `apps/api/src/common/configuration/custom-config/custom-config.service.ts:13,19,26` | `custom_config` select `CUSTOM_COLUMNS` / `.eq('key')` / `.eq('is_public', true)` | read | `order('key')`; `maybeSingle()` |
 | `custom-config.service.ts:33` | `custom_config` `upsert({key, value, description, is_public, updated_by}).select().single()` | write | |
 | `custom-config.service.ts:40` | `custom_config` `delete().eq('key').select('key')` | delete | returns whether a row existed |
-| `apps/api/src/common/integrations/integration-config.queries.ts:27,36` | `integration_config` `select('key, value, updated_at')` + `rpc('integration_secrets_read')` | read | overlay over env |
+| `apps/api/src/common/configuration/integrations/integration-config.queries.ts:27,36` | `integration_config` `select('key, value, updated_at')` + `rpc('integration_secrets_read')` | read | overlay over env |
 | `integration-config.queries.ts:42` | `rpc('integration_secrets_status')` | read | |
 | `integration-config.queries.ts:52-53` | `integration_config` delete / `upsert({key, value, updated_by})` | write | null deletes (env applies again); `updated_by` may be null (import command `apps/api/src/scripts/config-import-env.ts`) |
 | `integration-config.queries.ts:59,65` | `rpc('integration_secret_set' / 'integration_secret_clear')` | write | |
@@ -390,7 +390,7 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | Store | `audit_log.entity` | `entity_id` | `action` | Where |
 |---|---|---|---|---|
 | settings (`PATCH /settings`) | `'settings'` | `SINGLETON_ENTITY_ID` = `00000000-0000-0000-0000-000000000000` (`apps/api/src/common/audit/singleton-entity.ts:6`) | `'update'`, before/after = full value maps | `apps/api/src/common/settings/settings.controller.ts:38-44` |
-| custom-config | `'custom_config'` | singleton id | `create:<key>` / `update:<key>` / `delete:<key>` | `apps/api/src/common/custom-config/custom-config.controller.ts:35-59` |
+| custom-config | `'custom_config'` | singleton id | `create:<key>` / `update:<key>` / `delete:<key>` | `apps/api/src/common/configuration/custom-config/custom-config.controller.ts:35-59` |
 | integrations | `'integration_config'` | `INTEGRATIONS_ENTITY_ID` (same zero uuid, `integration-config.controller.ts:12`) | `update` / `secret_set:<KEY>` / `secret_clear:<KEY>`, after = `{keys}` (no values) | `integration-config.controller.ts:41-70` |
 | google settings | `'google_account'` | `GOOGLE_ENTITY_ID` (zero uuid) | `'settings'` | `apps/api/src/modules/platform/google-sync/admin/google-admin.service.ts:19,27` |
 

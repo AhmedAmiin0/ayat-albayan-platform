@@ -1,9 +1,9 @@
 import type { Permission } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { PERMISSION_TTL_MS, PermissionCache } from '../auth/permission.cache';
-import type { ConfigStore } from '../config-store/store/config-store.service';
-import type { Db } from '../db/db.module';
-import { SettingsService } from '../settings/settings.service';
+import { PERMISSION_TTL_MS, PermissionCache } from '@/common/auth/permission.cache';
+import type { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
+import type { Db } from '@/common/db/db.module';
+import { SettingsService } from '@/common/settings/settings.service';
 import { CacheGuard } from './cache-guard';
 import { cacheStoreFromEnv } from './cache.module';
 import { SharedCache } from './shared-cache';
