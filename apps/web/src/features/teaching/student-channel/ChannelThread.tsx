@@ -43,7 +43,8 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   const writes = mode === 'write';
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   const newest = first?.messages.at(-1);
-  // One ticking clock for every bubble (not new Date() in render, which the compiler would keep).
+  // One ticking clock for every bubble and the presence line (not new Date() in render, which the
+  // compiler would keep).
   const now = useNow();
   const send = useMutation({
     mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),
@@ -73,7 +74,7 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   return (
     <section aria-label={label} className="grid gap-3">
       {named && name && <h2 className="font-display text-h3 font-bold">{name}</h2>}
-      <ChannelPresenceLine chat={refs} tz={tz} />
+      <ChannelPresenceLine chat={refs} tz={tz} now={now} />
       {!writes && <p className={NOTE}>{readOnlyText(first?.open)}</p>}
       {query.hasNextPage && (
         <Button type="button" variant="ghost" size="sm" className="justify-self-center" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>
