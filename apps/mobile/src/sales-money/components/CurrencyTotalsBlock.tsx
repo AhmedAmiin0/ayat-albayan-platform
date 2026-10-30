@@ -1,9 +1,9 @@
 import type { CurrencyTotals } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from './AmountText';
-import { byCurrency } from '../lib/money-text';
+import { byCurrency } from '@/sales-money/lib/money-text';
 
 const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;
 

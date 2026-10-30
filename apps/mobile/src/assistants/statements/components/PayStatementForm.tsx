@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payouts/payout-actions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { money } from '@/payments/format';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
@@ -15,8 +15,8 @@ import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { assistantsErrorText } from '../../api/errors';
-import { usePayStatement } from '../hooks/use-pay-statement';
+import { assistantsErrorText } from '@/assistants/api/errors';
+import { usePayStatement } from '@/assistants/statements/hooks/use-pay-statement';
 
 const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 

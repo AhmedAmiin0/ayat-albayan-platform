@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AttachmentRow } from '@/payments/receipts/AttachmentRow';
 import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/receipts/attachments';
 import { FormLabel } from '@/payments/FormLabel';
 import { PhotoButtons } from '@/payments/receipts/PhotoButtons';
 import { Button } from '@/core/ui/primitives/Button';
-import { ChatReceiptList } from '../receipts/ChatReceiptList';
-import { useCopyChatReceipt } from '../receipts/chat-receipts';
-import { salesErrorText } from '../lib/sales-errors';
-import type { ReceiptChoice } from '../lib/transfer-form';
+import { ChatReceiptList } from '@/sales-subscribe/receipts/ChatReceiptList';
+import { useCopyChatReceipt } from '@/sales-subscribe/receipts/chat-receipts';
+import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
+import type { ReceiptChoice } from '@/sales-subscribe/lib/transfer-form';
 
 interface SalesReceiptFieldProps {
   /** The package's student (whose family chat is listed) and the package (where the copy goes). */

@@ -4,13 +4,13 @@ import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
 import { dayLabel } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { type StartDraft, usedBeforeOf } from '../lib/start-date';
+import { type StartDraft, usedBeforeOf } from '@/sales-subscribe/lib/start-date';
 
 interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */

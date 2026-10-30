@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { useGoogleStatus } from '../../google-sync/google-status';
-import { googleValues } from '../lib/google-values';
+import { Note } from '@/core/ui/feedback/Note';
+import { useGoogleStatus } from '@/ops/google-sync/google-status';
+import { googleValues } from '@/ops/values/lib/google-values';
 import { TableFrame } from './ValuesTable';
 import { ValueRow } from './ValueRow';
 

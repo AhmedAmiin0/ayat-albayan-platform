@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Chevron } from '@/core/ui/primitives/Chevron';

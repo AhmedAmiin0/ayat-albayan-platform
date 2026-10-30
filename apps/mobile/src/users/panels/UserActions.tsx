@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { enableUser, signOutUser, USERS_KEY } from '../shared/api';
-import { userErrorText } from '../shared/errors';
+import { enableUser, signOutUser, USERS_KEY } from '@/users/shared/api';
+import { userErrorText } from '@/users/shared/errors';
 
 export type ActionMode = 'disable' | 'reset' | 'delete';
 

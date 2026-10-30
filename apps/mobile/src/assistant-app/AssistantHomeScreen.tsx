@@ -8,7 +8,7 @@ import { DaySwitcher } from '@/classroom/sessions/DaySwitcher';
 import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { HeldBell } from '@/notifications/HeldBell';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';

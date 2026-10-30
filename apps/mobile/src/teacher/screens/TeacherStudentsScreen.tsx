@@ -2,7 +2,7 @@ import { RIYADH_TZ, type TeacherStudentKind, type TeacherStudentView } from '@ab
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
@@ -10,9 +10,9 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { useTeacherMe } from '../lib/queries';
-import { StudentRow } from '../components/StudentRow';
-import { useMyStudents } from '../lib/students-queries';
+import { useTeacherMe } from '@/teacher/lib/queries';
+import { StudentRow } from '@/teacher/components/StudentRow';
+import { useMyStudents } from '@/teacher/lib/students-queries';
 
 const kinds = (): FilterPill<TeacherStudentKind>[] => [
   { value: 'subscribed', label: t.teacherStudents.subscribed },

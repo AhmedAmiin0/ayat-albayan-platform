@@ -3,19 +3,19 @@ import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useHolds, useIsAdmin, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
-import { SubScreenHeader } from '../../shared/SubScreenHeader';
-import { useSettings } from '../../settings/use-settings';
-import { GOOGLE_GROUP } from '../lib/google-values';
-import { GoogleValuesTable } from '../table/GoogleValuesTable';
-import { useConfigMeta } from '../hooks/use-save-value';
-import { GROUP_IDS, groupKeys, groupLabel, type GroupId } from '../lib/value-groups';
-import { ValueSheet } from '../sheet/ValueSheet';
-import { ValuesTable } from '../table/ValuesTable';
+import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
+import { useSettings } from '@/ops/settings/use-settings';
+import { GOOGLE_GROUP } from '@/ops/values/lib/google-values';
+import { GoogleValuesTable } from '@/ops/values/table/GoogleValuesTable';
+import { useConfigMeta } from '@/ops/values/hooks/use-save-value';
+import { GROUP_IDS, groupKeys, groupLabel, type GroupId } from '@/ops/values/lib/value-groups';
+import { ValueSheet } from '@/ops/values/sheet/ValueSheet';
+import { ValuesTable } from '@/ops/values/table/ValuesTable';
 
 type Chip = GroupId | typeof GOOGLE_GROUP;
 

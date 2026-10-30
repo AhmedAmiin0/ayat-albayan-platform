@@ -1,12 +1,12 @@
 import { isEditableValueKey, SETTING_DEFAULTS, VALUE_CONFIRM, type SettingKey, type SettingMeta } from '@ab/shared';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { formatAt } from '../../activity/activity-format';
+import { formatAt } from '@/ops/activity/activity-format';
 import { DevKey } from './DevKey';
-import { sameValue } from '../lib/value-draft';
-import { boundsOf, valueText } from '../lib/value-text';
+import { sameValue } from '@/ops/values/lib/value-draft';
+import { boundsOf, valueText } from '@/ops/values/lib/value-text';
 import { useClockCycle } from '@/core/lib/clock';
 import type { ClockCycle } from '@ab/shared';
 

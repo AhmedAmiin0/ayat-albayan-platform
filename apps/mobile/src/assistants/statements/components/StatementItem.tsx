@@ -2,14 +2,14 @@ import { payoutStatusStyle, type AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { CardTitle } from '@/sales-money/components/CardTitle';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';
 import { statementMonth, statementWhen } from '@/sales-money/lib/money-text';
 import { StatementLines } from '@/sales-money/components/StatementLines';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { StatementActionBar } from './StatementActionBar';
-import type { StatementCan } from '../hooks/statement-can';
+import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 import { StatementTotals } from './StatementTotals';
 
 interface StatementItemProps {

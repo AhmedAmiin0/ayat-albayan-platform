@@ -3,13 +3,13 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { kindPills } from '@/students/list/student-kinds';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { useSalesHrefs } from '../lib/sales-href';
-import { teacherCounts } from '../lib/sales-text';
+import { useSalesHrefs } from '@/sales/lib/sales-href';
+import { teacherCounts } from '@/sales/lib/sales-text';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
 interface SalesTeacherHeaderProps {

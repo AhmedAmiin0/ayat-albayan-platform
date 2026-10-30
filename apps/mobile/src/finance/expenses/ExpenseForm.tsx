@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AmountField } from '@/payments/components/AmountField';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
@@ -14,7 +14,7 @@ import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { activeCategories, categoryLabel } from './categories';
 import { checkExpense, emptyExpense, type ExpenseDraft } from './expense-draft';
-import { financeErrorText } from '../shared/errors';
+import { financeErrorText } from '@/finance/shared/errors';
 import { useAddExpense } from './use-add-expense';
 
 interface ExpenseFormProps {

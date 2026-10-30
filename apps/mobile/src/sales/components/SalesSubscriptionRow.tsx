@@ -2,12 +2,12 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
-import type { SalesSubscription } from '../lib/sales-api';
-import { studentDetailsHref, useSalesHrefs } from '../lib/sales-href';
-import { startsLine, subscriptionSubtitle } from '../lib/sales-text';
-import { Note } from '@/more/Note';
+import type { SalesSubscription } from '@/sales/lib/sales-api';
+import { studentDetailsHref, useSalesHrefs } from '@/sales/lib/sales-href';
+import { startsLine, subscriptionSubtitle } from '@/sales/lib/sales-text';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { MoneyActionButton } from '../money-action';
+import { MoneyActionButton } from '@/sales/money-action';
 
 /**
  * One of my subscriptions: student and code, package · status · lessons, the start day. No price, no

@@ -3,12 +3,12 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { PhoneText } from '@/core/ui/layout/PhoneText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { studentDetailsHref } from '../lib/sales-href';
-import { guardianLine, studentSubtitle } from '../lib/sales-text';
+import { studentDetailsHref } from '@/sales/lib/sales-href';
+import { guardianLine, studentSubtitle } from '@/sales/lib/sales-text';
 
 /**
  * One student of the academy: name with its readable code, teacher · program, the guardian's phone

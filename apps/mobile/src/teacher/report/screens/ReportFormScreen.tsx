@@ -5,16 +5,16 @@ import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from '../../lib/queries';
-import { reportErrorText, useReportForm } from '../hooks/api';
-import { ReportEntryCard } from '../components/ReportEntryCard';
-import { ReportEntryCardV2 } from '../v2';
+import { useTeacherMe } from '@/teacher/lib/queries';
+import { reportErrorText, useReportForm } from '@/teacher/report/hooks/api';
+import { ReportEntryCard } from '@/teacher/report/components/ReportEntryCard';
+import { ReportEntryCardV2 } from '@/teacher/report/v2';
 import { useClockCycle } from '@/core/lib/clock';
 
 /** The report's own form: the new one (form_version 2), else the Google Form's (v1, unchanged). */

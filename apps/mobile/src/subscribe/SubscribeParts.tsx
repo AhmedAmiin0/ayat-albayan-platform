@@ -2,7 +2,7 @@ import type { QuoteResponse } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import type { StudentRef } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
