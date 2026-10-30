@@ -16,8 +16,8 @@ const h = t.sales.history;
 const part = { paid: 100, price: 290, due: 190, currency: 'SAR' };
 const base = details();
 const [current, past] = base.subscriptions;
-const other = () =>
-  details({ mine: false, subscriptions: [...(current ? [{ ...current, part_paid: part }] : []), ...(past ? [past] : [])] });
+const subs = [...(current ? [{ ...current, part_paid: part }] : []), ...(past ? [past] : [])];
+const other = () => details({ mine: false, subscriptions: subs });
 beforeEach(() => {
   mockApiFetch.mockReset();
   fakeNow(new Date('2026-10-27T10:00:00Z'));

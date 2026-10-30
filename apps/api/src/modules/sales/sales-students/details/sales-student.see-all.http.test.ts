@@ -5,7 +5,7 @@ import { MINE, REPORT, studentsApp } from '@/modules/sales/sales-students/sales-
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const PRICE = [{ id: SUB, price: 400, currency: 'SAR' }];
 
-// Owner 2026-10-30, «Make all assistants see all»: salesB reads salesA's student exactly as salesA does.
+// Owner 2026-10-30, «Make all assistants see all»: salesB reads salesA's student as salesA does.
 describe('every assistant sees every student (GET /sales/students/:id, its attendance and report PDF)', () => {
   let t: App;
   beforeAll(async () => {

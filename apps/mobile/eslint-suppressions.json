@@ -10378,9 +10378,6 @@
     "ab/no-parent-imports": {
       "count": 1
     },
-    "max-len": {
-      "count": 6
-    },
     "max-lines-per-function": {
       "count": 1
     },

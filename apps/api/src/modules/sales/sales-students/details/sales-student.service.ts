@@ -13,10 +13,11 @@ import { SalesStudentQueries } from './sales-student.queries';
 import { SalesStudentReads } from './sales-student.reads';
 
 /**
- * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) with its trial,
- * attendance, «الجدول» (weekly slots, the next lessons; no link), the current package's summary, the
- * subscriptions (no payments) and the sent reports as the teacher sees them: every student reads as hers
- * (owner 2026-10-30, «Make all assistants see all»); `mine` only marks hers for the money actions. Read-only.
+ * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) with its
+ * trial, attendance, «الجدول» (weekly slots, the next lessons; no link), the current package's
+ * summary, the subscriptions (no payments) and the sent reports as the teacher sees them: every
+ * student reads as hers (owner 2026-10-30, «Make all assistants see all»); `mine` only marks hers
+ * for the money actions. Read-only.
  */
 @Injectable()
 export class SalesStudentService {
@@ -40,13 +41,16 @@ export class SalesStudentService {
       this.queries.trialDates.trialLessons(studentId),
       this.currentPackage(studentId),
     ]);
-    const schedule = toStudentSchedule({ rules, lessons: upcoming, own: own.studentIds, studentTz: student.tz }, now);
-    // «مدفوعة جزئيًا» (owner 2026-10-28): the price for a viewer who sees it in her money views already, any student.
+    const facts = { rules, lessons: upcoming, own: own.studentIds, studentTz: student.tz };
+    const schedule = toStudentSchedule(facts, now);
+    // «مدفوعة جزئيًا» (owner 2026-10-28): the price for a viewer who sees it in her money views
+    // already, any student.
     const prices = can(user, 'self.sales_money') ? await this.queries.prices(studentId) : [];
     const trial = toTrialLessons(trials, now);
     const parts = { student, history, lessons, reports, schedule, trial, mine, prices };
     const view = toStudentDetails({ ...parts, package: pkg });
-    return { ...view, student: { ...view.student, guardian_phone: chatPhone(user, view.student.guardian_phone) } };
+    const phone = chatPhone(user, view.student.guardian_phone);
+    return { ...view, student: { ...view.student, guardian_phone: phone } };
   }
 
   /** The current package of ANY student (owner 2026-10-30): no price, payment or commission. */
@@ -55,7 +59,7 @@ export class SalesStudentService {
     return (await packageSummaries(this.roster, rows)).get(studentId) ?? null;
   }
 
-  /** «تنزيل PDF» of ANY student's sent report (owner 2026-10-30): 404 for another student's report, 409 pdf_not_ready. */
+  /** «تنزيل PDF» of ANY student's sent report (owner 2026-10-30): 404 another's, 409 pdf_not_ready. */
   reportPdf(input: { studentId: string; reportId: string }): Promise<SignedDownload> {
     return this.reads.files.studentPdfUrl({ id: input.reportId, studentId: input.studentId });
   }
