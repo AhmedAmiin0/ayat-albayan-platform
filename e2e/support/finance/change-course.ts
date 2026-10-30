@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { dayTimesPayload, seedSiblings, type DaySeed } from '../day-times';
+import { dayTimesPayload, seedSiblings, type DaySeed } from '../teaching/day-times';
 import { BASE, iso, MIN, type Tx } from '../edit-time';
 
 // Helpers of e2e/tests/change-course.sql.spec.ts: change_course (migration 480, «تغيير أيام الحلقات») on a

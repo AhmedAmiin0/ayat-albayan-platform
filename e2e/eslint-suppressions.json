@@ -114,7 +114,7 @@
       "count": 2
     }
   },
-  "support/classroom-live.ts": {
+  "support/teaching/classroom-live.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
@@ -152,7 +152,7 @@
       "count": 4
     }
   },
-  "support/day-times.ts": {
+  "support/teaching/day-times.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
     },
@@ -298,7 +298,7 @@
       "count": 10
     }
   },
-  "support/schedule-extra.ts": {
+  "support/teaching/schedule-extra.ts": {
     "max-len": {
       "count": 4
     }
@@ -364,7 +364,7 @@
       "count": 1
     }
   },
-  "tests/apply-lesson-changes-v3.sql.spec.ts": {
+  "tests/teaching/apply-lesson-changes-v3.sql.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -471,27 +471,27 @@
       "count": 2
     }
   },
-  "tests/booking-day-times.spec.ts": {
+  "tests/teaching/booking-day-times.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/booking-day-times.sql.spec.ts": {
+  "tests/teaching/booking-day-times.sql.spec.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "tests/booking-group.spec.ts": {
+  "tests/teaching/booking-group.spec.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "tests/booking-makeup-group.spec.ts": {
+  "tests/teaching/booking-makeup-group.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/booking-makeup-invoice.spec.ts": {
+  "tests/teaching/booking-makeup-invoice.spec.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
@@ -499,7 +499,7 @@
       "count": 3
     }
   },
-  "tests/booking-override.spec.ts": {
+  "tests/teaching/booking-override.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -551,17 +551,17 @@
       "count": 3
     }
   },
-  "tests/classroom-live-phone.spec.ts": {
+  "tests/teaching/classroom-live-phone.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/classroom-live.moderation.spec.ts": {
+  "tests/teaching/classroom-live.moderation.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/classroom-live.spec.ts": {
+  "tests/teaching/classroom-live.spec.ts": {
     "max-len": {
       "count": 4
     }
@@ -626,12 +626,12 @@
       "count": 1
     }
   },
-  "tests/edit-session-time.held.spec.ts": {
+  "tests/teaching/edit-session-time.held.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/edit-session-time.helpers.ts": {
+  "tests/teaching/edit-session-time.helpers.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -639,7 +639,7 @@
       "count": 4
     }
   },
-  "tests/edit-session-time.spec.ts": {
+  "tests/teaching/edit-session-time.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -769,7 +769,7 @@
       "count": 1
     }
   },
-  "tests/journey-5-availability-wizard.spec.ts": {
+  "tests/teaching/journey-5-availability-wizard.spec.ts": {
     "@typescript-eslint/no-unnecessary-template-expression": {
       "count": 1
     }
@@ -815,12 +815,12 @@
       "count": 1
     }
   },
-  "tests/meeting-recordings-rls.sql.spec.ts": {
+  "tests/teaching/meeting-recordings-rls.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
-  "tests/meetings.spec.ts": {
+  "tests/teaching/meetings.spec.ts": {
     "max-len": {
       "count": 3
     }
@@ -908,12 +908,12 @@
       "count": 1
     }
   },
-  "tests/proposals-reject.spec.ts": {
+  "tests/teaching/proposals-reject.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/proposals.spec.ts": {
+  "tests/teaching/proposals.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
@@ -1018,27 +1018,27 @@
       "count": 2
     }
   },
-  "tests/schedule-all-teachers.spec.ts": {
+  "tests/teaching/schedule-all-teachers.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/schedule-cancel.spec.ts": {
+  "tests/teaching/schedule-cancel.spec.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "tests/schedule-overview.spec.ts": {
+  "tests/teaching/schedule-overview.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/schedule-series.spec.ts": {
+  "tests/teaching/schedule-series.spec.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "tests/schedule-stale.spec.ts": {
+  "tests/teaching/schedule-stale.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -1084,7 +1084,7 @@
       "count": 1
     }
   },
-  "tests/student-recordings-api.spec.ts": {
+  "tests/teaching/student-recordings-api.spec.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -1095,7 +1095,7 @@
       "count": 1
     }
   },
-  "tests/student-recordings-rls.sql.spec.ts": {
+  "tests/teaching/student-recordings-rls.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -1164,7 +1164,7 @@
       "count": 2
     }
   },
-  "tests/teacher-meeting-mode.sql.spec.ts": {
+  "tests/teaching/teacher-meeting-mode.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },

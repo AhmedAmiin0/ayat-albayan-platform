@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { seedSiblings, type DaySeed } from '../day-times';
+import { seedSiblings, type DaySeed } from '../teaching/day-times';
 import { BASE, iso, MIN, type Tx } from '../edit-time';
 
 // Helpers of e2e/tests/pick-trial-date.sql.spec.ts: pick_trial_date (migration 20261025000660,

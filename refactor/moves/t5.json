@@ -1,0 +1,280 @@
+{
+  "id": "t5",
+  "seq": 115,
+  "moves": [
+    {
+      "from": "e2e/tests/apply-lesson-changes-v3.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-day-times.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-day-times.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-group.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-makeup-group.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-makeup-invoice.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/booking-override.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/classroom-live-phone.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/classroom-live.moderation.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/classroom-live.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/edit-session-time.held.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/edit-session-time.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/edit-time.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/internal-meeting.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/journey-4-reschedule-conflict.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/journey-5-availability-wizard.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/meeting-link-auto.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/meeting-recordings-rls.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/meetings.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/proposals-reject.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/proposals.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/schedule-all-teachers.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/schedule-cancel.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/schedule-overview.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/schedule-series.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/schedule-stale.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/teacher-meeting-mode.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/teachers-always-available.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/student-recordings-api.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/student-recordings-rls.sql.spec.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/tests/edit-session-time.helpers.ts",
+      "to": "e2e/tests/teaching/"
+    },
+    {
+      "from": "e2e/support/classroom-live.ts",
+      "to": "e2e/support/teaching/"
+    },
+    {
+      "from": "e2e/support/day-times.ts",
+      "to": "e2e/support/teaching/"
+    },
+    {
+      "from": "e2e/support/schedule-extra.ts",
+      "to": "e2e/support/teaching/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/classroom-live.ts",
+      "e2e/support/teaching/classroom-live.ts"
+    ],
+    [
+      "e2e/support/day-times.ts",
+      "e2e/support/teaching/day-times.ts"
+    ],
+    [
+      "e2e/support/schedule-extra.ts",
+      "e2e/support/teaching/schedule-extra.ts"
+    ],
+    [
+      "e2e/tests/apply-lesson-changes-v3.sql.spec.ts",
+      "e2e/tests/teaching/apply-lesson-changes-v3.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-day-times.spec.ts",
+      "e2e/tests/teaching/booking-day-times.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-day-times.sql.spec.ts",
+      "e2e/tests/teaching/booking-day-times.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-group.spec.ts",
+      "e2e/tests/teaching/booking-group.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-makeup-group.spec.ts",
+      "e2e/tests/teaching/booking-makeup-group.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-makeup-invoice.spec.ts",
+      "e2e/tests/teaching/booking-makeup-invoice.spec.ts"
+    ],
+    [
+      "e2e/tests/booking-override.spec.ts",
+      "e2e/tests/teaching/booking-override.spec.ts"
+    ],
+    [
+      "e2e/tests/classroom-live-phone.spec.ts",
+      "e2e/tests/teaching/classroom-live-phone.spec.ts"
+    ],
+    [
+      "e2e/tests/classroom-live.moderation.spec.ts",
+      "e2e/tests/teaching/classroom-live.moderation.spec.ts"
+    ],
+    [
+      "e2e/tests/classroom-live.spec.ts",
+      "e2e/tests/teaching/classroom-live.spec.ts"
+    ],
+    [
+      "e2e/tests/edit-session-time.held.spec.ts",
+      "e2e/tests/teaching/edit-session-time.held.spec.ts"
+    ],
+    [
+      "e2e/tests/edit-session-time.helpers.ts",
+      "e2e/tests/teaching/edit-session-time.helpers.ts"
+    ],
+    [
+      "e2e/tests/edit-session-time.spec.ts",
+      "e2e/tests/teaching/edit-session-time.spec.ts"
+    ],
+    [
+      "e2e/tests/edit-time.sql.spec.ts",
+      "e2e/tests/teaching/edit-time.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/internal-meeting.spec.ts",
+      "e2e/tests/teaching/internal-meeting.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-4-reschedule-conflict.spec.ts",
+      "e2e/tests/teaching/journey-4-reschedule-conflict.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-5-availability-wizard.spec.ts",
+      "e2e/tests/teaching/journey-5-availability-wizard.spec.ts"
+    ],
+    [
+      "e2e/tests/meeting-link-auto.spec.ts",
+      "e2e/tests/teaching/meeting-link-auto.spec.ts"
+    ],
+    [
+      "e2e/tests/meeting-recordings-rls.sql.spec.ts",
+      "e2e/tests/teaching/meeting-recordings-rls.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/meetings.spec.ts",
+      "e2e/tests/teaching/meetings.spec.ts"
+    ],
+    [
+      "e2e/tests/proposals-reject.spec.ts",
+      "e2e/tests/teaching/proposals-reject.spec.ts"
+    ],
+    [
+      "e2e/tests/proposals.spec.ts",
+      "e2e/tests/teaching/proposals.spec.ts"
+    ],
+    [
+      "e2e/tests/schedule-all-teachers.spec.ts",
+      "e2e/tests/teaching/schedule-all-teachers.spec.ts"
+    ],
+    [
+      "e2e/tests/schedule-cancel.spec.ts",
+      "e2e/tests/teaching/schedule-cancel.spec.ts"
+    ],
+    [
+      "e2e/tests/schedule-overview.spec.ts",
+      "e2e/tests/teaching/schedule-overview.spec.ts"
+    ],
+    [
+      "e2e/tests/schedule-series.spec.ts",
+      "e2e/tests/teaching/schedule-series.spec.ts"
+    ],
+    [
+      "e2e/tests/schedule-stale.spec.ts",
+      "e2e/tests/teaching/schedule-stale.spec.ts"
+    ],
+    [
+      "e2e/tests/student-recordings-api.spec.ts",
+      "e2e/tests/teaching/student-recordings-api.spec.ts"
+    ],
+    [
+      "e2e/tests/student-recordings-rls.sql.spec.ts",
+      "e2e/tests/teaching/student-recordings-rls.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-meeting-mode.sql.spec.ts",
+      "e2e/tests/teaching/teacher-meeting-mode.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teachers-always-available.spec.ts",
+      "e2e/tests/teaching/teachers-always-available.spec.ts"
+    ]
+  ]
+}
