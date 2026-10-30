@@ -54,6 +54,7 @@ Nothing in this plan runs on the owner's PC. GitHub Actions and cloud routines r
 | last block, `**/*.{js,mjs,cjs}`             | `tseslint.configs.disableTypeChecked`                                                                  | eslint and jest configs, tools/scripts `.mjs`                        |
 | `linterOptions`                             | `reportUnusedDisableDirectives: 'error'` (new)                                                         | 1, `students.mapper.ts:45`, deleted in PR 1                          |
 | kept                                        | `max-lines` 150, `max-params` 3, `no-explicit-any`, `no-non-null-assertion`, `no-extraneous-class` (decorators allowed) | 0, except 3 in tools/scripts (linted for the first time) |
+| docs/32 g3                                  | `max-len` 100 (strings, templates, URLs, regexes ignored), `max-lines-per-function` 50 (off in tests), `ab/max-params` (3, constructors 4, signatures counted) instead of `@typescript-eslint/max-params`, `ab/forbidden-imports` (R8: `DB`/`Db` outside repositories and adapters in api, `apiFetch`/`apiSend` in web/mobile `.tsx`) | baselined with `eslint --suppress-rule`; counts in the g3 PR |
 | `complexity`                                | 10, warn → **error**                                                                                   | 239                                                                  |
 | `max-depth`                                 | 3                                                                                                      | 14                                                                   |
 | `no-console`                                | error (off in tools/\*, e2e)                                                                           | 2 (mobile)                                                           |
@@ -221,10 +222,16 @@ the `lint.json` diff.
 ```
 eslint . --fix                    # L0 only
 eslint . --prune-suppressions     # drop the entries this PR fixed or whose file it deleted; both fail CI anyway
+pnpm lint:prune                   # the same in every package (turbo, no cache)
 pnpm guard:lint -- --write        # lower refactor/guards/lint.json; the gate fails if this is skipped
 ```
 
 A conflict in an `eslint-suppressions.json`: take develop's side, then re-run `--prune-suppressions` on the merge result.
+
+Since docs/32 g3 (`max-len` 100, `max-lines-per-function` 50, `ab/max-params`, the R8 import bans) most files
+carry an entry, so shortening one baselined line or splitting one long function is enough to need a prune. Nobody
+has to run ESLint by hand for it: when the CI lint job fails, its last step («Suppressions to prune») prints the
+pruned `eslint-suppressions.json` diff. Commit that diff, then `pnpm guard:lint -- --write`.
 
 ## 6. Fix lanes
 

@@ -84,7 +84,6 @@ Params: 0 linted functions with 4+ params, and all 713 api constructors take ≤
 - 18 more need React 19 APIs: the 15 REF rows, `document.title` ×2 → `<title>`, VideoTile → ref-callback cleanup. The 9 web rows wait for x1.
 - ≈ 95 are real external-system sync and stay, consolidated into shared hooks. 45 of the 172 sit in hooks duplicated between or inside the apps (9 web/mobile pairs, for example use-call-session 38/52 lines, use-autosave 54/68).
 - Memo: `useMemo` 71 (web 46, mobile 25), `useCallback` 87 (41 / 46), `memo()` 32 (3 / 29), `useStableHandler` 3 = **193**. They are deleted only after the compiler runs: today many callbacks are effect dependencies and the `memo()` FlatList rows rely on stable props.
-- Watch on the first CI after g3: synchronous setState in an effect body (`set-state-in-effect` is an error) in web `use-settings-form.ts:51`, mobile `use-screen-focus.ts:12`, web `use-grant-notices.ts:35`.
 
 ### 2.3 Data layer: repository scan (api, `012ffa06`)
 

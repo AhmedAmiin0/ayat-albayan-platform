@@ -8,21 +8,38 @@ import oxlint from 'eslint-plugin-oxlint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { TESTS } from './eslint-boundaries.js';
+import { boundariesPlugin, TESTS } from './eslint-boundaries.js';
 
 // Oxlint runs the rules of the root .oxlintrc.json first (`pnpm lint:ox`, a CI step before ESLint); ESLint turns
 // them off and keeps the type-aware, custom and react-hooks rules. Oxlint has no bulk suppressions, so only a rule
 // with no entry in any eslint-suppressions.json can move there (`pnpm guard:lint` checks it).
 const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.meta.url), 'utf8'));
 
-export { boundaries, TESTS } from './eslint-boundaries.js';
+export { boundaries, forbiddenImports, TESTS } from './eslint-boundaries.js';
 export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
 
 export const hardRules = {
   'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
+  // docs/32 R1: 150 lines of at most 100 characters (the prettier width); long strings and URLs
+  // may run on.
+  'max-len': [
+    'error',
+    {
+      code: 100,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: true,
+      ignoreUrls: true,
+      ignoreRegExpLiterals: true,
+    },
+  ],
+  // docs/32 R2 + D1: 3 per function, 4 per constructor, method signatures included
+  // (eslint-params.js).
   'max-params': 'off',
-  '@typescript-eslint/max-params': ['error', { max: 3 }],
+  '@typescript-eslint/max-params': 'off',
+  'ab/max-params': 'error',
+  // docs/32 R3: small single-purpose functions (tests: describe / it blocks run long).
+  'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
   '@typescript-eslint/no-explicit-any': 'error',
   '@typescript-eslint/no-non-null-assertion': 'error',
   complexity: ['error', 10],
@@ -63,6 +80,7 @@ const typedRules = {
 // Fakes implement async interfaces without await, and Fastify inject `.json()` is untyped; floating and
 // misused promises still fail in tests.
 const testRules = {
+  'max-lines-per-function': 'off',
   '@typescript-eslint/require-await': 'off',
   '@typescript-eslint/unbound-method': 'off',
   '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -87,6 +105,7 @@ export function config(root, ...extra) {
     tseslint.configs.stylisticTypeChecked,
     {
       linterOptions: { reportUnusedDisableDirectives: 'error' },
+      plugins: { ab: boundariesPlugin },
       languageOptions: {
         globals: { ...globals.node },
         // *.mts: vitest configs that no tsconfig includes.
