@@ -88,4 +88,3 @@ export interface PortalPackage {
 export interface PortalPackageView {
   package: PortalPackage | null;
 }
-
