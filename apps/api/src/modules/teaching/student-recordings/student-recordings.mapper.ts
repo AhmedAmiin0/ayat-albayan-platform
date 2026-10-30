@@ -1,4 +1,4 @@
-import { durationSeconds, mediaOfPath, STUDENT_RECORDING_STATUSES, type StudentRecordingStatus, type StudentRecordingView } from '@ab/shared';
+import { addCalendarDays, durationSeconds, mediaOfPath, STUDENT_RECORDING_STATUSES, type StudentRecordingStatus, type StudentRecordingView } from '@ab/shared';
 import type { RecordingRow } from '../classroom/recordings/recording.queries';
 
 /** A recording with the lesson it belongs to, as the student file's query selects it. */
@@ -45,7 +45,7 @@ export function canManage(rule: ManageRule, row: RecordingJoinRow): boolean {
 
 /** The UTC bounds of a `from`/`to` day range: [from 00:00, the day after `to` 00:00). */
 export function dayBounds(range: { from?: string | undefined; to?: string | undefined }): { gte: string | null; lt: string | null } {
-  const next = (day: string): string => new Date(Date.parse(`${day}T00:00:00.000Z`) + 86_400_000).toISOString();
+  const next = (day: string): string => `${addCalendarDays(day, 1)}T00:00:00.000Z`;
   return {
     gte: range.from ? `${range.from}T00:00:00.000Z` : null,
     lt: range.to ? next(range.to) : null,

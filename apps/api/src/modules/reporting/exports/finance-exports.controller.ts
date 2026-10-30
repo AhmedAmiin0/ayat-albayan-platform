@@ -1,4 +1,4 @@
-import { monthParam } from '@ab/shared';
+import { addCalendarDays, addCalendarMonths, monthParam } from '@ab/shared';
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -26,8 +26,7 @@ const ledgerQuery = z.object({ month: monthParam, teacherId: z.uuid().optional()
 
 /** «YYYY-MM» → the Riyadh month as a window (the dashboard's months). */
 function monthWindow(month: string) {
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  const last = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
+  const last = addCalendarDays(addCalendarMonths(month, 1), -1);
   return rangeWindow({ from: `${month}-01`, to: last });
 }
 

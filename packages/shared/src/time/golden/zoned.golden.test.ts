@@ -16,9 +16,12 @@ const wallLines = (zone: string): string[] =>
 
 function instantLines(zone: string): string[] {
   return instants.map((at) => {
-    const clocks = (['12', '24'] as const).map((cycle) => clockIn(at, { tz: zone, cycle, locale: 'ar' }));
+    const clocks = (['12', '24'] as const).map((cycle) =>
+      clockIn(at, { tz: zone, cycle, locale: 'ar' }),
+    );
     const day = localDateIn(at, zone);
-    const fields = [offsetMinutesIn(zone, at), day, startOfDayIn(at, zone).toISOString(), weekdayIn(at, zone)];
+    const start = startOfDayIn(at, zone).toISOString();
+    const fields = [offsetMinutesIn(zone, at), day, start, weekdayIn(at, zone)];
     return [...fields, ...clocks, addDaysIn(at, -1, zone).toISOString()].join(' ');
   });
 }

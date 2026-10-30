@@ -1,3 +1,4 @@
+import { localDateIn, wallToUtc } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { loadEnv } from '../../../../config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
@@ -13,7 +14,8 @@ const RECONCILE_UTC_HOUR = 2;
 
 /** ms from `now` to the next 02:00 UTC. */
 export function msUntilReconcile(now: Date): number {
-  const next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), RECONCILE_UTC_HOUR);
+  const today = localDateIn(now, 'UTC');
+  const next = wallToUtc(today, RECONCILE_UTC_HOUR * 60, 'UTC').getTime();
   return next > now.getTime() ? next - now.getTime() : next + DAY_MS - now.getTime();
 }
 
