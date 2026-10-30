@@ -1,3 +1,4 @@
+import { addDays } from '../time/index.js';
 import { courseDaysPerWeek } from './course/course.js';
 
 // The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
@@ -25,7 +26,7 @@ export type SalesStartResult = { ok: true; startsOn: string } | { ok: false; cod
 
 /** YYYY-MM-DD minus n days. */
 export function daysBefore(day: string, n: number): string {
-  return new Date(Date.parse(`${day}T00:00:00Z`) - n * 86_400_000).toISOString().slice(0, 10);
+  return addDays(day, -n);
 }
 
 export function salesStartDate(input: SalesStartInput): SalesStartResult {
