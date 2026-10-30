@@ -1,10 +1,10 @@
-import { ar, expect, test } from '../support/fixtures';
-import { API, bearer, setSetting } from '../support/messages';
-import { seedPackageStudent } from '../support/finance/money';
-import { resetAbrar, withSql } from '../support/schedule';
-import { apiSubmit, reportRow } from '../support/teacher-extra';
-import { approveTemplates, documentOf, sentToDigits } from '../support/teacher-templates';
-import { setMessaging, stubReset } from '../support/wa-stub';
+import { ar, expect, test } from '../../support/fixtures';
+import { API, bearer, setSetting } from '../../support/messages';
+import { seedPackageStudent } from '../../support/finance/money';
+import { resetAbrar, withSql } from '../../support/schedule';
+import { apiSubmit, reportRow } from '../../support/reporting/teacher-extra';
+import { approveTemplates, documentOf, sentToDigits } from '../../support/reporting/teacher-templates';
+import { setMessaging, stubReset } from '../../support/wa-stub';
 
 // What the guardian actually receives (R-REP-03, R-SUB-02, R-MSG-01): journeys 2 and 3 stop at
 // `queued`. Here the send gate is open, the two templates are approved at «Meta» (the stub), and

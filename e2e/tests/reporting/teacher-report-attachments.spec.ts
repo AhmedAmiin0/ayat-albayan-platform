@@ -1,9 +1,9 @@
 import { ATTACHMENT_MAX_BYTES } from '@ab/shared';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/finance/money';
-import { resetAbrar, withSql } from '../support/schedule';
-import { reportRow, storedObject } from '../support/teacher-extra';
+import { ar, expect, test } from '../../support/fixtures';
+import { seedPackageStudent } from '../../support/finance/money';
+import { resetAbrar, withSql } from '../../support/schedule';
+import { reportRow, storedObject } from '../../support/reporting/teacher-extra';
 
 // «المرفقات (اختياري)» (R-REP-02, R7–R9): a signed upload to Storage, then the report_attachments
 // row; the teacher removes a file again (row and object); a type or size the bucket would refuse

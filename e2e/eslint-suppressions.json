@@ -199,7 +199,7 @@
       "count": 7
     }
   },
-  "support/feedback.ts": {
+  "support/reporting/feedback.ts": {
     "max-len": {
       "count": 6
     }
@@ -227,7 +227,7 @@
       "count": 1
     }
   },
-  "support/lesson-rating.ts": {
+  "support/reporting/lesson-rating.ts": {
     "max-len": {
       "count": 5
     }
@@ -324,7 +324,7 @@
       "count": 5
     }
   },
-  "support/teacher-extra.ts": {
+  "support/reporting/teacher-extra.ts": {
     "max-len": {
       "count": 4
     }
@@ -334,7 +334,7 @@
       "count": 1
     }
   },
-  "support/teacher-templates.ts": {
+  "support/reporting/teacher-templates.ts": {
     "max-len": {
       "count": 2
     }
@@ -665,7 +665,7 @@
       "count": 1
     }
   },
-  "tests/feedback.spec.ts": {
+  "tests/reporting/feedback.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -710,7 +710,7 @@
       "count": 1
     }
   },
-  "tests/guardian-deliveries.spec.ts": {
+  "tests/reporting/guardian-deliveries.spec.ts": {
     "complexity": {
       "count": 1
     },
@@ -805,7 +805,7 @@
       "count": 3
     }
   },
-  "tests/lesson-rating.spec.ts": {
+  "tests/reporting/lesson-rating.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -944,12 +944,12 @@
       "count": 5
     }
   },
-  "tests/report-admin.spec.ts": {
+  "tests/reporting/report-admin.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/report-outcome.sql.spec.ts": {
+  "tests/reporting/report-outcome.sql.spec.ts": {
     "max-len": {
       "count": 3
     }
@@ -1188,12 +1188,12 @@
       "count": 5
     }
   },
-  "tests/teacher-report-attachments.spec.ts": {
+  "tests/reporting/teacher-report-attachments.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
-  "tests/teacher-report-edit-window.spec.ts": {
+  "tests/reporting/teacher-report-edit-window.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -1217,7 +1217,7 @@
       "count": 5
     }
   },
-  "tests/teacher-week-history.spec.ts": {
+  "tests/reporting/teacher-week-history.spec.ts": {
     "max-len": {
       "count": 3
     }

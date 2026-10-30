@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../support/fixtures';
-import { startedToday } from '../support/finance/money';
-import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../support/schedule';
-import { apiSubmit } from '../support/teacher-extra';
+import { ar, expect, test } from '../../support/fixtures';
+import { startedToday } from '../../support/finance/money';
+import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { apiSubmit } from '../../support/reporting/teacher-extra';
 
 // Teacher dashboard beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03): the teacher's join link, «تأكيد
 // الحلقة» from the card, the week tab across days on the teacher's (Cairo) clock, «تقارير لسه ما
