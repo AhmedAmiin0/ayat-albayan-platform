@@ -86,3 +86,34 @@ export function scheduleLine(
     })
     .join(words.groupSep);
 }
+
+/** The row's words from each app's i18n (`sales.allStudents`): `{n}` / `{of}` are filled here. */
+export interface RosterTexts {
+  noSchedule: string;
+  attendedPackage: string;
+  attendedRecent: string;
+  noHeldPackage: string;
+  noHeldRecent: string;
+}
+
+/** The schedule line, «لا يوجد جدول ثابت» without a slot; null in an old cache (no `weekly`). */
+export function rosterScheduleText(
+  weekly: readonly RosterSlot[] | undefined,
+  tz: string,
+  words: ScheduleWords & Pick<RosterTexts, 'noSchedule'>,
+): string | null {
+  if (!weekly) return null;
+  return scheduleLine(weekly, tz, words) ?? words.noSchedule;
+}
+
+/** «حضر 7 من 9 في الباقة الحالية» (or the last 30 days); null in an old cache. */
+export function rosterAttendanceText(
+  a: RosterAttendance | undefined,
+  texts: RosterTexts,
+): string | null {
+  if (!a) return null;
+  const pkg = a.basis === 'subscription';
+  if (a.held === 0) return pkg ? texts.noHeldPackage : texts.noHeldRecent;
+  const text = pkg ? texts.attendedPackage : texts.attendedRecent;
+  return text.replace('{n}', String(a.attended)).replace('{of}', String(a.held));
+}

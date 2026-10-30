@@ -57,3 +57,12 @@ export function packageSummaryParts(p: SalesPackageSummary, w: PackageWords): st
     ...endPart(p, w),
   ];
 }
+
+/** The row's line: the parts joined, «لا توجد باقة حالية» without one; null in an old cache. */
+export function packageSummaryText(
+  p: SalesPackageSummary | null | undefined,
+  words: PackageWords & { noPackage: string },
+): string | null {
+  if (p === undefined) return null;
+  return p ? packageSummaryParts(p, words).join(' · ') : words.noPackage;
+}

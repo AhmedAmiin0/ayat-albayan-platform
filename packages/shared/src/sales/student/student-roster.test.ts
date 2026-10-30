@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { rosterAttendance, scheduleGroups, scheduleLine, type RosterSlot } from './student-roster.js';
+import {
+  rosterAttendance,
+  rosterAttendanceText,
+  rosterScheduleText,
+  scheduleGroups,
+  scheduleLine,
+  type RosterSlot,
+} from './student-roster.js';
 
 const DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 const asma = { display_name_ar: 'أسماء حسين', display_name_en: 'Asma Hussein' };
@@ -71,5 +78,23 @@ describe('rosterAttendance', () => {
 
   it('is zero of zero without a held lesson', () => {
     expect(rosterAttendance([], 'recent')).toEqual({ attended: 0, held: 0, basis: 'recent' });
+  });
+});
+
+describe('roster texts', () => {
+  const texts = { noSchedule: 'none', attendedPackage: 'pkg {n}/{of}', attendedRecent: 'recent {n}/{of}', noHeldPackage: 'pkg 0', noHeldRecent: 'recent 0' };
+
+  it('the schedule, «none» without a slot, null in an old cache', () => {
+    expect(rosterScheduleText([sunTueThu], 'Asia/Riyadh', { ...words, ...texts })).toBe('الأحد، الثلاثاء، الخميس · [11:00] · أسماء حسين');
+    expect(rosterScheduleText([], 'Asia/Riyadh', { ...words, ...texts })).toBe('none');
+    expect(rosterScheduleText(undefined, 'Asia/Riyadh', { ...words, ...texts })).toBeNull();
+  });
+
+  it('the attendance by basis, with or without a held lesson', () => {
+    expect(rosterAttendanceText({ attended: 7, held: 9, basis: 'subscription' }, texts)).toBe('pkg 7/9');
+    expect(rosterAttendanceText({ attended: 2, held: 3, basis: 'recent' }, texts)).toBe('recent 2/3');
+    expect(rosterAttendanceText({ attended: 0, held: 0, basis: 'subscription' }, texts)).toBe('pkg 0');
+    expect(rosterAttendanceText({ attended: 0, held: 0, basis: 'recent' }, texts)).toBe('recent 0');
+    expect(rosterAttendanceText(undefined, texts)).toBeNull();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packageSummaryParts, type PackageWords, type SalesPackageSummary } from './student-package.js';
+import { packageSummaryParts, packageSummaryText, type PackageWords, type SalesPackageSummary } from './student-package.js';
 
 const words: PackageWords = {
   size: (size) => (size ? `باقة ${size}` : '—'),
@@ -39,5 +39,14 @@ describe('packageSummaryParts', () => {
     const parts = packageSummaryParts(summary({ projected_end_at: null, package: null }), words);
     expect(parts).toHaveLength(4);
     expect(parts[0]).toBe('— · [active]');
+  });
+});
+
+describe('packageSummaryText', () => {
+  const w = { ...words, noPackage: 'لا توجد باقة حالية' };
+  it('joins the parts; none: the «no package» words; an old cache: null', () => {
+    expect(packageSummaryText(summary(), w)).toBe(packageSummaryParts(summary(), words).join(' · '));
+    expect(packageSummaryText(null, w)).toBe('لا توجد باقة حالية');
+    expect(packageSummaryText(undefined, w)).toBeNull();
   });
 });
