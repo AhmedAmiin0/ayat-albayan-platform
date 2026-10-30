@@ -1,11 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '@/common/integrations/numbers-overlay';
-import { ExternalCatchUpJob } from '@/modules/messaging/webhook/external/external-catchup.job';
+import { ExternalCatchUpJob, FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { kapsoEnv, kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
 import type { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
 import type { KapsoHistory } from '@/modules/messaging/webhook/external/kapso-history';
-import { MAX_BACK_MS } from './inbound-history';
 import { catchUpRig, kapsoInbound, NOW, page } from './inbound.fakes';
 
 const NUMBER_A = '00000000-0000-4000-8000-0000000000a1';
@@ -66,7 +65,7 @@ describe('InboundCatchUpJob', () => {
     await x.job.runOnce(NOW);
     const sinces = x.kapso.inbound.mock.calls.map((c) => (c[1] as { since: string }).since);
     const [first, second] = sinces;
-    expect(first).toBe(new Date(NOW.getTime() - MAX_BACK_MS).toISOString());
+    expect(first).toBe(FLOOR.toISOString()); // 7 days back is before FLOOR on NOW
     expect(second).toBe(new Date(NOW.getTime() - 86_400_000).toISOString());
   });
 

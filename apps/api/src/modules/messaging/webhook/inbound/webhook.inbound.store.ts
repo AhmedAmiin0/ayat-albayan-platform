@@ -34,14 +34,15 @@ export class InboundStore {
 
   /**
    * A guardian's or teacher's message never creates a lead (docs/12 §3.5); anyone else is upserted
-   * (R-LEAD-01). upsertByPhone returns null for a job applicant (R-LEAD-04): no lead then.
+   * (R-LEAD-01). upsertByPhone returns null for a job applicant (R-LEAD-04): no lead then. `at`
+   * (default the message time) is the lead's last_inbound_at, i.e. the start of its follow-up cycle.
    */
-  async sender(input: { m: InboundEvent; phone: string }): Promise<Sender> {
-    const { m, phone } = input;
+  async sender(input: { m: InboundEvent; phone: string; at?: Date }): Promise<Sender> {
+    const { m, phone, at = m.at } = input;
     const who = await this.queries.identify(phone);
     const known = { id: who.lead?.id ?? null, created: null, stage: who.lead?.follow_up_stage ?? 0, owner: null };
     if (who.guardian || who.teacher) return { who, lead: known };
-    const row = await this.leads.upsertByPhone({ phone, name: m.name, at: m.at });
+    const row = await this.leads.upsertByPhone({ phone, name: m.name, at });
     if (!row) return { who, lead: known };
     const created = who.lead ? null : row.id;
     return { who, lead: { id: row.id, created, stage: row.follow_up_stage, owner: row.assigned_to } };

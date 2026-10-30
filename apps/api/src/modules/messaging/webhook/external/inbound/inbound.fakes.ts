@@ -13,6 +13,7 @@ import { InboundCatchUpJob } from './inbound-catchup.job';
 import type { InboundCatchUpRepo } from './inbound-catchup.repo';
 import { InboundCatchUp } from './inbound-catchup.service';
 import { InboundGapAlert } from './inbound-gap.alert';
+import { InboundListing } from './inbound-listing';
 
 /** 2026-10-30 09:00:00 UTC, inside the incident's gap. */
 export const GAP_AT = new Date('2026-10-30T09:00:00Z');
@@ -46,12 +47,9 @@ export function catchUpRig() {
     newestInbound: vi.fn().mockResolvedValue(null as Date | null),
     lastExternalReply: vi.fn().mockResolvedValue(null as Date | null),
   };
-  const catchUp = new InboundCatchUp(
-    repo as unknown as InboundCatchUpRepo,
-    ext as unknown as ExternalQueries,
-    s.inbound,
-    kapso as unknown as KapsoHistory,
-  );
+  const queries = ext as unknown as ExternalQueries;
+  const listing = new InboundListing(queries, kapso as unknown as KapsoHistory);
+  const catchUp = new InboundCatchUp(repo as unknown as InboundCatchUpRepo, listing, queries, s.inbound);
   const alert = new InboundGapAlert(s.push as unknown as PushService);
   const job = new InboundCatchUpJob(catchUp, alert);
   return { ...s, ext, kapso, repo, catchUp, alert, job };

@@ -31,3 +31,10 @@ export interface StatusMove {
   from: MessageStatus;
   patch: TablesUpdate<'messages'>;
 }
+
+/** The lesson message a typed reply may answer: to this phone, sent after `since`, up to `until`. */
+export interface ReplyWindow {
+  phone: string;
+  since: Date;
+  until: Date;
+}
