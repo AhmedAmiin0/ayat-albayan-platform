@@ -1,6 +1,6 @@
 import { makeAssistant, message, tokenOf } from '../../support/sales/assistant-api';
 import { fromChatMore } from '../../support/sales/assistant-journey';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { freshDigits } from '../../support/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { trialFamily } from '../../support/sales/sales-money';

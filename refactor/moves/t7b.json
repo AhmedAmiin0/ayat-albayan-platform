@@ -1,0 +1,16 @@
+{
+  "id": "t7b",
+  "seq": 118,
+  "moves": [
+    {
+      "from": "e2e/support/fixtures.ts",
+      "to": "e2e/support/core/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/fixtures.ts",
+      "e2e/support/core/fixtures.ts"
+    ]
+  ]
+}

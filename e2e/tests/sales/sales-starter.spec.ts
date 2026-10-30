@@ -1,5 +1,5 @@
 import { makeAssistant } from '../../support/sales/assistant-api';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { freshDigits } from '../../support/messages';
 import { chatRows, dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs, UNFLAGGED } from '../../support/messaging/restricted-templates';
 import { RESCHEDULE } from '../../support/messaging/reschedule-template';

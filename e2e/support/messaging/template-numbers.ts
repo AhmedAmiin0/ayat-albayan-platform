@@ -1,5 +1,5 @@
 import { expect, type Page } from '@playwright/test';
-import { ar } from '../fixtures';
+import { ar } from '../core/fixtures';
 
 // The templates section per number (owner 2026-10-18): each number has its own «مزامنة مع Meta».
 

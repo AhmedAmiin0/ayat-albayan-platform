@@ -1,7 +1,7 @@
 import { makeAssistant } from '../../support/sales/assistant-api';
 import { fromChatMore } from '../../support/messaging/chat-more';
 import { createListFromRow, dropListsLike, listChip, listsNamed, listsRow, messageCount } from '../../support/messaging/chat-lists';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { inboundRows } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
 import { signInSales } from '../../support/sales/sales-portal';

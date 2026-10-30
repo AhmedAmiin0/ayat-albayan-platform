@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { makeAssistant } from '../../support/sales/assistant-api';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { listedKeys } from '../../support/messaging/restricted-templates';
 import { CHAT_WABA, RESCHEDULE, rescheduleRow, seedReschedule } from '../../support/messaging/reschedule-template';
 import { withSql } from '../../support/schedule';

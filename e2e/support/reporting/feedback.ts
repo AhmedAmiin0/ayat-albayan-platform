@@ -1,4 +1,4 @@
-import { expect } from '../fixtures';
+import { expect } from '../core/fixtures';
 import { addDays, nextWeekSaturday, riyadh, seedFamily, seedLesson, withSql } from '../schedule';
 import { STUB_URL, stubSent, stubTemplateStatus } from '../wa-stub';
 

@@ -1,5 +1,5 @@
 import type { Locator } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { settled } from '../../support/finance/settle';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 

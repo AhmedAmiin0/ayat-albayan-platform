@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar } from '../../support/fixtures';
+import { ar } from '../../support/core/fixtures';
 import { addDays, withSql } from '../../support/schedule';
 
 // Shared by edit-session-time*.spec.ts («عدّل الوقت», R-SCH-11). Not a spec: Playwright only runs *.spec.ts.

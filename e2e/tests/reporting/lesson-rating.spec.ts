@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { seedSentConfirmation } from '../../support/messaging/inbound';
 import { payloadsOf, quickRating, RATING, ratingRows, ratingsSentTo, startedLesson } from '../../support/reporting/lesson-rating';
 import { API, bearer, setSetting } from '../../support/messages';

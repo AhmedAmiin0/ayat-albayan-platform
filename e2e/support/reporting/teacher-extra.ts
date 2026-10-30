@@ -1,6 +1,6 @@
 import { REPORT_RUBRICS, type Attendance, type Grade, type ReportFormResponse, type TextKey } from '@ab/shared';
 import { expect, type Locator, type Page } from '@playwright/test';
-import { ar } from '../fixtures';
+import { ar } from '../core/fixtures';
 import { API, bearer } from '../messages';
 import { withSql } from '../schedule';
 

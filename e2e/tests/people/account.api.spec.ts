@@ -1,6 +1,6 @@
 import { accountRow, accountUser } from '../../support/account';
 import { seedUser } from '../../support/core/db';
-import { expect, test } from '../../support/fixtures';
+import { expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/messages';
 import { dropLogins, expectSignedIn, signInAs } from '../../support/people/users-control';
 

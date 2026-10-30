@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/schedule';
 import { STUB_URL, stubInbound, stubReset } from '../../support/wa-stub';

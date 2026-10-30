@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
 import { auditOf, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 

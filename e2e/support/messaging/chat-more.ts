@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 
 /** The chat header's «المزيد» (docs/20 W3): «تحقق من التسجيل», the renewals, the transfer and the course days. */
 export const chatMore = (page: Page) =>

@@ -1,5 +1,5 @@
 import { seedUser } from '../../support/core/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { withSql } from '../../support/schedule';
 import { dropLogins, openUser, profileOf, stamp } from '../../support/people/users-control';
 

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
 import { seedPackageStudent } from '../../support/finance/money';
 import { uniqueName } from '../../support/finance/money-extra';

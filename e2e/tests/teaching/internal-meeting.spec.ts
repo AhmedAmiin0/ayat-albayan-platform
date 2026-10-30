@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { API } from '../../support/messages';
 import { withSql } from '../../support/schedule';
 import { AR_LOCALE } from '../../support/core/locale';

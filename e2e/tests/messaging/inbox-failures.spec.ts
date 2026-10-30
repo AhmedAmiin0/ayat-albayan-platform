@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { bubble, lastOutbound, openThread, pushesForMessage, stubFail, outboundRows } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/messages';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';

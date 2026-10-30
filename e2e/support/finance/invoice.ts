@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 
 /** A 1×1 PNG: the smallest valid image for an invoice upload. */
 export const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');

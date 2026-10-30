@@ -1,7 +1,7 @@
 import { LOCALE_STORAGE_KEY, offerText, quote } from '@ab/shared';
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 
 // docs/08 §3: «انسخ العرض للعميل» copies the site's Arabic offer text and «أرسله على واتساب»
 // links to wa.me with the same text, in Arabic even when the staff UI is English. Kuwait, 3 lessons

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { expect, test } from '../../support/fixtures';
+import { expect, test } from '../../support/core/fixtures';
 import { closeCodes, codeSentTo, codesSent, family, openCodes, post } from '../../support/people/family-sign-in';
 import { API } from '../../support/messages';
 import { withSql } from '../../support/schedule';

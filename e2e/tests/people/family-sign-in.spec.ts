@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { closeCodes, codeSentTo, family, openCodes } from '../../support/people/family-sign-in';
 import { stubReset } from '../../support/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';

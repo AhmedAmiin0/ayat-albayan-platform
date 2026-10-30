@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { approveTemplate, completedLesson, tokenSentTo, unapproveTemplate } from '../../support/reporting/feedback';
 import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../../support/schedule';
 import { setMessaging, stubReset } from '../../support/wa-stub';

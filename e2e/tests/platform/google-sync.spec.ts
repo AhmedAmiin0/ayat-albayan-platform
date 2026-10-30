@@ -1,4 +1,4 @@
-import { expect, test, ar } from '../../support/fixtures';
+import { expect, test, ar } from '../../support/core/fixtures';
 import { googleApi, itemsOf, readyReport, resetGoogle, STUB_TEACHER_CAL, stubState } from '../../support/platform/google';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
 

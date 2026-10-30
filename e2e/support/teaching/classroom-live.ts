@@ -1,5 +1,5 @@
 import type { Browser, BrowserContextOptions, Locator, Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 import { authFile, USERS } from '../users';
 import { AR_LOCALE } from '../core/locale';
 

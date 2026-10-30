@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { bubble, inboundRows, openThread, pushesForPhone, stubInboundMedia } from '../../support/messaging/inbox';
 import { freshDigits, seedLead } from '../../support/messages';
 import { stubReset } from '../../support/wa-stub';

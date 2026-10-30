@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { startedToday } from '../../support/finance/money';
 import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';
 import { apiSubmit } from '../../support/reporting/teacher-extra';

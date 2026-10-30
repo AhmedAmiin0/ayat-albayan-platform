@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../../support/finance/money';
 import { queuedFor, resetAbrar } from '../../support/schedule';
 

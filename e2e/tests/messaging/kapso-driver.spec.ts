@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { AVATAR_PNG } from '../../support/account';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { kapsoInbound, stubRequests, switchNotifications } from '../../support/messaging/kapso';
 import { clearQueue } from '../../support/messaging/message-queue';

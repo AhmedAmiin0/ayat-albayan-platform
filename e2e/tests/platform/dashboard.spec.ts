@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { riyadhToday, summaryOf, type Summary } from '../../support/finance/money-extra';
 import { kpiCounts, money, removeDashboardExpense, seedDashboard, weekOf } from '../../support/finance/money-dashboard';
 import { addDays, resetAbrar } from '../../support/schedule';

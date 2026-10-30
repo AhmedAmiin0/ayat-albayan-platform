@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { setSetting } from '../../support/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';

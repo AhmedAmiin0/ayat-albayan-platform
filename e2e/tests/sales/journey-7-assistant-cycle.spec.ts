@@ -1,5 +1,5 @@
 import { seedUser } from '../../support/core/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { freshDigits } from '../../support/messages';
 import { salesNav, signInSales } from '../../support/sales/sales-portal';
 import { riyadhDay } from '../../support/sales/sales-options';

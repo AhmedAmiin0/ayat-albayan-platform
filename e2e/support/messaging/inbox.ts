@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ar, expect } from '../fixtures';
+import { ar, expect } from '../core/fixtures';
 import { withSql } from '../schedule';
 import { STUB_URL } from '../wa-stub';
 

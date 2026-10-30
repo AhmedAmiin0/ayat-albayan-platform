@@ -1,5 +1,5 @@
 import { expect, type Page } from '@playwright/test';
-import { ar } from '../fixtures';
+import { ar } from '../core/fixtures';
 import { accessToken, API } from '../messages';
 import { approveReschedule, RESCHEDULE } from './reschedule-template';
 import { dropTemplate } from '../sales/sales-portal';

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { CHAT_PN, SINGLE_LINE, stubLineHealth } from '../../support/messaging/wa-lines';
 import { stubReset } from '../../support/wa-stub';
 

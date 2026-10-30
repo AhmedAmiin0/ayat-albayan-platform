@@ -1,5 +1,5 @@
 import { seedUser } from '../../support/core/db';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { apiStatus } from '../../support/messages';
 import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/schedule';

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { addDays, lessonsOf, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, setAvailability } from '../../support/schedule';
 import { openLessonDrawer, ruleStateOf, seedWeeklyRule, weekGrid, weekOf } from '../../support/teaching/schedule-extra';
 

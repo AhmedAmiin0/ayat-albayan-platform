@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily } from '../../support/schedule';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 

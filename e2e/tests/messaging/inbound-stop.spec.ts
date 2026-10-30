@@ -1,4 +1,4 @@
-import { expect, test } from '../../support/fixtures';
+import { expect, test } from '../../support/core/fixtures';
 import { auditActions, guardianPhone, inboundFor, leadsByPhone, pushesLike } from '../../support/messaging/inbound';
 import { freshDigits, seedLead } from '../../support/messages';
 import { seedFamily } from '../../support/schedule';

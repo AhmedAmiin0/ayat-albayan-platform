@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot, videoWidth } from '../../support/teaching/classroom-live';
 
 // The classroom against a real LiveKit (owner, 2026-10-05: «السبورة ومشاركة الشاشة لا تعملان»). Runs only

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { clearQueue, messageState, queueRenewal, queueText, queuedCount, sentToDigits } from '../../support/messaging/message-queue';
 import { freshDigits, seedLead } from '../../support/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';

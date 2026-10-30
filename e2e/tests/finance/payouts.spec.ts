@@ -1,6 +1,6 @@
 import { REPORT_RUBRICS, type ReportFormResponse } from '@ab/shared';
 import type { Page } from '@playwright/test';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
 
 // Teacher payouts (R-PAY-02, R-TCH-04, issue E3) on /admin/payouts. Last month, because approving

@@ -1,6 +1,6 @@
 import type { Browser } from '@playwright/test';
 import { family, makeAssistant, message, TAG } from '../../support/sales/assistant-api';
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { lastOutbound } from '../../support/messaging/inbox';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../../support/sales/sales-portal';
 

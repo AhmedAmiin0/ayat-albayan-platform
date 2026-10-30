@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { dropTeacher, insertTeacher, statusAudits, studentIdsOf, studentRow } from '../../support/people/admin-extra';
 import { seedFamily } from '../../support/schedule';
 

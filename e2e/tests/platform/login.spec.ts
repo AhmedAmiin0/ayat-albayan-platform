@@ -1,4 +1,4 @@
-import { ar, expect, loginViaUi, test } from '../../support/fixtures';
+import { ar, expect, loginViaUi, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 import { USERS } from '../../support/users';
 

@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { withSql } from '../../support/schedule';
 
 // «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05, owner 2026-10-06): the admin sets an assistant's

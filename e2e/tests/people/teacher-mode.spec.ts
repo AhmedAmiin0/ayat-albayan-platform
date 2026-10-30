@@ -1,4 +1,4 @@
-import { ar, expect, test } from '../../support/fixtures';
+import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 
