@@ -588,38 +588,20 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/LedgerPaid.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/finance/payouts/MonthSelect.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/features/finance/payouts/PayPayoutDialog.tsx": {
+  "src/features/finance/payouts/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     }
   },
-  "src/features/finance/payouts/PayoutActions.tsx": {
+  "src/features/finance/payouts/list/PayoutActions.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
-  "src/features/finance/payouts/PayoutDialogs.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    }
-  },
-  "src/features/finance/payouts/PayoutsPage.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -633,20 +615,12 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/TeacherDuesSummary.tsx": {
+  "src/features/finance/payouts/list/TeacherDuesSummary.tsx": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
-  "src/features/finance/payouts/api.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/finance/payouts/payout-columns.tsx": {
+  "src/features/finance/payouts/list/payout-columns.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -654,12 +628,38 @@
       "count": 4
     }
   },
-  "src/features/finance/payouts/use-pay-payout.ts": {
+  "src/features/finance/payouts/pay/PayPayoutDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/features/finance/payouts/pay/PayoutDialogs.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payouts/pay/use-pay-payout.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payouts/shared/LedgerPaid.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payouts/shared/MonthSelect.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/features/finance/pricing/PlansTable.test.tsx": {
@@ -925,7 +925,7 @@
       "count": 1
     },
     "no-restricted-syntax": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/messaging/inbox/calls/state/call-test-kit.ts": {
@@ -967,7 +967,7 @@
       "count": 2
     },
     "no-restricted-syntax": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/QuickActions.tsx": {
@@ -1131,11 +1131,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/sales-money/ChildChoiceDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -1273,9 +1268,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/subscribe/SalesTeacherField.tsx": {
@@ -1365,9 +1357,6 @@
   "src/features/messaging/inbox/sales/SalesRegisterAction.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/sales/SendRatingButton.tsx": {
@@ -1454,11 +1443,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/shared/ChatActionsProvider.tsx": {
-    "no-restricted-syntax": {
-      "count": 2
-    }
-  },
   "src/features/messaging/inbox/shared/LineBadge.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -1492,11 +1476,6 @@
   },
   "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/CopyPhoneButton.tsx": {
-    "no-restricted-syntax": {
       "count": 1
     }
   },

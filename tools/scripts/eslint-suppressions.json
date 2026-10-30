@@ -98,6 +98,11 @@
       "count": 1
     }
   },
+  "ci-checks/pure-move/baselines.mjs": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "ci-checks/roll-fake.mjs": {
     "complexity": {
       "count": 1

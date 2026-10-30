@@ -50,7 +50,7 @@
   "@typescript-eslint/unbound-method": 15,
   "@typescript-eslint/use-unknown-in-catch-callback-variable": 81,
   "ab/module-boundaries": 2030,
-  "complexity": 239,
+  "complexity": 240,
   "jsx-a11y/click-events-have-key-events": 2,
   "jsx-a11y/interactive-supports-focus": 2,
   "jsx-a11y/label-has-associated-control": 1,
@@ -64,5 +64,5 @@
   "max-lines": 1,
   "no-console": 2,
   "no-regex-spaces": 2,
-  "no-restricted-syntax": 250
+  "no-restricted-syntax": 158
 }
