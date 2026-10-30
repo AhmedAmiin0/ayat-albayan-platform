@@ -1,3 +1,4 @@
+import { clickToChatLink } from '../../core/format/index.js';
 import type { SettingDef } from '../defs.js';
 
 const h = 'settings.hints';
@@ -35,4 +36,4 @@ export const ACADEMY_SETTINGS = {
 
 /** https://wa.me/<digits> for the academy's WhatsApp number. */
 export const academyWhatsappUrl = (s: { academy_whatsapp_e164: string }): string =>
-  `https://wa.me/${s.academy_whatsapp_e164.replace(/^\+/, '')}`;
+  clickToChatLink(s.academy_whatsapp_e164);

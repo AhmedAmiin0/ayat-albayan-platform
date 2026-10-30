@@ -1,4 +1,4 @@
-import { waMeUrl, type PortalHome } from '@ab/shared';
+import { clickToChatLink, type PortalHome } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { PortalScopes } from '../scope/portal-scope';
@@ -23,7 +23,7 @@ export class PortalHomeService {
   private async renewUrl(): Promise<string | null> {
     try {
       const e164 = await this.chat.e164();
-      return e164 ? waMeUrl(e164) : null;
+      return e164 ? clickToChatLink(e164) : null;
     } catch (e) {
       this.log.warn(`chat number unavailable: ${e instanceof Error ? e.message : String(e)}`);
       return null;

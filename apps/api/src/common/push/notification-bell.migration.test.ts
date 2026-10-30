@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS, PUSH_KINDS, SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 380–382 (R-NOT-01..03). No database runs in unit tests: this pins their shape.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (file: string) => readFileSync(join(dir, file), 'utf8');
 const bell = read('20261012000380_notification_bell.sql');
 const kinds = read('20261012000381_push_kinds.sql');

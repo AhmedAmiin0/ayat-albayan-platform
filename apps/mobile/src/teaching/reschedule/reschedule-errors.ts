@@ -1,4 +1,6 @@
+import type { ClockCycle } from '@ab/shared';
 import { bookFailure } from '@/booking/shared/booking-errors';
+import { useClockCycle } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/lib/payment-errors';
@@ -23,10 +25,16 @@ function codeOf(error: unknown): string | undefined {
  * a clash → its lines; invalid_transition, no_rule, rule_not_active, date_in_past, no_occurrences…
  * → the lessons.error wording; anything else → the general error.
  */
-export function rescheduleFailure(error: unknown): RescheduleFailure {
+export function rescheduleFailure(error: unknown, cycle: ClockCycle): RescheduleFailure {
   if (isOffline(error)) return { kind: 'error', text: t.reschedule.offline };
-  const booked = bookFailure(error);
+  const booked = bookFailure(error, cycle);
   if (booked.kind === 'conflict') return booked;
   const code = codeOf(error);
   return { kind: 'error', text: (code && known[code]) || t.common.error };
+}
+
+/** A failed move in words on the screen's clock: re-worded when «تنسيق الوقت» changes. */
+export function useRescheduleFailure(move: { isError: boolean; error: unknown }) {
+  const cycle = useClockCycle();
+  return move.isError ? rescheduleFailure(move.error, cycle) : null;
 }

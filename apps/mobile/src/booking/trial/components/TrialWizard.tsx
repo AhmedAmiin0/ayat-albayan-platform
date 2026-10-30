@@ -3,17 +3,18 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BookedPanel } from '../../shared/BookedPanel';
-import { bookFailure } from '../../shared/booking-errors';
-import { draftFromLead, type BookingLead, type StudentChoice, type TrialDraft } from '../lib/draft';
-import { subscriptionHref } from '../lib/package-choice';
-import { stepsFor, type Step } from '../lib/steps';
-import { useBookingMode } from '../../shared/booking-mode';
-import { useBookTrial } from '../lib/use-book-trial';
+import { BookedPanel } from '@/booking/shared/BookedPanel';
+import { bookFailure } from '@/booking/shared/booking-errors';
+import { draftFromLead, type BookingLead, type StudentChoice, type TrialDraft } from '@/booking/trial/lib/draft';
+import { subscriptionHref } from '@/booking/trial/lib/package-choice';
+import { stepsFor, type Step } from '@/booking/trial/lib/steps';
+import { useBookingMode } from '@/booking/shared/booking-mode';
+import { useBookTrial } from '@/booking/trial/lib/use-book-trial';
 import { WizardStep } from './WizardStep';
 import { locale } from '@/core/lib/i18n/locale';
 
@@ -41,6 +42,7 @@ interface TrialWizardProps {
  * booking it returns to the conversation.
  */
 export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
+  const cycle = useClockCycle();
   const [draft, setDraft] = useState(() => draftFromLead(lead, subscribe ? '8' : 'trial'));
   // One per wizard, made now: the invoice uploads under it and the booking replays by it (rule 8).
   const [requestId] = useState(newRequestId);
@@ -103,7 +105,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
             requestId={requestId}
             booking={{
               busy: book.isPending,
-              failure: book.isError ? bookFailure(book.error) : null,
+              failure: book.isError ? bookFailure(book.error, cycle) : null,
               submit,
               reset: book.reset,
             }}

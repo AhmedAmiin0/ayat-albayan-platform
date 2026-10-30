@@ -4453,7 +4453,8 @@
       "guardian": "ولي الأمر",
       "noTeacher": "بلا معلم",
       "guardianPhone": "هاتف ولي الأمر",
-      "detailsHint": "يفتح تفاصيل الطالب"
+      "detailsHint": "يفتح تفاصيل الطالب",
+      "openStudent": "فتح ملف الطالب {name}"
     },
     "live": {
       "title": "الحلقات الجارية الآن",

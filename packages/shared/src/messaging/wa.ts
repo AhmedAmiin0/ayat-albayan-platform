@@ -27,15 +27,6 @@ export function sessionWindowOpen(lastInboundAt: Date | string | null | undefine
   return now.getTime() - at < SESSION_WINDOW_MS;
 }
 
-/**
- * R-MSG-03 fallback: «https://wa.me/966598917071?text=…» with the text prefilled. No URL /
- * URLSearchParams: @ab/shared also runs on Hermes. wa.me wants the number without the +.
- */
-export function clickToChatLink(phoneE164: string, text?: string): string {
-  const base = `https://wa.me/${phoneE164.replace(/\D/g, '')}`;
-  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
-}
-
 /** Tries per outbound message before it is `failed` (and the admin gets reminder_failed). */
 export const MAX_SEND_ATTEMPTS = 3;
 
