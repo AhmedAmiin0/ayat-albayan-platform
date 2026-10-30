@@ -15,7 +15,7 @@ async function askMic(): Promise<MicAnswer> {
 /** The native module, loaded on first use: a binary without it (an old APK) gets null, never a crash at boot. */
 function load(): WebRtc | null {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // oxlint-disable-next-line typescript/no-require-imports -- loaded lazily: an APK without the module gets null
     return require('react-native-webrtc') as WebRtc;
   } catch {
     return null;

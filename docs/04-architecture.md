@@ -182,8 +182,9 @@ code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. Ty
 Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
 violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
 them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is
-`// oxlint-disable-next-line <rule>` (ESLint would report an `eslint-disable` for it as unused); an unused
-Oxlint directive fails too (`--report-unused-disable-directives-severity=error`). `typecheck` runs
+`// oxlint-disable-next-line <rule> -- why`. Oxlint fails on every directive that hid nothing in its own run
+(`--report-unused-disable-directives-severity=error`), an `eslint-disable` included, so an ESLint-only rule gets no
+inline disable: its exception goes in `eslint-suppressions.json`, where `pnpm guard:lint` counts it. `typecheck` runs
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 

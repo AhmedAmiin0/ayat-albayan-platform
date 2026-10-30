@@ -198,9 +198,10 @@ and fix the violations they add; that is the point of PR 1.
 
 The gate counts per rule across the repo, not per file. ESLint already enforces per-file counts, and a per-file gate
 would fail on every file move. The known gap: a PR can fix one violation and add another of the same rule elsewhere,
-and the totals stay equal. Review catches that, and a new inline `eslint-disable` / `oxlint-disable` too: the gate does
-not count them (3 today; an unused one fails lint, `reportUnusedDisableDirectives` and Oxlint's
-`--report-unused-disable-directives-severity=error`). A PR that turns on a rule over existing violations raises a total
+and the totals stay equal. Review catches that, and a new inline `// oxlint-disable-next-line` too: the gate does not
+count them (2 today). Oxlint fails on any directive that hid nothing in its run (`--report-unused-disable-directives-severity=error`),
+an `eslint-disable` included, so an ESLint-only rule has no inline disable: its exception goes in the counted
+suppressions file. A PR that turns on a rule over existing violations raises a total
 on purpose, so the gate fails it: fix the violations in that PR, or the owner merges it past the red check after reading
 the `lint.json` diff.
 
