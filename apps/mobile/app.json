@@ -8,9 +8,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "experiments": {
-      "reactCompiler": true
-    },
     "extra": {
       "router": {},
       "eas": {

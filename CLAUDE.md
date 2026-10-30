@@ -16,7 +16,7 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 ## Hard code rules (CI fails otherwise)
 1. **Max 150 lines per file** (`max-lines`, blank lines & comments count). Split: `x.service.ts` / `x.queries.ts` / `x.mapper.ts` / one component per file / tests split by scenario.
 2. **Max 3 parameters per function** (`max-params`). Use a typed options object for the 4th+.
-3. Strict TypeScript, no `any`, no non-null assertions in app code. Type-aware lint at `--max-warnings 0`, React 19 idioms, React Compiler (no `useMemo`/`useCallback`/`memo`), effects only in named hooks: `docs/31a-strict-types-lint.md`. Old violations sit in `eslint-suppressions.json`, whose totals may only shrink (`pnpm guard:lint`).
+3. Strict TypeScript, no `any`, no non-null assertions in app code. Type-aware lint at `--max-warnings 0`, React 19 idioms (mobile), no `useMemo`/`useCallback`/`memo` where the React Compiler builds (web), effects only in named hooks: `docs/31a-strict-types-lint.md`. Old violations sit in `eslint-suppressions.json`, whose totals may only shrink (`pnpm guard:lint`).
 4. Every PR/commit adds unit tests next to the code (`*.test.ts`). Pure logic (phone/arabic normalisation, occurrence generation, conflict check, state machines, balances, reminder timing) must be unit-tested ≥ 80 %.
 5. Playwright e2e for the six journeys in `docs/03-requirements.md §5`; run against local Supabase + WhatsApp stub (`tools/wa-stub`).
 6. All times UTC in DB; tz on every person; never free-text times.

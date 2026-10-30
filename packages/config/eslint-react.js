@@ -3,14 +3,14 @@
 // block repeats the other selectors instead of adding a second block that would drop them.
 
 /** Hook files: the only place a raw useEffect / useLayoutEffect may live. */
-const HOOK_FILES =['**/use-*.ts', '**/use-*.tsx', '**/hooks/**'];
+const HOOK_FILES = ['**/use-*.ts', '**/use-*.tsx', '**/hooks/**'];
 
 const fromReact = (names, message) => [
   { selector: `ImportDeclaration[source.value='react'] > ImportSpecifier[imported.name=/^(${names})$/]`, message },
   { selector: `MemberExpression[object.name='React'][property.name=/^(${names})$/]`, message },
 ];
 
-// The React Compiler memoizes (web: reactCompilerPreset target 18, mobile: experiments.reactCompiler).
+// Where the React Compiler memoizes (web: reactCompilerPreset target 18).
 const COMPILER = fromReact('useMemo|useCallback|memo', 'React Compiler: it memoizes, drop useMemo / useCallback / memo.');
 
 // Need the React 19 runtime: web stays on React 18 until its upgrade.
@@ -30,11 +30,12 @@ const EFFECTS = [
 ];
 
 /**
- * Two blocks: `files` (every React file of the package) get the compiler rule, plus the React 19 rules when
- * `react19`; `effects` (outside HOOK_FILES) also refuse a raw effect.
+ * Two blocks: `files` (every React file of the package) get the no-memo rule when the React Compiler builds them
+ * (`compiler`) and the React 19 rules when the package runs React 19 (`react19`); `effects` (outside HOOK_FILES)
+ * also refuse a raw effect.
  */
-export function reactRestrictions({ files, effects, react19 }) {
-  const base = react19 ? [...COMPILER, ...REACT_19] : COMPILER;
+export function reactRestrictions({ files, effects, compiler, react19 }) {
+  const base = [...(compiler ? COMPILER : []), ...(react19 ? REACT_19 : [])];
   return [
     { files, rules: { 'no-restricted-syntax': ['error', ...base] } },
     { files: effects, ignores: HOOK_FILES, rules: { 'no-restricted-syntax': ['error', ...base, ...EFFECTS] } },

@@ -1,5 +1,7 @@
 import { boundaries, reactConfig, reactRestrictions } from '@ab/config/eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+
+const INBOX = 'src/features/messaging/inbox';
 // docs/27 §1 rule 6: another feature only through its index.ts (existing deep imports: eslint-suppressions.json).
 export default reactConfig(
   import.meta.dirname,
@@ -12,5 +14,7 @@ export default reactConfig(
   },
   // React 18 + the React Compiler (vite.config.ts, target 18): no manual memo, effects in hooks. The React 19
   // rules (forwardRef, useContext, .Provider) come with the React 19 upgrade.
-  ...reactRestrictions({ files: ['src/**/*.{ts,tsx}'], effects: ['src/**/*.tsx'], react19: false }),
+  ...reactRestrictions({ files: ['src/**/*.{ts,tsx}'], effects: ['src/**/*.tsx'], compiler: true, react19: false }),
+  // The inbox is not compiled yet (vite.config.ts NOT_COMPILED): manual memo stays allowed there.
+  ...reactRestrictions({ files: [`${INBOX}/**/*.{ts,tsx}`], effects: [`${INBOX}/**/*.tsx`], compiler: false, react19: false }),
 );

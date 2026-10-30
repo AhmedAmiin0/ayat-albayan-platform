@@ -87,11 +87,21 @@ effect block repeats the others so neither drops them). All of them count under 
 
 | rule                                                       | web (React 18.3)                         | mobile (React 19.2) |
 | ---------------------------------------------------------- | ---------------------------------------- | ------------------- |
-| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error; React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`) | error; React Compiler on (`app.json` `experiments.reactCompiler`, Babel only, OTA-safe) |
+| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`), except `src/features/messaging/inbox/` | off: no compiler yet (below) |
 | no `forwardRef` (ref is a prop)                            | after the React 19 upgrade               | error               |
 | `use(Context)`, not `useContext`                           | after the React 19 upgrade               | error               |
 | `<Context value>`, not `<Context.Provider>`                | after the React 19 upgrade               | error               |
 | raw `useEffect` / `useLayoutEffect` outside `use-*.ts(x)` and `hooks/` | error (`.tsx`)               | error (`.tsx`)      |
+
+The compiler caches what a component reads during render on the props and state it depends on. Code that
+reads mutable module state in render (a rules-of-React break the lint rules do not see) then shows stale values:
+on web that broke 3 inbox unit tests (`MessageLog` reads `lastOwnSend` from `own-send`; 2 `ReplyComposer` tests in the
+same folder). The inbox is left out (`vite.config.ts` `NOT_COMPILED`, the no-memo rule lifted there) until its
+stores subscribe through `useSyncExternalStore`. On mobile, `babel-preset-expo` turns the compiler on only for
+Metro (`supportsReactCompiler`, set from `experiments.reactCompiler`); jest-expo never sets it, so no CI test runs
+compiled mobile code and a merge would ship it untested to the preview OTA. Path: a `babel.config.js` that runs
+`babel-plugin-react-compiler` under jest, fix what breaks, then `experiments.reactCompiler: true` (Babel only,
+OTA-safe: not a native key in `native-changes.mjs`) and `compiler: true` for mobile.
 
 ### 3.3 Per package
 
