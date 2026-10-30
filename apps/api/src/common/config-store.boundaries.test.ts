@@ -51,7 +51,7 @@ describe('config-store boundaries (docs/26 §2e)', () => {
   it('common/settings imports only config-store among the config folders', () => {
     const bad = files('common/settings').flatMap((f) =>
       relImports(f)
-        .filter((t) => ['common/custom-config/', 'common/public-config/'].some((p) => t.startsWith(p)))
+        .filter((t) => ['common/custom-config', 'common/public-config'].some((p) => t === p || t.startsWith(`${p}/`)))
         .map((t) => `${relative(SRC, f)} → ${t}`),
     );
     expect(bad).toEqual([]);
