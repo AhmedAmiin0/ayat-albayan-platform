@@ -9,11 +9,11 @@ import type { WaError } from '../../whatsapp.types';
 /** messages.error_code of a row held by Meta's 131042: queued, shown as waiting with the reason. */
 export const WA_PAYMENT_HOLD = 'wa_payment_hold';
 /** The first hold; each later one is the time waited + this, so it doubles: 30 min, 1 h, 2 h… */
-export const PAYMENT_HOLD_MIN_MS = 30 * 60_000;
+const PAYMENT_HOLD_MIN_MS = 30 * 60_000;
 /** The longest single hold. */
-export const PAYMENT_HOLD_MAX_MS = 6 * 60 * 60_000;
+const PAYMENT_HOLD_MAX_MS = 6 * 60 * 60_000;
 /** A row due this long ago is not held: it fails with Meta's 131042 as before (never days late). */
-export const PAYMENT_HOLD_MAX_AGE_MS = 48 * 60 * 60_000;
+const PAYMENT_HOLD_MAX_AGE_MS = 48 * 60 * 60_000;
 
 /** The row columns the hold reads (DUE_COLUMNS); optional so older fixtures compile. */
 export interface HoldRow {
@@ -32,7 +32,7 @@ interface PaymentInput {
 }
 
 /** How long the row has waited since due (scheduled_for, else created_at); 0 when unknown. */
-export function waitedMs(row: HoldRow | undefined, now: Date): number {
+function waitedMs(row: HoldRow | undefined, now: Date): number {
   const since = Date.parse(row?.scheduled_for ?? row?.created_at ?? '');
   return Number.isFinite(since) ? Math.max(0, now.getTime() - since) : 0;
 }
