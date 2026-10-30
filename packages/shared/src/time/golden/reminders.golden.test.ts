@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { reopenDedupKey } from '../../messaging/chat/thread-reopen.js';
 import { dayBeforeSendAt, localDayStart } from '../../messaging/lesson/timing.day-before.js';
 import { reminderDue } from '../../messaging/lesson/timing.js';
 import { zonedInstant } from '../../schedule/lessons/series/zoned.js';
 import { riyadhToday } from '../riyadh-day.js';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
+
+// A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
+vi.setConfig({ testTimeout: 60_000 });
 
 // Regression goldens (docs/34 §7): what decides when a message goes out (the day-before reminder's
 // send instant and expiry, «is it due», the reopen dedup day) and the wall-clock picks a series is
