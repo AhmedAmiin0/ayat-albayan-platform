@@ -15,8 +15,8 @@ export function viewerTz(): string {
 }
 
 /**
- * The zone the store reads for `person`'s tz, with the device zone it captured at start (not a fresh
- * deviceTimeZone(): a zone change on the phone must not make the two disagree forever).
+ * The zone the store reads for `person`'s tz, with the device zone it captured at start (not a
+ * fresh deviceTimeZone(): a zone change on the phone must not make the two disagree forever).
  */
 export function viewerTzFor(personTz: string | null | undefined): string {
   return resolveViewerTz({ person: personTz ?? null, device });
