@@ -39,3 +39,14 @@ test('in a NodeNext package the barrel is named by its index file', () => {
   assert.equal(onlyPathsChanged(src, src.replace('../schemas/common.js', '../core/index.js'), c), false, 'not that barrel');
   assert.equal(onlyPathsChanged(src, src.replace('../schemas/common.js', '../core/schemas/index.js'), { ...c, reexports: heads({}) }), false);
 });
+
+test('a move may write a `../` path as its `@/` alias (docs/32 R12), never another file', () => {
+  const file = 'apps/api/src/modules/a/b/c.ts';
+  const src = "import { x } from '../../../common/x';\nvi.mock('../d/e');\n";
+  const moved = renameTable([['apps/api/src/modules/a/d/e.ts', 'apps/api/src/modules/a/f/e.ts']]);
+  const c = { from: file, to: file, table: moved, reexports: heads({}) };
+  const alias = "import { x } from '@/common/x';\nvi.mock('@/modules/a/f/e');\n";
+  assert.equal(onlyPathsChanged(src, alias, c), true);
+  assert.equal(onlyPathsChanged(src, alias.replace('@/common/x', '@/common/y'), c), false);
+  assert.equal(onlyPathsChanged(src, alias.replace('@/modules/a/f/e', '@/modules/a/d/e'), c), false, 'stale path');
+});

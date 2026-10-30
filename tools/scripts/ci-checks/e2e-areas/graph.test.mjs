@@ -3,7 +3,7 @@ import { rmSync } from 'node:fs';
 import { after, test } from 'node:test';
 import { makeRepo } from './fixture.mjs';
 import { reverseClosure } from './closure.mjs';
-import { buildGraph } from './graph.mjs';
+import { buildGraph, resolveSpec } from './graph.mjs';
 import { ownExports, parseImports } from './parse.mjs';
 
 const root = makeRepo();
@@ -65,4 +65,14 @@ test('reverseClosure follows importers and stops where told', () => {
     f.endsWith('routeTree.gen.ts'),
   );
   assert.ok(!stopped.has('apps/web/src/routeTree.gen.ts'));
+});
+
+test('resolveSpec: `@/` is the importing app\'s src (web and api), `../` stays relative', () => {
+  const files = new Set(['apps/web/src/lib/i18n.ts', 'apps/api/src/common/x.ts', 'apps/api/src/m/y/index.ts']);
+  assert.equal(resolveSpec(files, 'apps/web/src/a/b.tsx', '@/lib/i18n'), 'apps/web/src/lib/i18n.ts');
+  assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/common/x.js'), 'apps/api/src/common/x.ts');
+  assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/m/y'), 'apps/api/src/m/y/index.ts');
+  assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '../common/x'), 'apps/api/src/common/x.ts');
+  assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/lib/i18n'), null, 'never the other app');
+  assert.equal(resolveSpec(files, 'e2e/tests/a.spec.ts', '@/lib/i18n'), null);
 });
