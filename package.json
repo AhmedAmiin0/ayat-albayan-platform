@@ -27,7 +27,8 @@
     "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs",
     "guard:lint": "node tools/scripts/ci-checks/lint/lint-gate.mjs",
     "guard:queries": "node tools/scripts/ci-checks/lint/queries-gate.mjs",
-    "guard:cycles": "node tools/scripts/ci-checks/lint/cycles-gate.mjs"
+    "guard:cycles": "node tools/scripts/ci-checks/lint/cycles-gate.mjs",
+    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {
