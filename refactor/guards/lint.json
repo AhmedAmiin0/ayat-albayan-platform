@@ -62,7 +62,7 @@
   "jsx-a11y/no-static-element-interactions": 2,
   "jsx-a11y/role-supports-aria-props": 1,
   "max-depth": 14,
-  "max-len": 14457,
+  "max-len": 14455,
   "max-lines-per-function": 268,
   "no-console": 2,
   "no-restricted-syntax": 241

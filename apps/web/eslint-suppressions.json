@@ -3762,7 +3762,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/messaging/notification-rules/rule-timing.ts": {
@@ -9188,7 +9188,7 @@
   },
   "src/features/teaching/classroom/join/StaffClassroomPage.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/teaching/classroom/join/StaffJoinButton.tsx": {
