@@ -26,7 +26,8 @@
     "guard:dup": "jscpd && node tools/scripts/ci-checks/jscpd-gate.mjs",
     "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs",
     "guard:lint": "node tools/scripts/ci-checks/lint/lint-gate.mjs",
-    "guard:queries": "node tools/scripts/ci-checks/lint/queries-gate.mjs"
+    "guard:queries": "node tools/scripts/ci-checks/lint/queries-gate.mjs",
+    "guard:cycles": "node tools/scripts/ci-checks/lint/cycles-gate.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {

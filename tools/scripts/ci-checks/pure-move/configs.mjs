@@ -1,7 +1,7 @@
 // Config files in a move PR (docs/32 critic correction 5): they may follow moved files, nothing more.
 // Workflows and tsconfigs: only moved paths (repo or package-relative) change. The root knip.json: each
 // workspace's own relative paths follow moves inside it. refactor/: new or extended move maps, docs, and the
-// count baselines (jscpd, lint) with the same keys and counts at or below base. Anything else fails.
+// count baselines (jscpd, lint, cycles) with the same keys and counts at or below base. Anything else fails.
 import { posix } from 'node:path';
 import { relativePairs } from './baselines.mjs';
 
@@ -50,7 +50,7 @@ export function countsNotRaised(base, head) {
   return Object.entries(head).every(([k, v]) => Object.hasOwn(base, k) && countsNotRaised(base[k], v));
 }
 
-const COUNTS = /^refactor\/guards\/(jscpd|lint)\.json$/;
+const COUNTS = /^refactor\/guards\/(jscpd|lint|cycles)\.json$/;
 const MAPS = /^refactor\/moves\/[^/]+\.json$/;
 const ok = { kind: 'config' };
 const bad = (why) => ({ kind: 'bad', why });
