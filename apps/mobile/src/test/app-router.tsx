@@ -63,7 +63,7 @@ interface AppOptions {
   url: string;
   backend: FakeBackend;
   /** Who is signed in (default admin). */
-  gate?: 'admin' | 'teacher' | 'out';
+  gate?: 'admin' | 'teacher' | 'sales' | 'out';
   /** AsyncStorage keys present at boot (e.g. the saved language). */
   storage?: Record<string, string>;
 }
