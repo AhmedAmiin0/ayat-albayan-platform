@@ -17,6 +17,8 @@ export interface MoveMap {
   moves: MoveEntry[];
   barrels?: BarrelEntry[];
   files?: [string, string][];
+  /** Identifier renames applied across the monorepo with the move (`{ "XQueries": "XRepo" }`, D2). */
+  renames?: Record<string, string>;
 }
 
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
@@ -66,7 +68,7 @@ function expandEntry(root: string, entry: MoveEntry): [string, string][] {
   return [[from, to.endsWith('/') ? posix.join(to, posix.basename(from)) : to]];
 }
 
-/** `foo.ts` brings `foo.test.ts(x)`, `foo.spec.*`; every test brings `__snapshots__/<test>.snap`. */
+/** `foo.ts` brings `foo.test.ts(x)`, `foo.spec.*` (renamed with its stem); every test brings its `__snapshots__/<test>.snap`. */
 function companions(root: string, pair: [string, string]): [string, string][] {
   const [from, to] = pair;
   const dir = posix.dirname(from);
@@ -74,9 +76,10 @@ function companions(root: string, pair: [string, string]): [string, string][] {
   const names = existsSync(posix.join(root, dir)) ? readdirSync(posix.join(root, dir)) : [];
   if (CODE.test(from) && !isTest(from)) {
     const stem = posix.basename(from).replace(CODE, '');
+    const newStem = posix.basename(to).replace(CODE, '');
     for (const n of names) {
       if (isTest(n) && n.replace(TEST, '') === stem) {
-        out.push([posix.join(dir, n), posix.join(posix.dirname(to), n)]);
+        out.push([posix.join(dir, n), posix.join(posix.dirname(to), newStem + n.slice(stem.length))]);
       }
     }
   }

@@ -3,6 +3,8 @@ import { posix } from 'node:path';
 import { barrelText } from './barrels.ts';
 import { codeFiles, moveFiles, readText, rewriteText, textFiles, textPairs, writeIfChanged } from './files.ts';
 import { expandMap, readMap, writeMap, type MoveMap } from './map.ts';
+import { rewriteKnipWorkspaces } from './knip.ts';
+import { mentions, renameGuardNames, renameIdentifiers, renameTable } from './renames.ts';
 import { loadAliases, type Resolver } from './resolve.ts';
 import { needles, newProject, rewriteFile } from './rewrite.ts';
 
@@ -22,27 +24,38 @@ function filesOf(root: string, mapFile: string): { map: MoveMap; pairs: [string,
   return { map: recorded, pairs };
 }
 
-function rewriteAll(root: string, r: Resolver, pairs: [string, string][]): number {
+/** A text file's new text: repo paths, then the root knip.json workspace paths and the knip guard names. */
+function rewriteTextFile(file: string, text: string, ctx: { pairs: [string, string][]; table: Map<string, string> }): string {
+  const paths = rewriteText(text, textPairs(file, ctx.pairs));
+  if (file === 'knip.json') return rewriteKnipWorkspaces(paths, ctx.pairs);
+  if (file === 'refactor/guards/knip.json' && ctx.table.size > 0) return renameGuardNames(ctx.table, paths);
+  return paths;
+}
+
+function rewriteAll(r: Resolver, pairs: [string, string][], table: Map<string, string>): number {
+  const { root } = r;
   const project = newProject();
   const keys = needles(r.renamed);
   let count = 0;
   for (const file of codeFiles(root)) {
     const text = readText(root, file);
-    if (!r.renamed.has(file) && !keys.some((k) => text.includes(k))) continue;
-    if (writeIfChanged(root, file, rewriteFile(project, r, { file, text }))) count += 1;
+    const moved = r.renamed.has(file) || keys.some((k) => text.includes(k));
+    if (!moved && !mentions(table, text)) continue;
+    const specs = moved ? rewriteFile(project, r, { file, text }) : text;
+    if (writeIfChanged(root, file, renameIdentifiers(project, table, { file, text: specs }))) count += 1;
   }
   for (const file of textFiles(root)) {
-    if (writeIfChanged(root, file, rewriteText(readText(root, file), textPairs(file, pairs)))) count += 1;
+    if (writeIfChanged(root, file, rewriteTextFile(file, readText(root, file), { pairs, table }))) count += 1;
   }
   return count;
 }
 
-/** Applies one move map: rewrites every specifier and path reference, moves the files, writes barrels. */
+/** Applies one move map: rewrites every specifier, path reference and renamed identifier, moves the files, writes barrels. */
 export function runMap(root: string, mapFile: string): RunReport {
   const { map, pairs } = filesOf(root, mapFile);
   const pending = pairs.filter(([from]) => existsSync(posix.join(root, from)));
   const r: Resolver = { root, aliases: loadAliases(root), renamed: new Map(pairs) };
-  const rewritten = rewriteAll(root, r, pairs);
+  const rewritten = rewriteAll(r, pairs, renameTable(map.renames));
   moveFiles(root, pending);
   const project = newProject();
   for (const barrel of map.barrels ?? []) {
