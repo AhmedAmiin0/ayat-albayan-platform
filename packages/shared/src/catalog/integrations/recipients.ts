@@ -1,4 +1,4 @@
-import { E164_RE } from '../core/format/phone.js';
+import { E164_RE } from '../../core/format/phone.js';
 
 // WA_ALLOWED_RECIPIENTS (docs/12 §13.5): the staging guard, parsed the same way by the API's env
 // schema and the «التكاملات» form. Fail closed: nothing non-blank ever degrades to "unrestricted".

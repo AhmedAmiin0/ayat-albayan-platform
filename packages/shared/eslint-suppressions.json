@@ -386,12 +386,12 @@
       "count": 1
     }
   },
-  "src/integrations/checks.ts": {
+  "src/catalog/integrations/checks.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/integrations/driver-keys.ts": {
+  "src/catalog/integrations/driver-keys.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -399,27 +399,27 @@
       "count": 3
     }
   },
-  "src/integrations/index.ts": {
+  "src/catalog/integrations/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
       "count": 1
     }
   },
-  "src/integrations/keys.kapso.test.ts": {
+  "src/catalog/integrations/keys.kapso.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/integrations/keys.test.ts": {
+  "src/catalog/integrations/keys.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/integrations/keys.ts": {
+  "src/catalog/integrations/keys.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "src/integrations/recipients.ts": {
+  "src/catalog/integrations/recipients.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1166,17 +1166,17 @@
       "count": 7
     }
   },
-  "src/permissions/catalog.data.ts": {
+  "src/catalog/permissions/catalog.data.ts": {
     "max-len": {
       "count": 25
     }
   },
-  "src/permissions/catalog.sales-options.test.ts": {
+  "src/catalog/permissions/catalog.sales-options.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/permissions/catalog.ts": {
+  "src/catalog/permissions/catalog.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1972,32 +1972,32 @@
       "count": 2
     }
   },
-  "src/theme/avatar-tones.test.ts": {
+  "src/catalog/theme/avatar-tones.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/theme/avatar-tones.ts": {
+  "src/catalog/theme/avatar-tones.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/theme/theme.brand.test.ts": {
+  "src/catalog/theme/theme.brand.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/theme/theme.contrast.test.ts": {
+  "src/catalog/theme/theme.contrast.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/theme/theme.glass.test.ts": {
+  "src/catalog/theme/theme.glass.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/theme/theme.ts": {
+  "src/catalog/theme/theme.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },

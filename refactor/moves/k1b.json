@@ -1,0 +1,128 @@
+{
+  "id": "k1b",
+  "seq": 202,
+  "moves": [
+    {
+      "from": "packages/shared/src/permissions/",
+      "to": "packages/shared/src/catalog/permissions/"
+    },
+    {
+      "from": "packages/shared/src/integrations/",
+      "to": "packages/shared/src/catalog/integrations/"
+    },
+    {
+      "from": "packages/shared/src/theme/",
+      "to": "packages/shared/src/catalog/theme/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/integrations/checks.test.ts",
+      "packages/shared/src/catalog/integrations/checks.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/checks.ts",
+      "packages/shared/src/catalog/integrations/checks.ts"
+    ],
+    [
+      "packages/shared/src/integrations/driver-keys.test.ts",
+      "packages/shared/src/catalog/integrations/driver-keys.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/driver-keys.ts",
+      "packages/shared/src/catalog/integrations/driver-keys.ts"
+    ],
+    [
+      "packages/shared/src/integrations/index.ts",
+      "packages/shared/src/catalog/integrations/index.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.calls.test.ts",
+      "packages/shared/src/catalog/integrations/keys.calls.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.google.test.ts",
+      "packages/shared/src/catalog/integrations/keys.google.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.kapso.test.ts",
+      "packages/shared/src/catalog/integrations/keys.kapso.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.test.ts",
+      "packages/shared/src/catalog/integrations/keys.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.ts",
+      "packages/shared/src/catalog/integrations/keys.ts"
+    ],
+    [
+      "packages/shared/src/integrations/keys.web-push.test.ts",
+      "packages/shared/src/catalog/integrations/keys.web-push.test.ts"
+    ],
+    [
+      "packages/shared/src/integrations/recipients.ts",
+      "packages/shared/src/catalog/integrations/recipients.ts"
+    ],
+    [
+      "packages/shared/src/integrations/views.ts",
+      "packages/shared/src/catalog/integrations/views.ts"
+    ],
+    [
+      "packages/shared/src/permissions/catalog.data.ts",
+      "packages/shared/src/catalog/permissions/catalog.data.ts"
+    ],
+    [
+      "packages/shared/src/permissions/catalog.sales-options.test.ts",
+      "packages/shared/src/catalog/permissions/catalog.sales-options.test.ts"
+    ],
+    [
+      "packages/shared/src/permissions/catalog.test.ts",
+      "packages/shared/src/catalog/permissions/catalog.test.ts"
+    ],
+    [
+      "packages/shared/src/permissions/catalog.ts",
+      "packages/shared/src/catalog/permissions/catalog.ts"
+    ],
+    [
+      "packages/shared/src/permissions/index.ts",
+      "packages/shared/src/catalog/permissions/index.ts"
+    ],
+    [
+      "packages/shared/src/permissions/roles.schemas.ts",
+      "packages/shared/src/catalog/permissions/roles.schemas.ts"
+    ],
+    [
+      "packages/shared/src/permissions/roles.test.ts",
+      "packages/shared/src/catalog/permissions/roles.test.ts"
+    ],
+    [
+      "packages/shared/src/permissions/roles.ts",
+      "packages/shared/src/catalog/permissions/roles.ts"
+    ],
+    [
+      "packages/shared/src/theme/avatar-tones.test.ts",
+      "packages/shared/src/catalog/theme/avatar-tones.test.ts"
+    ],
+    [
+      "packages/shared/src/theme/avatar-tones.ts",
+      "packages/shared/src/catalog/theme/avatar-tones.ts"
+    ],
+    [
+      "packages/shared/src/theme/theme.brand.test.ts",
+      "packages/shared/src/catalog/theme/theme.brand.test.ts"
+    ],
+    [
+      "packages/shared/src/theme/theme.contrast.test.ts",
+      "packages/shared/src/catalog/theme/theme.contrast.test.ts"
+    ],
+    [
+      "packages/shared/src/theme/theme.glass.test.ts",
+      "packages/shared/src/catalog/theme/theme.glass.test.ts"
+    ],
+    [
+      "packages/shared/src/theme/theme.ts",
+      "packages/shared/src/catalog/theme/theme.ts"
+    ]
+  ]
+}

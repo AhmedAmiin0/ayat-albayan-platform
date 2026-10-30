@@ -1,6 +1,6 @@
 import type { WaLine } from '../enums/messaging.js';
-import type { IntegrationSource } from '../integrations/views.js';
-import type { WaProvider } from '../integrations/keys.js';
+import type { IntegrationSource } from '../catalog/integrations/views.js';
+import type { WaProvider } from '../catalog/integrations/keys.js';
 import type { CommsSource } from '../settings/domains/messaging.js';
 
 // «الأرقام» (docs/23 §3 phase 3): a WhatsApp number as a record. Ids and labels only: no view here ever
