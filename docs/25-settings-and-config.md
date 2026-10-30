@@ -101,7 +101,7 @@ export class ReportsSettings {
 No code. An admin adds it in «قيم مخصصة» (`PUT /config/custom/:key`): the key matches `CUSTOM_KEY_RE` and must not be a registry key (`reserved_key`); the value is JSON of at most 8 KB. When marked public it appears under `custom` in `GET /settings/public`. Once code depends on a value, make it a setting.
 
 ### Add an integration key
-1. `packages/shared/src/integrations/keys.ts`: add it to `INTEGRATION_PLAIN_KEYS` or `INTEGRATION_SECRET_KEYS` and to `GROUP_OF`; add its form check in `checks.ts`.
+1. `packages/shared/src/catalog/integrations/keys.ts`: add it to `INTEGRATION_PLAIN_KEYS` or `INTEGRATION_SECRET_KEYS` and to `GROUP_OF`; add its form check in `checks.ts`.
 2. The env schema (`apps/api/src/config/env/env.ts` or its `env.<topic>.ts` shape) must define it, using `env.blank.ts`'s helpers: `validOverlay` checks each database value against that key's schema and drops a bad one.
 3. A **secret** key needs a new migration that re-creates `public.integration_secret_key_ok` with the full list (never edit an old migration). `apps/api/src/common/integrations/secret-keys.migration.test.ts` reads the latest definition and fails until it matches `INTEGRATION_SECRET_KEYS`. A plain key needs no migration.
 4. Add `integrations.keys.<KEY>.label` / `.hint` to `ar.json` and `en.json`; update the key table in docs/09 «Integration config in the database».

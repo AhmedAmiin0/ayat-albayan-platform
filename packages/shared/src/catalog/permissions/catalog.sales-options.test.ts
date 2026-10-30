@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../../i18n/ar.json' with { type: 'json' };
-import en from '../../i18n/en.json' with { type: 'json' };
+import ar from '../../../i18n/ar.json' with { type: 'json' };
+import en from '../../../i18n/en.json' with { type: 'json' };
 import { defaultGrantsOf, EDITABLE_SYSTEM_ROLES, isEditableSystemRole, isGrantable, systemPermissionsOf } from './catalog.js';
 
 // Owner 2026-10-12 (docs/16 rows 23–24): two sales options the admin can switch off.

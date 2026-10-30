@@ -1,4 +1,4 @@
-import type { WaLine } from '../enums/messaging.js';
+import type { WaLine } from '../../enums/messaging.js';
 import type { IntegrationKey, WaProvider } from './keys.js';
 import type { IntegrationConfigItem } from './views.js';
 

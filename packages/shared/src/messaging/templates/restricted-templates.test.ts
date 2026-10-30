@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isPermission } from '../../permissions/catalog.js';
+import { isPermission } from '../../catalog/permissions/catalog.js';
 import {
   ALL_TEMPLATES_PERMISSIONS,
   OWN_BUTTON_TEMPLATES,
