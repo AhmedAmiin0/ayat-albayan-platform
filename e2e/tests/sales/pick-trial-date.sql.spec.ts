@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { rolledBack, type Tx } from '../../support/edit-time';
 import { bookPayload, movePayload, seedTrial, type TrialSeed } from '../../support/sales/trial-date';
 
 // pick_trial_date (migration 20261025000660, owner 2026-10-25 «موعد تجريبي جديد»): the move or the

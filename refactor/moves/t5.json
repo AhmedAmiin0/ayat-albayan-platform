@@ -135,10 +135,6 @@
       "to": "e2e/support/teaching/"
     },
     {
-      "from": "e2e/support/edit-time.ts",
-      "to": "e2e/support/teaching/"
-    },
-    {
       "from": "e2e/support/schedule-extra.ts",
       "to": "e2e/support/teaching/"
     }
@@ -151,10 +147,6 @@
     [
       "e2e/support/day-times.ts",
       "e2e/support/teaching/day-times.ts"
-    ],
-    [
-      "e2e/support/edit-time.ts",
-      "e2e/support/teaching/edit-time.ts"
     ],
     [
       "e2e/support/schedule-extra.ts",

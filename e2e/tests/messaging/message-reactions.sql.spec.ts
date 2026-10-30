@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { rolledBack, type Tx } from '../../support/edit-time';
 
 // Message reactions (migration 20261028000930, owner 2026-10-27): their_reaction / our_reaction are columns
 // of the reacted message; reaction ROWS (stored before, and our reaction sends) are never a preview or

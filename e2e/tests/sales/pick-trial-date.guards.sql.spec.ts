@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { rolledBack, type Tx } from '../../support/edit-time';
 import { bookPayload, movePayload, seedTrial } from '../../support/sales/trial-date';
 
 // pick_trial_date's guards (migration 20261025000661, PR #164 review): an imported trial stays a

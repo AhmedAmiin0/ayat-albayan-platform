@@ -184,7 +184,7 @@
       "count": 2
     }
   },
-  "support/teaching/edit-time.ts": {
+  "support/edit-time.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }

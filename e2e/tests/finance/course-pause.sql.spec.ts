@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { begin, codeOf, day, generate, groupOf, lessonsOf, pauseOf, resume, seedPause, setUntil, start, statuses } from '../../support/finance/course-pause';
-import { rolledBack } from '../../support/teaching/edit-time';
+import { rolledBack } from '../../support/edit-time';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, migrations 20261028000955–957, docs/11 §7b) against the real database,
 // rolled back. The student is alone on a daily rule (days 1–10) and shares a group rule (days 2 and 4).

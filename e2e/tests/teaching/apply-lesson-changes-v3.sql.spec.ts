@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { seedSiblings, type DaySeed } from '../../support/teaching/day-times';
-import { iso, BASE, rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { iso, BASE, rolledBack, type Tx } from '../../support/edit-time';
 
 // apply_lesson_changes v3 (migration 20261018000475, PR #113 review): the replacement rule of a
 // whole-rule reschedule stores the course's subscription_id, so a second reschedule keeps its last

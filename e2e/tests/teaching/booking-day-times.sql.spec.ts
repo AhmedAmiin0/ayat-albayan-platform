@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { book, bookInstant, dayTimesPayload, rulesOf, seedSiblings } from '../../support/teaching/day-times';
-import { rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { rolledBack, type Tx } from '../../support/edit-time';
 
 // create_booking v5 (migration 20261018000465, owner 2026-10-18 «اختر موعدًا لكل يوم») against the real
 // database, in a transaction that is rolled back: one schedule_rules row per distinct time, the other

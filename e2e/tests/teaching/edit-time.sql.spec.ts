@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { BASE, edit, HOUR, iso, MIN, rolledBack, seed } from '../../support/teaching/edit-time';
+import { BASE, edit, HOUR, iso, MIN, rolledBack, seed } from '../../support/edit-time';
 
 // edit_lesson_time (migration 174, «عدّل الوقت» R-SCH-11) against the real database, in a
 // transaction that is rolled back. The payloads have the shape the API's LessonTimeService builds.

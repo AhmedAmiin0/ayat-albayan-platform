@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { change, changeOf, CHANGE, seedCourse } from '../../support/finance/change-course';
-import { BASE, iso, rolledBack, type Tx } from '../../support/teaching/edit-time';
+import { BASE, iso, rolledBack, type Tx } from '../../support/edit-time';
 
 // change_course (migration 20261018000480, owner 2026-10-18 «تغيير أيام الحلقات»): the old rules of an
 // assistant course end, their future lessons move, the new rules keep the course tie, in one
