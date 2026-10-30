@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { useInset } from '../surface/inset';
-import { Ltr } from '../primitives/Ltr';
+import { ListRowTitle, type TitleLink } from '@/core/ui/lists/ListRowTitle';
 import { AppText } from '../primitives/AppText';
 
 interface ListRowProps {
@@ -24,6 +24,8 @@ interface ListRowProps {
   tags?: ReactNode;
   /** At the inline-end, usually a <StatusChip>. At most 45 % of the row: a long word ellipsizes. */
   trailing?: ReactNode;
+  /** Makes the title the row's header and a link of its own (a student's name → their file). */
+  titleLink?: TitleLink;
   /** Makes the row a button (opens the detail). Without it the row is plain text. */
   onPress?: () => void;
   /** What a tap opens, for the screen reader (only with onPress). */
@@ -36,6 +38,7 @@ interface ListRowProps {
  */
 export function ListRow(props: ListRowProps) {
   const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, metaStrong, tags, trailing, onPress } = props;
+  const { titleLink } = props;
   const { color } = useTheme();
   const inset = useInset();
   const row: ViewStyle = {
@@ -51,33 +54,7 @@ export function ListRow(props: ListRowProps) {
     <>
       {leading}
       <View style={{ flex: 1, gap: 2 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <AppText
-            numberOfLines={1}
-            style={{
-              flexShrink: 1,
-              fontFamily: type.ui[600],
-              fontSize: type.size.body,
-              lineHeight: type.lineHeight(type.size.body),
-              color: color.ink,
-            }}
-          >
-            {title}
-          </AppText>
-          {meta ? (
-            <Ltr
-              style={{
-                fontFamily: type.ui[metaStrong ? 500 : 400],
-                fontSize: type.size[metaStrong ? 'xs' : '2xs'],
-                color: metaStrong ? color.ink2 : color.ink3,
-                // The quiet meta (a phone beside a name) steps back so the name leads (owner 2026-10-29, option A).
-                opacity: metaStrong ? 1 : 0.85,
-              }}
-            >
-              {meta}
-            </Ltr>
-          ) : null}
-        </View>
+        <ListRowTitle title={title} meta={meta} metaStrong={metaStrong} link={titleLink} />
         {subtitle ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             {subtitleLeading}
