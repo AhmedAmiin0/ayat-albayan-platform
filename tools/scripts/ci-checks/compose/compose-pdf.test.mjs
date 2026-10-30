@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
-const root = (p) => fileURLToPath(new URL(`../../../${p}`, import.meta.url));
+const root = (p) => fileURLToPath(new URL(`../../../../${p}`, import.meta.url));
 const compose = parse(readFileSync(root('deploy/staging/docker-compose.yml'), 'utf8'), { merge: true });
 const roll = readFileSync(root('deploy/staging/roll.sh'), 'utf8');
 const rollback = readFileSync(root('deploy/staging/rollback.sh'), 'utf8');

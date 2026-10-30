@@ -3,23 +3,25 @@
 
 const blank = (width, height) => ({ width, height, data: new Float32Array(width * height * 4) });
 
+/** Output sample `t` of line `o`: the area-weighted sum of the source samples it covers. */
+function sample(ax, o, t) {
+  const { src, out, n, m, s, at } = ax;
+  const a = t * s, b = a + s;
+  for (let u = Math.floor(a); u < Math.min(n, Math.ceil(b - 1e-9)); u++) {
+    const w = (Math.min(b, u + 1) - Math.max(a, u)) / s;
+    for (let k = 0; k < 4; k++) out[at(o, t, m) + k] += src[at(o, u, n) + k] * w;
+  }
+}
+
 /** One axis of an area-average (box) resample on premultiplied RGBA. */
 function axis(src, { n, m, other, at }) {
   const out = new Float32Array(src.length / n * m);
-  const s = n / m;
-  for (let o = 0; o < other; o++) {
-    for (let t = 0; t < m; t++) {
-      const a = t * s, b = a + s;
-      for (let u = Math.floor(a); u < Math.min(n, Math.ceil(b - 1e-9)); u++) {
-        const w = (Math.min(b, u + 1) - Math.max(a, u)) / s;
-        for (let k = 0; k < 4; k++) out[at(o, t, m) + k] += src[at(o, u, n) + k] * w;
-      }
-    }
-  }
+  const ax = { src, out, n, m, s: n / m, at };
+  for (let o = 0; o < other; o++) for (let t = 0; t < m; t++) sample(ax, o, t);
   return out;
 }
 
-export function resize({ width: W, height: H, data }, w, h) {
+function resize({ width: W, height: H, data }, w, h) {
   const pre = new Float32Array(data);
   for (let i = 0; i < W * H; i++) for (let k = 0; k < 3; k++) pre[i * 4 + k] *= pre[i * 4 + 3];
   const rows = axis(pre, { n: W, m: w, other: H, at: (y, x, width) => (y * width + x) * 4 });

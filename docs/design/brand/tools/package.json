@@ -1,0 +1,12 @@
+{
+  "name": "@ab/brand-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "eslint": "^10.0.0"
+  }
+}

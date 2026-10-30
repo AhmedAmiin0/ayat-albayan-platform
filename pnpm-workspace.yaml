@@ -3,6 +3,7 @@ packages:
   - packages/*
   - tools/*
   - e2e
+  - docs/design/brand/tools
 allowBuilds:
   supabase: true
   esbuild: true
