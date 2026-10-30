@@ -128,6 +128,9 @@ jobs:
           - { name: test api 2/2, task: test, filter: --filter=api, args: '-- --shard=2/2' }
           - { name: test mobile, task: test, filter: --filter=mobile }
           - { name: test others, task: test, filter: '--filter=!web --filter=!api --filter=!mobile' }
+          # Metro bundle of the mobile app (docs/32 x0, critic correction 11): the same Babel config as an OTA, so
+          # React Compiler output, Metro resolution errors and barrel require cycles fail here, not after `eas update`.
+          - { name: bundle mobile, task: bundle, filter: --filter=mobile }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

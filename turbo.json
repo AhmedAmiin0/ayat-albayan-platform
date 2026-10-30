@@ -17,6 +17,7 @@
     "lint": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "$TURBO_ROOT$/.oxlintrc.json"] },
     "typecheck": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
     "test": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
+    "bundle": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
     "e2e": {
       "dependsOn": ["^build"],
       "cache": false,
