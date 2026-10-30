@@ -1,4 +1,4 @@
-import { WA_LINES, WA_PROVIDERS } from '@ab/shared';
+import { NUMBER_PURPOSES, WA_PROVIDERS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
@@ -20,23 +20,36 @@ export interface NumberFormFieldsProps {
   onChange: (patch: Partial<NumberDraft>) => void;
 }
 
-/** The add / edit fields: name, role, provider, then the Meta ids (LTR, latin only). */
+/**
+ * The add / edit fields: name, role (a calls number says it is Kapso only), provider, then the Meta
+ * ids (LTR, latin only).
+ */
 export function NumberFormFields({ draft, errors, onChange }: NumberFormFieldsProps) {
   return (
     <div className="grid gap-4">
       <Field label={f.label} required error={errors.label}>
         {(p) => <Input {...p} value={draft.label} maxLength={60} onChange={(e) => onChange({ label: e.target.value })} />}
       </Field>
-      <Field label={f.purpose}>
+      <Field
+        label={f.purpose}
+        hint={draft.purpose === 'calls' ? t.numbers.form.callsHint : undefined}
+      >
         {(p) => (
-          <Select {...p} value={draft.purpose} onChange={(e) => onChange({ purpose: WA_LINES.find((l) => l === e.target.value) ?? draft.purpose })}>
-            {WA_LINES.map((l) => (
+          <Select
+            {...p}
+            value={draft.purpose}
+            onChange={(e) => {
+              const purpose = NUMBER_PURPOSES.find((l) => l === e.target.value) ?? draft.purpose;
+              onChange({ purpose });
+            }}
+          >
+            {NUMBER_PURPOSES.map((l) => (
               <option key={l} value={l}>{t.numbers.purpose[l]}</option>
             ))}
           </Select>
         )}
       </Field>
-      <Field label={f.provider}>
+      <Field label={f.provider} error={errors.provider}>
         {(p) => (
           <Select {...p} value={draft.provider} onChange={(e) => onChange({ provider: WA_PROVIDERS.find((v) => v === e.target.value) ?? draft.provider })}>
             {WA_PROVIDERS.map((v) => (

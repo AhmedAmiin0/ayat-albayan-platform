@@ -1,6 +1,6 @@
 import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '../enums/index.js';
-import type { Quote } from '../pricing/quote.js';
-import type { RenewalPricing } from '../pricing/index.js';
+import type { Quote } from '../money/pricing/quote.js';
+import type { RenewalPricing } from '../money/pricing/index.js';
 
 // Whitelisted responses of the salesperson's money endpoints (docs/16): only her student and the package
 // she is creating or paying, never the fx internals (rate, provider, date), the quote source, notes or

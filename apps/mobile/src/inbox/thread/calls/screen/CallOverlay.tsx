@@ -1,4 +1,5 @@
-import { formatPhone, type ActiveCallView, type CallPermissionState } from '@ab/shared';
+import type { PermissionAsk } from '@ab/client-core';
+import { formatPhone, type ActiveCallView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Modal } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -7,8 +8,6 @@ import { CallBar } from './CallBar';
 import { CallScreen } from './CallScreen';
 import { IncomingCall } from './IncomingCall';
 import { PermissionDialog } from './PermissionDialog';
-
-export type PermissionAsk = { phone: string; state: Exclude<CallPermissionState, 'granted'> };
 
 interface CallOverlayProps {
   s: CallSessionApi;
@@ -59,7 +58,7 @@ export function CallOverlay(p: CallOverlayProps) {
         {host ? p.notice : null}
       </Modal>
       {session?.minimised && phase ? <CallBar session={session} row={p.s.row} phase={phase} onExpand={() => store.setMinimised(false)} /> : null}
-      {p.ask && !host ? <PermissionDialog {...p.ask} onClose={() => p.onAsk('closed')} onSent={() => p.onAsk('sent')} /> : null}
+      {p.ask && !host ? <PermissionDialog ask={p.ask} onClose={() => p.onAsk('closed')} onSent={() => p.onAsk('sent')} /> : null}
       {host ? null : p.notice}
     </>
   );

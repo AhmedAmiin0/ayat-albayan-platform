@@ -6,7 +6,7 @@ import { numberRow } from '../numbers.fakes';
 afterEach(() => setNumbersOverlay(null));
 
 describe('NumbersConfig', () => {
-  it('legacy clears the overlay and never reads the numbers (today\'s config untouched)', async () => {
+  it('legacy clears the overlay and never reads the messaging numbers (today\'s config untouched)', async () => {
     setNumbersOverlay({ values: { WA_PHONE_NUMBER_ID: 'x' }, numberIds: {} });
     const defaults = vi.fn(async () => [numberRow()]);
     const all = vi.fn(async () => [numberRow()]);

@@ -1,5 +1,4 @@
 import type { Json } from '@ab/db';
-import type { LineNumbers } from '../../../../config/env/env';
 import {
   DELIVERY_STATUSES,
   MEDIA_TYPES,
@@ -8,8 +7,8 @@ import {
   type StatusEvent,
   type WebhookBatch,
 } from '../webhook.events';
-import { readCalls } from './webhook.calls';
-import { acceptsNumber, lineFor, receivingNumber, where, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
+import { readCalls, readPermissionReplies } from './webhook.calls';
+import { receiving, where, type ReceiveOptions, type Receiving } from '../lines/webhook.lines';
 import { ECHO_FIELD, readEchoes } from './webhook.echoes';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
@@ -92,25 +91,8 @@ function toStatus(s: unknown, ctx: Omit<MessageContext, 'names'>): StatusEvent |
   };
 }
 
-export interface ParseOptions {
+export interface ParseOptions extends ReceiveOptions {
   now: Date;
-  /** Our lines' phone-number ids: changes for any other number are ignored. None = accept all. */
-  numbers?: LineNumbers;
-  /** Told the phone_number_id of every change ignored as neither line (docs/12 §13.6). */
-  onIgnored?: (id: string) => void;
-  /** Module mode (docs/23c decision 7): every wa_numbers row; absent / null = legacy (`numbers`). */
-  overlay?: readonly ReceivingNumber[] | null;
-}
-
-/** Where a change for `number` came in; null = ignored (reported via onIgnored). */
-function receiving(number: string | undefined, ctx: ParseOptions): Receiving | null {
-  const numbers = ctx.numbers ?? {};
-  const at = ctx.overlay ? receivingNumber(ctx.overlay, number) : acceptsNumber(numbers, number) ? { line: lineFor(numbers, number) } : null;
-  if (!at) {
-    if (number) ctx.onIgnored?.(number);
-    return null;
-  }
-  return number ? { ...at, phoneNumberId: number } : at;
 }
 
 /** `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never ticks); else skipped. */
@@ -138,6 +120,7 @@ function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch;
     const event = toStatus(s, { now: ctx.now, at: ctx.at });
     if (event) ctx.batch.statuses.push(event);
   }
+  if (ctx.at.phoneNumberId) readPermissionReplies(value, { now: ctx.now, phoneNumberId: ctx.at.phoneNumberId, batch: ctx.batch });
 }
 
 export function parseWebhook(body: unknown, opts: ParseOptions): WebhookBatch {

@@ -1,4 +1,4 @@
-import { ACCOUNT_CODE_TEMPLATE, waIdToE164, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, waIdToE164, type NumberPurpose } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '../inbound/webhook.inbound';
 import type { StatusEvent } from '../webhook.events';
@@ -10,7 +10,7 @@ import { ExternalQueries } from './external.queries';
 interface ExternalInput {
   /** Meta's message object (an echo, or an item of Kapso's history). */
   message: unknown;
-  from: { line: WaLine | null; numberId?: string | null; phoneNumberId?: string | null };
+  from: { line: NumberPurpose | null; numberId?: string | null; phoneNumberId?: string | null };
   /** The delivery status that revealed it (webhook); none for an echo or the catch-up job. */
   event?: StatusEvent;
 }

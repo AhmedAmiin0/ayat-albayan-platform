@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/shared';
 import { numberByPhoneId, overlayNumbers } from '../../../../common/integrations/numbers-overlay';
 import { lineEnvs, loadEnv, type KapsoLineEnv, type LineEnvs, type WhatsappEnv } from '../../../../config/env/env';
 
@@ -29,7 +29,9 @@ function legacyLines(lines: LineEnvs): KapsoNumber[] {
 export function kapsoNumberFor(phoneNumberId: string, read: () => LineEnvs = () => lineEnvs(loadEnv())): KapsoNumber | null {
   if (overlayNumbers()) {
     const n = numberByPhoneId(phoneNumberId);
-    return n && isKapso(n.env) ? { env: n.env, line: n.purpose, numberId: n.id } : null;
+    return n && isKapso(n.env) && isWaLine(n.purpose)
+      ? { env: n.env, line: n.purpose, numberId: n.id }
+      : null;
   }
   return legacyLines(read()).find((n) => n.env.phoneNumberId === phoneNumberId) ?? null;
 }

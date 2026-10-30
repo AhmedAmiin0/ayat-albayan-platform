@@ -1789,9 +1789,6 @@
     }
   },
   "src/features/messaging/inbox/calls/state/CallProvider.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
@@ -4043,7 +4040,7 @@
   },
   "src/features/messaging/numbers/form/NumberFormFields.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/numbers/form/NumberSecretRow.test.tsx": {

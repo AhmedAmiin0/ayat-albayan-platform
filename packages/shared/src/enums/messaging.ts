@@ -50,10 +50,31 @@ export const PUSH_KINDS = [
 ] as const satisfies readonly Enums<'push_kind'>[];
 /** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
 export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];
+/** Every wa_numbers purpose; `calls` never sends a regular message (docs/28 §10). */
+export const NUMBER_PURPOSES = [
+  ...WA_LINES,
+  'calls',
+] as const satisfies readonly Enums<'wa_line'>[];
 
 export type MessageDirection = Enums<'message_direction'>;
 export type MessageStatus = Enums<'message_status'>;
 export type TemplateStatus = Enums<'template_status'>;
 export type TemplateCategory = Enums<'template_category'>;
 export type PushKind = Enums<'push_kind'>;
-export type WaLine = Enums<'wa_line'>;
+/** A messaging line (sends and reply windows); never `calls` (docs/28 §10). */
+export type WaLine = (typeof WA_LINES)[number];
+/**
+ * A wa_numbers role: a messaging line, or `calls` (a number that only carries WhatsApp calls,
+ * docs/28 §10).
+ */
+export type NumberPurpose = Enums<'wa_line'>;
+/** A messaging line (not `calls`): what may send, open a reply window or own a template. */
+export const isWaLine = (v: string | null | undefined): v is WaLine =>
+  WA_LINES.some((l) => l === v);
+/**
+ * A row received on / sent from a messaging line or none (history): never the calls number's
+ * (docs/28 §10).
+ */
+export const onMessagingLine = <T extends { line: NumberPurpose | null }>(
+  row: T,
+): row is T & { line: WaLine | null } => row.line === null || isWaLine(row.line);

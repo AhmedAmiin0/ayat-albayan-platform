@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CallWebhookEvent } from '../../webhook/webhook.events';
 import { ADMIN_ACTOR, FAMILY, LINE, fakeGate, fakeKit } from '../calls.fakes';
 import { CallEvents, machineEvent } from './call-events.service';
+import { fakeNumberStore } from '../calls-number.fakes';
 import { CallsSweeper } from './calls.sweeper';
 import { OutboundCalls } from './outbound.service';
 
@@ -18,7 +19,11 @@ async function placed(on = true) {
   const t = fakeKit();
   const gate = fakeGate({ on });
   const view = await new OutboundCalls(t.kit, fakeGate(), new CallsSweeper(t.kit)).start(ADMIN_ACTOR, { phone: FAMILY, sdp: 'v=0 o', clientRequestId: '33333333-3333-4333-8333-333333333333' });
-  return { ...t, events: new CallEvents(t.kit, gate, new CallsSweeper(t.kit)), id: view.id };
+  return {
+    ...t,
+    events: new CallEvents(t.kit, gate, new CallsSweeper(t.kit), fakeNumberStore()),
+    id: view.id,
+  };
 }
 
 describe('CallEvents: our outbound call', () => {

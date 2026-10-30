@@ -184,3 +184,76 @@ migration text. `tools/wa-stub` serves `…/calls` and `…/call_permissions` un
 - **Known follow-ups for a Play Store build** (no native config change in this PR beyond the above): react-native-webrtc's plugin and library also declare `BLUETOOTH`, `WAKE_LOCK` and a `MediaProjectionService` (screen sharing, unused). Review, block or justify them in the Play Console declaration before a store release.
 - **Lifecycle:** signing out (the provider goes away) cancels a start in flight and ends a live call on WhatsApp. Calls turned off, or the user losing `inbox.send`, during a call hang it up. A double tap on the phone icon starts one call only.
 - **Polling and realtime:** `/calls/active` is polled and the realtime nudge subscribed only while the app is in the foreground.
+
+## 10. A dedicated calls number (owner 2026-10-27, branch `cloud/calls-number`)
+
+Why: Meta's Calling API cannot be turned on for the chat number (…446 on Kapso is also used in the WhatsApp
+Business app, «coexistence»; calling needs a Cloud-API-only number and a portfolio messaging limit of at least
+2,000). Owner: «oke add the second number». **Inert until a calls number is added**: with none, every path
+below is exactly §1–§9 (calls ring on the chat line).
+
+### 10.1 What changes
+
+- **A number role `calls`.** `wa_numbers.purpose` is the `wa_line` enum; migration
+  `20261030000983_wa_line_calls.sql` adds the value `calls` (alone: an enum value is unusable in its own
+  transaction). In code `WaLine` stays the two messaging lines; `NumberPurpose` (`NUMBER_PURPOSES`) adds `calls`.
+  A calls number is **Kapso only** (`callsNeedKapso`: the form says so under «المزوّد», the API answers 409
+  `calls_need_kapso` on a create or a PATCH that would break it).
+- **callingLine()** (`calls/kapso/calling-line.ts`): the enabled default `calls` number when there is one
+  (`common/integrations/calls-number.ts`, loaded by `NumbersConfig` under **both** `comms_source` values, by
+  `NumbersQueries.callsDefault()`; a failed read keeps the current one and never fails the numbers refresh), with Kapso's project key; a calls number that cannot carry a call (no WABA
+  id, no Kapso key) is `calls_unavailable`, never a silent fall back to the chat line. Else the chat line as
+  before. `wa_calls.number_id` stamps the calls number.
+- **Inbound.** The Kapso meta webhook routes a change by `metadata.phone_number_id`: under legacy the calls
+  number's id is kept (`webhook.lines.ts` `callsReceiving`), in module mode it is a `wa_numbers` row anyway.
+  Its `calls` changes reach the same calls flow; a family's message to it lands in their thread stamped
+  `line = 'calls'` (and its `number_id`), shown with the word «خط المكالمات» / «Calls line».
+- **It never sends a regular message.** Every send path skips it:
+  - the sender's queue never reads a `line = 'calls'` row (`SenderQueries.due`);
+  - module routing never sees a `calls` number (`messagingNumbers` in `NumberRoutes.pass`: no template, session,
+    rule or fallback_rank can pick it), and its `numberEnv` is always null;
+  - a template can never be on the calls line (check in migration 984) nor point at it
+    (`PUT /messaging/templates/:key/number` → 404 `unknown_number`), nor can a notification rule
+    (`PATCH /admin/notifications/:key` → `unknown_number`);
+  - a calls inbound never opens a reply window: `v_threads` / `thread_summary_refresh` exclude it from the
+    notifications window (migration `20261030000984_calls_number.sql`), `numberWindows` drops it (module
+    mode), so the reply line never becomes the calls number; the composer's «window open» and «إعادة فتح»
+    follow the messaging windows only (`messagingWindowOpen`); no read receipt is sent for it;
+  - the admin's «إعادة المحاولة» refuses a calls-number row (staff tap the button again);
+  - a file a family sends to it is fetched with its own Kapso connection only (download, never a send).
+- **The one thing it sends: «اطلب إذن الاتصال»**, FROM the calls number, only when a staff member taps it on
+  the call sheet (`calls/flow/calls-number-permission.ts`):
+  - Kapso `call_permissions` decides `granted` / `limited`; inside the **calls number's own** 24 h window the
+    interactive `call_permission_request` (its window: the family's newest message to THAT calls number);
+    outside it the approved template named in the setting
+    **`calls_permission_template`** («القيم» → الرسائل; `name` or `name:language`, Arabic by default);
+    empty = `needs_template` with `via: template`: no button, the sheet says why;
+  - the send gate (`messaging_enabled`, WhatsApp configured: `SendGate.open`, 409 `messaging_off`) and
+    `WA_ALLOWED_RECIPIENTS` (403) are checked first; a `messages` row (`line = 'calls'`, `number_id`, dedup key
+    `call_permission:<who>:<phone>:<request id>`, audited `call_permission_request`) shows it in the thread;
+    **one** `POST /{calls phone_number_id}/messages` through Kapso, never retried (a refusal: the row is
+    `failed` with the code, 502 `request_failed`). While the request is out the row is `failed` + `sending`,
+    never `queued`, so no sender, catch-up or queue count sees it; once WhatsApp took it, a failed write is
+    only logged (never a 502 that would invite a second request).
+  - The family's answer arrives as an interactive `call_permission_reply`: stored in `wa_call_permissions`
+    (API only: RLS on, no policy, no grant) by (phone_number_id, phone) with its expiry; an older answer never
+    replaces a newer one. The sheet shows the last answer; `granted` shows the stored expiry when Kapso gives none.
+
+### 10.2 OWNER STEPS (none of them is done by the PR)
+
+1. Get a **SIM that was never registered on WhatsApp** (neither the consumer app nor the Business app).
+2. In **Kapso**, add it as a new phone number of the **same WABA** as the chat number (Cloud API only; never
+   open it in the WhatsApp Business app).
+3. In **WhatsApp Manager**, check that the **portfolio messaging limit is at least 2,000** a day (calling
+   eligibility).
+4. In Kapso › Phone numbers › the new number › Settings, turn on **Calls**.
+5. Subscribe the number's **meta-kind Kapso webhook** to the **`calls`** field (same receiver,
+   `<API origin>/webhooks/kapso`; keep `messages` too, for the family's answers).
+6. In WhatsApp Manager, create and get approved a **call permission request template** on that WABA, then put
+   its name in «القيم» → الرسائل → «قالب طلب إذن الاتصال» (`calls_permission_template`).
+7. In **/admin/settings → التواصل → الأرقام**, add the number: purpose **«دور المكالمات»**, provider **Kapso**,
+   its phone number id and WABA id; turn it on and make it the default of its role. From then on calls ring on
+   it (no APK needed: JS only). To go back, turn it off: calls ring on the chat line again.
+
+Rollback: turn the calls number off (or delete it). Migrations are expand-only; their manual rollback is at
+the end of 984 (983's enum value stays, unused).

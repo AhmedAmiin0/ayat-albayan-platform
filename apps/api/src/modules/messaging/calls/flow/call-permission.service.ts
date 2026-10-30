@@ -6,11 +6,11 @@ import { Outbox, type Sent } from '../../inbox/send/outbox';
 import { pickSend, type SendPick } from '../../inbox/send/send-number';
 import { dedupKey, outboundBase } from '../../inbox/send/thread-send.service';
 import { assertMayCall, type CallActor } from '../access/call-access';
-import { CallsGate } from '../access/calls-gate';
 import type { CallingLine } from '../kapso/calling-line';
 import { CALL_PERMISSION_PAYLOAD } from '../../whatsapp/messages/wa-call-permission';
 import { callFailed, logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
+import { CallsNumberPermission } from './calls-number-permission';
 
 /** The reply window of the CALLING number is open: a session message may go from it now. */
 export function fromCallingNumber(pick: SendPick, line: CallingLine): pick is { line?: 'chat'; number_id?: string } {
@@ -23,6 +23,7 @@ export function fromCallingNumber(pick: SendPick, line: CallingLine): pick is { 
  * calling number's 24 h window offers «اطلب إذن الاتصال», an interactive call_permission_request sent
  * through the ordinary outbox (send gate, allow-list, dedupe, audit) as a staff send. Outside the
  * window only an approved call-permission template could ask: never created or submitted from here.
+ * A dedicated calls number (docs/28 §10) asks from ITSELF instead (CallsNumberPermission).
  */
 @Injectable()
 export class CallPermissions {
@@ -30,9 +31,13 @@ export class CallPermissions {
 
   constructor(
     private readonly kit: CallsKit,
-    private readonly gate: CallsGate,
     private readonly outbox: Outbox,
+    private readonly calls: CallsNumberPermission,
   ) {}
+
+  private get gate() {
+    return this.calls.gate;
+  }
 
   async state(actor: CallActor, phone: string, now = new Date()): Promise<CallPermissionView> {
     await this.gate.assertOn();
@@ -42,6 +47,7 @@ export class CallPermissions {
     const facts = await this.kit.api.permission(line, phone).catch((e: unknown) => {
       throw callFailed(logCallError(this.log, { what: 'permission check', callId: 'permission', error: e }));
     });
+    if (line.calls) return this.calls.state({ line, phone, facts, now });
     if (facts.canCall) return { state: 'granted', expires_at: facts.expiresAt };
     if (!facts.canRequest) return { state: 'limited', expires_at: null };
     const open = fromCallingNumber(await this.pick(phone, now), line);
@@ -53,6 +59,7 @@ export class CallPermissions {
     const state = await this.state(actor, input.phone, now);
     if (state.state !== 'request') throw conflict(`permission_${state.state}`);
     const line = this.gate.line();
+    if (line.calls) return this.calls.send({ actor, input, line, via: state.via ?? 'interactive' });
     const pick = await this.pick(input.phone, now);
     if (!fromCallingNumber(pick, line)) throw conflict('permission_needs_template');
     const send = { phone: input.phone, input, actorId: actor.user.id, scope: actor.teacher, sales: actor.sales };
