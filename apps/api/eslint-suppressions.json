@@ -17100,9 +17100,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/occurrences/lesson-writer.ts": {
