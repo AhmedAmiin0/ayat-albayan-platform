@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
-import { CoursePauseSection } from '@/students';
+import { CourseActionsSection, CoursePauseSection } from '@/students';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -59,6 +59,7 @@ export function SalesStudentScreen() {
           ) : null}
           {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : <Note>{t.sales.student.notMine}</Note>}
           <CoursePauseSection studentId={data.student.id} />
+          <CourseActionsSection studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           {mine ? <SubscriptionSection data={data} /> : null}
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
