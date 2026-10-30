@@ -9,10 +9,11 @@ import {
   type TemplateButton,
   type TemplateParams,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
-import { crmPlan } from '../drivers/crm/crm-plan';
-import { templateParams } from '../messages/wa-json';
-import { WaError, type TemplateRow } from '../whatsapp.types';
+import { ar } from '@/common/i18n/server-text';
+import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
+import { paymentHold, type HoldRow } from './hold/payment-hold';
+import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
+import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The sender's pure decisions (docs/12 §3.3): what to send, what a failure leads to.
 
@@ -30,7 +31,7 @@ export const AUTH_HOLD_MS = 15 * 60_000;
 export const KAPSO_AUTH = 'kapso_auth';
 /** messages.error_code when the CRM refused its API key or it lacks messages:send (docs/19): held the same way. */
 export const CRM_AUTH = 'crm_auth';
-export { CRM_RATE_LIMITED } from '../drivers/crm/crm-plan';
+export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {
@@ -41,6 +42,9 @@ export interface FailurePlan {
   /** Set when the try is not counted (auth hold): the claim's +1 is undone. */
   attempts?: number;
 }
+
+/** `row`: its due / expiry times, for the payment hold. */
+interface PlanInput { error: unknown; attempts: number; now: Date; row?: HoldRow }
 
 /** messages.error_code: Meta's code («131026»), else what kind of failure it was. */
 export function errorCode(error: unknown): string {
@@ -64,15 +68,17 @@ function errorText(error: unknown): string {
  * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
  * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
  * error (190 / 10 / 200, or Kapso / the CRM refusing its key) holds the row, uncounted: the credential is broken.
+ * Meta's 131042 (no payment method on the WABA; meta, kapso) holds it too (hold/payment-hold).
  * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
  * `attempts` counts this try.
  */
-export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {
+export function failurePlan(input: PlanInput): FailurePlan {
   const info = input.error instanceof WaError ? input.error.info : null;
   const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
   const error_text = errorText(input.error);
   if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
-  if (isWaAuthFailure(info)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
+  const held = accountHold({ ...input, info, error_text });
+  if (held) return held;
   const crm = crmPlan({ info, attempts: input.attempts, now: input.now, error_text, error_code: errorCode(input.error) });
   if (crm) return crm;
   const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
@@ -81,6 +87,14 @@ export function failurePlan(input: { error: unknown; attempts: number; now: Date
 
 /** Failed for good with its code (a retry overrides status and next_attempt_at). */
 const plain = (error: unknown, error_text: string): FailurePlan => ({ status: 'failed', next_attempt_at: null, error_code: errorCode(error), error_text });
+
+/** The account, not the message: a refused credential (15 min) or Meta's 131042 (payment hold). */
+interface HoldInput extends PlanInput { info: WaError['info'] | null; error_text: string }
+
+function accountHold(h: HoldInput): FailurePlan | null {
+  const until = new Date(h.now.getTime() + AUTH_HOLD_MS).toISOString();
+  return isWaAuthFailure(h.info) ? authHold({ ...h, until }) : paymentHold(h);
+}
 
 /** The token is broken, not the message: back in the queue, this try not counted. */
 function authHold(h: { error: unknown; attempts: number; error_text: string; until: string }): FailurePlan {
