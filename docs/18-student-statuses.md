@@ -85,5 +85,5 @@ rollback (in the file) restores exactly those rows.
 ## Tests
 
 Unit: `status-flow.test.ts` (shared), the API activation / renewal / expiry specs. E2E:
-`e2e/tests/student-statuses.spec.ts` (new → trial → pending_subscription → active, DB + admin chip),
+`e2e/tests/people/student-statuses.spec.ts` (new → trial → pending_subscription → active, DB + admin chip),
 `student-lists.spec.ts` (the «تجريبي» switch writes the three statuses).

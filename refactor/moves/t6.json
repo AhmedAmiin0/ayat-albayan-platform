@@ -1,0 +1,288 @@
+{
+  "id": "t6",
+  "seq": 116,
+  "moves": [
+    {
+      "from": "e2e/tests/account.api.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/account.credentials.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/account.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/assistants-admin.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/avatars.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/family-sign-in.api.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/family-sign-in.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/journey-6-duplicate-student.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/phone-search.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/portal-views.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/profiles-disabled.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/rate-limit-take.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/roles-permissions.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/roles.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/student-filters.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/student-lists.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/student-profile.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/student-statuses.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/teacher-isolation.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/teacher-isolation.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/teacher-mode.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/teacher-rls.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/teachers-admin.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/users-control.delete.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/users-control.invite.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/users-control.login.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/users-control.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/tests/users-control.sql.spec.ts",
+      "to": "e2e/tests/people/"
+    },
+    {
+      "from": "e2e/support/admin-extra.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/admin-extra-phone.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/family-sign-in.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/student-filters.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/student-statuses.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/teacher-isolation.ts",
+      "to": "e2e/support/people/"
+    },
+    {
+      "from": "e2e/support/users-control.ts",
+      "to": "e2e/support/people/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/admin-extra-phone.ts",
+      "e2e/support/people/admin-extra-phone.ts"
+    ],
+    [
+      "e2e/support/admin-extra.ts",
+      "e2e/support/people/admin-extra.ts"
+    ],
+    [
+      "e2e/support/family-sign-in.ts",
+      "e2e/support/people/family-sign-in.ts"
+    ],
+    [
+      "e2e/support/student-filters.ts",
+      "e2e/support/people/student-filters.ts"
+    ],
+    [
+      "e2e/support/student-statuses.ts",
+      "e2e/support/people/student-statuses.ts"
+    ],
+    [
+      "e2e/support/teacher-isolation.ts",
+      "e2e/support/people/teacher-isolation.ts"
+    ],
+    [
+      "e2e/support/users-control.ts",
+      "e2e/support/people/users-control.ts"
+    ],
+    [
+      "e2e/tests/account.api.spec.ts",
+      "e2e/tests/people/account.api.spec.ts"
+    ],
+    [
+      "e2e/tests/account.credentials.spec.ts",
+      "e2e/tests/people/account.credentials.spec.ts"
+    ],
+    [
+      "e2e/tests/account.spec.ts",
+      "e2e/tests/people/account.spec.ts"
+    ],
+    [
+      "e2e/tests/assistants-admin.spec.ts",
+      "e2e/tests/people/assistants-admin.spec.ts"
+    ],
+    [
+      "e2e/tests/avatars.sql.spec.ts",
+      "e2e/tests/people/avatars.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/family-sign-in.api.spec.ts",
+      "e2e/tests/people/family-sign-in.api.spec.ts"
+    ],
+    [
+      "e2e/tests/family-sign-in.spec.ts",
+      "e2e/tests/people/family-sign-in.spec.ts"
+    ],
+    [
+      "e2e/tests/journey-6-duplicate-student.spec.ts",
+      "e2e/tests/people/journey-6-duplicate-student.spec.ts"
+    ],
+    [
+      "e2e/tests/phone-search.spec.ts",
+      "e2e/tests/people/phone-search.spec.ts"
+    ],
+    [
+      "e2e/tests/portal-views.sql.spec.ts",
+      "e2e/tests/people/portal-views.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/profiles-disabled.sql.spec.ts",
+      "e2e/tests/people/profiles-disabled.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/rate-limit-take.sql.spec.ts",
+      "e2e/tests/people/rate-limit-take.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/roles-permissions.sql.spec.ts",
+      "e2e/tests/people/roles-permissions.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/roles.spec.ts",
+      "e2e/tests/people/roles.spec.ts"
+    ],
+    [
+      "e2e/tests/student-filters.spec.ts",
+      "e2e/tests/people/student-filters.spec.ts"
+    ],
+    [
+      "e2e/tests/student-lists.spec.ts",
+      "e2e/tests/people/student-lists.spec.ts"
+    ],
+    [
+      "e2e/tests/student-profile.spec.ts",
+      "e2e/tests/people/student-profile.spec.ts"
+    ],
+    [
+      "e2e/tests/student-statuses.spec.ts",
+      "e2e/tests/people/student-statuses.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-isolation.spec.ts",
+      "e2e/tests/people/teacher-isolation.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-isolation.sql.spec.ts",
+      "e2e/tests/people/teacher-isolation.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-mode.spec.ts",
+      "e2e/tests/people/teacher-mode.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-rls.sql.spec.ts",
+      "e2e/tests/people/teacher-rls.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teachers-admin.spec.ts",
+      "e2e/tests/people/teachers-admin.spec.ts"
+    ],
+    [
+      "e2e/tests/users-control.delete.spec.ts",
+      "e2e/tests/people/users-control.delete.spec.ts"
+    ],
+    [
+      "e2e/tests/users-control.invite.spec.ts",
+      "e2e/tests/people/users-control.invite.spec.ts"
+    ],
+    [
+      "e2e/tests/users-control.login.spec.ts",
+      "e2e/tests/people/users-control.login.spec.ts"
+    ],
+    [
+      "e2e/tests/users-control.spec.ts",
+      "e2e/tests/people/users-control.spec.ts"
+    ],
+    [
+      "e2e/tests/users-control.sql.spec.ts",
+      "e2e/tests/people/users-control.sql.spec.ts"
+    ]
+  ]
+}

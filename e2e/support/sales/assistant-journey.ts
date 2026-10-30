@@ -4,7 +4,7 @@ import { chatMore, fromChatMore } from '../messaging/chat-more';
 import { ar, expect } from '../fixtures';
 import { bearer, API } from '../messages';
 import { withSql } from '../schedule';
-import { studentStatusOf } from '../student-statuses';
+import { studentStatusOf } from '../people/student-statuses';
 import { stubSent } from '../wa-stub';
 
 export { fromChatMore } from '../messaging/chat-more';

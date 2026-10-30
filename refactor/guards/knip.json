@@ -244,7 +244,7 @@
   "apps/mobile/src/users/shared/validation.ts types FieldKey",
   "e2e/support/account.ts types AccountRow",
   "e2e/support/account.ts types Part",
-  "e2e/support/admin-extra.ts types StudentRow",
+  "e2e/support/people/admin-extra.ts types StudentRow",
   "e2e/support/sales/assistant-api.ts types Reply",
   "e2e/support/sales/assistant-journey.ts types Expected",
   "e2e/support/sales/assistant-journey.ts types Family",

@@ -28,12 +28,12 @@
       "count": 1
     }
   },
-  "support/admin-extra-phone.ts": {
+  "support/people/admin-extra-phone.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "support/admin-extra.ts": {
+  "support/people/admin-extra.ts": {
     "max-len": {
       "count": 1
     }
@@ -194,7 +194,7 @@
       "count": 1
     }
   },
-  "support/family-sign-in.ts": {
+  "support/people/family-sign-in.ts": {
     "max-len": {
       "count": 7
     }
@@ -316,7 +316,7 @@
       "count": 3
     }
   },
-  "support/student-statuses.ts": {
+  "support/people/student-statuses.ts": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
     },
@@ -329,7 +329,7 @@
       "count": 4
     }
   },
-  "support/teacher-isolation.ts": {
+  "support/people/teacher-isolation.ts": {
     "max-len": {
       "count": 1
     }
@@ -354,7 +354,7 @@
       "count": 2
     }
   },
-  "support/users-control.ts": {
+  "support/people/users-control.ts": {
     "max-len": {
       "count": 2
     }
@@ -458,12 +458,12 @@
       "count": 5
     }
   },
-  "tests/assistants-admin.spec.ts": {
+  "tests/people/assistants-admin.spec.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "tests/avatars.sql.spec.ts": {
+  "tests/people/avatars.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 3
     },
@@ -657,7 +657,7 @@
       "count": 7
     }
   },
-  "tests/family-sign-in.api.spec.ts": {
+  "tests/people/family-sign-in.api.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
@@ -774,7 +774,7 @@
       "count": 1
     }
   },
-  "tests/journey-6-duplicate-student.spec.ts": {
+  "tests/people/journey-6-duplicate-student.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
@@ -866,7 +866,7 @@
       "count": 1
     }
   },
-  "tests/phone-search.spec.ts": {
+  "tests/people/phone-search.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -887,7 +887,7 @@
       "count": 1
     }
   },
-  "tests/portal-views.sql.spec.ts": {
+  "tests/people/portal-views.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -900,7 +900,7 @@
       "count": 1
     }
   },
-  "tests/profiles-disabled.sql.spec.ts": {
+  "tests/people/profiles-disabled.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -928,7 +928,7 @@
       "count": 1
     }
   },
-  "tests/rate-limit-take.sql.spec.ts": {
+  "tests/people/rate-limit-take.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -972,7 +972,7 @@
       "count": 2
     }
   },
-  "tests/roles-permissions.sql.spec.ts": {
+  "tests/people/roles-permissions.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
@@ -1074,12 +1074,12 @@
       "count": 1
     }
   },
-  "tests/student-lists.spec.ts": {
+  "tests/people/student-lists.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/student-profile.spec.ts": {
+  "tests/people/student-profile.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -1103,7 +1103,7 @@
       "count": 2
     }
   },
-  "tests/student-statuses.spec.ts": {
+  "tests/people/student-statuses.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -1145,7 +1145,7 @@
       "count": 3
     }
   },
-  "tests/teacher-isolation.spec.ts": {
+  "tests/people/teacher-isolation.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1153,7 +1153,7 @@
       "count": 1
     }
   },
-  "tests/teacher-isolation.sql.spec.ts": {
+  "tests/people/teacher-isolation.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1175,7 +1175,7 @@
       "count": 1
     }
   },
-  "tests/teacher-mode.spec.ts": {
+  "tests/people/teacher-mode.spec.ts": {
     "max-len": {
       "count": 5
     }
@@ -1206,7 +1206,7 @@
       "count": 2
     }
   },
-  "tests/teacher-rls.sql.spec.ts": {
+  "tests/people/teacher-rls.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1247,22 +1247,22 @@
       "count": 1
     }
   },
-  "tests/users-control.delete.spec.ts": {
+  "tests/people/users-control.delete.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/users-control.invite.spec.ts": {
+  "tests/people/users-control.invite.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/users-control.spec.ts": {
+  "tests/people/users-control.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/users-control.sql.spec.ts": {
+  "tests/people/users-control.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
