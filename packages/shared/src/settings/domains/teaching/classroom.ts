@@ -21,6 +21,15 @@ export const CLASSROOM_SETTINGS = {
     labelKey: 'settings.defaultMeetingTitle', hintKey: 'settings.hints.defaultMeetingTitle',
   },
   /**
+   * Owner 2026-10-30 «close meetings longer than 2 hours»: MeetingMaxDurationJob closes a
+   * meeting or lesson room open longer than this. 0 = the job is off. No message to anyone.
+   */
+  meeting_max_minutes: {
+    module: 'classroom', group: 'classroom',
+    type: 'int', default: 120, min: 0, max: 1440,
+    labelKey: 'settings.meetingMaxMinutes', hintKey: 'settings.hints.meetingMaxMinutes',
+  },
+  /**
    * ON: messages carry our classroom link per lesson (family: lesson_join_link, teacher:
    * /classroom/<id>), chosen when the message is queued; lessons.meeting_link is never changed.
    * OFF (migration 330 seeds it): the teacher's fixed link, as before. Public: the apps hide the fixed link.
