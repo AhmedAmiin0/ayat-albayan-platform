@@ -28,7 +28,8 @@ export class MessagesService {
   async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
     const before = await this.row(id);
     const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
-    if (before.status !== 'failed') throw notRetryable();
+    // A calls-number row (docs/28 §10) is never queued: staff tap «اطلب إذن الاتصال» again instead.
+    if (before.status !== 'failed' || before.line === 'calls') throw notRetryable();
     if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
     const after = await this.queries.requeue(id);
     if (!after) throw notRetryable();

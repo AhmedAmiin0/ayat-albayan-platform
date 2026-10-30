@@ -28,8 +28,9 @@ export class RulesTable {
   }
 
   async numberExists(id: string): Promise<boolean> {
-    const { data, error } = await this.db.from('wa_numbers').select('id').eq('id', id).maybeSingle();
+    const { data, error } = await this.db.from('wa_numbers').select('id, purpose').eq('id', id).maybeSingle();
     if (error) throw new Error(`wa_numbers read failed: ${error.message}`);
-    return data !== null;
+    // A calls number never sends a notification (docs/28 §10): not a number a rule can pick.
+    return data !== null && data.purpose !== 'calls';
   }
 }

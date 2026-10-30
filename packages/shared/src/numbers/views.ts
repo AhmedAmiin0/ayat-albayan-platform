@@ -1,4 +1,4 @@
-import type { WaLine } from '../enums/messaging.js';
+import type { NumberPurpose, WaLine } from '../enums/messaging.js';
 import type { IntegrationSource } from '../catalog/integrations/views.js';
 import type { WaProvider } from '../catalog/integrations/keys.js';
 import type { CommsSource } from '../settings/domains/messaging.js';
@@ -30,8 +30,11 @@ export interface NumberSecretState {
 export interface NumberView {
   id: string;
   label: string;
-  /** The preset role (default traffic) this number serves. */
-  purpose: WaLine;
+  /**
+   * The preset role (default traffic) this number serves; `calls` = WhatsApp calls only, never a
+   * message.
+   */
+  purpose: NumberPurpose;
   provider: WaProvider;
   phone_number_id: string;
   waba_id: string | null;

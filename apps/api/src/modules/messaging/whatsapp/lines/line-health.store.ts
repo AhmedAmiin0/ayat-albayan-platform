@@ -1,4 +1,4 @@
-import { normalizePhone, type LineCheckView, type LineHealthView } from '@ab/shared';
+import { isWaLine, normalizePhone, type LineCheckView, type LineHealthView } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { lineNumbers, loadEnv } from '../../../../config/env/env';
@@ -58,6 +58,9 @@ export class LineHealthStore {
       .select('line, display_phone_e164, verified_name, checked_at, phone_number_id')
       .order('line');
     if (error) throw new Error(`line health read failed: ${error.message}`);
-    return currentRows(data, lineNumbers(loadEnv()));
+    return currentRows(
+      data.flatMap((r) => (isWaLine(r.line) ? [{ ...r, line: r.line }] : [])),
+      lineNumbers(loadEnv()),
+    );
   }
 }

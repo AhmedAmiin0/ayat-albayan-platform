@@ -38,6 +38,16 @@ export const MESSAGING_SETTINGS = {
     module: 'messaging', group: 'messaging', confirm: 'simple', reachesFamilies: true,
     type: 'bool', default: false, labelKey: 'calls.settings.enabled', hintKey: 'calls.settings.enabledHint',
   },
+  /**
+   * The approved call-permission-request template a calls number asks with outside its 24 h window
+   * (docs/28 §10; owner step: approve it in WhatsApp Manager). Empty (the seed) = that button is
+   * disabled with the reason. Sent only on a staff member's tap, through the send gate.
+   */
+  calls_permission_template: {
+    module: 'messaging', group: 'messaging', reachesFamilies: true,
+    type: 'string', default: '', minLength: 0, maxLength: 512,
+    labelKey: 'calls.settings.permissionTemplate', hintKey: 'calls.settings.permissionTemplateHint',
+  },
   /** A typed «نعم» confirms only a lesson we messaged the guardian about within this many hours. */
   quick_reply_window_hours: {
     module: 'messaging', group: 'messaging', reachesFamilies: true,

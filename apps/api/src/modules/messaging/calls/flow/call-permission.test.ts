@@ -3,6 +3,7 @@ import type { Outbox } from '../../inbox/send/outbox';
 import { pickSend } from '../../inbox/send/send-number';
 import { ADMIN_ACTOR, FAMILY, LINE, fakeApi, fakeGate, fakeKit, teacherActor } from '../calls.fakes';
 import { CallPermissions, fromCallingNumber } from './call-permission.service';
+import type { CallsNumberPermission } from './calls-number-permission';
 
 vi.mock('../../inbox/send/send-number', () => ({ pickSend: vi.fn(async () => ({ line: 'chat' })) }));
 const REQ = '44444444-4444-4444-8444-444444444444';
@@ -12,7 +13,7 @@ function setup(facts: { canCall: boolean; canRequest: boolean }) {
   api.permission.mockResolvedValue({ ...facts, expiresAt: facts.canCall ? '2026-11-02T10:00:00.000Z' : null });
   const t = fakeKit({ api });
   const outbox = { send: vi.fn(async () => ({ view: { id: 'm1' }, replayed: false })) };
-  return { ...t, outbox, perms: new CallPermissions(t.kit, fakeGate(), outbox as unknown as Outbox) };
+  return { ...t, outbox, perms: new CallPermissions(t.kit, outbox as unknown as Outbox, { gate: fakeGate() } as unknown as CallsNumberPermission) };
 }
 
 describe('CallPermissions.state (Kapso call_permissions)', () => {

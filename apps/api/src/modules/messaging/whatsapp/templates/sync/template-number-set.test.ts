@@ -62,6 +62,12 @@ describe('setTemplateNumber', () => {
     await expect(setTemplateNumber(deps, { key: 'nope', number_id: null }, 'a')).rejects.toMatchObject({ status: 404 });
     expect(queries.update).not.toHaveBeenCalled();
   });
+
+  it('a calls number (docs/28 §10) is never a template\'s number: 404 unknown_number, nothing written', async () => {
+    queries.numberRef.mockResolvedValueOnce({ id: SPARE, purpose: 'calls', is_default: true, waba_id: 'w1' });
+    await expect(setTemplateNumber(deps, { key: 'booking_confirmation', number_id: SPARE }, 'a')).rejects.toMatchObject({ status: 404, response: { code: 'unknown_number' } });
+    expect(queries.update).not.toHaveBeenCalled();
+  });
 });
 
 describe('approvedOn (decision 4)', () => {

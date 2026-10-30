@@ -78,9 +78,10 @@ export class ReopenTemplate {
   }
 }
 
-/** The thread's line is the one its last inbound came on (unknown: any line, the sender picks the template's). */
+/** The thread's line is the one its last inbound came on (unknown or the calls number: any line, the sender picks the template's). */
 function onThreadLine(line: string, thread: ThreadRow | null): boolean {
-  return !thread?.last_inbound_line || thread.last_inbound_line === line;
+  const last = thread?.last_inbound_line;
+  return !last || last === 'calls' || last === line;
 }
 
 function codeOf(e: HttpException): string {
