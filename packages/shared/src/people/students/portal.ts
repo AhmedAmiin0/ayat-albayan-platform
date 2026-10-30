@@ -88,6 +88,3 @@ export interface PortalPackage {
 export interface PortalPackageView {
   package: PortalPackage | null;
 }
-
-/** wa.me/<digits> for an E.164 number (the academy's chat line). */
-export const waMeUrl = (e164: string): string => `https://wa.me/${e164.replace(/\D/g, '')}`;
