@@ -2010,11 +2010,6 @@
       "count": 1
     }
   },
-  "src/core/lib/phone.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/lib/query/paged-result.test.tsx": {
     "max-len": {
       "count": 2
