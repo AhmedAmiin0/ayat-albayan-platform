@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
-import { refreshAfterSalesWrite } from '@/features/messaging/inbox/sales-money/api';
+import { refreshAfterSalesWrite } from '@/features/sales/sales-money';
 import { LESSONS_KEY } from '@/features/teaching/schedule/api';
-import type { BookingMode } from '../mode';
+import type { BookingMode } from '@/features/teaching/booking/mode';
 import { CHECK_KEY } from './api';
 
 /**

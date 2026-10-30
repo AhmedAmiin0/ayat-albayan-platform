@@ -2,11 +2,11 @@ import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { fullTime } from '../format';
-import { PHONE, pupil } from '../testing/inbox-fixture';
-import { student } from '../sales-money/sales-money-fixture';
+import { fullTime } from '@/features/messaging/inbox/format';
+import { PHONE, pupil } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesFamilyLine } from './SalesFamilyLine';
-import { renderWithClient, routeFetch } from '../testing/test-utils';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
