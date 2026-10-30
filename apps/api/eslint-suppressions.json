@@ -8244,9 +8244,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.job.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8287,11 +8284,8 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
@@ -8352,7 +8346,7 @@
   },
   "src/modules/messaging/whatsapp/sender/message.worker.ts": {
     "max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/sender/send-line.ts": {

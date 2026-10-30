@@ -6,7 +6,7 @@ import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { holdKey, paymentSubject, WA_PAYMENT_HOLD } from './payment-hold';
+import { holdUntil, paymentSubject, WA_PAYMENT_HOLD } from './payment-hold';
 
 // Meta 131042 «Business eligibility payment issue» (docs/12 §3.3): held, never failed per message.
 
@@ -101,11 +101,28 @@ describe('failurePlan — 131042 is a payment hold', () => {
   });
 });
 
-describe('hold keys and the push subject', () => {
+describe('the 48 h stop and the push subject', () => {
   const route: NumberRoute = { numberId: 'n-1', line: 'chat' };
-  it('per line under legacy, per number in module mode, one push subject per day', () => {
-    expect(holdKey({ line: 'chat' })).toBe('line:chat');
-    expect(holdKey({ line: 'chat', route })).toBe('number:n-1');
+
+  it('a probe at 47.5 h is held to due + 48 h, not 6 h on (~54 h)', () => {
+    const due = ago(47.5 * 60 * MIN);
+    expect(plan({ created_at: due, expires_at: null }).next_attempt_at).toBe(
+      new Date(Date.parse(due) + 48 * 60 * MIN).toISOString(),
+    );
+  });
+
+  it('no hold or deferral ever goes past due + 48 h (nor expires_at)', () => {
+    const due = ago(47 * 60 * MIN);
+    const far = NOW.getTime() + 24 * 60 * MIN;
+    expect(holdUntil({ scheduled_for: due, expires_at: null }, far)).toBe(
+      new Date(NOW.getTime() + 60 * MIN).toISOString(),
+    );
+    const expires_at = new Date(NOW.getTime() + 5 * MIN).toISOString();
+    expect(holdUntil({ scheduled_for: due, expires_at }, far)).toBe(expires_at);
+    expect(holdUntil(undefined, far)).toBe(new Date(far).toISOString());
+  });
+
+  it('one push subject per line (module mode: per number) per day', () => {
     expect(paymentSubject({ line: 'notifications', now: NOW })).toBe('whatsapp_payment:2026-10-30');
     expect(paymentSubject({ line: 'chat', now: NOW })).toBe('whatsapp_payment:chat:2026-10-30');
     expect(paymentSubject({ line: 'chat', route, now: NOW })).toBe(

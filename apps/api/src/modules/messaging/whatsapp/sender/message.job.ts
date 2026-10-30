@@ -1,9 +1,9 @@
 import type { WaLine } from '@ab/shared';
 import type { SendVia } from './message.dispatch';
-import type { NumberRoute } from '../numbers/number-route';
+import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { lineOf } from './send-line';
 import type { DueMessage } from './sender.due';
-import { WaError, type TemplateRow } from '../whatsapp.types';
+import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The worker's job, outcomes and fixed pieces (split from message.worker.ts for the line limit).
 
@@ -24,6 +24,9 @@ export interface SendJob {
    */
   route?: NumberRoute | null;
 }
+
+/** A job before the gate is read (the sender's pass): what sendingAt needs. */
+export type PassJob = Omit<SendJob, 'autoOn'>;
 
 export interface FailedInput {
   row: DueMessage;
@@ -58,7 +61,7 @@ export function authSubject(at: { line: WaLine; route?: NumberRoute | null; now:
 }
 
 /** A job's line (its number's role in module mode, else lineOf) and what it is sent through. */
-export function sendingAt(job: SendJob, multi: boolean): { line: WaLine; via: SendVia } {
+export function sendingAt(job: PassJob, multi: boolean): { line: WaLine; via: SendVia } {
   if (job.route) return { line: job.route.line, via: job.route };
   const line = lineOf(job.row, job.template, multi);
   return { line, via: line };
