@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message } from '../../testing/inbox-fixture';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 import { locale } from '@/lib/i18n/locale';
 
@@ -34,6 +34,14 @@ describe('outbound notes (R-MSG-05)', () => {
     expect(notes[0]).toBe('المحاولات: 2 من 3');
     expect(notes[1]).toContain(t.messages.errors['130429']);
     expect(notes[2]).toMatch(/^المحاولة القادمة /);
+  });
+
+  it('held for payment (131042, no try counted): the reason and the next try, no tries line', () => {
+    const row = out({ status: 'queued', attempts: 0, error_code: 'wa_payment_hold', next_attempt_at: '2026-10-01T12:30:00Z' });
+    const notes = outboundNotes(row, { waitingTemplate: false, now: NOW, clock: C24 });
+    expect(notes).toHaveLength(2);
+    expect(notes[0]).toContain(t.messages.errors.wa_payment_hold);
+    expect(notes[1]).toMatch(/^المحاولة القادمة /);
   });
 
   it('claimed by the sender right now: «تُرسل الآن», not the lease as «المحاولة الجاية»', () => {
