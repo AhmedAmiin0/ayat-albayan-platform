@@ -34,7 +34,8 @@ test('«جدّد الاشتراك»: titled as a renewal, the form prefilled fro
   mockParams.current = { phone: PHONE, studentId: KID, renew: '1' };
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: t.students.renew })).toBeTruthy();
-  expect(screen.getByRole('radio', { name: p.packages.premium.sessions, checked: true })).toBeTruthy();
+  // The title shows before the family loads: wait for the form itself.
+  expect(await screen.findByRole('radio', { name: p.packages.premium.sessions, checked: true })).toBeTruthy();
   expect(screen.getByRole('radio', { name: p.discounts['10'], checked: true })).toBeTruthy();
   await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID, pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' } }));
   await fireEvent.press(screen.getByRole('radio', { name: p.discounts['0'] }));

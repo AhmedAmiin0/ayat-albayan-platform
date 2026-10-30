@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "e2e": "playwright test",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "screens": "node scripts/screens.ts"
   },

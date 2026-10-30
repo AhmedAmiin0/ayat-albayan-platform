@@ -7,7 +7,7 @@
     "dev": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build"

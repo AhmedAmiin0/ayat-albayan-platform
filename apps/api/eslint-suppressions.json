@@ -9,6 +9,219 @@
       "count": 1
     }
   },
+  "src/common/activity/activity.entry.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/common/activity/activity.interceptor.test.ts": {
+    "@typescript-eslint/no-empty-function": {
+      "count": 2
+    }
+  },
+  "src/common/activity/activity.queries.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/activity/activity.queries.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/common/auth/auth.guard.resolver-failure.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/common/auth/auth.guard.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/auth/auth.guard.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/auth/decorators.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/common/auth/parity/permissions.parity.test.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "src/common/auth/parity/route-walk.test-util.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/common/auth/permissions.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/common/auth/verify-token.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/common/cache/cache-store.ts": {
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
+    }
+  },
+  "src/common/cache/cache.fakes.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
+  "src/common/cache/shared-cache.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/common/client-usage/client-usage.counter.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/client-usage/client-usage.hook.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/boundaries/config-parity.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/boundaries/config-seeder.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/boundaries/config-seeder.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/io/config-entries.mapper.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/io/config-entries.patch.http.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/io/config-entries.read.http.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/common/config-store/io/config-entries.test-util.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "src/common/config-store/store/config-defs.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/common/custom-config/custom-config.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/custom-config/custom-config.service.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/custom-config/custom-config.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "src/common/db/family-of-phone.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/http/http.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/integrations/integration-config.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/common/integrations/integration-config.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/common/integrations/integration-config.view.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/common/integrations/wacrm-driver.migration.test.ts": {
+    "@typescript-eslint/prefer-includes": {
+      "count": 1
+    }
+  },
+  "src/common/list-sort.test.ts": {
+    "@typescript-eslint/prefer-return-this-type": {
+      "count": 1
+    }
+  },
+  "src/common/list-sort.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/common/push/dispatch/push.audience.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -24,6 +237,49 @@
       "count": 1
     }
   },
+  "src/common/push/notifications.http.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/common/push/notifications.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/common/push/push.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/common/push/push.module.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/common/push/push.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/push/web/web-push.http.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/common/push/web/web-push.sender.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/push/web/web-push.sender.ts": {
+    "@typescript-eslint/return-await": {
+      "count": 1
+    }
+  },
   "src/common/rules/confirmations.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -34,8 +290,56 @@
       "count": 1
     }
   },
+  "src/common/settings/settings-meta.queries.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 6
+    }
+  },
+  "src/common/settings/settings-meta.queries.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/common/settings/settings.controller.follow-up.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/common/settings/settings.controller.retention.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/common/settings/settings.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/common/storage/avatars/staff-photo-admin.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/common/storage/avatars/staff-photo-admin.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/common/storage/storage.service.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/common/student-ids.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/config/env/whatsapp/env.whatsapp.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
   },
@@ -44,13 +348,91 @@
       "count": 1
     }
   },
+  "src/modules/finance/assistant-pay/admin/admin.guard.http.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/finance/assistant-pay/commissions/commissions.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.commissions.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/modules/finance/assistant-pay/my/my.controller.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.earnings.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/shared/assistant-pay.rpc.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/shared/rpc.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/statements/mappers.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/statements/statements.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
     }
   },
@@ -64,8 +446,30 @@
       "count": 2
     }
   },
+  "src/modules/finance/expenses/expense-year.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/finance/expenses/expense-year.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/expenses/expense.write.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -74,19 +478,77 @@
       "count": 1
     }
   },
+  "src/modules/finance/expenses/expenses.queries.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/fx/fx.fetcher.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/fx/fx.service.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
   "src/modules/finance/invoices/invoices.dto.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/finance/invoices/invoices.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/invoices/invoices.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payments/attachments/payment-attachments.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/finance/payments/attachments/payment-attachments.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/finance/payments/attachments/payment-files.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
   "src/modules/finance/payments/payment-inputs.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/finance/payments/payment-precheck.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/finance/payments/payments.dto.ts": {
@@ -94,8 +556,19 @@
       "count": 1
     }
   },
+  "src/modules/finance/payments/payments.list-query.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/finance/payments/payments.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 3
+    },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     }
   },
@@ -105,18 +578,43 @@
     }
   },
   "src/modules/finance/payments/payments.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/finance/payments/payments.service.ts": {
+    "@typescript-eslint/only-throw-error": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payouts/payouts.generate.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
   "src/modules/finance/payouts/payouts.ledger.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/finance/payouts/payouts.mapper.ts": {
+    "@typescript-eslint/consistent-indexed-object-style": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
     }
   },
   "src/modules/finance/payouts/payouts.module.ts": {
@@ -135,6 +633,9 @@
     }
   },
   "src/modules/finance/payouts/payouts.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -165,6 +666,12 @@
     }
   },
   "src/modules/finance/receivables/receivables.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -174,9 +681,88 @@
       "count": 3
     }
   },
+  "src/modules/finance/stripe/links/link-cancel.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/links/link-create.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/links/payment-links.queries.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/stripe/pay/checkout.service.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/pay/pay-html.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/pay/pay-limit.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/webhook/link-fulfilment.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/stripe/webhook/stripe-webhook.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/alerts/admin-tasks.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/modules/finance/subscriptions/alerts/alerts.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/alerts/alerts.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/finance/subscriptions/money/balance.queries.ts": {
@@ -184,19 +770,77 @@
       "count": 1
     }
   },
+  "src/modules/finance/subscriptions/money/commission-bell.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/money/money-follow-ups.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/money/packages.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/finance/subscriptions/student-lifecycle/lead-conversion.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-access.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-deactivation.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-deactivation.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
       "count": 1
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts": {
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-renewal.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-status.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
     }
   },
   "src/modules/finance/subscriptions/subscription-creator.ts": {
@@ -209,14 +853,48 @@
       "count": 1
     }
   },
+  "src/modules/finance/subscriptions/subscriptions.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    }
+  },
   "src/modules/finance/subscriptions/subscriptions.module.ts": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/finance/subscriptions/subscriptions.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/trial/student-trial-status.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/trial/student-trial-status.ts": {
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/trial/student-trial.plan.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
     }
   },
   "src/modules/finance/subscriptions/trial/student-trial.queries.ts": {
@@ -234,9 +912,66 @@
       "count": 1
     }
   },
+  "src/modules/finance/teacher-earnings/earnings.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.service.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/summary/corrections.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/teacher-earnings/summary/earnings.lists.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/summary/earnings.names.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/summary/earnings.summary.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 4
+    }
+  },
   "src/modules/messaging/calls/access/call-access.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/messaging/calls/access/calls-gate.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/calls.fakes.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
     }
   },
   "src/modules/messaging/calls/calls.module.ts": {
@@ -245,11 +980,23 @@
     }
   },
   "src/modules/messaging/calls/flow/call-errors.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/messaging/calls/flow/call-events.service.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -264,14 +1011,58 @@
       "count": 4
     }
   },
+  "src/modules/messaging/calls/flow/inbound.service.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/flow/outbound.test.ts": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
   "src/modules/messaging/calls/http/call-permission.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/messaging/calls/kapso/kapso-calls.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/calls/kapso/kapso-calls.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 4
+    }
+  },
+  "src/modules/messaging/calls/store/calls.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/chat-lists/chat-lists.queries.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/chat-lists/chat-lists.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/chat-lists/chat-lists.service.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
     }
   },
   "src/modules/messaging/follow-ups/follow-up-slots.ts": {
@@ -304,9 +1095,66 @@
       "count": 3
     }
   },
+  "src/modules/messaging/inbox/delta/delta.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/delta/thread-delta.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
   "src/modules/messaging/inbox/files/forward-files.ts": {
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-client.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-pages.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-preview.fakes.ts": {
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-preview.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-render.spawn.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-render.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/files/pdf/pdf-sandbox.handler.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/files/thread-file-send.controller.ts": {
@@ -314,24 +1162,84 @@
       "count": 2
     }
   },
+  "src/modules/messaging/inbox/files/thread-file-send.service.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/files/thread-file-send.service.ts": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/messaging/inbox/files/thread-file-send.voice.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/files/thread-file.controller.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/messaging/inbox/files/thread-file.crm.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file.echo.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file.pdf.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file.playable.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/files/thread-forward.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
     }
   },
+  "src/modules/messaging/inbox/files/thread-media.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/files/thread-media.service.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/files/voice-send.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/inbox.module.ts": {
@@ -340,6 +1248,9 @@
     }
   },
   "src/modules/messaging/inbox/people/thread-people.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -347,6 +1258,21 @@
   "src/modules/messaging/inbox/people/thread-people.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reactions/reaction-line.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/reactions/reaction.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/reads/read-marks.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/reads/read-receipts.ts": {
@@ -365,11 +1291,20 @@
     }
   },
   "src/modules/messaging/inbox/reopen/reopen-template.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/messaging/inbox/reopen/thread-reopen.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -385,7 +1320,15 @@
     }
   },
   "src/modules/messaging/inbox/send/outbox.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/send/send-audit.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
     }
   },
@@ -397,6 +1340,9 @@
   "src/modules/messaging/inbox/send/thread-send.service.ts": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
@@ -419,17 +1365,41 @@
       "count": 2
     }
   },
+  "src/modules/messaging/inbox/threads/known-number.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/last-unsupported.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/threads/phone-param.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/messaging/inbox/threads/thread-lessons.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/inbox/threads/thread-quotes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.controller.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -437,9 +1407,15 @@
   "src/modules/messaging/inbox/threads/threads.mapper.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -454,8 +1430,33 @@
       "count": 3
     }
   },
+  "src/modules/messaging/notification-rules/policy/policy.fakes.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/notification-rules/policy/rules.facts.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/rules-source.settings.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/rules.migration.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/rules.patch.http.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/rules.patch.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -464,8 +1465,54 @@
       "count": 1
     }
   },
+  "src/modules/messaging/notification-rules/rules.service.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/notification-rules/sync/rules.bridge.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/numbers/communications/communications.deps.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/numbers/communications/communications.service.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/numbers/config/numbers.env.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/numbers/config/numbers.secrets.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/numbers/config/numbers.secrets.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 5
+    }
+  },
+  "src/modules/messaging/numbers/import/numbers.import-plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -474,13 +1521,46 @@
       "count": 1
     }
   },
+  "src/modules/messaging/numbers/numbers.queries.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/numbers/numbers.service.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/push/push-receipts.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/messaging/push/push-receipts.queries.ts": {
     "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/push/push-transport.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/push/receipts.transport.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/push/receipts.transport.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/chain-db.fake.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
@@ -504,12 +1584,23 @@
       "count": 1
     }
   },
+  "src/modules/messaging/reminders/reminders.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/reminders/reminders.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/messaging/reminders/reminders.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -529,19 +1620,53 @@
       "count": 1
     }
   },
+  "src/modules/messaging/webhook/external/external-message.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/external/external.fakes.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/webhook/external/external.queries.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/messaging/webhook/external/kapso-history.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/inbound-refill.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.inbound.service.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 3
+    },
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 5
+    },
+    "complexity": {
       "count": 1
     }
   },
   "src/modules/messaging/webhook/inbound/webhook.inbound.store.ts": {
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.inbound.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
     }
   },
   "src/modules/messaging/webhook/inbound/webhook.inbound.ts": {
@@ -552,6 +1677,42 @@
   "src/modules/messaging/webhook/inbound/webhook.quick-reply.ts": {
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.reaction.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.reaction.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/meta.fakes.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/parse/webhook.echoes.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/parse/webhook.parse.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/parse/webhook.wacrm-signature.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
     }
   },
   "src/modules/messaging/webhook/webhook.module.ts": {
@@ -569,13 +1730,124 @@
       "count": 1
     }
   },
+  "src/modules/messaging/whatsapp/drivers/crm/crm-report.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/drivers/crm/crm.client.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/drivers/kapso/kapso-conversations.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts": {
+    "@typescript-eslint/prefer-string-starts-ends-with": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/drivers/kapso/kapso.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/gate/gate.controller.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/gate/send-gate.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/whatsapp/lines/lines.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/messaging/whatsapp/live-client.kapso.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/crm-copy/crm-copy.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/crm-history/crm-history-url.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/crm-history/crm-media.fetch.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/inbound-media.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/inbound-media.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/message.mapper.test.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/wa-components.media.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/modules/messaging/whatsapp/messages/wa-components.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/whatsapp/numbers/media-client.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/numbers/media-client.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/numbers/number-routes.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/whatsapp/numbers/number-routes.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/sender/message.sender.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     }
   },
@@ -590,7 +1862,108 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/staff-at-send.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/template-review.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/catalog/template-crm-name.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/catalog/template-env.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/catalog/template.crm.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/catalog/template.registry.sync.test.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/catalog/template.registry.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template-import.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template-line-sync.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template.submit-chat.test.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template.submit-doc.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/templates/sync/template.submit-kapso.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/wa-media-bucket.migration.test.ts": {
+    "@typescript-eslint/prefer-regexp-exec": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/whatsapp.client.test.ts": {
+    "@typescript-eslint/prefer-promise-reject-errors": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/whatsapp/whatsapp.client.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/whatsapp.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -599,19 +1972,132 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.queries.ts": {
-    "ab/module-boundaries": {
+  "src/modules/people/guardians/fake-db.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
+  "src/modules/people/guardians/guardian-phones.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/guardians/guardians.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/people/guardians/http.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.auth.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.avatar.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.password.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.ports.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/me.controller.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/people/me/me.service.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/push/push-device.claim.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/modules/people/portal/portal.fakes.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/roles/roles.seed.test.ts": {
+    "@typescript-eslint/prefer-regexp-exec": {
+      "count": 1
+    }
+  },
+  "src/modules/people/sign-in/accounts/auth-gate.supabase.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/people/sign-in/codes/codes.queries.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    }
+  },
+  "src/modules/people/sign-in/codes/limit-store.db.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/sign-in/codes/limit-store.db.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    }
+  },
+  "src/modules/people/sign-in/sign-in.fakes.accounts.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 16
+    }
+  },
   "src/modules/people/students/lead-link.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/people/students/merge.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/people/students/students.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 6
     }
   },
   "src/modules/people/students/students.controller.ts": {
@@ -620,6 +2106,9 @@
     }
   },
   "src/modules/people/students/students.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -630,6 +2119,9 @@
     }
   },
   "src/modules/people/students/students.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -639,9 +2131,19 @@
       "count": 2
     }
   },
+  "src/modules/people/students/students.sort.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/people/teacher-students/teacher-students.module.ts": {
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/people/teacher-students/teacher-students.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
     }
   },
   "src/modules/people/teacher-students/teacher-students.service.ts": {
@@ -649,8 +2151,46 @@
       "count": 1
     }
   },
+  "src/modules/people/teachers/availability/availability.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
   "src/modules/people/teachers/availability/availability.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/availability/availability.query.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/availability/free-slots.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    }
+  },
+  "src/modules/people/teachers/availability/intervals.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/meeting-view.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/own-teacher.guard.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/people/teachers/teachers.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
       "count": 1
     }
   },
@@ -664,6 +2204,31 @@
       "count": 1
     }
   },
+  "src/modules/people/users/audit/users.redact.ts": {
+    "@typescript-eslint/consistent-indexed-object-style": {
+      "count": 1
+    }
+  },
+  "src/modules/people/users/auth/users.fakes.auth.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 6
+    }
+  },
+  "src/modules/people/users/lifecycle/users.lifecycle.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/people/users/store/users.fakes.store.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 14
+    }
+  },
+  "src/modules/people/users/store/users.queries.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
   "src/modules/people/users/store/users.store.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -674,7 +2239,15 @@
       "count": 1
     }
   },
+  "src/modules/people/users/users.fakes.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
   "src/modules/people/users/users.logic.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -689,13 +2262,198 @@
       "count": 2
     }
   },
+  "src/modules/people/users/users.service.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/admin/google-log.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    }
+  },
+  "src/modules/platform/google-sync/http/google-http.client.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/http/google-http.drive.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/http/google-http.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-includes": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/map/google-map.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/google-sync/oauth/google-account.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/platform/google-sync/oauth/google-callback.controller.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/platform/google-sync/oauth/google-oauth.service.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/oauth/oauth-state.test.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/oauth/oauth-state.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/sync/google-items.queries.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/modules/platform/google-sync/sync/google-items.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/sync/google-sync.processor.trips.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/sync/google-sync.processor.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/modules/platform/google-sync/sync/google-sync.source.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/google-sync/writers/calendar/calendar.writer.handover.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/calendar/calendar.writer.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/calendar/event-format.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/google-sync/writers/calendar/script-guard.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/drive/drive-files.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/drive/drive.writers.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/google-sync/writers/drive/report-pdf.writer.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/sheets/a1-range.ts": {
+    "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/writers/sheets/sheet-rows.writer.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/process-role/config-reload.job.ts": {
+    "@typescript-eslint/no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/process-role/jobs.controller.test.ts": {
+    "@typescript-eslint/no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/process-role/role-http.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/translations/translations.controller.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/translations/translations.http.test.ts": {
+    "@typescript-eslint/dot-notation": {
       "count": 2
     }
   },
@@ -705,12 +2463,31 @@
     }
   },
   "src/modules/reporting/dashboard/dashboard.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/reporting/dashboard/finance/finance.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 5
+    }
+  },
   "src/modules/reporting/dashboard/finance/finance.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/finance/finance.service.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
       "count": 1
     }
   },
@@ -722,6 +2499,16 @@
   "src/modules/reporting/dashboard/range.ts": {
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/work/conversion.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/work/work.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
     }
   },
   "src/modules/reporting/dashboard/work/work.queries.ts": {
@@ -745,6 +2532,9 @@
     }
   },
   "src/modules/reporting/exports/exports.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -765,8 +2555,30 @@
     }
   },
   "src/modules/reporting/exports/finance-exports.queries.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/reporting/exports/finance.rows.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 7
+    }
+  },
+  "src/modules/reporting/exports/money.rows.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 4
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/reporting/report-pdf/render/pdf-text.ts": {
@@ -774,18 +2586,64 @@
       "count": 1
     }
   },
+  "src/modules/reporting/report-pdf/report-pdf.job.held.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/reporting/report-pdf/report-pdf.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/report-pdf/v2/family-source.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/files/report-attachments.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     }
   },
   "src/modules/reporting/reports/files/report-files.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/reporting/reports/history/report-history.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
   "src/modules/reporting/reports/history/report-history.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/history/report-history.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -794,9 +2652,37 @@
       "count": 1
     }
   },
+  "src/modules/reporting/reports/report-row.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
+  "src/modules/reporting/reports/report.mapper.ts": {
+    "@typescript-eslint/consistent-indexed-object-style": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/reporting/reports/reports.module.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/reporting/reports/reports.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/report-follow-up.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/report-form.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/reporting/reports/submit/report-pdf.queue.ts": {
@@ -809,8 +2695,49 @@
       "count": 1
     }
   },
+  "src/modules/reporting/reports/submit/report-submit.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/modules/reporting/reports/submit/submit-plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/teacher/teacher-reports.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/teacher/teacher-reports.queries.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/teacher/teacher-reports.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/v2/report-v2.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
@@ -820,12 +2747,20 @@
     }
   },
   "src/modules/sales/job-applicants/job-applicants.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/sales/job-applicants/job-applicants.service.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/leads/lead-family.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -840,6 +2775,9 @@
     }
   },
   "src/modules/sales/leads/leads.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -854,9 +2792,22 @@
       "count": 3
     }
   },
+  "src/modules/sales/sales-money/reads/sales-family.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    }
+  },
   "src/modules/sales/sales-money/reads/sales-money.reads.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/sales-money.mapper.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/sales-money.module.ts": {
@@ -869,9 +2820,19 @@
       "count": 2
     }
   },
+  "src/modules/sales/sales-money/sales-money.service.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    }
+  },
   "src/modules/sales/sales-money/sales-money.services.ts": {
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/sales-start.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/sales/sales-registration/sales-registration.queries.ts": {
@@ -884,13 +2845,48 @@
       "count": 1
     }
   },
+  "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-students/lessons/sales-lesson-actions.parity.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-students/lessons/sales-lesson-actions.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    }
+  },
   "src/modules/sales/sales/academy/sales-academy.queries.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/sales/sales/assign/sales-assign.upsert.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales/history/sales-history.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales/schedule/sales-lessons.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/sales/sales/schedule/sales-schedule.mapper.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/booking.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
       "count": 1
     }
   },
@@ -900,8 +2896,16 @@
     }
   },
   "src/modules/teaching/booking/core/booking.course-end.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/teaching/booking/core/booking.course-label.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/teaching/booking/core/booking.follow-ups.ts": {
@@ -909,24 +2913,75 @@
       "count": 1
     }
   },
+  "src/modules/teaching/booking/core/booking.lead-merge.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/booking/core/booking.mapper.ts": {
+    "@typescript-eslint/consistent-indexed-object-style": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 6
+    },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/teaching/booking/core/booking.messages.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
     }
   },
   "src/modules/teaching/booking/core/booking.parties.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/teaching/booking/core/booking.payload.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/booking/core/booking.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/booking.service.waiver.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/booking.writer.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/course-read.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.fakes.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
     }
   },
   "src/modules/teaching/booking/course-change/course-change.lessons.ts": {
@@ -934,23 +2989,55 @@
       "count": 2
     }
   },
+  "src/modules/teaching/booking/course-change/course-change.payload.ends.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.payload.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
   "src/modules/teaching/booking/course-change/course-change.payload.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 4
     }
   },
+  "src/modules/teaching/booking/course-change/course-change.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
   "src/modules/teaching/booking/course-change/course-change.planner.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/booking/course-change/course-change.projection.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
     }
   },
   "src/modules/teaching/booking/course-change/course-change.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -960,31 +3047,85 @@
     }
   },
   "src/modules/teaching/booking/instant/instant.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/teaching/booking/instant/instant.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/booking/instant/instant.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/invoice/booking.invoice.http.test.ts": {
+    "@typescript-eslint/dot-notation": {
       "count": 1
     }
   },
   "src/modules/teaching/booking/invoice/booking.invoice.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/booking/makeup/booking.makeup.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/makeup/makeup-candidates.service.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/booking/plan/booking.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/teaching/booking/plan/booking.planner.dst.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/plan/booking.planner.series.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/booking/plan/booking.planner.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
     "ab/module-boundaries": {
       "count": 3
     }
   },
   "src/modules/teaching/booking/plan/booking.series-plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -999,18 +3140,50 @@
       "count": 4
     }
   },
+  "src/modules/teaching/booking/sales/booking/sales-booking.http.test.ts": {
+    "@typescript-eslint/no-unsafe-enum-assignment": {
+      "count": 2
+    }
+  },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.scope.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/booking/sales/course/sales-course.http.test.ts": {
+    "@typescript-eslint/no-unsafe-enum-assignment": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/sales/course/sales-course.rules.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
   "src/modules/teaching/booking/teacher/teacher-alert.crm.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-alert.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -1020,17 +3193,33 @@
     }
   },
   "src/modules/teaching/booking/teacher/teacher-alert.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/teaching/booking/teacher/teacher-alert.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-options.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
   "src/modules/teaching/booking/teacher/teacher-options.service.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -1040,12 +3229,41 @@
     }
   },
   "src/modules/teaching/booking/trial-date/trial-date.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     }
   },
   "src/modules/teaching/booking/trial-date/trial-date.service.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.target.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/assistants/assistants.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/classroom.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -1059,6 +3277,46 @@
       "count": 1
     }
   },
+  "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/internal-meetings/internal-meetings.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/internal-meetings/meeting-join.scheduled.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/guest-join.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/classroom/join/join-limit.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -1069,13 +3327,71 @@
       "count": 1
     }
   },
+  "src/modules/teaching/classroom/join/join-link.copy.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/join-link.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/classroom/join/join-link.service.ts": {
     "ab/module-boundaries": {
       "count": 3
     }
   },
+  "src/modules/teaching/classroom/join/join.block.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/classroom/join/lesson-role.service.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/room-admission.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/join/room-join.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/classroom/join/room-open.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/livekit/livekit-api.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/livekit/livekit-webhook.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     }
   },
@@ -1099,8 +3415,87 @@
       "count": 2
     }
   },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invites.resend-guard.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invites.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invites.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-create.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.cancel.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.rules.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.service.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/moderation/kick.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
@@ -1109,9 +3504,98 @@
       "count": 1
     }
   },
+  "src/modules/teaching/classroom/moderation/share-grant.controller.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/student-link/student-link.admin.service.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/student-link/student-link.service.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/student-link/student-link.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.queries.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
+  "src/modules/teaching/course-pause/course-pause.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    }
+  },
+  "src/modules/teaching/feedback/feedback.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/feedback/feedback.module.ts": {
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/teaching/feedback/public/feedback.public.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/feedback/public/feedback.rate-limit.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/feedback/public/feedback.token.test.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/feedback/read/feedback.read.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/modules/teaching/feedback/read/feedback.read.service.ts": {
@@ -1120,6 +3604,9 @@
     }
   },
   "src/modules/teaching/feedback/request/feedback.request.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1127,6 +3614,11 @@
   "src/modules/teaching/feedback/request/feedback.sender.ts": {
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/modules/teaching/feedback/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/teaching/lesson-rating/lesson-rating.module.ts": {
@@ -1140,6 +3632,9 @@
     }
   },
   "src/modules/teaching/lesson-rating/queue/rating.queue.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1169,27 +3664,57 @@
       "count": 3
     }
   },
+  "src/modules/teaching/lesson-rating/rating.store.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/lessons.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/lessons/lessons.module.ts": {
     "ab/module-boundaries": {
       "count": 3
     }
   },
   "src/modules/teaching/lessons/lessons.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/lessons/overview/free-windows.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/lessons/overview/free-windows.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 3
     }
   },
   "src/modules/teaching/lessons/overview/overview.mapper.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/lessons/overview/overview.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1200,46 +3725,91 @@
     }
   },
   "src/modules/teaching/lessons/proposals/lesson-proposals.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/lessons/proposals/lesson-proposals.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
   "src/modules/teaching/lessons/reschedule/reschedule-one.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/teaching/lessons/reschedule/reschedule-rule.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/rule-cancel.controller.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/reschedule/rule-plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 5
     }
   },
   "src/modules/teaching/lessons/reschedule/rule-planner.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 3
     }
   },
   "src/modules/teaching/lessons/status/confirmation-messages.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/teaching/lessons/status/lesson-status.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/lessons/status/outcomes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/lessons/status/transition.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1254,7 +3824,15 @@
       "count": 1
     }
   },
+  "src/modules/teaching/lessons/store/lesson-row.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/lessons/store/lesson-store.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -1265,7 +3843,15 @@
     }
   },
   "src/modules/teaching/lessons/teacher-me/teacher-me.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/test-app.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -1275,47 +3861,143 @@
     }
   },
   "src/modules/teaching/lessons/time-edit/time-edit.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
   "src/modules/teaching/lessons/time-edit/time-edit.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/change-set.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 8
     }
   },
   "src/modules/teaching/scheduling/conflicts/conflict-checker.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/scheduling/conflicts/conflicts.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
+  "src/modules/teaching/scheduling/meeting-link.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/scheduling/occurrences/dst-probe.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/scheduling/occurrences/horizon.job.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/scheduling/occurrences/horizon.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/modules/teaching/scheduling/occurrences/lesson-writer.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
+  "src/modules/teaching/scheduling/occurrences/occurrence-generator.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
   "src/modules/teaching/scheduling/occurrences/occurrences.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
     "ab/module-boundaries": {
       "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/read-all.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/rpc.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/scheduling/rules/rule-extend.service.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/scheduling/rules/rule-projection.queries.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/rules/rule-projection.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/rules/schedule-rules.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/scheduling.fakes.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 2
     }
   },
   "src/modules/teaching/scheduling/scheduling.module.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-channels/channel.fakes.ts": {
+    "@typescript-eslint/no-meaningless-void-operator": {
       "count": 1
     }
   },
@@ -1345,7 +4027,15 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.service.ts": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/openapi.test.ts": {
+    "@typescript-eslint/dot-notation": {
       "count": 1
     }
   }

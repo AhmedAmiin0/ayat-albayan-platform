@@ -1,0 +1,510 @@
+{
+  "src/cli.args.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 2
+    }
+  },
+  "src/config.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    },
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    }
+  },
+  "src/db/config-seed.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/db/target.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/delta/only.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/delta/only.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/delta/orphans.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/delta/scope.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/delta/staging-delta.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/map/applicants/applicants.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/expenses/expenses.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/leads/contacts.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/leads/contacts.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/leads/fixtures.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 3
+    }
+  },
+  "src/map/leads/leads.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/leads/links.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/leads/record.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/lessons/lessons.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    }
+  },
+  "src/map/messages/messages.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/money/fin.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/money/heart.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 10
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/money/money.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/collect.heart.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/collect.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/match.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/people/match.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/rows.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 22
+    },
+    "@typescript-eslint/prefer-includes": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/status/bookings.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/status/facts.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/people/status/payments.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/people/students.facts.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/people/students.status.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/people/students.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/students.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/students.write.test.ts": {
+    "@typescript-eslint/no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/map/people/students.write.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/subs.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 6
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/translit.ts": {
+    "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-find": {
+      "count": 1
+    }
+  },
+  "src/map/reports/collect.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/reports/fields.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    },
+    "@typescript-eslint/prefer-includes": {
+      "count": 2
+    }
+  },
+  "src/map/reports/parse.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 8
+    }
+  },
+  "src/map/reports/parse.who.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/reports/reports.test.ts": {
+    "@typescript-eslint/no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/map/reports/times.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 8
+    }
+  },
+  "src/map/schedule/booking-row.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 6
+    }
+  },
+  "src/map/schedule/booking-slot.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/schedule/bookings.from.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/bookings.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/heart.rules.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/heart.rules.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/schedule/one-offs.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/one-offs.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/schedule/rules.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/teachers/teachers.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 9
+    },
+    "@typescript-eslint/prefer-includes": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/templates/buttons.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/templates/templates.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/templates/templates.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/pdf-import/match.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/pdf-import/match.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/plan/apply.batch.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/changes.test.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/plan/codes.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/codes.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/plan/creates-only.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/fake-db.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 11
+    }
+  },
+  "src/plan/match/match.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/plan/match/similar.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/match/templates.target.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/plan/plan.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/plan/stale-refs.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/stale-refs.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/report/review.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/crm.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/crm/rows.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/sources/extract-crm.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/sources/rows.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    }
+  },
+  "src/sources/sheets/cells.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "src/sources/sheets/siblings.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/sources/teachers.dir.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/zip.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/time.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 3
+    }
+  },
+  "src/types.ts": {
+    "@typescript-eslint/consistent-indexed-object-style": {
+      "count": 1
+    }
+  },
+  "src/validate.sources.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  }
+}
