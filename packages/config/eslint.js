@@ -16,6 +16,7 @@ import { TESTS } from './eslint-boundaries.js';
 const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.meta.url), 'utf8'));
 
 export { boundaries, TESTS } from './eslint-boundaries.js';
+export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
 
 export const hardRules = {

@@ -32,7 +32,7 @@ jobs:
       contents: read
       actions: read
     outputs:
-      e2e: ${{ steps.diff.outputs.e2e }}
+      e2e: ${{ steps.move.outputs.e2e || steps.diff.outputs.e2e }}
       code: ${{ steps.diff.outputs.code }}
       e2e_matrix: ${{ steps.e2e.outputs.e2e_matrix }}
       e2e_specs: ${{ steps.e2e.outputs.e2e_specs }}
@@ -72,10 +72,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+      # A proven pure move (docs/32 g1): plain folder moves only (move-e2e.mjs: a move map in the diff, no
+      # identifier or file-name renames, no route moves, nothing e2e reads at start-up) and pure-move-check green.
+      # Typecheck and the unit tests still run; e2e is skipped. FAIL SAFE: anything else = e2e as usual.
+      - name: move PR
+        id: move
+        if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if git diff --name-status -M50% "origin/$BASE_REF...HEAD" | node tools/scripts/ci-checks/pure-move/move-e2e.mjs \
+            && node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD; then
+            echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::pure folder move: e2e skipped"
+          fi
       # PRs only. Any failure leaves the selection out: plan.mjs (or the e2e job's fallback) = full suite.
       - name: e2e specs
         id: e2e
-        if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
+        if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true' && steps.move.outputs.e2e != 'false'
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
@@ -131,9 +144,10 @@ jobs:
           NODE_OPTIONS: ${{ matrix.heap }}
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
-  # that grew, a stale allow-list entry). Pure-move check: only for move PRs (refactor/* and cloud/refactor-*
-  # heads, any lane); it fails on any hunk that is not a rename, a module path, a new index.ts barrel,
-  # path-dependent config or a baseline entry that follows its moved file. No install, no secrets.
+  # that grew, a stale allow-list entry). Pure-move check: for move PRs (refactor/* and cloud/refactor-* heads
+  # of any lane, and any PR whose diff adds or changes refactor/moves/*.json, whatever its branch name); it fails
+  # on any hunk that is not a rename, a module path, a listed identifier rename, a new index.ts barrel, config
+  # that only follows moved paths or a baseline entry that follows its moved file. No install, no secrets.
   refactor:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -151,10 +165,10 @@ jobs:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
         run: |
-          case "$HEAD_REF" in
-            refactor/*|cloud/refactor-*) node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
-            *) echo "not a move PR ($HEAD_REF): skipped" ;;
-          esac
+          MAPS=$(git diff --name-only --diff-filter=AMR "origin/$BASE_REF...HEAD" -- 'refactor/moves/*.json')
+          case "$HEAD_REF" in refactor/*|cloud/refactor-*) MAPS="${MAPS:-$HEAD_REF}" ;; esac
+          if [ -n "$MAPS" ]; then node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD
+          else echo "not a move PR ($HEAD_REF): skipped"; fi
 
   # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
   # more clones, duplicated lines or cross-app clones), knip (no new unused file, export, type or

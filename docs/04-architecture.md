@@ -173,11 +173,12 @@ complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqe
 // + typescript-eslint strictTypeChecked + stylisticTypeChecked (projectService), react-hooks (all errors) on web/mobile,
 //   jsx-a11y on web, and reactRestrictions (eslint-react.js):
 //   web + mobile: no raw useEffect / useLayoutEffect outside use-*.ts(x) / hooks/
-//   web (React Compiler): no useMemo / useCallback / memo
+//   web + mobile (React Compiler): no useMemo / useCallback / memo
 //   mobile (React 19): no forwardRef (ref is a prop), use(Context) not useContext, <Context value> not <Context.Provider>
 ```
 React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset({ target: '18' })`, runtime from
-`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: not yet, jest does not run compiled
+`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs the
+compiler for every Babel caller while app.json `experiments.reactCompiler` is true, so jest also runs the compiled
 code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
 Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
 violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns

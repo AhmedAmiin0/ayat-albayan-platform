@@ -24,7 +24,7 @@ export function estimateMs(specs, durations) {
 /** { matrix, specs } for the e2e job: matrix = { include: [{ name, shard, total }] }. */
 export function plan(selection, durations) {
   const ok = selection && selection.full === false && Array.isArray(selection.specs);
-  const specs = ok ? selection.specs.filter((s) => /^[\w.-]+\.spec\.ts$/.test(s)) : [];
+  const specs = ok ? selection.specs.filter((s) => /^(?:[\w-][\w.-]*\/)*[\w.-]+\.spec\.ts$/.test(s)) : [];
   if (!ok || specs.length !== selection.specs.length)
     return { matrix: matrixOf(MAX_SHARDS, MAX_SHARDS), specs: '' };
   const total = Math.min(

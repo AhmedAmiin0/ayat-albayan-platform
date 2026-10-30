@@ -87,7 +87,7 @@ effect block repeats the others so neither drops them). All of them count under 
 
 | rule                                                       | web (React 18.3)                         | mobile (React 19.2) |
 | ---------------------------------------------------------- | ---------------------------------------- | ------------------- |
-| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`), except `src/features/messaging/inbox/` | off: no compiler yet (below) |
+| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`), except `src/features/messaging/inbox/` | error: React Compiler on (`babel.config.cjs`, below) |
 | no `forwardRef` (ref is a prop)                            | after the React 19 upgrade               | error               |
 | `use(Context)`, not `useContext`                           | after the React 19 upgrade               | error               |
 | `<Context value>`, not `<Context.Provider>`                | after the React 19 upgrade               | error               |
@@ -98,10 +98,11 @@ reads mutable module state in render (a rules-of-React break the lint rules do n
 on web that broke 3 inbox unit tests (`MessageLog` reads `lastOwnSend` from `own-send`; 2 `ReplyComposer` tests in the
 same folder). The inbox is left out (`vite.config.ts` `NOT_COMPILED`, the no-memo rule lifted there) until its
 stores subscribe through `useSyncExternalStore`. On mobile, `babel-preset-expo` turns the compiler on only for
-Metro (`supportsReactCompiler`, set from `experiments.reactCompiler`); jest-expo never sets it, so no CI test runs
-compiled mobile code and a merge would ship it untested to the preview OTA. Path: a `babel.config.js` that runs
-`babel-plugin-react-compiler` under jest, fix what breaks, then `experiments.reactCompiler: true` (Babel only,
-OTA-safe: not a native key in `native-changes.mjs`) and `compiler: true` for mobile.
+Metro (`supportsReactCompiler`, set from `experiments.reactCompiler`), and jest-expo never sets it. So
+`apps/mobile/babel.config.cjs` runs `babel-plugin-react-compiler` itself for every caller, jest included, while
+`experiments.reactCompiler` is true, and turns the preset's copy off (no double compile under Metro). The unit tests run
+the code the OTA ships; `src/test/react-compiler.test.tsx` fails if they stop. Babel only, OTA-safe: `experiments` is
+not a native key in `native-changes.mjs`. The memo calls that predate it are in mobile's `eslint-suppressions.json`.
 
 ### 3.3 Per package
 

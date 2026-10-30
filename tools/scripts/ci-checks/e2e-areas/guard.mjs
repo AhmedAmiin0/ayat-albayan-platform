@@ -1,13 +1,13 @@
 // Guard for e2e/areas.json (ci.yml «guards»): no spec can silently never run on pull requests.
 // Every e2e spec file is in an area or in «developOnly» (not both), every listed spec exists, and every
 // area path matches at least one file. Usage: node tools/scripts/ci-checks/e2e-areas/guard.mjs
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listFiles } from './graph.mjs';
-import { AREAS_FILE, loadAreas, pathMatches, SPEC_DIR } from './areas.mjs';
+import { AREAS_FILE, listSpecs, loadAreas, pathMatches, SPEC_DIR } from './areas.mjs';
 
-/** Problems with the map, as sentences (empty = fine). `specFiles`: names under e2e/tests/. */
+/** Problems with the map, as sentences (empty = fine). `specFiles`: paths under e2e/tests/ (folders allowed). */
 export function checkMap(map, specFiles, files) {
   const problems = [];
   const inAreas = new Set(Object.values(map.areas).flatMap((a) => a.specs));
@@ -30,7 +30,7 @@ export function checkMap(map, specFiles, files) {
 
 function main() {
   const root = fileURLToPath(new URL('../../../../', import.meta.url));
-  const specs = readdirSync(join(root, SPEC_DIR)).filter((f) => f.endsWith('.spec.ts'));
+  const specs = listSpecs(root);
   const problems = existsSync(join(root, AREAS_FILE))
     ? checkMap(loadAreas(root), specs, listFiles(root))
     : [`${AREAS_FILE} is missing`];

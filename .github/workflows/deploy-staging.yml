@@ -391,3 +391,28 @@ jobs:
           curl -fsS -X POST "${auth[@]}" "$api/actions/workflows/mobile.yml/dispatches" \
             -d '{"ref":"develop","inputs":{"action":"ota-update","branch":"preview"}}'
           echo "### OTA to preview started (mobile.yml) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
+
+  # Release tag + GitHub Release (owner 2026-10-30, docs/09 «Release tags»): v<UTC day>-<n> on the deployed commit
+  # after a green code deploy (never env_only; a failed or rolled-back deploy fails «deploy» first), skipped when
+  # that commit already has one (a re-run, a redeploy). The only job here that may write contents; no environment,
+  # no secret. A failure only warns, and continue-on-error keeps the run green (deploy-baseline.mjs reads green runs).
+  release:
+    needs: deploy
+    if: ${{ !cancelled() && needs.deploy.result == 'success' && !inputs.env_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+      - name: Tag the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          KIND: app
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: node tools/scripts/ci-checks/release-tags/release-tag.mjs
