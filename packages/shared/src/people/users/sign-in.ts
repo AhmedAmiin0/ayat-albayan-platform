@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizePhone } from '../../core/format/index.js';
+import { asciiDigits, normalizePhone } from '../../core/format/index.js';
 import { PASSWORD_MAX, normalizeStudentCode } from './validation.js';
 
 // Family accounts (docs/30): the public sign-in / forgot-password bodies and the identifier rules
@@ -28,8 +28,6 @@ export const isFamilyEmail = (email: string | null | undefined): boolean =>
 
 /** The 6-digit code: Arabic-Indic digits and spaces are folded first (a pasted «١٢٣ ٤٥٦» works). */
 export const LOGIN_CODE_LENGTH = 6;
-const asciiDigits = (s: string) =>
-  s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
 const digits = (s: string) => asciiDigits(s).replace(/\s/g, '');
 export const loginCode = z.string().transform(digits).pipe(z.string().regex(/^\d{6}$/, 'invalid_code'));
 

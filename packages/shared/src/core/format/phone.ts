@@ -1,3 +1,5 @@
+import { asciiDigits } from './digits.js';
+
 // Phone normalisation to E.164 (rule 7, R-STU-02).
 
 export type PhoneCountry = 'SA' | 'EG' | 'AE' | 'QA' | 'KW' | 'OM';
@@ -24,12 +26,6 @@ const COUNTRIES: readonly (readonly [string, PhoneCountry, RegExp])[] = [
 // Spaces, dashes, brackets, dots and the bidi marks WhatsApp copies along with numbers.
 const NOISE = /[\s\-().‎‏‪-‮]/g;
 
-function toAsciiDigits(s: string): string {
-  return s
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
-}
-
 /** "+<digits>", or null when the number carries no country code. */
 function withCountryCode(digits: string): string | null {
   if (digits.startsWith('+')) return digits;
@@ -52,7 +48,7 @@ function withCountryCode(digits: string): string | null {
  * Rejects handles, letters and short numbers.
  */
 export function normalizePhone(input: string): PhoneResult {
-  const cleaned = toAsciiDigits(input).replace(NOISE, '');
+  const cleaned = asciiDigits(input).replace(NOISE, '');
   if (!cleaned) return { ok: false, reason: 'empty' };
   if (!/^\+?[0-9]+$/.test(cleaned)) return { ok: false, reason: 'not_a_number' };
 
@@ -72,7 +68,7 @@ export function normalizePhone(input: string): PhoneResult {
  * → its E.164 digits; a partial one → its digits without a leading 00.
  */
 export function searchDigits(term: string): string | null {
-  const digits = toAsciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
+  const digits = asciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
   if (!/^[0-9]{3,}$/.test(digits)) return null;
   if (/^0[1-9]/.test(digits)) return digits.slice(1);
   const whole = normalizePhone(term);
