@@ -11,7 +11,6 @@ export interface CurrencyTotals {
   categories: CategoryTotal[];
 }
 
-
 /**
  * The month's totals per currency (amounts are never mixed or converted here, as on the web), each
  * with its categories, biggest first. Recurring drafts are not counted until confirmed.

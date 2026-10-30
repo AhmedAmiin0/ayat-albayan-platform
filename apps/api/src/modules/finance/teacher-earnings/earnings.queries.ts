@@ -1,5 +1,10 @@
 import type { Json, Tables } from '@ab/db';
-import { fromCents, toCents, type EarningsListQuery, type TeacherPaymentListQuery } from '@ab/shared';
+import {
+  fromCents,
+  toCents,
+  type EarningsListQuery,
+  type TeacherPaymentListQuery,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError, type Page } from '@/common/http/http';

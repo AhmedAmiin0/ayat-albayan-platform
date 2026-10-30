@@ -1,4 +1,4 @@
-import { toCents } from '../ledger/earnings/earnings.js';
+import { toCents } from '../ledger/cents.js';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
 import { commissionKindOf } from './kind.js';
 import { subscriptionAlreadyStarted, type StartFact } from './started.js';

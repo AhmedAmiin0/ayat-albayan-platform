@@ -11,8 +11,6 @@ export interface EarningMoney {
   paid_amount: number;
 }
 
-export { fromCents, toCents };
-
 /** What is still owed for one session; 0 (never negative) when a correction left it overpaid. */
 export function outstanding(e: EarningMoney): number {
   return fromCents(Math.max(0, toCents(e.amount) - toCents(e.paid_amount)));

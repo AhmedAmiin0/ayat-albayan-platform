@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { hasTwoDecimals } from './cents.js';
 import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '../../enums/index.js';
 import {
   CUSTOM_COUNT_MAX,
@@ -28,7 +29,7 @@ export const moneyAmount = z
   .number()
   .positive()
   .max(9_999_999_999)
-  .refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, { message: 'too_many_decimals' });
+  .refine(hasTwoDecimals, { message: 'too_many_decimals' });
 
 const pricingBase = {
   duration: z.literal(PRICING_DURATIONS).default(DEFAULT_DURATION),

@@ -1,4 +1,4 @@
-import { round2, toCents } from '../cents.js';
+import { fromCents, round2, toCents } from '../cents.js';
 
 // What a package has been paid, as the lists show it (owner, 2026-10-05). Derived, never stored:
 // the stored subscription_status keeps its meaning (a part-paid package is still 'unpaid').
@@ -18,7 +18,7 @@ export function paymentState(input: { paid: number; price: number }): PaymentSta
 /** Signed sum of a package's payments in its own currency: a refund counts against it. */
 export function netPaid(rows: readonly { amount: number; kind: 'payment' | 'refund' }[]): number {
   const cents = rows.reduce((n, r) => n + (r.kind === 'refund' ? -1 : 1) * toCents(Number(r.amount)), 0);
-  return cents / 100;
+  return fromCents(cents);
 }
 
 /**

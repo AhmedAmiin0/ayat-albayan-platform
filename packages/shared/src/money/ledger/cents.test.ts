@@ -22,5 +22,18 @@ describe('cents', () => {
     expect(hasTwoDecimals(100)).toBe(true);
     expect(hasTwoDecimals(1.234)).toBe(false);
     expect(hasTwoDecimals(-0.005)).toBe(false);
+    expect(hasTwoDecimals(0)).toBe(true);
+    expect(hasTwoDecimals(-12.34)).toBe(true);
+  });
+
+  // Pinned as they are (plain Math.round over binary floats), so nobody changes them silently:
+  // 1.005 * 100 is 100.49999…, and Math.round sends a negative half towards +∞.
+  it('keeps the float edge cases of Math.round', () => {
+    expect(toCents(1.005)).toBe(100);
+    expect(round2(1.005)).toBe(1);
+    expect(toCents(0.005)).toBe(1);
+    expect(round2(0.005)).toBe(0.01);
+    expect(toCents(-0.005)).toBe(-0);
+    expect(round2(-1.005)).toBe(-1);
   });
 });
