@@ -14,8 +14,10 @@ const CODE = /\.[cm]?[jt]sx?$/;
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
 const SPEC = /(?:\bfrom\s*|\bimport\s*\(\s*|^\s*import\s+)(['"])(\.{1,2}\/[^'"\n]*)\1/gm;
 
-/** The relative module paths `text` imports or re-exports. */
-export const specsOf = (text) => [...text.matchAll(SPEC)].map((m) => m[2]);
+const COMMENTS = /\/\*[\s\S]*?\*\/|(?<![:'"\w])\/\/[^\n]*/g;
+
+/** The relative module paths `text` imports or re-exports (comments skipped). */
+export const specsOf = (text) => [...text.replace(COMMENTS, '').matchAll(SPEC)].map((m) => m[2]);
 
 /** The top folder of a root-relative path (null for a file at the root). */
 export const folderOf = (rel) => (rel.includes('/') ? rel.split('/')[0] : null);

@@ -9,6 +9,11 @@ test('specsOf finds relative imports, re-exports and dynamic imports, not packag
   assert.deepEqual(specsOf(text), ['./a.js', '../b/index.js', './c.js']);
 });
 
+test('specsOf reads multi-line and side-effect imports, not paths named in comments', () => {
+  const text = "import {\n  a,\n  b,\n} from '../a/index.js';\nimport '../b/side.js';\n// moved from '../c/x.js'\n/* see '../d/y.js' */\n";
+  assert.deepEqual(specsOf(text), ['../a/index.js', '../b/side.js']);
+});
+
 test('folderGraph links top folders only, ignoring same-folder and root files', () => {
   const graph = folderGraph([
     file('a/x.ts', './y.js', '../b/index.js', '../../outside.js'),
