@@ -1,14 +1,14 @@
 // @ab/client-core (docs/27 §3.4, D3): code shared by web and mobile only. No DOM and no React
 // Native imports; react and @tanstack/react-query join as peers with the first hook (Wave E).
-export * from './http/index.js';
-export * from './keys/index.js';
-export * from './auth/index.js';
-export * from './users/index.js';
-export * from './payments/index.js';
-export * from './assistants/index.js';
-export * from './reports/index.js';
-export * from './booking/index.js';
-export * from './errors/index.js';
-export * from './channels/index.js';
-export * from './calls/index.js';
-export * from './inbox/index.js';
+export * from './core/http/index.js';
+export * from './core/keys/index.js';
+export * from './core/auth/index.js';
+export * from './people/users/index.js';
+export * from './finance/payments/index.js';
+export * from './people/assistants/index.js';
+export * from './teaching/reports/index.js';
+export * from './teaching/booking/index.js';
+export * from './core/errors/index.js';
+export * from './messaging/channels/index.js';
+export * from './messaging/calls/index.js';
+export * from './messaging/inbox/index.js';
