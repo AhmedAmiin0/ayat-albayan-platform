@@ -50,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     environment: mobile
+    outputs:
+      eas_url: ${{ steps.eas.outputs.url }}
     steps:
       - name: Develop only
         env:
@@ -67,13 +69,19 @@ jobs:
       # node_modules: without the install it fails «Failed to resolve plugin for module "expo-router"» (run 39154529791).
       - run: pnpm i --frozen-lockfile
       - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
+        id: eas
         working-directory: apps/mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           PROFILE: ${{ inputs.profile || 'preview' }}
+        # pipefail: a failed build still fails the step through the tee. The build page link it prints (expo.dev,
+        # no secret) goes to the release notes (job «release»).
         run: |
           test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          npx --yes "$EAS_CLI" build --platform android --profile "$PROFILE" --non-interactive
+          set -o pipefail
+          npx --yes "$EAS_CLI" build --platform android --profile "$PROFILE" --non-interactive 2>&1 | tee "$RUNNER_TEMP/eas-build.log"
+          url=$(grep -oE 'https://expo\.dev/accounts/[^[:space:]]+/builds/[0-9a-f-]+' "$RUNNER_TEMP/eas-build.log" | tail -1 || true)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
   ota:
     needs: build
@@ -155,3 +163,37 @@ jobs:
       - name: Remove the Firebase file
         if: always()
         run: rm -f "$RUNNER_TEMP/google-services.json"
+
+  # Release tag + GitHub Release per shipped APK / OTA (owner 2026-10-30, docs/09 «Release tags»), on the commit
+  # this run built; skipped when that commit already has a tag of the family (a re-run). The only job here that may
+  # write contents; no environment, no secret. A failure only warns, and continue-on-error keeps the run green
+  # (deploy-baseline.mjs reads the green mobile runs).
+  release:
+    needs: [build, ota]
+    if: ${{ !cancelled() && (needs.build.result == 'success' || needs.ota.result == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Tag the APK
+        if: ${{ needs.build.result == 'success' }}
+        env:
+          KIND: apk
+          PROFILE: ${{ inputs.profile || 'preview' }}
+          EAS_URL: ${{ needs.build.outputs.eas_url }}
+        run: VERSION=$(jq -r .expo.version apps/mobile/app.json) node tools/scripts/ci-checks/release-tags/release-tag.mjs
+      - name: Tag the OTA
+        if: ${{ needs.ota.result == 'success' }}
+        env:
+          KIND: ota
+          CHANNEL: ${{ inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
+        run: node tools/scripts/ci-checks/release-tags/release-tag.mjs
