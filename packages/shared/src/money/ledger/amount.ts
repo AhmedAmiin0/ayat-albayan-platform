@@ -1,3 +1,4 @@
+import { asciiDigits } from '../../core/format/index.js';
 import { moneyAmount } from './schemas.js';
 
 /**
@@ -5,11 +6,7 @@ import { moneyAmount } from './schemas.js';
  * (phone or desktop) types them. Used by every money input (web and mobile, R-PAY-01).
  */
 export function westernDigits(text: string): string {
-  return text
-    .trim()
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
-    .replace(/[٫,]/g, '.');
+  return asciiDigits(text.trim()).replace(/[٫,]/g, '.');
 }
 
 /**

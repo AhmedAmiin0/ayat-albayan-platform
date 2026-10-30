@@ -12,5 +12,6 @@ describe('parseDiscount (the site\'s free discount field)', () => {
     ['150', 100],
     ['١٢٫٥', 12.5],
     ['12,5', 12.5],
+    ['۱۲٫۵', 12.5],
   ])('%j → %d', (text, want) => expect(parseDiscount(text)).toBe(want));
 });
