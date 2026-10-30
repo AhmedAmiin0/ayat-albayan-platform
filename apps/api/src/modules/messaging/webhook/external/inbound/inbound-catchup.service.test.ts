@@ -40,7 +40,7 @@ describe('InboundCatchUp — rows', () => {
       created_at: GAP_AT.toISOString(),
     });
     expect(x.queries.stored[0]?.read_at).toBeUndefined(); // unread, as from the webhook
-    // Back-filled: the lead's follow-up cycle starts now, not at the old message (owner 2026-10-30).
+    // Back-filled: the lead's follow-up cycle starts now, not at the old message (owner).
     expect(x.leads.upsertByPhone).toHaveBeenCalledWith(expect.objectContaining({ at: NOW }));
     const again = await x.catchUp.number(chat(), RUN);
     expect(again).toMatchObject({ stored: 0, known: 2 });
@@ -135,8 +135,7 @@ describe('InboundCatchUp — window, paging, errors', () => {
     x.kapso.inbound.mockImplementation(async () => page([kapsoInbound({ id: `wamid.${n++}` })], 'more'));
     await x.catchUp.number(chat(), RUN);
     expect(x.kapso.inbound).toHaveBeenCalledTimes(MAX_PAGES);
-    const week = new Date(NOW.getTime() - MAX_BACK_MS);
-    expect(week < FLOOR).toBe(true);
+    expect(new Date(NOW.getTime() - MAX_BACK_MS) < FLOOR).toBe(true);
     expect(x.kapso.inbound.mock.calls[0]?.[1]).toEqual({ since: FLOOR.toISOString() });
   });
 
@@ -144,8 +143,8 @@ describe('InboundCatchUp — window, paging, errors', () => {
     const x = catchUpRig();
     const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     x.kapso.inbound.mockRejectedValue(new Error('WhatsApp HTTP 502'));
-    const counts = { listed: 0, stored: 0, complete: false };
-    await expect(x.catchUp.number(chat(), RUN)).resolves.toMatchObject(counts);
+    const done = x.catchUp.number(chat(), RUN);
+    await expect(done).resolves.toMatchObject({ listed: 0, stored: 0, complete: false });
     expect(error).toHaveBeenCalledWith(expect.stringContaining('stopped: WhatsApp HTTP 502'));
   });
 });

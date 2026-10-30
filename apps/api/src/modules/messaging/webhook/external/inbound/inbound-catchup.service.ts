@@ -34,9 +34,10 @@ const tail = (id: string): string => `…${id.slice(-4)}`;
  * gone). For one Kapso chat number: reads Kapso's INBOUND history since inboundSince
  * (InboundListing) and hands every wamid we do not hold, oldest first, to InboundService.handle,
  * the webhook's own path (row, line and number_id, lead or guardian, auto-assign, quick reply,
- * media id, reaction, unread, thread summary). Idempotent by wamid: held ones are skipped before any side effect, and a
- * webhook delivery racing us loses to the unique wa_message_id (handle → false, no push). A row
- * older than LATE_MS when stored is quiet: no push (InboundGapAlert tells the admins once instead).
+ * media id, reaction, unread, thread summary). Idempotent by wamid: held ones are skipped before
+ * any side effect, and a webhook delivery racing us loses to the unique wa_message_id (handle →
+ * false, no push). A row older than LATE_MS when stored is quiet: no push (InboundGapAlert tells
+ * the admins once instead).
  * One failing item is counted and logged by its wamid tail; the rest still run.
  */
 @Injectable()
@@ -89,9 +90,13 @@ export class InboundCatchUp {
       run.counts.failed += 1;
       const name = err instanceof Error ? err.name : typeof err;
       const id = tail(e.waMessageId);
-      return void this.log.error(`inbound catch-up ${run.label}: ${id} failed (${name})`);
+      this.log.error(`inbound catch-up ${run.label}: ${id} failed (${name})`);
+      return;
     }
-    if (!stored) return void (run.counts.known += 1);
+    if (!stored) {
+      run.counts.known += 1;
+      return;
+    }
     run.counts.stored += 1;
     if (late) run.counts.late += 1;
     const phone = waIdToE164(e.from);

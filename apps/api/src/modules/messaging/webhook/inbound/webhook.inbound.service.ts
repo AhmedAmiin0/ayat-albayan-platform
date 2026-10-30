@@ -18,7 +18,7 @@ interface InboundOptions {
   /**
    * A message the catch-up job back-filled (external/inbound, older than LATE_MS when stored): the
    * row, lead and quick reply as usual, its unread count included, but no admin / assistant push.
-   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past (owner 2026-10-30).
+   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past (owner, 10-30).
    */
   quiet?: boolean;
   /** The catch-up run's time (a quiet message); defaults to the clock. */

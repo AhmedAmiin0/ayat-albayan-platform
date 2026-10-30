@@ -35,7 +35,7 @@ export class InboundStore {
   /**
    * A guardian's or teacher's message never creates a lead (docs/12 §3.5); anyone else is upserted
    * (R-LEAD-01). upsertByPhone returns null for a job applicant (R-LEAD-04): no lead then. `at`
-   * (default the message time) is the lead's last_inbound_at, i.e. the start of its follow-up cycle.
+   * (default: the message time) is the lead's last_inbound_at: its follow-up cycle starts there.
    */
   async sender(input: { m: InboundEvent; phone: string; at?: Date }): Promise<Sender> {
     const { m, phone, at = m.at } = input;

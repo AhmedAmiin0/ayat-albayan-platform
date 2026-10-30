@@ -45,9 +45,11 @@ describe('InboundCatchUp — lead follow-ups after a back-fill (owner 2026-10-30
     const due = nextFollowUpAt({ ...row, follow_up_stage: 0 }, HOURS);
     expect(due).toEqual(new Date(NOW.getTime() + 24 * 3_600_000));
     // The bug: the old time made the follow-up due a day before the back-fill.
-    const old = nextFollowUpAt({ ...row, follow_up_stage: 0, last_inbound_at: TWO_DAYS_AGO.toISOString() }, HOURS);
+    const before = { ...row, follow_up_stage: 0, last_inbound_at: TWO_DAYS_AGO.toISOString() };
+    const old = nextFollowUpAt(before, HOURS);
     expect(old && old < NOW).toBe(true);
-    expect(x.queries.stored[0]?.created_at).toBe(TWO_DAYS_AGO.toISOString()); // the row keeps its time
+    // The row keeps its own time.
+    expect(x.queries.stored[0]?.created_at).toBe(TWO_DAYS_AGO.toISOString());
   });
 
   it('a fresh one (5 min, not quiet) keeps the message time, as the webhook', async () => {

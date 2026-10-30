@@ -7240,7 +7240,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/webhook/webhook.rating.test.ts": {

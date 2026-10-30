@@ -49,7 +49,8 @@ export function catchUpRig() {
   };
   const queries = ext as unknown as ExternalQueries;
   const listing = new InboundListing(queries, kapso as unknown as KapsoHistory);
-  const catchUp = new InboundCatchUp(repo as unknown as InboundCatchUpRepo, listing, queries, s.inbound);
+  const store = repo as unknown as InboundCatchUpRepo;
+  const catchUp = new InboundCatchUp(store, listing, queries, s.inbound);
   const alert = new InboundGapAlert(s.push as unknown as PushService);
   const job = new InboundCatchUpJob(catchUp, alert);
   return { ...s, ext, kapso, repo, catchUp, alert, job };

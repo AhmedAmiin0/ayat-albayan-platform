@@ -6,7 +6,7 @@ import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-num
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { catchUpRig, FAMILY_WA, GAP_TS, kapsoInbound, NOW, page } from './inbound.fakes';
 
-// Finding 2 of PR #452: one failing item, a failing read stamp or a Kapso error never loses the rest.
+// Finding 2 of PR #452: a failing item, read stamp or Kapso read never loses the rest.
 
 const RUN = { now: NOW, full: false };
 const OTHER_WA = '966509876543';
@@ -76,7 +76,8 @@ describe('InboundCatchUp — per-item isolation', () => {
   it('a clean, uncapped run is complete', async () => {
     const x = catchUpRig();
     x.kapso.inbound.mockResolvedValue(page([text('wamid.A')]));
-    expect(await x.catchUp.number(chat(), RUN)).toMatchObject({ stored: 1, failed: 0, complete: true });
+    const counts = await x.catchUp.number(chat(), RUN);
+    expect(counts).toMatchObject({ stored: 1, failed: 0, complete: true });
   });
 });
 
@@ -85,7 +86,8 @@ describe('InboundCatchUp — order across pages (Kapso lists newest first)', () 
     const x = catchUpRig();
     const older = page([text('wamid.A2', 1), text('wamid.A1', 1), text('wamid.A0', 0)]);
     const newer = page([text('wamid.D', 3), text('wamid.C', 2)], 'c1');
-    x.kapso.inbound.mockImplementation(async (_env, q: { after?: string }) => (q.after ? older : newer));
+    const pages = async (_e: unknown, q: { after?: string }) => (q.after ? older : newer);
+    x.kapso.inbound.mockImplementation(pages);
     await x.catchUp.number(chat(), RUN);
     expect(ids(x)).toEqual(['wamid.A0', 'wamid.A1', 'wamid.A2', 'wamid.C', 'wamid.D']);
   });
