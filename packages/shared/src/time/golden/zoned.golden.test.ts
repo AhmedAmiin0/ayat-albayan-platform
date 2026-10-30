@@ -4,7 +4,7 @@ import { clockIn } from '../format.js';
 import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
-// Regression goldens for the date-fns facade itself (docs/34 §6). Before it replaced the Intl /
+// Regression goldens for the date-fns facade itself (docs/34 §7). Before it replaced the Intl /
 // ms code, both ran side by side here over this sweep and agreed on every value; the digests below
 // were then taken from the old code (commit "pin reminder … instants") and now pin the facade.
 

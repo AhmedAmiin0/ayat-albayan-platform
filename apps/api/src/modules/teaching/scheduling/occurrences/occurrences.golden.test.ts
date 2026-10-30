@@ -1,22 +1,23 @@
 import { GOLDEN_ZONES, digest, goldenDates } from '@ab/shared/testing';
 import { describe, expect, it } from 'vitest';
-import { monthWindow } from '../../../finance/payouts/payouts.plan';
-import { rangeWindow, riyadhDate } from '../../../reporting/dashboard/range';
+import { monthWindow } from '@/modules/finance/payouts/payouts.plan';
+import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
 import { ruleOccurrences } from './occurrences';
 
-// Regression goldens (docs/34 §6): occurrence generation (idempotent on unique(rule_id, starts_at)),
-// the payroll month and the academy-day `?from&to` window must give byte-identical instants. The
-// digests were taken from the pre-date-fns code (Intl + ms math) and pin it: a different instant
-// anywhere in the year, in any zone, changes the digest.
+// Regression goldens (docs/34 §7): occurrence generation (idempotent on unique(rule_id,
+// starts_at)), the payroll month and the academy-day `?from&to` window: byte-identical instants.
+// The digests were taken from the pre-date-fns code (Intl + ms math) and pin it: a different
+// instant anywhere in the year, in any zone, changes the digest.
 
 const WINDOW = { from: new Date('2025-12-20T00:00:00Z'), to: new Date('2027-01-10T00:00:00Z') };
+const DAILY = { byday: [0, 1, 2, 3, 4, 5, 6] };
 const STARTS = ['00:00', '00:30', '01:30', '02:30', '12:00', '23:30:00'];
 const MONTHS = [...new Set(goldenDates().map((d) => d.slice(0, 7)))];
 
 function occurrenceLines(zone: string): string[] {
   return STARTS.flatMap((start_time_local) =>
     ruleOccurrences(
-      { byday: [0, 1, 2, 3, 4, 5, 6], start_time_local, duration_min: 45, tz: zone, starts_on: '2025-12-24', ends_on: '2027-01-07' },
+      { ...DAILY, start_time_local, duration_min: 45, tz: zone, starts_on: '2025-12-24', ends_on: '2027-01-07' },
       WINDOW,
     ).map((o) => `${o.starts_at.toISOString()} ${o.ends_at.toISOString()}`),
   );
@@ -45,7 +46,7 @@ describe.each(GOLDEN_ZONES)('pinned instants in %s', (zone) => {
 
 const one = (tz: string, date: string, start_time_local: string): string | undefined =>
   ruleOccurrences(
-    { byday: [0, 1, 2, 3, 4, 5, 6], start_time_local, duration_min: 30, tz, starts_on: date, ends_on: date },
+    { ...DAILY, start_time_local, duration_min: 30, tz, starts_on: date, ends_on: date },
     WINDOW,
   )[0]?.starts_at.toISOString();
 

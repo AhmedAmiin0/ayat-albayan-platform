@@ -1,4 +1,4 @@
-// Golden sweeps (docs/34 §6): the inputs every old-vs-new date test runs over. A full year in the
+// Golden sweeps (docs/34 §7): the inputs every old-vs-new date test runs over. A full year in the
 // academy's zones and two DST zones, with both year ends, the month ends and Cairo's 2026-10-29.
 
 export const GOLDEN_ZONES = [

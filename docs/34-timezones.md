@@ -161,3 +161,43 @@ Tests run as a Riyadh viewer on a Riyadh phone (`jest.setup.cjs`), whatever the 
 Counts (the §3 grep over `apps/mobile/src` non-test code at `d56c00b8`, import lines and the 16
 fixture / test-helper lines left out): **114 uses in 77 files: a 75, b 37, c 0, — 2** (a place
 name). Messages (c) are composed by the API; the app sends none with a time.
+
+## 7. date-fns facade
+
+Owner, 2026-10-30: «You can use date-fns instead of handling date». `date-fns` 4 and `@date-fns/tz`
+(pure JS, so mobile still ships by OTA: `tools/scripts/ci-checks/native-changes.mjs`) are
+dependencies of `packages/shared` only. Apps import date helpers through `@ab/shared`, never
+`date-fns` directly. The facade is in `packages/shared/src/time/`:
+
+| file | what |
+|---|---|
+| `zoned.ts` | wall clock ↔ UTC: `wallToUtc(date, minutes, tz)`, `wallInstant(date, 'HH:MM', tz)`, `offsetMinutesIn`, `localDateIn` / `localMonthIn` / `hhmmIn` / `zonedFieldsIn`, `weekdayIn` |
+| `calendar.ts` | calendar dates (`addCalendarDays`, `addCalendarMonths`, `weekdayOfDate`, `weekStartOfDate`, `calendarDaysBetween`), and instants in a zone: `startOfDayIn` / `endOfDayIn`, `startOfWeekIn`, `addDaysIn` / `addWeeksIn` (the wall clock is kept across DST), `dayRangeIn` (`?from&to`), `monthRangeIn` (payroll month) |
+| `format.ts` | words: `dateText` / `dateTextParts` (Intl names in the UI language, `-u-nu-latn` ASCII digits), `weekdayDayMonth` «الأحد 4 أكتوبر», `clockOf` / `clockIn` in the 12/24 h cycle (`useClock` / `useClockCycle` stay its source), `engineTimeZone` |
+| `running-head.ts`, `chat-day.ts`, `riyadh-day.ts`, `week.ts`, `time-zone.ts`, `viewer-zone.ts` | built on the three files above |
+
+- **Arithmetic** uses date-fns with `{ in: tz(zone) }`. **Wording** uses Intl in MSA (date-fns' `ar`
+  locale is not used). The relative phrases («منذ 5 دقائق», «أمس») keep their i18n strings.
+- **Same instants as before.** A wall time in a spring-forward gap, or a repeated one, resolves as it
+  did before date-fns: two offset reads (`wallToUtc`). `addDaysIn` keeps the old offset correction,
+  so the day-before reminder fires at the same instant. These are not TZDate's own rules (New York
+  02:30 on 2026-03-08 would differ).
+- **Goldens** (regression tests, fixed values). `packages/shared/src/time/golden/*.golden.test.ts`
+  and `apps/api/…/zoned-time.golden.test.ts` / `occurrences.golden.test.ts` cover 2025-12-24 to
+  2027-01-07 in Cairo, Riyadh, Dubai, Kuwait, Qatar, London and New York. Before the swap they ran
+  the old and new code side by side. Their digests were taken from the old code and now pin
+  occurrence generation, the day-before reminder (send instant, expiry, «due»), the reopen dedup
+  day, the payroll month, the `?from&to` window and every facade function. They also check the
+  DST edges explicitly (Cairo 2026-10-29 and 2026-04-24, New York, London).
+- **Plain durations** (retention days, lookbacks, timers, «at most 31 days apart») stay ms
+  constants. Only calendar math moves to the facade.
+- **Ratchet.** `packages/config/eslint-dates.js` (`no-restricted-properties`) bans
+  `Intl.DateTimeFormat`, `toLocaleDateString`, `toLocaleTimeString` and `getTimezoneOffset`
+  outside `packages/shared/src/time` and tests. The uses that predate it sit in
+  `eslint-suppressions.json` (`refactor/guards/lint.json` total). After B1: 61, of which web 33
+  and mobile 22 are lanes B2 and B3, and api and client-core are 0. Justified leftovers:
+  `packages/shared` `core/schemas/common.ts` `isTimeZone`, which checks that an id is a zone
+  (`core` may not import `time`: `guard:cycles`); `e2e/support` (3), which keeps its own Intl
+  oracle so the e2e checks do not reuse the code they test; `tools/migrate/src/time.ts`, the
+  one-shot Sheets import (docs/06), left as it is; and `tools/scripts/calendar`, a standalone
+  script with no `@ab/shared`.

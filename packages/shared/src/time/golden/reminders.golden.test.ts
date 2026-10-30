@@ -6,7 +6,7 @@ import { zonedInstant } from '../../schedule/lessons/series/zoned.js';
 import { riyadhToday } from '../riyadh-day.js';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
-// Regression goldens (docs/34 §6): what decides when a message goes out (the day-before reminder's
+// Regression goldens (docs/34 §7): what decides when a message goes out (the day-before reminder's
 // send instant and expiry, «is it due», the reopen dedup day) and the wall-clock picks a series is
 // generated from. The digests were taken from the pre-date-fns code (Intl + ms math): a different
 // instant anywhere in the year, in any zone, changes them.

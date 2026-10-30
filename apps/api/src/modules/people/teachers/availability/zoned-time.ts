@@ -1,6 +1,6 @@
 import { localDateIn, offsetMinutesIn, wallToUtc, weekdayOfDate } from '@ab/shared';
 
-// Wall-clock <-> UTC for the API (rule 6, R-SCH-01), on the @ab/shared date-fns facade (docs/34 §6;
+// Wall-clock <-> UTC for the API (rule 6, R-SCH-01), on the @ab/shared date-fns facade (docs/34 §7;
 // zoned-time.golden.test.ts and occurrences.golden.test.ts pin every instant to the pre-date-fns
 // code). A "local day" is the UTC-midnight epoch ms of a calendar date in some zone (y/m/d only).
 

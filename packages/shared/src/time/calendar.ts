@@ -10,7 +10,7 @@ import {
 } from 'date-fns';
 import { localDateIn, offsetMinutesIn, wallToUtc } from './zoned.js';
 
-// The date-fns facade, part 2 (docs/34 §6): calendar arithmetic. Two kinds of value:
+// The date-fns facade, part 2 (docs/34 §7): calendar arithmetic. Two kinds of value:
 // - a calendar date «YYYY-MM-DD» (a lesson's local day, a `?from&to` day): no zone at all;
 // - an instant (Date) moved in a zone: its local day and wall clock decide (DST-safe).
 

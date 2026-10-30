@@ -1,7 +1,7 @@
 import { tz, tzOffset } from '@date-fns/tz';
 import { format, getDay } from 'date-fns';
 
-// The date-fns facade, part 1 (docs/34 §6): zoned wall clock ↔ UTC instant (rule 6). Apps import
+// The date-fns facade, part 1 (docs/34 §7): zoned wall clock ↔ UTC instant (rule 6). Apps import
 // date helpers only through @ab/shared; date-fns and @date-fns/tz stay inside src/time.
 
 const MINUTE = 60_000;

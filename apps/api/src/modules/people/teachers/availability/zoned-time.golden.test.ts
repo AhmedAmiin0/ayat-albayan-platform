@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { localDay, offsetMs, toMinutes, weekdayOf, zonedToUtc } from './zoned-time';
 
 // zoned-time (the API's wall clock ↔ UTC: occurrence generation, booking, payouts, the `?from&to`
-// windows) on the @ab/shared date-fns facade (docs/34 §6). Before the swap it ran side by side
+// windows) on the @ab/shared date-fns facade (docs/34 §7). Before the swap it ran side by side
 // with the old Intl code over this sweep and agreed on every value; these digests were then taken
 // from the old code and now pin the facade-backed one.
 
