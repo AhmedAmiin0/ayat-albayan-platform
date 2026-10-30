@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { localDate } from '../schedule/schemas/scheduling.js';
 import { optionalText, phoneE164 } from '../core/schemas/common.js';
-import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
+import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/ledger/schemas.js';
 
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's

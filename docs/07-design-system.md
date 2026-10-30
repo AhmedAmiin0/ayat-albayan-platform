@@ -509,7 +509,7 @@ One system on mobile (`apps/mobile/src/core/ui/primitives/Button.tsx`, `core/ui/
 
 Shape meanings: **fill** = settled or done, **half** = underway, **hollow** = waiting, **struck** = stopped or cancelled.
 
-Keep this map in `packages/shared/src/status-style/status-style.ts` and unit-test that every enum value has an entry:
+Keep this map in `packages/shared/src/money/status-style/status-style.ts` and unit-test that every enum value has an entry:
 
 | Enum | Value | Label key (`ar.json`) | Label | Tone | Glyph |
 |---|---|---|---|---|---|
@@ -572,7 +572,7 @@ The tone rule, applied mechanically:
 Grade pips are ordinal, so grades read correctly in greyscale print. Filled pips come first, at the inline-start.
 
 ```ts
-// packages/shared/src/status-style/status-style.ts  (shape only; labels come from ar.json)
+// packages/shared/src/money/status-style/status-style.ts  (shape only; labels come from ar.json)
 export type Tone = 'ok' | 'act' | 'bad' | 'neutral';
 export type Glyph = 'fill' | 'half' | 'hollow' | 'struck';
 export interface StatusStyle { tone: Tone; glyph: Glyph }

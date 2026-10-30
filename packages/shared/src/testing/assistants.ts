@@ -1,4 +1,4 @@
-import type { AssistantCommissionView, AssistantStatementView, AssistantTermsView } from '../assistant/views.js';
+import type { AssistantCommissionView, AssistantStatementView, AssistantTermsView } from '../money/assistant/views.js';
 
 // Test-only assistant-pay rows shared by the web and mobile tests (never imported by app code):
 // two currencies, never summed.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as runtime from '../index.js';
-import { assistantTermsSchema } from '../assistant/schemas.js';
+import { assistantTermsSchema } from '../money/assistant/schemas.js';
 import { reportDraftSchema } from '../reports/schema.js';
 import { ASSISTANT, BALANCE, commission, FULL_GRADES, PAYMENT, reportView, statement, termsRowOf } from './index.js';
 
