@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
-import { readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
-import { loadAreas } from './areas.mjs';
+import { listSpecs, loadAreas } from './areas.mjs';
 import { AREAS } from './fixture.mjs';
 import { listFiles } from './graph.mjs';
 import { checkMap } from './guard.mjs';
@@ -45,8 +44,7 @@ test('a listed spec that does not exist, a spec listed twice, a path matching no
   assert.match(out, /renamed\/ matches no file/);
 });
 
-test('the real e2e/areas.json passes', () => {
+test('the real e2e/areas.json passes (specs in domain folders included, D8)', () => {
   const root = fileURLToPath(new URL('../../../../', import.meta.url));
-  const real = readdirSync(`${root}e2e/tests`).filter((f) => f.endsWith('.spec.ts'));
-  assert.deepEqual(checkMap(loadAreas(root), real, listFiles(root)), []);
+  assert.deepEqual(checkMap(loadAreas(root), listSpecs(root), listFiles(root)), []);
 });
