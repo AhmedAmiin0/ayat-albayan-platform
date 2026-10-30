@@ -1,7 +1,8 @@
 import { boundaries, domainModuleRegex, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
 
 // docs/32 g1: the domains already regrouped into `src/<domain>/<module>` (two-level modules). Each c-row move
-// adds its domain here in the same PR; empty = every feature is a one-level module, as before.
+// adds its domain here in the same PR that moves ALL of src/<domain>/ into src/<domain>/<module>/ (a listed domain
+// makes each sub-folder its own module); empty = every feature is a one-level module, as before.
 const DOMAINS = [];
 export default reactConfig(
   import.meta.dirname,

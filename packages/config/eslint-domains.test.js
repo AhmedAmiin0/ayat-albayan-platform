@@ -19,6 +19,12 @@ test('a converted domain’s modules are two levels deep; the rest stay one leve
   assert.equal(moduleOf('src/sales-money/a.ts', re), 'src/sales-money', 'a prefix is not the domain');
   assert.equal(moduleOf('src/core/ui/x.tsx', re), null);
   assert.equal(moduleOf('src/test/x.ts', re), null);
+  assert.equal(moduleOf('src/sales/index.ts', re), 'src/sales/index.ts', 'a file in the domain folder is its own module');
+});
+
+test('folder names are kebab-case only (they go into a regex)', () => {
+  assert.throws(() => domainModuleRegex({ ...opts, domains: ['a.b'] }), /kebab-case/);
+  assert.throws(() => routeImportGroup({ prefix: '@/', exempt: ['core'], domains: ['x|y'] }), /kebab-case/);
 });
 
 /** Lints one route import with the generated group, as apps/mobile does. */
