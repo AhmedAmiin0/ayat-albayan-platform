@@ -10,7 +10,7 @@ import { historyInbound } from './inbound-history';
 export const MAX_PAGES = 20;
 
 /** What one number's catch-up reads (InboundCatchUp). */
-export interface ListingQuery {
+interface ListingQuery {
   n: KapsoNumber;
   /** ISO time: Kapso's messages from then on. */
   since: string;
@@ -20,7 +20,7 @@ export interface ListingQuery {
   full: boolean;
 }
 
-export interface Listing {
+interface Listing {
   /** The family messages we do not hold, oldest first (whole run, not per page). */
   events: InboundEvent[];
   listed: number;
