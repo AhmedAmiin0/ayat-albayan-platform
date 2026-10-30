@@ -42,7 +42,7 @@ test('every thread row shows its tags like the web row: status chip, source, who
   expect(lead.getByText(t.enums.leadStatus.no_reply)).toBeTruthy();
   expect(lead.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
   expect(lead.queryByText(t.inbox.kind.lead)).toBeNull(); // not «عميل جديد» for a lead that never replied
-  expect(lead.getByText(t.inbox.unread.two)).toBeTruthy();
+  expect(lead.getByLabelText(t.inbox.unread.two)).toBeTruthy();
   expect(lead.getByText(`${t.inbox.you} أهلًا بيكي`)).toBeTruthy();
 
   const parent = within(rowOf('أم إيمان'));

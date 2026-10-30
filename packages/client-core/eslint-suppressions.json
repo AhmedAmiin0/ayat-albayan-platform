@@ -1,0 +1,359 @@
+{
+  "eslint.config.js": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistants/terms-form.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistants/terms-form.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/auth/permissions.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/auth/sign-in.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/booking/course-pause.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/booking/invoice.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/booking/picks.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/calls/call-actions.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 2
+    },
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 11
+    }
+  },
+  "src/calls/call-peer.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/calls/call-peer.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/calls/call-phase.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/calls/call-phase.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/calls/call-platform.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/calls/call-store.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 4
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/calls/call-words.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/calls/calls-api.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/calls/calls-api.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/calls/calls-realtime.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/calls/calls-ui.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/channels/channel-live.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/channels/channel-live.ts": {
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/channels/channels.ts": {
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/channels/teacher-pick.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/errors/chat-list-errors.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/errors/send-error.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/http/api-client.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    }
+  },
+  "src/http/api-client.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/http/api-error.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/http/client-header.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/http/query-string.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/inbox/inbox-live.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/inbox/live-connect.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/inbox/live-connect.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/inbox/live-registry.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/inbox/live-session.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/inbox/live-store.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/inbox/live-store.ts": {
+    "max-len": {
+      "count": 2
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/inbox/reaction-mutation.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/inbox/reaction-mutation.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/inbox/reactions.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/inbox/reopen-note.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/inbox/template-button.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/inbox/thread-delta.test.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/inbox/thread-delta.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/keys/query-keys.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/payments/request-id.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/payments/stripe-settings.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/payments/stripe-settings.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/payments/upload-once.ts": {
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/reports/entry-values.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/reports/errors.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/reports/reports.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/reports/v2-lines.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/reports/v2-text.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/users/create-form.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/users/edit-form.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/users/errors.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  },
+  "src/users/teacher-username.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/users/validation.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 6
+    }
+  }
+}

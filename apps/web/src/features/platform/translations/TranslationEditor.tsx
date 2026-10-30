@@ -1,5 +1,5 @@
 import { LOCALES, placeholderTokens, type Locale, type TranslationKeyRow } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -34,7 +34,7 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
     onDone(message);
     onClose();
   };
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const changes = changesFor(row, drafts);
     if (Object.keys(problems).length > 0) return;

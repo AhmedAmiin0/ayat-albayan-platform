@@ -1,6 +1,7 @@
 import { RATING_TEMPLATE } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { familyOfPhone } from '../../../common/db/family-of-phone';
 import type { QueuedMessage } from '../../messaging/reminders/queued-row';
 import { approvedTemplates, queueMessages } from '../../messaging/reminders/reminders.queries';
 import { readAll } from '../scheduling/read-all';
@@ -40,11 +41,13 @@ export class RatingQueries {
     return data;
   }
 
-  /** The guardian whose phone this is; null for a lead, a teacher or an unknown number. */
+  /**
+   * The family whose number (main or second, familyOfPhone) this is; null for a lead, a teacher or an unknown
+   * number. The rating goes to the chat it was asked from (RatingSendService sends to that phone).
+   */
   async guardianByPhone(phone: string): Promise<RatingGuardian | null> {
-    const { data, error } = await this.db.from('guardians').select('id, phone_e164, tz').eq('phone_e164', phone).maybeSingle();
-    if (error) throw dbError(error);
-    return data;
+    const family = await familyOfPhone(this.db, phone);
+    return family && { id: family.id, phone_e164: family.phone_e164, tz: family.tz };
   }
 
   /** The newest lesson of this guardian's children that took place and has started (null: none yet). */

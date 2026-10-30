@@ -34,6 +34,8 @@ export interface ChatActions {
   react: (m: MessageView, emoji: string | null) => void;
   /** A tap on the pill: who reacted. */
   openReactors: (m: MessageView) => void;
+  /** A tap on the admin's «! لم تُرسل» (or queued clock): why, retry, send it by hand (FailedSheet). */
+  openFailed: (m: MessageView) => void;
 }
 
 const noop = () => undefined;
@@ -51,6 +53,43 @@ export const ChatActionsContext = createContext<ChatActions>({
   reactable: () => false,
   react: noop,
   openReactors: noop,
+  openFailed: noop,
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
+
+/** The part a bubble reads: none of it changes when a reply is picked or a notice shows. */
+export type BubbleChatActions = Pick<
+  ChatActions,
+  | 'enabled'
+  | 'canSend'
+  | 'setReply'
+  | 'threadName'
+  | 'openMenu'
+  | 'openForward'
+  | 'showCopy'
+  | 'reactable'
+  | 'react'
+  | 'openReactors'
+  | 'openFailed'
+>;
+
+/**
+ * The bubbles' own slice (owner 2026-10-27, «Avoid rerenders»): picking «رد» or a notice changes
+ * ChatActionsContext, which only the composer and the notice read; every bubble reads this one.
+ */
+export const BubbleActionsContext = createContext<BubbleChatActions>({
+  enabled: false,
+  canSend: false,
+  setReply: noop,
+  threadName: null,
+  openMenu: noop,
+  openForward: noop,
+  showCopy: noop,
+  reactable: () => false,
+  react: noop,
+  openReactors: noop,
+  openFailed: noop,
+});
+
+export const useBubbleChatActions = (): BubbleChatActions => useContext(BubbleActionsContext);

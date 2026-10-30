@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { kickConfigReload } from '../../../config/role/worker-kick';
 import { configDef, seedEntryOf } from './config-defs';
 import { decodeAll, decodeValue } from './config-decode';
 import { ConfigStoreQueries } from './config-store.queries';
@@ -35,7 +36,7 @@ interface DescribeInput {
 export class ConfigStore {
   private readonly log = new Logger(ConfigStore.name);
   private readonly loggedMalformed = new Set<string>();
-  private readonly listeners: (() => void)[] = [];
+  private readonly listeners: ((remote: boolean) => void)[] = [];
   private cache: CacheEntry | null = null;
 
   constructor(
@@ -89,6 +90,8 @@ export class ConfigStore {
       this.invalidate();
       // The overrides reload never fails the save (TranslationsService also reloads every 5 min).
       if (hintKey && this.refreshOverrides) await this.refreshOverrides().catch(() => undefined);
+      // The other copies' translations (and the worker's) reload too: the hint is an ar override.
+      if (hintKey) kickConfigReload();
     }
   }
 
@@ -97,14 +100,27 @@ export class ConfigStore {
     return this.queries.names(ids);
   }
 
-  /** Called on every invalidation (SettingsService drops its legacy cache with it). */
-  onChange(listener: () => void): void {
+  /**
+   * Called on every invalidation (SettingsService drops its legacy cache with it). remote = another
+   * process wrote (ConfigCacheBridge), so this one must not announce it again.
+   */
+  onChange(listener: (remote: boolean) => void): void {
     this.listeners.push(listener);
   }
 
+  /** After a write here: drop the rows and announce it (ConfigCacheBridge). */
   invalidate(): void {
+    this.drop(false);
+  }
+
+  /** Another API copy or the worker wrote (the shared cache's `settings` topic). */
+  dropLocal(): void {
+    this.drop(true);
+  }
+
+  private drop(remote: boolean): void {
     this.cache = null;
-    for (const l of this.listeners) l();
+    for (const l of this.listeners) l(remote);
   }
 
   private remember(entry: CacheEntry): Promise<ConfigSnapshot> {

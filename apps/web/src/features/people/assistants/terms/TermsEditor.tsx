@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
@@ -30,7 +30,7 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
     setForm((f) => ({ ...f, ...patch }));
     setSaved(false);
   };
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const result = toInput(form, rules);
     setErrors('errors' in result ? result.errors : {});

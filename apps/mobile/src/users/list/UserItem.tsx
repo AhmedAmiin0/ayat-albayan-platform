@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { formatPhone, type UserView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -6,22 +7,26 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { lastSignIn, recordText, roleText, statusStyle } from '../shared/format';
 import { useClockCycle } from '@/core/lib/clock';
 
 interface UserItemProps {
   user: UserView;
-  onPress: () => void;
+  /** Stable: opens the user by id. */
+  onOpen: (id: string) => void;
 }
 
 /** One login, like the web's stacked row: name + status, then role and record, email, username, phone, last sign-in. */
-export function UserItem({ user, onPress }: UserItemProps) {
+export const UserItem = memo(function UserItem({ user, onOpen }: UserItemProps) {
+  const open = useCallback(() => onOpen(user.id), [onOpen, user.id]);
   const cycle = useClockCycle();
   const { color } = useTheme();
   const quiet = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   const parts = [roleText(user.role), user.linked ? recordText(user.linked) : null];
   return (
     <ListRow
+      leading={<Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} decorative />}
       title={user.full_name}
       subtitle={parts.filter((p): p is string => p !== null).join(t.common.listSeparator)}
       trailing={<StatusChip {...statusStyle(user.status)} label={t.users.status[user.status]} size="sm" />}
@@ -33,7 +38,7 @@ export function UserItem({ user, onPress }: UserItemProps) {
           <AppText style={quiet}>{`${t.users.cols.lastSignIn}: ${lastSignIn(user.last_sign_in_at, cycle)}`}</AppText>
         </View>
       }
-      onPress={onPress}
+      onPress={open}
     />
   );
-}
+});

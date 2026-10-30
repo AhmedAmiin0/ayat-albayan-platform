@@ -1,9 +1,18 @@
-import { boundaries, reactConfig } from '@ab/config/eslint';
+import { boundaries, domainModuleRegex, forbiddenImports, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
+
+// docs/32 g1: the domains already regrouped into `src/<domain>/<module>` (two-level modules). Each c-row move
+// adds its domain here in the same PR that moves ALL of src/<domain>/ into src/<domain>/<module>/ (a listed domain
+// makes each sub-folder its own module); empty = every feature is a one-level module, as before.
+const DOMAINS = [];
 export default reactConfig(
-  { ignores: ['jest.config.cjs', 'jest.setup.cjs'] },
+  import.meta.dirname,
+  { ignores: ['babel.config.cjs', 'jest.config.cjs', 'jest.setup.cjs'] },
+  // React 19.2: no forwardRef / useContext / .Provider; effects in hooks. The React Compiler builds every file
+  // (babel.config.cjs, jest included), so no useMemo / useCallback / memo by hand.
+  ...reactRestrictions({ files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], effects: ['src/**/*.tsx', 'app/**/*.tsx'], compiler: true, react19: true }),
   // docs/27 §1 rule 6: another feature (and a route file in app/) only through its index.ts; core/ and test/ are shared
   // (existing deep imports: eslint-suppressions.json).
-  boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: 'src/(?!core/|test/)[^/]+', alias: { '@/': 'src/' } }),
+  boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: domainModuleRegex({ base: 'src', exempt: ['core', 'test'], domains: DOMAINS }), alias: { '@/': 'src/' } }),
   {
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1). Use AppText.
     files: ['app/**/*.tsx', 'src/**/*.tsx'],
@@ -24,9 +33,15 @@ export default reactConfig(
         'error',
         {
           paths: [{ name: 'react-native', importNames: ['Text'], message: 'Use AppText from @/core/ui/primitives/AppText.' }],
-          patterns: [{ group: ['@/*/**', '!@/core/**'], message: 'Import the feature index (@/<feature>), not its internals.' }],
+          patterns: [{ group: routeImportGroup({ prefix: '@/', exempt: ['core'], domains: DOMAINS }), message: 'Import the feature index (@/<feature>), not its internals.' }],
         },
       ],
     },
   },
+  // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch / apiSend
+  // (existing ones: eslint-suppressions.json).
+  forbiddenImports({
+    files: ['src/**/*.tsx', 'app/**/*.tsx'],
+    bans: [{ regex: '(^|/)http/api(\\.js)?$', names: ['apiFetch', 'apiSend'], message: 'Call the API from a hook, not a component.' }],
+  }),
 );

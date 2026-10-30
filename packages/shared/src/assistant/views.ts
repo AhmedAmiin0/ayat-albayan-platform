@@ -2,6 +2,7 @@ import type { PaymentKind, PaymentMethod, PayoutStatus } from '../enums/index.js
 import type { AssistantCommissionStatus, AssistantCommissionType } from './commission.js';
 import type { AssistantCommissionKind } from './kind.js';
 import type { CurrencyTotals, StatementLineKind } from './statement.js';
+import type { WalletTotals } from './wallet.js';
 
 // Assistant (base role sales) responses (owner, 2026-10-06). snake_case, instants ISO UTC, months and
 // days YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.
@@ -102,8 +103,10 @@ export interface MyEarnings {
   terms: AssistantTermsView | null;
   /** This month so far, as the next statement would be (planStatement), per currency. */
   this_month: Record<string, CurrencyTotals>;
-  /** All earned commissions, per currency. */
+  /** All earned commissions, per currency (kept for app builds older than «محفظتي»). */
   commissions_total: Record<string, number>;
+  /** «محفظتي» per currency (walletTotals): owed, paid, earned this month. Commissions only. */
+  wallet: Record<string, WalletTotals>;
   statements: AssistantStatementView[];
 }
 

@@ -9,7 +9,7 @@ const q = (over: object = {}) => ({ q: '', settings: SETTINGS, ...over });
 
 describe('«القيم» rows', () => {
   it('builds each group’s rows', () => {
-    expect(groupRows('reports', []).map(rowKey)).toEqual(['report_teacher_edit_hours']);
+    expect(groupRows('reports', []).map(rowKey)).toEqual(['report_teacher_edit_hours', 'report_form_v2']);
     expect(groupRows('sending', [])[0]).toMatchObject({ kind: 'setting', owned: true });
     expect(groupRows('accounts', [])[0]).toMatchObject({ owned: false });
     expect(groupRows('google', []).map(rowKey)).toEqual(['google_sync_enabled', 'google_sync_mode', 'google_calendar_window_days']);
@@ -44,7 +44,7 @@ describe('«القيم» rows', () => {
 
   it('counts the editable values', () => {
     const counts = valueCounts({ ...SETTINGS, booking_horizon_weeks: 4 });
-    expect(counts.total).toBe(37);
+    expect(counts.total).toBe(38);
     expect(counts.modified).toBe(1);
     expect(counts.public).toBeGreaterThan(0);
     const [row] = groupRows('schedule', []);

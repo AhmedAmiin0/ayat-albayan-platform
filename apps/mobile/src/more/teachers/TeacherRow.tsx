@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
@@ -6,14 +7,16 @@ import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { TeacherCountLinks } from './TeacherCountLinks';
 import type { TeacherListItem } from '../types';
 
 /**
  * One teacher in «المعلمين»: the name and status open the teacher's file (on «مشترك»); the two counts
- * beside them open it on that list. Two sibling buttons, never one inside the other.
+ * beside them open it on that list. Two sibling buttons, never one inside the other. The list's inset
+ * card draws the fill and the rule between rows (owner 2026-10-28: one container rule).
  */
-export function TeacherRow({ teacher }: { teacher: TeacherListItem }) {
+export const TeacherRow = memo(function TeacherRow({ teacher }: { teacher: TeacherListItem }) {
   const { color } = useTheme();
   const name = teacherName(teacher, locale);
   return (
@@ -24,11 +27,9 @@ export function TeacherRow({ teacher }: { teacher: TeacherListItem }) {
         alignItems: 'center',
         gap: 8,
         paddingHorizontal: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
-        backgroundColor: color.raised,
       }}
     >
+      <Avatar name={name} id={teacher.id} src={teacher.avatar_url} decorative />
       <Pressable
         accessibilityRole="button"
         onPress={() => router.push(`/more/teachers/${teacher.id}`)}
@@ -45,4 +46,4 @@ export function TeacherRow({ teacher }: { teacher: TeacherListItem }) {
       <TeacherCountLinks teacher={teacher} name={name} />
     </View>
   );
-}
+});

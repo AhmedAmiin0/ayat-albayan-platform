@@ -10,8 +10,12 @@ export interface CallPermissionFacts {
   expiresAt: string | null;
 }
 
-/** A call permission request from the calls number (docs/28 §10): the interactive (24 h window) or the approved template. */
-export type PermissionRequest = { to: string; text: string } | { to: string; template: { name: string; language: string } };
+/**
+ * A call permission request from the calls number (docs/28 §10): the interactive (24 h window) or
+ * the approved template.
+ */
+export type PermissionRequest =
+  { to: string; text: string } | { to: string; template: { name: string; language: string } };
 
 /**
  * The calling signaling over Kapso's Meta proxy (POST /{phone_number_id}/calls, GET
@@ -27,7 +31,10 @@ export interface CallsApi {
   accept(line: CallingLine, input: { waCallId: string; sdp: string; ref: string }): Promise<void>;
   reject(line: CallingLine, waCallId: string): Promise<void>;
   terminate(line: CallingLine, waCallId: string): Promise<void>;
-  /** POST /{phone_number_id}/messages from the calls number: only «اطلب إذن الاتصال», one request, never retried. */
+  /**
+   * POST /{phone_number_id}/messages from the calls number: only «اطلب إذن الاتصال», one request,
+   * never retried.
+   */
   requestPermission(line: CallingLine, input: PermissionRequest): Promise<{ waMessageId: string }>;
 }
 

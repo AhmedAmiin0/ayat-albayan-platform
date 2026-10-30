@@ -1,0 +1,63 @@
+{
+  "src/calendar.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/drive.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/oauth.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 3
+    }
+  },
+  "src/server.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/sheets.ts": {
+    "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/state.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/stub.test.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/stub.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 2
+    }
+  }
+}

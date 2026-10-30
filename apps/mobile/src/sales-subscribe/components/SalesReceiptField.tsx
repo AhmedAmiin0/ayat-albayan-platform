@@ -16,7 +16,7 @@ import type { ReceiptChoice } from '../lib/transfer-form';
 
 interface SalesReceiptFieldProps {
   /** The package's student (whose family chat is listed) and the package (where the copy goes). */
-  target: { studentId: string; subscriptionId: string };
+  target: { studentId: string; subscriptionId: string; bind?: { phone?: string } };
   value: readonly ReceiptChoice[];
   onChange: (value: ReceiptChoice[]) => void;
 }
@@ -36,7 +36,7 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
     // Already in the list: another copy would only be a second object of the same file.
     if (value.some((a) => a.kind === 'chat' && a.messageId === item.message_id)) return setBrowsing(false);
     copy.mutate(
-      { subscriptionId: target.subscriptionId, messageId: item.message_id },
+      { subscriptionId: target.subscriptionId, messageId: item.message_id, ...target.bind },
       {
         onSuccess: (r) => {
           setBrowsing(false);
@@ -67,6 +67,7 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
           {browsing ? (
             <ChatReceiptList
               studentId={target.studentId}
+              {...(target.bind ? { bind: target.bind } : {})}
               busyId={copy.isPending ? copy.variables.messageId : undefined}
               onPick={fromChat}
             />

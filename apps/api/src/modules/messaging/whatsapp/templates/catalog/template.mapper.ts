@@ -1,6 +1,6 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
-import { paramNames, templateButtons } from '../../messages/wa-json';
+import { paramNames, templateButtons, templateDisplay } from '../../messages/wa-json';
 import { CRM_AUTH, KAPSO_AUTH } from '../../sender/send-plan';
 import type { ApprovalRow } from './templates.queries';
 import type { TemplateRow, WaError } from '../../whatsapp.types';
@@ -20,6 +20,7 @@ export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[
     footer_ar: row.footer_ar,
     params: paramNames(row.params),
     buttons: templateButtons(row.buttons),
+    display: templateDisplay(row.display),
     status: row.status,
     quality: row.quality,
     meta_id: row.meta_id,

@@ -30,7 +30,10 @@ export interface NumberSecretState {
 export interface NumberView {
   id: string;
   label: string;
-  /** The preset role (default traffic) this number serves; `calls` = WhatsApp calls only, never a message. */
+  /**
+   * The preset role (default traffic) this number serves; `calls` = WhatsApp calls only, never a
+   * message.
+   */
   purpose: NumberPurpose;
   provider: WaProvider;
   phone_number_id: string;

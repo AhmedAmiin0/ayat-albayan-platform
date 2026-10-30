@@ -96,14 +96,17 @@ export class CrmMediaCopier {
 
   /** null = copied (or already cached); else why not. */
   private async attempt(id: string, host: string): Promise<{ error: string; skip: boolean; status: number } | null> {
+    let loaded = false;
     try {
       const msg = await this.media.loadChat(id);
+      loaded = true;
       if (!copyable(msg, host)) return { error: 'not_copyable', skip: true, status: 0 };
       await this.media.cache(msg);
       return null;
     } catch (e) {
       const status = e instanceof HttpException ? e.getStatus() : 0;
-      return { error: reason(e), skip: PERMANENT.has(status), status };
+      // The gate's 410 (a file with no usable link, servable) never changes; a fetch's 410 may.
+      return { error: reason(e), skip: PERMANENT.has(status) || (status === 410 && !loaded), status };
     }
   }
 

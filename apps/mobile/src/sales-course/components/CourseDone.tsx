@@ -1,10 +1,11 @@
-import { counted, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
+import { counted, courseLessonCount, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from '../lib/course-body';
@@ -24,7 +25,7 @@ export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneP
   const cycle = useClockCycle();
   const { color } = useTheme();
   const [first] = result.lessons.map((l) => l.starts_at).sort();
-  const total = view.subscription?.lessons_total ?? 0;
+  const total = view.subscription ? courseLessonCount(view.subscription) : 0;
   const ends = courseEnd(body, total);
   const line = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (
@@ -40,8 +41,10 @@ export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneP
       </View>
       {first ? <AppText style={line}>{t.booking.firstLesson.replace('{when}', whenText(first, view.student.tz, cycle))}</AppText> : null}
       {ends ? <AppText style={line}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
-      {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
-      <Button variant={transfer ? 'ghost' : 'primary'} label={t.salesMoney.done} onPress={onDone} />
+      <ButtonRow testID="course-done-actions">
+        {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
+        <Button variant={transfer ? 'secondary' : 'primary'} label={t.salesMoney.done} onPress={onDone} />
+      </ButtonRow>
     </View>
   );
 }

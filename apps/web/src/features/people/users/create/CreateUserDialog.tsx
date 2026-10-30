@@ -1,6 +1,6 @@
 import type { IssuedCredential } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -39,7 +39,7 @@ export function CreateUserDialog({ onClose, prefill }: CreateUserDialogProps) {
       await queryClient.invalidateQueries({ queryKey: USERS_KEY });
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = createErrors(form);
     setErrors(found);

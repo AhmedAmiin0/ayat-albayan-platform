@@ -26,3 +26,13 @@ test('an English run reads en.json for both chat buttons', async () => {
   expect(await screen.findByRole('button', { name: en.salesMoney.newSubscription })).toBeTruthy();
   expect(screen.getByRole('button', { name: en.salesMoney.recordTransfer })).toBeTruthy();
 });
+
+test('a child due: the one money pill reads en.json «renew», with no child named', async () => {
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid(), kid({ id: 'k2', name: 'Salma', renew_due: true })),
+  );
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByRole('button', { name: en.students.renew })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /Salma/ })).toBeNull();
+  expect(screen.queryByRole('button', { name: en.salesMoney.newSubscription })).toBeNull();
+});

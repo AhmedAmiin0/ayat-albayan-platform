@@ -44,9 +44,9 @@ const INTEGRATIONS_NAMES = [
 ];
 const GOOGLE_NAMES = [
   'GOOGLE_ACCOUNT_STATUSES', 'GOOGLE_ERROR_KEYS', 'GOOGLE_REDIRECT_URI_PRODUCTION', 'GOOGLE_SCOPES',
-  'GOOGLE_SKIP_REASONS', 'GOOGLE_SYNC_KINDS', 'GOOGLE_SYNC_MODES', 'GOOGLE_SYNC_STATES', 'GOOGLE_WINDOW_DAYS',
+  'GOOGLE_SKIP_REASONS', 'GOOGLE_SYNC_KINDS', 'GOOGLE_SYNC_MODES', 'GOOGLE_SYNC_STATES', 'GOOGLE_WINDOW_DAYS', 'TEACHER_CALENDAR_OWNERS',
   'driveFileLink', 'driveFolderLink', 'fileIdIn', 'folderIdIn', 'googleDriveSchema', 'googleErrorKey',
-  'googleSettingsSchema', 'googleStudentMapSchema', 'googleTeacherMapSchema', 'sheetLink',
+  'googleSettingsSchema', 'googleStudentMapSchema', 'googleTeacherMapSchema', 'sheetLink', 'teacherCalendarOwnerSchema',
 ];
 /** Added by the segregation (additions only). */
 const NEW_NAMES = [
@@ -63,7 +63,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   chat_reopen_template: 'inquiry_followup_ar_v2', crm_media_host: '', crm_media_copy_all: false,
   booking_horizon_weeks: 5, late_cancel_hours: null, makeup_window_days: 60, teachers_always_available: true,
   join_opens_before_min: 15, join_closes_after_min: 120, default_meeting_title: 'اجتماع', meeting_link_auto: false,
-  report_teacher_edit_hours: 24, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
+  report_teacher_edit_hours: 24, report_form_v2: false, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
   flag_future_lessons_when_unpaid: true, payout_count_late: false, payout_count_no_show: false,
   payout_count_trials: false, fx_fresh_hours: 24, upload_max_mb: 10, academy_whatsapp_e164: '+966566101447',
   academy_timezone: 'Asia/Riyadh', feedback_rate_window_min: 10, sales_auto_assign: true, renewal_commission_percent: 50,
@@ -79,9 +79,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 49 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(49);
-    expect(root.SETTING_KEYS).toHaveLength(49);
+  it('SETTING_DEFAULTS holds the 50 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(50);
+    expect(root.SETTING_KEYS).toHaveLength(50);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 

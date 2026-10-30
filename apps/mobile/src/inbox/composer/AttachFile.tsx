@@ -3,6 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { AttachIcon } from '../shared/chat-icons';
+import { CameraIcon } from '../shared/composer-icons';
 import { AttachSheet } from './attach/AttachSheet';
 import { usePickSend } from './attach/use-pick-send';
 import { useThreadMode } from '../thread/hooks/thread-mode';
@@ -15,6 +16,8 @@ interface AttachFileProps {
   onReplies?: (() => void) | undefined;
   /** «الرموز التعبيرية»: the pill opens its emoji sheet (insert at the caret). */
   onEmoji: () => void;
+  /** The camera beside the paperclip, as WhatsApp (shown while the box is empty). */
+  camera?: boolean;
 }
 
 /**
@@ -24,7 +27,7 @@ interface AttachFileProps {
  * (teachers do not send files: the API answers 403 files_forbidden); the composer shows it only
  * while the 24 h window is open.
  */
-export function AttachFile({ phone, onError, ...actions }: AttachFileProps) {
+export function AttachFile({ phone, onError, camera = false, ...actions }: AttachFileProps) {
   const { color } = useTheme();
   const teacher = useThreadMode().kind === 'teacher';
   const { pick, pending } = usePickSend(phone, onError);
@@ -32,9 +35,14 @@ export function AttachFile({ phone, onError, ...actions }: AttachFileProps) {
   if (teacher) return null;
   return (
     <>
-      <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)}>
+      <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)} compact>
         <AttachIcon color={color.lapis} />
       </IconButton>
+      {camera ? (
+        <IconButton label={t.inbox.composer.camera} disabled={pending} onPress={() => void pick('camera')} compact>
+          <CameraIcon color={color.lapis} />
+        </IconButton>
+      ) : null}
       <AttachSheet
         visible={choosing}
         onPick={(source) => void pick(source)}

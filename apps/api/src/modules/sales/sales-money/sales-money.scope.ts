@@ -1,5 +1,6 @@
 import { DISCOUNTS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { can } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { forbidden } from '../../../common/http/errors';
 import { SalesQueries } from '../sales/sales.queries';
@@ -21,10 +22,17 @@ export function assertSalesDiscount(pricing: { discount?: number }): void {
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
 }
 
+/** sales.renew_any (owner 2026-10-29, docs/16 row 38): any student of the chat's family, not only hers. */
+export function renewsAny(user: AuthUser): boolean {
+  return can(user, 'sales.renew_any');
+}
+
 /**
  * Whose money a salesperson may write (docs/16 row 17): ownershipOf(...).studentIds, i.e. the students of
  * her leads' families and the students she brought (students.brought_by), whatever settings.sales_auto_assign
  * says. Never SalesBookingScope: its OFF rule (no ownership check, row 13) is for trial bookings only.
+ * With sales.renew_any (row 38) also a student one of whose family numbers (main or second) is the chat's `phone`
+ * the client sent: another family's student, or no phone, stays 403 not_your_student.
  */
 @Injectable()
 export class SalesMoneyScope {
@@ -37,13 +45,20 @@ export class SalesMoneyScope {
     return this.sales.ownership(user.id);
   }
 
-  async assertOwns(user: AuthUser, studentId: string): Promise<void> {
-    assertOwnStudent(await this.ownership(user), studentId);
+  async assertOwns(user: AuthUser, studentId: string, phone?: string): Promise<void> {
+    const own = await this.ownership(user);
+    if (own.studentIds.includes(studentId)) return;
+    if (phone && renewsAny(user) && (await this.family.phonesOf(studentId)).includes(phone)) return;
+    assertOwnStudent(own, studentId);
   }
 
-  /** The phone of her student's family chat (the only chat whose files she may use as a receipt). */
-  async familyChat(user: AuthUser, studentId: string): Promise<string> {
-    await this.assertOwns(user, studentId);
+  /**
+   * The chat whose files she may use as a receipt: the `phone` she is in when it is one of the student's family
+   * numbers (main or second, owner 2026-10-29), else the family's main chat.
+   */
+  async familyChat(user: AuthUser, studentId: string, phone?: string): Promise<string> {
+    await this.assertOwns(user, studentId, phone);
+    if (phone && (await this.family.phonesOf(studentId)).includes(phone)) return phone;
     return this.family.familyPhone(studentId);
   }
 }

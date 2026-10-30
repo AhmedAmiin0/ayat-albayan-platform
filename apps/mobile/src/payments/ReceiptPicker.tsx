@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from './FormLabel';
 import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
 
@@ -54,18 +55,10 @@ export function ReceiptPicker({ receipt, onChange }: ReceiptPickerProps) {
           }}
         />
       ) : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            variant="secondary"
-            label={receipt ? m.retake : m.takePhoto}
-            onPress={() => void pick('camera')}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button variant="secondary" label={m.pickPhoto} onPress={() => void pick('library')} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button variant="secondary" label={receipt ? m.retake : m.takePhoto} onPress={() => void pick('camera')} />
+        <Button variant="secondary" label={m.pickPhoto} onPress={() => void pick('library')} />
+      </ButtonRow>
       {error ? <ErrorLine message={error} /> : null}
     </View>
   );

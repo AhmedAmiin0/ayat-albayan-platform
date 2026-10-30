@@ -38,6 +38,7 @@ export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverla
       {incoming && (
         <IncomingCall
           name={caller}
+          phone={incoming.phone_e164}
           onAccept={() => store.accept(incoming, caller)}
           onDecline={() => store.reject(incoming)}
           onSilence={() => onSilence(incoming.id)}

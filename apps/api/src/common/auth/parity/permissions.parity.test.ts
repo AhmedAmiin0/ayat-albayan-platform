@@ -99,6 +99,26 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });
 
+  // Owner 2026-10-28 «تأكيد الحلقة»: sales' own confirm route only; the teacher/admin route keeps lessons.status.
+  it('lessons.confirm gates the sales confirm route only, for admin and sales (never a teacher)', () => {
+    expect(routes.filter((r) => r.permission === 'lessons.confirm').map((r) => r.key)).toEqual(['SalesLessonActionsController.confirm']);
+    expect(routes.find((r) => r.key === 'LessonActionsController.confirm')?.permission).toBe('lessons.status');
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('lessons.confirm'))).toEqual(['admin', 'sales']);
+  });
+
+  // Owner 2026-10-28 «إيقاف الدورة مؤقتًا» (docs/16 row 37c): its own routes only, admin and sales (never a teacher).
+  it('courses.pause gates exactly the course pause routes, for admin and sales', () => {
+    const keys = routes.filter((r) => r.permission === 'courses.pause').map((r) => r.key).sort();
+    expect(keys).toEqual(['preview', 'resume', 'start', 'state', 'until'].map((h) => `CoursePauseController.${h}`));
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('courses.pause'))).toEqual(['admin', 'sales']);
+  });
+
+  // Owner 2026-10-29 «تجديد اشتراك أي طالب من المحادثة»: an inline check of the sales money scope, the admin's only.
+  it('sales.renew_any gates no route and is held by the system admin only (never sales by default)', () => {
+    expect(routes.filter((r) => r.permission === 'sales.renew_any').map((r) => r.key)).toEqual([]);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('sales.renew_any'))).toEqual(['admin']);
+  });
+
   // Owner 2026-10-25 «الردود السريعة»: writing the shared list is an inline check (SavedRepliesService),
   // never a route gate; by default only the system admin holds it (grantable to assistants).
   it('saved_replies.manage gates no route and is held by the system admin only', () => {

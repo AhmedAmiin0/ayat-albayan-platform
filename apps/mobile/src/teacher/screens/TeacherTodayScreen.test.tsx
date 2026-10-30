@@ -1,5 +1,6 @@
 import { counted, PUBLIC_SETTING_DEFAULTS, type PendingReportView } from '@ab/shared';
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -61,6 +62,13 @@ test('my lessons today on my clock: the report for the started one, join + confi
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
   await fireEvent.press(screen.getByRole('button', { name: t.reports.pending }));
   expect(mockPush).toHaveBeenCalledWith('/teacher/reports');
+});
+
+test('docs/07 §6: the pending reports way is an outlined full-width button under the chip, not a ghost', async () => {
+  await renderWithQuery(<TeacherTodayScreen />);
+  const banner = await screen.findByTestId('pending-banner');
+  const button = within(banner).getByRole('button', { name: t.reports.pending });
+  expect(StyleSheet.flatten(button.props.style)).toMatchObject({ borderWidth: 1, minHeight: 48 });
 });
 
 test('«تأكيد» shows confirmed at once and sends POST /lessons/:id/confirm', async () => {

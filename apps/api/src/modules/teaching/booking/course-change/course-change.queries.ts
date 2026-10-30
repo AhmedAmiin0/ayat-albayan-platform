@@ -12,6 +12,8 @@ export type CourseSub = {
   package: PackageSize | null;
   duration: number;
   lessons_total: number;
+  /** Taken before the platform (owner 2026-10-28): the course carries lessons_total − this. */
+  lessons_used_before: number;
   starts_on: string;
 };
 
@@ -51,7 +53,7 @@ export class CourseChangeQueries {
   async subscription(id: string): Promise<CourseSub> {
     const { data, error } = await this.db
       .from('subscriptions')
-      .select('id, student_id, package, duration, lessons_total, starts_on')
+      .select('id, student_id, package, duration, lessons_total, lessons_used_before, starts_on')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

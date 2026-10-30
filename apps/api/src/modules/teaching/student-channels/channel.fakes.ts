@@ -21,7 +21,10 @@ const USERS: Record<string, AuthUser> = {
   oldTeacher: { id: 'p-t2', email: null, role: 'teacher' },
   guardian: { id: 'p-g', email: null, role: 'guardian' },
   otherGuardian: { id: 'p-g2', email: null, role: 'guardian' },
+  /** An adult student who is their own contact (contact_is_self). */
   student: { id: 'p-s', email: null, role: 'student' },
+  /** A child's own login (a guardian chats for them). */
+  child: { id: 'p-c', email: null, role: 'student' },
   admin: { id: 'p-ad', email: null, role: 'admin' },
   sales: { id: 'p-sa', email: null, role: 'sales' },
   otherSales: { id: 'p-sb', email: null, role: 'sales' },
@@ -37,6 +40,7 @@ export async function channelApp() {
   // The student's current teacher is t1 (p-t1); t2 taught them before and no longer does.
   const queries = {
     channelOf: vi.fn(async () => CH),
+    isOpen: vi.fn(async () => true),
     page: vi.fn(async (): Promise<ChannelMessageRow[]> => [messageRow()]),
     insert: vi.fn(async (row: { body: string; sender_profile_id: string; sender_role: string }) => messageRow({ id: 'm2', ...row })),
     setReadMark: vi.fn(async (row: { channelId: string; profileId: string; at: string }) => void row),
@@ -50,7 +54,8 @@ export async function channelApp() {
     ownedStudentIds: vi.fn(async (id: string) => (id === 'p-sa' ? [ST] : [])),
     teacherProfiles: vi.fn(async () => ['p-t1']),
   };
-  const scope = { studentsOf: vi.fn(async (id: string) => (id === 'p-g' || id === 'p-s' ? [{ id: ST, code: 'AB-0201', name: 'سلمى', tz: 'Asia/Riyadh', contact_is_self: false }] : [])) };
+  const own = (contactIsSelf: boolean) => [{ id: ST, code: 'AB-0201', name: 'سلمى', tz: 'Asia/Riyadh', contact_is_self: contactIsSelf }];
+  const scope = { studentsOf: vi.fn(async (id: string) => (id === 'p-g' || id === 'p-c' ? own(false) : id === 'p-s' ? own(true) : [])) };
   const teachers = { idByProfile: vi.fn(async (id: string) => ({ 'p-t1': 't1', 'p-t2': 't2' })[id] ?? null) };
   const push = { notifyProfiles: vi.fn(async () => undefined), notifyAdmins: vi.fn(), notifySales: vi.fn() };
   const builder = Test.createTestingModule({ imports: [AppModule] })

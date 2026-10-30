@@ -41,9 +41,16 @@ export class NumbersQueries {
     return data;
   }
 
-  /** The enabled default `calls` number (docs/28 §10), read under either comms source; null = none. */
+  /**
+   * The enabled default `calls` number (docs/28 §10), read under either comms source; null = none.
+   */
   async callsDefault(): Promise<NumberRow | null> {
-    const q = this.db.from('wa_numbers').select(COLUMNS).eq('purpose', 'calls').eq('enabled', true).eq('is_default', true);
+    const q = this.db
+      .from('wa_numbers')
+      .select(COLUMNS)
+      .eq('purpose', 'calls')
+      .eq('enabled', true)
+      .eq('is_default', true);
     const { data, error } = await q.maybeSingle();
     if (error) throw new Error(`calls number read failed: ${error.message}`);
     return data;

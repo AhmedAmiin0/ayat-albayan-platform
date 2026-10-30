@@ -1,13 +1,14 @@
 import type { Json, Tables } from '@ab/db';
 import { isCommissionKind, type AssistantStatementLineView, type AssistantStatementView, type CurrencyTotals, type StatementLineKind } from '@ab/shared';
-import { reasonText } from '../reasons';
+import { reasonText } from '../shared/reasons';
 
 type LineRow = {
   kind: string;
   amount: number;
   currency: string;
   commission: { kind: string; student: { code: string | null; name: string } | null } | null;
-  adjustment: { reason: string } | null;
+  /** kind 'reversal': a voided commission taken back (the wallet counts it); 'manual': the admin's +/-. */
+  adjustment: { kind: string; reason: string } | null;
 };
 export type StatementRow = Tables<'assistant_statements'> & {
   assistant: { id: string; full_name: string } | null;
@@ -16,7 +17,7 @@ export type StatementRow = Tables<'assistant_statements'> & {
 
 /** assistant_statements.lines + the names a statement shows, in one read. */
 export const STATEMENT_SELECT =
-  '*, assistant:profiles!assistant_id(id, full_name), lines:assistant_statement_lines(kind, amount, currency, commission:assistant_commissions(kind, student:students(code, name)), adjustment:assistant_adjustments(reason))';
+  '*, assistant:profiles!assistant_id(id, full_name), lines:assistant_statement_lines(kind, amount, currency, commission:assistant_commissions(kind, student:students(code, name)), adjustment:assistant_adjustments(kind, reason))';
 
 const RANK: Record<StatementLineKind, number> = { salary: 0, commission: 1, adjustment: 2 };
 const isKind = (k: string): k is StatementLineKind => k === 'salary' || k === 'commission' || k === 'adjustment';

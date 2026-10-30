@@ -1,9 +1,10 @@
 import { identifierKey } from '@ab/shared';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { WindowCounter } from '../../../teaching/feedback';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { LIMIT_STORE, type LimitStore } from './limit-store';
 import type { PhoneStats } from '../sign-in.ports';
 
 const WINDOW_MS = 15 * 60_000;
+const DAY_MS = 24 * 3_600_000;
 
 /** docs/30 §3: per phone on file, counted in the database (login_codes). */
 const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
@@ -32,27 +33,33 @@ const BUDGET: Record<LimitKind, { ip: number; identifier: number }> = {
 
 /**
  * The public sign-in routes' per-IP and per-identifier buckets (15 minutes). The identifier is folded
- * first (identifierKey: case, spaces, dashes, +), so `AB-1234` and `ab 1234` share one bucket. In memory
- * per API instance, like WindowCounter (docs/30 open item 2); the per-phone limits are in the database.
+ * first (identifierKey: case, spaces, dashes, +), so `AB-1234` and `ab 1234` share one bucket. Counted
+ * in the LimitStore: the database in the app (shared by every API copy, docs/09), memory in tests.
  */
 @Injectable()
 export class SignInLimits {
-  private readonly counters = new Map<string, WindowCounter>();
+  constructor(@Inject(LIMIT_STORE) private readonly store: LimitStore) {}
 
   /** 429 too_many_requests when either bucket of this kind is full. */
-  assert(kind: LimitKind, at: { ip: string; identifier: string }, now = Date.now()): void {
+  async assert(kind: LimitKind, at: { ip: string; identifier: string }, now = Date.now()): Promise<void> {
     const budget = BUDGET[kind];
-    const ok =
-      this.counter(`${kind}:ip`, budget.ip).allow(at.ip, now, WINDOW_MS) &&
-      this.counter(`${kind}:id`, budget.identifier).allow(identifierKey(at.identifier), now, WINDOW_MS);
-    if (!ok) throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+    const buckets = [
+      { key: `${kind}:ip:${at.ip}`, max: budget.ip },
+      { key: `${kind}:id:${identifierKey(at.identifier)}`, max: budget.identifier },
+    ];
+    if (!(await this.store.take({ buckets, windowMs: WINDOW_MS, now }))) {
+      throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+    }
   }
 
-  private counter(name: string, max: number): WindowCounter {
-    const found = this.counters.get(name);
-    if (found) return found;
-    const made = new WindowCounter(max);
-    this.counters.set(name, made);
-    return made;
+  /**
+   * May a code go to this phone (E.164, on file)? The per-phone send limits (3 per 15 minutes, 10 a day)
+   * as shared buckets, taken before the send: atomic across API copies, unlike the login_codes count.
+   */
+  async maySend(phone: string, now = Date.now()): Promise<boolean> {
+    const key = `send:phone:${phone}`;
+    const take = (suffix: string, max: number, windowMs: number) =>
+      this.store.take({ buckets: [{ key: `${key}${suffix}`, max }], windowMs, now });
+    return (await take('', PHONE_LIMITS.per15Min, WINDOW_MS)) && take(':day', PHONE_LIMITS.perDay, DAY_MS);
   }
 }

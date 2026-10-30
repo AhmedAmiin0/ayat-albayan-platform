@@ -14,11 +14,13 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { NoCommissionNote } from './NoCommissionNote';
 import { PricingInputs } from './PricingInputs';
 import { formFrom, type FormPrefill } from './form-prefill';
 import { pricingOf, startDays, subscribeErrorText } from './subscribe-form';
 import { PriceSection, SavedPanel, StartDayPills, StudentPills } from './SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from './use-subscribe';
+import { usePastUsedBefore } from './UsedBeforeField';
 
 /** studentId, the form's prefill (form-prefill) and, after a booking, the first lesson's day; renew from «جدّد الاشتراك». */
 type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };
@@ -47,7 +49,8 @@ const childLine = (s: StudentRef | undefined) =>
  * /inbox/subscribe?studentId=… (R-SUB-01): «اشتراك جديد» / «جدّد الاشتراك» (its title) from a
  * chat, or right after booking a lead's package. The child (or a sibling), the calculator's inputs,
  * the API's price, the first day from chips (rule 6), then «اعمل الاشتراك» (POST /subscriptions),
- * «الاشتراك اتسجل» and back to the chat, now «مشترك».
+ * «الاشتراك اتسجل» and back to the chat, now «مشترك». A first day before the academy's today (a booked
+ * lesson already past) also asks «حلقات مستخدمة من الباقة» (owner 2026-10-28), sent only above 0.
  */
 export function SubscribeScreen() {
   const params = useLocalSearchParams<Params>();
@@ -64,6 +67,7 @@ export function SubscribeScreen() {
   const quote = useSubscriptionQuote(studentId, pricing);
   const save = useCreateSubscription();
   const priced = quote.isSuccess && !quote.isPlaceholderData;
+  const used = usePastUsedBefore({ startsOn, quote: quote.data, now, today });
 
   return (
     <Screen>
@@ -87,6 +91,8 @@ export function SubscribeScreen() {
           value={startsOn}
           onChange={setPicked}
         />
+        <NoCommissionNote startsOn={startsOn} usedBefore={used.body.lessonsUsedBefore ?? 0} now={now} />
+        {used.field}
         {save.isError ? <ErrorLine message={subscribeErrorText(save.error, 'save')} /> : null}
         {save.isSuccess ? (
           <SavedPanel onBack={back} />
@@ -95,7 +101,7 @@ export function SubscribeScreen() {
             label={save.isPending ? t.common.saving : t.inbox.subscription.make}
             busy={save.isPending}
             disabled={!priced}
-            onPress={() => save.mutate({ studentId, pricing, startsOn })}
+            onPress={() => save.mutate({ studentId, pricing, startsOn, ...used.body })}
           />
         )}
       </ScrollView>

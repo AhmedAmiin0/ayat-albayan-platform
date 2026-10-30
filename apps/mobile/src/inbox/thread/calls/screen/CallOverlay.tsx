@@ -38,7 +38,8 @@ function hostContent(p: CallOverlayProps): { body: ReactNode; back: () => void }
   }
   if (!incoming || session) return null;
   const caller = callerOf(incoming, p.showsPhone);
-  const body = <IncomingCall name={caller} onAccept={() => store.accept(incoming, caller)} onDecline={() => store.reject(incoming)} />;
+  const accept = () => store.accept(incoming, caller);
+  const body = <IncomingCall name={caller} phone={incoming.phone_e164} onAccept={accept} onDecline={() => store.reject(incoming)} />;
   return { body, back: () => p.onSilence(incoming.id) };
 }
 

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { AVATAR_FILES } from '../../../../common/storage/avatars/avatar-files';
 import {
   ACCOUNT_AUTH,
-  ACCOUNT_FILES,
   ACCOUNT_STORE,
   type AccountAuth,
   type AccountFiles,
@@ -14,6 +14,6 @@ export class AccountPorts {
   constructor(
     @Inject(ACCOUNT_STORE) readonly store: AccountStore,
     @Inject(ACCOUNT_AUTH) readonly auth: AccountAuth,
-    @Inject(ACCOUNT_FILES) readonly files: AccountFiles,
+    @Inject(AVATAR_FILES) readonly files: AccountFiles,
   ) {}
 }

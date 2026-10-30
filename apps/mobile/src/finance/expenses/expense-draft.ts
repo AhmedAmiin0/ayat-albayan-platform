@@ -1,4 +1,4 @@
-import { RIYADH_TZ, amountProblem, parseAmount, type ExpenseCreate, type PaymentMethod } from '@ab/shared';
+import { RIYADH_TZ, amountProblem, parseAmount, type ExpenseCreate } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { paidAtFor } from '@/payments/lib/paid-day';
 import type { Receipt } from '@/payments/receipt';
@@ -11,7 +11,8 @@ export interface ExpenseDraft {
   /** Days back on the Riyadh calendar; 0 = today. */
   daysAgo: number;
   vendor: string;
-  method: PaymentMethod | null;
+  /** A manual method only (`card` is recorded by the platform, never entered). */
+  method: NonNullable<ExpenseCreate['method']> | null;
   note: string;
   receipt: Receipt | null;
 }

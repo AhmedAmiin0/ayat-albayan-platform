@@ -67,7 +67,10 @@ describe('تقرير الحلقة: titles and order', () => {
     const identity = await open();
     fireEvent.click(within(identity).getByRole('radio', { name: 'اللغة العربية' }));
     await vi.advanceTimersByTimeAsync(1000);
-    expect(apiSend).toHaveBeenCalledWith('PUT', '/reports/r-1/draft', expect.objectContaining({ program: 'arabic' }));
+    // React 19 renders the debounce timer update in a later scheduler task, after the advance.
+    await vi.waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('PUT', '/reports/r-1/draft', expect.objectContaining({ program: 'arabic' })),
+    );
     vi.useRealTimers();
     expect(t.enums.program.islamic_studies).toBe('الدراسات الإسلامية');
   });

@@ -15,6 +15,8 @@ import { ThreadFileSendController } from './files/thread-file-send.controller';
 import { ThreadFileSender } from './files/thread-file-send.service';
 import { ThreadMediaController } from './files/thread-media.controller';
 import { ThreadMediaService } from './files/thread-media.service';
+import { PdfPreviewQueries } from './files/pdf/pdf-preview.queries';
+import { PdfPreviewService } from './files/pdf/pdf-preview.service';
 import { ThreadReads } from './reads/thread-reads';
 import { ForwardFiles } from './files/forward-files';
 import { ThreadForwardController } from './files/thread-forward.controller';
@@ -45,6 +47,7 @@ import { ThreadDeltaService } from './delta/thread-delta.service';
  * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson every chat, redacted (docs/16).
  * ThreadFileController serves bubble photos / PDFs to the admin and sales (docs/20 W6);
  * ThreadFileSendController lets them send images / PDFs from the chat (owner 2026-10-19 #2).
+ * PDF preview like WhatsApp (owner 2026-10-29): PdfPreviewService renders a bubble PDF's pages (poppler).
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
  * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController (Kapso's record + the reopen template).
@@ -66,6 +69,8 @@ import { ThreadDeltaService } from './delta/thread-delta.service';
     SalesThreadsService,
     ThreadReads,
     ThreadMediaService,
+    PdfPreviewQueries,
+    PdfPreviewService,
     ThreadFileSender,
     InboxSettings,
     ThreadQuotes,

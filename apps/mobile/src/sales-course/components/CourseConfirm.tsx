@@ -1,4 +1,4 @@
-import { counted, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
+import { counted, courseLessonCount, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
@@ -31,7 +31,7 @@ interface CourseConfirmProps {
 
 /**
  * «المراجعة» of the course: the student, the teacher, the plan, each day with its time and when the
- * course ends (its lessons_total-th lesson). «احجز» waits for exactly the plan's days a week and a
+ * course ends (its courseLessonCount-th lesson: lessons_total − lessons_used_before). «احجز» waits for exactly the plan's days a week and a
  * clean series check (POST /sales/booking/check). Prefilled from the previous course, a clash names its
  * day(s) («موعد الخميس لم يعد متاحًا»); «اختر موعدًا آخر» keeps the other picks.
  */
@@ -40,7 +40,7 @@ export function CourseConfirm(props: CourseConfirmProps) {
   const { view, teacherName, picks, body, booking, onChangeSlot, prefilled } = props;
   const { color } = useTheme();
   const check = useCourseCheck(body);
-  const total = view.subscription?.lessons_total ?? 0;
+  const total = view.subscription ? courseLessonCount(view.subscription) : 0; // lessons used before the platform are not booked
   const ends = body ? courseEnd(body, total) : null;
   const clean = check.isSuccess && check.data.conflicts.length === 0;
   const ready = body !== null && picks.length === view.perWeek && clean;

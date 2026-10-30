@@ -60,6 +60,14 @@ const DELETES = {
     delete from public.students st using public.guardians g
     where g.id = st.guardian_id and st.notes = ${s.note}
       and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning st.id`,
+  // The seed writes only the main numbers (the mirror trigger); a second number was linked in the app: refuse.
+  guardian_phones: async (tx, s) => {
+    const [{ n }] = await tx`
+      select count(*)::int as n from public.guardian_phones
+      where not is_primary and guardian_id in (${DEMO_IDS.guardians(tx, s)})`;
+    if (n > 0) throw new Error(`${n} guardian_phones second number(s) of demo guardians would be deleted`);
+    return tx`delete from public.guardian_phones where guardian_id in (${DEMO_IDS.guardians(tx, s)}) returning phone_e164`;
+  },
   guardians: (tx, s) =>
     tx`delete from public.guardians where id in (${DEMO_IDS.guardians(tx, s)}) returning id`,
   teacher_time_off: (tx, s) => tx`

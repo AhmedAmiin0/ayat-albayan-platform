@@ -24,17 +24,21 @@ const teacher = (id: string, over: Partial<TeacherListItem> = {}): TeacherListIt
   ...over,
 });
 const page = (items: TeacherListItem[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
+// The rows are on page 1; the list asks for page 2 at its end (a total over 25), which is empty.
+const byPage = (first: ReturnType<typeof page>) => async (path: string) =>
+  path.includes('page=1&') ? first : { ...first, items: [], page: 2 };
 
 beforeEach(() => jest.clearAllMocks());
 
 test('rows with name + status chip, the API total as the count; tap opens the teacher', async () => {
-  mockApiFetch.mockResolvedValue(
-    page([teacher('t1'), teacher('t2', { display_name_ar: 'أ. محمود', status: 'inactive' })], 31),
+  mockApiFetch.mockImplementation(
+    byPage(page([teacher('t1'), teacher('t2', { display_name_ar: 'أ. محمود', status: 'inactive' })], 31)),
   );
   await renderWithQuery(<TeachersScreen />);
   expect(await screen.findByText('أ. فاطمة الزهراء')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers?page=1&pageSize=25');
-  expect(screen.getByText(t.teachers.count.replace('{n}', '31'))).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, «المعلمين · 31», no separate count line.
+  expect(screen.getByRole('header', { name: `${t.nav.teachers} · 31` })).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.active)).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.inactive)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: /^أ\. محمود/ }));

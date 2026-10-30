@@ -87,11 +87,18 @@ describe('InboundMedia.ensure (R-MSG-06)', () => {
 
   it.each([
     ['audio', { media_mime: 'audio/ogg' }],
-    ['no media id (a text)', { media_id: null }],
+    ['no media id (a text)', { media_id: null, media_mime: null }],
     ['an outbound message', { direction: 'outbound' as const }],
   ])('%s → 400 invoice_message', async (_name, over) => {
     const { media } = setup(msg(over));
     expect(await status(media.ensure('m1'))).toMatchObject({ status: 400, body: { code: 'invoice_message' } });
+  });
+
+  it('an inbound file with no media id and no CRM link (its name as body) → 410 media_expired, no call', async () => {
+    const { media, client } = setup(msg({ media_id: null, media_mime: 'application/pdf', body: 'Transaction-Receipt.pdf' }));
+    expect(await status(media.ensure('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
+    expect(await status(media.loadChat('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
+    expect(client.getMedia).not.toHaveBeenCalled();
   });
 
   it('an unknown message → 404 message_not_found', async () => {

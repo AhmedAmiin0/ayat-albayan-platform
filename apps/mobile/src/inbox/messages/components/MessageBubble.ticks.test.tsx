@@ -31,10 +31,16 @@ test('queued: the clock; sent by hand: two ticks and «يدويًا»', async ()
 
 test('failed: the saffron «!» with its word and why, and the bubble still renders its text', async () => {
   await show(failed);
-  expect(screen.getByLabelText(word.failed).props.testID).toBe('ticks-failed');
+  const why = t.messages.errorLine.replace('{reason}', t.messages.errors['131049']);
+  // The admin's (full access, the default thread mode): a button that says why, as WhatsApp's «!».
+  const ticks = screen.getByRole('button', { name: `${word.failed} — ${why}` });
+  expect(ticks.props.testID).toBe('ticks-failed');
   expect(screen.getByText(word.failed)).toBeTruthy();
-  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
+  expect(screen.getByText(why).props.numberOfLines).toBe(2);
   expect(screen.getByText(failed.body ?? '')).toBeTruthy();
+  // The actions live in the sheet now: no full-width buttons inside the bubble.
+  expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
+  expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
 });
 
 test('a long press shows the times on their own line under the meta row, and hides them again', async () => {

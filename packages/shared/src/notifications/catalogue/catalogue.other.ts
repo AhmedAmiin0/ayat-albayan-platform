@@ -1,7 +1,7 @@
 import type { NotificationEntry } from './catalogue.types.js';
 
 // Sends a person starts (docs/23a §B2 W8, W15–W19: listed, never switched) and the staff's bell /
-// push kinds (§B3 P1–P8: always on today).
+// push kinds (§B3 P1–P9: always on today).
 
 const MANUAL = { channels: ['whatsapp'], automatic: false, manual: true, essential: false, locked: false, defaults: { enabled: true } } as const;
 const STAFF = { channels: ['bell', 'push'], templates: [], automatic: false, manual: false, essential: false, locked: false, defaults: { enabled: true } } as const;
@@ -31,4 +31,6 @@ export const PUSH_ENTRIES = [
   { ...STAFF, channels: ['bell'], key: 'google_sync_alert', audience: 'staff', pushKind: 'google_sync_alert' },
   // docs/31 §2: a family's message in a student channel, to the student's current teacher(s) only.
   { ...STAFF, key: 'channel_message', audience: 'teacher', pushKind: 'channel_message' },
+  // «محفظتي» (owner 2026-10-29): a commission earned, to the assistant who brought the student; the bell only.
+  { ...STAFF, channels: ['bell'], key: 'commission_earned', audience: 'staff', pushKind: 'commission_earned' },
 ] as const satisfies readonly NotificationEntry[];

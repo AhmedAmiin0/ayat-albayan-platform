@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -12,8 +13,9 @@ import { ReceiptViewer } from '../attachments/ReceiptViewer';
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
  * student + code, method and day, who recorded it, then its «المرفقات» (bank, or a stored receipt), the booking invoice, or «بلا إيصال».
+ * The list's inset card draws the fill and the rule between payments (owner 2026-10-28).
  */
-export function PaymentItem({ payment }: { payment: PaymentView }) {
+export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
   // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
@@ -28,7 +30,7 @@ export function PaymentItem({ payment }: { payment: PaymentView }) {
     .join(' · ');
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
   return (
-    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }}>
+    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 12 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
         <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
           {payment.student.name}
@@ -45,4 +47,4 @@ export function PaymentItem({ payment }: { payment: PaymentView }) {
       {!files && !invoiceOnly ? <AppText style={{ ...small, color: color.ink3 }}>{t.mobileMoney.noReceipt}</AppText> : null}
     </View>
   );
-}
+});

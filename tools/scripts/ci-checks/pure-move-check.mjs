@@ -1,9 +1,14 @@
 // Pure-move gate for refactor PRs (docs/27 §4, §6). Usage: node tools/scripts/pure-move-check.mjs <base> [head]
 // Against the merge base it allows only: renames, changed module paths (import/export/require/import()/vi|jest
-// mock strings), new index.ts barrels made of `export … from` lines, and path-dependent config (docs, workflows,
-// vitest/jest/tsconfig/eslint configs, refactor/ maps and allow-lists, the generated route tree). Anything else fails.
+// mock strings), identifier renames listed in the diff's move maps (pure-move/identifiers.mjs), new index.ts
+// barrels made of `export … from` lines, config that only follows moved paths (code configs as code,
+// pure-move/configs.mjs for workflows, tsconfig, knip.json and refactor/) and path-keyed baselines whose
+// entries only follow their moved files (pure-move/baselines.mjs: eslint suppressions, knip, folder cap). Anything else fails.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { classifyBaseline } from './pure-move/baselines.mjs';
+import { classifyConfig, rewritePaths as rewriteText, textPairs } from './pure-move/configs.mjs';
+import { CODE_SPECS, grepFiles, identifierTable, renameIdentifiers, renameProblems } from './pure-move/identifiers.mjs';
 import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
 
@@ -41,7 +46,8 @@ export function normalize(text) {
     paths.push(SPEC.exec(st)?.[2] ?? '');
     return squash(st.replace(SPEC, '"<path>"'));
   });
-  const raw = text.replace(STATEMENTS, '').replace(CALLS, (_m, name, open, _q, path) => {
+  const raw = text.replace(STATEMENTS, '').replace(CALLS, (_m, ...groups) => {
+    const [name, open, , path] = groups;
     paths.push(path);
     return `${name}${open}"<path>"`;
   });
@@ -73,30 +79,30 @@ export function isBarrel(file, text) {
 export const barrelPaths = (file, text) => (text && isBarrel(file, text) ? normalize(text).paths : null);
 
 /** Docs and JSON/YAML data: only whole repo paths of moved files may change (as the codemod writes them). */
-const TEXT = /(^docs\/.*|\.md|(?<!tsconfig[^/]*)\.json|\.ya?ml)$/;
-const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-export const rewriteText = (text, renames) =>
-  renames.reduce((acc, [f, t]) => acc.replace(new RegExp(`(?<![\\w./-])${escape(f)}(?![\\w-]|\\.\\w)`, 'g'), t), text);
+const TEXT = /(^docs\/.*|\.md|(?<!tsconfig[^/]*|knip)\.json|\.ya?ml)$/;
+export { rewriteText };
 
 const isConfig = (file) => CONFIG.some((re) => re.test(file));
 
 /** Why one `git diff --name-status` entry is not a pure move (null = fine), and its kind. */
 export function classify(entry, read, ctx = {}) {
   const { status, from, to } = entry;
+  const baseline = classifyBaseline(entry, read, ctx);
+  if (baseline) return baseline;
   if (status === 'R100') return { kind: 'rename' };
   if (TEXT.test(to) && !/^(\.github|refactor)\//.test(to) && status !== 'A' && status !== 'D') {
-    const renamed = rewriteText(read('base', from), ctx.renames ?? []);
+    const renamed = rewriteText(read('base', from), textPairs(to, ctx.renames ?? []));
     return renamed === read('head', to) ? { kind: 'paths' } : { kind: 'bad', why: 'changes more than moved file paths' };
   }
-  if (isConfig(to)) return { kind: 'config' };
+  if (isConfig(to) && !CODE.test(to)) return classifyConfig(entry, read, ctx.renames ?? []);
   if (status === 'A') {
     return isBarrel(to, read('head', to)) ? { kind: 'barrel' } : { kind: 'bad', why: 'new file (only index.ts barrels may be added)' };
   }
   if (status === 'D') return { kind: 'bad', why: 'deleted file (a move is a rename)' };
   if ((status.startsWith('R') || status === 'M') && CODE.test(to)) {
-    return onlyPathsChanged(read('base', from), read('head', to), { ...ctx, from, to })
-      ? { kind: 'paths' }
-      : { kind: 'bad', why: 'changes more than import/export/mock paths' };
+    const base = renameIdentifiers(read('base', from), ctx.ids ?? new Map());
+    if (!onlyPathsChanged(base, read('head', to), { ...ctx, from, to })) return { kind: 'bad', why: 'changes more than import/export/mock paths' };
+    return { kind: isConfig(to) ? 'config' : 'paths' };
   }
   return { kind: 'bad', why: `${status}: not a move` };
 }
@@ -125,8 +131,12 @@ function main([base, head = 'HEAD']) {
   const renames = entries.filter((e) => e.status.startsWith('R')).map((e) => [e.from, e.to]);
   const gone = (dir) => git('ls-tree', '-d', '--name-only', head, '--', dir).trim() === '';
   const readHead = (file) => (git('ls-tree', '--name-only', head, '--', file).trim() ? read('head', file) : '');
-  const ctx = { renames, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
-  const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: 0 };
+  const ids = identifierTable(entries, read);
+  const grep = (re, files = CODE_SPECS) => grepFiles(() => git('grep', '-lE', re, mergeBase, '--', ...files));
+  const ctx = { renames, gone, ids, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
+  const problems = renameProblems(ids, grep, entries.map((e) => e.from));
+  for (const p of problems) console.log(`✗ renames: ${p}`);
+  const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: problems.length };
   for (const e of entries) {
     const result = classify(e, read, ctx);
     counts[result.kind] += 1;

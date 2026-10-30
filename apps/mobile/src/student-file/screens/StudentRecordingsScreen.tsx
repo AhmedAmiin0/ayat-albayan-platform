@@ -1,7 +1,7 @@
-import { RIYADH_TZ } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -15,16 +15,20 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { isFiltered, NO_FILTERS, recordingParams, utcToday, type RecordingFilters } from '../recordings/recording-filters';
 import { RecordingFiltersBar } from '../recordings/RecordingFiltersBar';
-import { RecordingRow } from '../recordings/RecordingRow';
+import { useRecordingRow } from '../recordings/RecordingRow';
 import { useRecordings } from '../recordings/recordings-queries';
 import { useTeacherChoices } from '../recordings/teacher-choices';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const R = t.mobileStudentFile.recordings;
+const keyOf = (r: StudentRecordingView) => r.id;
 
 /**
  * «تسجيلات الحلقات» of one student (web: StudentRecordings), newest first, filtered on the server by
  * date and teacher. Admin from the student screen, teacher from their student's file (`admin` false:
- * their own tz and no delete). Controls follow recordings.manage; the API enforces the same.
+ * their own tz and no delete). Controls follow recordings.manage; the API enforces the same. The list
+ * screens' compact top (owner 2026-10-28): «تسجيلات الحلقات · 12» on the title's line, the student's name
+ * under it, the rows in one inset card.
  */
 export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -38,37 +42,28 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const list = useRecordings(id, params);
   const teachers = useTeacherChoices(list.items, admin);
   const manage = can('recordings.manage');
+  const renderItem = useRecordingRow({ studentId: id, me: me.data, manage, admin, freshUrl: list.freshUrl });
   const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={R.title}
-        subtitle={list.data ? R.count.replace('{n}', String(list.total)) : name}
+        size="h2"
+        connecting
+        count={list.data ? list.total : undefined}
+        subtitle={name}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {can('recordings.read') ? (
         <>
           <RecordingFiltersBar value={filters} onChange={setFilters} teachers={teachers} />
           {list.isError && list.data ? <Note>{R.error}</Note> : null}
-          <FlatList
-            style={{ flex: 1, marginHorizontal: -16 }}
-            data={list.items}
-            keyExtractor={(r) => r.id}
-            renderItem={({ item }) => (
-              <RecordingRow
-                rec={item}
-                studentId={id}
-                tz={me.data?.tz ?? RIYADH_TZ}
-                canManage={manage}
-                canDelete={admin && manage && item.can_manage}
-                getUrl={() => list.freshUrl(item.id)}
-              />
-            )}
-            onEndReached={list.loadMore}
-            refreshing={list.isRefetching && !list.isFetchingNextPage}
-            onRefresh={list.refresh}
+          <LazyList
+            paged={list}
+            keyExtractor={keyOf}
+            renderItem={renderItem}
             ListHeaderComponent={<Note>{R.hint}</Note>}
-            ListFooterComponent={list.isFetchingNextPage ? <Note>{R.loadingMore}</Note> : <View style={{ height: 24 }} />}
+            ListFooterComponent={list.isFetchingNextPage ? <Note>{R.loadingMore}</Note> : null}
             ListEmptyComponent={
               list.data ? (
                 <EmptyState title={isFiltered(filters) ? R.emptyFiltered : R.empty} />

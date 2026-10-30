@@ -23,6 +23,8 @@ export interface SalesMoneySubscriptionView {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
+  /** Taken before the platform (owner 2026-10-28); absent from older APIs. */
+  lessons_used_before?: number;
   price: number;
   currency: string;
   starts_on: string;
@@ -47,14 +49,24 @@ export interface SalesPaymentView {
   created_at: string;
 }
 
-/** GET /sales/money/family: her students of this chat's family, each with its packages still owed. */
+/** GET /sales/money/family: her students of this chat's family (all of them with sales.renew_any), each with its packages owed. */
 export interface SalesFamilyStudent extends SalesStudentRef {
   status: StudentStatus;
+  /** false: not hers, listed through sales.renew_any (subscribe / renew / transfer only). Absent from old APIs = hers. */
+  mine?: boolean;
   open: SalesMoneySubscriptionView[];
   /** «جدّد الاشتراك» is her primary action: the package ended, or an active one is down to the renewal alert. */
   renew_due: boolean;
   /** The renewal's calculator inputs, from the last priced package (renewalPricing; pill discounts only). */
   renewal: RenewalPricing;
+  /** students.teacher_id (the trial's teacher until she picks another): «المعلم/ة»'s default. */
+  teacher_id: string | null;
+}
+
+/** GET /sales/subscriptions/teachers: the active teachers «المعلم/ة» offers (names only). */
+export interface SalesTeacherOption {
+  id: string;
+  name: string;
 }
 
 export interface SalesFamilyView {

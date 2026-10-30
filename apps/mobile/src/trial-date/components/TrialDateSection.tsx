@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
+import { useStudentHref } from '@/core/nav/tree-base';
 import type { StudentProfile } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -21,6 +22,7 @@ export function TrialDateSection({ student }: { student: StudentProfile }) {
   const can = usePermissions();
   const allowed = can('booking.write');
   const history = useTrialHistory(student.id, allowed);
+  const to = useStudentHref();
   if (!allowed) return null;
   const open = canPickTrialDate(student.status) && history.data?.allowed !== false;
   return (
@@ -30,7 +32,7 @@ export function TrialDateSection({ student }: { student: StudentProfile }) {
           variant="secondary"
           label={t.trialDate.action}
           accessibilityLabel={`${t.trialDate.action} — ${student.name}`}
-          onPress={() => router.push(studentFileTrialHref({ studentId: student.id, name: student.name, program: student.program }))}
+          onPress={() => router.push(to(studentFileTrialHref({ studentId: student.id, name: student.name, program: student.program })))}
         />
       ) : (
         <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>

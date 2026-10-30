@@ -15,5 +15,9 @@ node tools/scripts/ci-checks/pure-move-check.mjs origin/develop        # only re
 node tools/scripts/ci-checks/folder-cap.mjs [--strict] [--write <app>] # report crowded folders (strict in Wave F)
 ```
 
+- `guards/` — baselines that may only shrink: `jscpd.json` (`pnpm guard:dup`), `knip.json` (`pnpm guard:knip`) and
+  `lint.json` (`pnpm guard:lint`: per-rule totals of every package's `eslint-suppressions.json`, docs/31a §5). After a
+  PR that fixes violations: `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write`.
+
 A move PR may also update a guard's path list in a test (for example the Meta callers whitelist): the pure-move
 check accepts a string or anchored regex literal that changes exactly by a rename of the same diff.

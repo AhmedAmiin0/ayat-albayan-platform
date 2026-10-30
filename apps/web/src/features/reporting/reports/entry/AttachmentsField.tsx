@@ -12,6 +12,8 @@ export interface AttachmentsFieldProps {
   onChange: (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) => void;
   /** canEditReport: adding and removing close with the edit window. */
   editable: boolean;
+  /** The add button's words; the old form's «إرفاق ملف» by default. */
+  addLabel?: string;
 }
 
 /** صورة / ملف PDF / تسجيل صوتي and its size in MB (one decimal, Western digits). */
@@ -22,7 +24,7 @@ export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): st
 }
 
 /** «المرفقات (اختياري)» (R-REP-02): signed upload to Storage, then registered on the report. */
-export function AttachmentsField({ reportId, files, onChange, editable }: AttachmentsFieldProps) {
+export function AttachmentsField({ reportId, files, onChange, editable, addLabel = t.reports.attach }: AttachmentsFieldProps) {
   const input = useRef<HTMLInputElement>(null);
   const [local, setLocal] = useState<string | null>(null);
   const upload = useMutation({
@@ -70,7 +72,7 @@ export function AttachmentsField({ reportId, files, onChange, editable }: Attach
         <div className="flex flex-wrap items-center gap-3">
           <input ref={input} type="file" accept={ATTACHMENT_MIMES.join(',')} className="sr-only" tabIndex={-1} onChange={(e) => pick(e.target.files?.[0])} />
           <Button type="button" variant="secondary" disabled={upload.isPending} onClick={() => input.current?.click()}>
-            {upload.isPending ? t.reports.uploading : t.reports.attach}
+            {upload.isPending ? t.reports.uploading : addLabel}
           </Button>
           <span className="text-xs text-ink-3">{t.reports.attachmentHint}</span>
         </div>

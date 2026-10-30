@@ -46,4 +46,10 @@ export class SalesBookingScope {
     const students = await this.lessons.lessonStudents(lessonId);
     return students.length > 0 && students.every((id) => studentIds.includes(id));
   }
+
+  /** The grid names exactly this lesson's students (sales' «تغيير الموعد» of ANY lesson, owner 2026-10-28). */
+  async isLessonOf(lessonId: string, studentIds: readonly string[]): Promise<boolean> {
+    const students = await this.lessons.lessonStudents(lessonId);
+    return students.length > 0 && students.length === studentIds.length && studentIds.every((id) => students.includes(id));
+  }
 }

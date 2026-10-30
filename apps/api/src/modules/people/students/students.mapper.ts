@@ -25,7 +25,8 @@ export type StudentListItem = Omit<StudentListRow, 'guardian' | 'teacher'> & {
 };
 
 export type StudentProfileRow = Student & {
-  guardian: { id: string; name: string; phone_e164: string; students: Sibling[] };
+  /** phones: every family number, the main one (is_primary) and a second one (guardian_phones, 2026-10-29). */
+  guardian: { id: string; name: string; phone_e164: string; students: Sibling[]; phones: { phone_e164: string; is_primary: boolean }[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
 };
 
@@ -40,8 +41,7 @@ type InsertOpts = { dto: StudentCreateRequest; guardianId: string; actorId: stri
 
 /** Request → row: drops request-only keys, adds name_normalized (R-STU-03) and created_by. */
 export function toStudentInsert({ dto, guardianId, actorId }: InsertOpts): TablesInsert<'students'> {
-  // Request-only keys are dropped by the rest spread.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Request-only keys are dropped by the rest spread (no-unused-vars ignores rest siblings).
   const { guardian, guardian_id, force, lead_id, ...student } = dto;
   return {
     ...student,

@@ -1,8 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { useState } from 'react';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { PRICES } from '../saved-replies/fixtures';
-import type { StagedFile } from '../saved-replies/use-saved-reply';
+import { PRICES } from '../saved-replies/testing/fixtures';
+import type { StagedFile } from '../saved-replies/hooks/use-saved-reply';
 import { message } from '../shared/thread-fixtures';
 import { useComposerSend } from './use-composer-send';
 

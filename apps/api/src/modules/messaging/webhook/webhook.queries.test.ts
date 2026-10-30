@@ -50,3 +50,23 @@ describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => 
     ]);
   });
 });
+
+describe('WebhookQueries.identify: a family’s second number is that family (owner 2026-10-29)', () => {
+  it('finds the guardian through guardian_phones (main or second), the lead by the same phone', async () => {
+    const family = { id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
+    const { db, log } = chainDb({
+      guardian_phones: [{ data: { guardian: family } }],
+      teachers: [{ data: null }],
+      leads: [{ data: { id: 'l1', name: 'صباح', follow_up_stage: 0 } }],
+    });
+    const who = await new WebhookQueries(db, readerOf(WebhookSettings)).identify('+966552220000');
+    expect(who).toEqual({ guardian: { id: 'g1', name: 'أم سهيلة' }, teacher: null, lead: { id: 'l1', name: 'صباح', follow_up_stage: 0 } });
+    expect(callsOf(log, 'guardian_phones')).toEqual(expect.arrayContaining([['eq', ['phone_e164', '+966552220000']]]));
+    expect(log.some((l) => l.table === 'guardians')).toBe(false);
+  });
+
+  it('nobody → guardian null', async () => {
+    const { db } = chainDb({ guardian_phones: [{ data: null }], teachers: [{ data: null }], leads: [{ data: null }] });
+    expect((await new WebhookQueries(db, readerOf(WebhookSettings)).identify('+966559990000')).guardian).toBeNull();
+  });
+});

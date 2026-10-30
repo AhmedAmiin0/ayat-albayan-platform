@@ -33,7 +33,6 @@ const uuid = () => `00000000-0000-4000-8000-${String(++seq).padStart(12, '0')}`;
 export class FakeCallsQueries {
   readonly rows = new Map<string, CallRow>();
   readonly order: string[] = [];
-  inserts = 0;
 
   async insert(row: NewCall): Promise<CallRow | null> {
     this.order.push('insert');
@@ -48,7 +47,6 @@ export class FakeCallsQueries {
       ...row,
     } as CallRow;
     this.rows.set(full.id, full);
-    this.inserts += 1;
     return { ...full };
   }
   async get(id: string) {
@@ -104,7 +102,7 @@ export function fakeThreads(thread: { guardian_id: string | null; lead_id: strin
   const rows = new Map<string, Record<string, unknown>>();
   // A replayed dedup_key returns the first row, flagged (ThreadsQueries.enqueue, rule 8).
   const enqueue = vi.fn(async (row: Record<string, unknown>) => {
-    const key = String(row['dedup_key']);
+    const key = String(row.dedup_key);
     const first = rows.get(key);
     if (first) return { ...first, replayed: true };
     rows.set(key, { id: `m${rows.size + 1}`, ...row });

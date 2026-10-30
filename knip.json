@@ -2,14 +2,14 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
-      "entry": [
-        "docs/design/brand/tools/*.mjs",
-        "tools/livekit/token-server.mjs"
-      ],
+      "entry": ["tools/livekit/token-server.mjs"],
       "ignoreBinaries": ["supabase"]
     },
+    "docs/design/brand/tools": {
+      "entry": ["build.mjs", "check.mjs"]
+    },
     "apps/api": {
-      "entry": ["src/main.ts", "src/scripts/*.ts"],
+      "entry": ["src/main.ts", "src/scripts/*.ts", "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts"],
       "project": ["src/**/*.ts"],
       "ignore": ["src/modules/*/*/index.ts"],
       "ignoreDependencies": ["@fontsource/amiri", "@fontsource/ibm-plex-sans-arabic"]
@@ -17,7 +17,8 @@
     "apps/web": {
       "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignore": ["src/routeTree.gen.ts"]
+      "ignore": ["src/routeTree.gen.ts"],
+      "ignoreDependencies": ["babel-plugin-react-compiler"]
     },
     "apps/mobile": {
       "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],

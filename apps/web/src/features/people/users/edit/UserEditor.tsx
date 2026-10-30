@@ -1,6 +1,6 @@
 import type { UserDetail, UserRoleOption } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -13,6 +13,7 @@ import { userErrorText } from '../errors';
 import { ResetPasswordDialog } from '../actions/ResetPasswordDialog';
 import { UserActions, type ActionMode } from '../actions/UserActions';
 import { UserEditFields } from './UserEditFields';
+import { UserPhoto } from './UserPhoto';
 import { UserSummary } from './UserSummary';
 import type { FormErrors } from '../validation';
 
@@ -38,7 +39,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       onDone(t.users.toast.saved);
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = editErrors(form);
     setErrors(found);
@@ -72,6 +73,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       }
     >
       <div className="grid gap-4">
+        <UserPhoto user={user} canWrite={canWrite} />
         <UserSummary user={user} />
         <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
           <UserEditFields form={form} onChange={setForm} errors={errors} options={options} readOnly={!canWrite} roleLocked={!!user.linked} />

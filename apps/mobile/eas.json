@@ -22,6 +22,20 @@
       "node": "24.15.0",
       "pnpm": "11.25.0"
     },
+    "stripe-test": {
+      "distribution": "internal",
+      "channel": "stripe-test",
+      "android": {
+        "buildType": "apk"
+      },
+      "environment": "preview",
+      "env": {
+        "EXPO_PUBLIC_FEATURE_STRIPE": "1",
+        "APP_VARIANT": "stripetest"
+      },
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
+    },
     "production": {
       "channel": "production",
       "autoIncrement": true,

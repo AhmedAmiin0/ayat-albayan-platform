@@ -19,12 +19,13 @@ interface PortalPackageRow {
 export class PortalPackageQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The student's packages in FIFO order (as SubscriptionsQueries.forStudent): the last is the current one. */
+  /** The student's packages in FIFO order (as SubscriptionsQueries.forStudent): the last is the current one; never a cancelled one. */
   async packages(studentId: string): Promise<PortalPackageRow[]> {
     const { data, error } = await this.db
       .from('subscriptions')
       .select('id, package, duration, lessons_total, starts_on, renews_on, status')
       .eq('student_id', studentId)
+      .neq('status', 'cancelled')
       .order('starts_on')
       .order('created_at')
       .order('id');

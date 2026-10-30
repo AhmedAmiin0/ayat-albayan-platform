@@ -4,7 +4,10 @@ import { type Palette, shape, type, useTheme } from '@/theme';
 import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
 import { AppText } from '../primitives/AppText';
 
-/** Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. */
+/**
+ * Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. An unknown tone
+ * (a status newer than this bundle, e.g. 'cancelled' on an old OTA) is neutral instead of a crash.
+ */
 export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string } {
   switch (tone) {
     case 'ok':
@@ -14,6 +17,7 @@ export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string
     case 'bad':
       return { fg: color.bad, bg: color.badSoft };
     case 'neutral':
+    default:
       return { fg: color.ink2, bg: color.neutralSoft };
   }
 }
@@ -44,7 +48,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
-        height: md ? 26 : 22,
+        minHeight: md ? 26 : 22, // grows with a large font scale instead of clipping
         paddingStart: md ? 9 : 7,
         paddingEnd: md ? 11 : 9,
         borderRadius: shape.radius.pill,
@@ -56,7 +60,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       <NuqtaGlyph shape={glyph} color={fg} />
       <AppText
         numberOfLines={1}
-        style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: fg }}
+        style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, color: fg }}
       >
         {label}
       </AppText>

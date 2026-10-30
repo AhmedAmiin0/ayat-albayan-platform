@@ -2,6 +2,7 @@ import { splitLinks } from '@ab/shared';
 import { useState } from 'react';
 import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { appOpenUrl, STRIPE_FEATURE } from '@/core/lib/stripe-flag';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
@@ -26,9 +27,10 @@ interface LinkSpanProps {
 function LinkSpan({ text, href, onHold, onFail, plain }: LinkSpanProps) {
   const { color } = useTheme();
   const open = () => {
-    // Never crash on a link the phone cannot open: the generic error under the text instead.
+    // Never crash on a link the phone cannot open: the generic error under the text instead. A pay link
+    // in the Stripe test build is marked as opened from the app (its page brings the payer back here).
     Promise.resolve()
-      .then(() => Linking.openURL(href))
+      .then(() => Linking.openURL(appOpenUrl(href, STRIPE_FEATURE)))
       .catch(onFail);
   };
   const press = useHoldPress({ onPress: open, onHold });

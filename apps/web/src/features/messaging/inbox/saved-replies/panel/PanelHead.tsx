@@ -5,8 +5,8 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { SearchInput } from '@/components/ui/form/search-input';
 import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
-import { optionId } from '../ReplyOptions';
-import type { RepliesPicker } from '../use-replies-picker';
+import { optionId } from '../components/ReplyOptions';
+import type { RepliesPicker } from '../hooks/use-replies-picker';
 
 const S = t.savedReplies;
 const TABS: { value: SavedReplyScope; label: string }[] = [

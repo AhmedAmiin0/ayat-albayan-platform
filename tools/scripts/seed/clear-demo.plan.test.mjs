@@ -88,6 +88,7 @@ test('deletes children before the rows they point at', () => {
     assert.ok(DELETE_ORDER.indexOf(a) < DELETE_ORDER.indexOf(b), `${a} < ${b}`);
   before('leads', 'guardians');
   before('students', 'guardians');
+  before('guardian_phones', 'guardians');
   before('students', 'teachers');
   before('teacher_time_off', 'teachers');
   before('teacher_availability', 'teachers');

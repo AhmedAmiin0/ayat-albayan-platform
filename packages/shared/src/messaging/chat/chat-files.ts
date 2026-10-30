@@ -1,3 +1,5 @@
+import { counted, type PluralForm } from '../../core/format/index.js';
+import type { SignedDownload } from '../../reports/index.js';
 import { baseMime } from '../../schemas/chat-media.js';
 
 // Files staff send from the chat (owner 2026-10-19 #2): by link, inside the 24 h window.
@@ -56,4 +58,36 @@ export function chatFileProblem(
   if (!mimes.includes(mime)) return 'file_type';
   const cap = waMediaKind(mime) === 'image' ? Math.min(WA_IMAGE_MAX_BYTES, f.maxBytes) : f.maxBytes;
   return f.size < 1 || f.size > cap ? 'file_too_large' : null;
+}
+
+// A PDF bubble like WhatsApp's (owner 2026-10-29): page 1 as a thumb and «12 صفحة · PDF · 1.2 ميغابايت».
+
+const PDF_MIME = 'application/pdf';
+export const isPdfMime = (mime: string | null): boolean => baseMime(mime) === PDF_MIME;
+/** The preview's last page (GET …/pdf/:page refuses more); the file itself keeps them all. */
+export const PDF_PREVIEW_PAGES = 30;
+
+/**
+ * GET /threads/:phone/messages/:id/pdf/:page: that page as a signed JPEG (1 h), with the PDF's page
+ * count and size. Page 1 is the bubble's thumb and the descriptor.
+ */
+export type ThreadPdfPage = SignedDownload & { page: number; pages: number; bytes: number };
+
+/** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
+export type PdfMetaStrings = { type: string; pages: Readonly<Record<PluralForm, string>>; kb: string; mb: string };
+
+const MB = 1024 * 1024;
+/** First-strong isolate (FSI … PDI): in an Arabic line «1.2» never takes its direction from «PDF» (bidi W7). */
+const isolate = (s: string): string => `⁨${s}⁩`;
+
+/** Whole KB below 1 MB (at least 1), else MB with one decimal; Western digits. */
+function fileSizeText(bytes: number, s: PdfMetaStrings): string {
+  const small = bytes < MB;
+  const n = small ? String(Math.max(1, Math.floor(bytes / 1024))) : (bytes / MB).toFixed(1);
+  return (small ? s.kb : s.mb).split('{n}').join(n);
+}
+
+/** «12 صفحة · PDF · 1.2 ميغابايت», each part isolated so the line reads right in Arabic and English. */
+export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStrings): string {
+  return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
 }

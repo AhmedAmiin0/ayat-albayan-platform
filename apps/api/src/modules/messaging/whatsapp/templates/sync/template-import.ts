@@ -10,6 +10,7 @@ import {
   type WaLine,
 } from '@ab/shared';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
+import { metaDisplay } from './template-display';
 import type { MetaTemplate, TemplateRow } from '../../whatsapp.types';
 
 // One line's sync, pure part (owner 2026-10-12, 2026-10-18, docs/12 §3.4): an approved template on a
@@ -90,6 +91,7 @@ export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat')
     // Like tools/migrate's CRM import: the composers label them «المتغير n».
     params: Array.from({ length: n }, (_, i) => `var_${i + 1}`),
     buttons,
+    display: metaDisplay(comps),
     status: 'approved',
     quality: meta.quality,
     meta_id: meta.id,

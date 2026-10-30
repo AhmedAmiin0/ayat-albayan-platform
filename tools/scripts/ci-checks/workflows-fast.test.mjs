@@ -57,15 +57,27 @@ test('ci: check covers changes, every verify job, the guards and the refactor jo
   );
 });
 
-test('ci: Wave F guards fail the build (folder cap strict, jscpd and knip gates)', () => {
+test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries and lint gates)', () => {
   assert.ok(
     ci.jobs.refactor.steps.some(
       (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
     ),
   );
-  const runs = ci.jobs.guards.steps.map((s) => s.run);
-  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
+  const runs = ci.jobs.guards.steps.map((s) => s.run ?? '');
+  assert.ok(['pnpm guard:dup', 'pnpm guard:knip', 'pnpm guard:queries'].every((r) => runs.includes(r)));
+  // guard:lint on every run; on a PR also against the base branch's lint.json (docs/31a §5.1), so the full history.
+  const lint = runs.find((r) => r.includes('pnpm guard:lint -- --base'));
+  assert.ok(lint?.includes('git merge-base "origin/$BASE_REF" HEAD') && lint.includes('then pnpm guard:lint; exit'));
+  // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
+  assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
+  assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
+});
+
+test('ci: a red lint prints the pruned suppressions to commit', () => {
+  const step = ci.jobs.verify.steps.find((s) => s.name?.startsWith('Suppressions to prune'));
+  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
+  assert.match(step.run, /pnpm lint:prune .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
 });
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
@@ -74,8 +86,63 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   const fallback = JSON.parse(ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1]);
   assert.deepEqual(
     fallback.include.map((m) => m.shard),
-    ['1', '2', '3', '4', 'single'],
+    ['1', '2', '3', '4', '5', '6', '7', '8', 'single'],
   );
   assert.equal(ci.jobs.e2e.env.SHARDS, '${{ matrix.total }}');
   assert.ok(!('pull_request_target' in ci.on));
+});
+
+test('mobile.yml profile: preview by default (every automatic run), stripe-test only by hand, on its own channel', () => {
+  const mobile = load('mobile.yml');
+  const input = mobile.on.workflow_dispatch.inputs.profile;
+  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test'], 'preview']);
+  const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
+  assert.doesNotMatch(dispatch, /profile|stripe/i, 'deploy-staging must leave the profile at preview');
+  const step = (job, name) => mobile.jobs[job].steps.find((s) => s.name?.startsWith(name));
+  assert.match(step('build', 'EAS build').run, /--profile "\$PROFILE"/);
+  const guard = step('ota', 'Native-change guard');
+  assert.match(guard.run, /--build-profile "\$PROFILE" --status finished/);
+  assert.match(guard.run, /native-changes\.mjs "\$last" "\$PROFILE"/);
+  for (const s of [step('build', 'EAS build'), guard, step('ota', 'EAS update')]) {
+    assert.equal(s.env.PROFILE, "${{ inputs.profile || 'preview' }}");
+  }
+  const update = step('ota', 'EAS update').run;
+  const [side, normal] = update.split('exit 0');
+  assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
+  assert.match(side, /EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest/);
+  assert.match(side, /--channel stripe-test --environment preview/);
+  assert.doesNotMatch(normal, /STRIPE|APP_VARIANT|channel/);
+  assert.match(normal, /update --branch "\$EAS_BRANCH" --environment "\$EAS_BRANCH"/);
+  assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
+});
+
+test('release tags: only after a green release, no environment or secret, a failure never fails the run', () => {
+  const mobile = load('mobile.yml');
+  const [app, phone] = [deploy.jobs.release, mobile.jobs.release];
+  for (const job of [app, phone]) {
+    assert.deepEqual([job.permissions, job['continue-on-error'], job.environment], [{ contents: 'write' }, true, undefined]);
+    assert.doesNotMatch(JSON.stringify(job), /secrets\./);
+    assert.match(job.if, /^\$\{\{ !cancelled\(\) && /);
+  }
+  assert.match(app.if, /needs\.deploy\.result == 'success' && !inputs\.env_only/);
+  assert.match(phone.if, /needs\.build\.result == 'success' \|\| needs\.ota\.result == 'success'/);
+  const step = (job, kind) => job.steps.find((s) => s.env?.KIND === kind);
+  assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
+  assert.equal(step(phone, 'apk').if, "${{ needs.build.result == 'success' }}");
+  assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
+  assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.profile.*\}\}/)[0]);
+  for (const s of [step(app, 'app'), step(phone, 'apk'), step(phone, 'ota')]) {
+    assert.match(s.run, /node tools\/scripts\/ci-checks\/release-tags\/release-tag\.mjs$/);
+  }
+  // The EAS link goes through a tee: pipefail keeps a failed build red.
+  assert.match(mobile.jobs.build.steps.find((s) => s.id === 'eas').run, /set -o pipefail\n.*\| tee /);
+});
+
+test('deploy-staging merges LOGIN_CODE_PEPPER from a secret into the server .env (docs/30 §8)', () => {
+  const step = deploy.jobs.deploy.steps.find((s) => s.name?.startsWith('Merge the server .env'));
+  assert.equal(step.env.LOGIN_CODE_PEPPER, '${{ secrets.LOGIN_CODE_PEPPER }}');
+  const keys = /keys="([^"]+)"/.exec(step.run)?.[1].split(/\s+/) ?? [];
+  assert.ok(keys.includes('LOGIN_CODE_PEPPER'), 'the env-merge keys list');
+  // Every key the step reads is merged, and every merged key comes from the step's env.
+  assert.deepEqual([...keys].sort(), Object.keys(step.env).sort());
 });

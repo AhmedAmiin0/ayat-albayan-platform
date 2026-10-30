@@ -4,7 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
-import { REPLIES, WELCOME } from './fixtures';
+import { REPLIES, WELCOME } from './testing/fixtures';
+import { clearComposerDrafts } from '../composer/draft-store';
 
 // «أكمل الرد» (owner 2026-10-27): a reply with blanks asks for them before it goes into the box.
 
@@ -46,6 +47,9 @@ async function pickFromSheet(title: string | RegExp) {
   await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));
   await fireEvent.press(await screen.findByRole('button', { name: title }));
 }
+
+// Drafts outlive a chat until sign-out: each test starts with an empty box.
+afterEach(() => clearComposerDrafts());
 
 beforeEach(() => {
   mockApiFetch.mockReset();

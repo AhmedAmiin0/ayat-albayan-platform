@@ -12,7 +12,11 @@ describe('MessagesService.retry and the calls number', () => {
     const row = messageRow({ status: 'failed', line: 'calls', error_code: 'meta_131047' });
     const queries = { get: vi.fn().mockResolvedValue(row), requeue: vi.fn() };
     const sender = { kick: vi.fn() };
-    const svc = new MessagesService(queries as unknown as MessagesQueries, {} as MessageViews, sender as unknown as MessageSender);
+    const svc = new MessagesService(
+      queries as unknown as MessagesQueries,
+      {} as MessageViews,
+      sender as unknown as MessageSender,
+    );
     await expect(svc.retry(row.id, { automaticOn: true })).rejects.toMatchObject({ status: 409 });
     expect(queries.requeue).not.toHaveBeenCalled();
     expect(sender.kick).not.toHaveBeenCalled();

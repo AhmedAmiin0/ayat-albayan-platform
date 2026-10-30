@@ -1,5 +1,5 @@
 import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/shared';
-import type { FilterOption } from '@/components/DataTable';
+import type { FilterOption } from '@/components/data-table/DataTable';
 import { t } from '@/lib/i18n/i18n';
 
 // The select filters of the template health table (values are the row's raw values).

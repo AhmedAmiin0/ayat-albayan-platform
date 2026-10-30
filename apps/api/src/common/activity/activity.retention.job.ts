@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
+import { BackgroundJob } from '../../config/role/background-job';
 
 const EVERY_MS = 24 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -10,6 +11,7 @@ const FIRST_RUN_MS = 15 * 60_000;
  * Idempotent (deleting by cutoff twice deletes nothing more). ponytail: in-process timer like
  * ExpensesJob; pg_cron is not enabled in this project.
  */
+@BackgroundJob({ name: 'activity-retention' })
 @Injectable()
 export class ActivityRetentionJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(ActivityRetentionJob.name);

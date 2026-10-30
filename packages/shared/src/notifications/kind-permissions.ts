@@ -7,6 +7,8 @@ const BELL: readonly Permission[] = ['notifications.push'];
 const INBOX: readonly Permission[] = ['notifications.push', 'inbox.read'];
 /** The Google sync's own alerts (docs/24): for who may read the settings, i.e. admins. */
 const SETTINGS: readonly Permission[] = ['notifications.push', 'settings.read'];
+/** «محفظتي»'s own news: for who may read their own earnings (the salesperson). */
+const EARNINGS: readonly Permission[] = ['notifications.push', 'self.sales_earnings'];
 
 /**
  * The permissions a profile must hold, at send time, to get a notification of each kind (bell row,
@@ -23,6 +25,7 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   meeting_invite: BELL,
   google_sync_alert: SETTINGS,
   channel_message: BELL,
+  commission_earned: EARNINGS,
 };
 
 /** May a profile holding `held` be told about `kind`? */

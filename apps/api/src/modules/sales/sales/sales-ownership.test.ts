@@ -31,7 +31,7 @@ describe('ownershipOf (leads and brought students)', () => {
     const { db } = fakeDb({
       leads: [{ data: [{ id: 'l1', phone_e164: '+966551110000', converted_guardian_id: 'g1' }] }],
       students: [{ data: [] }, { data: [{ id: 's1' }] }],
-      guardians: [{ data: [{ phone_e164: '+966552220000' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966552220000' }] }],
     });
     expect(await ownershipOf(db, 'a')).toEqual({
       leadIds: ['l1'], guardianIds: ['g1'], studentIds: ['s1'], phones: ['+966551110000', '+966552220000'],
@@ -42,7 +42,7 @@ describe('ownershipOf (leads and brought students)', () => {
     const { db, calls } = fakeDb({
       leads: [{ data: [] }],
       students: [{ data: [{ id: 's9', guardian_id: 'g9' }] }],
-      guardians: [{ data: [{ phone_e164: '+966553330000' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966553330000' }] }],
     });
     expect(await ownershipOf(db, 'a')).toEqual({ leadIds: [], guardianIds: ['g9'], studentIds: ['s9'], phones: ['+966553330000'] });
     expect(calls.find((c) => c.table === 'students' && c.method === 'eq')?.args).toEqual(['brought_by', 'a']);
@@ -53,11 +53,21 @@ describe('ownershipOf (leads and brought students)', () => {
     const { db } = fakeDb({
       leads: [{ data: [{ id: 'l1', phone_e164: '+966551110000', converted_guardian_id: 'g1' }] }],
       students: [{ data: [{ id: 's1', guardian_id: 'g1' }] }, { data: [{ id: 's1' }, { id: 's2' }] }],
-      guardians: [{ data: [{ phone_e164: '+966552220000' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966552220000' }] }],
     });
     const own = await ownershipOf(db, 'a');
     expect(own.studentIds.sort()).toEqual(['s1', 's2']);
     expect(own.guardianIds).toEqual(['g1']);
+  });
+
+  it('every number of her families: the main one and a second one (guardian_phones by guardian_id)', async () => {
+    const { db, argsOf } = fakeDb({
+      leads: [{ data: [] }],
+      students: [{ data: [{ id: 's9', guardian_id: 'g9' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966553330000' }, { phone_e164: '+966554440000' }] }],
+    });
+    expect((await ownershipOf(db, 'a')).phones).toEqual(['+966553330000', '+966554440000']);
+    expect(argsOf('guardian_phones', 'in')).toEqual(['guardian_id', ['g9']]);
   });
 
   it('a database error is thrown', async () => {

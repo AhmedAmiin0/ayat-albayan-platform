@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { useChatActions } from '../../thread/hooks/chat-actions';
+import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { ResendSheet } from './ResendSheet';
 
 /**
@@ -12,7 +12,7 @@ import { ResendSheet } from './ResendSheet';
  * own read-only chat) inside the 24 h window (ChatActions.canSend); the API still decides the send.
  */
 export function ResendAsk({ message, phone }: { message: MessageView; phone: string }) {
-  const { enabled, canSend } = useChatActions();
+  const { enabled, canSend } = useBubbleChatActions();
   const [open, setOpen] = useState(false);
   // One request per 131060 bubble, not per opening: the text goes to the family once.
   const [id] = useState(requestId);

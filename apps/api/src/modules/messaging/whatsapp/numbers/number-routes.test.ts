@@ -23,7 +23,10 @@ describe('NumberRoutes.pass', () => {
 
   it('a calls number (docs/28 §10) never enters the pass, even enabled, default and with a config', async () => {
     const calls = overlayNum({ id: 'n-calls', phone_number_id: '1000000009', purpose: 'calls' });
-    const { pass } = await new NumberRoutes(queries() as unknown as RouteQueries).pass([...THREE, calls]);
+    const { pass } = await new NumberRoutes(queries() as unknown as RouteQueries).pass([
+      ...THREE,
+      calls,
+    ]);
     expect(pass.numbers.map((n) => n.id)).not.toContain('n-calls');
     expect(pass.numbers).toHaveLength(3);
   });

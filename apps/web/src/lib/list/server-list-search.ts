@@ -1,4 +1,4 @@
-import type { DataTableFilters, DataTableSort } from '@/components/data-table-features';
+import type { DataTableFilters, DataTableSort } from '@/components/data-table/data-table-features';
 import {
   clearFilterSearch,
   parseFilterSearch,

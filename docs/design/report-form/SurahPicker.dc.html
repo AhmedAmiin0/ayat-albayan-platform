@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>اختيار السورة والآيات</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#047857}a:hover{color:#065f46}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: {{c.margin}}; color: {{c.ink}}; font-family: 'Noto Sans Arabic', system-ui, sans-serif;">
+  <div aria-hidden="true" style="position: absolute; inset: 0; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; opacity: 0.55;">
+    <div style="height: 28px; width: 140px; border-radius: 6px; background: {{c.rule}};"></div>
+    <div style="height: 110px; border-radius: 12px; background: {{c.raised}}; border: 1px solid {{c.rule}};"></div>
+    <div style="height: 150px; border-radius: 12px; background: {{c.raised}}; border: 1px solid {{c.rule}};"></div>
+  </div>
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: {{c.scrim}};"></div>
+
+  <section role="dialog" aria-label="اختيار المقطع" style="position: absolute; inset-inline: 0; bottom: 0; height: 690px; box-sizing: border-box; background: {{c.page}}; border-radius: 16px 16px 0 0; padding: 10px 16px 20px; display: flex; flex-direction: column; gap: 12px;">
+    <div aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: {{c.ruleStrong}};"></div>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <h2 style="margin: 0; font-size: 18px; line-height: 1.5; font-weight: 700;">الحفظ الجديد</h2>
+      <button type="button" style="min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: {{c.lapis}}; font-size: 15px; font-weight: 600;">إلغاء</button>
+    </div>
+
+    <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">ابحث عن سورة</label>
+    <input id="q" placeholder="ابحث باسم السورة أو رقمها" style="min-height: 48px; border-radius: 10px; border: 1px solid {{c.ruleInput}}; background: {{c.sunk}}; color: {{c.ink}}; padding: 0 14px; font-size: 15px;">
+
+    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+      <span style="font-size: 12px; color: {{c.ink3}}; align-self: center;">الأخيرة:</span>
+      <button type="button" style="min-height: 32px; padding: 2px 10px; border-radius: 999px; border: 1px solid {{c.rule}}; background: {{c.sunk}}; color: {{c.ink2}}; font-size: 13px; font-weight: 600;">الملك</button>
+      <button type="button" style="min-height: 32px; padding: 2px 10px; border-radius: 999px; border: 1px solid {{c.rule}}; background: {{c.sunk}}; color: {{c.ink2}}; font-size: 13px; font-weight: 600;">القلم</button>
+    </div>
+
+    <ul style="list-style: none; margin: 0; padding: 0; border: 1px solid {{c.rule}}; border-radius: 12px; overflow: hidden; flex: 1 1 auto;">
+      <sc-for list="{{surahs}}" as="s" hint-placeholder-count="5">
+        <li style="border-bottom: 1px solid {{c.rule}};">
+          <button type="button" aria-pressed="{{s.on}}" style="width: 100%; min-height: 52px; padding: 6px 14px; border: 0; display: flex; align-items: center; gap: 12px; text-align: start; {{s.st}}">
+            <span style="width: 32px; font-size: 13px; color: {{c.ink3}}; font-variant-numeric: tabular-nums;">{{s.n}}</span>
+            <span style="flex: 1; font-size: 16px; font-weight: 600;">سورة {{s.name}}</span>
+            <span style="font-size: 12px; color: {{c.ink3}};">{{s.ayat}} آية · ج {{s.juz}}</span>
+          </button>
+        </li>
+      </sc-for>
+    </ul>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 13px; font-weight: 600; color: {{c.ink2}};">من الآية</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid {{c.ruleInput}}; border-radius: 10px; min-height: 48px; padding: 0 4px;">
+          <button type="button" aria-label="أنقص" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: {{c.sunk}}; color: {{c.ink}}; font-size: 20px;">−</button>
+          <span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;">16</span>
+          <button type="button" aria-label="زِد" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: {{c.sunk}}; color: {{c.ink}}; font-size: 20px;">+</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 13px; font-weight: 600; color: {{c.ink2}};">إلى الآية</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid {{c.ruleInput}}; border-radius: 10px; min-height: 48px; padding: 0 4px;">
+          <button type="button" aria-label="أنقص" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: {{c.sunk}}; color: {{c.ink}}; font-size: 20px;">−</button>
+          <span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;">22</span>
+          <button type="button" aria-label="زِد" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: {{c.sunk}}; color: {{c.ink}}; font-size: 20px;">+</button>
+        </div>
+      </div>
+    </div>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: {{c.ink2}};">7 آيات · الصفحة 563 · الجزء 29. يبدأ تلقائيًا بعد آخر حفظ (الآية 15).</p>
+    <button type="button" style="min-height: 52px; border-radius: 10px; border: 0; background: {{c.lapisFill}}; color: {{c.onLapis}}; font-size: 16px; font-weight: 700;">تمّ</button>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const LIGHT = { margin: '#f3f7f5', page: '#ffffff', raised: '#ffffff', sunk: '#f1f5f3', ink: '#17201c', ink2: '#2f3a35', ink3: '#4f5b55', rule: '#e2e8e5', ruleStrong: '#c8d2cd', ruleInput: '#77857d', lapis: '#047857', lapisFill: '#047857', lapisWash: '#ecfdf5', onLapis: '#ffffff', scrim: 'rgba(15, 30, 22, 0.42)' };
+    const DARK = { margin: '#1a211e', page: '#1e2623', raised: '#27312d', sunk: '#222b27', ink: '#e9efec', ink2: '#cfd8d3', ink3: '#adbab3', rule: '#35413c', ruleStrong: '#45524c', ruleInput: '#74837c', lapis: '#5eead4', lapisFill: '#047857', lapisWash: '#213a2c', onLapis: '#ffffff', scrim: 'rgba(10, 16, 13, 0.5)' };
+    const c = this.props.dark ? DARK : LIGHT;
+    const LIST = [[67, 'الملك', 30, 29], [68, 'القلم', 52, 29], [69, 'الحاقة', 52, 29], [70, 'المعارج', 44, 29], [71, 'نوح', 28, 29]];
+    const surahs = LIST.map(([n, name, ayat, juz]) => {
+      const on = n === 67;
+      return { n, name, ayat, juz, on, st: on ? 'background:' + c.lapisWash + ';color:' + c.ink + ';' : 'background:' + c.page + ';color:' + c.ink + ';' };
+    });
+    return { c, surahs };
+  }
+}
+</script>
+</body>
+</html>

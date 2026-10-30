@@ -1,4 +1,12 @@
-import { callsNeedKapso, META_ID_RE, type NumberCreate, type NumberPurpose, type NumberUpdate, type NumberView, type WaProvider } from '@ab/shared';
+import {
+  callsNeedKapso,
+  META_ID_RE,
+  type NumberCreate,
+  type NumberPurpose,
+  type NumberUpdate,
+  type NumberView,
+  type WaProvider,
+} from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 
 /** The add / edit dialog's fields as typed (ids trimmed on submit; empty optional ids are null). */
@@ -23,7 +31,10 @@ export function draftOf(view?: NumberView): NumberDraft {
 
 const LABEL_MAX = 60;
 
-/** Each field's problem in words (the API checks the same: label 1–60, ids META_ID_RE, a calls number on Kapso). */
+/**
+ * Each field's problem in words (the API checks the same: label 1–60, ids META_ID_RE, a calls
+ * number on Kapso).
+ */
 export function draftErrors(draft: NumberDraft): DraftErrors {
   const out: DraftErrors = {};
   const label = draft.label.trim();

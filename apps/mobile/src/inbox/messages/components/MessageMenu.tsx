@@ -1,8 +1,8 @@
 import type { MessageView } from '@ab/shared';
-import { Modal, Platform, Pressable, View } from 'react-native';
+import { Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { shape, type, useTheme } from '@/theme';
+import { type, useTheme } from '@/theme';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '../../thread/hooks/chat-actions';
@@ -11,6 +11,7 @@ import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
 import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { ReactionBar } from '../reactions/ReactionBar';
+import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -53,78 +54,56 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
       }} onMore={() => later(() => onMoreEmoji(m))} />
   ) : null;
   return (
-    <Modal visible={m !== null} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t.common.cancel}
-        onPress={onClose}
-        style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color.scrim }}
-      >
-        {/* A tap on the sheet itself does not close it. */}
-        <View
-          testID="message-menu"
-          accessibilityLabel={t.inbox.reply.menu}
-          onStartShouldSetResponder={() => true}
-          style={{
-            gap: 8,
-            padding: 16,
-            paddingBottom: 32,
-            borderTopLeftRadius: shape.radius.lg,
-            borderTopRightRadius: shape.radius.lg,
-            backgroundColor: color.raised,
-          }}
+    <MenuSheet open={m !== null} label={t.inbox.reply.menu} testID="message-menu" onClose={onClose}>
+      {bar}
+      {m ? (
+        <ContentText
+          source={quoteText(quoteOf(m))}
+          numberOfLines={2}
+          style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}
         >
-          {bar}
-          {m ? (
-            <ContentText
-              source={quoteText(quoteOf(m))}
-              numberOfLines={2}
-              style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}
-            >
-              {quoteText(quoteOf(m))}
-            </ContentText>
-          ) : null}
-          {reply ? (
-            <Button
-              variant="secondary"
-              label={t.inbox.reply.action}
-              disabled={!canSend}
-              onPress={() => {
-                setReply(m);
-                onClose();
-              }}
-            />
-          ) : null}
-          {reply && !canSend ? <Note>{t.inbox.sessionClosed}</Note> : null}
-          {m && offers?.copy ? (
-            <Button
-              variant="secondary"
-              label={t.inbox.copy.text}
-              accessibilityLabel={t.inbox.copy.label}
-              onPress={() => later(() => copyText({ title: t.inbox.copy.label, text: m.body ?? '' }, showCopy))}
-            />
-          ) : null}
-          {m && forward ? (
-            <Button
-              variant="secondary"
-              label={t.inbox.forward.action}
-              onPress={() => later(() => openForward(m))}
-            />
-          ) : null}
-          {m && offers?.download ? (
-            <Button
-              variant="secondary"
-              label={t.inbox.download.action}
-              accessibilityLabel={downloadLabel(m)}
-              onPress={() => {
-                onClose();
-                downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
-              }}
-            />
-          ) : null}
-          <Button variant="ghost" label={t.common.cancel} onPress={onClose} />
-        </View>
-      </Pressable>
-    </Modal>
+          {quoteText(quoteOf(m))}
+        </ContentText>
+      ) : null}
+      {reply ? (
+        <Button
+          variant="secondary"
+          label={t.inbox.reply.action}
+          disabled={!canSend}
+          onPress={() => {
+            setReply(m);
+            onClose();
+          }}
+        />
+      ) : null}
+      {reply && !canSend ? <Note>{t.inbox.sessionClosed}</Note> : null}
+      {m && offers?.copy ? (
+        <Button
+          variant="secondary"
+          label={t.inbox.copy.text}
+          accessibilityLabel={t.inbox.copy.label}
+          onPress={() => later(() => copyText({ title: t.inbox.copy.label, text: m.body ?? '' }, showCopy))}
+        />
+      ) : null}
+      {m && forward ? (
+        <Button
+          variant="secondary"
+          label={t.inbox.forward.action}
+          onPress={() => later(() => openForward(m))}
+        />
+      ) : null}
+      {m && offers?.download ? (
+        <Button
+          variant="secondary"
+          label={t.inbox.download.action}
+          accessibilityLabel={downloadLabel(m)}
+          onPress={() => {
+            onClose();
+            downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
+          }}
+        />
+      ) : null}
+      <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
+    </MenuSheet>
   );
 }

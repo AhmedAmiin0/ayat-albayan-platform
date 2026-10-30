@@ -1,6 +1,6 @@
 import type { TimeOffCreate } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -30,7 +30,7 @@ export function TimeOffDialog({ teacherId, onClose }: Props) {
     onError: () => setError(t.common.error),
   });
 
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const result = toTimeOffBody(draft);
     setError(result.ok ? null : result.error);

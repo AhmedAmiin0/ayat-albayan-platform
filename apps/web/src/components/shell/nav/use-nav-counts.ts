@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import { useQueries } from '@tanstack/react-query';
-import type { AdminNavProps } from '@/components/AdminNav';
+import type { AdminNavProps } from '@/components/shell/nav/AdminNav';
 import { apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 

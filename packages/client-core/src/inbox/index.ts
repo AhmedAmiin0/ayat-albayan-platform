@@ -30,3 +30,4 @@ export {
   withOurs,
 } from './reactions.js';
 export { type ReactInput, reactionMutation, type ReactionPorts, withReactions } from './reaction-mutation.js';
+export { templateButtonHint, templateButtonLabel, type TemplateButtonWords } from './template-button.js';

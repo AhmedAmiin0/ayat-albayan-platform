@@ -1,19 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { CommissionBell } from './commission-bell';
 import type { LeadConversion } from '../student-lifecycle/lead-conversion';
-import { MoneyFollowUps } from './money-follow-ups';
+import { FollowUpEnv, MoneyFollowUps } from './money-follow-ups';
 import type { StudentActivation } from '../student-lifecycle/student-activation';
 import type { StudentDeactivation } from '../student-lifecycle/student-deactivation';
 
 function setup() {
-  const leads = { afterPackage: vi.fn() };
-  const students = { afterPayment: vi.fn() };
-  const revert = { afterDelete: vi.fn() };
-  const follow = new MoneyFollowUps(
-    leads as unknown as LeadConversion,
-    students as unknown as StudentActivation,
-    revert as unknown as StudentDeactivation,
-  );
-  return { leads, students, revert, follow };
+  const order: string[] = [];
+  const step = (name: string) => vi.fn().mockImplementation(async () => void order.push(name));
+  const leads = { afterPackage: step('lead') };
+  const students = { afterPayment: step('activate') };
+  const revert = { afterDelete: step('revert') };
+  const bell = { notify: step('bell') };
+  const env = new FollowUpEnv(revert as unknown as StudentDeactivation, bell as unknown as CommissionBell);
+  const follow = new MoneyFollowUps(leads as unknown as LeadConversion, students as unknown as StudentActivation, env);
+  return { leads, students, revert, bell, follow, order };
 }
 const IDS = { studentId: 's1', actorId: 'u1' };
 const PAID = { id: 'p1', kind: 'payment', amount: 290 };
@@ -49,5 +50,24 @@ describe('MoneyFollowUps: what a money write changes outside money', () => {
     expect(t.students.afterPayment).not.toHaveBeenCalled();
     expect(t.revert.afterDelete).not.toHaveBeenCalled();
     expect(t.leads.afterPackage).not.toHaveBeenCalled();
+  });
+});
+
+describe('MoneyFollowUps: «عمولة جديدة» (CommissionBell, owner 2026-10-29)', () => {
+  it('runs after every write of a payment or a package (it rings whatever the database just earned)', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'update', before: PAID, after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
+    await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'update' }, IDS);
+    await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'cancel' }, IDS);
+    expect(t.bell.notify).toHaveBeenCalledTimes(5);
+  });
+
+  it('after the lifecycle follow-ups of the same write', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
+    expect(t.order).toEqual(['activate', 'bell', 'revert', 'bell']);
   });
 });

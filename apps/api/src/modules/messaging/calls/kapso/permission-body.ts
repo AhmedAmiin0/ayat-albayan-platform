@@ -9,7 +9,9 @@ import type { PermissionRequest } from './calls-api';
 const TEMPLATE_RE = /^([a-z0-9_]{1,512})(?::([a-z]{2,3}(?:_[A-Z]{2})?))?$/;
 
 /** The setting's value as a template name and language; null = unset or not a template name. */
-export function permissionTemplate(value: string | null | undefined): { name: string; language: string } | null {
+export function permissionTemplate(
+  value: string | null | undefined,
+): { name: string; language: string } | null {
   const m = TEMPLATE_RE.exec((value ?? '').trim());
   return m?.[1] ? { name: m[1], language: m[2] ?? 'ar' } : null;
 }

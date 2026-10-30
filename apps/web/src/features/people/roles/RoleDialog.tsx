@@ -1,6 +1,6 @@
 import { STAFF_ROLES } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -34,7 +34,7 @@ export function RoleDialog({ role, onClose }: Props) {
   };
   const save = useMutation({ mutationFn: saveRole, onSuccess: done });
   const remove = useMutation({ mutationFn: deleteRole, onSuccess: done });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const r = roleBody(form, { creating: !role, fixedGrants });
     setNameError(r.ok ? undefined : P.nameRequired);

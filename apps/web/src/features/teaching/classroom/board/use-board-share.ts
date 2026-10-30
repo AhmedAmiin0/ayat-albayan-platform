@@ -24,7 +24,7 @@ export interface BoardShare {
  * «مشاركة السبورة»: publishes the board canvas as the screen share, «إيقاف مشاركة السبورة» stops
  * it. Closing the board (unmounting the canvas) while it is shared stops the share too.
  */
-export function useBoardShare(canvas: RefObject<HTMLCanvasElement>, room: RoomController): BoardShare {
+export function useBoardShare(canvas: RefObject<HTMLCanvasElement | null>, room: RoomController): BoardShare {
   const sharing = room.snap.boardShareOn;
   const live = useRef({ sharing, stop: () => room.setBoardTrack(null) });
   const frames = useRef<(() => void) | null>(null);

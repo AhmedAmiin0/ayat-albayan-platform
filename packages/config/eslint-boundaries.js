@@ -4,6 +4,8 @@
 // no module, are free. Existing deep imports live in each package's eslint-suppressions.json (ESLint bulk
 // suppressions); a new one fails lint.
 import { dirname, relative, resolve } from 'node:path';
+import { forbiddenImportsRule } from './eslint-imports.js';
+import { maxParamsRule } from './eslint-params.js';
 
 const INDEX = /^\/index(\.[cm]?[jt]sx?)?$/;
 
@@ -69,10 +71,13 @@ const rule = {
   },
 };
 
-export const boundariesPlugin = { rules: { 'module-boundaries': rule } };
+/** The local `ab` plugin: one object, so every block that registers it names the same plugin. */
+export const boundariesPlugin = {
+  rules: { 'module-boundaries': rule, 'max-params': maxParamsRule, 'forbidden-imports': forbiddenImportsRule },
+};
 
 // Test code may import another module's fakes and fixtures and mock its internals by path.
-const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
+export const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
 
 /** Flat-config block: the rule as an error for `files` of the package at `root` (its config's directory). */
 export function boundaries({ root, files, module, alias, ignores = [] }) {
@@ -81,5 +86,18 @@ export function boundaries({ root, files, module, alias, ignores = [] }) {
     ignores: [...TESTS, ...ignores],
     plugins: { ab: boundariesPlugin },
     rules: { 'ab/module-boundaries': ['error', alias ? { root, module, alias } : { root, module }] },
+  };
+}
+
+/**
+ * Flat-config block: `ab/forbidden-imports` with `bans` ({ regex, names?, message }) for `files`,
+ * tests excepted.
+ */
+export function forbiddenImports({ files, ignores = [], bans }) {
+  return {
+    files,
+    ignores: [...TESTS, ...ignores],
+    plugins: { ab: boundariesPlugin },
+    rules: { 'ab/forbidden-imports': ['error', { bans }] },
   };
 }

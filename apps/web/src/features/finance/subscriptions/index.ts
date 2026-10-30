@@ -9,7 +9,6 @@ export {
   PAGE_SIZE,
   type QuoteResponse,
   quoteSubscription,
-  setPaused,
   studentBalanceQuery,
   type StudentBalanceView,
   studentSubscriptionsQuery,
@@ -18,14 +17,17 @@ export {
 } from './api';
 export { Amount } from './balance/Amount';
 export { BalanceCard } from './balance/BalanceCard';
+export { type CancelBody, CancelPackageDialog } from './cancel/CancelPackageDialog';
 export { CreateSubscriptionDialog } from './create/CreateSubscriptionDialog';
+export { NoCommissionNote } from './create/NoCommissionNote';
 export { PricingFields } from './create/PricingFields';
 export {
   RenewSubscriptionButton,
   type RenewSubscriptionButtonProps,
 } from './create/RenewSubscriptionButton';
 export { type PickedStudent, StudentPicker } from './create/StudentPicker';
-export { INITIAL_PRICING, pricingBody, type PricingForm, todayIn } from './create/pricing-form';
+export { UsedBeforeField } from './create/UsedBeforeField';
+export { INITIAL_PRICING, pricingBody, type PricingForm, pricingLessons, todayIn } from './create/pricing-form';
 export {
   apiErrorText,
   currencySymbol,
@@ -37,6 +39,7 @@ export {
   taskText,
   unpaidFlagged,
 } from './format';
+export { partPaidText } from './payment-lines';
 export {
   type MonthUrlSearch,
   type PagedUrlSearch,

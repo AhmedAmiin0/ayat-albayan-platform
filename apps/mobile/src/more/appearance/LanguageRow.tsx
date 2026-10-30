@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { setLocale } from '@/core/lib/i18n/locale-switch';
@@ -7,6 +6,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Section } from '../Section';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its
@@ -27,9 +27,9 @@ export function LanguageRow() {
   };
   return (
     <Section title={t.language.label}>
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         <ListRow title={t.language[other]} onPress={() => setAsking(true)} />
-      </View>
+      </InsetGroup>
       {asking ? (
         <InlineConfirm
           message={t.language.restart}

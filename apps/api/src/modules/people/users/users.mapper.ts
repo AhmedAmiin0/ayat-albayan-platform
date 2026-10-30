@@ -16,6 +16,7 @@ export function toUserView(r: UserRow): UserView {
     created_at: r.created_at,
     linked: r.linked,
     username: r.username ?? null,
+    avatar_seed: r.linked?.kind === 'teacher' ? r.linked.id : r.id,
   };
 }
 

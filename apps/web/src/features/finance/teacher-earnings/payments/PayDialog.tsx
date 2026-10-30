@@ -1,5 +1,5 @@
 import { amountProblem, earningIdsOf, parseAmount, payCeiling, type TeacherEarningView } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -31,7 +31,7 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
   const [amountError, setAmountError] = useState<string | null>(null);
   const save = usePayTeacher(teacher.id, onSaved);
 
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);

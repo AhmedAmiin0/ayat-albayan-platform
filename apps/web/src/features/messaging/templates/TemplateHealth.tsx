@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table/DataTable';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { otherLine, templatesQuery } from './api';

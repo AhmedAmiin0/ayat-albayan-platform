@@ -10,13 +10,12 @@ test('16pt input named «بحث»', async () => {
   expect(screen.getByLabelText(t.common.search)).toHaveStyle({ fontSize: 16, minHeight: 44 });
 });
 
-test('compact: a 40pt grey pill with a hairline edge, still 16pt text, the touch area stretched to 44pt', async () => {
+test('compact: a 44pt grey pill with a hairline edge, still 16pt text', async () => {
   await render(<SearchField onSearch={jest.fn()} compact />);
   const input = screen.getByLabelText(t.common.search);
-  expect(input).toHaveStyle({ fontSize: 16, minHeight: 40, borderRadius: 999 });
+  expect(input).toHaveStyle({ fontSize: 16, minHeight: 44, borderRadius: 999 });
   expect(input).not.toHaveStyle({ borderWidth: 1 });
   expect(input).toHaveStyle({ backgroundColor: 'rgba(120, 120, 128, 0.14)' });
-  expect(input.props.hitSlop).toEqual({ top: 2, bottom: 2 });
 });
 
 test('waits for a pause, then sends the trimmed text once', async () => {

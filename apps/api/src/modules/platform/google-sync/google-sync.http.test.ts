@@ -13,7 +13,7 @@ import { GoogleItemsQueries } from './sync/google-items.queries';
 import { GoogleLogQueries } from './admin/google-log.queries';
 import { GoogleMapQueries } from './map/google-map.queries';
 import { GoogleSettings } from './google-settings';
-import { fakeData } from './google-sync.fakes';
+import { fakeData, TEACHER_ID } from './google-sync.fakes';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -36,6 +36,7 @@ const ROUTES = [
   ['GET', '/admin/google/status'], ['GET', '/admin/google/connect'], ['POST', '/admin/google/disconnect'], ['PUT', '/admin/google/settings'],
   ['POST', '/admin/google/discover'], ['PUT', '/admin/google/drive'], ['GET', '/admin/google/teachers'], ['GET', '/admin/google/students'],
   ['GET', '/admin/google/items'], ['POST', '/admin/google/reconcile'],
+  ['GET', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`], ['PUT', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`],
 ] as const;
 
 describe('/admin/google (docs/24): admins only', () => {

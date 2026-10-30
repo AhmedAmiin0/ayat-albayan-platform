@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
-import { AssistantPaySettings } from '../assistant-pay.settings';
+import { AssistantPaySettings } from '../shared/assistant-pay.settings';
 import type { TermsRow } from './terms.mapper';
 
 /** assistant_terms (one row per assistant) and the people those terms are for (service role; the controllers guard). */
@@ -65,7 +65,7 @@ export class TermsQueries {
     if (ids.length === 0) return [];
     const [commissions, subs] = await Promise.all([
       this.db.from('assistant_commissions').select('subscription_id').in('student_id', ids),
-      this.db.from('subscriptions').select('id').in('student_id', ids).gt('price', 0).order('created_at').order('id'),
+      this.db.from('subscriptions').select('id').in('student_id', ids).gt('price', 0).neq('status', 'cancelled').order('created_at').order('id'),
     ]);
     if (commissions.error) throw dbError(commissions.error);
     if (subs.error) throw dbError(subs.error);

@@ -21,13 +21,14 @@ export function toBalance(r: Tables<'v_subscription_balance'>): BalanceRow | nul
   };
 }
 
-/** An unknown package (just created, view lag impossible but typed): nothing used yet. */
-export function emptyBalance(sub: { id: string; lessons_total: number }): BalanceView {
+/** An unknown package (just created, view lag impossible but typed): only the lessons used before the platform. */
+export function emptyBalance(sub: { id: string; lessons_total: number; lessons_used_before?: number }): BalanceView {
+  const used = sub.lessons_used_before ?? 0;
   return {
     subscription_id: sub.id,
     lessons_total: sub.lessons_total,
-    lessons_used: 0,
-    remaining: sub.lessons_total,
+    lessons_used: used,
+    remaining: sub.lessons_total - used,
     ended_at: null,
     projected_end_at: null,
   };

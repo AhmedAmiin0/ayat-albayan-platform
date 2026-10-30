@@ -14,7 +14,7 @@ create temp view roster as
   from public.students st
   left join public.teachers t on t.id = st.teacher_id
   left join lateral (select s.id, s.package, s.status from public.subscriptions s
-                      where s.student_id = st.id order by s.starts_on desc, s.created_at desc limit 1) sub on true
+                      where s.student_id = st.id and s.status <> 'cancelled' order by s.starts_on desc, s.created_at desc limit 1) sub on true
   left join public.v_subscription_balance b on b.subscription_id = sub.id
   order by teacher, st.status, student;
 -- Only the temp view above is created; the read itself runs read-only.

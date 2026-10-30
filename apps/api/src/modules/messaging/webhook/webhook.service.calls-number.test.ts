@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { CallEventsPort } from '../calls/flow/call-events.service';
 import { envelope, inboundValue, PHONE_NUMBER_ID, textPart } from './meta.fakes';
 import type { InboundService } from './inbound/webhook.inbound.service';
 import type { StatusService } from './status/webhook.status.service';
@@ -9,15 +8,27 @@ import { WebhookService } from './webhook.service';
 // replies go to the calls port; nothing here sends.
 
 const CALLS = { id: 'n-calls', purpose: 'calls' as const, phone_number_id: 'pid-calls' };
-const reply = { type: 'interactive', interactive: { type: 'call_permission_reply', call_permission_reply: { response: 'accept' } } };
+const reply = {
+  type: 'interactive',
+  interactive: { type: 'call_permission_reply', call_permission_reply: { response: 'accept' } },
+};
 
 function service() {
   const inbound = { handle: vi.fn().mockResolvedValue(undefined) };
   const statuses = { handle: vi.fn().mockResolvedValue(undefined) };
   const calls = { handle: vi.fn(), permissionReply: vi.fn().mockResolvedValue(undefined) };
-  const config = { appSecrets: ['s'], verifyToken: 't', numbers: { notifications: PHONE_NUMBER_ID }, calls: CALLS };
-  const svc = new WebhookService(config, inbound as unknown as InboundService, statuses as unknown as StatusService);
-  Object.assign(svc, { calls: calls as CallEventsPort });
+  const config = {
+    appSecrets: ['s'],
+    verifyToken: 't',
+    numbers: { notifications: PHONE_NUMBER_ID },
+    calls: CALLS,
+  };
+  const svc = new WebhookService(
+    config,
+    inbound as unknown as InboundService,
+    statuses as unknown as StatusService,
+  );
+  Object.assign(svc, { calls });
   return { svc, inbound, calls };
 }
 
@@ -25,13 +36,18 @@ describe('WebhookService and the calls number', () => {
   it('a text to the calls number is stored stamped line calls', async () => {
     const { svc, inbound } = service();
     await svc.handle(envelope(inboundValue(textPart('سلام')), 'pid-calls'));
-    expect(inbound.handle).toHaveBeenCalledWith(expect.objectContaining({ line: 'calls', numberId: 'n-calls' }), expect.anything());
+    expect(inbound.handle).toHaveBeenCalledWith(
+      expect.objectContaining({ line: 'calls', numberId: 'n-calls' }),
+      expect.anything(),
+    );
   });
 
   it('a call_permission_reply reaches the calls port beside the stored message', async () => {
     const { svc, inbound, calls } = service();
     await svc.handle(envelope(inboundValue(reply), 'pid-calls'));
-    expect(calls.permissionReply).toHaveBeenCalledWith(expect.objectContaining({ phoneNumberId: 'pid-calls', response: 'accepted' }));
+    expect(calls.permissionReply).toHaveBeenCalledWith(
+      expect.objectContaining({ phoneNumberId: 'pid-calls', response: 'accepted' }),
+    );
     expect(inbound.handle).toHaveBeenCalledTimes(1);
   });
 });

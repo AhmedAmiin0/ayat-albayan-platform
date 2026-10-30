@@ -42,9 +42,17 @@ const row = (fields: Partial<MessageView>) =>
 const show = (m: MessageView) => renderWithQuery(<MessageBubble message={m} phone={PHONE} />);
 const press = (label: string) => fireEvent.press(screen.getByRole('button', { name: label }));
 const openURL = jest.spyOn(Linking, 'openURL');
+/** A PDF's page 1: no preview (422), so the bubble keeps today's opener (PdfPreview.test.tsx has the card). */
+const PDF_1 = '/threads/%2B966552147730/messages/f1/pdf/1';
+const noPreview = () => Promise.reject(new ApiError(422, { code: 'pdf_no_preview' }));
 /** W6 answers `file`; the bubble's other reads (/auth/me for its actions) get nothing. */
 const serve = (file: () => Promise<unknown>) =>
-  mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : Promise.resolve(null)));
+  mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : path === PDF_1 ? noPreview() : Promise.resolve(null)));
+/** «عرض ملف»: a tap on the PDF card (none of these rows is staff-sent) asks page 1, which has no preview. */
+const pdfOpener = async () => {
+  await fireEvent.press(screen.getByTestId('pdf-f1'));
+  return screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -61,16 +69,16 @@ test('a HEIC photo keeps «عرض صورة»: nothing is signed on render; the t
 });
 
 test('the opener is a full touch target (docs/07: 44 pt)', async () => {
+  serve(async () => null);
   await show(row({ media_mime: 'application/pdf' }));
-  const opener = screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
-  expect(opener.props.style).toMatchObject({ minHeight: shape.control.touch });
+  expect((await pdfOpener()).props.style).toMatchObject({ minHeight: shape.control.touch });
 });
 
-test('our sent PDF opens too and shows its name', async () => {
+test('our sent PDF with no preview opens too and shows its name', async () => {
   serve(async () => ({ url: SIGNED, mime: 'application/pdf', expires_at: '2026-10-19T10:00:00Z' }));
   await show(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'الجدول.pdf' }));
+  await fireEvent.press(await pdfOpener());
   expect(screen.getByText('الجدول.pdf')).toBeTruthy();
-  await press(t.inbox.viewMedia.replace('{kind}', kind.document));
   await waitFor(() => expect(openURL).toHaveBeenCalledWith(SIGNED));
 });
 
@@ -103,7 +111,7 @@ test('410: the file expired', async () => {
 test('403: the label and «not allowed», no button left', async () => {
   serve(async () => { throw new ApiError(403, { code: 'media_forbidden' }); });
   await show(row({ media_mime: 'application/pdf' }));
-  await press(t.inbox.viewMedia.replace('{kind}', kind.document));
+  await fireEvent.press(await pdfOpener());
   expect(await screen.findByText(`${kind.document} · ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeNull();
 });
@@ -111,7 +119,7 @@ test('403: the label and «not allowed», no button left', async () => {
 test('another failure says so and keeps the button for another try', async () => {
   serve(async () => { throw new ApiError(500); });
   await show(row({ media_mime: 'application/pdf' }));
-  await press(t.inbox.viewMedia.replace('{kind}', kind.document));
+  await fireEvent.press(await pdfOpener());
   expect(await screen.findByText(t.common.error)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeTruthy();
 });

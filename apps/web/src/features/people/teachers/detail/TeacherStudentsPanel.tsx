@@ -2,7 +2,7 @@ import { CURRENT_STUDENT_STATUSES, STUDENT_STATUSES, type StudentStatus } from '
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table/DataTable';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Pager } from '@/components/ui/layout/pager';

@@ -15,7 +15,12 @@ import { apiFetch, apiSend } from '@/lib/http/api';
 import { supabase } from '@/lib/http/supabase';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
-// /sales/subscriptions and /sales/payments. Only her students; the price always from the API.
+// /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
+// phone for a child not hers (chatBinding, sales.renew_any, docs/16 row 38); nothing for hers.
+
+export type Bind = { phone?: string };
+const scopeQuery = (studentId: string, bind: Bind) =>
+  `studentId=${studentId}${bind.phone ? `&phone=${encodeURIComponent(bind.phone)}` : ''}`;
 
 /** Every sales money read lives under it (family, chat receipts, quotes). */
 export const SALES_MONEY_KEY = ['sales', 'money'] as const;
@@ -28,36 +33,48 @@ export const salesFamilyQuery = (phone: string) =>
   });
 
 /** GET /sales/money/chat-receipts: the images / PDFs the family sent (metadata only). */
-export const chatReceiptsQuery = (studentId: string) =>
+export const chatReceiptsQuery = (studentId: string, bind: Bind = {}) =>
   queryOptions({
     queryKey: [...SALES_MONEY_KEY, 'chat-receipts', studentId],
-    queryFn: () => apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?studentId=${studentId}`),
+    queryFn: () => apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
   });
 
 /** GET /sales/money/chat-receipts/:messageId: a short-lived thumbnail URL, asked per item. */
-export const chatReceiptFileQuery = (studentId: string, messageId: string) =>
+export const chatReceiptFileQuery = (studentId: string, messageId: string, bind: Bind = {}) =>
   queryOptions({
     queryKey: [...SALES_MONEY_KEY, 'chat-receipt', studentId, messageId],
-    queryFn: () => apiFetch<SalesChatReceiptFile>(`/sales/money/chat-receipts/${messageId}?studentId=${studentId}`),
+    queryFn: () => apiFetch<SalesChatReceiptFile>(`/sales/money/chat-receipts/${messageId}?${scopeQuery(studentId, bind)}`),
     staleTime: 60_000,
   });
 
-export type SalesQuoteBody = { studentId: string; pricing: SubscriptionPricing };
+export type SalesQuoteBody = Bind & { studentId: string; pricing: SubscriptionPricing };
 
 export const quoteSalesSubscription = (body: SalesQuoteBody) =>
   apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', body);
 
 /**
  * Strict body: no notes, no renewal day, never a price. `startsOn` only with subscriptions.set_start_date
- * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked.
+ * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked, and with it
+ * `lessonsUsedBefore` («حلقات مستخدمة من الباقة», owner 2026-10-28) when > 0.
  */
-export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; clientRequestId: string };
+export type SalesSubscriptionBody = SalesQuoteBody & {
+  startsOn?: string;
+  alreadyStarted?: true;
+  lessonsUsedBefore?: number;
+  /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed. */
+  teacherId?: string;
+  clientRequestId: string;
+};
 
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
 
+/** «إلغاء الباقة» of her student's package made by mistake (owner 2026-10-28): nothing paid, no lessons. */
+export const cancelSalesSubscription = (id: string, body: { reason?: string }) =>
+  apiSend<SalesMoneySubscriptionView>('POST', `/sales/subscriptions/${id}/cancel`, body);
+
 /** Strict body: never kind / method / invoiceId (always a bank payment); «المرفقات» optional (0..5 paths). */
-export type SalesPaymentBody = {
+export type SalesPaymentBody = Bind & {
   subscriptionId: string;
   amount: number;
   currency: string;
@@ -70,16 +87,17 @@ export type SalesPaymentBody = {
 export const recordSalesPayment = (body: SalesPaymentBody) => apiSend<SalesPaymentView>('POST', '/sales/payments', body);
 
 /** POST /sales/payments/receipt-from-chat: copies the chat file into the package's receipts. */
-export const receiptFromChat = (body: { subscriptionId: string; messageId: string }) =>
+export const receiptFromChat = (body: Bind & { subscriptionId: string; messageId: string }) =>
   apiSend<SalesReceiptCopied>('POST', '/sales/payments/receipt-from-chat', body);
 
 /** The admin's uploadReceipt, through the sales signed URL (the package must be her student's). */
-export async function uploadSalesReceipt(input: { subscriptionId: string; file: File }): Promise<string> {
+export async function uploadSalesReceipt(input: { subscriptionId: string; file: File; bind?: Bind }): Promise<string> {
   const { file } = input;
   const signed = await apiSend<SignedUpload>('POST', '/sales/payments/receipt-upload-url', {
     subscriptionId: input.subscriptionId,
     mime: file.type,
     size: file.size,
+    ...input.bind,
   });
   const { error } = await supabase.storage
     .from(signed.bucket)

@@ -2,6 +2,7 @@ import type { TablesUpdate } from '@ab/db';
 import { quickReplyIntent, type TemplateButton, type TemplateStatus } from '@ab/shared';
 import { z } from 'zod';
 import { templateButtons } from '../../messages/wa-json';
+import { metaDisplay } from './template-display';
 import type { MetaTemplate, TemplateRow } from '../../whatsapp.types';
 
 // The health check's pure part (docs/12 §3.4): Meta's view of one template → our registry row.
@@ -29,7 +30,9 @@ const componentSchema = z.object({
   /** HEADER only: TEXT | IMAGE | VIDEO | DOCUMENT | LOCATION (the chat import skips all but TEXT). */
   format: z.string().optional(),
   text: z.string().optional(),
-  buttons: z.array(z.object({ type: z.string(), text: z.string().optional(), url: z.string().optional() })).optional(),
+  buttons: z
+    .array(z.object({ type: z.string(), text: z.string().optional(), url: z.string().optional(), phone_number: z.string().optional() }))
+    .optional(),
 });
 export type Component = z.infer<typeof componentSchema>;
 
@@ -85,6 +88,7 @@ export function syncPatch(row: TemplateRow, meta: MetaTemplate | undefined, now:
     ...(body ? { body_ar: body } : {}),
     footer_ar: comps.find((c) => c.type === 'FOOTER')?.text ?? null,
     ...(buttons ? { buttons } : {}),
+    display: metaDisplay(comps),
   };
 }
 

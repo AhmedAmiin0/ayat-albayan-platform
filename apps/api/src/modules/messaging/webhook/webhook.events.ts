@@ -24,7 +24,10 @@ export interface InboundEvent {
   mediaMime: string | null;
   /** messages.interactive_payload: everything but plain text, as Meta sent it. */
   payload: Json | null;
-  /** The receiving line; null unless the chat line is configured (docs/12 §13.2); `calls` = the calls number (docs/28 §10). */
+  /**
+   * The receiving line; null unless the chat line is configured (docs/12 §13.2); `calls` = the
+   * calls number (docs/28 §10).
+   */
   line: NumberPurpose | null;
   /** Module mode only: the receiving wa_numbers row (messages.number_id, docs/23c decision 7). */
   numberId?: string;
@@ -87,7 +90,10 @@ export interface CallWebhookEvent {
   at: Date;
 }
 
-/** A family's answer to a call permission request (a `messages` item, interactive call_permission_reply; docs/28 §10). */
+/**
+ * A family's answer to a call permission request (a `messages` item, interactive
+ * call_permission_reply; docs/28 §10).
+ */
 export interface CallPermissionReplyEvent {
   /** The number the request went from (metadata.phone_number_id). */
   phoneNumberId: string;

@@ -12,7 +12,7 @@ afterEach(() => apiFetch.mockReset());
 
 const views = (label: string) => screen.getByRole('group', { name: label });
 
-describe('«الطلاب» and «أرباحي»: one page each, the old pages are view filters (owner 2026-10-12)', () => {
+describe('«الطلاب» and «محفظتي»: one page each, the old pages are view filters (owner 2026-10-12)', () => {
   it('«الطلاب» shows every student; «طلابي» is the filter beside the title', async () => {
     apiFetch.mockResolvedValue({ items: [], total: 0 });
     const onView = vi.fn();
@@ -31,13 +31,15 @@ describe('«الطلاب» and «أرباحي»: one page each, the old pages ar
     expect(screen.getByRole('button', { name: t.assistantPortal.nav.students }).getAttribute('aria-pressed')).toBe('true');
   });
 
-  it('«أرباحي» shows my earnings; «مدفوعاتي» is its filter and lists the payments I recorded', async () => {
+  it('«محفظتي» shows my commissions; «الكشوف» and «مدفوعاتي» are its filters', async () => {
     apiFetch.mockReturnValue(new Promise(() => {})); // the earnings stay loading: only the head is under test
     const onView = vi.fn();
     const { unmount } = renderWithQuery(<SalesMoney view="earnings" onView={onView} />);
     expect(screen.getByRole('heading', { level: 1, name: t.assistantPortal.nav.earnings })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.assistantPortal.nav.payments }));
     expect(onView).toHaveBeenCalledWith('payments');
+    fireEvent.click(screen.getByRole('button', { name: t.assistantPortal.wallet.views.statements }));
+    expect(onView).toHaveBeenCalledWith('statements');
     unmount();
     apiFetch.mockResolvedValue([]);
     renderWithQuery(<SalesMoney view="payments" onView={vi.fn()} />);

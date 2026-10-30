@@ -1,5 +1,6 @@
 import type { RuleSettings } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { kickConfigReload } from '../../../../config/role/worker-kick';
 import type { RulesSnapshot } from './rules.reader';
 import { RulesSourceSettings } from '../rules-source.settings';
 import { DbRulesReader } from './rules.store';
@@ -7,7 +8,7 @@ import { RulesTable, type RuleRowWrite } from './rules.table';
 
 /**
  * Where the rule writes land: the row, the mirrored legacy keys (legacy mode, the flip back) and the
- * snapshot cache, which is dropped after every write (even a failed one).
+ * snapshot cache, which is dropped after every write (even a failed one), here and on the worker.
  */
 @Injectable()
 export class RulesPersist {
@@ -32,7 +33,8 @@ export class RulesPersist {
       await this.table.upsert(input.row, input.actorId);
       await this.settings.writeLegacy(input.legacy, input.actorId);
     } finally {
-      this.reader.invalidate();
+      this.reader.changed();
+      kickConfigReload();
     }
   }
 
@@ -41,6 +43,7 @@ export class RulesPersist {
       await this.settings.writeLegacy(values, actorId);
     } finally {
       this.reader.invalidate();
+      kickConfigReload();
     }
   }
 

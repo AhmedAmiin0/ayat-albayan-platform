@@ -46,14 +46,12 @@ export function FollowUpCard({ lead, offline }: FollowUpCardProps) {
       onCancel={() => setConfirming(false)}
     />
   ) : (
-    <View style={{ alignSelf: 'flex-start', marginStart: -20 }}>
-      <Button
-        variant="ghost"
-        label={pause.isPending ? t.common.saving : paused ? f.resume : f.pause}
-        busy={pause.isPending}
-        onPress={() => (byLead ? setConfirming(true) : set(!paused))}
-      />
-    </View>
+    <Button
+      variant="secondary"
+      label={pause.isPending ? t.common.saving : paused ? f.resume : f.pause}
+      busy={pause.isPending}
+      onPress={() => (byLead ? setConfirming(true) : set(!paused))}
+    />
   );
 
   return (

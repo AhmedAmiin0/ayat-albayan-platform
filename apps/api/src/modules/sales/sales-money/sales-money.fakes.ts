@@ -18,6 +18,7 @@ export const CREATE = { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, clie
 export function salesDefaults(m: Mocks): void {
   m.sales.ownership.mockImplementation(async (id: string) => (id === SALES_A.id ? OWN_A : NONE));
   m.family.familyPhone.mockResolvedValue(FAMILY_PHONE);
+  m.family.phonesOf.mockResolvedValue([FAMILY_PHONE]);
   m.family.studentStatus.mockResolvedValue('active');
   m.subs.studentForQuote.mockResolvedValue({ id: STUDENT_ID, country: 'SA' });
   m.pricing.quote.mockResolvedValue(WEEKLY_SA);

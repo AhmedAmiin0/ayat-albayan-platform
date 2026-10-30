@@ -13,6 +13,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ListRow } from '@/core/ui/layout/ListRow';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import { type, useTheme } from '@/theme';
 import { useBookingTeachers } from '../../shared/queries';
 import { locale } from '@/core/lib/i18n/locale';
@@ -73,7 +74,7 @@ export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepPr
       {teachers.isError ? <ErrorState onRetry={() => void teachers.refetch()} /> : null}
       {teachers.isPending ? <AppText style={note}>{t.common.loading}</AppText> : null}
       {teachers.data?.length === 0 ? <AppText style={note}>{t.booking.noTeachers}</AppText> : null}
-      <View>
+      <InsetGroup>
         {teachers.data?.map((option) => (
           <ListRow
             key={option.id}
@@ -87,7 +88,7 @@ export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepPr
             onPress={option.has_availability ? () => onPick(option) : undefined}
           />
         ))}
-      </View>
+      </InsetGroup>
     </View>
   );
 }

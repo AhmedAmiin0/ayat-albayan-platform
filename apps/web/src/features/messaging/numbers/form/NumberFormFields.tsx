@@ -20,16 +20,29 @@ export interface NumberFormFieldsProps {
   onChange: (patch: Partial<NumberDraft>) => void;
 }
 
-/** The add / edit fields: name, role (a calls number says it is Kapso only), provider, then the Meta ids (LTR, latin only). */
+/**
+ * The add / edit fields: name, role (a calls number says it is Kapso only), provider, then the Meta
+ * ids (LTR, latin only).
+ */
 export function NumberFormFields({ draft, errors, onChange }: NumberFormFieldsProps) {
   return (
     <div className="grid gap-4">
       <Field label={f.label} required error={errors.label}>
         {(p) => <Input {...p} value={draft.label} maxLength={60} onChange={(e) => onChange({ label: e.target.value })} />}
       </Field>
-      <Field label={f.purpose} hint={draft.purpose === 'calls' ? t.numbers.form.callsHint : undefined}>
+      <Field
+        label={f.purpose}
+        hint={draft.purpose === 'calls' ? t.numbers.form.callsHint : undefined}
+      >
         {(p) => (
-          <Select {...p} value={draft.purpose} onChange={(e) => onChange({ purpose: NUMBER_PURPOSES.find((l) => l === e.target.value) ?? draft.purpose })}>
+          <Select
+            {...p}
+            value={draft.purpose}
+            onChange={(e) => {
+              const purpose = NUMBER_PURPOSES.find((l) => l === e.target.value) ?? draft.purpose;
+              onChange({ purpose });
+            }}
+          >
             {NUMBER_PURPOSES.map((l) => (
               <option key={l} value={l}>{t.numbers.purpose[l]}</option>
             ))}

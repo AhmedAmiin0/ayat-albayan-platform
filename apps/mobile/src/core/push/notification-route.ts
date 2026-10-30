@@ -47,6 +47,8 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   google_sync_alert: () => ADMIN_SETTINGS,
   // docs/31 §2: teachers only; never sent to an admin.
   channel_message: () => '/',
+  // «محفظتي» (owner 2026-10-29): salespeople only; never sent to an admin.
+  commission_earned: () => '/',
 };
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
@@ -100,6 +102,7 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   // Admins only (settings.read); never sent to a teacher.
   google_sync_alert: () => TEACHER_TODAY,
   channel_message: (data) => toTeacherChannel(data),
+  commission_earned: () => TEACHER_TODAY,
 };
 
 /** The teacher screen a tapped push opens; null for anything that is not one of our pushes. */

@@ -2,9 +2,19 @@ import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTe
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { notFound } from '../../../../common/http/errors';
-import { AssistantRpc } from '../assistant-pay.rpc';
+import { CommissionBell } from '../../subscriptions';
+import { AssistantRpc } from '../shared/assistant-pay.rpc';
 import { termsColumns, toTermsView } from './terms.mapper';
 import { TermsQueries } from './terms.queries';
+
+/** The audit and the commission bell (max-params). */
+@Injectable()
+export class TermsEnv {
+  constructor(
+    readonly audit: AuditService,
+    readonly bell: CommissionBell,
+  ) {}
+}
 
 /** The commission and salary terms of each assistant (R-ASST-02, R-ASST-03): set by an admin, read-only for the assistant. */
 @Injectable()
@@ -12,7 +22,7 @@ export class TermsService {
   constructor(
     private readonly queries: TermsQueries,
     private readonly rpc: AssistantRpc,
-    private readonly audit: AuditService,
+    private readonly env: TermsEnv,
   ) {}
 
   /** Every assistant, with their terms (both null until set). */
@@ -49,13 +59,16 @@ export class TermsService {
     await this.rpc.setTerms({ assistantId: input.assistantId, columns, actorId: input.actorId });
     const [row, share] = await Promise.all([this.queries.get(input.assistantId), this.queries.renewalShare()]);
     const after = toTermsView(input.assistantId, row, share);
-    await this.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
+    await this.env.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
     if (after.commission) await this.evaluateBrought(input.assistantId);
     return after;
   }
 
   // ponytail: one RPC per brought student without a commission, sequential; fine for tens of students per assistant.
+  /** Each evaluation may earn a commission: «عمولة جديدة» for what they earned, once after them all. */
   private async evaluateBrought(assistantId: string): Promise<void> {
-    for (const subscriptionId of await this.queries.uncommissioned(assistantId)) await this.rpc.evaluate(subscriptionId);
+    const subscriptions = await this.queries.uncommissioned(assistantId);
+    for (const subscriptionId of subscriptions) await this.rpc.evaluate(subscriptionId);
+    if (subscriptions.length > 0) await this.env.bell.notify();
   }
 }

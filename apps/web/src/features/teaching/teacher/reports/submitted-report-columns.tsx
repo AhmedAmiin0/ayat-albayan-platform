@@ -1,6 +1,6 @@
 import { ATTENDANCES, GRADES, gradeStyle, lessonWhenAt, type TeacherReportView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { reportFormHref } from '@/features/reporting/reports/paths';

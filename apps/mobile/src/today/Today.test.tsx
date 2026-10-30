@@ -13,6 +13,11 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
+// The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
+jest.mock('@/account/hooks/queries', () => ({
+  ...jest.requireActual('@/account/hooks/queries'),
+  useMyProfile: () => ({ data: undefined }),
+}));
 
 /** GET /lessons/day calls only (the sheet also reads each student's balance and the settings). */
 const dayCalls = () =>
@@ -32,11 +37,11 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('the greeting by the Riyadh clock, «اليوم», the date line, and today in Riyadh is what it asks for', async () => {
+test('the greeting by the Riyadh clock is the header (no «اليوم» title), the date line, and today in Riyadh is what it asks for', async () => {
   mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />);
-  expect(screen.getByText(t.today.greeting.evening)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.today.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.today.greeting.afternoon })).toBeTruthy(); // 16:20 Riyadh
+  expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getByText('الخميس 1 أكتوبر · بتوقيت الرياض')).toBeTruthy();
   await waitFor(() =>
     expect(mockApiFetch).toHaveBeenCalledWith('/lessons/day?date=2026-10-01&tz=Asia%2FRiyadh'),

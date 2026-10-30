@@ -58,6 +58,9 @@ export class LineHealthStore {
       .select('line, display_phone_e164, verified_name, checked_at, phone_number_id')
       .order('line');
     if (error) throw new Error(`line health read failed: ${error.message}`);
-    return currentRows(data.flatMap((r) => (isWaLine(r.line) ? [{ ...r, line: r.line }] : [])), lineNumbers(loadEnv()));
+    return currentRows(
+      data.flatMap((r) => (isWaLine(r.line) ? [{ ...r, line: r.line }] : [])),
+      lineNumbers(loadEnv()),
+    );
   }
 }

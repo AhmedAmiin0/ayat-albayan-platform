@@ -14,6 +14,8 @@ import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneySettings } from './sales-money.settings';
+import { SalesPackageCancel } from './sales-package-cancel';
+import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
 
 /**
  * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
@@ -26,7 +28,9 @@ import { SalesMoneySettings } from './sales-money.settings';
   controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
-    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals],
+    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
   ],
+  // The Stripe test build's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
+  exports: [SalesMoneyScope, SalesTeacherAssign],
 })
 export class SalesMoneyModule {}

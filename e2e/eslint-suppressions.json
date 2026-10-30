@@ -1,0 +1,1301 @@
+{
+  "eslint.config.js": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "playwright.config.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 9
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "scripts/screens.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/account.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/admin-extra-phone.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/admin-extra.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/api-boot.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/assistant-api.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "support/assistant-course.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "support/assistant-journey-ui.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "support/assistant-journey.ts": {
+    "max-len": {
+      "count": 12
+    }
+  },
+  "support/assistant-money.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/assistant.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 13
+    }
+  },
+  "support/auto-lists.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "support/change-course.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "support/chat-lists.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/chat-more.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/classroom-live.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "ab/max-params": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "support/config-seed.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/course-pause.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "support/course-renew.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "support/day-times.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 9
+    }
+  },
+  "support/db.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/durations-reporter.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/earnings.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/edit-time.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "support/exports-csv.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "support/family-sign-in.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "support/feedback.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "support/google.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "support/inbox.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/invoice.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/kapso.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/lesson-rating.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "support/message-queue.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/messages.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/money-dashboard.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/money-extra.ts": {
+    "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/money.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/pay-rule.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/reschedule-template.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "support/restricted-templates.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "support/rls.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/sales-money.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "support/sales-options.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/sales-portal.ts": {
+    "max-len": {
+      "count": 10
+    }
+  },
+  "support/schedule-extra.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "support/schedule.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/settings.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "support/student-statuses.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "support/teacher-extra.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "support/teacher-isolation.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/teacher-templates.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/template-registry.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/thread-panel.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "support/trial-date.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/users-control.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "support/wa-lines.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/apply-lesson-changes-v3.sql.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/assistant-auto-assign-off.api.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/assistant-commission-retro.sql.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/assistant-commission-started.sql.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/assistant-commission.sql.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/assistant-course-renew.api.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/assistant-course-subscription.sql.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/assistant-course.api.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/assistant-money.api.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/assistant-portal.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/assistant-renewal-commission.sql.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/assistant-reopen.sql.spec.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "tests/assistant-scope.api.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/assistant-scope.sql.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/assistant-statement.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/assistant-statements.sql.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/assistant-terms.sql.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/assistants-admin.spec.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "tests/avatars.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/booking-day-times.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/booking-day-times.sql.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/booking-group.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/booking-makeup-group.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/booking-makeup-invoice.spec.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/booking-override.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/change-course.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "tests/channel-after-subscribe.sql.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/chat-files.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/chat-list-auto-rules.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/chat-list-auto-triggers.sql.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/chat-lists.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/chat-lists.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/classroom-live-phone.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/classroom-live.moderation.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/classroom-live.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/config-expand.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/config-parity.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/config-seed.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/course-pause-resume.sql.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "tests/course-pause.sql.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 10
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "tests/dashboard.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 9
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/edit-session-time.held.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/edit-session-time.helpers.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/edit-session-time.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/expenses.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/exports.spec.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/family-sign-in.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/feedback.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/finance-money.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/forms-parity.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/google-calendar-handover.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/google-sync.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/google-sync.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/guardian-deliveries.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/inbound-new-lead.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/inbound-quick-reply.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/inbox-failures.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/inbox-media.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/inbox-push-owner.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/inbox-realtime.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/inbox-send-file.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/inbox-template-status.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/integration-config.sql.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/journey-5-availability-wizard.spec.ts": {
+    "@typescript-eslint/no-unnecessary-template-expression": {
+      "count": 1
+    }
+  },
+  "tests/journey-6-duplicate-student.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/journey-7-assistant-cycle.spec.ts": {
+    "max-len": {
+      "count": 16
+    }
+  },
+  "tests/kapso-driver.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/lead-register.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/leads-applicants.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/lesson-rating.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/locale.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/meeting-recordings-rls.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/meetings.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/message-reactions.sql.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/mobile-form-sheets.spec.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "tests/numbers-routing.sql.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/pay-rule.sql.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/payment-attachments.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "tests/payments-receipt.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/payouts.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/phone-search.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/pick-trial-date.guards.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/pick-trial-date.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/portal-views.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/pricing-offer.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "tests/profiles-disabled.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/proposals-reject.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/proposals.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/push-device-claim.sql.spec.ts": {
+    "max-len": {
+      "count": 11
+    }
+  },
+  "tests/push-notifications-rls.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/rate-limit-take.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/reply-forward.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/report-admin.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/report-outcome.sql.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/responsive-dashboard.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/responsive-frame.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/responsive.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/roles-permissions.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/sales-check-start.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/sales-double-role.spec.ts": {
+    "max-len": {
+      "count": 13
+    }
+  },
+  "tests/sales-meetings.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/sales-start-date-revoke.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/sales-starter.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales-subscribe.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "tests/saved-replies.sql.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/schedule-all-teachers.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/schedule-cancel.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/schedule-overview.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/schedule-series.spec.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "tests/schedule-stale.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/send-gate-boot.api.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/settings-academy.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/settings-gate.api.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 6
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/settings-switches.spec.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "tests/shell-focus.spec.ts": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "tests/student-lists.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/student-profile.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/student-recordings-api.spec.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/student-recordings-rls.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/student-statuses.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/subscriptions.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/teacher-corrections.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/teacher-earnings-rls.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/teacher-earnings-ui.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/teacher-earnings.sql.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/teacher-isolation.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/teacher-isolation.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/teacher-meeting-mode.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/teacher-mode.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/teacher-payments.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/teacher-report-attachments.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/teacher-report-edit-window.spec.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/teacher-restricted-templates.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/teacher-rls.sql.spec.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/teacher-week-history.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/template-numbers.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/templates.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/thread-summaries.race.sql.spec.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "tests/thread-summaries.sql.spec.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "tests/trial-no-teacher-chat.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/users-control.delete.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/users-control.invite.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/users-control.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/users-control.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/wa-line-health.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/wa-lines-check.spec.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "tests/wa-two-lines.reply.spec.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "tests/whatsapp-lines.sql.spec.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "tests/whatsapp-lines.windows.sql.spec.ts": {
+    "max-len": {
+      "count": 1
+    }
+  }
+}

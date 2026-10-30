@@ -68,11 +68,14 @@ test.describe('subscriptions (R-SUB-01/02)', () => {
     await expect(line).toContainText(ar.enums.subscriptionStatus.unpaid);
     await expect(line).toContainText(ar.subscriptions.progress.left.few.replace('{n}', '8'));
 
-    // Pause → paused; resume → back to what the money says (nothing paid yet: unpaid).
-    await line.getByRole('button', { name: ar.subscriptions.pause }).click();
+    // «إيقاف مؤقت» is the course pause (docs/11 §7b): from today → paused; «استئناف» → back to what the
+    // money says (nothing paid yet: unpaid).
+    await line.getByRole('button', { name: ar.coursePause.action }).click();
+    await page.getByRole('dialog').getByRole('button', { name: ar.coursePause.confirm }).click();
     await expect(line).toContainText(ar.enums.subscriptionStatus.paused);
     expect(await statusOf(studentId)).toBe('paused');
-    await line.getByRole('button', { name: ar.subscriptions.resume }).click();
+    await line.getByRole('button', { name: ar.coursePause.resume }).click();
+    await page.getByRole('dialog').getByRole('button', { name: ar.coursePause.resumeConfirm }).click();
     await expect(line).toContainText(ar.enums.subscriptionStatus.unpaid);
     expect(await statusOf(studentId)).toBe('unpaid');
 

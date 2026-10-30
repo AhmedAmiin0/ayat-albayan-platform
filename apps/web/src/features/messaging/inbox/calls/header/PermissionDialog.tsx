@@ -17,9 +17,10 @@ export interface PermissionDialogProps {
 
 /**
  * No permission to call this number yet (docs/28 §3.1): inside the 24 h window «اطلب إذن الاتصال»
- * sends WhatsApp's own permission request; from a calls number (§10) outside its window, the approved
- * template of the settings (or, unset, the button is not offered and the sheet says why). The family's
- * last answer on the calls number shows under it. Nothing is sent until the button is pressed.
+ * sends WhatsApp's own permission request; from a calls number (§10) outside its window, the
+ * approved template of the settings (or, unset, the button is not offered and the sheet says why).
+ * The family's last answer on the calls number shows under it. Nothing is sent until the button is
+ * pressed.
  */
 export function PermissionDialog({ ask: sheet, onClose, onSent }: PermissionDialogProps) {
   const client = useQueryClient();
@@ -32,7 +33,10 @@ export function PermissionDialog({ ask: sheet, onClose, onSent }: PermissionDial
       onSent();
     },
   });
-  const reply = permissionReplyText(sheet.reply, { text: t.calls.permission, at: (iso) => fullTime(iso, clock) });
+  const reply = permissionReplyText(sheet.reply, {
+    text: t.calls.permission,
+    at: (iso) => fullTime(iso, clock),
+  });
   const actions = (
     <>
       <Button variant="ghost" onClick={onClose}>

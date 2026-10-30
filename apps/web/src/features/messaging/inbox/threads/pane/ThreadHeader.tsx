@@ -1,6 +1,7 @@
 import { formatPhone, type ChatListRef, type SubscriptionBadge, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
+import { Avatar } from '@/components/ui/display/avatar';
 import { Icon } from '@/components/ui/display/icon';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -8,7 +9,7 @@ import { t } from '@/lib/i18n/i18n';
 import { threadKind, threadTitle, timesInText } from '../../format';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
 import type { InboxSearch } from '../../shared/search';
-import { ThreadListChips } from '../../lists/ThreadListChips';
+import { ThreadListChips } from '../../lists/components/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import { CopyPhoneButton } from './CopyPhoneButton';
@@ -52,6 +53,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
           <Icon name="chevron-right" />
           {t.common.back}
         </Link>
+        <Avatar name={th.display_name ?? ''} id={th.phone_e164} size="sm" decorative />
         <h2 id={headingId} className="min-w-0 truncate font-display text-base font-bold">
           {threadTitle(th, mode)}
         </h2>

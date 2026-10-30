@@ -30,8 +30,8 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     now.current = voiceReducer(now.current, e);
     setState(now.current);
   };
-  const [down, startedAt, keeping] = [useRef(false), useRef(0), useRef(false)];
-  const aborted = useRef(false); // keep() during arming: press() must not go live (its own line: a ref the compiler sees)
+  // One hook call per declarator: the React Compiler cached an array of these useRefs and skipped them on re-render.
+  const down = useRef(false), startedAt = useRef(0), keeping = useRef(false), aborted = useRef(false);
   const [drag] = useState(() => new Animated.Value(0));
   const [hint] = useState(() => new Animated.Value(1));
   const sender = useSendVoice(phone);

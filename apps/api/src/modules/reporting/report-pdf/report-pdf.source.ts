@@ -2,11 +2,12 @@ import type { Attendance, Grade, Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import type { SlotPackage } from './render/pdf-model';
+import { loadFamilyExtras, type FamilyExtras } from './v2/family-source';
 
 const REPORT_COLUMNS =
   'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
   'grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, ' +
-  'grade_commitment, grade_overall, notes, homework, next_plan, version';
+  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at';
 
 export interface ReportRow {
   id: string;
@@ -30,6 +31,10 @@ export interface ReportRow {
   homework: string | null;
   next_plan: string | null;
   version: number;
+  /** 2 = the new form: the family report uses the v2 layout (v2/family-template.ts). */
+  form_version: number;
+  content: unknown;
+  submitted_at: string | null;
 }
 
 /** Everything one report PDF and its message need, read with the service role. */
@@ -47,6 +52,8 @@ export interface ReportSource {
   /** v_package_lessons.n: this lesson's place among the student's consuming lessons. */
   packageN: number | null;
   packages: SlotPackage[];
+  /** v2 reports only: their content, the student's v2 history and the next lesson. */
+  family?: FamilyExtras;
 }
 
 function must<T>(res: { data: T | null; error: { message: string } | null }, what: string): T {
@@ -63,7 +70,7 @@ function must<T>(res: { data: T | null; error: { message: string } | null }, wha
 export class ReportPdfSource {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async load(reportId: string): Promise<ReportSource | null> {
+  async load(reportId: string, now: Date): Promise<ReportSource | null> {
     const res = await this.db.from('lesson_reports').select(REPORT_COLUMNS).eq('id', reportId).maybeSingle();
     if (res.error) throw new Error(`report read failed: ${res.error.message}`);
     if (!res.data) return null;
@@ -79,7 +86,8 @@ export class ReportPdfSource {
       this.db.from('teachers').select('display_name_ar').eq('id', report.teacher_id).maybeSingle(),
       this.db.from('v_lesson_sequence').select('seq').match(pair).maybeSingle(),
       this.db.from('v_package_lessons').select('n').match(pair).maybeSingle(),
-      this.db.from('subscriptions').select('id, lessons_total, starts_on, created_at').eq('student_id', report.student_id),
+      // A cancelled package holds no slot (v_package_lessons skips it too, migration 934).
+      this.db.from('subscriptions').select('id, lessons_total, lessons_used_before, starts_on, created_at').eq('student_id', report.student_id).neq('status', 'cancelled'),
     ]);
     const l = must(lesson, 'lesson');
     const s = must(student, 'student');
@@ -97,9 +105,11 @@ export class ReportPdfSource {
       packages: must(subs, 'subscriptions').map((p) => ({
         id: p.id,
         lessonsTotal: p.lessons_total,
+        lessonsUsedBefore: p.lessons_used_before,
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),
+      ...(report.form_version === 2 ? { family: await loadFamilyExtras(this.db, report, { startsAt: l.starts_at, now }) } : {}),
     };
   }
 

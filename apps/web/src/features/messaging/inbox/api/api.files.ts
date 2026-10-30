@@ -6,8 +6,10 @@ import {
   type SignedUpload,
   type ThreadFileSendInput,
   type ThreadFileUpload,
+  type ThreadPdfPage,
 } from '@ab/shared';
-import { apiSend } from '@/lib/http/api';
+import { queryOptions } from '@tanstack/react-query';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { supabase } from '@/lib/http/supabase';
 
 // D2 (owner 2026-10-19 #2): staff send an image or PDF inside the 24 h window. The file goes to
@@ -42,3 +44,16 @@ export async function uploadChatFile(input: { phone: string; requestId: string; 
 
 export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/file`, body);
+
+/**
+ * A chat PDF's page as a signed JPEG with the PDF's page count and size (owner 2026-10-29); page 1 is
+ * the bubble's thumb. Asked once «عرض ملف» opened the file, as threadFileQuery. A 503 (one render at a
+ * time per API copy) is retried twice; anything else leaves today's named link.
+ */
+export const threadPdfPageQuery = (phone: string, messageId: string, page: number) =>
+  queryOptions({
+    queryKey: ['thread-pdf', phone, messageId, page],
+    queryFn: () => apiFetch<ThreadPdfPage>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`),
+    staleTime: 30 * 60_000,
+    retry: (failures, e) => failures < 2 && e instanceof ApiError && e.status === 503,
+  });

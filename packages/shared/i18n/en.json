@@ -67,7 +67,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Ended",
-      "unpaid": "Awaiting activation"
+      "unpaid": "Awaiting activation",
+      "cancelled": "Cancelled"
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages"
@@ -311,7 +312,13 @@
     "phoneTaken": "This number is already registered to another guardian",
     "phoneHint": "Start with your country code, then your number — Saudi Arabia 966 · Egypt 20 · Sudan 249",
     "edit": "Edit guardian",
-    "updated": "Guardian details updated"
+    "updated": "Guardian details updated",
+    "mainPhone": "Main number",
+    "secondPhone": "Second number",
+    "removePhone": "Remove the second number",
+    "removePhoneConfirm": "Remove {phone} from the family's numbers? Its chat becomes a lead chat again.",
+    "phoneRemoved": "The second number was removed",
+    "phoneNotFound": "This number is not a second number of this family"
   },
   "teachers": {
     "title": "Teachers",
@@ -727,6 +734,7 @@
       "request_id_required": "Try again, the booking needs a request id",
       "makeup_not_eligible": "This lesson cannot be made up",
       "makeup_exists": "This lesson already has a makeup booking",
+      "number_taken": "This number belongs to a registered family; book from the student's file",
       "makeup_student": "The student is not on the missed lesson",
       "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
       "not_your_lead": "This lead is not assigned to you, so you cannot register it. Ask the admin to assign it to you.",
@@ -1046,13 +1054,19 @@
     "studentTime": "{time} {city} time",
     "greeting": {
       "morning": "Good morning",
-      "evening": "Good evening"
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "night": "Good night"
     },
+    "greetingNamed": "{greeting}, {name}",
     "summaryLabel": "Today at a glance",
     "summary": {
       "all": "lessons today",
-      "scheduled": "need confirmation",
+      "scheduled": "to confirm",
       "completed": "ended"
+    },
+    "statusShort": {
+      "scheduled": "To confirm"
     },
     "summaryFilter": "{n} {label}, show only these lessons",
     "summaryFilterActive": "{n} {label}, show all lessons",
@@ -1503,7 +1517,7 @@
     "title": "Sales",
     "nav": {
       "students": "My students",
-      "earnings": "My earnings",
+      "earnings": "My wallet",
       "payments": "My payments"
     },
     "register": {
@@ -1527,7 +1541,7 @@
       "voided": "Voided"
     },
     "earnings": {
-      "title": "My earnings",
+      "title": "My wallet",
       "terms": "My terms",
       "noTerms": "Your salary and commission terms are not set yet. Contact the administration.",
       "salary": "Monthly salary",
@@ -1569,6 +1583,33 @@
       "method": "Method",
       "paidAt": "Paid on",
       "note": "Note"
+    },
+    "wallet": {
+      "views": {
+        "commissions": "Commissions",
+        "statements": "Statements"
+      },
+      "due": "Owed to you",
+      "owedBack": "Deducted from your next statement",
+      "thisMonth": "This month {amount}",
+      "paid": "Paid to you {amount}",
+      "none": "Nothing owed right now",
+      "list": "My commissions",
+      "empty": "No commissions yet",
+      "emptyHint": "Each commission shows here as soon as a student you brought pays a package in full.",
+      "state": {
+        "in_statement": "In the {month} statement",
+        "paid": "Paid"
+      },
+      "method": {
+        "card": "Online",
+        "bank": "Bank transfer"
+      },
+      "voided": {
+        "payment_voided": "No longer fully paid",
+        "student_merged": "Record merged"
+      },
+      "voidedByAdmin": "Voided by the admin"
     }
   },
   "reports": {
@@ -1655,7 +1696,13 @@
       "attachment_path": "The file didn't upload correctly. Upload it again",
       "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it",
       "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending",
-      "missing_program": "Pick the program before sending"
+      "missing_program": "Pick the program before sending",
+      "missing_segments": "Add at least one recitation, new memorization or revision part",
+      "missing_topic": "Write the lesson topic before sending",
+      "missing_domain": "Pick the area before sending",
+      "invalid_range": "Pick ayahs that exist in the surah, from the lower to the higher",
+      "too_many_segments": "The report has the most parts it can hold; remove one before sending",
+      "form_version_mismatch": "This report's form changed; refresh and try again"
     },
     "entryFor": "Report for {name}",
     "submitting": "Sending…",
@@ -1696,7 +1743,138 @@
     "studentCol": "Student",
     "submittedAtCol": "Sent on",
     "gradeCol": "Grade",
-    "actionsCol": "Action"
+    "actionsCol": "Action",
+    "v2": {
+      "formTitle": "Lesson report",
+      "autoFilled": "Lesson details are filled in automatically from the schedule.",
+      "lessonOf": "Lesson {n} of {total}",
+      "lessonNo": "Lesson {n}",
+      "teacherChip": "Teacher: {name}",
+      "attendanceTitle": "Attendance",
+      "attendance": {
+        "on_time": "Attended on time",
+        "late": "Attended late",
+        "excused": "Excused in advance",
+        "absent": "Absent without notice"
+      },
+      "programTitle": "Program",
+      "absentHint": "No content or grades are needed for this lesson. The family receives one line with the attendance.",
+      "excusedTitle": "The student excused in advance",
+      "charged": "Counts against the package",
+      "notCharged": "Does not count against the package",
+      "absentNote": "Note to the family (optional)",
+      "absentNotePlaceholder": "e.g. Please let us know in advance when excusing",
+      "segment": {
+        "recited": "Recitation",
+        "new": "New memorization",
+        "revision": "Revision"
+      },
+      "pickRange": "Pick the surah and ayahs",
+      "rangeValue": "Surah {surah} · ayahs {from}–{to}",
+      "rangeShort": "Surah {surah} {from}–{to}",
+      "ayahs": {
+        "one": "1 ayah",
+        "two": "2 ayahs",
+        "few": "{n} ayahs",
+        "other": "{n} ayahs"
+      },
+      "pageOne": "p. {page}",
+      "pageRange": "pp. {first}–{last}",
+      "rateOf": "Grade for {title}",
+      "addSegment": "+ Add another part",
+      "segmentsFull": "Up to {max} parts",
+      "removeSegment": "Remove this part",
+      "tajweedTitle": "Theory / tajweed",
+      "optional": "(optional)",
+      "tajweed": {
+        "noon_sakin": "Noon sakinah and tanween",
+        "meem_sakin": "Meem sakinah",
+        "madd": "Prolongation (madd)",
+        "qalqala": "Qalqalah",
+        "makharij": "Articulation points"
+      },
+      "topic": "Lesson topic",
+      "skills": {
+        "reading": "Reading",
+        "writing": "Writing",
+        "listening": "Listening and speaking",
+        "grammar": "Grammar"
+      },
+      "domainTitle": "Area",
+      "domains": {
+        "aqeedah": "Creed",
+        "fiqh": "Fiqh",
+        "seerah": "Seerah",
+        "hadith": "Hadith",
+        "adab": "Manners"
+      },
+      "memorized": "Memorized",
+      "islamicRates": {
+        "comprehension": "Understanding",
+        "participation": "Participation"
+      },
+      "overall": "Overall grade",
+      "suggested": "Suggested from the grades: {grade}",
+      "homework": "Homework before the next lesson",
+      "homeworkHint": "Suggested from the lesson content; you can edit it.",
+      "nextTitle": "Next lesson",
+      "editPlan": "Edit the plan",
+      "note": "Note to the family",
+      "notePlaceholder": "Write a short note to the family",
+      "quick": {
+        "keep_going": "Well done, keep going",
+        "daily_revision": "Needs daily revision",
+        "tajweed_focus": "Needs to focus on tajweed"
+      },
+      "attach": "+ Attach a file",
+      "send": "Send the report to the family",
+      "saveEdit": "Save the edit",
+      "saveDraft": "Save draft",
+      "sendHint": "The guardian receives the report as a PDF on WhatsApp.",
+      "picker": {
+        "cancel": "Cancel",
+        "search": "Search for a surah",
+        "searchPlaceholder": "Search by surah name or number",
+        "recent": "Recent:",
+        "surahItem": "Surah {name}",
+        "surahMeta": "{n} ayahs · juz {juz}",
+        "from": "From ayah",
+        "to": "To ayah",
+        "dec": "Decrease",
+        "inc": "Increase",
+        "summary": "{ayahs} · page {page} · juz {juz}.",
+        "afterLast": "Starts right after the last memorized ayah ({ayah}).",
+        "done": "Done",
+        "noMatch": "No surah matches that name or number"
+      },
+      "suggest": {
+        "homeworkQuran": "Revise Surah {surah} from ayah {from} to {to} every day.",
+        "nextNew": "New memorization: Surah {surah} {from}–{to}",
+        "nextRevision": "Revision: Surah {surah} {from}–{to}",
+        "lang": "en"
+      },
+      "family": {
+        "title": "{name}'s lesson report",
+        "doneToday": "Done today",
+        "theoryLine": "Theory: {topic}",
+        "domainLine": "{domain}: {topic}",
+        "memorizedLine": "Memorized: {text}",
+        "progress": "Memorization progress",
+        "juzLabel": "Juz {juz} ({name})",
+        "pagesOf": "{done} of {total} pages",
+        "progressAria": "Juz {juz}: {done} of {total} pages",
+        "completedJuz": "Completed: {list}",
+        "juzName": "Juz {name}",
+        "teacherNote": "Teacher's note",
+        "lessonsLeft": "Left in the package: {left}",
+        "ask": "Questions? Message us on WhatsApp",
+        "absentLine": "The lesson did not take place: {attendance}."
+      },
+      "admin": {
+        "v2Badge": "New form",
+        "noContent": "No content for this lesson"
+      }
+    }
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -1735,6 +1913,22 @@
     "unpaidFlag": "Package not paid",
     "pause": "Pause",
     "resume": "Resume package",
+    "cancel": {
+      "action": "Cancel package",
+      "title": "Cancel this package?",
+      "body": "The package stays in the history as «Cancelled»: it is never owed and no lessons can be booked on it. A cancel cannot be undone.",
+      "reason": "Reason (optional)",
+      "confirm": "Cancel package",
+      "done": "Package cancelled",
+      "errors": {
+        "has_payments": "A package with payments cannot be cancelled. Refund it first.",
+        "has_lessons": "A package with booked or used lessons cannot be cancelled.",
+        "has_commission": "This package cannot be cancelled: a later package of the same student already earned a commission.",
+        "already_cancelled": "This package is already cancelled.",
+        "subscription_not_found": "This package no longer exists.",
+        "not_your_student": "This student is not one of yours."
+      }
+    },
     "saved": "Subscription saved",
     "empty": "No subscriptions for this student yet",
     "error": {
@@ -1771,6 +1965,7 @@
     "saved": "Payment recorded",
     "empty": "No payments yet",
     "error": {
+      "subscription_cancelled": "A cancelled package takes no payment",
       "currency_mismatch": "The payment currency must match the subscription currency ({currency})",
       "paid_at_future": "The payment date is in the future",
       "receipt_type": "Upload an image or PDF only",
@@ -2377,6 +2572,12 @@
     "filterAll": "All",
     "filterUnread": "Unread",
     "filterRow": "Filter chats",
+    "filterWaiting": "Awaiting your reply",
+    "emptyWaiting": "No chats are awaiting your reply",
+    "emptyStage": "No chats at this stage",
+    "draft": "Draft:",
+    "studentDetails": "Student details",
+    "chatMenu": "Chat options",
     "empty": "No messages yet",
     "emptyUnread": "No new messages",
     "unknownNumber": "Unknown number",
@@ -2496,13 +2697,20 @@
     },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
-      "notConfirmed": "No lesson was confirmed by this reply",
-      "reschedule": "Asked to reschedule the {when} lesson (Riyadh time)",
+      "reschedule": "Asked to reschedule the lesson",
       "rescheduleNoLesson": "Asked to reschedule",
+      "rescheduled": "The lesson was rescheduled",
       "stop": "Asked to stop messages"
     },
+    "replyAction": {
+      "confirm": "Confirm lesson",
+      "confirmLabel": "Confirm the {when} lesson (Riyadh time)",
+      "reschedule": "Reschedule",
+      "rescheduleLabel": "Reschedule the {when} lesson (Riyadh time)",
+      "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
+    },
     "composer": {
-      "placeholder": "Type a message…",
+      "placeholder": "Message",
       "placeholderDesktop": "Type a message — Enter to send, Shift+Enter for a new line",
       "send": "Send",
       "sending": "Sending…",
@@ -2629,7 +2837,18 @@
       "renew": "Renew subscription",
       "due": "Owes {amount}",
       "make": "Create the subscription",
-      "backToChat": "Back to the chat"
+      "backToChat": "Back to the chat",
+      "students": {
+        "one": "1 student",
+        "two": "2 students",
+        "few": "{n} students",
+        "other": "{n} students"
+      },
+      "subscribedOf": "Subscribed: {n} of {total}",
+      "noPackage": "No package: {names}",
+      "showStudents": "Show students",
+      "hideStudents": "Hide students",
+      "pickStudent": "Which student?"
     },
     "convertedLead": "Became a student",
     "sentBy": "Sent by: {name}",
@@ -2721,6 +2940,61 @@
       "copied": "Offer copied",
       "copyFailed": "Could not copy the offer",
       "close": "Close the price quote"
+    },
+    "templateBubble": {
+      "buttons": "Template buttons",
+      "button": {
+        "quick_reply": "Quick reply",
+        "url": "Open link",
+        "phone_number": "Call",
+        "copy_code": "Copy code"
+      },
+      "displayOnly": "{label}: shown only, the family taps it in WhatsApp",
+      "opensLink": "{label}: opens the link",
+      "callNumber": "{label}: ⁦{phone}⁩",
+      "tapped": "Tapped a button",
+      "header": {
+        "image": "Image",
+        "video": "Video",
+        "document": "Document",
+        "location": "Location"
+      }
+    },
+    "linkFamily": {
+      "action": "Link to an existing student",
+      "title": "Link this number to a student's family",
+      "hint": "Search by the student's name or code, then pick them. This number becomes their family's second number; who follows up the lead does not change.",
+      "confirm": "Link the number to the family of {name} ({code})?",
+      "pickHint": "Picks this student to link the number to their family",
+      "submit": "Link the number",
+      "linking": "Linking…",
+      "done": "The number is linked to the student's family",
+      "already": "This number is already linked to this family",
+      "errors": {
+        "lead_not_found": "This lead was not found",
+        "student_not_found": "No student has this code",
+        "number_taken": "This number is registered to another family",
+        "family_has_second_number": "This family already has a second number",
+        "teacher_number": "This is a teacher's number; it cannot be linked to a family",
+        "lead_has_family": "This number is another family's main number"
+      }
+    },
+    "pdf": {
+      "type": "PDF",
+      "pages": {
+        "one": "1 page",
+        "two": "2 pages",
+        "few": "{n} pages",
+        "other": "{n} pages"
+      },
+      "kb": "{n} KB",
+      "mb": "{n} MB",
+      "open": "Open {name}",
+      "pageOf": "Page {n} of {total}",
+      "more": "The preview shows the first {n} pages. Download the file to see the rest.",
+      "pageFailed": "Couldn't load the page. Tap to try again",
+      "tapToPreview": "Tap to preview",
+      "zoomHint": "Tap a page to zoom in"
     }
   },
   "mobileFinance": {
@@ -3133,17 +3407,29 @@
       "10": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
       "190": "The WhatsApp account's access has expired — it needs renewing from Business Manager, and messages are waiting in the queue",
       "200": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
+      "368": "Meta restricted the WhatsApp Business account for a policy breach — an admin checks it in Meta",
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
+      "131021": "Can't send to the academy's own number",
       "131026": "The number isn't on WhatsApp or can't receive messages",
       "131030": "This number is not on the allowed recipients list of the test account",
+      "131031": "The WhatsApp Business account is restricted or locked — an admin checks it in Meta",
+      "131037": "The WhatsApp number's display name isn't approved — an admin changes it in Meta",
+      "131042": "WhatsApp Business account payment problem — an admin fixes it in Meta",
+      "131045": "The academy's WhatsApp number isn't registered — an admin registers it in Meta",
       "131047": "More than 24 hours have passed since their last message",
       "131049": "Meta held back this message because the recipient has received too many messages — try later or send it yourself",
+      "131050": "They turned off marketing messages from the academy",
       "131051": "This message type isn't supported on WhatsApp",
+      "131053": "Couldn't upload the file to WhatsApp — its type isn't supported",
       "131056": "Too many messages to the same number in a short time — it will be resent automatically",
+      "131057": "The WhatsApp Business account is in maintenance — try later",
       "132000": "The template has the wrong number of variables",
       "132001": "The template doesn't exist on Meta",
+      "132012": "The template's values don't match its approved format",
       "132015": "Meta has paused this template temporarily",
+      "132016": "Meta disabled this template for good — create a new one",
+      "133010": "The academy's WhatsApp number isn't registered — an admin registers it in Meta",
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
@@ -3156,13 +3442,15 @@
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
       "stale": "No longer needed: the lesson was cancelled or changed, or the lead replied or asked to stop messages",
-      "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then press “Try again”",
+      "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then try again",
       "uncertain": "We're not sure it was sent — check WhatsApp before sending it again",
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",
+      "internal": "The platform hit an error while sending",
       "unknown": "Something went wrong while sending ({code})"
     },
-    "cancelManual": "Not yet"
+    "cancelManual": "Not yet",
+    "failedMenu": "Message not sent"
   },
   "mobileLeads": {
     "filter": "Filter",
@@ -3253,6 +3541,10 @@
     "channel_message": {
       "title": "New message from a student's family",
       "body": "{student}: {text}"
+    },
+    "commission_earned": {
+      "title": "New commission",
+      "body": "{amount} — {code} {student}"
     }
   },
   "bell": {
@@ -3332,7 +3624,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Package finished",
-      "unpaid": "Unpaid"
+      "unpaid": "Unpaid",
+      "cancelled": "Cancelled"
     },
     "program": {
       "quran": "The Holy Quran",
@@ -3420,7 +3713,8 @@
       "bank": "Bank transfer",
       "wallet": "E-wallet",
       "cash": "Cash",
-      "other": "Other"
+      "other": "Other",
+      "card": "Card (online)"
     },
     "payoutStatus": {
       "draft": "Draft",
@@ -3474,7 +3768,8 @@
       "new_student": "New student",
       "meeting_invite": "Meeting invitation",
       "google_sync_alert": "Google sync alert",
-      "channel_message": "Student channel message"
+      "channel_message": "Student channel message",
+      "commission_earned": "New commission"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3549,7 +3844,8 @@
       "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
-      "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed."
+      "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
+      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3574,7 +3870,8 @@
     "invalidPhone": "Enter the number in international format, e.g. +966500000000",
     "invalidText": "Check this field",
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
-    "commsSource": "Where the number setup comes from"
+    "commsSource": "Where the number setup comes from",
+    "reportFormV2": "New lesson report form"
   },
   "language": {
     "label": "Language",
@@ -4067,7 +4364,8 @@
       "teachers": "Teachers",
       "allStudents": "Students",
       "live": "Running lessons",
-      "academySchedule": "Lesson schedule"
+      "academySchedule": "Lesson schedule",
+      "scheduleTab": "Schedule"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -4127,7 +4425,21 @@
       "openSchedule": "Show the teacher's schedule today",
       "pick": "Pick a teacher to see their students",
       "allGenders": "Everyone",
-      "back": "Back to teachers"
+      "back": "Back to teachers",
+      "tabs": {
+        "students": "Students",
+        "schedule": "Schedule",
+        "attendance": "Attendance"
+      },
+      "tabsLabel": "Teacher view",
+      "overview": {
+        "noWeekly": "No weekly slots",
+        "slot": "{day} at {time} · {minutes} min",
+        "window": "Last {days} days",
+        "totals": "Held {held} · Student absent {student_absent} · Cancelled by teacher {cancelled_by_teacher} · Cancelled by admin {cancelled_by_admin} · Other {other}",
+        "latest": "Latest lessons",
+        "noLessons": "No lessons in this period"
+      }
     },
     "allStudents": {
       "title": "All students",
@@ -4140,10 +4452,7 @@
       "guardian": "Guardian",
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
-      "noPhone": "This student has no saved phone number, so there is no chat to open",
-      "detailsHint": "Opens the student details",
-      "chatHint": "Opens the guardian's chat",
-      "noPhoneHint": "No guardian phone"
+      "detailsHint": "Opens the student details"
     },
     "live": {
       "title": "Lessons running now",
@@ -4173,8 +4482,8 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
-      "chat": "Guardian's chat",
-      "notFound": "This student is not one of yours or does not exist",
+      "chat": "Open chat",
+      "notFound": "This student does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",
       "noSubscription": "No subscription yet",
@@ -4203,6 +4512,42 @@
         "noUpcoming": "No upcoming lessons",
         "showAll": "Show all ({n})",
         "showLess": "Show less"
+      },
+      "notMine": "Not one of your students: subscriptions and reports are not shown here",
+      "trial": {
+        "title": "Trial lesson",
+        "none": "No trial lesson",
+        "teacher": "with {name}",
+        "again": "New trial date for {name}"
+      },
+      "log": {
+        "title": "Attendance log",
+        "open": "View attendance log",
+        "months": "Choose the month",
+        "columns": {
+          "date": "Date",
+          "time": "Time",
+          "teacher": "Teacher",
+          "status": "Status",
+          "report": "Report"
+        },
+        "totals": {
+          "held": "Attended",
+          "absent": "Absent",
+          "excused": "Excused",
+          "late": "Late",
+          "cancelled": "Cancelled",
+          "rescheduled": "Rescheduled"
+        },
+        "empty": "No past lessons in this month",
+        "sent": "Sent",
+        "notSent": "Not sent",
+        "trial": "Trial",
+        "makeup": "Makeup",
+        "moved": "Rescheduled",
+        "late": "Late",
+        "cancelReason": "Cancel reason: {reason}",
+        "openReport": "Open the report of the {date} lesson"
       }
     },
     "lessonActions": {
@@ -4213,7 +4558,11 @@
       "reasonHint": "e.g. the family is travelling",
       "confirmCancel": "Confirm cancellation",
       "cancelled": "Lesson cancelled",
-      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin."
+      "ownNote": "You can confirm, reschedule or cancel any lesson; anything else is done by the admin.",
+      "confirm": "Confirm lesson",
+      "confirmed": "Lesson confirmed",
+      "confirmEnded": "This lesson has ended, so it cannot be confirmed",
+      "confirmInvalid": "This lesson cannot be confirmed from its current status"
     },
     "mobile": {
       "section": "Sales",
@@ -4228,7 +4577,15 @@
       "lessonsCount": "Lessons: {n}",
       "liveNow": "Running now",
       "makeupTag": "Makeup",
-      "lessonLabel": "Lesson at {time} with {teacher}"
+      "lessonLabel": "Lesson at {time} with {teacher}",
+      "status": {
+        "label": "Lesson status",
+        "all": "All",
+        "scheduled": "To confirm",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "empty": "No lessons with this status on this day"
+      }
     },
     "views": {
       "students": "Students view",
@@ -4237,6 +4594,12 @@
     "renewalCommission": {
       "label": "Renewal commission share",
       "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
+    },
+    "money": {
+      "transfer": "Record transfer",
+      "renew": "Renew",
+      "transferFor": "Record a transfer for {name}",
+      "renewFor": "Renew {name}'s subscription"
     }
   },
   "salesMoney": {
@@ -4302,8 +4665,22 @@
       "attachment_in_use": "This file is already attached to another payment; choose another file.",
       "attachment_path": "One attachment could not be used; attach it again.",
       "attachment_type": "An attachment must be an image or a PDF.",
-      "too_many_attachments": "At most 5 attachments."
-    }
+      "too_many_attachments": "At most 5 attachments.",
+      "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
+      "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package.",
+      "teacher_not_found": "The chosen teacher is not available now. Choose another."
+    },
+    "usedBefore": "Lessons already used from the package",
+    "usedBeforeHint": "Counted from the package; only the rest is booked",
+    "usedBeforeLess": "One lesson fewer",
+    "usedBeforeMore": "One lesson more",
+    "noCommissionStarted": "No commission: the course started before it was recorded",
+    "teacher": "Teacher",
+    "teacherHint": "The teacher–student chat opens after the subscription.",
+    "teacherNone": "No teacher assigned yet",
+    "teacherSearch": "Search teachers",
+    "payOnline": "Online payment"
   },
   "registrationCheck": {
     "title": "Registration check",
@@ -4529,6 +4906,7 @@
       "invoice_mismatch": "This invoice does not belong to this package's student",
       "invoice_used": "A payment was already recorded from this invoice",
       "refund_exceeds_paid": "The refund is more than what was paid on this package",
+      "subscription_cancelled": "A cancelled package takes no payment",
       "category_exists": "A category with this key already exists",
       "invalid_category": "Use lower-case latin letters and digits for the key",
       "month_required": "Choose the month or the paid date",
@@ -4797,6 +5175,7 @@
       "booking.write": "Book lessons",
       "lessons.reschedule": "Reschedule one lesson of their own students (sales)",
       "lessons.cancel": "Cancel one lesson of their own students (sales)",
+      "lessons.confirm": "Confirm any scheduled lesson (sales)",
       "pricing.read": "View pricing",
       "tasks.manage": "Admin tasks",
       "classroom.join": "Join the online classroom",
@@ -4860,7 +5239,10 @@
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
       "saved_replies.manage": "Manage shared quick replies",
-      "student_channels.monitor": "Read student–teacher channels"
+      "student_channels.monitor": "Read student–teacher channels",
+      "courses.pause": "Pause and resume any student's course",
+      "sales.renew_any": "Renew any student's subscription from the chat",
+      "leads.link_family": "Link a lead's number to an existing student's family"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -4868,7 +5250,11 @@
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
-      "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission."
+      "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
+      "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
+      "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
+      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
+      "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
     "page": {
       "title": "Roles and permissions",
@@ -5397,7 +5783,8 @@
         "teacher_unmapped": "Teacher not mapped to a calendar",
         "student_unmapped": "Student folder not confirmed",
         "drive_unconfirmed": "Reports folder not confirmed",
-        "already_in_sheet": "Report already in the sheet from the old script"
+        "already_in_sheet": "Report already in the sheet from the old script",
+        "script_event_present": "The old script's event is already at this time"
       }
     },
     "counts": {
@@ -5405,7 +5792,8 @@
     },
     "alerts": {
       "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
-      "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped."
+      "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
+      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first"
     },
     "web": {
       "updated": "Updated {at}",
@@ -5435,6 +5823,17 @@
       "pdf_not_synced": "The report file is not uploaded yet",
       "summary_row_other_folder": "The student's summary row points at another folder, so it was left as is",
       "other": "Google error: {code}"
+    },
+    "teacherCalendar": {
+      "title": "Teacher's calendar",
+      "script": "From the sheet (old script)",
+      "platform": "From the platform",
+      "warning": "Switch to the platform only after the script has stopped for this teacher.",
+      "managed": "Events written by the platform: {n}",
+      "scriptPresent": "Lessons not written because the script's event is there: {n}",
+      "changedAt": "Last changed: {at}",
+      "saved": "The teacher's calendar source was saved",
+      "loadError": "Couldn't load the teacher's calendar status."
     }
   },
   "notificationCatalogue": {
@@ -5597,6 +5996,10 @@
       "channel_message": {
         "name": "Family message in the student channel",
         "trigger": "When the student or guardian writes in the student channel"
+      },
+      "commission_earned": {
+        "name": "New assistant commission",
+        "trigger": "When a student the assistant brought pays a package in full"
       }
     }
   },
@@ -6499,6 +6902,7 @@
     "close": "Close",
     "showHistory": "Show dates",
     "mobile": {
+      "pickStudent": "Which student?",
       "showAll": "Show all ({n})",
       "showLess": "Show less",
       "newTime": "New date"
@@ -6687,6 +7091,187 @@
     "back": "All students",
     "students": "Students",
     "noMessageYet": "No messages yet",
-    "hide": "Hide the chat"
+    "hide": "Hide the chat",
+    "closed": "The chat with the teacher opens after the subscription",
+    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher."
+  },
+  "packagePayment": {
+    "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
+    "shortfall": "The amount is {amount} {currency} less than what is due; the package stays unpaid until the full amount is paid",
+    "error": {
+      "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
+      "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+    }
+  },
+  "paymentLinks": {
+    "title": "Online payment link",
+    "testBadge": "Test",
+    "kind": {
+      "new": "New subscription",
+      "renewal": "Renewal"
+    },
+    "referencePrice": "Calculator price: {amount} {currency}",
+    "agreedAmount": "Agreed amount ({currency})",
+    "minAmount": "Lowest allowed amount: {amount} {currency}",
+    "create": "Create link",
+    "creating": "Creating the link…",
+    "created": "Payment link created; it expires {when}.",
+    "sendInChat": "Send in the chat",
+    "copy": "Copy",
+    "copied": "Link copied",
+    "templateNeeded": "The family's last message is over 24 hours old: send an approved template first, then the link.",
+    "message": "Hello, here is the payment link for {student}'s package ({lessons} lessons): {amount} {currency}\n{url}",
+    "list": "Payment links",
+    "empty": "No payment links.",
+    "cancel": "Cancel link",
+    "cancelConfirm": "Cancel this link? The family will not be able to pay with it.",
+    "expiresAt": "Expires {when}",
+    "paidAt": "Paid {when}",
+    "lessons": "{count} lessons",
+    "status": {
+      "open": "Open",
+      "paid": "Paid",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    },
+    "error": {
+      "discount_too_large": "The amount is below the admin's discount limit.",
+      "discount_not_allowed": "The calculator discount may only be 0, 5, 10 or 15 %.",
+      "not_a_renewal": "This student has no earlier package to renew.",
+      "currency_mismatch": "The amount must be in the package currency ({currency}).",
+      "link_not_open": "This link is no longer open.",
+      "link_processing": "This link's payment is being processed; wait for the result before cancelling it.",
+      "stripe_not_configured": "The Stripe keys are not saved in the settings yet.",
+      "stripe_unavailable": "Stripe could not be reached; the link was not cancelled. Try again.",
+      "generic": "Could not create the link; try again."
+    },
+    "web": {
+      "agreed": "Agreed amount",
+      "reference": "Calculator price",
+      "amountPositive": "Enter an amount above zero.",
+      "copyFailed": "Could not copy; copy the link by hand.",
+      "status": "Status",
+      "when": "Date",
+      "emptyHint": "Create the payment link from the family's chat: «New subscription» or «Renew subscription», then «Online payment».",
+      "maxDiscountRange": "Enter a number from 0 to 100."
+    },
+    "mobile": {
+      "agreed": "Agreed amount: {amount} {currency}",
+      "cancelling": "Cancelling the link…",
+      "cancelFailed": "Could not cancel the link; try again.",
+      "confirming": "Confirming the payment…",
+      "paid": "Paid",
+      "notConfirmed": "The payment is not confirmed yet",
+      "refresh": "Refresh",
+      "openStudent": "Open the student's file"
+    },
+    "pay": {
+      "title": "Pay Ayat Al-Bayan Academy",
+      "greeting": "Hello {name}",
+      "amount": "Amount: {amount} {currency}",
+      "button": "Pay now",
+      "redirecting": "Taking you to the payment page…",
+      "paid": "Paid, thank you.",
+      "expired": "This link has expired. Contact the academy for a new one.",
+      "cancelled": "This link was cancelled. Contact the academy.",
+      "processing": "Your payment is processing; you will get a confirmation when it completes.",
+      "thanks": "Thank you! We received your payment and the subscription activates automatically.",
+      "back": "The payment was not completed. You can try again.",
+      "notFound": "This link is not valid.",
+      "testNotice": "Test payment page (Stripe sandbox): no real card is used.",
+      "doneTitle": "Payment received, thank you",
+      "cancelTitle": "The payment was not made",
+      "packageLine": "Package: {lessons}",
+      "backToPage": "Back to the payment page",
+      "backToApp": "Back to the app"
+    },
+    "bell": {
+      "paidTitle": "Paid through a payment link",
+      "refusedTitle": "A card payment was not recorded in the platform",
+      "disputeTitle": "A card payment was disputed",
+      "disputeBody": "Needs review in the Stripe dashboard"
+    },
+    "settings": {
+      "section": "Online payment (test)",
+      "hint": "This section exists in the test build only and accepts Stripe test keys only.",
+      "enabled": "Enable payment links",
+      "apiKey": "Restricted key (rk_test_…)",
+      "webhookSecret": "Webhook signing secret (whsec_…)",
+      "maxDiscount": "Maximum discount (%)",
+      "maxDiscountHint": "Leave empty for no limit.",
+      "webhookUrl": "Webhook URL to add in Stripe",
+      "set": "Saved: {masked}",
+      "notSet": "Not saved",
+      "save": "Save",
+      "clear": "Remove",
+      "saved": "Settings saved",
+      "liveRefused": "The test build accepts Stripe test keys only (rk_test_ or sk_test_).",
+      "invalidSecret": "The webhook secret starts with whsec_.",
+      "copyUrl": "Copy the URL",
+      "urlCopied": "URL copied"
+    }
+  },
+  "coursePause": {
+    "action": "Pause",
+    "title": "Pause the course",
+    "from": "From",
+    "until": "Last paused day (optional)",
+    "untilHint": "Lessons come back the day after it. Leave empty to keep the course paused until «Resume course».",
+    "reason": "Reason (optional)",
+    "reasonHint": "e.g. the family is travelling",
+    "preview": {
+      "zero": "No upcoming lessons in this period; the package is extended by the paused days",
+      "one": "1 lesson will be cancelled; the package is extended by the paused days",
+      "two": "2 lessons will be cancelled; the package is extended by the paused days",
+      "few": "{n} lessons will be cancelled; the package is extended by the paused days",
+      "other": "{n} lessons will be cancelled; the package is extended by the paused days"
+    },
+    "previewLoading": "Counting lessons…",
+    "noMessage": "No message is sent to the family; tell them in the chat.",
+    "confirm": "Pause course",
+    "done": "Course paused",
+    "bannerUntil": "The course is paused until {date}",
+    "bannerOpen": "The course is paused until resumed",
+    "bannerFrom": "The pause starts on {date}",
+    "bannerReason": "Reason: {reason}",
+    "resume": "Resume",
+    "resumeTitle": "Resume the course now?",
+    "resumeBody": "The cancelled lessons come back on the same days and times from today, and the package is extended by the days already paused (none if the pause has not started).",
+    "resumeConfirm": "Resume course",
+    "resumed": "Course resumed",
+    "resumedConflicts": "Course resumed. Lessons with a clash to review in the schedule: {n}",
+    "changeUntil": "Change the end of the pause",
+    "changeUntilTitle": "End of the pause",
+    "save": "Save",
+    "saved": "End of the pause saved",
+    "history": "Pause history",
+    "historyRange": "{from} – {until}",
+    "historyOpenEnd": "until resumed",
+    "historyDays": "Days added to the package: {n}",
+    "errors": {
+      "date_in_past": "A pause cannot start on a past day",
+      "invalid_range": "Pick a last day on or after the start day",
+      "already_paused": "The course is already paused",
+      "pause_not_open": "This pause has already ended",
+      "student_not_found": "Student not found",
+      "generic": "Could not save the pause. Try again."
+    }
+  },
+  "staffPhoto": {
+    "title": "Photo",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "uploading": "Uploading the photo…",
+    "removing": "Removing the photo…",
+    "saved": "Photo saved.",
+    "removed": "Photo removed.",
+    "confirmRemove": "Remove {name}'s photo? Their initials will show instead.",
+    "hint": "A square JPG, PNG or WebP image, up to 2 MB.",
+    "photoOf": "Photo of {name}",
+    "errors": {
+      "avatar_not_staff": "Student and guardian accounts have no photo.",
+      "generic": "Could not save the photo. Try again."
+    }
   }
 }

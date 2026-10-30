@@ -65,17 +65,32 @@ export function readCalls(value: unknown, ctx: CallsContext): void {
 }
 
 /**
- * A `messages` change's call_permission_reply items (docs/28 §10): the family's accept / reject of a
- * request, with WhatsApp's expiry. The message itself is still stored as an inbound row (its thread).
+ * A `messages` change's call_permission_reply items (docs/28 §10): the family's accept / reject of
+ * a request, with WhatsApp's expiry. The message itself is still stored as an inbound row (its
+ * thread).
  */
-export function readPermissionReplies(value: unknown, ctx: { now: Date; phoneNumberId: string; batch: WebhookBatch }): void {
+export function readPermissionReplies(
+  value: unknown,
+  ctx: { now: Date; phoneNumberId: string; batch: WebhookBatch },
+): void {
   for (const m of list(get(value, 'messages'))) {
     const f = (path: string) => field(m, path);
     const [from, answer] = [f('from'), f('interactive.call_permission_reply.response')];
-    if (f('interactive.type') !== 'call_permission_reply' || !from || (answer !== 'accept' && answer !== 'reject')) continue;
+    if (
+      f('interactive.type') !== 'call_permission_reply' ||
+      !from ||
+      (answer !== 'accept' && answer !== 'reject')
+    )
+      continue;
     const exp = f('interactive.call_permission_reply.expiration_timestamp');
     const response = answer === 'accept' ? 'accepted' : 'rejected';
     const expiresAt = response === 'accepted' && exp ? metaTime(exp, ctx.now) : null;
-    (ctx.batch.permissions ??= []).push({ phoneNumberId: ctx.phoneNumberId, from, response, expiresAt, at: metaTime(f('timestamp'), ctx.now) });
+    (ctx.batch.permissions ??= []).push({
+      phoneNumberId: ctx.phoneNumberId,
+      from,
+      response,
+      expiresAt,
+      at: metaTime(f('timestamp'), ctx.now),
+    });
   }
 }

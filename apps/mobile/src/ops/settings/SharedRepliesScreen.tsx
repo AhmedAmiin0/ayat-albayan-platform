@@ -1,6 +1,6 @@
 import type { SavedReply } from '@ab/shared';
-import { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
@@ -8,13 +8,14 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { Screen } from '@/core/ui/layout/Screen';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/api';
-import { DeleteConfirm } from '@/inbox/saved-replies/DeleteConfirm';
-import { ReplyEditor } from '@/inbox/saved-replies/ReplyEditor';
-import { replyError } from '@/inbox/saved-replies/reply-error';
-import { ReplyRow } from '@/inbox/saved-replies/ReplyRow';
+import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/hooks/api';
+import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
+import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';
+import { replyError } from '@/inbox/saved-replies/lib/reply-error';
+import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
 import { SubScreenHeader } from '../shared/SubScreenHeader';
 
 /** «إلى الأعلى» / «إلى الأسفل» (none at the ends, none while a move is saving) and «احذف», 44pt each. */
@@ -40,6 +41,7 @@ function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; busy:
  * «الردود السريعة» in «الإعدادات» (owner 2026-10-25): the SHARED list every inbox user sees, for
  * holders of saved_replies.manage (the entry is hidden otherwise; the API refuses anyway). A tap
  * edits a reply; up / down reorder it; «رد جديد» adds one at the end. Personal replies live in the chat.
+ * The replies sit in one inset card (owner 2026-10-28: one container rule).
  */
 export function SharedRepliesScreen() {
   const replies = useSavedReplies();
@@ -47,6 +49,31 @@ export function SharedRepliesScreen() {
   const [editing, setEditing] = useState<{ reply: SavedReply | null } | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const shared = (replies.data ?? []).filter((r) => r.scope === 'shared');
+  const { mutate, isPending } = move;
+  const count = shared.length;
+  const renderRow = useCallback(
+    ({ item, index }: ListRenderItemInfo<SavedReply>) => (
+      <View>
+        <ReplyRow
+          reply={item}
+          onPress={() => setEditing({ reply: item })}
+          trailing={
+            <RowActions
+              reply={item}
+              first={index === 0}
+              last={index === count - 1}
+              busy={isPending}
+              onMove={(direction) => mutate({ id: item.id, direction })}
+              onDelete={() => setDeleting(item.id)}
+            />
+          }
+        />
+        {deleting === item.id ? <DeleteConfirm reply={item} onDone={() => setDeleting(null)} /> : null}
+      </View>
+    ),
+    [count, isPending, mutate, deleting],
+  );
+  const cells = useInsetRows(renderRow, count);
   if (editing) {
     return (
       <Screen>
@@ -64,33 +91,15 @@ export function SharedRepliesScreen() {
         {move.isError ? <ErrorLine message={replyError(move.error)} /> : null}
       </View>
       <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
+        style={{ flex: 1 }}
         data={shared}
         keyExtractor={(r) => r.id}
-        renderItem={({ item, index }) => (
-          <View>
-            <ReplyRow
-              reply={item}
-              onPress={() => setEditing({ reply: item })}
-              trailing={
-                <RowActions
-                  reply={item}
-                  first={index === 0}
-                  last={index === shared.length - 1}
-                  busy={move.isPending}
-                  onMove={(direction) => move.mutate({ id: item.id, direction })}
-                  onDelete={() => setDeleting(item.id)}
-                />
-              }
-            />
-            {deleting === item.id ? <DeleteConfirm reply={item} onDone={() => setDeleting(null)} /> : null}
-          </View>
-        )}
+        {...cells}
         ListEmptyComponent={
           replies.isError ? (
             <ErrorState onRetry={() => void replies.refetch()} />
           ) : (
-            <View style={{ padding: 16 }}>
+            <View style={{ paddingVertical: 16 }}>
               <Note>{replies.isPending ? t.common.loading : t.savedReplies.emptyShared}</Note>
             </View>
           )

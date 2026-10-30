@@ -52,3 +52,11 @@ test('refuses two targets for one file and two files for one target', () => {
 test('sources that no longer exist are left out', () => {
   assert.deepEqual(expandMap(root, m([{ from: 'src/gone.ts', to: 'src/x.ts' }, { from: 'src/none/*', to: 'src/y' }])), []);
 });
+
+test('a renamed file renames its test companions with the stem', () => {
+  assert.deepEqual(expandMap(root, m([{ from: 'src/a/meta-client.ts', to: 'src/a/meta-api.ts' }])), [
+    ['src/a/__snapshots__/meta-client.test.ts.snap', 'src/a/__snapshots__/meta-api.test.ts.snap'],
+    ['src/a/meta-client.test.ts', 'src/a/meta-api.test.ts'],
+    ['src/a/meta-client.ts', 'src/a/meta-api.ts'],
+  ]);
+});

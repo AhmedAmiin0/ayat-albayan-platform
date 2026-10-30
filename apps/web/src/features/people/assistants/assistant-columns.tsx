@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import type { AssistantRow } from './api';

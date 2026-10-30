@@ -4,11 +4,12 @@ import type { BalanceQueries } from '../../../finance/subscriptions/money/balanc
 import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
 import { ThreadsQueries } from './threads.queries';
 
-// A family's message to the calls number (docs/28 §10) lands in their thread but never becomes a reply
-// window (module mode) and never gets a read receipt (the calls number sends nothing).
+// A family's message to the calls number (docs/28 §10) lands in their thread but never becomes a
+// reply window (module mode) and never gets a read receipt (the calls number sends nothing).
 
 const PHONE = '+201001234567';
-const queries = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsQueries(db, {} as PackagesService, {} as BalanceQueries);
+const queries = (db: ReturnType<typeof fakeDb>['db']) =>
+  new ThreadsQueries(db, {} as PackagesService, {} as BalanceQueries);
 
 describe('ThreadsQueries and the calls number', () => {
   it('numberWindows: a calls window is dropped; chat and unstamped history stay', async () => {

@@ -27,7 +27,9 @@ test.describe('finance: part payments, receivables, refunds', () => {
     await pay.getByLabel(new RegExp(ar.payments.amount)).fill('100');
     await pay.getByRole('button', { name: ar.payments.record, exact: true }).click();
     await expect(page.getByRole('status')).toHaveText(ar.payments.saved);
-    await expect(row.getByText(ar.finance.partiallyPaid)).toBeVisible();
+    // Owner 2026-10-28: the status cell says what was paid and what is left («مدفوعة جزئيًا: 100 من …»).
+    const partPaid = ar.packagePayment.partPaid.replace('{paid}', '100').split(' من ')[0] ?? '';
+    await expect(row.getByText(partPaid)).toBeVisible();
     const filters = await openFilters(page);
     await filters.getByRole('combobox', { name: ar.subscriptions.status }).selectOption('partial');
     await showResults(filters);

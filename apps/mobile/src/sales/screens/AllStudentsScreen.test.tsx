@@ -28,7 +28,7 @@ test('every student: name, code, teacher · program, guardian phone and name, st
   expect(screen.getByText(`${t.sales.allStudents.noTeacher} · ${t.enums.program.quran}`)).toBeTruthy();
   expect(screen.getAllByText(t.sales.mobile.guardianLine.replace('{name}', 'أحمد سالم'))).toHaveLength(2);
   expect(screen.getByText(t.enums.studentStatus.trial)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.sales.allStudents.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: `${t.sales.allStudents.title} · 2` })).toBeTruthy();
   expect(screen.getAllByText(ltr(formatPhone('+201001112223')))).toHaveLength(2);
   // The header's «رجوع» plus both rows (owner 2026-10-27: no row is a dead line).
   expect(screen.getAllByRole('button')).toHaveLength(3);
@@ -50,13 +50,13 @@ test('a failed read with nothing cached shows the error', async () => {
   expect(await screen.findByText(t.sales.loadFailed)).toBeTruthy();
 });
 
-test('one of hers (`mine`) opens «تفاصيل الطالب»; a pending one of another family opens its chat', async () => {
+test('the sales tree: hers (`mine`) and another family\'s student both open «تفاصيل الطالب» (owner 2026-10-28)', async () => {
   const other = student({ id: 'st2', name: 'جنى علي', code: 'AB-0190', status: 'pending_subscription', guardian_phone: '+966551110000' });
   mockApiFetch.mockResolvedValue(page([student({ mine: true }), other]));
   await renderWithQuery(<TreeBaseProvider value="/sales"><AllStudentsScreen /></TreeBaseProvider>);
   await screen.findByText('يوسف أحمد');
   await fireEvent.press(screen.getByText('جنى علي'));
-  expect(router.push).toHaveBeenCalledWith('/sales/inbox/thread/%2B966551110000');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st2');
   await fireEvent.press(screen.getByText('يوسف أحمد'));
   expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
 });

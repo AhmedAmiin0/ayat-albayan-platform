@@ -51,7 +51,8 @@ test('rows: action, actor with role, item, Riyadh time and the result', async ()
   expect(screen.getByText(t.activity.error.replace('{status}', '403'))).toBeTruthy();
   expect(screen.getByText(new RegExp(t.activity.unknownUser))).toBeTruthy();
   expect(lastUrl()).toBe('/activity?page=1&pageSize=25');
-  expect(screen.getByText(t.activity.count.replace('{n}', '2'))).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, «سجل النشاط · 2», no separate count line.
+  expect(screen.getByRole('header', { name: `${t.activity.title} · 2` })).toBeTruthy();
 });
 
 test('role and item pills filter on the server and reset to page 1', async () => {

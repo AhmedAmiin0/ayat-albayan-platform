@@ -1,8 +1,10 @@
-import type { SalesPaymentView } from '@ab/shared';
+import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
+import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -10,7 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { chosenOpen, openPackages, useSalesFamily } from '../lib/family';
+import { chosenOpen, familyKey, openPackages, useSalesFamily } from '../lib/family';
 import { OpenPackagePicker } from '../components/OpenPackagePicker';
 import { TransferDone } from '../components/TransferDone';
 import { TransferForm } from '../components/TransferForm';
@@ -21,7 +23,8 @@ type Params = { phone?: string; subscriptionId?: string };
 /**
  * /inbox/sales-transfer?phone=…[&subscriptionId=…] (R-ASST-04, owner 2026-10-12): the family's bank
  * transfer for one of HER owed packages, with its receipt; it counts at once (POST /sales/payments)
- * and a paid trial makes the student «مشترك».
+ * and a paid trial makes the student «مشترك». A package she made by mistake (nothing paid) is cancelled here
+ * instead («إلغاء الباقة», owner 2026-10-28).
  */
 export function SalesTransferScreen() {
   const params = useLocalSearchParams<Params>();
@@ -31,6 +34,8 @@ export function SalesTransferScreen() {
   const [picked, setPicked] = useState(params.subscriptionId);
   const [done, setDone] = useState<SalesPaymentView | null>(null);
   const sub = chosenOpen(open, picked);
+  // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
+  const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   return (
@@ -56,7 +61,14 @@ export function SalesTransferScreen() {
         ) : (
           <>
             <OpenPackagePicker packages={open} value={sub} onChange={setPicked} />
-            {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} onDone={setDone} /> : null}
+            {sub && cancelOffered(sub) && !bind.phone ? (
+              <CancelPackage
+                key={`cancel-${sub.id}`}
+                cancel={(body) => apiSend('POST', `/sales/subscriptions/${sub.id}/cancel`, body)}
+                stale={[familyKey(phone)]}
+              />
+            ) : null}
+            {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} /> : null}
           </>
         )}
       </ScrollView>

@@ -7,6 +7,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import { useCatalogue } from '../notif-rules/hooks/use-catalogue';
 import { useSettings } from '../settings/use-settings';
 import { sentCounts, type SentRow } from './sent-counts';
@@ -44,7 +45,7 @@ function Row({ row, onOpen }: { row: SentRow; onOpen: (audience: NotificationAud
       accessibilityRole="button"
       accessibilityLabel={rowLabel(row)}
       onPress={() => onOpen(row.audience)}
-      style={{ minHeight: shape.control.touch, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }}
+      style={({ pressed }) => ({ minHeight: shape.control.touch, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, backgroundColor: pressed ? color.sunk : undefined })}
     >
       <Cell text={row.label} wide />
       <Cell text={String(row.on)} />
@@ -58,7 +59,8 @@ function Row({ row, onOpen }: { row: SentRow; onOpen: (audience: NotificationAud
  * «ماذا يُرسل الآن» (docs/23 §2d mobile): per audience, how many notifications go out now and how
  * many do not, from GET /admin/notifications (the column heads say which is which, so no caption).
  * A row opens «الإشعارات» on that audience. With WhatsApp messaging off, a line under the rows says
- * the counted ones are in-app alerts only.
+ * the counted ones are in-app alerts only. The rows sit in one inset card under their column heads
+ * (owner 2026-10-28: one container rule).
  */
 export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience) => void }) {
   const query = useCatalogue();
@@ -67,19 +69,21 @@ export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience
   return (
     <Section title={h().whatTitle}>
       {data ? (
-        <View style={{ marginHorizontal: -16 }}>
+        <View style={{ gap: 4 }}>
           <View
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
-            style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingBottom: 4, paddingEnd: 40 }}
+            style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingEnd: 40 }}
           >
             <Cell text={h().colAudience} wide strong />
             <Cell text={h().colOn} strong />
             <Cell text={h().colOff} strong />
           </View>
-          {sentCounts(data.entries).map((row) => (
-            <Row key={row.audience} row={row} onOpen={onOpen} />
-          ))}
+          <InsetGroup>
+            {sentCounts(data.entries).map((row) => (
+              <Row key={row.audience} row={row} onOpen={onOpen} />
+            ))}
+          </InsetGroup>
         </View>
       ) : query.isError ? (
         <ErrorState message={t.notificationCatalogue.loadError} onRetry={() => void query.refetch()} />

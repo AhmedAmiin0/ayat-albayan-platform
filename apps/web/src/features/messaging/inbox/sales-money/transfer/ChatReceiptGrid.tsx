@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { chatReceiptsQuery, receiptFromChat } from '../api';
+import { chatReceiptsQuery, receiptFromChat, type Bind } from '../api';
 import { ChatReceiptThumb } from './ChatReceiptThumb';
 import { salesErrorText } from '../errors';
 import { chatReceiptLabel, type ReceiptChoice } from './receipt';
@@ -13,16 +13,18 @@ type Props = {
   /** Messages already in the list: shown as picked, never copied again. */
   picked: ReadonlySet<string>;
   onPicked: (choice: ReceiptChoice & { kind: 'chat' }) => void;
+  /** The chat's phone for a child not hers (chatBinding). */
+  bind?: Bind | undefined;
 };
 
 /**
  * «اختر صورة الإيصال من المحادثة»: the family's images / PDFs (newest first, as the API sends them);
  * an expired one is disabled. Picking copies it into the package's receipts (receipt-from-chat).
  */
-export function ChatReceiptGrid({ sub, picked, onPicked }: Props) {
-  const list = useQuery(chatReceiptsQuery(sub.student.id));
+export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
+  const list = useQuery(chatReceiptsQuery(sub.student.id, bind));
   const copy = useMutation({
-    mutationFn: (r: SalesChatReceipt) => receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id }),
+    mutationFn: (r: SalesChatReceipt) => receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id, ...bind }),
     onSuccess: (res, r) =>
       onPicked({ kind: 'chat', messageId: r.message_id, subscriptionId: sub.id, path: res.receipt_path, label: chatReceiptLabel(r) }),
   });
@@ -47,7 +49,7 @@ export function ChatReceiptGrid({ sub, picked, onPicked }: Props) {
                 picked.has(r.message_id) && 'border-(--lapis)',
               )}
             >
-              <ChatReceiptThumb studentId={sub.student.id} receipt={r} />
+              <ChatReceiptThumb studentId={sub.student.id} receipt={r} bind={bind} />
               {r.expired && <span className="text-2xs text-ink-3">{t.salesMoney.receiptExpired}</span>}
             </button>
           </li>

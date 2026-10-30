@@ -26,12 +26,12 @@ const UNIT =
 const GRAPHED =
   /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(shared|client-core)\/src\/)/;
 const ROUTES = 'apps/web/src/routes/';
-const SPEC = /^e2e\/tests\/[^/]+\.spec\.ts$/;
+const SPEC = /^e2e\/tests\/(?:[^/]+\/)*[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
 const REGISTRY = /^apps\/web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
 /** Code between a changed file and a page or module: followed further, never decides by itself. */
 const PASS =
-  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(shared|client-core)\/src\/|e2e\/(scripts|support\/(?!global-setup|durations-reporter))|e2e\/tests\/(?!auth\.setup)[^/]+\.ts$)/;
+  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
 /** The area whose page lists every UI string: runs on any key change. */
 const EVERY_KEY_AREA = 'translations';
 
@@ -47,7 +47,7 @@ export function selectSpecs({ root, files, base, graph, map: given }) {
     if (SPEC.test(f)) {
       if (existsSync(join(root, f))) specs.add(f.slice(SPEC_DIR.length));
     } else if (BUNDLES.test(f)) {
-      const r = bundleUsers(root, f, base, g);
+      const r = bundleUsers({ root, file: f, base, graph: g });
       if (r.reason) return full(r.reason);
       if (!map.areas[EVERY_KEY_AREA]) return full(`no «${EVERY_KEY_AREA}» area for ${f}`);
       starts.push(...r.users);
@@ -80,7 +80,7 @@ export function selectSpecs({ root, files, base, graph, map: given }) {
 const full = (reason) => ({ full: true, reason, specs: [] });
 
 /** The files that read a changed key of one bundle, or { reason } for the full suite. */
-function bundleUsers(root, file, base, g) {
+function bundleUsers({ root, file, base, graph: g }) {
   if (!base) return { reason: `${file} changed and there is no base commit to compare` };
   const before = JSON.parse(
     execFileSync('git', ['show', `${base}:${file}`], { cwd: root, encoding: 'utf8' }),

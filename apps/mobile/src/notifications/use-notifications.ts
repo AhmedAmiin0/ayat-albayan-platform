@@ -1,5 +1,5 @@
 import type { NotificationsPage } from '@ab/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markedRead } from './notifications-cache';
 
@@ -11,13 +11,16 @@ const NOTIFICATIONS_LIST_KEY = ['notifications', 'list'] as const;
 const NOTIFICATIONS_POLL_MS = 30_000;
 const NOTIFICATIONS_PATH = '/me/notifications?page=1&pageSize=20';
 
+/** The bell's query: the newest page and the unread count (useBellSignal rides the same one). */
+export const notificationsListQuery = queryOptions({
+  queryKey: NOTIFICATIONS_LIST_KEY,
+  queryFn: () => apiFetch<NotificationsPage>(NOTIFICATIONS_PATH),
+  refetchInterval: NOTIFICATIONS_POLL_MS,
+});
+
 /** The newest page and the caller's unread count, refetched every 30 s while the app is open. */
 export function useNotifications() {
-  return useQuery({
-    queryKey: NOTIFICATIONS_LIST_KEY,
-    queryFn: () => apiFetch<NotificationsPage>(NOTIFICATIONS_PATH),
-    refetchInterval: NOTIFICATIONS_POLL_MS,
-  });
+  return useQuery(notificationsListQuery);
 }
 
 /**

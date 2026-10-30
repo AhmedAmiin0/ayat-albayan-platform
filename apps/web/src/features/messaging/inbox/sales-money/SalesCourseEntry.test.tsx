@@ -45,20 +45,31 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
     apiSend.mockReset();
   });
 
-  it('one per student with a subscription to follow, naming the child when several; opens the dialog', async () => {
+  it('ONE entry, no child named (owner 2026-10-29); with several, the children with a subscription to follow are picked first', async () => {
     openChat([
       student({ status: 'active' }),
       student({ id: 'p', name: 'جود', status: 'pending_subscription' }),
       student({ id: 'r', name: 'يوسف', status: 'pending_renewal' }),
       student({ id: 't', name: 'مريم', status: 'trial' }),
     ]);
-    const course = (name: string) => ({ name: `${t.booking.courseDays} — ${name}` });
     await openMore();
-    expect(await screen.findByRole('button', course('سهيلة'))).toBeTruthy();
-    expect(screen.getByRole('button', course('جود'))).toBeTruthy();
-    expect(screen.getByRole('button', course('يوسف'))).toBeTruthy();
-    expect(screen.queryByRole('button', course('مريم'))).toBeNull();
-    fireEvent.click(screen.getByRole('button', course('سهيلة')));
+    expect(await screen.findAllByRole('button', { name: t.booking.courseDays })).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: / — / })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.booking.courseDays }));
+    const choice = within(await screen.findByRole('dialog', { name: t.booking.courseDays }));
+    expect(choice.getAllByRole('button', { name: /سهيلة|جود|يوسف|مريم/ }).map((b) => b.textContent)).toEqual([
+      expect.stringContaining('سهيلة'),
+      expect.stringContaining('جود'),
+      expect.stringContaining('يوسف'),
+    ]);
+    fireEvent.click(choice.getByRole('button', { name: /سهيلة/ }));
+    expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
+  });
+
+  it('one child with a course: the entry opens its dialog straight away', async () => {
+    openChat([student({ status: 'active' }), student({ id: 't', name: 'مريم', status: 'trial' })]);
+    await openMore();
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseDays }));
     expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
   });
 
@@ -70,10 +81,11 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
 
   it('a new, trial or expired student holding an unpaid package gets «أيام الحلقات» too', async () => {
     openChat([student({ status: 'trial', open: [OPEN_SUB] }), student({ id: 'e', name: 'جود', status: 'expired', open: [OPEN_SUB] })]);
-    const course = (name: string) => ({ name: `${t.booking.courseDays} — ${name}` });
     await openMore();
-    expect(await screen.findByRole('button', course('سهيلة'))).toBeTruthy();
-    expect(screen.getByRole('button', course('جود'))).toBeTruthy();
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseDays }));
+    const choice = within(await screen.findByRole('dialog', { name: t.booking.courseDays }));
+    expect(choice.getByRole('button', { name: /سهيلة/ })).toBeTruthy();
+    expect(choice.getByRole('button', { name: /جود/ })).toBeTruthy();
   });
 
   it('right after «اشتراك جديد»: «احجز أيام الحلقات الآن», and closing it comes back to the transfer as typed', async () => {

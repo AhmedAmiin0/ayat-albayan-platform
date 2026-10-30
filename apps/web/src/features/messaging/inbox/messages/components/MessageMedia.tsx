@@ -1,4 +1,4 @@
-import { isChatViewMime, isPlayableMime, type MessageView } from '@ab/shared';
+import { isChatViewMime, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -9,6 +9,7 @@ import { threadFileQuery, type ThreadFile } from '../../api/api';
 import { mediaKind } from '../../format';
 import { DownloadButton } from './DownloadButton';
 import { MediaPlayer } from './MediaPlayer';
+import { PdfCard } from '../pdf/PdfCard';
 import { useInboxMode } from '../../shared/mode';
 
 /** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
@@ -57,9 +58,11 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   }
   // A loaded file stays even when a background refetch fails (the error is only for no file at all).
   if (file.data) {
+    const loaded = <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />;
     return (
       <div className="grid gap-1">
-        <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />
+        {/* A PDF: page 1 as a card like WhatsApp's (owner 2026-10-29), else today's named link. */}
+        {isPdfMime(file.data.mime) ? <PdfCard message={m} file={file.data} fallback={loaded} /> : loaded}
         <DownloadButton message={m} name={m.media_name ?? kind} />
       </div>
     );

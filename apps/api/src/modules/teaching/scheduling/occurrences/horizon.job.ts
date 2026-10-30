@@ -8,6 +8,7 @@ import { addDays } from './horizon';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleQueries } from '../schedule.queries';
 import { SchedulingSettings } from '../scheduling.settings';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -22,6 +23,7 @@ export type RunSummary = { rules: number; inserted: number; failed: number; ende
  * only repeats work: inserts are `on conflict do nothing` and each rule is row-locked while it
  * is generated, so nothing duplicates. Move to pg_cron / pg-boss when the API scales out.
  */
+@BackgroundJob({ name: 'horizon' })
 @Injectable()
 export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(HorizonJob.name);

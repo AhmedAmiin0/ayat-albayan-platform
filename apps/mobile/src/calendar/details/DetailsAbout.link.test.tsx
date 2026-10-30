@@ -30,7 +30,8 @@ test.each(ROLES)('%s: the full URL as selectable LTR text, no isolates; «انس
   await show(role);
   const text = screen.getByText(URL);
   expect(text.props.selectable).toBe(true);
-  expect(text.props.numberOfLines).toBe(2);
+  expect(text.props.numberOfLines).toBe(1);
+  expect(text.props.ellipsizeMode).toBe('middle');
   expect(text.props.children).not.toMatch(/[⁦-⁩]/);
   expect(StyleSheet.flatten(text.props.style)).toMatchObject({ writingDirection: 'ltr', textAlign: 'left' });
   await press(t.lessons.copyLink);
@@ -77,4 +78,16 @@ test('neither field sent (sales\' «الجدول»): unknown, so no «رابط �
   expect(screen.queryByText(t.lessons.joinLink)).toBeNull();
   expect(screen.queryByText(t.lessons.noLink)).toBeNull();
   expect(screen.getByText(t.schedule.teacher)).toBeTruthy();
+});
+
+test('the link buttons are ONE equal-width row with icons, outside the label column', async () => {
+  await show('sales');
+  const copy = screen.getByRole('button', { name: t.lessons.copyLink });
+  const open = screen.getByRole('button', { name: t.studentLists.openLink });
+  expect(screen.getAllByTestId('button-icon')).toHaveLength(2);
+  const cells = screen.getAllByTestId('button-row-cell');
+  expect(cells).toHaveLength(2);
+  expect(cells[0]).toContainElement(copy);
+  expect(cells[1]).toContainElement(open);
+  expect(StyleSheet.flatten(copy.props.style)).toMatchObject({ minHeight: 48, borderWidth: 1 });
 });

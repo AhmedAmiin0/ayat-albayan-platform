@@ -6,11 +6,12 @@
   "scripts": {
     "gen:types": "supabase gen types typescript --local > src/types.ts && prettier --write src/types.ts",
     "reset": "supabase db reset",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsgo --noEmit"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "supabase": "^2.119.0",
     "typescript": "~6.0.3"

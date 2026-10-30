@@ -1,8 +1,12 @@
-import { subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
+import { apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { useStudentHref } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
-import { packageName, paidOf, usedOf } from '@/payments/format';
+import { CancelPackage } from '@/payments';
+import { packageName, paidLine, usedOf } from '@/payments/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 import { RecentPayments } from '@/payments/components/RecentPayments';
@@ -14,7 +18,8 @@ import { SectionLabel } from '../list/SectionLabel';
 
 /**
  * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when
- * the renewal alert is due), the current package and what is paid of it, «سجّل دفعة», then the
+ * the renewal alert is due), the current package and what is paid of it, «سجّل دفعة» («إلغاء الباقة» while
+ * nothing is paid; owner 2026-10-28), then the
  * latest payments. Secondary button: the guardian card already holds the screen's one filled one.
  * Nothing while the balance is unknown; a student without a package says so.
  */
@@ -23,6 +28,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
   const balance = useStudentBalance(studentId).data;
   const line = packageLine(balance, useRenewalThreshold());
   const current = balance?.current;
+  const to = useStudentHref();
   const small = {
     fontFamily: type.ui[500],
     fontSize: type.size.xs,
@@ -48,7 +54,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
           {current ? (
             <StatusChip
               {...subscriptionStatusStyle[current.status]}
-              label={t.enums.subscriptionStatus[current.status]}
+              label={t.enums.subscriptionStatus[current.status] ?? current.status}
               size="sm"
             />
           ) : null}
@@ -66,14 +72,20 @@ export function BalanceCard({ studentId }: { studentId: string }) {
               {line.label}
             </AppText>
             <AppText style={small}>{`${packageName(current)} · ${usedOf(current)}`}</AppText>
-            <AppText style={small}>{paidOf(current)}</AppText>
+            <AppText style={small}>{paidLine(current)}</AppText>
             <View style={{ marginTop: 6 }}>
               <Button
                 variant="secondary"
                 label={t.payments.mobile.record}
-                onPress={() => router.push(`/students/payment/${studentId}`)}
+                onPress={() => router.push(to(`/students/payment/${studentId}`))}
               />
             </View>
+            {cancelOffered(current) ? (
+              <CancelPackage
+                cancel={(body) => apiSend('POST', `/subscriptions/${current.id}/cancel`, body)}
+                stale={[['students', studentId], pathKey('/subscriptions')]}
+              />
+            ) : null}
           </>
         ) : (
           <AppText style={small}>{t.subscriptions.empty}</AppText>

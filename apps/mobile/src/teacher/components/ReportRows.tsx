@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { gradeStyle, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
@@ -12,7 +13,7 @@ import { useClockCycle, whenIn } from '@/core/lib/clock';
 export const reportFormHref = (lessonId: string) => `/teacher/reports/${lessonId}`;
 
 /** A started lesson still missing its sent report: «اكتب التقرير», or «تعديل التقرير» for a draft. */
-export function PendingReportRow({ row, tz }: { row: PendingReportView; tz: string }) {
+export const PendingReportRow = memo(function PendingReportRow({ row, tz }: { row: PendingReportView; tz: string }) {
   const cycle = useClockCycle();
   return (
     <ListRow
@@ -23,10 +24,10 @@ export function PendingReportRow({ row, tz }: { row: PendingReportView; tz: stri
       onPress={() => router.push(reportFormHref(row.lesson_id))}
     />
   );
-}
+});
 
 /** A sent report: when, the overall grade (or the attendance), and edit while its window is open. */
-export function SubmittedReportRow({ row, tz }: { row: TeacherReportView; tz: string }) {
+export const SubmittedReportRow = memo(function SubmittedReportRow({ row, tz }: { row: TeacherReportView; tz: string }) {
   const cycle = useClockCycle();
   const when = whenIn(new Date(row.starts_at), tz, cycle);
   const grade = row.grade_overall ? t.enums.grade[row.grade_overall] : row.attendance ? t.enums.attendance[row.attendance] : null;
@@ -47,10 +48,10 @@ export function SubmittedReportRow({ row, tz }: { row: TeacherReportView; tz: st
       onPress={() => router.push(reportFormHref(row.lesson_id))}
     />
   );
-}
+});
 
 /** One of my students: their «سجل التقارير». */
-export function StudentHistoryRow({ student }: { student: { id: string; code: string; name: string } }) {
+export const StudentHistoryRow = memo(function StudentHistoryRow({ student }: { student: { id: string; code: string; name: string } }) {
   return (
     <ListRow
       title={student.name}
@@ -59,7 +60,7 @@ export function StudentHistoryRow({ student }: { student: { id: string; code: st
       onPress={() => router.push(`/teacher/reports/student/${student.id}`)}
     />
   );
-}
+});
 
 /** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {
@@ -78,7 +79,7 @@ interface ReportHistoryRowProps {
 }
 
 /** One sent report of a student's «سجل التقارير» (teacher, admin, and sales' «تفاصيل الطالب» read-only). */
-export function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
+export const ReportHistoryRow = memo(function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
   const cycle = useClockCycle();
   return (
     <ListRow
@@ -88,4 +89,4 @@ export function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowPr
       onPress={onPress}
     />
   );
-}
+});

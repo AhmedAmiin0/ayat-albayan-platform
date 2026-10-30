@@ -10,6 +10,7 @@ import { RemindersQueries } from './reminders.queries';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { Ticker } from './ticker';
+import { BackgroundJob } from '../../../config/role/background-job';
 
 const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
@@ -32,6 +33,7 @@ type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; les
  * lesson_needs_confirmation (R-MOB-01) once per lesson (also when OFF). Only queues: the sender owns
  * the send gate.
  */
+@BackgroundJob({ name: 'reminders' })
 @Injectable()
 export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(RemindersJob.name);

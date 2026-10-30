@@ -10,8 +10,8 @@ import { SendGate } from '../../whatsapp';
  * The feature's gates (docs/28 §6), checked by every call route before anything else: the setting
  * (off = 404 calls_disabled, as if the routes did not exist), the calling line (not Kapso = 503
  * calls_unavailable) and the staging allow-list WA_ALLOWED_RECIPIENTS (403 recipient_not_allowed:
- * never a call to a number outside it). A message the calls number sends (the permission request only,
- * docs/28 §10) also needs the one send gate (messaging_enabled).
+ * never a call to a number outside it). A message the calls number sends (the permission request
+ * only, docs/28 §10) also needs the one send gate (messaging_enabled).
  */
 @Injectable()
 export class CallsGate {
@@ -28,12 +28,18 @@ export class CallsGate {
     if (!(await this.enabled())) throw notFound('calls_disabled');
   }
 
-  /** The one send gate (WhatsApp configured and messaging_enabled): closed = nothing leaves the calls number. */
+  /**
+   * The one send gate (WhatsApp configured and messaging_enabled): closed = nothing leaves the
+   * calls number.
+   */
   messagingOpen(): Promise<boolean> {
     return this.send.open();
   }
 
-  /** calls_permission_template as a template (name, language); null = unset (the button is disabled). */
+  /**
+   * calls_permission_template as a template (name, language); null = unset (the button is
+   * disabled).
+   */
   async permissionTemplate(): Promise<{ name: string; language: string } | null> {
     return permissionTemplate((await this.settings.read()).calls_permission_template);
   }

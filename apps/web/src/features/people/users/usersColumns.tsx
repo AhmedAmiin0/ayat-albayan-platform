@@ -1,6 +1,8 @@
 import type { UserView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import { memo } from 'react';
+import { Avatar } from '@/components/ui/display/avatar';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads/format';
@@ -29,23 +31,31 @@ const stacked = {
   last: 'max-sm:order-7',
 };
 
+/** Photo (staff) or initials, then the name as a button to the panel. Memoised per row. */
+const NameCell = memo(function NameCell({ user, onOpen }: { user: UserView; onOpen: (userId: string) => void }) {
+  return (
+    <span className="flex items-center gap-2.5">
+      <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} size="sm" decorative />
+      <button
+        type="button"
+        className="block min-w-0 cursor-pointer text-start font-semibold text-ink hover:underline max-sm:min-h-11"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpen(user.id);
+        }}
+      >
+        {user.full_name}
+      </button>
+    </span>
+  );
+});
+
 /** The users table. The name is a button (keyboard path to the panel); a click on the row opens it too. */
 export function usersColumns(onOpen: (userId: string) => void) {
   return col.columns([
     col.accessor('full_name', {
       header: () => C.name,
-      cell: (c) => (
-        <button
-          type="button"
-          className="block cursor-pointer text-start font-semibold text-ink hover:underline max-sm:min-h-11"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpen(c.row.original.id);
-          }}
-        >
-          {c.getValue()}
-        </button>
-      ),
+      cell: (c) => <NameCell user={c.row.original} onOpen={onOpen} />,
       meta: { className: stacked.name },
     }),
     col.accessor('email', {

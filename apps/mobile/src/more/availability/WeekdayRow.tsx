@@ -4,7 +4,10 @@ import { useClockCycle } from '@/core/lib/clock';
 import { slotRange, weekdayName, type WeekdaySlots } from '../schedule';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-/** «الاتنين   16:00 – 18:00   20:00 – 22:00»: the day, then its ranges (wrapping). */
+/**
+ * «الاتنين   16:00 – 18:00   20:00 – 22:00»: the day, then its ranges (wrapping). A row of the week's
+ * inset card, which draws the fill and the rules (owner 2026-10-28: one container rule).
+ */
 export function WeekdayRow({ day }: { day: WeekdaySlots }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
@@ -14,9 +17,8 @@ export function WeekdayRow({ day }: { day: WeekdaySlots }) {
       style={{
         flexDirection: 'row',
         gap: 12,
+        paddingHorizontal: 16,
         paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
       }}
     >
       <AppText style={[text, { width: 84, fontFamily: type.ui[600] }]}>{weekdayName(day.weekday)}</AppText>

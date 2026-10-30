@@ -69,16 +69,22 @@ export interface CallConfigView {
  * GET /calls/permission/:phone (Kapso call_permissions): granted = the call may start; request =
  * inside the 24 h window, «اطلب إذن الاتصال» sends the interactive request; needs_template = outside
  * it, only an approved call-permission template could ask (owner step 4; with a calls number and
- * calls_permission_template set this is `request` via `template`, docs/28 §10); limited = WhatsApp's own
- * limits refuse both the call and a new request for now (e.g. a request already sent today).
+ * calls_permission_template set this is `request` via `template`, docs/28 §10); limited =
+ * WhatsApp's own limits refuse both the call and a new request for now (e.g. a request already sent
+ * today).
  */
 export const CALL_PERMISSION_STATES = ['granted', 'request', 'needs_template', 'limited'] as const;
 export type CallPermissionState = (typeof CALL_PERMISSION_STATES)[number];
 
-/** How «اطلب إذن الاتصال» asks from a calls number (docs/28 §10): inside its 24 h window, or the setting's template. */
+/**
+ * How «اطلب إذن الاتصال» asks from a calls number (docs/28 §10): inside its 24 h window, or the
+ * setting's template.
+ */
 export type CallPermissionVia = 'interactive' | 'template';
 
-/** The family's last answer to a request from the calling number (call_permission_reply webhook). */
+/**
+ * The family's last answer to a request from the calling number (call_permission_reply webhook).
+ */
 export interface CallPermissionReply {
   response: 'accepted' | 'rejected';
   /** When they answered (UTC). */
@@ -92,8 +98,9 @@ export interface CallPermissionView {
   /** granted: when WhatsApp says the permission lapses (UTC); null = permanent or unknown. */
   expires_at: string | null;
   /**
-   * A calls number (docs/28 §10): how «اطلب إذن الاتصال» asks (request), or `template` with needs_template
-   * when only a template could ask and calls_permission_template is empty. Absent = the chat line.
+   * A calls number (docs/28 §10): how «اطلب إذن الاتصال» asks (request), or `template` with
+   * needs_template when only a template could ask and calls_permission_template is empty. Absent =
+   * the chat line.
    */
   via?: CallPermissionVia;
   /** A calls number only: the family's stored last answer on it; absent / null = none. */

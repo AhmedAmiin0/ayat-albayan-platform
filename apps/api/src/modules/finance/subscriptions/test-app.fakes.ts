@@ -9,8 +9,10 @@ export function mocks() {
       update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
       byRequest: vi.fn(),
     },
+    cancels: { linkedLessons: vi.fn(), laterCommission: vi.fn(), cancel: vi.fn() }, // «إلغاء الباقة»
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
+    commissionBell: { notify: vi.fn() }, // «عمولة جديدة» after every money write
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
@@ -47,7 +49,7 @@ export function mocks() {
     attachments: { forPayment: vi.fn(), save: vi.fn(), owners: vi.fn() }, // payment_attachments
     // The salesperson's money routes (sales-money): her ownership, her families, the chat files.
     sales: { ownership: vi.fn() },
-    family: { studentsOfPhone: vi.fn(), familyPhone: vi.fn(), studentStatus: vi.fn() },
+    family: { studentsOfPhone: vi.fn(), familyPhone: vi.fn(), phoneOf: vi.fn(), phonesOf: vi.fn(), studentStatus: vi.fn(), linkPackages: vi.fn() },
     media: { load: vi.fn(), cache: vi.fn(), ensure: vi.fn() },
     mediaQueries: { recent: vi.fn(), message: vi.fn(), setPath: vi.fn() },
   };
@@ -59,6 +61,7 @@ export function resetMocks(m: Mocks): void {
   for (const group of Object.values(m)) for (const fn of Object.values(group)) fn.mockReset();
   m.subs.forStudent.mockResolvedValue([]);
   m.subs.forStudents.mockResolvedValue([]);
+  m.family.linkPackages.mockResolvedValue([]);
   m.subs.paid.mockResolvedValue(new Map());
   m.balances.forSubscriptions.mockResolvedValue(new Map());
   m.balances.forStudents.mockResolvedValue([]);
@@ -72,6 +75,8 @@ export function resetMocks(m: Mocks): void {
   m.earnings.settlePayout.mockResolvedValue(null);
   m.earnings.paidOnLessons.mockResolvedValue(0);
   m.subs.byRequest.mockResolvedValue(null);
+  m.cancels.linkedLessons.mockResolvedValue(0);
+  m.cancels.laterCommission.mockResolvedValue(false);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
   m.attachments.forPayment.mockResolvedValue([]);

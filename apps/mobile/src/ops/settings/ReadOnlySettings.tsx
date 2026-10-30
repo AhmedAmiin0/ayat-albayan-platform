@@ -1,9 +1,9 @@
 import type { AcademySettings } from '@ab/shared';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { ListRow } from '@/core/ui/layout/ListRow';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** Joins the web note with a caller's own line into one note (the overview stays one phone high). */
 export const readOnlyNoteText = (more?: string): string =>
@@ -22,11 +22,11 @@ export function ReadOnlySettings({ settings, note }: { settings: AcademySettings
   ];
   return (
     <Section title={m.readOnlyTitle}>
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         {rows.map(([label, on]) => (
           <ListRow key={label} title={label} trailing={<Note>{on ? m.on : m.off}</Note>} />
         ))}
-      </View>
+      </InsetGroup>
       <Note>{readOnlyNoteText(note)}</Note>
     </Section>
   );

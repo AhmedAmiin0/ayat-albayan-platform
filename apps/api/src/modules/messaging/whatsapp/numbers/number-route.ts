@@ -1,4 +1,11 @@
-import { isWaLine, NOTIFICATION_CATALOGUE, routeSession, routeTemplate, type RoutableNumber, type WaLine } from '@ab/shared';
+import {
+  isWaLine,
+  NOTIFICATION_CATALOGUE,
+  routeSession,
+  routeTemplate,
+  type RoutableNumber,
+  type WaLine,
+} from '@ab/shared';
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import type { DueMessage } from '../sender/sender.due';
 import type { TemplateRow } from '../whatsapp.types';
@@ -25,8 +32,13 @@ export interface RoutePass {
   crm?: ReadonlySet<string>;
 }
 
-/** The numbers routing may ever pick: never a `calls` number (docs/28 §10: it never sends a message). */
-export function messagingNumbers(numbers: readonly OverlayNumber[]): (OverlayNumber & { purpose: WaLine })[] {
+/**
+ * The numbers routing may ever pick: never a `calls` number (docs/28 §10: it never sends a
+ * message).
+ */
+export function messagingNumbers(
+  numbers: readonly OverlayNumber[],
+): (OverlayNumber & { purpose: WaLine })[] {
   return numbers.filter((n): n is OverlayNumber & { purpose: WaLine } => isWaLine(n.purpose));
 }
 

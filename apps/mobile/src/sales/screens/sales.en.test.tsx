@@ -28,7 +28,7 @@ test('an English run reads en.json: the teacher’s English name, gender and pro
   mockApiFetch.mockResolvedValue([teacher()]);
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByText('Abrar Mohamed')).toBeTruthy();
-  expect(screen.getByRole('header', { name: en.sales.teachers.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: `${en.sales.teachers.title} · 1` })).toBeTruthy();
   expect(screen.getByText(`Female · ${en.enums.program.quran}, ${en.enums.program.arabic}`)).toBeTruthy();
   expect(screen.getByText(en.studentLists.counts.replace('{active}', '1').replace('{trial}', '1'))).toBeTruthy();
 });
@@ -56,6 +56,11 @@ test('an English run of a teacher’s students and the read-only schedule', asyn
   expect(screen.getByRole('button', { name: "Show the teacher's schedule today" })).toBeTruthy();
   await first.unmount();
   await renderWithQuery(<SalesScheduleScreen />);
-  expect(await screen.findByText(en.sales.lessonActions.ownNote)).toBeTruthy();
-  expect(await screen.findByText(en.schedule.trialTag)).toBeTruthy();
+  // The row's second line: the kind first, the bare name (no «Teacher»), the length.
+  const teacherLine = `${en.schedule.trialTag} · ${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${en.enums.duration['30']}`;
+  expect(await screen.findByText(teacherLine)).toBeTruthy();
+  // One word for the state: the pill says «To confirm» like the rows; no permissions note over the day.
+  expect(screen.getByRole('tab', { name: `${en.sales.academySchedule.status.scheduled} 0` })).toBeTruthy();
+  expect(en.sales.academySchedule.status.scheduled).toBe(en.today.statusShort.scheduled);
+  expect(screen.queryByText(en.sales.lessonActions.ownNote)).toBeNull();
 });

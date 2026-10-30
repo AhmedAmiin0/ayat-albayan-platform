@@ -1,5 +1,5 @@
 import { PUSH_KINDS, type PushKind } from '../enums/index.js';
-import { E164_RE } from '../format/phone.js';
+import { E164_RE } from '../core/format/phone.js';
 import { HOME_BY_ROLE, type UserRole } from '../permissions/roles.js';
 
 // Where a bell row opens on the web (R-NOT-01). `data` is PushService's { kind, ...event.data }:
@@ -65,6 +65,8 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
     if (area !== 'teacher') return HOME_BY_ROLE[area];
     return id ? `/teacher/messages?student=${id}` : '/teacher/messages';
   },
+  // «محفظتي» (owner 2026-10-29): the salesperson's wallet; only sales get this kind.
+  commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
 };
 
 const isArea = (role: UserRole | null): role is Area =>

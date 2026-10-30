@@ -24,17 +24,22 @@ export const changeEmail = (body: EmailChange) => apiSend<AccountProfile>('PUT',
 export const changePassword = (body: PasswordChange) => apiSend('PUT', '/me/password', body);
 
 /**
- * R-ACC-05: the photo goes straight to the private `avatars` bucket through a one-off signed URL
- * (same flow as the payment receipt), then its path is set on the profile (the API re-checks it).
+ * A photo goes straight to the private `avatars` bucket through a one-off signed URL (same flow as
+ * the payment receipt): POST `{base}/upload-url` {mime,size} → upload to it → PUT `{base}` {path}
+ * (the API re-checks it). `base` is '/me/avatar' (R-ACC-05) or an admin's '/teachers/:id/avatar' /
+ * '/users/:id/avatar' (owner 2026-10-28).
  */
-export async function uploadAvatar(file: File): Promise<AccountProfile> {
-  const signed = await apiSend<SignedUpload>('POST', '/me/avatar/upload-url', { mime: file.type, size: file.size });
+export async function uploadPhoto<T>(base: string, file: File): Promise<T> {
+  const signed = await apiSend<SignedUpload>('POST', `${base}/upload-url`, { mime: file.type, size: file.size });
   const { error } = await supabase.storage
     .from(signed.bucket)
     .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
   if (error) throw error;
-  return apiSend<AccountProfile>('PUT', '/me/avatar', { path: signed.path });
+  return apiSend<T>('PUT', base, { path: signed.path });
 }
+
+/** R-ACC-05: the caller's own photo. */
+export const uploadAvatar = (file: File) => uploadPhoto<AccountProfile>('/me/avatar', file);
 
 /** DELETE /me/avatar: back to the initials. */
 export const removeAvatar = () => apiSend<AccountProfile>('DELETE', '/me/avatar');

@@ -1,6 +1,7 @@
 import { REGISTRATION_CHECK_MAX, type RegistrationMatch } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { familyOfPhone } from '../../../common/db/family-of-phone';
 import { studentNameOrCodeFilter } from '../../people/students/students.mapper';
 import { dbError } from '../../../common/http/http';
 
@@ -21,14 +22,11 @@ export const toMatch = (r: Row): RegistrationMatch => ({ name: r.name, code: r.c
 export class SalesRegistrationQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The children of the guardian with this phone (guardians.phone_e164, the family's only number). */
+  /** The children of the family with this number, its main or its second one (familyOfPhone). */
   async byPhone(phone: string): Promise<RegistrationMatch[]> {
-    const { data, error } = await this.db
-      .from('students')
-      .select(`${COLUMNS}, guardian:guardians!inner(phone_e164)`)
-      .eq('guardian.phone_e164', phone)
-      .order('name')
-      .limit(READ);
+    const family = await familyOfPhone(this.db, phone);
+    if (!family) return [];
+    const { data, error } = await this.db.from('students').select(COLUMNS).eq('guardian_id', family.id).order('name').limit(READ);
     if (error) throw dbError(error);
     return data.map(toMatch);
   }

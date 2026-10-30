@@ -1,7 +1,7 @@
 // HTTP test harness for the money controllers (test-only, excluded from the build). Real
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
+import { Test, type TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../../../app.module';
 import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
@@ -24,8 +24,10 @@ import { InboundMedia } from '../../messaging/whatsapp/messages/inbound-media.se
 import { InboundMediaQueries } from '../../messaging/whatsapp/messages/inbound-media.queries';
 import { TeachersQueries } from '../../people/teachers/teachers.queries';
 import { AdminTasksQueries } from './alerts/admin-tasks.queries';
+import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
 import { AlertsQueries } from './alerts/alerts.queries';
 import { BalanceQueries } from './money/balance.queries';
+import { CommissionBell } from './money/commission-bell';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentActivation } from './student-lifecycle/student-activation';
@@ -50,15 +52,20 @@ const verify: TokenVerifier = async (token) => {
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object };
 
-/** Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key. */
-export async function moneyApp(resolver: PermissionResolver = systemResolver) {
+/**
+ * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
+ * `more`: a module's own overrides on top (the Stripe test build's queries and client).
+ */
+export async function moneyApp(resolver: PermissionResolver = systemResolver, more: (b: TestingModuleBuilder) => TestingModuleBuilder = (b) => b) {
   const m = mocks();
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SubscriptionsQueries).useValue(m.subs)
+    .overrideProvider(SubscriptionCancelQueries).useValue(m.cancels)
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
+    .overrideProvider(CommissionBell).useValue(m.commissionBell)
     .overrideProvider(StudentStatusQueries).useValue(m.statuses)
     .overrideProvider(StudentTrialQueries).useValue(m.trials)
     .overrideProvider(AlertsQueries).useValue(m.alerts)
@@ -80,9 +87,9 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver) {
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(SalesFamilyQueries).useValue(m.family)
     .overrideProvider(InboundMedia).useValue(m.media)
-    .overrideProvider(InboundMediaQueries).useValue(m.mediaQueries)
-    .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    .overrideProvider(InboundMediaQueries).useValue(m.mediaQueries);
+  const mod = await more(builder).compile();
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true }); // as main.ts
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = ({ method, url, token = 'admin', body }: InjectArgs) =>

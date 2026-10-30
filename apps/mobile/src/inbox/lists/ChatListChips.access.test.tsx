@@ -19,10 +19,10 @@ const listCalls = () => mockApiFetch.mock.calls.filter(([p]: [string]) => p === 
 
 beforeEach(() => mockApiFetch.mockReset());
 
-/** The row holds exactly «الكل» and «غير مقروءة». */
-function expectAllAndUnreadOnly() {
+/** No list chips: the row holds «الكل», «غير مقروءة» and, for staff, «بانتظار ردّك» + the 6 worked lead stages. */
+function expectAllAndUnreadOnly(staff = 0) {
   const row = within(screen.getByLabelText(t.inbox.filterRow));
-  expect(row.getAllByRole('tab')).toHaveLength(2);
+  expect(row.getAllByRole('tab')).toHaveLength(2 + staff);
   expect(row.getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(row.getByRole('tab', { name: t.inbox.filterUnread })).toBeTruthy();
 }
@@ -31,7 +31,7 @@ test('without inbox.lists: the row is «الكل» · «غير مقروءة» on
   mockApiFetch.mockImplementation(answer({ me: withoutLists }));
   await renderWithQuery(<ThreadsList />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(NAME)).toBeTruthy();
-  expectAllAndUnreadOnly();
+  expectAllAndUnreadOnly(7);
   expect(screen.queryByRole('button', { name: t.inbox.lists.new })).toBeNull();
   expect(listCalls()).toHaveLength(0);
 });

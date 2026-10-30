@@ -16,6 +16,8 @@ export type Teacher = Omit<TeacherCreate, 'meeting_mode'> & {
   /** The teacher's login (null = none yet, created on «المستخدمون») and its sign-in username (docs/30). */
   profile_id?: string | null;
   username?: string | null;
+  /** The teacher's photo, a short-lived signed URL; null / absent = the initials (owner 2026-10-28). */
+  avatar_url?: string | null;
 };
 /** A row of GET /teachers: the teacher and their current students by kind («مشترك · تجريبي»). */
 export type TeacherListRow = Teacher & TeacherStudentCounts;

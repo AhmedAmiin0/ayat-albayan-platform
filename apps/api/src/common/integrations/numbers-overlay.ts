@@ -15,7 +15,9 @@ import type { WhatsappEnv } from '../../config/env/whatsapp/env.whatsapp';
 export interface OverlayNumber {
   id: string;
   label: string;
-  /** `calls` (docs/28 §10): env is always null, so it never sends; inbound on it is still logged. */
+  /**
+   * `calls` (docs/28 §10): env is always null, so it never sends; inbound on it is still logged.
+   */
   purpose: NumberPurpose;
   phone_number_id: string;
   waba_id: string | null;

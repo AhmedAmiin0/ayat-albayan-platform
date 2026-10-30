@@ -4,7 +4,7 @@
 const blank = (width, height) => ({ width, height, data: new Float32Array(width * height * 4) });
 
 /** Mean colour of the outermost pixel ring: the ivory paper the logo was drawn on. */
-export function borderColour({ width: W, height: H, data }) {
+function borderColour({ width: W, height: H, data }) {
   const sum = [0, 0, 0];
   let n = 0;
   for (let i = 0; i < W * H; i++) {
@@ -21,53 +21,85 @@ export function borderColour({ width: W, height: H, data }) {
  * the darkening direction counts: every stroke (gold, green) is darker than the ivory, and the
  * GIMP lightening term divides by (1 − bg) ≈ 0.01, which turns paper noise into opaque specks.
  */
-export function strokeAlpha(c, bg, solid = 0.85) {
+function strokeAlpha(c, bg, solid = 0.85) {
   let a = 0;
   for (let k = 0; k < 3; k++) a = Math.max(a, (bg[k] - c[k]) / bg[k]);
   return Math.min(1, Math.max(0, a) / solid);
 }
 
-/**
- * Removes the paper OUTSIDE the emblem: flood fill from the border (and `seeds`) through pixels
- * within `tol` of the paper colour. The emblem keeps its own ivory (star field, pages): it is the
- * same colour as the paper, so a global key would hollow out the Mushaf. A `fringe`-px band next to
- * the removed area is un-blended (colour-to-alpha), which keeps the anti-aliasing.
- */
-export function extract(img, { tol = 8 / 255, fringe = 2, island = 64, seeds = [] } = {}) {
+/** The 4-neighbours of pixel `i` inside a W×H image. */
+const neighbours = (W, H) => (i) =>
+  [i % W ? i - 1 : -1, (i + 1) % W ? i + 1 : -1, i - W, i + W].filter((j) => j >= 0 && j < W * H);
+
+/** Flood fill of the paper from the border and `seeds`: 0 = removed paper, -1 = emblem. */
+function paperFill(img, { bg, tol, seeds }) {
   const { width: W, height: H, data } = img;
-  const bg = borderColour(img);
-  const px = (i) => [data[i * 4], data[i * 4 + 1], data[i * 4 + 2]];
-  const near = (i) => px(i).every((v, k) => Math.abs(v - bg[k]) <= tol);
+  const near = (i) => [0, 1, 2].every((k) => Math.abs(data[i * 4 + k] - bg[k]) <= tol);
   const dist = new Int16Array(W * H).fill(-1); // -1 emblem, 0 removed paper, 1..fringe band
   const stack = [];
   const push = (i) => { if (dist[i] === -1 && near(i)) { dist[i] = 0; stack.push(i); } };
   for (let x = 0; x < W; x++) { push(x); push((H - 1) * W + x); }
   for (let y = 0; y < H; y++) { push(y * W); push(y * W + W - 1); }
   for (const [x, y] of seeds) push(y * W + x);
-  const nb = (i) => [i % W ? i - 1 : -1, (i + 1) % W ? i + 1 : -1, i - W, i + W].filter((j) => j >= 0 && j < W * H);
+  const nb = neighbours(W, H);
   while (stack.length) for (const j of nb(stack.pop())) push(j);
+  return dist;
+}
+
+/** Marks the `fringe`-px band next to the removed paper with its distance (1..fringe). */
+function markFringe(dist, nb, fringe) {
   let ring = [];
-  for (let i = 0; i < W * H; i++) if (dist[i] === 0) ring.push(i);
+  dist.forEach((d, i) => { if (d === 0) ring.push(i); });
   for (let d = 1; d <= fringe; d++) {
     const next = [];
-    for (const i of ring) for (const j of nb(i)) if (dist[j] === -1) { dist[j] = d; next.push(j); }
+    for (const j of ring.flatMap(nb)) if (dist[j] === -1) { dist[j] = d; next.push(j); }
     ring = next;
   }
-  // Islands cut off from the emblem body by the band (paper specks between close strokes): un-blend
-  // them too. A real stroke stays opaque under strokeAlpha, so small gold dots survive.
-  const seen = new Uint8Array(W * H);
-  for (let s = 0; s < W * H; s++) {
+}
+
+/** The emblem part connected to `s` (marks it seen). */
+function partOf(s, { dist, seen, nb }) {
+  const part = [s];
+  seen[s] = 1;
+  // for…of re-reads the length: the parts pushed below are visited too (a breadth-first walk).
+  for (const q of part) {
+    for (const j of nb(q)) if (dist[j] === -1 && !seen[j]) { seen[j] = 1; part.push(j); }
+  }
+  return part;
+}
+
+/** Islands cut off from the emblem body by the band (paper specks between close strokes) join the band. */
+function markIslands(dist, nb, { island, fringe }) {
+  const seen = new Uint8Array(dist.length);
+  for (let s = 0; s < dist.length; s++) {
     if (dist[s] !== -1 || seen[s]) continue;
-    const part = [s];
-    seen[s] = 1;
-    for (let p = 0; p < part.length; p++) {
-      for (const j of nb(part[p])) if (dist[j] === -1 && !seen[j]) { seen[j] = 1; part.push(j); }
-    }
+    const part = partOf(s, { dist, seen, nb });
     if (part.length < island) for (const i of part) dist[i] = fringe;
   }
+}
+
+/**
+ * Removes the paper OUTSIDE the emblem: flood fill from the border (and `seeds`) through pixels
+ * within `tol` of the paper colour. The emblem keeps its own ivory (star field, pages): it is the
+ * same colour as the paper, so a global key would hollow out the Mushaf. A `fringe`-px band next to
+ * the removed area is un-blended (colour-to-alpha), which keeps the anti-aliasing. Islands cut off by
+ * the band are un-blended too; a real stroke stays opaque under strokeAlpha, so small gold dots survive.
+ */
+export function extract(img, { tol = 8 / 255, fringe = 2, island = 64, seeds = [] } = {}) {
+  const { width: W, height: H } = img;
+  const bg = borderColour(img);
+  const dist = paperFill(img, { bg, tol, seeds });
+  const nb = neighbours(W, H);
+  markFringe(dist, nb, fringe);
+  markIslands(dist, nb, { island, fringe });
+  return unblend(img, dist, bg);
+}
+
+/** Emblem opaque, paper clear, the band and islands un-blended against the paper colour `bg`. */
+function unblend({ width: W, height: H, data }, dist, bg) {
   const out = blank(W, H);
   for (let i = 0; i < W * H; i++) {
-    const c = px(i);
+    const c = [data[i * 4], data[i * 4 + 1], data[i * 4 + 2]];
     const a = dist[i] === -1 ? 1 : dist[i] === 0 ? 0 : strokeAlpha(c, bg);
     for (let k = 0; k < 3; k++) out.data[i * 4 + k] = a > 0 ? bg[k] + (c[k] - bg[k]) / a : 0;
     out.data[i * 4 + 3] = a;

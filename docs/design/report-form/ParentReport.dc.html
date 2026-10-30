@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تقرير الحلقة للأسرة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#047857}a:hover{color:#065f46}
+</style>
+</helmet>
+<article dir="rtl" style="width: 390px; min-height: {{frameH}}px; box-sizing: border-box; background: {{c.page}}; color: {{c.ink}}; font-family: 'Noto Sans Arabic', system-ui, sans-serif; padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 16px;">
+
+  <header style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; border-bottom: 2px solid {{c.gold}};">
+    <p style="margin: 0; font-size: 13px; font-weight: 600; color: {{c.lapis}};">أكاديمية آيات البيان</p>
+    <h1 style="margin: 0; font-size: 22px; line-height: 1.4; font-weight: 700;">تقرير حلقة يوسف</h1>
+    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: {{c.ink2}};">الأحد 27 أكتوبر · الحلقة 9 من 12 · المعلمة سارة</p>
+    <span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: {{c.okSoft}}; color: {{c.ok}}; font-size: 13px; font-weight: 600;">حضر في الموعد</span>
+  </header>
+
+  <section style="display: flex; flex-direction: column; gap: 10px;">
+    <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">ما أنجزه اليوم</h2>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: {{c.sunk}};">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-size: 13px; font-weight: 600; color: {{c.ink3}};">{{r.title}}</span>
+          <span style="font-size: 15px; font-weight: 600;">{{r.range}}</span>
+        </div>
+        <span style="padding: 3px 10px; border-radius: 999px; background: {{c.lapisWash}}; color: {{c.lapisText}}; font-size: 13px; font-weight: 700;">{{r.rate}}</span>
+      </div>
+    </sc-for>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: {{c.ink2}};">الدرس النظري: أحكام النون الساكنة والتنوين</p>
+  </section>
+
+  <section style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; border-radius: 12px; border: 1px solid {{c.rule}};">
+    <span style="font-size: 15px; font-weight: 700;">التقدير العام</span>
+    <span style="font-size: 20px; font-weight: 700; color: {{c.lapisText}};">جيد جدًا</span>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 8px;">
+    <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">التقدّم في الحفظ</h2>
+    <div style="display: flex; justify-content: space-between; font-size: 13px; color: {{c.ink2}};">
+      <span>الجزء 29 (تبارك)</span>
+      <span style="font-variant-numeric: tabular-nums;">2 من 20 صفحة</span>
+    </div>
+    <div role="img" aria-label="الجزء 29: صفحتان من عشرين" style="height: 10px; border-radius: 999px; background: {{c.sunk}}; overflow: hidden;">
+      <div style="width: 10%; height: 100%; background: {{c.lapisFill}}; border-radius: 999px;"></div>
+    </div>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: {{c.ink2}};">المحفوظ حتى الآن: جزء عمّ كاملًا وصفحتان من جزء تبارك.</p>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 6px;">
+    <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">الواجب قبل الحلقة القادمة</h2>
+    <p style="margin: 0; font-size: 15px; line-height: 1.8;">مراجعة سورة الملك من الآية 1 إلى 22 يوميًا، وتحضير الآيات 23–30 استماعًا.</p>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: {{c.goldWash}};">
+    <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">ملاحظة المعلمة</h2>
+    <p style="margin: 0; font-size: 15px; line-height: 1.8;">أحسنت، استمر. تحسّنت المدود كثيرًا هذا الأسبوع.</p>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 4px;">
+    <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">الحلقة القادمة</h2>
+    <p style="margin: 0; font-size: 14px; line-height: 1.7; color: {{c.ink2}};">الثلاثاء 29 أكتوبر · الحفظ الجديد: سورة الملك 23–30</p>
+  </section>
+
+  <footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid {{c.rule}}; font-size: 12px; line-height: 1.6; color: {{c.ink3}};">
+    باقي في الباقة 3 حلقات · للاستفسار راسلنا على واتساب
+  </footer>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"frameH":{"editor":"int","default":1240},"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const LIGHT = { page: '#ffffff', sunk: '#f1f5f3', ink: '#17201c', ink2: '#2f3a35', ink3: '#4f5b55', rule: '#e2e8e5', lapis: '#047857', lapisText: '#047857', lapisFill: '#047857', lapisWash: '#ecfdf5', gold: '#b7891f', goldWash: '#eef7f1', ok: '#15803d', okSoft: '#eaf7ee' };
+    const DARK = { page: '#1e2623', sunk: '#222b27', ink: '#e9efec', ink2: '#cfd8d3', ink3: '#adbab3', rule: '#35413c', lapis: '#5eead4', lapisText: '#5eead4', lapisFill: '#047857', lapisWash: '#213a2c', gold: '#e0b95a', goldWash: '#2a3a31', ok: '#7ee2a6', okSoft: '#20372b' };
+    const c = this.props.dark ? DARK : LIGHT;
+    const rows = [
+      { title: 'التسميع', range: 'سورة الملك 1–15', rate: 'ممتاز' },
+      { title: 'الحفظ الجديد', range: 'سورة الملك 16–22', rate: 'جيد جدًا' },
+      { title: 'المراجعة', range: 'سورة القلم 1–20', rate: 'جيد' }
+    ];
+    return { c, rows, frameH: this.props.frameH ?? 1240 };
+  }
+}
+</script>
+</body>
+</html>

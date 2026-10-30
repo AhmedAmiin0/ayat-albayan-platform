@@ -3,8 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
 import { SettingsService } from '../../../common/settings/settings.service';
 
-/** whatsapp_calls_enabled (docs/28 §6): the calls feature's one switch, default false; calls_permission_template (§10). */
-const KEYS = ['whatsapp_calls_enabled', 'calls_permission_template'] as const satisfies readonly SettingKey[];
+/**
+ * whatsapp_calls_enabled (docs/28 §6): the calls feature's one switch, default false;
+ * calls_permission_template (§10).
+ */
+const KEYS = [
+  'whatsapp_calls_enabled',
+  'calls_permission_template',
+] as const satisfies readonly SettingKey[];
 type CallsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /** The academy settings the calls module reads (common/settings/settings-slice.ts). */

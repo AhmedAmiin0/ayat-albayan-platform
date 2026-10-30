@@ -1,6 +1,5 @@
 import type { AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { patchProfile } from '../hooks/account-api';
@@ -50,9 +49,7 @@ export function PhoneSection({ profile }: { profile: AccountProfile }) {
         error={action.errors.phone_e164}
       />
       {typed !== '' ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="ghost" label={t.account.phone.remove} onPress={() => setPhone('')} />
-        </View>
+        <Button variant="danger" label={t.account.phone.remove} onPress={() => setPhone('')} />
       ) : null}
       <AccountField
         {...passwordInput(t.account.currentPassword)}

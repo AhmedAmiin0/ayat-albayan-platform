@@ -1,10 +1,7 @@
-// The permission catalog (owner, 2026-10-05: "add dynamic roles and permissions"). One stable
-// `resource.action` key per group of API endpoints that had the same @Roles set before roles became
-// dynamic, so the five system roles keep exactly today's access (the API's parity test checks it).
-// `grants` = the non-admin system roles that hold the permission by default (seeded in migration
-// 20261005000220); the system admin always holds every grantable permission.
-// Adding a permission: add a row here, its labels in i18n (permissions.items), a seed row in a new
-// migration for the system roles that should get it, then use it in @Permissions('…').
+// The permission catalog (owner, 2026-10-05: dynamic roles). One stable `resource.action` key per group of API
+// endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
+// it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
+// Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = [
@@ -26,11 +23,11 @@ const T: Grant[] = ['teacher'];
 const TS: Grant[] = ['teacher', 'sales'];
 const TA: Grant[] = ['teacher', 'assistant'];
 const TAS: Grant[] = ['teacher', 'assistant', 'sales'];
-
 export const PERMISSION_ROWS = [
   { key: 'leads.read', area: 'people', grants: [] },
   { key: 'leads.write', area: 'people', grants: [] },
   { key: 'leads.assign', area: 'people', grants: [] },
+  { key: 'leads.link_family', area: 'people', grants: [] }, // «ربط بطالب موجود» (owner 2026-10-29): the admin's only
   { key: 'applicants.read', area: 'people', grants: [] },
   { key: 'applicants.write', area: 'people', grants: [] },
   { key: 'students.read', area: 'students', grants: [] },
@@ -52,12 +49,14 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.status', area: 'schedule', grants: T },
   { key: 'lessons.write', area: 'schedule', grants: [] },
   { key: 'booking.write', area: 'schedule', grants: [] },
-  // Sales' «تغيير الموعد» / «إلغاء الحلقة» on ONE lesson of her own students from «جدول الحلقات» (owner 2026-10-27,
-  // docs/16 row 37): POST /sales/lessons/:id/reschedule and /cancel only. Never a series, an outcome or teacher pay.
+  // Sales' «تغيير الموعد» / «إلغاء الحلقة» / «تأكيد الحلقة» on ONE lesson, ANY lesson (docs/16 rows 37, 37b): POST
+  // /sales/lessons/:id/reschedule, /cancel, /confirm only. Never a series, an outcome or teacher pay.
   { key: 'lessons.reschedule', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.cancel', area: 'schedule', grants: ['sales'] },
-  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
-  // chat, migration 20261026000760); teachers never.
+  { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
+  // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/16 row 37c): the course pause routes, ANY student.
+  { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
+  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
@@ -96,9 +95,10 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (owner 2026-10-12, docs/16 row 24): an inline check of the sales subscribe
-  // (no route gate). Without it the package starts on the default day (today, Riyadh).
+  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe, no route gate.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
+  // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
+  { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },
   { key: 'receivables.read', area: 'finance', grants: [] },
   { key: 'payouts.read', area: 'finance', grants: [] },

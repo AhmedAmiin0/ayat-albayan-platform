@@ -13,7 +13,8 @@ import {
 } from '@ab/shared';
 import type { Href } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { isolate, ltr } from '@/core/ui/primitives/Ltr';
+import { money, partPaidLine } from '@/payments/format';
 
 // A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
 // GET /threads/:phone `people`. The rules (badge, child chip, new vs renew) are @ab/shared's, so
@@ -45,17 +46,36 @@ export function packageText(sub: ThreadSubscriptionView | null): string {
   return [name, remainingLabel].filter(Boolean).join(' · ');
 }
 
-/** «عليه 145 ر.س» while the newest package owes money, else null. */
+/** «عليه 145 ر.س» while the newest package owes money («مدفوعة جزئيًا: …» once part of it came, owner 2026-10-28), else null. */
 export function dueLine(sub: ThreadSubscriptionView | null): string | null {
+  const part = sub ? partPaidLine({ paid: sub.paid_amount, price: sub.price, currency: sub.currency }) : null;
+  if (part) return part;
   return sub && sub.due_amount > 0 ? s().due.replace('{amount}', money(sub.due_amount, sub.currency)) : null;
 }
 
-const running = (student: ThreadStudentView) => subscriptionBadge([student]) === 'subscribed';
+/** A package that still runs (lessons left, not ended): the family chip's «مشترك» for one child. */
+export const running = (student: ThreadStudentView) => subscriptionBadge([student]) === 'subscribed';
 
-interface SubscribeAction {
+/** One row of «لأيّ طالب؟»: «يوسف · AB-0183 — جدّد الاشتراك» and that child's own form. */
+interface SubscribeTarget {
   label: string;
   href: Href;
 }
+
+/** One place to go; `accessibilityLabel` names the child the short pill is for. */
+interface SubscribeLink {
+  label: string;
+  accessibilityLabel?: string;
+  href: Href;
+}
+
+/** Several children qualify: the pill opens «لأيّ طالب؟», each row with its own new / renew. */
+interface SubscribePick {
+  label: string;
+  targets: SubscribeTarget[];
+}
+
+export type SubscribeAction = SubscribeLink | SubscribePick;
 
 interface ActionInput {
   people: ThreadPeople;
@@ -65,10 +85,11 @@ interface ActionInput {
 }
 
 /**
- * The thread's one subscribe button. A guardian: the first child without a running package (else
- * the first child), «جدّد الاشتراك» once its package ended, else «اشتراك جديد» (subscribeKind, as
- * the web); with several children it names the child. A lead with no guardian yet (a converted one
- * too): «اشترك» → the booking wizard with a package step. A lost lead or anyone else: nothing.
+ * The thread's one subscribe pill. A guardian: the children without a running package (else every
+ * child: an early renewal or an extra package), «جدّد الاشتراك» once a package ended, else «اشتراك
+ * جديد» (subscribeKind, as the web); one such child → its form (the pill's spoken name names it),
+ * several → «لأيّ طالب؟». A lead with no guardian yet (a converted one too): «اشترك» → the booking
+ * wizard with a package step. A lost lead or anyone else: nothing.
  */
 export function subscribeAction({ people, phone, thread }: ActionInput): SubscribeAction | null {
   if (people.guardian) return guardianAction(people.students, phone);
@@ -79,11 +100,18 @@ export function subscribeAction({ people, phone, thread }: ActionInput): Subscri
 }
 
 function guardianAction(students: readonly ThreadStudentView[], phone: string): SubscribeAction | null {
-  const child = students.find((st) => !running(st)) ?? students[0];
-  if (!child) return null;
-  const renew = subscribeKind(child.subscription) === 'renew';
-  const word = renew ? s().renew : t.subscriptions.new;
-  const label = students.length > 1 ? `${word} — ${child.name}` : word;
-  const params = { studentId: child.id, phone, ...(renew ? { renew: '1' } : {}) };
-  return { label, href: { pathname: '/inbox/subscribe', params } };
+  const open = students.filter((st) => !running(st));
+  const kinds = (open.length > 0 ? open : students).map((child) => {
+    const renew = subscribeKind(child.subscription) === 'renew';
+    const params = { studentId: child.id, phone, ...(renew ? { renew: '1' } : {}) };
+    const href: Href = { pathname: '/inbox/subscribe', params };
+    return { child, renew, word: renew ? s().renew : t.subscriptions.new, href };
+  });
+  const [only] = kinds;
+  if (!only) return null;
+  if (kinds.length === 1) return { label: only.word, accessibilityLabel: `${only.word} — ${only.child.name}`, href: only.href };
+  // The code tells same-name children apart (and keeps the sheet's keys unique); isolated, a Latin name
+  // and the code never merge into one LTR run in an Arabic row.
+  const targets = kinds.map((k) => ({ label: `${isolate(k.child.name)} · ${ltr(k.child.code)} — ${k.word}`, href: k.href }));
+  return { label: kinds.every((k) => k.renew) ? s().renew : t.subscriptions.new, targets };
 }

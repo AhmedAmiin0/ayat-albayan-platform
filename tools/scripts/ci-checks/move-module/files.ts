@@ -36,6 +36,26 @@ export function rewriteText(text: string, pairs: [string, string][]): string {
   );
 }
 
+/** Data files keyed by folder-relative paths: the e2e spec lists (D8; pure-move/configs.mjs). */
+const RELATIVE_TO: Record<string, string> = {
+  'e2e/areas.json': 'e2e/tests',
+  'e2e/shard-durations.json': 'e2e',
+};
+
+/**
+ * The pairs a text file may name: repo paths, and in a package's `eslint-suppressions.json` (ESLint bulk
+ * suppressions are keyed by package-relative paths) the moves inside that package, relative to it;
+ * the same for the e2e spec lists, relative to their folder.
+ */
+export function textPairs(file: string, pairs: [string, string][]): [string, string][] {
+  const suppressions = posix.basename(file) === 'eslint-suppressions.json';
+  const dir = suppressions ? posix.dirname(file) : RELATIVE_TO[file];
+  if (dir === undefined || dir === '.') return pairs;
+  const pre = `${dir}/`;
+  const inside = pairs.filter(([from, to]) => from.startsWith(pre) && to.startsWith(pre));
+  return [...pairs, ...inside.map(([from, to]): [string, string] => [from.slice(pre.length), to.slice(pre.length)])];
+}
+
 export function readText(root: string, file: string): string {
   return readFileSync(posix.join(root, file), 'utf8');
 }

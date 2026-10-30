@@ -61,12 +61,24 @@ function lastBody(row: ThreadRow): string | null {
 }
 
 /**
- * Is a messaging line's 24 h window open? A message to the calls number (docs/28 §10) opens none: when it is
- * the newest inbound, only the two line windows count (they leave it out).
+ * Is a messaging line's 24 h window open? A message to the calls number (docs/28 §10) opens none:
+ * when it is the newest inbound, only the two line windows count (they leave it out).
  */
-export function messagingWindowOpen(row: Pick<ThreadRow, 'last_inbound_at' | 'last_inbound_line' | 'last_chat_inbound_at' | 'last_notifications_inbound_at'>, now: Date): boolean {
+export function messagingWindowOpen(
+  row: Pick<
+    ThreadRow,
+    | 'last_inbound_at'
+    | 'last_inbound_line'
+    | 'last_chat_inbound_at'
+    | 'last_notifications_inbound_at'
+  >,
+  now: Date,
+): boolean {
   if (row.last_inbound_line !== 'calls') return sessionWindowOpen(row.last_inbound_at, now);
-  return sessionWindowOpen(row.last_chat_inbound_at, now) || sessionWindowOpen(row.last_notifications_inbound_at, now);
+  return (
+    sessionWindowOpen(row.last_chat_inbound_at, now) ||
+    sessionWindowOpen(row.last_notifications_inbound_at, now)
+  );
 }
 
 /** replyLine() over the view's two per-line windows (docs/12 §13.3 rule 2). */

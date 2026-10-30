@@ -1,4 +1,11 @@
-import { isWaLine, NOTIFICATION_CATALOGUE, type LineHealthView, type NotificationsOverview, type TemplateStatus, type WaLine } from '@ab/shared';
+import {
+  isWaLine,
+  NOTIFICATION_CATALOGUE,
+  type LineHealthView,
+  type NotificationsOverview,
+  type TemplateStatus,
+  type WaLine,
+} from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { LineHealthStore } from '../whatsapp/lines/line-health.store';
@@ -65,6 +72,10 @@ export class RulesQueries {
   async templates(): Promise<TemplateFacts> {
     const { data, error } = await this.db.from('message_templates').select('key, status, line').in('key', [...CATALOGUE_TEMPLATE_KEYS]);
     if (error) throw new Error(`templates read failed: ${error.message}`);
-    return new Map(data.flatMap((r) => (isWaLine(r.line) ? [[r.key, { status: r.status, line: r.line }] as const] : [])));
+    return new Map(
+      data.flatMap((r) =>
+        isWaLine(r.line) ? [[r.key, { status: r.status, line: r.line }] as const] : [],
+      ),
+    );
   }
 }

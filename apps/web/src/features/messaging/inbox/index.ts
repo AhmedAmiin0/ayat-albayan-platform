@@ -65,6 +65,6 @@ export {
   stageReply,
   updateReply,
   uploadReplyFile,
-} from './saved-replies/api';
-export { useReplyDialogs } from './saved-replies/use-reply-dialogs';
+} from './saved-replies/lib/api';
+export { useReplyDialogs } from './saved-replies/hooks/use-reply-dialogs';
 export { clearTabMemories } from './shared/tab-memory';

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -12,18 +12,22 @@ interface ChatHeaderProps {
   /** «عميل محتمل · +966 …» or when the saved thread was fetched; one smaller line. */
   subtitle?: string;
   onBack: () => void;
+  /** The contact's initials circle, beside the chevron (decorative: the title reads the name). */
+  avatar?: ReactNode;
   /** Icon buttons at the inline-end («تحقق من التسجيل»). */
   trailing?: ReactNode;
+  /** Tapping the name or number: the student's details (owner 2026-10-29). Unset = not tappable. */
+  onTitlePress?: () => void;
 }
 
 /**
  * A chat's header in one ~52pt line, WhatsApp-like, so the messages get the room (owner
  * 2026-10-18): «رجوع» as a chevron, the name in Amiri at h4 and the subtitle under it, both one
  * line, then the icon actions. As WhatsApp (owner 2026-10-27), a logical row that RN mirrors: the
- * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the name
- * beside it, the icons at the end.
+ * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the
+ * contact's initials and the name beside it, the icons at the end.
  */
-export function ChatHeader({ title, subtitle, onBack, trailing }: ChatHeaderProps) {
+export function ChatHeader({ title, subtitle, onBack, avatar, trailing, onTitlePress }: ChatHeaderProps) {
   const { color } = useTheme();
   return (
     <View
@@ -40,8 +44,16 @@ export function ChatHeader({ title, subtitle, onBack, trailing }: ChatHeaderProp
       <IconButton label={t.common.back} onPress={onBack}>
         <Chevron to="prev" color={color.ink} size={22} />
       </IconButton>
+      {avatar}
       {/* Hugs the chevron at the inline-start. */}
-      <View testID="chat-names" style={{ flex: 1, minWidth: 0, alignItems: 'flex-start' }}>
+      <Pressable
+        testID="chat-names"
+        disabled={!onTitlePress}
+        onPress={onTitlePress}
+        accessibilityRole={onTitlePress ? 'button' : undefined}
+        accessibilityHint={onTitlePress ? t.inbox.studentDetails : undefined}
+        style={{ flex: 1, minWidth: 0, alignItems: 'flex-start' }}
+      >
         <AppText
           testID="chat-title"
           accessibilityRole="header"
@@ -72,7 +84,7 @@ export function ChatHeader({ title, subtitle, onBack, trailing }: ChatHeaderProp
             {subtitle}
           </AppText>
         ) : null}
-      </View>
+      </Pressable>
       {trailing}
     </View>
   );

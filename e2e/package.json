@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "e2e": "playwright test",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsgo --noEmit",
     "screens": "node scripts/screens.ts"
   },
   "devDependencies": {
@@ -14,6 +14,7 @@
     "@playwright/test": "^1.63.0",
     "@supabase/supabase-js": "^2.117.2",
     "@types/node": "^24.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "api": "workspace:*",
     "eslint": "^10.0.0",
     "postgres": "^3.4.9",

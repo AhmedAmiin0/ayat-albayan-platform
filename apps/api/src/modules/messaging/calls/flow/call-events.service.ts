@@ -7,7 +7,8 @@ import { callingLine, type CallingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
-import { CallsNumberStore } from '../store/calls-number.store';
+import { CallsNumberRepo } from '../store/calls-number.repo';
+import { CallsSweeper } from './calls.sweeper';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */
 export interface CallEventsPort {
@@ -50,14 +51,27 @@ export class CallEvents implements CallEventsPort {
   constructor(
     private readonly kit: CallsKit,
     private readonly gate: CallsGate,
-    private readonly permissions: CallsNumberStore,
+    private readonly sweeper: CallsSweeper,
+    private readonly permissions: CallsNumberRepo,
   ) {}
 
-  /** Stored whatever the setting says (it only records the family's own answer); never a send, never Kapso. */
+  /**
+   * Stored whatever the setting says (it only records the family's own answer); never a send, never
+   * Kapso.
+   */
   async permissionReply(e: CallPermissionReplyEvent): Promise<void> {
     const phone = waIdToE164(e.from);
-    if (!phone) return void this.log.warn(`call permission reply: the wa_id is not a phone`);
-    await this.permissions.saveReply({ phoneNumberId: e.phoneNumberId, phone, response: e.response, expiresAt: e.expiresAt, at: e.at });
+    if (!phone) {
+      this.log.warn(`call permission reply: the wa_id is not a phone`);
+      return;
+    }
+    await this.permissions.saveReply({
+      phoneNumberId: e.phoneNumberId,
+      phone,
+      response: e.response,
+      expiresAt: e.expiresAt,
+      at: e.at,
+    });
   }
 
   async handle(e: CallWebhookEvent): Promise<void> {
@@ -98,5 +112,7 @@ export class CallEvents implements CallEventsPort {
       ...{ number_id: line.numberId, guardian_id: thread?.guardian_id ?? null, lead_id: thread?.lead_id ?? null },
       started_at: e.at.toISOString(),
     });
+    // The sweeper (on the worker) ends it as missed if its terminate webhook is lost.
+    void this.sweeper.wake();
   }
 }

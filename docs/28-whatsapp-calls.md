@@ -195,7 +195,7 @@ below is exactly §1–§9 (calls ring on the chat line).
 ### 10.1 What changes
 
 - **A number role `calls`.** `wa_numbers.purpose` is the `wa_line` enum; migration
-  `20261028000940_wa_line_calls.sql` adds the value `calls` (alone: an enum value is unusable in its own
+  `20261030000983_wa_line_calls.sql` adds the value `calls` (alone: an enum value is unusable in its own
   transaction). In code `WaLine` stays the two messaging lines; `NumberPurpose` (`NUMBER_PURPOSES`) adds `calls`.
   A calls number is **Kapso only** (`callsNeedKapso`: the form says so under «المزوّد», the API answers 409
   `calls_need_kapso` on a create or a PATCH that would break it).
@@ -212,11 +212,11 @@ below is exactly §1–§9 (calls ring on the chat line).
   - the sender's queue never reads a `line = 'calls'` row (`SenderQueries.due`);
   - module routing never sees a `calls` number (`messagingNumbers` in `NumberRoutes.pass`: no template, session,
     rule or fallback_rank can pick it), and its `numberEnv` is always null;
-  - a template can never be on the calls line (check in migration 941) nor point at it
+  - a template can never be on the calls line (check in migration 984) nor point at it
     (`PUT /messaging/templates/:key/number` → 404 `unknown_number`), nor can a notification rule
     (`PATCH /admin/notifications/:key` → `unknown_number`);
   - a calls inbound never opens a reply window: `v_threads` / `thread_summary_refresh` exclude it from the
-    notifications window (migration `20261028000941_calls_number.sql`), `numberWindows` drops it (module
+    notifications window (migration `20261030000984_calls_number.sql`), `numberWindows` drops it (module
     mode), so the reply line never becomes the calls number; the composer's «window open» and «إعادة فتح»
     follow the messaging windows only (`messagingWindowOpen`); no read receipt is sent for it;
   - the admin's «إعادة المحاولة» refuses a calls-number row (staff tap the button again);
@@ -256,4 +256,4 @@ below is exactly §1–§9 (calls ring on the chat line).
    it (no APK needed: JS only). To go back, turn it off: calls ring on the chat line again.
 
 Rollback: turn the calls number off (or delete it). Migrations are expand-only; their manual rollback is at
-the end of 941 (940's enum value stays, unused).
+the end of 984 (983's enum value stays, unused).

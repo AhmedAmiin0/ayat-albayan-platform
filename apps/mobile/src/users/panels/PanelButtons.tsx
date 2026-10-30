@@ -1,5 +1,5 @@
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 
 interface PanelButtonsProps {
@@ -10,16 +10,15 @@ interface PanelButtonsProps {
   disabled?: boolean;
 }
 
-/** A form's foot: [«إلغاء» ghost][the verb, primary], 44pt, side by side. */
+/**
+ * A form's foot (docs/07 §6 «الأزرار»): ONE ButtonRow, the verb (primary) at the reading start, then
+ * «إلغاء» (secondary: it only closes the step); they stack when the labels do not fit.
+ */
 export function PanelButtons({ confirmLabel, onConfirm, onCancel, busy = false, disabled = false }: PanelButtonsProps) {
   return (
-    <View style={{ flexDirection: 'row', gap: 8 }}>
-      <View style={{ flex: 1 }}>
-        <Button variant="ghost" label={t.common.cancel} onPress={onCancel} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Button label={confirmLabel} onPress={onConfirm} busy={busy} disabled={disabled} />
-      </View>
-    </View>
+    <ButtonRow>
+      <Button label={confirmLabel} onPress={onConfirm} busy={busy} disabled={disabled} />
+      <Button variant="secondary" label={t.common.cancel} onPress={onCancel} />
+    </ButtonRow>
   );
 }

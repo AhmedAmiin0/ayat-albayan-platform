@@ -1,3 +1,4 @@
+import { sendErrorReason } from '@ab/client-core';
 import { clockOf, counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock, viewerZone } from '@/lib/clock-text';
@@ -95,9 +96,7 @@ export function sessionUntil(lastInboundAt: string, clock: Clock): string {
   return t.inbox.sessionOpenUntil.replace('{time}', fullTime(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString(), clock));
 }
 
-/** Meta / sender error in words: messages.errors.<code>, else «حصلت مشكلة في الإرسال (code)». */
+/** Meta / sender error in words: messages.errors.<code>, else «حدثت مشكلة في الإرسال (code)» (as the phone). */
 export function errorText(m: Pick<MessageView, 'error_code' | 'error_text'>): string {
-  const known = (t.messages.errors as Record<string, string>)[m.error_code ?? ''];
-  if (known) return known;
-  return t.messages.errors.unknown.replace('{code}', m.error_code ?? m.error_text ?? '—');
+  return sendErrorReason(m.error_code ?? m.error_text, t.messages.errors);
 }

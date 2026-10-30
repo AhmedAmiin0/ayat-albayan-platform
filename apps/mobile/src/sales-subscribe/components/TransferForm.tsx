@@ -5,6 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
+import { ShortfallNote } from '@/payments';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
@@ -16,6 +17,8 @@ import { useSalesPayment } from '../hooks/use-sales-payment';
 interface TransferFormProps {
   sub: SalesMoneySubscriptionView;
   phone: string;
+  /** The chat's phone for a child not hers (chatBinding, sales.renew_any); none for hers. */
+  bind?: { phone?: string };
   onDone: (payment: SalesPaymentView) => void;
 }
 
@@ -23,9 +26,9 @@ interface TransferFormProps {
  * The bank transfer for one package: «المرفقات» (optional, up to 5), amount (the due, prefilled) in the
  * package currency (shown, never asked), day, note. Errors show once a save was tried; a refused save keeps everything entered.
  */
-export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
+export function TransferForm({ sub, phone, bind = {}, onDone }: TransferFormProps) {
   const now = useNow();
-  const pay = useSalesPayment(phone);
+  const pay = useSalesPayment(phone, bind);
   const [draft, setDraft] = useState(() => draftFor(sub));
   const [tried, setTried] = useState(false);
   const check = checkTransfer(draft, { sub, now });
@@ -40,7 +43,7 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
   return (
     <View style={{ gap: 20 }}>
       <SalesReceiptField
-        target={{ studentId: sub.student.id, subscriptionId: sub.id }}
+        target={{ studentId: sub.student.id, subscriptionId: sub.id, bind }}
         value={draft.attachments}
         onChange={(attachments) => set({ attachments })}
       />
@@ -50,6 +53,7 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
         currency={sub.currency}
         error={errors.amount}
       />
+      <ShortfallNote amountText={draft.amountText} due={sub.due} currency={sub.currency} />
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
       <Field label={m.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} multiline />
       {pay.isError ? <ErrorLine message={salesErrorText(pay.error)} /> : null}

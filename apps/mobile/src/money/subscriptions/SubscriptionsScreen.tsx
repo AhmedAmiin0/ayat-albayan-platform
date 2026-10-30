@@ -13,13 +13,16 @@ type View = 'packages' | 'tasks';
 /**
  * «الاشتراكات والتجديدات» (web /admin/subscriptions): the packages with their status and the
  * renewal highlight, and the open admin-task queue. Read-only; «سجّل دفعة» opens the payment form.
+ * The list screens' compact top (owner 2026-10-28): title, pills and search 8pt apart.
  */
 export function SubscriptionsScreen() {
   const [view, setView] = useState<View>('packages');
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.mobileMoney.subscriptionsTitle}
+        size="h2"
+        connecting
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <FilterPills

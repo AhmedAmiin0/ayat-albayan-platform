@@ -1,8 +1,10 @@
-import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { can } from '../../../../common/auth/permissions';
 import type { AuthUser } from '../../../../common/auth/verify-token';
-import { buildEarnings } from './my.earnings';
+import type { Page, PageQuery } from '../../../../common/http/http';
+import { toMyCommission } from './my.commissions.mapper';
+import { buildEarnings, frozenLines } from './my.earnings';
 import { toMyPayment, toMyStudent } from './my.mapper';
 import { MyQueries } from './my.queries';
 import { StatementsQueries } from '../statements/statements.queries';
@@ -32,6 +34,12 @@ export class MyService {
     return (await this.queries.payments(user.id)).map(toMyPayment);
   }
 
+  /** «عمولاتي» (owner 2026-10-29): one page of my own commissions, newest first, each with its wallet state. */
+  async commissions(user: AuthUser, q: PageQuery): Promise<Page<MyCommissionRow>> {
+    const { rows, total } = await this.queries.commissionPage(user.id, q);
+    return { items: rows.map(toMyCommission), total, page: q.page, pageSize: q.pageSize };
+  }
+
   async earnings(user: AuthUser, now = new Date()): Promise<MyEarnings> {
     const [terms, share, tz, commissions, adjustments, statements] = await Promise.all([
       this.terms.get(user.id),
@@ -47,6 +55,7 @@ export class MyService {
       terms: terms ? toTermsView(user.id, terms, share) : null,
       commissions,
       adjustments,
+      frozen: frozenLines(statements),
       statements: statements.map(toStatementView),
     });
   }

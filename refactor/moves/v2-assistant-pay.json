@@ -1,0 +1,116 @@
+{
+  "id": "v2-assistant-pay",
+  "seq": 106,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.controller.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/admin.*",
+      "to": "apps/api/src/modules/finance/assistant-pay/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.dto.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.errors.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.fakes.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.rpc.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/rpc.test.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/assistant-pay.settings.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/reasons.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/rows.fakes.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/mappers.test.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/statements/"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/finance/assistant-pay/admin.corrections.http.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/admin/admin.corrections.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/admin.guard.http.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/admin/admin.guard.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/admin.statements.http.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/admin/admin.statements.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/admin.terms.http.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/admin/admin.terms.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.controller.ts",
+      "apps/api/src/modules/finance/assistant-pay/admin/assistant-pay.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.dto.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.errors.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.errors.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.fakes.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.rpc.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.rpc.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.settings.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.settings.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/assistant-pay.settings.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/assistant-pay.settings.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/mappers.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/statements/mappers.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/reasons.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/reasons.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/reasons.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/reasons.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/rows.fakes.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/rows.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/rpc.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/shared/rpc.test.ts"
+    ]
+  ]
+}

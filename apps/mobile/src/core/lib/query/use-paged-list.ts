@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString } from '../http/api';
+import { usePagedActions, withTracked } from './paged-result';
 import { flattenPages, nextPageParam, type Page, type WithId } from './paging';
 import { listKey, type ListParams } from './query-keys';
 
@@ -14,7 +15,7 @@ interface PagedListOptions {
 }
 
 /**
- * Infinite list over a `{ items, total, page, pageSize }` endpoint. Feed `items` to a FlatList,
+ * Infinite list over a `{ items, total, page, pageSize }` endpoint. Feed `items` to a LazyList,
  * `loadMore` to `onEndReached` and `refresh` to `onRefresh`. Everything else is TanStack's result.
  */
 export function usePagedList<T extends WithId>({
@@ -31,10 +32,6 @@ export function usePagedList<T extends WithId>({
   });
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
-  /** The next page, only if there is one and it isn't already on its way. */
-  const loadMore = () => {
-    if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage();
-  };
-  const refresh = () => void query.refetch();
-  return { ...query, items, total: pages?.[0]?.total ?? 0, loadMore, refresh };
+  const { loadMore, refresh, pulling } = usePagedActions(query);
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling });
 }

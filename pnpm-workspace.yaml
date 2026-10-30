@@ -3,6 +3,7 @@ packages:
   - packages/*
   - tools/*
   - e2e
+  - docs/design/brand/tools
 allowBuilds:
   supabase: true
   esbuild: true
@@ -33,3 +34,8 @@ minimumReleaseAgeExclude:
   - '@tanstack/router-generator@1.167.40'
   - '@tanstack/router-plugin@1.168.42'
   - vite@8.3.2
+# One React DOM for the workspace, equal to react 19.2.3 (React refuses a mismatched pair): apps/web and the
+# optional react-dom peer of expo-router / @expo/metro-runtime would otherwise take the newest 19.x (docs/32 x1).
+overrides:
+  react-dom: 19.2.3
+  '@types/react-dom': ~19.2.3

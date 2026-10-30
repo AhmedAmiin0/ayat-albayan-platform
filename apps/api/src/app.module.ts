@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ActivityModule } from './common/activity/activity.module';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
+import { CacheModule } from './common/cache/cache.module';
 import { ClientUsageModule } from './common/client-usage/client-usage.module';
 import { ConfigStoreModule } from './common/config-store/config-store.module';
 import { CustomConfigModule } from './common/custom-config/custom-config.module';
@@ -12,7 +13,9 @@ import { PublicConfigModule } from './common/public-config/public-config.module'
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { StorageModule } from './common/storage/storage.service';
+import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
+import { CoursePauseModule } from './modules/teaching/course-pause';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
 import { ExportsModule } from './modules/reporting/exports/exports.module';
@@ -21,6 +24,7 @@ import { FeedbackModule } from './modules/teaching/feedback/feedback.module';
 import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
 import { HealthController } from './modules/platform/health/health.controller';
+import { ProcessRoleModule } from './modules/platform/process-role';
 import { InboxModule } from './modules/messaging/inbox/inbox.module';
 import { SavedRepliesModule } from './modules/messaging/saved-replies/saved-replies.module';
 import { InvoicesModule } from './modules/finance/invoices/invoices.module';
@@ -36,6 +40,7 @@ import { PaymentsModule } from './modules/finance/payments/payments.module';
 import { SalesMoneyModule } from './modules/sales/sales-money/sales-money.module';
 import { AssistantPayModule } from './modules/finance/assistant-pay/assistant-pay.module';
 import { PayoutsModule } from './modules/finance/payouts/payouts.module';
+import { StripeTestModule } from './modules/finance/stripe';
 import { TeacherEarningsModule } from './modules/finance/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/finance/pricing/pricing.module';
 import { ReceivablesModule } from './modules/finance/receivables/receivables.module';
@@ -63,6 +68,8 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
 @Module({
   imports: [
     DbModule,
+    CacheModule,
+    ProcessRoleModule,
     IntegrationConfigModule,
     AuditModule,
     AuthModule,
@@ -74,6 +81,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     PublicConfigModule,
     TranslationsModule,
     StorageModule,
+    AvatarsModule,
     LessonEventsModule,
     PushModule,
     GuardiansModule,
@@ -93,6 +101,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     InvoicesModule,
     ReceivablesModule,
     LessonsModule,
+    CoursePauseModule,
     ReportsModule,
     RolesModule,
     UsersModule,
@@ -105,6 +114,8 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
+    // Test build only (docs/30): an empty module unless FEATURE_STRIPE=test.
+    StripeTestModule.register(),
     TeacherEarningsModule,
     ExpensesModule,
     DashboardModule,

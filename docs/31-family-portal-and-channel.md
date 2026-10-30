@@ -89,18 +89,34 @@ unknown id. The POSTs are logged by the activity log like every mutation.
 Owner, 2026-10-27: «When the assistant registers a student it opens a chat channel between teacher and
 student that is monitored by assistant and all authorized users.»
 
+Owner, 2026-10-29: «chat between teacher and student will be using socket it will not use whatsapp» and
+«Assistant assigns the student to the teacher when the student take the trial and decided to subscribe so he
+can start chatting with the teacher this is if in case the student had no guardians». Decisions 2, 3, 6 and 8
+below are updated accordingly (migrations `20261029000971`–`972`).
+
 ### Decisions
 
 1. **In-platform messaging, not WhatsApp.** The WhatsApp Cloud API has no usable groups, and teachers already
    see the family's WhatsApp thread in teacher mode. The channel lives in our database and our apps; nothing
    is sent on WhatsApp.
-2. **One channel per student, opened at registration.** A trigger on `students` INSERT opens it, whatever the
+2. **One channel row per student, created at registration; OPEN only after the subscription** (owner
+   2026-10-29). The channel is open when the student is subscribed (status past the trial: not `new`,
+   `trial` or `pending_subscription`; the payment moves a trial student to `active`) AND the assistant
+   assigned the teacher (`students.teacher_id`, docs/16 row 38). Rule: `channel_is_open` (SQL, RLS) and
+   `channelOpen` (`@ab/shared`, API). Closed: the teacher and the family get an empty page with `open: false`
+   (no message listed), the apps show «تُفتح المحادثة مع المعلم بعد الاشتراك» instead of the composer, a
+   post or a read mark is 409 `channel_not_open`, unread is 0, and the teacher's list leaves the student
+   out; monitors still read (with «المحادثة مغلقة أمام المعلم/ة والأسرة…»). Losing the teacher
+   (`teacher_id` cleared) closes it again. The row itself: a trigger on `students` INSERT opens it, whatever the
    path (sales registration, admin form, booking, import); one idempotent insert…select opened it for every
    existing student (new rows only). `merge_students` moves the merged student's messages into the kept
    channel.
-3. **Participants** (read and write): the student's own login (`students.profile_id`, if any), the guardian's
-   login (`guardians.profile_id`, if any; a child's guardian takes part, an adult who is their own contact is
-   both), and the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
+3. **Participants** (read and write, on an open channel): the family side is the guardian's login
+   (`guardians.profile_id`; for a child) or the student's own login (`students.profile_id`) ONLY when the
+   student is their own contact (`students.contact_is_self`; owner 2026-10-29: the direct student chat is for
+   students without guardians). A child's own login has no channel at all (the stricter choice: no read, no
+   write; 403 `channel_guardian_only`, the portal hides the tab; RLS gives it nothing) — `familyChats`
+   (`@ab/shared`). The teacher side is the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
    (`students.teacher_id`) or the teacher of an open lesson of the student running now or starting within a
    day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
    current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps
@@ -111,8 +127,15 @@ student that is monitored by assistant and all authorized users.»
    area messaging; the system admin by default, grantable to custom roles). A monitor has no send route: a
    post from a monitor is 403. Every monitor screen says «للاطلاع فقط».
 5. **Text only**, 1–2000 characters (trimmed), links clickable with the shared `splitLinks`.
-6. **Refresh** like the inbox: polling (web `INBOX_REFRESH_MS` while the window has focus, mobile every 15 s
-   while the screen is shown). Threads open on the newest message (web scrolls to it, mobile is an inverted
+6. **Live over a socket, never WhatsApp** (owner 2026-10-29). Supabase Realtime `postgres_changes` (INSERT on
+   `channel_messages`, filtered `channel_id=eq.<id>` from the page's `channel_id`); the table joins the
+   `supabase_realtime` publication (migration 971) and Realtime tells each subscriber only what RLS
+   (`can_read_channel`) lets them read, so it works behind both API copies with no new server. A new row is a
+   nudge: the thread re-reads through the API (`subscribeChannelMessages`, `@ab/client-core`). The poll stays
+   as the fallback: 60 s while the socket is joined (`CHANNEL_LIVE_FALLBACK_MS`), 15 s while it is down;
+   mobile joins only while the screen is shown and the app is in the foreground, and TanStack's focus refetch
+   catches up on return. Only a participant's open thread joins the socket; monitors, the lists and the
+   badges keep polling as before (RLS tells only the admin and the owning assistant among monitors). Threads open on the newest message (web scrolls to it, mobile is an inverted
    list); a time shows its day when it is not today. Unread counts per participant
    (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's messages (never
    a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown
@@ -123,9 +146,9 @@ student that is monitored by assistant and all authorized users.»
    settings like every staff kind: off → nothing, bell only → no device push). The bell row quotes up to 80
    characters, and it stays in that teacher's bell after a teacher change. A teacher's message notifies
    nobody (the family reads it in the portal). No WhatsApp; nothing to monitors.
-8. **Trial students**: the channel is open from registration (the owner's request), so a teacher assigned to
-   a trial student can write to the family in the platform; the WhatsApp rule (no teacher ↔ family chat
-   before the subscription, owner 2026-10-11) is unchanged. Owner to confirm.
+8. **Trial students: no chat in the trial** (owner 2026-10-29, answers the open question). The channel opens
+   only after the subscription and the assignment (decision 2), matching the WhatsApp rule (no teacher ↔
+   family chat before the subscription, owner 2026-10-11).
 
 ### API (`apps/api/src/modules/teaching/student-channels`)
 
@@ -139,8 +162,9 @@ student that is monitored by assistant and all authorized users.»
 `GET …/messages?before=<iso>` pages back 50 at a time, newest page first. A message view is
 `{ id, body, sender_role, sender_name, mine, created_at }`: names only (the teacher's display name, the
 student's or guardian's name), never a phone, email or profile id; a page also carries `student_name` (the
-header). RLS lets a direct PostgREST reader see `sender_profile_id` (a uuid, no personal data); the apps
-read through the API only.
+header), `open` (decision 2) and `channel_id` (the Realtime filter, decision 6). RLS lets a direct PostgREST
+or Realtime reader see `sender_profile_id` (a uuid, no personal data); the apps read the data through the API
+only (the socket is a nudge).
 
 ### Database (`20261028000800_student_channels.sql`, `20261028000801_push_kind_channel.sql`)
 
@@ -154,6 +178,12 @@ key both)`. RLS on all three: a participant, the owning assistant and the admin 
 (`can_read_channel`); a profile reads its own read marks; no client writes (the API is the writer). Checked
 against a local stack when written: the trigger, the backfill, a teacher change, another family refused, a
 merge.
+
+`20261029000971_channel_after_subscribe.sql` (owner 2026-10-29): `channel_is_open(student)`; `can_read_channel`
+gates the teacher and the family on it (monitors unchanged) and lets a student login in only with
+`contact_is_self`; `teacher_channel_student_ids` keeps open channels; `channel_messages` joins
+`supabase_realtime` (guarded). `20261029000972_assign_student_teacher.sql`: `assign_student_teacher` (docs/16
+row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/channel-after-subscribe.sql.spec.ts`.
 
 ### Apps
 

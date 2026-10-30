@@ -1,4 +1,4 @@
-import { formatPhone, isPackageEnded, studentStatusStyle } from '@ab/shared';
+import { formatPhone, isPackageEnded, secondPhoneOf, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
@@ -29,6 +29,7 @@ import { CreateAccountButton } from '@/features/people/users/create/CreateAccoun
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
+import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -50,10 +51,13 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
 
+  // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
+  const second = secondPhoneOf(student.guardian.phones);
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
     [t.students.guardian, <span key="g">{student.guardian.name}</span>],
     [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
+    ...(second ? [[t.guardians.secondPhone, <Ltr key="p2">{formatPhone(second)}</Ltr>] as const] : []),
     [
       t.students.effectiveLink,
       student.meeting_link ? (
@@ -90,10 +94,12 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 {t.guardians.edit}
               </Button>
               <CreateAccountButton student={student} />
+              <CoursePauseAction studentId={student.id} onDone={setNotice} />
             </>
           }
         />
       </PageHead>
+      <CoursePausePanel studentId={student.id} onDone={setNotice} />
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
           <div key={term} className="flex min-w-0 items-baseline gap-2">

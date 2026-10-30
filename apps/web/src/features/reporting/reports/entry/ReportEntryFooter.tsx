@@ -1,12 +1,9 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { reportErrorText } from '../api';
-import { SaveStatus, SubmittedNote } from '../history/ReportStatusLine';
+import { SaveStatus } from '../history/ReportStatusLine';
+import { FooterAlerts } from './FooterAlerts';
 import type { ReportEntryState } from './use-report-entry';
-
-const ERRORS: Record<string, string> = t.reports.error;
 
 function submitLabel(s: ReportEntryState): string {
   if (s.submit.isPending) return t.reports.submitting;
@@ -21,10 +18,7 @@ export function ReportEntryFooter({ s, block, tz }: { s: ReportEntryState; block
   const { report } = s;
   return (
     <footer className="grid gap-3 border-t border-rule pt-4">
-      {s.problem && <FormAlert>{ERRORS[s.problem] ?? t.common.error}</FormAlert>}
-      {s.submit.error && <FormAlert>{reportErrorText(s.submit.error)}</FormAlert>}
-      {block && <FormAlert>{ERRORS[block]}</FormAlert>}
-      <SubmittedNote report={report} tz={tz} />
+      <FooterAlerts problem={s.problem} error={s.submit.error} block={block} report={report} tz={tz} />
       <div className="flex flex-wrap items-center gap-3">
         {report.can_edit && (
           <Button type="button" size="lg" disabled={block !== null || s.submit.isPending} onClick={s.send}>

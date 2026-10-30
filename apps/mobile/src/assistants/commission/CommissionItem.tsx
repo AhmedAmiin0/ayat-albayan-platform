@@ -1,6 +1,5 @@
 import type { AssistantCommissionView } from '@ab/shared';
 import { useState } from 'react';
-import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
@@ -31,9 +30,7 @@ export function CommissionItem({ commission: c, canWrite, onNotice }: Commission
     <MoneyCard>
       <CommissionFacts commission={c} />
       {canWrite && c.status === 'earned' && !asking ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="ghost" label={L.void} onPress={() => setAsking(true)} />
-        </View>
+        <Button variant="danger" label={L.void} onPress={() => setAsking(true)} />
       ) : null}
       {asking ? (
         <ReasonConfirm

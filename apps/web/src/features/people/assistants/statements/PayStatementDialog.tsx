@@ -1,5 +1,5 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
@@ -29,7 +29,7 @@ export function PayStatementDialog({ statement, onClose }: Props) {
   const [problem, setProblem] = useState<string | null>(null);
   const save = usePayStatement(statement.id, statement.assistant.id, onClose);
   const amounts = Object.entries(statement.totals).map(([c, v]) => moneyText(v.total, c)).join(t.common.listSeparator);
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAYMENT_KINDS, PAYMENT_METHODS } from '../enums/index.js';
+import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '../enums/index.js';
 import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
@@ -8,7 +8,7 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
-import { optionalText } from '../schemas/common.js';
+import { optionalText } from '../core/schemas/common.js';
 import { instant, localDate } from '../schemas/lessons/scheduling.js';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
@@ -48,6 +48,7 @@ export const subscriptionPricingSchema = z.xor([
   z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
 ]);
 
+export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; the real one is usedBeforeMax (usedBeforeProblem)
 /** POST /subscriptions (R-SUB-01). */
 export const subscriptionCreateSchema = z.object({
   studentId: z.uuid(),
@@ -55,13 +56,13 @@ export const subscriptionCreateSchema = z.object({
   startsOn: localDate,
   renewsOn: localDate.nullish(),
   notes: optionalText,
+  /** Lessons taken before the platform (owner 2026-10-28): only with a past startsOn (usedBeforeProblem). */
+  lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
 });
 
-/** PATCH /subscriptions/:id. Only what an admin may set; price and size never change. */
+/** PATCH /subscriptions/:id: no price, size or `paused` (a pause is the course pause, docs/11 §7b; the key is dropped). */
 export const subscriptionUpdateSchema = z.object({
-  /** true → paused; false → back to the derived status (subscriptionStatusFor). */
-  paused: z.boolean().optional(),
   renewsOn: localDate.nullable().optional(),
   notes: optionalText,
 });
@@ -106,7 +107,7 @@ export const paymentCreateSchema = z.object({
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */
 export const paymentUpdateSchema = z.object({
   amount: moneyAmount.optional(),
-  method: z.enum(PAYMENT_METHODS).optional(),
+  method: z.enum(ALL_PAYMENT_METHODS).optional(), // a card (Stripe) payment keeps its method on an edit
   paidAt: pastInstant.optional(),
   receiptPath: z.string().min(1).nullable().optional(),
   note: optionalText,

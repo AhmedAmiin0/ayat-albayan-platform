@@ -1,5 +1,6 @@
 import type { NotificationRuleRow } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
+import { SharedCache } from '../../../../common/cache/shared-cache';
 import { RulesReader, type RulesSnapshot } from './rules.reader';
 import { RulesSourceSettings } from '../rules-source.settings';
 import { RulesTable } from './rules.table';
@@ -8,6 +9,7 @@ import { RulesTable } from './rules.table';
  * The DB RulesReader (docs/23b): one snapshot = comms_source (exactly 'module', else legacy), every
  * notification_rules row and the 8 legacy keys, cached for SETTINGS_CACHE_MS (0 in e2e). A failed
  * read is never cached; invalidate() drops the snapshot after our own writes and the source flip.
+ * With Redis a rule write here (changed()) and any settings write in another process drop it too.
  */
 @Injectable()
 export class DbRulesReader extends RulesReader {
@@ -16,8 +18,11 @@ export class DbRulesReader extends RulesReader {
   constructor(
     private readonly table: RulesTable,
     private readonly settings: RulesSourceSettings,
+    @Optional() private readonly shared?: SharedCache,
   ) {
     super();
+    shared?.on('rules', () => this.invalidate());
+    shared?.on('settings', () => this.invalidate());
   }
 
   snapshot(now = Date.now()): Promise<RulesSnapshot> {
@@ -34,6 +39,12 @@ export class DbRulesReader extends RulesReader {
   /** The next snapshot() reads the database again. */
   invalidate(): void {
     this.cached = null;
+  }
+
+  /** After a notification_rules write here: drop it and tell the other API copies and the worker. */
+  changed(): void {
+    this.invalidate();
+    void this.shared?.invalidate({ topic: 'rules' });
   }
 
   /** A fresh snapshot (writes and parity never decide on a cached one): the settings it reads too. */

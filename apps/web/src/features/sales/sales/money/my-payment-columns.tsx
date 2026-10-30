@@ -1,11 +1,11 @@
 import { PAYMENT_KINDS, PAYMENT_METHODS, type MyPaymentRow } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
-import { Ltr } from '@/components/ui/display/ltr';
 import { formatDate } from '@/features/sales/leads/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
+import { StudentCell } from './StudentCell';
 
 const col = createColumnHelper<DataTableFeatures, MyPaymentRow>();
 const kindOptions = PAYMENT_KINDS.map((k) => ({ value: k, label: t.enums.paymentKind[k] }));
@@ -20,12 +20,7 @@ export const myPaymentColumns = ({ onAttachments }: Handlers) =>
     col.accessor((p) => `${p.student.name} ${p.student.code}`, {
       id: 'student',
       header: () => t.assistantPortal.payments.student,
-      cell: (c) => (
-        <span className="inline-flex items-baseline gap-3">
-          <span className="font-semibold">{c.row.original.student.name}</span>
-          <Ltr className="text-sm text-ink-2">{c.row.original.student.code}</Ltr>
-        </span>
-      ),
+      cell: (c) => <StudentCell student={c.row.original.student} />,
       meta: { className: 'max-sm:order-1 max-sm:basis-full', filter: { kind: 'text' } },
     }),
     col.accessor('amount', {

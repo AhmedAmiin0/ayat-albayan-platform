@@ -27,8 +27,10 @@ export type ChatFileSource = 'image' | 'camera' | 'pdf';
 
 /** A refusal before or during the upload, as inbox.error.<code>. */
 export class ChatFileError extends Error {
-  constructor(readonly code: 'file_type' | 'file_too_large' | 'file_upload') {
+  readonly code: 'file_type' | 'file_too_large' | 'file_upload';
+  constructor(code: ChatFileError['code']) {
     super(code);
+    this.code = code;
   }
 }
 

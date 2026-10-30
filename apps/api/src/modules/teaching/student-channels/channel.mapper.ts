@@ -30,12 +30,21 @@ interface PageContext {
   names: ReadonlyMap<string, string>;
   readOnly: boolean;
   studentName: string;
+  open: boolean;
+  channelId: string;
 }
 
 export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): ChannelPage {
   const shown = rows.slice(0, CHANNEL_PAGE_SIZE).reverse();
   const messages = shown.map((r) => toMessageView(r, ctx));
-  return { student_name: ctx.studentName, messages, has_more: rows.length > CHANNEL_PAGE_SIZE, read_only: ctx.readOnly };
+  return {
+    student_name: ctx.studentName,
+    messages,
+    has_more: rows.length > CHANNEL_PAGE_SIZE,
+    read_only: ctx.readOnly,
+    open: ctx.open,
+    channel_id: ctx.channelId,
+  };
 }
 
 /** What counts as unread for a participant: the other side's messages (a co-teacher's never). */

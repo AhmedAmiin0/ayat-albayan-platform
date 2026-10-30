@@ -37,6 +37,7 @@ describe('crmTemplateBody', () => {
       } catch (e) {
         return e;
       }
+      return undefined;
     })();
     expect(err).toBeInstanceOf(WaError);
     expect((err as WaError).info.code).toBe(132000);

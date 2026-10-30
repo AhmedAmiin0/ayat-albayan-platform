@@ -2,6 +2,7 @@ import {
   CHANNEL_REFRESH_MS,
   CHANNEL_WRITES,
   channelKey,
+  channelPollMs,
   channelMessagesPath,
   channelReadPath,
   olderCursor,
@@ -14,21 +15,23 @@ import { useEffect } from 'react';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 
-// The student channel on the phone (docs/31 §2): polled while the screen is shown (CHANNEL_REFRESH_MS).
+// The student channel on the phone (docs/31 §2): the list polls while shown (CHANNEL_REFRESH_MS); the thread
+// has its socket (use-channel-live) and polls only as the fallback (channelPollMs).
 
 export interface ChannelRef {
   audience: ChannelAudience;
   studentId: string;
 }
 
-export function useChannel({ audience, studentId }: ChannelRef) {
+/** `live`: the thread's socket is joined, so the poll is only the fallback. */
+export function useChannel({ audience, studentId }: ChannelRef, live = false) {
   const focused = useScreenFocused();
   return useInfiniteQuery({
     queryKey: channelKey(audience, studentId),
     queryFn: ({ pageParam }) => apiFetch<ChannelPage>(channelMessagesPath({ audience, studentId, before: pageParam })),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: olderCursor,
-    refetchInterval: focused ? CHANNEL_REFRESH_MS : false,
+    refetchInterval: focused ? channelPollMs(live) : false,
   });
 }
 

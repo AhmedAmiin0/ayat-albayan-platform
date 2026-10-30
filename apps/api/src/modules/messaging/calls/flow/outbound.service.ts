@@ -8,6 +8,7 @@ import { toActiveView } from '../store/calls.mapper';
 import type { CallRow } from '../store/call-row';
 import { callFailed, logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
+import { CallsSweeper } from './calls.sweeper';
 
 /** Is this live row one the user is in (placed it, or took it)? */
 export const isPartyOf = (row: CallRow, userId: string): boolean => row.created_by === userId || row.accepted_by === userId;
@@ -24,6 +25,7 @@ export class OutboundCalls {
   constructor(
     private readonly kit: CallsKit,
     private readonly gate: CallsGate,
+    private readonly sweeper: CallsSweeper,
   ) {}
 
   async start(actor: CallActor, input: { phone: string; sdp: string; clientRequestId: string }): Promise<ActiveCallView> {
@@ -79,11 +81,14 @@ export class OutboundCalls {
   /** The connecting row, linked to the chat's guardian / lead; null = that request id exists already. */
   private async insert(input: { phone: string; sdp: string; clientRequestId: string; line: CallingLine; userId: string }): Promise<CallRow | null> {
     const thread = await this.kit.threads.thread(input.phone);
-    return this.kit.queries.insert({
+    const row = await this.kit.queries.insert({
       ...{ phone_e164: input.phone, direction: 'outbound', status: 'connecting', offer_sdp: input.sdp },
       ...{ number_id: input.line.numberId, guardian_id: thread?.guardian_id ?? null, lead_id: thread?.lead_id ?? null },
       ...{ created_by: input.userId, client_request_id: input.clientRequestId },
     });
+    // The sweeper (on the worker) times the call out: it leaves its idle pace now.
+    void this.sweeper.wake();
+    return row;
   }
 
   /** Calls on, the chat line on Kapso, this chat theirs to write in and the number on the allow-list. */

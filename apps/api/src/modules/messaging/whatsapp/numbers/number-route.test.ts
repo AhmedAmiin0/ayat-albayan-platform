@@ -81,15 +81,30 @@ describe('ruleNumbers / approvedOn / routable', () => {
   });
 
   it('sendable = enabled with its own config', () => {
-    const sendable = (over: Parameters<typeof overlayNum>[0]) => messagingNumbers([overlayNum(over)]).map(routable)[0]?.sendable;
+    const sendable = (over: Parameters<typeof overlayNum>[0]) =>
+      messagingNumbers([overlayNum(over)]).map(routable)[0]?.sendable;
     expect(sendable({})).toBe(true);
     expect(sendable({ env: null })).toBe(false);
     expect(sendable({ enabled: false })).toBe(false);
   });
 
   it('a calls number (docs/28 §10) is never routable: no template, session or fallback can pick it', () => {
-    expect(messagingNumbers([overlayNum({ purpose: 'calls', id: 'n-calls' }), overlayNum()]).map((n) => n.id)).toEqual([overlayNum().id]);
-    const pass = routePass({ numbers: [...THREE, overlayNum({ id: 'n-calls', phone_number_id: '1000000009', purpose: 'calls', fallback_rank: 0 })] });
+    expect(
+      messagingNumbers([overlayNum({ purpose: 'calls', id: 'n-calls' }), overlayNum()]).map(
+        (n) => n.id,
+      ),
+    ).toEqual([overlayNum().id]);
+    const pass = routePass({
+      numbers: [
+        ...THREE,
+        overlayNum({
+          id: 'n-calls',
+          phone_number_id: '1000000009',
+          purpose: 'calls',
+          fallback_rank: 0,
+        }),
+      ],
+    });
     expect(pass.numbers.some((n) => n.id === 'n-calls')).toBe(false);
   });
 });

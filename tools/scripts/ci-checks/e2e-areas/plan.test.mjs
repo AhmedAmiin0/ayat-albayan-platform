@@ -10,7 +10,7 @@ const durations = {
   'tests/c.spec.ts': { desktop: 30_000 },
 };
 const shards = (p) => p.matrix.include.map((m) => `${m.shard}/${m.total}`);
-const FULL = ['1/4', '2/4', '3/4', '4/4', 'single/4'];
+const FULL = [...Array.from({ length: 8 }, (_, i) => `${i + 1}/8`), 'single/8'];
 
 test("the full suite, a bad or a missing selection: today's matrix, no spec list", () => {
   for (const sel of [
@@ -25,7 +25,7 @@ test("the full suite, a bad or a missing selection: today's matrix, no spec list
   }
 });
 
-test('shards follow the measured time, never more than the spec files or 4', () => {
+test('shards follow the measured time, never more than the spec files or 8', () => {
   assert.deepEqual(shards(plan({ full: false, specs: ['b.spec.ts'] }, durations)), [
     '1/1',
     'single/1',
@@ -57,7 +57,10 @@ test('ci.yml: the e2e fallback matrix is the full plan; only PRs select; every s
   const fallback = ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1];
   assert.deepEqual(JSON.parse(fallback), plan(null, {}).matrix);
   const step = ci.jobs.changes.steps.find((s) => s.id === 'e2e');
-  assert.equal(step.if, "github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'");
+  assert.equal(
+    step.if,
+    "github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true' && steps.move.outputs.e2e != 'false'",
+  );
   assert.match(step.run, /\|\| echo '\{"full":true/);
   const run = ci.jobs.e2e.steps.find((s) => s.name === 'e2e').run;
   assert.match(run, /--shard="\$SHARD\/\$SHARDS" \$PROJECT \$SPECS/);

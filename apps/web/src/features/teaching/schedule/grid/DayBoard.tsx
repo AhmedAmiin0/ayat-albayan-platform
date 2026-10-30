@@ -50,7 +50,7 @@ function TeacherDay({ row, day, now, onOpen }: { row: BoardRow } & Omit<DayBoard
   const facts = teacherDay(row.teacher, { day, lessons, now });
   return (
     <section aria-label={teacherLabel(row.teacher)} className={cn(rowGrid, 'border-b border-rule py-3')}>
-      <TeacherCell teacher={row.teacher} now={now} />
+      <TeacherCell teacher={row.teacher} now={now} photo={row.photo} />
       <div className="grid min-w-0 content-start gap-2">
         {facts.dayOff ? (
           <p className="border-s-2 border-danger ps-1.5 text-xs text-ink-2">

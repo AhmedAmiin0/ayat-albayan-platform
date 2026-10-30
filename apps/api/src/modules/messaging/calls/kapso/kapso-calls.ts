@@ -54,9 +54,13 @@ export class KapsoCallsApi implements CallsApi {
     await this.post(line, { ...base(), call_id: waCallId, action: 'terminate' });
   }
 
-  async requestPermission(line: CallingLine, input: PermissionRequest): Promise<{ waMessageId: string }> {
+  async requestPermission(
+    line: CallingLine,
+    input: PermissionRequest,
+  ): Promise<{ waMessageId: string }> {
     const body = permissionRequestBody(input);
-    const res = parsed(sentSchema, await graphJson(this.conn(line), { path: `${line.env.phoneNumberId}/messages`, method: 'POST', body }));
+    const path = `${line.env.phoneNumberId}/messages`;
+    const res = parsed(sentSchema, await graphJson(this.conn(line), { path, method: 'POST', body }));
     return { waMessageId: res.messages[0]?.id ?? '' };
   }
 

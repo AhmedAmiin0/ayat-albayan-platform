@@ -58,6 +58,8 @@ export const DELETE_ORDER = [
   'channel_messages',
   'student_channels',
   'students',
+  // The demo families' numbers (migration 973); a second number linked to one makes clear:demo refuse.
+  'guardian_phones',
   'guardians',
   'teacher_time_off',
   'teacher_availability',

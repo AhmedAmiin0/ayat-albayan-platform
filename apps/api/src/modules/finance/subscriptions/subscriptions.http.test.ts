@@ -73,15 +73,11 @@ describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
     expect((await call({ method: 'GET', url: '/subscriptions', token: 'teacher' })).statusCode).toBe(403);
   });
 
-  it('S4: pause writes paused; resume starts from unpaid and is recomputed', async () => {
-    m.subs.get.mockResolvedValue(subRow({ status: 'paused' }));
-    m.subs.update.mockResolvedValue(subRow({ status: 'unpaid' }));
-    const res = await call({ method: 'PATCH', url: `/subscriptions/${SUB_ID}`, body: { paused: false } });
-    expect(res.statusCode).toBe(200);
-    expect(m.subs.update).toHaveBeenCalledWith(SUB_ID, { status: 'unpaid' });
+  it('S4: PATCH never pauses: a pause is the course pause (POST /students/:id/course-pause, docs/11 §7b)', async () => {
     m.subs.get.mockResolvedValue(subRow({ status: 'active' }));
-    await call({ method: 'PATCH', url: `/subscriptions/${SUB_ID}`, body: { paused: true } });
-    expect(m.subs.update).toHaveBeenLastCalledWith(SUB_ID, { status: 'paused' });
+    const res = await call({ method: 'PATCH', url: `/subscriptions/${SUB_ID}`, body: { paused: true } });
+    expect(res.statusCode).toBe(200);
+    expect(m.subs.update).not.toHaveBeenCalled();
   });
 
   it('S5: 409 has_payments; 204 otherwise', async () => {

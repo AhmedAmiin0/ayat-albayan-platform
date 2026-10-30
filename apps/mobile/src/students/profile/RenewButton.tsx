@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
+import { useStudentHref } from '@/core/nav/tree-base';
 import { useStudentBalance } from '@/payments/hooks/queries';
 import { Button } from '@/core/ui/primitives/Button';
 import { renewHref } from './renew';
@@ -13,7 +14,8 @@ import type { StudentRef } from '../shared/types';
  */
 export function RenewButton({ student }: { student: StudentRef }) {
   const balance = useStudentBalance(student.id);
+  const to = useStudentHref();
   const href = renewHref(student, balance.data?.current);
   if (!href) return null;
-  return <Button variant="secondary" label={t.students.renew} disabled={balance.isPending} onPress={() => router.push(href)} />;
+  return <Button variant="secondary" label={t.students.renew} disabled={balance.isPending} onPress={() => router.push(to(href))} />;
 }

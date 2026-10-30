@@ -4,7 +4,7 @@ import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '../../finance/subscriptio
 import { moneyApp, resetMocks, SALES_A, type Mocks } from '../../finance/subscriptions/test-app';
 import { CREATE, REQ, salesDefaults } from './sales-money.fakes';
 
-const SUB_KEYS = ['currency', 'due', 'duration', 'id', 'lessons_total', 'package', 'paid', 'price', 'starts_on', 'status', 'student'];
+const SUB_KEYS = ['currency', 'due', 'duration', 'id', 'lessons_total', 'lessons_used_before', 'package', 'paid', 'price', 'starts_on', 'status', 'student'];
 
 describe('POST /sales/subscriptions(/quote): her student, the admin’s SubscriptionCreator, a whitelisted view', () => {
   let app: NestFastifyApplication;

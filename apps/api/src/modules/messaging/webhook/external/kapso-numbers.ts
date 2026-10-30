@@ -29,7 +29,9 @@ function legacyLines(lines: LineEnvs): KapsoNumber[] {
 export function kapsoNumberFor(phoneNumberId: string, read: () => LineEnvs = () => lineEnvs(loadEnv())): KapsoNumber | null {
   if (overlayNumbers()) {
     const n = numberByPhoneId(phoneNumberId);
-    return n && isKapso(n.env) && isWaLine(n.purpose) ? { env: n.env, line: n.purpose, numberId: n.id } : null;
+    return n && isKapso(n.env) && isWaLine(n.purpose)
+      ? { env: n.env, line: n.purpose, numberId: n.id }
+      : null;
   }
   return legacyLines(read()).find((n) => n.env.phoneNumberId === phoneNumberId) ?? null;
 }

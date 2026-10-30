@@ -1,4 +1,4 @@
-import { clockTime } from '../../format/running-head.js';
+import { clockTime } from '../../core/format/running-head.js';
 import { joinNames, lessonWhenText } from '../lesson/booking-confirmation.js';
 import { quickReplyPayload } from '../replies/quick-reply.js';
 import {

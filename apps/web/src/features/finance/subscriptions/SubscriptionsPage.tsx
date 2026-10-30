@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { DataTable } from '@/components/DataTable';
-import { TableBox } from '@/components/TableBox';
+import { DataTable } from '@/components/data-table/DataTable';
+import { TableBox } from '@/components/data-table/TableBox';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
@@ -12,11 +12,15 @@ import { Pager } from '@/components/ui/layout/pager';
 import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
+import { usePermissions } from '@/features/people/auth';
+import { CoursePauseDialogs, type CoursePauseTarget } from '@/features/teaching/course-pause';
 import { t } from '@/lib/i18n/i18n';
 import { toFilterSearch, toSortSearch } from '@/lib/list/list-search';
-import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
+import { cancelSubscription, subscriptionsQuery, type SubscriptionView } from './api';
+import { CancelPackageDialog } from './cancel/CancelPackageDialog';
 import { CreateSubscriptionDialog } from './create/CreateSubscriptionDialog';
 import { OpenTasks } from './balance/OpenTasks';
+import { packageName, studentLabel } from './format';
 import { subscriptionsTable, type SubscriptionsUrlSearch } from './search';
 import { subscriptionColumns } from './subscription-columns';
 import { useSubscriptionFilters } from './use-subscription-filters';
@@ -30,7 +34,8 @@ type Props = {
 
 /** /admin/subscriptions (R-SUB-01/02): packages by status, sort + filters (URL), new, pay, tasks. */
 export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
-  const queryClient = useQueryClient();
+  const { can } = usePermissions();
+  const canPause = can('courses.pause');
   const { status, page = 1 } = search;
   const table = subscriptionsTable(search);
   const list = useQuery(subscriptionsQuery({ status, page, ...table }));
@@ -41,24 +46,26 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const bare = list.data?.total === 0 && !status && Object.keys(table.filters).length === 0;
   const [creating, setCreating] = useState(false);
   const [paying, setPaying] = useState<{ sub: SubscriptionView; kind: 'payment' | 'refund' } | null>(null);
+  const [cancelling, setCancelling] = useState<SubscriptionView | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const pause = useMutation({
-    mutationFn: setPaused,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: MONEY_KEY }),
-  });
-  const pauseMutate = pause.mutate;
+  const [course, setCourse] = useState<CoursePauseTarget>(null);
   const columns = useMemo(
     () =>
       subscriptionColumns({
         onPay: (sub, kind) => setPaying({ sub, kind }),
-        onPause: (s, paused) => pauseMutate({ id: s.id, paused }),
+        onPause: (s) => setCourse({ studentId: s.student.id, resume: false, subscriptionId: s.id }),
+        onResume: (s) => setCourse({ studentId: s.student.id, resume: true, subscriptionId: s.id }),
+        canPause,
+        onCancel: setCancelling,
         onOpen: onOpenStudent,
       }),
-    [pauseMutate, onOpenStudent],
+    [canPause, onOpenStudent],
   );
   const saved = (message: string) => () => {
     setCreating(false);
     setPaying(null);
+    setCancelling(null);
+    setCourse(null);
     setToast(message);
   };
 
@@ -73,7 +80,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
           </Button>
         </div>
       </PageHead>
-      {(list.isError || pause.isError) && <FormAlert>{t.common.error}</FormAlert>}
+      {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
       {bare && <TableBox center><EmptyState title={t.subscriptions.emptyList} /></TableBox>}
       {list.data && !bare && (
@@ -97,6 +104,15 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
       {paying && (
         <RecordPaymentDialog subscription={paying.sub} kind={paying.kind} onClose={() => setPaying(null)} onSaved={saved(t.payments.saved)} />
       )}
+      {cancelling && (
+        <CancelPackageDialog
+          label={`${packageName(cancelling)} · ${studentLabel(cancelling.student)}`}
+          cancel={(body) => cancelSubscription(cancelling.id, body)}
+          onClose={() => setCancelling(null)}
+          onDone={saved(t.subscriptions.cancel.done)}
+        />
+      )}
+      <CoursePauseDialogs target={course} onClose={() => setCourse(null)} onDone={(m) => saved(m)()} />
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>
   );

@@ -1,5 +1,5 @@
 import { crmTemplateName, templateCrmNameSchema, type TemplateView } from '@ab/shared';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -26,7 +26,7 @@ export function CrmNameDialog({ template: tpl, busy, onSave, onClose }: CrmNameD
   const [language, setLanguage] = useState(tpl.crm_language ?? '');
   const [invalid, setInvalid] = useState<{ name: boolean; language: boolean }>({ name: false, language: false });
   const fallback = crmTemplateName({ ...tpl, crm_name: null });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const parsed = templateCrmNameSchema.safeParse({ crm_name: name, crm_language: language });
     const bad = (field: string) => !parsed.success && parsed.error.issues.some((i) => i.path[0] === field);

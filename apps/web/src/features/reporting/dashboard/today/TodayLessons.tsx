@@ -1,4 +1,5 @@
 import { clockOf, lessonStatusStyle, type LessonView } from '@ab/shared';
+import { Avatar } from '@/components/ui/display/avatar';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
@@ -35,7 +36,8 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
       </span>
       <div className="grid min-w-0 gap-1">
         <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join(t.common.listSeparator)}</p>
-        <p className="text-sm text-ink-2">
+        <p className="flex items-center gap-2 text-sm text-ink-2">
+          <Avatar name={teacherLabel(lesson.teacher)} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="sm" decorative />
           {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">

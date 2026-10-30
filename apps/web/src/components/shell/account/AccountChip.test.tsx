@@ -1,4 +1,4 @@
-import type { AccountProfile } from '@ab/shared';
+import { avatarTone, type AccountProfile } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
@@ -49,7 +49,14 @@ describe('«حسابي» in the shells (R-ACC-01)', () => {
   it('no photo: the initials of the full name', async () => {
     apiFetch.mockResolvedValue({ ...PROFILE, avatar_url: null });
     shown(<SideFoot email="sara@ab.co" />);
-    expect(await screen.findByText('سأ')).toBeTruthy();
+    expect(await screen.findByText('س')).toBeTruthy(); // Arabic: one letter (avatarInitials)
+  });
+
+  it("the initials' tone hashes avatar_seed (the linked teacher), so the person keeps one tone", async () => {
+    apiFetch.mockResolvedValue({ ...PROFILE, avatar_url: null, avatar_seed: 't1' });
+    const { container } = shown(<SideFoot email="sara@ab.co" />);
+    await screen.findByText('س');
+    expect(container.querySelector('[data-avatar-tone]')?.getAttribute('data-avatar-tone')).toBe(String(avatarTone('t1') + 1));
   });
 
   it('the profile fails: the link and the email stay (initial from the email)', async () => {
@@ -57,7 +64,7 @@ describe('«حسابي» in the shells (R-ACC-01)', () => {
     shown(<MenuFoot email="sara@ab.co" />);
     expect(accountLink().getAttribute('href')).toBe('/account');
     expect(screen.getByText('sara@ab.co').getAttribute('dir')).toBe('ltr');
-    expect(screen.getByText('s')).toBeTruthy();
+    expect(screen.getByText('S')).toBeTruthy();
   });
 
   it('is a 44px target', () => {

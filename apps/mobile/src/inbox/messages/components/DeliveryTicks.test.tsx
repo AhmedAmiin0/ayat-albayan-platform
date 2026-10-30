@@ -69,3 +69,16 @@ test('«يدويًا» is text: drawn in the muted text ink, not the tick grey',
   await render(<DeliveryTicks status="sent_manually" />);
   expect(StyleSheet.flatten(screen.getByText(t.messages.manualTick).props.style).color).toBe(palette.light.ink3);
 });
+
+test('the admin’s row that did not go out: a button that says why, and a tap opens its sheet', async () => {
+  const onPress = jest.fn();
+  const why = t.messages.errorLine.replace('{reason}', t.messages.errors['131042']);
+  await render(<DeliveryTicks status="failed" onPress={onPress} actionLabel={why} />);
+  const ticks = screen.getByRole('button', { name: `${word.failed} — ${why}` });
+  expect(ticks.props.testID).toBe('ticks-failed');
+  await fireEvent.press(ticks);
+  expect(onPress).toHaveBeenCalledTimes(1);
+  // A queued row (the hand-off only): the clock is the button, named by its word.
+  await render(<DeliveryTicks status="queued" onPress={onPress} />);
+  expect(screen.getByRole('button', { name: word.queued }).props.testID).toBe('ticks-pending');
+});

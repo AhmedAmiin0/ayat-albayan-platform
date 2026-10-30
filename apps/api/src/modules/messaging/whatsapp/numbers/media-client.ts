@@ -11,12 +11,18 @@ import type { NumberClients } from './number-clients';
 type MediaSource = { kind: 'client'; client: WhatsappClient; line: WaLine | null } | { kind: 'crm' } | { kind: 'none' };
 
 /**
- * A file a family sent to the calls number (docs/28 §10): only its own Kapso connection can fetch the
- * media id. The client is used for that download only (the calls number never sends a message).
+ * A file a family sent to the calls number (docs/28 §10): only its own Kapso connection can fetch
+ * the media id. The client is used for that download only (the calls number never sends a message).
  */
 function callsSource(): MediaSource {
   const env = callsNumber()?.env;
-  return env ? { kind: 'client', client: whatsappClient(env, { allowed: allowedRecipients(loadEnv()) }), line: null } : { kind: 'none' };
+  return env
+    ? {
+        kind: 'client',
+        client: whatsappClient(env, { allowed: allowedRecipients(loadEnv()) }),
+        line: null,
+      }
+    : { kind: 'none' };
 }
 
 /**
@@ -35,9 +41,15 @@ export function mediaSource(msg: MediaOf, from: MediaFrom): MediaSource {
 }
 
 type MediaOf = Pick<MediaMessage, 'line'> & { number?: MediaNumber | null };
-type MediaFrom = { lines: WhatsappLines; numbers: Pick<NumberClients, 'client'> };
+interface MediaFrom {
+  lines: WhatsappLines;
+  numbers: Pick<NumberClients, 'client'>;
+}
 
-/** The row's line, else its number's role, else notifications; `calls` never gets here (mediaSource). */
+/**
+ * The row's line, else its number's role, else notifications; `calls` never gets here
+ * (mediaSource).
+ */
 const messagingLine = (msg: MediaOf): WaLine => {
   const line = msg.line ?? msg.number?.purpose ?? 'notifications';
   return isWaLine(line) ? line : 'notifications';

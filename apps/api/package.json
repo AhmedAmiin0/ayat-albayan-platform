@@ -6,8 +6,8 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "node --env-file-if-exists=.env dist/main.js",
     "dev": "node --env-file-if-exists=.env --watch -r @swc-node/register src/main.ts",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsgo --noEmit",
     "test": "vitest run",
     "config:import-env": "node --env-file-if-exists=.env dist/scripts/config-import-env.js"
   },
@@ -23,10 +23,12 @@
     "@nestjs/swagger": "^7.4.2",
     "@supabase/supabase-js": "^2.117.2",
     "google-auth-library": "^11.3.1",
+    "ioredis": "5.11.1",
     "jose": "^6.2.12",
     "playwright-core": "1.63.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "stripe": "23.0.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "@swc-node/register": "^1.11.0",
     "@swc/core": "^1.16.13",
     "@types/node": "^24.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "typescript": "~6.0.3",
     "unplugin-swc": "^2.0.0",

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { compareValues, nextSortDir } from '@/components/client-sort';
+import { compareValues, nextSortDir } from '@/components/data-table/client-sort';
 
 // Client sort for the dashboard's hand-built summary tables (they keep their <th scope="row">
 // row headers, which DataTable does not render): header clicks cycle asc → desc → none.

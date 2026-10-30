@@ -6,6 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ButtonRow, copyIcon, openIcon } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { SmallHeading } from './SmallHeading';
 
@@ -49,11 +50,11 @@ export function TeacherMeetingLink({ link, platform }: { link: string | null; pl
           >
             {url}
           </AppText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            <Button variant="secondary" label={L.copyLink} onPress={() => void copy(url)} />
+          <ButtonRow>
+            <Button variant="secondary" icon={copyIcon} label={L.copyLink} onPress={() => void copy(url)} />
             <Button variant="secondary" label={L.shareLink} onPress={() => share(url)} />
-            <Button variant="secondary" label={L.openLink} onPress={() => void Linking.openURL(url).catch(() => setFailed(true))} />
-          </View>
+            <Button variant="secondary" icon={openIcon} label={L.openLink} onPress={() => void Linking.openURL(url).catch(() => setFailed(true))} />
+          </ButtonRow>
           {copied ? (
             <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
               {L.copied}

@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { WaError } from '../../whatsapp/whatsapp.types';
 import { ADMIN_ACTOR, FAMILY, fakeApi, fakeGate, fakeKit, teacherActor } from '../calls.fakes';
+import { CallsSweeper } from './calls.sweeper';
 import { OutboundCalls } from './outbound.service';
 
 const REQ = '11111111-1111-4111-8111-111111111111';
@@ -8,7 +9,7 @@ const input = { phone: FAMILY, sdp: 'v=0 offer', clientRequestId: REQ };
 
 function setup(opts: { on?: boolean; refuse?: string } = {}) {
   const t = fakeKit();
-  return { ...t, calls: new OutboundCalls(t.kit, fakeGate(opts)) };
+  return { ...t, calls: new OutboundCalls(t.kit, fakeGate(opts), new CallsSweeper(t.kit)) };
 }
 
 describe('OutboundCalls.start (staff → family)', () => {
@@ -55,10 +56,20 @@ describe('OutboundCalls.start (staff → family)', () => {
     const api = fakeApi();
     api.permission.mockResolvedValue({ canCall: false, canRequest: true, expiresAt: null });
     const t = fakeKit({ api });
-    const calls = new OutboundCalls(t.kit, fakeGate());
+    const calls = new OutboundCalls(t.kit, fakeGate(), new CallsSweeper(t.kit));
     await expect(calls.start(ADMIN_ACTOR, input)).rejects.toMatchObject({ response: { code: 'no_permission' } });
     expect(t.queries.rows.size).toBe(0);
     expect(api.connect).not.toHaveBeenCalled();
+  });
+
+  it('a stored call wakes the sweeper (on the worker) for its 45 s timeout; a double tap does not', async () => {
+    const t = fakeKit();
+    const sweeper = new CallsSweeper(t.kit);
+    const wake = vi.spyOn(sweeper, 'wake');
+    const calls = new OutboundCalls(t.kit, fakeGate(), sweeper);
+    await calls.start(ADMIN_ACTOR, input);
+    await calls.start(ADMIN_ACTOR, input);
+    expect(wake).toHaveBeenCalledTimes(1);
   });
 
   it('setting off: 404 calls_disabled before anything else', async () => {

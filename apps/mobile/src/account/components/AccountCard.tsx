@@ -47,17 +47,15 @@ export function AccountCard({ title, children, onSave, pending = false, ...p }: 
       </AppText>
       {children}
       {onSave ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          {/* Secondary: a screen has one filled button at most (docs/07 §1.4) and this one has five sections. */}
-          <Button
-            variant="secondary"
-            label={pending ? t.account.saving : t.account.save}
-            accessibilityLabel={`${t.account.save} — ${title}`}
-            onPress={onSave}
-            busy={pending}
-            disabled={p.disabled}
-          />
-        </View>
+        // Secondary at full width: a screen has one filled button at most (docs/07 §1.4) and this one has five sections.
+        <Button
+          variant="secondary"
+          label={pending ? t.account.saving : t.account.save}
+          accessibilityLabel={`${t.account.save} — ${title}`}
+          onPress={onSave}
+          busy={pending}
+          disabled={p.disabled}
+        />
       ) : null}
       {p.error ? <ErrorLine message={p.error} /> : null}
       {p.notice ? <Notice message={p.notice} /> : null}

@@ -1,7 +1,12 @@
 import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
 import type { CallsNumber } from '../../../../common/integrations/calls-number';
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { validOverlay, type Env, type KapsoLineEnv, type WhatsappEnv } from '../../../../config/env/env';
+import {
+  validOverlay,
+  type Env,
+  type KapsoLineEnv,
+  type WhatsappEnv,
+} from '../../../../config/env/env';
 import { ROLE_KEYS } from '../lines/numbers.lines';
 import type { NumberRow } from '../numbers.queries';
 
@@ -36,7 +41,8 @@ function checked({ row, secrets }: NumberSource, line: WaLine): Record<string, s
 /**
  * What this number sends with; null = it cannot send: disabled, an id / token / base / key missing,
  * or a value that fails the env schema (the row stays queued, like an unconfigured line). A `calls`
- * number never sends a message (docs/28 §10): always null here, so no route or fallback can pick it.
+ * number never sends a message (docs/28 §10): always null here, so no route or fallback can pick
+ * it.
  */
 export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const line = source.row.purpose;
@@ -78,7 +84,10 @@ function metaEnv(own: { ids: Ids; token?: string; appId?: string }, env: Env): W
   return own.appId ? { ...conn, appId: own.appId } : conn;
 }
 
-/** Its own app secret (webhook signatures), when set and valid; never another number's (a calls number: Kapso's). */
+/**
+ * Its own app secret (webhook signatures), when set and valid; never another number's (a calls
+ * number: Kapso's).
+ */
 function appSecretOf({ row, secrets }: NumberSource): string | null {
   if (!isWaLine(row.purpose)) return null;
   const key = ROLE_KEYS[row.purpose].app_secret;
@@ -104,10 +113,13 @@ export function overlayNumber(source: NumberSource, env: Env): OverlayNumber {
 }
 
 /**
- * The calls number as callingLine() rings it (docs/28 §10): Kapso only, its ids and the project key;
- * env null = it cannot carry a call now (not kapso, no WABA id, no Kapso base / key).
+ * The calls number as callingLine() rings it (docs/28 §10): Kapso only, its ids and the project
+ * key; env null = it cannot carry a call now (not kapso, no WABA id, no Kapso base / key).
  */
 export function callsNumberOf(row: NumberRow, env: Env): CallsNumber {
-  const ids = row.provider === 'kapso' && row.waba_id ? { phoneNumberId: row.phone_number_id, wabaId: row.waba_id } : null;
+  const ids =
+    row.provider === 'kapso' && row.waba_id
+      ? { phoneNumberId: row.phone_number_id, wabaId: row.waba_id }
+      : null;
   return { id: row.id, phoneNumberId: row.phone_number_id, env: ids ? kapsoEnv(ids, env) : null };
 }

@@ -2,6 +2,7 @@ import { Inject, Injectable, InternalServerErrorException, Logger, Optional } fr
 import type { LineNumbers } from '../../../config/env/env';
 import { InboundService } from './inbound/webhook.inbound.service';
 import type { ReceivingNumber } from './lines/webhook.lines';
+import { WebhookConfigReload } from './lines/webhook.reload';
 import { parseWebhook } from './parse/webhook.parse';
 import { StatusService } from './status/webhook.status.service';
 import { CALL_EVENTS, type CallEventsPort } from '../calls/flow/call-events.service';
@@ -58,6 +59,8 @@ export class WebhookService {
   private readonly ignored = new Set<string>();
   /** WhatsApp Calling items (docs/28; property-injected: the constructor is at the 3-parameter limit). */
   @Optional() @Inject(CALL_EVENTS) private readonly calls?: CallEventsPort;
+  /** Reloads the config once before a change for an unknown number is ignored (absent in unit tests). */
+  @Optional() @Inject(WebhookConfigReload) private readonly reload?: WebhookConfigReload;
 
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
@@ -67,9 +70,7 @@ export class WebhookService {
 
   async handle(body: unknown): Promise<void> {
     const now = new Date();
-    const onIgnored = (id: string) => this.warnIgnored(id);
-    const { numbers, overlay, calls } = this.config;
-    const batch = parseWebhook(body, { now, numbers, onIgnored, overlay, calls });
+    const batch = await this.parse(body, now);
     // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
@@ -79,6 +80,24 @@ export class WebhookService {
     for (const c of batch.calls ?? []) failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
     for (const p of batch.permissions ?? []) failed += await this.safely('call_permission', () => this.calls?.permissionReply(p) ?? Promise.resolve());
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
+  }
+
+  /**
+   * The batch for the numbers this copy knows. An unknown phone_number_id may be one the other API copy
+   * just saved: reload the config once and parse again before its changes are ignored (and warned about).
+   */
+  private async parse(body: unknown, now: Date): Promise<ReturnType<typeof parseWebhook>> {
+    const ignored: string[] = [];
+    const read = () => {
+      ignored.length = 0;
+      const onIgnored = (id: string) => ignored.push(id);
+      const { numbers, overlay, calls } = this.config;
+      return parseWebhook(body, { now, numbers, onIgnored, overlay, calls });
+    };
+    let batch = read();
+    if (ignored.length > 0 && (await this.reload?.once())) batch = read();
+    for (const id of ignored) this.warnIgnored(id);
+    return batch;
   }
 
   /** The id only (no secrets): tells the owner which phone_number_id Meta really sends. */

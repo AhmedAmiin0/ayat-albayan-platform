@@ -1,8 +1,9 @@
-import type { MyEarnings, MyPaymentRow, MyStudentRow, PaymentAttachmentView } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, PaymentAttachmentView } from '@ab/shared';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../common/auth/verify-token';
+import { pageQuerySchema, parseOrThrow, type Page } from '../../../../common/http/http';
 import { PaymentAttachments } from '../../payments/attachments/payment-attachments.service';
 import { MyService } from './my.service';
 
@@ -29,6 +30,13 @@ export class MyController {
   @Permissions('self.sales_earnings')
   earnings(@CurrentUser() user: AuthUser): Promise<MyEarnings> {
     return this.my.earnings(user);
+  }
+
+  /** «محفظتي»: my commissions, newest first (?page, ?pageSize ≤ 100); the caller's own only, whatever the query says. */
+  @Get('commissions')
+  @Permissions('self.sales_earnings')
+  commissions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<MyCommissionRow>> {
+    return this.my.commissions(user, parseOrThrow(pageQuerySchema, query));
   }
 
   @Get('payments')
