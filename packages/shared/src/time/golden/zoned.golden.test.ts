@@ -1,67 +1,62 @@
 import { describe, expect, it } from 'vitest';
-import * as legacyZoned from '../../schedule/lessons/series/zoned.js';
-import * as legacyDayBefore from '../../messaging/lesson/timing.day-before.js';
-import { clockOf as legacyClockOf } from '../../core/format/clock.js';
-import { utcOffsetMinutes as legacyOffset } from '../time-zone.js';
-import { riyadhToday as legacyRiyadhToday } from '../riyadh-day.js';
-import * as legacyWeek from '../week.js';
 import { addCalendarDays, addDaysIn, startOfDayIn, weekStartOfDate, weekdayOfDate } from '../calendar.js';
-import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
 import { clockIn } from '../format.js';
-import { GOLDEN_TIMES, GOLDEN_ZONES, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
+import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
+import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
-// Old (Intl / ms math) and new (date-fns facade) side by side over the full sweep: every
-// instant must be byte-identical before the old code goes (docs/34 §6).
+// Regression goldens for the date-fns facade itself (docs/34 §6). Before it replaced the Intl /
+// ms code, both ran side by side here over this sweep and agreed on every value; the digests below
+// were then taken from the old code (commit "pin reminder … instants") and now pin the facade.
 
 const dates = goldenDates();
 const instants = goldenInstants();
 
-describe.each(GOLDEN_ZONES)('wall clock ↔ UTC in %s', (zone) => {
-  it('zonedInstant (occurrence picks) = wallInstant', () => {
-    for (const date of dates) {
-      for (const time of GOLDEN_TIMES) {
-        expect(wallInstant(date, time, zone).toISOString()).toBe(legacyZoned.zonedInstant(date, time, zone));
-      }
-    }
+const wallLines = (zone: string): string[] =>
+  dates.flatMap((date) => GOLDEN_TIMES.map((time) => wallInstant(date, time, zone).toISOString()));
+
+function instantLines(zone: string): string[] {
+  return instants.map((at) => {
+    const clocks = (['12', '24'] as const).map((cycle) => clockIn(at, { tz: zone, cycle, locale: 'ar' }));
+    const day = localDateIn(at, zone);
+    const fields = [offsetMinutesIn(zone, at), day, startOfDayIn(at, zone).toISOString(), weekdayIn(at, zone)];
+    return [...fields, ...clocks, addDaysIn(at, -1, zone).toISOString()].join(' ');
+  });
+}
+
+function dateLines(): string[] {
+  return dates.map((date) => {
+    const moved = [-400, -31, -7, -1, 0, 1, 7, 28, 366].map((n) => addCalendarDays(date, n));
+    return [...moved, weekdayOfDate(date), weekStartOfDate(date)].join(' ');
+  });
+}
+
+const EXPECTED: Record<string, { wall: string; instants: string }> = {
+  'Africa/Cairo': { wall: '5700:83595874', instants: '18240:8b596d37' },
+  'Asia/Riyadh': { wall: '5700:b6f52d53', instants: '18240:a426f3d9' },
+  'Asia/Dubai': { wall: '5700:f1a17c07', instants: '18240:995b52ed' },
+  'Asia/Kuwait': { wall: '5700:b6f52d53', instants: '18240:a426f3d9' },
+  'Asia/Qatar': { wall: '5700:b6f52d53', instants: '18240:a426f3d9' },
+  'Europe/London': { wall: '5700:580c4659', instants: '18240:63ae8843' },
+  'America/New_York': { wall: '5700:5464dfbd', instants: '18240:2477f843' },
+};
+
+describe.each(GOLDEN_ZONES)('the facade, pinned, in %s', (zone) => {
+  it('wall clock → UTC for every day and time of the sweep', () => {
+    expect(digest(wallLines(zone))).toBe(EXPECTED[zone]?.wall);
   });
 
-  it('offset, local day, day start, weekday and clock of every half hour', () => {
-    for (const at of instants) {
-      expect(offsetMinutesIn(zone, at)).toBe(legacyOffset(zone, at));
-      expect(localDateIn(at, zone)).toBe(legacyDayBefore.localDate(at, zone));
-      expect(startOfDayIn(at, zone).toISOString()).toBe(legacyDayBefore.localDayStart(at, zone).toISOString());
-      expect(weekdayIn(at, zone)).toBe(legacyWeek.weekdayOf(legacyDayBefore.localDate(at, zone)));
-      for (const cycle of ['12', '24'] as const) {
-        const opts = { tz: zone, cycle, locale: 'ar' } as const;
-        expect(clockIn(at, opts)).toBe(legacyClockOf(at, opts));
-      }
-    }
-  });
-
-  it('dayBeforeSendAt: the lesson time a local day earlier, and at a fixed send_at_local', () => {
-    for (const at of instants) {
-      const legacy = legacyDayBefore.dayBeforeSendAt(at, zone);
-      expect(addDaysIn(at, -1, zone).toISOString()).toBe(legacy.toISOString());
-      const date = addCalendarDays(localDateIn(at, zone), -1);
-      const fixed = legacyDayBefore.dayBeforeSendAt(at, zone, '18:00');
-      expect(wallInstant(date, '18:00', zone).toISOString()).toBe(fixed.toISOString());
-    }
+  it('offset, local day, day start, weekday, both clocks and a day back, every half hour', () => {
+    expect(digest(instantLines(zone))).toBe(EXPECTED[zone]?.instants);
   });
 });
 
 describe('calendar dates', () => {
   it('add days, weekday and academy week start (السبت)', () => {
-    for (const date of dates) {
-      for (const n of [-400, -31, -7, -1, 0, 1, 7, 28, 366]) {
-        expect(addCalendarDays(date, n)).toBe(legacyWeek.addDays(date, n));
-        expect(addCalendarDays(date, n)).toBe(legacyZoned.addLocalDays(date, n));
-      }
-      expect(weekdayOfDate(date)).toBe(legacyWeek.weekdayOf(date));
-      expect(weekStartOfDate(date)).toBe(legacyWeek.weekStart(date));
-    }
+    expect(digest(dateLines())).toBe('380:d419bf46');
   });
 
-  it('riyadhToday = localDateIn(Asia/Riyadh)', () => {
-    for (const at of instants) expect(localDateIn(at, 'Asia/Riyadh')).toBe(legacyRiyadhToday(at));
+  it('Cairo 2026-10-29 → 30: the day after the change starts at 00:00 +02', () => {
+    expect(startOfDayIn(new Date('2026-10-30T10:00:00Z'), 'Africa/Cairo').toISOString()).toBe('2026-10-29T22:00:00.000Z');
+    expect(addDaysIn(new Date('2026-10-30T10:00:00Z'), -1, 'Africa/Cairo').toISOString()).toBe('2026-10-29T09:00:00.000Z');
   });
 });

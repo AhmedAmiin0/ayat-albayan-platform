@@ -1,6 +1,6 @@
 export * from './core/async/index.js';
 export * from './core/format/arabic.js';
-export * from './core/format/chat-day.js';
+export * from './time/chat-day.js';
 export * from './enums/index.js';
 export * from './core/format/highlight-diff.js';
 export * from './schedule/classroom/index.js';
@@ -15,7 +15,7 @@ export * from './money/pricing/index.js';
 export * from './reports/index.js';
 export * from './catalog/permissions/roles.js';
 export * from './catalog/permissions/index.js';
-export * from './core/format/running-head.js';
+export * from './time/running-head.js';
 export * from './core/format/clock-pref.js';
 export * from './core/format/clock.js';
 export * from './core/format/clock-picker.js';

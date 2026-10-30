@@ -44,20 +44,13 @@ export function dateTextParts(
   return dateFormat(opts, fields).formatToParts(at);
 }
 
-/** One part of dateText, '' when the engine leaves it out. */
-export function datePart(
-  at: Date | number,
-  opts: DateTextOptions,
-  part: Intl.DateTimeFormatPartTypes,
-): string {
-  const fields: Record<string, DateFields> = {
-    weekday: { weekday: 'long' },
-    month: { month: 'long' },
-    day: { day: 'numeric' },
-    year: { year: 'numeric' },
-  };
-  const parts = dateTextParts(at, opts, fields[part] ?? {});
-  return parts.find((p) => p.type === part)?.value ?? '';
+const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+
+/** «الأحد 4 أكتوبر»: weekday, day and month joined by spaces (without Intl's «، »). */
+export function weekdayDayMonth(at: Date | number, opts: DateTextOptions): string {
+  const parts = dateTextParts(at, opts, WEEKDAY_DAY_MONTH);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
+  return [part('weekday'), part('day'), part('month')].join(' ');
 }
 
 /** «17:30» (24) or «5:30 م» / «5:30 PM» (12): the clock of `at` in `opts.tz`. */
@@ -65,6 +58,9 @@ export function clockIn(at: Date | number, opts: ClockOptions): string {
   const { hour, minute } = zonedFieldsIn(at, opts.tz);
   return clockOfParts(hour, minute, opts);
 }
+
+/** The clock of `date` in `opts.tz`, in the cycle and language given (the name screens use). */
+export const clockOf = clockIn;
 
 /** «الاثنين 12 أكتوبر 18:00»-style: `fields` of the date, then the clock in the viewer's cycle. */
 export function dateClockText(at: Date | number, opts: ClockOptions, fields: DateFields): string {

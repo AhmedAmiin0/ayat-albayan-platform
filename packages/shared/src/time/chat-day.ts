@@ -1,3 +1,6 @@
+import { calendarDaysBetween, weekdayOfDate } from './calendar.js';
+import { localDateIn, zonedFieldsIn } from './zoned.js';
+
 // The day a chat message belongs to, as WhatsApp shows it above each day's first bubble (owner
 // 2026-10-27): today, yesterday, the weekday within the last 6 days, else the date (the year only
 // when it is not this year). Days are calendar days in the viewer's time zone. Not display text:
@@ -17,27 +20,18 @@ export type ChatDay =
   /** `year` is null in the current year. */
   | { kind: 'date'; day: number; month: number; year: number | null };
 
-const dayFormats = new Map<string, Intl.DateTimeFormat>();
-
-/** The calendar day of the instant in `tz`, as plain numbers (engines differ on zero-padding). */
+/** The calendar day of the instant in `tz`, as plain numbers. */
 export function dayParts(at: Date, tz: string): DayParts {
-  let f = dayFormats.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: tz });
-    dayFormats.set(tz, f);
-  }
-  const parts = f.formatToParts(at);
-  const part = (k: 'day' | 'month' | 'year') => Number(parts.find((p) => p.type === k)?.value);
-  return { day: part('day'), month: part('month'), year: part('year') };
+  const { day, month, year } = zonedFieldsIn(at, tz);
+  return { day, month, year };
 }
 
-const DAY_MS = 86_400_000;
-const serial = (d: DayParts) => Date.UTC(d.year, d.month - 1, d.day) / DAY_MS;
+const pad = (n: number): string => String(n).padStart(2, '0');
+const ymd = (d: DayParts): string => `${d.year}-${pad(d.month)}-${pad(d.day)}`;
 
 /** «2026-09-29»: the same key for every message of one local day. */
 export function chatDayKey(at: Date, tz: string): string {
-  const d = dayParts(at, tz);
-  return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}`;
+  return localDateIn(at, tz);
 }
 
 interface ChatDayOptions {
@@ -49,9 +43,9 @@ interface ChatDayOptions {
 export function chatDay(at: Date, { now, tz }: ChatDayOptions): ChatDay {
   const day = dayParts(at, tz);
   const today = dayParts(now, tz);
-  const ago = serial(today) - serial(day);
+  const ago = calendarDaysBetween(ymd(day), ymd(today));
   if (ago === 0) return { kind: 'today' };
   if (ago === 1) return { kind: 'yesterday' };
-  if (ago > 1 && ago <= 6) return { kind: 'weekday', weekday: new Date(serial(day) * DAY_MS).getUTCDay() };
+  if (ago > 1 && ago <= 6) return { kind: 'weekday', weekday: weekdayOfDate(ymd(day)) };
   return { kind: 'date', day: day.day, month: day.month, year: day.year === today.year ? null : day.year };
 }

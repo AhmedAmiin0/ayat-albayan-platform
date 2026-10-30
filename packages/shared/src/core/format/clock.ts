@@ -1,5 +1,6 @@
 // The one display formatter for clock times (clock-pref.ts). Built on h23 parts plus our own
 // ص / م (AM / PM) suffix, so every engine (Hermes included) prints the same; digits stay Western.
+// The clock of an instant (clockOf) reads its zone through the date-fns facade (time/format.ts).
 import type { Locale } from '../../i18n/index.js';
 import type { ClockCycle } from './clock-pref.js';
 
@@ -23,24 +24,6 @@ export function clockOfParts(hour: number, minute: number, opts: Omit<ClockOptio
   const h = ((hour % 24) + 24) % 24;
   if (opts.cycle === '24') return `${pad(h)}:${pad(minute)}`;
   return `${h % 12 || 12}:${pad(minute)} ${meridiemLabel(h < 12 ? 'am' : 'pm', opts.locale)}`;
-}
-
-const zoned = new Map<string, Intl.DateTimeFormat>();
-
-function zonedFormat(tz: string): Intl.DateTimeFormat {
-  let f = zoned.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: tz });
-    zoned.set(tz, f);
-  }
-  return f;
-}
-
-/** The clock of `date` in `tz`, in the cycle and language given. */
-export function clockOf(date: Date, opts: ClockOptions): string {
-  const parts = zonedFormat(opts.tz).formatToParts(date);
-  const get = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((p) => p.type === type)?.value ?? 0);
-  return clockOfParts(get('hour'), get('minute'), opts);
 }
 
 /** A stored «HH:MM» (or «HH:MM:SS») wall time for display; anything else comes back as given. */
