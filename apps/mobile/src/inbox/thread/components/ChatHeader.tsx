@@ -5,12 +5,15 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { IconButton } from '@/core/ui/primitives/IconButton';
+import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
 
 interface ChatHeaderProps {
   /** The name (or the number); one line, cut with an ellipsis. */
   title: string;
   /** «عميل محتمل · +966 …» or when the saved thread was fetched; one smaller line. */
   subtitle?: string;
+  /** «آخر رسالة منذ …» (docs/33 §4): a third, smaller line; '' or unset = none. */
+  status?: string;
   onBack: () => void;
   /** The contact's initials circle, beside the chevron (decorative: the title reads the name). */
   avatar?: ReactNode;
@@ -27,7 +30,8 @@ interface ChatHeaderProps {
  * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the
  * contact's initials and the name beside it, the icons at the end.
  */
-export function ChatHeader({ title, subtitle, onBack, avatar, trailing, onTitlePress }: ChatHeaderProps) {
+export function ChatHeader(props: ChatHeaderProps) {
+  const { title, subtitle, status, onBack, avatar, trailing, onTitlePress } = props;
   const { color } = useTheme();
   return (
     <View
@@ -84,6 +88,7 @@ export function ChatHeader({ title, subtitle, onBack, avatar, trailing, onTitleP
             {subtitle}
           </AppText>
         ) : null}
+        <PresenceLabel testID="chat-status" text={status ?? ''} />
       </Pressable>
       {trailing}
     </View>

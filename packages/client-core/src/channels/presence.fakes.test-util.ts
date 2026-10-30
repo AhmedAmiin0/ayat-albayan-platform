@@ -1,7 +1,7 @@
 import type { PresenceChannelLike, PresenceRealtimeLike } from './presence-live.js';
 
 /** A fake realtime client: records joins, tracks and leaves; tests drive status and state. */
-export interface FakeChannel extends PresenceChannelLike {
+interface FakeChannel extends PresenceChannelLike {
   topic: string;
   config: { private: boolean; presence?: { key: string } };
   tracked: Record<string, unknown>[];

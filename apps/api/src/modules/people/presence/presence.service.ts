@@ -12,7 +12,7 @@ import { PresenceRepo } from './presence.repo';
 import { PresenceSettings } from './presence.settings';
 
 /** A channel the caller already passed the channel's own access check for (ChannelAccess). */
-export interface ChannelSeat {
+interface ChannelSeat {
   viewer: AuthUser;
   studentId: string;
   /** A participant (teacher, family) rather than a monitor (admin, owning assistant). */

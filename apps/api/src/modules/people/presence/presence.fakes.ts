@@ -5,13 +5,13 @@ import type { ChannelPerson, StaffRow } from './presence.repo';
 export const SEEN = '2026-10-30T09:00:00.000Z';
 
 /** The student's channel: teacher p-t1, guardian p-g, own-contact student p-s. */
-export const CHANNEL_PEOPLE: ChannelPerson[] = [
+const CHANNEL_PEOPLE: ChannelPerson[] = [
   { profile_id: 'p-t1', role: 'teacher' },
   { profile_id: 'p-g', role: 'guardian' },
   { profile_id: 'p-s', role: 'student' },
 ];
 
-export const STAFF: StaffRow[] = [
+const STAFF: StaffRow[] = [
   { id: 'p-ad', full_name: 'المدير', role: 'admin' },
   { id: 'p-t1', full_name: 'أبرار', role: 'teacher' },
   { id: 'p-sa', full_name: 'سارة', role: 'sales' },

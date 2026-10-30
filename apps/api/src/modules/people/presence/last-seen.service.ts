@@ -4,7 +4,7 @@ import { PresenceSettings } from './presence.settings';
 import { TouchThrottle } from './touch-throttle';
 
 /** The queued users are written this often, in one call. */
-export const LAST_SEEN_FLUSH_MS = 15_000;
+const LAST_SEEN_FLUSH_MS = 15_000;
 
 /**
  * Last seen (docs/33 §1.2): an authenticated request queues its user, at most once a minute per

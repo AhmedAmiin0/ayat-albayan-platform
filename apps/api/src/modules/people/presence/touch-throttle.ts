@@ -2,7 +2,7 @@
 export const TOUCH_EVERY_MS = 60_000;
 
 /** Users remembered; beyond it the oldest is forgotten (it may write once more: no harm). */
-export const TOUCH_MAX_USERS = 10_000;
+const TOUCH_MAX_USERS = 10_000;
 
 /** Is a write due: never written, or the last is TOUCH_EVERY_MS old (a clock going back: no). */
 export function shouldTouch(lastMs: number | undefined, nowMs: number): boolean {
