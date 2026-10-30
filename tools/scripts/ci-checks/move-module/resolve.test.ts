@@ -38,6 +38,13 @@ test('formats the new specifier in the same style', () => {
   assert.ok(t);
   assert.equal(formatSpec(t, { from: 'apps/api/src/main.ts', file: 'apps/api/src/config/env/env.ts' }), './config/env/env');
   assert.equal(formatSpec(t, { from: 'apps/api/src/a/b/c.ts', file: 'apps/api/src/env.ts' }), '../../env');
+  const aliases = loadAliases(root);
+  const up = { from: 'apps/web/src/a/b/c.ts', file: 'apps/web/src/env.ts', aliases };
+  const web = resolveSpec(r(), 'apps/web/src/a.ts', './lib/api');
+  assert.ok(web);
+  assert.equal(formatSpec(web, up), '@/env', 'a climbing path takes the app alias');
+  assert.equal(formatSpec(web, { ...up, from: 'apps/web/src/c.ts' }), './env', 'a sibling stays');
+  assert.equal(formatSpec(t, { ...up, from: 'apps/api/src/a/b/c.ts', file: 'apps/api/src/env.ts' }), '../../env', 'no alias');
   const js = resolveSpec(r(), 'apps/web/src/a.ts', './lib/api.js');
   assert.ok(js);
   assert.equal(formatSpec(js, { from: 'apps/web/src/a.ts', file: 'apps/web/src/core/api.ts' }), './core/api.js');

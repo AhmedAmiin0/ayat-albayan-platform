@@ -6,6 +6,7 @@
 import { dirname, relative, resolve } from 'node:path';
 import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
+import { noParentImportsRule } from './eslint-parent-imports.js';
 
 const INDEX = /^\/index(\.[cm]?[jt]sx?)?$/;
 
@@ -73,7 +74,12 @@ const rule = {
 
 /** The local `ab` plugin: one object, so every block that registers it names the same plugin. */
 export const boundariesPlugin = {
-  rules: { 'module-boundaries': rule, 'max-params': maxParamsRule, 'forbidden-imports': forbiddenImportsRule },
+  rules: {
+    'module-boundaries': rule,
+    'max-params': maxParamsRule,
+    'forbidden-imports': forbiddenImportsRule,
+    'no-parent-imports': noParentImportsRule,
+  },
 };
 
 // Test code may import another module's fakes and fixtures and mock its internals by path.
@@ -100,4 +106,14 @@ export function forbiddenImports({ files, ignores = [], bans }) {
     plugins: { ab: boundariesPlugin },
     rules: { 'ab/forbidden-imports': ['error', { bans }] },
   };
+}
+
+/**
+ * Flat-config block: `ab/no-parent-imports` (eslint-parent-imports.js) for `files` of the
+ * package at `root`, tests included (their imports and mock paths use the alias too); `dir`: the
+ * `@/*` folder.
+ */
+export function noParentImports({ root, files, dir = 'src', ignores = [] }) {
+  const rules = { 'ab/no-parent-imports': ['error', { root, dir }] };
+  return { files, ignores, plugins: { ab: boundariesPlugin }, rules };
 }

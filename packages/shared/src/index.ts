@@ -9,6 +9,7 @@ export * from './messaging/index.js';
 export * from './money/assistant/index.js';
 export * from './money/ledger/index.js';
 export * from './core/format/phone.js';
+export * from './core/format/digits.js';
 export * from './core/format/plural.js';
 export * from './money/pricing/index.js';
 export * from './reports/index.js';

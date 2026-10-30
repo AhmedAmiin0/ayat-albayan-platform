@@ -1,3 +1,4 @@
+import { asciiDigits } from '@ab/shared';
 import type { CellValue } from '../../google-client.port';
 
 // Column A of «سجل حضور — <student>» holds the lesson date as the script wrote it. Read with
@@ -9,15 +10,14 @@ const DAY_MS = 86_400_000;
 const pad = (n: number): string => String(n).padStart(2, '0');
 const ymd = (y: number, m: number, d: number): string | null =>
   m >= 1 && m <= 12 && d >= 1 && d <= 31 && y >= 2000 && y <= 2100 ? `${y}-${pad(m)}-${pad(d)}` : null;
-/** Arabic-Indic and Persian digits → ASCII, so «٢٠٢٦/١٠/٢١» parses too. */
-const ascii = (s: string): string => s.replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660)).replace(/[۰-۹]/g, (c) => String(c.charCodeAt(0) - 0x6f0));
 
 export function sheetDate(cell: CellValue): string | null {
   if (typeof cell === 'number' && cell > 30_000 && cell < 80_000) {
     return new Date(EPOCH + Math.floor(cell) * DAY_MS).toISOString().slice(0, 10);
   }
   if (typeof cell !== 'string') return null;
-  const s = ascii(cell.trim());
+  // Arabic-Indic and Persian digits → ASCII, so «٢٠٢٦/١٠/٢١» parses too.
+  const s = asciiDigits(cell.trim());
   const iso = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/.exec(s);
   if (iso) return ymd(Number(iso[1]), Number(iso[2]), Number(iso[3]));
   const dmy = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/.exec(s);

@@ -2,7 +2,7 @@ import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { usePermissions } from '@/features/people/auth';
-import { useInboxMode } from '../../shared/mode';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';
 import { RescheduleLessonDrawer } from './RescheduleLessonDrawer';
 

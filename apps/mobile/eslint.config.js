@@ -1,4 +1,4 @@
-import { boundaries, domainModuleRegex, forbiddenImports, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
+import { boundaries, domainModuleRegex, forbiddenImports, noParentImports, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
 
 // docs/32 g1: the domains already regrouped into `src/<domain>/<module>` (two-level modules). Each c-row move
 // adds its domain here in the same PR that moves ALL of src/<domain>/ into src/<domain>/<module>/ (a listed domain
@@ -13,6 +13,9 @@ export default reactConfig(
   // docs/27 §1 rule 6: another feature (and a route file in app/) only through its index.ts; core/ and test/ are shared
   // (existing deep imports: eslint-suppressions.json).
   boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], module: domainModuleRegex({ base: 'src', exempt: ['core', 'test'], domains: DOMAINS }), alias: { '@/': 'src/' } }),
+  // Owner 2026-10-30, docs/32 R12: `@/…`, never `../` (existing ones: eslint-suppressions.json; the
+  // sweep is `pnpm imports:absolute -- mobile --write`).
+  noParentImports({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'] }),
   {
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1). Use AppText.
     files: ['app/**/*.tsx', 'src/**/*.tsx'],

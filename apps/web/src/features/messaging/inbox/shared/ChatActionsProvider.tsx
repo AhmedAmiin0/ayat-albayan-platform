@@ -3,10 +3,10 @@ import { useState, type ReactNode } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { ChatActionsContext, type ChatActions } from './chat-actions';
-import { ForwardDialog } from '../messages/forward/ForwardDialog';
-import { forwardSummary, type ForwardSummary } from '../messages/forward/forward-summary';
-import { quoteOf } from '../messages/lib/quote';
-import { useReact } from '../messages/reactions/use-react';
+import { ForwardDialog } from '@/features/messaging/inbox/messages/forward/ForwardDialog';
+import { forwardSummary, type ForwardSummary } from '@/features/messaging/inbox/messages/forward/forward-summary';
+import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
+import { useReact } from '@/features/messaging/inbox/messages/reactions/use-react';
 
 export interface ChatActionsProviderProps {
   thread: ThreadView;

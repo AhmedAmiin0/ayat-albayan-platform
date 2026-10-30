@@ -3,16 +3,16 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
-import { withDays, type LogItem } from '../lib/day-groups';
+import { withDays, type LogItem } from '@/features/messaging/inbox/messages/lib/day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
-import { CallEntry } from '../../calls/entries/CallEntry';
+import { CallEntry } from '@/features/messaging/inbox/calls/entries/CallEntry';
 import type { CallView } from '@ab/shared';
-import { WithThreadCalls } from '../../calls/entries/use-thread-calls';
-import { useCallsEnabled } from '../../calls/state/call-context';
-import { useLastOwnSend } from '../../composer/lib/own-send';
-import { isNearBottom } from '../lib/stick-to-bottom';
-import { ReplyActionsProvider } from '../reply-actions';
+import { WithThreadCalls } from '@/features/messaging/inbox/calls/entries/use-thread-calls';
+import { useCallsEnabled } from '@/features/messaging/inbox/calls/state/call-context';
+import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
+import { isNearBottom } from '@/features/messaging/inbox/messages/lib/stick-to-bottom';
+import { ReplyActionsProvider } from '@/features/messaging/inbox/messages/reply-actions';
 
 export interface MessageLogProps {
   /** The chat's number: her own last send in it (own-send) snaps the log down. */

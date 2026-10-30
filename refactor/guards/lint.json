@@ -51,6 +51,7 @@
   "ab/forbidden-imports": 147,
   "ab/max-params": 2,
   "ab/module-boundaries": 2030,
+  "ab/no-parent-imports": 9002,
   "complexity": 239,
   "jsx-a11y/click-events-have-key-events": 2,
   "jsx-a11y/interactive-supports-focus": 2,

@@ -14,24 +14,6 @@
       "count": 1
     }
   },
-  "src/components/shell/nav/AdminNav.permissions.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/components/shell/nav/AdminNav.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/components/shell/layout/AppShell.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/components/data-table/ColumnFilterText.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 5
@@ -41,6 +23,9 @@
     }
   },
   "src/components/data-table/ColumnFilterText.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -76,6 +61,9 @@
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -90,21 +78,11 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/components/shell/layout/RouteFade.test.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/components/shell/layout/RouteFade.tsx": {
-    "no-restricted-syntax": {
-      "count": 1
+      "count": 2
     }
   },
   "src/components/data-table/TableBox.test.tsx": {
@@ -113,11 +91,6 @@
     }
   },
   "src/components/data-table/TableBox.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/components/shell/nav/admin-nav-items.ts": {
     "max-len": {
       "count": 2
     }
@@ -142,6 +115,9 @@
     }
   },
   "src/components/data-table/filter-controls.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -197,6 +173,9 @@
     }
   },
   "src/components/shell/account/AccountChip.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -234,6 +213,16 @@
       "count": 3
     }
   },
+  "src/components/shell/header/MenuBar.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/components/shell/header/MenuBar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/shell/header/MenuBell.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -247,12 +236,25 @@
       "count": 4
     }
   },
+  "src/components/shell/header/bell-placement.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/components/shell/layout/AdminLayout.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/components/shell/layout/AdminLayout.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "max-len": {
       "count": 7
@@ -261,7 +263,18 @@
       "count": 1
     }
   },
+  "src/components/shell/layout/AppShell.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
   "src/components/shell/layout/FixedTopBarLayout.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -273,6 +286,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -282,15 +298,44 @@
       "count": 2
     }
   },
+  "src/components/shell/layout/RouteFade.test.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/components/shell/layout/RouteFade.tsx": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/components/shell/layout/TopBarLayout.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 5
     }
   },
   "src/components/shell/layout/inbox-route.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/components/shell/nav/AdminNav.permissions.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/components/shell/nav/AdminNav.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -313,6 +358,11 @@
       "count": 3
     }
   },
+  "src/components/shell/nav/admin-nav-items.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "src/components/shell/nav/nav-title.ts": {
     "max-len": {
       "count": 2
@@ -324,6 +374,9 @@
     }
   },
   "src/components/table-toolbar/ActiveFilterChips.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -331,14 +384,28 @@
   "src/components/table-toolbar/ControlField.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/components/table-toolbar/ControlField.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/components/table-toolbar/DataTableToolbar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/components/table-toolbar/FilterPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 5
     }
@@ -354,6 +421,9 @@
     }
   },
   "src/components/table-toolbar/TableToolbar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -367,8 +437,16 @@
     }
   },
   "src/components/table-toolbar/fields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/components/table-toolbar/types.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/components/ui/display/avatar.tsx": {
@@ -387,6 +465,11 @@
   "src/components/ui/display/linked-body.tsx": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/components/ui/display/ltr.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/components/ui/display/mark.test.tsx": {
@@ -420,8 +503,16 @@
     }
   },
   "src/components/ui/form/field.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/components/ui/form/form-alert.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/components/ui/form/input.tsx": {
@@ -442,6 +533,11 @@
       "count": 1
     }
   },
+  "src/components/ui/form/search-input.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/ui/form/segmented-control.tsx": {
     "max-len": {
       "count": 2
@@ -457,8 +553,23 @@
       "count": 2
     }
   },
+  "src/components/ui/layout/button-row.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/ui/layout/button-row.tsx": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/components/ui/layout/clock-toggle.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/layout/head-actions.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -473,6 +584,9 @@
     }
   },
   "src/components/ui/layout/pager.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -498,7 +612,15 @@
       "count": 1
     }
   },
+  "src/components/ui/layout/tabs.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/ui/layout/tabs.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "jsx-a11y/interactive-supports-focus": {
       "count": 1
     },
@@ -514,6 +636,11 @@
       "count": 1
     }
   },
+  "src/components/ui/layout/theme-toggle.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/ui/layout/use-narrow.ts": {
     "max-len": {
       "count": 2
@@ -523,16 +650,35 @@
     }
   },
   "src/components/ui/overlay/dialog-header.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/components/ui/overlay/dialog-layout.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/components/ui/overlay/dialog-sheet.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/components/ui/overlay/dialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/components/ui/overlay/dialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     },
@@ -541,6 +687,9 @@
     }
   },
   "src/components/ui/overlay/more-menu.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "jsx-a11y/click-events-have-key-events": {
       "count": 1
     },
@@ -557,6 +706,9 @@
     }
   },
   "src/components/ui/overlay/toast.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "no-restricted-syntax": {
       "count": 1
     }
@@ -880,6 +1032,9 @@
     }
   },
   "src/features/finance/payments/attachments/AttachmentsDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -889,6 +1044,9 @@
       "count": 1
     },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -906,6 +1064,9 @@
   "src/features/finance/payments/attachments/ReceiptDialog.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/finance/payments/attachments/ReceiptField.tsx": {
@@ -974,6 +1135,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -1008,6 +1172,9 @@
     },
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -1056,6 +1223,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -1096,9 +1266,15 @@
   "src/features/finance/payouts/list/PayoutActions.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/finance/payouts/list/PayoutsPage.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -1109,6 +1285,9 @@
     },
     "ab/module-boundaries": {
       "count": 4
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -1126,6 +1305,9 @@
   "src/features/finance/payouts/list/TeacherDuesSummary.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/finance/payouts/list/payout-columns.tsx": {
@@ -1134,6 +1316,9 @@
     },
     "ab/module-boundaries": {
       "count": 4
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -1149,6 +1334,9 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -1163,11 +1351,17 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/finance/payouts/pay/use-pay-payout.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -1178,6 +1372,9 @@
     },
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -1223,6 +1420,9 @@
     }
   },
   "src/features/finance/pricing/calculator/CalcSteps.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -1230,7 +1430,15 @@
       "count": 1
     }
   },
+  "src/features/finance/pricing/calculator/FxNote.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/finance/pricing/calculator/QuoteResult.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     },
@@ -1304,13 +1512,29 @@
     }
   },
   "src/features/finance/subscriptions/balance/Amount.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/balance/BalanceCard.part-paid.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/balance/BalanceCard.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/finance/subscriptions/balance/BalanceCard.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 5
     },
     "complexity": {
       "count": 1
@@ -1326,6 +1550,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -1333,9 +1560,15 @@
   "src/features/finance/subscriptions/balance/OpenTasks.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/finance/subscriptions/cancel/CancelPackageDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -1344,18 +1577,32 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 6
     }
   },
   "src/features/finance/subscriptions/cancel/subscription-columns.cancelled.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/finance/subscriptions/create/CreateSubscriptionDialog.retry.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/finance/subscriptions/create/CreateSubscriptionDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 5
@@ -1365,6 +1612,9 @@
     }
   },
   "src/features/finance/subscriptions/create/CreateSubscriptionDialog.used-before.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1406,11 +1656,22 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/finance/subscriptions/create/RenewSubscriptionButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/finance/subscriptions/create/RenewSubscriptionButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -1583,11 +1844,19 @@
       "count": 1
     }
   },
+  "src/features/finance/teacher-earnings/payments/PaymentsHistory.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/finance/teacher-earnings/payments/PaymentsHistory.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -1600,6 +1869,9 @@
   "src/features/finance/teacher-earnings/payments/VoidPaymentDialog.tsx": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -1625,6 +1897,9 @@
     },
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -1660,6 +1935,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 13
     }
@@ -1686,6 +1964,9 @@
     }
   },
   "src/features/messaging/inbox/api/thread-delta.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -1706,37 +1987,83 @@
     }
   },
   "src/features/messaging/inbox/calls/entries/CallEntry.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/calls/entries/CallEntry.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/calls/entries/call-text.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/calls/entries/use-thread-calls.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/calls/header/CallButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/calls/header/CallButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/calls/header/PermissionDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/calls/header/PermissionDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/calls/log/CallsLog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/calls/log/CallsLog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/calls/log/CallsLogRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/calls/log/CallsTabs.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -1771,6 +2098,9 @@
     }
   },
   "src/features/messaging/inbox/calls/screen/CallOverlay.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -1786,6 +2116,16 @@
   "src/features/messaging/inbox/calls/screen/IncomingCall.tsx": {
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/messaging/inbox/calls/state/CallProvider.cancel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/calls/state/CallProvider.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/inbox/calls/state/CallProvider.tsx": {
@@ -1814,6 +2154,9 @@
     }
   },
   "src/features/messaging/inbox/calls/state/call-platform.ts": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -1821,6 +2164,9 @@
   "src/features/messaging/inbox/calls/state/call-test-kit.ts": {
     "@typescript-eslint/require-await": {
       "count": 5
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -1832,17 +2178,26 @@
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/composer/components/Composer.lines.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/Composer.teacher.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -1853,16 +2208,35 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 5
     }
   },
+  "src/features/messaging/inbox/composer/components/Composer.wide.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/ComposerPhone.replies.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/composer/components/ComposerPhone.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/ComposerPhone.tsx": {
+    "ab/no-parent-imports": {
+      "count": 10
+    },
     "complexity": {
       "count": 1
     },
@@ -1873,7 +2247,15 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/composer/components/FileComposer.reply.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/composer/components/FileComposer.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -1901,9 +2283,17 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/composer/components/QuickActions.link.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/composer/components/QuickActions.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "max-len": {
       "count": 2
@@ -1912,12 +2302,48 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/composer/components/ReplyFromNote.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/composer/components/ReplyFromNote.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/composer/components/ReplyStrip.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TemplateComposer.contact.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TemplateComposer.empty.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TemplateComposer.restricted.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/composer/components/TemplateComposer.restricted.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/TemplateComposer.starter.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -1925,6 +2351,9 @@
   "src/features/messaging/inbox/composer/components/TemplateComposer.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 7
     },
     "complexity": {
       "count": 1
@@ -1940,11 +2369,17 @@
     "@typescript-eslint/no-empty-function": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/TemplateParamFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     },
@@ -1952,12 +2387,33 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/composer/components/TextComposer.draft.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TextComposer.errors.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/composer/components/TextComposer.failed.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/composer/components/TextComposer.focus.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/composer/components/TextComposer.remount.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -1968,6 +2424,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 7
     },
     "complexity": {
       "count": 1
@@ -1982,9 +2441,17 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/composer/lib/allowed-templates.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/composer/lib/allowed-templates.ts": {
     "ab/module-boundaries": {
       "count": 4
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -2000,6 +2467,11 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/composer/lib/reply-from.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/composer/lib/send-error.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -2008,8 +2480,18 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/composer/lib/send-start.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/composer/lib/send-start.ts": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/composer/lib/template-params.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -2019,13 +2501,24 @@
     }
   },
   "src/features/messaging/inbox/composer/lib/use-reply-target.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/lib/use-thread-reopen.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/quote/QuoteButton.access.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
     }
   },
   "src/features/messaging/inbox/composer/quote/QuoteButton.tsx": {
@@ -2034,16 +2527,25 @@
     }
   },
   "src/features/messaging/inbox/composer/quote/QuoteDialog.prefill.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/composer/quote/QuoteDialog.send.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/composer/quote/QuoteDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -2055,6 +2557,9 @@
     }
   },
   "src/features/messaging/inbox/composer/quote/use-quote-offer.ts": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -2070,6 +2575,9 @@
     }
   },
   "src/features/messaging/inbox/lead/FollowUpLine.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
@@ -2080,13 +2588,49 @@
   "src/features/messaging/inbox/lead/LeadDataActions.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadPanel.register.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadPanel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/inbox/lead/LeadStatusChange.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadSummary.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadSummary.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LinkFamilyDialog.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -2104,6 +2648,11 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/lead/lead-summary.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/lead/lead-summary.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -2111,11 +2660,17 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/lead/link-family.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -2142,11 +2697,17 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lead/qualification/QualificationForm.v1.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -2161,27 +2722,44 @@
       "count": 3
     }
   },
+  "src/features/messaging/inbox/lists/components/AutoListNote.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/lists/components/ChatListChips.tsx": {
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/lists/components/ChatListsBar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/CreateListDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/lists/components/DeleteListDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/EditListDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -2191,27 +2769,49 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/lists/components/ListDialogs.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/lists/components/ListNameForm.tsx": {
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/lists/components/ThreadListChips.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/lists/components/ThreadListChips.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/lists/components/ThreadListsDialog.sync.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/ThreadListsDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/ThreadListsDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -2229,7 +2829,15 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/lists/lib/member-cache.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/lists/lib/member-cache.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -2248,6 +2856,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -2258,26 +2869,41 @@
     }
   },
   "src/features/messaging/inbox/lists/lib/use-thread-lists-action.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/messages/components/BubbleActions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/messages/components/BubbleActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/features/messaging/inbox/messages/components/BubbleMenu.tools.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/components/BubbleMenu.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "complexity": {
       "count": 1
     },
@@ -2300,6 +2926,9 @@
     }
   },
   "src/features/messaging/inbox/messages/components/DownloadButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -2310,6 +2939,9 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MediaPlayer.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "jsx-a11y/media-has-caption": {
       "count": 2
     },
@@ -2321,6 +2953,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -2328,12 +2963,38 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/messages/components/MessageBubble.links.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/messages/components/MessageBubble.sender.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/messages/components/MessageBubble.side.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/messages/components/MessageBubble.template.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/messages/components/MessageBubble.ticks.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/messages/components/MessageBubble.tsx": {
+    "ab/no-parent-imports": {
+      "count": 8
+    },
     "complexity": {
       "count": 1
     },
@@ -2344,7 +3005,15 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/messages/components/MessageBubble.unavailable.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/messages/components/MessageContent.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 5
     }
@@ -2363,6 +3032,9 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.pin.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -2370,6 +3042,9 @@
   "src/features/messaging/inbox/messages/components/MessageLog.quote.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 1
@@ -2390,11 +3065,27 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.wrap.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/messages/components/MessageMedia.access.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/messages/components/MessageMedia.download.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/messages/components/MessageMedia.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -2403,11 +3094,22 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 6
     }
   },
+  "src/features/messaging/inbox/messages/components/QuoteBlock.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/messages/forward/ForwardDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -2415,6 +3117,9 @@
   "src/features/messaging/inbox/messages/forward/ForwardDialog.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -2427,12 +3132,20 @@
     }
   },
   "src/features/messaging/inbox/messages/forward/ForwardList.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/forward/forward-summary.ts": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/messages/lib/bubble-offers.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -2447,6 +3160,9 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/day-groups.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -2457,13 +3173,24 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/messaging/inbox/messages/lib/quote.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/lib/stick-to-bottom.test.ts": {
@@ -2479,23 +3206,40 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/messages/pdf/PdfCard.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/messages/pdf/PdfCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/messages/reactions/ReactionPill.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/reactions/reactions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/reactions/use-react.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -2516,6 +3260,9 @@
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyNoteLine.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -2539,16 +3286,25 @@
     }
   },
   "src/features/messaging/inbox/messages/resend/ResendAsk.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/messages/resend/ResendAsk.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/messages/resend/ResendDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
@@ -2582,13 +3338,34 @@
     }
   },
   "src/features/messaging/inbox/sales-money/SalesChatActions.link.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/sales-money/SalesChatActions.payment-link.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/messaging/inbox/sales-money/SalesChatActions.renew-any.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/SalesChatActions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/sales-money/SalesChatActions.trial.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/messaging/inbox/sales-money/SalesChatActions.tsx": {
@@ -2596,22 +3373,39 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/sales-money/SalesChatFrame.converted.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/sales-money/SalesChatFrame.lead.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/SalesChatFrame.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/sales-money/SalesChatFrame.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/SalesCourseEntry.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -2643,7 +3437,20 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/sales-money/SalesSubscribeAction.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
+  "src/features/messaging/inbox/sales-money/SalesSubscribeAction.renew.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/messaging/inbox/sales-money/SalesSubscribeAction.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -2656,6 +3463,11 @@
       "count": 8
     }
   },
+  "src/features/messaging/inbox/sales-money/course/ContinueChoice.teacher.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/sales-money/course/ContinueChoice.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -2665,36 +3477,57 @@
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.change.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.choice.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.clash.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.continue.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.count.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.other.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -2708,6 +3541,9 @@
     },
     "ab/module-boundaries": {
       "count": 4
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "complexity": {
       "count": 1
@@ -2770,6 +3606,9 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -2777,6 +3616,9 @@
   "src/features/messaging/inbox/sales-money/payment-link/CreatedLink.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -2799,6 +3641,9 @@
     }
   },
   "src/features/messaging/inbox/sales-money/payment-link/link.fixture.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -2828,6 +3673,9 @@
     },
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/inbox/sales-money/subscribe/SalesStartField.tsx": {
@@ -2851,13 +3699,29 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.start.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.teacher.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
     }
   },
   "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.tsx": {
@@ -2881,6 +3745,9 @@
     }
   },
   "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.used-before.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -2908,12 +3775,18 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/ChatReceiptThumb.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -2938,26 +3811,41 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.cancel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.chat.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.renew-any.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.shortfall.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
@@ -2968,6 +3856,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -2980,6 +3871,9 @@
     }
   },
   "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.upload.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -2997,6 +3891,11 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/sales-money/transfer/receipt.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/sales-money/transfer/receipt.ts": {
     "ab/module-boundaries": {
       "count": 2
@@ -3012,6 +3911,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -3021,6 +3923,9 @@
       "count": 1
     },
     "ab/module-boundaries": {
+      "count": 4
+    },
+    "ab/no-parent-imports": {
       "count": 4
     },
     "complexity": {
@@ -3037,11 +3942,22 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/sales/SalesFamilyLine.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/sales/SalesRegisterAction.draft.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -3054,9 +3970,17 @@
       "count": 5
     }
   },
+  "src/features/messaging/inbox/sales/SendRatingButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/sales/SendRatingButton.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -3068,6 +3992,11 @@
     },
     "max-lines-per-function": {
       "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales/SubscriptionChip.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/inbox/sales/SubscriptionChip.tsx": {
@@ -3086,6 +4015,11 @@
       "count": 3
     }
   },
+  "src/features/messaging/inbox/sales/sales-register.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/sales/sales-register.ts": {
     "ab/module-boundaries": {
       "count": 2
@@ -3095,6 +4029,9 @@
     }
   },
   "src/features/messaging/inbox/sales/subscription.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3111,6 +4048,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -3121,17 +4061,28 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/saved-replies/components/DeleteReplyDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/saved-replies/components/PlaceholderChips.tsx": {
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/saved-replies/components/RepliesPanel.mine.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/saved-replies/components/RepliesPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -3142,17 +4093,36 @@
       "count": 4
     }
   },
+  "src/features/messaging/inbox/saved-replies/components/ReplyComposer.picker.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.send.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/saved-replies/components/ReplyComposer.slash.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.staged.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.tsx": {
+    "ab/no-parent-imports": {
+      "count": 9
+    },
     "max-len": {
       "count": 11
     },
@@ -3160,7 +4130,15 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/saved-replies/components/ReplyEditorDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/saved-replies/components/ReplyEditorDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 5
     },
@@ -3169,6 +4147,9 @@
     }
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyOptions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "jsx-a11y/interactive-supports-focus": {
       "count": 1
     },
@@ -3188,26 +4169,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/saved-replies/lib/api.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/saved-replies/lib/filter.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/saved-replies/panel/PanelHead.tsx": {
-    "jsx-a11y/no-autofocus": {
-      "count": 1
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -3224,6 +4187,9 @@
     }
   },
   "src/features/messaging/inbox/saved-replies/hooks/use-replies-picker.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -3235,12 +4201,18 @@
     }
   },
   "src/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/saved-replies/hooks/use-reply-values.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -3251,8 +4223,43 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 5
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/lib/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/lib/filter.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/lib/reply-draft.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/panel/PanelHead.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
+    "jsx-a11y/no-autofocus": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/features/messaging/inbox/shared/ChatActionsProvider.tsx": {
@@ -3285,6 +4292,9 @@
     }
   },
   "src/features/messaging/inbox/shared/tab-memory.ts": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -3298,6 +4308,9 @@
     }
   },
   "src/features/messaging/inbox/testing/inbox-fixture.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3307,12 +4320,48 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/threads/list/InboxListHead.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/list/InboxPage.layout.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/threads/list/InboxPage.lines.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    }
+  },
+  "src/features/messaging/inbox/threads/list/InboxPage.list.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/threads/list/InboxPage.lists.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/list/InboxPage.sort.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
+  "src/features/messaging/inbox/threads/list/InboxPage.tags.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/threads/list/InboxPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 11
+    },
     "complexity": {
       "count": 1
     },
@@ -3331,12 +4380,28 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/list/ThreadFilterFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/threads/list/ThreadList.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
   },
+  "src/features/messaging/inbox/threads/list/ThreadRow.ticks.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 7
+    },
     "complexity": {
       "count": 1
     },
@@ -3347,9 +4412,22 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/list/empty-title.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/threads/list/thread-filters.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/CopyPhoneButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/CopyPhoneButton.tsx": {
@@ -3357,12 +4435,23 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/pane/NewThread.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/threads/pane/NewThread.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/threads/pane/NewThread.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 4
     }
@@ -3373,11 +4462,17 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadHeader.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadHeader.tsx": {
+    "ab/no-parent-imports": {
+      "count": 7
+    },
     "complexity": {
       "count": 1
     },
@@ -3385,7 +4480,15 @@
       "count": 4
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "complexity": {
       "count": 1
     },
@@ -3394,36 +4497,72 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.chat.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.composer.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.converted.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.focus.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.handoff.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.lists.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.messages.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.narrow.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.permissions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.phone.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -3432,6 +4571,9 @@
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -3439,6 +4581,9 @@
   "src/features/messaging/inbox/threads/pane/ThreadPane.privacy.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 5
     },
     "max-len": {
       "count": 1
@@ -3451,28 +4596,78 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.refetch-error.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.register.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.registrationCheck.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.reopen.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.reply.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.sales.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.salesRegister.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.salesRegister.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.subscription.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.teacher.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 12
     },
     "complexity": {
       "count": 1
@@ -3498,6 +4693,9 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/WindowBanner.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -3519,6 +4717,9 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/window-state.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -3553,6 +4754,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -3571,11 +4775,17 @@
     }
   },
   "src/features/messaging/messaging/lines/LinesCard.cache.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/messaging/lines/LinesCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3613,6 +4823,9 @@
   "src/features/messaging/notification-catalogue/NumbersLine.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/notification-catalogue/catalogue-api.ts": {
@@ -3647,6 +4860,9 @@
   },
   "src/features/messaging/notification-catalogue/use-catalogue.ts": {
     "ab/module-boundaries": {
+      "count": 2
+    },
+    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -3685,6 +4901,9 @@
     "ab/module-boundaries": {
       "count": 5
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 6
     }
@@ -3698,6 +4917,9 @@
     }
   },
   "src/features/messaging/notification-rules/cells/ChannelsPart.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -3705,11 +4927,17 @@
   "src/features/messaging/notification-rules/cells/NamePart.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/notification-rules/cells/NumberPart.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "complexity": {
       "count": 1
@@ -3718,17 +4946,26 @@
   "src/features/messaging/notification-rules/cells/StatePart.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/notification-rules/phone/RulePhoneRow.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/notification-rules/phone/RuleSheet.tsx": {
+    "ab/no-parent-imports": {
+      "count": 9
+    },
     "max-len": {
       "count": 2
     }
@@ -3748,6 +4985,9 @@
   },
   "src/features/messaging/notification-rules/rule-text.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -3773,11 +5013,17 @@
     }
   },
   "src/features/messaging/notification-rules/switch/EssentialOffDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/notification-rules/switch/RuleSwitch.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     },
@@ -3791,6 +5037,9 @@
     }
   },
   "src/features/messaging/notification-rules/table/ManualTable.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3799,11 +5048,17 @@
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 7
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/notification-rules/table/RuleRowActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -3817,6 +5072,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 4
     }
@@ -3824,6 +5082,9 @@
   "src/features/messaging/notification-rules/table/use-rule-row.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 5
     },
     "max-len": {
       "count": 5
@@ -3841,6 +5102,9 @@
     }
   },
   "src/features/messaging/notification-rules/timing/FollowUpEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     },
@@ -3849,11 +5113,17 @@
     }
   },
   "src/features/messaging/notification-rules/timing/TimingEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/features/messaging/notification-rules/timing/TimingPart.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -3908,11 +5178,17 @@
     }
   },
   "src/features/messaging/notifications/web-push/WebPushToggle.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/notifications/web-push/use-web-push.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -3946,7 +5222,15 @@
       "count": 1
     }
   },
+  "src/features/messaging/notifications/web-push/web-push.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/notifications/web-push/web-push.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3955,11 +5239,22 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/messaging/numbers/card/NumberActions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/numbers/card/NumberActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "complexity": {
       "count": 1
     },
@@ -3971,6 +5266,9 @@
     }
   },
   "src/features/messaging/numbers/card/NumberCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -3979,11 +5277,17 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/numbers/card/NumberTemplateSync.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3992,7 +5296,15 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/card/ParityList.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -4007,9 +5319,15 @@
     },
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/messaging/numbers/form/FallbackRankField.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
@@ -4017,12 +5335,23 @@
       "count": 1
     }
   },
+  "src/features/messaging/numbers/form/NumberFormDialog.add.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/numbers/form/NumberFormDialog.edit.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/numbers/form/NumberFormDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -4035,9 +5364,15 @@
   "src/features/messaging/numbers/form/NumberSecretRow.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/numbers/form/NumberSecretRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -4048,10 +5383,18 @@
   "src/features/messaging/numbers/form/SecretChip.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/numbers/form/fallback-rank.ts": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/form/number-form.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -4063,7 +5406,25 @@
       "count": 1
     }
   },
+  "src/features/messaging/numbers/import/ImportButton.invalid.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/numbers/import/ImportButton.nothing.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/numbers/import/ImportButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/messaging/numbers/import/ImportButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -4081,9 +5442,20 @@
   "src/features/messaging/numbers/import/SourceSwitch.blocked.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/numbers/import/SourceSwitch.confirm.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/messaging/numbers/import/SourceSwitch.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -4108,6 +5480,9 @@
   },
   "src/features/messaging/numbers/use-numbers-mutation.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -4178,6 +5553,9 @@
     }
   },
   "src/features/messaging/templates/crm/CrmNameButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -4186,16 +5564,30 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/templates/crm/CrmNameDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
   },
+  "src/features/messaging/templates/crm/CrmStatusActions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/templates/crm/CrmStatusActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "jsx-a11y/no-autofocus": {
       "count": 1
     },
@@ -4204,6 +5596,9 @@
     }
   },
   "src/features/messaging/templates/crm/use-crm-name.ts": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -4211,6 +5606,9 @@
   "src/features/messaging/templates/crm/use-crm-status.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -4220,6 +5618,9 @@
     }
   },
   "src/features/messaging/templates/lines/LineSyncResult.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -4228,16 +5629,25 @@
     }
   },
   "src/features/messaging/templates/lines/MoveLineDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/templates/lines/MoveLineDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/templates/lines/SendFromCell.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -4246,11 +5656,22 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
   },
+  "src/features/messaging/templates/lines/TemplateLines.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/messaging/templates/lines/TemplateLines.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -4259,12 +5680,18 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/templates/lines/use-template-lines.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -4282,9 +5709,15 @@
   "src/features/messaging/templates/numbers/SubmitTarget.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/messaging/templates/numbers/SubmitTemplateDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -4293,6 +5726,9 @@
     }
   },
   "src/features/messaging/templates/numbers/TemplateNumberDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -4305,6 +5741,9 @@
   "src/features/messaging/templates/numbers/use-template-number.ts": {
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -4386,11 +5825,17 @@
     }
   },
   "src/features/people/account/sections/AvatarSection.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/people/account/sections/AvatarSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 2
     }
@@ -4401,11 +5846,27 @@
     },
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/people/account/sections/EmailSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/people/account/sections/NameSection.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/people/account/sections/NameSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
     }
   },
   "src/features/people/account/sections/PasswordField.tsx": {
@@ -4419,16 +5880,35 @@
   "src/features/people/account/sections/PasswordSection.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/people/account/sections/PasswordSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
   },
+  "src/features/people/account/sections/PhoneSection.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/people/account/sections/PhoneSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/people/account/sections/PhotoPick.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/account/use-account-save.ts": {
@@ -4483,11 +5963,17 @@
   "src/features/people/assistants/commissions/CommissionLedger.test.tsx": {
     "@typescript-eslint/no-unnecessary-template-expression": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/assistants/commissions/CommissionLedger.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -4525,6 +6011,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -4534,6 +6023,9 @@
       "count": 1
     },
     "ab/module-boundaries": {
+      "count": 2
+    },
+    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -4550,6 +6042,9 @@
     "ab/module-boundaries": {
       "count": 4
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     },
@@ -4560,6 +6055,9 @@
   "src/features/people/assistants/statements/StatementActions.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -4572,6 +6070,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -4579,6 +6080,9 @@
   "src/features/people/assistants/statements/StatementLinesDialog.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -4592,12 +6096,20 @@
       "count": 1
     }
   },
+  "src/features/people/assistants/statements/StatementsPanel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/assistants/statements/StatementsPanel.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -4624,8 +6136,16 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/people/assistants/statements/totals.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/assistants/statements/totals.ts": {
@@ -4638,6 +6158,9 @@
       "count": 1
     },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -4667,6 +6190,9 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -4684,6 +6210,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
@@ -4697,6 +6226,9 @@
     },
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -4732,22 +6264,34 @@
   "src/features/people/assistants/terms/TermsEditor.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/assistants/terms/TermsEditor.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/people/assistants/terms/TermsFields.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/people/assistants/terms/terms-form.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -4763,6 +6307,9 @@
   "src/features/people/assistants/terms/terms-summary.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/auth/admin-access.ts": {
@@ -4795,6 +6342,9 @@
     }
   },
   "src/features/people/auth/code/CodeStep.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -4810,21 +6360,38 @@
     }
   },
   "src/features/people/auth/code/use-code-flow.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/people/auth/family/FamilyPanel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/people/auth/family/FamilyPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/people/auth/family/PhoneSignIn.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/auth/login/PasswordForm.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
@@ -4833,11 +6400,22 @@
     }
   },
   "src/features/people/auth/login/StaffPanel.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/people/auth/login/StaffPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/auth/login/auth-api.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -4865,6 +6443,9 @@
     }
   },
   "src/features/people/auth/reset/ResetFlow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 3
     },
@@ -4979,7 +6560,15 @@
       "count": 3
     }
   },
+  "src/features/people/portal/lessons/LessonAction.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/people/portal/lessons/LessonAction.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -4990,6 +6579,9 @@
     }
   },
   "src/features/people/portal/lessons/LessonsPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -5089,21 +6681,40 @@
     }
   },
   "src/features/people/students/create/CreateStudentDialog.contact.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/people/students/create/CreateStudentDialog.initial.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/students/create/CreateStudentDialog.teacher.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/create/CreateStudentDialog.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/people/students/create/CreateStudentDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 2
@@ -5119,6 +6730,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 4
     },
@@ -5126,8 +6740,16 @@
       "count": 1
     }
   },
+  "src/features/people/students/create/create-student.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/students/create/create-student.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -5146,6 +6768,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -5156,12 +6781,20 @@
       "count": 1
     }
   },
+  "src/features/people/students/duplicates/DuplicateDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/people/students/duplicates/DuplicateDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -5172,12 +6805,23 @@
       "count": 2
     }
   },
-  "src/features/people/students/duplicates/SiblingMerge.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
+  "src/features/people/students/duplicates/SiblingMerge.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
+  "src/features/people/students/duplicates/SiblingMerge.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/people/students/duplicates/SiblingsStrip.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -5188,6 +6832,9 @@
     }
   },
   "src/features/people/students/list/StudentFilters.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -5201,12 +6848,18 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/people/students/list/StudentRowActions.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5227,6 +6880,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -5242,6 +6898,9 @@
   },
   "src/features/people/students/list/TeacherCell.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5274,6 +6933,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     },
@@ -5282,6 +6944,9 @@
     }
   },
   "src/features/people/students/list/use-student-filters.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -5307,16 +6972,25 @@
     }
   },
   "src/features/people/students/profile/StudentProfileForm.contact.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/students/profile/StudentProfileForm.status.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/people/students/profile/StudentProfileForm.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -5324,6 +6998,9 @@
   "src/features/people/students/profile/StudentProfileForm.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 6
@@ -5335,14 +7012,40 @@
       "count": 1
     }
   },
+  "src/features/people/students/profile/StudentProfilePage.pause.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/students/profile/StudentProfilePage.phones.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/people/students/profile/StudentProfilePage.renew.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/profile/StudentProfilePage.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/profile/StudentProfilePage.trial.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/students/profile/StudentProfilePage.tsx": {
     "ab/module-boundaries": {
       "count": 9
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -5355,8 +7058,16 @@
     }
   },
   "src/features/people/students/profile/TeacherField.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/people/students/profile/profile-form.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/people/students/profile/profile-form.ts": {
@@ -5368,6 +7079,9 @@
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -5383,11 +7097,17 @@
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/students/profile/student-note.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -5426,6 +7146,9 @@
     }
   },
   "src/features/people/students/recordings/StudentRecordings.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -5512,6 +7235,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -5561,12 +7287,23 @@
       "count": 1
     }
   },
+  "src/features/people/teachers/detail/RatesTable.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/people/teachers/detail/StudentCountLink.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/people/teachers/detail/TeacherDetailPage.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -5575,16 +7312,25 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/teachers/detail/TeacherFacts.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/teachers/detail/TeacherMeta.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -5635,6 +7381,9 @@
     }
   },
   "src/features/people/teachers/form/TeacherDialog.mode.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -5649,6 +7398,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -5657,6 +7409,9 @@
     }
   },
   "src/features/people/teachers/form/TeacherDialog.username.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -5665,11 +7420,17 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-lines-per-function": {
       "count": 1
     }
   },
   "src/features/people/teachers/form/TeacherMeetingModeField.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -5678,12 +7439,18 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/people/teachers/form/TeacherUsernameField.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -5707,6 +7474,9 @@
     }
   },
   "src/features/people/teachers/form/meeting-mode-test-utils.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -5722,12 +7492,18 @@
     }
   },
   "src/features/people/teachers/form/teacher-form.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/people/teachers/form/teacher-form.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5752,6 +7528,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -5761,6 +7540,9 @@
   },
   "src/features/people/teachers/time-off/TimeOffList.tsx": {
     "ab/forbidden-imports": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -5798,11 +7580,22 @@
     }
   },
   "src/features/people/users/actions/DeleteUserDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 4
     }
   },
+  "src/features/people/users/actions/DisableDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/people/users/actions/ResetPasswordDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 2
     }
@@ -5816,6 +7609,9 @@
     }
   },
   "src/features/people/users/actions/UserActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -5827,6 +7623,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -5836,8 +7635,21 @@
       "count": 1
     }
   },
+  "src/features/people/users/create/CreateAccountButton.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/users/create/CreateAccountButton.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/create/CreateUserDialog.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5845,11 +7657,17 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/people/users/create/CreateUserFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -5864,6 +7682,9 @@
   },
   "src/features/people/users/create/LinkPicker.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5885,21 +7706,45 @@
       "count": 1
     }
   },
+  "src/features/people/users/edit/HistoryReferences.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/edit/UserDetailDialog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/people/users/edit/UserDetailDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/people/users/edit/UserEditFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/people/users/edit/UserEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 7
+    },
     "max-len": {
       "count": 1
     },
     "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/edit/UserPhoto.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5910,6 +7755,11 @@
   },
   "src/features/people/users/edit/UserSummary.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/edit/edit-form.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -6008,6 +7858,9 @@
     }
   },
   "src/features/platform/google-sync/connection/ConnectionActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -6022,11 +7875,17 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/platform/google-sync/connection/ConnectionCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -6034,19 +7893,31 @@
   "src/features/platform/google-sync/connection/DriveCard.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/platform/google-sync/connection/DriveCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/platform/google-sync/connection/LiveConfirmDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/platform/google-sync/connection/ModeControl.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -6057,6 +7928,9 @@
     }
   },
   "src/features/platform/google-sync/connection/use-drive-actions.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -6068,6 +7942,9 @@
   },
   "src/features/platform/google-sync/connection/use-oauth-return.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6102,35 +7979,63 @@
       "count": 2
     }
   },
+  "src/features/platform/google-sync/log/SyncLog.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/platform/google-sync/log/SyncLog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/platform/google-sync/log/SyncLogRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/platform/google-sync/mapping/StudentManualLink.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/platform/google-sync/mapping/StudentMap.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/platform/google-sync/mapping/StudentMap.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/platform/google-sync/mapping/StudentRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/platform/google-sync/mapping/TeacherCalendarSelect.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -6139,22 +8044,39 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 5
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/platform/google-sync/mapping/TeacherMap.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/platform/google-sync/mapping/TeacherRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/platform/google-sync/teacher-calendar/TeacherCalendarOwner.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/platform/integrations/IntegrationSourceNote.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6163,6 +8085,9 @@
   },
   "src/features/platform/integrations/IntegrationsForm.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6217,11 +8142,17 @@
     }
   },
   "src/features/platform/integrations/rows/IntegrationGroup.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/platform/integrations/rows/PlainIntegrationRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -6229,6 +8160,9 @@
   "src/features/platform/integrations/rows/SecretIntegrationRow.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     },
     "jsx-a11y/no-autofocus": {
       "count": 1
@@ -6242,6 +8176,9 @@
   },
   "src/features/platform/integrations/rows/SecretStatusChip.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6316,6 +8253,9 @@
     }
   },
   "src/features/platform/settings/pages/AppearancePage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -6359,6 +8299,9 @@
     }
   },
   "src/features/platform/settings/pages/CommunicationsPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 6
     }
@@ -6397,6 +8340,9 @@
   "src/features/platform/settings/pages/communications/CommunicationsBody.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -6438,6 +8384,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     },
@@ -6451,6 +8400,9 @@
     }
   },
   "src/features/platform/settings/pages/communications/overview/PublicNumber.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -6480,6 +8432,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -6494,6 +8449,9 @@
   },
   "src/features/platform/settings/pages/communications/tabs/SavedRepliesTable.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6596,6 +8554,9 @@
     }
   },
   "src/features/platform/settings/registry-form/settings-scope.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -6625,6 +8586,9 @@
     }
   },
   "src/features/platform/settings/sections/SectionFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -6729,6 +8693,9 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     },
@@ -6737,6 +8704,9 @@
     }
   },
   "src/features/platform/settings/values/cells/ActionCell.tsx": {
+    "ab/no-parent-imports": {
+      "count": 7
+    },
     "max-len": {
       "count": 3
     }
@@ -6755,12 +8725,33 @@
     }
   },
   "src/features/platform/settings/values/cells/key-item.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/conflicts/ConflictNotice.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/values/conflicts/ConflictRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/conflicts/conflict-text.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/platform/settings/values/conflicts/conflict-text.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -6799,6 +8790,9 @@
     }
   },
   "src/features/platform/settings/values/description/row-description.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -6817,11 +8811,22 @@
     }
   },
   "src/features/platform/settings/values/description/use-sheet-description.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/platform/settings/values/editors/ChoiceEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/platform/settings/values/editors/NumberEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "complexity": {
       "count": 1
     },
@@ -6829,15 +8834,31 @@
       "count": 1
     }
   },
+  "src/features/platform/settings/values/editors/RowMessage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/platform/settings/values/editors/ShapeEditor.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/platform/settings/values/editors/ShapeFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/platform/settings/values/editors/TextEditor.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -6849,7 +8870,15 @@
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/editors/ValueSwitch.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -6857,7 +8886,15 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/hooks/entry-save-result.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -6896,6 +8933,9 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 6
     },
@@ -6922,6 +8962,9 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 5
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 5
     },
@@ -6935,6 +8978,9 @@
   "src/features/platform/settings/values/hooks/use-values-view.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "complexity": {
       "count": 1
@@ -6959,6 +9005,9 @@
     }
   },
   "src/features/platform/settings/values/lib/value-rows.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -6972,16 +9021,30 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/platform/settings/values/rows/GoogleValueRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 8
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/platform/settings/values/rows/OwnedValue.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/platform/settings/values/rows/SettingPhoneRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 8
+    },
     "max-len": {
       "count": 2
     }
@@ -6989,6 +9052,9 @@
   "src/features/platform/settings/values/rows/SettingValueRow.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 13
     },
     "complexity": {
       "count": 1
@@ -7001,6 +9067,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -7011,7 +9080,15 @@
     }
   },
   "src/features/platform/settings/values/sheet/ConfirmValueDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/sheet/ImpactNote.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -7036,9 +9113,22 @@
       "count": 1
     }
   },
+  "src/features/platform/settings/values/sheet/ValueSheet.phone.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/sheet/ValueSheet.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/platform/settings/values/sheet/ValueSheet.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 8
     },
     "complexity": {
       "count": 1
@@ -7178,28 +9268,63 @@
     }
   },
   "src/features/reporting/dashboard/finance/ExpensesByCategory.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/dashboard/finance/FinanceByMonth.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/dashboard/finance/FinanceTotals.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/finance/finance-notes.en.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/finance/finance-notes.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/reporting/dashboard/finance/finance-notes.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/reporting/dashboard/funnel/FunnelChart.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/reporting/dashboard/funnel/KpiStrip.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/reporting/dashboard/funnel/SourceTable.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
     }
   },
   "src/features/reporting/dashboard/funnel/funnel.test.ts": {
@@ -7215,6 +9340,11 @@
   "src/features/reporting/dashboard/funnel/kpis.test.ts": {
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/reporting/dashboard/funnel/kpis.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/reporting/dashboard/link-mock.tsx": {
@@ -7244,6 +9374,11 @@
       "count": 2
     }
   },
+  "src/features/reporting/dashboard/shared/hand-sort.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/reporting/dashboard/shared/hand-sort.ts": {
     "max-len": {
       "count": 1
@@ -7252,7 +9387,20 @@
       "count": 1
     }
   },
+  "src/features/reporting/dashboard/today/LessonsByStatus.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/today/PendingReportsList.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/reporting/dashboard/today/TeacherLoad.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -7266,18 +9414,32 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
+    }
+  },
+  "src/features/reporting/dashboard/today/UnpaidList.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/reporting/dashboard/today/UnpaidList.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/reporting/dashboard/today/WeekSection.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/reporting/dashboard/today/today-fixture.ts": {
@@ -7307,21 +9469,38 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/reporting/dashboard/work/TasksList.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/reporting/dashboard/work/TasksList.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/dashboard/work/WorkPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/reporting/dashboard/work/work-text.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -7403,6 +9582,9 @@
     }
   },
   "src/features/reporting/reports/entry-v2/AbsentCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -7417,12 +9599,20 @@
       "count": 2
     }
   },
+  "src/features/reporting/reports/entry-v2/ReportEntryV2.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/reporting/reports/entry-v2/ToggleChips.tsx": {
     "max-len": {
       "count": 2
     }
   },
   "src/features/reporting/reports/entry-v2/V2Footer.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -7432,22 +9622,44 @@
       "count": 2
     }
   },
+  "src/features/reporting/reports/entry-v2/after/AfterLesson.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
+  "src/features/reporting/reports/entry-v2/after/NextPlanCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/reporting/reports/entry-v2/after/NoteCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/reporting/reports/entry-v2/after/OverallCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/programs/ArabicSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/programs/IslamicSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -7463,16 +9675,25 @@
     }
   },
   "src/features/reporting/reports/entry-v2/quran/QuranSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/reporting/reports/entry-v2/quran/SegmentCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/quran/SegmentPart.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -7498,6 +9719,9 @@
     }
   },
   "src/features/reporting/reports/entry-v2/use-report-entry-v2.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -7506,11 +9730,17 @@
     }
   },
   "src/features/reporting/reports/entry-v2/v2-test-kit.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/features/reporting/reports/entry/AttachmentsField.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -7520,6 +9750,16 @@
   },
   "src/features/reporting/reports/entry/AttendanceField.tsx": {
     "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/reporting/reports/entry/FooterAlerts.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/entry/FooterAlerts.tsx": {
+    "ab/no-parent-imports": {
       "count": 2
     }
   },
@@ -7555,6 +9795,9 @@
     }
   },
   "src/features/reporting/reports/entry/ReportEntryFooter.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -7566,6 +9809,9 @@
   },
   "src/features/reporting/reports/entry/use-autosave.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -7581,6 +9827,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -7591,13 +9840,24 @@
     }
   },
   "src/features/reporting/reports/history/LessonReportLinks.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/history/PdfAction.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/reporting/reports/history/PendingReports.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/reporting/reports/history/RecordingLink.tsx": {
@@ -7612,6 +9872,11 @@
   },
   "src/features/reporting/reports/history/ReportLink.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/history/ReportStatusLine.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -7631,6 +9896,9 @@
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -7653,12 +9921,23 @@
       "count": 1
     }
   },
+  "src/features/reporting/reports/view-v2/AdminReportV2.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/reporting/reports/view-v2/ReportV2View.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/reporting/reports/view-v2/ReportV2View.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -7712,6 +9991,9 @@
   "src/features/sales/leads/list/LeadAssignSelect.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/sales/leads/list/LeadFilterFields.tsx": {
@@ -7719,7 +10001,15 @@
       "count": 3
     }
   },
+  "src/features/sales/leads/list/LeadList.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/sales/leads/list/LeadListItem.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -7731,6 +10021,9 @@
   },
   "src/features/sales/leads/list/LeadsToolbar.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -7754,11 +10047,17 @@
     }
   },
   "src/features/sales/leads/list/lead-filters.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/sales/leads/list/lead-sort.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -7798,12 +10097,18 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/sales/payment-links/pay/PayPage.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -7824,6 +10129,9 @@
   "src/features/sales/payment-links/settings/SecretField.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/sales/payment-links/settings/StripeSettingsForm.test.tsx": {
@@ -7836,6 +10144,9 @@
   },
   "src/features/sales/payment-links/settings/StripeSettingsForm.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -7854,6 +10165,9 @@
     }
   },
   "src/features/sales/payment-links/settings/StripeSettingsSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -7924,15 +10238,31 @@
       "count": 2
     }
   },
+  "src/features/sales/sales/live/SalesLive.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/sales/sales/live/SalesLive.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/sales/sales/live/SalesLiveStrip.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/sales/sales/live/SalesLiveStrip.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -7964,6 +10294,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
@@ -7980,6 +10313,9 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -7988,6 +10324,9 @@
     }
   },
   "src/features/sales/sales/money/SalesMoney.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
@@ -8006,6 +10345,9 @@
     }
   },
   "src/features/sales/sales/money/links/PaymentLinksSection.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     },
@@ -8015,6 +10357,9 @@
   },
   "src/features/sales/sales/money/links/link-columns.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8071,6 +10416,9 @@
     }
   },
   "src/features/sales/sales/schedule/LessonMeetingLink.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8083,6 +10431,11 @@
   "src/features/sales/sales/schedule/LinkActions.tsx": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/sales/sales/schedule/SalesConfirmLesson.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/sales/sales/schedule/SalesConfirmLesson.tsx": {
@@ -8115,6 +10468,9 @@
     }
   },
   "src/features/sales/sales/schedule/SalesLessonDrawer.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -8127,14 +10483,25 @@
       "count": 4
     }
   },
+  "src/features/sales/sales/schedule/SalesSchedule.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    }
+  },
   "src/features/sales/sales/schedule/SalesSchedule.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    },
+    "ab/no-parent-imports": {
       "count": 2
     }
   },
   "src/features/sales/sales/schedule/SalesSchedule.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -8167,7 +10534,15 @@
       "count": 2
     }
   },
+  "src/features/sales/sales/students/AllStudents.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/sales/sales/students/AllStudents.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8178,6 +10553,9 @@
     }
   },
   "src/features/sales/sales/students/MyStudents.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8188,6 +10566,9 @@
     }
   },
   "src/features/sales/sales/students/SalesStudents.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -8214,16 +10595,25 @@
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     },
@@ -8232,21 +10622,33 @@
     }
   },
   "src/features/sales/sales/subscriptions/SubscriptionHistory.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/sales/sales/subscriptions/SubscriptionHistory.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/sales/sales/subscriptions/history-column.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/sales-subscription-columns.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8273,17 +10675,26 @@
     }
   },
   "src/features/sales/sales/teachers/MyEarnings.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/sales/sales/teachers/SalesTeachers.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/sales/sales/teachers/SalesTeachers.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8314,6 +10725,9 @@
     }
   },
   "src/features/sales/sales/teachers/TeacherMeetingLink.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -8326,6 +10740,11 @@
   "src/features/sales/sales/teachers/TeacherStudentsByKind.tsx": {
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/sales/sales/teachers/teacher-view.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/sales/sales/teachers/teacher-view.ts": {
@@ -8462,6 +10881,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 7
     }
@@ -8469,6 +10891,9 @@
   "src/features/teaching/booking/course-change/ChangeReview.tsx": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 5
@@ -8478,11 +10903,17 @@
     }
   },
   "src/features/teaching/booking/course-change/CourseChangeForm.clash.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/course-change/CourseChangeForm.review.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -8498,6 +10929,9 @@
     }
   },
   "src/features/teaching/booking/course-change/api.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -8513,11 +10947,17 @@
     }
   },
   "src/features/teaching/booking/course-change/change-fixture.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/course-change/change-text.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -8525,6 +10965,9 @@
   "src/features/teaching/booking/course-change/refresh.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -8555,8 +10998,16 @@
       "count": 1
     }
   },
+  "src/features/teaching/booking/draft/draft.prefilled.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/booking/draft/draft.steps.ts": {
     "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "complexity": {
@@ -8572,6 +11023,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -8599,6 +11053,9 @@
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8607,17 +11064,26 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/invoice/InvoiceChosen.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/invoice/InvoiceDialog.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8628,17 +11094,26 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/invoice/InvoiceField.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/invoice/InvoiceField.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "complexity": {
@@ -8651,17 +11126,28 @@
       "count": 1
     }
   },
+  "src/features/teaching/booking/invoice/InvoiceStep.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/booking/invoice/InvoiceThumb.tsx": {
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/invoice/api.invoice.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/teaching/booking/invoice/invoice-file.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8682,6 +11168,9 @@
   "src/features/teaching/booking/steps/package/PackageStep.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -8707,6 +11196,9 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "complexity": {
       "count": 1
     },
@@ -8721,6 +11213,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8734,27 +11229,42 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/steps/review/ReviewStep.course.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/steps/review/ReviewStep.invoice.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/steps/review/ReviewStep.past.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/teaching/booking/steps/review/ReviewStep.tsx": {
     "ab/module-boundaries": {
+      "count": 3
+    },
+    "ab/no-parent-imports": {
       "count": 3
     },
     "complexity": {
@@ -8767,7 +11277,15 @@
       "count": 1
     }
   },
+  "src/features/teaching/booking/steps/review/ReviewSummary.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/booking/steps/review/ReviewSummary.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "complexity": {
       "count": 1
     },
@@ -8775,20 +11293,39 @@
       "count": 4
     }
   },
+  "src/features/teaching/booking/steps/review/SeriesCheck.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/booking/steps/review/SeriesCheck.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 5
     },
     "max-len": {
       "count": 6
     }
   },
+  "src/features/teaching/booking/steps/review/booked.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/booking/steps/review/booked.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/steps/review/course-taken.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -8796,6 +11333,9 @@
   "src/features/teaching/booking/steps/review/course-taken.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 4
@@ -8805,12 +11345,18 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/steps/slots/DayTimesList.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8826,12 +11372,23 @@
     }
   },
   "src/features/teaching/booking/steps/slots/SlotDays.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
+  "src/features/teaching/booking/steps/slots/SlotStep.course.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/booking/steps/slots/SlotStep.tsx": {
     "ab/module-boundaries": {
+      "count": 2
+    },
+    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -8839,11 +11396,24 @@
     }
   },
   "src/features/teaching/booking/steps/slots/TeacherStep.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     },
     "no-restricted-syntax": {
       "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/who/KindStep.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/who/KindStep.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/teaching/booking/steps/who/LeadStudentStep.contact.test.tsx": {
@@ -8855,16 +11425,25 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/teaching/booking/steps/who/MissedLessonStep.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/booking/steps/who/MissedLessonStep.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "complexity": {
       "count": 1
     },
@@ -8882,6 +11461,9 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -8889,6 +11471,11 @@
       "count": 1
     },
     "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/who/new-student.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -8909,6 +11496,11 @@
       "count": 7
     }
   },
+  "src/features/teaching/booking/trial-date/TrialDatesSection.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/booking/trial-date/TrialDatesSection.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -8921,6 +11513,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -8928,9 +11523,20 @@
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog.admin.test.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/trial-date/dialog/TrialDateDialog.sales.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog.states.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -8938,6 +11544,9 @@
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 6
     },
     "complexity": {
       "count": 1
@@ -8947,11 +11556,17 @@
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDateNotes.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDonePanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -8959,6 +11574,9 @@
   "src/features/teaching/booking/trial-date/dialog/TrialReviewStep.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 3
@@ -8968,11 +11586,17 @@
     }
   },
   "src/features/teaching/booking/trial-date/dialog/draft.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/booking/trial-date/dialog/draft.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -8982,8 +11606,23 @@
       "count": 1
     }
   },
+  "src/features/teaching/booking/trial-date/history/TrialHistoryTable.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/trial-date/history/TrialHistoryTable.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/booking/trial-date/history/TrialHistoryTable.tsx": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/trial-date/history/history-text.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -8996,6 +11635,9 @@
     }
   },
   "src/features/teaching/booking/trial-date/trial-fixture.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -9014,11 +11656,17 @@
     }
   },
   "src/features/teaching/classroom/board/BoardStage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/board/BoardToolbar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -9032,6 +11680,9 @@
     }
   },
   "src/features/teaching/classroom/board/board-fixture.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -9099,6 +11750,9 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -9107,11 +11761,17 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "no-restricted-syntax": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/board/use-board.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -9138,16 +11798,25 @@
     }
   },
   "src/features/teaching/classroom/join/CopyLinkButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 5
     }
@@ -9158,6 +11827,9 @@
     }
   },
   "src/features/teaching/classroom/join/JoinButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -9171,11 +11843,27 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/teaching/classroom/join/StaffClassroomPage.meeting.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/join/StaffClassroomPage.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/classroom/join/StaffClassroomPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 4
     }
@@ -9183,6 +11871,9 @@
   "src/features/teaching/classroom/join/StaffJoinButton.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 3
@@ -9201,15 +11892,31 @@
       "count": 2
     }
   },
+  "src/features/teaching/classroom/kick/KickButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/classroom/kick/ParticipantsSheet.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/kick/use-kick.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/kick/use-kick.ts": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     },
@@ -9217,11 +11924,39 @@
       "count": 1
     }
   },
+  "src/features/teaching/classroom/mute/MuteButtons.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/classroom/mute/MuteToasts.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/mute/mute-api.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/mute/use-mute.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/classroom/mute/use-mute.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     },
     "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/mute/use-muted-notice.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -9239,34 +11974,77 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.board.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/classroom/room/components/ClassroomRoom.boardRequest.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.draw.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/classroom/room/components/ClassroomRoom.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.errors.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.kick.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/teaching/classroom/room/components/ClassroomRoom.mute.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/classroom/room/components/ClassroomRoom.recordingOff.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.recordings.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/classroom/room/components/ClassroomRoom.share.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -9278,11 +12056,42 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.trial.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.trial.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/classroom/room/components/ClassroomRoom.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/classroom/room/components/ControlBar.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    }
+  },
   "src/features/teaching/classroom/room/components/LiveRoom.tsx": {
+    "ab/no-parent-imports": {
+      "count": 17
+    },
     "complexity": {
       "count": 1
     },
@@ -9291,16 +12100,30 @@
     }
   },
   "src/features/teaching/classroom/room/components/ParticipantGrid.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/components/RoomHeader.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/classroom/room/components/RoomStage.max.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/room/components/RoomStage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9327,6 +12150,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9335,16 +12161,30 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 5
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/livekit/livekit-data.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/classroom/room/livekit/livekit-data.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/classroom/room/livekit/livekit-moderated.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9360,6 +12200,9 @@
     },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "max-len": {
       "count": 4
@@ -9384,11 +12227,17 @@
     }
   },
   "src/features/teaching/classroom/room/livekit/snapshot.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/teaching/classroom/room/livekit/stage.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9399,6 +12248,9 @@
     }
   },
   "src/features/teaching/classroom/room/livekit/use-room.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -9418,26 +12270,43 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/classroom/sessions/AssistantHome.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/sessions/AssistantLessonRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/sessions/AssistantsManager.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/teaching/classroom/sessions/SessionCard.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
     }
   },
   "src/features/teaching/classroom/sessions/sessions.ts": {
@@ -9446,7 +12315,20 @@
     }
   },
   "src/features/teaching/classroom/share/RequestButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/share/ShareButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/classroom/share/share-api.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -9456,6 +12338,9 @@
     }
   },
   "src/features/teaching/classroom/share/stop-revoked.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9463,6 +12348,9 @@
   "src/features/teaching/classroom/share/use-share-requests.ts": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 2
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "max-len": {
       "count": 4
@@ -9475,6 +12363,9 @@
     }
   },
   "src/features/teaching/classroom/stage/StageScreen.tsx": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -9493,11 +12384,17 @@
     }
   },
   "src/features/teaching/classroom/student-link/StudentJoinLink.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/student-link/StudentLessonPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -9505,9 +12402,15 @@
   "src/features/teaching/classroom/student-link/StudentLinkPage.test.tsx": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/classroom/student-link/StudentLinkPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -9638,6 +12541,9 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -9645,6 +12551,9 @@
   "src/features/teaching/feedback/public/FeedbackForm.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -9662,12 +12571,23 @@
     }
   },
   "src/features/teaching/feedback/public/FeedbackPublicPage.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
+  "src/features/teaching/feedback/public/KindLine.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/feedback/public/RatingScale.tsx": {
     "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -9722,6 +12642,9 @@
     "ab/module-boundaries": {
       "count": 4
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -9738,11 +12661,17 @@
     }
   },
   "src/features/teaching/meetings/internal/CreatedMeeting.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/meetings/internal/InternalMeetingButton.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9753,6 +12682,9 @@
     }
   },
   "src/features/teaching/meetings/internal/InternalMeetingDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -9760,9 +12692,15 @@
   "src/features/teaching/meetings/internal/InternalMeetingsList.manage.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/meetings/internal/InternalMeetingsList.recordings.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9770,10 +12708,16 @@
   "src/features/teaching/meetings/internal/InternalMeetingsList.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/meetings/internal/InternalMeetingsList.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -9783,6 +12727,9 @@
     }
   },
   "src/features/teaching/meetings/invitees/InviteResultRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9806,6 +12753,9 @@
     }
   },
   "src/features/teaching/meetings/invitees/InviteeViewRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -9840,6 +12790,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -9853,11 +12806,17 @@
     }
   },
   "src/features/teaching/meetings/rows/CancelMeetingDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/meetings/rows/MeetingLinkBox.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9868,6 +12827,9 @@
     }
   },
   "src/features/teaching/meetings/rows/MeetingRow.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9875,9 +12837,15 @@
   "src/features/teaching/meetings/rows/MeetingRowDialogs.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/meetings/rows/MeetingRowInfo.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -9885,9 +12853,15 @@
   "src/features/teaching/meetings/rows/meeting-join-errors.ts": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/meetings/scheduled/RescheduleDialog.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -9909,6 +12883,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 5
+    },
     "max-len": {
       "count": 6
     }
@@ -9918,8 +12895,16 @@
       "count": 3
     }
   },
+  "src/features/teaching/meetings/scheduled/schedule-form.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/meetings/scheduled/schedule-form.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -9951,6 +12936,9 @@
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -9971,27 +12959,42 @@
   "src/features/teaching/schedule/edit-time/EditTime.locked.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 4
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeConfirm.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeDone.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "no-restricted-syntax": {
       "count": 2
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeFields.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 10
     },
@@ -10005,6 +13008,9 @@
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 4
     },
     "complexity": {
       "count": 1
@@ -10025,12 +13031,18 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/teaching/schedule/edit-time/edit-time-text.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -10043,11 +13055,17 @@
     }
   },
   "src/features/teaching/schedule/edit-time/edit-time.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/features/teaching/schedule/filters/ScheduleFilters.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -10057,6 +13075,11 @@
       "count": 7
     }
   },
+  "src/features/teaching/schedule/filters/TeacherPicker.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/schedule/filters/TeacherPicker.tsx": {
     "max-len": {
       "count": 2
@@ -10064,6 +13087,9 @@
   },
   "src/features/teaching/schedule/filters/schedule-filters.test.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -10080,11 +13106,22 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/schedule/grid/DayBoard.en.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    }
+  },
   "src/features/teaching/schedule/grid/DayBoard.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -10092,6 +13129,9 @@
   "src/features/teaching/schedule/grid/DayBoard.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/schedule/grid/ScheduleTrack.tsx": {
@@ -10103,7 +13143,15 @@
     }
   },
   "src/features/teaching/schedule/grid/SlotGrid.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/grid/TeacherCell.test.tsx": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -10111,26 +13159,46 @@
     "ab/module-boundaries": {
       "count": 3
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/schedule/grid/WeekAgenda.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/teaching/schedule/grid/WeekAgenda.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
   "src/features/teaching/schedule/grid/WeekGrid.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 6
     }
   },
   "src/features/teaching/schedule/grid/WeekSchedule.flags.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/schedule/grid/WeekSchedule.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -10138,6 +13206,9 @@
   "src/features/teaching/schedule/grid/WeekSchedule.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 12
     },
     "complexity": {
       "count": 1
@@ -10155,6 +13226,9 @@
     }
   },
   "src/features/teaching/schedule/lesson/LessonActions.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -10166,6 +13240,9 @@
     }
   },
   "src/features/teaching/schedule/lesson/LessonChip.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -10182,6 +13259,9 @@
     }
   },
   "src/features/teaching/schedule/lesson/LessonDetails.tsx": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 5
     },
@@ -10213,6 +13293,9 @@
     "ab/module-boundaries": {
       "count": 4
     },
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 1
     }
@@ -10225,15 +13308,29 @@
   "src/features/teaching/schedule/lesson/LessonTags.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/schedule/lesson/lesson-fixture.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
+  "src/features/teaching/schedule/lesson/lessons.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/schedule/lesson/lessons.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -10264,6 +13361,9 @@
     }
   },
   "src/features/teaching/schedule/reschedule/CancelForm.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -10286,6 +13386,9 @@
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     },
@@ -10297,11 +13400,17 @@
     }
   },
   "src/features/teaching/schedule/reschedule/MakeupAction.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -10310,6 +13419,9 @@
     }
   },
   "src/features/teaching/schedule/reschedule/ProposalsPanel.tsx": {
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -10317,6 +13429,9 @@
   "src/features/teaching/schedule/reschedule/RescheduleForm.tsx": {
     "ab/module-boundaries": {
       "count": 4
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -10332,19 +13447,38 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/teaching/schedule/reschedule/reschedule.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
     }
   },
   "src/features/teaching/schedule/reschedule/reschedule.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/features/teaching/schedule/reschedule/slots.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/features/teaching/schedule/reschedule/slots.ts": {
+    "ab/no-parent-imports": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -10512,6 +13646,9 @@
     "ab/module-boundaries": {
       "count": 5
     },
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -10524,6 +13661,9 @@
   "src/features/teaching/teacher/lessons/TeacherLessonCard.tsx": {
     "ab/module-boundaries": {
       "count": 5
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -10540,6 +13680,9 @@
   "src/features/teaching/teacher/proposals/ProposeForm.tsx": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -10575,9 +13718,15 @@
   "src/features/teaching/teacher/reports/MyReports.tsx": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-parent-imports": {
+      "count": 2
     }
   },
   "src/features/teaching/teacher/reports/SubmittedReports.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     },
@@ -10713,6 +13862,9 @@
     }
   },
   "src/lib/settings/config-entries-api.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -10723,6 +13875,9 @@
     }
   },
   "src/lib/settings/public-config.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -10732,7 +13887,20 @@
       "count": 3
     }
   },
+  "src/lib/settings/settings-api.test.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
+  "src/lib/settings/settings-api.ts": {
+    "ab/no-parent-imports": {
+      "count": 1
+    }
+  },
   "src/lib/settings/use-setting-switch.test.tsx": {
+    "ab/no-parent-imports": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -11266,6 +14434,11 @@
   },
   "src/routes/teacher/students.tsx": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/styles/motion.test.ts": {
+    "ab/no-parent-imports": {
       "count": 1
     }
   },

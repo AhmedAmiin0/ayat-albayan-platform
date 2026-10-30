@@ -1,9 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message, PHONE } from '../../testing/inbox-fixture';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
-import { clearOwnSends, recordOwnSend } from '../../composer/lib/own-send';
+import { clearOwnSends, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 
 // jsdom has no layout: every box holds 1000px of content in a 400px window, with a real scrollTop.
 const tops = new WeakMap<Element, number>();

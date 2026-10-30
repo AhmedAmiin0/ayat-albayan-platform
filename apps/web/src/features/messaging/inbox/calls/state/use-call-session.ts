@@ -2,8 +2,8 @@ import { CallStore, deriveCall, type CallDerived, type CallSession } from '@ab/c
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { activeCallsQuery, CALLS_KEY } from '../api/calls-api';
-import type { RtcDeps } from '../rtc/media';
+import { activeCallsQuery, CALLS_KEY } from '@/features/messaging/inbox/calls/api/calls-api';
+import type { RtcDeps } from '@/features/messaging/inbox/calls/rtc/media';
 import { peerMaker, webCalls } from './call-platform';
 
 export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'incoming'> {

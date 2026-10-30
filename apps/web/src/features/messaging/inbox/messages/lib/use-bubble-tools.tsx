@@ -5,7 +5,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { errorCode } from '@/features/teaching/schedule/api';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { threadFileDownload } from '../../api/api';
+import { threadFileDownload } from '@/features/messaging/inbox/api/api';
 import { copyText, saveUrl } from './save-file';
 
 type Said = { text: string; tone: 'info' | 'error' };
