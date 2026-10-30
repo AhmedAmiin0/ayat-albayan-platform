@@ -13,7 +13,8 @@ const base = {
   'src/inbox/a.tsx': { [RULE]: { count: 3 }, [PARENT]: { count: 2 }, 'max-len': { count: 1 } },
   'src/sales/b.tsx': { [RULE]: { count: 1 } },
 };
-const check = (head) => suppressionsMoved(FILE, { base: JSON.stringify(base), head: JSON.stringify(head) }, MOVES);
+const texts = (head) => ({ base: JSON.stringify(base), head: JSON.stringify(head) });
+const check = (head) => suppressionsMoved(FILE, texts(head), MOVES);
 const note = { 'src/core/ui/feedback/Note.tsx': { 'max-len': { count: 1 } } };
 
 test('a move may lower or drop module-boundaries entries, alongside no-parent-imports', () => {
