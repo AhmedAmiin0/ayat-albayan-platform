@@ -2,7 +2,7 @@
 // Western digits everywhere (one numeral system), Hijri via Umm al-Qura. DB stays UTC.
 import { CAIRO_TZ, RIYADH_TZ, type ClockCycle } from '../core/format/index.js';
 import type { Locale } from '../i18n/index.js';
-import { clockIn, dateTextParts } from './format.js';
+import { clockOf, dateTextParts } from './format.js';
 import { hhmmIn } from './zoned.js';
 
 export { CAIRO_TZ, RIYADH_TZ };
@@ -65,7 +65,7 @@ export function formatRunningHead(
   return {
     gregorian: gregorianLine(date, locale),
     hijri: hijriLine(date, locale),
-    riyadhTime: clockIn(date, { tz: RIYADH_TZ, cycle, locale }),
-    cairoTime: clockIn(date, { tz: CAIRO_TZ, cycle, locale }),
+    riyadhTime: clockOf(date, { tz: RIYADH_TZ, cycle, locale }),
+    cairoTime: clockOf(date, { tz: CAIRO_TZ, cycle, locale }),
   };
 }

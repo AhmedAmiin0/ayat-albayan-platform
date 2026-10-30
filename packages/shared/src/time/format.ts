@@ -54,17 +54,14 @@ export function weekdayDayMonth(at: Date | number, opts: DateTextOptions): strin
 }
 
 /** «17:30» (24) or «5:30 م» / «5:30 PM» (12): the clock of `at` in `opts.tz`. */
-export function clockIn(at: Date | number, opts: ClockOptions): string {
+export function clockOf(at: Date | number, opts: ClockOptions): string {
   const { hour, minute } = zonedFieldsIn(at, opts.tz);
   return clockOfParts(hour, minute, opts);
 }
 
-/** The clock of `date` in `opts.tz`, in the cycle and language given (the name screens use). */
-export const clockOf = clockIn;
-
 /** «الاثنين 12 أكتوبر 18:00»-style: `fields` of the date, then the clock in the viewer's cycle. */
 export function dateClockText(at: Date | number, opts: ClockOptions, fields: DateFields): string {
-  return `${dateText(at, opts, fields)} ${clockIn(at, opts)}`;
+  return `${dateText(at, opts, fields)} ${clockOf(at, opts)}`;
 }
 
 /** The device's zone as the engine reports it (resolveViewerTz validates it). */

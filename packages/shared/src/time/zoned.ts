@@ -24,7 +24,7 @@ export function wallToUtc(date: string, minutes: number, zone: string): Date {
 }
 
 /** "HH:MM" or "HH:MM:SS" (Postgres `time`) → minutes after midnight; "24:00" is 1440. */
-export function minutesOfHhmm(hhmm: string): number {
+function minutesOfHhmm(hhmm: string): number {
   const [h = 0, m = 0] = hhmm.split(':').map(Number);
   return h * 60 + m;
 }
@@ -37,11 +37,6 @@ export function wallInstant(date: string, hhmm: string, zone: string): Date {
 /** «YYYY-MM-DD»: the calendar day `at` falls on in `zone`. */
 export function localDateIn(at: Date | number, zone: string): string {
   return format(at, 'yyyy-MM-dd', { in: tz(zone) });
-}
-
-/** «YYYY-MM»: the calendar month `at` falls in, in `zone`. */
-export function localMonthIn(at: Date | number, zone: string): string {
-  return format(at, 'yyyy-MM', { in: tz(zone) });
 }
 
 /** «HH:mm», 24 h, ASCII digits: the wall clock of `at` in `zone` (keys and server texts). */

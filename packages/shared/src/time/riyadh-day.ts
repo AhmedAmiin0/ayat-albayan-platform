@@ -1,6 +1,6 @@
 import { RIYADH_TZ, type ClockCycle } from '../core/format/index.js';
 import type { Locale } from '../i18n/locale.js';
-import { clockIn, dateText } from './format.js';
+import { clockOf, dateText } from './format.js';
 import { localDateIn, weekdayIn } from './zoned.js';
 
 // The academy's own calendar (docs/11 §3): Riyadh days and times of UTC instants, Western digits
@@ -27,7 +27,7 @@ export interface RiyadhWhenWords {
 export function riyadhWhenText(instant: string, words: RiyadhWhenWords): string {
   const at = new Date(instant);
   const tz = words.tz ?? RIYADH_TZ;
-  const clock = clockIn(at, { tz, locale: words.locale, cycle: words.cycle ?? '24' });
+  const clock = clockOf(at, { tz, locale: words.locale, cycle: words.cycle ?? '24' });
   const dayMonth = dateText(at, { tz, locale: words.locale }, { day: 'numeric', month: 'long' });
   return `${words.weekday[String(weekdayIn(at, tz))] ?? ''} ${dayMonth} ${clock}`;
 }

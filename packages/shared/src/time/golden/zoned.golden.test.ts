@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addCalendarDays, addDaysIn, startOfDayIn, weekStartOfDate, weekdayOfDate } from '../calendar.js';
-import { clockIn } from '../format.js';
+import { clockOf } from '../format.js';
 import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
@@ -17,7 +17,7 @@ const wallLines = (zone: string): string[] =>
 function instantLines(zone: string): string[] {
   return instants.map((at) => {
     const clocks = (['12', '24'] as const).map((cycle) =>
-      clockIn(at, { tz: zone, cycle, locale: 'ar' }),
+      clockOf(at, { tz: zone, cycle, locale: 'ar' }),
     );
     const day = localDateIn(at, zone);
     const start = startOfDayIn(at, zone).toISOString();
