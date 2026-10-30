@@ -1,7 +1,7 @@
 import { normalizeArabic } from '@ab/shared';
 import type { APIRequestContext } from '@playwright/test';
 import { call } from './assistant-api';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // Helpers of the sales subscribe spec (owner 2026-10-12, docs/16 rows 16–19): a trial family brought by a
 // salesperson on a given WhatsApp number, and the receipt upload to the signed URL. Real API and database.

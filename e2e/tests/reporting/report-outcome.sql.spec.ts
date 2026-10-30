@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 
 // submit_report (migrations 130 + 131) against the real database, in a transaction that is rolled

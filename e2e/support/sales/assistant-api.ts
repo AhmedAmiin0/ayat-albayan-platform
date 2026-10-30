@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { APIRequestContext } from '@playwright/test';
 import { seedUser } from '../core/db';
-import { nextWeekSaturday, withSql } from '../schedule';
+import { nextWeekSaturday, withSql } from '../core/schedule';
 
 // Helpers of the assistant API specs (real API on :3100, real database): logins, a typed call wrapper,
 // leads of an assistant, and the sales booking body. Nothing here is mocked.

@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, ruleOf, seedFamily, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, ruleOf, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
 // Booking over a clash (R-SCH-04): the slot stays pickable, «احجز» → 409 → ConflictNotice, and
 // «احجز رغم التعارض» needs a reason that lands on the clashing lessons only (+ the book audit).

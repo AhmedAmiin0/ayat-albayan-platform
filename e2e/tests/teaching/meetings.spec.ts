@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // Meetings (owner, 2026-10-04): «حلقة فورية» from «اجتماع جديد», «افتح الحلقة الآن» before the

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { approveTemplate, completedLesson, tokenSentTo, unapproveTemplate } from '../../support/reporting/feedback';
-import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../../support/schedule';
+import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
 import { setMessaging, stubReset } from '../../support/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 

@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // Helpers of e2e/tests/assistant-course-renew.api.spec.ts (owner 2026-10-18: «تابِع بنفس الأيام»,
 // «تغيير أيام الحلقات»).

@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/messages';
 import { seedPackageStudent } from '../../support/finance/money';
-import { resetAbrar, withSql } from '../../support/schedule';
+import { resetAbrar, withSql } from '../../support/core/schedule';
 import { dropHiba, HIBA_AMOUNT, HIBA_MONTH, seedAbrarPayout, seedHiba, type HibaSeed } from '../../support/people/teacher-isolation';
 
 // Teacher isolation (R-NFR-02, R5 ownership, rule 9) through the API and the UI. teacher-mode.spec

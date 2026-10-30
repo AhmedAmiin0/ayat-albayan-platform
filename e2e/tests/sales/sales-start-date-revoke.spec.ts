@@ -5,7 +5,7 @@ import { freshDigits } from '../../support/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { trialFamily } from '../../support/sales/sales-money';
 import { resetSales } from '../../support/sales/sales-options';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 
 // Owner 2026-10-12 (docs/16 rows 23, 24, 26), in the browser: in her family's chat the salesperson checks

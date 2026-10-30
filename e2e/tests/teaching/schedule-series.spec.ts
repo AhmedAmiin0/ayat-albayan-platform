@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { addDays, lessonsOf, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, setAvailability } from '../../support/schedule';
+import { addDays, lessonsOf, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, setAvailability } from '../../support/core/schedule';
 import { openLessonDrawer, ruleStateOf, seedWeeklyRule, weekGrid, weekOf } from '../../support/teaching/schedule-extra';
 
 // «غيّر الموعد» with scope «هذه الحلقة وكل ما بعدها» (R-SCH-07, reschedule-rule.service.ts): the old

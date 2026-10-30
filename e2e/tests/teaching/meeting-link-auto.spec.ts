@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer, setSetting } from '../../support/messages';
-import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
 // settings.meeting_link_auto (owner 2026-10-12): ON = the messages carry the platform classroom,
 // chosen when they are queued; lessons.meeting_link keeps the teacher's fixed link either way. The

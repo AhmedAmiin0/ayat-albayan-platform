@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import { API, bearer } from '../messages';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import { stubSent, stubTemplateStatus, type StubSent } from '../wa-stub';
 
 // report_ready and renewal_due start «not_submitted» (migration 141) and the stub starts without

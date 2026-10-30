@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 import type { StubSent } from '../wa-stub';
 
 // The outbound queue as the settings switches see it: count, clear and seed queued rows, read what

@@ -1,7 +1,7 @@
 import { freshPhone, leadOf, makeAssistant } from '../../support/sales/assistant-api';
 import { expect, test } from '../../support/core/fixtures';
 import { pushesForProfile } from '../../support/messaging/inbox';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 

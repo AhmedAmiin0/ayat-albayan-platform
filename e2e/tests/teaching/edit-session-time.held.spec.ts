@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { auditOf, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 
 // «عدّل الوقت» on a COMPLETED lesson (R-SCH-11, correct mode): fix the recorded length the same day,

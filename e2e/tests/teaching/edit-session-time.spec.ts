@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability } from '../../support/schedule';
+import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability } from '../../support/core/schedule';
 import { auditOf, autoMessages, cairo, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 
 // «عدّل الوقت» (R-SCH-11): edit ONE lesson in place (same id, report, payments), not «غيّر الموعد».

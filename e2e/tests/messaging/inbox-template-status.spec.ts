@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { backdateInbound, bubble, lastOutbound, roleOf } from '../../support/messaging/inbox';
-import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, stubStatus } from '../../support/wa-stub';
 
 // Closed 24 h window (R-MSG-01, H4) and delivery chips (R-MSG-05): the composer offers only a

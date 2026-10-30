@@ -1,6 +1,6 @@
 import { expect } from '../core/fixtures';
 import { API, setSetting } from '../messages';
-import { seedFamily, withSql } from '../schedule';
+import { seedFamily, withSql } from '../core/schedule';
 import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../wa-stub';
 
 // Family accounts (docs/30): the account_code template on the stub, the switch, a fresh family, and the

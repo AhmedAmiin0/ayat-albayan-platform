@@ -2,7 +2,7 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/messages';
 import { signInSales } from '../../support/sales/sales-portal';
-import { seedFamily, withSql } from '../../support/schedule';
+import { seedFamily, withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/users';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/wa-stub';
 

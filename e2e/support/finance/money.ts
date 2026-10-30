@@ -1,5 +1,5 @@
 import { quote } from '@ab/shared';
-import { seedFamily, withSql, type Family } from '../schedule';
+import { seedFamily, withSql, type Family } from '../core/schedule';
 
 // Seed for journeys 2 and 3 (docs/03 §5): «أبرار» has a lesson today that has already started,
 // with a student whose package has 3 lessons left (R-SUB-02 fires at 2). Deterministic: call

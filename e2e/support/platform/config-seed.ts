@@ -1,7 +1,7 @@
 import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import type { Sql, TransactionSql } from 'postgres';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 /** The payload the API's ConfigSeeder sends at boot (docs/26 §2b): metadata only, never a value. */
 const SEED_PAYLOAD = seedPayload(bundleText(ar));

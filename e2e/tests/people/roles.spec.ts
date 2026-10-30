@@ -2,7 +2,7 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { apiStatus } from '../../support/messages';
 import { openNav } from '../../support/core/nav';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // «الأدوار والصلاحيات» (owner, 2026-10-05): the admin creates «محاسب» with payments.read only and

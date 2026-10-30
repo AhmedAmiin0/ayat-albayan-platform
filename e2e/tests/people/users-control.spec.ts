@@ -1,4 +1,4 @@
-import { seedFamily, withSql } from '../../support/schedule';
+import { seedFamily, withSql } from '../../support/core/schedule';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 import {

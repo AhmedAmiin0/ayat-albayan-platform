@@ -3,7 +3,7 @@ import { makeAssistant } from '../../support/sales/assistant-api';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { listedKeys } from '../../support/messaging/restricted-templates';
 import { CHAT_WABA, RESCHEDULE, rescheduleRow, seedReschedule } from '../../support/messaging/reschedule-template';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { numberBlock, syncNumber } from '../../support/messaging/template-numbers';
 import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } from '../../support/messaging/template-registry';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';

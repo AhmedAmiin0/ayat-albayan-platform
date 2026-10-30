@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { bootApiOnce } from '../../support/api-boot';
-import { seedFamily, withSql } from '../../support/schedule';
+import { seedFamily, withSql } from '../../support/core/schedule';
 import { restoreSettings, snapshotSettings } from '../../support/platform/settings';
 import { stubSent } from '../../support/wa-stub';
 

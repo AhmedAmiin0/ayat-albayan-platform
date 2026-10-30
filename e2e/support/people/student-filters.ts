@@ -1,6 +1,6 @@
 import { normalizeArabic } from '@ab/shared';
 import { dropTeacher, insertTeacher } from './admin-extra';
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // Seed for the students-filters spec (R-STU-01, R-TCH-03): one teacher with an active, a trial
 // and a paused student, plus an active student without a teacher. Names carry a clock stamp so

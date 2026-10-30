@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
-import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/schedule';
+import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/wa-stub';
 
 // Teacher mode (R-TCH-03, R-MSG-05, owner 2026-10-02: "login as a teacher and see only my chats,

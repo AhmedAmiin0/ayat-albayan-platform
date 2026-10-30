@@ -1,4 +1,4 @@
-import { withSql } from '../schedule';
+import { withSql } from '../core/schedule';
 
 // A6 helpers: put settings rows back after a spec changed them, and read one as text. The template
 // registry helpers are in template-registry.ts, the outbound queue helpers in message-queue.ts.

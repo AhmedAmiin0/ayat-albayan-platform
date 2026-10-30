@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API } from '../../support/messages';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
 // «اجتماع داخلي» (owner, 2026-10-05): a standalone room with no lesson, no students, no teacher and

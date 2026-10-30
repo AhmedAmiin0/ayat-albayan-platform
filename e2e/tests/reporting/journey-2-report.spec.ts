@@ -1,7 +1,7 @@
 import { REPORT_RUBRICS } from '@ab/shared';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf, reportOf, seedPackageStudent } from '../../support/finance/money';
-import { queuedFor, resetAbrar } from '../../support/schedule';
+import { queuedFor, resetAbrar } from '../../support/core/schedule';
 
 // Journey 2 (docs/03 §5, docs/11 §10): teacher logs in → sees today's lesson → marks attendance →
 // opens «تقرير الحلقة» → submits → PDF generated → guardian message queued → package balance

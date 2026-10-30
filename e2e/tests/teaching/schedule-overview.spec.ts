@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 
 // All-teachers calendar (R-SCH-01, research-calendar item 15): rows come from the teachers table,
 // not from lessons, so a teacher with nothing booked still shows. «أبرار» works Sunday 16:00–20:00

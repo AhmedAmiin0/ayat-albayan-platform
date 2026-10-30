@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import type { TrialDateResult, TrialHistory } from '@ab/shared';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 
 // Owner 2026-10-25 «موعد تجريبي جديد», through the REAL API and database: her student's trial is
 // booked, then a new date MOVES it (the old one stays as «نُقلت»), a retry is a replay, the history

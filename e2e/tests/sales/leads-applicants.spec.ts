@@ -3,7 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
 import { freshDigits, seedLead } from '../../support/messages';
 import { riyadhToday, summaryOf, uniqueName } from '../../support/finance/money-extra';
-import { withSql } from '../../support/schedule';
+import { withSql } from '../../support/core/schedule';
 
 // Leads list (R-LEAD-01/02/04, issue C4): status tabs and source filter narrow the list (the header
 // count is GET /leads `total`), search finds a lead by name and by phone, and «نقل لطلبات التوظيف»

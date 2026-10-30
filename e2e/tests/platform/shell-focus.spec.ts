@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { removeDashboardExpense, seedDashboard } from '../../support/finance/money-dashboard';
-import { resetAbrar } from '../../support/schedule';
+import { resetAbrar } from '../../support/core/schedule';
 
 // Design review, 2026-10-05: keyboard focus must stay visible and reachable in the admin shell.
 // Each test sizes its own viewport, so it runs once (desktop project).
