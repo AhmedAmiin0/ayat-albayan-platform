@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyAttachment } from '@ab/shared';
 import { useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
-import { filledText, slashAt, slashSearch } from './reply-text';
+import { filledText, slashAt, slashSearch } from '../lib/reply-text';
 
 /** A picked reply's file, waiting for «أرسل». */
 export interface StagedFile {

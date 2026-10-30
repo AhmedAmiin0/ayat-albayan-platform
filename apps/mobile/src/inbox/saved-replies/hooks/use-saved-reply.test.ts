@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { PRICES } from './fixtures';
+import { PRICES } from '../testing/fixtures';
 import { useSavedReplyDraft } from './use-saved-reply';
 
 const setup = () => renderHook(() => useSavedReplyDraft({ text: '', setText: jest.fn(), enabled: true }));

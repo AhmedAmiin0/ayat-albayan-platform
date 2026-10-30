@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { AttachIcon, CrossIcon } from '../shared/chat-icons';
+import { AttachIcon, CrossIcon } from '../../shared/chat-icons';
 
 /** The remove button is drawn dense (32pt) and stretched to the 44pt touch floor by hitSlop. */
 const SLOP = (shape.control.touch - shape.control.dense) / 2;

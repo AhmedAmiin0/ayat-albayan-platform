@@ -4,7 +4,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { formatDate } from '@/features/sales/leads/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
-import { earningsSummaryQuery } from './api';
+import { earningsSummaryQuery } from '../api';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 /**

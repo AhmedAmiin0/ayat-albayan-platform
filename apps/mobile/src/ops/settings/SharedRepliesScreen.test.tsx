@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { PRICES, REPLIES, WELCOME } from '@/inbox/saved-replies/fixtures';
+import { PRICES, REPLIES, WELCOME } from '@/inbox/saved-replies/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SharedRepliesScreen } from './SharedRepliesScreen';
 

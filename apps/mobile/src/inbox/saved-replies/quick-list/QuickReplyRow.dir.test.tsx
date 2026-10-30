@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
-import { PRICES } from '../fixtures';
+import { PRICES } from '../testing/fixtures';
 import { QuickReplyRow } from './QuickReplyRow';
 
 // Arabic UI (jest.setup: RTL): each line aligns by its own language, never a forced writingDirection.

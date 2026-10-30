@@ -11,11 +11,11 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/api';
-import { DeleteConfirm } from '@/inbox/saved-replies/DeleteConfirm';
-import { ReplyEditor } from '@/inbox/saved-replies/ReplyEditor';
-import { replyError } from '@/inbox/saved-replies/reply-error';
-import { ReplyRow } from '@/inbox/saved-replies/ReplyRow';
+import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/hooks/api';
+import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
+import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';
+import { replyError } from '@/inbox/saved-replies/lib/reply-error';
+import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
 import { SubScreenHeader } from '../shared/SubScreenHeader';
 
 /** «إلى الأعلى» / «إلى الأسفل» (none at the ends, none while a move is saving) and «احذف», 44pt each. */

@@ -3,13 +3,13 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/sales/leads/format';
-import { LedgerPaid } from './LedgerPaid';
+import { LedgerPaid } from '../shared/LedgerPaid';
 import { PayoutActions } from './PayoutActions';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { durationLabel } from '@/features/finance/pricing/format';
 import { moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
-import type { PayoutView } from './api';
+import type { PayoutView } from '../api';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();

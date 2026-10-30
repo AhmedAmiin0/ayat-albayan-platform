@@ -1,0 +1,172 @@
+{
+  "id": "v2-mobile-saved-replies",
+  "seq": 107,
+  "moves": [
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/DeleteConfirm*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/MineActions*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/ReplyRow*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/SavedRepliesButton*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/SavedRepliesSheet*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/SavedReplyChip*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/SavedReplyPicker*",
+      "to": "apps/mobile/src/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/PlaceholderChips*",
+      "to": "apps/mobile/src/inbox/saved-replies/editor/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/ReplyEditor*",
+      "to": "apps/mobile/src/inbox/saved-replies/editor/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/ReplyFileField*",
+      "to": "apps/mobile/src/inbox/saved-replies/editor/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/api*",
+      "to": "apps/mobile/src/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/send-staged*",
+      "to": "apps/mobile/src/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/use-saved-reply*",
+      "to": "apps/mobile/src/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/reply-error*",
+      "to": "apps/mobile/src/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/reply-text*",
+      "to": "apps/mobile/src/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/saved-replies/fixtures*",
+      "to": "apps/mobile/src/inbox/saved-replies/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/saved-replies/api.ts",
+      "apps/mobile/src/inbox/saved-replies/hooks/api.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/DeleteConfirm.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/DeleteConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/fixtures.ts",
+      "apps/mobile/src/inbox/saved-replies/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/MineActions.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/MineActions.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/PlaceholderChips.test.ts",
+      "apps/mobile/src/inbox/saved-replies/editor/PlaceholderChips.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/PlaceholderChips.tsx",
+      "apps/mobile/src/inbox/saved-replies/editor/PlaceholderChips.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/reply-error.test.ts",
+      "apps/mobile/src/inbox/saved-replies/lib/reply-error.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/reply-error.ts",
+      "apps/mobile/src/inbox/saved-replies/lib/reply-error.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/reply-text.slash.test.ts",
+      "apps/mobile/src/inbox/saved-replies/lib/reply-text.slash.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/reply-text.test.ts",
+      "apps/mobile/src/inbox/saved-replies/lib/reply-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/reply-text.ts",
+      "apps/mobile/src/inbox/saved-replies/lib/reply-text.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/ReplyEditor.buttons.test.tsx",
+      "apps/mobile/src/inbox/saved-replies/editor/ReplyEditor.buttons.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/ReplyEditor.tsx",
+      "apps/mobile/src/inbox/saved-replies/editor/ReplyEditor.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/ReplyFileField.tsx",
+      "apps/mobile/src/inbox/saved-replies/editor/ReplyFileField.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/ReplyRow.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/ReplyRow.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedRepliesButton.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedRepliesButton.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedRepliesSheet.mine.test.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedRepliesSheet.mine.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedRepliesSheet.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedRepliesSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedReplyChip.test.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedReplyChip.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedReplyChip.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedReplyChip.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/SavedReplyPicker.tsx",
+      "apps/mobile/src/inbox/saved-replies/components/SavedReplyPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/send-staged.ts",
+      "apps/mobile/src/inbox/saved-replies/hooks/send-staged.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/use-saved-reply.slash.test.ts",
+      "apps/mobile/src/inbox/saved-replies/hooks/use-saved-reply.slash.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/use-saved-reply.test.ts",
+      "apps/mobile/src/inbox/saved-replies/hooks/use-saved-reply.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/saved-replies/use-saved-reply.ts",
+      "apps/mobile/src/inbox/saved-replies/hooks/use-saved-reply.ts"
+    ]
+  ]
+}
