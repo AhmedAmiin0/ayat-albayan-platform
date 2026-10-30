@@ -23,6 +23,3 @@ export function salesHrefs(base: TreeBase) {
 export const familyChatHref = (base: TreeBase, phone: string): Href => inTree(base, threadHref(phone));
 
 export const useSalesHrefs = () => salesHrefs(useTreeBase());
-
-/** A student's details in the tree the page runs in: «تفاصيل الطالب» in the sales tree, the admin's student file otherwise. */
-export const studentDetailsHref = (base: TreeBase, id: string): Href => (base === '/sales' ? `/sales/students/${id}` : `/students/${id}`) as Href;
