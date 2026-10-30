@@ -44,4 +44,10 @@ export const courseTeacherCheckSchema = teacherBase.superRefine(refine);
 /** POST /students/:id/course-teacher/change: idempotent on clientRequestId (rule 8). */
 export const courseTeacherChangeSchema = teacherBase.extend({ clientRequestId: z.uuid() }).superRefine(refine);
 
+/**
+ * GET /students/:id/course-teacher|course-times/change: the package to change; absent = the student's
+ * current package (any student: the sales file of a student not hers carries no package id).
+ */
+export const profileCourseQuerySchema = z.object({ subscriptionId: z.uuid().optional() });
+
 export type CourseTeacherRequest = z.infer<typeof courseTeacherCheckSchema>;

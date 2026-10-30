@@ -9,7 +9,7 @@ import { unmaterialised } from './course-change.projection';
 import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
 import { courseOverlaps } from '../sales/course/sales-course.rules';
 
-export type Loaded = { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] };
+export interface Loaded { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] }
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };
 
 /** A lesson an old rule will still generate before the change point: booked, chargeable. */
@@ -32,7 +32,11 @@ export class CourseChangePlanner {
    * no_change / days_count_mismatch / no_occurrences, 403 override_not_allowed, 409 custom_count_admin /
    * course_finished / course_exists (the new days overlap another weekly course of the student).
    */
-  async planned(req: CourseChangeRequest & { teacherId?: string }, role: ChangeRole, loaded: Loaded): Promise<Planned> {
+  async planned(
+    req: CourseChangeRequest & { teacherId?: string },
+    role: ChangeRole,
+    loaded: Loaded,
+  ): Promise<Planned> {
     const { sub, active, all } = loaded;
     const tz = active[0]?.tz ?? 'Asia/Riyadh';
     const now = new Date();

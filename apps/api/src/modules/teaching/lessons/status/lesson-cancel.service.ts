@@ -10,12 +10,12 @@ import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } fro
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
-type CancelInput = { lessonId: string; body: CancelBody; actor: AuthUser };
-type RuleCancelInput = { ruleId: string; body: RuleCancelRequest; actor: AuthUser };
-type RuleStopInput = { ruleId: string; at: Date; reason: string; actor: AuthUser };
+interface CancelInput { lessonId: string; body: CancelBody; actor: AuthUser }
+interface RuleCancelInput { ruleId: string; body: RuleCancelRequest; actor: AuthUser }
+interface RuleStopInput { ruleId: string; at: Date; reason: string; actor: AuthUser }
 
-type Cancel = { by: CancelRequest['by']; reason: string | null };
-type EndRule = {
+interface Cancel { by: CancelRequest['by']; reason: string | null }
+interface EndRule {
   rule: RuleWithLinks;
   /** First local day without lessons; the rule's ends_on becomes the day before. */
   from: string;
@@ -23,7 +23,7 @@ type EndRule = {
   cutoff: Date;
   body: Cancel;
   actor: AuthUser;
-};
+}
 
 /**
  * Cancel one occurrence, or this one and the rest of its rule (R-SCH-07). Returns the ids of
@@ -79,8 +79,8 @@ export class LessonCancelService {
   }
 
   /**
-   * «إلغاء الاشتراك» (owner 2026-10-30): the rule's open lessons from `at` are cancelled by the admin side
-   * and the rule ends on the cancel date in its zone (stopEndsOn: never later than it already ends).
+   * «إلغاء الاشتراك» (owner 2026-10-30): the rule's open lessons from `at` are cancelled by the
+   * admin side and the rule ends on the cancel date in its zone (stopEndsOn: never later than now).
    * Lessons that already started stay for their report (issue B2).
    */
   async stopRule({ ruleId, at, reason, actor }: RuleStopInput): Promise<string[]> {

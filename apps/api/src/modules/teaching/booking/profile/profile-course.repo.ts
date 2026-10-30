@@ -1,4 +1,4 @@
-import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import { currentPackage, OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
@@ -6,11 +6,22 @@ import { notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
 /** A teacher picked for «تغيير المعلم». */
-export type PickedTeacher = { id: string; status: 'active' | 'inactive' };
+interface PickedTeacher {
+  id: string;
+  status: 'active' | 'inactive';
+}
 
-type Assign = { studentId: string; from: string | null; to: string; actorId: string; subscriptionId: string };
+interface Assign {
+  studentId: string;
+  from: string | null;
+  to: string;
+  actorId: string;
+  subscriptionId: string;
+}
 
-/** The profile course actions' reads and the teacher assignment (service role; the routes guard). */
+/**
+ * The profile course actions' reads and the teacher assignment (service role; the routes guard).
+ */
 @Injectable()
 export class ProfileCourseRepo {
   constructor(
@@ -20,15 +31,37 @@ export class ProfileCourseRepo {
 
   /** 404 student_not_found; the student's assigned teacher (students.teacher_id). */
   async studentTeacher(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('students').select('teacher_id').eq('id', studentId).maybeSingle();
+    const { data, error } = await this.db
+      .from('students')
+      .select('teacher_id')
+      .eq('id', studentId)
+      .maybeSingle();
     if (error) throw dbError(error);
     if (!data) throw notFound('student_not_found');
     return data.teacher_id;
   }
 
+  /** The student's current package id (currentPackage); 404 subscription_not_found when none. */
+  async currentSubscription(studentId: string): Promise<string> {
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select('id, status')
+      .eq('student_id', studentId)
+      .order('starts_on', { ascending: false })
+      .order('created_at', { ascending: false });
+    if (error) throw dbError(error);
+    const current = currentPackage(data);
+    if (!current) throw notFound('subscription_not_found');
+    return current.id;
+  }
+
   /** The teacher, or null when unknown. */
   async teacher(id: string): Promise<PickedTeacher | null> {
-    const { data, error } = await this.db.from('teachers').select('id, status').eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('teachers')
+      .select('id, status')
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -48,8 +81,9 @@ export class ProfileCourseRepo {
   }
 
   /**
-   * students.teacher_id → the new teacher, compare-and-set on the one read (the family channel follows it,
-   * channel_teacher_ids); audited only when it changed a row (a retry writes nothing, rule 8).
+   * students.teacher_id → the new teacher, compare-and-set on the one read (the family channel
+   * follows it, channel_teacher_ids); audited only when it changed a row (a retry writes nothing,
+   * rule 8).
    */
   async assignTeacher(a: Assign): Promise<boolean> {
     let q = this.db.from('students').update({ teacher_id: a.to }).eq('id', a.studentId);

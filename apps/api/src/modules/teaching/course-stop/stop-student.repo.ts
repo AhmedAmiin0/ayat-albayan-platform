@@ -4,11 +4,16 @@ import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-type Churn = { studentId: string; subscriptionId: string; actorId: string };
+interface Churn {
+  studentId: string;
+  subscriptionId: string;
+  actorId: string;
+}
 
 /**
- * The student's move to «توقف» (churned) after a stop (docs/18: a manual status, so no automatic rule moves
- * it back). Compare-and-set on the status read, audited as a status_change only when it changed a row.
+ * The student's move to «توقف» (churned) after a stop (docs/18: a manual status, so no automatic
+ * rule moves it back). Compare-and-set on the status read, audited as a status_change only when it
+ * changed a row.
  */
 @Injectable()
 export class StopStudentRepo {
@@ -39,7 +44,12 @@ export class StopStudentRepo {
       entityId: c.studentId,
       action: 'status_change',
       before: { status: from },
-      after: { status: to, from, reason: 'subscription_stopped', subscription_id: c.subscriptionId },
+      after: {
+        status: to,
+        from,
+        reason: 'subscription_stopped',
+        subscription_id: c.subscriptionId,
+      },
     });
     return to;
   }

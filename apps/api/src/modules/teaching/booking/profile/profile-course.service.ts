@@ -16,15 +16,20 @@ import {
 import { CourseChangeViews } from '@/modules/teaching/booking/course-change/course-change.view';
 import { ProfileCourseRepo } from './profile-course.repo';
 
-type Move = { studentId: string; body: CourseMove; user: AuthUser };
+interface Move {
+  studentId: string;
+  body: CourseMove;
+  user: AuthUser;
+}
 
 /**
- * «تغيير المعلم» and «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): the same CourseChange
- * as the lesson drawer's «تغيير أيام الحلقات» (the remaining count kept, the conflict check, one transaction,
- * audited), for ANY student, by whoever holds the route's key. The admin may override a clash with a reason;
- * every other holder never (403 override_not_allowed). A teacher change also moves students.teacher_id (the
- * family channel follows it). Past lessons, reports and earnings are never touched; the calendar sync hears
- * every moved and new lesson through the lessons' outbox triggers (docs/24).
+ * «تغيير المعلم» and «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): the same
+ * CourseChange as the lesson drawer's «تغيير أيام الحلقات» (the remaining count kept, the conflict
+ * check, one transaction, audited), for ANY student, by whoever holds the route's key. The admin
+ * may override a clash with a reason; every other holder never (403 override_not_allowed). A
+ * teacher change also moves students.teacher_id (the family channel follows it). Past lessons,
+ * reports and earnings are never touched; the calendar sync hears every moved and new lesson
+ * through the lessons' outbox triggers (docs/24).
  */
 @Injectable()
 export class ProfileCourse {
@@ -36,25 +41,37 @@ export class ProfileCourse {
   ) {}
 
   /** The course to change, with its current teacher and «من تاريخ»'s default (the next lesson). */
-  async view(studentId: string, subscriptionId: string): Promise<ProfileCourseView> {
+  async view(studentId: string, picked?: string): Promise<ProfileCourseView> {
+    const subscriptionId = picked ?? (await this.repo.currentSubscription(studentId));
     await this.ownedBy(studentId, subscriptionId);
     const view = await this.views.view(subscriptionId);
     const upcoming = await this.repo.upcoming(subscriptionId);
-    return { ...view, nextLesson: changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() }) };
+    return {
+      ...view,
+      nextLesson: changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() }),
+    };
   }
 
   check(move: Move): Promise<CourseChangeCheck> {
     return this.guarded(move, (actor) => this.course.check(move.body, actor));
   }
 
-  /** 201; a retry with the same clientRequestId returns the first change and re-assigns nothing new. */
+  /**
+   * 201; a retry with the same clientRequestId returns the first change and re-assigns nothing new.
+   */
   async change(move: Move & { body: { clientRequestId: string } }): Promise<CourseChangeResult> {
     const from = await this.repo.studentTeacher(move.studentId);
     const result = await this.guarded(move, (actor) => this.course.change(move.body, actor));
     const to = move.body.teacherId;
     if (to !== undefined && to !== from) {
       const { subscriptionId } = move.body;
-      await this.repo.assignTeacher({ studentId: move.studentId, from, to, actorId: move.user.id, subscriptionId });
+      await this.repo.assignTeacher({
+        studentId: move.studentId,
+        from,
+        to,
+        actorId: move.user.id,
+        subscriptionId,
+      });
     }
     return result;
   }
@@ -72,7 +89,9 @@ export class ProfileCourse {
     if (sub.student_id !== studentId) throw notFound('subscription_not_found');
   }
 
-  /** 404 teacher_not_found, 409 teacher_inactive, 400 same_teacher (the course's teacher already). */
+  /**
+   * 404 teacher_not_found, 409 teacher_inactive, 400 same_teacher (the course's teacher already).
+   */
   private async assertTeacher(body: CourseMove): Promise<void> {
     const teacher = body.teacherId ? await this.repo.teacher(body.teacherId) : null;
     if (!teacher) throw notFound('teacher_not_found');

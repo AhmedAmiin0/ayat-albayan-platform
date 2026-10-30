@@ -1,11 +1,11 @@
-import { OPEN_LESSON_STATUSES, type SubscriptionStatus } from '@ab/shared';
+import { currentPackage, OPEN_LESSON_STATUSES, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
 /** The package a stop reads (subscriptions row). */
-export type StopSub = {
+export interface StopSub {
   id: string;
   student_id: string;
   status: SubscriptionStatus;
@@ -13,12 +13,20 @@ export type StopSub = {
   cancelled_at: string | null;
   cancelled_by: string | null;
   cancel_reason: string | null;
-};
+}
 
 /** A weekly rule of the course that still reaches today or later. */
-export type StopRule = { id: string; ends_on: string | null };
+interface StopRule {
+  id: string;
+  ends_on: string | null;
+}
 
-type Stamp = { id: string; actorId: string; reason: string; now: Date };
+interface Stamp {
+  id: string;
+  actorId: string;
+  reason: string;
+  now: Date;
+}
 
 const SUB = 'id, student_id, status, currency, cancelled_at, cancelled_by, cancel_reason';
 
@@ -29,13 +37,33 @@ export class CourseStopRepo {
 
   /** 404 subscription_not_found (also for another student's package). */
   async subscription(id: string, studentId: string): Promise<StopSub> {
-    const { data, error } = await this.db.from('subscriptions').select(SUB).eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select(SUB)
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw dbError(error);
     if (data?.student_id !== studentId) throw notFound('subscription_not_found');
     return data;
   }
 
-  /** The course's active rules (subscription_id, migration 470) not ended before `today` (UTC date). */
+  /** The student's current package (currentPackage: newest active, else newest live); 404 none. */
+  async current(studentId: string): Promise<StopSub> {
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select(SUB)
+      .eq('student_id', studentId)
+      .order('starts_on', { ascending: false })
+      .order('created_at', { ascending: false });
+    if (error) throw dbError(error);
+    const sub = currentPackage(data);
+    if (!sub) throw notFound('subscription_not_found');
+    return sub;
+  }
+
+  /**
+   * The course's active rules (subscription_id, migration 470) not ended before `today` (UTC date).
+   */
   async activeRules(subscriptionId: string, today: string): Promise<StopRule[]> {
     const { data, error } = await this.db
       .from('schedule_rules')
@@ -63,14 +91,18 @@ export class CourseStopRepo {
 
   /** Net paid (payments − refunds): shown, never changed. */
   async paid(subscriptionId: string): Promise<number> {
-    const { data, error } = await this.db.from('payments').select('amount, kind').eq('subscription_id', subscriptionId);
+    const { data, error } = await this.db
+      .from('payments')
+      .select('amount, kind')
+      .eq('subscription_id', subscriptionId);
     if (error) throw dbError(error);
-    return data.reduce((sum, p) => sum + (p.kind === 'refund' ? -Number(p.amount) : Number(p.amount)), 0);
+    return data.reduce((sum, p) => sum + (p.kind === 'refund' ? -p.amount : p.amount), 0);
   }
 
   /**
-   * Compare-and-set to cancelled (kind 'stopped', migration 985) with who / when / why; null when it was
-   * cancelled meanwhile. 409 has_future_lessons when the guard still finds an open lesson to come.
+   * Compare-and-set to cancelled (kind 'stopped', migration 985) with who / when / why; null when
+   * it was cancelled meanwhile. 409 has_future_lessons when the guard still finds an open lesson to
+   * come.
    */
   async stamp(w: Stamp): Promise<StopSub | null> {
     const patch = {
@@ -87,7 +119,8 @@ export class CourseStopRepo {
       .neq('status', 'cancelled')
       .select(SUB)
       .maybeSingle();
-    if (error?.code === '23514' && error.message.startsWith('has_future_lessons')) throw conflict('has_future_lessons');
+    if (error?.code === '23514' && error.message.startsWith('has_future_lessons'))
+      throw conflict('has_future_lessons');
     if (error) throw dbError(error);
     return data;
   }

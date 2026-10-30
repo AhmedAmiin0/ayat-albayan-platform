@@ -16,8 +16,8 @@ import { CourseChangeDeps } from './course-change.writer';
 import { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '../sales/booking/sales-booking.scope';
 
-/** anyStudent: the profile's routes (owner 2026-10-30), held by a permission key, skip «her own students». */
-export type ChangeActor = { user: AuthUser; role: ChangeRole; anyStudent?: boolean };
+/** anyStudent: the profile's routes (owner 2026-10-30, a permission key) skip «her own students». */
+export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
 /** teacherId: «تغيير المعلم» (owner 2026-10-30), the new rules' teacher; absent = the course's. */
 export type CourseMove = CourseChangeRequest & { teacherId?: string };
 
@@ -41,7 +41,8 @@ export class CourseChange {
   async check(req: CourseMove, actor: ChangeActor): Promise<CourseChangeCheck> {
     const sub = await this.owned(req.subscriptionId, actor);
     const planned = await this.deps.planner.planned(req, actor.role, await this.load(sub));
-    return { conflicts: await this.conflicts(planned, req.teacherId), remaining: planned.plan.remaining, endsOn: planned.plan.endsOn };
+    const { remaining, endsOn } = planned.plan;
+    return { conflicts: await this.conflicts(planned, req.teacherId), remaining, endsOn };
   }
 
   /**
@@ -52,7 +53,10 @@ export class CourseChange {
    * starts_at_mismatch / starts_before_subscription / starts_before_course / no_change /
    * days_count_mismatch / no_occurrences / trial_not_course.
    */
-  async change(req: CourseMove & { clientRequestId: string }, actor: ChangeActor): Promise<CourseChangeResult> {
+  async change(
+    req: CourseMove & { clientRequestId: string },
+    actor: ChangeActor,
+  ): Promise<CourseChangeResult> {
     const sub = await this.owned(req.subscriptionId, actor);
     const replay = await this.deps.writer.replay(req.clientRequestId, sub.id);
     if (replay) return replay;
@@ -78,7 +82,8 @@ export class CourseChange {
   /** 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers. */
   private async owned(subscriptionId: string, actor: ChangeActor): Promise<CourseSub> {
     const sub = await this.queries.subscription(subscriptionId);
-    if (actor.role === 'sales' && actor.anyStudent !== true) assertOwnStudents([sub.student_id], await this.scope.owned(actor.user));
+    if (actor.role === 'sales' && actor.anyStudent !== true)
+      assertOwnStudents([sub.student_id], await this.scope.owned(actor.user));
     return sub;
   }
 
@@ -92,7 +97,7 @@ export class CourseChange {
     return { sub, active, all };
   }
 
-  /** Every new lesson against the (new) teacher's and the student's time, the moved lessons and old rules excluded. */
+  /** Every new lesson against the (new) teacher's and the student's time; moved lessons, old rules out. */
   private conflicts(p: Planned, teacherId: string | undefined): Promise<Conflict[]> {
     return this.deps.checker.check({
       teacherId: teacherId ?? p.active[0]?.teacher_id ?? '',
@@ -103,7 +108,7 @@ export class CourseChange {
     });
   }
 
-  /** The confirmation's link and contacts: the (new) teacher's link and meeting mode, the guardians. */
+  /** The confirmation's link and contacts: the (new) teacher's link and mode, the guardians. */
   private async messaging(active: readonly ChangeRule[], newTeacher: string | undefined) {
     const [head] = active;
     const teacher = newTeacher ?? head?.teacher_id;

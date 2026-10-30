@@ -1,4 +1,9 @@
-import { STUDENT_STATUSES, type CourseStopped, type CourseStopResult, type StudentStatus } from '@ab/shared';
+import {
+  STUDENT_STATUSES,
+  type CourseStopped,
+  type CourseStopResult,
+  type StudentStatus,
+} from '@ab/shared';
 import type { StopSub } from './course-stop.repo';
 
 /** Who stopped the package, when and why; null while it is not cancelled. */
@@ -11,7 +16,10 @@ const ids = (v: unknown): number => (Array.isArray(v) ? v.length : 0);
 const statusOf = (v: unknown): StudentStatus => STUDENT_STATUSES.find((s) => s === v) ?? 'churned';
 
 /** The answer of a stop, from its audit row's `after` (a replay answers the first stop). */
-export function toResult(input: { sub: StopSub; after: Record<string, unknown> }): CourseStopResult {
+export function toResult(input: {
+  sub: StopSub;
+  after: Record<string, unknown>;
+}): CourseStopResult {
   const { sub, after } = input;
   return {
     subscriptionId: sub.id,

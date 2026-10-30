@@ -3,14 +3,17 @@ import type { LessonStatus, StudentStatus, SubscriptionStatus } from '../../enum
 import { OPEN_LESSON_STATUSES } from '../../schedule/lessons/state-machine.js';
 import { wallParts } from '../../schedule/lessons/series/day-times.js';
 
-// «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY. Every
-// future lesson of the subscription's course is cancelled, its weekly rules end on the cancel date, the
-// student becomes «توقف» (churned) and the package «ملغاة» (cancel_kind 'stopped', migration 985) with
-// who / when / why. Payments, held lessons, reports and teacher earnings are never touched. Pure.
+// «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
+// Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
+// date, the student becomes «توقف» (churned) and the package «ملغاة» (cancel_kind 'stopped',
+// migration 985) with who / when / why. Payments, held lessons, reports and teacher earnings are
+// never touched. Pure.
 
 export const COURSE_STOP_REASON_MAX = 300;
 
-/** POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required. */
+/**
+ * POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required.
+ */
 export const courseStopSchema = z.strictObject({
   subscriptionId: z.uuid(),
   reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
@@ -18,8 +21,10 @@ export const courseStopSchema = z.strictObject({
 });
 export type CourseStopRequest = z.infer<typeof courseStopSchema>;
 
-/** GET /students/:id/course-stop?subscriptionId=: what the confirm sheet shows. */
-export const courseStopQuerySchema = z.object({ subscriptionId: z.uuid() });
+/**
+ * GET /students/:id/course-stop?subscriptionId=: the sheet's lines; absent = the current package.
+ */
+export const courseStopQuerySchema = z.object({ subscriptionId: z.uuid().optional() });
 
 /** Who stopped the package, when and why (null while it runs). */
 export interface CourseStopped {
@@ -66,7 +71,9 @@ export function stoppedLessons<T extends { status: LessonStatus; starts_at: stri
   return lessons.filter((l) => open.includes(l.status) && Date.parse(l.starts_at) >= now.getTime());
 }
 
-/** The student after a stop: «توقف» (churned); null when already churned (no move, no audit row). */
+/**
+ * The student after a stop: «توقف» (churned); null when already churned (no move, no audit row).
+ */
 export function studentAfterStop(status: StudentStatus): StudentStatus | null {
   return status === 'churned' ? null : 'churned';
 }
@@ -81,8 +88,9 @@ export function stopEndsOn(rule: { tz: string; ends_on: string | null }, now: Da
 }
 
 /**
- * «من تاريخ» of a teacher or time change: the next upcoming open lesson of the course (its local date and
- * instant in the course zone); null when none is booked yet (the dialog then asks for a date).
+ * «من تاريخ» of a teacher or time change: the next upcoming open lesson of the course (its local
+ * date and instant in the course zone); null when none is booked yet (the dialog then asks for a
+ * date).
  */
 export function changeEffectiveFrom(
   lessons: readonly { status: LessonStatus; starts_at: string }[],
