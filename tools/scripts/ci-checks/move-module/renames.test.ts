@@ -9,17 +9,17 @@ import { replay, runMap } from './run.ts';
 const DIR = 'apps/api/src/modules/finance/payouts';
 const repo = (): string =>
   makeRepo({
-    [`${DIR}/payouts.queries.ts`]: "@Injectable()\nexport class PayoutsQueries {\n  list(): string {\n    return 'PayoutsQueries';\n  }\n}\n",
-    [`${DIR}/payouts.queries.test.ts`]: "import { PayoutsQueries } from './payouts.queries';\n// PayoutsQueries reads payouts\nconst q = new PayoutsQueries();\n",
-    [`${DIR}/__snapshots__/payouts.queries.test.ts.snap`]: 'exports[`x`] = 1;\n',
-    [`${DIR}/payouts.module.ts`]: "import { PayoutsQueries } from './payouts.queries';\n@Module({ providers: [PayoutsQueries], exports: [PayoutsQueries] })\nexport class PayoutsModule {}\n",
-    [`${DIR}/index.ts`]: "export { PayoutsQueries } from './payouts.queries';\n",
-    [`${DIR}/payouts.service.test.ts`]: "vi.mock('./payouts.queries', () => ({ PayoutsQueries: vi.fn() }));\nconst { PayoutsQueries } = await import('./payouts.queries');\nconst PayoutsQueriesX = 1;\n",
-    'apps/api/src/other.ts': "import { PayoutsQueries as Q } from './modules/finance/payouts';\nexport const n = Q.name;\n",
-    'refactor/guards/knip.json': `${JSON.stringify([`${DIR}/payouts.queries.ts exports PayoutsQueries`, 'b.ts types PayoutsQueriesRow'], null, 2)}\n`,
+    [`${DIR}/widget.queries.ts`]: "@Injectable()\nexport class WidgetQueries {\n  list(): string {\n    return 'WidgetQueries';\n  }\n}\n",
+    [`${DIR}/widget.queries.test.ts`]: "import { WidgetQueries } from './widget.queries';\n// WidgetQueries reads payouts\nconst q = new WidgetQueries();\n",
+    [`${DIR}/__snapshots__/widget.queries.test.ts.snap`]: 'exports[`x`] = 1;\n',
+    [`${DIR}/payouts.module.ts`]: "import { WidgetQueries } from './widget.queries';\n@Module({ providers: [WidgetQueries], exports: [WidgetQueries] })\nexport class PayoutsModule {}\n",
+    [`${DIR}/index.ts`]: "export { WidgetQueries } from './widget.queries';\n",
+    [`${DIR}/payouts.service.test.ts`]: "vi.mock('./widget.queries', () => ({ WidgetQueries: vi.fn() }));\nconst { WidgetQueries } = await import('./widget.queries');\nconst WidgetQueriesX = 1;\n",
+    'apps/api/src/other.ts': "import { WidgetQueries as Q } from './modules/finance/payouts';\nexport const n = Q.name;\n",
+    'refactor/guards/knip.json': `${JSON.stringify([`${DIR}/widget.queries.ts exports WidgetQueries`, 'b.ts types WidgetQueriesRow'], null, 2)}\n`,
     'refactor/moves/r.json': map({
-      moves: [{ from: `${DIR}/payouts.queries.ts`, to: `${DIR}/payouts.repo.ts` }],
-      renames: { PayoutsQueries: 'PayoutsRepo' },
+      moves: [{ from: `${DIR}/widget.queries.ts`, to: `${DIR}/widget.repo.ts` }],
+      renames: { WidgetQueries: 'WidgetRepo' },
     }),
   });
 
@@ -27,14 +27,14 @@ test('renames the class, its importers, barrel, Nest providers/exports and mock 
   const root = repo();
   runMap(root, 'refactor/moves/r.json');
   const s = snapshot(root);
-  assert.equal(s[`${DIR}/payouts.repo.ts`], "@Injectable()\nexport class PayoutsRepo {\n  list(): string {\n    return 'PayoutsQueries';\n  }\n}\n");
-  assert.equal(s[`${DIR}/payouts.repo.test.ts`], "import { PayoutsRepo } from './payouts.repo';\n// PayoutsQueries reads payouts\nconst q = new PayoutsRepo();\n");
-  assert.ok(s[`${DIR}/__snapshots__/payouts.repo.test.ts.snap`], 'the snapshot follows the test stem');
-  assert.equal(s[`${DIR}/payouts.module.ts`], "import { PayoutsRepo } from './payouts.repo';\n@Module({ providers: [PayoutsRepo], exports: [PayoutsRepo] })\nexport class PayoutsModule {}\n");
-  assert.equal(s[`${DIR}/index.ts`], "export { PayoutsRepo } from './payouts.repo';\n");
-  assert.equal(s[`${DIR}/payouts.service.test.ts`], "vi.mock('./payouts.repo', () => ({ PayoutsRepo: vi.fn() }));\nconst { PayoutsRepo } = await import('./payouts.repo');\nconst PayoutsQueriesX = 1;\n");
-  assert.equal(s['apps/api/src/other.ts'], "import { PayoutsRepo as Q } from './modules/finance/payouts';\nexport const n = Q.name;\n");
-  assert.deepEqual(JSON.parse(s['refactor/guards/knip.json'] ?? '[]'), [`${DIR}/payouts.repo.ts exports PayoutsRepo`, 'b.ts types PayoutsQueriesRow']);
+  assert.equal(s[`${DIR}/widget.repo.ts`], "@Injectable()\nexport class WidgetRepo {\n  list(): string {\n    return 'WidgetQueries';\n  }\n}\n");
+  assert.equal(s[`${DIR}/widget.repo.test.ts`], "import { WidgetRepo } from './widget.repo';\n// WidgetQueries reads payouts\nconst q = new WidgetRepo();\n");
+  assert.ok(s[`${DIR}/__snapshots__/widget.repo.test.ts.snap`], 'the snapshot follows the test stem');
+  assert.equal(s[`${DIR}/payouts.module.ts`], "import { WidgetRepo } from './widget.repo';\n@Module({ providers: [WidgetRepo], exports: [WidgetRepo] })\nexport class PayoutsModule {}\n");
+  assert.equal(s[`${DIR}/index.ts`], "export { WidgetRepo } from './widget.repo';\n");
+  assert.equal(s[`${DIR}/payouts.service.test.ts`], "vi.mock('./widget.repo', () => ({ WidgetRepo: vi.fn() }));\nconst { WidgetRepo } = await import('./widget.repo');\nconst WidgetQueriesX = 1;\n");
+  assert.equal(s['apps/api/src/other.ts'], "import { WidgetRepo as Q } from './modules/finance/payouts';\nexport const n = Q.name;\n");
+  assert.deepEqual(JSON.parse(s['refactor/guards/knip.json'] ?? '[]'), [`${DIR}/widget.repo.ts exports WidgetRepo`, 'b.ts types WidgetQueriesRow']);
 });
 
 test('run twice (and replay) = no diff; a branch file using the old name follows on replay', () => {
@@ -44,9 +44,9 @@ test('run twice (and replay) = no diff; a branch file using the old name follows
   assert.deepEqual(runMap(root, 'refactor/moves/r.json'), { id: 't', moved: 0, rewritten: 0 });
   replay(root);
   assert.deepEqual(snapshot(root), once);
-  writeFileSync(posix.join(root, 'apps/api/src/late.ts'), "import { PayoutsQueries } from './modules/finance/payouts';\n");
+  writeFileSync(posix.join(root, 'apps/api/src/late.ts'), "import { WidgetQueries } from './modules/finance/payouts';\n");
   replay(root);
-  assert.equal(snapshot(root)['apps/api/src/late.ts'], "import { PayoutsRepo } from './modules/finance/payouts';\n");
+  assert.equal(snapshot(root)['apps/api/src/late.ts'], "import { WidgetRepo } from './modules/finance/payouts';\n");
 });
 
 test('the table refuses non-identifiers, chains and two olds to one new', () => {
