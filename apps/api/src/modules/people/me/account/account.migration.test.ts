@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261012000370 (R-ACC-05; rule 9): the avatars bucket and its own-folder policies, and
 // NO self-write policy on public.profiles.
 
 const sql = readFileSync(
-  join(__dirname, '../../../../../../../packages/db/supabase/migrations/20261012000370_profile_self_service.sql'),
+  migrationPath('20261012000370_profile_self_service.sql'),
   'utf8',
 );
 const code = sql.replace(/--.*$/gm, '');

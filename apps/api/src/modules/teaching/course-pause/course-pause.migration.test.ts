@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 955–958 (owner 2026-10-28, «Also add option to pause the course»; docs/11 §7b).
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const table = code('20261028000955_course_pauses.sql');
 const rpcs = code('20261028000956_course_pause_rpcs.sql');

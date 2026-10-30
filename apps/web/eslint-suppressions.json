@@ -3164,17 +3164,11 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }

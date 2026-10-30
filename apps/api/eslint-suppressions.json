@@ -7732,11 +7732,6 @@
       "count": 6
     }
   },
-  "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.migration.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.outage.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -8238,9 +8233,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.job.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8281,11 +8273,8 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
@@ -8345,11 +8334,8 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/sender/send-line.ts": {
@@ -8377,9 +8363,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/send-plan.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 13
     }
@@ -8415,9 +8398,6 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.due.ts": {
     "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8914,9 +8894,6 @@
   "src/modules/messaging/whatsapp/whatsapp.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 6
@@ -13479,9 +13456,6 @@
     }
   },
   "src/modules/teaching/booking/core/booking.contact-is-self.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -17090,9 +17064,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     }
   },

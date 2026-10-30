@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 981, read as text (no database in unit tests): the owner-rights family views lose the default
 // write grants of `authenticated`, which bypassed the RLS of the tables under them (review authz-db-1).
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261030000981_portal_views_read_only.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const VIEWS = ['portal_students', 'portal_guardians', 'portal_lessons', 'portal_reports', 'portal_packages', 'portal_recordings', 'student_self'];
