@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { classifyConfig, countsNotRaised, knipConfigMoved } from './configs.mjs';
+import { classifyConfig, countsNotRaised, knipConfigMoved, textPairs } from './configs.mjs';
 
 const R = [['apps/api/src/main.ts', 'apps/api/src/boot/main.ts'], ['tools/x.mjs', 'tools/y/x.mjs']];
 const verdict = (to, [base, head], status = 'M') => classifyConfig({ status, from: to, to }, (side) => (side === 'base' ? base : head), R).kind;
@@ -42,4 +42,12 @@ test('root knip.json: workspace-relative paths follow moves inside their workspa
   assert.equal(knipConfigMoved({ base, head: head.replace('"apps/web":{"entry":["src/main.ts"]', '"apps/web":{"entry":["src/boot/main.ts"]') }, R), false);
   assert.equal(knipConfigMoved({ base, head: head.replace('"src/boot/main.ts"]', '"src/boot/main.ts"],"ignore":["x"]') }, R), false);
   assert.equal(verdict('knip.json', [base, head]), 'config');
+});
+
+test('the e2e spec lists name moves inside their folder by relative path, other data files by repo path', () => {
+  const moves = [['e2e/tests/a.spec.ts', 'e2e/tests/messaging/a.spec.ts'], ['e2e/support/b.ts', 'e2e/support/core/b.ts']];
+  assert.deepEqual(textPairs('e2e/areas.json', moves), [...moves, ['a.spec.ts', 'messaging/a.spec.ts']]);
+  const durations = [['tests/a.spec.ts', 'tests/messaging/a.spec.ts'], ['support/b.ts', 'support/core/b.ts']];
+  assert.deepEqual(textPairs('e2e/shard-durations.json', moves), [...moves, ...durations]);
+  assert.deepEqual(textPairs('docs/areas.json', moves), moves);
 });

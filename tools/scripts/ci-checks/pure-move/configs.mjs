@@ -10,6 +10,17 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export const rewritePaths = (text, pairs) =>
   pairs.reduce((acc, [f, t]) => acc.replace(new RegExp(`(?<![\\w./-])${escape(f)}(?![\\w-]|\\.\\w)`, 'g'), t), text);
 
+// Data files keyed by paths relative to a folder: the e2e spec lists (D8; move-module/files.ts).
+const RELATIVE_TO = new Map([
+  ['e2e/areas.json', 'e2e/tests'],
+  ['e2e/shard-durations.json', 'e2e'],
+]);
+/** The pairs a data file may name: repo paths, and the e2e spec lists the moves in their folder. */
+export function textPairs(file, renames) {
+  const dir = RELATIVE_TO.get(file);
+  return dir === undefined ? renames : [...renames, ...relativePairs(dir, renames)];
+}
+
 const parse = (text) => {
   try {
     return JSON.parse(text);
