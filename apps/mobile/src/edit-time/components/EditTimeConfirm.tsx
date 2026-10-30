@@ -35,7 +35,7 @@ export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNoti
   return (
     <View style={{ gap: 6 }}>
       <AppText accessibilityLiveRegion="polite" style={{ ...text, fontFamily: type.ui[700], color: color.ink }}>
-        {changeLine(lesson, state, cycle)}
+        {changeLine(lesson, state, { tz, cycle })}
       </AppText>
       <AppText style={text}>{zoneNote(tz)}</AppText>
       <AppText style={text}>{teacherLine(lesson, chosenStart(lesson, state.picked), cycle)}</AppText>

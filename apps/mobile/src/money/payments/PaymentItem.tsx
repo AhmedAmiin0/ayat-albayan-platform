@@ -9,6 +9,7 @@ import { Ltr } from '@/core/ui/primitives/Ltr';
 import { AttachmentsViewer } from '../attachments/AttachmentsViewer';
 import { hasAttachments } from '../attachments/receipt-file';
 import { ReceiptViewer } from '../attachments/ReceiptViewer';
+import { useViewerTz } from '@/core/lib/clock';
 
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
@@ -16,6 +17,7 @@ import { ReceiptViewer } from '../attachments/ReceiptViewer';
  * The list's inset card draws the fill and the rule between payments (owner 2026-10-28).
  */
 export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
   // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
@@ -23,7 +25,7 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Pay
   const files = hasAttachments(payment);
   const line = [
     t.enums.paymentMethod[payment.method],
-    instantDay(payment.paid_at),
+    instantDay(payment.paid_at, tz),
     payment.recorded_by ? t.payments.recordedBy.replace('{name}', payment.recorded_by.full_name) : null,
   ]
     .filter(Boolean)

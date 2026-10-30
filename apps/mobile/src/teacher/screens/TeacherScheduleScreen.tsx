@@ -40,7 +40,7 @@ export function TeacherScheduleScreen() {
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
-  const subtitle = headerLine([zoneNote(tz)], lessons, cycle);
+  const subtitle = headerLine([zoneNote(tz)], lessons, { cycle, tz });
   return (
     <Screen list>
       <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />

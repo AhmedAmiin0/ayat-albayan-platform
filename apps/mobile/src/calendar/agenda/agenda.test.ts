@@ -5,6 +5,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
 
 // Winter week (Cairo back on UTC+2 since 30 Oct): Saturday 31 Oct → Friday 6 Nov 2026.
+const VIEWER = { cycle: '24', tz: 'Asia/Riyadh' } as const;
 const START = '2026-10-31';
 const at = (id: string, startsAt: string, minutes = 45) =>
   lesson({
@@ -82,7 +83,7 @@ test('a day’s availability: its weekday’s windows by start, named in the gri
 
 test('the subtitle says how old a saved list is only while its refetch fails', () => {
   const ok = { isError: false, data: [], dataUpdatedAt: 0 };
-  expect(headerLine(['أ', 'ب'], ok, '24')).toBe('أ · ب');
-  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined }, '24')).toBe('أ');
-  expect(headerLine(['أ'], { ...ok, isError: true }, '24')).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
+  expect(headerLine(['أ', 'ب'], ok, VIEWER)).toBe('أ · ب');
+  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined }, VIEWER)).toBe('أ');
+  expect(headerLine(['أ'], { ...ok, isError: true }, VIEWER)).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
 });

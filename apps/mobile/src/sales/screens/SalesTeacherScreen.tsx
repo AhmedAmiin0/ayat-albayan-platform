@@ -17,7 +17,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '../lib/sales-api';
 import { SalesTeacherHeader } from '../components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '../lib/sales-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { TeacherOverviewTab } from '../teacher/TeacherOverviewTab';
@@ -33,6 +33,7 @@ const TABS: readonly TeacherTab[] = ['students', 'schedule', 'attendance'];
  */
 export function SalesTeacherScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const list = useSalesTeachers();
@@ -50,11 +51,11 @@ export function SalesTeacherScreen() {
         title={item.name}
         meta={item.code}
         subtitle={t.enums.program[item.program]}
-        tags={<Note>{nextLessonLine(item, cycle)}</Note>}
+        tags={<Note>{nextLessonLine(item, cycle, tz)}</Note>}
         trailing={<StatusChip {...studentStatusStyle[item.status]} size="sm" label={t.enums.studentStatus[item.status]} />}
       />
     ),
-    [base, cycle],
+    [base, cycle, tz],
   );
   // The students sit in one inset card inside the gutter (owner 2026-10-28: one container rule).
   const cells = useInsetRows(row, rows.length);

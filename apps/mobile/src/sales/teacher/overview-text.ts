@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { inWeekOrder, wallParts, type ClockCycle, type SalesOverviewStudent } from '@ab/shared';
 import type { SalesTeacherOverview, SalesTeacherSlot } from '@ab/shared';
 import { hhmm } from '@/core/lib/clock';
@@ -12,19 +11,24 @@ const weekdays: Record<string, string | undefined> = t.enums.weekday;
 const o = t.sales.teachers.overview;
 
 /** Weekday and time on the viewer's clock from `at` (docs/34); an old payload keeps Riyadh's. */
-function inViewerZone(slot: SalesTeacherSlot): SalesTeacherSlot {
+function inViewerZone(slot: SalesTeacherSlot, tz: string): SalesTeacherSlot {
   if (!slot.at) return slot;
-  const { weekday, time } = wallParts(slot.at, viewerTz());
+  const { weekday, time } = wallParts(slot.at, tz);
   return { ...slot, weekday, time };
 }
 
-/** The slots السبت → الجمعة, by time within a day, on the viewer's clock. */
-export const slotsInWeekOrder = (slots: readonly SalesTeacherSlot[]): SalesTeacherSlot[] =>
-  inWeekOrder(slots.map(inViewerZone).sort((a, b) => a.time.localeCompare(b.time)));
+/** The slots السبت → الجمعة, by time within a day, on the viewer's (`tz`) clock. */
+export function slotsInWeekOrder(
+  slots: readonly SalesTeacherSlot[],
+  tz: string,
+): SalesTeacherSlot[] {
+  const own = slots.map((slot) => inViewerZone(slot, tz));
+  return inWeekOrder(own.sort((a, b) => a.time.localeCompare(b.time)));
+}
 
 /** «الأحد الساعة 8:00 م · 45 دقيقة» (the viewer's clock, the phone's 12 / 24 h). */
-export function slotLine(slot: SalesTeacherSlot, cycle: ClockCycle): string {
-  const { weekday, time } = inViewerZone(slot);
+export function slotLine(slot: SalesTeacherSlot, cycle: ClockCycle, tz: string): string {
+  const { weekday, time } = inViewerZone(slot, tz);
   const day = weekdays[String(weekday)] ?? '';
   return fill(o.slot, { day, time: hhmm(time, cycle), minutes: String(slot.duration_min) });
 }

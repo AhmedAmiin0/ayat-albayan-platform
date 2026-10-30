@@ -54,7 +54,7 @@ test('from a family chat: «اشتراك جديد» → saved → the days (late
   expect(backend.sent('POST /sales/subscriptions')[0]?.body).toMatchObject({ clientRequestId: expect.any(String) });
 
   await press('button', m.receiptFromChat);
-  await press('button', `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`);
+  await press('button', `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`);
   expect(await screen.findByText(m.attachmentN.replace('{n}', '1'))).toBeTruthy();
   await press('button', m.saveTransfer);
   expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();

@@ -1,5 +1,5 @@
 import { sameClockAt, type ClockCycle, type LessonView } from '@ab/shared';
-import { clockIn } from '@/core/lib/clock';
+import { clockIn, type ViewerClock } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
@@ -78,8 +78,9 @@ export function availabilityLine(
 export function headerLine(
   parts: readonly string[],
   query: { isError: boolean; data: unknown; dataUpdatedAt: number },
-  cycle: ClockCycle,
+  viewer: ViewerClock,
 ): string {
   const stale = query.isError && query.data !== undefined;
-  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle))] : [])].join(' · ');
+  const at = () => clockAt(query.dataUpdatedAt, viewer.cycle, viewer.tz);
+  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', at())] : [])].join(' · ');
 }

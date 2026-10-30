@@ -4,11 +4,13 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import type { MakeupSource } from './makeup-draft';
 import { whenText } from '../shared/slots';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** What the makeup is for, over every step: «للطالب يوسف» and the lesson he missed, with its time. */
 export function MissedHeader({ source }: { source: MakeupSource }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const line = { fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink };
   return (
@@ -23,7 +25,7 @@ export function MissedHeader({ source }: { source: MakeupSource }) {
     >
       <AppText style={line}>{t.booking.mobile.makeupFor.replace('{name}', source.studentName)}</AppText>
       <AppText style={{ ...line, fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}>
-        {`${t.booking.mobile.missedLesson}: ${whenText(source.missedAt, source.tz, cycle)}`}
+        {`${t.booking.mobile.missedLesson}: ${whenText(source.missedAt, source.tz, viewer)}`}
       </AppText>
     </View>
   );

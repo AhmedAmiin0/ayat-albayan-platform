@@ -5,6 +5,8 @@ import { courseBlock, courseEnd, courseRequest } from './course-body';
 import { courseFixedText, courseRows } from './course-summary';
 import { courseView, STUDENT_ID } from '../testing/fixtures';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const REQ = '99999999-9999-4999-8999-999999999999';
 const custom = (lessons_total: number, perWeek: number | null) =>
   courseView({
@@ -47,7 +49,7 @@ test('a custom count (24 lessons, 6 days) books its days; the body’s package o
   expect(body).toMatchObject({ kind: 'package', byday: [0, 2], durationMin: 60, package: '8', clientRequestId: REQ });
   expect(bookingRequestSchema.safeParse(body).success).toBe(true);
   // The label comes from the subscription (24 lessons), never from that body value.
-  expect(courseRows({ view: custom(24, 6), teacherName: 'مريم', body, cycle: '24' })[2]?.[1]).toContain(counted(t.schedule.lessonCount, 24));
+  expect(courseRows({ view: custom(24, 6), teacherName: 'مريم', body, viewer: R24 })[2]?.[1]).toContain(counted(t.schedule.lessonCount, 24));
 });
 
 test('the course ends on its lessons_total-th lesson over every day', () => {
@@ -61,13 +63,13 @@ test('the review: the «الباقة» row holds the plan itself, no prefix', ()
   const minutes = (n: '45' | '60') => t.enums.duration[n];
   expect(courseFixedText(courseView().subscription)).toBe(`${t.enums.packageSize['8']} · ${minutes('45')}`);
   expect(courseFixedText(custom(24, 6).subscription)).toBe(`${counted(t.schedule.lessonCount, 24)} · ${minutes('60')}`);
-  const rows = courseRows({ view: courseView(), teacherName: 'مريم', body: null, cycle: '24' });
+  const rows = courseRows({ view: courseView(), teacherName: 'مريم', body: null, viewer: R24 });
   expect(rows.map(([label]) => label)).toEqual([t.booking.studentSection, t.booking.steps.teacher, t.booking.steps.package]);
   expect(rows[2]?.[1]).not.toContain(t.booking.steps.package);
 });
 
 test('the review never shows an empty teacher row (her name not known)', () => {
-  const rows = courseRows({ view: courseView(), teacherName: '', body: null, cycle: '24' });
+  const rows = courseRows({ view: courseView(), teacherName: '', body: null, viewer: R24 });
   expect(rows.map(([label]) => label)).toEqual([t.booking.studentSection, t.booking.steps.package]);
 });
 

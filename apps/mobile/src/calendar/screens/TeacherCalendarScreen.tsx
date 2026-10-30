@@ -47,7 +47,7 @@ export function TeacherCalendarScreen() {
   const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
   const zone = zoneNote(tz);
-  const subtitle = headerLine([t.calendar.teacherCalendar, zone], lessons, cycle);
+  const subtitle = headerLine([t.calendar.teacherCalendar, zone], lessons, { cycle, tz });
 
   return (
     <Screen>

@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import type { TimeEditResult } from '../lib/types';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 export interface EditTimeDoneProps {
   /** The API's answer: the same lesson, its new time, and what the edit set in motion. */
@@ -23,6 +23,8 @@ export interface EditTimeDoneProps {
  */
 export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
+  const viewer = { tz: viewerZone, cycle };
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
@@ -38,7 +40,7 @@ export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
         </AppText>
       </View>
       <AppText style={{ ...text, fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}>
-        {t.reschedule.newWhen.replace('{when}', whenText(done.lesson.starts_at, tz, cycle))}
+        {t.reschedule.newWhen.replace('{when}', whenText(done.lesson.starts_at, tz, viewer))}
       </AppText>
       {done.notified > 0 ? <AppText style={text}>{t.editTime.notifiedLine}</AppText> : null}
       {done.payout === 'draft_stale' ? <AppText style={text}>{t.editTime.payoutDraft}</AppText> : null}

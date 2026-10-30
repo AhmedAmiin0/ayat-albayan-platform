@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import {
   attendanceStyle,
   counted,
@@ -9,10 +8,9 @@ import {
   type StatusStyle,
   type TrialDateRow,
   type TrialHistory,
-  type ClockCycle,
   type TrialOutcome,
 } from '@ab/shared';
-import { whenIn } from '@/core/lib/clock';
+import { whenIn, type ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { isolate } from '@/core/ui/primitives/Ltr';
@@ -35,22 +33,22 @@ interface WhenLines {
 }
 
 /** An instant in the viewer's zone, and in the family's when it differs (rule 6). */
-export function whenLines(startsAt: string, familyTz: string, cycle: ClockCycle): WhenLines {
+export function whenLines(startsAt: string, familyTz: string, viewer: ViewerClock): WhenLines {
   const at = new Date(startsAt);
   // Every time says its zone (docs/07 principle 7): the viewer's own (docs/34).
-  const viewer = viewerTz();
-  const when = `${whenIn(at, viewer, cycle)} ${t.schedule.viewerTime}`;
-  const familyAt = whenIn(at, familyTz, cycle);
+  const when = `${whenIn(at, viewer.tz, viewer.cycle)} ${t.schedule.viewerTime}`;
+  const familyAt = whenIn(at, familyTz, viewer.cycle);
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
-  if (lessonWhenText(at, familyTz, locale) === lessonWhenText(at, viewer, locale)) return { when, family: null };
+  const same = lessonWhenText(at, familyTz, locale) === lessonWhenText(at, viewer.tz, locale);
+  if (same) return { when, family: null };
   return { when, family: t.trialDate.familyTime.replace('{time}', familyAt) };
 }
 
 /** «فاطمة، الأحد 4 أكتوبر 17:00»: who picked it and when; «غير معروف» for an imported row. */
-export function pickedLine(row: TrialDateRow, cycle: ClockCycle): string {
+export function pickedLine(row: TrialDateRow, viewer: ViewerClock): string {
   return t.trialDate.pickedAt
     .replace('{name}', row.picked_by ? isolate(row.picked_by) : t.trialDate.unknownPicker)
-    .replace('{when}', whenIn(new Date(row.picked_at), viewerTz(), cycle));
+    .replace('{when}', whenIn(new Date(row.picked_at), viewer.tz, viewer.cycle));
 }
 
 /** «موعدان» … the history header's count. */
@@ -62,9 +60,9 @@ export function warnLine(count: number): string | null {
 }
 
 /** What the new date does: moves the upcoming trial (its time), or books a new trial lesson. */
-export function effectLine(history: TrialHistory, cycle: ClockCycle): string {
+export function effectLine(history: TrialHistory, viewer: ViewerClock): string {
   const upcoming = history.upcoming_id ? history.items.find((r) => r.lesson_id === history.upcoming_id) : undefined;
   if (!history.upcoming_id) return t.trialDate.newLesson;
-  const when = upcoming ? whenLines(upcoming.starts_at, history.family_tz, cycle).when : '';
+  const when = upcoming ? whenLines(upcoming.starts_at, history.family_tz, viewer).when : '';
   return t.trialDate.moves.replace('{when}', when);
 }

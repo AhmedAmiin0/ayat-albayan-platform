@@ -9,7 +9,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { RECORDING_CHIP, recordingTime, type RecordingSource } from './recording-format';
 import { playRecording } from './recordings-api';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /**
  * One recording: start time, status chip, and «شغّل» once the file exists (a fresh link on every tap).
@@ -17,10 +17,11 @@ import { useClockCycle } from '@/core/lib/clock';
  */
 export function RecordingRow({ source, rec }: { source: RecordingSource; rec: LessonRecordingView }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const client = useQueryClient();
   const play = useMutation({ mutationFn: () => playRecording(client, source, rec.id) });
-  const time = recordingTime(rec.started_at, cycle);
+  const time = recordingTime(rec.started_at, cycle, tz);
   return (
     <View style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 10 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>

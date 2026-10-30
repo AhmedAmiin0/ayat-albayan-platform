@@ -9,7 +9,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 import { riyadhToday } from '@/calendar/lib/week';
 import { whenText } from './slots';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 export interface BookedPanelProps {
   result: BookingResult;
@@ -31,6 +31,8 @@ export interface BookedPanelProps {
  */
 export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: BookedPanelProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
+  const viewer = { tz: viewerZone, cycle };
   const { color } = useTheme();
   const toSchedule = useTabOpen('schedule');
   const first = [...result.lessons].sort((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
@@ -58,7 +60,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
       </View>
       {first ? (
         <AppText style={line}>
-          {t.booking.firstLesson.replace('{when}', whenText(first.starts_at, tz, cycle))}
+          {t.booking.firstLesson.replace('{when}', whenText(first.starts_at, tz, viewer))}
         </AppText>
       ) : null}
       <AppText style={line}>{t.today.withTeacher.replace('{teacher}', teacherName)}</AppText>

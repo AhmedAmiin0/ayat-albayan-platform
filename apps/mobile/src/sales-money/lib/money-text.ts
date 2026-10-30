@@ -58,9 +58,9 @@ export function lineText(l: AssistantStatementLineView): string {
 }
 
 /** «دُفع 3 نوفمبر 2026» / «اعتُمد …», or null for a draft. */
-export function statementWhen(s: Pick<AssistantStatementView, 'paid_at' | 'approved_at'>): string | null {
-  if (s.paid_at) return p.paidAt.replace('{date}', instantDay(s.paid_at));
-  return s.approved_at ? p.approvedAt.replace('{date}', instantDay(s.approved_at)) : null;
+export function statementWhen(s: Pick<AssistantStatementView, 'paid_at' | 'approved_at'>, tz: string): string | null {
+  if (s.paid_at) return p.paidAt.replace('{date}', instantDay(s.paid_at, tz));
+  return s.approved_at ? p.approvedAt.replace('{date}', instantDay(s.approved_at, tz)) : null;
 }
 
 /** Entries of a per-currency record, sorted by currency (never one number across them). */
@@ -87,7 +87,8 @@ export function commissionLine(c: MyCommissionRow): string {
 }
 
 /** «29 أكتوبر 2026»: the day it was earned, on the entry's first line. */
-export const commissionDay = (c: Pick<MyCommissionRow, 'earned_at'>): string => instantDay(c.earned_at);
+export const commissionDay = (c: Pick<MyCommissionRow, 'earned_at'>, tz: string): string =>
+  instantDay(c.earned_at, tz);
 
 /** The chip: «مستحقة», «في كشف أكتوبر 2026», «مدفوعة» or «ملغاة». */
 export function walletStateText(c: Pick<MyCommissionRow, 'state' | 'statement_month'>): string {

@@ -42,7 +42,7 @@ export function ReportFormScreen() {
     <Screen>
       <ScreenHeader
         title={t.reports.formTitle}
-        subtitle={stale ? t.mobile.lastUpdated.replace('{time}', clockAt(form.dataUpdatedAt, cycle)) : undefined}
+        subtitle={stale ? t.mobile.lastUpdated.replace('{time}', clockAt(form.dataUpdatedAt, cycle, tz)) : undefined}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {data ? (

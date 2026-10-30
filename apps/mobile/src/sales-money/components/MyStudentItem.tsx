@@ -10,6 +10,7 @@ import { PhoneText } from '@/core/ui/layout/PhoneText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { AmountText } from './AmountText';
 import { CommissionChip } from './CommissionChip';
+import { useViewerTz } from '@/core/lib/clock';
 
 const S = t.assistantPortal.students;
 
@@ -21,6 +22,7 @@ const S = t.assistantPortal.students;
  * student's file in either tree (owner 2026-10-30).
  */
 export function MyStudentItem({ student }: { student: MyStudentRow }) {
+  const tz = useViewerTz();
   const c = student.commission;
   const base = useTreeBase();
   const open = () => router.push(studentDetailsHref(base, student.id));
@@ -31,7 +33,7 @@ export function MyStudentItem({ student }: { student: MyStudentRow }) {
       title={student.name}
       meta={student.code}
       metaStrong
-      subtitle={`${S.broughtAt}: ${instantDay(student.brought_at)}`}
+      subtitle={`${S.broughtAt}: ${instantDay(student.brought_at, tz)}`}
       tags={
         student.guardian_phone || c ? (
           <>

@@ -1,14 +1,12 @@
-import { viewerTz } from '@ab/client-core';
 import {
   clockTime,
   lessonWhenText,
   otherZoneClock,
   sameClockAt,
   utcOffsetMinutes,
-  type ClockCycle,
   type SlotView,
 } from '@ab/shared';
-import { clockIn, whenIn } from '@/core/lib/clock';
+import { clockIn, whenIn, type ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -16,8 +14,8 @@ import { localDate } from '@/today/lib/timeline';
 
 // Free trial slots (R-SCH-06, R-SCH-01): the next 7 days of GET /booking/slots, laid out by the
 // viewer's day, the viewer's time first and the student's own clock beside it when it differs
-// (docs/34). Picked, never typed (rule 6): a slot is an instant, sent as is. Text helpers read the
-// viewer's zone from the store (viewerTz), set before any screen opens.
+// (docs/34). Picked, never typed (rule 6): a slot is an instant, sent as is. Text helpers take the
+// viewer's zone from the screen (useViewerTz), so a zone change re-renders them.
 
 const DAY = 86_400_000;
 const WINDOW_DAYS = 7;
@@ -65,21 +63,21 @@ interface SlotDay {
   slots: SlotView[];
 }
 
-/** «الأحد 4 أكتوبر» of an instant on the viewer's calendar (lessonWhenText without its clock). */
-export function dayLabel(at: Date): string {
-  return lessonWhenText(at, viewerTz(), locale).replace(/\s\d{2}:\d{2}$/, '');
+/** «الأحد 4 أكتوبر» of an instant on the `tz` calendar (lessonWhenText without its clock). */
+export function dayLabel(at: Date, tz: string): string {
+  return lessonWhenText(at, tz, locale).replace(/\s\d{2}:\d{2}$/, '');
 }
 
 /** Only the slots with no clash, grouped by the viewer's day, earliest first. */
-export function freeSlotDays(slots: readonly SlotView[]): SlotDay[] {
+export function freeSlotDays(slots: readonly SlotView[], tz: string): SlotDay[] {
   const days = new Map<string, SlotDay>();
   const free = slots
     .filter((s) => s.conflicts.length === 0)
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   for (const slot of free) {
     const at = new Date(slot.starts_at);
-    const date = localDate(at, viewerTz());
-    const day = days.get(date) ?? { date, label: dayLabel(at), slots: [] };
+    const date = localDate(at, tz);
+    const day = days.get(date) ?? { date, label: dayLabel(at, tz), slots: [] };
     day.slots.push(slot);
     days.set(date, day);
   }
@@ -90,23 +88,21 @@ export function freeSlotDays(slots: readonly SlotView[]): SlotDay[] {
 export function slotTimes(
   startsAt: string,
   tz: string,
-  cycle: ClockCycle,
+  viewer: ViewerClock,
 ): { main: string; local: string | null } {
   const at = new Date(startsAt);
-  const viewer = viewerTz();
-  const other = otherZoneClock(at, tz, { tz: viewer, cycle, locale });
+  const other = otherZoneClock(at, tz, { ...viewer, locale });
   const local = other && t.today.studentTime.replace('{time}', other).replace('{city}', cityOf(tz));
-  return { main: clockIn(at, viewer, cycle), local };
+  return { main: clockIn(at, viewer.tz, viewer.cycle), local };
 }
 
 /** «الأحد 4 أكتوبر 17:00 بتوقيتك، عند الطالب الأحد 4 أكتوبر 18:00 بتوقيت الرياض». */
-export function whenText(startsAt: string, tz: string, cycle: ClockCycle): string {
+export function whenText(startsAt: string, tz: string, viewer: ViewerClock): string {
   const at = new Date(startsAt);
-  const viewer = viewerTz();
-  const own = `${whenIn(at, viewer, cycle)} ${t.schedule.viewerTime}`;
-  if (sameClockAt(at, { a: tz, b: viewer })) return own;
+  const own = `${whenIn(at, viewer.tz, viewer.cycle)} ${t.schedule.viewerTime}`;
+  if (sameClockAt(at, { a: tz, b: viewer.tz })) return own;
   const local = t.schedule.inCity
-    .replace('{time}', whenIn(at, tz, cycle))
+    .replace('{time}', whenIn(at, tz, viewer.cycle))
     .replace('{city}', cityOf(tz));
   return `${own}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }

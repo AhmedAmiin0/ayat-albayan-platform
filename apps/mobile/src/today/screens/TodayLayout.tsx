@@ -17,7 +17,7 @@ import type { TodayLesson } from '../lib/today-lesson';
 import { todayPlan, type Hero } from '../lib/today-plan';
 import type { TodaySource } from '../lib/today-source';
 import { useNow } from '@/core/lib/time/use-now';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The lesson whose «تفاصيل الحلقة» is open (null: closed), and how to close it. */
 interface OpenDetails<L extends TodayLesson> {
@@ -43,6 +43,7 @@ interface TodayLayoutProps<L extends TodayLesson> {
  */
 export function TodayLayout<L extends TodayLesson>({ source, hero: heroCard, sheet, notice }: TodayLayoutProps<L>) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const now = useNow();
   const day = source.useDay(now);
   const inset = useTabBarInset();
@@ -52,7 +53,7 @@ export function TodayLayout<L extends TodayLesson>({ source, hero: heroCard, she
   const lessons = visibleLessons(day.data ?? []);
   const plan = todayPlan(lessons, filter, now);
   // Offline (no NetInfo): the refetch failed but the saved day is on screen; say how old it is.
-  const stale = day.isError && loaded ? t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle)) : undefined;
+  const stale = day.isError && loaded ? t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle, tz)) : undefined;
   const { hero } = plan;
   const nothing = hero === null && plan.rest.length === 0 && plan.ended.length === 0;
 

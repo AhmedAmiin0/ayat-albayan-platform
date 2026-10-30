@@ -66,7 +66,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const details = useLessonDetails(data?.lessons);
   const day = view === 'day';
   const agendas = data ? teacherAgendas(data, { start: day ? date : start, tz, view, filter, now }) : [];
-  const subtitle = headerLine([zoneNote(tz)], overview, cycle);
+  const subtitle = headerLine([zoneNote(tz)], overview, { cycle, tz });
   const actionsOf = (lesson: LessonView, onLeave?: () => void) => (
     <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={onLeave} />
   );

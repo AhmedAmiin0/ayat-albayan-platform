@@ -62,8 +62,8 @@ test('each entry in two lines: «+50 …», the day and its state, then code · 
   expect(commissionLine(due)).toContain(W.method.card);
   expect(commissionLine(renewal)).toContain(W.method.bank);
   // The day sits on line 1, so line 2 fits 360dp.
-  expect(screen.getAllByText(commissionDay(due)).length).toBeGreaterThan(0);
-  expect(commissionLine(due)).not.toContain(commissionDay(due));
+  expect(screen.getAllByText(commissionDay(due, 'Asia/Riyadh')).length).toBeGreaterThan(0);
+  expect(commissionLine(due)).not.toContain(commissionDay(due, 'Asia/Riyadh'));
   expect(screen.getByText(/\+50/)).toBeTruthy();
   expect(screen.getByText(t.assistantPortal.commission.earned)).toBeTruthy();
   expect(commissionLine(renewal)).toContain(t.assistants.ledger.kind.renewal.replace('{n}', '50'));

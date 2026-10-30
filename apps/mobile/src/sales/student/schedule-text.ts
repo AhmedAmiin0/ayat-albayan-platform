@@ -1,6 +1,5 @@
-import { viewerTz } from '@ab/client-core';
 import { inWeekOrder, localizedName, wallParts, type ClockCycle, type SalesWeeklySlot } from '@ab/shared';
-import { hhmm } from '@/core/lib/clock';
+import { hhmm, type ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -31,16 +30,16 @@ function daysAt(starts: readonly string[], tz: string, cycle: ClockCycle): strin
 }
 
 /** The slot on the viewer's clock (docs/34). */
-export const weeklyLine = (slot: Pick<SalesWeeklySlot, 'next'>, cycle: ClockCycle): string =>
-  daysAt(slot.next, viewerTz(), cycle);
+export const weeklyLine = (slot: Pick<SalesWeeklySlot, 'next'>, viewer: ViewerClock): string =>
+  daysAt(slot.next, viewer.tz, viewer.cycle);
 
 /**
  * «عند الطالب: الأحد الساعة 6:00 م بتوقيت القاهرة» in the STUDENT's zone; null when the student's
  * days and clock read as the viewer's (Riyadh, Kuwait, Qatar for a Riyadh viewer).
  */
-export function studentLine(slot: Pick<SalesWeeklySlot, 'next'>, tz: string, cycle: ClockCycle): string | null {
-  const days = daysAt(slot.next, tz, cycle);
-  if (days === weeklyLine(slot, cycle)) return null;
+export function studentLine(slot: Pick<SalesWeeklySlot, 'next'>, tz: string, viewer: ViewerClock): string | null {
+  const days = daysAt(slot.next, tz, viewer.cycle);
+  if (days === weeklyLine(slot, viewer)) return null;
   return fill(s.studentTime, { days: fill(t.schedule.inCity, { time: days, city: cities[tz] ?? ltr(tz) }) });
 }
 
@@ -48,10 +47,10 @@ export function studentLine(slot: Pick<SalesWeeklySlot, 'next'>, tz: string, cyc
 export function slotLines(
   slot: Pick<SalesWeeklySlot, 'next'>,
   tz: string,
-  cycle: ClockCycle,
+  viewer: ViewerClock,
 ): { main: string; student: string | null } {
-  const student = studentLine(slot, tz, cycle);
-  const main = weeklyLine(slot, cycle);
+  const student = studentLine(slot, tz, viewer);
+  const main = weeklyLine(slot, viewer);
   return { main: student ? `${main} ${t.schedule.viewerTime}` : main, student };
 }
 
