@@ -10,7 +10,7 @@ import { templateRow } from '../whatsapp.fakes';
 
 const gate = fakeSwitches();
 const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn(), chatConfigured: false };
-const worker = { process: vi.fn() };
+const worker = { process: vi.fn(), deferRest: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const chat = (id: string) => dueMessage({ id, template_key: null, body: 'نص', line: 'chat' });
 const notif = (id: string) => dueMessage({ id });
@@ -73,5 +73,16 @@ describe('MessageSender — per-line auth pause', () => {
     const summary = await sender().runOnce(NOW);
     expect(ids()).toEqual(['s1', 'n1']);
     expect(summary).toMatchObject({ paused: 1, sent: 1 });
+  });
+
+  it('a paused line hands its later rows to deferRest in one call; the other line sends', async () => {
+    queries.due.mockResolvedValue([chat('c1'), notif('n1'), chat('c2'), notif('n2'), chat('c3')]);
+    worker.process.mockResolvedValueOnce('paused').mockResolvedValue('sent');
+    await sender().runOnce(NOW);
+    expect(ids()).toEqual(['c1', 'n1', 'n2']);
+    expect(worker.deferRest).toHaveBeenCalledTimes(1);
+    type Call = [{ row: { id: string } }, { id: string }[]];
+    const [probe, rest] = worker.deferRest.mock.calls[0] as Call;
+    expect([probe.row.id, rest.map((r) => r.id)]).toEqual(['c1', ['c2', 'c3']]);
   });
 });
