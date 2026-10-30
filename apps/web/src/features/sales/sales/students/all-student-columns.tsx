@@ -9,10 +9,11 @@ import { RosterScheduleCell } from './RosterScheduleCell';
 
 const col = createColumnHelper<DataTableFeatures, SalesStudentView>();
 
-// «كل الطلاب» (sales, read-only): who, which teacher and program, the status chip, the guardian's name
-// and phone (owner 2026-10-27: sales see every chat with its phone). Never a price, payment, note or
-// meeting link. The server pages and searches. Every student's current package (size, status,
-// lessons used / left, dates), weekly schedule and attendance count (owner 2026-10-30), hers or not.
+// «كل الطلاب» (sales, read-only): who, which teacher and program, the status chip, the
+// guardian's name and phone (owner 2026-10-27: sales see every chat with its phone). Never a
+// price, payment, note or meeting link. The server pages and searches. Every student's current
+// package (size, status, lessons used / left, dates), weekly schedule and attendance count
+// (owner 2026-10-30), hers or not.
 export const allStudentColumns = col.columns([
   col.accessor('name', {
     header: () => t.sales.allStudents.student,

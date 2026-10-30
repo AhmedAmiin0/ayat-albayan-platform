@@ -16,11 +16,16 @@ export function PackageSection({ summary }: { summary: SalesPackageSummary | nul
   if (summary === undefined) return null;
   const s = t.sales.student;
   const end = summary?.ended_at ? null : summary?.projected_end_at;
+  const endLine = end ? fill(t.sales.history.projectedEnd, { date: ltr(riyadhDate(end)) }) : null;
   return (
     <View style={{ gap: 8 }}>
       <SmallHeading>{s.subscription}</SmallHeading>
-      {summary ? <HistoryEntryCard entry={summary} current brief /> : <Note>{s.noSubscription}</Note>}
-      {end ? <Note>{fill(t.sales.history.projectedEnd, { date: ltr(riyadhDate(end)) })}</Note> : null}
+      {summary ? (
+        <HistoryEntryCard entry={summary} current brief />
+      ) : (
+        <Note>{s.noSubscription}</Note>
+      )}
+      {endLine ? <Note>{endLine}</Note> : null}
     </View>
   );
 }

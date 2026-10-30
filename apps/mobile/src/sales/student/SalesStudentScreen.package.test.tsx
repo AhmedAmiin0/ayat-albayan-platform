@@ -20,7 +20,10 @@ const summary: SalesPackageSummary = {
   lessons_total: 12, lessons_used: 5, lessons_remaining: 7,
 };
 const other = (pkg: SalesPackageSummary | null) =>
-  details({ mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 }, package: pkg });
+  details({
+    mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 },
+    package: pkg,
+  });
 beforeEach(() => {
   mockApiFetch.mockReset();
   fakeNow(new Date('2026-10-27T10:00:00Z'));
