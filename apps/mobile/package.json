@@ -10,6 +10,7 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsgo --noEmit",
     "test": "jest",
+    "bundle": "expo export --platform android --output-dir dist/bundle",
     "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build"
   },
   "dependencies": {
