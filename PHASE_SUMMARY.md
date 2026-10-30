@@ -179,7 +179,7 @@ Two critics reviewed the running app. The fidelity critic checked it against the
 - **Applicants:** the count reads «3 طلب», rows stack on phones, and the application date shows the date only.
 
 ### Mobile (Expo)
-- **Theme:** `packages/shared/src/theme/theme.ts` is now the one source for the RN palette, elevation, type, shape, space and motion. `apps/mobile/src/theme.ts` re-exports it and only picks the scheme.
+- **Theme:** `packages/shared/src/catalog/theme/theme.ts` is now the one source for the RN palette, elevation, type, shape, space and motion. `apps/mobile/src/theme.ts` re-exports it and only picks the scheme.
 - **Fonts and graphics:** Amiri and Plex via expo-font, plus the Mark, the NuqtaGlyph and the empty-state rhombus.
 - **Screens:** the login screen and the «النهارده» shell.
 - **Start alignment:** the new `AppText` and the `Field` primitive align to the start under forceRTL.
@@ -622,7 +622,7 @@ Owner request: every price on **ayatalbayan.com/calculator**, with a currency AP
 Branch `develop`. Foundation commit `8ea89a6` (scheduling schema, lesson state machine, `docs/10-phase2-contracts.md`), then five builder branches merged with `--no-ff` in this order: `phase2/brand` (`6e9d431`), `phase2/engine` (`69b439f`), `phase2/booking` (`8c7fc50`), `phase2/web` (`5249b06`), `phase2/mobile` (`205c006`). All five merges were clean, with no textual conflicts. The `ar.json` hunks fell in separate namespaces (`lessons.error`, `schedule`, `booking`, `teacherDash`, `today`), and the migrations have distinct numbers (080 engine, 090 booking, 100 engine).
 
 ## What was built
-- **Brand** (`phase2/brand`): the real academy emblem replaces the invented rosette everywhere: web shell, login cover, favicons, mobile header and login, iOS and Android icons, and the splash image. The palette moves to brand green, gold and paper in `packages/shared/src/theme/theme.ts` and `apps/web/src/styles/tokens.css`, kept in sync by a test. Every text/surface pair passes AA in light and dark (`theme.contrast.test.ts`). Token names are unchanged.
+- **Brand** (`phase2/brand`): the real academy emblem replaces the invented rosette everywhere: web shell, login cover, favicons, mobile header and login, iOS and Android icons, and the splash image. The palette moves to brand green, gold and paper in `packages/shared/src/catalog/theme/theme.ts` and `apps/web/src/styles/tokens.css`, kept in sync by a test. Every text/surface pair passes AA in light and dark (`theme.contrast.test.ts`). Token names are unchanged.
 - **Lessons engine** (`phase2/engine`; R-SCH-02, 03, 07, 08, R-LES-01, 03, R-TCH-03):
   - `generate_rule_lessons` (migration 080) inserts with `on conflict (rule_id, starts_at) do nothing`, so re-runs add 0 rows and never recreate cancelled or rescheduled slots (issue B1).
   - `apply_lesson_changes` (migration 100) applies status CAS, the end of a rule, a new rule with its lessons, and dedup-keyed queued messages in one transaction.

@@ -8,7 +8,7 @@ kept: every action is still there, now inside the lesson details sheet.
 **Ships JS-only by OTA**: no native dependency, config plugin or `app.json` change (no `expo-blur` in
 this APK). `tools/scripts/ci-checks/native-changes.mjs` must report no native change.
 
-Phone 390×844, RTL, Noto Sans Arabic, palette tokens (`packages/shared/src/theme/theme.ts`). Light values
+Phone 390×844, RTL, Noto Sans Arabic, palette tokens (`packages/shared/src/catalog/theme/theme.ts`). Light values
 below; dark mode takes each token's dark twin.
 
 ## 1. Ground and header

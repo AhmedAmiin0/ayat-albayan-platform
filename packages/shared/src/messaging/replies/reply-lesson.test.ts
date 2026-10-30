@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Permission } from '../../permissions/catalog.js';
+import type { Permission } from '../../catalog/permissions/catalog.js';
 import type { ThreadLesson } from '../chat/views.js';
 import { replyConfirmPath, replyLesson, replyRights } from './reply-lesson.js';
 

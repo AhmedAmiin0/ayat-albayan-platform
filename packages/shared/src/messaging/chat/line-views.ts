@@ -1,5 +1,5 @@
 import type { WaLine } from '../../enums/messaging.js';
-import type { WaProvider } from '../../integrations/keys.js';
+import type { WaProvider } from '../../catalog/integrations/keys.js';
 
 /**
  * POST /messaging/lines/check item (docs/12 §13.8–13.9): one WhatsApp line as Meta reports it.

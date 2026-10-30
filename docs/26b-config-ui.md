@@ -7,7 +7,7 @@ Modern Standard Arabic (CLAUDE.md rule 10); raw key names only as small LTR text
 `values-390.html`, `notifications.html`, `mobile.html`, and `states.html` (every dialog and state), all on the shared
 `tokens.css`.
 
-> **Colours (owner, 2026-10-23: «keep the colors»).** The build keeps the app's live «Emerald Mint» palette exactly (`apps/web/src/styles/tokens.css`, from `packages/shared/src/theme/theme.ts`): white pages, the light mint sidebar, the soft green-grey dark mode, `--lapis-fill` for primary buttons. The mockups' `tokens.css` now copies those values; no new colour is introduced.
+> **Colours (owner, 2026-10-23: «keep the colors»).** The build keeps the app's live «Emerald Mint» palette exactly (`apps/web/src/styles/tokens.css`, from `packages/shared/src/catalog/theme/theme.ts`): white pages, the light mint sidebar, the soft green-grey dark mode, `--lapis-fill` for primary buttons. The mockups' `tokens.css` now copies those values; no new colour is introduced.
 
 ## 0. Owner feedback (2026-10-23) and what changed
 
