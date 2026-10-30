@@ -29,3 +29,20 @@ test('package-relative pairs only for moves inside the package of a suppressions
   assert.deepEqual(textPairs('eslint-suppressions.json', pairs), pairs);
   assert.deepEqual(textPairs('apps/web/knip.json', pairs), pairs);
 });
+
+test('the e2e spec lists follow a spec moved into a domain folder (areas by tests/-relative name)', () => {
+  const areas = { areas: { inbox: { paths: ['apps/web/src/x.ts'], specs: ['inbox.spec.ts', 'x-inbox.spec.ts'] } } };
+  const root = makeRepo({
+    'e2e/areas.json': `${JSON.stringify(areas, null, 2)}\n`,
+    'e2e/shard-durations.json': '{ "tests/inbox.spec.ts": { "desktop": 9 } }\n',
+    'e2e/tests/inbox.spec.ts': "import { a } from '../support/a';\n",
+    'e2e/support/a.ts': 'export const a = 1;\n',
+    'refactor/moves/t.json': map({ moves: [{ from: 'e2e/tests/inbox.spec.ts', to: 'e2e/tests/messaging/inbox.spec.ts' }] }),
+  });
+  runMap(root, 'refactor/moves/t.json');
+  const s = snapshot(root);
+  const specs = ['messaging/inbox.spec.ts', 'x-inbox.spec.ts'];
+  assert.deepEqual(JSON.parse(s['e2e/areas.json'] ?? '{}'), { areas: { inbox: { ...areas.areas.inbox, specs } } });
+  assert.equal(s['e2e/shard-durations.json'], '{ "tests/messaging/inbox.spec.ts": { "desktop": 9 } }\n');
+  assert.equal(s['e2e/tests/messaging/inbox.spec.ts'], "import { a } from '../../support/a';\n");
+});

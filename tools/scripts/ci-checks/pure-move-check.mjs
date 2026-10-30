@@ -7,7 +7,7 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { classifyBaseline } from './pure-move/baselines.mjs';
-import { classifyConfig, rewritePaths as rewriteText } from './pure-move/configs.mjs';
+import { classifyConfig, rewritePaths as rewriteText, textPairs } from './pure-move/configs.mjs';
 import { CODE_SPECS, grepFiles, identifierTable, renameIdentifiers, renameProblems } from './pure-move/identifiers.mjs';
 import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
@@ -91,7 +91,7 @@ export function classify(entry, read, ctx = {}) {
   if (baseline) return baseline;
   if (status === 'R100') return { kind: 'rename' };
   if (TEXT.test(to) && !/^(\.github|refactor)\//.test(to) && status !== 'A' && status !== 'D') {
-    const renamed = rewriteText(read('base', from), ctx.renames ?? []);
+    const renamed = rewriteText(read('base', from), textPairs(to, ctx.renames ?? []));
     return renamed === read('head', to) ? { kind: 'paths' } : { kind: 'bad', why: 'changes more than moved file paths' };
   }
   if (isConfig(to) && !CODE.test(to)) return classifyConfig(entry, read, ctx.renames ?? []);
