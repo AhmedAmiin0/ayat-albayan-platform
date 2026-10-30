@@ -35,6 +35,7 @@ describe('salesStartDate with subscriptions.set_start_date', () => {
 
   it('daysBefore counts calendar days', () => {
     expect(daysBefore('2026-03-01', 1)).toBe('2026-02-28');
+    expect(daysBefore('2027-01-01', 1)).toBe('2026-12-31');
     expect(daysBefore(today, 365)).toBe('2025-10-12');
   });
 });
