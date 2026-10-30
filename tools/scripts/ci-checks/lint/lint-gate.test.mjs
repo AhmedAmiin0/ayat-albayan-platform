@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { differences, totals } from './lint-gate.mjs';
+import { aboveBase, differences, gone, oxlintSuppressed, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -20,4 +20,37 @@ test('differences: equal totals pass; a grown or new rule and a shrunk or gone o
     'shrank: max-depth 2 -> 1 (pnpm guard:lint -- --write)',
     'shrank: no-console 1 -> 0 (pnpm guard:lint -- --write)',
   ]);
+});
+
+test('aboveBase: no total may rise above the base branch, even when lint.json was rewritten to match', () => {
+  const base = { complexity: 5, 'max-depth': 2 };
+  assert.deepEqual(aboveBase({ complexity: 5, 'max-depth': 1 }, base), []);
+  // `eslint . --suppress-all` then `pnpm guard:lint -- --write`: both files rose together, the in-tree check passes.
+  const raised = { complexity: 7, eqeqeq: 1, 'max-depth': 2 };
+  assert.deepEqual(differences(raised, raised), []);
+  assert.deepEqual(aboveBase(raised, base), [
+    'above the base branch: complexity 5 -> 7 (fix the new violations)',
+    'above the base branch: eqeqeq 0 -> 1 (fix the new violations)',
+  ]);
+});
+
+test('gone: an entry whose file was deleted or moved fails (ESLint never lints that file)', () => {
+  const byFile = { 'src/a.ts': { complexity: { count: 1 } }, 'src/old.ts': { 'max-depth': { count: 2 } } };
+  const exists = (path) => path === 'apps/web/src/a.ts';
+  assert.deepEqual(gone('apps/web', byFile, exists), ['gone: apps/web/src/old.ts (eslint . --prune-suppressions)']);
+  assert.deepEqual(gone('apps/web', {}, exists), []);
+});
+
+test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, whatever its prefix', () => {
+  const now = { '@typescript-eslint/max-params': 2, complexity: 240, 'no-regex-spaces': 2 };
+  const rc = {
+    rules: { 'typescript/no-explicit-any': 'error', 'max-params': 'error' },
+    overrides: [{ rules: { 'eslint/no-regex-spaces': 'error' } }],
+  };
+  assert.deepEqual(oxlintSuppressed(rc, now), [
+    'oxlint runs @typescript-eslint/max-params, which has 2 suppressed: keep it in ESLint',
+    'oxlint runs no-regex-spaces, which has 2 suppressed: keep it in ESLint',
+  ]);
+  assert.deepEqual(oxlintSuppressed({ rules: { eqeqeq: 'error' } }, now), []);
+  assert.deepEqual(oxlintSuppressed({}, now), []);
 });

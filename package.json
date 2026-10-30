@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo lint",
+    "lint": "pnpm lint:ox && turbo lint",
+    "lint:ox": "oxlint --deny-warnings --report-unused-disable-directives-severity=error --ignore-pattern=packages/db/src/types.ts apps packages tools/google-stub tools/migrate tools/scripts tools/wa-stub e2e",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "e2e": "turbo e2e",
@@ -30,6 +31,7 @@
     "@ab/config": "workspace:*",
     "jscpd": "4.0.5",
     "knip": "5.88.1",
+    "oxlint": "1.88.0",
     "postgres": "^3.4.9",
     "prettier": "^3.6.0",
     "turbo": "^2.11.6"
