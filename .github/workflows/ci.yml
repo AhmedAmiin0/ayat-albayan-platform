@@ -106,7 +106,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { name: lint, task: lint, key: lint }
+          # Type-aware lint (docs/31a): more heap, fewer packages at once.
+          - { name: lint, task: lint, key: lint, opts: --concurrency=3, heap: --max-old-space-size=6144 }
           - { name: typecheck, task: typecheck, key: typecheck }
           - { name: test web 1/2, task: test, key: web-1, filter: --filter=web, args: '-- --shard=1/2' }
           - { name: test web 2/2, task: test, key: web-2, filter: --filter=web, args: '-- --shard=2/2' }
@@ -128,7 +129,9 @@ jobs:
           key: turbo-${{ matrix.key }}-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             turbo-${{ matrix.key }}-${{ runner.os }}-
-      - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} --cache-dir=.turbo/cache ${{ matrix.args }}
+      - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
+        env:
+          NODE_OPTIONS: ${{ matrix.heap }}
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
   # that grew, a stale allow-list entry). Pure-move check: only for move PRs (refactor/* and cloud/refactor-*
@@ -157,8 +160,9 @@ jobs:
           esac
 
   # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
-  # more clones, duplicated lines or cross-app clones) and knip (no new unused file, export, type or
-  # dependency). Module boundaries are an eslint error, checked by the lint job. The e2e area guard: every
+  # more clones, duplicated lines or cross-app clones), knip (no new unused file, export, type or
+  # dependency) and lint (docs/31a: per-rule totals of every eslint-suppressions.json; the lint job fails on a
+  # new violation, this gate on a count raised by hand or a stale baseline). The e2e area guard: every
   # e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
@@ -175,6 +179,7 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm guard:dup
       - run: pnpm guard:knip
+      - run: pnpm guard:lint
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change

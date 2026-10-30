@@ -6,7 +6,7 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "node --env-file-if-exists=.env dist/main.js",
     "dev": "node --env-file-if-exists=.env --watch -r @swc-node/register src/main.ts",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "config:import-env": "node --env-file-if-exists=.env dist/scripts/config-import-env.js"

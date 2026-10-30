@@ -81,6 +81,28 @@ Nothing in this plan runs on the owner's PC. GitHub Actions and cloud routines r
 `noRawEffect` uses `no-restricted-syntax` on purpose. Flat config replaces rule options per block, so a second
 `no-restricted-imports` block would silently drop mobile's `AppText` and feature-index options and api's settings-reader option.
 
+PR 1 also adds the owner's «avoid before React 19 practices» (2026-10-30) to the same `no-restricted-syntax` list
+(`reactRestrictions` in `packages/config/eslint-react.js`, which replaces `noRawEffect`; one list per file, the
+effect block repeats the others so neither drops them). All of them count under one key, `no-restricted-syntax`.
+
+| rule                                                       | web (React 18.3)                         | mobile (React 19.2) |
+| ---------------------------------------------------------- | ---------------------------------------- | ------------------- |
+| no `useMemo` / `useCallback` / `memo` (import or `React.x`) | error where compiled: React Compiler on (`reactCompilerPreset({ target: '18' })` + `react-compiler-runtime`), except `src/features/messaging/inbox/` | off: no compiler yet (below) |
+| no `forwardRef` (ref is a prop)                            | after the React 19 upgrade               | error               |
+| `use(Context)`, not `useContext`                           | after the React 19 upgrade               | error               |
+| `<Context value>`, not `<Context.Provider>`                | after the React 19 upgrade               | error               |
+| raw `useEffect` / `useLayoutEffect` outside `use-*.ts(x)` and `hooks/` | error (`.tsx`)               | error (`.tsx`)      |
+
+The compiler caches what a component reads during render on the props and state it depends on. Code that
+reads mutable module state in render (a rules-of-React break the lint rules do not see) then shows stale values:
+on web that broke 3 inbox unit tests (`MessageLog` reads `lastOwnSend` from `own-send`; 2 `ReplyComposer` tests in the
+same folder). The inbox is left out (`vite.config.ts` `NOT_COMPILED`, the no-memo rule lifted there) until its
+stores subscribe through `useSyncExternalStore`. On mobile, `babel-preset-expo` turns the compiler on only for
+Metro (`supportsReactCompiler`, set from `experiments.reactCompiler`); jest-expo never sets it, so no CI test runs
+compiled mobile code and a merge would ship it untested to the preview OTA. Path: a `babel.config.js` that runs
+`babel-plugin-react-compiler` under jest, fix what breaks, then `experiments.reactCompiler: true` (Babel only,
+OTA-safe: not a native key in `native-changes.mjs`) and `compiler: true` for mobile.
+
 ### 3.3 Per package
 
 | package                       | on top of the factory                                                                                                   | off              |
@@ -168,7 +190,7 @@ no-unsafe-enum-comparison, prefer-return-this-type, return-await.
 | `apps/web/package.json`, `pnpm-lock.yaml`                     | `eslint-plugin-jsx-a11y` 6.10.2; lockfile written by a CI job or cloud routine. Its peer range stops at ESLint 9; it loaded and reported under 10.11 in the probe. Add a `peerDependencyRules.allowedVersions` entry if pnpm warns |
 | `crm-body.test.ts:34`, `send-file.ts:30`, `students.mapper.ts:45` | the 2 tsc fixes; delete the unused directive                                           |
 | `*/eslint-suppressions.json` (4 today, 6 new: client-core, migrate, wa-stub, google-stub, scripts, e2e) | `eslint . --suppress-all` per package, run in CI |
-| `refactor/guards/lint.json`, `tools/scripts/ci-checks/lint-gate.mjs` (+ test), root `guard:lint`, `guards` job | per-rule totals summed over every suppressions file. Fails when a total grows, a rule is missing, or the baseline is stale (then `pnpm guard:lint -- --write`). Same shape as `jscpd-gate` and `knip-gate`. `ab/module-boundaries` (2,031) gets the same check |
+| `refactor/guards/lint.json`, `tools/scripts/ci-checks/lint/lint-gate.mjs` (+ test; own folder: `ci-checks/` is at the 12-file cap), root `guard:lint`, `guards` job | per-rule totals summed over every suppressions file. Fails when a total grows, a rule is missing, or the baseline is stale (then `pnpm guard:lint -- --write`). Same shape as `jscpd-gate` and `knip-gate`. `ab/module-boundaries` (2,031) gets the same check |
 | `.github/workflows/ci.yml`                                    | the lint row gets `NODE_OPTIONS=--max-old-space-size=6144` and `--concurrency=3`           |
 
 PR 1 changes every tsconfig, so its CI runs the full e2e set, including the api boot. In-flight branches rebase onto it

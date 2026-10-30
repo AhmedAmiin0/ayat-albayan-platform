@@ -1,0 +1,102 @@
+{
+  "src/assistants/terms-form.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 3
+    }
+  },
+  "src/calls/call-actions.ts": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 2
+    },
+    "@typescript-eslint/no-meaningless-void-operator": {
+      "count": 2
+    }
+  },
+  "src/calls/call-store.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 4
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    }
+  },
+  "src/calls/calls-api.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 2
+    }
+  },
+  "src/calls/calls-ui.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  },
+  "src/errors/send-error.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/http/api-client.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    }
+  },
+  "src/inbox/live-registry.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  },
+  "src/inbox/reaction-mutation.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/inbox/reaction-mutation.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  },
+  "src/payments/stripe-settings.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/payments/upload-once.ts": {
+    "@typescript-eslint/no-unnecessary-type-parameters": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/reports/reports.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/users/create-form.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/users/edit-form.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/users/errors.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  },
+  "src/users/validation.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    }
+  }
+}

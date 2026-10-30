@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "cli": "node --env-file-if-exists=.env src/cli.ts",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

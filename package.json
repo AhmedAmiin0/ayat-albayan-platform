@@ -22,7 +22,8 @@
     "migrate:apply": "pnpm --filter @ab/migrate cli apply",
     "test:all": "turbo lint typecheck test e2e --force",
     "guard:dup": "jscpd && node tools/scripts/ci-checks/jscpd-gate.mjs",
-    "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs"
+    "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs",
+    "guard:lint": "node tools/scripts/ci-checks/lint/lint-gate.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {
