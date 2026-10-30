@@ -5031,9 +5031,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -5126,9 +5123,6 @@
   "src/features/messaging/notification-rules/table/use-rule-row.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 5
@@ -11858,9 +11852,6 @@
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 5
     }
@@ -11905,9 +11896,6 @@
     }
   },
   "src/features/teaching/classroom/join/StaffClassroomPage.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
@@ -12436,9 +12424,6 @@
     }
   },
   "src/features/teaching/classroom/student-link/StudentLessonPanel.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
