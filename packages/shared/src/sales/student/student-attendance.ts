@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { Attendance, LessonStatus } from '../../enums/index.js';
 import { RIYADH_TZ } from '../../core/format/index.js';
 import { zonedInstant } from '../../schedule/lessons/index.js';
-import { monthParam } from '../../money/index.js';
+import { monthParam } from '../../money/ledger/index.js';
 import { riyadhToday } from '../../time/index.js';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 

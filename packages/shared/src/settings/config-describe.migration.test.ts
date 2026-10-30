@@ -21,7 +21,7 @@ const sql = Object.values(FILES)[0] ?? '';
 const ownedAtCopy = (key: string): boolean => isOwnedSettingKey(key) && OWNED_SETTING_KEYS[key] !== 'notifications';
 /** Keys added after the copy shipped: no override of theirs existed; the seeder writes their description. */
 const AFTER_COPY: readonly string[] = [
-  'chat_reopen_template', 'crm_media_host', 'crm_media_copy_all', 'whatsapp_calls_enabled', 'renewal_commission_percent',
+  'chat_reopen_template', 'crm_media_host', 'crm_media_copy_all', 'whatsapp_calls_enabled', 'calls_permission_template', 'renewal_commission_percent',
   'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts', 'report_form_v2',
 ];
 

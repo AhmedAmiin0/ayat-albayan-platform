@@ -611,8 +611,8 @@ Owner request: every price on **ayatalbayan.com/calculator**, with a currency AP
 - **Egypt is quoted in USD.** EGP is not one of the site's currencies, so Egypt-based guardians (and any other country) get USD at the API rate. Teacher payouts stay in EGP (R-TCH-01).
 - **Provider attribution:** the link reads «أسعار الصرف من ExchangeRate-API» and points to exchangerate-api.com. docs/08 §4 quotes the provider's own wording, «Rates By Exchange Rate API». Please confirm the Arabic wording is acceptable; if not, change `pricing.fx.attribution` in `packages/shared/i18n/ar.json`.
 - **Keep prices in sync with the site.** If ayatalbayan.com/calculator changes, update these places, then run `pnpm test:all`. The tier tests pin today's numbers, so they will fail until updated.
-  - **Base prices, lesson counts, the weekly/monthly packages, the discount pills and the limits:** `packages/shared/src/pricing/catalog.ts`.
-  - **Countries, currencies and divisors:** `packages/shared/src/pricing/currency.ts`.
+  - **Base prices, lesson counts, the weekly/monthly packages, the discount pills and the limits:** `packages/shared/src/money/pricing/catalog.ts`.
+  - **Countries, currencies and divisors:** `packages/shared/src/money/pricing/currency.ts`.
   - **Package names, taglines and the offer wording:** `ar.json` under `pricing`.
   - **The spec tables:** docs/08 §1–3.
 - **Free discount:** staff can type any 0–100%, as on the site. The family-discount hint still points to the sales sheet.

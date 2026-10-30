@@ -17,7 +17,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   uploads: ['upload_max_mb'],
   academy: ['academy_whatsapp_e164', 'academy_timezone', 'academy_contact', 'recording_consent_notice', 'feedback_rate_window_min',
     'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts'],
-  messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'crm_media_host', 'crm_media_copy_all'],
+  messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'calls_permission_template', 'crm_media_host', 'crm_media_copy_all'],
   sales: ['sales_auto_assign', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 };
@@ -37,9 +37,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 37 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2) sit in their «القيم» group, scope config', () => {
+  it('the 38 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(37);
+    expect(config).toHaveLength(38);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

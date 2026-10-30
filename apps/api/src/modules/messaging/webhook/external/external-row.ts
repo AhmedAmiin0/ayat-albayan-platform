@@ -1,5 +1,5 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { ACCOUNT_CODE_TEMPLATE, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, type NumberPurpose } from '@ab/shared';
 import type { StatusEvent } from '../webhook.events';
 import type { Contact } from '../webhook.types';
 import { statusPatch } from '../status/webhook.status';
@@ -20,7 +20,7 @@ interface ExternalRowInput {
   phone: string;
   who: Contact;
   /** Where it was sent from: the line and, when known, the wa_numbers row. */
-  from: { line: WaLine | null; numberId: string | null };
+  from: { line: NumberPurpose | null; numberId: string | null };
   /** created_at: WhatsApp's time, nudged within its second like inbound rows (orderedAt). */
   at: Date;
   /** The delivery status that revealed it (webhook); none for the catch-up job. */

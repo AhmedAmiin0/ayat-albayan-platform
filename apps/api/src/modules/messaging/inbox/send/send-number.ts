@@ -1,4 +1,4 @@
-import { mergeWindows, replyNumber, type NumberWindow, type WaLine } from '@ab/shared';
+import { isWaLine, mergeWindows, replyNumber, type NumberWindow, type WaLine } from '@ab/shared';
 import { Logger } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import { pickSendLine, type SendLineCode } from './send-line';
@@ -51,7 +51,7 @@ export function pickNumber(input: { rows: readonly ThreadWindow[]; numbers: read
   const picked = replyNumber({ windows, now: input.now, canSend: (id) => sendable(byId.get(id)) });
   if ('code' in picked) return { code: picked.code === 'number_not_configured' ? 'line_not_configured' : 'session_closed' };
   const n = byId.get(picked.numberId);
-  return n ? { number_id: n.id, line: n.purpose } : { code: 'line_not_configured' };
+  return n && isWaLine(n.purpose) ? { number_id: n.id, line: n.purpose } : { code: 'line_not_configured' };
 }
 
 /**

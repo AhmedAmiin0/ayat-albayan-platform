@@ -21,6 +21,16 @@ describe('NumberRoutes.pass', () => {
     expect(templates).toEqual([templateRow()]);
   });
 
+  it('a calls number (docs/28 §10) never enters the pass, even enabled, default and with a config', async () => {
+    const calls = overlayNum({ id: 'n-calls', phone_number_id: '1000000009', purpose: 'calls' });
+    const { pass } = await new NumberRoutes(queries() as unknown as RouteQueries).pass([
+      ...THREE,
+      calls,
+    ]);
+    expect(pass.numbers.map((n) => n.id)).not.toContain('n-calls');
+    expect(pass.numbers).toHaveLength(3);
+  });
+
   it('rules unreadable → the pass throws (never a number the rule did not pick); no reader → no rule numbers', async () => {
     const failing = new NumberRoutes(queries() as unknown as RouteQueries, reader(vi.fn(async () => Promise.reject(new Error('db down')))));
     await expect(failing.pass(THREE)).rejects.toThrow('db down');

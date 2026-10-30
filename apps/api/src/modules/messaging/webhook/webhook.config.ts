@@ -1,3 +1,4 @@
+import { callsNumber } from '../../../common/integrations/calls-number';
 import { overlayNumbers, type OverlayNumber } from '../../../common/integrations/numbers-overlay';
 import { crmWebhookSecret } from '../../../config/env/whatsapp/env.crm';
 import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '../../../config/env/env';
@@ -53,6 +54,10 @@ export function liveWebhookConfig(read: () => Env): WebhookConfig {
     },
     get overlay() {
       return overlayNumbers();
+    },
+    get calls() {
+      const n = callsNumber();
+      return n ? { id: n.id, purpose: 'calls' as const, phone_number_id: n.phoneNumberId } : null;
     },
   };
 }

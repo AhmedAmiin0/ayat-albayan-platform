@@ -4,7 +4,7 @@ import type { WhatsappEnv } from '../../../../config/env/env';
 import type { SendGate } from '../gate/send-gate';
 import type { MessageDispatch } from '../sender/message.dispatch';
 import type { SenderQueries } from '../sender/sender.queries';
-import { routable } from '../numbers/number-route';
+import { messagingNumbers, routable } from '../numbers/number-route';
 import type { NumberRoutes } from '../numbers/number-routes';
 import { templateRow } from '../whatsapp.fakes';
 import { CodeSend } from './code-send';
@@ -18,7 +18,7 @@ const queries = { approvedTemplates: vi.fn(), chatConfigured: true };
 const dispatch = { ready: vi.fn(), send: vi.fn() };
 const routes = {
   pass: vi.fn(async (numbers: readonly OverlayNumber[]) => ({
-    pass: { numbers: numbers.map(routable), ruleNumbers: new Map(), approvals: new Map(), crm: new Set<string>() },
+    pass: { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: new Map(), approvals: new Map(), crm: new Set<string>() },
     templates: [],
   })),
 };

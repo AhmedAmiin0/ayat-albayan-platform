@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { NumberPurpose, WaLine } from '@ab/shared';
 import type { WhatsappEnv } from '../../config/env/whatsapp/env.whatsapp';
 
 // Numbers as records (docs/23 §3 phase 3). null = settings.comms_source is legacy (or not loaded): loadEnv()
@@ -15,7 +15,10 @@ import type { WhatsappEnv } from '../../config/env/whatsapp/env.whatsapp';
 export interface OverlayNumber {
   id: string;
   label: string;
-  purpose: WaLine;
+  /**
+   * `calls` (docs/28 §10): env is always null, so it never sends; inbound on it is still logged.
+   */
+  purpose: NumberPurpose;
   phone_number_id: string;
   waba_id: string | null;
   enabled: boolean;

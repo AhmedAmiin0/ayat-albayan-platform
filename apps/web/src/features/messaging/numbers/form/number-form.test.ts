@@ -25,4 +25,11 @@ describe('number-form', () => {
     expect(updateBody(numberView(), draft)).toEqual({ label: 'New name', app_id: '3000000001' });
     expect(updateBody(numberView(), draftOf(numberView()))).toEqual({});
   });
+
+  it('a calls number must be on Kapso (docs/28 §10): the provider field says so before saving', () => {
+    const calls = { ...draftOf(), label: 'رقم المكالمات', phone_number_id: '1000000009', purpose: 'calls' as const };
+    expect(draftErrors(calls)).toEqual({ provider: t.numbers.errors.calls_need_kapso });
+    expect(draftErrors({ ...calls, provider: 'kapso' })).toEqual({});
+    expect(createBody({ ...calls, provider: 'kapso' })).toMatchObject({ purpose: 'calls', provider: 'kapso', enabled: false });
+  });
 });

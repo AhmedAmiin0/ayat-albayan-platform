@@ -1,9 +1,9 @@
-import { PLAYABLE_MIMES, type WaLine } from '@ab/shared';
+import { PLAYABLE_MIMES, type NumberPurpose } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
-export type MediaNumber = { id: string; provider: string; purpose: WaLine };
+export type MediaNumber = { id: string; provider: string; purpose: NumberPurpose };
 
 /** The columns of an inbound message that carry a file (R-MSG-06). */
 export type MediaMessage = {
@@ -18,8 +18,8 @@ export type MediaMessage = {
   /** A sent file's name (thread-file-send); «تنزيل» saves under it. */
   media_name?: string | null;
   created_at: string;
-  /** The receiving line: its token is the only one that can fetch the media id (null = notifications). */
-  line: WaLine | null;
+  /** The receiving line: its token is the only one that can fetch the media id (null = notifications; calls = the calls number). */
+  line: NumberPurpose | null;
   /** Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it. */
   number?: MediaNumber | null;
 };

@@ -1,7 +1,7 @@
 import { Injectable, Optional } from '@nestjs/common';
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import { RulesReader } from '../../notification-rules/store/rules.reader';
-import { routable, ruleNumbers, type RoutePass } from './number-route';
+import { messagingNumbers, routable, ruleNumbers, type RoutePass } from './number-route';
 import { RouteQueries } from './route.queries';
 import type { TemplateRow } from '../whatsapp.types';
 
@@ -24,7 +24,7 @@ export class NumberRoutes {
     const approvals = await this.queries.approvals();
     const [templates, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);
     const crm = new Set(numbers.filter((n) => n.env?.provider === 'crm').map((n) => n.id));
-    return { pass: { numbers: numbers.map(routable), ruleNumbers: rules, approvals, crm }, templates };
+    return { pass: { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: rules, approvals, crm }, templates };
   }
 
   private async ruleNumbers(): Promise<Map<string, string | null>> {

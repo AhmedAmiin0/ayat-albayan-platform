@@ -4952,9 +4952,6 @@
     }
   },
   "src/inbox/thread/calls/screen/CallOverlay.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -4983,11 +4980,6 @@
   "src/inbox/thread/calls/screen/PermissionDialog.buttons.test.tsx": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/inbox/thread/calls/screen/PermissionDialog.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/thread/calls/screen/RoundButton.tsx": {

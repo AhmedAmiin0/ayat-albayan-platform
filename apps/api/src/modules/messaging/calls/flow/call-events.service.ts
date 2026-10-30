@@ -1,17 +1,20 @@
 import { waIdToE164, type CallEvent } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type { CallWebhookEvent } from '../../webhook/webhook.events';
+import type { CallPermissionReplyEvent, CallWebhookEvent } from '../../webhook/webhook.events';
 import { CallsGate } from '../access/calls-gate';
 import { callingLine, type CallingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
+import { CallsNumberRepo } from '../store/calls-number.repo';
 import { CallsSweeper } from './calls.sweeper';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */
 export interface CallEventsPort {
   handle(event: CallWebhookEvent): Promise<void>;
+  /** A family's answer to a call permission request (docs/28 §10): stored with its expiry. */
+  permissionReply(event: CallPermissionReplyEvent): Promise<void>;
 }
 export const CALL_EVENTS = Symbol('CALL_EVENTS');
 
@@ -49,7 +52,27 @@ export class CallEvents implements CallEventsPort {
     private readonly kit: CallsKit,
     private readonly gate: CallsGate,
     private readonly sweeper: CallsSweeper,
+    private readonly permissions: CallsNumberRepo,
   ) {}
+
+  /**
+   * Stored whatever the setting says (it only records the family's own answer); never a send, never
+   * Kapso.
+   */
+  async permissionReply(e: CallPermissionReplyEvent): Promise<void> {
+    const phone = waIdToE164(e.from);
+    if (!phone) {
+      this.log.warn(`call permission reply: the wa_id is not a phone`);
+      return;
+    }
+    await this.permissions.saveReply({
+      phoneNumberId: e.phoneNumberId,
+      phone,
+      response: e.response,
+      expiresAt: e.expiresAt,
+      at: e.at,
+    });
+  }
 
   async handle(e: CallWebhookEvent): Promise<void> {
     const line = callingLine();
