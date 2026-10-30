@@ -42,7 +42,7 @@ test("allowed already: the preview with one's camera, then «انضم الآن»
   expect(screen.getByTestId('room-grid')).toBeTruthy();
   expect(screen.getByTestId('video-mirrored')).toBeTruthy();
   expect(screen.getByText(R.count.replace('{n}', '2'))).toBeTruthy();
-  expect(screen.getByLabelText('سهيلة')).toBeTruthy();
+  expect(screen.getByLabelText('Suhaila')).toBeTruthy();
   expect(screen.queryByText(t.classroom.waiting)).toBeNull();
 });
 

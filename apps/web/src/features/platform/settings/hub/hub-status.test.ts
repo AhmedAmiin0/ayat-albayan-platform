@@ -10,18 +10,18 @@ const summary = (n: number, modified: number, open: number) =>
   [counted(H.valuesCount, n), fill(H.valuesModified, { n: modified }), fill(H.valuesPublic, { n: open })].join(' · ');
 
 describe('valuesSummary («القيم» — N قيمة · M معدَّلة · K عامة)', () => {
-  it('the seeded defaults: 38 values, none changed, 8 public', () => {
-    expect(valuesSummary({ ...SETTING_DEFAULTS })).toBe(summary(38, 0, 8));
+  it('the seeded defaults: 39 values, none changed, 9 public', () => {
+    expect(valuesSummary({ ...SETTING_DEFAULTS })).toBe(summary(39, 0, 9));
   });
 
   it('counts only editable values that differ from the default', () => {
     const s = settingsWith({ booking_horizon_weeks: 6, upload_max_mb: 99, messaging_enabled: !SETTING_DEFAULTS.messaging_enabled });
-    expect(valuesSummary(s)).toBe(summary(38, 2, 8));
+    expect(valuesSummary(s)).toBe(summary(39, 2, 9));
   });
 
   it('an object value is compared by content, not by identity', () => {
     const contact = { ...SETTING_DEFAULTS.academy_contact };
-    expect(valuesSummary(settingsWith({ academy_contact: contact }))).toBe(summary(38, 0, 8));
+    expect(valuesSummary(settingsWith({ academy_contact: contact }))).toBe(summary(39, 0, 9));
   });
 });
 

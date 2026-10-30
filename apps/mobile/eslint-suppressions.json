@@ -331,7 +331,7 @@
   },
   "src/app-config.test.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/assistant-app/AssistantHomeScreen.tsx": {
@@ -6397,11 +6397,8 @@
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/inbox/thread/calls/rtc/ringtone.ts": {
@@ -7342,13 +7339,10 @@
   },
   "src/meetings/manage/api.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/meetings/manage/meeting-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },

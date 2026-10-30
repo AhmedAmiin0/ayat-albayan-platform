@@ -80,7 +80,7 @@ export function fakePlatform(
 export function tile(over: Partial<RoomTile> = {}): RoomTile {
   return {
     key: 'p1:camera',
-    name: 'سهيلة',
+    name: 'Suhaila',
     local: false,
     screen: false,
     micOn: true,
