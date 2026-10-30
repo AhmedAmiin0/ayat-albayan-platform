@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { posix } from 'node:path';
 import { barrelText } from './barrels.ts';
-import { codeFiles, moveFiles, readText, rewriteText, textFiles, writeIfChanged } from './files.ts';
+import { codeFiles, moveFiles, readText, rewriteText, textFiles, textPairs, writeIfChanged } from './files.ts';
 import { expandMap, readMap, writeMap, type MoveMap } from './map.ts';
 import { loadAliases, type Resolver } from './resolve.ts';
 import { needles, newProject, rewriteFile } from './rewrite.ts';
@@ -32,7 +32,7 @@ function rewriteAll(root: string, r: Resolver, pairs: [string, string][]): numbe
     if (writeIfChanged(root, file, rewriteFile(project, r, { file, text }))) count += 1;
   }
   for (const file of textFiles(root)) {
-    if (writeIfChanged(root, file, rewriteText(readText(root, file), pairs))) count += 1;
+    if (writeIfChanged(root, file, rewriteText(readText(root, file), textPairs(file, pairs)))) count += 1;
   }
   return count;
 }

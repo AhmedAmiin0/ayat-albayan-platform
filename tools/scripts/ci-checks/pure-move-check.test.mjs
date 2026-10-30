@@ -115,10 +115,14 @@ test('docs and JSON may change only by whole moved paths', () => {
   assert.equal(classify({ status: 'M', from: 'docs/a.json', to: 'docs/a.json' }, read, ctx).kind, 'bad');
 });
 
-test('a shrunk folder-cap allow-list and a new move map are config', () => {
-  const files = { 'base:refactor/folder-cap/web.json': '{ "a": 1, "b": 2 }', 'head:refactor/folder-cap/web.json': '{ "a": 1 }' };
+test('a shrunk folder-cap allow-list is a baseline edit, a grown one fails, a new move map is config', () => {
+  const cap = (n) => `{ "a": { "files": ${n}, "dirs": 0 }, "b": { "files": 14, "dirs": 0 } }`;
+  const files = { 'base:refactor/folder-cap/web.json': cap(13), 'head:refactor/folder-cap/web.json': '{ "a": { "files": 13, "dirs": 0 } }' };
   const read = (side, f) => files[`${side}:${f}`] ?? '';
-  assert.equal(classify({ status: 'M', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' }, read).kind, 'config');
+  const web = { status: 'M', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' };
+  assert.equal(classify(web, read).kind, 'paths');
+  files['head:refactor/folder-cap/web.json'] = cap(14);
+  assert.equal(classify(web, read).kind, 'bad');
   assert.equal(classify({ status: 'A', from: 'refactor/moves/b1.json', to: 'refactor/moves/b1.json' }, read).kind, 'config');
 });
 
