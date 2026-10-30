@@ -15,22 +15,44 @@ const NOW = new Date('2026-10-30T21:30:00Z');
 
 describe('«إلغاء الاشتراك» request (owner 2026-10-30)', () => {
   it('needs a short reason and the idempotency key', () => {
-    expect(courseStopSchema.parse({ subscriptionId: SUB, reason: '  سفر  ', clientRequestId: REQ }).reason).toBe('سفر');
-    expect(courseStopSchema.safeParse({ subscriptionId: SUB, clientRequestId: REQ }).success).toBe(false);
-    expect(courseStopSchema.safeParse({ subscriptionId: SUB, reason: ' ', clientRequestId: REQ }).success).toBe(false);
-    expect(courseStopSchema.safeParse({ subscriptionId: SUB, reason: 'x'.repeat(301), clientRequestId: REQ }).success).toBe(false);
+    expect(
+      courseStopSchema.parse({ subscriptionId: SUB, reason: '  سفر  ', clientRequestId: REQ })
+        .reason,
+    ).toBe('سفر');
+    expect(courseStopSchema.safeParse({ subscriptionId: SUB, clientRequestId: REQ }).success).toBe(
+      false,
+    );
+    expect(
+      courseStopSchema.safeParse({ subscriptionId: SUB, reason: ' ', clientRequestId: REQ })
+        .success,
+    ).toBe(false);
+    expect(
+      courseStopSchema.safeParse({
+        subscriptionId: SUB,
+        reason: 'x'.repeat(301),
+        clientRequestId: REQ,
+      }).success,
+    ).toBe(false);
     expect(courseStopSchema.safeParse({ subscriptionId: SUB, reason: 'سفر' }).success).toBe(false);
   });
 
   it('is strict: a refund flag is refused', () => {
-    expect(courseStopSchema.safeParse({ subscriptionId: SUB, reason: 'سفر', clientRequestId: REQ, refund: true }).success).toBe(false);
+    expect(
+      courseStopSchema.safeParse({
+        subscriptionId: SUB,
+        reason: 'سفر',
+        clientRequestId: REQ,
+        refund: true,
+      }).success,
+    ).toBe(false);
   });
 });
 
 describe('courseStopBlock', () => {
   it('refuses a cancelled package (either kind), allows every other status', () => {
     expect(courseStopBlock({ status: 'cancelled' })).toBe('already_cancelled');
-    for (const status of ['trial', 'active', 'paused', 'expired', 'unpaid'] as const) expect(courseStopBlock({ status })).toBeNull();
+    for (const status of ['trial', 'active', 'paused', 'expired', 'unpaid'] as const)
+      expect(courseStopBlock({ status })).toBeNull();
   });
 });
 
@@ -55,7 +77,15 @@ describe('stoppedLessons: which lessons a stop cancels', () => {
 
 describe('studentAfterStop: the status transition', () => {
   it('every status becomes «توقف» (churned)', () => {
-    for (const s of ['new', 'trial', 'pending_subscription', 'active', 'pending_renewal', 'expired', 'paused'] as const)
+    for (const s of [
+      'new',
+      'trial',
+      'pending_subscription',
+      'active',
+      'pending_renewal',
+      'expired',
+      'paused',
+    ] as const)
       expect(studentAfterStop(s)).toBe('churned');
   });
 
@@ -88,12 +118,21 @@ describe('changeEffectiveFrom: «من تاريخ» defaults to the next lesson',
       startsOn: '2026-11-03',
       startsAt: '2026-11-02T22:30:00Z',
     });
-    expect(changeEffectiveFrom(lessons, { tz: 'Africa/Cairo', now: NOW })?.startsOn).toBe('2026-11-03');
-    expect(changeEffectiveFrom(lessons, { tz: 'America/New_York', now: NOW })?.startsOn).toBe('2026-11-02');
+    expect(changeEffectiveFrom(lessons, { tz: 'Africa/Cairo', now: NOW })?.startsOn).toBe(
+      '2026-11-03',
+    );
+    expect(changeEffectiveFrom(lessons, { tz: 'America/New_York', now: NOW })?.startsOn).toBe(
+      '2026-11-02',
+    );
   });
 
   it('a lesson starting right now is not «upcoming»; none booked → null', () => {
-    expect(changeEffectiveFrom([{ status: 'scheduled', starts_at: NOW.toISOString() }], { tz: 'Asia/Riyadh', now: NOW })).toBeNull();
+    expect(
+      changeEffectiveFrom([{ status: 'scheduled', starts_at: NOW.toISOString() }], {
+        tz: 'Asia/Riyadh',
+        now: NOW,
+      }),
+    ).toBeNull();
     expect(changeEffectiveFrom([], { tz: 'Asia/Riyadh', now: NOW })).toBeNull();
   });
 });

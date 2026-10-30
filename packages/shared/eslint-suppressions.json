@@ -1585,14 +1585,9 @@
       "count": 6
     }
   },
-  "src/schedule/schemas/course-change.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/schedule/schemas/course-change.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/schedule/schemas/day-times.test.ts": {

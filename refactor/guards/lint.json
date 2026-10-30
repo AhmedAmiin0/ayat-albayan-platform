@@ -1,6 +1,6 @@
 {
   "@typescript-eslint/consistent-indexed-object-style": 6,
-  "@typescript-eslint/consistent-type-definitions": 666,
+  "@typescript-eslint/consistent-type-definitions": 660,
   "@typescript-eslint/consistent-type-exports": 8,
   "@typescript-eslint/consistent-type-imports": 45,
   "@typescript-eslint/dot-notation": 757,
@@ -63,7 +63,7 @@
   "jsx-a11y/no-static-element-interactions": 2,
   "jsx-a11y/role-supports-aria-props": 1,
   "max-depth": 14,
-  "max-len": 14445,
+  "max-len": 14435,
   "max-lines-per-function": 268,
   "no-console": 2,
   "no-restricted-syntax": 239

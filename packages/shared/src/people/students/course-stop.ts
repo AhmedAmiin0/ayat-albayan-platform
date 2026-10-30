@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '../../enums/index.js';
-import { OPEN_LESSON_STATUSES } from '../../schedule/lessons/state-machine.js';
-import { wallParts } from '../../schedule/lessons/series/day-times.js';
+import { OPEN_LESSON_STATUSES, wallParts } from '../../schedule/lessons/index.js';
 
 // «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
 // Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel

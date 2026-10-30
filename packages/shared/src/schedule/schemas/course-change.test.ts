@@ -18,7 +18,9 @@ const requestId = '00000000-0000-4000-8000-000000000002';
 
 describe('courseChangeSchema', () => {
   it('accepts the picks with their own times', () => {
-    expect(courseChangeSchema.safeParse({ ...body, clientRequestId: requestId }).success).toBe(true);
+    expect(courseChangeSchema.safeParse({ ...body, clientRequestId: requestId }).success).toBe(
+      true,
+    );
   });
   it('the change needs a clientRequestId; the check does not', () => {
     expect(courseChangeSchema.safeParse(body).success).toBe(false);
@@ -41,7 +43,10 @@ describe('courseTeacherChangeSchema («تغيير المعلم», owner 2026-10-
     expect(courseTeacherCheckSchema.safeParse({ ...body, teacherId }).success).toBe(true);
     expect(courseTeacherCheckSchema.safeParse(body).success).toBe(false);
     expect(courseTeacherChangeSchema.safeParse({ ...body, teacherId }).success).toBe(false);
-    expect(courseTeacherChangeSchema.safeParse({ ...body, teacherId, clientRequestId: requestId }).success).toBe(true);
+    expect(
+      courseTeacherChangeSchema.safeParse({ ...body, teacherId, clientRequestId: requestId })
+        .success,
+    ).toBe(true);
   });
   it('keeps the day-time refinement', () => {
     const bad = { ...body, teacherId, dayTimes: [{ weekday: 4, startTimeLocal: '19:30' }] };

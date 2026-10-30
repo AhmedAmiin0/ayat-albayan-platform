@@ -9,7 +9,7 @@ import type { CourseMove } from '@/modules/teaching/booking/course-change/course
 import type { ProfileCourse } from './profile-course.service';
 
 /** The check's and the change's bodies of one profile action (times, or teacher). */
-export interface MoveSchemas {
+interface MoveSchemas {
   check: z.ZodType<CourseMove>;
   change: z.ZodType<CourseMove & { clientRequestId: string }>;
 }

@@ -133,11 +133,6 @@
       "count": 1
     }
   },
-  "src/common/auth/auth.fakes.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/common/auth/auth.guard.resolver-failure.test.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -13818,9 +13813,6 @@
     }
   },
   "src/modules/teaching/booking/course-change/course-change.planner.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -13884,14 +13876,11 @@
     }
   },
   "src/modules/teaching/booking/course-change/course-change.service.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/no-parent-imports": {
       "count": 4
     },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/teaching/booking/course-change/course-change.view.ts": {
@@ -16689,9 +16678,6 @@
     }
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 4
-    },
     "ab/module-boundaries": {
       "count": 2
     },
