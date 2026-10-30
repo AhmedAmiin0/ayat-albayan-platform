@@ -21,22 +21,38 @@ export interface RiyadhWhenWords {
   locale: Locale;
   /** The viewer's clock (12 or 24 h); 24 h when not given. */
   cycle?: ClockCycle;
+  /** The viewer's zone (docs/34); the academy's (Riyadh) when not given. */
+  tz?: string;
 }
 
-const dayMonths = new Map<Locale, Intl.DateTimeFormat>();
+const dayMonths = new Map<string, Intl.DateTimeFormat>();
 
-function dayMonth(locale: Locale): Intl.DateTimeFormat {
-  let f = dayMonths.get(locale);
+function dayMonth(locale: Locale, tz: string): Intl.DateTimeFormat {
+  const key = `${locale}|${tz}`;
+  let f = dayMonths.get(key);
   if (!f) {
-    f = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: RIYADH_TZ, day: 'numeric', month: 'long' });
-    dayMonths.set(locale, f);
+    f = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: tz, day: 'numeric', month: 'long' });
+    dayMonths.set(key, f);
   }
   return f;
 }
 
-/** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and the Riyadh clock of `instant` (an ISO string). */
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const weekdays = new Map<string, Intl.DateTimeFormat>();
+
+function weekdayOf(at: Date, tz: string): number {
+  let f = weekdays.get(tz);
+  if (!f) {
+    f = new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short' });
+    weekdays.set(tz, f);
+  }
+  return DAYS.indexOf(f.format(at));
+}
+
+/** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and clock of `instant` (ISO) in `words.tz`. */
 export function riyadhWhenText(instant: string, words: RiyadhWhenWords): string {
   const at = new Date(instant);
-  const weekday = new Date(`${riyadhToday(at)}T00:00:00Z`).getUTCDay();
-  return `${words.weekday[String(weekday)] ?? ''} ${dayMonth(words.locale).format(at)} ${clockOf(at, { tz: RIYADH_TZ, locale: words.locale, cycle: words.cycle ?? '24' })}`;
+  const tz = words.tz ?? RIYADH_TZ;
+  const clock = clockOf(at, { tz, locale: words.locale, cycle: words.cycle ?? '24' });
+  return `${words.weekday[String(weekdayOf(at, tz))] ?? ''} ${dayMonth(words.locale, tz).format(at)} ${clock}`;
 }

@@ -2011,9 +2011,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/time/week.ts": {
