@@ -4,7 +4,8 @@ import {
   lessonWhenText,
   otherZoneClock,
   sameClockAt,
-  utcOffsetMinutes,
+  wallToUtc,
+  weekdayOfDate,
   type ClockCycle,
   type SlotView,
 } from '@ab/shared';
@@ -19,6 +20,7 @@ import { localDate } from '@/today/lib/timeline';
 // (docs/34). Picked, never typed (rule 6): a slot is an instant, sent as is. Text helpers read the
 // viewer's zone from the store (viewerTz), set before any screen opens.
 
+/** A plain duration: the window is 7 × 24 h of instants, not calendar days. */
 const DAY = 86_400_000;
 const WINDOW_DAYS = 7;
 const cities: Record<string, string | undefined> = t.tz;
@@ -30,11 +32,9 @@ export function slotWindow(now: Date): { from: string; to: string } {
   return { from: now.toISOString(), to: new Date(now.getTime() + WINDOW_DAYS * DAY).toISOString() };
 }
 
-/** The instant a local day (YYYY-MM-DD) begins in `tz`; a second pass settles a DST change. */
+/** The instant a local day (YYYY-MM-DD) begins in `tz` (wallToUtc: two offset reads, as before). */
 export function dayStartUtc(date: string, tz: string): Date {
-  const wall = Date.parse(`${date}T00:00:00Z`);
-  const first = wall - utcOffsetMinutes(tz, new Date(wall)) * 60_000;
-  return new Date(wall - utcOffsetMinutes(tz, new Date(first)) * 60_000);
+  return wallToUtc(date, 0, tz);
 }
 
 /** Where the slot window opens: now, or `from` (an instant) when that is later. */
@@ -53,7 +53,7 @@ export function ruleFromSlot(
   return {
     startsOn,
     startTimeLocal: clockTime(at, tz),
-    weekday: new Date(`${startsOn}T00:00:00Z`).getUTCDay(),
+    weekday: weekdayOfDate(startsOn),
   };
 }
 
