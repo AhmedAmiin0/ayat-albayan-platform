@@ -66,8 +66,15 @@ export class TermsQueries {
     if (ids.length === 0) return [];
     const [commissions, subs] = await Promise.all([
       this.db.from('assistant_commissions').select('subscription_id').in('student_id', ids),
-      // A stopped package keeps its money and its commission (migration 991); an unused cancel never earns.
-      this.db.from('subscriptions').select('id').in('student_id', ids).gt('price', 0).or(COUNTS_FOR_MONEY).order('created_at').order('id'),
+      // A stopped package keeps its commission (migration 991); an unused cancel never earns.
+      this.db
+        .from('subscriptions')
+        .select('id')
+        .in('student_id', ids)
+        .gt('price', 0)
+        .or(COUNTS_FOR_MONEY)
+        .order('created_at')
+        .order('id'),
     ]);
     if (commissions.error) throw dbError(commissions.error);
     if (subs.error) throw dbError(subs.error);

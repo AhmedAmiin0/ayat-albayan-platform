@@ -5,9 +5,9 @@ import { readAll, readChunked } from '../../teaching/scheduling/read-all';
 
 const SUB = 'id, price, currency, starts_on, status, student:students(id, code, name, guardian:guardians(name, phone_e164))';
 /**
- * A trial package never owes, nor an unused-cancelled one (owner 2026-10-28: a mistake, nothing paid); every
- * other status can (an expired package may still be unpaid), and so can a STOPPED one (owner 2026-10-30,
- * migration 991: the course stopped, the money kept).
+ * A trial package never owes, nor an unused-cancelled one (owner 2026-10-28: a mistake, nothing
+ * paid); every other status can (an expired package may still be unpaid), and so can a STOPPED one
+ * (owner 2026-10-30, migration 991: the course stopped, the money kept).
  */
 const OWING = ['unpaid', 'active', 'paused', 'expired'] as const satisfies readonly Exclude<SubscriptionStatus, 'trial' | 'cancelled'>[];
 const OWING_FILTER = `status.in.(${OWING.join(',')}),cancel_kind.eq.stopped`;

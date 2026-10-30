@@ -4,12 +4,18 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 import { assistant, code, one, student } from '../../support/sales/assistant';
 import { day, importedCourse, rule, teacher } from '../../support/teaching/course-stop';
 
-// change_course v2 (PR #464 review B2, migration 991): «تغيير المعلم» / «تغيير موعد الحلقات» of a student
-// whose rule has no subscription_id (imported, handover, admin booking) ends that rule and books the new
-// one; a rule it cannot attribute is course_unattributed. Rolled back.
+// change_course v2 (PR #464 review B2, migration 991): «تغيير المعلم» / «تغيير موعد الحلقات» of a
+// student whose rule has no subscription_id (imported, handover, admin booking) ends that rule and
+// books the new one; a rule it cannot attribute is course_unattributed. Rolled back.
 
-/** The change_course payload the API builds (course-change.payload.ts), reduced to what is checked. */
-function payload(c: { student: string; sub: string; rule: string }, input: { teacher: string; actor: string }) {
+/** The change_course payload the API builds (course-change.payload.ts), reduced to the checks. */
+interface Course {
+  student: string;
+  sub: string;
+  rule: string;
+}
+
+function payload(c: Course, input: { teacher: string; actor: string }) {
   const id = randomUUID();
   return {
     client_request_id: randomUUID(),
@@ -17,12 +23,28 @@ function payload(c: { student: string; sub: string; rule: string }, input: { tea
     starts_on: day(5),
     actor: input.actor,
     end_rules: [{ id: c.rule, ends_on: day(4), changes: [] }],
-    new_rules: [{ id, teacher_id: input.teacher, duration_min: 30, start_time_local: '18:00', tz: 'Asia/Riyadh',
-      byday: [0, 2], starts_on: day(5), ends_on: day(30), meeting_link: null, package: '8', created_from_lead_id: null,
-      subscription_id: c.sub, first_rule_id: null, student_ids: [c.student], lessons: [] }],
+    new_rules: [{ ...newRule(c, input.teacher), id }],
     audit: { entity: 'subscriptions', entity_id: c.sub, action: 'course_change', before: {}, after: {} },
   };
 }
+
+/** The new rule: Sun + Tue 18:00 Riyadh with the new teacher, tied to the package. */
+const newRule = (c: Course, teacher: string) => ({
+  teacher_id: teacher,
+  duration_min: 30,
+  start_time_local: '18:00',
+  tz: 'Asia/Riyadh',
+  byday: [0, 2],
+  starts_on: day(5),
+  ends_on: day(30),
+  meeting_link: null,
+  package: '8',
+  created_from_lead_id: null,
+  subscription_id: c.sub,
+  first_rule_id: null,
+  student_ids: [c.student],
+  lessons: [],
+});
 
 const change = async (tx: Tx, p: object) =>
   one(await tx<{ r: { rule_ids: string[] } }[]>`select public.change_course(${tx.json(p as never)}) as r`).r;

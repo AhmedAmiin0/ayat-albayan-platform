@@ -43,7 +43,7 @@ export interface SubscriptionView {
   price_source: QuoteResponse;
   starts_on: string;
   status: SubscriptionStatus;
-  /** A cancelled package's kind: 'unused' or 'stopped' (still owed, countsForMoney); absent from older APIs. */
+  /** A cancelled package's kind, 'unused' or 'stopped' (still owed: countsForMoney). */
   cancel_kind?: string | null;
   renews_on: string | null;
   notes: string | null;

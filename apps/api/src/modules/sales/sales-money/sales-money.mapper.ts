@@ -39,7 +39,7 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    // An unused-cancelled package is never owed (owner 2026-10-28); a stopped one still is (2026-10-30).
+    // An unused cancel is never owed (owner 2026-10-28); a stopped package still is (2026-10-30).
     due: countsForMoney(s) ? Math.max(0, cents(s.price - s.paid)) : 0,
   };
 }

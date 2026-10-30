@@ -2,8 +2,9 @@ import { randomUUID } from 'node:crypto';
 import type { Tx } from '../core/rls';
 import { one, student, subscription } from '../sales/assistant';
 
-// Helpers of the «إلغاء الاشتراك» SQL specs (migration 991): a student whose weekly rule carries no
-// subscription_id (imported, calendar handover, admin booking: migration 470), its lessons, the stop.
+// Helpers of the «إلغاء الاشتراك» SQL specs (migration 991): a student whose weekly rule carries
+// no subscription_id (imported, calendar handover, admin booking: migration 470), its lessons, the
+// stop.
 
 /** A teacher row of its own (no login needed by the RPCs). */
 export async function teacher(tx: Tx): Promise<string> {
@@ -23,16 +24,19 @@ interface RuleInput {
 export async function rule(tx: Tx, r: RuleInput): Promise<string> {
   const { id } = one(await tx<{ id: string }[]>`insert into public.schedule_rules
       (teacher_id, duration_min, start_time_local, tz, byday, starts_on, subscription_id)
-    values (${r.teacher}, 30, '17:00', 'Asia/Riyadh', '{0,1,2,3,4,5,6}', current_date + ${r.from ?? -60}::int,
-      ${r.subscriptionId ?? null}) returning id`);
-  for (const s of r.students) await tx`insert into public.schedule_rule_students (rule_id, student_id) values (${id}, ${s})`;
+    values (${r.teacher}, 30, '17:00', 'Asia/Riyadh', '{0,1,2,3,4,5,6}',
+      current_date + ${r.from ?? -60}::int, ${r.subscriptionId ?? null}) returning id`);
+  for (const s of r.students)
+    await tx`insert into public.schedule_rule_students (rule_id, student_id) values (${id}, ${s})`;
   return id;
 }
 
-/** One lesson of the rule `days` from today (UTC) at 14:00Z: completed in the past, scheduled after. */
+/** One lesson of the rule `days` from today (UTC) at 14:00Z: done before today, else scheduled. */
 export async function lesson(tx: Tx, input: { rule: string; days: number }): Promise<string> {
-  const { id } = one(await tx<{ id: string }[]>`insert into public.lessons (rule_id, teacher_id, starts_at, ends_at, status)
-    select r.id, r.teacher_id, (current_date + ${input.days}::int) + time '14:00', (current_date + ${input.days}::int) + time '14:30',
+  const { id } = one(await tx<{ id: string }[]>`insert into public.lessons
+      (rule_id, teacher_id, starts_at, ends_at, status)
+    select r.id, r.teacher_id, (current_date + ${input.days}::int) + time '14:00',
+      (current_date + ${input.days}::int) + time '14:30',
       case when ${input.days}::int < 0 then 'completed' else 'scheduled' end::public.lesson_status
     from public.schedule_rules r where r.id = ${input.rule} returning id`);
   await tx`insert into public.lesson_students (lesson_id, student_id)
@@ -41,7 +45,13 @@ export async function lesson(tx: Tx, input: { rule: string; days: number }): Pro
 }
 
 /** A course that started 10 days ago on an imported rule: 3 lessons held, 3 to come. */
-export async function importedCourse(tx: Tx, input: { phone: string; broughtBy?: string; price?: number }) {
+interface CourseInput {
+  phone: string;
+  broughtBy?: string;
+  price?: number;
+}
+
+export async function importedCourse(tx: Tx, input: CourseInput) {
   const s = await student(tx, {
     phone: input.phone,
     broughtBy: input.broughtBy ?? null,
@@ -55,7 +65,8 @@ export async function importedCourse(tx: Tx, input: { phone: string; broughtBy?:
   return { student: s, sub, rule: r };
 }
 
-export const day = (offset: number) => new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+export const day = (offset: number) =>
+  new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
 
 interface Stop {
   student: string;
@@ -66,10 +77,25 @@ interface Stop {
 }
 
 /** stop_course as the API calls it; a fresh clientRequestId unless given. */
-export async function stop(tx: Tx, c: Stop): Promise<Record<string, unknown>> {
-  const p = { subscription_id: c.sub, student_id: c.student, client_request_id: c.requestId ?? randomUUID(),
-    actor: c.actor, reason: 'سفر' };
-  return one(await tx<{ r: Record<string, unknown> }[]>`select public.stop_course(${tx.json(p)}) as r`).r;
+/** stop_course's answer (the fields the specs read). */
+export interface StopRow {
+  cancelled_lessons: string[];
+  ended_rules: string[];
+  student_status: string;
+  closed_pause: string | null;
+  replayed: boolean;
+}
+
+export async function stop(tx: Tx, c: Stop): Promise<StopRow> {
+  const p = {
+    subscription_id: c.sub,
+    student_id: c.student,
+    client_request_id: c.requestId ?? randomUUID(),
+    actor: c.actor,
+    reason: 'سفر',
+  };
+  const rows = await tx<{ r: StopRow }[]>`select public.stop_course(${tx.json(p)}) as r`;
+  return one(rows).r;
 }
 
 /** What the money readers say about a package: balance, commission kind, fully paid. */

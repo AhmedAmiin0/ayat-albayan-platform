@@ -39,7 +39,10 @@ function stopError(error: PostgrestError): Error {
   return dbError(error);
 }
 
-/** «إلغاء الاشتراك»'s reads and its one-transaction write (service role; the route checks subscriptions.stop). */
+/**
+ * «إلغاء الاشتراك»'s reads and its one-transaction write (service role; the route checks
+ * subscriptions.stop).
+ */
 @Injectable()
 export class CourseStopRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

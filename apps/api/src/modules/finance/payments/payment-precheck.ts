@@ -5,11 +5,13 @@ import type { Converted, PaymentInputs } from './payment-inputs';
 import type { PaymentRow, PaymentsQueries, PaymentSubscription } from './payments.queries';
 
 /**
- * An unused-cancelled package's money is frozen (owner 2026-10-28: it stays net 0; migration 934 refuses
- * it too). A stopped one keeps its money (owner 2026-10-30, migration 991): its payments stay editable.
+ * An unused-cancelled package's money is frozen (owner 2026-10-28: it stays net 0; migration 934
+ * refuses it too). A stopped one keeps its money (owner 2026-10-30, migration 991): its payments
+ * stay editable.
  */
 export function notCancelled(row: PaymentRow): PaymentRow {
-  if (row.subscription && !countsForMoney(row.subscription)) throw conflict('subscription_cancelled');
+  if (row.subscription && !countsForMoney(row.subscription))
+    throw conflict('subscription_cancelled');
   return row;
 }
 
@@ -25,8 +27,8 @@ export async function precheckPayment(
   v: { input: PaymentWrite; sub: PaymentSubscription },
 ): Promise<Prechecked> {
   const { input, sub } = v;
-  // An unused-cancelled package (owner 2026-10-28) takes no money; migration 934 refuses the row too. A
-  // stopped one still does: the family settles what it owes (migration 991).
+  // An unused-cancelled package (owner 2026-10-28) takes no money; migration 934 refuses the row
+  // too. A stopped one still does: the family settles what it owes (migration 991).
   if (!countsForMoney(sub)) throw conflict('subscription_cancelled');
   const files = await deps.inputs.files.check(sub.id, input);
   if (input.invoiceId) await deps.inputs.checkInvoice(input.invoiceId, sub.student_id);

@@ -38,6 +38,7 @@ describe('error codes', () => {
   it('maps the stop codes, anything else is generic', () => {
     expect(courseStopErrorCode(fail('already_cancelled'))).toBe('already_cancelled');
     expect(courseStopErrorCode(fail('has_future_lessons'))).toBe('has_future_lessons');
+    expect(courseStopErrorCode(fail('course_unattributed'))).toBe('course_unattributed');
     expect(courseStopErrorCode(fail('conflict'))).toBe('generic');
     expect(courseStopErrorCode(new Error('x'))).toBe('generic');
   });
@@ -48,6 +49,8 @@ describe('error codes', () => {
     expect(courseMoveErrorCode(fail(42))).toBe('generic');
     expect(courseMoveErrorCode(new ApiError(500, null))).toBe('generic');
     const errors: Record<string, string> = ar.courseActions.errors;
-    for (const code of ['already_cancelled', 'teacher_not_found', 'course_exists', 'generic']) expect(errors[code]).toBeTruthy();
+    for (const code of ['already_cancelled', 'teacher_not_found', 'course_exists', 'course_unattributed', 'generic'])
+      expect(errors[code]).toBeTruthy();
+    expect(courseMoveErrorCode(fail('course_unattributed'))).toBe('course_unattributed');
   });
 });

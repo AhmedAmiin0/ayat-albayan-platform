@@ -2318,7 +2318,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/finance/payments/payments.attachments.http.test.ts": {
@@ -2725,7 +2725,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/receivables/receivables.service.test.ts": {
@@ -13750,7 +13750,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/booking/course-change/course-change.meeting-mode.test.ts": {

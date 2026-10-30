@@ -4,8 +4,9 @@ import { rolledBack } from '../../support/core/rls';
 import { assistant, code, student, subscription } from '../../support/sales/assistant';
 import { day, importedCourse, lesson, rule, stop, teacher } from '../../support/teaching/course-stop';
 
-// stop_course (PR #464 review B2, B3 and the minors, migration 991): the course of a student whose rule has
-// no subscription_id (imported / handover / admin-booked), one transaction, replayed by clientRequestId.
+// stop_course (PR #464 review B2, B3 and the minors, migration 991): the course of a student whose
+// rule has no subscription_id (imported / handover / admin-booked), one transaction, replayed by
+// clientRequestId.
 
 const statusesOf = (tx: Parameters<Parameters<typeof rolledBack>[0]>[0], ruleId: string) =>
   tx<{ status: string; chargeable: boolean }[]>`select l.status, ls.chargeable from public.lessons l
@@ -20,7 +21,7 @@ test.describe('stop_course (991)', () => {
       const c = await importedCourse(tx, { phone: '+966500000921' });
       const r = await stop(tx, { ...c, actor: a });
       expect(r).toMatchObject({ ended_rules: [c.rule], student_status: 'churned', replayed: false });
-      expect(r['cancelled_lessons']).toHaveLength(3);
+      expect(r.cancelled_lessons).toHaveLength(3);
       const [ruleRow] = await tx`select status from public.schedule_rules where id = ${c.rule}`;
       expect(ruleRow).toEqual({ status: 'ended' });
       expect((await statusesOf(tx, c.rule)).map((l) => `${l.status}:${String(l.chargeable)}`)).toEqual([
@@ -39,7 +40,7 @@ test.describe('stop_course (991)', () => {
       const requestId = randomUUID();
       const first = await stop(tx, { ...c, actor: a, requestId });
       const again = await stop(tx, { ...c, actor: a, requestId });
-      expect(again).toMatchObject({ replayed: true, cancelled_lessons: first['cancelled_lessons'] });
+      expect(again).toMatchObject({ replayed: true, cancelled_lessons: first.cancelled_lessons });
       expect(await code(tx, () => stop(tx, { ...c, actor: a }))).toBe('already_cancelled');
     });
   });
@@ -77,7 +78,7 @@ test.describe('stop_course (991)', () => {
       await tx`insert into public.course_pauses (student_id, subscription_id, rule_ids, from_date, student_status_before, started_at)
         values (${c.student}, ${c.sub}, array[${c.rule}::uuid], current_date, 'active', now())`;
       const r = await stop(tx, { ...c, actor: a });
-      expect(r['closed_pause']).not.toBeNull();
+      expect(r.closed_pause).not.toBeNull();
       const [pause] = await tx`select resumed_at is not null as closed, extended_days from public.course_pauses
         where student_id = ${c.student}`;
       expect(pause).toEqual({ closed: true, extended_days: 0 });

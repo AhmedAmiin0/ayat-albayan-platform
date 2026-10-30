@@ -56,7 +56,12 @@ export function courseStopLessonsText(
   return preview.futureLessons === 0 ? words.zero : counted(words, preview.futureLessons);
 }
 
-const STOP_CODES = ['already_cancelled', 'has_future_lessons', 'subscription_not_found'] as const;
+const STOP_CODES = [
+  'already_cancelled',
+  'course_unattributed',
+  'has_future_lessons',
+  'subscription_not_found',
+] as const;
 export type CourseStopErrorCode = (typeof STOP_CODES)[number] | 'generic';
 
 const MOVE_CODES = [
@@ -65,6 +70,7 @@ const MOVE_CODES = [
   'course_not_found',
   'course_exists',
   'course_changed',
+  'course_unattributed',
   'custom_count_admin',
   'date_in_past',
   'days_count_mismatch',

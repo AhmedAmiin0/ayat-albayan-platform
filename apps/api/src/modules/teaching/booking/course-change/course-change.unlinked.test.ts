@@ -48,8 +48,8 @@ describe('CourseChange — a rule without subscription_id', () => {
       done('c1', '2026-10-05'),
       done('c2', '2026-10-12'),
     ]);
-    // 8 − the two held in this package's period (Oct 5, 12) − Mon Oct 19 still to be generated before
-    // the change point. September belongs to the last package (unbounded: 3).
+    // 8 − the two held in this package's period (Oct 5, 12) − Mon Oct 19 still to be generated
+    // before the change point. September belongs to the last package (unbounded: 3).
     expect((await service.check(check(), SALES)).remaining).toBe(5);
   });
 

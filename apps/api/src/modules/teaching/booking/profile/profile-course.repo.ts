@@ -70,7 +70,9 @@ export class ProfileCourseRepo {
    * The next open lesson of the course's rules (course_rules_of, migration 991: also a rule without
    * subscription_id) from now on: «من تاريخ»'s default.
    */
-  async upcoming(ruleIds: readonly string[]): Promise<{ status: LessonStatus; starts_at: string }[]> {
+  async upcoming(
+    ruleIds: readonly string[],
+  ): Promise<{ status: LessonStatus; starts_at: string }[]> {
     if (ruleIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lessons')

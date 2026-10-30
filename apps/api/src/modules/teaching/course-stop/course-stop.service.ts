@@ -38,7 +38,10 @@ export class CourseStop {
       ? await this.repo.subscription(subscriptionId, studentId)
       : await this.repo.current(studentId);
     const stopped = toStopped(sub);
-    const [plan, paid] = await Promise.all([this.repo.plan(sub.id, new Date()), this.repo.paid(sub.id)]);
+    const [plan, paid] = await Promise.all([
+      this.repo.plan(sub.id, new Date()),
+      this.repo.paid(sub.id),
+    ]);
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
     return {

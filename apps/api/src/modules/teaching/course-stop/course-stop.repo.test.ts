@@ -66,11 +66,11 @@ describe('CourseStopRepo', () => {
   });
 
   it.each([
-    ['subscription_not_found', 'P0001', 'subscription_not_found', 404],
-    ['already_cancelled', 'P0001', 'already_cancelled', 409],
-    ['course_unattributed', 'P0001', 'course_unattributed', 409],
-    ['has_future_lessons: subscription s1', '23514', 'has_future_lessons', 409],
-  ])('stop: %s → %s', async (message, code, expected, status) => {
+    { message: 'subscription_not_found', code: 'P0001', expected: 'subscription_not_found', status: 404 },
+    { message: 'already_cancelled', code: 'P0001', expected: 'already_cancelled', status: 409 },
+    { message: 'course_unattributed', code: 'P0001', expected: 'course_unattributed', status: 409 },
+    { message: 'has_future_lessons: s1', code: '23514', expected: 'has_future_lessons', status: 409 },
+  ])('stop: $message → $status', async ({ message, code, expected, status }) => {
     const err = await repoOf(chain({}), failing({ code, message }))
       .stop(CALL)
       .catch((e: unknown) => e);

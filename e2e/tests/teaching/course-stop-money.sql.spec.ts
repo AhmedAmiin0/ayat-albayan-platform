@@ -3,10 +3,15 @@ import { rolledBack } from '../../support/core/rls';
 import { assistant, code, commissionOf, pay, subscription } from '../../support/sales/assistant';
 import { importedCourse, moneyOf, stop } from '../../support/teaching/course-stop';
 
-// «إلغاء الاشتراك» keeps the money (PR #464 review B1, migration 991): a STOPPED package (status cancelled,
-// cancel_kind stopped) stays in every money reader, so nothing the money says changes. Rolled back.
+// «إلغاء الاشتراك» keeps the money (PR #464 review B1, migration 991): a STOPPED package (status
+// cancelled, cancel_kind stopped) stays in every money reader, so nothing the money says changes.
+// Rolled back.
 
-const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
+const PERCENT = {
+  commission_type: 'percent',
+  commission_value: 10,
+  commission_starts_on: '2000-01-01',
+} as const;
 
 test.describe('a stopped package keeps its money (991)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
@@ -16,7 +21,8 @@ test.describe('a stopped package keeps its money (991)', () => {
       const a = await assistant(tx, 'stop-money', PERCENT);
       const c = await importedCourse(tx, { phone: '+966500000911', broughtBy: a });
       await pay(tx, c.sub, 200);
-      const before = { commission: await commissionOf(tx, c.student), money: await moneyOf(tx, c.sub) };
+      const commission = await commissionOf(tx, c.student);
+      const before = { commission, money: await moneyOf(tx, c.sub) };
       expect(before.commission).toMatchObject({ status: 'earned', amount: '20.00', subscription_id: c.sub });
       expect(before.money).toMatchObject({ balance: '(3,5,t)', kind: 'first' });
       await stop(tx, { ...c, actor: a });

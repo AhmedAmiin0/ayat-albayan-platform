@@ -2,9 +2,9 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { conflict, notFound } from '@/common/http/errors';
 import { NOW, REQ, STOPPED, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
-// «إلغاء الاشتراك» over HTTP (owner 2026-10-30): stop_course's 404 / 409s and the replay (review B3:
-// the clientRequestId is written with the stamp, so a retry after a crash or a double tap answers the
-// first stop instead of 409 already_cancelled).
+// «إلغاء الاشتراك» over HTTP (owner 2026-10-30): stop_course's 404 / 409s and the replay (review
+// B3: the clientRequestId is written with the stamp, so a retry after a crash or a double tap
+// answers the first stop instead of 409 already_cancelled).
 type App = Awaited<ReturnType<typeof stopApp>>;
 const URL = `/students/${STUDENT}/course-stop`;
 const BODY = { subscriptionId: SUB, reason: 'سفر الأسرة', clientRequestId: REQ };

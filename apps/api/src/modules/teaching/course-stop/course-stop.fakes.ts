@@ -35,7 +35,7 @@ export const stamped = subRow({
   cancel_reason: 'سفر',
 });
 
-/** stop_course's answer for a first stop: 2 rules ended, 3 lessons cancelled, the student churned. */
+/** stop_course's answer to a first stop: 2 rules ended, 3 lessons cancelled, student churned. */
 export const STOPPED = {
   cancelled_lessons: ['l1', 'l2', 'l3'],
   ended_rules: ['r1', 'r2'],

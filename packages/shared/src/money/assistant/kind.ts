@@ -1,5 +1,4 @@
 import type { SubscriptionStatus } from '../../enums/index.js';
-import { countsForMoney } from '../ledger/usage/package-cancel.js';
 
 // Renewal commission (owner 2026-10-26, migrations 20261027000750-751): which kind a subscription's commission
 // is. Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
@@ -25,8 +24,9 @@ export interface OrderFact {
   cancel_kind?: string | null;
 }
 
+/** price > 0 and countsForMoney (money/ledger; not imported: the ledger reads this module). */
 const counts = (s: OrderFact): boolean =>
-  s.price > 0 && (s.status === undefined || countsForMoney({ status: s.status, cancel_kind: s.cancel_kind }));
+  s.price > 0 && (s.status !== 'cancelled' || s.cancel_kind === 'stopped');
 
 /** created_at, then id (uuid order = lowercase hex order). */
 const before = (a: OrderFact, b: OrderFact): boolean =>
