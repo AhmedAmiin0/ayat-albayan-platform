@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { commsSourceSchema, isNumberError, numberCreateSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema } from './schemas.js';
+import { callsNeedKapso, commsSourceSchema, isNumberError, numberCreateSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema } from './schemas.js';
 
 const base = { label: 'رقم الإشعارات', purpose: 'notifications', phone_number_id: '1000000001' };
 
@@ -33,5 +33,15 @@ describe('numbers schemas (docs/23 §3 phase 3)', () => {
     expect(commsSourceSchema.safeParse({ source: 'env' }).success).toBe(false);
     expect(isNumberError('parity_not_empty')).toBe(true);
     expect(isNumberError('nope')).toBe(false);
+  });
+
+  it('a calls number (docs/28 §10) is kapso only, on create and in a patch check', () => {
+    expect(numberCreateSchema.safeParse({ ...base, purpose: 'calls' }).success).toBe(false);
+    expect(numberCreateSchema.safeParse({ ...base, purpose: 'calls', provider: 'meta' }).success).toBe(false);
+    expect(numberCreateSchema.parse({ ...base, purpose: 'calls', provider: 'kapso' })).toMatchObject({ purpose: 'calls' });
+    expect(numberUpdateSchema.parse({ purpose: 'calls' })).toEqual({ purpose: 'calls' });
+    expect(callsNeedKapso({ purpose: 'calls', provider: 'crm' })).toBe(true);
+    expect(callsNeedKapso({ purpose: 'chat', provider: 'meta' })).toBe(false);
+    expect(isNumberError('calls_need_kapso')).toBe(true);
   });
 });

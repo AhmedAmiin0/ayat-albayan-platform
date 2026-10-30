@@ -19,6 +19,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
       'scheduled_for.is.null,scheduled_for.lte.2026-10-02T08:00:00.000Z',
       'next_attempt_at.is.null,next_attempt_at.lte.2026-10-02T08:00:00.000Z',
       'template_key.is.null,template_key.in.(booking_confirmation,lesson_reminder)',
+      'line.is.null,line.neq.calls', // never a calls-number row (docs/28 §10)
       'template_key.not.is.null,line.is.null,line.neq.chat', // no chat client here (review A, C1)
     ]);
     expect(calls.find((c) => c.method === 'limit')?.args).toEqual([50]);

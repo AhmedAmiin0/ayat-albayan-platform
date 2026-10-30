@@ -1,4 +1,5 @@
-import { formatPhone, type ActiveCallView, type CallPermissionState } from '@ab/shared';
+import type { PermissionAsk } from '@ab/client-core';
+import { formatPhone, type ActiveCallView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { PermissionDialog } from '../header/PermissionDialog';
 import type { CallSessionApi } from '../state/use-call-session';
@@ -10,7 +11,7 @@ export interface CallOverlayProps {
   s: CallSessionApi;
   /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
   showsPhone: boolean;
-  ask: { phone: string; state: Exclude<CallPermissionState, 'granted'> } | null;
+  ask: PermissionAsk | null;
   onAsk: (next: 'closed' | 'sent') => void;
   /** Esc on the incoming call: silence its ring. */
   onSilence: (callId: string) => void;
@@ -44,7 +45,7 @@ export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverla
         />
       )}
       <SessionView s={s} />
-      {ask && <PermissionDialog {...ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} />}
+      {ask && <PermissionDialog ask={ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} />}
     </>
   );
 }

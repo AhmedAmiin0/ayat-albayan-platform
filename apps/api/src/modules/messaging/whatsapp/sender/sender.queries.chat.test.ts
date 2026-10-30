@@ -38,7 +38,7 @@ describe('SenderQueries.due — chat rows without a chat client', () => {
     expect(q.chatConfigured).toBe(true);
     await q.due({ keys: [], now: NOW, limit: 50 });
     expect(ors(calls)).not.toContain(CHAT_FILTER);
-    expect(ors(calls)).toHaveLength(3);
+    expect(ors(calls)).toHaveLength(4); // the 4th: never a calls-number row (docs/28 §10)
   });
 
   it('the chat config is read per call: a chat line configured after construction lifts the filter', async () => {

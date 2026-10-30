@@ -22,6 +22,8 @@ export interface WebhookConfig {
   wacrmSecret?: string;
   /** Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy (`numbers`). */
   overlay?: readonly ReceivingNumber[] | null;
+  /** The dedicated calls number (docs/28 §10), read per access; null / absent = none. */
+  calls?: ReceivingNumber | null;
 }
 
 /**
@@ -76,6 +78,7 @@ export class WebhookService {
     for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
     for (const e of batch.echoes) failed += await this.safely('echo', () => this.statuses.echo(e));
     for (const c of batch.calls ?? []) failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
+    for (const p of batch.permissions ?? []) failed += await this.safely('call_permission', () => this.calls?.permissionReply(p) ?? Promise.resolve());
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 
@@ -88,7 +91,8 @@ export class WebhookService {
     const read = () => {
       ignored.length = 0;
       const onIgnored = (id: string) => ignored.push(id);
-      return parseWebhook(body, { now, numbers: this.config.numbers, onIgnored, overlay: this.config.overlay });
+      const { numbers, overlay, calls } = this.config;
+      return parseWebhook(body, { now, numbers, onIgnored, overlay, calls });
     };
     let batch = read();
     if (ignored.length > 0 && (await this.reload?.once())) batch = read();

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { NumberCreate, NumberSecretName, NumberUpdate, NumberView } from '@ab/shared';
+import { callsNeedKapso, type NumberCreate, type NumberSecretName, type NumberUpdate, type NumberView } from '@ab/shared';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { numberView } from './numbers.mapper';
 import { NumbersEffects } from './numbers.effects';
@@ -12,6 +12,11 @@ function audited(row: NumberRow | null): Json {
   if (!row) return null;
   const { id, label, purpose, provider, phone_number_id, waba_id, app_id, enabled, is_default } = row;
   return { id, label, purpose, provider, phone_number_id, waba_id, app_id, enabled, is_default };
+}
+
+/** A calls number is Kapso only (docs/28 §10), whichever of the two fields a PATCH changes. */
+function assertKapsoCalls(next: { purpose: string; provider: string }): void {
+  if (callsNeedKapso(next)) throw new ConflictException({ message: 'calls_need_kapso' });
 }
 
 const missing = (): never => {
@@ -55,6 +60,7 @@ export class NumbersService {
     const before = (await this.queries.byId(id)) ?? missing();
     const { is_default: isDefault, ...rest } = body;
     if (isDefault === true && !(rest.enabled ?? before.enabled)) throw new ConflictException({ message: 'not_enabled' });
+    assertKapsoCalls({ ...before, ...rest });
     const patch = { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false as const } : {}) };
     let wrote = Object.keys(patch).length > 0;
     if (wrote && !(await this.queries.update(id, { patch, actorId }))) missing();

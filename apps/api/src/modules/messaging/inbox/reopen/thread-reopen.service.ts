@@ -1,7 +1,8 @@
-import { sessionWindowOpen, type ThreadReopenView } from '@ab/shared';
+import type { ThreadReopenView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '../../../sales/sales/sales-scope';
 import { assertCanSend, type TeacherScope } from '../teacher-threads/teacher-scope';
+import { messagingWindowOpen } from '../threads/threads.mapper';
 import { ThreadsQueries } from '../threads/threads.queries';
 import { KapsoReopener, last4 } from './kapso-reopener';
 import type { Sent } from '../send/outbox';
@@ -52,7 +53,7 @@ export class ThreadReopenService {
     if (r.scope) assertCanSend(r.scope, r.phone);
     const thread = await this.queries.thread(r.phone);
     if (!thread) return { view: { kapso_reopened: false, template: 'not_sent' } };
-    if (sessionWindowOpen(thread.last_inbound_at, now)) return { view: { kapso_reopened: false, template: 'window_open' } };
+    if (messagingWindowOpen(thread, now)) return { view: { kapso_reopened: false, template: 'window_open' } };
     const kapso = this.kapso.reopen(r.phone);
     const queued: Promise<Queued> = r.restricted
       ? Promise.resolve({ outcome: 'not_allowed' })

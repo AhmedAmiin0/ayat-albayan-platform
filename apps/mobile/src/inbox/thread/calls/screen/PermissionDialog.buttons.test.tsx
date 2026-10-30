@@ -8,7 +8,7 @@ import { PermissionDialog } from './PermissionDialog';
 const styleOf = (name: string) => StyleSheet.flatten(within(screen.getByTestId('call-permission')).getByRole('button', { name }).props.style);
 
 test('docs/07 «الأزرار»: «اطلب إذن الاتصال» (filled) then «إغلاق» (outlined), one ButtonRow', async () => {
-  await renderWithQuery(<PermissionDialog phone="+966552147730" state="request" onClose={jest.fn()} onSent={jest.fn()} />);
+  await renderWithQuery(<PermissionDialog ask={{ phone: '+966552147730', state: 'request' }} onClose={jest.fn()} onSent={jest.fn()} />);
   const cells = within(screen.getByTestId('call-permission-actions')).getAllByTestId('button-row-cell');
   expect(cells).toHaveLength(2);
   expect(within(cells[0] as (typeof cells)[number]).getByText(t.calls.permission.request)).toBeTruthy();
@@ -18,6 +18,6 @@ test('docs/07 «الأزرار»: «اطلب إذن الاتصال» (filled) th
 });
 
 test('outside the window only «إغلاق» shows, filling the row', async () => {
-  await renderWithQuery(<PermissionDialog phone="+966552147730" state="needs_template" onClose={jest.fn()} onSent={jest.fn()} />);
+  await renderWithQuery(<PermissionDialog ask={{ phone: '+966552147730', state: 'needs_template' }} onClose={jest.fn()} onSent={jest.fn()} />);
   expect(within(screen.getByTestId('call-permission-actions')).getAllByTestId('button-row-cell')).toHaveLength(1);
 });

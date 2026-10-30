@@ -4,5 +4,6 @@ export { callPhase, deriveCall, endedOnServer, ringingFor, talkedSeconds, UNANSW
 export type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
 export { CallStore, type CallStoreState } from './call-store.js';
 export { callEntryText, callErrorText, callPhaseText, callStatusText, type CallsText } from './call-words.js';
-export { callClock, callsReadable, permissionHint, ringWhile, secondClock, usableCalls, type CallsUi } from './calls-ui.js';
+export { callClock, callsReadable, ringWhile, secondClock, usableCalls, type CallsUi } from './calls-ui.js';
+export { askOf, permissionHint, permissionReplyText, type PermissionAsk, type PermissionWords } from './permission-ask.js';
 export { isCallsData, subscribeCalls, type RealtimeLike } from './calls-realtime.js';

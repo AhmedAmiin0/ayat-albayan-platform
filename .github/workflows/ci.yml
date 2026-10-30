@@ -263,7 +263,8 @@ jobs:
   # Shards 1-8 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
   # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
   # configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys (playwright.config.ts reads E2E_LINES);
-  # the six §5 journeys plus the template status and settings switch specs, desktop only.
+  # the six §5 journeys plus the template status and settings switch specs, desktop only. Named by file
+  # name alone: Playwright matches them as path patterns, so they keep working inside e2e/tests/<domain>/.
   e2e:
     name: ${{ matrix.name }}
     needs: changes
@@ -392,10 +393,10 @@ jobs:
         run: |
           if [ "$SHARD" = single ]; then
             pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --project=desktop \
-              tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts \
-              tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts \
-              tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts \
-              tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
+              journey-1-lead-to-trial.spec.ts journey-2-report.spec.ts \
+              journey-3-payment-renewal.spec.ts journey-4-reschedule-conflict.spec.ts \
+              journey-5-availability-wizard.spec.ts journey-6-duplicate-student.spec.ts \
+              inbox-template-status.spec.ts settings-switches.spec.ts
           else
             pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT $SPECS
           fi

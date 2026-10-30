@@ -1,5 +1,5 @@
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { routable, type Approvals, type RoutePass } from './number-route';
+import { messagingNumbers, routable, type Approvals, type RoutePass } from './number-route';
 import { STUB_ENV } from '../whatsapp.fakes';
 
 // Test-only (excluded from the build): numbers as the overlay carries them, and one pass's routing input.
@@ -35,5 +35,5 @@ export const THREE: readonly OverlayNumber[] = [
 
 export function routePass(input: { numbers?: readonly OverlayNumber[]; rules?: Record<string, string | null>; approvals?: Record<string, Record<string, string>> } = {}): RoutePass {
   const approvals: Approvals = new Map(Object.entries(input.approvals ?? {}).map(([k, v]) => [k, new Map(Object.entries(v))]));
-  return { numbers: (input.numbers ?? THREE).map(routable), ruleNumbers: new Map(Object.entries(input.rules ?? {})), approvals };
+  return { numbers: messagingNumbers(input.numbers ?? THREE).map(routable), ruleNumbers: new Map(Object.entries(input.rules ?? {})), approvals };
 }
