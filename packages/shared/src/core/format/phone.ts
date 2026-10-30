@@ -1,5 +1,4 @@
 // Phone normalisation to E.164 (rule 7, R-STU-02).
-import { siteCountry, type SiteCountry } from '../../pricing/index.js';
 
 export type PhoneCountry = 'SA' | 'EG' | 'AE' | 'QA' | 'KW' | 'OM';
 export type PhoneResult =
@@ -78,12 +77,6 @@ export function searchDigits(term: string): string | null {
   if (/^0[1-9]/.test(digits)) return digits.slice(1);
   const whole = normalizePhone(term);
   return whole.ok ? whole.e164.slice(1) : digits.replace(/^00?/, '');
-}
-
-/** The site country a chat number is quoted in («عرض سعر»: +966 → SA …); null → USD («دولة أخرى»). */
-export function pricingCountryOfPhone(phone: string): SiteCountry | null {
-  const r = normalizePhone(phone);
-  return r.ok ? siteCountry(r.country) : null;
 }
 
 function ok(e164: string, country: PhoneCountry | null): PhoneResult {
