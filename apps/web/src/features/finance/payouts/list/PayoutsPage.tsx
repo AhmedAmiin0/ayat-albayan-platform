@@ -21,11 +21,11 @@ import {
   payoutReceiptUrl,
   payoutsQuery,
   type PayoutGenerateResult,
-} from './api';
+} from '../api';
 import { MissingRates } from './MissingRates';
-import { MonthSelect } from './MonthSelect';
+import { MonthSelect } from '../shared/MonthSelect';
 import { payoutColumns } from './payout-columns';
-import { PayoutDialogs, type PayoutDialog } from './PayoutDialogs';
+import { PayoutDialogs, type PayoutDialog } from '../pay/PayoutDialogs';
 import { TeacherDuesSummary } from './TeacherDuesSummary';
 
 type Props = { month: string; onMonth: (month: string) => void };

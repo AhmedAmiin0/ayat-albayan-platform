@@ -10,7 +10,7 @@ import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
-import type { PayoutView } from './api';
+import type { PayoutView } from '../api';
 import { usePayPayout } from './use-pay-payout';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';

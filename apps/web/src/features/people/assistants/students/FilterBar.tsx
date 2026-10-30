@@ -1,7 +1,7 @@
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { currentMonth } from '@/features/finance/payouts/api';
-import { monthLabel, monthOptions } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
 import { t } from '@/lib/i18n/i18n';
 import type { AssistantRow } from '../api';
 

@@ -2,7 +2,7 @@ import type { PayoutView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { MyPayouts } from './MyPayouts';

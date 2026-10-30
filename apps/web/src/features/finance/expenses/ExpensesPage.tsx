@@ -12,7 +12,7 @@ import { downloadCsv } from '@/features/reporting/exports/api';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { currentMonth } from '@/features/finance/payouts/api';
-import { MonthSelect } from '@/features/finance/payouts/MonthSelect';
+import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
