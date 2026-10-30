@@ -4851,11 +4851,8 @@
     }
   },
   "src/inbox/messages/days/day-label.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/inbox/messages/days/day-separators.test.ts": {
@@ -6970,9 +6967,6 @@
     }
   },
   "src/inbox/threads-list/ThreadRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 6
     },
@@ -6988,15 +6982,7 @@
       "count": 2
     }
   },
-  "src/inbox/threads-list/ThreadTrailing.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/inbox/threads-list/ThreadTrailing.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -7075,9 +7061,6 @@
     }
   },
   "src/inbox/threads-list/ThreadsList.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
