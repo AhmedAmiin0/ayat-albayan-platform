@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { NUMBER_PURPOSES } from '../enums/messaging.js';
-import { WA_PROVIDERS } from '../catalog/integrations/keys.js';
-import { COMMS_SOURCES } from '../settings/domains/messaging.js';
+import { NUMBER_PURPOSES } from '../../enums/messaging.js';
+import { WA_PROVIDERS } from '../../catalog/integrations/keys.js';
+import { COMMS_SOURCES } from '../../settings/domains/messaging.js';
 import { NUMBER_SECRET_NAMES } from './views.js';
 
 /** A Meta id (phone number, WABA, app): letters, digits, _ and -, at most 64 (wa_numbers checks). */
