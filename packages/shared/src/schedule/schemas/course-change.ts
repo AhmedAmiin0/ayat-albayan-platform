@@ -33,3 +33,15 @@ export const courseChangeSchema = changeBase.extend({ clientRequestId: z.uuid() 
 export const courseChangeQuerySchema = z.object({ subscriptionId: z.uuid() });
 
 export type CourseChangeRequest = z.infer<typeof courseChangeCheckSchema>;
+
+// «تغيير المعلم» from the student's profile (owner 2026-10-30): the same change with the new teacher. The
+// days and times may stay the course's: the remaining lessons then move to the new teacher only.
+const teacherBase = changeBase.extend({ teacherId: z.uuid() });
+
+/** POST /students/:id/course-teacher/change/check: nothing written. */
+export const courseTeacherCheckSchema = teacherBase.superRefine(refine);
+
+/** POST /students/:id/course-teacher/change: idempotent on clientRequestId (rule 8). */
+export const courseTeacherChangeSchema = teacherBase.extend({ clientRequestId: z.uuid() }).superRefine(refine);
+
+export type CourseTeacherRequest = z.infer<typeof courseTeacherCheckSchema>;

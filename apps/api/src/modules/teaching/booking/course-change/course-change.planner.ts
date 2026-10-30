@@ -32,7 +32,7 @@ export class CourseChangePlanner {
    * no_change / days_count_mismatch / no_occurrences, 403 override_not_allowed, 409 custom_count_admin /
    * course_finished / course_exists (the new days overlap another weekly course of the student).
    */
-  async planned(req: CourseChangeRequest, role: ChangeRole, loaded: Loaded): Promise<Planned> {
+  async planned(req: CourseChangeRequest & { teacherId?: string }, role: ChangeRole, loaded: Loaded): Promise<Planned> {
     const { sub, active, all } = loaded;
     const tz = active[0]?.tz ?? 'Asia/Riyadh';
     const now = new Date();
@@ -41,7 +41,8 @@ export class CourseChangePlanner {
     if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
     const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
     assertChange(req, { ...facts, before: [] }, now);
-    assertStart(req, { subStartsOn: sub.starts_on, rules: all });
+    const teacherChanged = req.teacherId !== undefined && req.teacherId !== active[0]?.teacher_id;
+    assertStart(req, { subStartsOn: sub.starts_on, rules: all, teacherChanged });
     const cutoff = new Date(Math.max(startOfLocalDay(req.startsOn, tz).getTime(), now.getTime()));
     const moved = await this.lessons.openFrom(all.map((r) => r.id), cutoff);
     const before = await this.used({ loaded, moved, req, now });

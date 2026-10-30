@@ -42,6 +42,7 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     client_request_id: null,
     cancelled_at: null,
     cancelled_by: null,
+    cancel_kind: null,
     cancel_reason: null,
     ...patch,
   };
