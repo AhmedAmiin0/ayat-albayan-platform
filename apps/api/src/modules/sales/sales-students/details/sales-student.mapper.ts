@@ -25,7 +25,7 @@ interface DetailsParts {
   /** Empty unless the viewer holds self.sales_money (part_paid). */
   prices?: readonly PriceRow[];
   trial: SalesTrialLesson[];
-  /** Hers: only then the subscriptions and the sent reports (owner 2026-10-28). */
+  /** Hers (the money actions); every student shows its subscriptions and reports (owner 2026-10-30). */
   mine: boolean;
   /** The current package, hers or not (owner 2026-10-30): already whitelisted (no price). */
   package?: SalesPackageSummary | null;
@@ -81,15 +81,12 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
 }
 
 /**
- * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول»
- * included). Not hers: no subscription and no report, whatever was read.
+ * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no payment, note or meeting link («الجدول» included); a
+ * price only as `part_paid`. Any student, hers or not (owner 2026-10-30).
  */
-/** Hers: the subscriptions and the sent reports; not hers: neither, whatever was read. */
-const owned = (p: DetailsParts) =>
-  p.mine ? { subscriptions: subscriptionsOf(p.history, p.prices ?? []), reports: p.reports } : { subscriptions: [], reports: { items: [], total: 0 } };
-
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
-  const { subscriptions, reports } = owned(p);
+  const subscriptions = subscriptionsOf(p.history, p.prices ?? []);
+  const reports = p.reports;
   const current = currentPackage(subscriptions); // never a cancelled one (owner 2026-10-28)
   const items = attendanceDays(p.student.id, p.lessons);
   return {

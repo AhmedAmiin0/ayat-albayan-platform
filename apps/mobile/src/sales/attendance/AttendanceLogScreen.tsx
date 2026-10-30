@@ -27,8 +27,8 @@ const pdfError = (e: unknown): string => (e instanceof ApiError && e.status === 
  * «سجل الحضور» of one student (owner 2026-10-28), from «تفاصيل الطالب» or the admin's student file:
  * the month pills (newest first), the month's totals and a compact striped table of every past lesson
  * (Riyadh day and time on the viewer's clock, teacher, status chip, report sent or not; trial / makeup
- * tags and the cancel reason under a row). A row with a sent report opens it, for her students only
- * (`mine`) as «التقارير» does; the admin opens any. No money, link or notes.
+ * tags and the cancel reason under a row). A row with a sent report opens it, for any student (owner
+ * 2026-10-30) as «التقارير» does. No money, link or notes.
  */
 export function AttendanceLogScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -49,9 +49,9 @@ export function AttendanceLogScreen() {
   );
   const renderItem = useCallback(
     ({ item, index }: { item: AttendanceTableRow; index: number }) => (
-      <AttendanceLogRow row={item} striped={index % 2 === 1} cycle={cycle} onOpen={data?.mine && item.report_id ? open : undefined} />
+      <AttendanceLogRow row={item} striped={index % 2 === 1} cycle={cycle} onOpen={item.report_id ? open : undefined} />
     ),
-    [cycle, data?.mine, open],
+    [cycle, open],
   );
   const pick = useCallback((m: string) => {
     setError(null);

@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { MINE, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
-const SECRET = /price|currency|fx_|amount|payment|receipt|commission|note|secret|سر/i;
+const SECRET = /fx_|amount|payment|receipt|commission|note|secret|سر/i;
 const keys = (v: unknown): string[] =>
   v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
 
@@ -41,16 +41,16 @@ describe('GET /sales/students/:id: the current package of ANY student', () => {
     expect(t.roster.balances).toHaveBeenCalledWith(['sub2']);
   });
 
-  it('still never a price, currency, payment, commission or report for another\'s student', async () => {
+  it('another\'s student: subscriptions and reports as for hers (owner 2026-10-30); never a commission', async () => {
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesB' });
     const body = res.json();
-    const none = { mine: false, subscriptions: [], reports: { items: [], total: 0 } };
-    expect(body).toMatchObject(none);
+    expect(body.mine).toBe(false);
+    expect(body.subscriptions.length).toBeGreaterThan(0);
+    expect(body.reports.total).toBe(1);
     expect(keys(body).filter((k) => SECRET.test(k))).toEqual([]);
-    expect(res.body).not.toMatch(/290|SAR|سر|commission/);
-    expect(t.history.history).not.toHaveBeenCalled();
-    expect(t.queries.prices).not.toHaveBeenCalled();
-    expect(t.reports.submitted).not.toHaveBeenCalled();
+    expect(res.body).not.toMatch(/سر|commission/);
+    expect(t.history.history).toHaveBeenCalledWith(MINE);
+    expect(t.queries.prices).toHaveBeenCalledWith(MINE);
   });
 
   it('her own student keeps the subscriptions and also gets the summary; none: package null', async () => {

@@ -25,7 +25,7 @@ export interface AttendanceTableRow {
   kind: AttendanceKind | null;
   /** A report of this student for this lesson was submitted (sent). */
   report_sent: boolean;
-  /** That report's id, only when it may open (`mine`); else null. */
+  /** That report's id (it opens for any student, owner 2026-10-30); else null. */
   report_id: string | null;
   /** Only for a cancelled lesson. */
   cancel_reason: string | null;
@@ -54,7 +54,7 @@ export interface StudentAttendanceTable {
   /** Newest first. */
   items: AttendanceTableRow[];
   totals: Record<AttendanceTotalKind, number>;
-  /** Hers (the sales tree; always true for the admin): a sent report opens only then. */
+  /** Hers (the sales tree; always true for the admin); a sent report opens either way (owner 2026-10-30). */
   mine: boolean;
 }
 

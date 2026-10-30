@@ -16,19 +16,18 @@ import { SalesStudentService } from './sales-student.service';
 export class SalesStudentController {
   constructor(private readonly students: SalesStudentService) {}
 
-  /** Any student: trial, «الجدول», attendance; hers also subscriptions and sent reports (`mine`); 404 student_not_found. */
+  /** Any student: trial, «الجدول», attendance, subscriptions and sent reports (`mine` on hers); 404 student_not_found. */
   @Get(':id')
   details(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesStudentDetails> {
     return this.students.details(user, id);
   }
 
-  /** 1 h signed URL of a sent report's PDF; 404 for another student's report, 409 pdf_not_ready. */
+  /** 1 h signed URL of any student's sent report PDF; 404 for another student's report, 409 pdf_not_ready. */
   @Get(':id/reports/:reportId/pdf')
   reportPdf(
     @Param('id', ParseUUIDPipe) id: string,
     @Param('reportId', ParseUUIDPipe) reportId: string,
-    @CurrentUser() user: AuthUser,
   ): Promise<SignedDownload> {
-    return this.students.reportPdf(user, { studentId: id, reportId });
+    return this.students.reportPdf({ studentId: id, reportId });
   }
 }
