@@ -2,11 +2,11 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
-      "entry": [
-        "docs/design/brand/tools/*.mjs",
-        "tools/livekit/token-server.mjs"
-      ],
+      "entry": ["tools/livekit/token-server.mjs"],
       "ignoreBinaries": ["supabase"]
+    },
+    "docs/design/brand/tools": {
+      "entry": ["build.mjs", "check.mjs"]
     },
     "apps/api": {
       "entry": ["src/main.ts", "src/scripts/*.ts", "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts"],

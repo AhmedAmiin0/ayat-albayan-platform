@@ -21,38 +21,49 @@ function paeth(a, b, c) {
   return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
 }
 
-export function decode(buf) {
+/** The header fields and the concatenated IDAT data of a PNG (8-bit RGB or RGBA, no interlace). */
+function readChunks(buf) {
   if (!buf.subarray(0, 8).equals(SIG)) throw new Error('not a PNG');
-  let o = 8, width = 0, height = 0, ctype = 0;
+  const head = { width: 0, height: 0, ctype: 0 };
   const idat = [];
-  while (o < buf.length) {
+  for (let o = 8; o < buf.length; ) {
     const len = buf.readUInt32BE(o);
     const type = buf.toString('ascii', o + 4, o + 8);
     const body = buf.subarray(o + 8, o + 8 + len);
-    if (type === 'IHDR') {
-      width = body.readUInt32BE(0);
-      height = body.readUInt32BE(4);
-      ctype = body[9];
-      if (body[8] !== 8 || body[12] !== 0 || (ctype !== 2 && ctype !== 6)) throw new Error('unsupported PNG');
-    }
+    if (type === 'IHDR') Object.assign(head, ihdr(body));
     if (type === 'IDAT') idat.push(body);
     o += 12 + len;
   }
+  return { ...head, idat: Buffer.concat(idat) };
+}
+
+/** Width, height and colour type from IHDR; only 8-bit, non-interlaced RGB or RGBA is supported. */
+function ihdr(body) {
+  const ctype = body[9];
+  if (body[8] !== 8 || body[12] !== 0 || (ctype !== 2 && ctype !== 6)) throw new Error('unsupported PNG');
+  return { width: body.readUInt32BE(0), height: body.readUInt32BE(4), ctype };
+}
+
+/** One scanline un-filtered in place into `px` (filters 0–4). */
+function unfilterRow(raw, px, { y, stride, bpp }) {
+  const f = raw[y * (stride + 1)];
+  const line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
+  for (let x = 0; x < stride; x++) {
+    const a = x >= bpp ? px[y * stride + x - bpp] : 0;
+    const b = y > 0 ? px[(y - 1) * stride + x] : 0;
+    const c = x >= bpp && y > 0 ? px[(y - 1) * stride + x - bpp] : 0;
+    const pred = [0, a, b, (a + b) >> 1, paeth(a, b, c)][f];
+    px[y * stride + x] = (line[x] + pred) & 255;
+  }
+}
+
+export function decode(buf) {
+  const { width, height, ctype, idat } = readChunks(buf);
   const bpp = ctype === 6 ? 4 : 3;
-  const raw = inflateSync(Buffer.concat(idat));
+  const raw = inflateSync(idat);
   const stride = width * bpp;
   const px = Buffer.alloc(stride * height);
-  for (let y = 0; y < height; y++) {
-    const f = raw[y * (stride + 1)];
-    const line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
-    for (let x = 0; x < stride; x++) {
-      const a = x >= bpp ? px[y * stride + x - bpp] : 0;
-      const b = y > 0 ? px[(y - 1) * stride + x] : 0;
-      const c = x >= bpp && y > 0 ? px[(y - 1) * stride + x - bpp] : 0;
-      const pred = [0, a, b, (a + b) >> 1, paeth(a, b, c)][f];
-      px[y * stride + x] = (line[x] + pred) & 255;
-    }
-  }
+  for (let y = 0; y < height; y++) unfilterRow(raw, px, { y, stride, bpp });
   const data = new Float32Array(width * height * 4);
   for (let i = 0; i < width * height; i++) {
     for (let k = 0; k < 3; k++) data[i * 4 + k] = px[i * bpp + k] / 255;

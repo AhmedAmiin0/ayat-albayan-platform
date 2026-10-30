@@ -9,7 +9,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "pnpm lint:ox && turbo lint",
-    "lint:ox": "oxlint --deny-warnings --report-unused-disable-directives-severity=error --ignore-pattern=packages/db/src/types.ts apps packages tools/google-stub tools/migrate tools/scripts tools/wa-stub e2e",
+    "lint:ox": "oxlint --deny-warnings --report-unused-disable-directives-severity=error --ignore-pattern=packages/db/src/types.ts apps packages tools/google-stub tools/migrate tools/scripts tools/wa-stub e2e docs/design/brand/tools",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "e2e": "turbo e2e",

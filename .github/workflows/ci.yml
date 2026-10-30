@@ -18,7 +18,8 @@ concurrency:
 jobs:
   # Which parts changed. e2e drives apps/web against the API and database, so a change that only touches
   # the mobile app, docs, the migration tool or other scripts skips the e2e machines; a docs-only change
-  # (docs/**, *.md; not docs/09, which workflows.test.mjs reads) also skips verify.
+  # (docs/**, *.md; not docs/09, which workflows.test.mjs reads, nor the linted docs/design/brand/tools) also
+  # skips verify.
   # PRs diff against the base branch. Pushes diff against the previous commit, but only when ci passed on
   # that commit (so a run cancelled by this push never lets its changes through untested).
   # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
@@ -66,7 +67,8 @@ jobs:
           # Here-strings, not pipes: with pipefail an early `grep -q` exit could make the test read false.
           if grep -qvE '^(apps/mobile/|docs/|tools/migrate/|tools/scripts/|.*\.md$)' <<< "$files" \
             || grep -qE '^tools/scripts/(ci-checks/e2e-shards|env/write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
-          if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files"; then code=true; fi
+          if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files" \
+            || grep -q '^docs/design/brand/tools/' <<< "$files"; then code=true; fi
           printf 'e2e=%s\ncode=%s\n' "$e2e" "$code" | tee -a "$GITHUB_OUTPUT"
       - if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
         uses: actions/setup-node@v4

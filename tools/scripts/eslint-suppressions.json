@@ -4,14 +4,6 @@
       "count": 1
     }
   },
-  "ci-checks/compose.test.mjs": {
-    "max-lines": {
-      "count": 1
-    },
-    "no-regex-spaces": {
-      "count": 1
-    }
-  },
   "ci-checks/e2e-areas/areas.mjs": {
     "complexity": {
       "count": 1
@@ -36,9 +28,6 @@
     }
   },
   "ci-checks/e2e-areas/select.mjs": {
-    "@typescript-eslint/max-params": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -86,9 +75,6 @@
     }
   },
   "ci-checks/pure-move-check.mjs": {
-    "@typescript-eslint/max-params": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     }
@@ -105,11 +91,6 @@
   },
   "ci-checks/roll-fake.mjs": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "ci-checks/roll.test.mjs": {
-    "no-regex-spaces": {
       "count": 1
     }
   },

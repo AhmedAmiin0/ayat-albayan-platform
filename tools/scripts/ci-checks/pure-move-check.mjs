@@ -46,7 +46,8 @@ export function normalize(text) {
     paths.push(SPEC.exec(st)?.[2] ?? '');
     return squash(st.replace(SPEC, '"<path>"'));
   });
-  const raw = text.replace(STATEMENTS, '').replace(CALLS, (_m, name, open, _q, path) => {
+  const raw = text.replace(STATEMENTS, '').replace(CALLS, (_m, ...groups) => {
+    const [name, open, , path] = groups;
     paths.push(path);
     return `${name}${open}"<path>"`;
   });

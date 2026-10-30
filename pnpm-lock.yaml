@@ -363,6 +363,15 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1(@noble/hashes@1.8.0))(vite@8.3.2(@types/node@24.19.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  docs/design/brand/tools:
+    devDependencies:
+      '@ab/config':
+        specifier: workspace:*
+        version: link:../../../../packages/config
+      eslint:
+        specifier: ^10.0.0
+        version: 10.11.0(jiti@2.7.0)(supports-color@8.1.1)
+
   e2e:
     devDependencies:
       '@ab/config':
