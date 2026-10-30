@@ -3545,6 +3545,10 @@
     "commission_earned": {
       "title": "عمولة جديدة",
       "body": "{amount} — {code} {student}"
+    },
+    "kapsoWebhookGap": {
+      "title": "لا تصل رسائل العائلات من Kapso مباشرة",
+      "body": "تحقّق من الـ webhook في Kapso: جُلبت {count} رسالة متأخرة عبر الاستدراك الدوري"
     }
   },
   "bell": {

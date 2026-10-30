@@ -6758,7 +6758,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/webhook/external/external.queries.ts": {
@@ -6802,9 +6802,6 @@
     },
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/webhook/external/kapso-numbers.test.ts": {
@@ -6869,10 +6866,10 @@
   },
   "src/modules/messaging/webhook/inbound/webhook.inbound.service.ts": {
     "@typescript-eslint/no-confusing-void-expression": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 5
+      "count": 2
     },
     "ab/no-parent-imports": {
       "count": 4

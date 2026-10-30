@@ -22,6 +22,10 @@ import { ExternalStatus, KAPSO_HISTORY } from './external/external-status';
 import { ExternalQueries } from './external/external.queries';
 import { ExternalStore } from './external/external.store';
 import { KapsoHistory } from './external/kapso-history';
+import { InboundCatchUpJob } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.job';
+import { InboundCatchUpRepo } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.repo';
+import { InboundCatchUp } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.service';
+import { InboundGapAlert } from '@/modules/messaging/webhook/external/inbound/inbound-gap.alert';
 
 /**
  * GET/POST /webhooks/whatsapp (docs/12 §3.5, routes W1–W2), POST /webhooks/kapso and /webhooks/wacrm (docs/19). Inbound processing does not depend on
@@ -50,6 +54,11 @@ import { KapsoHistory } from './external/kapso-history';
     ExternalStore,
     ExternalStatus,
     ExternalCatchUpJob,
+    // Families' messages the webhook missed (Kapso's inbound history, incident 2026-10-30).
+    InboundCatchUpRepo,
+    InboundCatchUp,
+    InboundGapAlert,
+    InboundCatchUpJob,
   ],
 })
 export class WebhookModule {}

@@ -15,6 +15,11 @@ const UNDO_MARGIN_MS = 500;
 interface InboundOptions {
   /** Epoch ms when Meta gets its 200 regardless (WebhookService); none = it waits for us. */
   deadline?: number;
+  /**
+   * A message the catch-up job back-filled (external/inbound, older than LATE_MS when stored): the
+   * row, lead and quick reply as usual, its unread count included, but no admin / assistant push.
+   */
+  quiet?: boolean;
 }
 
 /**
@@ -45,18 +50,25 @@ export class InboundService {
     private readonly push: PushService,
   ) {}
 
-  async handle(m: InboundEvent, opts: InboundOptions = {}): Promise<void> {
+  /** True when this call stored a new row (false: a replay, a reaction or not a phone). */
+  async handle(m: InboundEvent, opts: InboundOptions = {}): Promise<boolean> {
     const phone = waIdToE164(m.from);
-    if (!phone) return void this.log.warn(`inbound ${m.waMessageId}: wa_id ${m.from} is not a phone`);
-    if (m.type === 'reaction') return void (await this.reactions?.apply(m, phone));
-    if (await this.own?.has(phone)) return void (await this.store.saveOwn(m, phone));
+    if (!phone) {
+      this.log.warn(`inbound ${m.waMessageId}: wa_id ${m.from} is not a phone`);
+      return false;
+    }
+    if (m.type === 'reaction') {
+      await this.reactions?.apply(m, phone);
+      return false;
+    }
+    if (await this.own?.has(phone)) return this.store.saveOwn(m, phone);
     const { who, lead } = await this.store.sender({ m, phone });
     const intent = intentOf(m);
     const rating = ratingOf(m);
     const asks = rating !== null || intent === 'confirm' || intent === 'reschedule';
     const lessonId = asks ? await this.replies.lessonFor({ m, phone, who, rating: rating !== null }) : null;
     const stored = await this.store.save({ m, phone, who, leadId: lead.id, lessonId, stage: lead.stage });
-    if (!stored) return; // replay of a wamid we already handled
+    if (!stored) return false; // replay of a wamid we already handled
     try {
       await this.replies.act({ intent, m, lessonId, leadId: lead.id });
       await this.rate({ m, who, rating, lessonId });
@@ -64,9 +76,11 @@ export class InboundService {
       await this.undo(m.waMessageId, opts.deadline);
       throw e;
     }
+    if (opts.quiet) return true;
     const { kind, event } = inboundPush({ m, phone, who, newLeadId: lead.created, intent });
     await this.push.notifyAdmins(kind, event);
     await this.notifySalesFor(kind, event, { who, lead });
+    return true;
   }
 
   /** The assistants' alert (docs/21 §6): none for a teacher; a new lead → every assistant. */

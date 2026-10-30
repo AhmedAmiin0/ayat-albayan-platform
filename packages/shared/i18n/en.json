@@ -3545,6 +3545,10 @@
     "commission_earned": {
       "title": "New commission",
       "body": "{amount} — {code} {student}"
+    },
+    "kapsoWebhookGap": {
+      "title": "Families' messages are not arriving from Kapso directly",
+      "body": "Check the webhook in Kapso: {count} late messages were fetched by the periodic catch-up"
     }
   },
   "bell": {

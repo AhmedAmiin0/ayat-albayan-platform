@@ -89,7 +89,7 @@ describe('confirm by reply (R-SCH-03)', () => {
     for (const err of [new ConflictException({ code: 'invalid_transition' }), new NotFoundException()]) {
       const s = asGuardian();
       s.lessons.confirm.mockRejectedValue(err);
-      await expect(s.inbound.handle(event({ replyKey: `confirm:${LESSON_ID}` }))).resolves.toBeUndefined();
+      await expect(s.inbound.handle(event({ replyKey: `confirm:${LESSON_ID}` }))).resolves.toBe(true);
       expect(s.audit.record).not.toHaveBeenCalled();
       expect(s.push.notifyAdmins).toHaveBeenCalled();
     }

@@ -9,7 +9,7 @@ import { KapsoHistory } from './kapso-history';
 import { kapsoChatNumbers, type KapsoNumber } from './kapso-numbers';
 import { BackgroundJob } from '../../../../config/role/background-job';
 
-const EVERY_MS = 10 * 60_000;
+export const EVERY_MS = 10 * 60_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
 const FIRST_RUN_MS = 2 * 60_000;
 /** Never before the chat import of 2026-10-25, which holds everything older. */
