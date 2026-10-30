@@ -4,6 +4,8 @@ import { clearAllDrafts, getDraft, setDraft } from './composer/lib/draft-store';
 import { LinkFamilyDialog } from './lead/LinkFamilyDialog';
 import { useThreadListsAction } from './lists/lib/use-thread-lists-action';
 import { BUBBLE_ROW } from './messages/lib/bubble-side';
+import { SalesRegisterButton, SalesRegisterDialog } from './sales/SalesRegisterAction';
+import { canRegisterFrom } from './sales/sales-register';
 import { fillComposer } from './saved-replies/lib/filter';
 import { inboxBase, InboxModeContext, showsPhone, useInboxMode } from './shared/mode';
 
@@ -17,6 +19,9 @@ describe('inbox barrel', () => {
     expect(inbox.fillComposer).toBe(fillComposer);
     expect(inbox.LinkFamilyDialog).toBe(LinkFamilyDialog);
     expect(inbox.useThreadListsAction).toBe(useThreadListsAction);
+    expect(inbox.SalesRegisterButton).toBe(SalesRegisterButton);
+    expect(inbox.SalesRegisterDialog).toBe(SalesRegisterDialog);
+    expect(inbox.canRegisterFrom).toBe(canRegisterFrom);
   });
 
   it('re-exports the inbox mode helpers', () => {

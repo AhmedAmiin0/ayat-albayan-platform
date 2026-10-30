@@ -72,5 +72,7 @@ export { BUBBLE_ROW } from './messages/lib/bubble-side';
 export { clearAllDrafts, getDraft, setDraft } from './composer/lib/draft-store';
 export { fillComposer } from './saved-replies/lib/filter';
 export { LinkFamilyDialog } from './lead/LinkFamilyDialog';
+export { SalesRegisterButton, SalesRegisterDialog } from './sales/SalesRegisterAction';
+export { canRegisterFrom } from './sales/sales-register';
 export { useThreadListsAction } from './lists/lib/use-thread-lists-action';
 export { inboxBase, type InboxMode, InboxModeContext, showsPhone, useInboxMode } from './shared/mode';
