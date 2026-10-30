@@ -1,6 +1,6 @@
 import { chatBinding, DISCOUNTS, usedBeforeMax, type PaymentLinkView, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useId, useMemo, useRef, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -92,7 +92,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
       onSaved(sub);
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!studentId || save.isPending) return;
     const checked = startBody(startShown, { canSet, today, lessonsTotal });

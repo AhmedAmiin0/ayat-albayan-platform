@@ -1,7 +1,7 @@
 import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core';
 import type { TeacherCreate } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { apiSend } from '@/lib/http/api';
@@ -46,7 +46,7 @@ export function TeacherDialog({ teacher, onClose }: Props) {
       setError(usernameApiError(e, t.familyAuth.teacherUsername) ?? apiErrorMessage(e)),
   });
 
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const result = validateTeacher(form);
     if (!result.ok) return setError(result.error);

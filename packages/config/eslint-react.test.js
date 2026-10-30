@@ -14,7 +14,7 @@ const lint = ({ compiler, react19, file, code }) => {
 const imports = "import React, { forwardRef, memo, useContext, useMemo } from 'react';";
 const provider = `${imports}\nexport const A = () => <Ctx.Provider value={1}><b /></Ctx.Provider>;`;
 
-test('compiled React 18 (web): only the no-memo rule, per import and per React.x', () => {
+test('compiled, React 19 rules off (web): only the no-memo rule, per import and per React.x', () => {
   const code = `${imports}\nexport const A = () => React.useCallback(() => 1, []);`;
   assert.deepEqual(lint({ compiler: true, react19: false, file: 'src/a.tsx', code }), Array(3).fill('React Compiler'));
   assert.deepEqual(lint({ compiler: false, react19: false, file: 'src/a.tsx', code }), []);

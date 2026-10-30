@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SyntheticEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
@@ -11,7 +11,7 @@ const L = t.meetingInvites;
 export function PhoneInviteeInput({ onAdd, disabled }: { onAdd: (item: PickedInvitee) => void; disabled?: boolean }) {
   const [phone, setPhone] = useState('');
   const [invalid, setInvalid] = useState(false);
-  const add = (e?: FormEvent) => {
+  const add = (e?: SyntheticEvent) => {
     e?.preventDefault();
     const item = fromPhone(phone);
     setInvalid(!item);

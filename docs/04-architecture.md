@@ -7,7 +7,7 @@
 | Monorepo | **Turborepo** + pnpm workspaces | `turbo run build test lint typecheck e2e` with remote cache |
 | Database / Auth / Storage | **Supabase** (Postgres 15, Auth, Storage, Realtime, pg_cron, Vault) | Migrations as SQL in `packages/db/supabase/migrations`; types generated to `packages/db/src/types.ts` |
 | API | **NestJS 10** (TypeScript, Fastify adapter) | Owns all business logic & WhatsApp webhooks. Talks to Postgres via `postgres.js`/Kysely + Supabase service client for Storage/Auth admin |
-| Web (admin + teacher + guardian portal) | **React 18 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
+| Web (admin + teacher + guardian portal) | **React 19 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
 | Mobile (admin) | **Expo SDK 51+ / React Native**, expo-router, TanStack Query, expo-notifications | EAS Build; same `packages/api-client` |
 | Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/tsconfig/prettier) | |
 | Messaging | Meta WhatsApp Cloud API v20+ | Webhook → Nest; outbound via Nest `MessagingModule` |
@@ -176,10 +176,10 @@ complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqe
 //   web + mobile (React Compiler): no useMemo / useCallback / memo
 //   mobile (React 19): no forwardRef (ref is a prop), use(Context) not useContext, <Context value> not <Context.Provider>
 ```
-React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset({ target: '18' })`, runtime from
-`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs the
+React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset()`, React 19's own runtime),
+except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs the
 compiler for every Babel caller while app.json `experiments.reactCompiler` is true, so jest also runs the compiled
-code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
+code (docs/31a §3.2). Web (React 19.2, docs/32 x1) gets the React 19 rules once x2–x5 remove the old uses. TypeScript flags: docs/31a §2.
 Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
 violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
 them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is

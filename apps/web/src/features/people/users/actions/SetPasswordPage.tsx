@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { Field } from '@/components/ui/form/field';
@@ -28,7 +28,7 @@ export function SetPasswordPage() {
     void hasRecoverySession().then((ok) => setPhase(ok ? 'ready' : 'invalid'));
   }, []);
 
-  const submit = async (e: FormEvent) => {
+  const submit = async (e: SubmitEvent) => {
     e.preventDefault();
     const problem = setPasswordError(password, confirm);
     setError(problem);

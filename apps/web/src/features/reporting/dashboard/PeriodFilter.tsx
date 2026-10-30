@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Input } from '@/components/ui/form/input';
 import { Label } from '@/components/ui/form/label';
@@ -19,7 +19,7 @@ export interface PeriodFilterProps {
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const [draft, setDraft] = useState(value);
   const [error, setError] = useState<keyof typeof t.dashboard.error | null>(null);
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const code = rangeError(draft);
     setError(code);

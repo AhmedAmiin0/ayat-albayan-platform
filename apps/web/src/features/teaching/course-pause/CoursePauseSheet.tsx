@@ -1,7 +1,7 @@
 import { coursePauseErrorCode } from '@ab/client-core';
 import { riyadhToday } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -35,7 +35,7 @@ export function CoursePauseSheet({ studentId, onClose, onDone }: CoursePauseShee
     },
   });
   const blocked = draftProblem(draft, today) !== null;
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!blocked) start.mutate();
   };

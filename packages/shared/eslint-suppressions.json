@@ -123,21 +123,6 @@
       "count": 18
     }
   },
-  "src/core/async/result.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/async/result.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    }
-  },
-  "src/core/async/retry.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/classroom/internal-meetings.ts": {
     "max-len": {
       "count": 7
@@ -207,45 +192,19 @@
       "count": 2
     }
   },
-  "src/custom-config/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
+  "src/core/async/result.test.ts": {
+    "max-len": {
       "count": 1
     }
   },
-  "src/custom-config/public-config.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
+  "src/core/async/result.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
-  "src/custom-config/public.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
+  "src/core/async/retry.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/custom-config/schema.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/enums/feedback.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/finance.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/messaging.ts": {
-    "max-len": {
-      "count": 5
     }
   },
   "src/core/format/arabic.ts": {
@@ -286,7 +245,7 @@
   },
   "src/core/format/phone.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/core/format/running-head.ts": {
@@ -298,6 +257,63 @@
     }
   },
   "src/core/format/text-dir.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/core/schemas/common.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/core/schemas/list-sort.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/custom-config/public-config.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/public.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/schema.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/enums/feedback.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/finance.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/messaging.ts": {
     "max-len": {
       "count": 5
     }
@@ -1547,11 +1563,6 @@
       "count": 1
     }
   },
-  "src/core/schemas/common.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/schemas/feedback.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -1609,17 +1620,6 @@
   },
   "src/schemas/lessons/scheduling.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/schemas/list-sort.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },
     "max-len": {

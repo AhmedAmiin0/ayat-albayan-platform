@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useId, useRef, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -49,7 +49,7 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
       onSaved();
     },
   });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!student || !startsOn) return;
     const body = { studentId: student.id, pricing, startsOn, notes: notes.trim() || null, ...extra };

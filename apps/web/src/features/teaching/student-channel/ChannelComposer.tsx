@@ -1,5 +1,5 @@
 import { CHANNEL_BODY_MAX } from '@ab/shared';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
@@ -16,7 +16,7 @@ export function ChannelComposer({ pending, failed, onSend }: Props) {
   const [text, setText] = useState('');
   const body = text.trim();
   const tooLong = body.length > CHANNEL_BODY_MAX;
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!body || tooLong || pending) return;
     void onSend(body).then(() => setText(''), () => undefined);
