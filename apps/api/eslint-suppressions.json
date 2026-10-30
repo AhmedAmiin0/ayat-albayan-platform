@@ -12880,17 +12880,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/details/sales-student-schedule.mapper.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/details/sales-student-trial.mapper.test.ts": {
@@ -13097,7 +13092,7 @@
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.ts": {
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 5
@@ -13171,7 +13166,7 @@
       "count": 7
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/sales/sales/assign/sales-assign.fakes.ts": {
