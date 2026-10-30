@@ -9,7 +9,7 @@ import { t } from '@/lib/i18n/i18n';
 import { threadKind, threadTitle, timesInText } from '../../format';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
 import type { InboxSearch } from '../../shared/search';
-import { ThreadListChips } from '../../lists/ThreadListChips';
+import { ThreadListChips } from '../../lists/components/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import { CopyPhoneButton } from './CopyPhoneButton';

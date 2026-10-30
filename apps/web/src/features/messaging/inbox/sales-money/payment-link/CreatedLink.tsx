@@ -8,7 +8,7 @@ import { formatDate } from '@/features/sales/leads';
 import { fillText, linkMessage } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 import { getDraft, setDraft } from '../../composer/lib/draft-store';
-import { fillComposer } from '../../saved-replies/filter';
+import { fillComposer } from '../../saved-replies/lib/filter';
 
 const P = t.paymentLinks;
 

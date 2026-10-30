@@ -6,7 +6,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { CalcSteps } from '@/features/finance/pricing';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { fillComposer } from '../../saved-replies/filter';
+import { fillComposer } from '../../saved-replies/lib/filter';
 import { getDraft, setDraft } from '../lib/draft-store';
 import { sendErrorText } from '../lib/send-error';
 import { QuoteActions } from './QuoteActions';

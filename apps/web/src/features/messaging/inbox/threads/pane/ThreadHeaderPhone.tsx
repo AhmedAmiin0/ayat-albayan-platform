@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { threadKind, threadTitle, timesInText } from '../../format';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
-import { ThreadListChips } from '../../lists/ThreadListChips';
+import { ThreadListChips } from '../../lists/components/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import type { ThreadHeaderProps } from './ThreadHeader';

@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PRICES, REPLIES, savedReply } from '@/features/messaging/inbox/saved-replies/fixture';
+import { PRICES, REPLIES, savedReply } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { SavedRepliesTab } from './SavedRepliesTab';
