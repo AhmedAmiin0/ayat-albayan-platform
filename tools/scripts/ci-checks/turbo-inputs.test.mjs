@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const MIGRATIONS = '$TURBO_ROOT$/packages/db/supabase/migrations/**';
-const TEST = /\.test\.[cm]?[jt]sx?$/;
+const CODE = /\.[cm]?[jt]sx?$/;
 const json = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const turboOf = (pkg) => {
   try {
@@ -18,12 +18,13 @@ const turboOf = (pkg) => {
 };
 const testInputs = (pkg) => turboOf(pkg).tasks.test?.inputs ?? [];
 
-function testFiles(dir) {
+// Code, tests and test helpers alike: a helper that reads a file feeds the tests that import it.
+function codeFiles(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     if (e.name === 'node_modules' || e.name === 'dist' || e.name.startsWith('.')) return [];
     const path = join(dir, e.name);
-    if (e.isDirectory()) return testFiles(path);
-    return TEST.test(e.name) ? [path] : [];
+    if (e.isDirectory()) return codeFiles(path);
+    return CODE.test(e.name) ? [path] : [];
   });
 }
 
@@ -40,11 +41,11 @@ test('the root package has no workspace dependency but @ab/config (its files joi
   assert.deepEqual(internal, ['@ab/config']);
 });
 
-test('every package whose tests read the migrations hashes them into its test task', () => {
+test('every package whose code names the migrations hashes them into its test task', () => {
   const readers = packages.filter(
     (pkg) =>
       pkg !== 'packages/db' &&
-      testFiles(join(ROOT, pkg)).some((f) =>
+      codeFiles(join(ROOT, pkg)).some((f) =>
         readFileSync(f, 'utf8').includes('supabase/migrations'),
       ),
   );
@@ -52,14 +53,16 @@ test('every package whose tests read the migrations hashes them into its test ta
   for (const pkg of readers) assert.ok(testInputs(pkg).includes(MIGRATIONS), pkg);
 });
 
-test('package test inputs extend the root inputs instead of replacing them', () => {
-  for (const pkg of packages) {
-    const inputs = testInputs(pkg);
-    if (inputs.length) assert.equal(inputs[0], '$TURBO_EXTENDS$', pkg);
-  }
+test('package lint and test inputs extend the root inputs instead of replacing them', () => {
+  for (const pkg of packages)
+    for (const task of ['lint', 'test']) {
+      const inputs = turboOf(pkg).tasks[task]?.inputs ?? [];
+      if (inputs.length) assert.equal(inputs[0], '$TURBO_EXTENDS$', `${pkg} ${task}`);
+    }
 });
 
-// root(path) calls and new URL(../ path) literals → repo paths outside tools/scripts.
+// Literal root(path) calls and new URL(../ path) strings → repo paths outside tools/scripts.
+// Paths built from variables (`${DIR}`, listFiles) are not seen: the inputs list them by hand.
 function outsideReads(file) {
   const text = readFileSync(file, 'utf8');
   const fromRoot = [...text.matchAll(/root\(['`]([^'`$]+)/g)].map((m) => m[1]);
@@ -69,13 +72,13 @@ function outsideReads(file) {
   return [...fromRoot, ...fromUrl].filter((p) => p && !p.startsWith('tools/scripts'));
 }
 
-test('every repo file the @ab/scripts tests read is a test input', () => {
+test('every literal repo path the @ab/scripts code reads is a test input', () => {
   const globs = testInputs('tools/scripts')
     .filter((g) => g.startsWith('$TURBO_ROOT$/'))
     .map((g) => g.slice('$TURBO_ROOT$/'.length));
   const covered = (p) =>
     globs.some((g) => (g.endsWith('/**') ? `${p}/`.startsWith(g.slice(0, -2)) : g === p));
-  const reads = testFiles(join(ROOT, 'tools/scripts')).flatMap(outsideReads);
+  const reads = codeFiles(join(ROOT, 'tools/scripts')).flatMap(outsideReads);
   assert.ok(reads.includes('deploy/staging/roll.sh'), 'the scan finds root() reads');
   assert.ok(reads.includes('.github/workflows/ci.yml'), 'the scan finds URL reads');
   assert.deepEqual([...new Set(reads.filter((p) => !covered(p)))], []);

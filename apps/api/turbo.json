@@ -2,6 +2,12 @@
   "$schema": "https://turborepo.dev/schema.json",
   "extends": ["//"],
   "tasks": {
-    "test": { "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/packages/db/supabase/migrations/**"] }
+    "test": {
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/packages/db/supabase/migrations/**",
+        "$TURBO_ROOT$/apps/web/public/brand/**"
+      ]
+    }
   }
 }
