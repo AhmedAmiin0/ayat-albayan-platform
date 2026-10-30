@@ -35,6 +35,12 @@ test('every workflow has top-level permissions of contents: read only', () => {
   for (const w of workflows) assert.deepEqual(w.doc.permissions, { contents: 'read' }, w.file);
 });
 
+test('only claude-tasks and the two release jobs may write contents (docs/09 «Release tags»)', () => {
+  const writes = (j) => j.permissions === 'write-all' || j.permissions?.contents === 'write';
+  const writers = workflows.flatMap((w) => jobsOf(w).filter(([, j]) => writes(j)).map(([n]) => `${w.file}/${n}`));
+  assert.deepEqual(writers.sort(), ['claude-tasks.yml/claude', 'deploy-staging.yml/release', 'mobile.yml/release']);
+});
+
 test('the flag guard catches every server-only messaging switch, as whole words only', () => {
   for (const k of ['WA_PHONE_NUMBER_ID', 'WA_CHAT_PHONE_NUMBER_ID', 'WA_ALLOWED_RECIPIENTS']) {
     assert.ok(FLAGS.test(`echo "${k}=x" >> .env`), k);

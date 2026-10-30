@@ -104,6 +104,28 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
 });
 
+test('release tags: only after a green release, no environment or secret, a failure never fails the run', () => {
+  const mobile = load('mobile.yml');
+  const [app, phone] = [deploy.jobs.release, mobile.jobs.release];
+  for (const job of [app, phone]) {
+    assert.deepEqual([job.permissions, job['continue-on-error'], job.environment], [{ contents: 'write' }, true, undefined]);
+    assert.doesNotMatch(JSON.stringify(job), /secrets\./);
+    assert.match(job.if, /^\$\{\{ !cancelled\(\) && /);
+  }
+  assert.match(app.if, /needs\.deploy\.result == 'success' && !inputs\.env_only/);
+  assert.match(phone.if, /needs\.build\.result == 'success' \|\| needs\.ota\.result == 'success'/);
+  const step = (job, kind) => job.steps.find((s) => s.env?.KIND === kind);
+  assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
+  assert.equal(step(phone, 'apk').if, "${{ needs.build.result == 'success' }}");
+  assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
+  assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.profile.*\}\}/)[0]);
+  for (const s of [step(app, 'app'), step(phone, 'apk'), step(phone, 'ota')]) {
+    assert.match(s.run, /node tools\/scripts\/ci-checks\/release-tags\/release-tag\.mjs$/);
+  }
+  // The EAS link goes through a tee: pipefail keeps a failed build red.
+  assert.match(mobile.jobs.build.steps.find((s) => s.id === 'eas').run, /set -o pipefail\n.*\| tee /);
+});
+
 test('deploy-staging merges LOGIN_CODE_PEPPER from a secret into the server .env (docs/30 §8)', () => {
   const step = deploy.jobs.deploy.steps.find((s) => s.name?.startsWith('Merge the server .env'));
   assert.equal(step.env.LOGIN_CODE_PEPPER, '${{ secrets.LOGIN_CODE_PEPPER }}');
