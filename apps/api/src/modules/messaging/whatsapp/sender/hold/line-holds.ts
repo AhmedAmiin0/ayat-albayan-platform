@@ -8,7 +8,7 @@ interface Held {
 }
 
 /** A line hold set or renewed by a probe's 131042. */
-export interface HoldSet {
+interface HoldSet {
   until: number;
   /** The previous hold's end in this episode (its deferred rows move to the new end); else null. */
   prev: number | null;

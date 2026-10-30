@@ -2,12 +2,12 @@ import { vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
-import type { PaymentHoldRepo } from './hold/payment-hold.repo';
-import { PaymentHolds } from './hold/payment-holds';
-import type { MessageDispatch } from './message.dispatch';
-import { MessageWorker, type SendJob } from './message.worker';
-import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
+import type { PaymentHoldRepo } from './payment-hold.repo';
+import { PaymentHolds } from './payment-holds';
+import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dispatch';
+import { MessageWorker, type SendJob } from '@/modules/messaging/whatsapp/sender/message.worker';
+import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import type { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
 
 // Test-only (excluded from the build): a worker with the real 131042 line hold over fakes.
 

@@ -5,7 +5,7 @@ import { PaymentHolds } from './payment-holds';
 
 // Test-only (excluded from the build): the line hold over a fake repo.
 
-export const MIN = 60_000;
+const MIN = 60_000;
 export const NOW = new Date('2026-10-30T08:00:00Z');
 export const at = (min: number) => new Date(NOW.getTime() + min * MIN);
 export const iso = (min: number) => at(min).toISOString();

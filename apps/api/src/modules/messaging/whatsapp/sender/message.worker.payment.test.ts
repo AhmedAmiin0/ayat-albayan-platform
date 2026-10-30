@@ -12,7 +12,7 @@ import {
   resetPaymentFakes,
   subjects,
   worker,
-} from './message.worker.payment.fakes';
+} from './hold/worker-payment.fakes';
 
 // Meta 131042 in the worker: the row and its line wait (one probe per hold), one push a day.
 

@@ -12,7 +12,7 @@ import {
   resetPaymentFakes,
   subjects,
   worker,
-} from './message.worker.payment.fakes';
+} from './hold/worker-payment.fakes';
 
 // The review fixes of the 131042 line hold: the 48 h stop, history-sized holds, lift, session
 // texts, driver switches (docs/12 §3.3).

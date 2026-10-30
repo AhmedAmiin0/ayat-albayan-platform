@@ -9,7 +9,7 @@ import { PaymentHoldRepo } from './payment-hold.repo';
 /** The reason on the rows a held line defers untried (the probe row keeps Meta's text). */
 const LINE_HELD = 'held: the WhatsApp Business account has a payment issue (Meta 131042)';
 /** The deferred rows come due this long after the probe, so at the hold end only the probe is. */
-export const LINE_HOLD_STAGGER_MS = 2 * 60_000;
+const LINE_HOLD_STAGGER_MS = 2 * 60_000;
 
 /** What the line hold says about a due row: send it, it was deferred, or it reached 48 h. */
 type HoldCheck = 'send' | 'deferred' | 'aged';
