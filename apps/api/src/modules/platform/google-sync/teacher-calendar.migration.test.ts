@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { GOOGLE_SKIP_REASONS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261028000943 (the per-teacher calendar handover, docs/24) read as text: no database in unit tests.
-const sql = readFileSync(join(__dirname, '../../../../../../packages/db/supabase/migrations/20261028000943_teacher_calendar_owner.sql'), 'utf8');
+const sql = readFileSync(migrationPath('20261028000943_teacher_calendar_owner.sql'), 'utf8');
 const fn = (name: string) => new RegExp(`function public\\.${name}\\([\\s\\S]*?\\n\\$\\$;`).exec(sql)?.[0] ?? '';
 
 describe('migration 20261028000943: teachers.calendar_owner', () => {

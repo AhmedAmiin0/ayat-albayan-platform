@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 630 (docs/26 §2a, 26-P1 expand): inert columns, revision table, config_seed / config_set.
 // No database in unit tests; e2e/tests/config-expand.sql.spec.ts runs it against Postgres.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261023000630_config_expand.sql'), 'utf8');
 const body = (fn: string): string => new RegExp(`function public\\.${fn}\\([\\s\\S]*?\\$\\$([\\s\\S]*?)\\$\\$`).exec(sql)?.[1] ?? '';
 

@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 942 (owner 2026-10-28, «If the course already started so dont give commission»).
-const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const sql = code('20261028000942_commission_started_course.sql');
 const planOf = (text: string) => {
