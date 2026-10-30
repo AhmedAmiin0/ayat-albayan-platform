@@ -1,5 +1,5 @@
 import type { LessonStatus } from '../../enums/index.js';
-import type { Conflict } from '../../lessons/conflicts.js';
+import type { Conflict } from '../../schedule/lessons/conflicts.js';
 import { CONSUMING_LESSON_STATUSES } from '../../money/usage/usage.js';
 import type { BookedCourse } from './course-follow.js';
 

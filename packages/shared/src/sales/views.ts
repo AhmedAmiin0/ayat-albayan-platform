@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { JoinWindow } from '../classroom/join-window.js';
+import type { JoinWindow } from '../schedule/classroom/join-window.js';
 import type { LessonStatus, PackageSize, SubscriptionStatus } from '../enums/index.js';
 
 /** GET /sales/subscriptions rows: who and which package, never a price, currency, fx rate or note. */

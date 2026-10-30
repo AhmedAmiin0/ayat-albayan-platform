@@ -41,10 +41,10 @@ Totals: **Critical 0 · Important 5 (all fixed) · Minor 23 (11 fixed, 12 not fi
 | M16 | `send-stale.ts:64` | The new branch duplicates `LESSON_TIMED` staleness, and its reason text reads «lesson retimed». | Harmless; the behaviour is unchanged. |
 | M17 | `google_sync_enqueue_lesson` (`…611:82`) | Moving an imported trial leaves the old script's calendar event in place. | Unreachable today, because imported trials are in the past. Noted for the import cut-over. |
 | M18 | `trial-date.history.ts:72` | For imported rows, «when picked» shows the import date. | Fixing it needs a nullable `picked_at` in the shared type; the effect is cosmetic. |
-| M19 | `packages/shared/src/students/trial-dates.ts:65` | An excused trial shows «غاب». | The owner's outcome list has no «اعتذر». Adding it is an owner decision. |
+| M19 | `packages/shared/src/people/students/trial-dates.ts:65` | An excused trial shows «غاب». | The owner's outcome list has no «اعتذر». Adding it is an owner decision. |
 | M20 | web `history-text.ts:26` vs mobile `trial-date-text.ts:50` | «When picked» is a date on web and a date + time (without the zone label) on mobile. | Cosmetic. |
 | M21 | web `trial-date/draft.ts` vs mobile `trial-date-body.ts:43` | Web books 45 minutes, while mobile reuses the last trial's length. | The owner has not said which is right, and it is safe either way. |
-| M22 | `packages/shared/src/students/status-flow.ts:66` | `trialMove` now lets an open trial win over an older attended one everywhere (renewal revert, recompute), not only for this feature. | Intended by the PR (R-SCH-12). Flagged here so the owner can confirm. |
+| M22 | `packages/shared/src/people/students/status-flow.ts:66` | `trialMove` now lets an open trial win over an older attended one everywhere (renewal revert, recompute), not only for this feature. | Intended by the PR (R-SCH-12). Flagged here so the owner can confirm. |
 | M23 | `TrialDateWizard.tsx:35`, `BookingWizard.tsx`, `WizardBody.tsx`, `draft.ts`, `use-sales-family-actions.tsx` | ESLint complexity warnings (11–19). | Warnings only, not CI errors, and mostly inherited from the booking wizard. |
 
 ## Checked and found correct

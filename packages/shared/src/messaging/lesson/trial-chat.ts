@@ -1,5 +1,5 @@
 import type { StudentStatus } from '../../enums/index.js';
-import { isNotSubscribed } from '../../students/status-flow.js';
+import { isNotSubscribed } from '../../people/students/status-flow.js';
 
 // Trial students (owner, 2026-10-11): a teacher and a trial family do not chat directly; sales
 // or the system manages between them. The API scope (migration 20261007000001) enforces it; the

@@ -1,5 +1,5 @@
 {
-  "src/account/account.schemas.ts": {
+  "src/people/account/account.schemas.ts": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -7,7 +7,7 @@
       "count": 1
     }
   },
-  "src/account/account.views.ts": {
+  "src/people/account/account.views.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -15,7 +15,7 @@
       "count": 2
     }
   },
-  "src/account/avatar-initials.ts": {
+  "src/people/account/avatar-initials.ts": {
     "max-len": {
       "count": 3
     }
@@ -123,17 +123,17 @@
       "count": 18
     }
   },
-  "src/classroom/internal-meetings.ts": {
+  "src/schedule/classroom/internal-meetings.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "src/classroom/join-window.config.test.ts": {
+  "src/schedule/classroom/join-window.config.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/join-window.ts": {
+  "src/schedule/classroom/join-window.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -141,22 +141,22 @@
       "count": 6
     }
   },
-  "src/classroom/meeting-invites.ts": {
+  "src/schedule/classroom/meeting-invites.ts": {
     "max-len": {
       "count": 9
     }
   },
-  "src/classroom/meeting-mode.ts": {
+  "src/schedule/classroom/meeting-mode.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/classroom/meetings.ts": {
+  "src/schedule/classroom/meetings.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/classroom/moderation.ts": {
+  "src/schedule/classroom/moderation.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
@@ -164,27 +164,27 @@
       "count": 4
     }
   },
-  "src/classroom/room.ts": {
+  "src/schedule/classroom/room.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/classroom/schemas.ts": {
+  "src/schedule/classroom/schemas.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/classroom/student-lesson.test.ts": {
+  "src/schedule/classroom/student-lesson.test.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "src/classroom/student-lesson.ts": {
+  "src/schedule/classroom/student-lesson.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/student-recordings.ts": {
+  "src/schedule/classroom/student-recordings.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
@@ -424,12 +424,12 @@
       "count": 1
     }
   },
-  "src/lessons/chargeable.ts": {
+  "src/schedule/lessons/chargeable.ts": {
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
     }
   },
-  "src/lessons/makeup-offer.ts": {
+  "src/schedule/lessons/makeup-offer.ts": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -437,7 +437,7 @@
       "count": 3
     }
   },
-  "src/lessons/makeup-views.ts": {
+  "src/schedule/lessons/makeup-views.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -445,12 +445,12 @@
       "count": 3
     }
   },
-  "src/lessons/overview.ts": {
+  "src/schedule/lessons/overview.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/lessons/pick-progress.ts": {
+  "src/schedule/lessons/pick-progress.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -458,12 +458,12 @@
       "count": 1
     }
   },
-  "src/lessons/series/day-times.test.ts": {
+  "src/schedule/lessons/series/day-times.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/lessons/series/day-times.ts": {
+  "src/schedule/lessons/series/day-times.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -471,22 +471,22 @@
       "count": 2
     }
   },
-  "src/lessons/series/time-edit.ts": {
+  "src/schedule/lessons/series/time-edit.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/lessons/series/zoned.ts": {
+  "src/schedule/lessons/series/zoned.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/lessons/state-machine.ts": {
+  "src/schedule/lessons/state-machine.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/lessons/teacher-name.ts": {
+  "src/schedule/lessons/teacher-name.ts": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -494,7 +494,7 @@
       "count": 1
     }
   },
-  "src/lessons/views.ts": {
+  "src/schedule/lessons/views.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1571,7 +1571,7 @@
       "count": 5
     }
   },
-  "src/schemas/lessons/booking-extras.ts": {
+  "src/schedule/schemas/booking-extras.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1585,22 +1585,22 @@
       "count": 6
     }
   },
-  "src/schemas/lessons/course-change.test.ts": {
+  "src/schedule/schemas/course-change.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/schemas/lessons/course-change.ts": {
+  "src/schedule/schemas/course-change.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/schemas/lessons/day-times.test.ts": {
+  "src/schedule/schemas/day-times.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/schemas/lessons/day-times.ts": {
+  "src/schedule/schemas/day-times.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1608,17 +1608,17 @@
       "count": 2
     }
   },
-  "src/schemas/lessons/lesson-time.ts": {
+  "src/schedule/schemas/lesson-time.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/schemas/lessons/scheduling.fixes.test.ts": {
+  "src/schedule/schemas/scheduling.fixes.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/schemas/lessons/scheduling.ts": {
+  "src/schedule/schemas/scheduling.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1626,12 +1626,12 @@
       "count": 2
     }
   },
-  "src/schemas/people/contact-is-self.test.ts": {
+  "src/people/schemas/contact-is-self.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/schemas/people/people.ts": {
+  "src/people/schemas/people.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1639,7 +1639,7 @@
       "count": 4
     }
   },
-  "src/schemas/people/teacher-students.ts": {
+  "src/people/schemas/teacher-students.ts": {
     "max-len": {
       "count": 2
     }
@@ -1926,7 +1926,7 @@
       "count": 3
     }
   },
-  "src/students/course-pause.ts": {
+  "src/people/students/course-pause.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
@@ -1934,22 +1934,22 @@
       "count": 17
     }
   },
-  "src/students/portal.ts": {
+  "src/people/students/portal.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "src/students/status-flow.ts": {
+  "src/people/students/status-flow.ts": {
     "max-len": {
       "count": 16
     }
   },
-  "src/students/student-lists.test.ts": {
+  "src/people/students/student-lists.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/students/student-lists.ts": {
+  "src/people/students/student-lists.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1957,7 +1957,7 @@
       "count": 5
     }
   },
-  "src/students/trial-dates.ts": {
+  "src/people/students/trial-dates.ts": {
     "max-len": {
       "count": 9
     }
@@ -2021,17 +2021,17 @@
       "count": 1
     }
   },
-  "src/users/index.ts": {
+  "src/people/users/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
       "count": 1
     }
   },
-  "src/users/sign-in.ts": {
+  "src/people/users/sign-in.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "src/users/users.schemas.ts": {
+  "src/people/users/users.schemas.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -2045,7 +2045,7 @@
       "count": 3
     }
   },
-  "src/users/users.views.ts": {
+  "src/people/users/users.views.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -2053,7 +2053,7 @@
       "count": 2
     }
   },
-  "src/users/validation.ts": {
+  "src/people/users/validation.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
