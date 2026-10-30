@@ -37,7 +37,7 @@ const show = (body: ChannelPresence) => {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <ChannelPresenceLine chat={{ audience: 'portal', studentId: 's1' }} tz="Asia/Riyadh" />
+      <ChannelPresenceLine chat={{ audience: 'portal', studentId: 's1' }} tz="Asia/Riyadh" now={new Date()} />
     </QueryClientProvider>,
   );
 };
