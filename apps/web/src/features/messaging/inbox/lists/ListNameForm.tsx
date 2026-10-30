@@ -1,5 +1,5 @@
 import { chatListNameSchema, CHAT_LIST_NAME_MAX } from '@ab/shared';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
@@ -17,7 +17,7 @@ export interface ListNameFormProps {
 export function ListNameForm({ id, initial = '', error, onSubmit }: ListNameFormProps) {
   const [name, setName] = useState(initial);
   const [missing, setMissing] = useState(false);
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const parsed = chatListNameSchema.safeParse(name);
     setMissing(!parsed.success);

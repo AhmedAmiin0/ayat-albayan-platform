@@ -35,7 +35,7 @@ export function useBoardSync({ room, status, me, state, dispatch }: BoardSyncOpt
       if (!msg) return;
       if (msg.t !== 'sync-request') return dispatch({ msg, from: packet.from });
       const now = state.current;
-      if (now && shouldAnswerSync(now, role)) {
+      if (shouldAnswerSync(now, role)) {
         syncMessages(now).forEach((m) => send(m, [packet.from.identity]));
       }
     };

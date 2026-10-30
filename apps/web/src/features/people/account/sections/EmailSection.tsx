@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
@@ -35,7 +35,7 @@ export function EmailSection({ profile, onDone }: SectionProps) {
     setPassword('');
   };
   const save = useAccountSave({ save: changeEmail, toast: t.account.toast.email, onDone, refreshAuth: true, onSaved: clear });
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = emailErrors({ email, password });
     save.setErrors(found);

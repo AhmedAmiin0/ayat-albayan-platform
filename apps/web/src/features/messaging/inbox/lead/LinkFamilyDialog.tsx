@@ -1,6 +1,6 @@
 import { formatPhone, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent, type ReactNode } from 'react';
+import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -63,7 +63,7 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
     setPicked(m);
     link.reset();
   };
-  const search = (e: FormEvent) => {
+  const search = (e: SubmitEvent) => {
     e.preventDefault();
     const r = checkRequest('name', query);
     setInvalid(r.ok ? null : R.error[r.code]);

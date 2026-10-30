@@ -1,6 +1,6 @@
 import type { StripeAdminSettings, StripeSettingsPatch } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { CheckField } from '@/components/settings/fields/CheckField';
 import { NumberField } from '@/components/settings/fields/NumberField';
 import { Button } from '@/components/ui/form/button';
@@ -37,7 +37,7 @@ export function StripeSettingsForm({ settings, onSaved }: Props) {
     setProblems({});
     save.mutate(patch);
   };
-  const submit = (e: FormEvent) => {
+  const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const checked = settingsPatch(draft);
     if (checked.ok) send(checked.patch);
