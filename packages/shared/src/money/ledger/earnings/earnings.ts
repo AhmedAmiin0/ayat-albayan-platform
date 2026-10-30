@@ -1,3 +1,5 @@
+import { fromCents, toCents } from '../cents.js';
+
 // Per-session teacher earnings (migrations 176-179). Money is compared in piasters (integers):
 // numeric(12,2) comes back from the API as a JS number and 0.1 + 0.2 must not break a balance.
 
@@ -9,8 +11,7 @@ export interface EarningMoney {
   paid_amount: number;
 }
 
-export const toCents = (v: number): number => Math.round(v * 100);
-export const fromCents = (c: number): number => c / 100;
+export { fromCents, toCents };
 
 /** What is still owed for one session; 0 (never negative) when a correction left it overpaid. */
 export function outstanding(e: EarningMoney): number {

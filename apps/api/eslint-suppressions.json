@@ -3661,9 +3661,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     }
   },
   "src/modules/finance/subscriptions/subscriptions.replay.http.test.ts": {
@@ -3838,9 +3835,6 @@
       "count": 1
     },
     "@typescript-eslint/no-deprecated": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -11524,9 +11518,6 @@
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 7
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 5

@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_METHODS, round2, type PaymentMethod } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -10,7 +10,7 @@ import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
-import type { PayoutView } from '../api';
+import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
@@ -23,7 +23,7 @@ type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
  */
 export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
   const formId = useId();
-  const due = Math.max(0, Math.round((payout.amount - (payout.ledger_paid ?? 0)) * 100) / 100);
+  const due = Math.max(0, round2(payout.amount - (payout.ledger_paid ?? 0)));
   const maxBytes = useUploadMaxBytes();
   const [day, setDay] = useState(paidAtDay());
   const [method, setMethod] = useState<PaymentMethod>('bank');

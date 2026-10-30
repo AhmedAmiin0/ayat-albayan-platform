@@ -1,9 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
+import { round2 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { applySort, ilikeContains } from '../../../common/list-sort';
-import { dbError, type Page } from '../../../common/http/http';
-import { readChunked } from '../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, ilikeContains } from '@/common/list-sort';
+import { dbError, type Page } from '@/common/http/http';
+import { readChunked } from '@/modules/teaching/scheduling/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 
 export type { SubListQuery } from './list/subscriptions.list-query';
@@ -132,5 +133,5 @@ export class SubscriptionsQueries {
 
 /** Adds money without float drift (numeric(12,2)). */
 export function cents(a: number, b: number): number {
-  return Math.round((a + b) * 100) / 100;
+  return round2(a + b);
 }

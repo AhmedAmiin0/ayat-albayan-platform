@@ -1,8 +1,8 @@
 import type { Json, Tables } from '@ab/db';
-import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/shared';
+import { fromCents, toCents, type EarningsListQuery, type TeacherPaymentListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError, type Page } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError, type Page } from '@/common/http/http';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './summary/earnings.lists';
 
@@ -112,15 +112,15 @@ export class EarningsQueries {
 
   /** Paid so far on these lessons (the monthly statement shows what the ledger already covered). */
   async paidOnLessons(lessonIds: readonly string[]): Promise<number> {
-    let cents = 0;
+    let total = 0;
     for (let i = 0; i < lessonIds.length; i += 100) {
       const { data, error } = await this.db
         .from('teacher_session_earnings')
         .select('paid_amount')
         .in('lesson_id', lessonIds.slice(i, i + 100));
       if (error) throw dbError(error);
-      cents += data.reduce((n, r) => n + Math.round(r.paid_amount * 100), 0);
+      total += data.reduce((n, r) => n + toCents(r.paid_amount), 0);
     }
-    return cents / 100;
+    return fromCents(total);
   }
 }
