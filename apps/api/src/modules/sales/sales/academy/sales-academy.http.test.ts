@@ -48,7 +48,8 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     const res = await t.get('/sales/students/all?page=2&pageSize=20&search=%D9%8A%D8%A7%D8%B3', 'salesA');
     expect(t.academy.students).toHaveBeenCalledWith({ page: 2, pageSize: 20, search: 'ياس' });
     expect(res.json()).toEqual({
-      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', guardian_phone: '+966551110000', mine: true }],
+      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', guardian_phone: '+966551110000', mine: true,
+        weekly: [], attendance: { attended: 0, held: 0, basis: 'recent' } }],
       total: 41, page: 2, pageSize: 20,
     });
     // Owner 2026-10-27: sales already see every chat with its phone, so the row opens that family's chat.

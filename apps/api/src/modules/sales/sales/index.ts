@@ -29,3 +29,9 @@ export {
   withMine,
 } from './schedule/sales-schedule.mapper';
 export type { SalesScheduleRow } from './schedule/sales-schedule.queries';
+export {
+  nextStarts,
+  toWeeklySlot,
+  WEEKLY_RULE_COLUMNS,
+  type WeeklyRuleRow,
+} from './schedule/weekly-slot';

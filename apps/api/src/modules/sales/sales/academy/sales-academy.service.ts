@@ -6,6 +6,8 @@ import { notFound } from '../../../../common/http/errors';
 import type { Page } from '../../../../common/http/http';
 import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
 import { SalesAcademyQueries } from './sales-academy.queries';
+import { packageStarts, rosterFrom, toRoster, type RosterFacts } from './sales-roster.mapper';
+import { SalesRosterRepo } from './sales-roster.repo';
 import { toSalesHistory } from '../history/sales-history.mapper';
 import { SalesHistoryQueries } from '../history/sales-history.queries';
 import { SalesQueries } from '../sales.queries';
@@ -21,17 +23,42 @@ export class SalesAcademyService {
     private readonly academy: SalesAcademyQueries,
     private readonly histories: SalesHistoryQueries,
     private readonly sales: SalesQueries,
+    private readonly roster: SalesRosterRepo,
   ) {}
 
-  /** Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب» (docs/16 row 36). */
-  async students(q: SalesStudentsQuery, user: AuthUser): Promise<Page<SalesStudentView>> {
-    const [{ rows, total }, own] = await Promise.all([this.academy.students(q), this.ownStudents(user)]);
+  /**
+   * Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب»
+   * (docs/16 row 36). Each row also carries its weekly slots and attendance count (owner 2026-10-30),
+   * read for the whole page at once.
+   */
+  async students(
+    q: SalesStudentsQuery,
+    user: AuthUser,
+    now = new Date(),
+  ): Promise<Page<SalesStudentView>> {
+    const [{ rows, total }, own] = await Promise.all([
+      this.academy.students(q),
+      this.ownStudents(user),
+    ]);
+    const facts = await this.rosterOf(rows.map((row) => row.id), now);
     const items = rows.map((row) => ({
       ...toSalesStudent(row),
       guardian_phone: chatPhone(user, row.guardian?.phone_e164),
       ...(own.has(row.id) ? { mine: true } : {}),
+      ...facts.get(row.id),
     }));
     return { items, total, page: q.page, pageSize: q.pageSize };
+  }
+
+  /** Rules, active package starts, then the lessons since the earliest start: 3 reads per page. */
+  private async rosterOf(ids: readonly string[], now: Date): Promise<Map<string, RosterFacts>> {
+    const [rules, packages] = await Promise.all([
+      this.roster.rules(ids),
+      this.roster.packages(ids),
+    ]);
+    const starts = packageStarts(packages);
+    const lessons = await this.roster.lessons(ids, { from: rosterFrom(starts, now), to: now });
+    return toRoster(ids, { rules, starts, lessons }, now);
   }
 
   /** The ids of her own students (SalesQueries.ownership). */

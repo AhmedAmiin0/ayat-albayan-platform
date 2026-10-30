@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SalesAcademyController } from './academy/sales-academy.controller';
 import { SalesAcademyQueries } from './academy/sales-academy.queries';
 import { SalesAcademyService } from './academy/sales-academy.service';
+import { SalesRosterRepo } from './academy/sales-roster.repo';
 import { SalesAdminController } from './sales-admin.controller';
 import { SalesAssignQueries } from './assign/sales-assign.queries';
 import { SalesAssignService } from './assign/sales-assign.service';
@@ -25,6 +26,7 @@ import { SalesSettings } from './sales.settings';
   providers: [
     ...[SalesSettings, SalesQueries, SalesService, SalesScopes, SalesAssignQueries, SalesAssignService],
     ...[SalesAcademyQueries, SalesHistoryQueries, SalesAcademyService, SalesScheduleQueries, SalesScheduleService],
+    SalesRosterRepo,
   ],
   exports: [SalesQueries, SalesScopes, SalesAssignService, SalesHistoryQueries],
 })

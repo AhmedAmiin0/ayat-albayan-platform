@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { SalesScheduleRow } from '../../sales';
-import { nextStarts, scheduleWindow, toStudentSchedule } from './sales-student-schedule.mapper';
-import type { WeeklyRuleRow } from './sales-student.queries';
+import { nextStarts, type SalesScheduleRow, type WeeklyRuleRow } from '@/modules/sales/sales';
+import { scheduleWindow, toStudentSchedule } from './sales-student-schedule.mapper';
 
 // Tuesday 27 October 2026, 13:00 in Riyadh.
 const NOW = new Date('2026-10-27T10:00:00Z');

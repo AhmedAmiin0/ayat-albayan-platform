@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '../enums/index.js';
 import type { TeacherStudentCounts } from '../people/students/student-lists.js';
+import type { RosterAttendance, RosterSlot } from './student/student-roster.js';
 import type { SalesSubscriptionView } from './views.js';
 
 // The salesperson's assistant side (owner 2026-10-11, docs/16): the academy's teachers, every student and
@@ -57,6 +58,10 @@ export interface SalesStudentView {
   guardian_phone: string | null;
   /** One of hers (the ownership of «الاشتراكات»): the row opens «تفاصيل الطالب». Absent in an old cache. */
   mine?: boolean;
+  /** The active weekly slots (owner 2026-10-30), read in the viewer's zone. Absent: old cache. */
+  weekly?: RosterSlot[];
+  /** Present / held in the current package, else the last 30 days. Absent: old cache. */
+  attendance?: RosterAttendance;
 }
 
 /** `?page&pageSize&search`: search is a name (Arabic-normalised) or a code. */
