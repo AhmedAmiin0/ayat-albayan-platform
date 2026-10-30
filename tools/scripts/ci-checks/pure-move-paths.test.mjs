@@ -28,3 +28,14 @@ test('the re-exported names still have to match (the barrel only changes the pat
   const renamed = "export { InboxScreen as default, X } from '@/inbox';\n";
   assert.equal(onlyPathsChanged(SRC, renamed, ctx(files)), false);
 });
+
+test('in a NodeNext package the barrel is named by its index file', () => {
+  const file = 'packages/shared/src/money/schemas.ts';
+  const src = "import { optionalText } from '../schemas/common.js';\n";
+  const moved = renameTable([['packages/shared/src/schemas/common.ts', 'packages/shared/src/core/schemas/common.ts']]);
+  const barrel = { 'packages/shared/src/core/schemas/index.ts': "export * from './common.js';\n" };
+  const c = { from: file, to: file, table: moved, reexports: heads(barrel) };
+  assert.equal(onlyPathsChanged(src, src.replace('../schemas/common.js', '../core/schemas/index.js'), c), true);
+  assert.equal(onlyPathsChanged(src, src.replace('../schemas/common.js', '../core/index.js'), c), false, 'not that barrel');
+  assert.equal(onlyPathsChanged(src, src.replace('../schemas/common.js', '../core/schemas/index.js'), { ...c, reexports: heads({}) }), false);
+});

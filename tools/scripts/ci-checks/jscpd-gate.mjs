@@ -1,14 +1,16 @@
-// Duplicated-code gate (docs/27 §4 Wave F): jscpd (.jscpd.json, --min-lines 8, tests ignored) may not report
-// more clones, more duplicated lines or more cross-app clones than refactor/guards/jscpd.json, and a
-// measure below it fails too until the baseline is lowered with --write (the freed room is not reused). Cross-app = the two copies sit in different apps/packages/tools,
-// fixtures and fakes not counted.
+// Duplicated-code gate (docs/27 §4 Wave F): jscpd (.jscpd.json, --min-lines 8, tests ignored) may
+// not report more clones, more duplicated lines or more cross-app clones than
+// refactor/guards/jscpd.json, and a measure below it fails too until the baseline is lowered with
+// --write (the freed room is not reused). Cross-app = the two copies sit in different apps/tools,
+// or one in an app and one in packages/ (all packages are one unit: lane K splits shared into many,
+// docs/32 correction 10); fixtures and fakes not counted.
 // Usage: node tools/scripts/ci-checks/jscpd-gate.mjs [--write]   (after `jscpd`, which writes the report)
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const FIXTURE = /fixture|\.fakes?\.|\/testing\/|\/test\//;
-const unitOf = (f) => f.match(/^(apps\/[^/]+|packages\/[^/]+|tools\/[^/]+|e2e)\//)?.[1] ?? f;
+const unitOf = (f) => f.match(/^(apps\/[^/]+|packages|tools\/[^/]+|e2e)\//)?.[1] ?? f;
 
 /** `{ clones, duplicatedLines, crossApp }` of a jscpd json report. */
 export function measure(report) {
@@ -36,7 +38,8 @@ function main(args) {
   const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   console.log(`jscpd: ${JSON.stringify(now)} (baseline ${JSON.stringify(baseline)})`);
   const problems = check(now, baseline);
-  for (const p of problems) console.log(`  ${p}${p.includes(' > ') ? ': move the shared code to packages/shared or packages/client-core' : ''}`);
+  const hint = ': move the shared code to a package (packages/shared, packages/client-core)';
+  for (const p of problems) console.log(`  ${p}${p.includes(' > ') ? hint : ''}`);
   if (problems.length > 0) process.exit(1);
 }
 

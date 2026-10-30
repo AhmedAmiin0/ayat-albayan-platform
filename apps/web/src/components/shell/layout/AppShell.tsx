@@ -2,10 +2,10 @@ import { Outlet, useChildMatches, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { RouteFade } from './RouteFade';
-import { AdminLayout } from './shell/layout/AdminLayout';
-import { FixedTopBarLayout } from './shell/layout/FixedTopBarLayout';
-import { titleFor, type NavTitleItem } from './shell/nav/nav-title';
-import { TopBarLayout, type SectionHome } from './shell/layout/TopBarLayout';
+import { AdminLayout } from './AdminLayout';
+import { FixedTopBarLayout } from './FixedTopBarLayout';
+import { titleFor, type NavTitleItem } from '../nav/nav-title';
+import { TopBarLayout, type SectionHome } from './TopBarLayout';
 
 export interface AppShellProps {
   /** Cartouche title of the section home (/admin, /teacher, /portal). */

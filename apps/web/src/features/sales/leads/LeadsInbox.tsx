@@ -12,7 +12,7 @@ import { leadsQuery, reclassifyLead } from './leads.api';
 import { LeadStatusTabs } from './list/LeadStatusTabs';
 import { LeadsToolbar } from './list/LeadsToolbar';
 import { parseLeadSearch, type LeadSearch } from './types';
-import { TableBox } from '@/components/TableBox';
+import { TableBox } from '@/components/data-table/TableBox';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 
 export interface LeadsInboxProps {

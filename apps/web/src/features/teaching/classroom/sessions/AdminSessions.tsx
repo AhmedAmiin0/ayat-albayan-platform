@@ -1,7 +1,7 @@
 import { intlLocale, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { TableBox } from '@/components/TableBox';
+import { TableBox } from '@/components/data-table/TableBox';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';

@@ -1,6 +1,6 @@
 import { PROGRAMS, STUDENT_PACKAGE_FILTERS, NO_TEACHER, tzChoices, tzOptionLabel } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import type { FilterOption } from '@/components/data-table-features';
+import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';

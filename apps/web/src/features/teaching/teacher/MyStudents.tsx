@@ -1,6 +1,6 @@
 import type { TeacherMe } from '@ab/shared';
 import { useMemo } from 'react';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table/DataTable';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { t } from '@/lib/i18n/i18n';
 import { myStudentColumns } from './myStudentColumns';

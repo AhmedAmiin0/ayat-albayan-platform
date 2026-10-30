@@ -2,7 +2,7 @@ import type { UserView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import { memo } from 'react';
 import { Avatar } from '@/components/ui/display/avatar';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads/format';

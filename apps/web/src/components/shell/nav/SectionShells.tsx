@@ -1,8 +1,8 @@
 import type { UserRole } from '@ab/shared';
 import type { ComponentType } from 'react';
-import { ADMIN_NAV_ITEMS } from '@/components/admin-nav-items';
-import { AdminNav } from '@/components/AdminNav';
-import { AppShell } from '@/components/AppShell';
+import { ADMIN_NAV_ITEMS } from '@/components/shell/nav/admin-nav-items';
+import { AdminNav } from '@/components/shell/nav/AdminNav';
+import { AppShell } from '@/components/shell/layout/AppShell';
 import { CallProvider, useInboxRealtime } from '@/features/messaging/inbox';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { PortalHome } from '@/features/people/portal';

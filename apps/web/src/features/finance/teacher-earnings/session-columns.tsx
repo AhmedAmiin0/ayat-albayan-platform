@@ -1,7 +1,7 @@
 import { earningStatusStyle, type TeacherEarningView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
