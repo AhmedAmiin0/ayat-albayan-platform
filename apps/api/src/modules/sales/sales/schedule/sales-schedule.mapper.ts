@@ -7,8 +7,6 @@ import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 /** «الحلقة القادمة» looks this far ahead (weekly lessons: everyone booked has one inside it). */
 export const UPCOMING_DAYS = 8;
 
-/** Not counted in «حلقات اليوم»: cancelled ones (a moved-away one is never read). */
-
 /** Today's Riyadh calendar day, "YYYY-MM-DD". */
 export function riyadhToday(now: Date): string {
   return new Date(localDay(now.getTime(), RIYADH_TZ)).toISOString().slice(0, 10);
@@ -75,6 +73,7 @@ export function teacherDayFacts(rows: readonly SalesScheduleRow[], now: Date): M
   const at = now.getTime();
   for (const row of rows) {
     const id = row.teacher?.id;
+    // Not counted in «حلقات اليوم»: cancelled ones (a moved-away one is never read).
     if (!id || isCancelledLesson(row.status)) continue;
     const running = isOpenLesson(row.status) && Date.parse(row.starts_at) <= at && at < Date.parse(row.ends_at);
     const prev = facts.get(id) ?? { lessons_today: 0, live_now: false };

@@ -106,7 +106,9 @@ function timeEdit(row: LessonRow, role: ViewContext['role']): LessonTimeEditView
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */
 function activeMakeup(row: LessonRow, studentId: string): LessonStudentView['makeup'] {
-  const m = row.makeups?.find((x) => x.makeup_student_id === studentId && !isClosedLesson(x.status));
+  const m = row.makeups?.find(
+    (x) => x.makeup_student_id === studentId && !isClosedLesson(x.status),
+  );
   return m ? { lesson_id: m.id, starts_at: iso(m.starts_at) } : null;
 }
 
