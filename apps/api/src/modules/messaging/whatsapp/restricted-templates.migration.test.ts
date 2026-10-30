@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { RESTRICTED_TEMPLATE_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The restricted allow-list (owner 2026-10-12). No database runs in unit tests: this pins the shape.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261012000360_restricted_templates.sql'), 'utf8');
 
 describe('migration 20261012000360: the restricted template allow-list', () => {

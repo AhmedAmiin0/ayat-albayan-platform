@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { isLessonTimed, TEMPLATE_KEYS } from '@ab/shared';
+import { REPO_ROOT } from '@/common/db/repo-paths.test-util';
 
 // The lesson_join_link definition lives in migration 182 (seeded, not submitted, admin-initiated).
-const root = join(__dirname, '../../../../../..');
+const root = REPO_ROOT;
 const sql = readFileSync(join(root, 'packages/db/supabase/migrations/20261001000182_lesson_join_link_template.sql'), 'utf8');
 const ar: { templates: { names: Record<string, string> } } = JSON.parse(readFileSync(join(root, 'packages/shared/i18n/ar.json'), 'utf8'));
 
