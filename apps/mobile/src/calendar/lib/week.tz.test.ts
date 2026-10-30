@@ -2,19 +2,17 @@ import { t } from '@/core/lib/i18n/i18n';
 
 // A phone in Bogotá (UTC-5) or Cairo (UTC+3 until 29 Oct 2026) still reads the academy's Riyadh
 // calendar: today, the السبت week start and each label's weekday never follow the device's zone.
-// jest cannot switch the process zone, so the device is emulated: a plain Date's local getters and
-// Intl's default zone are that zone's, and the module is loaded after. The offset and the local
-// setters stay the process's (UTC): date-fns' TZDate needs them to agree with each other.
+// jest cannot switch the process zone, so the device is emulated: Date's local getters and Intl's
+// default zone are that zone's, and the module is loaded after.
 type Week = typeof import('./week');
 const GETTERS = ['FullYear', 'Month', 'Date', 'Day', 'Hours', 'Minutes'] as const;
 
 function onDevice(zone: string, offsetMin: number): Week {
   const shifted = (d: Date) => new Date(d.getTime() + offsetMin * 60_000);
+  jest.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(-offsetMin);
   for (const g of GETTERS) {
-    const real = Date.prototype[`get${g}`];
-    // Plain Dates only: date-fns' TZDate (a Date subclass) reads its own zone, not the device's.
     jest.spyOn(Date.prototype, `get${g}`).mockImplementation(function (this: Date) {
-      return this.constructor === Date ? shifted(this)[`getUTC${g}`]() : real.call(this);
+      return shifted(this)[`getUTC${g}`]();
     });
   }
   const Real = Intl.DateTimeFormat;
