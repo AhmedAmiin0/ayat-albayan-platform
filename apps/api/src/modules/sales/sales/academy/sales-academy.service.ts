@@ -6,6 +6,7 @@ import { notFound } from '../../../../common/http/errors';
 import type { Page } from '../../../../common/http/http';
 import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
 import { SalesAcademyQueries } from './sales-academy.queries';
+import { packageSummaries } from './sales-package.mapper';
 import { packageStarts, rosterFrom, toRoster, type RosterFacts } from './sales-roster.mapper';
 import { SalesRosterRepo } from './sales-roster.repo';
 import { toSalesHistory } from '../history/sales-history.mapper';
@@ -28,8 +29,8 @@ export class SalesAcademyService {
 
   /**
    * Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب»
-   * (docs/16 row 36). Each row also carries its weekly slots and attendance count (owner 2026-10-30),
-   * read for the whole page at once.
+   * (docs/16 row 36). Each row also carries its weekly slots, attendance count and current package
+   * (owner 2026-10-30; no price), read for the whole page at once.
    */
   async students(
     q: SalesStudentsQuery,
@@ -50,15 +51,18 @@ export class SalesAcademyService {
     return { items, total, page: q.page, pageSize: q.pageSize };
   }
 
-  /** Rules, active package starts, then the lessons since the earliest start: 3 reads per page. */
+  /** Rules and packages, then the lessons since the earliest start and the balances: 4 reads a page. */
   private async rosterOf(ids: readonly string[], now: Date): Promise<Map<string, RosterFacts>> {
     const [rules, packages] = await Promise.all([
       this.roster.rules(ids),
       this.roster.packages(ids),
     ]);
     const starts = packageStarts(packages);
-    const lessons = await this.roster.lessons(ids, { from: rosterFrom(starts, now), to: now });
-    return toRoster(ids, { rules, starts, lessons }, now);
+    const [lessons, summaries] = await Promise.all([
+      this.roster.lessons(ids, { from: rosterFrom(starts, now), to: now }),
+      packageSummaries(this.roster, packages),
+    ]);
+    return toRoster(ids, { rules, starts, lessons, packages: summaries }, now);
   }
 
   /** The ids of her own students (SalesQueries.ownership). */

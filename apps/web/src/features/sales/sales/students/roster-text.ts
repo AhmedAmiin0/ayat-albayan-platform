@@ -1,4 +1,11 @@
-import { localizedName, scheduleLine, type SalesStudentView } from '@ab/shared';
+import {
+  localizedName,
+  packageSummaryParts,
+  RIYADH_TZ,
+  scheduleLine,
+  type PackageWords,
+  type SalesStudentView,
+} from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
@@ -37,4 +44,29 @@ export function rosterAttendanceLine(student: Pick<SalesStudentView, 'attendance
   if (a.held === 0) return pkg ? S.noHeldPackage : S.noHeldRecent;
   const counts = { n: String(a.attended), of: String(a.held) };
   return fill(pkg ? S.attendedPackage : S.attendedRecent, counts);
+}
+
+const H = t.sales.history;
+const sizes: Record<string, string | undefined> = t.enums.packageSize;
+const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH_TZ, dateStyle: 'short' });
+/** A date as an LTR island inside the Arabic line. */
+const ltr = (text: string): string => `\u2066${text}\u2069`;
+
+const words: PackageWords = {
+  size: (size) => (size ? (sizes[size] ?? size) : '—'),
+  status: (status) => t.enums.subscriptionStatus[status],
+  day: (iso) => ltr(DAY.format(new Date(iso))),
+  date: ltr,
+  used: H.used,
+  remaining: H.remaining,
+  starts: H.starts,
+  ended: H.ended,
+  projectedEnd: H.projectedEnd,
+};
+
+/** «12 حلقة · مشترك · استُخدمت 5 من 12 · …» (no price), «لا توجد باقة حالية»; null: old cache. */
+export function rosterPackageLine(student: Pick<SalesStudentView, 'package'>): string | null {
+  if (student.package === undefined) return null;
+  if (student.package === null) return S.noPackage;
+  return packageSummaryParts(student.package, words).join(' · ');
 }

@@ -7,7 +7,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.queries';
 import { SalesAcademyQueries } from './sales-academy.queries';
-import { type RosterLessonRow, type RosterPackageRow, type RosterRuleRow, SalesRosterRepo } from './sales-roster.repo';
+import { type RosterBalanceRow, type RosterLessonRow, type RosterPackageRow, type RosterRuleRow, SalesRosterRepo } from './sales-roster.repo';
 import type { HistoryBundle } from '../history/sales-history.queries';
 import { SalesHistoryQueries } from '../history/sales-history.queries';
 import type { SalesScheduleRow } from '../schedule/sales-schedule.queries';
@@ -86,6 +86,7 @@ export async function academyApp() {
     rules: vi.fn(async (): Promise<RosterRuleRow[]> => []),
     packages: vi.fn(async (): Promise<RosterPackageRow[]> => []),
     lessons: vi.fn(async (): Promise<RosterLessonRow[]> => []),
+    balances: vi.fn(async (): Promise<RosterBalanceRow[]> => []),
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)

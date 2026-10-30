@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '../enums/index.js';
 import type { TeacherStudentCounts } from '../people/students/student-lists.js';
+import type { SalesPackageSummary } from './student/student-package.js';
 import type { RosterAttendance, RosterSlot } from './student/student-roster.js';
 import type { SalesSubscriptionView } from './views.js';
 
@@ -62,6 +63,8 @@ export interface SalesStudentView {
   weekly?: RosterSlot[];
   /** Present / held in the current package, else the last 30 days. Absent: old cache. */
   attendance?: RosterAttendance;
+  /** The current package, hers or not (owner 2026-10-30), no price. null: none; absent: old. */
+  package?: SalesPackageSummary | null;
 }
 
 /** `?page&pageSize&search`: search is a name (Arabic-normalised) or a code. */

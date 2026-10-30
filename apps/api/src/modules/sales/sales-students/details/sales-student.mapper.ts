@@ -4,6 +4,7 @@ import {
   currentPackage,
   netPaid,
   partPaid,
+  type SalesPackageSummary,
   type SalesPartPaid,
   type ReportSummaryView,
   type SalesAttendanceDay,
@@ -26,6 +27,8 @@ interface DetailsParts {
   trial: SalesTrialLesson[];
   /** Hers: only then the subscriptions and the sent reports (owner 2026-10-28). */
   mine: boolean;
+  /** The current package, hers or not (owner 2026-10-30): already whitelisted (no price). */
+  package?: SalesPackageSummary | null;
 }
 
 
@@ -106,5 +109,6 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
     reports,
     schedule: p.schedule,
     trial: p.trial,
+    package: p.package ?? null,
   };
 }

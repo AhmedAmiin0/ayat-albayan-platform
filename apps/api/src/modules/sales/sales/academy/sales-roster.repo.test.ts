@@ -17,11 +17,24 @@ describe('SalesRosterRepo (whitelisted, one read per kind for the page)', () => 
     expect(f.argsOf('schedule_rule_students', 'eq')).toEqual(['rule.status', 'active']);
   });
 
-  it('packages: the active ones, the start date only (never a price)', async () => {
+  it('packages: every one, newest first, size / status / dates only (never a price)', async () => {
     const f = fakeDb({ subscriptions: [{ data: [] }] });
     await new SalesRosterRepo(f.db).packages(IDS);
-    expect(f.argsOf('subscriptions', 'select')).toEqual(['student_id, starts_on']);
-    expect(f.argsOf('subscriptions', 'eq')).toEqual(['status', 'active']);
+    const select = String(f.argsOf('subscriptions', 'select')?.[0]);
+    expect(select).toBe('id, student_id, package, status, starts_on, renews_on, lessons_total, created_at');
+    expect(select).not.toMatch(/price|currency|fx_|note/);
+    expect(f.argsOf('subscriptions', 'in')).toEqual(['student_id', IDS]);
+    const orders = f.calls.filter((c) => c.method === 'order').map((c) => c.args[0]);
+    expect(orders).toEqual(['starts_on', 'created_at']);
+  });
+
+  it('balances: used (lessons_used_before in), left and the end of the given packages', async () => {
+    const f = fakeDb({ v_subscription_balance: [{ data: [] }] });
+    await new SalesRosterRepo(f.db).balances(['sub1']);
+    expect(f.argsOf('v_subscription_balance', 'select')).toEqual([
+      'subscription_id, lessons_used, remaining, ended_at, projected_end_at',
+    ]);
+    expect(f.argsOf('v_subscription_balance', 'in')).toEqual(['subscription_id', ['sub1']]);
   });
 
   it('lessons: [from, to) for the page, read in pages of 1000 until a short one', async () => {
@@ -41,8 +54,13 @@ describe('SalesRosterRepo (whitelisted, one read per kind for the page)', () => 
   it('no student: no read at all', async () => {
     const f = fakeDb({});
     const repo = new SalesRosterRepo(f.db);
-    const out = [await repo.rules([]), await repo.packages([]), await repo.lessons([], W)];
-    expect(out).toEqual([[], [], []]);
+    const out = [
+      await repo.rules([]),
+      await repo.packages([]),
+      await repo.lessons([], W),
+      await repo.balances([]),
+    ];
+    expect(out).toEqual([[], [], [], []]);
     expect(f.trips).toEqual([]);
   });
 

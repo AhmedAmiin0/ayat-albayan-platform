@@ -3,6 +3,7 @@ import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enu
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
+import type { SalesPackageSummary } from './student-package.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
 import type { TrialOutcome } from '../../people/students/index.js';
 
@@ -59,6 +60,11 @@ export interface SalesStudentDetails {
   schedule?: SalesStudentSchedule;
   /** «الحلقة التجريبية»: the trial lessons newest first ([] without one). Absent in an old cache. */
   trial?: SalesTrialLesson[];
+  /**
+   * The current package of ANY student (owner 2026-10-30): size, status, dates, lessons used /
+   * left; never a price or payment. null: none. Absent in an old cache.
+   */
+  package?: SalesPackageSummary | null;
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */

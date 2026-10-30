@@ -6,22 +6,24 @@ import {
   zonedInstant,
   type RosterAttendance,
   type RosterSlot,
+  type SalesPackageSummary,
 } from '@ab/shared';
 import { toWeeklySlot } from '@/modules/sales/sales/schedule/weekly-slot';
 import type { RosterLessonRow, RosterPackageRow, RosterRuleRow } from './sales-roster.repo';
 
 const DAY_MS = 86_400_000;
 
-/** One row's additions: the weekly slots (next starts + teacher) and the attendance count. */
+/** One row's additions: the weekly slots, the attendance count and the current package. */
 export interface RosterFacts {
   weekly: RosterSlot[];
   attendance: RosterAttendance;
+  package: SalesPackageSummary | null;
 }
 
 /** Each student's active package start (the latest when several), as a Riyadh-midnight instant. */
 export function packageStarts(rows: readonly RosterPackageRow[]): Map<string, number> {
   const out = new Map<string, number>();
-  for (const row of rows) {
+  for (const row of rows.filter((r) => r.status === 'active')) {
     const at = Date.parse(zonedInstant(row.starts_on, '00:00', RIYADH_TZ));
     out.set(row.student_id, Math.max(at, out.get(row.student_id) ?? -Infinity));
   }
@@ -38,6 +40,7 @@ interface RosterParts {
   rules: readonly RosterRuleRow[];
   starts: ReadonlyMap<string, number>;
   lessons: readonly RosterLessonRow[];
+  packages: ReadonlyMap<string, SalesPackageSummary>;
 }
 
 function slotsOf(rules: readonly RosterRuleRow[], id: string, now: Date): RosterSlot[] {
@@ -70,6 +73,7 @@ export function toRoster(
   const factsOf = (id: string): RosterFacts => ({
     weekly: slotsOf(p.rules, id, now),
     attendance: attendanceOf(p, id, now),
+    package: p.packages.get(id) ?? null,
   });
   return new Map(ids.map((id) => [id, factsOf(id)]));
 }
