@@ -1,6 +1,9 @@
 import { digest, GOLDEN_TIMES, GOLDEN_ZONES, goldenDates, goldenInstants } from '@ab/shared/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { localDay, offsetMs, toMinutes, weekdayOf, zonedToUtc } from './zoned-time';
+
+// A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
+vi.setConfig({ testTimeout: 60_000 });
 
 // zoned-time (the API's wall clock ↔ UTC: occurrence generation, booking, payouts, the `?from&to`
 // windows) on the @ab/shared date-fns facade (docs/34 §7). Before the swap it ran side by side

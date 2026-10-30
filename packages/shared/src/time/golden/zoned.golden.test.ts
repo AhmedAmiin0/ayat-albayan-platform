@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { addCalendarDays, addDaysIn, startOfDayIn, weekStartOfDate, weekdayOfDate } from '../calendar.js';
 import { clockOf } from '../format.js';
 import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
+
+// A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
+vi.setConfig({ testTimeout: 60_000 });
 
 // Regression goldens for the date-fns facade itself (docs/34 §7). Before it replaced the Intl /
 // ms code, both ran side by side here over this sweep and agreed on every value; the digests below

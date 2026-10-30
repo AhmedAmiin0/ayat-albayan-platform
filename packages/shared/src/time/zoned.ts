@@ -5,6 +5,17 @@ import { format, getDay } from 'date-fns';
 // date helpers only through @ab/shared; date-fns and @date-fns/tz stay inside src/time.
 
 const MINUTE = 60_000;
+const contexts = new Map<string, ReturnType<typeof tz>>();
+
+/** date-fns' `in` context for `zone`, built once per zone (they are pure functions). */
+function inZone(zone: string): ReturnType<typeof tz> {
+  let ctx = contexts.get(zone);
+  if (!ctx) {
+    ctx = tz(zone);
+    contexts.set(zone, ctx);
+  }
+  return ctx;
+}
 
 /** Minutes `zone` is ahead of UTC at `at` (Riyadh +180; Cairo +120, +180 in summer). */
 export function offsetMinutesIn(zone: string, at: Date | number): number {
@@ -36,12 +47,12 @@ export function wallInstant(date: string, hhmm: string, zone: string): Date {
 
 /** «YYYY-MM-DD»: the calendar day `at` falls on in `zone`. */
 export function localDateIn(at: Date | number, zone: string): string {
-  return format(at, 'yyyy-MM-dd', { in: tz(zone) });
+  return format(at, 'yyyy-MM-dd', { in: inZone(zone) });
 }
 
 /** «HH:mm», 24 h, ASCII digits: the wall clock of `at` in `zone` (keys and server texts). */
 export function hhmmIn(at: Date | number, zone: string): string {
-  return format(at, 'HH:mm', { in: tz(zone) });
+  return format(at, 'HH:mm', { in: inZone(zone) });
 }
 
 export interface ZonedFields {
@@ -56,7 +67,7 @@ export interface ZonedFields {
 /** The wall-clock fields of `at` in `zone`, as numbers. */
 export function zonedFieldsIn(at: Date | number, zone: string): ZonedFields {
   const [year = 0, month = 1, day = 1, hour = 0, minute = 0] = format(at, 'yyyy M d H m', {
-    in: tz(zone),
+    in: inZone(zone),
   })
     .split(' ')
     .map(Number);
@@ -65,5 +76,5 @@ export function zonedFieldsIn(at: Date | number, zone: string): ZonedFields {
 
 /** 0 = الأحد … 6 = السبت: the weekday `at` falls on in `zone` (the DB `byday` numbering). */
 export function weekdayIn(at: Date | number, zone: string): number {
-  return getDay(at, { in: tz(zone) });
+  return getDay(at, { in: inZone(zone) });
 }
