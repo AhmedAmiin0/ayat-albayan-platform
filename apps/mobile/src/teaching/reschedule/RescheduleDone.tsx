@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { Scope } from './reschedule-body';
-import { useClockCycle, useViewerTz } from '@/core/lib/clock';
+import { useViewerClock } from '@/core/lib/clock';
 
 interface RescheduleDoneProps {
   /** The API's answer: the new lesson (for a series, its first lesson); sales get its time and status only. */
@@ -25,9 +25,7 @@ interface RescheduleDoneProps {
  * the WhatsApp confirmation is on its way (the API queued it with the move). No box.
  */
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
-  const cycle = useClockCycle();
-  const viewerZone = useViewerTz();
-  const viewer = { tz: viewerZone, cycle };
+  const viewer = useViewerClock();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (

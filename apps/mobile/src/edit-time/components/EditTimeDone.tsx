@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import type { TimeEditResult } from '../lib/types';
-import { useClockCycle, useViewerTz } from '@/core/lib/clock';
+import { useViewerClock } from '@/core/lib/clock';
 
 export interface EditTimeDoneProps {
   /** The API's answer: the same lesson, its new time, and what the edit set in motion. */
@@ -22,9 +22,7 @@ export interface EditTimeDoneProps {
  * calculated again, and a report PDF that is re-made (the guardian is not sent it twice).
  */
 export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
-  const cycle = useClockCycle();
-  const viewerZone = useViewerTz();
-  const viewer = { tz: viewerZone, cycle };
+  const viewer = useViewerClock();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
