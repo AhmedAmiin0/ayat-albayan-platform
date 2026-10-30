@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 932 (owner 2026-10-28): subscriptions.lessons_used_before, counted in v_subscription_balance.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const sql = code('20261028000932_lessons_used_before.sql');
 const viewOf = (text: string) => text.slice(text.indexOf('create or replace view public.v_subscription_balance'));

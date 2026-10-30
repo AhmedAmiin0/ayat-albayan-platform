@@ -1,4 +1,5 @@
-import { DAY, localDay, zonedToUtc } from '../../../people/teachers/availability/zoned-time';
+import { addDays } from '@ab/shared';
+import { DAY, localDay, zonedToUtc } from '@/modules/people/teachers/availability/zoned-time';
 import type { UtcWindow } from './occurrences';
 
 const WEEK = 7 * DAY;
@@ -11,7 +12,8 @@ const dateOf = (day: number): string => new Date(day).toISOString().slice(0, 10)
 export const localDateOf = (instant: Date, tz: string): string =>
   dateOf(localDay(instant.getTime(), tz));
 
-export const addDays = (date: string, days: number): string => dateOf(dayOf(date) + days * DAY);
+/** Re-exported for the scheduling callers; the one engine lives in @ab/shared (docs/32 k2). */
+export { addDays };
 
 /** UTC instant of local midnight at the start of `date` in `tz` (DST-safe). */
 export const startOfLocalDay = (date: string, tz: string): Date =>
