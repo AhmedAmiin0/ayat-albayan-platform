@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { uploadInvoice } from '../support/invoice';
+import { uploadInvoice } from '../support/finance/invoice';
 import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../support/schedule';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those

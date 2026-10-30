@@ -1547,7 +1547,7 @@ Owner request: a second booking type «حجز تعويضي» and a required «ا
 ### Integration
 - Merged `makeup/api`, `makeup/web`, `makeup/mobile` (--no-ff). i18n conflicts resolved by key union (`booking.kind/makeup/invoice/error`); the API's `booking.error.*` is the single home of the new error codes (`lessons.error` is pinned by an API test to the lessons codes), the web `lessonErrorText` reads both.
 - The web and mobile stand-in contract types now come from `@ab/shared` (`BookingKind`, `InvoiceInput`, `InvoiceView`, `MakeupCandidate`, `ThreadMediaItem`, `LessonView.makeup`, `makeupEligible`); only mobile-only drafts stay local.
-- Fixtures gained `invoice_id`. e2e: `chat-subscribe`, `journey-5` upload an invoice before review (`e2e/support/invoice.ts`), `journey-1` checks the trial type and no package list, `forms-parity` checks the three types and the four paid sizes (the trial option moved to «نوع الحجز», docs/13 DEVIATION). New `booking-makeup-invoice.spec` (trial without invoice, package blocked until upload, makeup with invoice saved from a wa-stub photo, teacher 403).
+- Fixtures gained `invoice_id`. e2e: `chat-subscribe`, `journey-5` upload an invoice before review (`e2e/support/finance/invoice.ts`), `journey-1` checks the trial type and no package list, `forms-parity` checks the three types and the four paid sizes (the trial option moved to «نوع الحجز», docs/13 DEVIATION). New `booking-makeup-invoice.spec` (trial without invoice, package blocked until upload, makeup with invoice saved from a wa-stub photo, teacher 403).
 
 ### Gate (`supabase db reset` (171 applied; `gen:types` unchanged) + `pnpm env:local`, then `pnpm test:all`)
 - 27/27 turbo tasks green. e2e: 79 passed + 3 skipped (desktop + mobile).

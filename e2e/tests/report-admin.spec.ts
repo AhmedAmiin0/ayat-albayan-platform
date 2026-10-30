@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar, withSql } from '../support/schedule';
 import { apiSubmit, backdateSubmit, fillTexts, reportRow, TEXTS } from '../support/teacher-extra';
 import { USERS } from '../support/users';

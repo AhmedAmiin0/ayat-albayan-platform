@@ -1,7 +1,7 @@
 import { ATTACHMENT_MAX_BYTES } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar, withSql } from '../support/schedule';
 import { reportRow, storedObject } from '../support/teacher-extra';
 

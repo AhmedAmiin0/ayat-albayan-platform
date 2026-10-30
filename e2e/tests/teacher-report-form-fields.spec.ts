@@ -1,6 +1,6 @@
 import { REPORT_RUBRICS, type Grade, type Rubric } from '@ab/shared';
 import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar } from '../support/schedule';
 import { fillTexts, pickAttendance, pickGrade, reportRow, TEXTS } from '../support/teacher-extra';
 

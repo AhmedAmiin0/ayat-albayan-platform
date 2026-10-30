@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { guardianPhoneOf, uniqueName } from '../support/money-extra';
+import { guardianPhoneOf, uniqueName } from '../support/finance/money-extra';
 import { seedFamily, withSql } from '../support/schedule';
 
 // The link no other spec covers (R-LEAD-01, R-SUB-01, R-PAY-01): a lead whose trial is done became

@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { uploadInvoice } from '../support/invoice';
+import { uploadInvoice } from '../support/finance/invoice';
 import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../support/schedule';
 
 // Two siblings in ONE group lesson on a two-day series (R-STU-04, R-SCH-02/06): the wizard ticks the

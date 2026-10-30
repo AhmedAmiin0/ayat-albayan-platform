@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from './fixtures';
-import { seedPackageStudent, type PackageSeed } from './money';
+import { seedPackageStudent, type PackageSeed } from './finance/money';
 import { addDays, withSql } from './schedule';
 
 // Helpers of the cancel / series / stale / proposal-reject / booking-override / group specs.

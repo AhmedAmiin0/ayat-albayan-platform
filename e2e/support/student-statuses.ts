@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { quote } from '@ab/shared';
 import type { Locator, Page } from '@playwright/test';
 import { API, bearer } from './messages';
-import { startedToday } from './money';
+import { startedToday } from './finance/money';
 import { addDays, nextWeekSaturday, riyadh, withSql } from './schedule';
 
 // Helpers of the student status pipeline spec (owner 2026-10-15, docs/18): students.status, its

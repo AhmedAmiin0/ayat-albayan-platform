@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { uploadInvoice } from '../support/invoice';
+import { uploadInvoice } from '../support/finance/invoice';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, ruleOf, seedFamily, seedLesson, setAvailability, withSql } from '../support/schedule';
 
 // Booking over a clash (R-SCH-04): the slot stays pickable, «احجز» → 409 → ConflictNotice, and

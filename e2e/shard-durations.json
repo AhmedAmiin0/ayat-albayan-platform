@@ -23,15 +23,15 @@
   "desktop": 309,
   "mobile": 8
  },
- "tests/assistant-commission-retro.sql.spec.ts": {
+ "tests/finance/assistant-commission-retro.sql.spec.ts": {
   "desktop": 151,
   "mobile": 5
  },
- "tests/assistant-commission-started.sql.spec.ts": {
+ "tests/finance/assistant-commission-started.sql.spec.ts": {
   "desktop": 163,
   "mobile": 8
  },
- "tests/assistant-commission.sql.spec.ts": {
+ "tests/finance/assistant-commission.sql.spec.ts": {
   "desktop": 258,
   "mobile": 9
  },
@@ -47,7 +47,7 @@
   "desktop": 399,
   "mobile": 13
  },
- "tests/assistant-money.api.spec.ts": {
+ "tests/finance/assistant-money.api.spec.ts": {
   "desktop": 937,
   "mobile": 14
  },
@@ -55,7 +55,7 @@
   "desktop": 9940,
   "mobile": 17599
  },
- "tests/assistant-renewal-commission.sql.spec.ts": {
+ "tests/finance/assistant-renewal-commission.sql.spec.ts": {
   "desktop": 365,
   "mobile": 19
  },
@@ -71,11 +71,11 @@
   "desktop": 182,
   "mobile": 7
  },
- "tests/assistant-statement.api.spec.ts": {
+ "tests/finance/assistant-statement.api.spec.ts": {
   "desktop": 249,
   "mobile": 12
  },
- "tests/assistant-statements.sql.spec.ts": {
+ "tests/finance/assistant-statements.sql.spec.ts": {
   "desktop": 205,
   "mobile": 11
  },
@@ -119,7 +119,7 @@
   "desktop": 3909,
   "mobile": 4001
  },
- "tests/change-course.sql.spec.ts": {
+ "tests/finance/change-course.sql.spec.ts": {
   "desktop": 438,
   "mobile": 21
  },
@@ -175,11 +175,11 @@
   "desktop": 158,
   "mobile": 7
  },
- "tests/course-pause-resume.sql.spec.ts": {
+ "tests/finance/course-pause-resume.sql.spec.ts": {
   "desktop": 134,
   "mobile": 5
  },
- "tests/course-pause.sql.spec.ts": {
+ "tests/finance/course-pause.sql.spec.ts": {
   "desktop": 451,
   "mobile": 20
  },
@@ -199,11 +199,11 @@
   "desktop": 344,
   "mobile": 7
  },
- "tests/expenses.spec.ts": {
+ "tests/finance/expenses.spec.ts": {
   "desktop": 3483,
   "mobile": 4906
  },
- "tests/exports.spec.ts": {
+ "tests/finance/exports.spec.ts": {
   "desktop": 3050,
   "mobile": 3233
  },
@@ -219,7 +219,7 @@
   "desktop": 20750,
   "mobile": 20005
  },
- "tests/finance-money.spec.ts": {
+ "tests/finance/finance-money.spec.ts": {
   "desktop": 11452,
   "mobile": 10848
  },
@@ -375,19 +375,19 @@
   "desktop": 59,
   "mobile": 4
  },
- "tests/pay-rule.sql.spec.ts": {
+ "tests/finance/pay-rule.sql.spec.ts": {
   "desktop": 335,
   "mobile": 9
  },
- "tests/payment-attachments.api.spec.ts": {
+ "tests/finance/payment-attachments.api.spec.ts": {
   "desktop": 446,
   "mobile": 6
  },
- "tests/payments-receipt.spec.ts": {
+ "tests/finance/payments-receipt.spec.ts": {
   "desktop": 5855,
   "mobile": 7743
  },
- "tests/payouts.spec.ts": {
+ "tests/finance/payouts.spec.ts": {
   "desktop": 6094,
   "mobile": 7481
  },
@@ -407,11 +407,11 @@
   "desktop": 27,
   "mobile": 0
  },
- "tests/pricing-offer.spec.ts": {
+ "tests/finance/pricing-offer.spec.ts": {
   "desktop": 6015,
   "mobile": 6193
  },
- "tests/pricing.spec.ts": {
+ "tests/finance/pricing.spec.ts": {
   "desktop": 3250,
   "mobile": 3407
  },
@@ -567,23 +567,23 @@
   "desktop": 6761,
   "mobile": 2
  },
- "tests/subscriptions.spec.ts": {
+ "tests/finance/subscriptions.spec.ts": {
   "desktop": 13084,
   "mobile": 18453
  },
- "tests/teacher-corrections.sql.spec.ts": {
+ "tests/finance/teacher-corrections.sql.spec.ts": {
   "desktop": 228,
   "mobile": 2
  },
- "tests/teacher-earnings-rls.sql.spec.ts": {
+ "tests/finance/teacher-earnings-rls.sql.spec.ts": {
   "desktop": 157,
   "mobile": 0
  },
- "tests/teacher-earnings-ui.spec.ts": {
+ "tests/finance/teacher-earnings-ui.spec.ts": {
   "desktop": 6629,
   "mobile": 9738
  },
- "tests/teacher-earnings.sql.spec.ts": {
+ "tests/finance/teacher-earnings.sql.spec.ts": {
   "desktop": 183,
   "mobile": 0
  },
@@ -603,7 +603,7 @@
   "desktop": 17102,
   "mobile": 20861
  },
- "tests/teacher-payments.sql.spec.ts": {
+ "tests/finance/teacher-payments.sql.spec.ts": {
   "desktop": 214,
   "mobile": 1
  },

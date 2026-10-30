@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { riyadhToday, summaryOf, type Summary } from '../support/money-extra';
-import { kpiCounts, money, removeDashboardExpense, seedDashboard, weekOf } from '../support/money-dashboard';
+import { riyadhToday, summaryOf, type Summary } from '../support/finance/money-extra';
+import { kpiCounts, money, removeDashboardExpense, seedDashboard, weekOf } from '../support/finance/money-dashboard';
 import { addDays, resetAbrar } from '../support/schedule';
 
 // Dashboard (R-RPT-01/02): the numbers on /admin are the statuses in the database. The DB is shared

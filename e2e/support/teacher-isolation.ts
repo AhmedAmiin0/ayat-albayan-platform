@@ -1,4 +1,4 @@
-import { startedToday } from './money';
+import { startedToday } from './finance/money';
 import { seedFamily, seedLesson, withSql } from './schedule';
 
 // A second, login-less teacher «هبة» with her own family, lesson, sent report, chat and payout:

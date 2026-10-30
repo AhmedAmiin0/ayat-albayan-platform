@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { removeDashboardExpense, seedDashboard } from '../support/money-dashboard';
+import { removeDashboardExpense, seedDashboard } from '../support/finance/money-dashboard';
 import { resetAbrar } from '../support/schedule';
 
 // Design review, 2026-10-05: keyboard focus must stay visible and reachable in the admin shell.
