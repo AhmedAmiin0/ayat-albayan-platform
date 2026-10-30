@@ -28,7 +28,6 @@
   "prettier": "@ab/config/prettier",
   "devDependencies": {
     "@ab/config": "workspace:*",
-    "@ab/shared": "workspace:*",
     "jscpd": "4.0.5",
     "knip": "5.88.1",
     "postgres": "^3.4.9",

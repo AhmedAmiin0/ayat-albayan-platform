@@ -11,7 +11,8 @@ import { backdateSubmit, fillAttended, fillTexts, reportRow, storedObject, TEXTS
 // report_ready is not queued twice; after it the form is read-only and the API says
 // edit_window_closed; two tabs on one report → the second submit gets version_conflict.
 
-const PDF_WAIT = { timeout: 150_000, intervals: [1_000, 2_000, 5_000] };
+// Polled every second: the submit kicks the PDF job (ready in a few seconds), a 5 s step overshot it.
+const PDF_WAIT = { timeout: 150_000, intervals: [1_000] };
 const when = (text: string) => text.split('{when}')[0]?.trim() ?? '';
 
 async function open(page: Page, lessonId: string): Promise<void> {

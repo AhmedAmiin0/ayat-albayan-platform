@@ -7,6 +7,9 @@
     "test": "node --test",
     "typecheck": "tsc -p tsconfig.json"
   },
+  "dependencies": {
+    "@ab/shared": "workspace:*"
+  },
   "devDependencies": {
     "@ab/config": "workspace:*",
     "@types/node": "^24.19.0",

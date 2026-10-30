@@ -74,7 +74,7 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   const fallback = JSON.parse(ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1]);
   assert.deepEqual(
     fallback.include.map((m) => m.shard),
-    ['1', '2', '3', '4', 'single'],
+    ['1', '2', '3', '4', '5', '6', '7', '8', 'single'],
   );
   assert.equal(ci.jobs.e2e.env.SHARDS, '${{ matrix.total }}');
   assert.ok(!('pull_request_target' in ci.on));
