@@ -55,7 +55,7 @@ export function MeetingGuestPage({ token, make }: { token: string; make?: () => 
       joinWith={joinMeetingAsGuest}
       title={view.data.title}
       intro={intro}
-      problem={(e) => meetingJoinProblem(e, clock)}
+      problem={(e) => meetingJoinProblem(e, clock, tz)}
       {...(make && { make })}
     />
   );

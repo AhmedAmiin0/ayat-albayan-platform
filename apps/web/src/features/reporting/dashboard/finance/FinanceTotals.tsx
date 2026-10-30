@@ -1,12 +1,14 @@
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { financeNotes, rateLines } from './finance-notes';
 import { amount, currencyLabel } from '../shared/format';
 import type { DashboardData } from '../types';
 
 /** The period's four money totals (Plex, not the KPI Amiri: these are data) and the FX notes. */
 export function FinanceTotals({ finance }: { finance: DashboardData['finance'] }) {
+  const tz = useViewerTz();
   const cur = currencyLabel(finance.currency);
   const items = [
     { label: t.dashboard.revenue, value: finance.revenue },
@@ -28,7 +30,7 @@ export function FinanceTotals({ finance }: { finance: DashboardData['finance'] }
         ))}
       </dl>
       <ul className="grid gap-1 text-xs text-ink-2">
-        {financeNotes(finance).map((n) => (
+        {financeNotes(finance, tz).map((n) => (
           <li key={n.text} className={cn('flex items-center gap-1.5', n.warn && 'font-semibold text-ink')}>
             <NuqtaGlyph shape={n.warn ? 'hollow' : 'fill'} className={cn('size-[9px] shrink-0', n.warn ? 'text-act' : 'text-gold')} />
             {n.text}

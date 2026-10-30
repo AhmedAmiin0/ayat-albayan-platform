@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { clockOf, formatAmount, intlLocale } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
@@ -35,15 +34,14 @@ export function monthLabel(month: string): string {
 const dayFormat = (timeZone: string) =>
   new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone });
 
-/** «الخميس، 1 أكتوبر 16:00» in the viewer's zone. */
-export function whenViewer(iso: string, clock: Clock): string {
+/** «الخميس، 1 أكتوبر 16:00» in `clock.tz`, the viewer's zone (useViewerTz()). */
+export function whenViewer(iso: string, clock: Clock & { tz: string }): string {
   const at = new Date(iso);
-  const tz = viewerTz();
-  return `${dayFormat(tz).format(at)} ${clockOf(at, { tz, ...clock })}`;
+  return `${dayFormat(clock.tz).format(at)} ${clockOf(at, clock)}`;
 }
 
-/** A provider rate time as a date in the viewer's zone. */
-export function rateDate(iso: string): string {
-  const opts = { day: 'numeric', month: 'long', year: 'numeric', timeZone: viewerTz() } as const;
+/** A provider rate time as a date in `tz`, the viewer's zone (useViewerTz()). */
+export function rateDate(iso: string, tz: string): string {
+  const opts = { day: 'numeric', month: 'long', year: 'numeric', timeZone: tz } as const;
   return new Intl.DateTimeFormat(intlLocale(locale), opts).format(new Date(iso));
 }

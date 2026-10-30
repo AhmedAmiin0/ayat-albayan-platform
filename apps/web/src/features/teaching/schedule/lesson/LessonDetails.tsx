@@ -90,7 +90,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           <DetailRow label={t.schedule.needsReview}>
             <span className="block text-danger">{t.schedule.generatedConflict}</span>
             {lesson.conflicts.map((c, i) => (
-              <span key={`${c.kind}-${i}`} className="block text-xs text-ink-2">{conflictText(c, clock, teacherTz)}</span>
+              <span key={`${c.kind}-${i}`} className="block text-xs text-ink-2">{conflictText(c, { ...clock, tz }, teacherTz)}</span>
             ))}
           </DetailRow>
         )}

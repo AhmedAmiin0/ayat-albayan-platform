@@ -17,12 +17,12 @@ export function rateLines(f: Pick<Finance, 'currency' | 'fx_rates'>): string[] {
  * The lines under the money: the conversion (currency + rate date), currencies left out for lack
  * of a rate, and lessons whose teacher has no rate. Honest about every gap, never a guess.
  */
-export function financeNotes(f: Finance): { text: string; warn: boolean }[] {
+export function financeNotes(f: Finance, tz: string): { text: string; warn: boolean }[] {
   const cur = currencyLabel(f.currency);
   const notes = [
     {
       text: f.fx_date
-        ? t.dashboard.fxNote.replace('{currency}', cur).replace('{date}', rateDate(f.fx_date))
+        ? t.dashboard.fxNote.replace('{currency}', cur).replace('{date}', rateDate(f.fx_date, tz))
         : t.dashboard.allInCurrency.replace('{currency}', cur),
       warn: false,
     },

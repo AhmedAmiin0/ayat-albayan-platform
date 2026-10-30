@@ -10,7 +10,7 @@ import { ProposalsPanel } from './reschedule/ProposalsPanel';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 // The UI in English (LTR): dates, joiners and the proposal arrow follow it, not the Arabic default.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

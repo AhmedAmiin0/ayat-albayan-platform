@@ -88,7 +88,7 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <ScheduleFilters search={search} teachers={all} onSearch={patch} resultCount={overview.data ? shown.length : undefined} />
       <Body
         query={overview}
-        rows={boardRows(teachers, shown)}
+        rows={boardRows(teachers, shown, tz)}
         view={{ day, week, today, now }}
         onOpen={(l) => setOpenId(l.id)}
       />
