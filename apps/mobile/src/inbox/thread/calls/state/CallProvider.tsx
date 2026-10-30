@@ -1,4 +1,4 @@
-import { ringWhile, type CallTarget, type CallsUi } from '@ab/client-core';
+import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
@@ -10,7 +10,7 @@ import { useForeground } from '../api/use-foreground';
 import type { RtcDeps } from '../rtc/media';
 import { nativeRtc } from '../rtc/native-rtc';
 import { CallNotice } from '../screen/CallNotice';
-import { CallOverlay, type PermissionAsk } from '../screen/CallOverlay';
+import { CallOverlay } from '../screen/CallOverlay';
 import { CallsContext } from './call-context';
 import { useCallSession, type CallSessionApi } from './use-call-session';
 import { startRingtone } from '../rtc/ringtone';
@@ -62,8 +62,9 @@ export function CallProvider({ children, enabled = true, showsPhone = true, rtc 
     starting.current = true;
     try {
       const p = await client.fetchQuery(callPermissionQuery(target.phone));
-      if (p.state === 'granted') s.store.begin(target);
-      else setAsk({ phone: target.phone, state: p.state });
+      const sheet = askOf(target.phone, p);
+      if (sheet) setAsk(sheet);
+      else s.store.begin(target);
     } catch (e) {
       s.store.notify(callErrorText(e));
     } finally {

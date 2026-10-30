@@ -1726,7 +1726,7 @@
   },
   "src/settings/exports.test.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/settings/gate.ts": {

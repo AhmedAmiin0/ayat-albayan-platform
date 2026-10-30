@@ -1,4 +1,4 @@
-import type { CallConfigView, CallPermissionState } from '@ab/shared';
+import type { CallConfigView } from '@ab/shared';
 import type { CallTarget } from './call-phase.js';
 
 // The calls UI both apps hand down through React context, and the small pure pieces their hooks use.
@@ -19,15 +19,6 @@ export const usableCalls = (ui: CallsUi | null): CallsUi | null => (ui && ui.con
 
 /** The calls log and the chat's call entries need only `enabled` (reading is inbox.read). */
 export const callsReadable = (ui: CallsUi | null): boolean => ui?.config.enabled === true;
-
-/** Why a number cannot be called yet, in the app's `t.calls.permission` words (docs/28 §3.1). */
-export function permissionHint(
-  state: Exclude<CallPermissionState, 'granted'>,
-  text: { requestHint: string; needsTemplate: string; limited: string },
-): string {
-  if (state === 'request') return text.requestHint;
-  return state === 'needs_template' ? text.needsTemplate : text.limited;
-}
 
 /** For an effect: rings while `ringing` (an inbound call waits for this user); the cleanup stops it. */
 export function ringWhile(ringing: boolean, start: () => { stop(): void }): (() => void) | undefined {

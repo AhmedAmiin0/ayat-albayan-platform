@@ -1,6 +1,6 @@
 {
   "@typescript-eslint/consistent-indexed-object-style": 6,
-  "@typescript-eslint/consistent-type-definitions": 668,
+  "@typescript-eslint/consistent-type-definitions": 666,
   "@typescript-eslint/consistent-type-exports": 8,
   "@typescript-eslint/consistent-type-imports": 45,
   "@typescript-eslint/dot-notation": 757,
@@ -51,7 +51,7 @@
   "ab/forbidden-imports": 147,
   "ab/max-params": 2,
   "ab/module-boundaries": 2030,
-  "complexity": 240,
+  "complexity": 239,
   "jsx-a11y/click-events-have-key-events": 2,
   "jsx-a11y/interactive-supports-focus": 2,
   "jsx-a11y/label-has-associated-control": 1,
@@ -62,7 +62,7 @@
   "jsx-a11y/no-static-element-interactions": 2,
   "jsx-a11y/role-supports-aria-props": 1,
   "max-depth": 14,
-  "max-len": 14468,
+  "max-len": 14457,
   "max-lines-per-function": 268,
   "no-console": 2,
   "no-restricted-syntax": 241

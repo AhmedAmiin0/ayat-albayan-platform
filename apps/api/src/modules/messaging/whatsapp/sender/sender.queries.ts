@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import { onMessagingLine, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import type { StaffAtSend } from '../../reminders/plan/staff-reachable';
@@ -8,7 +8,7 @@ import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
-import type { TemplateRow } from '../whatsapp.types';
+import { templateRows, type TemplateRow } from '../whatsapp.types';
 
 export type { DueMessage } from './sender.due';
 
@@ -34,7 +34,7 @@ export class SenderQueries {
   async approvedTemplates(): Promise<TemplateRow[]> {
     const { data, error } = await this.db.from('message_templates').select('*').eq('status', 'approved');
     if (error) throw new Error(`templates read failed: ${error.message}`);
-    return data;
+    return templateRows(data);
   }
 
   /** One cheap read: is anything due now (sender.due.ts)? false = the pass reads nothing more. */
@@ -58,13 +58,14 @@ export class SenderQueries {
       .eq('status', 'queued')
       .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
       .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`)
-      .or(`template_key.is.null${approved}`);
+      .or(`template_key.is.null${approved}`)
+      .or('line.is.null,line.neq.calls'); // never a row of the calls number (docs/28 §10)
     const allowed = this.allowed;
     const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
     const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
     const { data, error } = await scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).limit(input.limit);
     if (error) throw new Error(`outbound queue read failed: ${error.message}`);
-    return data;
+    return data.filter(onMessagingLine);
   }
 
   /**

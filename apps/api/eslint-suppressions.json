@@ -2801,11 +2801,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/calls/kapso/calling-line.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/calls/kapso/calls-api.ts": {
     "max-len": {
       "count": 1
@@ -4035,7 +4030,7 @@
   },
   "src/modules/messaging/numbers/config/numbers.config.ts": {
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/modules/messaging/numbers/config/numbers.env.crm.test.ts": {
@@ -4679,7 +4674,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/webhook/parse/webhook.signature.test.ts": {
@@ -4811,7 +4806,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/modules/messaging/webhook/webhook.settings.test.ts": {
@@ -5318,9 +5313,6 @@
     }
   },
   "src/modules/messaging/whatsapp/numbers/media-client.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

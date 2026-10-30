@@ -31,7 +31,8 @@ export async function setTemplateNumber(deps: NumberSetDeps, input: NumberSetInp
   const row = await deps.queries.get(input.key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   const ref = input.number_id === null ? null : await deps.queries.numberRef(input.number_id);
-  if (input.number_id !== null && !ref) throw waHttpError('unknown_number', 404);
+  // A calls number never sends a template (docs/28 §10): it is not a number a template can pick.
+  if (input.number_id !== null && (!ref || ref.purpose === 'calls')) throw waHttpError('unknown_number', 404);
   let after = row;
   if (row.number_id !== input.number_id) {
     after = (await deps.queries.update(input.key, { number_id: input.number_id })) ?? { ...row, number_id: input.number_id };

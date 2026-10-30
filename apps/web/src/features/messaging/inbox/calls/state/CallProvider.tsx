@@ -1,5 +1,4 @@
-import { ringWhile, type CallTarget, type CallsUi } from '@ab/client-core';
-import type { CallPermissionState } from '@ab/shared';
+import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
@@ -27,8 +26,6 @@ export interface CallProviderProps {
   rtc?: RtcDeps | null;
 }
 
-type Ask = { phone: string; state: Exclude<CallPermissionState, 'granted'> };
-
 /**
  * WhatsApp voice calls for a signed-in staff shell (docs/28 §5): the config, the realtime nudge, the
  * one call of this device, the incoming ring on any page, the full-screen call and its minimised bar.
@@ -41,7 +38,7 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const deps = useMemo(() => (rtc === undefined ? browserRtc() : rtc), [rtc]);
   const play = useCallback((stream: MediaStream) => playOn(audio.current, stream), []);
   const s = useCallSession({ config, rtc: deps, play });
-  const [ask, setAsk] = useState<Ask | null>(null);
+  const [ask, setAsk] = useState<PermissionAsk | null>(null);
   const [sent, setSent] = useState(false);
   const [silenced, setSilenced] = useState<string | null>(null);
   const on = config?.enabled === true && config.canCall;
@@ -52,8 +49,9 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const call = async (target: CallTarget) => {
     try {
       const p = await client.fetchQuery(callPermissionQuery(target.phone));
-      if (p.state === 'granted') s.store.begin(target);
-      else setAsk({ phone: target.phone, state: p.state });
+      const sheet = askOf(target.phone, p);
+      if (sheet) setAsk(sheet);
+      else s.store.begin(target);
     } catch (e) {
       s.store.notify(callErrorText(e));
     }

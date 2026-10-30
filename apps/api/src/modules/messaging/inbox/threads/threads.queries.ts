@@ -1,5 +1,5 @@
 import type { TablesInsert } from '@ab/db';
-import type { ThreadLesson, ThreadPeople } from '@ab/shared';
+import { onMessagingLine, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
@@ -70,7 +70,9 @@ export class ThreadsQueries {
   async numberWindows(phone: string): Promise<ThreadWindow[]> {
     const { data, error } = await this.db.from('v_thread_numbers').select('number_id, line, last_inbound_at').eq('phone_e164', phone);
     check(error, 'thread number windows read');
-    return (data ?? []).map((r) => ({ numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at }));
+    return (data ?? []).filter(onMessagingLine).map((r) => ({ // the calls number: no window (§10)
+      numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at,
+    }));
   }
 
   /**
@@ -113,7 +115,7 @@ export class ThreadsQueries {
     else if (upTo) query = query.in('id', [...upTo]);
     const { data, error } = await query.select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
-    return newestPerLine(data);
+    return newestPerLine(data.filter(onMessagingLine)); // never a receipt from the calls number
   }
 
   /** Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing was written). */
