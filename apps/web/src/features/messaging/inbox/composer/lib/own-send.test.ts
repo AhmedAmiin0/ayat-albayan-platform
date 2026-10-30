@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { clearOwnSends, lastOwnSend, ownSendGeneration, recordOwnSend } from './own-send';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { clearOwnSends, lastOwnSend, ownSendGeneration, recordOwnSend, subscribeOwnSends } from './own-send';
 
 const A = '+966501234567';
 const B = '+966507654321';
@@ -28,5 +28,18 @@ describe('her own last send per chat', () => {
     expect(lastOwnSend(A)).toBeUndefined();
     recordOwnSend(A, 'm-new', ownSendGeneration());
     expect(lastOwnSend(A)).toBe('m-new');
+  });
+
+  it('notifies subscribers on a record and on a clear, not on a stale record; unsubscribe stops it', () => {
+    const listener = vi.fn();
+    const stop = subscribeOwnSends(listener);
+    const before = ownSendGeneration();
+    recordOwnSend(A, 'm-1');
+    clearOwnSends();
+    recordOwnSend(A, 'm-old', before);
+    expect(listener).toHaveBeenCalledTimes(2);
+    stop();
+    recordOwnSend(A, 'm-2');
+    expect(listener).toHaveBeenCalledTimes(2);
   });
 });
