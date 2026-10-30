@@ -62,8 +62,11 @@ end $$;
 revoke all on function public.subscription_cancel_guard() from public, anon, authenticated;
 
 insert into public.role_permissions (role_id, permission)
-select r.id, k.permission
-  from public.roles r
-  cross join (values ('subscriptions.stop'), ('students.change_teacher'), ('courses.reschedule')) as k (permission)
- where r.is_system and r.key in ('admin', 'sales')
+select r.id, 'subscriptions.stop' from public.roles r where r.is_system and r.key in ('admin', 'sales')
+on conflict do nothing;
+insert into public.role_permissions (role_id, permission)
+select r.id, 'students.change_teacher' from public.roles r where r.is_system and r.key in ('admin', 'sales')
+on conflict do nothing;
+insert into public.role_permissions (role_id, permission)
+select r.id, 'courses.reschedule' from public.roles r where r.is_system and r.key in ('admin', 'sales')
 on conflict do nothing;

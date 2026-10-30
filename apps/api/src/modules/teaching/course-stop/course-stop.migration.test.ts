@@ -25,7 +25,7 @@ describe('migration 985', () => {
 
   it('seeds subscriptions.stop, students.change_teacher and courses.reschedule for the system admin and sales only', () => {
     for (const key of ['subscriptions.stop', 'students.change_teacher', 'courses.reschedule'])
-      expect(sql).toContain(`('${key}')`);
+      expect(sql).toContain(`select r.id, '${key}' from public.roles r`);
     expect(sql).toMatch(/where r\.is_system and r\.key in \('admin', 'sales'\)/);
     expect(sql).not.toMatch(/'teacher'|'assistant'|'guardian'/);
   });
