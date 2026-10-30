@@ -115,3 +115,12 @@ export function formatPhone(e164: string): string {
   }
   return e164;
 }
+
+/**
+ * R-MSG-03 fallback: «https://wa.me/966598917071?text=…» with the text prefilled. No URL /
+ * URLSearchParams: @ab/shared also runs on Hermes. wa.me wants the number without the +.
+ */
+export function clickToChatLink(phoneE164: string, text?: string): string {
+  const base = `https://wa.me/${phoneE164.replace(/\D/g, '')}`;
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
+}
