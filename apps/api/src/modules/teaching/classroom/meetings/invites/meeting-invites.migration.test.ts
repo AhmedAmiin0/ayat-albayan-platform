@@ -1,9 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 410–415 (R-MEET-01..03). No database runs in unit tests: this pins their shape.
-const dir = join(__dirname, '../../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (file: string) => readFileSync(join(dir, file), 'utf8');
 const schedule = read('20261012000410_meeting_schedule.sql');
 const invitees = read('20261012000411_meeting_invitees.sql');

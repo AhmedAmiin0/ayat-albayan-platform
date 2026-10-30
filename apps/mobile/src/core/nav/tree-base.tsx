@@ -26,6 +26,11 @@ export function inTree(base: TreeBase, href: Href): Href {
   return { ...href, pathname: `${base}${href.pathname}` } as Href;
 }
 
+/** A student's details in the tree the page runs in: «تفاصيل الطالب» in the sales tree, the admin's
+ * student file otherwise. */
+export const studentDetailsHref = (base: TreeBase, id: string): Href =>
+  base === '/sales' ? `/sales/students/${id}` : `/students/${id}`;
+
 const InChatContext = createContext(false);
 
 /** ChatStack's: the screens below run inside a chat group (app/(admin-chat), (sales-chat), (teacher-chat)). */

@@ -11,7 +11,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { useReschedule } from './queries';
 import { repeatDays, rescheduleBody, seriesDays, type Scope } from './reschedule-body';
-import { rescheduleFailure, type RescheduleFailure } from './reschedule-errors';
+import { useRescheduleFailure, type RescheduleFailure } from './reschedule-errors';
 import { SlotPicker } from './SlotPicker';
 
 const scopePills = () =>
@@ -39,7 +39,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope }: Mo
   // null = untouched: the old rule's days shifted to the new slot (seriesDays).
   const [picked, setByday] = useState<number[] | null>(null);
   const byday = picked ?? (startsAt ? seriesDays(lesson, startsAt, tz) : []);
-  const failure = move.isError ? rescheduleFailure(move.error) : null;
+  const failure = useRescheduleFailure(move);
   const pick = (slot: string | null) => {
     move.reset();
     setStartsAt(slot);

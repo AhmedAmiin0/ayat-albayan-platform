@@ -1,5 +1,5 @@
 import { CONFLICT_KINDS, RIYADH_TZ, type ClockCycle, type Conflict } from '@ab/shared';
-import { clockCycle, whenIn } from '@/core/lib/clock';
+import { whenIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/lib/payment-errors';
@@ -57,13 +57,13 @@ function codedFailure(code: unknown): BookFailure | null {
 }
 
 /** The 409s that carry data: the clashes, or the similar-named children. */
-function conflictFailure(body: Record<string, unknown>): BookFailure | null {
+function conflictFailure(body: Record<string, unknown>, cycle: ClockCycle): BookFailure | null {
   const list = (key: string): unknown[] => {
     const v = body[key];
     return Array.isArray(v) ? v : [];
   };
   if (body['code'] === 'conflict') {
-    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map((c) => conflictLine(c, clockCycle())) };
+    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map((c) => conflictLine(c, cycle)) };
   }
   const candidates = list('candidates')
     .map(toCandidate)
@@ -79,13 +79,14 @@ export function isCodedRefusal(error: unknown): boolean {
   return error instanceof ApiError && isRecord(error.body) && codedFailure(error.body['code']) !== null;
 }
 
-export function bookFailure(error: unknown): BookFailure {
+/** `cycle`: the one the screen renders with (useClockCycle), for the clash lines. */
+export function bookFailure(error: unknown, cycle: ClockCycle): BookFailure {
   if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
   if (!(error instanceof ApiError) || !isRecord(error.body)) {
     return { kind: 'error', text: t.common.error };
   }
   const coded = codedFailure(error.body['code']);
   if (coded) return coded;
-  const data = error.status === 409 ? conflictFailure(error.body) : null;
+  const data = error.status === 409 ? conflictFailure(error.body, cycle) : null;
   return data ?? { kind: 'error', text: t.common.error };
 }

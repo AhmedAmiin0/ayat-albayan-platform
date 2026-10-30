@@ -7,8 +7,9 @@ import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/De
 import { listTime, previewText, threadName } from '@/features/messaging/inbox/format';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { cn } from '@/lib/utils';
-import { sectionTitle } from '../shared/Bar';
+import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 
 /** How many conversations the dashboard shows; the rest is one click away in the inbox. */
 export const RECENT_THREADS = 5;
@@ -17,7 +18,7 @@ export const RECENT_THREADS = 5;
 const ticksWord = (th: ThreadView): string =>
   th.last_direction === 'outbound' ? t.enums.messageStatus[th.last_status] : '';
 
-function ThreadItem({ thread: th }: { thread: ThreadView }) {
+function ThreadItem({ thread: th, now }: { thread: ThreadView; now: Date }) {
   const unread = th.unread_count > 0;
   const name = threadName(th);
   const clock = useClock();
@@ -34,7 +35,7 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
           <span className={cn('truncate', unread ? 'font-bold' : 'font-semibold')}>{name}</span>
         </span>
         <time dateTime={th.last_message_at} className="text-2xs text-ink-3 tabular-nums">
-          {listTime(th.last_message_at, clock)}
+          {listTime(th.last_message_at, clock, now)}
         </time>
         <span className="col-span-2 flex min-w-0 items-center gap-1 text-sm text-ink-2">
           {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}
@@ -51,6 +52,8 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
 export function RecentInbox({ className }: { className?: string }) {
   const threads = useQuery(threadsQuery({ page: 1 }));
   const items = threads.data?.items.slice(0, RECENT_THREADS);
+  // One ticking clock for the five rows: «14:05» turns into the date at midnight without a remount.
+  const now = useNow();
   return (
     <section aria-labelledby="dash-inbox" className={cn('grid content-start gap-2 rounded-md border border-rule p-4', className)}>
       <div className="flex items-baseline justify-between gap-3">
@@ -73,7 +76,7 @@ export function RecentInbox({ className }: { className?: string }) {
       {items && items.length > 0 && (
         <ul className="grid">
           {items.map((th) => (
-            <ThreadItem key={th.phone_e164} thread={th} />
+            <ThreadItem key={th.phone_e164} thread={th} now={now} />
           ))}
         </ul>
       )}

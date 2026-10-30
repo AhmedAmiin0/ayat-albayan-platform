@@ -1,5 +1,5 @@
 import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
-import { clockCycle, clockIn, dateWithClock } from '@/core/lib/clock';
+import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { webOrigin } from '@/classroom/links/web-origin';
 import { t } from '@/core/lib/i18n/i18n';
@@ -20,20 +20,21 @@ export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): s
 const R = t.meetings.internal.refusal;
 
 /** A refused join in a meeting's words (never a lesson's): not open yet names when it opens on the viewer's clock. */
-function refusal(code: unknown, opensAt: unknown, tz: string): string | null {
-  if (code === 'join_not_open_yet') return typeof opensAt === 'string' ? R.notOpenAt.replace('{when}', meetingWhen(opensAt, tz, clockCycle())) : R.notOpen;
-  return code === 'join_closed' ? R.closed : null;
+function refusal(code: unknown, opensAt: unknown, clock: { tz: string; cycle: ClockCycle }) {
+  if (code !== 'join_not_open_yet') return code === 'join_closed' ? R.closed : null;
+  if (typeof opensAt !== 'string') return R.notOpen;
+  return R.notOpenAt.replace('{when}', meetingWhen(opensAt, clock.tz, clock.cycle));
 }
 
 /**
  * The line for a refused meeting call: a join refusal (refusal()), a bare 403 «غير مسموح لك بدخول هذا
  * الاجتماع»; then the API's `code` in words (meeting_ended, meeting_not_found, forbidden), else the generic one.
  */
-export function meetingError(error: unknown, tz = 'Asia/Riyadh'): string {
+export function meetingError(error: unknown, cycle: ClockCycle, tz = 'Asia/Riyadh'): string {
   const body = error instanceof ApiError ? error.body : null;
   const read = (key: string): unknown => (typeof body === 'object' && body !== null ? Reflect.get(body, key) : undefined);
   const code = read('code');
-  const meeting = refusal(code, read('opens_at'), tz);
+  const meeting = refusal(code, read('opens_at'), { tz, cycle });
   if (meeting) return meeting;
   if (code === undefined && error instanceof ApiError && error.status === 403) return R.forbidden;
   if (typeof code === 'string' && errors[code]) return errors[code];

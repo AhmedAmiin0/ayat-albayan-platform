@@ -14,7 +14,7 @@ const day = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
 const MINUTE = 60_000;
 
 /** Short time of a row as of `now`. */
-export function notificationTime(iso: string, clock: Clock, now: Date = new Date()): string {
+export function notificationTime(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   const minutes = Math.max(0, Math.floor((now.getTime() - at.getTime()) / MINUTE));
   if (minutes < 60) return relative.format(-minutes, 'minute');

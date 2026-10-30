@@ -1,11 +1,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { API_SRC } from '@/common/db/repo-paths.test-util';
 
 // docs/26 §2e boundary tests: config-store imports no consumer (only shared helpers); the settings
 // table is touched only where listed below.
 
-const SRC = resolve(__dirname, '..');
+const SRC = API_SRC;
 
 const files = (dir: string): string[] =>
   readdirSync(join(SRC, dir), { recursive: true, encoding: 'utf8' })
