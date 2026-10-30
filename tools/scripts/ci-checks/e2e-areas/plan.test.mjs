@@ -57,7 +57,10 @@ test('ci.yml: the e2e fallback matrix is the full plan; only PRs select; every s
   const fallback = ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1];
   assert.deepEqual(JSON.parse(fallback), plan(null, {}).matrix);
   const step = ci.jobs.changes.steps.find((s) => s.id === 'e2e');
-  assert.equal(step.if, "github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'");
+  assert.equal(
+    step.if,
+    "github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true' && steps.move.outputs.e2e != 'false'",
+  );
   assert.match(step.run, /\|\| echo '\{"full":true/);
   const run = ci.jobs.e2e.steps.find((s) => s.name === 'e2e').run;
   assert.match(run, /--shard="\$SHARD\/\$SHARDS" \$PROJECT \$SPECS/);
