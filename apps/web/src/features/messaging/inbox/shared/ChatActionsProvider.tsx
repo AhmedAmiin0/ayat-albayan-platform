@@ -1,12 +1,12 @@
 import { canReact, type MessageQuote, type MessageView, type ThreadView } from '@ab/shared';
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { ChatActionsContext, type ChatActions } from './chat-actions';
-import { ForwardDialog } from '../messages/forward/ForwardDialog';
-import { forwardSummary, type ForwardSummary } from '../messages/forward/forward-summary';
-import { quoteOf } from '../messages/lib/quote';
-import { useReact } from '../messages/reactions/use-react';
+import { ForwardDialog } from '@/features/messaging/inbox/messages/forward/ForwardDialog';
+import { forwardSummary, type ForwardSummary } from '@/features/messaging/inbox/messages/forward/forward-summary';
+import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
+import { useReact } from '@/features/messaging/inbox/messages/reactions/use-react';
 
 export interface ChatActionsProviderProps {
   thread: ThreadView;
@@ -24,27 +24,25 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
   const [target, setTarget] = useState<MessageQuote | null>(null);
   const [forwarding, setForwarding] = useState<MessageView | null>(null);
   const [notice, setNotice] = useState<ForwardSummary | null>(null);
-  // Stable: the toast's timer restarts whenever onDismiss changes (the chat polls every 10 s).
-  const dismiss = useCallback(() => setNotice(null), []);
+  // Stable (the React Compiler memoizes it): the toast's timer restarts whenever onDismiss changes
+  // (the chat polls every 10 s).
+  const dismiss = () => setNotice(null);
   const replyBlocked = thread.session_open ? null : t.inbox.sessionClosed;
   const { display_name: name, phone_e164: phone } = thread;
   // «تفاعل» (owner 2026-10-27): a refused or failed reaction says so in the same toast.
   const { mutate: reactNow } = useReact(phone, (text) => setNotice({ text, tone: 'error' }));
-  const value = useMemo<ChatActions>(
-    () => ({
-      enabled,
-      chat: { name, phone },
-      replyBlocked,
-      target: replyBlocked ? null : target,
-      reply: (m) => setTarget(quoteOf(m)),
-      cancelReply: (id) => setTarget((now) => (id === undefined || now?.id === id ? null : now)),
-      forward: (m) => setForwarding(m),
-      notLoaded: () => setNotice({ text: t.inbox.reply.notLoaded, tone: 'info' }),
-      reactable: (m) => enabled && canReact(m, thread, new Date()),
-      react: (m, emoji) => reactNow({ message: m, emoji }),
-    }),
-    [enabled, name, phone, replyBlocked, target, thread, reactNow],
-  );
+  const value: ChatActions = {
+    enabled,
+    chat: { name, phone },
+    replyBlocked,
+    target: replyBlocked ? null : target,
+    reply: (m) => setTarget(quoteOf(m)),
+    cancelReply: (id) => setTarget((now) => (id === undefined || now?.id === id ? null : now)),
+    forward: (m) => setForwarding(m),
+    notLoaded: () => setNotice({ text: t.inbox.reply.notLoaded, tone: 'info' }),
+    reactable: (m) => enabled && canReact(m, thread, new Date()),
+    react: (m, emoji) => reactNow({ message: m, emoji }),
+  };
 
   return (
     <ChatActionsContext.Provider value={value}>
