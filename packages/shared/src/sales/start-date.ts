@@ -24,7 +24,7 @@ export interface SalesStartInput {
 
 export type SalesStartResult = { ok: true; startsOn: string } | { ok: false; code: SalesStartProblem };
 
-/** YYYY-MM-DD minus n days. */
+/** YYYY-MM-DD minus n days (the shared addDays, negated). */
 export function daysBefore(day: string, n: number): string {
   return addDays(day, -n);
 }
