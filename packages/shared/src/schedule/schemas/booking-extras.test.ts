@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../../money/schemas.js';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../../money/ledger/schemas.js';
 import {
   INVOICE_MAX_BYTES,
   INVOICE_MIMES,
