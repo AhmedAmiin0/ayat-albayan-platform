@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 971–972 (owner 2026-10-29, docs/31 §2), read as text: no database in unit tests.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const open = strip(readFileSync(join(dir, '20261029000971_channel_after_subscribe.sql'), 'utf8'));
 const assign = strip(readFileSync(join(dir, '20261029000972_assign_student_teacher.sql'), 'utf8'));

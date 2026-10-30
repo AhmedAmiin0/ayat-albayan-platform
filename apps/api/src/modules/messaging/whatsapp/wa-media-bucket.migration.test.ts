@@ -2,11 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INVOICE_MIMES, PLAYABLE_MAX_BYTES, PLAYABLE_MIMES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // docs/21 §2.5: the wa-media bucket takes every type the chat caches. No database runs in unit
 // tests: this pins the SQL, so a mime added to PLAYABLE_MIMES without the bucket fails here, not as
 // a Storage 4xx on a family's first voice note of that type.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261019000500_wa_media_audio_video.sql'), 'utf8');
 const allowed = sql.match(/allowed_mime_types = array\[([^\]]*)\]/)?.[1] ?? '';
 

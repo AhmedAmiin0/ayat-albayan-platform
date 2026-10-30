@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 634 (docs/26 §4 «Validate»): validates the three checks migration 630 added NOT VALID.
 // No database in unit tests; e2e/tests/config-expand.sql.spec.ts checks the result against Postgres.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261024000634_config_validate.sql'), 'utf8');
 const code = sql.replace(/--.*$/gm, '');
 

@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migrations 20261015000440..442 (owner 2026-10-15, R-STU-05, docs/18): the new student statuses.
 
 const read = (name: string) =>
-  readFileSync(join(__dirname, `../../../../../../packages/db/supabase/migrations/${name}.sql`), 'utf8').replace(/--.*$/gm, '');
+  readFileSync(migrationPath(`${name}.sql`), 'utf8').replace(/--.*$/gm, '');
 const values = read('20261015000440_student_statuses_enum');
 const defaults = read('20261015000441_student_statuses_defaults');
 const reclassify = read('20261015000442_student_statuses_reclassify');

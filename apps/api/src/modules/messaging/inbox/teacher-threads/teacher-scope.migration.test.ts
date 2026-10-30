@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { REPO_ROOT } from '@/common/db/repo-paths.test-util';
 
 // Trial students: no direct teacher ↔ family chat (owner, 2026-10-11). The scope lives in SQL
 // (teacher_thread_phones); no database runs in unit tests, so this pins the migration's shape.
-const root = join(__dirname, '../../../../../../..');
+const root = REPO_ROOT;
 const dir = join(root, 'packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261007000001_trial_no_teacher_chat.sql'), 'utf8');
 const body = sql.slice(sql.indexOf('$$'), sql.lastIndexOf('$$'));
