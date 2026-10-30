@@ -173,12 +173,13 @@ complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqe
 // + typescript-eslint strictTypeChecked + stylisticTypeChecked (projectService), react-hooks (all errors) on web/mobile,
 //   jsx-a11y on web, and reactRestrictions (eslint-react.js):
 //   web + mobile: no raw useEffect / useLayoutEffect outside use-*.ts(x) / hooks/
-//   web (React Compiler): no useMemo / useCallback / memo
+//   web + mobile (React Compiler): no useMemo / useCallback / memo
 //   mobile (React 19): no forwardRef (ref is a prop), use(Context) not useContext, <Context value> not <Context.Provider>
 ```
 React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset({ target: '18' })`, runtime from
-`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: not yet, jest does not run compiled
-code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
+`react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs
+`babel-plugin-react-compiler` for every Babel caller, jest included, while app.json `experiments.reactCompiler` is true
+(docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
 Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:
