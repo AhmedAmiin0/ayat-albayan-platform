@@ -1,3 +1,4 @@
+import { viewerTz } from '@ab/client-core';
 import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
 import { clockCycle, clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
@@ -29,7 +30,7 @@ function refusal(code: unknown, opensAt: unknown, tz: string): string | null {
  * The line for a refused meeting call: a join refusal (refusal()), a bare 403 «غير مسموح لك بدخول هذا
  * الاجتماع»; then the API's `code` in words (meeting_ended, meeting_not_found, forbidden), else the generic one.
  */
-export function meetingError(error: unknown, tz = 'Asia/Riyadh'): string {
+export function meetingError(error: unknown, tz = viewerTz()): string {
   const body = error instanceof ApiError ? error.body : null;
   const read = (key: string): unknown => (typeof body === 'object' && body !== null ? Reflect.get(body, key) : undefined);
   const code = read('code');

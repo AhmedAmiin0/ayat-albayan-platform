@@ -1,4 +1,5 @@
-import { counted, formatAmount, intlLocale, partPaid, receiptShortfall, RIYADH_TZ, type SubscriptionView } from '@ab/shared';
+import { viewerTz } from '@ab/client-core';
+import { counted, formatAmount, intlLocale, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -24,12 +25,15 @@ export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_tot
 
 const dayIn = (timeZone: string) =>
   new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone });
-const riyadhDay = dayIn(RIYADH_TZ);
+const days = new Map<string, Intl.DateTimeFormat>();
 const calendarDay = dayIn('UTC');
 
-/** «1 أكتوبر 2026»: the Riyadh day of an instant (the app's clock, docs/07 §12). */
+/** «1 أكتوبر 2026»: the viewer's day of an instant (docs/34). */
 export function instantDay(iso: string): string {
-  return riyadhDay.format(new Date(iso));
+  const tz = viewerTz();
+  const format = days.get(tz) ?? dayIn(tz);
+  days.set(tz, format);
+  return format.format(new Date(iso));
 }
 
 /** «1 أكتوبر 2026» for a local date (YYYY-MM-DD, e.g. starts_on), whatever the phone's zone. */

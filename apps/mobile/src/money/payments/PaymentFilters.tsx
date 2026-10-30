@@ -17,6 +17,7 @@ export function PaymentFilters({ kind, month, onKind, onMonth }: PaymentFiltersP
   const months = useMemo(
     () => [
       { value: 'all', label: t.mobileMoney.allMonths },
+      // academy day (docs/34 b): the finance months are the academy's.
       ...recentMonths(riyadhToday(new Date())).map((m) => ({ value: m, label: monthLabel(m) })),
     ],
     [],

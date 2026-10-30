@@ -94,6 +94,13 @@ jest.mock('expo-document-picker', () => ({
   getDocumentAsync: jest.fn(async () => ({ canceled: true, assets: null })),
 }));
 
+// Times on screen read in the viewer's zone (docs/34 §2): the person's tz, else the device's. The
+// CI machine's zone must not change an expectation, so every suite starts as a Riyadh viewer on a
+// Riyadh phone (a signed-in flow whose /auth/me has no tz falls back to the device's); a test that
+// needs another viewer calls setViewerPersonTz itself and resets it after.
+jest.mock('@ab/shared', () => ({ ...jest.requireActual('@ab/shared'), deviceTimeZone: () => 'Asia/Riyadh' }));
+require('@ab/client-core').setViewerPersonTz('Asia/Riyadh');
+
 // FlashList measures nothing in jest (zero layout = no rows): a 400×900 window and 100pt rows, as the
 // library's own jestSetup (whose first mock, FlashList → RecyclerView, breaks on 2.0.2: not exported).
 // A private dist path: re-check it when FlashList is upgraded.

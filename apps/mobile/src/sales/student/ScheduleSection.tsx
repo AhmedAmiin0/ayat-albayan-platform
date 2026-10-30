@@ -25,11 +25,11 @@ export function ScheduleSection({ schedule, studentId }: { schedule: SalesStuden
       <SectionLabel header>{s.title}</SectionLabel>
       {schedule.weekly.length === 0 ? <Note>{s.noWeekly}</Note> : null}
       {schedule.weekly.map((slot) => {
-        // An old cache without the student's zone: the Riyadh line alone until the refetch.
-        const lines = schedule.student_tz ? slotLines(slot, schedule.student_tz, cycle) : { riyadh: weeklyLine(slot, cycle), student: null };
+        // An old cache without the student's zone: the viewer's line alone until the refetch.
+        const lines = schedule.student_tz ? slotLines(slot, schedule.student_tz, cycle) : { main: weeklyLine(slot, cycle), student: null };
         return (
           <View key={slot.rule_id} style={{ gap: 2 }}>
-            <AppText style={line}>{lines.riyadh}</AppText>
+            <AppText style={line}>{lines.main}</AppText>
             <Note>{slotMeta(slot)}</Note>
             {lines.student ? <Note>{lines.student}</Note> : null}
           </View>

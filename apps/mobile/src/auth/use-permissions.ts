@@ -3,6 +3,7 @@ import { sendsAllTemplates, type Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { useMeZone } from './use-me-zone';
 
 export { permissionsOf, type Can };
 
@@ -21,10 +22,12 @@ export function usePermissions(): Can {
 /**
  * Is /auth/me loaded (the persisted copy or a live answer) for a signed-in gate? Fetches it while it is
  * missing. Signed out (or still booting) needs none. The root layout keeps «جارٍ الاتصال» up until true.
+ * It also sets the viewer's zone from /auth/me `tz` (docs/34) before the trees mount.
  */
 export function useMeReady(signedIn: boolean): boolean {
   const me = useQuery({ ...meQuery(), enabled: signedIn });
-  return !signedIn || meLoaded(me.data);
+  const zoned = useMeZone(me.data, signedIn);
+  return !signedIn || (meLoaded(me.data) && zoned);
 }
 
 /**

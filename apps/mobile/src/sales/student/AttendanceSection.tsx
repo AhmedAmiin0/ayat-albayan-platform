@@ -1,8 +1,8 @@
-import { RIYADH_TZ, type SalesStudentDetails } from '@ab/shared';
+import type { SalesStudentDetails } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
@@ -24,6 +24,7 @@ interface AttendanceSectionProps {
 export function AttendanceSection({ studentId, attendance }: AttendanceSectionProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const to = useStudentHref();
   const s = t.sales.student;
   const text = { flex: 1, fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
@@ -46,7 +47,7 @@ export function AttendanceSection({ studentId, attendance }: AttendanceSectionPr
               key={day.lesson_id}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, borderBottomWidth: 1, borderBottomColor: color.rule }}
             >
-              <AppText style={text}>{whenIn(new Date(day.starts_at), RIYADH_TZ, cycle)}</AppText>
+              <AppText style={text}>{whenIn(new Date(day.starts_at), tz, cycle)}</AppText>
               <StatusChip {...ATTENDANCE_STYLE[day.kind]} label={s.kind[day.kind]} size="sm" />
             </View>
           ))}

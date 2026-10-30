@@ -16,7 +16,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from '../lib/queries';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
 const noMove = () => undefined;
@@ -29,6 +29,7 @@ const noMove = () => undefined;
  */
 export function TeacherScheduleScreen() {
   const cycle = useClockCycle();
+  // academy day (docs/34 b): the week pages by Riyadh days; times read in the viewer's zone.
   const today = riyadhToday(useNow());
   const [start, setStart] = useFollowingDay(weekStart(today));
   const me = useTeacherMe();
@@ -39,7 +40,7 @@ export function TeacherScheduleScreen() {
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
-  const subtitle = headerLine([t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)], lessons, cycle);
+  const subtitle = headerLine([zoneNote(useViewerTz())], lessons, cycle);
   return (
     <Screen list>
       <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />

@@ -9,6 +9,7 @@ export function useSalesReplyLesson(lesson: ReplyLesson) {
   return useQuery({
     queryKey: ['reply-lesson', 'sales', lesson.id],
     queryFn: async (): Promise<SalesScheduleLesson | null> => {
+      // academy day (docs/34 b): a reply is about a lesson of the same academy day.
       const date = chatDayKey(new Date(lesson.starts_at), RIYADH_TZ);
       const day = await apiFetch<SalesScheduleDay>(`/sales/schedule${toQueryString({ date })}`);
       return day.lessons.find((l) => l.id === lesson.id) ?? null;

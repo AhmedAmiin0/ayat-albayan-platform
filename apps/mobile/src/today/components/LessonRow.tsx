@@ -1,12 +1,12 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { riyadhTime, rowSubtitle, studentNames } from '../lib/lesson-text';
+import { lessonClock, rowSubtitle, studentNames } from '../lib/lesson-text';
 import type { TodayLesson } from '../lib/today-lesson';
 
 interface LessonRowProps<L extends TodayLesson> {
@@ -18,7 +18,7 @@ interface LessonRowProps<L extends TodayLesson> {
 }
 
 /**
- * One lesson in «بقية اليوم» (docs/29 §4): the Riyadh time, the students and «أ. سلمى · 30 دقيقة»,
+ * One lesson in «بقية اليوم» (docs/29 §4): the local time, the students and «أ. سلمى · 30 دقيقة»,
  * and at the end a 7pt dot with the status word in its tone (short, and wrapping between words, never
  * cut mid-word: owner 2026-10-28). The whole row is one button: no
  * buttons on it, every action is in the sheet.
@@ -27,7 +27,7 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
   const { color } = useTheme();
   const tone = toneColors(color, lessonStatusStyle[lesson.status].tone).fg;
   const cycle = useClockCycle();
-  const time = riyadhTime(lesson.starts_at, cycle);
+  const time = lessonClock(lesson.starts_at, useViewerTz(), cycle);
   const names = studentNames(lesson);
   const status = statusWord(lesson.status);
   return (

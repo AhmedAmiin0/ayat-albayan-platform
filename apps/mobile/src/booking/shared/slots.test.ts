@@ -1,6 +1,5 @@
-import { t } from '@/core/lib/i18n/i18n';
 import { MON_19, slot, SUN_17 } from '../testing/fixtures';
-import { freeSlotDays, ruleFromSlot, slotLegend, slotTimes, slotWindow, whenText } from './slots';
+import { freeSlotDays, ruleFromSlot, slotTimes, slotWindow, whenText } from './slots';
 
 test('the window is now → 7 days on, as ISO instants', () => {
   const now = new Date('2026-10-02T10:00:00.000Z');
@@ -29,7 +28,7 @@ test('ruleFromSlot reads the day, clock and weekday in the family zone', () => {
   });
 });
 
-test('only free slots, grouped by Riyadh day (not UTC), earliest first', () => {
+test('only free slots, grouped by the viewer day (Riyadh here, not UTC), earliest first', () => {
   const lateSunday = '2026-10-04T21:30:00.000Z'; // 00:30 Monday in Riyadh
   const days = freeSlotDays([
     slot(MON_19),
@@ -45,20 +44,18 @@ test('only free slots, grouped by Riyadh day (not UTC), earliest first', () => {
   expect(freeSlotDays([slot(SUN_17, true)])).toEqual([]);
 });
 
-test('slot times: big Riyadh clock, the student clock only when the zone differs', () => {
-  expect(slotTimes(SUN_17, 'Asia/Riyadh', '24')).toEqual({ riyadh: '17:00', local: null });
-  expect(slotTimes(SUN_17, 'Asia/Dubai', '24')).toEqual({ riyadh: '17:00', local: '18:00 بتوقيت دبي' });
+test('slot times: big viewer clock, the student clock only when it differs', () => {
+  expect(slotTimes(SUN_17, 'Asia/Riyadh', '24')).toEqual({ main: '17:00', local: null });
+  const dubai = { main: '17:00', local: '18:00 بتوقيت دبي' };
+  expect(slotTimes(SUN_17, 'Asia/Dubai', '24')).toEqual(dubai);
+  // 4 Oct: Cairo is on summer time, the same clock as Riyadh.
+  expect(slotTimes(SUN_17, 'Africa/Cairo', '24').local).toBeNull();
   expect(slotTimes(SUN_17, 'Pacific/Fiji', '24').local).toMatch(/بتوقيت ⁦Pacific\/Fiji⁩$/);
 });
 
-test('whenText: Riyadh first, then the student day and clock', () => {
-  expect(whenText(SUN_17, 'Asia/Riyadh', '24')).toBe('الأحد 4 أكتوبر 17:00 بتوقيت الرياض');
+test('whenText: the viewer first, then the student day and clock', () => {
+  expect(whenText(SUN_17, 'Asia/Riyadh', '24')).toBe('الأحد 4 أكتوبر 17:00 بتوقيتك');
   expect(whenText(SUN_17, 'Asia/Dubai', '24')).toBe(
-    'الأحد 4 أكتوبر 17:00 بتوقيت الرياض، عند الطالب الأحد 4 أكتوبر 18:00 بتوقيت دبي',
+    'الأحد 4 أكتوبر 17:00 بتوقيتك، عند الطالب الأحد 4 أكتوبر 18:00 بتوقيت دبي',
   );
-});
-
-test('the legend names the student city, or just Riyadh', () => {
-  expect(slotLegend('Asia/Riyadh')).toBe(t.booking.tzNote.replace('{city}', 'الرياض'));
-  expect(slotLegend('Asia/Dubai')).toBe(t.booking.slotLegend.replace('{city}', 'دبي'));
 });

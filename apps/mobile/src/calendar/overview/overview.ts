@@ -98,6 +98,7 @@ function weekItems(lessons: readonly LessonView[]): AgendaItem[] {
   const items: AgendaItem[] = [];
   let last = '';
   for (const lesson of lessons) {
+    // academy day (docs/34 b): the week pages by Riyadh days, as the `?date` param.
     const date = localDate(new Date(lesson.starts_at), RIYADH_TZ);
     if (date !== last) items.push({ kind: 'day', date });
     last = date;

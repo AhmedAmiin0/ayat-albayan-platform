@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 import { canOpen } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { addDays, riyadhToday } from '@/calendar/lib/week';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { AssistantLessonsList } from '@/classroom/assistants/AssistantLessonsList';
 import { DaySwitcher } from '@/classroom/sessions/DaySwitcher';
 import { useNow } from '@/core/lib/time/use-now';
@@ -24,13 +25,15 @@ import { InsetGroup } from '@/core/ui/surface/inset';
  * The bell at the header's end (notifications.push).
  */
 export function AssistantHomeScreen({ can }: { can: Can }) {
+  // academy day (docs/34 b): the day pages as the calendar's; times read in the viewer's zone.
   const today = riyadhToday(useNow());
+  const zone = zoneNote(useViewerTz());
   const [date, setDate] = useFollowingDay(today);
   const isToday = date === today;
   const inset = useTabBarInset();
   return (
     <Screen list>
-      <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={t.schedule.riyadhTime} trailing={<HeldBell tree="assistant" />} />
+      <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={zone} trailing={<HeldBell tree="assistant" />} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 + inset }}>
         <DaySwitcher date={date} isToday={isToday} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
         <Note>{t.mobileRoles.joinNote}</Note>

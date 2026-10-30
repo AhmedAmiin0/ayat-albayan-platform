@@ -119,7 +119,7 @@ test('slots: only free ones, by Riyadh day; «رجوع» walks the steps back, t
   expect(screen.getByText(`${t.booking.pickTime} *`)).toBeTruthy();
   expect(screen.getByText(t.booking.startsOn)).toBeTruthy();
   expect(screen.queryByRole('button', { name: '19:00' })).toBeNull(); // Monday's slot is busy
-  expect(screen.getByText(t.booking.tzNote.replace('{city}', 'الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.schedule.zoneNote.replace('{city}', 'الرياض'))).toBeTruthy();
 
   const back = () => fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   await back();

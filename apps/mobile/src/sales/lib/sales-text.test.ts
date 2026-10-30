@@ -7,7 +7,7 @@ import {
   guardianLine,
   historyLines,
   packageLabel,
-  riyadhDate,
+  viewerDate,
   startsLine,
   statusLabel,
   studentSubtitle,
@@ -22,9 +22,9 @@ test('fill replaces every named placeholder', () => {
   expect(fill('{a} / {b}', { a: '1', b: '2' })).toBe('1 / 2');
 });
 
-test('riyadhDate is the Riyadh calendar day in Western digits', () => {
-  expect(riyadhDate('2026-09-30T22:30:00.000Z')).toBe('2026-10-01');
-  expect(riyadhDate('2026-09-30T20:59:00.000Z')).toBe('2026-09-30');
+test('viewerDate is the Riyadh calendar day in Western digits', () => {
+  expect(viewerDate('2026-09-30T22:30:00.000Z')).toBe('2026-10-01');
+  expect(viewerDate('2026-09-30T20:59:00.000Z')).toBe('2026-09-30');
 });
 
 test('status and package words; unknown values as sent, none as a dash', () => {

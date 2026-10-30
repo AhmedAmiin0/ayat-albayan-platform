@@ -1127,9 +1127,6 @@
   "src/booking/shared/slots.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/booking/testing/fixtures.ts": {
@@ -1390,7 +1387,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/calendar/agenda/AgendaLessonRow.tsx": {
@@ -1514,7 +1511,7 @@
   },
   "src/calendar/details/details-text.ts": {
     "max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/calendar/details/use-lesson-details.test.tsx": {
@@ -1565,7 +1562,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/overview/overview.ts": {
@@ -3107,7 +3104,7 @@
   },
   "src/edit-time/components/CorrectTimes.tsx": {
     "ab/module-boundaries": {
-      "count": 5
+      "count": 4
     },
     "ab/no-parent-imports": {
       "count": 1
@@ -7159,7 +7156,7 @@
       "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     }
   },
   "src/meetings/create/CreateMeetingDone.tsx": {
@@ -7369,11 +7366,6 @@
       "count": 4
     }
   },
-  "src/meetings/manage/use-viewer-tz.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/meetings/screens/MeetingsScreen.list.test.tsx": {
     "max-len": {
       "count": 1
@@ -7384,7 +7376,7 @@
       "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 4
+      "count": 3
     },
     "max-len": {
       "count": 5
@@ -8010,11 +8002,6 @@
     "ab/no-parent-imports": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/ops/activity/activity-format.ts": {
     "max-len": {
       "count": 1
     }
@@ -10363,7 +10350,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "no-restricted-syntax": {
       "count": 1
@@ -11019,7 +11006,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/sales/student/student-api.ts": {
@@ -11346,7 +11333,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/student-file/screens/TeacherStudentRecordingsScreen.tsx": {
@@ -11998,7 +11985,7 @@
       "count": 2
     },
     "ab/no-parent-imports": {
-      "count": 4
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -12274,7 +12261,7 @@
       "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 4
@@ -12294,9 +12281,6 @@
     },
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "complexity": {
-      "count": 1
     },
     "max-len": {
       "count": 2
@@ -12627,7 +12611,7 @@
   },
   "src/today/lib/lesson-text.ts": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/today/lib/timeline.test.ts": {
@@ -12841,7 +12825,7 @@
   },
   "src/trial-date/lib/trial-date-text.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/trial-date/lib/trial-href.ts": {

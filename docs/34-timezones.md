@@ -90,4 +90,32 @@ Filled by the web PR (`cloud/review-viewer-tz-web`).
 
 ## 6. apps/mobile
 
-Filled by the mobile PR (`cloud/review-viewer-tz-mobile`).
+One source: `useViewerTz()` (`src/core/lib/clock/viewer-tz.ts`, `useSyncExternalStore` over the
+client-core store) and `zoneNote(tz)` «الأوقات بتوقيتك (القاهرة)» beside it. `useMeReady`
+(`src/auth/use-me-zone.ts`) feeds the store from `GET /auth/me` `tz` (null when signed out) and
+keeps «جارٍ الاتصال» up until the store reads that zone, so text helpers that call client-core
+`viewerTz()` without subscribing (`booking/shared/slots.ts`, `*-text.ts`) never paint a stale
+zone. `meetings/manage/use-viewer-tz.ts` (academy clock outside the teacher tree) is deleted.
+Tests run as a Riyadh viewer on a Riyadh phone (`jest.setup.cjs`), whatever the CI machine's zone.
+
+| File | Use | Class | Outcome |
+|---|---|---|---|
+| `today/lib/lesson-text.ts` (`riyadhTime` → `lessonClock`, `studentTimes`), `today/components/LessonRow`, `QuietDay` (time), `today/hero/HeroCard`, `hero-text`, `live/LiveSessions`, `classroom/sessions/SessionCard`, `classroom/assistants/AssistantLessonItem`, `classroom/links/join-text`, `sales/components/SalesLessonRow`, `calendar/agenda/AgendaLessonRow` | a lesson's start on a row, card or hero | a | viewer's clock; a student's clock only when it differs at that instant (`otherZoneClock`) |
+| `today/lib/today-plan.ts` `greetingPart` | «صباح الخير» by the hour | a | viewer's hour |
+| `calendar/agenda/agenda.ts` `teacherClock`, `calendar/details/details-text.ts` `whenLine` / `clockLines`, `DetailsWhen` | «… بتوقيت الرياض», the student's and teacher's clocks | a | «… بتوقيتك»; other clocks only when they differ (Cairo in summer: none) |
+| `calendar/overview/overview-text.ts` `spanClock` / `windowsLine` / `freeLabel`, `TeacherHeader`, `AgendaItemRow` | windows and free gaps | a | viewer's clock, named with the viewer's city |
+| `calendar/overview/overview-text.ts` `teacherMeta`, `more/schedule.ts` | the teacher's city / a zone's name | — | kept: a place, not a clock |
+| `booking/shared/slots.ts` (`dayLabel`, `freeSlotDays`, `slotTimes`, `whenText`, the legend), `teaching/reschedule/SlotButton`, `SlotPicker`, `booking/trial/components/SlotStep`, `edit-time/components/CorrectTimes`, `EditTimeConfirm`, `edit-time/lib/edit-time-text.ts` | pickers: slots by day, the big clock, «الموعد الذي اخترته» | a | the viewer's days and clock, the student's under it when it differs; the picker states its zone (`zoneNote`); a slot is an instant sent as is, nothing typed or converted |
+| `booking/shared/booking-errors.ts`, `booking/shared/picks.ts`, `booking/invoice/MediaCard`, `booking/makeup/MakeupAction` | a clash's time, a weekly pick's city label, a media time, a makeup chip | a | viewer's clock; a pick names its city when not the viewer's zone |
+| `trial-date/lib/trial-date-text.ts` (`VIEWER_TZ`) | a trial's time and the family's | a | viewer's clock «بتوقيتك», `trialDate.familyTime` only when it differs |
+| `sales/lib/sales-text.ts` (`riyadhDate` → `viewerDate`, `nextLessonLine`), `sales/student/schedule-text.ts` (`weeklyLine`, `slotLines`), `ScheduleSection`, `UpcomingLessons`, `AttendanceSection`, `TrialSection`, `ReportsSection`, `sales/teacher/TeacherAttendanceTab`, `TeacherOverviewTab`, `sales/components/SalesTeacherHeader`, `sales/attendance/*` (day, time, note), `SalesScheduleScreen` (subtitle) | sales' student and teacher pages | a | viewer's days and clock; notes say «الأوقات بتوقيتك (…)» |
+| `ops/activity/activity-format.ts`, `ops/dashboard/work-text.ts`, `payments/format.ts` `instantDay`, `earnings/lib/format.ts` | log times, a pending report, an instant's day, a session | a | viewer's zone |
+| `teacher/screens/*` (`Today`, `Students`, `Reports`, `StudentReports`), `teacher/report/screens/ReportFormScreen`, `student-file/recordings/RecordingRow`, `classroom/recordings/recording-format.ts`, `meetings/manage/{use-viewer-tz,use-enter-meeting,meeting-text}.ts` | `teachers/me` tz or Riyadh | a | `useViewerTz()` (the teacher's tz via /auth/me; an admin's own zone) |
+| `inbox/shared/format.ts` `clockAt` (not in the grep) | «آخر تحديث» in the device's zone | a | viewer's zone |
+| `calendar/lib/week.ts` (`riyadhToday`, `riyadhMidnight`, `weekWindow`), `calendar/agenda/agenda.ts` `agendaDays`, `calendar/overview/overview.ts`, `DayScheduleScreen`, `TeacherCalendarScreen`, `teacher/screens/TeacherScheduleScreen`, `teaching/reschedule/{SlotPicker,queries}.ts`, `assistant-app/{AssistantHomeScreen,assistant-day}.ts`, `classroom/sessions/AdminSessionsScreen`, `today/lib/use-day-lessons.ts`, `today/components/QuietDay` (date), `booking/shared/BookedPanel`, `sales/lib/sales-api.ts` `useSalesDay`, `sales/screens/SalesScheduleScreen` (today), `ops/dashboard/dashboard-queries.ts` | the day / week a screen pages by, the `?date` / `?from&to` it asks for | b | kept: academy days, as the API's day params (§4 known limit); the times inside read in the viewer's zone and the subtitle names it |
+| `finance/shared/month.ts`, `money/payments/PaymentFilters`, `finance/expenses/expense-draft.ts`, `payments/lib/paid-day.ts`, `assistants/terms/terms-form.ts`, `sales-subscribe/components/SalesSubscribeForm`, `subscribe/UsedBeforeField`, `students/course-pause/*` (3), `inbox/messages/reply-actions/reply-lesson-read.ts` | finance month, paid / expense / terms day, subscribe start day, used-before and pause cut-offs, a reply's lesson day | b | kept with `// academy day (docs/34 b)` |
+| `subscribe/SubscribeScreen`, `sales/lesson-actions/SalesRescheduleForm`, `teaching/reschedule/reschedule-body.ts`, `booking/trial/lib/draft.ts` (`COUNTRY_TZ`), `details-text` `seriesLine`, availability `teacherTz` fallbacks | a family's or teacher's tz with the academy's when missing | b | kept: a data default for the other person's zone, not a display zone |
+
+Counts (the §3 grep over `apps/mobile/src` non-test code at `d56c00b8`, import lines and the 16
+fixture / test-helper lines left out): **114 uses in 77 files: a 75, b 37, c 0, — 2** (a place
+name). Messages (c) are composed by the API; the app sends none with a time.

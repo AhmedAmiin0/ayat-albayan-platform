@@ -42,7 +42,7 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const list = useRecordings(id, params);
   const teachers = useTeacherChoices(list.items, admin);
   const manage = can('recordings.manage');
-  const renderItem = useRecordingRow({ studentId: id, me: me.data, manage, admin, freshUrl: list.freshUrl });
+  const renderItem = useRecordingRow({ studentId: id, manage, admin, freshUrl: list.freshUrl });
   const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
   return (
     <Screen list>

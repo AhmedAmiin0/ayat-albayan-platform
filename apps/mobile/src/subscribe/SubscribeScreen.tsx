@@ -39,6 +39,7 @@ function useProfile(id: string) {
 
 /** The child with its siblings (the pills) and the family's zone (the day chips). */
 const familyOf = (p: StudentProfile | undefined) =>
+  // docs/34 b: no family yet reads as the academy's zone (a data default, not a display).
   p ? { family: [p, ...p.siblings], tz: p.tz } : { family: [], tz: RIYADH_TZ };
 
 /** «يوسف · AB-0183». */

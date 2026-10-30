@@ -1,4 +1,5 @@
 import { lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/shared';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
@@ -50,7 +51,9 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const params = useLocalSearchParams<{ teacherId?: string; date?: string }>();
   const now = useNow();
+  // academy day (docs/34 b): GET /sales/schedule `?date` is a Riyadh day.
   const today = riyadhToday(now);
+  const tz = useViewerTz();
   const [date, setDate] = useFollowingDay(today, params.date && DATE.test(params.date) ? params.date : undefined);
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const [status, setStatus] = useState<ScheduleStatus>('all');
@@ -89,7 +92,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         title={t.sales.academySchedule.title}
         size="h2"
         connecting
-        subtitle={t.schedule.riyadhTime}
+        subtitle={zoneNote(tz)}
         trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <View style={{ gap: 8 }}>

@@ -1,7 +1,6 @@
 import {
   intlLocale,
   lessonStatusStyle,
-  RIYADH_TZ,
   type AttendanceTableRow,
   type AttendanceTotalKind,
   type StatusStyle,
@@ -11,14 +10,20 @@ import { locale } from '@/core/lib/i18n/locale';
 import { ATTENDANCE_STYLE } from '../student/attendance-text';
 import { fill } from '../lib/sales-text';
 
-// What «سجل الحضور» says (owner 2026-10-28): the Riyadh day and date, the month names, the totals,
-// a row's chip and tags. The chips are «الحضور»'s (ATTENDANCE_STYLE) and the lesson statuses'. Pure.
+// What «سجل الحضور» says (owner 2026-10-28): the viewer's day and date, the month names, the
+// totals, a row's chip and tags. The chips are «الحضور»'s (ATTENDANCE_STYLE) and the lesson statuses'. Pure.
 
-const dayDate = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: RIYADH_TZ, weekday: 'short', day: 'numeric', month: 'numeric' });
 const monthName = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: 'UTC', month: 'long', year: 'numeric' });
 
-/** «الثلاثاء، 27/10»: the lesson's Riyadh weekday and date. */
-export const dayDateOf = (iso: string): string => dayDate.format(new Date(iso));
+const dayDates = new Map<string, Intl.DateTimeFormat>();
+
+/** «الثلاثاء، 27/10»: the lesson's weekday and date on the viewer's calendar `tz`. */
+export function dayDateOf(iso: string, tz: string): string {
+  const opts = { timeZone: tz, weekday: 'short', day: 'numeric', month: 'numeric' } as const;
+  const format = dayDates.get(tz) ?? new Intl.DateTimeFormat(intlLocale(locale), opts);
+  dayDates.set(tz, format);
+  return format.format(new Date(iso));
+}
 
 /** "2026-10" → «أكتوبر 2026». */
 export const monthOf = (month: string): string => monthName.format(new Date(`${month}-15T12:00:00Z`));

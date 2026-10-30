@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { slotLegend } from '@/booking/shared/slots';
 import { dayLabel } from '@/calendar/lib/week';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/teaching/reschedule/SlotButton';
@@ -36,7 +36,7 @@ export function CorrectTimes({ lesson, durationMin, tz, now, value, onPick }: Co
     <View style={{ gap: 8 }}>
       <FormLabel>{t.editTime.correctTimes}</FormLabel>
       <AppText style={note}>{t.editTime.dayFixed.replace('{day}', day)}</AppText>
-      <AppText style={note}>{slotLegend(tz)}</AppText>
+      <AppText style={note}>{zoneNote(useViewerTz())}</AppText>
       {starts.length === 0 ? (
         <AppText style={note}>{t.editTime.noTimes}</AppText>
       ) : (

@@ -22,6 +22,7 @@ interface ChangeUntilFormProps {
  */
 export function ChangeUntilForm({ studentId, pause, onDone, onClose }: ChangeUntilFormProps) {
   const [earliest] = useState(() => {
+    // academy day (docs/34 b): a pause cuts at the academy's today.
     const today = riyadhToday();
     return pause.from_date > today ? pause.from_date : today;
   });
