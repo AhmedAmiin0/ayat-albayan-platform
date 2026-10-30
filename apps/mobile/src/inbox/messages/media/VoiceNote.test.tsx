@@ -17,10 +17,10 @@ const serve = (answer: () => Promise<unknown>) =>
 const file = async () => ({ url: signed('v1'), mime: 'audio/ogg', expires_at: '2099-01-01T00:00:00Z' });
 const fetches = () => mockApiFetch.mock.calls.filter(([p]) => p === pathOf('v1')).length;
 
-beforeEach(() => {
+beforeEach(async () => {
   mockApiFetch.mockReset();
   resetPlayers();
-  statusIs({});
+  await statusIs({});
 });
 
 test('the row shows before any request: round play button and waveform, nothing signed (W6)', async () => {
@@ -34,7 +34,7 @@ test('the row shows before any request: round play button and waveform, nothing 
 test('ONE tap fetches once, shows the ring while fetching, and plays as soon as it is loaded', async () => {
   let answer: (v: unknown) => void = () => undefined;
   serve(() => new Promise((resolve) => (answer = resolve)));
-  statusIs({ isLoaded: false });
+  await statusIs({ isLoaded: false });
   const view = await showVoice();
   await tapPlay();
   await tapPlay();
@@ -46,7 +46,7 @@ test('ONE tap fetches once, shows the ring while fetching, and plays as soon as 
   // Not loaded yet: the ring stays and nothing plays.
   expect(player?.play).not.toHaveBeenCalled();
   expect(screen.getByTestId('media-spinner', ALL)).toBeTruthy();
-  statusIs({ isLoaded: true, playing: true });
+  await statusIs({ isLoaded: true, playing: true });
   await view.rerender(voiceNote());
   await waitFor(() => expect(player?.play).toHaveBeenCalledTimes(1));
   expect(screen.queryByTestId('media-spinner', ALL)).toBeNull();
@@ -85,7 +85,7 @@ test('another failure keeps the row with «اضغط لإعادة المحاول�
 
 test('fetched but never loaded (network, a codec): after 15 s the ring gives way to the retry line', async () => {
   serve(file);
-  statusIs({ isLoaded: false });
+  await statusIs({ isLoaded: false });
   await showVoice();
   jest.useFakeTimers();
   try {
