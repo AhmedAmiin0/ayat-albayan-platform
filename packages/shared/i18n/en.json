@@ -3845,7 +3845,8 @@
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
-      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are."
+      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
+      "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3871,7 +3872,8 @@
     "invalidText": "Check this field",
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
     "commsSource": "Where the number setup comes from",
-    "reportFormV2": "New lesson report form"
+    "reportFormV2": "New lesson report form",
+    "presenceEnabled": "Show online status and last seen"
   },
   "language": {
     "label": "Language",
@@ -7273,5 +7275,25 @@
       "avatar_not_staff": "Student and guardian accounts have no photo.",
       "generic": "Could not save the photo. Try again."
     }
+  },
+  "presence": {
+    "online": "Online now",
+    "lastSeen": "Last seen {when}",
+    "lastMessage": "Last message {when}",
+    "now": "just now",
+    "minutes": {
+      "one": "1 minute ago",
+      "two": "2 minutes ago",
+      "few": "{n} minutes ago",
+      "other": "{n} minutes ago"
+    },
+    "today": "today at {time}",
+    "yesterday": "yesterday",
+    "staffTitle": "Team status",
+    "staffOnline": "Online now: {n}",
+    "staffNever": "Not seen yet",
+    "staffEmpty": "No team members yet",
+    "off": "Online status is turned off in Values",
+    "loadError": "Could not load the team status"
   }
 }

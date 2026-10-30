@@ -7,6 +7,7 @@ export {
   type ChannelAudience,
   channelKey,
   channelMessagesPath,
+  channelPresencePath,
   channelReadPath,
   channelTimeText,
   olderCursor,
@@ -23,3 +24,16 @@ export {
   subscribeChannelMessages,
 } from './channel-live.js';
 export { type TeacherPick, teacherChoice } from './teacher-pick.js';
+export {
+  channelPresenceKey,
+  PRESENCE_SELF_PATH,
+  type PresenceChannelLike,
+  type PresenceRealtimeLike,
+  presenceSelfKey,
+  presenceTopic,
+  type PresenceWatch,
+  STAFF_PRESENCE_PATH,
+  staffPresenceKey,
+  trackSelf,
+} from './presence-live.js';
+export { watchPresence } from './presence-watch.js';
