@@ -37,7 +37,7 @@ beforeEach(() => {
 test('her own child: two methods, «تحويل بنكي» first and picked; saving is today’s package, then its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('radio', { name: t.enums.paymentMethod.bank, checked: true })).toBeTruthy();
-  expect(screen.getByRole('radio', { name: m.payOnline, checked: false })).toBeTruthy();
+  expect(await screen.findByRole('radio', { name: m.payOnline, checked: false })).toBeTruthy();
   expect(screen.getByText(t.payments.method)).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
   await waitFor(() => expect(posted('/sales/subscriptions')).toHaveLength(1));
@@ -48,7 +48,7 @@ test('her own child: two methods, «تحويل بنكي» first and picked; savi
 test('«دفع إلكتروني»: the amount to transfer gives way to the reference and the agreed amount; the button makes the link', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByText(m.price)).toBeTruthy();
-  await fireEvent.press(screen.getByRole('radio', { name: m.payOnline }));
+  await fireEvent.press(await screen.findByRole('radio', { name: m.payOnline }));
   expect(await screen.findByLabelText(new RegExp(t.paymentLinks.agreedAmount.split(' (')[0] ?? ''))).toBeTruthy();
   expect(screen.queryByText(m.price)).toBeNull();
   expect(screen.getByRole('button', { name: t.paymentLinks.create })).toBeTruthy();
