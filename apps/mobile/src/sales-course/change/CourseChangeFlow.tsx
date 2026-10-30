@@ -84,7 +84,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
         body={body}
         saving={{
           busy: change.isPending,
-          failure: change.isError ? bookFailure(change.error) : null,
+          failure: change.isError ? bookFailure(change.error, cycle) : null,
           submit: () => (body ? change.mutate(body) : undefined),
         }}
         onChangeSlot={() => go('slot')}

@@ -16,7 +16,7 @@ test('409 conflict: one Arabic line per clash on the Riyadh clock; junk entries 
       'nonsense',
     ],
   });
-  expect(bookFailure(error)).toEqual({
+  expect(bookFailure(error, '24')).toEqual({
     kind: 'conflict',
     lines: [
       'المعلم/ة مشغول/ة بحلقة أخرى في هذا الموعد (الأحد 4 أكتوبر 17:00)',
@@ -36,7 +36,7 @@ test('409 duplicate_student: the similar-named children on file', () => {
       { id: 3 },
     ],
   });
-  expect(bookFailure(error)).toEqual({
+  expect(bookFailure(error, '24')).toEqual({
     kind: 'duplicate',
     candidates: [
       { id: 's1', name: 'يوسف', code: 'AB-0100' },
@@ -46,7 +46,7 @@ test('409 duplicate_student: the similar-named children on file', () => {
 });
 
 test('no answer at all: offline, and the retry will not book twice', () => {
-  expect(bookFailure(new TypeError('Network request failed'))).toEqual({
+  expect(bookFailure(new TypeError('Network request failed'), '24')).toEqual({
     kind: 'error',
     text: t.booking.mobile.offline,
   });
@@ -54,7 +54,7 @@ test('no answer at all: offline, and the retry will not book twice', () => {
 
 test('a refused or missing invoice sends the admin back to «الفاتورة» with its own line', () => {
   for (const [status, code] of [[400, 'invoice_required'], [400, 'invoice_path'], [400, 'invoice_message'], [410, 'media_expired'], [413, 'invoice_too_large']] as const) {
-    expect(bookFailure(new ApiError(status, { code }))).toEqual({
+    expect(bookFailure(new ApiError(status, { code }), '24')).toEqual({
       kind: 'invoice',
       text: t.booking.error[code],
     });
@@ -62,11 +62,11 @@ test('a refused or missing invoice sends the admin back to «الفاتورة» 
 });
 
 test('a makeup the API refuses says why, wherever the status', () => {
-  expect(bookFailure(new ApiError(409, { code: 'makeup_not_eligible' }))).toEqual({
+  expect(bookFailure(new ApiError(409, { code: 'makeup_not_eligible' }), '24')).toEqual({
     kind: 'error',
     text: t.booking.error.makeup_not_eligible,
   });
-  expect(bookFailure(new ApiError(409, { code: 'makeup_exists' }))).toEqual({
+  expect(bookFailure(new ApiError(409, { code: 'makeup_exists' }), '24')).toEqual({
     kind: 'error',
     text: t.booking.error.makeup_exists,
   });
@@ -74,27 +74,27 @@ test('a makeup the API refuses says why, wherever the status', () => {
 
 test('a salesperson’s registration the API scopes out says why (not her lead, not her family)', () => {
   for (const code of ['not_your_lead', 'not_your_family'] as const) {
-    expect(bookFailure(new ApiError(403, { code }))).toEqual({ kind: 'error', text: t.booking.error[code] });
+    expect(bookFailure(new ApiError(403, { code }), '24')).toEqual({ kind: 'error', text: t.booking.error[code] });
   }
 });
 
 test('the course guard’s lesson and scope codes are coded refusals with their own line', () => {
   const pastError = new ApiError(422, { code: 'date_in_past', message: 'x' });
-  expect(bookFailure(pastError)).toEqual({ kind: 'error', text: t.lessons.error.date_in_past });
+  expect(bookFailure(pastError, '24')).toEqual({ kind: 'error', text: t.lessons.error.date_in_past });
   expect(isCodedRefusal(pastError)).toBe(true);
   const scopeError = new ApiError(403, { code: 'not_your_student', message: 'x' });
-  expect(bookFailure(scopeError)).toEqual({ kind: 'error', text: t.booking.error.not_your_student });
+  expect(bookFailure(scopeError, '24')).toEqual({ kind: 'error', text: t.booking.error.not_your_student });
   expect(isCodedRefusal(scopeError)).toBe(true);
 });
 
 test('anything else is the generic error', () => {
   const generic = { kind: 'error', text: t.common.error };
-  expect(bookFailure(new ApiError(500, null))).toEqual(generic);
-  expect(bookFailure(new ApiError(404, { code: 'lead_not_found' }))).toEqual(generic);
-  expect(bookFailure(new ApiError(409, { code: 'duplicate_student', candidates: [] }))).toEqual(
+  expect(bookFailure(new ApiError(500, null), '24')).toEqual(generic);
+  expect(bookFailure(new ApiError(404, { code: 'lead_not_found' }), '24')).toEqual(generic);
+  expect(bookFailure(new ApiError(409, { code: 'duplicate_student', candidates: [] }), '24')).toEqual(
     generic,
   );
-  expect(bookFailure(new Error('booking_incomplete'))).toEqual(generic);
+  expect(bookFailure(new Error('booking_incomplete'), '24')).toEqual(generic);
 });
 
 test('a coded refusal (a guard) is told apart from a failure to retry', () => {
@@ -109,7 +109,7 @@ test('the course and its change refusals are coded, each with its booking.error 
   const codes = ['starts_at_mismatch', 'starts_before_course', 'starts_before_subscription', 'no_change', 'course_changed', 'course_exists'] as const;
   for (const code of codes) {
     const error = new ApiError(code === 'course_changed' || code === 'course_exists' ? 409 : 400, { code, message: 'x' });
-    expect(bookFailure(error)).toEqual({ kind: 'error', text: t.booking.error[code] });
+    expect(bookFailure(error, '24')).toEqual({ kind: 'error', text: t.booking.error[code] });
     expect(isCodedRefusal(error)).toBe(true);
   }
 });

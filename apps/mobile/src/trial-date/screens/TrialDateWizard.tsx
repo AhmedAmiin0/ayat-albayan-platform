@@ -5,6 +5,7 @@ import { ScrollView, View } from 'react-native';
 import { bookFailure } from '@/booking/shared/booking-errors';
 import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -33,6 +34,7 @@ interface TrialDateWizardProps {
  * request id per wizard (rule 8). The history sits over the first step.
  */
 export function TrialDateWizard({ history, title, program, fallback }: TrialDateWizardProps) {
+  const cycle = useClockCycle();
   const [draft, setDraft] = useState<TrialDateDraft>(() => trialDateDraft(history));
   const [requestId] = useState(newRequestId);
   const [step, setStep] = useState<Step>('teacher');
@@ -87,7 +89,7 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
             draft={draft}
             history={history}
             body={body}
-            submit={{ busy: book.isPending, failure: book.isError ? bookFailure(book.error) : null, onSubmit: () => body && book.mutate(body) }}
+            submit={{ busy: book.isPending, failure: book.isError ? bookFailure(book.error, cycle) : null, onSubmit: () => body && book.mutate(body) }}
             onChangeSlot={() => {
               patch({ startsAt: null });
               go('slot');

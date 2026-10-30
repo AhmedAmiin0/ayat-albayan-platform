@@ -1,8 +1,9 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { ClockCycle, RoomJoinResult } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { useClock } from '@/lib/clock';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { CLASSROOM_KEY, joinRoom } from '../api/api';
@@ -47,13 +48,15 @@ interface Props {
 }
 
 /** A 403 with opens_at reads «تُفتح الساعة …»; every other code has its own line. */
-function lessonProblem(error: unknown): string {
+function lessonProblem(error: unknown, cycle: ClockCycle): string {
   const opens = error instanceof ApiError && error.status === 403 ? opensAtOf(error) : null;
-  return opens !== null ? opensAtText(opens) : classroomErrorText(error);
+  return opens !== null ? opensAtText(opens, cycle) : classroomErrorText(error);
 }
 
 /** /classroom/:lessonId for admin, the lesson's teacher and the assigned assistant; /meeting/:id with `join`. */
-export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, problem = lessonProblem }: Props) {
+export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, problem }: Props) {
+  const { cycle } = useClock();
+  const problemOf = problem ?? ((e: unknown) => lessonProblem(e, cycle));
   const [attempt, setAttempt] = useState(0);
   const queryClient = useQueryClient();
   const join = useJoin(lessonId, attempt, joiner);
@@ -65,6 +68,6 @@ export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, pr
   if (join.isPending) {
     return <main className="grid min-h-dvh place-items-center bg-page"><p role="status" className="text-sm text-ink-2">{t.classroom.joining}</p></main>;
   }
-  if (join.error) return <Notice onRetry={retry}>{problem(join.error)}</Notice>;
+  if (join.error) return <Notice onRetry={retry}>{problemOf(join.error)}</Notice>;
   return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={retry} />;
 }

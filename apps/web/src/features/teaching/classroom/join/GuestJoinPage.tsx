@@ -1,4 +1,4 @@
-import { guestJoinSchema } from '@ab/shared';
+import { guestJoinSchema, type ClockCycle } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
 import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
@@ -8,6 +8,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Logo } from '@/components/ui/display/mark';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { joinAsGuest } from '../api/api';
 import { ClassroomRoom } from '../room/components/ClassroomRoom';
@@ -17,9 +18,9 @@ import type { RoomClient } from '../room/components/room-types';
 import { opensAtText } from '../room/livekit/window-hint';
 
 /** A 403 with opens_at reads «بتفتح الساعة …»; every other code has its own line. */
-function problemText(error: unknown): string {
+function problemText(error: unknown, cycle: ClockCycle): string {
   const opens = opensAtOf(error);
-  return opens ? opensAtText(opens) : classroomErrorText(error);
+  return opens ? opensAtText(opens, cycle) : classroomErrorText(error);
 }
 
 interface Props {
@@ -36,7 +37,9 @@ interface Props {
 
 /** /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room. No login, no app shell. */
 export function GuestJoinPage(props: Props) {
-  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem = problemText } = props;
+  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem } = props;
+  const { cycle } = useClock();
+  const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');
   const [missing, setMissing] = useState(false);
   const join = useMutation({ mutationFn: joinWith });
@@ -64,7 +67,7 @@ export function GuestJoinPage(props: Props) {
             <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
           )}
         </Field>
-        {join.isError && <FormAlert>{problem(join.error)}</FormAlert>}
+        {join.isError && <FormAlert>{problemOf(join.error)}</FormAlert>}
         <RecordedNotice />
         <Button type="submit" size="lg" disabled={join.isPending}>
           {join.isPending ? t.classroom.joining : t.classroom.guest.join}

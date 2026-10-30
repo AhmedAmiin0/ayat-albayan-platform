@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { endMeeting, newMeetingLink } from './api';
 import { cancelMeeting } from '../invite/invite-api';
@@ -14,6 +15,7 @@ export type Asking = 'end' | 'link' | 'cancel';
  */
 export function useMeetingManage(id: string) {
   const [asking, setAsking] = useState<Asking | null>(null);
+  const cycle = useClockCycle();
   const client = useQueryClient();
   const refresh = () => client.invalidateQueries({ queryKey: ['meetings'] });
   const settle = { onSettled: () => setAsking(null) };
@@ -33,7 +35,8 @@ export function useMeetingManage(id: string) {
     setAsking(next);
   };
   const plain = end.error ?? link.error;
-  const error = cancel.error ? inviteError(cancel.error) : plain ? meetingError(plain) : null;
+  const failed = plain ? meetingError(plain, cycle) : null;
+  const error = cancel.error ? inviteError(cancel.error) : failed;
   const confirm = asking ? confirms[asking] : null;
   return { confirm, ask, close: () => setAsking(null), newUrl: link.data?.url ?? null, error };
 }

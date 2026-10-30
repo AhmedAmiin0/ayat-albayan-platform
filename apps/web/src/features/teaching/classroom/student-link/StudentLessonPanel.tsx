@@ -1,4 +1,4 @@
-import { lessonWhenAt, type StudentLinkLesson } from '@ab/shared';
+import { lessonWhenAt, type ClockCycle, type StudentLinkLesson } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -20,9 +20,9 @@ interface Props {
   onJoin: (name: string) => void;
 }
 
-const problemText = (error: unknown): string => {
+const problemText = (error: unknown, cycle: ClockCycle): string => {
   const opens = opensAtOf(error);
-  return opens ? opensAtText(opens) : classroomErrorText(error);
+  return opens ? opensAtText(opens, cycle) : classroomErrorText(error);
 };
 
 /** «حلقتك القادمة / الآن»: when (viewer's clock), with whom, an optional name and the big «ادخل الحلقة». */
@@ -31,7 +31,7 @@ export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJ
   const [name, setName] = useState('');
   const state = windowStateAt(lesson.window, now);
   const title = isLessonNow(lesson, now) ? t.studentLink.page.now : t.studentLink.page.next;
-  const waiting = state === 'early' ? opensAtText(lesson.window.opens_at) : t.classroom.closedHint;
+  const waiting = state === 'early' ? opensAtText(lesson.window.opens_at, clock.cycle) : t.classroom.closedHint;
   return (
     <>
       <section aria-label={title} className="grid gap-1">
@@ -42,7 +42,7 @@ export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJ
       <Field label={t.studentLink.page.name}>
         {(p) => <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={firstName} onChange={(e) => setName(e.target.value)} />}
       </Field>
-      {error !== null && <FormAlert>{problemText(error)}</FormAlert>}
+      {error !== null && <FormAlert>{problemText(error, clock.cycle)}</FormAlert>}
       <RecordedNotice />
       <Button type="button" size="lg" disabled={state !== 'open' || pending} onClick={() => onJoin(name.trim())}>
         {pending ? t.classroom.joining : t.studentLink.page.enter}

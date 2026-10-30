@@ -1,6 +1,7 @@
 import type { NotificationEntryView, NotificationRuleView, NotificationsOverview, RulePatchInput } from '@ab/shared';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { CATALOGUE_QUERY_KEY } from '../../notification-catalogue/catalogue-api';
@@ -57,7 +58,8 @@ export function useRuleRow(rule: NotificationRuleView): RuleRowState {
   const [failure, setFailure] = useState<RuleFailure | null>(null);
   const mutation = useMutation({ mutationFn: patchRule });
   const draft = edits ?? draftOf(rule);
-  const words = { rule, numberName: (id: string | null) => numberName(api.numbers, id) };
+  const clock = useClock();
+  const words = { rule, numberName: (id: string | null) => numberName(api.numbers, id), clock };
   const result = draftResult({ ...words, draft });
   const fail = (error: unknown) => {
     const why = ruleFailure(error);
