@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { SearchInput } from './ui/form/search-input';
+import { SearchInput } from '../ui/form/search-input';
 
 export const FILTER_DEBOUNCE_MS = 300;
 

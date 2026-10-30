@@ -1,0 +1,144 @@
+{
+  "id": "b21",
+  "seq": 110,
+  "moves": [
+    {
+      "from": "apps/web/src/components/ColumnFilterText*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/DataTable.*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/DataTableHead*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/TableBox*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/client-sort*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/data-table-features*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/filter-controls*",
+      "to": "apps/web/src/components/data-table/"
+    },
+    {
+      "from": "apps/web/src/components/AdminNav*",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/admin-nav-items*",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/AppShell*",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/RouteFade*",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/use-rail-box*",
+      "to": "apps/web/src/components/shell/layout/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/components/admin-nav-items.ts",
+      "apps/web/src/components/shell/nav/admin-nav-items.ts"
+    ],
+    [
+      "apps/web/src/components/AdminNav.permissions.test.tsx",
+      "apps/web/src/components/shell/nav/AdminNav.permissions.test.tsx"
+    ],
+    [
+      "apps/web/src/components/AdminNav.test.tsx",
+      "apps/web/src/components/shell/nav/AdminNav.test.tsx"
+    ],
+    [
+      "apps/web/src/components/AdminNav.tsx",
+      "apps/web/src/components/shell/nav/AdminNav.tsx"
+    ],
+    [
+      "apps/web/src/components/AppShell.tsx",
+      "apps/web/src/components/shell/layout/AppShell.tsx"
+    ],
+    [
+      "apps/web/src/components/client-sort.test.ts",
+      "apps/web/src/components/data-table/client-sort.test.ts"
+    ],
+    [
+      "apps/web/src/components/client-sort.ts",
+      "apps/web/src/components/data-table/client-sort.ts"
+    ],
+    [
+      "apps/web/src/components/ColumnFilterText.test.tsx",
+      "apps/web/src/components/data-table/ColumnFilterText.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ColumnFilterText.tsx",
+      "apps/web/src/components/data-table/ColumnFilterText.tsx"
+    ],
+    [
+      "apps/web/src/components/data-table-features.ts",
+      "apps/web/src/components/data-table/data-table-features.ts"
+    ],
+    [
+      "apps/web/src/components/DataTable.filter.test.tsx",
+      "apps/web/src/components/data-table/DataTable.filter.test.tsx"
+    ],
+    [
+      "apps/web/src/components/DataTable.sort.test.tsx",
+      "apps/web/src/components/data-table/DataTable.sort.test.tsx"
+    ],
+    [
+      "apps/web/src/components/DataTable.test.tsx",
+      "apps/web/src/components/data-table/DataTable.test.tsx"
+    ],
+    [
+      "apps/web/src/components/DataTable.tsx",
+      "apps/web/src/components/data-table/DataTable.tsx"
+    ],
+    [
+      "apps/web/src/components/DataTableHead.tsx",
+      "apps/web/src/components/data-table/DataTableHead.tsx"
+    ],
+    [
+      "apps/web/src/components/filter-controls.ts",
+      "apps/web/src/components/data-table/filter-controls.ts"
+    ],
+    [
+      "apps/web/src/components/RouteFade.test.tsx",
+      "apps/web/src/components/shell/layout/RouteFade.test.tsx"
+    ],
+    [
+      "apps/web/src/components/RouteFade.tsx",
+      "apps/web/src/components/shell/layout/RouteFade.tsx"
+    ],
+    [
+      "apps/web/src/components/TableBox.test.tsx",
+      "apps/web/src/components/data-table/TableBox.test.tsx"
+    ],
+    [
+      "apps/web/src/components/TableBox.tsx",
+      "apps/web/src/components/data-table/TableBox.tsx"
+    ],
+    [
+      "apps/web/src/components/use-rail-box.test.tsx",
+      "apps/web/src/components/shell/layout/use-rail-box.test.tsx"
+    ],
+    [
+      "apps/web/src/components/use-rail-box.ts",
+      "apps/web/src/components/shell/layout/use-rail-box.ts"
+    ]
+  ]
+}

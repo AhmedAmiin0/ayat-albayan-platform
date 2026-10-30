@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ColumnFilterText } from '@/components/ColumnFilterText';
+import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { salesPeopleQuery } from '@/features/sales/sales/api';
 import { t } from '@/lib/i18n/i18n';

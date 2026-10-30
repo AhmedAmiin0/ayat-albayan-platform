@@ -2,7 +2,7 @@ import type { TeacherStudentView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
+import { FILTER_DEBOUNCE_MS } from '@/components/data-table/ColumnFilterText';
 import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { TeacherStudents } from './TeacherStudents';

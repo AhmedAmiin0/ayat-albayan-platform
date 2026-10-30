@@ -1,7 +1,7 @@
 import { ACTIVITY_RESULTS, ACTIVITY_ROLES, type ActivityView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable';
+import type { ColumnFilterDef, DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { actionLabel, entityLabel, entityLink, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';

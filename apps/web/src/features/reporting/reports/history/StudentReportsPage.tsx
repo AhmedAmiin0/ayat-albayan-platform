@@ -13,7 +13,7 @@ import { studentReportsQuery } from '../api';
 import { useRecordedLessons } from './use-recorded-lessons';
 import { GradeChart } from '../chart/GradeChart';
 import { ReportHistoryList } from './ReportHistoryList';
-import { TableBox } from '@/components/TableBox';
+import { TableBox } from '@/components/data-table/TableBox';
 import { cn } from '@/lib/utils';
 
 export interface StudentReportsPageProps {
