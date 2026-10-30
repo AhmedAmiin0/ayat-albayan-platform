@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { dueMessage } from '../sender.fakes';
+import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { PaymentHoldRepo } from './payment-hold.repo';
 import { PaymentHolds } from './payment-holds';
 

@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import { PaymentHolds } from './hold/payment-holds';
 import type { PaymentHoldRepo } from './hold/payment-hold.repo';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
-import { WaError } from '../whatsapp.types';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Meta 131042 in the worker: the row and its line wait (one probe per hold), one push a day.
 

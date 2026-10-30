@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import { SENDING } from '../send-plan';
+import { DB, type Db } from '@/common/db/db.module';
+import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { WA_PAYMENT_HOLD } from './payment-hold';
 
 /** The line hold's one write: a row of a held line waits too, untried and uncounted. */

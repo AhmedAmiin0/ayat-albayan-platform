@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { DueMessage } from '../sender.due';
+import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { holdUntil } from './payment-hold';
 import { PaymentHoldRepo } from './payment-hold.repo';
 

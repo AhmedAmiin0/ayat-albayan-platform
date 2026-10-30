@@ -9,11 +9,11 @@ import {
   type TemplateButton,
   type TemplateParams,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
-import { crmPlan } from '../drivers/crm/crm-plan';
+import { ar } from '@/common/i18n/server-text';
+import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
-import { templateParams } from '../messages/wa-json';
-import { WaError, type TemplateRow } from '../whatsapp.types';
+import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
+import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The sender's pure decisions (docs/12 §3.3): what to send, what a failure leads to.
 
@@ -31,7 +31,7 @@ export const AUTH_HOLD_MS = 15 * 60_000;
 export const KAPSO_AUTH = 'kapso_auth';
 /** messages.error_code when the CRM refused its API key or it lacks messages:send (docs/19): held the same way. */
 export const CRM_AUTH = 'crm_auth';
-export { CRM_RATE_LIMITED } from '../drivers/crm/crm-plan';
+export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {

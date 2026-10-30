@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, WaLine } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import type { StaleLead } from './send-stale';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */

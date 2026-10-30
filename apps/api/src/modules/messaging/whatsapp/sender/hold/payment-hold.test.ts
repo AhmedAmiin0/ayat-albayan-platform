@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { crmErrorFrom } from '../../drivers/crm/crm-http';
-import { byDriver } from '../../drivers/meta/graph';
-import { KAPSO_ENV } from '../../drivers/kapso/kapso.fakes';
-import { failurePlan } from '../send-plan';
-import { STUB_ENV } from '../../whatsapp.fakes';
-import type { NumberRoute } from '../../numbers/number-route';
-import { WaError } from '../../whatsapp.types';
+import { crmErrorFrom } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
+import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { holdKey, paymentSubject, WA_PAYMENT_HOLD } from './payment-hold';
 
 // Meta 131042 «Business eligibility payment issue» (docs/12 §3.3): held, never failed per message.

@@ -1,7 +1,7 @@
 import { isWaPaymentHold, type WaLine } from '@ab/shared';
-import type { NumberRoute } from '../../numbers/number-route';
-import type { FailurePlan } from '../send-plan';
-import type { WaError } from '../../whatsapp.types';
+import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
+import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
+import type { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Meta 131042 (no valid payment method on the WABA) is the ACCOUNT, not the message: the row waits
 // in the queue, the try not counted, until the owner fixes billing in Meta (docs/12 §3.3).

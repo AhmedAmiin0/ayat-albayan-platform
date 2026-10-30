@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { KAPSO_ENV } from '../../drivers/kapso/kapso.fakes';
-import { failurePlan } from '../send-plan';
-import { HttpWhatsappClient } from '../../whatsapp.client';
-import { RECORDED, scriptedFetch, STUB_ENV, type Recorded } from '../../whatsapp.fakes';
-import { WaError } from '../../whatsapp.types';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
+import { RECORDED, scriptedFetch, STUB_ENV, type Recorded } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // No double send: Meta's 131042 is an HTTP 4xx error body with no `messages[].id`, so the client
 // throws and nothing was accepted; any 2xx with a wamid resolves as sent and is never held.
