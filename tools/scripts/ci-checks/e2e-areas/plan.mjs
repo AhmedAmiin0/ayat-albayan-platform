@@ -1,13 +1,13 @@
 // The e2e job matrix from a selection (select.mjs). Usage:
 //   node tools/scripts/ci-checks/e2e-areas/plan.mjs <selection.json>   -> lines for $GITHUB_OUTPUT
-// Full suite = today's matrix (4 shards + single line). A selection gets as many shards as its measured
-// time needs (e2e/shard-durations.json, ~90 s of specs per shard, at most 4, never more than its spec
+// Full suite = today's matrix (8 shards + single line). A selection gets as many shards as its measured
+// time needs (e2e/shard-durations.json, ~90 s of specs per shard, at most 8, never more than its spec
 // files), so no shard machine starts Supabase for nothing; «single line» (the six journeys, the smoke
 // set) always runs. FAIL SAFE: a bad or missing selection = the full matrix.
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-export const MAX_SHARDS = 4;
+export const MAX_SHARDS = 8;
 export const SHARD_MS = 90_000;
 const DURATIONS = fileURLToPath(new URL('../../../../e2e/shard-durations.json', import.meta.url));
 

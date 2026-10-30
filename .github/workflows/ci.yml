@@ -30,7 +30,7 @@ jobs:
   # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
   # On a PR, step «e2e specs» also picks the e2e specs the change can reach (e2e/areas.json, through the
   # import graph: tools/scripts/ci-checks/e2e-areas/select.mjs) and how many shards they need; anything it
-  # does not understand, and every push, = the full suite on 4 shards, as before.
+  # does not understand, and every push, = the full suite on 8 shards.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -202,9 +202,9 @@ jobs:
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
-  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-4 shards; pushes to
+  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-8 shards; pushes to
   # develop/main run every spec on both projects, the safety net for anything a PR selection missed.
-  # Shards 1-4 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
+  # Shards 1-8 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
   # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
   # configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys (playwright.config.ts reads E2E_LINES);
   # the six §5 journeys plus the template status and settings switch specs, desktop only.
@@ -220,7 +220,7 @@ jobs:
     # «single line» (the smoke set) always; the fallback below is the full matrix (pushes, any failure).
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":4},{"name":"e2e (2)","shard":"2","total":4},{"name":"e2e (3)","shard":"3","total":4},{"name":"e2e (4)","shard":"4","total":4},{"name":"e2e (single line)","shard":"single","total":4}]}') }}
+      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":8},{"name":"e2e (2)","shard":"2","total":8},{"name":"e2e (3)","shard":"3","total":8},{"name":"e2e (4)","shard":"4","total":8},{"name":"e2e (5)","shard":"5","total":8},{"name":"e2e (6)","shard":"6","total":8},{"name":"e2e (7)","shard":"7","total":8},{"name":"e2e (8)","shard":"8","total":8},{"name":"e2e (single line)","shard":"single","total":8}]}') }}
     env:
       SHARDS: ${{ matrix.total }}
       # The PR's selected spec files (empty = all of them).

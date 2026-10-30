@@ -65,10 +65,13 @@ export async function signInAs(browser: Browser, creds: { email: string; passwor
 /** The login left /login (the home of the role loaded). */
 export const expectSignedIn = (page: Page) => expect(page).not.toHaveURL(/\/login/);
 
-/** The login was refused: the form is back (not submitting) and the URL is still /login. */
+/**
+ * The login was refused: the form shows its error (every refusal ends in that alert, a sign-in in a
+ * navigation away), the form is back (not submitting) and the URL is still /login.
+ */
 export async function expectRefused(page: Page): Promise<void> {
+  await expect(page.getByRole('alert')).toBeVisible();
   await expect(page.getByRole('button', { name: ar.auth.submit })).toBeVisible();
-  await page.waitForTimeout(1_000);
   await expect(page).toHaveURL(/\/login/);
 }
 
