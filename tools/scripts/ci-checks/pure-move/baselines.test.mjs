@@ -6,7 +6,8 @@ const RENAMES = [
   ['apps/web/src/features/payouts/PayoutsPage.tsx', 'apps/web/src/features/payouts/list/PayoutsPage.tsx'],
   ['apps/web/src/features/payouts/use-pay.ts', 'apps/web/src/features/payouts/pay/use-pay.ts'],
 ];
-const entry = (count) => ({ 'ab/module-boundaries': { count } });
+// max-len: a rule a move may never change (no-parent-imports and module-boundaries may shrink).
+const entry = (count) => ({ 'max-len': { count } });
 const SUPP = { 'src/boot.tsx': entry(1), 'src/features/payouts/PayoutsPage.tsx': entry(4), 'src/features/payouts/use-pay.ts': entry(3) };
 const moved = { ...SUPP };
 delete moved['src/features/payouts/PayoutsPage.tsx'];
