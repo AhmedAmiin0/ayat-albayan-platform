@@ -1,8 +1,10 @@
 import { retry, type WaLine } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { sleep } from '../../../../common/cache/sleep';
 import { activeNumberId } from '../../../../common/integrations/numbers-overlay';
 import { PushService } from '../../../../common/push/push.service';
+import { holdKey, paymentSubject, WA_PAYMENT_HOLD } from './hold/payment-hold';
+import { PaymentHolds } from './hold/payment-holds';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
 import type { NumberRoute } from '../numbers/number-route';
@@ -13,11 +15,13 @@ import type { WaSent } from '../whatsapp.types';
 
 export type { SendJob, SendOutcome } from './message.job';
 
+interface HoldAt { line: WaLine; route?: NumberRoute | null; now: Date }
+
 /**
  * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness (a staff alert's teacher
- * checked again: staffAtSend), the automatic-messages
- * hold (auto_off), claim, send, outcome.
- * Never throws. Idempotency: a row is claimed by compare-and-set before Meta is called, so two
+ * checked again: staffAtSend), the automatic-messages hold (auto_off), the 131042 line hold
+ * (hold/), claim, send, outcome. Never throws.
+ * Idempotency: a row is claimed by compare-and-set before Meta is called, so two
  * workers never send it twice; producers dedupe the row itself by dedup_key.
  */
 @Injectable()
@@ -30,6 +34,8 @@ export class MessageWorker {
     private readonly queries: SenderQueries,
     private readonly dispatch: MessageDispatch,
     private readonly push: PushService,
+    /** The 131042 line hold; absent (unit tests) = no line hold, the row hold still applies. */
+    @Optional() private readonly holds?: PaymentHolds,
   ) {}
 
   async process(job: SendJob): Promise<SendOutcome> {
@@ -56,7 +62,7 @@ export class MessageWorker {
       await this.queries.expire(row.id, AUTO_OFF);
       return 'held';
     }
-    if (!readyToSend(row, template)) return 'skipped';
+    if (await this.notNow(job, { line, route, now })) return 'skipped';
     const attempts = await this.claim({ row, now, line, route });
     if (attempts === null) return 'skipped';
     let sent: WaSent;
@@ -98,6 +104,9 @@ export class MessageWorker {
     await this.queries.failure(row.id, plan);
     // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
     if (plan.error_code === CRM_RATE_LIMITED) return 'paused';
+    if (plan.error_code === WA_PAYMENT_HOLD) {
+      return this.paymentHeld({ ...input, next: plan.next_attempt_at });
+    }
     if (plan.attempts !== undefined) {
       // The token, not the message: rows wait; one push a day (fixed in Business Manager).
       this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);
@@ -109,6 +118,25 @@ export class MessageWorker {
     this.log.warn(`message ${row.id} failed: ${plan.error_code} ${plan.error_text}`);
     await this.alert(row, `${row.id}:${now.getTime()}`);
     return 'failed';
+  }
+
+  /** Not now: its PDF is not attached yet, or its line is on a 131042 hold (deferred, untried). */
+  private async notNow(job: SendJob, at: HoldAt): Promise<boolean> {
+    if (!readyToSend(job.row, job.template)) return true;
+    const until = this.holds?.heldUntil(holdKey(at), at.now);
+    if (!this.holds || !until) return false;
+    await this.holds.defer(job.row, until);
+    return true;
+  }
+
+  /** 131042: the line waits for this row's next try; one push per line (number) a day. */
+  private async paymentHeld(input: FailedInput & { next: string | null }): Promise<SendOutcome> {
+    const { row, line, route, now, next } = input;
+    const key = holdKey({ line, route });
+    this.log.error(`WhatsApp refused for payment (131042) on ${key}; held until ${next ?? '?'}`);
+    this.holds?.hold(key, next);
+    await this.alert(row, paymentSubject({ line, route, now }));
+    return 'paused';
   }
 
   /** reminder_failed, keyed per failed try: a row that fails again after the admin's retry pushes again. */

@@ -34,9 +34,11 @@ function queuedNotes(m: MessageView, o: NotesInput): string[] {
   if (m.error_code === 'sending') return [...notes, t.messages.sendingNow];
   if (m.attempts > 0) {
     notes.push(t.messages.attempts.replace('{n}', String(m.attempts)).replace('{max}', String(MAX_SEND_ATTEMPTS)));
-    if (m.error_code) notes.push(t.messages.errorLine.replace('{reason}', errorText(m)));
-    if (m.next_attempt_at) notes.push(at(t.messages.nextAttempt, m.next_attempt_at, o.clock));
   }
+  // A hold (token or payment, wa_payment_hold) has its reason and next try with no try counted.
+  if (m.error_code) notes.push(t.messages.errorLine.replace('{reason}', errorText(m)));
+  const next = m.attempts > 0 || m.error_code ? m.next_attempt_at : null;
+  if (next) notes.push(at(t.messages.nextAttempt, next, o.clock));
   return notes;
 }
 

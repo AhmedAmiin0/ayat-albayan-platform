@@ -67,6 +67,17 @@ export function isWaAuthError(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && AUTH.has(code);
 }
 
+/**
+ * Account-level billing / eligibility (Meta Cloud API error codes): 131042 «Business eligibility
+ * payment issue», no valid payment method on the WABA. Every send fails the same way until the
+ * owner fixes billing in Meta, so the sender holds the row instead of failing it (docs/12 §3.3).
+ */
+const PAYMENT_HOLD = new Set([131042]);
+
+export function isWaPaymentHold(code: number | null | undefined): boolean {
+  return code !== null && code !== undefined && PAYMENT_HOLD.has(code);
+}
+
 /** The fields of a WhatsApp error that say whether the credential was refused. */
 export interface WaAuthInfo {
   code: number | null | undefined;
