@@ -58,6 +58,8 @@ export interface RoomClient {
    */
   connect: (join: RoomCredentials, media: MediaWish) => Promise<void>;
   disconnect: () => void;
+  /** The screen is gone: disconnects, and a pending or later connect rejects (no room left). */
+  close: () => void;
   snapshot: () => RoomSnapshot;
   subscribe: (listener: () => void) => () => void;
   setMic: (on: boolean) => Promise<void>;

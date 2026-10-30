@@ -78,13 +78,26 @@ export function createNativeClient({ lk }: LiveKitNative): RoomClient {
   const room = new lk.Room({ adaptiveStream: true, dynacast: true });
   const store = roomStore(lk, room);
   const local = localControls({ lk }, room, store.emit);
+  // Left before the join finished (back, sign-out while the token or audio was awaited): a
+  // connect never starts, or is undone, so no room keeps the mic and camera behind a closed screen.
+  let closed = false;
+  const ensureOpen = () => {
+    if (closed) throw new Error('room client closed');
+  };
   return {
     async connect(join, media) {
+      ensureOpen();
       await room.connect(join.url, join.token);
+      if (closed) void room.disconnect();
+      ensureOpen();
       await local.start(media);
       store.setStatus('connected');
     },
     disconnect: () => void room.disconnect(),
+    close: () => {
+      closed = true;
+      void room.disconnect();
+    },
     snapshot: store.snapshot,
     subscribe: store.subscribe,
     setMic: local.setMic,

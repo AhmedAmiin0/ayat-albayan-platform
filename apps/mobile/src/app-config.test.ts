@@ -25,8 +25,11 @@ test('the calls and the room: webrtc with the MSA rationales; RECORD_AUDIO is no
     { microphonePermission: t.mobileRoom.native.mic, cameraPermission: t.mobileRoom.native.camera },
   ]);
   expect(app.expo.android.blockedPermissions).not.toContain('android.permission.RECORD_AUDIO');
-  // Voice only: the plugin's «draw over other apps» is not needed.
-  expect(app.expo.android.blockedPermissions).toEqual(['android.permission.SYSTEM_ALERT_WINDOW']);
+  // No «draw over other apps»; no foreground service (LiveKit's is for screen share, off: docs/35).
+  expect(app.expo.android.blockedPermissions).toEqual([
+    'android.permission.SYSTEM_ALERT_WINDOW',
+    'android.permission.FOREGROUND_SERVICE',
+  ]);
 });
 
 test('LiveKit (docs/35): its expo plugin with the communication audio type, no screen-share service', () => {

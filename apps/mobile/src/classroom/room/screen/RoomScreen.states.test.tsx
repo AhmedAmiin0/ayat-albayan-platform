@@ -114,6 +114,20 @@ test('«فتح في المتصفح» on any step: leaves and opens the web class
 test('leaving the screen (back) disconnects the room', async () => {
   await live();
   await screen.unmount();
-  expect(p.client.disconnect).toHaveBeenCalled();
+  expect(p.client.close).toHaveBeenCalled();
   expect(p.audio.stop).toHaveBeenCalled();
+});
+
+test('left while the token was awaited: the client is closed and the audio stopped', async () => {
+  let give = (_c: typeof CREDS) => undefined as void;
+  fetchJoin.mockImplementationOnce(() => new Promise((r) => (give = r)));
+  p.client.connect.mockRejectedValueOnce(new Error('room client closed'));
+  await render(
+    withInsets(<RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />),
+  );
+  await press(R.preview.join);
+  await screen.unmount();
+  expect(p.client.close).toHaveBeenCalled();
+  await act(async () => give(CREDS));
+  expect(p.audio.stop).toHaveBeenCalledTimes(2);
 });

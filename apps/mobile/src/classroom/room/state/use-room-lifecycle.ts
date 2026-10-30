@@ -32,7 +32,7 @@ export function useRoomLifecycle({ client, platform, dispatch, onChecked }: Life
   );
   useEffect(
     () => () => {
-      client.disconnect();
+      client.close();
       void platform.audio.stop();
     },
     [client, platform],
