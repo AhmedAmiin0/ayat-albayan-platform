@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus } from '../../enums/index.js';
-import { RIYADH_TZ } from '../../format/index.js';
+import { RIYADH_TZ } from '../../core/format/index.js';
 import { zonedInstant } from '../../lessons/index.js';
 import { monthParam } from '../../money/index.js';
-import { riyadhToday } from '../../time-zone/index.js';
+import { riyadhToday } from '../../time/index.js';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
 // «سجل الحضور» (owner 2026-10-28): every past lesson of one student in a Riyadh month, as a table.

@@ -8,7 +8,7 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
-import { optionalText } from '../schemas/common.js';
+import { optionalText } from '../core/schemas/common.js';
 import { instant, localDate } from '../schemas/lessons/scheduling.js';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:

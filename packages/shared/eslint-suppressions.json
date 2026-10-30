@@ -123,17 +123,17 @@
       "count": 18
     }
   },
-  "src/async/result.test.ts": {
+  "src/core/async/result.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/async/result.ts": {
+  "src/core/async/result.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     }
   },
-  "src/async/retry.ts": {
+  "src/core/async/retry.ts": {
     "max-len": {
       "count": 2
     }
@@ -248,27 +248,27 @@
       "count": 5
     }
   },
-  "src/format/arabic.ts": {
+  "src/core/format/arabic.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/format/clock-pref.ts": {
+  "src/core/format/clock-pref.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/format/clock-range.test.ts": {
+  "src/core/format/clock-range.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/format/clock.ts": {
+  "src/core/format/clock.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/format/highlight-diff.ts": {
+  "src/core/format/highlight-diff.ts": {
     "@typescript-eslint/no-misused-spread": {
       "count": 3
     },
@@ -279,17 +279,17 @@
       "count": 1
     }
   },
-  "src/format/phone.reject.test.ts": {
+  "src/core/format/phone.reject.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/format/phone.ts": {
+  "src/core/format/phone.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/format/running-head.ts": {
+  "src/core/format/running-head.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -297,7 +297,7 @@
       "count": 2
     }
   },
-  "src/format/text-dir.ts": {
+  "src/core/format/text-dir.ts": {
     "max-len": {
       "count": 5
     }
@@ -1547,7 +1547,7 @@
       "count": 1
     }
   },
-  "src/schemas/common.ts": {
+  "src/core/schemas/common.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1615,7 +1615,7 @@
       "count": 2
     }
   },
-  "src/schemas/list-sort.ts": {
+  "src/core/schemas/list-sort.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -2005,7 +2005,7 @@
       "count": 8
     }
   },
-  "src/time-zone/riyadh-day.ts": {
+  "src/time/riyadh-day.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
@@ -2016,7 +2016,7 @@
       "count": 1
     }
   },
-  "src/time-zone/week.ts": {
+  "src/time/week.ts": {
     "max-len": {
       "count": 1
     }

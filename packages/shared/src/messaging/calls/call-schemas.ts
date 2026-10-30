@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { phoneE164 } from '../../schemas/common.js';
+import { phoneE164 } from '../../core/schemas/common.js';
 
 // Request bodies of the calls routes (docs/28 §4). camelCase, like every other request.
 

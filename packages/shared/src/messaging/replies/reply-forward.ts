@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { E164_RE } from '../../format/phone.js';
+import { E164_RE } from '../../core/format/phone.js';
 import { baseMime } from '../../schemas/chat-media.js';
 import type { MessageDirection } from '../../enums/messaging.js';
 

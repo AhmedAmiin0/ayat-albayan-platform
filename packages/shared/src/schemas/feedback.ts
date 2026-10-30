@@ -8,8 +8,8 @@ import {
   type FeedbackRecommend,
 } from '../enums/index.js';
 import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating.js';
-import { phoneE164 } from './common.js';
-import { listSortShape } from './list-sort.js';
+import { phoneE164 } from '../core/schemas/index.js';
+import { listSortShape } from '../core/schemas/index.js';
 import type { Attendance, LessonStatus } from '../enums/index.js';
 
 // «رأيك يهمّنا» (docs/13-forms-spec.md form 3). camelCase commands, snake_case responses like the
