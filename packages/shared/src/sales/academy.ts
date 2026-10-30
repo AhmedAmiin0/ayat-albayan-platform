@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '../enums/index.js';
-import type { TeacherStudentCounts } from '../students/student-lists.js';
+import type { TeacherStudentCounts } from '../people/students/student-lists.js';
 import type { SalesSubscriptionView } from './views.js';
 
 // The salesperson's assistant side (owner 2026-10-11, docs/16): the academy's teachers, every student and

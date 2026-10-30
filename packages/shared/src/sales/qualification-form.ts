@@ -1,6 +1,6 @@
 import { GENDERS, type Gender } from '../enums/index.js';
 import { leadQualificationPatchSchema, type LeadQualificationPatch } from '../messaging/schemas.js';
-import { FILLED_BY, GROUP_KINDS, type FilledBy, type GroupKind } from '../schemas/people/leads.js';
+import { FILLED_BY, GROUP_KINDS, type FilledBy, type GroupKind } from '../people/schemas/leads.js';
 
 // R-LEAD-03: the lead's structured qualification form of both apps (docs/27 E5), with the questions the first
 // registration form asked (research-forms 8–9). All optional; a field emptied by the admin is sent as null
