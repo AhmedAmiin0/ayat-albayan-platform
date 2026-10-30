@@ -6,11 +6,10 @@ import {
   type NotificationEntryView,
   type NotificationsOverview,
 } from '@ab/shared';
-import { clockCycle, type Clock } from '@/lib/clock';
-import { locale } from '@/lib/i18n/locale';
+import type { Clock } from '@/lib/clock';
 import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
-import { blockerText } from '../notification-catalogue/catalogue-text';
+import { blockerText } from '@/features/messaging/notification-catalogue/catalogue-text';
 import type { RuleFailure } from './rules-api';
 
 // The words of «الإشعارات» rows: timings as text, channels, approval, reach and save errors.
@@ -21,8 +20,8 @@ const fill = (text: string, values: Record<string, string | number>): string =>
 const field = (timing: unknown, name: string): unknown =>
   timing && typeof timing === 'object' ? (timing as Record<string, unknown>)[name] : undefined;
 
-/** A stored timing in words («قبل الحلقة بـ60 دقيقة»), clocks in the viewer's cycle (now, by default); null without its own timing. */
-export function timingText(key: string, timing: unknown, clock: Clock = { cycle: clockCycle(), locale }): string | null {
+/** A stored timing in words («قبل الحلقة بـ60 دقيقة»), clocks in the viewer's cycle (useClock); null without its own timing. */
+export function timingText(key: string, timing: unknown, clock: Clock): string | null {
   const tm = r().timing;
   if (key === 'lesson_reminder' || key === 'teacher_lesson_reminder') {
     const minutes = field(timing, 'minutes_before');
