@@ -17,7 +17,7 @@ Nothing in this plan runs on the owner's PC. GitHub Actions and cloud routines r
 | lint errors recorded    | 2,031 (`ab/module-boundaries` only)                     | + ≈3,093 new, in the same `eslint-suppressions.json` files |
 | a new violation         | fails only for the rules that are errors today          | fails for every rule in §3                               |
 | warnings                | ignored (`complexity`, `exhaustive-deps` never fail CI) | none left; `eslint . --max-warnings 0`                   |
-| suppression file grows  | passes if someone edits the JSON                        | fails CI (`refactor/guards/lint.json`, §5.1)             |
+| suppression file grows  | passes if someone edits the JSON                        | fails CI on a PR: no total above the base branch's `refactor/guards/lint.json` (§5.1) |
 | `eslint --fix` can clear | n/a                                                     | ≈1.7k of the ≈3.1k (L0 sweep, §6)                       |
 
 ## 2. TypeScript flags
@@ -190,7 +190,7 @@ no-unsafe-enum-comparison, prefer-return-this-type, return-await.
 | `apps/web/package.json`, `pnpm-lock.yaml`                     | `eslint-plugin-jsx-a11y` 6.10.2; lockfile written by a CI job or cloud routine. Its peer range stops at ESLint 9; it loaded and reported under 10.11 in the probe. Add a `peerDependencyRules.allowedVersions` entry if pnpm warns |
 | `crm-body.test.ts:34`, `send-file.ts:30`, `students.mapper.ts:45` | the 2 tsc fixes; delete the unused directive                                           |
 | `*/eslint-suppressions.json` (4 today, 6 new: client-core, migrate, wa-stub, google-stub, scripts, e2e) | `eslint . --suppress-all` per package, run in CI |
-| `refactor/guards/lint.json`, `tools/scripts/ci-checks/lint/lint-gate.mjs` (+ test; own folder: `ci-checks/` is at the 12-file cap), root `guard:lint`, `guards` job | per-rule totals summed over every suppressions file. Fails when a total grows, a rule is missing, or the baseline is stale (then `pnpm guard:lint -- --write`). Same shape as `jscpd-gate` and `knip-gate`. `ab/module-boundaries` (2,031) gets the same check |
+| `refactor/guards/lint.json`, `tools/scripts/ci-checks/lint/lint-gate.mjs` (+ test; own folder: `ci-checks/` is at the 12-file cap), root `guard:lint`, `guards` job | per-rule totals summed over every suppressions file. Fails when the tree's totals and `lint.json` differ (then `pnpm guard:lint -- --write`); on a PR, when a total is above the base branch's `lint.json` (`--base`, read at `git merge-base`, so `--write` can only lower a total); and on an entry whose file is gone (ESLint lints only files that exist, so it never reports those). Same shape as `jscpd-gate` and `knip-gate`. `ab/module-boundaries` (2,031) gets the same check |
 | `.github/workflows/ci.yml`                                    | the lint row gets `NODE_OPTIONS=--max-old-space-size=6144` and `--concurrency=3`           |
 
 PR 1 changes every tsconfig, so its CI runs the full e2e set, including the api boot. In-flight branches rebase onto it
@@ -198,14 +198,18 @@ and fix the violations they add; that is the point of PR 1.
 
 The gate counts per rule across the repo, not per file. ESLint already enforces per-file counts, and a per-file gate
 would fail on every file move. The known gap: a PR can fix one violation and add another of the same rule elsewhere,
-and the totals stay equal. Review catches that.
+and the totals stay equal. Review catches that, and a new inline `eslint-disable` / `oxlint-disable` too: the gate does
+not count them (3 today; an unused one fails lint, `reportUnusedDisableDirectives` and Oxlint's
+`--report-unused-disable-directives-severity=error`). A PR that turns on a rule over existing violations raises a total
+on purpose, so the gate fails it: fix the violations in that PR, or the owner merges it past the red check after reading
+the `lint.json` diff.
 
 ### 5.2 Order
 
 | step | PR                     | contents                                                                                                   | lands when                                   |
 | ---- | ---------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
 | 1    | PR 1                   | §5.1                                                                                                       | CI green                                     |
-| 2    | suppressions follow moves | `move-module` renames the moved files' keys in `eslint-suppressions.json` (a cross-package move moves the entry to the other package's file); `pure-move-check` accepts those hunks; unit tests | before the next docs/31 move PR. Without it, a moved file's suppressed violations come back as new errors and its old keys fail as stale |
+| 2    | suppressions follow moves | `move-module` renames the moved files' keys in `eslint-suppressions.json` (a cross-package move moves the entry to the other package's file); `pure-move-check` accepts those hunks; unit tests | before the next docs/31 move PR. Without it, a moved file's suppressed violations come back as new errors, and `guard:lint` fails on its old keys (their file is gone) |
 | 3    | L0 `--fix` sweep       | one PR per package, api last                                                                               | no docs/31 lane branch open on that package  |
 | 4    | L1 + L2                | inside the docs/31 lanes                                                                                   | with each lane                               |
 | 5    | queued                 | import-cycle guard, `jsx-no-leaked-render` (§7)                                                            | after a probe measures them                  |
@@ -214,7 +218,7 @@ and the totals stay equal. Review catches that.
 
 ```
 eslint . --fix                    # L0 only
-eslint . --prune-suppressions     # drop the entries this PR fixed; ESLint fails on stale entries anyway
+eslint . --prune-suppressions     # drop the entries this PR fixed or whose file it deleted; both fail CI anyway
 pnpm guard:lint -- --write        # lower refactor/guards/lint.json; the gate fails if this is skipped
 ```
 

@@ -2,11 +2,14 @@
 // eslint-suppressions.json (`eslint . --suppress-all`); refactor/guards/lint.json holds their per-rule totals.
 // Fails when a total grew or a rule is new (a count raised by hand), and when one shrank without the
 // baseline (then `pnpm guard:lint -- --write`), so a fixed violation cannot come back unnoticed.
-// Per rule over the whole repo, not per file: ESLint itself enforces the per-file counts. Also fails when the
-// root .oxlintrc.json (the first lint pass, no bulk suppressions) runs a rule that has suppressed violations.
-// Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write]
+// Per rule over the whole repo, not per file: ESLint itself enforces the per-file counts. On a PR, CI also passes
+// the base branch's lint.json (--base): no total may rise above it, so re-running `eslint --suppress-all` and
+// `--write` cannot raise both files and pass. Also fails on an entry whose file is gone (ESLint lints only files that
+// exist, so it never reports those), and when the root .oxlintrc.json (the first lint pass, no bulk suppressions)
+// runs a rule that has suppressed violations.
+// Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write] [--base <the base branch's lint.json>]
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const FILES = ['apps/*', 'packages/*', 'tools/*', 'e2e'].map((dir) => `${dir}/eslint-suppressions.json`);
@@ -30,6 +33,20 @@ export function differences(now, baseline) {
   });
 }
 
+/** On a PR: one line per rule whose total is above the base branch's (a rule the base lacks counts from 0). */
+export function aboveBase(now, base) {
+  return Object.keys(now)
+    .filter((rule) => now[rule] > (base[rule] ?? 0))
+    .map((rule) => `above the base branch: ${rule} ${base[rule] ?? 0} -> ${now[rule]} (fix the new violations)`);
+}
+
+/** Entries of the suppressions file in package folder `dir` whose file is gone (deleted or moved). */
+export function gone(dir, byFile, exists) {
+  return Object.keys(byFile)
+    .filter((key) => !exists(`${dir}/${key}`))
+    .map((key) => `gone: ${dir}/${key} (eslint . --prune-suppressions)`);
+}
+
 const bare = (rule) => rule.replace(/^(eslint|typescript|@typescript-eslint)\//, '');
 
 /**
@@ -49,13 +66,21 @@ const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 
 function main(args) {
   const root = fileURLToPath(new URL('../../../..', import.meta.url));
+  const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
   const paths = globSync(FILES, { cwd: root }).sort();
-  const now = totals(paths.map((p) => JSON.parse(readFileSync(join(root, p), 'utf8'))));
+  const files = paths.map((p) => read(join(root, p)));
+  const now = totals(files);
   const file = join(root, 'refactor', 'guards', 'lint.json');
   if (args.includes('--write')) writeFileSync(file, `${JSON.stringify(now, null, 2)}\n`);
-  const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
-  const oxlintrc = JSON.parse(readFileSync(join(root, '.oxlintrc.json'), 'utf8'));
-  const diff = [...differences(now, baseline), ...oxlintSuppressed(oxlintrc, now)];
+  const baseline = existsSync(file) ? read(file) : {};
+  const at = args.indexOf('--base');
+  const exists = (path) => existsSync(join(root, path));
+  const diff = [
+    ...differences(now, baseline),
+    ...(at === -1 ? [] : aboveBase(now, read(args[at + 1]))),
+    ...paths.flatMap((p, i) => gone(dirname(p), files[i], exists)),
+    ...oxlintSuppressed(read(join(root, '.oxlintrc.json')), now),
+  ];
   console.log(`lint: ${sum(now)} suppressed in ${paths.length} packages, baseline ${sum(baseline)}`);
   for (const line of diff) console.log(`  ${line}`);
   if (diff.length > 0) process.exit(1);

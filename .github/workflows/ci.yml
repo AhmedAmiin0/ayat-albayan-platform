@@ -158,9 +158,10 @@ jobs:
 
   # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
   # more clones, duplicated lines or cross-app clones), knip (no new unused file, export, type or
-  # dependency) and lint (docs/31a: per-rule totals of every eslint-suppressions.json; the lint job fails on a
-  # new violation, this gate on a count raised by hand or a stale baseline). The e2e area guard: every
-  # e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
+  # dependency) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a
+  # new violation, this gate on a count raised by hand, a stale baseline or an entry whose file is gone; on a PR no
+  # total may rise above the base branch's lint.json either, so rewriting both files cannot pass). The e2e area
+  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -168,6 +169,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -176,7 +179,18 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm guard:dup
       - run: pnpm guard:knip
-      - run: pnpm guard:lint
+      # A base without lint.json (before the ratchet) has nothing to compare with; a git error fails the step.
+      - name: pnpm guard:lint (on a PR, also against the base branch)
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then pnpm guard:lint; exit; fi
+          base=$(git merge-base "origin/$BASE_REF" HEAD)
+          if ! git cat-file -e "$base:refactor/guards/lint.json" 2>/dev/null; then
+            echo "::notice::no lint.json on $BASE_REF: in-tree check only"; pnpm guard:lint; exit
+          fi
+          git show "$base:refactor/guards/lint.json" > "$RUNNER_TEMP/lint-base.json"
+          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change

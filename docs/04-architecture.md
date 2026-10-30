@@ -182,7 +182,8 @@ code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. Ty
 Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
 violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
 them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is
-`// oxlint-disable-next-line <rule>` (ESLint would report an `eslint-disable` for it as unused). `typecheck` runs
+`// oxlint-disable-next-line <rule>` (ESLint would report an `eslint-disable` for it as unused); an unused
+Oxlint directive fails too (`--report-unused-disable-directives-severity=error`). `typecheck` runs
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
@@ -194,7 +195,7 @@ Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseli
 | Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split) |
 | Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside) | `refactor/guards/jscpd.json` | `pnpm guard:dup` (`-- --write` after a dedup PR) |
 | Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` | `pnpm guard:knip` (`-- --write` after a clean-up) |
-| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package (a total that grew, a new rule or a stale baseline fails) | `refactor/guards/lint.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write` (docs/31a §5.3) |
+| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package (a total that grew, a new rule, a stale baseline or an entry whose file is gone fails; on a PR also a total above the base branch's `lint.json`) | `refactor/guards/lint.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write` (docs/31a §5.3) |
 
 Code used by two apps goes to `packages/shared` (pure TS) or `packages/client-core` (web + mobile), never a copy.
 
