@@ -13,7 +13,11 @@ node tools/scripts/ci-checks/move-module.ts refactor/moves/<id>.json   # apply o
 node tools/scripts/ci-checks/move-module.ts --replay                   # an open feature branch follows every committed move
 node tools/scripts/ci-checks/pure-move-check.mjs origin/develop        # only renames, module paths, barrels, path config
 node tools/scripts/ci-checks/folder-cap.mjs [--strict] [--write <app>] # report crowded folders (strict in Wave F)
+pnpm imports:absolute -- <workspace|paths…> [--write]                  # `../` → `@/` in api/web/mobile (dry run without --write)
 ```
+
+Every move PR writes `@/` imports in the app files it creates or edits (docs/32 R12): move-module.ts already does for the
+paths it rewrites; run `imports:absolute` on the rest, then `pnpm lint:prune` and `pnpm guard:lint -- --write`.
 
 - `guards/` — baselines that may only shrink: `jscpd.json` (`pnpm guard:dup`), `knip.json` (`pnpm guard:knip`) and
   `lint.json` (`pnpm guard:lint`: per-rule totals of every package's `eslint-suppressions.json`, docs/31a §5). After a

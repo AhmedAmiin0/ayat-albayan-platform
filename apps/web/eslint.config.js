@@ -1,4 +1,4 @@
-import { boundaries, forbiddenImports, reactConfig, reactRestrictions } from '@ab/config/eslint';
+import { boundaries, forbiddenImports, noParentImports, reactConfig, reactRestrictions } from '@ab/config/eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 const INBOX = 'src/features/messaging/inbox';
@@ -6,6 +6,9 @@ const INBOX = 'src/features/messaging/inbox';
 export default reactConfig(
   import.meta.dirname,
   boundaries({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}'], module: 'src/features/[^/]+/[^/]+', alias: { '@/': 'src/' } }),
+  // Owner 2026-10-30, docs/32 R12: `@/…`, never `../` (existing ones: eslint-suppressions.json; the
+  // sweep is `pnpm imports:absolute -- web --write`).
+  noParentImports({ root: import.meta.dirname, files: ['src/**/*.{ts,tsx}'] }),
   {
     ...jsxA11y.flatConfigs.recommended,
     files: ['src/**/*.tsx'],

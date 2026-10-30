@@ -30,8 +30,9 @@ test('moves files with their tests and snapshots and rewrites every importer', (
   const root = repo();
   assert.deepEqual(runMap(root, 'refactor/moves/p.json'), { id: 't', moved: 4, rewritten: 6 });
   const s = snapshot(root);
-  assert.equal(s['apps/web/src/core/http/api.ts'], "import { z } from '../../lib/z';\nexport const api = z;\n");
-  assert.equal(s['apps/web/src/core/http/api.test.ts'], "import { api } from './api';\nvi.mock('../../lib/z');\n");
+  // web has the `@/*` alias: a rewritten path never climbs (docs/32 R12); api here has none.
+  assert.equal(s['apps/web/src/core/http/api.ts'], "import { z } from '@/lib/z';\nexport const api = z;\n");
+  assert.equal(s['apps/web/src/core/http/api.test.ts'], "import { api } from './api';\nvi.mock('@/lib/z');\n");
   assert.ok(s['apps/web/src/core/http/__snapshots__/api.test.ts.snap']);
   assert.equal(s['apps/web/src/features/a.tsx'], "import { api } from '@/core/http/api';\nimport { z } from '../lib/z';\nvi.mock('@/core/http/api');\n");
   assert.equal(s['apps/api/src/m/x.ts'], "import { env, type Env } from '../config/env/env';\nconst l = () => import('../config/env/env');\n");

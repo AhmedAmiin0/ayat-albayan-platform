@@ -1,4 +1,4 @@
-import { boundaries, config, forbiddenImports } from '@ab/config/eslint';
+import { boundaries, config, forbiddenImports, noParentImports } from '@ab/config/eslint';
 
 export default config(
   import.meta.dirname,
@@ -6,7 +6,10 @@ export default config(
   // then name Object and Nest would fail at boot, not at typecheck (docs/31a §3.3).
   { languageOptions: { parserOptions: { emitDecoratorMetadata: true, experimentalDecorators: true } } },
   // docs/27 §1 rule 6: another module only through its index.ts (existing deep imports: eslint-suppressions.json).
-  boundaries({ root: import.meta.dirname, files: ['src/**/*.ts'], module: 'src/modules/[^/]+/[^/]+' }),
+  boundaries({ root: import.meta.dirname, files: ['src/**/*.ts'], module: 'src/modules/[^/]+/[^/]+', alias: { '@/': 'src/' } }),
+  // Owner 2026-10-30, docs/32 R12: `@/…`, never `../` (existing ones: eslint-suppressions.json; the
+  // sweep is `pnpm imports:absolute -- api --write`).
+  noParentImports({ root: import.meta.dirname, files: ['src/**/*.ts'] }),
   // Modules read settings through their own typed reader (<module>.settings.ts), never the
   // store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
   {

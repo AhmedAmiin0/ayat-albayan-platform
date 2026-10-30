@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { asciiDigits } from '../../core/format/index.js';
 import type { SettingConfirm, SettingGroup } from '../groups.js';
 import type { SettingOwner } from '../ownership.js';
 import type { SettingDef } from '../defs.js';
@@ -100,9 +101,12 @@ export function needsTypedConfirm(confirm: SettingConfirm | null, value: unknown
   return !(typeof prev === 'number' && value >= prev);
 }
 
-/** The typed confirmation matches: the number of days, trimmed (Arabic-Indic digits accepted). */
+/**
+ * The typed confirmation matches: the number of days, trimmed (Arabic-Indic and Persian digits
+ * accepted).
+ */
 export function typedConfirmMatches(value: unknown, text: string | undefined): boolean {
   if (typeof text !== 'string') return false;
-  const ascii = text.trim().replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+  const ascii = asciiDigits(text.trim());
   return ascii === String(value);
 }
