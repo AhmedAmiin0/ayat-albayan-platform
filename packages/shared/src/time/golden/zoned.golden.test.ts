@@ -8,7 +8,7 @@ import * as legacyWeek from '../week.js';
 import { addCalendarDays, addDaysIn, startOfDayIn, weekStartOfDate, weekdayOfDate } from '../calendar.js';
 import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
 import { clockIn } from '../format.js';
-import { GOLDEN_TIMES, GOLDEN_ZONES, goldenDates, goldenInstants } from './sweep.js';
+import { GOLDEN_TIMES, GOLDEN_ZONES, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
 // Old (Intl / ms math) and new (date-fns facade) side by side over the full sweep: every
 // instant must be byte-identical before the old code goes (docs/34 §6).
