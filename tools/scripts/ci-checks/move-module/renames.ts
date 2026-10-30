@@ -1,4 +1,4 @@
-import { Node, type Project } from 'ts-morph';
+import { Node, type Project, type SourceFile } from 'ts-morph';
 import type { RewriteInput } from './rewrite.ts';
 import { applyEdits } from './specifiers.ts';
 
@@ -25,19 +25,37 @@ export function mentions(table: Map<string, string>, text: string): boolean {
   return new RegExp(`(?<![\\w$])(?:${[...table.keys()].map(escape).join('|')})(?![\\w$])`).test(text);
 }
 
+/** Workspace specifiers a renamed name may come from; any other bare package keeps its own names. */
+const OWN = /^(\.|@\/|@ab\/)/;
+
+/** Refuses a file whose rename would collide (the new name is there already) or reach a package import. */
+function guard(sf: SourceFile, table: Map<string, string>, ids: Node[]): void {
+  const file = sf.getFilePath();
+  const names = new Set(ids.map((n) => n.getText()));
+  const clash = [...table].find(([from, to]) => names.has(from) && names.has(to));
+  if (clash !== undefined) throw new Error(`${file}: ${clash[1]} already exists, rename refused`);
+  for (const decl of sf.getImportDeclarations()) {
+    if (OWN.test(decl.getModuleSpecifierValue())) continue;
+    const hit = decl.getNamedImports().map((n) => n.getName()).find((n) => table.has(n));
+    if (hit !== undefined) throw new Error(`${file}: ${hit} comes from ${decl.getModuleSpecifierValue()}, rename refused`);
+  }
+}
+
 /**
  * Renames every identifier named in the table: the declaration, imports and re-exports (barrels), Nest
- * `providers`/`exports` arrays, mock factory keys and every use. Strings and comments stay as they are.
+ * `providers`/`exports` arrays, mock factory keys and every use, matched by name (the table holds unique class
+ * names). Strings and comments stay as they are. A file that already has the new name, or imports an old one
+ * from a non-workspace package, stops the run.
  */
 export function renameIdentifiers(project: Project, table: Map<string, string>, input: RewriteInput): string {
   const { file, text } = input;
   if (!mentions(table, text)) return text;
   const sf = project.createSourceFile(`/virtual/${file}`, text, { overwrite: true });
-  const edits: { start: number; end: number; value: string }[] = [];
-  sf.forEachDescendant((node) => {
-    if (!Node.isIdentifier(node)) return;
+  const ids = sf.getDescendants().filter((n) => Node.isIdentifier(n));
+  guard(sf, table, ids);
+  const edits = ids.flatMap((node) => {
     const to = table.get(node.getText());
-    if (to !== undefined) edits.push({ start: node.getStart(), end: node.getEnd(), value: to });
+    return to === undefined ? [] : [{ start: node.getStart(), end: node.getEnd(), value: to }];
   });
   project.removeSourceFile(sf);
   return edits.length === 0 ? text : applyEdits(text, edits);
@@ -51,5 +69,5 @@ export function renameGuardNames(table: Map<string, string>, text: string): stri
     const to = table.get(line.slice(at + 1));
     return to === undefined ? line : `${line.slice(0, at + 1)}${to}`;
   });
-  return `${JSON.stringify(renamed.sort(), null, 2)}\n`;
+  return `${JSON.stringify([...new Set(renamed)].sort(), null, 2)}\n`;
 }

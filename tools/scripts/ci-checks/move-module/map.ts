@@ -17,7 +17,10 @@ export interface MoveMap {
   moves: MoveEntry[];
   barrels?: BarrelEntry[];
   files?: [string, string][];
-  /** Identifier renames applied across the monorepo with the move (`{ "XQueries": "XRepo" }`, D2). */
+  /**
+   * Identifier renames applied across the monorepo with the move (`{ "XQueries": "XRepo" }`, D2). They stay
+   * active on every replay: an old name a branch adds later is renamed too.
+   */
   renames?: Record<string, string>;
 }
 

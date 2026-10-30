@@ -70,3 +70,18 @@ test('the knip guard keeps its sort after a rename', () => {
   assert.equal(renameGuardNames(renameTable({ Zed: 'Alpha' }), text), `${JSON.stringify(['a.ts exports Alpha', 'b.ts types Row'], null, 2)}\n`);
   assert.equal(renameGuardNames(renameTable({ Row: 'Line' }), text), `${JSON.stringify(['a.ts exports Zed', 'b.ts types Line'], null, 2)}\n`);
 });
+
+test('refuses a collision with the new name and an old name imported from an outside package', () => {
+  const run = (text: string): void => {
+    const root = makeRepo({ 'apps/api/src/a.ts': text, 'refactor/moves/r.json': map({ moves: [], renames: { Foo: 'Bar' } }) });
+    runMap(root, 'refactor/moves/r.json');
+  };
+  assert.throws(() => run('class Foo {}\nconst Bar = 1;\n'), /Bar already exists/);
+  assert.throws(() => run("import { Foo } from 'ext-lib';\n"), /Foo comes from ext-lib/);
+  assert.doesNotThrow(() => run("import { Foo } from '@ab/shared';\nimport { Foo as F } from './f';\n"));
+});
+
+test('the knip guard drops a line a rename makes duplicate', () => {
+  const text = `${JSON.stringify(['a.ts exports X', 'a.ts exports Y'], null, 2)}\n`;
+  assert.equal(renameGuardNames(renameTable({ X: 'Y' }), text), `${JSON.stringify(['a.ts exports Y'], null, 2)}\n`);
+});
