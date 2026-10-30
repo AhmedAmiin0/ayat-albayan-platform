@@ -4,12 +4,12 @@
       "count": 1
     }
   },
-  "src/assistants/terms-form.test.ts": {
+  "src/people/assistants/terms-form.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/assistants/terms-form.ts": {
+  "src/people/assistants/terms-form.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
@@ -23,32 +23,32 @@
       "count": 6
     }
   },
-  "src/auth/permissions.ts": {
+  "src/core/auth/permissions.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/auth/sign-in.ts": {
+  "src/core/auth/sign-in.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/booking/course-pause.ts": {
+  "src/teaching/booking/course-pause.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "src/booking/invoice.ts": {
+  "src/teaching/booking/invoice.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/booking/picks.ts": {
+  "src/teaching/booking/picks.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/calls/call-actions.ts": {
+  "src/messaging/calls/call-actions.ts": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 2
     },
@@ -59,32 +59,32 @@
       "count": 11
     }
   },
-  "src/calls/call-peer.test.ts": {
+  "src/messaging/calls/call-peer.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/calls/call-peer.ts": {
+  "src/messaging/calls/call-peer.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "src/calls/call-phase.test.ts": {
+  "src/messaging/calls/call-phase.test.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/calls/call-phase.ts": {
+  "src/messaging/calls/call-phase.ts": {
     "max-len": {
       "count": 8
     }
   },
-  "src/calls/call-platform.ts": {
+  "src/messaging/calls/call-platform.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/calls/call-store.ts": {
+  "src/messaging/calls/call-store.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 4
     },
@@ -95,17 +95,17 @@
       "count": 10
     }
   },
-  "src/calls/call-words.ts": {
+  "src/messaging/calls/call-words.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/calls/calls-api.test.ts": {
+  "src/messaging/calls/calls-api.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/calls/calls-api.ts": {
+  "src/messaging/calls/calls-api.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 2
     },
@@ -113,12 +113,12 @@
       "count": 6
     }
   },
-  "src/calls/calls-realtime.ts": {
+  "src/messaging/calls/calls-realtime.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/calls/calls-ui.ts": {
+  "src/messaging/calls/calls-ui.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },
@@ -126,32 +126,32 @@
       "count": 5
     }
   },
-  "src/channels/channel-live.test.ts": {
+  "src/messaging/channels/channel-live.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/channels/channel-live.ts": {
+  "src/messaging/channels/channel-live.ts": {
     "max-len": {
       "count": 10
     }
   },
-  "src/channels/channels.ts": {
+  "src/messaging/channels/channels.ts": {
     "max-len": {
       "count": 10
     }
   },
-  "src/channels/teacher-pick.ts": {
+  "src/messaging/channels/teacher-pick.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/errors/chat-list-errors.ts": {
+  "src/core/errors/chat-list-errors.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/errors/send-error.ts": {
+  "src/core/errors/send-error.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -159,47 +159,47 @@
       "count": 1
     }
   },
-  "src/http/api-client.test.ts": {
+  "src/core/http/api-client.test.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 2
     }
   },
-  "src/http/api-client.ts": {
+  "src/core/http/api-client.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/http/api-error.ts": {
+  "src/core/http/api-error.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/http/client-header.ts": {
+  "src/core/http/client-header.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/http/query-string.ts": {
+  "src/core/http/query-string.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/inbox-live.ts": {
+  "src/messaging/inbox/inbox-live.ts": {
     "max-len": {
       "count": 8
     }
   },
-  "src/inbox/live-connect.test.ts": {
+  "src/messaging/inbox/live-connect.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/live-connect.ts": {
+  "src/messaging/inbox/live-connect.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "src/inbox/live-registry.ts": {
+  "src/messaging/inbox/live-registry.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },
@@ -207,17 +207,17 @@
       "count": 1
     }
   },
-  "src/inbox/live-session.ts": {
+  "src/messaging/inbox/live-session.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/live-store.test.ts": {
+  "src/messaging/inbox/live-store.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/live-store.ts": {
+  "src/messaging/inbox/live-store.ts": {
     "max-len": {
       "count": 2
     },
@@ -225,12 +225,12 @@
       "count": 1
     }
   },
-  "src/inbox/reaction-mutation.test.ts": {
+  "src/messaging/inbox/reaction-mutation.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
-  "src/inbox/reaction-mutation.ts": {
+  "src/messaging/inbox/reaction-mutation.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },
@@ -238,47 +238,47 @@
       "count": 4
     }
   },
-  "src/inbox/reactions.ts": {
+  "src/messaging/inbox/reactions.ts": {
     "max-len": {
       "count": 8
     }
   },
-  "src/inbox/reopen-note.ts": {
+  "src/messaging/inbox/reopen-note.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/template-button.ts": {
+  "src/messaging/inbox/template-button.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/thread-delta.test.ts": {
+  "src/messaging/inbox/thread-delta.test.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "src/inbox/thread-delta.ts": {
+  "src/messaging/inbox/thread-delta.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "src/keys/query-keys.ts": {
+  "src/core/keys/query-keys.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/payments/request-id.ts": {
+  "src/finance/payments/request-id.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/payments/stripe-settings.test.ts": {
+  "src/finance/payments/stripe-settings.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/stripe-settings.ts": {
+  "src/finance/payments/stripe-settings.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -286,7 +286,7 @@
       "count": 7
     }
   },
-  "src/payments/upload-once.ts": {
+  "src/finance/payments/upload-once.ts": {
     "@typescript-eslint/no-unnecessary-type-parameters": {
       "count": 1
     },
@@ -297,32 +297,32 @@
       "count": 2
     }
   },
-  "src/reports/entry-values.ts": {
+  "src/teaching/reports/entry-values.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/reports/errors.ts": {
+  "src/teaching/reports/errors.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/reports/reports.test.ts": {
+  "src/teaching/reports/reports.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
-  "src/reports/v2-lines.test.ts": {
+  "src/teaching/reports/v2-lines.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/reports/v2-text.ts": {
+  "src/teaching/reports/v2-text.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/users/create-form.ts": {
+  "src/people/users/create-form.ts": {
     "complexity": {
       "count": 1
     },
@@ -330,7 +330,7 @@
       "count": 1
     }
   },
-  "src/users/edit-form.ts": {
+  "src/people/users/edit-form.ts": {
     "complexity": {
       "count": 1
     },
@@ -338,17 +338,17 @@
       "count": 1
     }
   },
-  "src/users/errors.ts": {
+  "src/people/users/errors.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     }
   },
-  "src/users/teacher-username.ts": {
+  "src/people/users/teacher-username.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/users/validation.ts": {
+  "src/people/users/validation.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },

@@ -1,17 +1,17 @@
 import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
-import { callErrorText } from '../api/call-error';
-import { callConfigQuery, callPermissionQuery } from '../api/calls-api';
-import { useCallsRealtime } from '../api/use-calls-realtime';
-import { browserRtc, type RtcDeps } from '../rtc/media';
-import { CallOverlay } from '../screen/CallOverlay';
+import { callErrorText } from '@/features/messaging/inbox/calls/api/call-error';
+import { callConfigQuery, callPermissionQuery } from '@/features/messaging/inbox/calls/api/calls-api';
+import { useCallsRealtime } from '@/features/messaging/inbox/calls/api/use-calls-realtime';
+import { browserRtc, type RtcDeps } from '@/features/messaging/inbox/calls/rtc/media';
+import { CallOverlay } from '@/features/messaging/inbox/calls/screen/CallOverlay';
 import { CallsContext } from './call-context';
 import { useCallSession } from './use-call-session';
-import { startRingtone } from '../rtc/ringtone';
+import { startRingtone } from '@/features/messaging/inbox/calls/rtc/ringtone';
 
 /** Plays the family's voice on the provider's <audio> (the device's output). */
 function playOn(el: HTMLAudioElement | null, stream: MediaStream): void {
@@ -35,8 +35,8 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const client = useQueryClient();
   const config = useQuery(callConfigQuery).data;
   const audio = useRef<HTMLAudioElement>(null);
-  const deps = useMemo(() => (rtc === undefined ? browserRtc() : rtc), [rtc]);
-  const play = useCallback((stream: MediaStream) => playOn(audio.current, stream), []);
+  const deps = rtc === undefined ? browserRtc() : rtc;
+  const play = (stream: MediaStream) => playOn(audio.current, stream);
   const s = useCallSession({ config, rtc: deps, play });
   const [ask, setAsk] = useState<PermissionAsk | null>(null);
   const [sent, setSent] = useState(false);
