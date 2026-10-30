@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizePhone } from '../format/index.js';
+import { normalizePhone } from '../core/format/index.js';
 import { PASSWORD_MAX, normalizeStudentCode } from './validation.js';
 
 // Family accounts (docs/30): the public sign-in / forgot-password bodies and the identifier rules

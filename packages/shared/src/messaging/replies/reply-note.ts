@@ -1,7 +1,7 @@
 import type { Locale } from '../../i18n/locale.js';
-import { RIYADH_TZ } from '../../format/running-head.js';
+import { RIYADH_TZ } from '../../core/format/running-head.js';
 import { lessonWhenAt } from '../lesson/booking-confirmation.js';
-import type { ClockCycle } from '../../format/index.js';
+import type { ClockCycle } from '../../core/format/index.js';
 import { quickReplyIntent } from './quick-reply.js';
 import { lessonNotEnded, type ReplyLesson, type ReplyRights } from './reply-lesson.js';
 import type { MessageView } from '../chat/views.js';

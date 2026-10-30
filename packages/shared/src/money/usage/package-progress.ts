@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '../../format/plural.js';
+import { counted, type PluralForm } from '../../core/format/plural.js';
 
 // docs/07 §6: one pure function for the package line on the students hamish, the mobile card, the
 // guardian portal and the PDF footer. Strings come from ar.json `subscriptions.progress` (passed in:

@@ -1,6 +1,6 @@
 // The one display formatter for clock times (clock-pref.ts). Built on h23 parts plus our own
 // ص / م (AM / PM) suffix, so every engine (Hermes included) prints the same; digits stay Western.
-import type { Locale } from '../i18n/index.js';
+import type { Locale } from '../../i18n/index.js';
 import type { ClockCycle } from './clock-pref.js';
 
 export interface ClockOptions {
