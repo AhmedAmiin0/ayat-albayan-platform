@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { endMeeting, newMeetingLink } from './api';
-import { cancelMeeting } from '../invite/invite-api';
-import { inviteError } from '../invite/invite-text';
+import { cancelMeeting } from '@/meetings/invite/invite-api';
+import { inviteError } from '@/meetings/invite/invite-text';
 import { meetingError } from './meeting-text';
 
 export type Asking = 'end' | 'link' | 'cancel';

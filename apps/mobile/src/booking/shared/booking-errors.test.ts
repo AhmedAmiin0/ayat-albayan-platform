@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { bookFailure, isCodedRefusal } from './booking-errors';
-import { SUN_17 } from '../testing/fixtures';
+import { SUN_17 } from '@/booking/testing/fixtures';
 
 const END = '2026-10-04T14:45:00.000Z';
 

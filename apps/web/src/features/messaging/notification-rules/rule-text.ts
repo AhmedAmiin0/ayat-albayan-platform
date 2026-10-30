@@ -9,7 +9,7 @@ import {
 import type { Clock } from '@/lib/clock';
 import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
-import { blockerText } from '../notification-catalogue/catalogue-text';
+import { blockerText } from '@/features/messaging/notification-catalogue/catalogue-text';
 import type { RuleFailure } from './rules-api';
 
 // The words of «الإشعارات» rows: timings as text, channels, approval, reach and save errors.

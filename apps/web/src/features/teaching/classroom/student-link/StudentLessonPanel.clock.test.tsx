@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { setClockPref } from '@/lib/clock';
 import { ApiError } from '@/lib/http/api';
-import { opensAtText } from '../room/livekit/window-hint';
+import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
 import { StudentLessonPanel } from './StudentLessonPanel';
 
 const OPENS = '2026-10-03T15:45:00.000Z';

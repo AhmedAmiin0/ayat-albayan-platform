@@ -9,14 +9,14 @@ import { useClockCycle } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { courseRequest } from '../lib/course-body';
-import { useBookCourse } from '../hooks/course-queries';
+import { courseRequest } from '@/sales-course/lib/course-body';
+import { useBookCourse } from '@/sales-course/hooks/course-queries';
 import { CourseConfirm } from './CourseConfirm';
 import { CourseDone } from './CourseDone';
 import { CourseOpening, type CourseChangeEntry } from './CourseOpening';
 import { CourseStarts } from './CourseStarts';
-import { COURSE_STEPS, firstStep, stepBack, stepNumber, type CourseStep } from '../lib/course-steps';
-import { useKnownTeacher } from '../hooks/use-known-teacher';
+import { COURSE_STEPS, firstStep, stepBack, stepNumber, type CourseStep } from '@/sales-course/lib/course-steps';
+import { useKnownTeacher } from '@/sales-course/hooks/use-known-teacher';
 
 type Teacher = { id: string; name: string };
 

@@ -5,10 +5,10 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { classroomErrorText, opensAtOf } from '../room/livekit/errors';
+import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
 import { isLessonNow, viewerTz, windowStateAt } from './student-link';
-import { RecordedNotice } from '../recordings/RecordedNotice';
-import { opensAtText } from '../room/livekit/window-hint';
+import { RecordedNotice } from '@/features/teaching/classroom/recordings/RecordedNotice';
+import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
 import { useClock } from '@/lib/clock';
 
 interface Props {

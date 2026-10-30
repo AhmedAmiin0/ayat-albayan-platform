@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { setClockPref } from '@/lib/clock';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { opensAtText } from '../room/livekit/window-hint';
+import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
 import { GuestJoinPage } from './GuestJoinPage';
 import { StaffClassroomPage } from './StaffClassroomPage';
 

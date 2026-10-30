@@ -6,11 +6,11 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { useClock } from '@/lib/clock';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { CLASSROOM_KEY, joinRoom } from '../api/api';
-import { ClassroomRoom } from '../room/components/ClassroomRoom';
-import { classroomErrorText, opensAtOf } from '../room/livekit/errors';
-import type { RoomClient } from '../room/components/room-types';
-import { opensAtText } from '../room/livekit/window-hint';
+import { CLASSROOM_KEY, joinRoom } from '@/features/teaching/classroom/api/api';
+import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
+import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
+import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
+import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
 
 /** Who mints the token: the lesson's room by default, an internal meeting's (joinMeeting) otherwise. */
 type Joiner = (id: string) => Promise<RoomJoinResult>;

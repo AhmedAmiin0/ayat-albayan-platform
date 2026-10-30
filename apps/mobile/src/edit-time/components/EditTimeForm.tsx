@@ -6,16 +6,16 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle } from '@/core/lib/clock';
 import { familyTz } from '@/teaching/reschedule/reschedule-body';
 import { Button } from '@/core/ui/primitives/Button';
-import { canSubmit, editBody, lengthOf, type EditState } from '../lib/edit-time-body';
-import { editTimeFailure } from '../lib/edit-time-errors';
-import { lengthLocked, payoutLockOf, type PayoutLock } from '../lib/edit-time-lock';
+import { canSubmit, editBody, lengthOf, type EditState } from '@/edit-time/lib/edit-time-body';
+import { editTimeFailure } from '@/edit-time/lib/edit-time-errors';
+import { lengthLocked, payoutLockOf, type PayoutLock } from '@/edit-time/lib/edit-time-lock';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone } from './EditTimeDone';
 import { EditTimeFields } from './EditTimeFields';
 import { EditTimeHeader } from './EditTimeHeader';
 import { PayoutLockNotice } from './PayoutLockNotice';
-import { useEditTime } from '../lib/queries';
-import { editMode, type EditableLesson } from '../lib/types';
+import { useEditTime } from '@/edit-time/lib/queries';
+import { editMode, type EditableLesson } from '@/edit-time/lib/types';
 
 export interface EditTimeFormProps {
   lesson: EditableLesson;

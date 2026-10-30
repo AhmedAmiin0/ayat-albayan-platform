@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '../../notification-catalogue/catalogue-api';
-import { draftOf, draftResult, isDirty, type DraftResult, type RuleDraft } from '../rule-draft';
-import { numberName, useRules } from '../rules-context';
-import { failureText } from '../rule-text';
-import { patchRule, ruleFailure, type RuleFailure } from '../rules-api';
+import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
+import { draftOf, draftResult, isDirty, type DraftResult, type RuleDraft } from '@/features/messaging/notification-rules/rule-draft';
+import { numberName, useRules } from '@/features/messaging/notification-rules/rules-context';
+import { failureText } from '@/features/messaging/notification-rules/rule-text';
+import { patchRule, ruleFailure, type RuleFailure } from '@/features/messaging/notification-rules/rules-api';
 
 export interface SwitchInput {
   on: boolean;

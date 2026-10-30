@@ -13,10 +13,10 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { CourseChangeFlow } from '../change/CourseChangeFlow';
-import { CurrentCourse } from '../change/CurrentCourse';
-import { CourseWizard } from '../components/CourseWizard';
-import { useCourseView, type CourseViewState } from '../hooks/use-course-view';
+import { CourseChangeFlow } from '@/sales-course/change/CourseChangeFlow';
+import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
+import { CourseWizard } from '@/sales-course/components/CourseWizard';
+import { useCourseView, type CourseViewState } from '@/sales-course/hooks/use-course-view';
 
 /** The student; the chat's number and the new package, when «اشتراك جديد» goes on to its transfer. */
 type Params = { studentId?: string; phone?: string; subscriptionId?: string };

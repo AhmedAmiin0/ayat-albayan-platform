@@ -10,12 +10,12 @@ import { Input } from '@/components/ui/form/input';
 import { Logo } from '@/components/ui/display/mark';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
-import { joinAsGuest } from '../api/api';
-import { ClassroomRoom } from '../room/components/ClassroomRoom';
-import { classroomErrorText, opensAtOf } from '../room/livekit/errors';
-import { RecordedNotice } from '../recordings/RecordedNotice';
-import type { RoomClient } from '../room/components/room-types';
-import { opensAtText } from '../room/livekit/window-hint';
+import { joinAsGuest } from '@/features/teaching/classroom/api/api';
+import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
+import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
+import { RecordedNotice } from '@/features/teaching/classroom/recordings/RecordedNotice';
+import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
+import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
 
 /** A 403 with opens_at reads «بتفتح الساعة …»; every other code has its own line. */
 function problemText(error: unknown, cycle: ClockCycle): string {
