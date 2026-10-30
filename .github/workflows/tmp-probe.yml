@@ -1,5 +1,5 @@
-# TEMPORARY (removed before the PR is ready): writes pnpm-lock.yaml for the new dependencies and compares
-# tsc with tsgo per package, Oxlint on the repo, the guards and ESLint. Nothing runs on the owner's PC.
+# TEMPORARY (removed before the PR is ready). Run 1 (40987960781) wrote pnpm-lock.yaml and compared tsc with
+# tsgo per package; this run checks the committed lockfile, Oxlint, planted errors, the guards and ESLint.
 name: tmp-probe
 on:
   push:
@@ -18,46 +18,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: pnpm install --no-frozen-lockfile
-      - uses: actions/upload-artifact@v4
-        with:
-          name: lockfile
-          path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
       - name: Oxlint
         run: |
           set +e
           time pnpm lint:ox; echo "oxlint exit $?"
-          pnpm -s lint:ox --format json > "$RUNNER_TEMP/oxlint.json"
           true
       - name: Build what typecheck reads
         run: pnpm turbo build --filter=@ab/shared --filter=@ab/client-core && pnpm --filter web exec tsr generate
-      - name: tsc vs tsgo
+      # The same errors from both compilers, flags included (strict, noImplicitReturns, noUncheckedIndexedAccess,
+      # erasableSyntaxOnly, verbatimModuleSyntax, decorators).
+      - name: tsc vs tsgo on planted errors
         run: |
           set +e
-          out="$RUNNER_TEMP/tsgo"; mkdir -p "$out"; sum="$out/summary.md"
-          echo "| package | tsc ms | tsc exit | tsc errors | tsgo ms | tsgo exit | tsgo errors | files tsc | files tsgo | files only in one |" > "$sum"
-          echo "|---|---|---|---|---|---|---|---|---|---|" >> "$sum"
-          timed() { local s; s=$(date +%s%N); "$@"; echo $(( ($(date +%s%N) - s) / 1000000 )); }
-          for spec in apps/api apps/mobile apps/web packages/client-core packages/db packages/shared \
-            tools/google-stub tools/migrate tools/wa-stub "tools/scripts:-p tsconfig.json" e2e; do
-            dir=${spec%%:*}; args="--noEmit"; [ "$spec" != "$dir" ] && args=${spec#*:}
-            n=$(echo "$dir" | tr / _)
-            (cd "$dir" && pnpm exec tsc $args --listFilesOnly) | sort > "$out/$n.files.tsc"
-            (cd "$dir" && pnpm exec tsgo $args --listFilesOnly) | sort > "$out/$n.files.tsgo"
-            only=$(comm -3 "$out/$n.files.tsc" "$out/$n.files.tsgo" | wc -l)
-            ms1=$(timed sh -c "cd $dir && pnpm exec tsc $args > $out/$n.tsc.txt 2>&1; echo \$? > $out/$n.tsc.rc" | tail -1)
-            ms2=$(timed sh -c "cd $dir && pnpm exec tsgo $args > $out/$n.tsgo.txt 2>&1; echo \$? > $out/$n.tsgo.rc" | tail -1)
-            echo "| $dir | $ms1 | $(cat $out/$n.tsc.rc) | $(grep -c 'error TS' $out/$n.tsc.txt) | $ms2 | $(cat $out/$n.tsgo.rc) | $(grep -c 'error TS' $out/$n.tsgo.txt) | $(wc -l < $out/$n.files.tsc) | $(wc -l < $out/$n.files.tsgo) | $only |" >> "$sum"
+          printf '%s\n' "export const n: number = 'x';" "export function f(a: number) { if (a) return 1; }" \
+            "import { Injectable } from '@nestjs/common';" "@Injectable() export class P { constructor(private readonly n: number) {} }" > apps/api/src/zz-probe.ts
+          printf '%s\n' "export enum E { A }" "const xs: number[] = [];" "export const y: number = xs[0];" > apps/mobile/src/zz-probe.ts
+          printf '%s\n' "import { ReactNode } from 'react';" "export type R = ReactNode;" "export const z: string = 1;" > apps/web/src/zz-probe.ts
+          for d in apps/api apps/mobile apps/web; do
+            a=$(cd $d && pnpm exec tsc --noEmit 2>&1 | grep -o -E 'zz-probe.ts\([0-9]+,[0-9]+\): error TS[0-9]+' | sort | tr '\n' ' ')
+            b=$(cd $d && pnpm exec tsgo --noEmit 2>&1 | grep -o -E 'zz-probe.ts[:(][0-9]+[:,][0-9]+\)?: error TS[0-9]+' | sed -E 's/zz-probe.ts:([0-9]+):([0-9]+)/zz-probe.ts(\1,\2)/' | sort | tr '\n' ' ')
+            echo "$d tsc : $a" | tee -a "$GITHUB_STEP_SUMMARY"; echo "$d tsgo: $b" | tee -a "$GITHUB_STEP_SUMMARY"
+            [ "$a" = "$b" ] && echo "$d: SAME" | tee -a "$GITHUB_STEP_SUMMARY" || echo "$d: DIFFERENT" | tee -a "$GITHUB_STEP_SUMMARY"
+            (cd $d && pnpm exec tsgo --noEmit 2>&1 | grep zz-probe | head -8)
           done
-          cat "$sum" | tee -a "$GITHUB_STEP_SUMMARY"
-          for f in "$out"/*.tsgo.txt "$out"/*.tsc.txt; do [ -s "$f" ] && { echo "== $f"; head -40 "$f"; }; done
+          rm apps/*/src/zz-probe.ts
           true
-      - uses: actions/upload-artifact@v4
-        with:
-          name: probe-reports
-          path: |
-            ${{ runner.temp }}/oxlint.json
-            ${{ runner.temp }}/tsgo
       - name: Guards
         run: |
           set +e

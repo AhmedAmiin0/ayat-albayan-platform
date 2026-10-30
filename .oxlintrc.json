@@ -35,7 +35,6 @@
     "no-unassigned-vars": "error",
     "no-unexpected-multiline": "error",
     "no-unsafe-finally": "error",
-    "no-unsafe-optional-chaining": "error",
     "no-unused-labels": "error",
     "no-unused-private-class-members": "error",
     "no-unused-vars": [
