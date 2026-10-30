@@ -50,17 +50,19 @@ test('lessons outside the week are left out', () => {
 
 test('the teacher clock shows only when it reads differently from Riyadh', () => {
   const winter = at('w', '2026-11-04T14:00:00.000Z'); // 17:00 Riyadh, 16:00 Cairo
-  expect(teacherClock(winter, '24')).toBe(t.booking.teacherClock.replace('{time}', '16:00').replace('{city}', 'القاهرة'));
+  const cairo = t.booking.teacherClock.replace('{time}', '16:00').replace('{city}', 'القاهرة');
+  expect(teacherClock(winter, '24', 'Asia/Riyadh')).toBe(cairo);
   const summer = at('s', '2026-10-01T14:00:00.000Z'); // Cairo on summer time: 17:00 both
-  expect(teacherClock(summer, '24')).toBeNull();
+  expect(teacherClock(summer, '24', 'Asia/Riyadh')).toBeNull();
   const riyadh = { ...winter, teacher: { ...winter.teacher, tz: 'Asia/Riyadh' } };
-  expect(teacherClock(riyadh, '24')).toBeNull();
+  expect(teacherClock(riyadh, '24', 'Asia/Riyadh')).toBeNull();
 });
 
 test('past midnight the teacher clock names the teacher’s own day (verifier: Sat 00:30 Riyadh = Fri 23:30 Cairo)', () => {
   const late = at('late', '2026-10-30T21:30:00.000Z');
   const friday = `${t.enums.weekday['5']} 23:30`;
-  expect(teacherClock(late, '24')).toBe(t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة'));
+  const line = t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة');
+  expect(teacherClock(late, '24', 'Asia/Riyadh')).toBe(line);
 });
 
 /** `range` is «HH:MM-HH:MM», Cairo wall clock. */

@@ -1,7 +1,7 @@
 import type { LessonView, SlotView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { freeSlotDays, slotLegend, whenText } from '@/booking/shared/slots';
+import { freeSlotDays, whenText } from '@/booking/shared/slots';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,7 +13,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { slotWindow, useRescheduleSlots } from './queries';
 import { SlotButton } from './SlotButton';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /** What the picker reads of a lesson: the admin's LessonView or sales' schedule lesson. */
 type SlotLesson = Pick<LessonView, 'id' | 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
@@ -53,6 +53,7 @@ export function SlotPicker({
   const cycle = useClockCycle();
   const { color } = useTheme();
   const [now] = useState(() => new Date());
+  // academy day (docs/34 b): weeks page as the calendar's; each slot reads in the viewer's zone.
   const thisWeek = weekStart(riyadhToday(now));
   const [week, setWeek] = useState(() => {
     const own = weekStart(riyadhToday(new Date(lesson.starts_at)));
@@ -109,6 +110,7 @@ type WeekSlotsProps = Pick<SlotPickerProps, 'tz' | 'value' | 'onPick'> & { slots
 /** The week's days with free starts (pills), then the chosen day's free starts. */
 function WeekSlots({ slots, tz, value, onPick }: WeekSlotsProps) {
   const { color } = useTheme();
+  const viewer = useViewerTz();
   const days = freeSlotDays(slots);
   const [chosen, setChosen] = useState<string | null>(null);
   const day = days.find((d) => d.date === chosen) ?? days[0];
@@ -125,7 +127,7 @@ function WeekSlots({ slots, tz, value, onPick }: WeekSlotsProps) {
         role="radiogroup"
       />
       <FormLabel>{t.booking.freeSlots}</FormLabel>
-      <AppText style={note}>{slotLegend(tz)}</AppText>
+      <AppText style={note}>{zoneNote(viewer)}</AppText>
       <View
         accessibilityRole="radiogroup"
         accessibilityLabel={t.booking.freeSlots}

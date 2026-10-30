@@ -5,7 +5,7 @@ import { slotLines, slotMeta, studentLine, weeklyLine } from './schedule-text';
 const s = t.sales.student.schedule;
 const CAIRO = 'عند الطالب: الأحد · الثلاثاء · الخميس الساعة 19:00 بتوقيت القاهرة';
 
-test('the weekly line: the days السبت → الجمعة at their Riyadh time, 24 h and 12 h', () => {
+test('the weekly line: the days السبت → الجمعة on the viewer clock (Riyadh here), 24 h and 12 h', () => {
   expect(weeklyLine(weeklySlot, '24')).toBe('الأحد · الثلاثاء · الخميس الساعة 20:00');
   expect(weeklyLine(weeklySlot, '12')).toBe('الأحد · الثلاثاء · الخميس الساعة 8:00 م');
   // Saturday first in the academy week, whatever comes next.
@@ -28,11 +28,12 @@ test('the student line reads the STUDENT\'s zone: an imported rule (Riyadh) for 
 
 test.each(['Asia/Riyadh', 'Asia/Kuwait', 'Asia/Qatar', 'Asia/Bahrain'])('%s reads Riyadh\'s days and clock: no student line, no zone label', (tz) => {
   expect(studentLine(weeklySlot, tz, '24')).toBeNull();
-  expect(slotLines(weeklySlot, tz, '24')).toEqual({ riyadh: 'الأحد · الثلاثاء · الخميس الساعة 20:00', student: null });
+  expect(slotLines(weeklySlot, tz, '24')).toEqual({ main: 'الأحد · الثلاثاء · الخميس الساعة 20:00', student: null });
 });
 
-test('with a student line under it, the Riyadh line says «بتوقيت الرياض»', () => {
-  expect(slotLines(weeklySlot, 'Africa/Cairo', '24')).toEqual({ riyadh: `الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.riyadhTime}`, student: CAIRO });
+test('with a student line under it, the viewer line says «بتوقيتك»', () => {
+  const main = `الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.viewerTime}`;
+  expect(slotLines(weeklySlot, 'Africa/Cairo', '24')).toEqual({ main, student: CAIRO });
 });
 
 test('teacher and length; no teacher leaves the length alone', () => {

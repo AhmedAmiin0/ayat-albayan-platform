@@ -2,11 +2,11 @@ import { counted, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { riyadhTime } from '../lib/lesson-text';
+import { lessonClock } from '../lib/lesson-text';
 import { raisedCard } from '@/core/ui/surface/surface';
 import { localDate, visibleLessons } from '../lib/timeline';
 import type { TodayLesson } from '../lib/today-lesson';
@@ -22,9 +22,11 @@ const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24
 export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const tomorrow = new Date(now.getTime() + DAY);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
+  // academy day (docs/34 b): the schedule's `date` param is a Riyadh day.
   const date = localDate(tomorrow, RIYADH_TZ);
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingVertical: 24 }}>
@@ -38,7 +40,7 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
       </AppText>
       {first ? (
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: 24, color: color.ink3, textAlign: 'center', fontVariant: ['tabular-nums'] }}>
-          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', riyadhTime(first.starts_at, cycle))}
+          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', lessonClock(first.starts_at, tz, cycle))}
         </AppText>
       ) : null}
       <Pressable

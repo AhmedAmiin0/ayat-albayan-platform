@@ -15,17 +15,17 @@ export interface SlotButtonProps {
   role?: 'radio' | 'checkbox' | 'button';
 }
 
-/** A free start: big Riyadh time, the student's clock under it; picked = inverse (docs/07 §6). */
+/** A free start: big local time, the student's clock under it; picked = inverse (docs/07 §6). */
 export function SlotButton({ startsAt, tz, selected, onPick, role = 'radio' }: SlotButtonProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();
-  const { riyadh, local } = slotTimes(startsAt, tz, cycle);
+  const { main, local } = slotTimes(startsAt, tz, cycle);
   const ink = selected ? color.onInverse : color.ink;
   return (
     <Pressable
       accessibilityRole={role}
       accessibilityState={role === 'button' ? {} : { checked: selected }}
-      accessibilityLabel={local ? `${riyadh}${t.common.listSeparator}${local}` : riyadh}
+      accessibilityLabel={local ? `${main}${t.common.listSeparator}${local}` : main}
       onPress={() => onPick(startsAt)}
       style={({ pressed }) => ({
         minHeight: shape.control.touch,
@@ -41,7 +41,7 @@ export function SlotButton({ startsAt, tz, selected, onPick, role = 'radio' }: S
       })}
     >
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: ink, fontVariant: ['tabular-nums'] }}>
-        {riyadh}
+        {main}
       </AppText>
       {local ? (
         <AppText

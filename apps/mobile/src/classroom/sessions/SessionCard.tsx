@@ -1,10 +1,10 @@
 import { lessonStatusStyle, teacherName, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
-import { riyadhTime, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
@@ -23,10 +23,11 @@ function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const teacher = teacherName(lesson.teacher, locale);
   const time = t.classroom.admin.time
-    .replace('{from}', riyadhTime(lesson.starts_at, cycle))
-    .replace('{to}', riyadhTime(lesson.ends_at, cycle));
+    .replace('{from}', lessonClock(lesson.starts_at, tz, cycle))
+    .replace('{to}', lessonClock(lesson.ends_at, tz, cycle));
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   return (
     <View

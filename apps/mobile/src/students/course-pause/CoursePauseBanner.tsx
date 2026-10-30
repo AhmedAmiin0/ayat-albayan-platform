@@ -31,6 +31,7 @@ export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: Cou
   const [editing, setEditing] = useState(false);
   const resume = useResumePause(studentId);
   const c = t.coursePause;
+  // academy day (docs/34 b): a pause cuts at the academy's today.
   const lines = bannerLines(pause, riyadhToday());
   const confirm = () =>
     resume.isPending ? undefined : resume.mutate(undefined, { onSuccess: (result) => onNotice(resumedText(result)) });

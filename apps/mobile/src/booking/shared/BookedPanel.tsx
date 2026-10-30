@@ -74,6 +74,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
           {first && toSchedule ? (
             <Button
               label={t.booking.openSchedule}
+              // academy day (docs/34 b): the schedule's `date` param is a Riyadh day.
               onPress={() => router.replace({ pathname: '/schedule', params: { date: riyadhToday(new Date(first.starts_at)) } })}
             />
           ) : null}

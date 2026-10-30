@@ -12,6 +12,7 @@ const DAY = 86_400_000;
  */
 export function paidAtFor(now: Date, daysAgo: number): Date {
   if (daysAgo <= 0) return now;
+  // academy day (docs/34 b): a payment is booked on an academy day.
   const day = localDate(new Date(now.getTime() - daysAgo * DAY), RIYADH_TZ);
   return new Date(`${day}T09:00:00.000Z`);
 }

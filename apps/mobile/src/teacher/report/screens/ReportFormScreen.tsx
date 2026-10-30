@@ -1,4 +1,3 @@
-import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, type ComponentProps } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -11,11 +10,10 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from '../../lib/queries';
 import { reportErrorText, useReportForm } from '../hooks/api';
 import { ReportEntryCard } from '../components/ReportEntryCard';
 import { ReportEntryCardV2 } from '../v2';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The report's own form: the new one (form_version 2), else the Google Form's (v1, unchanged). */
 function EntryForm(p: ComponentProps<typeof ReportEntryCard>) {
@@ -33,7 +31,7 @@ export function ReportFormScreen() {
   const cycle = useClockCycle();
   const { lessonId = '' } = useLocalSearchParams<{ lessonId: string }>();
   const form = useReportForm(lessonId);
-  const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   // A saved form is shown only once this open has asked the API (or could not): each card seeds
   // its fields once, and must not seed them from an older copy than the server's draft.
   const data = form.isFetchedAfterMount || form.isError ? form.data : undefined;

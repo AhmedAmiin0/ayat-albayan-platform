@@ -35,7 +35,7 @@ test('the trial first: date and time in Riyadh, the teacher, the outcome chip; s
   mockApiFetch.mockResolvedValue(details({ trial: [trialLesson, moved] }));
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByRole('header', { name: s.trial.title })).toBeTruthy();
-  expect(screen.getByText(`${whenIn(new Date(trialLesson.starts_at), RIYADH_TZ, '24')} ${t.schedule.riyadhTime}`)).toBeTruthy();
+  expect(screen.getByText(`${whenIn(new Date(trialLesson.starts_at), RIYADH_TZ, '24')} ${t.schedule.viewerTime}`)).toBeTruthy();
   expect(screen.getByText(s.trial.teacher.replace('{name}', 'أبرار محمد'))).toBeTruthy();
   expect(screen.getAllByText(t.trialDate.outcome.attended)).toHaveLength(2); // the trial's chip and the attendance list's
   expect(screen.getByText(t.trialDate.outcome.moved)).toBeTruthy();

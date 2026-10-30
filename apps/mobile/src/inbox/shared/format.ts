@@ -1,3 +1,4 @@
+import { viewerTz } from '@ab/client-core';
 import type { ClockCycle, ThreadView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -33,9 +34,9 @@ export function leadAge(iso: string, now: Date = new Date()): string {
   return counted(age.days, Math.floor(ms / DAY));
 }
 
-/** «16:20» / «4:20 م» in the device's zone: when the cached list on screen was last fetched (R-MOB-03). */
+/** «16:20» / «4:20 م» in the viewer's zone: when the cached list on screen was last fetched (R-MOB-03). */
 export function clockAt(epochMs: number, cycle: ClockCycle): string {
-  return clockIn(new Date(epochMs), Intl.DateTimeFormat().resolvedOptions().timeZone, cycle);
+  return clockIn(new Date(epochMs), viewerTz(), cycle);
 }
 
 /** Who the number is in words (guardian / teacher / lead, else «رقم مش متسجل»): never the number. */

@@ -77,4 +77,5 @@ const lessonsOf = (day: SalesScheduleDay) => day.lessons;
  * The salesperson's «اليوم»: «جدول الحلقات» on the Riyadh day of `now` for every teacher, the very
  * same query (one cache, the same whitelist), as its lessons.
  */
+// academy day (docs/34 b): GET /sales/schedule `?date` is a Riyadh day.
 export const useSalesDay = (now: Date) => useQuery({ ...salesScheduleQuery(riyadhToday(now), ''), select: lessonsOf });

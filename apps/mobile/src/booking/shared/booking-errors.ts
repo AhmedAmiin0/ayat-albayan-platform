@@ -1,4 +1,5 @@
-import { CONFLICT_KINDS, RIYADH_TZ, type ClockCycle, type Conflict } from '@ab/shared';
+import { viewerTz } from '@ab/client-core';
+import { CONFLICT_KINDS, type ClockCycle, type Conflict } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -41,11 +42,11 @@ function toCandidate(v: unknown): Candidate | null {
   return { id: v['id'], name: v['name'], code: typeof v['code'] === 'string' ? v['code'] : null };
 }
 
-/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», Riyadh wall clock. */
+/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», viewer's clock. */
 export function conflictLine(c: Conflict, cycle: ClockCycle): string {
   return t.booking.conflict[c.kind].replace(
     '{when}',
-    whenIn(new Date(c.startsAt), RIYADH_TZ, cycle),
+    whenIn(new Date(c.startsAt), viewerTz(), cycle),
   );
 }
 

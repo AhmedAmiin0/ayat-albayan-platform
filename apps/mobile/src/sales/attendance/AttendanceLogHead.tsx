@@ -1,5 +1,6 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { View } from 'react-native';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
@@ -38,7 +39,7 @@ export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadPro
           </AppText>
         ))}
       </View>
-      <Note>{t.schedule.riyadhTime}</Note>
+      <Note>{zoneNote(useViewerTz())}</Note>
       <View
         accessibilityRole="header"
         style={[ROW_LINE, { marginHorizontal: -16, paddingHorizontal: 16, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: color.ruleStrong }]}

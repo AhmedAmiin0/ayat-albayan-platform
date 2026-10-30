@@ -23,6 +23,7 @@ interface SalesRescheduleFormProps {
 
 export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps) {
   const cycle = useClockCycle();
+  // docs/34 b: the family's zone; a missing one reads as the academy's (data default).
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const durationMin = lessonDuration(lesson);
   const move = useSalesReschedule(lesson.id);

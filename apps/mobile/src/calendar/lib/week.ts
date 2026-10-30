@@ -5,7 +5,10 @@ import { locale } from '@/core/lib/i18n/locale';
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the academy week runs السبت →
 // الجمعة on the Riyadh calendar, like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.
 
-/** Academy-week math and today's Riyadh day, the web grid's own (shared since docs/27 E6). */
+/**
+ * Academy-week math and today's Riyadh day, the web grid's own (shared since docs/27 E6). academy
+ * day (docs/34 b): the screens page by Riyadh days; the times inside read in the viewer's zone.
+ */
 export { addDays, riyadhToday, weekdayOf, weekStart };
 
 /**

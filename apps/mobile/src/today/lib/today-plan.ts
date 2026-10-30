@@ -1,4 +1,4 @@
-import { isOpenLesson, RIYADH_TZ } from '@ab/shared';
+import { isOpenLesson } from '@ab/shared';
 import { applyFilter, type TodayFilter } from './timeline';
 import type { TodayLesson } from './today-lesson';
 
@@ -10,12 +10,12 @@ const MINUTE = 60_000;
 type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
 
 /**
- * The part of the day by the Riyadh clock (owner 2026-10-28: «Good morning» at 3:36 read wrong): morning
+ * The part of the day by the local clock (owner 2026-10-28: «Good morning» at 3:36 read wrong): morning
  * 04:00–11:59 (about dawn), afternoon 12:00–16:59, evening 17:00–21:59, night 22:00–03:59.
  */
-export function greetingPart(now: Date): GreetingPart {
+export function greetingPart(now: Date, tz: string): GreetingPart {
   const hour = Number(
-    new Intl.DateTimeFormat('en-US', { timeZone: RIYADH_TZ, hour: '2-digit', hourCycle: 'h23' }).format(now),
+    new Intl.DateTimeFormat('en', { timeZone: tz, hour: '2-digit', hourCycle: 'h23' }).format(now),
   );
   if (hour >= 4 && hour < 12) return 'morning';
   if (hour >= 12 && hour < 17) return 'afternoon';

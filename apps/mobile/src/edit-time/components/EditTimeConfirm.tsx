@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from '../lib/edit-time-body';
 import { changeLine, teacherLine } from '../lib/edit-time-text';
 import type { EditableLesson, TimeEditMode } from '../lib/types';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 export interface EditTimeConfirmProps {
   lesson: EditableLesson;
@@ -19,13 +19,14 @@ export interface EditTimeConfirmProps {
 
 /**
  * Before «احفظ التعديل»: nothing changed yet says so (a disabled button needs its reason), else
- * «{من} ← {إلى}» in Riyadh time, the teacher's own clock for the new start, that it is the same
- * lesson, and for a correction what it leaves alone (attendance, status) and what it moves (the
- * teacher's payout when the length changed, the report file). The guardian toggle appears only
- * when a WhatsApp confirmation would go out (a move to a later start).
+ * «{من} ← {إلى}» on the viewer's clock, the teacher's own clock for the new start, that it is the
+ * same lesson, and for a correction what it leaves alone (attendance, status) and what it moves
+ * (the teacher's payout when the length changed, the report file). The guardian toggle appears
+ * only when a WhatsApp confirmation would go out (a move to a later start).
  */
 export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNotify }: EditTimeConfirmProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   if (!isBookable(state.durationMin)) return null; // «اختار مدة الحلقة الأول» already says it
@@ -36,7 +37,7 @@ export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNoti
       <AppText accessibilityLiveRegion="polite" style={{ ...text, fontFamily: type.ui[700], color: color.ink }}>
         {changeLine(lesson, state, cycle)}
       </AppText>
-      <AppText style={text}>{t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}</AppText>
+      <AppText style={text}>{zoneNote(tz)}</AppText>
       <AppText style={text}>{teacherLine(lesson, chosenStart(lesson, state.picked), cycle)}</AppText>
       {willNotify(lesson, state, now) ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: shape.control.touch }}>

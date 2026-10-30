@@ -18,6 +18,7 @@ export {
 export const TERM_CURRENCIES: readonly string[] = [...new Set([TERMS_DEFAULT_CURRENCY, ...CURRENCY_ISOS])];
 
 /** Today in Riyadh, YYYY-MM-DD (the web's paidAtDay). */
+// academy day (docs/34 b): terms start on an academy day.
 export const todayDay = (now: Date = new Date()): string => localDate(now, RIYADH_TZ);
 
 export function formOf(terms: AssistantTermsView | null, today = todayDay()): TermsForm {

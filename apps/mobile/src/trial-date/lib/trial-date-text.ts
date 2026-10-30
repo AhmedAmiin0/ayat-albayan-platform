@@ -1,10 +1,10 @@
+import { viewerTz } from '@ab/client-core';
 import {
   attendanceStyle,
   counted,
   leadStatusStyle,
   lessonStatusStyle,
   lessonWhenText,
-  RIYADH_TZ,
   warnsTrialDate,
   type StatusStyle,
   type TrialDateRow,
@@ -16,9 +16,6 @@ import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { isolate } from '@/core/ui/primitives/Ltr';
-
-/** The admin's and the salesperson's clock (as useViewerTz outside the teacher tree): the academy's. */
-const VIEWER_TZ = RIYADH_TZ;
 
 /** Each outcome in the existing status grammar (docs/07 §6): saffron only where a report is due. */
 export const trialOutcomeStyle: Record<TrialOutcome, StatusStyle> = {
@@ -40,11 +37,12 @@ interface WhenLines {
 /** An instant in the viewer's zone, and in the family's when it differs (rule 6). */
 export function whenLines(startsAt: string, familyTz: string, cycle: ClockCycle): WhenLines {
   const at = new Date(startsAt);
-  // Every time says its zone (docs/07 principle 7): the viewer reads the academy's clock.
-  const when = `${whenIn(at, VIEWER_TZ, cycle)} ${t.schedule.riyadhTime}`;
+  // Every time says its zone (docs/07 principle 7): the viewer's own (docs/34).
+  const viewer = viewerTz();
+  const when = `${whenIn(at, viewer, cycle)} ${t.schedule.viewerTime}`;
   const familyAt = whenIn(at, familyTz, cycle);
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
-  if (lessonWhenText(at, familyTz, locale) === lessonWhenText(at, VIEWER_TZ, locale)) return { when, family: null };
+  if (lessonWhenText(at, familyTz, locale) === lessonWhenText(at, viewer, locale)) return { when, family: null };
   return { when, family: t.trialDate.familyTime.replace('{time}', familyAt) };
 }
 
@@ -52,7 +50,7 @@ export function whenLines(startsAt: string, familyTz: string, cycle: ClockCycle)
 export function pickedLine(row: TrialDateRow, cycle: ClockCycle): string {
   return t.trialDate.pickedAt
     .replace('{name}', row.picked_by ? isolate(row.picked_by) : t.trialDate.unknownPicker)
-    .replace('{when}', whenIn(new Date(row.picked_at), VIEWER_TZ, cycle));
+    .replace('{when}', whenIn(new Date(row.picked_at), viewerTz(), cycle));
 }
 
 /** «موعدان» … the history header's count. */
