@@ -34,6 +34,7 @@ export * from './i18n/locale.js';
 export * from './time/time-zone.js';
 export * from './time/week.js';
 export * from './time/riyadh-day.js';
+export * from './time/viewer-zone.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';

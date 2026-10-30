@@ -16,6 +16,11 @@ export interface SalesTeacherSlot {
   weekday: number;
   /** "HH:MM" (24 h) in Riyadh. */
   time: string;
+  /**
+   * The rule's next start (UTC ISO) on this weekday: clients read weekday and time from it in the
+   * viewer's zone (docs/34). Absent in a payload cached before it existed: weekday/time then.
+   */
+  at?: string;
   duration_min: number;
   students: SalesOverviewStudent[];
 }

@@ -520,6 +520,9 @@
     "synced": "تمت مزامنة الجدول: أُضيفت {n} حلقة",
     "syncedNone": "الجدول متزامن، لا توجد حلقات ناقصة",
     "riyadhTime": "بتوقيت الرياض",
+    "viewerTime": "بتوقيتك",
+    "familyAt": "{time} بتوقيت العائلة",
+    "zoneNote": "الأوقات بتوقيتك ({city})",
     "studentTime": "عند الطالب {time}",
     "teacherTime": "عند المعلم/ة {time}",
     "lessonCount": {
