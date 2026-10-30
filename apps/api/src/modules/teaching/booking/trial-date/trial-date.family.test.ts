@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { NOW } from '../booking.fakes';
+import { NOW } from '@/modules/teaching/booking/booking.fakes';
 import { ACTOR, fakeTrialDates, REQUEST, trialRequest, trialRow } from './trial-date.fakes';
 
 // A trial's new date that MOVES its upcoming trial: ONE family WhatsApp (the owner's operator,
@@ -28,7 +28,8 @@ describe('TrialDates: one family message per move', () => {
   it('not usable: the booking confirmation stays, the notice leaves the family out', async () => {
     const { s, messages } = await pick(false);
     expect(messages?.map((m) => m.template_key)).toEqual([expect.stringMatching(/^booking_confirmation/)]);
-    expect(s.events.scheduleChanged).toHaveBeenCalledWith(expect.objectContaining({ familyNotice: false }));
+    const familyLeftOut = expect.objectContaining({ familyNotice: false });
+    expect(s.events.scheduleChanged).toHaveBeenCalledWith(familyLeftOut);
   });
 
   it('no trial to move (a fresh booking): the confirmation always, no move notice', async () => {

@@ -102,7 +102,11 @@ function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
   return { mode, now: new Date(), current, request, zones };
 }
 
-type NoticeInput = { row: LessonRow; plan: TimeEditPlan; actor: AuthUser };
+interface NoticeInput {
+  row: LessonRow;
+  plan: TimeEditPlan;
+  actor: AuthUser;
+}
 
 /**
  * The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody), only when

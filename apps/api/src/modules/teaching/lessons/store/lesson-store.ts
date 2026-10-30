@@ -48,8 +48,9 @@ export class LessonStore {
     const to = change.lessons?.find((l) => l.id === movedId(asked))?.starts_at;
     const { notice, messages } = await this.family({ notice: asked, to, messages: change.messages });
     const applied = messages ? { ...change, messages } : change;
+    const row = { entity, entity_id: entityId, action, before, after };
     try {
-      await this.writer.apply({ ...applied, audit: { entity, entity_id: entityId, action, before, after } });
+      await this.writer.apply({ ...applied, audit: row });
     } catch (e) {
       if (errorCode(e) === 'invalid_transition') {
         throw invalidTransition(transition.from, transition.event);
@@ -65,8 +66,8 @@ export class LessonStore {
    * `changes[]`, so the balance alerts (R-SUB-02) are told explicitly. 409 stale_time on a lost race.
    */
   async retime(change: TimeEditChange, asked?: ScheduleChange): Promise<void> {
-    const to = change.to.starts_at;
-    const { notice, messages } = await this.family({ notice: asked, to, messages: change.messages });
+    const moving = { notice: asked, to: change.to.starts_at, messages: change.messages };
+    const { notice, messages } = await this.family(moving);
     await this.writer.retime({ ...change, messages: messages ?? change.messages });
     await this.events.changed([change.lesson_id]);
     if (notice) await this.events.scheduleChanged(notice);
@@ -85,7 +86,11 @@ export class LessonStore {
   }
 }
 
-type Moving = { notice?: ScheduleChange; to?: string; messages?: QueuedMessage[] };
+interface Moving {
+  notice?: ScheduleChange;
+  to?: string;
+  messages?: QueuedMessage[];
+}
 
 const movedId = (n?: ScheduleChange): string | undefined =>
   n?.kind === 'lesson_rescheduled' ? n.lessonId : undefined;

@@ -7,8 +7,8 @@ import { NotificationPolicy } from '../../../messaging/notification-rules/policy
 import { domainError } from '../booking.errors';
 import { BookingFollowUps } from '../core/booking.follow-ups';
 import { BookingPlanner } from '../plan/booking.planner';
-import type { BookingPayload } from '../core/booking.mapper';
-import type { MessageDraft } from '../core/booking.messages';
+import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
+import type { MessageDraft } from '@/modules/teaching/booking/core/booking.messages';
 import { FamilyMoveNotice, familyMove, type FamilyMove } from '@/modules/teaching/schedule-notices';
 import { trialHistory, trialLessonsOf } from './trial-date.history';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
@@ -118,15 +118,17 @@ export class TrialDates {
   }
 }
 
-type FollowUp = {
-  req: BookingRequest;
+interface Moved {
+  old: MovedTrial;
   result: TrialDateResult;
-  old: MovedTrial | null;
   actorId: string;
   /** FamilyMoveNotice's choice: the family hears the move by lesson_rescheduled. */
   familyNotice: boolean;
-};
-type Moved = { old: MovedTrial; result: TrialDateResult; actorId: string; familyNotice: boolean };
+}
+interface FollowUp extends Omit<Moved, 'old'> {
+  req: BookingRequest;
+  old: MovedTrial | null;
+}
 
 /** A trial moved to its new date: lesson_rescheduled from the old trial's start. */
 function movedTrial({ old, result, actorId, familyNotice }: Moved): ScheduleChange {

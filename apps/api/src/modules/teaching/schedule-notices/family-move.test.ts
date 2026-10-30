@@ -21,7 +21,8 @@ function setup(usable: boolean | Error) {
 
 describe('familyMove (pure)', () => {
   it('usable: the family hears lesson_rescheduled, every booking_confirmation* row is dropped', () => {
-    expect(familyMove(true, [confirmation, other])).toEqual({ familyNotice: true, messages: [other] });
+    const out = familyMove(true, [confirmation, other]);
+    expect(out).toEqual({ familyNotice: true, messages: [other] });
   });
 
   it('not usable: the booking confirmation stays, nothing else changes', () => {

@@ -4,7 +4,7 @@ import { NoticeGate } from './notice.gate';
 import { isUpcoming } from './notice.plan';
 
 /** A lesson move: its old and its new start (ISO). */
-export interface Move {
+interface Move {
   from: string;
   to: string;
 }

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/events/lesson-events';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID } from '../lessons.fakes';
+import type { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { RescheduleOneService } from './reschedule-one.service';
 
 // Moving one lesson: ONE family WhatsApp (the owner's operator, 2026-10-30), lesson_rescheduled
@@ -30,7 +30,8 @@ describe('RescheduleOneService: one family message per move', () => {
     const s = setup(true);
     const id = await s.run();
     expect(appliedChange(s.writer)?.messages).toEqual([]);
-    expect(s.heard).toHaveBeenCalledWith(expect.objectContaining({ lessonId: id, familyNotice: true }));
+    const promised = expect.objectContaining({ lessonId: id, familyNotice: true });
+    expect(s.heard).toHaveBeenCalledWith(promised);
   });
 
   it('not usable: the booking confirmation is the one family message', async () => {

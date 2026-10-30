@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/events/lesson-events';
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
-import { fakeStore } from '../lessons.fakes';
+import { fakeStore } from '@/modules/teaching/lessons/lessons.fakes';
 
 // ONE family WhatsApp per move (the owner's operator, 2026-10-30): before a move's write the store
 // asks FamilyMoveNotice; lesson_rescheduled usable → its booking confirmation is not queued and the
@@ -10,10 +10,10 @@ import { fakeStore } from '../lessons.fakes';
 const NOW = new Date('2026-10-02T10:00:00Z');
 const FROM = '2026-10-04T14:00:00.000Z';
 const TO = '2026-10-05T14:00:00.000Z';
-const confirmation = {
+const confirmation: QueuedMessage = {
   phone_e164: '+966501234567', guardian_id: 'G1', lesson_id: 'L2',
   template_key: 'booking_confirmation', template_params: {}, dedup_key: 'booking_confirmation:L2:G1',
-} as QueuedMessage;
+};
 const moved: ScheduleChange = { kind: 'lesson_rescheduled', lessonId: 'L2', fromStartsAt: FROM, actorId: 'u1' };
 const lesson = {
   id: 'L2', rule_id: null, teacher_id: 'T1', starts_at: TO, ends_at: TO, meeting_link: null,
@@ -33,8 +33,8 @@ function setup(usable: boolean) {
   s.family.open = usable;
   const heard = vi.fn(async (_c: ScheduleChange) => undefined);
   s.events.onScheduleChange(heard);
-  const applied = () => (s.writer.apply.mock.calls[0]?.[0] as ChangeSet | undefined)?.messages;
-  const retimed = () => (s.writer.retime.mock.calls[0]?.[0] as TimeEditChange | undefined)?.messages;
+  const applied = () => s.writer.apply.mock.calls[0]?.[0].messages;
+  const retimed = () => s.writer.retime.mock.calls[0]?.[0].messages;
   return { ...s, heard, applied, retimed };
 }
 

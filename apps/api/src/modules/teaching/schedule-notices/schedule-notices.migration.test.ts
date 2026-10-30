@@ -35,7 +35,7 @@ describe('migration 988: the schedule-change notices', () => {
       expect(code).toContain(`'${BODIES[key]}'`);
     }
     expect(code).not.toMatch(/'(approved|pending)'/);
-    // Any unique key (key, or (meta_name, language) from migration 141) keeps the row: never a failure.
+    // Any unique key (key, or (meta_name, language) from migration 141) keeps the row.
     expect(code).toContain('on conflict do nothing;');
     expect(code).not.toMatch(/on conflict \(key\)/);
   });

@@ -50,7 +50,13 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
  * R-SCH-04, R-SCH-06, R-LEAD-06. Owner: Phase 2 builder B2 (docs/10-phase2-contracts.md §1).
  */
 @Module({
-  imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule, ScheduleNoticesModule],
+  imports: [
+    TeachersModule,
+    SchedulingModule,
+    SalesModule,
+    SubscriptionsModule,
+    ScheduleNoticesModule,
+  ],
   controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, TrialDateController, SalesTrialDateController],
   providers: [
     BookingSettings,
