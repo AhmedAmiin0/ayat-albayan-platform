@@ -12,7 +12,8 @@ import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const FILES = ['apps/*', 'packages/*', 'tools/*', 'e2e'].map((dir) => `${dir}/eslint-suppressions.json`);
+const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
+const FILES = DIRS.map((dir) => `${dir}/eslint-suppressions.json`);
 
 /** Per-rule totals (sorted by rule) of suppressions files shaped `{ file: { rule: { count } } }`. */
 export function totals(files) {
