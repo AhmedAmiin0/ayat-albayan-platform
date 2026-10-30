@@ -4,6 +4,7 @@
 // exactly; the knip and folder-cap baselines may also shrink (their own gates check them against the tree).
 import { posix } from 'node:path';
 import { folderRenames } from '../pure-move-tokens.mjs';
+import { renameGuardLine } from './identifiers.mjs';
 
 const SUPPRESSIONS = /(^|\/)eslint-suppressions\.json$/;
 const KNIP = /^refactor\/guards\/knip\.json$/;
@@ -53,15 +54,15 @@ export function suppressionsMoved(file, texts, renames) {
   return moved !== null && canon(Object.fromEntries(moved)) === canon(head);
 }
 
-/** True when every head knip line is a base line, its file (first word) at its new path. */
-export function knipMoved(texts, renames) {
+/** True when every head knip line is a base line, its file (first word) at its new path, its name renamed by `ids`. */
+export function knipMoved(texts, renames, ids = new Map()) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!Array.isArray(base) || !Array.isArray(head)) return false;
   const table = new Map(renames);
   const move = (line) => {
     const cut = String(line).indexOf(' ');
     const path = cut < 0 ? String(line) : String(line).slice(0, cut);
-    return `${table.get(path) ?? path}${cut < 0 ? '' : String(line).slice(cut)}`;
+    return renameGuardLine(`${table.get(path) ?? path}${cut < 0 ? '' : String(line).slice(cut)}`, ids);
   };
   const allowed = new Set(base.map(move));
   return head.every((line) => typeof line === 'string' && allowed.has(line));
@@ -90,7 +91,7 @@ export function classifyBaseline(entry, read, ctx = {}) {
     kind === 'suppressions'
       ? suppressionsMoved(to, texts, renames)
       : kind === 'knip'
-        ? knipMoved(texts, renames)
+        ? knipMoved(texts, renames, ctx.ids)
         : folderCapMoved(texts, renames, ctx.gone ?? (() => false));
   return ok ? { kind: 'paths' } : { kind: 'bad', why: `${kind}: changes more than the keys of moved files` };
 }
