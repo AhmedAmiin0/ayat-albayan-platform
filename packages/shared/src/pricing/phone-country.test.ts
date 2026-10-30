@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pricingCountryOfPhone } from './phone.js';
+import { pricingCountryOfPhone } from './phone-country.js';
 
 describe('pricingCountryOfPhone («عرض سعر» in the chat)', () => {
   it.each([
