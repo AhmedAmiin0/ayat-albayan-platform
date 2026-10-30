@@ -28,3 +28,11 @@ test('check fails on a measure above its baseline, and asks to lower a baseline 
   ]);
   assert.deepEqual(check({ clones: 1 }, {}), ['clones: 1 > baseline 0']);
 });
+
+test('all packages are one unit: a clone between two packages is not cross-app, one with an app is', () => {
+  const split = {
+    statistics: { total: { clones: 2, duplicatedLines: 20 } },
+    duplicates: [dup('packages/core/src/a.ts', 'packages/money/src/b.ts'), dup('packages/core/src/a.ts', 'apps/web/src/c.ts')],
+  };
+  assert.deepEqual(measure(split), { clones: 2, duplicatedLines: 20, crossApp: 1 });
+});

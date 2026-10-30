@@ -210,6 +210,7 @@ jobs:
       - run: pnpm guard:dup
       - run: pnpm guard:knip
       - run: pnpm guard:queries
+      - run: pnpm guard:cycles
       # A base without lint.json (before the ratchet) has nothing to compare with; a git error fails the step.
       - name: pnpm guard:lint (on a PR, also against the base branch)
         env:
