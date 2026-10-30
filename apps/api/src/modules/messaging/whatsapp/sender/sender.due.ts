@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, WaLine } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import type { StaleLead } from './send-stale';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
@@ -18,6 +18,9 @@ export interface DueMessage {
   created_by: string | null;
   attempts: number;
   expires_at: string | null;
+  /** Queued at / due at: the payment hold's backoff (hold/payment-hold); optional for fixtures. */
+  created_at?: string;
+  scheduled_for?: string | null;
   /** SENDING = a previous try was claimed and never resolved (send-plan). */
   error_code: string | null;
   /** The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it. */
@@ -36,7 +39,7 @@ export interface DueMessage {
 }
 
 export const DUE_COLUMNS =
-  'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, created_by, attempts, expires_at, error_code, line, number_id, media_path, media_mime, media_name, interactive_payload, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
+  'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, created_by, attempts, expires_at, created_at, scheduled_for, error_code, line, number_id, media_path, media_mime, media_name, interactive_payload, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
 
 /**
  * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the allow-list
