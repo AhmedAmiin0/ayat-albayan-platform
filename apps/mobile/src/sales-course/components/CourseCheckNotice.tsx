@@ -32,7 +32,7 @@ export function CourseCheckNotice({ check, onChangeSlot }: CourseCheckNoticeProp
   const { color } = useTheme();
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   if (check.error) {
-    const failure = bookFailure(check.error);
+    const failure = bookFailure(check.error, cycle);
     if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
     if (failure.kind !== 'duplicate' && isCodedRefusal(check.error)) return <ErrorLine message={failure.text} />;
     const message = failure.kind === 'error' ? failure.text : t.common.error;

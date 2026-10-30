@@ -6,13 +6,13 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { DeliveryTicks } from '../../messages/components/DeliveryTicks';
-import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from '../../format';
-import { LineBadge } from '../../shared/LineBadge';
-import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
-import type { InboxSearch } from '../../shared/search';
-import { leadChip } from '../../sales/subscription';
-import { SubscriptionChip } from '../../sales/SubscriptionChip';
+import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/DeliveryTicks';
+import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from '@/features/messaging/inbox/format';
+import { LineBadge } from '@/features/messaging/inbox/shared/LineBadge';
+import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
+import { leadChip } from '@/features/messaging/inbox/sales/subscription';
+import { SubscriptionChip } from '@/features/messaging/inbox/sales/SubscriptionChip';
 import { useClock } from '@/lib/clock';
 
 export interface ThreadRowProps {
@@ -20,6 +20,8 @@ export interface ThreadRowProps {
   /** The list's URL state; opening a thread keeps its filters. */
   search: InboxSearch;
   active: boolean;
+  /** The list's ticking clock (one useNow per list): «اليوم» turns into a date at midnight. */
+  now: Date;
 }
 
 /** Our last message did not go out: the admin's turn (saffron «دورك», docs/07), shown on the row. */
@@ -54,7 +56,7 @@ function PhoneTag({ phone }: { phone: string }) {
  * · time; the last message («أنت:» for ours, after its ticks), or «متبعتتش» when our last send failed; the lead's
  * status chip or who the number is, the family's package tags (FamilyTags), source.
  */
-export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
+export function ThreadRow({ thread: th, search, active, now }: ThreadRowProps) {
   const mode = useInboxMode();
   const name = threadTitle(th, mode);
   const clock = useClock();
@@ -88,7 +90,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           {th.display_name && showsPhone(mode) && <PhoneTag phone={th.phone_e164} />}
         </span>
         <time dateTime={th.last_message_at} title={fullTime(th.last_message_at, clock)} className="text-2xs text-ink-3 tabular-nums">
-          {listTime(th.last_message_at, clock)}
+          {listTime(th.last_message_at, clock, now)}
         </time>
         <span className={cn('col-start-2 flex min-w-0 items-center gap-1 text-xs', unread ? 'text-ink' : 'text-ink-2')}>
           {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} inList />}

@@ -17,33 +17,34 @@ const rule = (patch: Partial<NotificationRuleView> = {}): NotificationRuleView =
   ...patch,
 });
 const numberName = (id: string | null) => (id === null ? r.templateNumber : `#${id}`);
+const on = { numberName, clock: { cycle: '24', locale: 'ar' } } as const;
 
 describe('a row draft → the PATCH body (only what changed)', () => {
   it('unchanged: no body, not dirty', () => {
     const base = rule();
-    const result = draftResult({ rule: base, draft: draftOf(base), numberName });
+    const result = draftResult({ rule: base, draft: draftOf(base), ...on });
     expect(result).toEqual({ ok: true, patch: {}, changes: [] });
     expect(isDirty(result)).toBe(false);
   });
 
   it('timing, channels and number each alone, with their «… بدلًا من …» words', () => {
     const base = rule();
-    const timed = draftResult({ rule: base, draft: { ...draftOf(base), timing: { kind: 'teacher_lesson_reminder', minutes: '30', same: false } }, numberName });
+    const timed = draftResult({ rule: base, draft: { ...draftOf(base), timing: { kind: 'teacher_lesson_reminder', minutes: '30', same: false } }, ...on });
     expect(timed).toMatchObject({ ok: true, patch: { timing: { minutes_before: 30 } } });
     expect(timed.ok && timed.changes[0]).toBe(
       r.insteadOf.replace('{new}', r.timing.minutesText.replace('{n}', '30')).replace('{old}', r.timing.sameAsFamily),
     );
     // Channels go out in catalogue order whatever order they were ticked in.
-    const channels = draftResult({ rule: base, draft: { ...draftOf(base), channels: ['push', 'whatsapp'] }, numberName });
+    const channels = draftResult({ rule: base, draft: { ...draftOf(base), channels: ['push', 'whatsapp'] }, ...on });
     expect(channels).toMatchObject({ ok: true, patch: { channels: ['whatsapp', 'push'] } });
-    const number = draftResult({ rule: base, draft: { ...draftOf(base), number_id: 'n1' }, numberName });
+    const number = draftResult({ rule: base, draft: { ...draftOf(base), number_id: 'n1' }, ...on });
     expect(number).toEqual({ ok: true, patch: { number_id: 'n1' }, changes: [r.insteadOf.replace('{new}', '#n1').replace('{old}', r.templateNumber)] });
   });
 
   it('the same channels in another order are not a change; an unparsable timing is dirty with its reason', () => {
     const base = rule({ channels: ['whatsapp', 'push'] });
-    expect(draftResult({ rule: base, draft: { ...draftOf(base), channels: ['push', 'whatsapp'] }, numberName })).toMatchObject({ patch: {} });
-    const bad = draftResult({ rule: base, draft: { ...draftOf(base), timing: { kind: 'teacher_lesson_reminder', minutes: '1', same: false } }, numberName });
+    expect(draftResult({ rule: base, draft: { ...draftOf(base), channels: ['push', 'whatsapp'] }, ...on })).toMatchObject({ patch: {} });
+    const bad = draftResult({ rule: base, draft: { ...draftOf(base), timing: { kind: 'teacher_lesson_reminder', minutes: '1', same: false } }, ...on });
     expect(bad).toEqual({ ok: false, error: r.errors.minutes });
     expect(isDirty(bad)).toBe(true);
   });
