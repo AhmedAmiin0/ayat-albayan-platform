@@ -1,6 +1,7 @@
 import {
   allowedLessonEvents,
   CONFLICT_KINDS,
+  isClosedLesson,
   isOpenLesson,
   meetingModeOf,
   usesPlatform,
@@ -105,10 +106,9 @@ function timeEdit(row: LessonRow, role: ViewContext['role']): LessonTimeEditView
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */
 function activeMakeup(row: LessonRow, studentId: string): LessonStudentView['makeup'] {
-  const m = row.makeups?.find((x) => x.makeup_student_id === studentId && !INACTIVE.has(x.status));
+  const m = row.makeups?.find((x) => x.makeup_student_id === studentId && !isClosedLesson(x.status));
   return m ? { lesson_id: m.id, starts_at: iso(m.starts_at) } : null;
 }
-const INACTIVE: ReadonlySet<string> = new Set(['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled']);
 
 const conflictList = z.array(
   z.object({
