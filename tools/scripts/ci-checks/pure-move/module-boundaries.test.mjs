@@ -33,6 +33,7 @@ test('module-boundaries may not rise, appear or reach 0, and other rules stay', 
   assert.equal(check({ ...rest, 'src/sales/b.tsx': one, 'src/c.tsx': one }), false, 'added');
   assert.equal(check({ ...rest, 'src/sales/b.tsx': { [RULE]: { count: 0 } } }), false, 'count 0');
   const noMaxLen = { [RULE]: { count: 3 }, [PARENT]: { count: 2 } };
-  const dropped = { ...note, 'src/inbox/a.tsx': noMaxLen, 'src/sales/b.tsx': base['src/sales/b.tsx'] };
+  const sales = base['src/sales/b.tsx'];
+  const dropped = { ...note, 'src/inbox/a.tsx': noMaxLen, 'src/sales/b.tsx': sales };
   assert.equal(check(dropped), false, 'max-len dropped');
 });
