@@ -1,7 +1,7 @@
 import { clearAllDrafts } from '../composer/lib/draft-store';
 import { clearOwnSends } from '../composer/lib/own-send';
 import { registerDrafts } from '../sales/register-drafts';
-import { clearAllStaged } from '../saved-replies/staged-store';
+import { clearAllStaged } from '../saved-replies/lib/staged-store';
 
 /**
  * The inbox's tab memories (unsent replies, staged reply attachments, her own last sends, half-typed registrations),

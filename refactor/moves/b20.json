@@ -1,0 +1,384 @@
+{
+  "id": "b20",
+  "seq": 109,
+  "moves": [
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/AttachmentField*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/DeleteReplyDialog*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/MineActions*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/PlaceholderChips*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/RepliesPanel*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/ReplyEditorDialog*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/ReplyOptions*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/SavedRepliesButton*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/StagedChip*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/use-picker-keys*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/use-replies-picker*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/use-reply-dialogs*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/use-reply-values*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/use-staged-send*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/api.ts",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/filter*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/fixture.ts",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/reply-draft*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/saved-replies/staged-store*",
+      "to": "apps/web/src/features/messaging/inbox/saved-replies/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/AutoListNote*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ChatListChips*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ChatListsBar*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/CreateListDialog*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/DeleteListDialog*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/EditListDialog*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ListChip*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ListDialogs.test.tsx",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ListNameForm*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ThreadListChips*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/ThreadListsDialog*",
+      "to": "apps/web/src/features/messaging/inbox/lists/components/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/active-list*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/api.ts",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/api.test.ts",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/member-cache*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/member-queue*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/use-lists-access*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/use-membership*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/inbox/lists/use-thread-lists-action*",
+      "to": "apps/web/src/features/messaging/inbox/lists/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/messaging/inbox/lists/active-list.test.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/active-list.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/active-list.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/active-list.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/api.test.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/api.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/api.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/api.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/AutoListNote.test.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/AutoListNote.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/AutoListNote.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/AutoListNote.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ChatListChips.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ChatListChips.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ChatListsBar.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ChatListsBar.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/CreateListDialog.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/CreateListDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/DeleteListDialog.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/DeleteListDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/EditListDialog.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/EditListDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ListChip.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ListChip.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ListDialogs.test.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ListDialogs.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ListNameForm.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ListNameForm.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/member-cache.test.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/member-cache.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/member-cache.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/member-cache.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/member-queue.test.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/member-queue.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/member-queue.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/member-queue.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ThreadListChips.test.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ThreadListChips.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ThreadListChips.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ThreadListChips.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ThreadListsDialog.sync.test.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ThreadListsDialog.sync.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ThreadListsDialog.test.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ThreadListsDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/ThreadListsDialog.tsx",
+      "apps/web/src/features/messaging/inbox/lists/components/ThreadListsDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/use-lists-access.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/use-lists-access.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/use-membership.ts",
+      "apps/web/src/features/messaging/inbox/lists/lib/use-membership.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/lists/use-thread-lists-action.tsx",
+      "apps/web/src/features/messaging/inbox/lists/lib/use-thread-lists-action.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/api.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/api.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/AttachmentField.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/AttachmentField.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/DeleteReplyDialog.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/DeleteReplyDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/filter.test.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/filter.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/filter.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/filter.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/fixture.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/fixture.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/MineActions.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/MineActions.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/PlaceholderChips.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/PlaceholderChips.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/RepliesPanel.mine.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/RepliesPanel.mine.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/RepliesPanel.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/RepliesPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/reply-draft.test.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/reply-draft.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/reply-draft.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/reply-draft.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer.picker.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyComposer.picker.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer.send.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyComposer.send.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer.slash.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyComposer.slash.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer.staged.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyComposer.staged.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyComposer.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyComposer.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyEditorDialog.test.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyEditorDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyEditorDialog.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyEditorDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/ReplyOptions.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/ReplyOptions.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/SavedRepliesButton.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/SavedRepliesButton.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/staged-store.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/lib/staged-store.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/StagedChip.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/components/StagedChip.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-picker-keys.test.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-picker-keys.test.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-picker-keys.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-picker-keys.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-replies-picker.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-replies-picker.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-reply-dialogs.tsx",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs.tsx"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-reply-values.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-reply-values.ts"
+    ],
+    [
+      "apps/web/src/features/messaging/inbox/saved-replies/use-staged-send.ts",
+      "apps/web/src/features/messaging/inbox/saved-replies/hooks/use-staged-send.ts"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 import type { ChatListRef, ThreadView } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { useThreadListsAction } from '../lists/use-thread-lists-action';
+import { useThreadListsAction } from '../lists/lib/use-thread-lists-action';
 import { SalesChatButtons } from './SalesChatActions';
 import { useSalesFamilyActions } from './use-sales-family-actions';
 
