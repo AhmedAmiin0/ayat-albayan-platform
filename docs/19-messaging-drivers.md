@@ -68,7 +68,7 @@ Migration `20261017000450_kapso_secret_keys.sql` adds the two secrets to `integr
 
 ## Local and e2e
 
-`tools/wa-stub` serves the same Graph routes under `/kapso/{version}/…`: it requires `X-API-Key` and refuses any bearer, records the credential kind of every request (`GET /__stub/requests`), requires `phone_number_id` on `GET /{media_id}` and answers a `download_url` that only works without credentials, edits templates via `?hsm_id=`, and `POST /__stub/kapso/inbound` forwards a Kapso-signed raw Meta inbound to `/webhooks/kapso`. `e2e/tests/kapso-driver.spec.ts` switches the notifications line to kapso in the database, checks an inbound and a reply end to end and a bad signature, and always switches back to meta.
+`tools/wa-stub` serves the same Graph routes under `/kapso/{version}/…`: it requires `X-API-Key` and refuses any bearer, records the credential kind of every request (`GET /__stub/requests`), requires `phone_number_id` on `GET /{media_id}` and answers a `download_url` that only works without credentials, edits templates via `?hsm_id=`, and `POST /__stub/kapso/inbound` forwards a Kapso-signed raw Meta inbound to `/webhooks/kapso`. `e2e/tests/messaging/kapso-driver.spec.ts` switches the notifications line to kapso in the database, checks an inbound and a reply end to end and a bad signature, and always switches back to meta.
 
 ## crm driver (owner 2026-10-25: «add one driver for the crm», «deal with the crm as api»)
 

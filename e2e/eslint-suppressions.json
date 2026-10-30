@@ -104,12 +104,12 @@
       "count": 7
     }
   },
-  "support/chat-lists.ts": {
+  "support/messaging/chat-lists.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "support/chat-more.ts": {
+  "support/messaging/chat-more.ts": {
     "max-len": {
       "count": 2
     }
@@ -212,7 +212,7 @@
       "count": 4
     }
   },
-  "support/inbox.ts": {
+  "support/messaging/inbox.ts": {
     "max-len": {
       "count": 3
     }
@@ -222,7 +222,7 @@
       "count": 1
     }
   },
-  "support/kapso.ts": {
+  "support/messaging/kapso.ts": {
     "max-len": {
       "count": 1
     }
@@ -232,7 +232,7 @@
       "count": 5
     }
   },
-  "support/message-queue.ts": {
+  "support/messaging/message-queue.ts": {
     "max-len": {
       "count": 1
     }
@@ -268,12 +268,12 @@
       "count": 2
     }
   },
-  "support/reschedule-template.ts": {
+  "support/messaging/reschedule-template.ts": {
     "max-len": {
       "count": 6
     }
   },
-  "support/restricted-templates.ts": {
+  "support/messaging/restricted-templates.ts": {
     "max-len": {
       "count": 6
     }
@@ -339,12 +339,12 @@
       "count": 2
     }
   },
-  "support/template-registry.ts": {
+  "support/messaging/template-registry.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "support/thread-panel.ts": {
+  "support/messaging/thread-panel.ts": {
     "max-len": {
       "count": 1
     }
@@ -359,7 +359,7 @@
       "count": 2
     }
   },
-  "support/wa-lines.ts": {
+  "support/messaging/wa-lines.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     }
@@ -520,12 +520,12 @@
       "count": 7
     }
   },
-  "tests/chat-files.sql.spec.ts": {
+  "tests/messaging/chat-files.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
-  "tests/chat-list-auto-rules.sql.spec.ts": {
+  "tests/messaging/chat-list-auto-rules.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 2
     },
@@ -533,17 +533,17 @@
       "count": 5
     }
   },
-  "tests/chat-list-auto-triggers.sql.spec.ts": {
+  "tests/messaging/chat-list-auto-triggers.sql.spec.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "tests/chat-lists.spec.ts": {
+  "tests/messaging/chat-lists.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/chat-lists.sql.spec.ts": {
+  "tests/messaging/chat-lists.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 3
     },
@@ -718,32 +718,32 @@
       "count": 1
     }
   },
-  "tests/inbound-new-lead.spec.ts": {
+  "tests/messaging/inbound-new-lead.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/inbound-quick-reply.spec.ts": {
+  "tests/messaging/inbound-quick-reply.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/inbox-failures.spec.ts": {
+  "tests/messaging/inbox-failures.spec.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "tests/inbox-media.spec.ts": {
+  "tests/messaging/inbox-media.spec.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "tests/inbox-push-owner.spec.ts": {
+  "tests/messaging/inbox-push-owner.spec.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "tests/inbox-realtime.sql.spec.ts": {
+  "tests/messaging/inbox-realtime.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -751,12 +751,12 @@
       "count": 5
     }
   },
-  "tests/inbox-send-file.spec.ts": {
+  "tests/messaging/inbox-send-file.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/inbox-template-status.spec.ts": {
+  "tests/messaging/inbox-template-status.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -784,7 +784,7 @@
       "count": 16
     }
   },
-  "tests/kapso-driver.spec.ts": {
+  "tests/messaging/kapso-driver.spec.ts": {
     "max-len": {
       "count": 4
     }
@@ -825,7 +825,7 @@
       "count": 3
     }
   },
-  "tests/message-reactions.sql.spec.ts": {
+  "tests/messaging/message-reactions.sql.spec.ts": {
     "max-len": {
       "count": 5
     }
@@ -835,7 +835,7 @@
       "count": 1
     }
   },
-  "tests/numbers-routing.sql.spec.ts": {
+  "tests/messaging/numbers-routing.sql.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -918,12 +918,12 @@
       "count": 1
     }
   },
-  "tests/push-device-claim.sql.spec.ts": {
+  "tests/messaging/push-device-claim.sql.spec.ts": {
     "max-len": {
       "count": 11
     }
   },
-  "tests/push-notifications-rls.sql.spec.ts": {
+  "tests/messaging/push-notifications-rls.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
@@ -936,7 +936,7 @@
       "count": 4
     }
   },
-  "tests/reply-forward.sql.spec.ts": {
+  "tests/messaging/reply-forward.sql.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1013,7 +1013,7 @@
       "count": 6
     }
   },
-  "tests/saved-replies.sql.spec.ts": {
+  "tests/messaging/saved-replies.sql.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -1043,7 +1043,7 @@
       "count": 2
     }
   },
-  "tests/send-gate-boot.api.spec.ts": {
+  "tests/messaging/send-gate-boot.api.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -1201,7 +1201,7 @@
       "count": 2
     }
   },
-  "tests/teacher-restricted-templates.spec.ts": {
+  "tests/messaging/teacher-restricted-templates.spec.ts": {
     "max-len": {
       "count": 2
     }
@@ -1222,27 +1222,27 @@
       "count": 3
     }
   },
-  "tests/template-numbers.spec.ts": {
+  "tests/messaging/template-numbers.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/templates.spec.ts": {
+  "tests/messaging/templates.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/thread-summaries.race.sql.spec.ts": {
+  "tests/messaging/thread-summaries.race.sql.spec.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "tests/thread-summaries.sql.spec.ts": {
+  "tests/messaging/thread-summaries.sql.spec.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "tests/trial-no-teacher-chat.spec.ts": {
+  "tests/messaging/trial-no-teacher-chat.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -1270,22 +1270,22 @@
       "count": 3
     }
   },
-  "tests/wa-line-health.sql.spec.ts": {
+  "tests/messaging/wa-line-health.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
-  "tests/wa-lines-check.spec.ts": {
+  "tests/messaging/wa-lines-check.spec.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "tests/wa-two-lines.reply.spec.ts": {
+  "tests/messaging/wa-two-lines.reply.spec.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "tests/whatsapp-lines.sql.spec.ts": {
+  "tests/messaging/whatsapp-lines.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -1293,7 +1293,7 @@
       "count": 1
     }
   },
-  "tests/whatsapp-lines.windows.sql.spec.ts": {
+  "tests/messaging/whatsapp-lines.windows.sql.spec.ts": {
     "max-len": {
       "count": 1
     }

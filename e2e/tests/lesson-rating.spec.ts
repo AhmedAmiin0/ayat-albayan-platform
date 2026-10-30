@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { seedSentConfirmation } from '../support/inbound';
+import { seedSentConfirmation } from '../support/messaging/inbound';
 import { payloadsOf, quickRating, RATING, ratingRows, ratingsSentTo, startedLesson } from '../support/lesson-rating';
 import { API, bearer, setSetting } from '../support/messages';
 import { approveTemplates } from '../support/teacher-templates';

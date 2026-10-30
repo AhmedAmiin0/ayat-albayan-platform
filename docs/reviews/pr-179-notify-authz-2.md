@@ -21,7 +21,7 @@ No Critical or Important findings.
 
 ## Minor (fixed in this PR)
 
-1. `e2e/tests/push-device-claim.sql.spec.ts`: the unit case removed by #179 «a binding made before
+1. `e2e/tests/messaging/push-device-claim.sql.spec.ts`: the unit case removed by #179 «a binding made before
    720 (null hash) + a presented key → 409» had no replacement at the SQL level (a rewrite to
    `is not distinct from` would let a key-less claim prove a null-hash binding). Added.
 2. Same file: «the holder registering again clears its own contest» was no longer tested. Added.
@@ -35,5 +35,5 @@ No Critical or Important findings.
   other claims of that same token, until the API role's statement timeout. Not worth extra code.
 
 Verified locally: `pnpm i --frozen-lockfile`, `pnpm --filter @ab/db --filter @ab/shared build`,
-full `pnpm turbo lint typecheck test`, and `e2e/tests/push-device-claim.sql.spec.ts` (6 tests)
+full `pnpm turbo lint typecheck test`, and `e2e/tests/messaging/push-device-claim.sql.spec.ts` (6 tests)
 against local Supabase with every migration applied.

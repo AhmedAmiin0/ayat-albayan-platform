@@ -3,7 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../support/schedule';
 import { STUB_URL, stubInbound, stubReset } from '../support/wa-stub';
-import { sidePanel } from '../support/thread-panel';
+import { sidePanel } from '../support/messaging/thread-panel';
 // Booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06): a trial needs none; a package and a makeup do
 // (uploaded, or saved from the family's chat); only the admin sees it. «Meta» = wa-stub.
 const API = 'http://localhost:3100';

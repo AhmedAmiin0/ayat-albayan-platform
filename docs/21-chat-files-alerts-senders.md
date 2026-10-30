@@ -194,7 +194,7 @@ end $$;
 ### 2.5 Migration tests
 
 - `apps/api/src/modules/messaging/whatsapp/wa-media-bucket.migration.test.ts`: a SQL-text test in the style of `restricted-templates.migration.test.ts`. It asserts that every entry of `PLAYABLE_MIMES` and `INVOICE_MIMES` appears in migration 500, and that `16777216` and `messages_media_cached_idx` are present. This keeps the bucket and the shared list in sync.
-- `e2e/tests/chat-files.sql.spec.ts`, in the style of `student-recordings-rls.sql.spec.ts` and `apply-lesson-changes-v3.sql.spec.ts`:
+- `e2e/tests/messaging/chat-files.sql.spec.ts`, in the style of `student-recordings-rls.sql.spec.ts` and `apply-lesson-changes-v3.sql.spec.ts`:
   - wa-media has `file_size_limit = 16777216` and its `allowed_mime_types` include `audio/ogg` and `video/mp4`;
   - an insert with `media_name = '   '` violates the check;
   - the FK of `messages_created_by_fkey` targets `public.profiles`;
@@ -320,7 +320,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
   - `MessageMedia.test.tsx`: rewrite :63 so an audio row shows «تشغيل رسالة صوتية», makes no fetch on render, and after the click renders `<audio src=signed>`. Also cover an outbound PDF row with `media_name`.
   - `MediaPlayer.test.tsx`: video gives `<video>`; a fired `error` event gives the link; the src is unchanged after a rerender with a new url.
 - Mobile `MessageFile.test.tsx`: a tap requests the W6 path and calls `Linking.openURL(signed)`; 410 shows expired; teacher mode shows the label with no request.
-- e2e `e2e/tests/inbox-media.spec.ts`: add `stubInboundMedia({ media: { kind: 'audio', mime: 'audio/ogg; codecs=opus', base64: <tiny> } })` (the `e2e/support/inbox.ts` helper already accepts audio). Click «تشغيل رسالة صوتية» and check that the bubble's `audio` element has a `src`.
+- e2e `e2e/tests/messaging/inbox-media.spec.ts`: add `stubInboundMedia({ media: { kind: 'audio', mime: 'audio/ogg; codecs=opus', base64: <tiny> } })` (the `e2e/support/messaging/inbox.ts` helper already accepts audio). Click «تشغيل رسالة صوتية» and check that the bubble's `audio` element has a `src`.
 
 ## 5. Decision 2: the assistant sends images and PDFs from the chat
 
@@ -436,8 +436,8 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 - Web: `AttachButton.test.tsx`, `FileComposer.test.tsx` (the send lock is shared, a sign-out mid-send leaves nothing in the next tab), and the outbound case in `MessageMedia.test.tsx`.
 - Mobile: `send-file.test.ts` and `AttachImage.test.tsx` (hidden for teacher mode and for a closed window).
 - e2e:
-  - New `e2e/tests/inbox-send-file.spec.ts`: a sales user; a stub inbound opens the window; attach a tiny PNG fixture; send. `stubSent()` has `type: 'image'` with `image.link`. The bubble's «عرض صورة» opens. A closed window hides the paperclip.
-  - Extend `e2e/tests/kapso-driver.spec.ts`: on the line it switches to Kapso, after the inbound, send a file. `stubRequests()` then shows `via: 'kapso'` with `body.type === 'image'`.
+  - New `e2e/tests/messaging/inbox-send-file.spec.ts`: a sales user; a stub inbound opens the window; attach a tiny PNG fixture; send. `stubSent()` has `type: 'image'` with `image.link`. The bubble's «عرض صورة» opens. A closed window hides the paperclip.
+  - Extend `e2e/tests/messaging/kapso-driver.spec.ts`: on the line it switches to Kapso, after the inbound, send a file. `stubRequests()` then shows `via: 'kapso'` with `body.type === 'image'`.
 
 ## 6. Decision 3: bell and browser push go to the owning assistant
 
@@ -501,9 +501,9 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
   - a lookup that throws means `handle` resolves, `notifyAdmins` was called and `notifySales` was not;
   - a replay means neither is called.
 - `sales-ownership.test.ts`: a case for `guardianOwnerIds`.
-- e2e `e2e/tests/inbox-push-owner.spec.ts`, API-level against wa-stub with push delivery off in CI (only bell rows are checked):
+- e2e `e2e/tests/messaging/inbox-push-owner.spec.ts`, API-level against wa-stub with push delivery off in CI (only bell rows are checked):
   - Use `makeAssistant` ×2 (A, B), `freshPhone()` and `leadOf(A, phone)` from `e2e/support/assistant-api.ts`.
-  - Add `pushesForProfile({ profileId, kind, phone })` next to `pushesForPhone` in `e2e/support/inbox.ts`.
+  - Add `pushesForProfile({ profileId, kind, phone })` next to `pushesForPhone` in `e2e/support/messaging/inbox.ts`.
   - Inbound from that phone: A has a `new_message` row, B has none, the admin has one.
   - SQL sets `assigned_to = null`, then a second inbound: B gains a row (a new dedup key), and A's is deduplicated.
   - A fresh phone: A and B both get `new_lead`.
