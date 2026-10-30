@@ -2,7 +2,7 @@ import type { ExpenseYearView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
-import { DataTable, type DataTableFeatures } from '@/components/DataTable';
+import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';

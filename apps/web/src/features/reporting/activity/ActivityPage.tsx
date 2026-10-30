@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { DataTable } from '@/components/DataTable';
-import { TableBox } from '@/components/TableBox';
+import { DataTable } from '@/components/data-table/DataTable';
+import { TableBox } from '@/components/data-table/TableBox';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { PageHead } from '@/components/ui/layout/page';

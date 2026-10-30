@@ -6,7 +6,7 @@ import { AdminShell, AssistantShell, PortalShell, SalesShell, SHELL_OF, TeacherS
 
 const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn<(props: { wide?: boolean }) => null>(() => null));
-vi.mock('@/components/AppShell', () => ({ AppShell: appShell }));
+vi.mock('@/components/shell/layout/AppShell', () => ({ AppShell: appShell }));
 vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
 vi.mock('./use-nav-counts', () => ({ useNavCounts: () => ({}) }));

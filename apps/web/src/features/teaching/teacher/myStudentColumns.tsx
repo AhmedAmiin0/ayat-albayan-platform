@@ -1,7 +1,7 @@
 import { STUDENT_STATUSES, studentStatusStyle, type TeacherMe } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable';
+import type { ColumnFilterDef, DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';

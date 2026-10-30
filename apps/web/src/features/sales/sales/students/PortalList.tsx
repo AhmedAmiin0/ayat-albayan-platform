@@ -1,7 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { RowData } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
-import { DataTable, type DataTableColumn } from '@/components/DataTable';
+import { DataTable, type DataTableColumn } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';

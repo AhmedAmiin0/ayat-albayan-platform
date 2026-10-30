@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
@@ -21,7 +21,7 @@ import { ExpenseDialog } from './ExpenseDialog';
 import type { ExpenseAction } from './ExpenseActions';
 import { expenseColumns } from './expense-columns';
 import { ExpenseYearTable } from './ExpenseYearTable';
-import { TableBox } from '@/components/TableBox';
+import { TableBox } from '@/components/data-table/TableBox';
 
 type Props = { month: string; onMonth: (month: string) => void };
 
