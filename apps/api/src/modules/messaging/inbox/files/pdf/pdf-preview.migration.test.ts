@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261030000982 read as text (no database in unit tests; CI's e2e job applies it).
 
-const sql = readFileSync(join(__dirname, '../../../../../../../../packages/db/supabase/migrations/20261030000982_message_pdf_preview.sql'), 'utf8');
+const sql = readFileSync(migrationPath('20261030000982_message_pdf_preview.sql'), 'utf8');
 const code = sql.replace(/--.*$/gm, '');
 
 describe('migration 20261030000982 message PDF preview', () => {

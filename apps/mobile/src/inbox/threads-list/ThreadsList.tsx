@@ -8,16 +8,17 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { clockAt } from '../shared/format';
+import { clockAt } from '@/inbox/shared/format';
 import { InboxHeaderActions } from './InboxHeaderActions';
 import { FAB, NewChatSheet } from './NewChatSheet';
-import { type ChatChoice, ChatListChips } from '../lists/ChatListChips';
-import { useThreadMode } from '../thread/hooks/thread-mode';
+import { type ChatChoice, ChatListChips } from '@/inbox/lists/ChatListChips';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
 import { useThreadRow } from './ThreadRow';
 import { useChoiceRows, useThreadList } from './use-thread-list';
 import { useClockCycle } from '@/core/lib/clock';
+import { useToday } from '@/core/lib/time/use-today';
 
 /**
  * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
@@ -43,7 +44,8 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
   const admin = mode.kind === 'admin';
-  const renderItem = useThreadRow(mode, base);
+  // One clock for the whole list (not a timer per row), new only at midnight.
+  const renderItem = useThreadRow(mode, base, useToday());
 
   return (
     <View testID="chats-list" style={{ flex: 1, gap: 8 }}>

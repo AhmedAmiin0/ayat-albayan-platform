@@ -68,8 +68,11 @@ export function previewText(th: ThreadView): string {
 /** «رسالتين جداد», «3 رسايل جديدة». */
 export const unreadLabel = (n: number): string => counted(t.inbox.unread, n);
 
-/** Today → «14:05» / «2:05 م», another day → «3 أكتوبر». */
-export function listTime(iso: string, clock: Clock, now: Date = new Date()): string {
+/**
+ * Today → «14:05» / «2:05 م», another day → «3 أكتوبر». `now` is the list's ticking clock (useNow,
+ * one per list): a default `new Date()` would be read once and kept by the React Compiler.
+ */
+export function listTime(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   return at.toDateString() === now.toDateString() ? clockAt(at, clock) : dayMonth.format(at);
 }
@@ -77,7 +80,7 @@ export function listTime(iso: string, clock: Clock, now: Date = new Date()): str
 export const clockText = (iso: string, clock: Clock): string => clockAt(new Date(iso), clock);
 
 /** A bubble's time: «05:53» today, «1 أكتوبر 05:53» another day (the 24 h window needs the day). */
-export function stampText(iso: string, clock: Clock, now: Date = new Date()): string {
+export function stampText(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   return at.toDateString() === now.toDateString() ? clockAt(at, clock) : `${dayMonth.format(at)} ${clockAt(at, clock)}`;
 }
