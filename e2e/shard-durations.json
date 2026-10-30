@@ -19,71 +19,71 @@
   "desktop": 67,
   "mobile": 5
  },
- "tests/assistant-auto-assign-off.api.spec.ts": {
+ "tests/sales/assistant-auto-assign-off.api.spec.ts": {
   "desktop": 309,
   "mobile": 8
  },
- "tests/assistant-commission-retro.sql.spec.ts": {
+ "tests/finance/assistant-commission-retro.sql.spec.ts": {
   "desktop": 151,
   "mobile": 5
  },
- "tests/assistant-commission-started.sql.spec.ts": {
+ "tests/finance/assistant-commission-started.sql.spec.ts": {
   "desktop": 163,
   "mobile": 8
  },
- "tests/assistant-commission.sql.spec.ts": {
+ "tests/finance/assistant-commission.sql.spec.ts": {
   "desktop": 258,
   "mobile": 9
  },
- "tests/assistant-course-renew.api.spec.ts": {
+ "tests/sales/assistant-course-renew.api.spec.ts": {
   "desktop": 411,
   "mobile": 8
  },
- "tests/assistant-course-subscription.sql.spec.ts": {
+ "tests/sales/assistant-course-subscription.sql.spec.ts": {
   "desktop": 83,
   "mobile": 4
  },
- "tests/assistant-course.api.spec.ts": {
+ "tests/sales/assistant-course.api.spec.ts": {
   "desktop": 399,
   "mobile": 13
  },
- "tests/assistant-money.api.spec.ts": {
+ "tests/finance/assistant-money.api.spec.ts": {
   "desktop": 937,
   "mobile": 14
  },
- "tests/assistant-portal.spec.ts": {
+ "tests/sales/assistant-portal.spec.ts": {
   "desktop": 9940,
   "mobile": 17599
  },
- "tests/assistant-renewal-commission.sql.spec.ts": {
+ "tests/finance/assistant-renewal-commission.sql.spec.ts": {
   "desktop": 365,
   "mobile": 19
  },
- "tests/assistant-reopen.sql.spec.ts": {
+ "tests/sales/assistant-reopen.sql.spec.ts": {
   "desktop": 103,
   "mobile": 6
  },
- "tests/assistant-scope.api.spec.ts": {
+ "tests/sales/assistant-scope.api.spec.ts": {
   "desktop": 223,
   "mobile": 7
  },
- "tests/assistant-scope.sql.spec.ts": {
+ "tests/sales/assistant-scope.sql.spec.ts": {
   "desktop": 182,
   "mobile": 7
  },
- "tests/assistant-statement.api.spec.ts": {
+ "tests/finance/assistant-statement.api.spec.ts": {
   "desktop": 249,
   "mobile": 12
  },
- "tests/assistant-statements.sql.spec.ts": {
+ "tests/finance/assistant-statements.sql.spec.ts": {
   "desktop": 205,
   "mobile": 11
  },
- "tests/assistant-terms.sql.spec.ts": {
+ "tests/sales/assistant-terms.sql.spec.ts": {
   "desktop": 129,
   "mobile": 5
  },
- "tests/assistant-trial-date.api.spec.ts": {
+ "tests/sales/assistant-trial-date.api.spec.ts": {
   "desktop": 344,
   "mobile": 10
  },
@@ -119,35 +119,35 @@
   "desktop": 3909,
   "mobile": 4001
  },
- "tests/change-course.sql.spec.ts": {
+ "tests/finance/change-course.sql.spec.ts": {
   "desktop": 438,
   "mobile": 21
  },
- "tests/channel-after-subscribe.sql.spec.ts": {
+ "tests/sales/channel-after-subscribe.sql.spec.ts": {
   "desktop": 137,
   "mobile": 9
  },
- "tests/chat-files.sql.spec.ts": {
+ "tests/messaging/chat-files.sql.spec.ts": {
   "desktop": 74,
   "mobile": 10
  },
- "tests/chat-list-auto-rules.sql.spec.ts": {
+ "tests/messaging/chat-list-auto-rules.sql.spec.ts": {
   "desktop": 204,
   "mobile": 14
  },
- "tests/chat-list-auto-triggers.sql.spec.ts": {
+ "tests/messaging/chat-list-auto-triggers.sql.spec.ts": {
   "desktop": 120,
   "mobile": 6
  },
- "tests/chat-lists.spec.ts": {
+ "tests/messaging/chat-lists.spec.ts": {
   "desktop": 10721,
   "mobile": 12540
  },
- "tests/chat-lists.sql.spec.ts": {
+ "tests/messaging/chat-lists.sql.spec.ts": {
   "desktop": 99,
   "mobile": 7
  },
- "tests/chat-subscribe.spec.ts": {
+ "tests/sales/chat-subscribe.spec.ts": {
   "desktop": 15318,
   "mobile": 18207
  },
@@ -175,11 +175,11 @@
   "desktop": 158,
   "mobile": 7
  },
- "tests/course-pause-resume.sql.spec.ts": {
+ "tests/finance/course-pause-resume.sql.spec.ts": {
   "desktop": 134,
   "mobile": 5
  },
- "tests/course-pause.sql.spec.ts": {
+ "tests/finance/course-pause.sql.spec.ts": {
   "desktop": 451,
   "mobile": 20
  },
@@ -199,11 +199,11 @@
   "desktop": 344,
   "mobile": 7
  },
- "tests/expenses.spec.ts": {
+ "tests/finance/expenses.spec.ts": {
   "desktop": 3483,
   "mobile": 4906
  },
- "tests/exports.spec.ts": {
+ "tests/finance/exports.spec.ts": {
   "desktop": 3050,
   "mobile": 3233
  },
@@ -215,11 +215,11 @@
   "desktop": 5200,
   "mobile": 6079
  },
- "tests/feedback.spec.ts": {
+ "tests/reporting/feedback.spec.ts": {
   "desktop": 20750,
   "mobile": 20005
  },
- "tests/finance-money.spec.ts": {
+ "tests/finance/finance-money.spec.ts": {
   "desktop": 11452,
   "mobile": 10848
  },
@@ -239,43 +239,43 @@
   "desktop": 242,
   "mobile": 0
  },
- "tests/guardian-deliveries.spec.ts": {
+ "tests/reporting/guardian-deliveries.spec.ts": {
   "desktop": 7301,
   "mobile": 34
  },
- "tests/inbound-new-lead.spec.ts": {
+ "tests/messaging/inbound-new-lead.spec.ts": {
   "desktop": 3277,
   "mobile": 3865
  },
- "tests/inbound-quick-reply.spec.ts": {
+ "tests/messaging/inbound-quick-reply.spec.ts": {
   "desktop": 1741,
   "mobile": 1039
  },
- "tests/inbound-stop.spec.ts": {
+ "tests/messaging/inbound-stop.spec.ts": {
   "desktop": 580,
   "mobile": 361
  },
- "tests/inbox-failures.spec.ts": {
+ "tests/messaging/inbox-failures.spec.ts": {
   "desktop": 14227,
   "mobile": 17548
  },
- "tests/inbox-media.spec.ts": {
+ "tests/messaging/inbox-media.spec.ts": {
   "desktop": 6966,
   "mobile": 10193
  },
- "tests/inbox-push-owner.spec.ts": {
+ "tests/messaging/inbox-push-owner.spec.ts": {
   "desktop": 863,
   "mobile": 0
  },
- "tests/inbox-realtime.sql.spec.ts": {
+ "tests/messaging/inbox-realtime.sql.spec.ts": {
   "desktop": 93,
   "mobile": 0
  },
- "tests/inbox-send-file.spec.ts": {
+ "tests/messaging/inbox-send-file.spec.ts": {
   "desktop": 9296,
   "mobile": 12018
  },
- "tests/inbox-template-status.spec.ts": {
+ "tests/messaging/inbox-template-status.spec.ts": {
   "desktop": 4616,
   "mobile": 5678
  },
@@ -287,11 +287,11 @@
   "desktop": 7605,
   "mobile": 10463
  },
- "tests/journey-1-lead-to-trial.spec.ts": {
+ "tests/sales/journey-1-lead-to-trial.spec.ts": {
   "desktop": 5613,
   "mobile": 7613
  },
- "tests/journey-2-report.spec.ts": {
+ "tests/reporting/journey-2-report.spec.ts": {
   "desktop": 5886,
   "mobile": 8323
  },
@@ -311,31 +311,31 @@
   "desktop": 3859,
   "mobile": 5095
  },
- "tests/journey-7-assistant-cycle.spec.ts": {
+ "tests/sales/journey-7-assistant-cycle.spec.ts": {
   "desktop": 30407,
   "mobile": 23
  },
- "tests/kapso-driver.spec.ts": {
+ "tests/messaging/kapso-driver.spec.ts": {
   "desktop": 9731,
   "mobile": 609
  },
- "tests/lead-qualification.spec.ts": {
+ "tests/sales/lead-qualification.spec.ts": {
   "desktop": 5431,
   "mobile": 8755
  },
- "tests/lead-register.spec.ts": {
+ "tests/sales/lead-register.spec.ts": {
   "desktop": 3044,
   "mobile": 4618
  },
- "tests/lead-to-subscription.spec.ts": {
+ "tests/sales/lead-to-subscription.spec.ts": {
   "desktop": 5918,
   "mobile": 8752
  },
- "tests/leads-applicants.spec.ts": {
+ "tests/sales/leads-applicants.spec.ts": {
   "desktop": 5184,
   "mobile": 7286
  },
- "tests/lesson-rating.spec.ts": {
+ "tests/reporting/lesson-rating.spec.ts": {
   "desktop": 8490,
   "mobile": 115
  },
@@ -359,7 +359,7 @@
   "desktop": 9860,
   "mobile": 15058
  },
- "tests/message-reactions.sql.spec.ts": {
+ "tests/messaging/message-reactions.sql.spec.ts": {
   "desktop": 88,
   "mobile": 7
  },
@@ -367,27 +367,27 @@
   "desktop": 4904,
   "mobile": 4
  },
- "tests/notification-bell.spec.ts": {
+ "tests/messaging/notification-bell.spec.ts": {
   "desktop": 6019,
   "mobile": 4193
  },
- "tests/numbers-routing.sql.spec.ts": {
+ "tests/messaging/numbers-routing.sql.spec.ts": {
   "desktop": 59,
   "mobile": 4
  },
- "tests/pay-rule.sql.spec.ts": {
+ "tests/finance/pay-rule.sql.spec.ts": {
   "desktop": 335,
   "mobile": 9
  },
- "tests/payment-attachments.api.spec.ts": {
+ "tests/finance/payment-attachments.api.spec.ts": {
   "desktop": 446,
   "mobile": 6
  },
- "tests/payments-receipt.spec.ts": {
+ "tests/finance/payments-receipt.spec.ts": {
   "desktop": 5855,
   "mobile": 7743
  },
- "tests/payouts.spec.ts": {
+ "tests/finance/payouts.spec.ts": {
   "desktop": 6094,
   "mobile": 7481
  },
@@ -395,11 +395,11 @@
   "desktop": 47400,
   "mobile": 44390
  },
- "tests/pick-trial-date.guards.sql.spec.ts": {
+ "tests/sales/pick-trial-date.guards.sql.spec.ts": {
   "desktop": 162,
   "mobile": 3
  },
- "tests/pick-trial-date.sql.spec.ts": {
+ "tests/sales/pick-trial-date.sql.spec.ts": {
   "desktop": 183,
   "mobile": 4
  },
@@ -407,11 +407,11 @@
   "desktop": 27,
   "mobile": 0
  },
- "tests/pricing-offer.spec.ts": {
+ "tests/finance/pricing-offer.spec.ts": {
   "desktop": 6015,
   "mobile": 6193
  },
- "tests/pricing.spec.ts": {
+ "tests/finance/pricing.spec.ts": {
   "desktop": 3250,
   "mobile": 3407
  },
@@ -427,11 +427,11 @@
   "desktop": 9136,
   "mobile": 9142
  },
- "tests/push-device-claim.sql.spec.ts": {
+ "tests/messaging/push-device-claim.sql.spec.ts": {
   "desktop": 139,
   "mobile": 1
  },
- "tests/push-notifications-rls.sql.spec.ts": {
+ "tests/messaging/push-notifications-rls.sql.spec.ts": {
   "desktop": 43,
   "mobile": 0
  },
@@ -439,15 +439,15 @@
   "desktop": 47,
   "mobile": 0
  },
- "tests/reply-forward.sql.spec.ts": {
+ "tests/messaging/reply-forward.sql.spec.ts": {
   "desktop": 52,
   "mobile": 0
  },
- "tests/report-admin.spec.ts": {
+ "tests/reporting/report-admin.spec.ts": {
   "desktop": 11922,
   "mobile": 12393
  },
- "tests/report-outcome.sql.spec.ts": {
+ "tests/reporting/report-outcome.sql.spec.ts": {
   "desktop": 163,
   "mobile": 1
  },
@@ -471,31 +471,31 @@
   "desktop": 5858,
   "mobile": 6140
  },
- "tests/sales-check-start.api.spec.ts": {
+ "tests/sales/sales-check-start.api.spec.ts": {
   "desktop": 247,
   "mobile": 0
  },
- "tests/sales-double-role.spec.ts": {
+ "tests/sales/sales-double-role.spec.ts": {
   "desktop": 19119,
   "mobile": 21981
  },
- "tests/sales-meetings.spec.ts": {
+ "tests/sales/sales-meetings.spec.ts": {
   "desktop": 6730,
   "mobile": 5808
  },
- "tests/sales-start-date-revoke.spec.ts": {
+ "tests/sales/sales-start-date-revoke.spec.ts": {
   "desktop": 14961,
   "mobile": 1
  },
- "tests/sales-starter.spec.ts": {
+ "tests/sales/sales-starter.spec.ts": {
   "desktop": 13665,
   "mobile": 10703
  },
- "tests/sales-subscribe.api.spec.ts": {
+ "tests/sales/sales-subscribe.api.spec.ts": {
   "desktop": 821,
   "mobile": 9
  },
- "tests/saved-replies.sql.spec.ts": {
+ "tests/messaging/saved-replies.sql.spec.ts": {
   "desktop": 178,
   "mobile": 9
  },
@@ -519,7 +519,7 @@
   "desktop": 3837,
   "mobile": 33
  },
- "tests/send-gate-boot.api.spec.ts": {
+ "tests/messaging/send-gate-boot.api.spec.ts": {
   "desktop": 11419,
   "mobile": 1
  },
@@ -567,23 +567,23 @@
   "desktop": 6761,
   "mobile": 2
  },
- "tests/subscriptions.spec.ts": {
+ "tests/finance/subscriptions.spec.ts": {
   "desktop": 13084,
   "mobile": 18453
  },
- "tests/teacher-corrections.sql.spec.ts": {
+ "tests/finance/teacher-corrections.sql.spec.ts": {
   "desktop": 228,
   "mobile": 2
  },
- "tests/teacher-earnings-rls.sql.spec.ts": {
+ "tests/finance/teacher-earnings-rls.sql.spec.ts": {
   "desktop": 157,
   "mobile": 0
  },
- "tests/teacher-earnings-ui.spec.ts": {
+ "tests/finance/teacher-earnings-ui.spec.ts": {
   "desktop": 6629,
   "mobile": 9738
  },
- "tests/teacher-earnings.sql.spec.ts": {
+ "tests/finance/teacher-earnings.sql.spec.ts": {
   "desktop": 183,
   "mobile": 0
  },
@@ -603,27 +603,27 @@
   "desktop": 17102,
   "mobile": 20861
  },
- "tests/teacher-payments.sql.spec.ts": {
+ "tests/finance/teacher-payments.sql.spec.ts": {
   "desktop": 214,
   "mobile": 1
  },
- "tests/teacher-report-attachments.spec.ts": {
+ "tests/reporting/teacher-report-attachments.spec.ts": {
   "desktop": 8290,
   "mobile": 12991
  },
- "tests/teacher-report-draft.spec.ts": {
+ "tests/reporting/teacher-report-draft.spec.ts": {
   "desktop": 7551,
   "mobile": 10089
  },
- "tests/teacher-report-edit-window.spec.ts": {
+ "tests/reporting/teacher-report-edit-window.spec.ts": {
   "desktop": 22305,
   "mobile": 27212
  },
- "tests/teacher-report-form-fields.spec.ts": {
+ "tests/reporting/teacher-report-form-fields.spec.ts": {
   "desktop": 4400,
   "mobile": 6614
  },
- "tests/teacher-restricted-templates.spec.ts": {
+ "tests/messaging/teacher-restricted-templates.spec.ts": {
   "desktop": 6135,
   "mobile": 8271
  },
@@ -631,7 +631,7 @@
   "desktop": 198,
   "mobile": 228
  },
- "tests/teacher-week-history.spec.ts": {
+ "tests/reporting/teacher-week-history.spec.ts": {
   "desktop": 5000,
   "mobile": 6765
  },
@@ -643,19 +643,19 @@
   "desktop": 3097,
   "mobile": 3829
  },
- "tests/template-numbers.spec.ts": {
+ "tests/messaging/template-numbers.spec.ts": {
   "desktop": 13000,
   "mobile": 12482
  },
- "tests/templates.spec.ts": {
+ "tests/messaging/templates.spec.ts": {
   "desktop": 12113,
   "mobile": 11510
  },
- "tests/thread-summaries.race.sql.spec.ts": {
+ "tests/messaging/thread-summaries.race.sql.spec.ts": {
   "desktop": 83,
   "mobile": 0
  },
- "tests/thread-summaries.sql.spec.ts": {
+ "tests/messaging/thread-summaries.sql.spec.ts": {
   "desktop": 124,
   "mobile": 0
  },
@@ -663,11 +663,11 @@
   "desktop": 6564,
   "mobile": 6697
  },
- "tests/trial-no-teacher-chat.spec.ts": {
+ "tests/messaging/trial-no-teacher-chat.spec.ts": {
   "desktop": 16169,
   "mobile": 15851
  },
- "tests/trial-no-teacher-chat.sql.spec.ts": {
+ "tests/messaging/trial-no-teacher-chat.sql.spec.ts": {
   "desktop": 102,
   "mobile": 0
  },
@@ -691,27 +691,27 @@
   "desktop": 267,
   "mobile": 17
  },
- "tests/wa-line-health.sql.spec.ts": {
+ "tests/messaging/wa-line-health.sql.spec.ts": {
   "desktop": 62,
   "mobile": 6
  },
- "tests/wa-lines-check.spec.ts": {
+ "tests/messaging/wa-lines-check.spec.ts": {
   "desktop": 6671,
   "mobile": 7
  },
- "tests/wa-two-lines.reply.spec.ts": {
+ "tests/messaging/wa-two-lines.reply.spec.ts": {
   "desktop": 18634,
   "mobile": 18283
  },
- "tests/wa-two-lines.spec.ts": {
+ "tests/messaging/wa-two-lines.spec.ts": {
   "desktop": 4098,
   "mobile": 3864
  },
- "tests/whatsapp-lines.sql.spec.ts": {
+ "tests/messaging/whatsapp-lines.sql.spec.ts": {
   "desktop": 210,
   "mobile": 16
  },
- "tests/whatsapp-lines.windows.sql.spec.ts": {
+ "tests/messaging/whatsapp-lines.windows.sql.spec.ts": {
   "desktop": 145,
   "mobile": 10
  }

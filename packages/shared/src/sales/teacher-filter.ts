@@ -2,7 +2,7 @@ import { normalizeArabic } from '../core/format/arabic.js';
 import type { Gender, Program } from '../enums/index.js';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';
-import { isOpenLesson } from '../lessons/state-machine.js';
+import { isOpenLesson } from '../schedule/lessons/state-machine.js';
 
 // «المعلمون» and «جدول الحلقات» of the salesperson, the same rules on web and mobile (owner rule: in sync).
 

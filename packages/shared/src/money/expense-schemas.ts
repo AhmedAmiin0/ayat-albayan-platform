@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '../enums/index.js';
 import { optionalText } from '../core/schemas/common.js';
-import { localDate } from '../schemas/lessons/scheduling.js';
+import { localDate } from '../schedule/schemas/scheduling.js';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas.js';
 
 // Expenses (R-RPT-02, issue E4; owner 2026-10-05). The category is a key of expense_categories

@@ -1,0 +1,392 @@
+{
+  "id": "t1",
+  "seq": 111,
+  "moves": [
+    {
+      "from": "e2e/tests/chat-files.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/chat-list-auto-rules.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/chat-list-auto-triggers.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/chat-lists.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/chat-lists.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbound-new-lead.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbound-quick-reply.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbound-stop.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-failures.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-media.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-push-owner.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-realtime.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-send-file.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/inbox-template-status.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/kapso-driver.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/message-reactions.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/notification-bell.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/numbers-routing.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/push-device-claim.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/push-notifications-rls.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/reply-forward.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/saved-replies.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/send-gate-boot.api.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/teacher-restricted-templates.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/template-numbers.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/templates.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/thread-summaries.race.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/thread-summaries.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/trial-no-teacher-chat.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/trial-no-teacher-chat.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/wa-line-health.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/wa-lines-check.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/wa-two-lines.reply.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/wa-two-lines.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/whatsapp-lines.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/tests/whatsapp-lines.windows.sql.spec.ts",
+      "to": "e2e/tests/messaging/"
+    },
+    {
+      "from": "e2e/support/chat-lists.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/chat-more.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/inbound.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/inbox.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/kapso.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/message-queue.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/reschedule-template.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/restricted-templates.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/template-numbers.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/template-registry.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/thread-panel.ts",
+      "to": "e2e/support/messaging/"
+    },
+    {
+      "from": "e2e/support/wa-lines.ts",
+      "to": "e2e/support/messaging/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/chat-lists.ts",
+      "e2e/support/messaging/chat-lists.ts"
+    ],
+    [
+      "e2e/support/chat-more.ts",
+      "e2e/support/messaging/chat-more.ts"
+    ],
+    [
+      "e2e/support/inbound.ts",
+      "e2e/support/messaging/inbound.ts"
+    ],
+    [
+      "e2e/support/inbox.ts",
+      "e2e/support/messaging/inbox.ts"
+    ],
+    [
+      "e2e/support/kapso.ts",
+      "e2e/support/messaging/kapso.ts"
+    ],
+    [
+      "e2e/support/message-queue.ts",
+      "e2e/support/messaging/message-queue.ts"
+    ],
+    [
+      "e2e/support/reschedule-template.ts",
+      "e2e/support/messaging/reschedule-template.ts"
+    ],
+    [
+      "e2e/support/restricted-templates.ts",
+      "e2e/support/messaging/restricted-templates.ts"
+    ],
+    [
+      "e2e/support/template-numbers.ts",
+      "e2e/support/messaging/template-numbers.ts"
+    ],
+    [
+      "e2e/support/template-registry.ts",
+      "e2e/support/messaging/template-registry.ts"
+    ],
+    [
+      "e2e/support/thread-panel.ts",
+      "e2e/support/messaging/thread-panel.ts"
+    ],
+    [
+      "e2e/support/wa-lines.ts",
+      "e2e/support/messaging/wa-lines.ts"
+    ],
+    [
+      "e2e/tests/chat-files.sql.spec.ts",
+      "e2e/tests/messaging/chat-files.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/chat-list-auto-rules.sql.spec.ts",
+      "e2e/tests/messaging/chat-list-auto-rules.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/chat-list-auto-triggers.sql.spec.ts",
+      "e2e/tests/messaging/chat-list-auto-triggers.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/chat-lists.spec.ts",
+      "e2e/tests/messaging/chat-lists.spec.ts"
+    ],
+    [
+      "e2e/tests/chat-lists.sql.spec.ts",
+      "e2e/tests/messaging/chat-lists.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/inbound-new-lead.spec.ts",
+      "e2e/tests/messaging/inbound-new-lead.spec.ts"
+    ],
+    [
+      "e2e/tests/inbound-quick-reply.spec.ts",
+      "e2e/tests/messaging/inbound-quick-reply.spec.ts"
+    ],
+    [
+      "e2e/tests/inbound-stop.spec.ts",
+      "e2e/tests/messaging/inbound-stop.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-failures.spec.ts",
+      "e2e/tests/messaging/inbox-failures.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-media.spec.ts",
+      "e2e/tests/messaging/inbox-media.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-push-owner.spec.ts",
+      "e2e/tests/messaging/inbox-push-owner.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-realtime.sql.spec.ts",
+      "e2e/tests/messaging/inbox-realtime.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-send-file.spec.ts",
+      "e2e/tests/messaging/inbox-send-file.spec.ts"
+    ],
+    [
+      "e2e/tests/inbox-template-status.spec.ts",
+      "e2e/tests/messaging/inbox-template-status.spec.ts"
+    ],
+    [
+      "e2e/tests/kapso-driver.spec.ts",
+      "e2e/tests/messaging/kapso-driver.spec.ts"
+    ],
+    [
+      "e2e/tests/message-reactions.sql.spec.ts",
+      "e2e/tests/messaging/message-reactions.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/notification-bell.spec.ts",
+      "e2e/tests/messaging/notification-bell.spec.ts"
+    ],
+    [
+      "e2e/tests/numbers-routing.sql.spec.ts",
+      "e2e/tests/messaging/numbers-routing.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/push-device-claim.sql.spec.ts",
+      "e2e/tests/messaging/push-device-claim.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/push-notifications-rls.sql.spec.ts",
+      "e2e/tests/messaging/push-notifications-rls.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/reply-forward.sql.spec.ts",
+      "e2e/tests/messaging/reply-forward.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/saved-replies.sql.spec.ts",
+      "e2e/tests/messaging/saved-replies.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/send-gate-boot.api.spec.ts",
+      "e2e/tests/messaging/send-gate-boot.api.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-restricted-templates.spec.ts",
+      "e2e/tests/messaging/teacher-restricted-templates.spec.ts"
+    ],
+    [
+      "e2e/tests/template-numbers.spec.ts",
+      "e2e/tests/messaging/template-numbers.spec.ts"
+    ],
+    [
+      "e2e/tests/templates.spec.ts",
+      "e2e/tests/messaging/templates.spec.ts"
+    ],
+    [
+      "e2e/tests/thread-summaries.race.sql.spec.ts",
+      "e2e/tests/messaging/thread-summaries.race.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/thread-summaries.sql.spec.ts",
+      "e2e/tests/messaging/thread-summaries.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/trial-no-teacher-chat.spec.ts",
+      "e2e/tests/messaging/trial-no-teacher-chat.spec.ts"
+    ],
+    [
+      "e2e/tests/trial-no-teacher-chat.sql.spec.ts",
+      "e2e/tests/messaging/trial-no-teacher-chat.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/wa-line-health.sql.spec.ts",
+      "e2e/tests/messaging/wa-line-health.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/wa-lines-check.spec.ts",
+      "e2e/tests/messaging/wa-lines-check.spec.ts"
+    ],
+    [
+      "e2e/tests/wa-two-lines.reply.spec.ts",
+      "e2e/tests/messaging/wa-two-lines.reply.spec.ts"
+    ],
+    [
+      "e2e/tests/wa-two-lines.spec.ts",
+      "e2e/tests/messaging/wa-two-lines.spec.ts"
+    ],
+    [
+      "e2e/tests/whatsapp-lines.sql.spec.ts",
+      "e2e/tests/messaging/whatsapp-lines.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/whatsapp-lines.windows.sql.spec.ts",
+      "e2e/tests/messaging/whatsapp-lines.windows.sql.spec.ts"
+    ]
+  ]
+}

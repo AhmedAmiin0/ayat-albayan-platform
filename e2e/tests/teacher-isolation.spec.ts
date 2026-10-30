@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer } from '../support/messages';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar, withSql } from '../support/schedule';
 import { dropHiba, HIBA_AMOUNT, HIBA_MONTH, seedAbrarPayout, seedHiba, type HibaSeed } from '../support/teacher-isolation';
 

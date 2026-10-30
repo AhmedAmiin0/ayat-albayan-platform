@@ -101,7 +101,7 @@ export class ReportsSettings {
 No code. An admin adds it in «قيم مخصصة» (`PUT /config/custom/:key`): the key matches `CUSTOM_KEY_RE` and must not be a registry key (`reserved_key`); the value is JSON of at most 8 KB. When marked public it appears under `custom` in `GET /settings/public`. Once code depends on a value, make it a setting.
 
 ### Add an integration key
-1. `packages/shared/src/integrations/keys.ts`: add it to `INTEGRATION_PLAIN_KEYS` or `INTEGRATION_SECRET_KEYS` and to `GROUP_OF`; add its form check in `checks.ts`.
+1. `packages/shared/src/catalog/integrations/keys.ts`: add it to `INTEGRATION_PLAIN_KEYS` or `INTEGRATION_SECRET_KEYS` and to `GROUP_OF`; add its form check in `checks.ts`.
 2. The env schema (`apps/api/src/config/env/env.ts` or its `env.<topic>.ts` shape) must define it, using `env.blank.ts`'s helpers: `validOverlay` checks each database value against that key's schema and drops a bad one.
 3. A **secret** key needs a new migration that re-creates `public.integration_secret_key_ok` with the full list (never edit an old migration). `apps/api/src/common/integrations/secret-keys.migration.test.ts` reads the latest definition and fails until it matches `INTEGRATION_SECRET_KEYS`. A plain key needs no migration.
 4. Add `integrations.keys.<KEY>.label` / `.hint` to `ar.json` and `en.json`; update the key table in docs/09 «Integration config in the database».
@@ -133,6 +133,6 @@ drops it. Its only writer is `POST /admin/communications/source` (`numbers.manag
 ## 8. Where the e2e settings writers live
 
 - `e2e/support/settings.ts`: `snapshotSettings`, `restoreSettings`, `settingText`.
-- `e2e/support/template-registry.ts`: template snapshot/restore, `setTemplateStatus`, `templateRow`, `stubTemplates`.
-- `e2e/support/message-queue.ts`: `queuedCount`, `clearQueue`, `queueText`, `queueRenewal`, `messageState`, `sentToDigits`.
+- `e2e/support/messaging/template-registry.ts`: template snapshot/restore, `setTemplateStatus`, `templateRow`, `stubTemplates`.
+- `e2e/support/messaging/message-queue.ts`: `queuedCount`, `clearQueue`, `queueText`, `queueRenewal`, `messageState`, `sentToDigits`.
 - Older writers kept where they are, to avoid touching about 25 specs: `setSetting` (`support/messages.ts`), `setMessaging` (`support/wa-stub.ts`), `setSettingTx` (`support/pay-rule.ts`), `setLateCancelHours` (`support/schedule-extra.ts`), `seedSettings` (`support/db.ts`), `resetGoogle` (`support/google.ts`), `autoMessages` (`tests/edit-session-time.helpers.ts`). The e2e API runs with `SETTINGS_CACHE_MS=0`, so their SQL writes apply at once.

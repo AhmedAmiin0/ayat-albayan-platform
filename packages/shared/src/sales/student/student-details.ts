@@ -4,7 +4,7 @@ import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
-import type { TrialOutcome } from '../../students/index.js';
+import type { TrialOutcome } from '../../people/students/index.js';
 
 // «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28), its trial,
 // «الجدول» and attendance; subscriptions and sent reports only for HER students (`mine`). Never a price or payment.

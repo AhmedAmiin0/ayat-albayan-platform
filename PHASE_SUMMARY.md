@@ -80,7 +80,7 @@ Collected from the `TODO(R-…)` comments in the code:
 - R-AUTH-01: the guardian magic-link portal is not built (open question 4).
 
 Raised by the verifiers and builders:
-- **Shared schema bug:** every `*UpdateSchema` in `packages/shared` is built with `.partial()`, and zod 4 still applies `.default()` values. A partial update therefore resets fields such as `status` or `program`. Students works around it with `studentPatchSchema` and teachers with `sentOnly()`. The root fix belongs in `packages/shared/src/schemas/people/people.ts` and `leads.ts`.
+- **Shared schema bug:** every `*UpdateSchema` in `packages/shared` is built with `.partial()`, and zod 4 still applies `.default()` values. A partial update therefore resets fields such as `status` or `program`. Students works around it with `studentPatchSchema` and teachers with `sentOnly()`. The root fix belongs in `packages/shared/src/people/schemas/people.ts` and `leads.ts`.
 - **Reclassify:** it deletes the lead, and the foreign key (`on delete set null`) nulls `from_lead_id`. The audit row is the only link back, so the `jobApplicants.fromLead` label can never be shown. Reclassify also does not block leads that are already `converted`. Please decide whether to add a marker column instead.
 - **Merge does not copy fields:** empty fields on the kept student are not filled from the merged one; that data survives only in the snapshot. The profile's merge tool only offers students on the same guardian phone, so the same child under two phones needs a student picker, which is not built. Old `audit_log` rows keep the merged student's id.
 - R-STU-05: should `meeting_link_override` be cleared when the teacher changes? It is currently kept.
@@ -179,7 +179,7 @@ Two critics reviewed the running app. The fidelity critic checked it against the
 - **Applicants:** the count reads «3 طلب», rows stack on phones, and the application date shows the date only.
 
 ### Mobile (Expo)
-- **Theme:** `packages/shared/src/theme/theme.ts` is now the one source for the RN palette, elevation, type, shape, space and motion. `apps/mobile/src/theme.ts` re-exports it and only picks the scheme.
+- **Theme:** `packages/shared/src/catalog/theme/theme.ts` is now the one source for the RN palette, elevation, type, shape, space and motion. `apps/mobile/src/theme.ts` re-exports it and only picks the scheme.
 - **Fonts and graphics:** Amiri and Plex via expo-font, plus the Mark, the NuqtaGlyph and the empty-state rhombus.
 - **Screens:** the login screen and the «النهارده» shell.
 - **Start alignment:** the new `AppText` and the `Field` primitive align to the start under forceRTL.
@@ -622,7 +622,7 @@ Owner request: every price on **ayatalbayan.com/calculator**, with a currency AP
 Branch `develop`. Foundation commit `8ea89a6` (scheduling schema, lesson state machine, `docs/10-phase2-contracts.md`), then five builder branches merged with `--no-ff` in this order: `phase2/brand` (`6e9d431`), `phase2/engine` (`69b439f`), `phase2/booking` (`8c7fc50`), `phase2/web` (`5249b06`), `phase2/mobile` (`205c006`). All five merges were clean, with no textual conflicts. The `ar.json` hunks fell in separate namespaces (`lessons.error`, `schedule`, `booking`, `teacherDash`, `today`), and the migrations have distinct numbers (080 engine, 090 booking, 100 engine).
 
 ## What was built
-- **Brand** (`phase2/brand`): the real academy emblem replaces the invented rosette everywhere: web shell, login cover, favicons, mobile header and login, iOS and Android icons, and the splash image. The palette moves to brand green, gold and paper in `packages/shared/src/theme/theme.ts` and `apps/web/src/styles/tokens.css`, kept in sync by a test. Every text/surface pair passes AA in light and dark (`theme.contrast.test.ts`). Token names are unchanged.
+- **Brand** (`phase2/brand`): the real academy emblem replaces the invented rosette everywhere: web shell, login cover, favicons, mobile header and login, iOS and Android icons, and the splash image. The palette moves to brand green, gold and paper in `packages/shared/src/catalog/theme/theme.ts` and `apps/web/src/styles/tokens.css`, kept in sync by a test. Every text/surface pair passes AA in light and dark (`theme.contrast.test.ts`). Token names are unchanged.
 - **Lessons engine** (`phase2/engine`; R-SCH-02, 03, 07, 08, R-LES-01, 03, R-TCH-03):
   - `generate_rule_lessons` (migration 080) inserts with `on conflict (rule_id, starts_at) do nothing`, so re-runs add 0 rows and never recreate cancelled or rescheduled slots (issue B1).
   - `apply_lesson_changes` (migration 100) applies status CAS, the end of a rule, a new rule with its lessons, and dedup-keyed queued messages in one transaction.
@@ -1547,7 +1547,7 @@ Owner request: a second booking type «حجز تعويضي» and a required «ا
 ### Integration
 - Merged `makeup/api`, `makeup/web`, `makeup/mobile` (--no-ff). i18n conflicts resolved by key union (`booking.kind/makeup/invoice/error`); the API's `booking.error.*` is the single home of the new error codes (`lessons.error` is pinned by an API test to the lessons codes), the web `lessonErrorText` reads both.
 - The web and mobile stand-in contract types now come from `@ab/shared` (`BookingKind`, `InvoiceInput`, `InvoiceView`, `MakeupCandidate`, `ThreadMediaItem`, `LessonView.makeup`, `makeupEligible`); only mobile-only drafts stay local.
-- Fixtures gained `invoice_id`. e2e: `chat-subscribe`, `journey-5` upload an invoice before review (`e2e/support/invoice.ts`), `journey-1` checks the trial type and no package list, `forms-parity` checks the three types and the four paid sizes (the trial option moved to «نوع الحجز», docs/13 DEVIATION). New `booking-makeup-invoice.spec` (trial without invoice, package blocked until upload, makeup with invoice saved from a wa-stub photo, teacher 403).
+- Fixtures gained `invoice_id`. e2e: `chat-subscribe`, `journey-5` upload an invoice before review (`e2e/support/finance/invoice.ts`), `journey-1` checks the trial type and no package list, `forms-parity` checks the three types and the four paid sizes (the trial option moved to «نوع الحجز», docs/13 DEVIATION). New `booking-makeup-invoice.spec` (trial without invoice, package blocked until upload, makeup with invoice saved from a wa-stub photo, teacher 403).
 
 ### Gate (`supabase db reset` (171 applied; `gen:types` unchanged) + `pnpm env:local`, then `pnpm test:all`)
 - 27/27 turbo tasks green. e2e: 79 passed + 3 skipped (desktop + mobile).

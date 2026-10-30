@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import { ATTENDANCES, GRADES, type LessonStatus } from '../enums/index.js';
-import { LESSON_EVENT_TARGET } from '../lessons/state-machine.js';
+import { LESSON_EVENT_TARGET } from '../schedule/lessons/state-machine.js';
 import {
   ATTENDANCE_EVENT,
   attended,

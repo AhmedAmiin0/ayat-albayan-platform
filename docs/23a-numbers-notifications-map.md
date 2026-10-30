@@ -8,7 +8,7 @@ Contents: A. Lines · B. Notification engine · C. Admin UI · D. Data model · 
 
 ## A. LINES (the two WhatsApp numbers)
 
-**Correction to the brief.** Both lines can run on either driver. `WA_PROVIDER` picks the notifications line's driver and `WA_CHAT_PROVIDER` the chat line's (`apps/api/src/config/env/whatsapp/env.kapso.ts:16-20`, `apps/api/src/config/env/whatsapp/env.whatsapp.ts:63-65`). Only the defaults are `meta`. The e2e helper `e2e/support/kapso.ts:24-37` switches the **notifications** line to kapso.
+**Correction to the brief.** Both lines can run on either driver. `WA_PROVIDER` picks the notifications line's driver and `WA_CHAT_PROVIDER` the chat line's (`apps/api/src/config/env/whatsapp/env.kapso.ts:16-20`, `apps/api/src/config/env/whatsapp/env.whatsapp.ts:63-65`). Only the defaults are `meta`. The e2e helper `e2e/support/messaging/kapso.ts:24-37` switches the **notifications** line to kapso.
 
 ### A1. Where the line type is defined
 
@@ -22,8 +22,8 @@ Contents: A. Lines · B. Notification engine · C. Admin UI · D. Data model · 
 | `ThreadView.last_inbound_line`, `reply_line`; `MessageView.line` | `packages/shared/src/messaging/chat/views.ts:47,53,92` |
 | `TemplateView.line`, `TemplateLineSync.line` | `template-views.ts:25`, `template-sync-views.ts:10` |
 | `replyLine()` 24 h window rule, literal `'chat'`/`'notifications'` | `packages/shared/src/messaging/replies/reply-line.ts:4-29` |
-| Integration groups `wa_notifications`, `wa_chat`; key lists; `GROUP_OF`; `WA_PROVIDERS`, `INTEGRATION_ENUMS` | `packages/shared/src/integrations/keys.ts:7`, `:10-91`, `:106-113` |
-| Per-key value checks | `packages/shared/src/integrations/checks.ts:25-45` |
+| Integration groups `wa_notifications`, `wa_chat`; key lists; `GROUP_OF`; `WA_PROVIDERS`, `INTEGRATION_ENUMS` | `packages/shared/src/catalog/integrations/keys.ts:7`, `:10-91`, `:106-113` |
+| Per-key value checks | `packages/shared/src/catalog/integrations/checks.ts:25-45` |
 | i18n `enums.waLine` («خط الإشعارات» / «خط المحادثات»), groups, `WA_CHAT_*` labels, «افحص الخطوط», `chatOptional`, `duplicateChatPhone` | `packages/shared/i18n/ar.json:3125-3128`, `:4481-4482`, `:4554-4578`, `:2652`, `:2657`, `:2679` |
 
 ### A2. Hard-coded two-line sites (grep `'chat'|'notifications'|WaLine|WA_LINES|line ===|WA_CHAT_|wa_line`)
@@ -65,7 +65,7 @@ Also: `.github/workflows/ci.yml:146-189` (`E2E_LINES: single` job), `tools/migra
 
 **e2e:** `playwright.config.ts:14-37,73-106` (`E2E_WA`, `E2E_WA_CHAT_KEYS`, `E2E_LINES=single`, empty providers); support `wa-lines.ts`, `kapso.ts`, `template-numbers.ts`, `restricted-templates.ts`, `reschedule-template.ts`; specs `wa-two-lines.spec.ts` (15), `whatsapp-lines.windows.sql.spec.ts` (14), `wa-two-lines.reply.spec.ts` (13), `whatsapp-lines.sql.spec.ts` (11), `template-numbers.spec.ts` (8), `sales-starter.spec.ts` (5), `templates.spec.ts` (3), `wa-lines-check.spec.ts` (2).
 
-### A3. Config keys per line (registry `packages/shared/src/integrations/keys.ts:10-91`)
+### A3. Config keys per line (registry `packages/shared/src/catalog/integrations/keys.ts:10-91`)
 
 | Group | Plain (`integration_config`) | Secret (Vault `integration:<KEY>`) |
 |---|---|---|

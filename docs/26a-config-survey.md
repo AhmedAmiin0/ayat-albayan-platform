@@ -164,7 +164,7 @@ Seeded rows: **none** (no migration or `seed.sql` inserts into `custom_config`).
 
 Table `M/20261012000310_integration_config.sql:10-15`: `key text pk check (key ~ '^[A-Z][A-Z0-9_]{2,63}$'), value text not null check (octet_length(value) <= 4096), updated_at, updated_by`; RLS admin read `:22-26`. Secrets: Vault name **`integration:<KEY>`** via `integration_secret_set/clear/secrets_read/secrets_status` (`:38-89`), whitelisted by `public.integration_secret_key_ok()` — redefined 4 times: `M/…000310:29` (8 keys) → `M/20261012000380_notification_bell.sql:50` (+`WEB_PUSH_VAPID_PRIVATE_KEY`) → `M/20261017000450_kapso_secret_keys.sql:13` (+`KAPSO_API_KEY`, `KAPSO_WEBHOOK_SECRET`) → `M/20261022000610_google_sync.sql:132` (+`GOOGLE_CLIENT_SECRET`) = 12. Pinned by `apps/api/src/common/integrations/secret-keys.migration.test.ts`.
 
-Groups in page order `packages/shared/src/integrations/keys.ts:7`: `wa_notifications, wa_chat, kapso, wa_safety, livekit, expo, web_push, fx, google`. Plain list `keys.ts:10-31` (20), secret list `keys.ts:34-47` (12), `GROUP_OF` `keys.ts:62-96`, enums `keys.ts:115-120`, value checks `checks.ts:28-49` (max 4096 `checks.ts:9`). i18n `integrations.keys.<KEY>.label/.hint`. Env fallback: a non-empty DB value wins over `process.env` (`apps/api/src/config/env/env.ts` `loadEnv` / `validOverlay`); env schema location given.
+Groups in page order `packages/shared/src/catalog/integrations/keys.ts:7`: `wa_notifications, wa_chat, kapso, wa_safety, livekit, expo, web_push, fx, google`. Plain list `keys.ts:10-31` (20), secret list `keys.ts:34-47` (12), `GROUP_OF` `keys.ts:62-96`, enums `keys.ts:115-120`, value checks `checks.ts:28-49` (max 4096 `checks.ts:9`). i18n `integrations.keys.<KEY>.label/.hint`. Env fallback: a non-empty DB value wins over `process.env` (`apps/api/src/config/env/env.ts` `loadEnv` / `validOverlay`); env schema location given.
 
 | key | group | plain/secret | storage | check (`checks.ts`) | env schema (fallback) | code default when unset | proposed module |
 |---|---|---|---|---|---|---|---|
@@ -404,7 +404,7 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | `e2e/support/settings.ts:19-22` | `insert … values ($key, $json::jsonb) on conflict (key) do update set value = excluded.value` / `delete … where key = $key` | restore (keeps JSON null) |
 | `e2e/support/settings.ts:32` | `select value #>> '{}' … where key = $key` | text read |
 | `e2e/support/wa-stub.ts:59` | upsert `messaging_enabled` (`on conflict (key) do update`) | |
-| `e2e/support/pay-rule.ts:56` | upsert any bool key (tx) | |
+| `e2e/support/finance/pay-rule.ts:56` | upsert any bool key (tx) | |
 | `e2e/support/schedule-extra.ts:32-35` | delete / upsert `late_cancel_hours` | null = delete, like the API |
 | `e2e/support/db.ts:60-67` (`seedSettings`) | multi-row upsert of 11 keys incl. `late_cancel_hours` JSON null | after `resetDb` |
 | `e2e/support/db.ts:23-27` (`resetDb`) | `truncate` every `pg_tables` row in `public` except 4 | **truncates settings/custom_config/integration_config**; a view is not in `pg_tables`, a new base table would be truncated automatically |
@@ -412,8 +412,8 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | `e2e/support/google.ts:37` | `delete … where key in (google_sync_enabled, google_sync_mode, google_calendar_window_days)`; `select public.google_token_clear()` | |
 | `e2e/tests/edit-session-time.helpers.ts:58` | `update public.settings set value = … where key = 'auto_messages_enabled'` | plain UPDATE |
 | `e2e/tests/google-sync.sql.spec.ts:22,32-34` | upsert `google_sync_enabled` = `'true'`; `delete … where key like 'google\_%'`; asserts `google_sync_on()` = false and `google_sync_window_days()` = 60 on missing rows | |
-| `e2e/tests/teacher-earnings.sql.spec.ts:21` | `update public.settings set value = 'true'::jsonb where key = 'payout_count_late'` | |
-| `e2e/support/kapso.ts:30-33` | upsert / delete `integration_config` `WA_PROVIDER`, `KAPSO_API_BASE` | |
+| `e2e/tests/finance/teacher-earnings.sql.spec.ts:21` | `update public.settings set value = 'true'::jsonb where key = 'payout_count_late'` | |
+| `e2e/support/messaging/kapso.ts:30-33` | upsert / delete `integration_config` `WA_PROVIDER`, `KAPSO_API_BASE` | |
 | `e2e/tests/integration-config.sql.spec.ts:32-89` | RLS spec: admin can SELECT, non-admin sees nothing, admin INSERT denied, anon `42501`; service-role calls of all five secret RPCs; blank secret `22023` | pins RLS + grants + error codes |
 
 No e2e SQL touches `custom_config`.
@@ -613,8 +613,8 @@ Because the gate depends on `SettingsService` cache, a kill switch flipped by PA
 
 | Item | Location | Detail |
 |---|---|---|
-| Catalog | `packages/shared/src/permissions/catalog.data.ts:30-…` (`PERMISSION_ROWS`); settings rows at :104-105 | `{ key: 'settings.read', area: 'system', grants: [] }`, `{ key: 'settings.write', … grants: [] }` → admin only by default. Header comment :1-7 is the recipe: row here + i18n `permissions.items` + seed migration + `@Permissions('…')`. |
-| Derivations | `packages/shared/src/permissions/catalog.ts` | `Permission` type, `GRANTABLE_PERMISSIONS` (all non-`self`), `defaultGrantsOf` (admin = all grantable), `effectivePermissions`, `systemPermissionsOf`, `permissionGroups` (matrix sections). |
+| Catalog | `packages/shared/src/catalog/permissions/catalog.data.ts:30-…` (`PERMISSION_ROWS`); settings rows at :104-105 | `{ key: 'settings.read', area: 'system', grants: [] }`, `{ key: 'settings.write', … grants: [] }` → admin only by default. Header comment :1-7 is the recipe: row here + i18n `permissions.items` + seed migration + `@Permissions('…')`. |
+| Derivations | `packages/shared/src/catalog/permissions/catalog.ts` | `Permission` type, `GRANTABLE_PERMISSIONS` (all non-`self`), `defaultGrantsOf` (admin = all grantable), `effectivePermissions`, `systemPermissionsOf`, `permissionGroups` (matrix sections). |
 | DB | migration `20261005000220_roles_permissions.sql:10-55` | `roles`, `role_permissions(permission text check '^[a-z]+\.[a-z_]+$')` — free text, no FK to a catalog; seeds system roles. Later grant migrations: 225, 240, 274, 281, 300, 360, 380, 430, 433, `20261020000521_chat_lists_permission.sql` (pattern: `insert … select r.id, '<perm>' from roles r where r.is_system and r.key in (…) on conflict do nothing`). |
 | Resolver | `common/auth/db-permission.resolver.ts:7-38` | role row + `role_permissions`; system `admin` gets `allGrantable` regardless of rows. |
 | Cache | `common/auth/permission.cache.ts:4,14-30` | per-user, `PERMISSION_TTL_MS` 30 s; `clear()` local; comment explicitly bounds cross-instance staleness by TTL. |

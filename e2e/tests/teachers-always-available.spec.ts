@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { uploadInvoice } from '../support/invoice';
+import { uploadInvoice } from '../support/finance/invoice';
 import { setSetting } from '../support/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../support/schedule';
 

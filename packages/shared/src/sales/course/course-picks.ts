@@ -1,5 +1,5 @@
 import type { Weekday } from '../../enums/index.js';
-import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule } from '../../lessons/series/day-times.js';
+import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule } from '../../schedule/lessons/series/day-times.js';
 import type { BookedCourse, PrefilledPick } from './course-follow.js';
 import { prefillDays } from './course-follow.js';
 

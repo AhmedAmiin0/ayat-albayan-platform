@@ -129,7 +129,7 @@ visible focus, 44px targets, loading/empty/error states, light/dark, 390px with 
   header chips (`ThreadListChips`). `InboxSearch.list` (a uuid; unknown → «الكل» via `activeList`).
 - **Mobile**: JS only (no native change), admin and assistant trees.
 - **Tests**: shared, API (service, queries, guard, http, threads list/detail, parity, seed), web, mobile,
-  `e2e/tests/chat-lists.spec.ts` (the journey) and `e2e/tests/chat-lists.sql.spec.ts` (RLS, cascade, key,
+  `e2e/tests/messaging/chat-lists.spec.ts` (the journey) and `e2e/tests/messaging/chat-lists.sql.spec.ts` (RLS, cascade, key,
   E.164, cap, seed).
 
 
@@ -160,5 +160,5 @@ to «معلم» now, then add new ones automatically; never remove anyone added 
   تلقائيًا») under the chip row while it is shown, in the chat's
   «القوائم» checklist and in «تعديل القائمة» (web and mobile). `GET /chat-lists` items carry `auto_rule`
   (`'subscribed' | 'teachers' | null`).
-- **Tests**: `e2e/tests/chat-list-auto-rules.sql.spec.ts` (backfill, each trigger path, idempotency,
+- **Tests**: `e2e/tests/messaging/chat-list-auto-rules.sql.spec.ts` (backfill, each trigger path, idempotency,
   invalid phones, nothing removed, a list without a rule untouched, grants).

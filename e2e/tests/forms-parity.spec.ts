@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar, seedFamily, setAvailability } from '../support/schedule';
 
 // Forms parity (owner 2026-10-03, "THESE ARE ALL OUR FORMS"): each form in the app shows the Google

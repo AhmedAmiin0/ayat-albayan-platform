@@ -92,7 +92,7 @@ All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are se
 
 ### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales) — ✅ done
 
-Files: `apps/api/src/modules/messaging/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/messaging/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/messaging/inbox/inbox.module.ts`, `apps/web/src/features/messaging/inbox/api/api.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/api/src/modules/messaging/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/messaging/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/messaging/inbox/inbox.module.ts`, `apps/web/src/features/messaging/inbox/api/api.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/messaging/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 This is the only API change in the routine, allowed because docs/16 row 1b says media inside messages «shows in every thread» for sales, while MessageViews.view is always called without a URL (sales-threads.service.ts:47).
 
@@ -107,7 +107,7 @@ This is the only API change in the routine, allowed because docs/16 row 1b says 
 - For an inbound image or PDF MIME, render a button «عرض {kind}». On click it runs `threadFileQuery(m.phone_e164, m.id)` (useQuery, enabled after the click, staleTime under the signed URL's TTL), then shows an `<img>` thumbnail that opens full size in a new tab, or a named link for a PDF. HEIC is a link.
 - A 410 shows the new string inbox.mediaExpired «انتهت صلاحية الملف».
 - Other MIMEs keep today's label.
-(3) Update e2e/tests/inbox-media.spec.ts:43,45, which asserts the placeholder.
+(3) Update e2e/tests/messaging/inbox-media.spec.ts:43,45, which asserts the placeholder.
 
 **Test:** New thread-file.http.test.ts: a sales user gets 200 and a signed url for a message of that phone; a message of another phone → 404 message_not_found; a teacher → 403 media_forbidden; a role without inbox.read → 403. Expired media → 410. New MessageMedia.test.tsx: an image row makes no request on render; a click fetches /threads/%2B9665…/messages/<id>/file and renders an img with the signed url; a 410 → «انتهت صلاحية الملف»; an audio/ogg row shows the label only and never fetches.
 

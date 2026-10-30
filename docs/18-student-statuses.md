@@ -1,7 +1,7 @@
 # 18 — Student statuses (owner 2026-10-15)
 
 `students.status` is one pipeline from the first contact to renewal (R-STU-05). Pure rules:
-`packages/shared/src/students/status-flow.ts`; display order: `STUDENT_STATUSES`; labels:
+`packages/shared/src/people/students/status-flow.ts`; display order: `STUDENT_STATUSES`; labels:
 `enums.studentStatus.*`; chips: docs/07 §6.
 
 | # | key | Arabic | meaning | chip |

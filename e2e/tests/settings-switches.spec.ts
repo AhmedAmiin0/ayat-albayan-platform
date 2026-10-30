@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { clearQueue, messageState, queueRenewal, queueText, queuedCount, sentToDigits } from '../support/message-queue';
+import { clearQueue, messageState, queueRenewal, queueText, queuedCount, sentToDigits } from '../support/messaging/message-queue';
 import { freshDigits, seedLead } from '../support/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';

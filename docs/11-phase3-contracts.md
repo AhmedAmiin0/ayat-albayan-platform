@@ -336,7 +336,7 @@ Owner request 2026-10-28 «Also add option to pause the course». Before, a paus
   - `/admin/expenses`.
   - The `/admin` dashboard: a KPI strip per docs/07 §6, replacing `admin.homeEmpty`. A numeral turns saffron only when there is work behind it.
 - **Design:** docs/07 rules apply. Green marks actions, gold is ornament, and saffron is only «دورك». Western digits. Status chips use the `reportStatusStyle`, `pdfStatusStyle`, `payoutStatusStyle` and `subscriptionStatusStyle` styles.
-- **E2E journeys** (`e2e/support/money.ts`: `seedPackageStudent({ teacherId, paid, guardian, student })` after `resetAbrar()`):
+- **E2E journeys** (`e2e/support/finance/money.ts`: `seedPackageStudent({ teacherId, paid, guardian, student })` after `resetAbrar()`):
   - **#2:** the teacher sees today's lesson (already started) → marks attendance → opens the report → submits. Expected:
     - `reportOf(lessonId)` is submitted with version 1;
     - the PDF reaches `ready`;

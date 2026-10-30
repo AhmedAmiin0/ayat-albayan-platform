@@ -9,7 +9,7 @@ import {
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
 import { optionalText } from '../core/schemas/common.js';
-import { instant, localDate } from '../schemas/lessons/scheduling.js';
+import { instant, localDate } from '../schedule/schemas/scheduling.js';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
 // a subscription is priced by the API from the catalog (docs/08), the same quote as /pricing.

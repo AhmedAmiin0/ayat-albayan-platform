@@ -1,7 +1,7 @@
 import type { LessonStatus } from '../../enums/index.js';
 import { chatDayKey, RIYADH_TZ } from '../../core/format/index.js';
-import { isOpenLesson } from '../../lessons/index.js';
-import type { Permission } from '../../permissions/index.js';
+import { isOpenLesson } from '../../schedule/lessons/index.js';
+import type { Permission } from '../../catalog/permissions/index.js';
 import type { MessageView, ThreadLesson } from '../chat/views.js';
 
 // Which lesson a guardian's quick reply is about, and what the viewer may do to it from the chat

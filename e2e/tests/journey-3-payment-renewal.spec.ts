@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../support/money';
+import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../support/finance/money';
 import { queuedFor, resetAbrar } from '../support/schedule';
 
 // Journey 3 (docs/03 §5): the admin records a payment → the package is active → lessons are
