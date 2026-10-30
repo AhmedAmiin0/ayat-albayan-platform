@@ -1,6 +1,6 @@
 import { REPORT_RUBRICS } from '@ab/shared';
 import { ar, expect, test } from '../support/fixtures';
-import { balanceOf, reportOf, seedPackageStudent } from '../support/money';
+import { balanceOf, reportOf, seedPackageStudent } from '../support/finance/money';
 import { queuedFor, resetAbrar } from '../support/schedule';
 
 // Journey 2 (docs/03 §5, docs/11 §10): teacher logs in → sees today's lesson → marks attendance →

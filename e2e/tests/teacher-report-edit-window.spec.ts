@@ -2,7 +2,7 @@ import { REPORT_RUBRICS } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer } from '../support/messages';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { queuedFor, resetAbrar, withSql } from '../support/schedule';
 import { backdateSubmit, fillAttended, fillTexts, reportRow, storedObject, TEXTS } from '../support/teacher-extra';
 

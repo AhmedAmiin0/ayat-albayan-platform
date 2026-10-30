@@ -1,6 +1,6 @@
 import type { Locator } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { settled } from '../support/settle';
+import { settled } from '../support/finance/settle';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Owner, 2026-10-05: "on the mobile view of the dashboard don't make the bars for the forms; keep

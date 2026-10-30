@@ -1,0 +1,304 @@
+{
+  "id": "t2",
+  "seq": 112,
+  "moves": [
+    {
+      "from": "e2e/tests/expenses.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/exports.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/finance-money.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/payments-receipt.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/payouts.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/pricing.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/pricing-offer.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/subscriptions.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/teacher-earnings-ui.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/teacher-earnings.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/teacher-earnings-rls.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/teacher-payments.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/teacher-corrections.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/pay-rule.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/payment-attachments.api.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/change-course.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/course-pause.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/course-pause-resume.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-commission.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-commission-retro.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-commission-started.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-renewal-commission.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-statements.sql.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-statement.api.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/tests/assistant-money.api.spec.ts",
+      "to": "e2e/tests/finance/"
+    },
+    {
+      "from": "e2e/support/assistant-money.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/change-course.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/course-pause.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/course-renew.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/earnings.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/exports-csv.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/invoice.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/money.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/money-dashboard.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/money-extra.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/pay-rule.ts",
+      "to": "e2e/support/finance/"
+    },
+    {
+      "from": "e2e/support/settle.ts",
+      "to": "e2e/support/finance/"
+    }
+  ],
+  "files": [
+    [
+      "e2e/support/assistant-money.ts",
+      "e2e/support/finance/assistant-money.ts"
+    ],
+    [
+      "e2e/support/change-course.ts",
+      "e2e/support/finance/change-course.ts"
+    ],
+    [
+      "e2e/support/course-pause.ts",
+      "e2e/support/finance/course-pause.ts"
+    ],
+    [
+      "e2e/support/course-renew.ts",
+      "e2e/support/finance/course-renew.ts"
+    ],
+    [
+      "e2e/support/earnings.ts",
+      "e2e/support/finance/earnings.ts"
+    ],
+    [
+      "e2e/support/exports-csv.ts",
+      "e2e/support/finance/exports-csv.ts"
+    ],
+    [
+      "e2e/support/invoice.ts",
+      "e2e/support/finance/invoice.ts"
+    ],
+    [
+      "e2e/support/money-dashboard.ts",
+      "e2e/support/finance/money-dashboard.ts"
+    ],
+    [
+      "e2e/support/money-extra.ts",
+      "e2e/support/finance/money-extra.ts"
+    ],
+    [
+      "e2e/support/money.ts",
+      "e2e/support/finance/money.ts"
+    ],
+    [
+      "e2e/support/pay-rule.ts",
+      "e2e/support/finance/pay-rule.ts"
+    ],
+    [
+      "e2e/support/settle.ts",
+      "e2e/support/finance/settle.ts"
+    ],
+    [
+      "e2e/tests/assistant-commission-retro.sql.spec.ts",
+      "e2e/tests/finance/assistant-commission-retro.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-commission-started.sql.spec.ts",
+      "e2e/tests/finance/assistant-commission-started.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-commission.sql.spec.ts",
+      "e2e/tests/finance/assistant-commission.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-money.api.spec.ts",
+      "e2e/tests/finance/assistant-money.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-renewal-commission.sql.spec.ts",
+      "e2e/tests/finance/assistant-renewal-commission.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-statement.api.spec.ts",
+      "e2e/tests/finance/assistant-statement.api.spec.ts"
+    ],
+    [
+      "e2e/tests/assistant-statements.sql.spec.ts",
+      "e2e/tests/finance/assistant-statements.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/change-course.sql.spec.ts",
+      "e2e/tests/finance/change-course.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/course-pause-resume.sql.spec.ts",
+      "e2e/tests/finance/course-pause-resume.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/course-pause.sql.spec.ts",
+      "e2e/tests/finance/course-pause.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/expenses.spec.ts",
+      "e2e/tests/finance/expenses.spec.ts"
+    ],
+    [
+      "e2e/tests/exports.spec.ts",
+      "e2e/tests/finance/exports.spec.ts"
+    ],
+    [
+      "e2e/tests/finance-money.spec.ts",
+      "e2e/tests/finance/finance-money.spec.ts"
+    ],
+    [
+      "e2e/tests/pay-rule.sql.spec.ts",
+      "e2e/tests/finance/pay-rule.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/payment-attachments.api.spec.ts",
+      "e2e/tests/finance/payment-attachments.api.spec.ts"
+    ],
+    [
+      "e2e/tests/payments-receipt.spec.ts",
+      "e2e/tests/finance/payments-receipt.spec.ts"
+    ],
+    [
+      "e2e/tests/payouts.spec.ts",
+      "e2e/tests/finance/payouts.spec.ts"
+    ],
+    [
+      "e2e/tests/pricing-offer.spec.ts",
+      "e2e/tests/finance/pricing-offer.spec.ts"
+    ],
+    [
+      "e2e/tests/pricing.spec.ts",
+      "e2e/tests/finance/pricing.spec.ts"
+    ],
+    [
+      "e2e/tests/subscriptions.spec.ts",
+      "e2e/tests/finance/subscriptions.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-corrections.sql.spec.ts",
+      "e2e/tests/finance/teacher-corrections.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-earnings-rls.sql.spec.ts",
+      "e2e/tests/finance/teacher-earnings-rls.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-earnings-ui.spec.ts",
+      "e2e/tests/finance/teacher-earnings-ui.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-earnings.sql.spec.ts",
+      "e2e/tests/finance/teacher-earnings.sql.spec.ts"
+    ],
+    [
+      "e2e/tests/teacher-payments.sql.spec.ts",
+      "e2e/tests/finance/teacher-payments.sql.spec.ts"
+    ]
+  ]
+}

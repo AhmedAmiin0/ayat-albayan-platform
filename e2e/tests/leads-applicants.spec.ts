@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { openFilters, showResults } from '../support/filters';
 import { freshDigits, seedLead } from '../support/messages';
-import { riyadhToday, summaryOf, uniqueName } from '../support/money-extra';
+import { riyadhToday, summaryOf, uniqueName } from '../support/finance/money-extra';
 import { withSql } from '../support/schedule';
 
 // Leads list (R-LEAD-01/02/04, issue C4): status tabs and source filter narrow the list (the header

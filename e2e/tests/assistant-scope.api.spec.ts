@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { ThreadDetail, ThreadView } from '@ab/shared';
 import { call, family, makeAssistant, message, tokenOf, type Assistant, type Family } from '../support/assistant-api';
-import { money } from '../support/assistant-money';
+import { money } from '../support/finance/assistant-money';
 import { USERS } from '../support/users';
 
 // What an assistant may NOT see or do, through the REAL API and database (R-ASST-04): the money routes

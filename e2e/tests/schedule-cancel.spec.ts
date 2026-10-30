@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { balanceOf } from '../support/money';
+import { balanceOf } from '../support/finance/money';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson } from '../support/schedule';
 import {
   cancelStateOf,

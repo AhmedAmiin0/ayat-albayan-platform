@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { startedToday } from '../support/money';
+import { startedToday } from '../support/finance/money';
 import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../support/schedule';
 import { apiSubmit } from '../support/teacher-extra';
 

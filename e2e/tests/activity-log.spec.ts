@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../support/fixtures';
 import { apiStatus } from '../support/messages';
-import { thisMonthStart } from '../support/money-extra';
+import { thisMonthStart } from '../support/finance/money-extra';
 import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
 

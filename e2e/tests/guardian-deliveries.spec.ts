@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer, setSetting } from '../support/messages';
-import { seedPackageStudent } from '../support/money';
+import { seedPackageStudent } from '../support/finance/money';
 import { resetAbrar, withSql } from '../support/schedule';
 import { apiSubmit, reportRow } from '../support/teacher-extra';
 import { approveTemplates, documentOf, sentToDigits } from '../support/teacher-templates';

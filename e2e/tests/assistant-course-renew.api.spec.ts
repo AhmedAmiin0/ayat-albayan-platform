@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import type { BookingResult, CourseChangeCheck, CourseChangeResult, SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
 import { call, family, makeAssistant, type Assistant } from '../support/assistant-api';
-import { countedLessons, courseAudit, courseRules, renewal } from '../support/course-renew';
+import { countedLessons, courseAudit, courseRules, renewal } from '../support/finance/course-renew';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../support/schedule';
 
 // Owner 2026-10-18, through the REAL API and database: the assistant books an 8-lesson course (Sun 17:00 +
