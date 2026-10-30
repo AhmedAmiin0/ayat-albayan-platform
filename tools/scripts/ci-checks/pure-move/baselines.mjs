@@ -44,7 +44,33 @@ function rekey(base, table) {
   return out;
 }
 
-/** True when `head` is `base` with each moved file's key renamed (package-relative) and every count kept. */
+// docs/32 R12: a move writes `@/` for the `../` paths of the files it touches, so the entries
+// of this rule may shrink or go (never grow, never appear); every other rule keeps its count.
+const SHRINKS = 'ab/no-parent-imports';
+const lowered = (was, now) =>
+  Number.isInteger(now?.count) && now.count >= 1 && now.count <= was.count;
+
+/** A file's rules with head's lower SHRINKS entry, or without it when head dropped it. */
+function shrunkRules(rules, now) {
+  const was = rules[SHRINKS];
+  if (!isRecord(was) || (now !== undefined && !lowered(was, now))) return rules;
+  const rest = Object.entries(rules).filter(([rule]) => rule !== SHRINKS);
+  return Object.fromEntries(now === undefined ? rest : [...rest, [SHRINKS, now]]);
+}
+
+/** `moved` (the re-keyed base) with head's lower or dropped SHRINKS entries taken over. */
+export function shrunk(moved, head) {
+  const files = [...moved].map(([key, rules]) => {
+    const now = isRecord(head[key]) ? head[key][SHRINKS] : undefined;
+    return [key, shrunkRules(rules, now)];
+  });
+  return Object.fromEntries(files.filter(([, rules]) => Object.keys(rules).length > 0));
+}
+
+/**
+ * True when `head` is `base` with each moved file's key renamed (package-relative) and every count kept
+ * (SHRINKS may only go down).
+ */
 export function suppressionsMoved(file, texts, renames) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!isRecord(base) || !isRecord(head)) return false;
@@ -53,7 +79,7 @@ export function suppressionsMoved(file, texts, renames) {
   // A file moved onto a stale key (its old file gone) would silently inherit that key's suppressions.
   if (pairs.some(([, to]) => Object.hasOwn(base, to) && !table.has(to))) return false;
   const moved = rekey(base, table);
-  return moved !== null && canon(Object.fromEntries(moved)) === canon(head);
+  return moved !== null && canon(shrunk(moved, head)) === canon(head);
 }
 
 /** True when every head knip line is a base line, its file (first word) at its new path, its name renamed by `ids`. */

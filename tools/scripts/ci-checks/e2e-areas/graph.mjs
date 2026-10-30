@@ -42,8 +42,9 @@ export function listFiles(root) {
 export function resolveSpec(files, from, spec) {
   let base;
   if (ALIAS[spec]) return ALIAS[spec];
-  if (spec.startsWith('@/') && from.startsWith('apps/web/src/'))
-    base = posix.join('apps/web/src', spec.slice(2));
+  const app = /^apps\/[^/]+\/src\//.exec(from)?.[0];
+  // `@/x` → the importing app's src/x (web and api, tsconfig `paths`; docs/32 R12).
+  if (spec.startsWith('@/') && app) base = posix.join(app, spec.slice(2));
   else if (spec.startsWith('.')) base = posix.join(posix.dirname(from), spec);
   else return null;
   const bare = base.replace(/\.(js|mjs|ts|tsx)$/, '');
