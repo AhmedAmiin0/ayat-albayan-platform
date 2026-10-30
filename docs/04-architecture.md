@@ -179,6 +179,11 @@ complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqe
 React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerPreset({ target: '18' })`, runtime from
 `react-compiler-runtime`), except `src/features/messaging/inbox/` for now. Mobile: not yet, jest does not run compiled
 code (docs/31a §3.2). Web gets the React 19 rules with its React 19 upgrade. TypeScript flags: docs/31a §2.
+Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
+violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
+them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is
+`// oxlint-disable-next-line <rule>` (ESLint would report an `eslint-disable` for it as unused). `typecheck` runs
+`tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
 Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:

@@ -1,0 +1,71 @@
+# TEMPORARY (removed before the PR is ready): writes pnpm-lock.yaml for the new dependencies and compares
+# tsc with tsgo per package, Oxlint on the repo, the guards and ESLint. Nothing runs on the owner's PC.
+name: tmp-probe
+on:
+  push:
+    branches: [ci/fast-lint-typecheck]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: pnpm install --no-frozen-lockfile
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lockfile
+          path: pnpm-lock.yaml
+      - name: Oxlint
+        run: |
+          set +e
+          time pnpm lint:ox; echo "oxlint exit $?"
+          pnpm -s lint:ox --format json > "$RUNNER_TEMP/oxlint.json"
+          true
+      - name: Build what typecheck reads
+        run: pnpm turbo build --filter=@ab/shared --filter=@ab/client-core && pnpm --filter web exec tsr generate
+      - name: tsc vs tsgo
+        run: |
+          set +e
+          out="$RUNNER_TEMP/tsgo"; mkdir -p "$out"; sum="$out/summary.md"
+          echo "| package | tsc ms | tsc exit | tsc errors | tsgo ms | tsgo exit | tsgo errors | files tsc | files tsgo | files only in one |" > "$sum"
+          echo "|---|---|---|---|---|---|---|---|---|---|" >> "$sum"
+          timed() { local s; s=$(date +%s%N); "$@"; echo $(( ($(date +%s%N) - s) / 1000000 )); }
+          for spec in apps/api apps/mobile apps/web packages/client-core packages/db packages/shared \
+            tools/google-stub tools/migrate tools/wa-stub "tools/scripts:-p tsconfig.json" e2e; do
+            dir=${spec%%:*}; args="--noEmit"; [ "$spec" != "$dir" ] && args=${spec#*:}
+            n=$(echo "$dir" | tr / _)
+            (cd "$dir" && pnpm exec tsc $args --listFilesOnly) | sort > "$out/$n.files.tsc"
+            (cd "$dir" && pnpm exec tsgo $args --listFilesOnly) | sort > "$out/$n.files.tsgo"
+            only=$(comm -3 "$out/$n.files.tsc" "$out/$n.files.tsgo" | wc -l)
+            ms1=$(timed sh -c "cd $dir && pnpm exec tsc $args > $out/$n.tsc.txt 2>&1; echo \$? > $out/$n.tsc.rc" | tail -1)
+            ms2=$(timed sh -c "cd $dir && pnpm exec tsgo $args > $out/$n.tsgo.txt 2>&1; echo \$? > $out/$n.tsgo.rc" | tail -1)
+            echo "| $dir | $ms1 | $(cat $out/$n.tsc.rc) | $(grep -c 'error TS' $out/$n.tsc.txt) | $ms2 | $(cat $out/$n.tsgo.rc) | $(grep -c 'error TS' $out/$n.tsgo.txt) | $(wc -l < $out/$n.files.tsc) | $(wc -l < $out/$n.files.tsgo) | $only |" >> "$sum"
+          done
+          cat "$sum" | tee -a "$GITHUB_STEP_SUMMARY"
+          for f in "$out"/*.tsgo.txt "$out"/*.tsc.txt; do [ -s "$f" ] && { echo "== $f"; head -40 "$f"; }; done
+          true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: probe-reports
+          path: |
+            ${{ runner.temp }}/oxlint.json
+            ${{ runner.temp }}/tsgo
+      - name: Guards
+        run: |
+          set +e
+          pnpm guard:knip; echo "knip exit $?"
+          pnpm guard:dup; echo "jscpd exit $?"
+          pnpm guard:lint; echo "lint gate exit $?"
+          true
+      - name: ESLint (all packages)
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: pnpm turbo lint --concurrency=3 --continue

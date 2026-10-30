@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { differences, totals } from './lint-gate.mjs';
+import { differences, oxlintSuppressed, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -20,4 +20,18 @@ test('differences: equal totals pass; a grown or new rule and a shrunk or gone o
     'shrank: max-depth 2 -> 1 (pnpm guard:lint -- --write)',
     'shrank: no-console 1 -> 0 (pnpm guard:lint -- --write)',
   ]);
+});
+
+test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, whatever its prefix', () => {
+  const now = { '@typescript-eslint/max-params': 2, complexity: 240, 'no-regex-spaces': 2 };
+  const rc = {
+    rules: { 'typescript/no-explicit-any': 'error', 'max-params': 'error' },
+    overrides: [{ rules: { 'eslint/no-regex-spaces': 'error' } }],
+  };
+  assert.deepEqual(oxlintSuppressed(rc, now), [
+    'oxlint runs @typescript-eslint/max-params, which has 2 suppressed: keep it in ESLint',
+    'oxlint runs no-regex-spaces, which has 2 suppressed: keep it in ESLint',
+  ]);
+  assert.deepEqual(oxlintSuppressed({ rules: { eqeqeq: 'error' } }, now), []);
+  assert.deepEqual(oxlintSuppressed({}, now), []);
 });

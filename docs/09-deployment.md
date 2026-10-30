@@ -376,9 +376,8 @@ Migrations are **never applied by surprise**: the `apply` job waits in `staging-
 | `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees) |
 | `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
-| `TURBO_TOKEN` | Optional Turborepo remote cache | `ci` |
 
-Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `TURBO_TEAM`, `OTA_BASELINE_SHA`. **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
+Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `OTA_BASELINE_SHA`. The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 
 Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
 

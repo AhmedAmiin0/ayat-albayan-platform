@@ -7,7 +7,7 @@
     "start": "node --env-file-if-exists=.env dist/main.js",
     "dev": "node --env-file-if-exists=.env --watch -r @swc-node/register src/main.ts",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "test": "vitest run",
     "config:import-env": "node --env-file-if-exists=.env dist/scripts/config-import-env.js"
   },
@@ -37,6 +37,7 @@
     "@swc-node/register": "^1.11.0",
     "@swc/core": "^1.16.13",
     "@types/node": "^24.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "typescript": "~6.0.3",
     "unplugin-swc": "^2.0.0",

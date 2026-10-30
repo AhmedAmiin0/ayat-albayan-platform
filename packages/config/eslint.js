@@ -1,12 +1,19 @@
 // Hard code rules (CLAUDE.md §1-3, R-NFR-05) and the strict type-aware set (docs/31a). CI fails on any
 // violation; the ones that predate a rule sit in each package's eslint-suppressions.json, whose per-rule
 // totals may only shrink (refactor/guards/lint.json, pnpm guard:lint).
+import { readFileSync } from 'node:fs';
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
+import oxlint from 'eslint-plugin-oxlint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { TESTS } from './eslint-boundaries.js';
+
+// Oxlint runs the rules of the root .oxlintrc.json first (`pnpm lint:ox`, a CI step before ESLint); ESLint turns
+// them off and keeps the type-aware, custom and react-hooks rules. Oxlint has no bulk suppressions, so only a rule
+// with no entry in any eslint-suppressions.json can move there (`pnpm guard:lint` checks it).
+const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.meta.url), 'utf8'));
 
 export { boundaries, TESTS } from './eslint-boundaries.js';
 export { reactRestrictions } from './eslint-react.js';
@@ -88,6 +95,7 @@ export function config(root, ...extra) {
     },
     { files: TESTS, rules: testRules },
     ...extra,
+    ...oxlint.buildFromOxlintConfig(oxlintrc),
     // Last, so no block above turns a type-aware rule back on for plain JS (eslint and jest configs, .mjs scripts).
     { files: ['**/*.{js,mjs,cjs}'], extends: [tseslint.configs.disableTypeChecked] },
   );

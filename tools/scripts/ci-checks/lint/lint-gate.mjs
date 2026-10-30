@@ -2,7 +2,8 @@
 // eslint-suppressions.json (`eslint . --suppress-all`); refactor/guards/lint.json holds their per-rule totals.
 // Fails when a total grew or a rule is new (a count raised by hand), and when one shrank without the
 // baseline (then `pnpm guard:lint -- --write`), so a fixed violation cannot come back unnoticed.
-// Per rule over the whole repo, not per file: ESLint itself enforces the per-file counts.
+// Per rule over the whole repo, not per file: ESLint itself enforces the per-file counts. Also fails when the
+// root .oxlintrc.json (the first lint pass, no bulk suppressions) runs a rule that has suppressed violations.
 // Usage: node tools/scripts/ci-checks/lint/lint-gate.mjs [--write]
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -29,6 +30,21 @@ export function differences(now, baseline) {
   });
 }
 
+const bare = (rule) => rule.replace(/^(eslint|typescript|@typescript-eslint)\//, '');
+
+/**
+ * Rules the root .oxlintrc.json runs that still have suppressed violations. Oxlint has no bulk suppressions,
+ * so such a rule must stay in ESLint. `typescript/x`, `@typescript-eslint/x` and `x` are one rule here
+ * (eslint-plugin-oxlint turns the base rule and its typescript-eslint extension off together).
+ */
+export function oxlintSuppressed(oxlintrc, now) {
+  const blocks = [oxlintrc, ...(oxlintrc.overrides ?? [])];
+  const moved = new Set(blocks.flatMap((b) => Object.keys(b.rules ?? {})).map(bare));
+  return Object.keys(now)
+    .filter((rule) => moved.has(bare(rule)))
+    .map((rule) => `oxlint runs ${rule}, which has ${now[rule]} suppressed: keep it in ESLint`);
+}
+
 const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 
 function main(args) {
@@ -38,7 +54,8 @@ function main(args) {
   const file = join(root, 'refactor', 'guards', 'lint.json');
   if (args.includes('--write')) writeFileSync(file, `${JSON.stringify(now, null, 2)}\n`);
   const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
-  const diff = differences(now, baseline);
+  const oxlintrc = JSON.parse(readFileSync(join(root, '.oxlintrc.json'), 'utf8'));
+  const diff = [...differences(now, baseline), ...oxlintSuppressed(oxlintrc, now)];
   console.log(`lint: ${sum(now)} suppressed in ${paths.length} packages, baseline ${sum(baseline)}`);
   for (const line of diff) console.log(`  ${line}`);
   if (diff.length > 0) process.exit(1);

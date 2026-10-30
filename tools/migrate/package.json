@@ -5,7 +5,7 @@
   "scripts": {
     "cli": "node --env-file-if-exists=.env src/cli.ts",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@ab/config": "workspace:*",
     "@types/node": "^24.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
     "typescript": "~6.0.3",
     "vitest": "^5.0.3"
