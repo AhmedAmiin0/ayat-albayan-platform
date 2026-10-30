@@ -9,6 +9,7 @@ import tseslint from 'typescript-eslint';
 import { TESTS } from './eslint-boundaries.js';
 
 export { boundaries, TESTS } from './eslint-boundaries.js';
+export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
 
 export const hardRules = {
