@@ -27,6 +27,7 @@ export function target(file, spec) {
 /**
  * True when `newSpec` in `to` names the file that `oldSpec` named in `from`, or a folder whose index barrel
  * re-exports that file (`reexports(dir)`: the files the head's `dir/index` barrel re-exports, extensions stripped).
+ * The folder is named bare (`@/inbox`) or by its index file (`../core/schemas/index.js`: NodeNext).
  */
 export function samePath({ from, to, table, reexports }, oldSpec, newSpec) {
   const was = target(from, oldSpec);
@@ -35,7 +36,8 @@ export function samePath({ from, to, table, reexports }, oldSpec, newSpec) {
   const key = strip(was);
   const expected = table.get(key) ?? key;
   const got = strip(now);
-  return got === expected || `${got}/index` === expected || (reexports?.(got)?.has(expected) ?? false);
+  const dir = got.endsWith('/index') ? got.slice(0, -'/index'.length) : got;
+  return got === expected || `${got}/index` === expected || (reexports?.(dir)?.has(expected) ?? false);
 }
 
 /** `dir → the files its head index barrel re-exports` (stripped repo paths), memoised. `paths(file, text)`: its specs. */

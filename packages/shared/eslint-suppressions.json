@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/account/account.schemas.ts": {
     "ab/module-boundaries": {
       "count": 2

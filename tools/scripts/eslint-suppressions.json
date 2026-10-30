@@ -126,7 +126,7 @@
   },
   "ci-checks/jscpd-gate.mjs": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "ci-checks/jscpd-gate.test.mjs": {
