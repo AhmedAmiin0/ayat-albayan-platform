@@ -25,6 +25,7 @@ describe('typedConfirmMatches', () => {
   it('accepts the number of days, trimmed, on any keypad', () => {
     expect(typedConfirmMatches(30, ' 30 ')).toBe(true);
     expect(typedConfirmMatches(30, '٣٠')).toBe(true);
+    expect(typedConfirmMatches(30, '۳۰')).toBe(true);
   });
 
   it('refuses another number, words or nothing', () => {

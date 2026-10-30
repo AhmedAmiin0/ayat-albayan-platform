@@ -1,4 +1,4 @@
-import { LOGIN_CODE_LENGTH } from '@ab/shared';
+import { LOGIN_CODE_LENGTH, asciiDigits } from '@ab/shared';
 
 // The 6-box code input's rules (docs/30 §7), kept pure so they are unit-tested apart from the DOM.
 
@@ -6,8 +6,7 @@ export const emptyCode = (): string[] => Array.from({ length: LOGIN_CODE_LENGTH 
 
 /** The ASCII digits of a typed or pasted text: Arabic-Indic and Persian digits fold, anything else drops. */
 export function digitsOf(raw: string): string[] {
-  const ascii = raw.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
-  return ascii.replace(/\D/g, '').split('').filter(Boolean);
+  return asciiDigits(raw).replace(/\D/g, '').split('').filter(Boolean);
 }
 
 /** The full code once every box holds a digit, else null. */
