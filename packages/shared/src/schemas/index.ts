@@ -1,5 +1,5 @@
 export * from './lessons/availability.js';
-export * from './common.js';
+export * from '../core/schemas/index.js';
 export * from './people/leads.js';
 export * from './people/people.js';
 export * from './lessons/scheduling.js';
@@ -9,7 +9,7 @@ export * from './lessons/booking-extras.js';
 export * from './lessons/day-times.js';
 export * from './people/teacher-students.js';
 export * from './people/student-filters.js';
-export * from './list-sort.js';
+export * from '../core/schemas/index.js';
 export * from './people/people-sort.js';
 export * from './activity.js';
 export * from './lessons/course-change.js';

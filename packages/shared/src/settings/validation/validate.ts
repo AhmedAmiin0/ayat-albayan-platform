@@ -1,5 +1,5 @@
-import { E164_RE } from '../../format/phone.js';
-import { isTimeZone } from '../../schemas/common.js';
+import { E164_RE } from '../../core/format/phone.js';
+import { isTimeZone } from '../../core/schemas/common.js';
 import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from '../registry.js';
 import { shapeValid } from './shape.js';
 import type { SettingDef } from '../defs.js';
