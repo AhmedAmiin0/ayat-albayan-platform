@@ -6,7 +6,8 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 // commission on any earn path; an existing one settles as before (a payment correction never takes
 // it away); a renewal fully paid since the switch-off never earns, even once it is on again; one
 // paid before it still can; the first commission is unchanged. Each case is rolled back.
-// settings.updated_at is now() (the transaction start): a payment of `iso(-1)` is "before the switch-off".
+// settings.updated_at is now() (the transaction start): a payment of `iso(-1)` is before
+// the switch-off.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const setOn = (tx: Tx, on: boolean) => tx`insert into public.settings (key, value)
@@ -74,7 +75,8 @@ test.describe('renewal commission switch (20261101000996)', () => {
       await tx`insert into public.assistant_terms (assistant_id, commission_type, commission_value, commission_starts_on)
         values (${a}, 'percent', 10, '2000-01-01')`;
       await tx`select public.evaluate_assistant_commission(${renewal})`; // as the API does after new terms
-      expect([await reason(tx, renewal), await renewalOf(tx, renewal)]).toEqual([undefined, undefined]);
+      expect(await reason(tx, renewal)).toBeUndefined();
+      expect(await renewalOf(tx, renewal)).toBeUndefined();
       expect(await commissionOf(tx, s)).toMatchObject({ amount: '10.00', status: 'earned' }); // the first is unchanged
 
       await setOn(tx, true);
