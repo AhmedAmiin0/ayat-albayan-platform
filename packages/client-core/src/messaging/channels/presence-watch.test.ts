@@ -1,6 +1,7 @@
+import { PRESENCE_WATCH_MAX } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { PresenceWatch } from './presence-live.js';
-import { watchPresence } from './presence-watch.js';
+import { presenceWatchKey, watchPresence } from './presence-watch.js';
 import { fakeRealtime } from './presence.fakes.test-util.js';
 
 const A = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
@@ -65,5 +66,20 @@ describe('watchPresence', () => {
     const rt = fakeRealtime();
     watchPresence(rt, { profileIds: [], onChange });
     expect(rt.joined).toHaveLength(0);
+  });
+});
+
+describe('presenceWatchKey', () => {
+  it('the same people in any order: the same key (no rejoin on a re-sort)', () => {
+    expect(presenceWatchKey([B, A, B, ''])).toBe(`${A},${B}`);
+    expect(presenceWatchKey([A, B])).toBe(presenceWatchKey([B, A]));
+  });
+
+  it('keeps the caller\'s first PRESENCE_WATCH_MAX, then sorts them', () => {
+    const ids = Array.from({ length: PRESENCE_WATCH_MAX + 1 }, (_, i) => `p${String(i).padStart(3, '0')}`);
+    const key = presenceWatchKey([...ids].reverse()).split(',');
+    expect(key).toHaveLength(PRESENCE_WATCH_MAX);
+    expect(key).not.toContain('p000');
+    expect(key).toEqual([...key].sort());
   });
 });

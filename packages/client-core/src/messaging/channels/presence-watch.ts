@@ -1,3 +1,4 @@
+import { PRESENCE_WATCH_MAX } from '@ab/shared';
 import {
   afterAuth,
   hasMeta,
@@ -6,6 +7,14 @@ import {
   presenceTopic,
   type PresenceWatch,
 } from './presence-live.js';
+
+/**
+ * The watch's identity: the first PRESENCE_WATCH_MAX distinct people (the caller's priority),
+ * sorted, so the same people in another order (a list re-sorted by last seen) keep the same
+ * subscriptions.
+ */
+export const presenceWatchKey = (profileIds: readonly string[]): string =>
+  [...new Set(profileIds)].filter(Boolean).slice(0, PRESENCE_WATCH_MAX).sort().join(',');
 
 interface WatchInput {
   /** The people shown (at most PRESENCE_WATCH_MAX, @ab/shared). */

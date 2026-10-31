@@ -36,4 +36,4 @@ export {
   staffPresenceKey,
   trackSelf,
 } from './presence-live.js';
-export { watchPresence } from './presence-watch.js';
+export { presenceWatchKey, watchPresence } from './presence-watch.js';

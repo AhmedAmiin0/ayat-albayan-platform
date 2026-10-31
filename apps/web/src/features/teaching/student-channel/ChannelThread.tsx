@@ -43,7 +43,8 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   const writes = mode === 'write';
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   const newest = first?.messages.at(-1);
-  // One ticking clock for every bubble (not new Date() in render, which the compiler would keep).
+  // One ticking clock for every bubble and the presence line (not new Date() in render, which the
+  // compiler would keep).
   const now = useNow();
   const send = useMutation({
     mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),

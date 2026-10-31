@@ -1,5 +1,4 @@
-import { type PresenceWatch, watchPresence } from '@ab/client-core';
-import { PRESENCE_WATCH_MAX } from '@ab/shared';
+import { type PresenceWatch, presenceWatchKey, watchPresence } from '@ab/client-core';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/core/lib/http/supabase';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
@@ -16,8 +15,8 @@ export function usePresenceWatch(profileIds: readonly string[], enabled: boolean
   const focused = useScreenFocused();
   const active = useAppActive();
   const [watch, setWatch] = useState<PresenceWatch>(IDLE);
-  // A string, so a new array of the same people keeps the same subscriptions.
-  const key = [...new Set(profileIds)].slice(0, PRESENCE_WATCH_MAX).join(',');
+  // A sorted string, so the same people in a new array or order keep the same subscriptions.
+  const key = presenceWatchKey(profileIds);
   const on = enabled && focused && active && key !== '';
   useEffect(() => {
     if (!on) return undefined;

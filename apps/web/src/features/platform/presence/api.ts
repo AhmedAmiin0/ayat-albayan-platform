@@ -8,17 +8,11 @@ import {
   type ChannelAudience,
 } from '@ab/client-core';
 import type { ChannelPresence, PresenceSelf, StaffPresence } from '@ab/shared';
-import { queryOptions } from '@tanstack/react-query';
+import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
 
 // Presence (docs/33): last seen from the API, online now from the socket (use-presence-watch).
 const MINUTE_MS = 60_000;
-
-/**
- * The chat header re-reads last seen this often: without a joined socket, «متصل الآن» rests on a
- * last seen under PRESENCE_RECENT_MS (2 min) old, so it must be fresher than that.
- */
-const CHAT_PRESENCE_MS = 30_000;
 
 /** A chat with a student: which of its people this viewer is told about. */
 export interface PresenceChat {
@@ -33,12 +27,16 @@ export const presenceSelfQuery = queryOptions({
   staleTime: 10 * MINUTE_MS,
 });
 
-/** The chat header's people with their last seen (the API writes it at most once a minute). */
-export const channelPresenceQuery = ({ audience, studentId }: PresenceChat) =>
+/**
+ * The chat header's people; last seen moves at most once a minute (the API's throttle). Re-read on
+ * each tick of the thread's one clock (`now` in the key, no timer of its own); the last answer
+ * stays shown meanwhile.
+ */
+export const channelPresenceQuery = ({ audience, studentId }: PresenceChat, now: Date) =>
   queryOptions({
-    queryKey: channelPresenceKey(audience, studentId),
+    queryKey: [...channelPresenceKey(audience, studentId), now.getTime()],
     queryFn: () => apiFetch<ChannelPresence>(channelPresencePath(audience, studentId)),
-    refetchInterval: CHAT_PRESENCE_MS,
+    placeholderData: keepPreviousData,
   });
 
 /** «حالة الفريق» (admin): every active staff login with its last seen. */

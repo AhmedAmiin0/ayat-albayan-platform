@@ -3,6 +3,7 @@ import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden } from '@/common/http/errors';
 import { PresenceService } from '@/modules/people/presence';
 import {
   ChannelAccess,
@@ -14,7 +15,8 @@ const UUID = new ParseUUIDPipe();
 /**
  * «متصل الآن» / «آخر ظهور» in the chat header (docs/33 §2): each audience's route runs the same
  * access check as its messages route (another family, teacher or assistant: 404), then the
- * presence rule keeps only the people this caller may see.
+ * presence rule keeps only the people this caller may see. The monitor route is the admin's alone:
+ * a custom role holding student_channels.monitor reads the chat but sees nobody's presence (§2).
  */
 @ApiTags('student-channels')
 @ApiBearerAuth()
@@ -49,7 +51,9 @@ export class ChannelPresenceController {
     @Param('id', UUID) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    return this.of(user, await this.access.monitor(user, id));
+    const actor = await this.access.monitor(user, id);
+    if (user.role !== 'admin') throw forbidden('presence_admin_only');
+    return this.of(user, actor);
   }
 
   @Get('sales/students/:id/channel/presence')

@@ -64,6 +64,26 @@ describe('ChannelPresenceLine: the student channel header (docs/33)', () => {
     expect(screen.queryByText(p.online)).toBeNull();
   });
 
+  it('re-reads on the thread clock\'s tick (no timer of its own), keeping the last line meanwhile', async () => {
+    const timers = vi.spyOn(globalThis, 'setInterval');
+    apiFetch.mockResolvedValue(answer());
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const line = (now: Date) => (
+      <QueryClientProvider client={client}>
+        <ChannelPresenceLine chat={{ audience: 'portal', studentId: 's1' }} tz="Asia/Riyadh" now={now} />
+      </QueryClientProvider>
+    );
+    const { container, rerender } = render(line(new Date()));
+    const seen = p.lastSeen.replace('{when}', p.minutes.few.replace('{n}', '10'));
+    await screen.findByText(seen);
+    rerender(line(new Date(Date.now() + 60_000)));
+    expect(container.textContent).toContain(p.lastSeen.split('{when}')[0]);
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledTimes(2));
+    // waitFor's own 50 ms poll aside, nothing ticks here.
+    expect(timers.mock.calls.filter((c) => c[1] !== 50)).toEqual([]);
+    timers.mockRestore();
+  });
+
   it('presence off, no peers or never seen: nothing at all', async () => {
     for (const body of [
       answer({ enabled: false, peers: [] }),

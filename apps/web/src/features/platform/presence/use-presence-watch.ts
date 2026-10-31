@@ -1,5 +1,4 @@
-import { PRESENCE_WATCH_MAX } from '@ab/shared';
-import { watchPresence, type PresenceWatch } from '@ab/client-core';
+import { presenceWatchKey, watchPresence, type PresenceWatch } from '@ab/client-core';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/http/supabase';
 
@@ -7,11 +6,12 @@ const IDLE: PresenceWatch = { live: false, online: new Set() };
 
 /**
  * Who of `profileIds` is online now (docs/33 §1.1): subscribes, never tracks, to each person's
- * topic (at most PRESENCE_WATCH_MAX); leaves on unmount or when the people change. Until the
- * socket answers (or without Realtime) `live` is false and the callers fall back to last seen.
+ * topic (at most PRESENCE_WATCH_MAX); leaves on unmount or when the people (not their order)
+ * change. Until the socket answers (or without Realtime) `live` is false and the callers fall back
+ * to last seen.
  */
 export function usePresenceWatch(profileIds: readonly string[]): PresenceWatch {
-  const key = [...new Set(profileIds)].slice(0, PRESENCE_WATCH_MAX).join(',');
+  const key = presenceWatchKey(profileIds);
   const [state, setState] = useState<{ key: string; watch: PresenceWatch }>({ key: '', watch: IDLE });
   useEffect(() => {
     if (!key) return;
