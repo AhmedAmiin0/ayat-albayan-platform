@@ -8,6 +8,7 @@ import {
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { domainError } from '../booking.errors';
+import { addedLessons, type CourseTold } from './course-change.notice-plan';
 import { changePayload } from './course-change.payload';
 import type { ChangeRole } from './course-change.plan';
 import type { Loaded, Planned } from './course-change.planner';
@@ -76,7 +77,8 @@ export class CourseChange {
       ...(await this.messaging(planned.active, req.teacherId)),
       counted: planned.counted,
     });
-    return this.deps.writer.apply({ payload, subscriptionId: sub.id, moved: planned.moved.map((m) => m.id) });
+    const told = toldOf({ planned, payload, actorId: actor.user.id, teacherId: req.teacherId });
+    return this.deps.writer.apply({ payload, subscriptionId: sub.id, told });
   }
 
   /** 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers. */
@@ -124,4 +126,19 @@ export class CourseChange {
     const contacts = await this.queries.contacts(head ? head.schedule_rule_students.map((s) => s.student_id) : []);
     return { link: { teacherLink, auto }, contacts };
   }
+}
+
+interface ToldInput {
+  planned: Planned;
+  payload: Record<string, unknown>;
+  actorId: string;
+  teacherId: string | undefined;
+}
+
+/** Who hears the change (CourseChangeNotices): the moved and new lessons, a new teacher. */
+function toldOf({ planned, payload, actorId, teacherId }: ToldInput): CourseTold {
+  const teacherChanged = teacherId !== undefined && teacherId !== planned.active[0]?.teacher_id;
+  const added = addedLessons(payload);
+  const studentIds = [planned.sub.student_id];
+  return { moved: planned.moved, added, actorId, studentIds, teacherChanged };
 }

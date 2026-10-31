@@ -13246,7 +13246,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/booking/course-change/course-change.meeting-mode.test.ts": {
@@ -13368,7 +13368,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/teaching/booking/course-change/course-change.view.ts": {
@@ -13390,7 +13390,7 @@
       "count": 7
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/booking/instant/instant.controller.test.ts": {

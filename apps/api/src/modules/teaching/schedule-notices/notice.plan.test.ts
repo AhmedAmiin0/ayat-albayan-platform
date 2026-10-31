@@ -97,3 +97,17 @@ describe('families and dedup keys', () => {
     expect(keys('L1@1')).not.toEqual(keys('L1@2'));
   });
 });
+
+describe('planNotice: one side only («تغيير المعلم» tells each side apart)', () => {
+  it('audience teacher: the teacher’s WhatsApp and bell, nothing to the family', () => {
+    const plan = planNotice(notice({ audience: 'teacher' }), NOW);
+    expect(plan.messages.map((m) => m.dedup_key)).toEqual(['lesson_cancelled:L1:t:T1']);
+    expect(plan.pushes.map((p) => p.profileIds[0])).toEqual(['pT1']);
+  });
+
+  it('audience family: the guardian’s WhatsApp and bell, nothing to the teacher', () => {
+    const plan = planNotice(notice({ audience: 'family' }), NOW);
+    expect(plan.messages.map((m) => m.dedup_key)).toEqual(['lesson_cancelled:L1:g:G1']);
+    expect(plan.pushes.map((p) => p.profileIds[0])).toEqual(['pG1']);
+  });
+});
