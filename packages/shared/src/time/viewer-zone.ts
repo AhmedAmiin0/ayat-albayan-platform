@@ -1,4 +1,5 @@
-import { clockOf, RIYADH_TZ, type ClockOptions } from '../core/format/index.js';
+import { RIYADH_TZ, type ClockOptions } from '../core/format/index.js';
+import { clockOf, engineTimeZone } from './format.js';
 import { isTimeZone } from '../core/schemas/index.js';
 
 // Whose clock a screen reads in (owner 2026-10-30, docs/34): «Store all in utc server time and
@@ -13,7 +14,7 @@ const isZone = (tz: string | null | undefined): tz is string => !!tz && isTimeZo
 /** The device's (browser's, phone's) zone, or null when the engine does not know it. */
 export function deviceTimeZone(): string | null {
   try {
-    const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tz = engineTimeZone();
     return isZone(tz) ? tz : null;
   } catch {
     return null;

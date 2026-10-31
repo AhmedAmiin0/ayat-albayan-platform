@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import { localDateIn, type LessonStatus } from '@ab/shared';
 import type { TodayLesson } from './today-lesson';
 
 // «اليوم» (R-MOB-02, docs/29): which lessons show and the summary card's counts, each column also
@@ -40,12 +40,5 @@ export function filterCounts(lessons: readonly TodayLesson[]): Record<TodayFilte
 
 /** The local calendar day in `tz` as YYYY-MM-DD, for GET /lessons/day?date (a key, not display). */
 export function localDate(now: Date, tz: string): string {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: tz,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
-  return `${part('year')}-${part('month')}-${part('day')}`;
+  return localDateIn(now, tz);
 }

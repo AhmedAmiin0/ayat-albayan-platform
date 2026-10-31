@@ -2406,12 +2406,6 @@
     }
   },
   "src/modules/finance/payouts/payouts.plan.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -10370,7 +10364,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/google-sync/sync/google-sync.processor.test.ts": {
@@ -10951,11 +10945,8 @@
     }
   },
   "src/modules/reporting/dashboard/range.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 1

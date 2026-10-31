@@ -2562,7 +2562,7 @@
   },
   "src/features/messaging/inbox/format.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/messaging/inbox/lead/FollowUpLine.tsx": {
@@ -5105,7 +5105,7 @@
   },
   "src/features/messaging/notifications/format.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/notifications/notifications-test-kit.ts": {
@@ -7490,7 +7490,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/users/UsersPage.tsx": {
@@ -13622,7 +13622,7 @@
   },
   "src/lib/clock-text.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/lib/clock.ts": {

@@ -634,6 +634,9 @@
     },
     "max-len": {
       "count": 4
+    },
+    "no-restricted-properties": {
+      "count": 1
     }
   },
   "src/types.ts": {

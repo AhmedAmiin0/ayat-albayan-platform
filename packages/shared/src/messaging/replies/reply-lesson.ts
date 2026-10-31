@@ -1,5 +1,6 @@
 import type { LessonStatus } from '../../enums/index.js';
-import { chatDayKey, RIYADH_TZ } from '../../core/format/index.js';
+import { RIYADH_TZ } from '../../core/format/index.js';
+import { chatDayKey } from '../../time/index.js';
 import { isOpenLesson } from '../../schedule/lessons/index.js';
 import type { Permission } from '../../catalog/permissions/index.js';
 import type { MessageView, ThreadLesson } from '../chat/views.js';

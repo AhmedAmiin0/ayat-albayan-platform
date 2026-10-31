@@ -12538,9 +12538,6 @@
     }
   },
   "src/today/lib/timeline.ts": {
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }

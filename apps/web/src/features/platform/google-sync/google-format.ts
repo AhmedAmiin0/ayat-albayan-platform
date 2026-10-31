@@ -9,8 +9,7 @@ import { locale } from '@/lib/i18n/locale';
 
 /** The time with its date in `clock.tz`, the viewer's zone (useViewerTz()). */
 export function formatAt(iso: string, clock: Clock & { tz: string }): string {
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: clock.tz });
-  return dateAndClock(day, new Date(iso), clock);
+  return dateAndClock(new Date(iso), clock, { dateStyle: 'medium' });
 }
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });

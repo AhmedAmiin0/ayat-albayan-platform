@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { addCalendarMonths, localDateIn, SETTING_DEFAULTS } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { ExpensesQueries } from './expenses.queries';
 import { ExpensesSettings } from './expenses.settings';
@@ -10,8 +10,7 @@ const FIRST_RUN_MS = 10 * 60_000;
 
 /** The first day of the month after `now` in `tz` (settings.academy_timezone), YYYY-MM-01. */
 export function nextMonthStart(now: Date, tz: string = SETTING_DEFAULTS.academy_timezone): string {
-  const [y = 0, m = 1] = now.toLocaleDateString('en-CA', { timeZone: tz }).split('-').map(Number);
-  return new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
+  return addCalendarMonths(localDateIn(now, tz), 1);
 }
 
 /**

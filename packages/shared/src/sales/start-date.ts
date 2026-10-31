@@ -1,5 +1,5 @@
-import { addDays } from '../time/index.js';
 import { courseDaysPerWeek } from './course/course.js';
+import { addCalendarDays } from '../time/index.js';
 
 // The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
 // enforces it, web and mobile use it to show the same error before posting.
@@ -24,9 +24,9 @@ export interface SalesStartInput {
 
 export type SalesStartResult = { ok: true; startsOn: string } | { ok: false; code: SalesStartProblem };
 
-/** YYYY-MM-DD minus n days (the shared addDays, negated). */
+/** YYYY-MM-DD minus n days (addCalendarDays, negated). */
 export function daysBefore(day: string, n: number): string {
-  return addDays(day, -n);
+  return addCalendarDays(day, -n);
 }
 
 export function salesStartDate(input: SalesStartInput): SalesStartResult {

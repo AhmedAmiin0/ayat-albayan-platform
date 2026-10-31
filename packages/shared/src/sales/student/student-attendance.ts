@@ -1,9 +1,8 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus } from '../../enums/index.js';
 import { RIYADH_TZ } from '../../core/format/index.js';
-import { zonedInstant } from '../../schedule/lessons/index.js';
 import { monthParam } from '../../money/ledger/index.js';
-import { riyadhToday } from '../../time/index.js';
+import { addCalendarMonths, monthRangeIn, riyadhToday } from '../../time/index.js';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
 // «سجل الحضور» (owner 2026-10-28): every past lesson of one student in a Riyadh month, as a table.
@@ -67,16 +66,12 @@ export const riyadhMonthOf = (at: Date): string => riyadhToday(at).slice(0, 7);
 
 /** The month after "YYYY-MM". */
 export function nextMonth(month: string): string {
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  return m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, '0')}`;
+  return addCalendarMonths(month, 1).slice(0, 7);
 }
 
 /** [from, to) of a Riyadh month as UTC instants. */
 export function riyadhMonthBounds(month: string): { from: Date; to: Date } {
-  return {
-    from: new Date(zonedInstant(`${month}-01`, '00:00', RIYADH_TZ)),
-    to: new Date(zonedInstant(`${nextMonth(month)}-01`, '00:00', RIYADH_TZ)),
-  };
+  return monthRangeIn(month, RIYADH_TZ);
 }
 
 const ZERO = (): Record<AttendanceTotalKind, number> => ({

@@ -1,4 +1,4 @@
-import { intlLocale, subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
+import { dateText, subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/ui/display/empty-state';
@@ -9,9 +9,9 @@ import { locale } from '@/lib/i18n/locale';
 import { portalPackageQuery } from './api';
 import { LoadState } from './LoadState';
 
-const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'UTC' });
 /** A calendar day «YYYY-MM-DD» as the UI writes dates (no zone: it is a day, not an instant). */
-const dayText = (day: string): string => DAY.format(new Date(`${day}T00:00:00Z`));
+const dayText = (day: string): string =>
+  dateText(new Date(`${day}T00:00:00Z`), { tz: 'UTC', locale }, { dateStyle: 'medium' });
 
 interface Props {
   student: PortalStudent;

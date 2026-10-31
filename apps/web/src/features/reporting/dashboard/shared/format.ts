@@ -1,4 +1,4 @@
-import { clockOf, formatAmount, intlLocale } from '@ab/shared';
+import { clockOf, dateText, formatAmount } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import type { Clock } from '@/lib/clock';
@@ -24,24 +24,22 @@ export function percent(rate: number | null): string {
   return rate === null ? '—' : `${Math.round(rate * 100)}%`;
 }
 
-const monthFormat = new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric', timeZone: 'UTC' });
-
 /** "2026-09" → «سبتمبر 2026». */
 export function monthLabel(month: string): string {
-  return monthFormat.format(new Date(`${month}-01T00:00:00Z`));
+  const first = new Date(`${month}-01T00:00:00Z`);
+  return dateText(first, { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
 }
 
-const dayFormat = (timeZone: string) =>
-  new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone });
+const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 
 /** «الخميس، 1 أكتوبر 16:00» in `clock.tz`, the viewer's zone (useViewerTz()). */
 export function whenViewer(iso: string, clock: Clock & { tz: string }): string {
   const at = new Date(iso);
-  return `${dayFormat(clock.tz).format(at)} ${clockOf(at, clock)}`;
+  return `${dateText(at, { tz: clock.tz, locale }, WEEKDAY_DAY_MONTH)} ${clockOf(at, clock)}`;
 }
 
 /** A provider rate time as a date in `tz`, the viewer's zone (useViewerTz()). */
 export function rateDate(iso: string, tz: string): string {
-  const opts = { day: 'numeric', month: 'long', year: 'numeric', timeZone: tz } as const;
-  return new Intl.DateTimeFormat(intlLocale(locale), opts).format(new Date(iso));
+  const fields = { day: 'numeric', month: 'long', year: 'numeric' } as const;
+  return dateText(new Date(iso), { tz, locale }, fields);
 }

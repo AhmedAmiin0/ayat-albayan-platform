@@ -1,5 +1,5 @@
 import {
-  addDays,
+  addCalendarDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -54,7 +54,7 @@ export function pricingOf(f: SubscribeForm): SubscriptionPricing {
  */
 export function startDays(now: Date, tz: string, first?: string): string[] {
   const today = localDate(now, tz);
-  const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
+  const days = Array.from({ length: 7 }, (_, i) => addCalendarDays(today, i));
   return first && !days.includes(first) ? [first, ...days] : days;
 }
 

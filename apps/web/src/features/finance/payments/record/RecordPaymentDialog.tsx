@@ -11,6 +11,7 @@ import type { PickedStudent } from '@/features/finance/subscriptions/create/Stud
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { AttachmentsField } from '../attachments/AttachmentsField';
+import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
 import { ReceiptField, receiptProblem } from '../attachments/ReceiptField';
 import { ShortfallNote } from './ShortfallNote';
@@ -33,8 +34,6 @@ const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind ==
 /** What a payment in `currency` still owes (owner 2026-10-28: less stays unpaid); null for a refund or another currency. */
 const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
   s && opts.kind === 'payment' && opts.currency === s.currency ? Math.max(0, s.price - s.paid) : null;
-// academy day (docs/34 b): the payment day is a Riyadh day (paidAtFor stores its noon)
-const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 
 /** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt, and «المرفقات» for a bank payment. */
 export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment', student: preset, onClose, onSaved }: Props) {
@@ -42,7 +41,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
   const maxBytes = useUploadMaxBytes();
   const [student, setStudent] = useState<PickedStudent | null>(preset ?? null);
   const [picked, setPicked] = useState<SubscriptionView | null>(subscription ?? null);
-  const [form, setForm] = useState<PaymentForm>({ amount: subscription ? defaultAmount(subscription, kind) : '', method: 'bank', day: today(), note: '' });
+  const [form, setForm] = useState<PaymentForm>({ amount: subscription ? defaultAmount(subscription, kind) : '', method: 'bank', day: paidAtDay(), note: '' });
   const [currency, setCurrency] = useState(subscription?.currency ?? '');
   const [file, setFile] = useState<File | null>(null);
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -92,7 +91,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
             {t.payments.paidOf.replace('{paid}', moneyText(picked.paid, picked.currency)).replace('{price}', moneyText(picked.price, picked.currency))}
           </p>
         )}
-        <PaymentFields form={form} set={setFields} currency={currency} today={today()} amountError={amountError} />
+        <PaymentFields form={form} set={setFields} currency={currency} today={paidAtDay()} amountError={amountError} />
         <ShortfallNote amount={form.amount} due={dueIn(picked, { kind, currency })} currencyLabel={currencySymbol(currency)} />
         {picked && (
           <Field label={t.payments.currency} hint={currency !== picked.currency ? t.finance.convertedHint.replace('{currency}', picked.currency) : undefined}>

@@ -1,6 +1,7 @@
 import { channelMode, liveChannelId, threadMessages } from '@ab/client-core';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
+import { phoneTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -16,9 +17,6 @@ import { useChannelLive } from './use-channel-live';
 /** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
 const readOnlyText = (open: boolean | undefined) =>
   open === false ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}` : t.studentChannel.readOnly;
-
-/** The viewer's clock (the phone's zone). */
-const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 /**
  * One student's channel (docs/31 §2): an inverted list, so it opens on the newest message and a new one
