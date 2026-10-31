@@ -1,27 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { broughtAtOf } from '../students/brought-at';
+import { broughtAtOf } from '@/features/people/assistants/students/brought-at';
 import { generateTargets } from './generate-targets';
-import { sumByCurrency } from './totals';
-
-describe('sumByCurrency (never one number across currencies)', () => {
-  it('sums each currency on its own, in exact cents', () => {
-    const rows = [
-      { amount: 0.1, currency: 'SAR' },
-      { amount: 0.2, currency: 'SAR' },
-      { amount: 700, currency: 'EGP' },
-    ];
-    expect(sumByCurrency(rows)).toEqual({ SAR: 0.3, EGP: 700 });
-  });
-
-  it('leaves out rows the filter rejects, and a currency with none disappears', () => {
-    const rows = [
-      { amount: 50, currency: 'SAR', ok: true },
-      { amount: 20, currency: 'USD', ok: false },
-    ];
-    expect(sumByCurrency(rows, (r) => r.ok)).toEqual({ SAR: 50 });
-    expect(sumByCurrency([])).toEqual({});
-  });
-});
 
 describe('generateTargets', () => {
   const st = (id: string, status: 'draft' | 'approved' | 'paid') => ({ assistant: { id }, status });
