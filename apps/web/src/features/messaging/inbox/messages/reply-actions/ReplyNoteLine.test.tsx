@@ -1,7 +1,7 @@
-import { pathKey } from '@ab/client-core';
+import { pathKey, setViewerPersonTz } from '@ab/client-core';
 import type { Permission, ThreadLesson } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { message } from '../../testing/inbox-fixture';
@@ -88,5 +88,12 @@ describe('reply note actions (owner 2026-10-28)', () => {
     expect(screen.queryByText(NO)).toBeNull();
     renderNote(YES, { mode: 'admin', permissions: [], lessons: [{ ...LESSON, status: 'confirmed' }] });
     expect(screen.getByText(/^تم تأكيد حلقة/)).toBeTruthy();
+  });
+
+  it('names the lesson time in the viewer’s zone and follows a zone change in place', () => {
+    renderNote(YES, { mode: 'admin', permissions: [], lessons: [{ ...LESSON, status: 'confirmed' }] });
+    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('17:00'); // Riyadh
+    act(() => setViewerPersonTz('Europe/London'));
+    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('15:00');
   });
 });

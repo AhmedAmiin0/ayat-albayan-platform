@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { counted, dateText, formatAmount, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -25,9 +24,9 @@ export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_tot
 
 const DAY = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 
-/** «1 أكتوبر 2026»: the viewer's day of an instant (docs/34). */
-export function instantDay(iso: string): string {
-  return dateText(new Date(iso), { tz: viewerTz(), locale }, DAY);
+/** «1 أكتوبر 2026»: the day of an instant in the viewer's `tz` (docs/34; useViewerTz). */
+export function instantDay(iso: string, tz: string): string {
+  return dateText(new Date(iso), { tz, locale }, DAY);
 }
 
 /** «1 أكتوبر 2026» for a local date (YYYY-MM-DD, e.g. starts_on), whatever the phone's zone. */

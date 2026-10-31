@@ -7732,11 +7732,6 @@
       "count": 6
     }
   },
-  "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.migration.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.outage.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -13479,9 +13474,6 @@
     }
   },
   "src/modules/teaching/booking/core/booking.contact-is-self.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -17090,9 +17082,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     }
   },

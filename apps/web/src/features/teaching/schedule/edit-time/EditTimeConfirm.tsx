@@ -40,8 +40,8 @@ const Side = ({ children }: { children: string }) => <span className="whitespace
  * the teacher's payout and the report file. Shown once something differs.
  */
 export function EditTimeConfirm(p: EditTimeConfirmProps) {
-  const clock = useClock();
   const tz = useViewerTz();
+  const clock = { ...useClock(), tz };
   const { lesson, mode, next, change, canNotify, notify, onNotify, payoutLocked = false } = p;
   const teacherTz = lesson.teacher.tz;
   // The teacher's own clock is only worth a line when it reads differently from the viewer's.
@@ -51,7 +51,10 @@ export function EditTimeConfirm(p: EditTimeConfirmProps) {
     ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, tz, clock),
   ];
   const correct = mode === 'correct';
-  const sides = { '{from}': whenWithLength(lesson.starts_at, durationMin(lesson), clock), '{to}': whenWithLength(next.startsAt, next.durationMin, clock) };
+  const sides = {
+    '{from}': whenWithLength(lesson.starts_at, durationMin(lesson), clock),
+    '{to}': whenWithLength(next.startsAt, next.durationMin, clock),
+  };
   return (
     <div className="grid gap-2.5 rounded-md bg-sunk px-3.5 py-3" aria-live="polite">
       <p className="text-sm font-semibold">

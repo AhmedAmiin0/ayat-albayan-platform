@@ -2700,7 +2700,7 @@
       "failed": "تعذّر تنزيل الملف، حاول مرة أخرى"
     },
     "quickReply": {
-      "confirmed": "تم تأكيد حلقة {when} (بتوقيت الرياض)",
+      "confirmed": "تم تأكيد حلقة {when} (بتوقيتك)",
       "reschedule": "طلب تغيير موعد الحلقة",
       "rescheduleNoLesson": "طلب تغيير الموعد",
       "rescheduled": "تم تغيير موعد الحلقة",
@@ -2708,9 +2708,9 @@
     },
     "replyAction": {
       "confirm": "تأكيد الحلقة",
-      "confirmLabel": "تأكيد حلقة {when} (بتوقيت الرياض)",
+      "confirmLabel": "تأكيد حلقة {when} (بتوقيتك)",
       "reschedule": "تغيير الموعد",
-      "rescheduleLabel": "تغيير موعد حلقة {when} (بتوقيت الرياض)",
+      "rescheduleLabel": "تغيير موعد حلقة {when} (بتوقيتك)",
       "notFound": "تعذر فتح الحلقة، فقد تغيّر موعدها أو أُلغيت. حدّث المحادثة وحاول مرة أخرى."
     },
     "composer": {
@@ -4581,6 +4581,8 @@
       "emptyTeacher": "لا توجد حلقات لهذا المعلم في هذا اليوم",
       "lessonsCount": "عدد الحلقات: {n}",
       "liveNow": "جارية الآن",
+      "riyadhDay": "يوم الأكاديمية بتوقيت الرياض، والأوقات بتوقيتك",
+      "otherDay": "{day} بتوقيتك",
       "makeupTag": "تعويضية",
       "lessonLabel": "حلقة {time} مع {teacher}",
       "status": {

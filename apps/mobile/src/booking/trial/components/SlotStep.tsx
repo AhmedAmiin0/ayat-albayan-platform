@@ -50,9 +50,10 @@ export interface SlotStepProps {
 export function SlotStep(props: SlotStepProps) {
   const { teacherId, tz, durationMin, onPick, multi, from, exclude, excludeLessonId } = props;
   const { color } = useTheme();
+  const viewerZone = useViewerTz();
   const [now] = useState(() => new Date());
   const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude, excludeLessonId) });
-  const days = slots.data ? freeSlotDays(slots.data.slots) : [];
+  const days = slots.data ? freeSlotDays(slots.data.slots, viewerZone) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
   const tap = (slot: string) =>
@@ -62,7 +63,7 @@ export function SlotStep(props: SlotStepProps) {
     <View style={{ gap: 12 }}>
       <FormLabel required>{multi ? t.booking.pickDayTimes : t.booking.pickTime}</FormLabel>
       {multi?.need ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.pickNDays, multi.need)}</AppText> : null}
-      <AppText style={note}>{zoneNote(useViewerTz())}</AppText>
+      <AppText style={note}>{zoneNote(viewerZone)}</AppText>
       <SlotsStatus slots={slots} empty={days.length === 0} />
       {days.length > 0 && !multi ? <FormLabel>{t.booking.startsOn}</FormLabel> : null}
       {days.map((day) => (

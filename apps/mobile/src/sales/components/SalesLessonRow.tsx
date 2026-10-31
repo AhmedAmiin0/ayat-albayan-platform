@@ -6,7 +6,7 @@ import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { lessonClock, rowSubtitle, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';
@@ -44,7 +44,9 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const running = isRunningLesson(lesson, now);
   const time = lessonClock(lesson.starts_at, tz, cycle);
   const who = studentNames(lesson);
-  const subtitle = rowSubtitle(lesson);
+  // A `?date` (Riyadh) day: another day for the viewer is named (dated rows already say it).
+  const hint = dated ? null : viewerDayHint(lesson.starts_at, tz);
+  const subtitle = [hint, rowSubtitle(lesson)].filter(Boolean).join(' · ');
   const when = `${dayLabel(wallParts(lesson.starts_at, tz).date)} ${time}`;
   const label = t.lessons.sheet.openRow.replace('{names}', who);
   // A running lesson already confirmed reads «جارية الآن» alone; one still to confirm keeps its word too.

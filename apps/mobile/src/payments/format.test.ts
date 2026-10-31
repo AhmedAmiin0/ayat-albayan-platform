@@ -19,7 +19,7 @@ test('packageName: the catalog size, or the count for a custom package', () => {
 
 test('instantDay is the Riyadh day; localDay keeps the stored date', () => {
   // 22:30Z on 30 Sep is 01:30 on 1 Oct in Riyadh.
-  expect(instantDay('2026-09-30T22:30:00Z')).toBe('1 أكتوبر 2026');
+  expect(instantDay('2026-09-30T22:30:00Z', 'Asia/Riyadh')).toBe('1 أكتوبر 2026');
   expect(localDay('2026-10-01')).toBe('1 أكتوبر 2026');
 });
 

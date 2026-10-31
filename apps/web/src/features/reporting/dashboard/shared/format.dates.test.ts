@@ -1,4 +1,3 @@
-import { setViewerPersonTz } from '@ab/client-core';
 import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { locale } from '@/lib/i18n/locale';
@@ -15,11 +14,10 @@ describe('dashboard dates, as before', () => {
   });
 
   it('whenViewer and rateDate read in the viewer zone', () => {
-    setViewerPersonTz('Africa/Cairo');
     const opts = { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Cairo' } as const;
     const day = new Intl.DateTimeFormat(L, opts).format(new Date(iso));
-    expect(whenViewer(iso, { cycle: '24', locale })).toBe(`${day} 23:30`);
+    expect(whenViewer(iso, { cycle: '24', locale, tz: 'Africa/Cairo' })).toBe(`${day} 23:30`);
     const rate = new Intl.DateTimeFormat(L, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Cairo' });
-    expect(rateDate(iso)).toBe(rate.format(new Date(iso)));
+    expect(rateDate(iso, 'Africa/Cairo')).toBe(rate.format(new Date(iso)));
   });
 });

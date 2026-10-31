@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { clockOf, type Conflict, lessonWhenAt, sameClockAt } from '@ab/shared';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -20,15 +19,19 @@ const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_of
 /**
  * «الميعاد ده مش من المواعيد المتاحة للمعلم/ة (السبت 31 أكتوبر 15:00، عند المعلم/ة 14:00 بتوقيت
  * القاهرة)»: the viewer's wall clock, plus the teacher's own (when it differs) for their
- * availability / time off.
+ * availability / time off. `clock.tz` is the viewer's zone (useViewerTz()).
  */
-export function conflictText(c: Conflict, clock: Clock, teacherTz?: string): string {
+export function conflictText(
+  c: Conflict,
+  clock: Clock & { tz: string },
+  teacherTz?: string,
+): string {
   const at = new Date(c.startsAt);
-  const tz = viewerTz();
-  let when = lessonWhenAt(at, { tz, ...clock });
+  const tz = clock.tz;
+  let when = lessonWhenAt(at, clock);
   if (teacherTz && !sameClockAt(at, { a: teacherTz, b: tz }) && TEACHER_SIDE.has(c.kind)) {
     const city = tzCity(teacherTz) ?? teacherTz;
-    when += `${t.common.listSeparator}${t.booking.teacherClock.replace('{time}', clockOf(at, { tz: teacherTz, ...clock })).replace('{city}', city)}`;
+    when += `${t.common.listSeparator}${t.booking.teacherClock.replace('{time}', clockOf(at, { ...clock, tz: teacherTz })).replace('{city}', city)}`;
   }
   return t.booking.conflict[c.kind].replace('{when}', when);
 }
@@ -56,8 +59,8 @@ export interface ConflictNoticeProps {
  * API rejects a blank one). Always stacked: it sits in a 460px drawer as well as a wide page.
  */
 export function ConflictNotice(p: ConflictNoticeProps) {
-  const clock = useClock();
   const tz = useViewerTz();
+  const clock = { ...useClock(), tz };
   const { conflicts, teacherTz, onChangeSlot, onOverride, busy = false, studentNames = {} } = p;
   const labels = p.labels ?? { override: t.booking.override, reason: t.booking.overrideReason };
   const titleId = useId();

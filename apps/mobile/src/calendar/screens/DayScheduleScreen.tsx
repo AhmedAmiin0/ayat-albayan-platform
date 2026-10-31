@@ -34,14 +34,14 @@ import { ScheduleFilters } from '../overview/ScheduleFilters';
 import { SchedulePeriod } from '../overview/SchedulePeriod';
 import { TeacherHeader } from '../overview/TeacherHeader';
 import { useOverview } from '../overview/use-overview';
-import { riyadhToday, weekStart, weekWindow } from '../lib/week';
+import { viewerToday, weekStart, weekWindow } from '../lib/week';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
 
 /**
- * «الجدول» (R-SCH-01, R-TCH-02): every teacher, even one with nothing booked, on one academy day
+ * «الجدول» (R-SCH-01, R-TCH-02): every teacher, even one with nothing booked, on one viewer day
  * (lessons and free gaps by time) or the whole week (lessons by day), from GET /lessons/overview,
  * fetched once per week. Each lesson shows تأكيد / إلغاء (optimistic, R-MOB-03) and «غيّر الميعاد»
  * (the reschedule sheet, R-SCH-07) and «عدّل الوقت» (the in-place edit sheet, R-SCH-11); a tap on the row opens «تفاصيل الحلقة» with the same actions. Filter by program and gender. `back` when it is pushed from
@@ -50,8 +50,9 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
   const cycle = useClockCycle();
   const now = useNow();
-  // academy day (docs/34 b): the overview pages by Riyadh days; times read in the viewer's zone.
-  const today = riyadhToday(now);
+  const tz = useViewerTz();
+  // The viewer's days (docs/34): the overview window, day buckets and clock are one zone.
+  const today = viewerToday(now, tz);
   const [date, setDate] = useFollowingDay(today, initialDate && DATE.test(initialDate) ? initialDate : undefined);
   const [view, setView] = useState<ScheduleView>('day');
   const [filter, setFilter] = useState<TeacherFilter>(ALL);
@@ -60,12 +61,12 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const action = useLessonAction();
   const inset = useTabBarInset();
   const start = weekStart(date);
-  const overview = useOverview(weekWindow(start));
+  const overview = useOverview(weekWindow(start, tz));
   const data = overview.data;
   const details = useLessonDetails(data?.lessons);
   const day = view === 'day';
-  const agendas = data ? teacherAgendas(data, { start: day ? date : start, view, filter, now }) : [];
-  const subtitle = headerLine([zoneNote(useViewerTz())], overview, cycle);
+  const agendas = data ? teacherAgendas(data, { start: day ? date : start, tz, view, filter, now }) : [];
+  const subtitle = headerLine([zoneNote(tz)], overview, { cycle, tz });
   const actionsOf = (lesson: LessonView, onLeave?: () => void) => (
     <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={onLeave} />
   );
@@ -99,7 +100,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
             view={view}
             filter={filter}
             date={date}
-            days={day && data ? dayCounts(data, start, filter) : null}
+            days={day && data ? dayCounts(data, { start, tz }, filter) : null}
             onView={setView}
             onFilter={setFilter}
             onDate={setDate}

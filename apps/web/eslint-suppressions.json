@@ -10406,9 +10406,6 @@
   "src/features/sales/sales/schedule/SalesDayNav.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/sales/sales/schedule/SalesLessonDetails.tsx": {
@@ -11571,9 +11568,6 @@
   },
   "src/features/teaching/booking/trial-date/history/history-text.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -13269,7 +13263,7 @@
   },
   "src/features/teaching/schedule/overview.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/schedule/overview.ts": {
@@ -13335,9 +13329,6 @@
   "src/features/teaching/schedule/reschedule/ProposalsPanel.tsx": {
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/schedule/reschedule/RescheduleForm.tsx": {
@@ -13495,9 +13486,6 @@
   },
   "src/features/teaching/teacher-students/next-lesson.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

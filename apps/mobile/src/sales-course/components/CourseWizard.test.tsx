@@ -9,6 +9,8 @@ import { isDisabled, fakeCourseApi, press, walkToReview } from '../testing/cours
 import { CourseScreen } from '../screens/CourseScreen';
 import { courseView, STUDENT_ID } from '../testing/fixtures';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -52,8 +54,8 @@ test('teacher → exactly the plan’s days, each with its time → review → �
   await press('checkbox', '18:00');
   await press('button', t.booking.next);
 
-  expect(await screen.findByText(dayLine(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(await screen.findByText(dayLine(SUN_17, 'Asia/Riyadh', R24))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   const ends = counted(t.booking.courseEnds, 8).replace('{date}', localDay('2026-10-29'));
   expect(screen.getByText(ends)).toBeTruthy();
   expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();

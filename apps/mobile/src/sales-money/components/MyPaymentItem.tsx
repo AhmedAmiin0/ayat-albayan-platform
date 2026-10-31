@@ -7,13 +7,15 @@ import { instantDay, money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { isolate, Ltr } from '@/core/ui/primitives/Ltr';
+import { useViewerTz } from '@/core/lib/clock';
 
 /** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note, then «المرفقات» of a bank transfer.
  * Its list's inset card draws the fill and the rules (owner 2026-10-28: one container rule). */
 export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
-  const line = [t.enums.paymentKind[payment.kind], t.enums.paymentMethod[payment.method], instantDay(payment.paid_at)].join(' · ');
+  const line = [t.enums.paymentKind[payment.kind], t.enums.paymentMethod[payment.method], instantDay(payment.paid_at, tz)].join(' · ');
   return (
     <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 12 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>

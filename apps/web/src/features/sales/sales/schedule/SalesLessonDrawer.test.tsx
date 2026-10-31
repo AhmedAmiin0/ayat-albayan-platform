@@ -9,6 +9,8 @@ import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
+/** …read in the suite's viewer zone (the academy's, Riyadh). */
+const Z24 = { ...C24, tz: 'Asia/Riyadh' };
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -45,7 +47,7 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     expect(within(drawer).getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
     expect(within(drawer).getByText(t.schedule.trialTag)).toBeTruthy();
     expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
-    for (const line of salesClockLines(LATER, C24)) expect(within(drawer).getByText(line)).toBeTruthy();
+    for (const line of salesClockLines(LATER, Z24)) expect(within(drawer).getByText(line)).toBeTruthy();
     expect(within(drawer).getByText('أبرار')).toBeTruthy();
     expect(within(drawer).getByText('AB-0183')).toBeTruthy();
     expect(within(drawer).getByText(t.lessons.sheet.readOnly)).toBeTruthy();
@@ -68,7 +70,11 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
   });
 
   it('salesClockLines: none for Riyadh or an old cache without zones', () => {
-    expect(salesClockLines(scheduleLesson(), C24)).toEqual([]);
-    expect(salesClockLines(LATER, C24)).toHaveLength(2);
+    expect(salesClockLines(scheduleLesson(), Z24)).toEqual([]);
+    expect(salesClockLines(LATER, Z24)).toHaveLength(2);
+  });
+
+  it('salesClockLines: compares with the zone it is given (a Cairo viewer drops the Cairo teacher)', () => {
+    expect(salesClockLines(LATER, { ...C24, tz: 'Africa/Cairo' })).toHaveLength(1);
   });
 });

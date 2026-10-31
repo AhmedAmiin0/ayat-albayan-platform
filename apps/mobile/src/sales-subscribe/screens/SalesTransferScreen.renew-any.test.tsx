@@ -41,7 +41,7 @@ test('not hers: the transfer and the chat receipts carry the chat phone; «إل�
   expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: m.receiptFromChat }));
   expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${KID}&phone=${encodeURIComponent(CHAT)}`);
-  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}` }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}` }));
   await waitFor(() => expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG, phone: CHAT }));
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }));

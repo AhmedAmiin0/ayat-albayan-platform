@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
@@ -7,8 +6,10 @@ import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { proposalsQuery } from '../api';
 import { studentNames } from '../lesson/lessons';
 import { type Clock, useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
-const when = (iso: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz: viewerTz(), ...clock });
+/** The viewer's time; `clock.tz` is the viewer's zone (useViewerTz()). */
+const when = (iso: string, clock: Clock & { tz: string }) => lessonWhenAt(new Date(iso), clock);
 
 /**
  * «طلبات تغيير الميعاد» above the week (R-SCH-08): every lesson a teacher proposed to move, in any
@@ -16,7 +17,7 @@ const when = (iso: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz: vi
  * drawer with «وافق» / «ارفض». Nothing pending → nothing rendered.
  */
 export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => void }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const proposals = useQuery(proposalsQuery);
   const list = proposals.data ?? [];
   if (list.length === 0) return null;

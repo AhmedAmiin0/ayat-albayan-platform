@@ -1103,7 +1103,7 @@
   },
   "src/booking/shared/picks.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/booking/shared/queries.ts": {
@@ -1513,11 +1513,6 @@
       "count": 1
     }
   },
-  "src/calendar/lib/week.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/lib/week.tz.test.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -1562,7 +1557,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/calendar/route.test.tsx": {
@@ -7304,9 +7299,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -12762,7 +12754,7 @@
   },
   "src/trial-date/lib/trial-date-text.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/trial-date/lib/trial-href.ts": {
@@ -13168,9 +13160,6 @@
   },
   "src/users/shared/format.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

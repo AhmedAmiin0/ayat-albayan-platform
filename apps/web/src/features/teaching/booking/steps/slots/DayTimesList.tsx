@@ -1,10 +1,10 @@
-import { viewerTz } from '@ab/client-core';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import type { DayPick } from '../../draft/draft.days';
 import { type Clock, useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { clockOfHhmm } from '@ab/shared';
 
 export interface DayTimesListProps {
@@ -19,12 +19,17 @@ export interface DayTimesListProps {
 const weekday: Record<string, string> = t.enums.weekday;
 
 /**
- * «الأحد الساعة 17:00» for one picked day (the family's clock); «… 17:00 بتوقيت القاهرة» when the
- * family's zone is not the viewer's.
+ * «الأحد الساعة 17:00» for one picked day on the family's clock `tz`; «… 17:00 بتوقيت القاهرة»
+ * when that zone is not the viewer's (`clock.tz`, from useViewerTz()).
  */
-export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, clock: Clock, tz: string = viewerTz()): string {
+export function dayAtText(
+  p: Pick<DayPick, 'weekday' | 'time'>,
+  clock: Clock & { tz: string },
+  tz: string,
+): string {
   const at = clockOfHhmm(p.time, clock.cycle, clock.locale);
-  const time = tz === viewerTz() ? at : t.schedule.inCity.replace('{time}', at).replace('{city}', tzCity(tz) ?? tz);
+  const city = tzCity(tz) ?? tz;
+  const time = tz === clock.tz ? at : t.schedule.inCity.replace('{time}', at).replace('{city}', city);
   return t.booking.dayAt.replace('{day}', weekday[String(p.weekday)] ?? '').replace('{time}', time);
 }
 
@@ -33,7 +38,7 @@ export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, clock: Clock, tz
  * picked on the slot grid above; each removable with its own button (44px touch target).
  */
 export function DayTimesList({ picks, tz, onRemove }: DayTimesListProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   if (picks.length === 0) return <p className="text-xs text-ink-3">{t.booking.noDayPicked}</p>;
   return (
     <ul className="flex flex-wrap gap-2">

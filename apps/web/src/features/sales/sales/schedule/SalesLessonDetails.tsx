@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { lessonStatusStyle, lessonWhenAt, sameClockAt, type SalesScheduleLesson } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -14,11 +13,14 @@ import { useViewerTz } from '@/lib/viewer-tz';
 
 /**
  * «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when its clock
- * differs from the viewer's at that instant.
+ * differs from the viewer's (`clock.tz`, useViewerTz()) at that instant.
  */
-export function salesClockLines(lesson: SalesScheduleLesson, clock: Clock): string[] {
+export function salesClockLines(
+  lesson: SalesScheduleLesson,
+  clock: Clock & { tz: string },
+): string[] {
   const at = new Date(lesson.starts_at);
-  const viewer = viewerTz();
+  const viewer = clock.tz;
   const other = (tz: string | null | undefined): tz is string =>
     !!tz && !sameClockAt(at, { a: tz, b: viewer });
   const zones = [...new Set(lesson.students.map((s) => s.tz))].filter(other);
@@ -46,7 +48,7 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
       <dl className="grid gap-3">
         <DetailRow label={t.schedule.time}>
           <span className="block">{`${lessonWhenAt(new Date(lesson.starts_at), { tz, ...clock })} ${t.schedule.viewerTime}`}</span>
-          {salesClockLines(lesson, clock).map((line) => (
+          {salesClockLines(lesson, { ...clock, tz }).map((line) => (
             <span key={line} className="block text-xs text-ink-2">{line}</span>
           ))}
         </DetailRow>

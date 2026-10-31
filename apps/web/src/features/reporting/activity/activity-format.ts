@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { dateText, type StatusStyle } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { clockWithSeconds } from '@/lib/clock-text';
@@ -10,11 +9,11 @@ import { locale } from '@/lib/i18n/locale';
 
 const JOIN = locale === 'ar' ? '، ' : ', ';
 
-export function formatAt(iso: string, clock: Clock): string {
+/** The time in `clock.tz` (the viewer's zone, from useViewerTz()), with its date. */
+export function formatAt(iso: string, clock: Clock & { tz: string }): string {
   const at = new Date(iso);
-  const tz = viewerTz();
-  const day = dateText(at, { tz, locale }, { dateStyle: 'medium' });
-  return `${day}${JOIN}${clockWithSeconds(at, { ...clock, tz })}`;
+  const day = dateText(at, { tz: clock.tz, locale }, { dateStyle: 'medium' });
+  return `${day}${JOIN}${clockWithSeconds(at, clock)}`;
 }
 
 type Dict = Record<string, string | undefined>;

@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { CALL_DIRECTIONS, CALL_END_REASONS, CALL_STATUSES, INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 740 (docs/28), read as text: no database in unit tests.
-const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261026000740_wa_calls.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 

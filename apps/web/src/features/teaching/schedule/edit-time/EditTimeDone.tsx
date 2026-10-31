@@ -10,6 +10,7 @@ import type { TimeEditResult } from './edit-time.contract';
 import { durationMin } from '../lesson/lessons';
 import { zonedParts } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /** Toast line after a save: «اتعدّل» and, when a guardian message was queued, that it was. */
 export const savedMessage = (r: Pick<TimeEditResult, 'notified'>): string =>
@@ -30,7 +31,7 @@ export interface EditTimeDoneProps {
  * another week would drop out of the list (and the drawer with it) before the admin had read this.
  */
 export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const queryClient = useQueryClient();
   const title = useRef<HTMLParagraphElement>(null);
   useEffect(() => title.current?.focus(), []);

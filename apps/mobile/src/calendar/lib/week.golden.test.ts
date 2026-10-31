@@ -7,14 +7,14 @@ import { dayLabel, riyadhMidnight, riyadhNoon, weekLabel, weekWindow } from './w
 // taken from the old code.
 
 const line = (date: string) =>
-  [riyadhMidnight(date), riyadhNoon(date).toISOString(), weekWindow(date).to, dayLabel(date), weekLabel(date)].join(' | ');
+  [riyadhMidnight(date), riyadhNoon(date).toISOString(), weekWindow(date, 'Asia/Riyadh').to, dayLabel(date), weekLabel(date)].join(' | ');
 
 test('Riyadh midnights, noons, week ends and labels, pinned', () => {
   expect(digest(goldenDates().map(line))).toBe('380:2e465a07');
 });
 
 test('the week of 2026-10-24 (Cairo changes its clocks on the 29th; Riyadh does not)', () => {
-  expect(weekWindow('2026-10-24')).toEqual({ from: '2026-10-23T21:00:00.000Z', to: '2026-10-30T21:00:00.000Z' });
+  expect(weekWindow('2026-10-24', 'Asia/Riyadh')).toEqual({ from: '2026-10-23T21:00:00.000Z', to: '2026-10-30T21:00:00.000Z' });
   expect(riyadhNoon('2026-12-31').toISOString()).toBe('2026-12-31T09:00:00.000Z');
   expect(dayLabel('2026-10-24')).toBe('السبت 24 أكتوبر');
 });

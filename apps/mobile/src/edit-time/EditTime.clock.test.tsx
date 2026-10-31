@@ -31,9 +31,9 @@ test('the clash line follows a 24 → 12 h switch of «تنسيق الوقت» w
   await renderWithQuery(<EditTimeSheet lesson={upcoming} onClose={jest.fn()} />, client);
   await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));
   await fireEvent.press(screen.getByRole('button', { name: t.editTime.submit }));
-  expect(await screen.findByText(conflictLine(clash, '24'))).toBeTruthy();
+  expect(await screen.findByText(conflictLine(clash, '24', 'Asia/Riyadh'))).toBeTruthy();
 
   await act(async () => setClockPref('12'));
-  expect(screen.getByText(conflictLine(clash, '12'))).toBeTruthy();
-  expect(screen.queryByText(conflictLine(clash, '24'))).toBeNull();
+  expect(screen.getByText(conflictLine(clash, '12', 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.queryByText(conflictLine(clash, '24', 'Asia/Riyadh'))).toBeNull();
 });
