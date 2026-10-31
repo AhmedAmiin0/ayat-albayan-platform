@@ -46,6 +46,6 @@ describe('channel bubble states (owner 2026-10-30)', () => {
     expect(screen.getByLabelText(a.editTitle)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     expect(screen.queryByLabelText(a.editTitle)).toBeNull();
-    expect(screen.getByText('الحلقة غدًا')).toBeTruthy();
+    expect(screen.getByText('See you tomorrow')).toBeTruthy();
   });
 });

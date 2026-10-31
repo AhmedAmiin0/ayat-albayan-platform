@@ -13,9 +13,9 @@ export const msg = (
   over: Partial<ChannelMessageView> = {},
 ): ChannelMessageView => ({
   id: 'm1',
-  body: 'الحلقة غدًا',
+  body: 'See you tomorrow',
   sender_role: 'teacher',
-  sender_name: 'أبرار',
+  sender_name: 'Abrar',
   mine: true,
   created_at: new Date(Date.now() - minutesAgo * MIN).toISOString(),
   edited: false,
