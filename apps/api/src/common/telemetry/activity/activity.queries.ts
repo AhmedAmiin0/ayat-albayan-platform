@@ -3,7 +3,7 @@ import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } f
 import { Inject, Injectable } from '@nestjs/common';
 import { dbError } from '@/common/http/http';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, type SortSpec } from '@/common/list-sort';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
 
 /** Newest first by default; every key sorts server-side (R-NFR-08). */
 const SORT: SortSpec<ActivitySortKey> = {

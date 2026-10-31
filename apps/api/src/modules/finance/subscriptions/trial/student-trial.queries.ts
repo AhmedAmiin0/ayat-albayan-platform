@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readChunked } from '../../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { readChunked } from '@/common/db/read-all';
 import { trialStudentsOf, type ChangedLessonRow, type TrialLessonRow } from './student-trial.plan';
 
 const RULE = 'rule:schedule_rules!lessons_rule_id_fkey(package)';

@@ -1,9 +1,9 @@
 import type { AdminTaskKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
-import { readAll, readChunked } from '../../../teaching/scheduling/read-all';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { readAll, readChunked } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 
 export interface Recipient {
   studentName: string;

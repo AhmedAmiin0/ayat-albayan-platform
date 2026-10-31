@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import { IN_CHUNK } from '../../../teaching/scheduling/read-all';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { IN_CHUNK } from '@/common/db/read-all';
 import { StudentTrialQueries } from './student-trial.queries';
 
 function setup(results: Record<string, FakeResult[]>) {

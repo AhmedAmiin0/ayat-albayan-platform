@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readAll } from '../../../teaching/scheduling/read-all';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 
 /** The reads of StudentExpiryJob (owner 2026-10-15, docs/11 §7): pending_renewal students, payments since. */
 @Injectable()

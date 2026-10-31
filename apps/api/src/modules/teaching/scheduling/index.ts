@@ -39,7 +39,7 @@ export {
   type RuleTiming,
   type UtcWindow,
 } from './occurrences/occurrences';
-export { IN_CHUNK, MAX_ROWS, readAll, readChunked } from './read-all';
+export { IN_CHUNK, MAX_ROWS, readAll, readChunked } from '@/common/db/read-all';
 export { callRpc, rpcError } from './rpc';
 export { type ProjectionQuery, RuleProjectionQueries } from './rules/rule-projection.queries';
 export {
