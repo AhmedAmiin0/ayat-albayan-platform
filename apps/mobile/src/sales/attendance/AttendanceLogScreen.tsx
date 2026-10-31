@@ -21,14 +21,15 @@ import { monthOf } from './attendance-log-text';
 const keyOf = (row: AttendanceTableRow) => row.lesson_id;
 
 /** 409 pdf_not_ready says so; anything else (offline, gone) the general error, as «التقارير». */
-const pdfError = (e: unknown): string => (e instanceof ApiError && e.status === 409 ? t.reports.error.pdf_not_ready : t.common.error);
+const pdfError = (e: unknown): string =>
+  e instanceof ApiError && e.status === 409 ? t.reports.error.pdf_not_ready : t.common.error;
 
 /**
- * «سجل الحضور» of one student (owner 2026-10-28), from «تفاصيل الطالب» or the admin's student file:
- * the month pills (newest first), the month's totals and a compact striped table of every past lesson
- * (Riyadh day and time on the viewer's clock, teacher, status chip, report sent or not; trial / makeup
- * tags and the cancel reason under a row). A row with a sent report opens it, for her students only
- * (`mine`) as «التقارير» does; the admin opens any. No money, link or notes.
+ * «سجل الحضور» of one student (owner 2026-10-28), from «تفاصيل الطالب» or the admin's student
+ * file: the month pills (newest first), the month's totals and a compact striped table of every
+ * past lesson (Riyadh day and time on the viewer's clock, teacher, status chip, report sent or not;
+ * trial / makeup tags and the cancel reason under a row). A row with a sent report opens it, for
+ * any student (owner 2026-10-30) as «التقارير» does. No money, link or notes.
  */
 export function AttendanceLogScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -43,22 +44,30 @@ export function AttendanceLogScreen() {
     (row: AttendanceTableRow) => {
       if (!row.report_id) return;
       setError(null);
-      void openAttendanceReport(base, { studentId: id, reportId: row.report_id }, to).catch((e: unknown) => setError(pdfError(e)));
+      const report = { studentId: id, reportId: row.report_id };
+      void openAttendanceReport(base, report, to).catch((e: unknown) => setError(pdfError(e)));
     },
     [base, id, to],
   );
   const renderItem = useCallback(
     ({ item, index }: { item: AttendanceTableRow; index: number }) => (
-      <AttendanceLogRow row={item} striped={index % 2 === 1} cycle={cycle} onOpen={data?.mine && item.report_id ? open : undefined} />
+      <AttendanceLogRow
+        row={item}
+        striped={index % 2 === 1}
+        cycle={cycle}
+        onOpen={item.report_id ? open : undefined}
+      />
     ),
-    [cycle, data?.mine, open],
+    [cycle, open],
   );
   const pick = useCallback((m: string) => {
     setError(null);
     setMonth(m);
   }, []);
   const title = t.sales.student.log.title;
-  if (!data) return <SalesLoadScreen title={title} query={log} notFound={t.sales.student.notFound} />;
+  if (!data) {
+    return <SalesLoadScreen title={title} query={log} notFound={t.sales.student.notFound} />;
+  }
   return (
     <Screen>
       <ScreenHeader

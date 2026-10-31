@@ -4461,7 +4461,10 @@
       "attendedRecent": "Attended {n} of {of} in the last 30 days",
       "noHeldPackage": "No lessons held in the current package yet",
       "noHeldRecent": "No lessons held in the last 30 days",
-      "groupSeparator": "; "
+      "groupSeparator": "; ",
+      "package": "Package",
+      "packageLine": "Package: {line}",
+      "noPackage": "No current package"
     },
     "live": {
       "title": "Lessons running now",
@@ -4480,6 +4483,7 @@
       "starts": "Starts: {date}",
       "renews": "Renews: {date}",
       "ended": "Ended: {date}",
+      "projectedEnd": "Expected end: {date}",
       "changes": "Status changes",
       "created": "Created as {to}",
       "changed": "From {from} to {to}",
@@ -4522,7 +4526,6 @@
         "showAll": "Show all ({n})",
         "showLess": "Show less"
       },
-      "notMine": "Not one of your students: the schedule and attendance are shown here; subscriptions and reports are for your own students only",
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",

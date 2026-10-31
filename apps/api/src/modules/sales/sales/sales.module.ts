@@ -28,6 +28,6 @@ import { SalesSettings } from './sales.settings';
     ...[SalesAcademyQueries, SalesHistoryQueries, SalesAcademyService, SalesScheduleQueries, SalesScheduleService],
     SalesRosterRepo,
   ],
-  exports: [SalesQueries, SalesScopes, SalesAssignService, SalesHistoryQueries],
+  exports: [SalesQueries, SalesScopes, SalesAssignService, SalesHistoryQueries, SalesRosterRepo],
 })
 export class SalesModule {}

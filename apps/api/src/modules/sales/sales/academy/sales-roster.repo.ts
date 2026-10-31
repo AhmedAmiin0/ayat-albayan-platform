@@ -1,3 +1,4 @@
+import type { Tables } from '@ab/db';
 import type { Attendance, LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
@@ -10,11 +11,17 @@ export interface RosterRuleRow {
   rule: WeeklyRuleRow;
 }
 
-/** A student's active package start: of subscriptions the date only, never a price or payment. */
-export interface RosterPackageRow {
-  student_id: string;
-  starts_on: string;
-}
+/** A student's package (owner 2026-10-30): size, status and dates only; never a price. */
+export type RosterPackageRow = Pick<
+  Tables<'subscriptions'>,
+  'id' | 'student_id' | 'package' | 'status' | 'starts_on' | 'renews_on' | 'lessons_total' | 'created_at'
+>;
+
+/** A package's balance (v_subscription_balance): used (lessons_used_before in), left, end. */
+export type RosterBalanceRow = Pick<
+  Tables<'v_subscription_balance'>,
+  'subscription_id' | 'lessons_used' | 'remaining' | 'ended_at' | 'projected_end_at'
+>;
 
 /** A past lesson of one of the page's students: its status and the student's own attendance. */
 export interface RosterLessonRow {
@@ -24,6 +31,9 @@ export interface RosterLessonRow {
 }
 
 const RULE_SELECT = `student_id, rule:schedule_rules!inner(${WEEKLY_RULE_COLUMNS})` as const;
+const PACKAGE_SELECT =
+  'id, student_id, package, status, starts_on, renews_on, lessons_total, created_at' as const;
+const BALANCE_SELECT = 'subscription_id, lessons_used, remaining, ended_at, projected_end_at' as const;
 const LESSON_SELECT = 'student_id, attendance, lesson:lessons!inner(starts_at, status)' as const;
 
 /** PostgREST answers at most 1000 rows (config.toml max_rows): lessons are read in such pages. */
@@ -31,8 +41,9 @@ const PAGE = 1000;
 const MAX_PAGES = 10;
 
 /**
- * «كل الطلاب»'s schedule and attendance (owner 2026-10-30): one read per kind for the WHOLE page of
- * students, never one per row. Service role, whitelisted columns: never a price, payment or link.
+ * «كل الطلاب»'s schedule, attendance and current package (owner 2026-10-30): one read per kind for
+ * the WHOLE page of students, never one per row. Service role, whitelisted columns: never a price,
+ * currency, payment, commission or link.
  */
 @Injectable()
 export class SalesRosterRepo {
@@ -49,14 +60,26 @@ export class SalesRosterRepo {
     return data;
   }
 
-  /** The students' active packages (status active), the start date only. */
+  /** The students' packages, newest first (starts_on, created_at): never a price or currency. */
   async packages(studentIds: readonly string[]): Promise<RosterPackageRow[]> {
     if (studentIds.length === 0) return [];
     const { data, error } = await this.db
       .from('subscriptions')
-      .select('student_id, starts_on')
+      .select(PACKAGE_SELECT)
       .in('student_id', [...studentIds])
-      .eq('status', 'active');
+      .order('starts_on', { ascending: false })
+      .order('created_at', { ascending: false });
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The balances of the given packages (a cancelled one has no row). */
+  async balances(subscriptionIds: readonly string[]): Promise<RosterBalanceRow[]> {
+    if (subscriptionIds.length === 0) return [];
+    const { data, error } = await this.db
+      .from('v_subscription_balance')
+      .select(BALANCE_SELECT)
+      .in('subscription_id', [...subscriptionIds]);
     if (error) throw dbError(error);
     return data;
   }

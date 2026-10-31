@@ -1484,7 +1484,7 @@
   },
   "src/sales/student/student-attendance.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/sales/student/student-details.ts": {

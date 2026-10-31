@@ -49,7 +49,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(t.academy.students).toHaveBeenCalledWith({ page: 2, pageSize: 20, search: 'ياس' });
     expect(res.json()).toEqual({
       items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', guardian_phone: '+966551110000', mine: true,
-        weekly: [], attendance: { attended: 0, held: 0, basis: 'recent' } }],
+        weekly: [], attendance: { attended: 0, held: 0, basis: 'recent' }, package: null }],
       total: 41, page: 2, pageSize: 20,
     });
     // Owner 2026-10-27: sales already see every chat with its phone, so the row opens that family's chat.
@@ -81,13 +81,14 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(res.body).not.toMatch(/bank|price|سر/);
   });
 
-  it('GET history: another salesperson, or an unknown id, is 404 subscription_not_found; a bad id is 400', async () => {
+  it('GET history: any salesperson reads it (owner 2026-10-30); an unknown id is 404; a bad id is 400', async () => {
     const other = await t.get(`/sales/subscriptions/${SUB}/history`, 'salesB');
-    expect([other.statusCode, other.json().code]).toEqual([404, 'subscription_not_found']);
+    expect(other.statusCode).toBe(200);
+    expect(other.json().subscription_id).toBe(SUB);
+    t.history.history.mockClear();
     const unknown = await t.get('/sales/subscriptions/c1000000-0000-4000-8000-0000000000ff/history', 'salesA');
     expect([unknown.statusCode, unknown.json().code]).toEqual([404, 'subscription_not_found']);
     expect(t.history.history).not.toHaveBeenCalled();
-    expect(other.body).not.toMatch(/290|SAR|amount/);
     expect((await t.get('/sales/subscriptions/nope/history', 'salesA')).statusCode).toBe(400);
   });
 });
