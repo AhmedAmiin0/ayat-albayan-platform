@@ -761,7 +761,8 @@
       "no_change": "You have not changed any time yet; pick another day or time",
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
-      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more."
+      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -2609,6 +2610,10 @@
     "previewUnsupported": "Message whose content did not arrive",
     "reacted": "Reaction: {emoji}",
     "reactionRemoved": "Reaction removed",
+    "edited": "Edited",
+    "deletedMessage": "This message was deleted",
+    "adWelcome": "The ad's welcome message",
+    "unsupportedEcho": "Unsupported message",
     "reactions": {
       "react": "React",
       "bar": "React to the message",
@@ -2995,6 +3000,18 @@
       "pageFailed": "Couldn't load the page. Tap to try again",
       "tapToPreview": "Tap to preview",
       "zoomHint": "Tap a page to zoom in"
+    },
+    "hide": {
+      "action": "Remove from platform",
+      "title": "Remove this message from the platform?",
+      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted from the customer's phone: they still see it in WhatsApp.",
+      "confirm": "Remove from platform",
+      "placeholder": "Hidden on the platform — still visible to the customer",
+      "by": "Hidden by {name} · {time}",
+      "byUnknown": "Hidden · {time}",
+      "unhide": "Show",
+      "failed": "Could not complete the action, please try again.",
+      "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
     }
   },
   "mobileFinance": {
@@ -3171,6 +3188,10 @@
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
       "teacher_new_student": "Teacher: new student alert",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed",
       "trial_reschedule": "Reschedule the trial lesson",
       "free_trial_invite": "Free trial lesson invitation",
       "welcome_greeting": "Welcome message"
@@ -3546,6 +3567,31 @@
     "commission_earned": {
       "title": "New commission",
       "body": "{amount} — {code} {student}"
+    },
+    "kapso_webhook_gap": {
+      "title": "Families' messages are not arriving from Kapso directly",
+      "body": {
+        "one": "Check the webhook in Kapso: 1 late message was fetched by the periodic catch-up",
+        "two": "Check the webhook in Kapso: 2 late messages were fetched by the periodic catch-up",
+        "few": "Check the webhook in Kapso: {n} late messages were fetched by the periodic catch-up",
+        "other": "Check the webhook in Kapso: {n} late messages were fetched by the periodic catch-up"
+      }
+    },
+    "lesson_rescheduled": {
+      "title": "Lesson time changed",
+      "body": "{student}: from {from} to {when}"
+    },
+    "lesson_cancelled": {
+      "title": "Lesson cancelled",
+      "body": "{student}’s lesson on {when} was cancelled"
+    },
+    "course_paused": {
+      "title": "Lessons paused",
+      "body": "{student}’s lessons are paused from {when}"
+    },
+    "course_resumed": {
+      "title": "Lessons resumed",
+      "body": "{student}’s lessons resume; first lesson {when}"
     }
   },
   "bell": {
@@ -3770,7 +3816,11 @@
       "meeting_invite": "Meeting invitation",
       "google_sync_alert": "Google sync alert",
       "channel_message": "Student channel message",
-      "commission_earned": "New commission"
+      "commission_earned": "New commission",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3847,7 +3897,8 @@
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
-      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are."
+      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
+      "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3874,7 +3925,8 @@
     "invalidText": "Check this field",
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
     "commsSource": "Where the number setup comes from",
-    "reportFormV2": "New lesson report form"
+    "reportFormV2": "New lesson report form",
+    "presenceEnabled": "Show online status and last seen"
   },
   "language": {
     "label": "Language",
@@ -5256,6 +5308,9 @@
       "saved_replies.manage": "Manage shared quick replies",
       "student_channels.monitor": "Read student–teacher channels",
       "courses.pause": "Pause and resume any student's course",
+      "subscriptions.stop": "Cancel any student's subscription and stop the course",
+      "students.change_teacher": "Change any student's teacher for the rest of the course",
+      "courses.reschedule": "Change any student's lesson days and times",
       "sales.renew_any": "Renew any student's subscription from the chat",
       "leads.link_family": "Link a lead's number to an existing student's family"
     },
@@ -5268,6 +5323,9 @@
       "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
       "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
       "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
+      "subscriptions.stop": "Cancels the subscription's upcoming lessons, ends its schedule and marks the student churned. Payments, past lessons, reports and teacher pay stay as they are.",
+      "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
+      "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
       "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
@@ -6015,6 +6073,22 @@
       "commission_earned": {
         "name": "New assistant commission",
         "trigger": "When a student the assistant brought pays a package in full"
+      },
+      "lesson_rescheduled": {
+        "name": "Lesson time changed",
+        "trigger": "When an upcoming lesson moves to a new time, to the teacher and the guardian"
+      },
+      "lesson_cancelled": {
+        "name": "Lesson cancelled",
+        "trigger": "When the academy team cancels an upcoming lesson, to the teacher and the guardian"
+      },
+      "course_paused": {
+        "name": "Lessons paused",
+        "trigger": "When a student’s course is paused: one message to the teacher and the guardian"
+      },
+      "course_resumed": {
+        "name": "Lessons resumed",
+        "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
       }
     }
   },
@@ -7108,7 +7182,28 @@
     "noMessageYet": "No messages yet",
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
-    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher."
+    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "actions": {
+      "menu": "Message options",
+      "edit": "Edit",
+      "deleteForAll": "Delete for everyone",
+      "edited": "Edited",
+      "deleted": "This message was deleted",
+      "editTitle": "Edit message",
+      "save": "Save",
+      "saving": "Saving…",
+      "deleteTitle": "Delete this message for everyone?",
+      "deleteBody": "The message will be deleted for everyone in this chat. This cannot be undone.",
+      "moderateBody": "This message will be deleted for everyone in the chat (admin moderation). This cannot be undone.",
+      "deleteConfirm": "Delete for everyone",
+      "failed": "Could not complete the action, please try again.",
+      "errors": {
+        "edit_window_closed": "The 15-minute edit window has passed.",
+        "delete_window_closed": "The 48-hour delete window has passed.",
+        "not_your_message": "You can only edit or delete your own messages.",
+        "message_deleted": "This message was already deleted."
+      }
+    }
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
@@ -7227,6 +7322,86 @@
       "urlCopied": "URL copied"
     }
   },
+  "courseActions": {
+    "stop": {
+      "action": "Cancel subscription",
+      "title": "Cancel subscription and stop the course",
+      "intro": "What happens when you confirm:",
+      "lessons": {
+        "zero": "No upcoming lessons to cancel",
+        "one": "1 upcoming lesson will be cancelled",
+        "two": "2 upcoming lessons will be cancelled",
+        "few": "{n} upcoming lessons will be cancelled",
+        "other": "{n} upcoming lessons will be cancelled"
+      },
+      "schedule": "The subscription's weekly schedule ends today",
+      "money": "Recorded payments ({amount}) stay as they are, no refund",
+      "history": "Past lessons, their reports and teacher pay stay as they are",
+      "status": "The student's status becomes «Churned»",
+      "reason": "Cancellation reason",
+      "reasonHint": "A short reason kept in the log",
+      "confirm": "Confirm cancellation",
+      "done": "Subscription cancelled and course stopped",
+      "stopped": "Subscription cancelled on {date}",
+      "stoppedReason": "Reason: {reason}"
+    },
+    "teacher": {
+      "action": "Change teacher",
+      "title": "Change teacher",
+      "current": "Current teacher",
+      "pick": "New teacher",
+      "noTeachers": "No teachers available for this student",
+      "keepDays": "Keep the current days and times",
+      "changeDays": "Change the days and times too",
+      "confirm": "Confirm teacher change",
+      "done": "The remaining lessons moved to the new teacher"
+    },
+    "times": {
+      "action": "Change lesson times",
+      "title": "Change lesson times",
+      "days": "New days and times",
+      "confirm": "Save the new times",
+      "done": "The remaining lessons' times changed"
+    },
+    "from": "Change starts from",
+    "fromHint": "Default: the day of the next lesson",
+    "zoneNote": "Times in your zone ({tz})",
+    "remaining": {
+      "zero": "No lessons left in the course",
+      "one": "1 remaining lesson moves",
+      "two": "2 remaining lessons move",
+      "few": "{n} remaining lessons move",
+      "other": "{n} remaining lessons move"
+    },
+    "endsOn": "Last lesson on {date}",
+    "checking": "Checking the times…",
+    "conflicts": "The new time clashes with the teacher's or the student's time:",
+    "overrideReason": "Reason to override the clash",
+    "override": "Save despite the clash",
+    "errors": {
+      "generic": "Could not complete the request, try again",
+      "already_cancelled": "This subscription is already cancelled",
+      "has_future_lessons": "Some upcoming lessons were not cancelled yet, try again",
+      "subscription_not_found": "Subscription not found",
+      "conflict": "The time clashes with the teacher's or the student's time",
+      "course_finished": "No lessons left in the course to move",
+      "course_not_found": "This subscription has no weekly schedule",
+      "course_exists": "The new days overlap another course of the student",
+      "course_changed": "The schedule changed since you opened this, reopen it",
+      "custom_count_admin": "Custom lesson count: only an admin can change it",
+      "date_in_past": "Pick an upcoming date",
+      "days_count_mismatch": "Pick the same number of days a week",
+      "no_change": "The days and times did not change",
+      "no_occurrences": "No lessons fall on the picked days",
+      "override_not_allowed": "Only an admin can override a clash",
+      "same_teacher": "This is already the student's teacher",
+      "starts_before_course": "The date is before the course starts",
+      "starts_before_subscription": "The date is before the subscription starts",
+      "teacher_inactive": "This teacher is inactive",
+      "teacher_not_found": "Teacher not found",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first."
+    }
+  },
   "coursePause": {
     "action": "Pause",
     "title": "Pause the course",
@@ -7288,5 +7463,25 @@
       "avatar_not_staff": "Student and guardian accounts have no photo.",
       "generic": "Could not save the photo. Try again."
     }
+  },
+  "presence": {
+    "online": "Online now",
+    "lastSeen": "Last seen {when}",
+    "lastMessage": "Last message {when}",
+    "now": "just now",
+    "minutes": {
+      "one": "1 minute ago",
+      "two": "2 minutes ago",
+      "few": "{n} minutes ago",
+      "other": "{n} minutes ago"
+    },
+    "today": "today at {time}",
+    "yesterday": "yesterday",
+    "staffTitle": "Team status",
+    "staffOnline": "Online now: {n}",
+    "staffNever": "Not seen yet",
+    "staffEmpty": "No team members yet",
+    "off": "Online status is turned off in Values",
+    "loadError": "Could not load the team status"
   }
 }

@@ -25,6 +25,7 @@ import { useHeaderStudents } from '../thread/components/HeaderStudents';
 import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
+import { useLastMessageLine } from '@/inbox/thread/hooks/use-last-message';
 import { useClockCycle } from '@/core/lib/clock';
 import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
@@ -78,6 +79,7 @@ export function ThreadScreen() {
   // Opening the chat reads it on the server: its unread badge leaves the list at once.
   useInboxRead(phone, query);
   const thread = query.data?.pages[0]?.thread ?? null;
+  const lastMessage = useLastMessageLine(thread?.last_inbound_at);
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
   const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
@@ -91,6 +93,7 @@ export function ThreadScreen() {
         <ChatHeader
           title={title}
           subtitle={subtitleOf(phone, query, { teacher, cycle })}
+          status={lastMessage}
           onBack={back}
           avatar={contactAvatar(thread, phone)}
           onTitlePress={students.onPress}

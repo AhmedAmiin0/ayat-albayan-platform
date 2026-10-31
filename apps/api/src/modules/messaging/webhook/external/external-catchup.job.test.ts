@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { fakeQueries } from '../webhook.fakes';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { fakeQueries } from '@/modules/messaging/webhook/webhook.fakes';
 import { catchUpSince, ExternalCatchUpJob, FLOOR, LOOKBACK_MS, MAX_PAGES } from './external-catchup.job';
 import { externalServices, KAPSO_NUMBER_ID, kapsoOverlay, kapsoText, SENT_AT, SENT_TS } from './external.fakes';
 import type { ExternalQueries } from './external.queries';

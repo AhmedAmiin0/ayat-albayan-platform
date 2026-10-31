@@ -32,6 +32,8 @@ export interface NotificationTemplateView {
 export interface NotificationEntryView {
   key: NotificationKey;
   audience: NotificationAudience;
+  /** v2 only: the others it reaches too (catalogue alsoTo): a schedule change's teacher. */
+  also_to?: NotificationAudience[];
   channels: NotificationChannel[];
   automatic: boolean;
   manual: boolean;

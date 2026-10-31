@@ -1,3 +1,4 @@
+import { countsForMoney } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field } from '@/components/ui/form/field';
@@ -22,12 +23,12 @@ const optionText = (s: SubscriptionView) =>
 
 /**
  * Any package of any student, not only the first 100 unpaid ones: search the student (name, phone
- * or code), then choose among their packages that have not ended (unpaid, active, paused; never a cancelled one). The one
- * that still owes is chosen first.
+ * or code), then choose among their packages that have not ended (unpaid, active, paused; a stopped one still
+ * owes, an unused-cancelled one never: countsForMoney). The one that still owes is chosen first.
  */
 export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props) {
   const list = useQuery({ ...studentSubscriptionsQuery(student?.id ?? ''), enabled: student !== null });
-  const open = (list.data?.items ?? []).filter((s) => s.status !== 'expired' && s.status !== 'cancelled');
+  const open = (list.data?.items ?? []).filter((s) => s.status !== 'expired' && countsForMoney(s));
   useEffect(() => {
     if (picked || open.length === 0) return;
     onPick(open.find((s) => owed(s) > 0) ?? open[0] ?? null);

@@ -1,4 +1,7 @@
 import { Global, Injectable, Logger, Module } from '@nestjs/common';
+import type { ScheduleChange, ScheduleChangeListener } from './schedule-change';
+
+export type { ScheduleChange } from './schedule-change';
 
 export type LessonsChangedListener = (lessonIds: readonly string[]) => Promise<void>;
 
@@ -13,6 +16,7 @@ export type LessonsChangedListener = (lessonIds: readonly string[]) => Promise<v
 export class LessonEvents {
   private readonly log = new Logger(LessonEvents.name);
   private readonly listeners: LessonsChangedListener[] = [];
+  private readonly scheduleListeners: ScheduleChangeListener[] = [];
 
   onChanged(listener: LessonsChangedListener): void {
     this.listeners.push(listener);
@@ -25,6 +29,23 @@ export class LessonEvents {
         await listener(lessonIds);
       } catch (e) {
         this.log.error(`lessons-changed listener failed: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
+  }
+
+  /** The schedule-change notices (ScheduleNotices) subscribe here. */
+  onScheduleChange(listener: ScheduleChangeListener): void {
+    this.scheduleListeners.push(listener);
+  }
+
+  /** After the commit: a lesson moved or cancelled, a course paused or resumed. Never throws. */
+  async scheduleChanged(change: ScheduleChange): Promise<void> {
+    for (const listener of this.scheduleListeners) {
+      try {
+        await listener(change);
+      } catch (e) {
+        const why = e instanceof Error ? e.message : String(e);
+        this.log.error(`schedule-change ${change.kind} listener failed: ${why}`);
       }
     }
   }

@@ -52,6 +52,9 @@ const DELETES = {
       and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning sl.student_id`,
   channel_reads: (tx, s) => tx`
     delete from public.channel_reads where channel_id in (${demoChannels(tx, s)}) returning channel_id`,
+  channel_message_edits: (tx, s) => tx`
+    delete from public.channel_message_edits e using public.channel_messages m
+    where m.id = e.message_id and m.channel_id in (${demoChannels(tx, s)}) returning e.id`,
   channel_messages: (tx, s) => tx`
     delete from public.channel_messages where channel_id in (${demoChannels(tx, s)}) returning id`,
   student_channels: (tx, s) => tx`

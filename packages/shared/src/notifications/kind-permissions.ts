@@ -26,6 +26,11 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   google_sync_alert: SETTINGS,
   channel_message: BELL,
   commission_earned: EARNINGS,
+  // A schedule change (owner 2026-10-30): the teacher, and the family once they hold the bell.
+  lesson_rescheduled: BELL,
+  lesson_cancelled: BELL,
+  course_paused: BELL,
+  course_resumed: BELL,
 };
 
 /** May a profile holding `held` be told about `kind`? */

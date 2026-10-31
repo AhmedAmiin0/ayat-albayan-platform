@@ -128,6 +128,12 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
+  it('a message hidden from the platform: its file is 404 message_not_found for everyone', async () => {
+    queries.message.mockResolvedValue(row({ hidden_at: '2026-10-30T10:00:00.000Z' }));
+    for (const who of ['admin', 'sales']) expect((await call(who)).json().code).toBe('message_not_found');
+    expect(storage.signedDownload).not.toHaveBeenCalled();
+  });
+
   it('a bad phone is 400 invalid_phone; a bad message id is 400', async () => {
     expect((await call('sales', `/threads/abc/messages/${M1}/file`)).json()).toMatchObject({ code: 'invalid_phone' });
     expect((await call('sales', `/threads/${encodeURIComponent(PHONE)}/messages/x/file`)).statusCode).toBe(400);

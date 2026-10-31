@@ -2,7 +2,7 @@ import type { ChannelPage } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { CHANNEL_WRITES, channelMessagesPath, channelReadPath, channelTimeText, olderCursor, threadMessages } from './channels.js';
 
-const msg = (id: string, at: string) => ({ id, body: id, sender_role: 'guardian' as const, sender_name: '', mine: false, created_at: at });
+const msg = (id: string, at: string) => ({ id, body: id, sender_role: 'guardian' as const, sender_name: '', mine: false, created_at: at, edited: false, deleted: false });
 
 describe('student channel paths and pages (docs/31 §2)', () => {
   it('each audience reads its own route; before is encoded', () => {

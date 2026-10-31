@@ -1,6 +1,6 @@
 import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
-import { IntegrationConfigModule } from '@/common/integrations/integration-config.module';
+import { IntegrationConfigModule } from '@/common/configuration/integrations/integration-config.module';
 import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';
 import { bootGaps, lineProvider, loadEnv } from '@/config/env/env';
 import { CodeSend } from './direct/code-send';

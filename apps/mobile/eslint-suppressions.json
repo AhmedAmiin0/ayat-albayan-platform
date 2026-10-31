@@ -4723,9 +4723,6 @@
     }
   },
   "src/inbox/messages/components/MessageMeta.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 7
     }
@@ -4891,7 +4888,7 @@
   },
   "src/inbox/messages/hooks/bubble-offers.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {
@@ -4900,9 +4897,6 @@
     }
   },
   "src/inbox/messages/hooks/message-text.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -4956,9 +4950,6 @@
     }
   },
   "src/inbox/messages/hooks/thread-preview.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -6580,9 +6571,6 @@
     }
   },
   "src/inbox/thread/components/ChatHeader.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -9264,7 +9252,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-course/change/CurrentCourse.tsx": {
@@ -11004,7 +10992,7 @@
   },
   "src/student-file/channel/ChannelBubble.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/student-file/channel/ChannelComposer.tsx": {

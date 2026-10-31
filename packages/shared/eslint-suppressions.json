@@ -51,7 +51,7 @@
   },
   "src/money/assistant/kind.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/money/assistant/renewal.test.ts": {
@@ -530,11 +530,6 @@
       "count": 1
     }
   },
-  "src/messaging/channel/channel.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
   "src/messaging/chat/chat-files.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -969,7 +964,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/money/ledger/usage/receivables.ts": {
@@ -1064,7 +1059,7 @@
   },
   "src/notifications/catalogue/catalogue.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/notifications/catalogue/catalogue.types.ts": {
@@ -1585,14 +1580,9 @@
       "count": 6
     }
   },
-  "src/schedule/schemas/course-change.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/schedule/schemas/course-change.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/schedule/schemas/day-times.test.ts": {

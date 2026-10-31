@@ -30,6 +30,15 @@ describe('MoneyWrites: audit → follow-ups (flip / revert) → recompute + the 
     expect(t.audit.record).not.toHaveBeenCalled();
   });
 
+  it('recorded: a write audited by its own RPC (stop_course) closes the tasks and follows up, no audit row', async () => {
+    const t = setup();
+    const stop = { actorId: 'a1', entity: 'subscriptions', entityId: 'sub1', action: 'cancel', after: {} };
+    await t.w.recorded(stop, 's1');
+    expect(t.order).toEqual(['follow', 'evaluate']);
+    expect(t.alerts.closeTasksOf).toHaveBeenCalledWith('sub1');
+    expect(t.audit.record).not.toHaveBeenCalled();
+  });
+
   it('no student → only the audit', async () => {
     const t = setup();
     await t.w.done(CREATE, null);

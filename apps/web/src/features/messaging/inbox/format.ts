@@ -1,5 +1,15 @@
 import { sendErrorReason } from '@ab/client-core';
-import { clockOf, counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import {
+  clockOf,
+  counted,
+  formatPhone,
+  intlLocale,
+  previewNote,
+  SESSION_WINDOW_MS,
+  type MessageView,
+  type NoteWords,
+  type ThreadView,
+} from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
@@ -15,6 +25,13 @@ const day = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
 const clockAt = (at: Date, clock: Clock): string => clockOf(at, { ...clock, tz: viewerZone() });
 
 export type MediaKind = keyof typeof t.inbox.media;
+
+/** A deleted message, the ad's welcome, an unsupported echo (owner 2026-10-30, marker-notes). */
+export const NOTE_WORDS: NoteWords = {
+  deleted: t.inbox.deletedMessage,
+  adWelcome: t.inbox.adWelcome,
+  unsupported: t.inbox.unsupportedEcho,
+};
 
 /** WhatsApp media by MIME: image / audio / video, PDFs and other files are documents. */
 export function mediaKind(mime: string | null): MediaKind {
@@ -51,6 +68,8 @@ export function templateLine(key: string): string {
 }
 
 function lastText(th: ThreadView): string {
+  const note = previewNote(th, NOTE_WORDS);
+  if (note) return note;
   const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
   if (media) return th.last_body ? `${media}: ${th.last_body}` : media;
   if (th.last_body) return th.last_body;

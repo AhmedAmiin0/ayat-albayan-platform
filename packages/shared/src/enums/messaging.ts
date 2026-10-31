@@ -47,6 +47,10 @@ export const PUSH_KINDS = [
   'google_sync_alert',
   'channel_message',
   'commission_earned',
+  'lesson_rescheduled',
+  'lesson_cancelled',
+  'course_paused',
+  'course_resumed',
 ] as const satisfies readonly Enums<'push_kind'>[];
 /** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
 export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];

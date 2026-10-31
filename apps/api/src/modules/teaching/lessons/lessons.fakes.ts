@@ -8,6 +8,7 @@ import type { LessonRow } from './store/lesson-row';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import { LessonStore } from './store/lesson-store';
 import type { LessonsQueries } from './lessons.queries';
+import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 export { RULE_ID, STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000d1';
@@ -75,8 +76,11 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
       record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
     }),
   };
-  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter, new LessonEvents());
-  return { store, queries, writer, record };
+  const events = new LessonEvents();
+  // lesson_rescheduled unusable by default: a move's booking confirmation stays (FamilyMoveNotice).
+  const family = fakeFamilyMove();
+  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter, events, family.move);
+  return { store, queries, writer, record, events, family: family.gate };
 }
 
 /** The change set passed to the n-th writer.apply call, without its audit row (see `record`). */

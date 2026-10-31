@@ -6,13 +6,14 @@ import {
   type BodySlot,
   type TemplateParamsInput,
   type TemplateView,
+  type ThreadNote,
   type ThreadView,
   type WaLine,
 } from '@ab/shared';
-import { lineEnvs, loadEnv } from '../../../../config/env/env';
-import { orSafe } from '../../../people/guardians/http';
-import { looksCrmHistory } from '../../whatsapp';
-import type { FamilyTag } from '../people/thread-people.mapper';
+import { lineEnvs, loadEnv } from '@/config/env/env';
+import { orSafe } from '@/modules/people/guardians/http';
+import { looksCrmHistory } from '@/modules/messaging/whatsapp';
+import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
 export type ThreadRow = Tables<'v_threads'>;
 
@@ -22,7 +23,7 @@ export type ThreadRow = Tables<'v_threads'>;
  * The family tags come from the guardian's students (ThreadsQueries.familyTags / people); a
  * guardian without students is «مش مشترك», a row without a guardian has no badge.
  */
-export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, now: Date, tag: FamilyTag | null = null): ThreadView {
+export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, tag: FamilyTag | null = null): ThreadView {
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -33,6 +34,7 @@ export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, no
     last_status: row.last_status ?? 'delivered',
     last_media_mime: row.last_media_mime,
     ...(row.last_unsupported ? { last_unsupported: true } : {}),
+    ...(row.last_note ? { last_note: row.last_note } : {}),
     last_message_at: row.last_message_at ?? '',
     last_inbound_at: row.last_inbound_at,
     last_inbound_line: row.last_inbound_line,

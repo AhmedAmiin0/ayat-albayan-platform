@@ -1,8 +1,8 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { ACCOUNT_CODE_TEMPLATE, type NumberPurpose } from '@ab/shared';
-import type { StatusEvent } from '../webhook.events';
-import type { Contact } from '../webhook.types';
-import { statusPatch } from '../status/webhook.status';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import type { Contact } from '@/modules/messaging/webhook/webhook.types';
+import { statusPatch } from '@/modules/messaging/webhook/status/webhook.status';
 import type { ExternalMessage } from './external-message';
 
 // The outbound row of a message sent outside the app (Kapso's inbox, the WhatsApp Business app).
@@ -27,11 +27,6 @@ interface ExternalRowInput {
   event?: StatusEvent;
 }
 
-/** Text, else a caption-less media's or another type's marker («[image]»): an outbound row needs content. */
-function bodyOf(msg: ExternalMessage): string | null {
-  if (msg.body) return msg.body;
-  return msg.templateName ? null : `[${msg.type}]`;
-}
 
 /**
  * Status and times: Kapso's status (else sent) at WhatsApp's time, moved forward by the event
@@ -58,7 +53,9 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     phone_e164: phone,
     guardian_id: who.guardian?.id ?? null,
     lead_id: who.guardian ? null : (who.lead?.id ?? null),
-    body: secret ? null : bodyOf(msg),
+    // Only real text or a caption, never a «[image]» placeholder (owner 2026-10-30): the
+    // payload says what a row without text is (migration 992 lets an outbound row carry only it).
+    body: secret ? null : msg.body,
     template_key: templateKey,
     template_params: secret ? null : msg.templateParams,
     wa_message_id: msg.waMessageId,
@@ -68,7 +65,7 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     media_name: msg.mediaName,
     created_at: at.toISOString(),
     created_by: null,
-    // A reaction sent from the WhatsApp Business app is never a bubble (migration 900 hides reaction rows).
-    ...(msg.type === 'reaction' ? { interactive_payload: { type: 'reaction' } } : {}),
+    // An edit, revoke or reaction is a hidden marker the database applies (migration 992).
+    ...(msg.payload === null ? {} : { interactive_payload: msg.payload }),
   };
 }

@@ -13,4 +13,10 @@ describe('commissionKindOf: a cancelled package', () => {
   it('a live earlier package still makes it a renewal', () => {
     expect(commissionKindOf([{ ...mistake, id: 'a', status: 'active' }, right], 'b')).toBe('renewal');
   });
+
+  it('a stopped package (migration 991) keeps its kind and still makes a later one a renewal', () => {
+    const stopped: OrderFact = { ...mistake, id: 'a', cancel_kind: 'stopped' };
+    expect(commissionKindOf([stopped, right], 'a')).toBe('first');
+    expect(commissionKindOf([stopped, right], 'b')).toBe('renewal');
+  });
 });

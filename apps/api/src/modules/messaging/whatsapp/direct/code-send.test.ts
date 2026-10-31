@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import type { SendGate } from '../gate/send-gate';
-import type { MessageDispatch } from '../sender/message.dispatch';
-import type { SenderQueries } from '../sender/sender.queries';
-import { templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dispatch';
+import type { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { CodeSend, codeRow } from './code-send';
 
 const ACCOUNT_CODE = templateRow({

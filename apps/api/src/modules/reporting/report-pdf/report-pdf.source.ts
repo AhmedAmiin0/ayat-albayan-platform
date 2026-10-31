@@ -1,4 +1,4 @@
-import type { Attendance, Grade, Program } from '@ab/shared';
+import { COUNTS_FOR_MONEY, type Attendance, type Grade, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import type { SlotPackage } from './render/pdf-model';
@@ -86,8 +86,12 @@ export class ReportPdfSource {
       this.db.from('teachers').select('display_name_ar').eq('id', report.teacher_id).maybeSingle(),
       this.db.from('v_lesson_sequence').select('seq').match(pair).maybeSingle(),
       this.db.from('v_package_lessons').select('n').match(pair).maybeSingle(),
-      // A cancelled package holds no slot (v_package_lessons skips it too, migration 934).
-      this.db.from('subscriptions').select('id, lessons_total, lessons_used_before, starts_on, created_at').eq('student_id', report.student_id).neq('status', 'cancelled'),
+      // An unused cancel holds no slot; a stopped one holds what it used (v_package_lessons, 991).
+      this.db
+        .from('subscriptions')
+        .select('id, lessons_total, lessons_used_before, lessons_used_at_stop, starts_on, created_at')
+        .eq('student_id', report.student_id)
+        .or(COUNTS_FOR_MONEY),
     ]);
     const l = must(lesson, 'lesson');
     const s = must(student, 'student');
@@ -106,6 +110,7 @@ export class ReportPdfSource {
         id: p.id,
         lessonsTotal: p.lessons_total,
         lessonsUsedBefore: p.lessons_used_before,
+        lessonsUsedAtStop: p.lessons_used_at_stop,
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),
