@@ -1,8 +1,8 @@
-import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
-import { bodyExamples } from '../template-review';
-import { authSubmitComponents } from '../direct/auth-template';
+import { BODY_SLOTS, WA_ERROR, type TemplateParams } from '@ab/shared';
+import { bodyExamples } from '@/modules/messaging/whatsapp/template-review';
+import { authSubmitComponents } from '@/modules/messaging/whatsapp/direct/auth-template';
 import { templateButtons } from './wa-json';
-import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '../whatsapp.types';
+import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Graph request bodies (docs/12 §3.2): what POST /{phone}/messages and POST /message_templates get.
 
@@ -12,7 +12,7 @@ export type GraphBody = Record<string, unknown>;
 export const waTo = (e164: string): string => e164.replace(/\D/g, '');
 
 /** A send we refuse before Meta does: counts as Meta's 132000 (bad parameters), never retried. */
-export const badParams = (details: string) => new WaError('template parameters do not match', { code: 132000, status: 0, details });
+export const badParams = (details: string) => new WaError('template parameters do not match', { code: WA_ERROR.paramCountMismatch, status: 0, details });
 
 /** Highest {{n}} in the body: Meta's own text after the health check, else the seeded shape. */
 export function bodyVarCount(body: string): number {
