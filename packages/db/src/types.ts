@@ -513,11 +513,56 @@ export type Database = {
         };
         Relationships: [];
       };
+      channel_message_edits: {
+        Row: {
+          actor_profile_id: string | null;
+          created_at: string;
+          id: string;
+          kind: string;
+          message_id: string;
+          previous_body: string;
+        };
+        Insert: {
+          actor_profile_id?: string | null;
+          created_at?: string;
+          id?: string;
+          kind: string;
+          message_id: string;
+          previous_body: string;
+        };
+        Update: {
+          actor_profile_id?: string | null;
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          message_id?: string;
+          previous_body?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_message_edits_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'channel_messages';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_message_edits_actor_profile_id_fkey';
+            columns: ['actor_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       channel_messages: {
         Row: {
           body: string;
           channel_id: string;
           created_at: string;
+          deleted_at: string | null;
+          deleted_by: string | null;
+          edited_at: string | null;
           id: string;
           sender_profile_id: string | null;
           sender_role: string;
@@ -526,6 +571,9 @@ export type Database = {
           body: string;
           channel_id: string;
           created_at?: string;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
+          edited_at?: string | null;
           id?: string;
           sender_profile_id?: string | null;
           sender_role: string;
@@ -534,11 +582,21 @@ export type Database = {
           body?: string;
           channel_id?: string;
           created_at?: string;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
+          edited_at?: string | null;
           id?: string;
           sender_profile_id?: string | null;
           sender_role?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'channel_messages_deleted_by_fkey';
+            columns: ['deleted_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'channel_messages_channel_id_fkey';
             columns: ['channel_id'];
@@ -2649,13 +2707,17 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           dedup_key: string | null;
+          deleted_at: string | null;
           delivered_at: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at: string | null;
           error_code: string | null;
           error_text: string | null;
           expires_at: string | null;
           forwarded_from_id: string | null;
           guardian_id: string | null;
+          hidden_at: string | null;
+          hidden_by: string | null;
           id: string;
           interactive_payload: Json | null;
           lead_id: string | null;
@@ -2695,13 +2757,17 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
           forwarded_from_id?: string | null;
           guardian_id?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
           id?: string;
           interactive_payload?: Json | null;
           lead_id?: string | null;
@@ -2741,13 +2807,17 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction?: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
           forwarded_from_id?: string | null;
           guardian_id?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
           id?: string;
           interactive_payload?: Json | null;
           lead_id?: string | null;
@@ -2781,6 +2851,13 @@ export type Database = {
           wa_pricing_category?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'messages_hidden_by_fkey';
+            columns: ['hidden_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'messages_our_reaction_by_fkey';
             columns: ['our_reaction_by'];
@@ -5583,6 +5660,7 @@ export type Database = {
           channel_id: string;
           last_at: string | null;
           last_body: string | null;
+          last_deleted: boolean | null;
           last_role: string | null;
           student_id: string;
           unread: number;
@@ -5601,6 +5679,10 @@ export type Database = {
         }[];
       };
       message_is_reaction: { Args: { p: Json }; Returns: boolean };
+      message_markers_apply: {
+        Args: { p_phone: string; p_since: string; p_wamid: string };
+        Returns: number;
+      };
       messages_reaction_backfill: { Args: never; Returns: number };
       teacher_unread: {
         Args: { p_phones: string[]; p_teacher_id: string };

@@ -25,6 +25,7 @@ import { ThreadsQueries } from './threads/threads.queries';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenQueries } from './reopen/reopen.queries';
 import { DeltaQueries } from './delta/delta.queries';
+import { MessageHideRepo } from './hide/message-hide.repo';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -73,6 +74,7 @@ function mocks() {
     audit: { record: vi.fn() },
     reopens: { requestedSince: vi.fn(async () => false), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
+    hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
   };
 }
@@ -96,6 +98,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ReopenQueries).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
+    .overrideProvider(MessageHideRepo).useValue(m.hides)
     .overrideProvider(DeltaQueries).useValue(m.delta)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

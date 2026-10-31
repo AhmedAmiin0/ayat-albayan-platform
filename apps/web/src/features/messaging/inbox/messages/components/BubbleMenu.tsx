@@ -8,6 +8,7 @@ import { useChatActions } from '../../shared/chat-actions';
 import type { BubbleOffers } from '../lib/bubble-offers';
 import type { BubbleTools } from '../lib/use-bubble-tools';
 import { ReactionRow } from '../reactions/ReactionRow';
+import { HideItems } from '@/features/messaging/inbox/messages/hide/HideItems';
 
 export interface BubbleMenuProps {
   message: MessageView;
@@ -17,6 +18,8 @@ export interface BubbleMenuProps {
   onClose: () => void;
   offers: BubbleOffers;
   tools: Pick<BubbleTools, 'copy' | 'download'>;
+  /** Opens the «حذف من المنصة» confirm. */
+  onHide?: () => void;
 }
 
 /** «تنزيل الملف — خطة الحفظ.pdf», or the file's kind when it has no name. */
@@ -31,7 +34,8 @@ const item =
  * «نسخ» (a message with text), «إعادة توجيه», «تنزيل» (a file this viewer may open; owner 2026-10-26).
  * Plain buttons like MoreMenu (no ARIA menu roles); the first takes focus, Esc closes (BubbleActions).
  */
-export function BubbleMenu({ message: m, outbound, onClose, offers, tools }: BubbleMenuProps) {
+export function BubbleMenu(props: BubbleMenuProps) {
+  const { message: m, outbound, onClose, offers, tools, onHide } = props;
   const actions = useChatActions();
   const first = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -84,6 +88,7 @@ export function BubbleMenu({ message: m, outbound, onClose, offers, tools }: Bub
           {t.inbox.download.action}
         </button>
       )}
+      <HideItems offers={offers} onPick={pick(() => onHide?.())} />
     </div>
   );
 }

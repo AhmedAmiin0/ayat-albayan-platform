@@ -3002,9 +3002,6 @@
     }
   },
   "src/features/messaging/inbox/messages/components/MessageContent.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 5
     }
@@ -3142,7 +3139,7 @@
   },
   "src/features/messaging/inbox/messages/lib/bubble-offers.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/lib/bubble-side.ts": {
@@ -13362,11 +13359,6 @@
     }
   },
   "src/features/teaching/schedule/tz.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/ChannelBubble.tsx": {
     "max-len": {
       "count": 1
     }

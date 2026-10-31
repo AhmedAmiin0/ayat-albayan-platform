@@ -49,7 +49,7 @@ export class ThreadMediaService {
   /** 404 message_not_found when the message is not in this phone's chat (never reveal another family's). */
   async file(input: { phone: string; messageId: string }): Promise<ThreadFile> {
     const msg = await this.media.load(input.messageId);
-    if (msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (msg.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const file = await this.media.cache(msg);
     const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path });
     return { ...signed, mime: file.mime };
@@ -73,7 +73,8 @@ export class ThreadMediaService {
   /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
   async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
-    if (!msg || msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    // A message hidden from the platform keeps its file away from staff too («حذف من المنصة»).
+    if (!msg || msg.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     if (msg.direction === 'outbound' && msg.media_path) {
       return { msg, file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) } };
     }

@@ -22,6 +22,7 @@ import { ReplyNoteLine } from '../reply-actions';
 import { TappedLabel } from '../template/TappedLabel';
 import { TemplateButtons } from '../template/TemplateButtons';
 import { TemplateFrame } from '../template/TemplateFrame';
+import { HiddenBody } from '@/inbox/messages/components/hide/HiddenBody';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {
@@ -97,7 +98,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
     borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
     backgroundColor: ours ? color.lapisWash : color.raised,
   };
-  const content = (
+  const content = m.hidden ? <HiddenBody message={m} /> : (
     <>
       {m.forwarded ? <AppText style={small}>{t.inbox.forward.forwarded}</AppText> : null}
       {m.reply_to ? <QuoteBlock quote={m.reply_to} onJump={onJump} /> : null}

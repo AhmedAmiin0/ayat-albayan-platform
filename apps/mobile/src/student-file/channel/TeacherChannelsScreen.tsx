@@ -17,12 +17,18 @@ import { useTeacherChannels } from './channel-queries';
 
 const keyOf = (r: TeacherChannelRow) => r.student_id;
 
+/** The last message, «تم حذف هذه الرسالة» once deleted for everyone, else «لا رسائل بعد». */
+const previewOf = (r: TeacherChannelRow): string => {
+  if (!r.last_message) return t.studentChannel.noMessageYet;
+  return r.last_message.deleted ? t.studentChannel.actions.deleted : r.last_message.body;
+};
+
 function renderRow({ item }: ListRenderItemInfo<TeacherChannelRow>): ReactElement {
   return (
     <ListRow
       title={item.student_name}
       meta={item.student_code}
-      subtitle={item.last_message?.body ?? t.studentChannel.noMessageYet}
+      subtitle={previewOf(item)}
       trailing={item.unread > 0 ? <StatusChip size="sm" tone="act" glyph="fill" label={t.studentChannel.unread.replace('{n}', String(item.unread))} /> : undefined}
       onPress={() => router.push(`/teacher/more/messages/${item.student_id}`)}
     />

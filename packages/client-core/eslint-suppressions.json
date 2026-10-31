@@ -169,11 +169,6 @@
       "count": 1
     }
   },
-  "src/messaging/channels/channel-live.ts": {
-    "max-len": {
-      "count": 10
-    }
-  },
   "src/messaging/channels/channels.ts": {
     "max-len": {
       "count": 10

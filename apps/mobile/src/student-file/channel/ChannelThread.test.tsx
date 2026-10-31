@@ -16,8 +16,8 @@ const c = t.studentChannel;
 const page = (over: Partial<ChannelPage> = {}): ChannelPage => ({
   student_name: 'سلمى',
   messages: [
-    { id: 'm1', body: 'متى الحلقة؟ https://example.org/plan', sender_role: 'guardian', sender_name: 'أم سلمى', mine: false, created_at: '2026-10-27T10:00:00.000Z' },
-    { id: 'm2', body: 'غدًا إن شاء الله', sender_role: 'teacher', sender_name: 'أبرار', mine: true, created_at: '2026-10-27T10:05:00.000Z' },
+    { id: 'm1', body: 'متى الحلقة؟ https://example.org/plan', sender_role: 'guardian', sender_name: 'أم سلمى', mine: false, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false },
+    { id: 'm2', body: 'غدًا إن شاء الله', sender_role: 'teacher', sender_name: 'أبرار', mine: true, created_at: '2026-10-27T10:05:00.000Z', edited: false, deleted: false },
   ],
   has_more: false,
   read_only: false,
