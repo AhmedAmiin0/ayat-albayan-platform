@@ -68,7 +68,7 @@ export const SETTINGS_LAYOUT = {
     'recording_retention_days',
     'activity_retention_days',
   ],
-  sales: ['sales_auto_assign', 'renewal_commission_percent'],
+  sales: ['sales_auto_assign', 'renewal_commission_enabled', 'renewal_commission_percent'],
   appearance: [],
 } as const satisfies Record<SettingsSectionId, readonly SettingKey[]>;
 

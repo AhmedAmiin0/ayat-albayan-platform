@@ -5,6 +5,20 @@ import { commissionKindOf, RENEWAL_CUTOFF } from './kind.js';
 // value» = HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent, default 50),
 // not half of the renewal's price. Pure twin; the database decides.
 
+/** The renewal switch and share as the settings hold them. */
+export interface RenewalSettings {
+  renewal_commission_enabled: boolean;
+  renewal_commission_percent: number;
+}
+
+/**
+ * The share of the normal commission a renewal earns NOW (twin of renewal_commission_share,
+ * migration 20261101000996): the percent while «عمولة التجديد» is on, 0 while it is off
+ * (owner 2026-11-01), so planRenewalCommission plans nothing (amount 0).
+ */
+export const renewalShareNow = (s: RenewalSettings): number =>
+  s.renewal_commission_enabled ? s.renewal_commission_percent : 0;
+
 export interface PlannedRenewal extends PlannedCommission {
   /** The share copied onto the row when earned: a later setting change never touches it. */
   share: number;
