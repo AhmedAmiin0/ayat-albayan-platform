@@ -1,4 +1,4 @@
-import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { E164_RE, LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 
 /** The list's orders: no `sort` = newest message first; «غير المقروءة أولًا»; by name. */
 export const THREAD_SORTS = ['unread', 'name'] as const;
@@ -22,7 +22,6 @@ export type InboxSearch = {
   page: number;
 };
 
-const E164 = /^\+[1-9]\d{6,14}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined => all.find((x) => x === v);
@@ -33,7 +32,7 @@ export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   const out: InboxSearch = { page: Number.isInteger(page) && page > 1 ? page : 1 };
   const phone = typeof s['phone'] === 'string' ? s['phone'].trim() : '';
   const q = typeof s['q'] === 'string' ? s['q'].trim() : '';
-  if (E164.test(phone)) out.phone = phone;
+  if (E164_RE.test(phone)) out.phone = phone;
   if (q) out.q = q;
   if (s['unread'] === true || s['unread'] === 'true') out.unread = true;
   const sort = pick(THREAD_SORTS, s['sort']);
