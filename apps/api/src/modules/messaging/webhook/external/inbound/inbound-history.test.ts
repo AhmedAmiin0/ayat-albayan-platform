@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import {
   historyInbound,
   inboundSince,
@@ -52,6 +53,12 @@ describe('historyInbound: Kapso history item → the webhook InboundEvent', () =
     });
   });
 
+  it('the family\'s WhatsApp name from kapso.contact_name (a new lead is named); none → null', () => {
+    const kapso = { direction: 'inbound', phone_number: `+${FAMILY_WA}`, contact_name: ' أم سارة ' };
+    expect(historyInbound(kapsoInbound({ kapso }), AT)?.name).toBe('أم سارة');
+    expect(historyInbound(kapsoInbound(), AT)?.name).toBeNull();
+  });
+
   it('only a business-scoped from_user_id: the sender is Kapso phone_number', () => {
     const m = kapsoInbound({ from: undefined, from_user_id: 'US.123' });
     expect(historyInbound(m, AT)?.from).toBe(FAMILY_WA);
@@ -68,9 +75,21 @@ describe('historyInbound: Kapso history item → the webhook InboundEvent', () =
 });
 
 describe('inboundSince', () => {
-  it('none stored, or the first run after a deploy → 7 days back (the cap)', () => {
-    expect(inboundSince(null, { now: NOW, full: false })).toEqual(ago(MAX_BACK_MS));
-    expect(inboundSince(ago(60_000), { now: NOW, full: true })).toEqual(ago(MAX_BACK_MS));
+  /** Long after FLOOR: the 7-day cap is the bound. */
+  const LATER = new Date('2026-11-20T12:00:00Z');
+  const weekBefore = (now: Date) => new Date(now.getTime() - MAX_BACK_MS);
+
+  it('none stored, or a full run → 7 days back (the cap)', () => {
+    expect(inboundSince(null, { now: LATER, full: false })).toEqual(weekBefore(LATER));
+    const recent = new Date(LATER.getTime() - 60_000);
+    expect(inboundSince(recent, { now: LATER, full: true })).toEqual(weekBefore(LATER));
+  });
+
+  it('never before FLOOR (the chat import, as the outbound catch-up)', () => {
+    expect(weekBefore(NOW) < FLOOR).toBe(true);
+    expect(inboundSince(null, { now: NOW, full: false })).toEqual(FLOOR);
+    expect(inboundSince(ago(60_000), { now: NOW, full: true })).toEqual(FLOOR);
+    expect(inboundSince(new Date('2026-10-01T00:00:00Z'), { now: NOW, full: false })).toEqual(FLOOR);
   });
 
   it('the newest inbound row, or the last day when that is newer; never past 7 days', () => {
@@ -78,7 +97,7 @@ describe('inboundSince', () => {
     expect(inboundSince(gap, { now: NOW, full: false })).toEqual(gap);
     expect(inboundSince(ago(60_000), { now: NOW, full: false })).toEqual(ago(LOOKBACK_MS));
     const old = new Date('2026-10-01T00:00:00Z');
-    expect(inboundSince(old, { now: NOW, full: false })).toEqual(ago(MAX_BACK_MS));
+    expect(inboundSince(old, { now: LATER, full: false })).toEqual(weekBefore(LATER));
   });
 
   it('late = older than 15 minutes when stored', () => {

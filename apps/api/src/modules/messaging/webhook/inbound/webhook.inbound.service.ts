@@ -18,8 +18,11 @@ interface InboundOptions {
   /**
    * A message the catch-up job back-filled (external/inbound, older than LATE_MS when stored): the
    * row, lead and quick reply as usual, its unread count included, but no admin / assistant push.
+   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past (owner, 10-30).
    */
   quiet?: boolean;
+  /** The catch-up run's time (a quiet message); defaults to the clock. */
+  now?: Date;
 }
 
 /**
@@ -59,7 +62,8 @@ export class InboundService {
     }
     if (isMarkerType(m.type)) return this.marker(m, phone);
     if (await this.own?.has(phone)) return this.store.saveOwn(m, phone);
-    const { who, lead } = await this.store.sender({ m, phone });
+    const cycle = opts.quiet ? (opts.now ?? new Date()) : m.at;
+    const { who, lead } = await this.store.sender({ m, phone, at: cycle });
     const intent = intentOf(m);
     const rating = ratingOf(m);
     const asks = rating !== null || intent === 'confirm' || intent === 'reschedule';

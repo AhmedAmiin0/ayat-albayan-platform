@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { CHANNEL_BODY_MAX, CHANNEL_SENDER_ROLES, PUSH_KINDS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 800–801 (docs/31 §2), read as text: no database in unit tests (checked on a local stack when written).
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const sql = readFileSync(join(dir, '20261028000800_student_channels.sql'), 'utf8');
 const code = strip(sql);

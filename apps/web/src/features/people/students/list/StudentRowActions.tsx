@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react';
+import { clickToChatLink } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
@@ -18,7 +19,7 @@ export function StudentRowActions({ row, onOpen }: StudentRowActionsProps) {
   return (
     <div className="flex">
       <a
-        href={`https://wa.me/${row.guardian_phone.replace(/^\+/, '')}`}
+        href={clickToChatLink(row.guardian_phone)}
         target="_blank"
         rel="noreferrer"
         aria-label={t.students.whatsappTo.replace('{name}', row.guardian_name)}

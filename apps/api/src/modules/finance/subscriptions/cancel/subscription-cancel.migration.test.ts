@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 20261028000933/934 «إلغاء الباقة» (owner 2026-10-28): the value, the columns, then every reader.
 
-const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const m933 = read('20261028000933_subscription_cancelled.sql');
 const m934 = read('20261028000934_subscription_cancelled_readers.sql');

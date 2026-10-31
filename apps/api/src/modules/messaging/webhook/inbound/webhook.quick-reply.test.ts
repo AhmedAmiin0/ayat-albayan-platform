@@ -5,6 +5,8 @@ import { AT, event, GUARDIAN_ID, LESSON_ID, NEW_LEAD_ID, nobody, outbound, servi
 
 const guardian = { ...nobody(), guardian: { id: GUARDIAN_ID, name: 'أم سهيلة' } };
 const OTHER_LESSON = '00000000-0000-4000-8000-0000000000a2';
+/** Never a lesson message sent after the reply: up to the end of its (whole) second. */
+const END_OF_AT = new Date(AT.getTime() + 999);
 
 function asGuardian() {
   const s = services();
@@ -44,7 +46,7 @@ describe('confirm by reply (R-SCH-03)', () => {
     s.queries.recentLessonOutbound.mockResolvedValue(LESSON_ID);
     await s.inbound.handle(event({ body: 'تمام' }));
     const since = new Date(AT.getTime() - 48 * 3_600_000);
-    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since });
+    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since, until: END_OF_AT });
     expect(s.lessons.confirm).toHaveBeenCalledWith({ lessonId: LESSON_ID, actor: null });
   });
 
@@ -53,7 +55,7 @@ describe('confirm by reply (R-SCH-03)', () => {
     s.queries.replyWindowMs.mockResolvedValue(6 * 3_600_000);
     await s.inbound.handle(event({ body: 'تمام' }));
     const since = new Date(AT.getTime() - 6 * 3_600_000);
-    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since });
+    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since, until: END_OF_AT });
   });
 
   it('a plain «تمام» with no lesson message in 48 h: only stored, no lesson linked', async () => {

@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 700 (owner 2026-10-25: notifications only to authenticated, authorized people). No
 // database runs in unit tests: this pins its shape.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261025000700_push_sessions.sql'), 'utf8');
 const code = sql
   .split('\n')

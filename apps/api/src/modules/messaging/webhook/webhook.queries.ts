@@ -6,7 +6,7 @@ import { familyOfPhone } from '../../../common/db/family-of-phone';
 import { guardianOwnerIds } from '../../sales/sales/sales-ownership';
 import { refillUnsupported } from './inbound/inbound-refill';
 import { WebhookSettings } from './webhook.settings';
-import type { Contact, OutboundRow, StatusMove } from './webhook.types';
+import type { Contact, OutboundRow, ReplyWindow, StatusMove } from './webhook.types';
 
 export type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
@@ -119,11 +119,10 @@ export class WebhookQueries {
   }
 
   /**
-   * docs/12 §3.5: the lesson of the latest outbound row with a lesson_id we sent this phone since
-   * `since` (48 h), while that lesson is still open (scheduled | confirmed). Only rows that actually
-   * went out: a reply can't answer a message still in the queue. null otherwise.
+   * docs/12 §3.5: the open lesson of the latest sent outbound row with a lesson_id, from `since`
+   * (48 h) up to `until` (the reply: never a later message, e.g. a back-filled «نعم»); else null.
    */
-  async recentLessonOutbound(input: { phone: string; since: Date }): Promise<string | null> {
+  async recentLessonOutbound(input: ReplyWindow): Promise<string | null> {
     const { data, error } = await this.db
       .from('messages')
       .select('lesson_id, lesson:lessons!inner(status)')
@@ -131,6 +130,7 @@ export class WebhookQueries {
       .eq('phone_e164', input.phone)
       .in('status', ['sent', 'delivered', 'read', 'sent_manually'])
       .gt('created_at', input.since.toISOString())
+      .lte('created_at', input.until.toISOString())
       .in('lesson.status', ['scheduled', 'confirmed'])
       .order('created_at', { ascending: false })
       .limit(1);
