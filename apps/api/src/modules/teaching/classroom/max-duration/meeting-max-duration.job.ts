@@ -29,8 +29,8 @@ const why = (e: unknown): string => (e instanceof Error ? e.message : String(e))
  * 2. Any `lesson-`/`meeting-` room LiveKit created before the limit is closed in LiveKit only;
  *    other rooms never. The job reads nothing from lessons and writes none (status, attendance,
  *    report, earnings stay). Not lessons.room_opened_at: it is stamped once and kept when a lesson
- *    is moved, so it would close a fresh room. LiveKit drops an empty room after 10 minutes, so a
- *    room really open past the limit has an old creation time.
+ *    is moved, so it would close a fresh room. LiveKit drops an empty room (CreateRoom
+ *    empty_timeout 600 s), so a room really open past the limit has an old creation time.
  * A running recording is stopped first, so the file is kept. One room's failure never stops the
  * run; a re-run finds nothing left (ended meetings are not selected, closed rooms not listed).
  */

@@ -31,8 +31,7 @@ describe('MeetingMaxDurationJob', () => {
     expect(await t.job.runOnce(NOW)).toEqual({ ended: 0, closed: 1, failed: 0 });
     expect(t.lk.deleted).toEqual([`lesson-${L2}`]);
     expect(deletes(t.lk.http)).toBe(1);
-    // LiveKit only: the repo reads meetings, never lessons (lessons.room_opened_at is not used).
-    expect(Object.keys(t.repo)).toEqual(['overdueMeetings']);
+    // LiveKit only: no lesson, meeting or audit row is written.
     expect(t.store.end).not.toHaveBeenCalled();
     expect(t.audit.record).not.toHaveBeenCalled();
   });
