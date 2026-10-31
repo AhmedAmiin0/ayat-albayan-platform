@@ -23,3 +23,12 @@ export function useTextOnReply(toText: () => void): void {
   setSeen(id);
   if (id) toText();
 }
+
+/** Calls `toTemplate` (render phase) on each «أرسل قالبًا» under a refused text (131047). */
+export function useTemplateOnAsk(toTemplate: () => void): void {
+  const asked = useChatActions().templateAsk;
+  const [seen, setSeen] = useState(asked);
+  if (asked === seen) return;
+  setSeen(asked);
+  toTemplate();
+}

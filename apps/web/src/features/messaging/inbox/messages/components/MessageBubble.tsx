@@ -13,6 +13,7 @@ import { Content, SenderLine } from './MessageContent';
 import { useInboxMode } from '../../shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
 import { useClock } from '@/lib/clock';
+import { AskTemplateButton } from '@/features/messaging/inbox/messages/resend/AskTemplateButton';
 import { TemplateButtons } from '../template/TemplateButtons';
 
 /** Some of the bubble's text is selected with the mouse. */
@@ -100,6 +101,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
             </p>
           ))}
           {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+          <AskTemplateButton message={m} />
           <ReactionPill message={m} outbound={outbound} />
         </div>
       </article>

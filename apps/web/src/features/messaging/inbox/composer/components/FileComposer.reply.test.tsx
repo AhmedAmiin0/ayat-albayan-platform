@@ -29,6 +29,8 @@ function show(cancelReply = vi.fn()) {
     notLoaded: vi.fn(),
     reactable: () => false,
     react: vi.fn(),
+    templateAsk: 0,
+    askTemplate: vi.fn(),
   };
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
   render(

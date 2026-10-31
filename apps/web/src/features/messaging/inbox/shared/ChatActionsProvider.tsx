@@ -24,6 +24,7 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
   const [target, setTarget] = useState<MessageQuote | null>(null);
   const [forwarding, setForwarding] = useState<MessageView | null>(null);
   const [notice, setNotice] = useState<ForwardSummary | null>(null);
+  const [templateAsk, setTemplateAsk] = useState(0);
   // Stable (the React Compiler memoizes it): the toast's timer restarts whenever onDismiss changes
   // (the chat polls every 10 s).
   const dismiss = () => setNotice(null);
@@ -42,6 +43,8 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
     notLoaded: () => setNotice({ text: t.inbox.reply.notLoaded, tone: 'info' }),
     reactable: (m) => enabled && canReact(m, thread, new Date()),
     react: (m, emoji) => reactNow({ message: m, emoji }),
+    templateAsk,
+    askTemplate: () => setTemplateAsk((n) => n + 1),
   };
 
   return (

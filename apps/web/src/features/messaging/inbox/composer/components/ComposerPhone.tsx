@@ -60,11 +60,12 @@ function Notices({ notes }: { notes: string[] }) {
  * reply_line: no reply line in template mode. With no template allowed the help line replaces
  * «فأرسل قالبًا».
  */
-function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock }): string[] {
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock; trying: boolean }): string[] {
   const { thread, gateNote, mode, noneAllowed, clock } = input;
   const open = thread.session_open;
   const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at, clock) : null;
-  const closedNote = open || noneAllowed ? null : t.inbox.sessionClosed;
+  const shut = open || noneAllowed ? null : t.inbox.sessionClosed;
+  const closedNote = input.trying ? t.inbox.tryAfterWindow : shut;
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
   return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
 }
@@ -81,19 +82,23 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
+  const inbox = useInboxMode();
+  // Owner 2026-10-31: on a Kapso chat line staff still try free text after the window (no files).
+  const trying = !open && thread.try_after_window === true && inbox !== 'teacher';
+  const typing = open || trying;
   const noneAllowed = useNoneAllowed(teacher);
-  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock() });
-  const access = useChatAccess(useInboxMode());
+  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock(), trying });
+  const access = useChatAccess(inbox);
   const { files, replies } = access;
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
   const [problem, setProblem] = useState<ChatFileProblem | null>(null);
   const file = picked?.phone === thread.phone_e164 ? picked.file : null;
-  const template = !open || (mode === 'template' && !noneAllowed);
-  const toggle = open && !noneAllowed && (
+  const template = !typing || (mode === 'template' && !noneAllowed);
+  const toggle = typing && !noneAllowed && (
     <IconButton
       label={t.inbox.composer.modeTemplate}
       aria-pressed={mode === 'template'}
-      className={cn('rounded-full', mode === 'template' && 'bg-lapis-wash text-lapis')}
+      className={cn('rounded-full', (trying || mode === 'template') && 'bg-lapis-wash text-lapis')}
       onClick={() => onMode(mode === 'template' ? 'text' : 'template')}
     >
       <Icon name="template" className="size-5" />
@@ -117,13 +122,13 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Notices notes={notes} />
       {!open && <SendRatingButton thread={thread} />}
       {template && (toggle || locked || quote) && <div className="flex gap-1.5">{toggle}{locked}{quote}</div>}
-      {!open && noneAllowed ? (
+      {!typing && noneAllowed ? (
         <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : file ? (
         <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />
-      ) : replies ? (
+      ) : replies && open ? (
         <ReplyComposer thread={thread} context={context} leading={<>{toggle}{attach}{quote}</>} />
       ) : (
         <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}{quote}</>} />

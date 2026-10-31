@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { createContext, type Dispatch, type SetStateAction, useContext } from 'react';
+import { createContext, type Dispatch, type SetStateAction, useContext, useState } from 'react';
 import type { CopyRequest } from '../../messages/copy-download/chat-tools';
 
 // One open chat's «رد» / «إعادة توجيه» state (ChatActionsProvider). Without a provider: all off.
@@ -36,6 +36,8 @@ export interface ChatActions {
   openReactors: (m: MessageView) => void;
   /** A tap on the admin's «! لم تُرسل» (or queued clock): why, retry, send it by hand (FailedSheet). */
   openFailed: (m: MessageView) => void;
+  /** «أرسل قالبًا» in FailedSheet (131047, owner 2026-10-31): asks so far; the composer follows. */
+  templateAsk: number;
 }
 
 const noop = () => undefined;
@@ -54,9 +56,19 @@ export const ChatActionsContext = createContext<ChatActions>({
   react: noop,
   openReactors: noop,
   openFailed: noop,
+  templateAsk: 0,
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
+
+/** Calls `open` (render phase) on each new «أرسل قالبًا» ask: the composer opens its templates. */
+export function useTemplateOnAsk(open: () => void): void {
+  const asked = useChatActions().templateAsk;
+  const [seen, setSeen] = useState(asked);
+  if (asked === seen) return;
+  setSeen(asked);
+  open();
+}
 
 /** The part a bubble reads: none of it changes when a reply is picked or a notice shows. */
 export type BubbleChatActions = Pick<

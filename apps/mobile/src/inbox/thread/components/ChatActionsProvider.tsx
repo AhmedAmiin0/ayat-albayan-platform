@@ -39,6 +39,7 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const [reactors, setReactors] = useState<MessageView | null>(null);
   const [emojiFor, setEmojiFor] = useState<MessageView | null>(null);
   const [failed, setFailed] = useState<MessageView | null>(null);
+  const [templateAsk, setTemplateAsk] = useState(0);
   const { mutate: reactNow } = useReact(phone, (text) => say({ text }));
   const own = isOwnThread(mode, thread);
   const canSend = !own && sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
@@ -64,7 +65,7 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
     }),
     [enabled, canSend, threadName, reactableNow, reactNow],
   );
-  const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say }), [bubble, reply, notice]);
+  const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say, templateAsk }), [bubble, reply, notice, templateAsk]);
   const removable = reactors !== null && value.reactable(reactors);
   return (
     <ChatActionsContext.Provider value={value}>
@@ -72,7 +73,7 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
       <MessageMenu message={menu?.m ?? null} at={menu?.at ?? null} phone={phone} onClose={() => setMenu(null)} onMoreEmoji={setEmojiFor} />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
       <CopySheet request={copy} onClose={() => setCopy(null)} />
-      <FailedSheet phone={phone} message={failed} onClose={() => setFailed(null)} onError={(text) => say({ text })} />
+      <FailedSheet phone={phone} message={failed} onClose={() => setFailed(null)} onError={(text) => say({ text })} onTemplate={() => setTemplateAsk((n) => n + 1)} />
       <ReactorsSheet message={reactors} contact={threadName} onRemove={removable ? (m) => value.react(m, null) : undefined} onClose={() => setReactors(null)} />
       <EmojiSheet
         visible={emojiFor !== null}

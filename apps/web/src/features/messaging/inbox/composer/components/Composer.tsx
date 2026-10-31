@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { useReadsMessaging } from '../lib/allowed-templates';
 import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import type { PrefillContext } from '../lib/template-params';
-import { useTextOnReply } from '../lib/use-reply-target';
+import { useTemplateOnAsk, useTextOnReply } from '../lib/use-reply-target';
 import { reopenNote, useThreadReopen } from '../lib/use-thread-reopen';
 
 /**
@@ -27,6 +27,7 @@ export function Composer({ thread, context: known }: { thread: ThreadView; conte
   const [mode, setMode] = useState<Mode>('text');
   const reopen = reopenNote(useThreadReopen(thread));
   useTextOnReply(() => setMode('text'));
+  useTemplateOnAsk(() => setMode('template'));
   const closed = gate.data && !gate.data.open ? gate.data.reason : null;
   const teacher = !!thread.teacher_id && !thread.guardian_id;
   const gateNote = !closed
