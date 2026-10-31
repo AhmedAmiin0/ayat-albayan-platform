@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { fullTime } from '../format';
-import { salesFamilyQuery } from '../sales-money/api';
+import { fullTime } from '@/features/messaging/inbox/format';
+import { salesFamilyQuery } from '@/features/sales/sales-money';
 import { useClock } from '@/lib/clock';
 
 export interface SalesFamilyLineProps {

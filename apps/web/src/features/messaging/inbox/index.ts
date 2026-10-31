@@ -36,7 +36,7 @@ export {
   unreadLabel,
 } from './format';
 export { inboxLive, useInboxLive, useInboxRealtime } from './api/live';
-export { CallProvider, type CallProviderProps } from './calls/state/CallProvider';
+export { CallProvider, type CallProviderProps } from '@/features/messaging/calls';
 export { DeliveryTicks, type DeliveryTicksProps } from './messages/components/DeliveryTicks';
 export {
   chatReceiptFileQuery,
@@ -53,7 +53,7 @@ export {
   type SalesQuoteBody,
   type SalesSubscriptionBody,
   uploadSalesReceipt,
-} from './sales-money/api';
+} from '@/features/sales/sales-money';
 export {
   createReply,
   deleteReply,
