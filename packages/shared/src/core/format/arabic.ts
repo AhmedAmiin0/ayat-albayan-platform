@@ -44,7 +44,7 @@ export function arabicNameSimilar(a: string, b: string): boolean {
 
 /**
  * Does any of `fields` contain the search, both normalised (case, tashkeel, hamza / taa marbuta /
- * ya forms and spaces ignored)? A blank search matches everything.
+ * ya forms ignored, spaces collapsed)? A blank search matches everything.
  */
 export function matchesQuery(fields: string | readonly string[], query: string): boolean {
   const q = normalizeArabic(query);
