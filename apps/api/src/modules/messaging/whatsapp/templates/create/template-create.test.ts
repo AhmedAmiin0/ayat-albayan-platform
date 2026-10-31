@@ -1,4 +1,5 @@
 import { templateCreateSchema } from '@ab/shared';
+import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
@@ -32,12 +33,15 @@ const queries = { create: vi.fn() };
 const audit = { record: vi.fn() };
 const creator = () =>
   new TemplateCreator(queries as unknown as TemplatesQueries, audit as unknown as AuditService);
-interface Refusal {
-  getStatus: () => number;
-  getResponse: () => unknown;
-}
+/** [status, body] of the HttpException a call rejects with (anything else is rethrown). */
 const rejected = (p: Promise<unknown>) =>
-  p.then(() => null, (e: Refusal) => [e.getStatus(), e.getResponse()]);
+  p.then(
+    () => null,
+    (e: unknown) => {
+      if (!(e instanceof HttpException)) throw e;
+      return [e.getStatus(), e.getResponse()];
+    },
+  );
 
 beforeEach(() => {
   vi.resetAllMocks();
