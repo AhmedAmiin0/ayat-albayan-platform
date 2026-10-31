@@ -2,11 +2,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { LESSON, MINE, REPORT, studentsApp } from '../sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
-const SECRET = /price|currency|fx_|amount|method|note|rate|meeting|link|receipt|payment|secret|سر/i;
-const keys = (v: unknown): string[] =>
-  v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
 
-// Owner 2026-10-28: «تفاصيل الطالب» opens ANY student; salesB reads salesA's student (MINE) as not hers.
+// Owner 2026-10-28: «تفاصيل الطالب» opens ANY student; 2026-10-30: salesB reads salesA's student (MINE) in full.
 describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row 36)', () => {
   let t: App;
   beforeAll(async () => {
@@ -16,19 +13,19 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
   beforeEach(() => t.reset());
   afterEach(() => vi.useRealTimers());
 
-  it('200 with mine = false: student, trial, attendance and «الجدول»; no subscription or report, neither read', async () => {
+  it('200 with mine = false: the same student, attendance, «الجدول», subscriptions and reports as hers', async () => {
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesB' });
     expect(res.statusCode).toBe(200);
     const body = res.json();
-    expect(body).toMatchObject({ mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 } });
+    const hers = (await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json();
+    expect({ ...body, mine: true, schedule: null }).toEqual({ ...hers, schedule: null });
+    expect(body).toMatchObject({ mine: false, current_id: expect.any(String), reports: { total: 1 } });
+    expect(body.subscriptions.length).toBeGreaterThan(0);
     expect(body.student).toMatchObject({ id: MINE, name: 'ياسمين', guardian_phone: '+966551110000' });
     expect(body.attendance.totals).toEqual({ present: 1, absent: 1, excused: 0, cancelled: 1, unmarked: 1 });
     expect(body.schedule.weekly).toHaveLength(1);
     expect(body.schedule.upcoming[0].students[0].mine).not.toBe(true);
-    expect(t.history.history).not.toHaveBeenCalled();
-    expect(t.reports.submitted).not.toHaveBeenCalled();
-    expect(keys(body).filter((k) => SECRET.test(k))).toEqual([]);
-    expect(res.body).not.toMatch(/سر|secret|\+20|SAR|bank/);
+    expect(res.body).not.toMatch(/سر|secret|\+20|bank/);
   });
 
   it('the trial (as «مواعيد الحلقة التجريبية» finds it): every date newest first, a moved one kept, its outcome and the teacher', async () => {
@@ -42,11 +39,11 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
     expect((await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json().trial).toEqual([]);
   });
 
-  it('the report PDF stays mine-only (404); moving or cancelling another\'s lesson is allowed (owner 2026-10-28)', async () => {
+  it('the report PDF opens for another\'s student; moving or cancelling another\'s lesson is allowed', async () => {
     vi.useFakeTimers({ now: new Date('2026-10-27T10:00:00Z'), toFake: ['Date'] }); // before the lesson ends
     const pdf = await t.call('GET', `/sales/students/${MINE}/reports/${REPORT}/pdf`, { token: 'salesB' });
-    expect([pdf.statusCode, pdf.json().code]).toEqual([404, 'student_not_found']);
-    expect(t.files.studentPdfUrl).not.toHaveBeenCalled();
+    expect(pdf.statusCode).toBe(200);
+    expect(t.files.studentPdfUrl).toHaveBeenCalledWith({ id: REPORT, studentId: MINE });
     const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesB', body: { startsAt: '2099-01-01T10:00:00.000Z' } });
     const cancel = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} });
     expect([move.statusCode, cancel.statusCode]).toEqual([200, 200]);
