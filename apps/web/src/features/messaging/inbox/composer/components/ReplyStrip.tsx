@@ -1,9 +1,10 @@
+import { quoteIcon } from '@ab/shared';
 import type { RefObject } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { useChatActions } from '../../shared/chat-actions';
-import { quoteSender, quoteText } from '../../messages/lib/quote';
+import { quoteSender, quoteText } from '@/features/messaging/inbox/messages/lib/quote';
 
 /**
  * «الرد على رسالة» above the message box (owner 2026-10-25): one compact line (44px, the phone's
@@ -13,6 +14,7 @@ import { quoteSender, quoteText } from '../../messages/lib/quote';
 export function ReplyStrip({ returnFocus }: { returnFocus: RefObject<HTMLElement | null> }) {
   const { target, chat, cancelReply } = useChatActions();
   if (!target) return null;
+  const icon = quoteIcon(target);
   return (
     <div
       role="group"
@@ -25,6 +27,7 @@ export function ReplyStrip({ returnFocus }: { returnFocus: RefObject<HTMLElement
           {quoteSender(target, chat)}
         </span>
         <span className="min-w-0 truncate text-ink-2" dir="auto">
+          {icon && <span aria-hidden="true">{`${icon} `}</span>}
           {quoteText(target)}
         </span>
       </p>
