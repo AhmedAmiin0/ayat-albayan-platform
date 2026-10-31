@@ -28,6 +28,7 @@ const DOC_READERS = {
   'public.google_sync_on': ['google_sync_enabled'],
   'public.google_sync_window_days': ['google_calendar_window_days'],
   'public.renewal_commission_share': ['renewal_commission_percent'],
+  'public.presence_enabled': ['presence_enabled'],
 };
 
 describe('every key a SQL reader names is seeded (docs/26 §2b)', () => {

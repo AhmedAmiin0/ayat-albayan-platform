@@ -5,8 +5,8 @@ import { EDITABLE_VALUE_KEYS, isEditableValueKey, OWNED_VALUE_GROUPS, VALUE_CONF
 describe('«القيم» groups', () => {
   const owned: readonly string[] = Object.values(OWNED_VALUE_GROUPS).flat();
 
-  it('place every settings key exactly once, editable or owned (38 + 12 = 50)', () => {
-    expect(EDITABLE_VALUE_KEYS).toHaveLength(38);
+  it('place every settings key exactly once, editable or owned (39 + 12 = 51)', () => {
+    expect(EDITABLE_VALUE_KEYS).toHaveLength(39);
     expect(owned).toHaveLength(12);
     expect([...EDITABLE_VALUE_KEYS, ...owned].sort()).toEqual([...SETTING_KEYS].sort());
   });

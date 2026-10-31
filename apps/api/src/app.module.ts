@@ -34,6 +34,7 @@ import { LessonRatingModule } from './modules/teaching/lesson-rating/lesson-rati
 import { LessonsModule } from './modules/teaching/lessons/lessons.module';
 import { MeModule } from './modules/people/me/me.module';
 import { PortalModule } from './modules/people/portal';
+import { PresenceModule } from './modules/people/presence';
 import { MessagingJobsModule } from './modules/messaging/messaging-jobs/messaging-jobs.module';
 import { NotificationRulesModule } from './modules/messaging/notification-rules/rules.module';
 import { PaymentsModule } from './modules/finance/payments/payments.module';
@@ -94,6 +95,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     JobApplicantsModule,
     MeModule,
     PortalModule,
+    PresenceModule,
     FxModule,
     PricingModule,
     SchedulingModule,

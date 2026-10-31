@@ -18,6 +18,7 @@ import { FIRST_VIEW, USERS_PAGE_SIZE, type UsersView } from '../shared/api';
 import { backToMore } from '../shared/nav';
 import { UserItem } from '../list/UserItem';
 import { UsersFilters } from '../list/UsersFilters';
+import { StaffPresenceSection } from '@/users/presence/StaffPresenceSection';
 
 const keyOf = (u: UserView) => u.id;
 const openUser = (id: string) => router.push(`/more/users/${id}`);
@@ -55,6 +56,7 @@ export function UsersScreen({ can }: { can: Can }) {
         keyExtractor={keyOf}
         renderItem={renderRow}
         keyboardShouldPersistTaps="handled"
+        ListHeaderComponent={<StaffPresenceSection />}
         ListEmptyComponent={
           list.data ? (
             <EmptyState title={t.users.empty} />

@@ -15,6 +15,7 @@ const PER_COPY: Record<string, string> = {
     'refreshes its own copy of the UI strings',
   'common/client-usage/client-usage.service.ts': 'logs this copy’s own client-version counters',
   'common/activity/activity.writer.ts': 'flushes this copy’s own buffered activity rows',
+  'modules/people/presence/last-seen.service.ts': 'flushes this copy’s own queued last-seen users',
 };
 
 /** Jobs that start no timer in a test boot, and why (every other registered job must). */
