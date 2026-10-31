@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '@/common/integrations/numbers-overlay';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { holdKey } from './hold-key';

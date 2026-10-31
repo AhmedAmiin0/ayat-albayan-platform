@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { integrationRefreshMs } from '../../../../common/integrations/integration-refresh';
-import { loadEnv } from '../../../../config/env/env';
-import { NumbersQueries, type NumberRow } from '../numbers.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { integrationRefreshMs } from '@/common/configuration/integrations/integration-refresh';
+import { loadEnv } from '@/config/env/env';
+import { NumbersQueries, type NumberRow } from '@/modules/messaging/numbers/numbers.queries';
 
 const MIN_TTL_MS = 1_000;
 const WEEK_MS = 7 * 24 * 3_600_000;

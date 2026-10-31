@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import type { PushService } from '../../../../common/push/push.service';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23 phase 3: messages.number_id is stamped at claim in module mode only; legacy claims are unchanged.
 

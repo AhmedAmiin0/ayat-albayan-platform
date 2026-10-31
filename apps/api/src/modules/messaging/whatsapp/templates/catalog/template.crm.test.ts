@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import type { OverlayNumber } from '../../../../../common/integrations/numbers-overlay';
-import { CrmWhatsappClient } from '../../drivers/crm/crm.client';
-import { CRM_ENV, CRM_SENT } from '../../drivers/crm/crm.fakes';
-import { syncNumber } from '../sync/template-number-sync';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
+import { CRM_ENV, CRM_SENT } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
+import { syncNumber } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
-import { scriptedFetch, templateRow } from '../../whatsapp.fakes';
+import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: a crm line's templates live in the CRM. No sync call, no row touched, no submit;
 // the admin sets the status by hand (audited), only while the line is on crm.

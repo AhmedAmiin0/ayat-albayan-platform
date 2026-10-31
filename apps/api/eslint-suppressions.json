@@ -303,11 +303,6 @@
       "count": 4
     }
   },
-  "src/common/cache/cache.inert.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
   "src/common/cache/cache.module.ts": {
     "max-len": {
       "count": 3
@@ -397,119 +392,79 @@
       "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-ownership.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/common/configuration/config-store/boundaries/config-ownership.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/boundaries/config-ownership.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/common/configuration/config-store/boundaries/config-ownership.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-parity.test.ts": {
+  "src/common/configuration/config-store/boundaries/config-parity.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
-  "src/common/config-store/boundaries/config-parity.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
+  "src/common/configuration/config-store/boundaries/config-parity.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/boundaries/config-seeder.test.ts": {
+  "src/common/configuration/config-store/boundaries/config-seeder.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
     },
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
-  "src/common/config-store/boundaries/config-seeder.ts": {
+  "src/common/configuration/config-store/boundaries/config-seeder.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/config-store.di.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/common/config-store/config-store.fakes.ts": {
+  "src/common/configuration/config-store/config-store.fakes.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/config-store.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/common/config-store/config-store.types.ts": {
+  "src/common/configuration/config-store/config-store.types.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/io/config-entries.audit.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/configuration/config-store/io/config-entries.audit.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/io/config-entries.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/common/configuration/config-store/io/config-entries.controller.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/io/config-entries.mapper.ts": {
+  "src/common/configuration/config-store/io/config-entries.mapper.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 4
     }
   },
-  "src/common/config-store/io/config-entries.patch.http.test.ts": {
+  "src/common/configuration/config-store/io/config-entries.patch.http.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
-  "src/common/config-store/io/config-entries.read.http.test.ts": {
+  "src/common/configuration/config-store/io/config-entries.read.http.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -519,54 +474,42 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/io/config-entries.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
+  "src/common/configuration/config-store/io/config-entries.service.ts": {
     "max-len": {
       "count": 9
     }
   },
-  "src/common/config-store/io/config-entries.test-util.ts": {
+  "src/common/configuration/config-store/io/config-entries.test-util.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
     "@typescript-eslint/require-await": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/store/config-cache.bridge.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/configuration/config-store/store/config-cache.bridge.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/store/config-decode.test.ts": {
+  "src/common/configuration/config-store/store/config-decode.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/store/config-decode.ts": {
+  "src/common/configuration/config-store/store/config-decode.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/config-store/store/config-defs.ts": {
+  "src/common/configuration/config-store/store/config-defs.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
@@ -574,57 +517,32 @@
       "count": 2
     }
   },
-  "src/common/config-store/store/config-store.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/configuration/config-store/store/config-store.queries.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/config-store/store/config-store.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/configuration/config-store/store/config-store.queries.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/config-store/store/config-store.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/common/config-store/store/config-store.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/configuration/config-store/store/config-store.service.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/common/custom-config/custom-config.controller.test.ts": {
+  "src/common/configuration/custom-config/custom-config.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     }
   },
-  "src/common/custom-config/custom-config.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
-  "src/common/custom-config/custom-config.service.test.ts": {
+  "src/common/configuration/custom-config/custom-config.service.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
-  "src/common/custom-config/custom-config.service.ts": {
+  "src/common/configuration/custom-config/custom-config.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -634,17 +552,90 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
   },
-  "src/common/custom-config/custom-config.shared.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
+  "src/common/configuration/custom-config/custom-config.shared.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/common/configuration/integrations/integration-config.controller.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
     },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/common/configuration/integrations/integration-config.controller.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/common/configuration/integrations/integration-config.fakes.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/common/configuration/integrations/integration-config.module.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/common/configuration/integrations/integration-config.queries.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/common/configuration/integrations/integration-config.service.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/common/configuration/integrations/integration-config.service.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/common/configuration/integrations/integration-config.view.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/common/configuration/integrations/integration-config.view.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/common/configuration/integrations/integration-refresh.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/common/configuration/integrations/integration-refresh.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/common/configuration/integrations/numbers-overlay.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/common/configuration/integrations/wacrm-driver.migration.test.ts": {
+    "@typescript-eslint/prefer-includes": {
+      "count": 1
+    }
+  },
+  "src/common/configuration/public-config/public-config.controller.ts": {
     "max-len": {
       "count": 1
     }
@@ -683,122 +674,6 @@
       "count": 2
     }
   },
-  "src/common/integrations/calls-number.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/common/integrations/integration-config.controller.test.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/common/integrations/integration-config.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/common/integrations/integration-config.fakes.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/common/integrations/integration-config.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/common/integrations/integration-config.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/common/integrations/integration-config.queries.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/common/integrations/integration-config.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/common/integrations/integration-config.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/common/integrations/integration-config.shared.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/common/integrations/integration-config.view.test.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 5
-    }
-  },
-  "src/common/integrations/integration-config.view.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/common/integrations/integration-refresh.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/common/integrations/integration-refresh.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/common/integrations/numbers-overlay.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/common/integrations/wacrm-driver.migration.test.ts": {
-    "@typescript-eslint/prefer-includes": {
-      "count": 1
-    }
-  },
   "src/common/list-sort.test.ts": {
     "@typescript-eslint/prefer-return-this-type": {
       "count": 1
@@ -810,24 +685,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/common/public-config/public-config.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    }
-  },
-  "src/common/public-config/public-config.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/common/public-config/public-config.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/common/push/dispatch/push.audience.sales.test.ts": {
@@ -1157,9 +1014,6 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -1183,9 +1037,6 @@
     }
   },
   "src/common/settings/settings-slice.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 5
     }
@@ -1195,15 +1046,7 @@
       "count": 1
     }
   },
-  "src/common/settings/settings-write.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/common/settings/settings-write.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -1260,22 +1103,11 @@
     }
   },
   "src/common/settings/settings.service.shared.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 2
     }
   },
-  "src/common/settings/settings.service.switch.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/common/settings/settings.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -1283,9 +1115,6 @@
   "src/common/settings/settings.service.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 13
@@ -1457,33 +1286,17 @@
       "count": 2
     }
   },
-  "src/config/env/env.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/config/env/env.overlay.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/config/env/env.recording.ts": {
     "max-len": {
       "count": 1
     }
   },
   "src/config/env/env.sources.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/config/env/env.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 14
     }
@@ -1555,9 +1368,6 @@
     }
   },
   "src/config/env/whatsapp/env.whatsapp.numbers-mode.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -4170,21 +3980,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/calls/kapso/calling-line.calls.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/calls/kapso/calling-line.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/calls/kapso/calling-line.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/calls/kapso/calls-api.ts": {
     "max-len": {
       "count": 1
@@ -4930,9 +4725,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 5
     }
@@ -4978,9 +4770,6 @@
     }
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -5242,25 +5031,16 @@
     }
   },
   "src/modules/messaging/inbox/send/send-number.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/inbox/send/send-number.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/messaging/inbox/send/send-number.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 10
     }
@@ -5569,9 +5349,6 @@
     }
   },
   "src/modules/messaging/inbox/threads/threads.numbers.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
     }
@@ -6013,11 +5790,6 @@
       "count": 3
     }
   },
-  "src/modules/messaging/numbers/config/numbers.config.calls.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
   "src/modules/messaging/numbers/config/numbers.config.fakes.ts": {
     "ab/no-parent-imports": {
       "count": 4
@@ -6026,23 +5798,12 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/config/numbers.config.refresh.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/numbers/config/numbers.config.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/numbers/config/numbers.config.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 2
     }
@@ -6069,9 +5830,6 @@
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 8
@@ -6124,17 +5882,11 @@
     }
   },
   "src/modules/messaging/numbers/import/numbers.import.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/numbers/import/numbers.import.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 9
     }
@@ -6156,9 +5908,6 @@
     }
   },
   "src/modules/messaging/numbers/lines/numbers.lines.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 5
     }
@@ -6185,9 +5934,6 @@
     }
   },
   "src/modules/messaging/numbers/numbers.effects.order.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 2
     }
@@ -6318,9 +6064,6 @@
   "src/modules/messaging/numbers/own/own-numbers.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 8
@@ -6692,9 +6435,6 @@
     }
   },
   "src/modules/messaging/webhook/external/external-catchup.job.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -6734,11 +6474,6 @@
       "count": 5
     }
   },
-  "src/modules/messaging/webhook/external/external-status.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/webhook/external/external-status.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -6750,9 +6485,6 @@
   "src/modules/messaging/webhook/external/external.fakes.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 5
@@ -6804,15 +6536,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/webhook/external/kapso-numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/webhook/external/kapso-numbers.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -6983,17 +6707,11 @@
     }
   },
   "src/modules/messaging/webhook/lines/webhook.reload.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/webhook/lines/webhook.reload.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -7078,9 +6796,6 @@
     }
   },
   "src/modules/messaging/webhook/providers/webhook.kapso.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
     }
@@ -7140,25 +6855,12 @@
       "count": 3
     }
   },
-  "src/modules/messaging/webhook/webhook.calls-number.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/webhook/webhook.config.live.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/webhook/webhook.config.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/modules/messaging/webhook/webhook.config.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -7193,9 +6895,6 @@
     }
   },
   "src/modules/messaging/webhook/webhook.http.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -7217,9 +6916,6 @@
     }
   },
   "src/modules/messaging/webhook/webhook.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -7312,25 +7008,16 @@
     }
   },
   "src/modules/messaging/whatsapp/direct/code-send.line.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    },
     "max-len": {
       "count": 5
     }
   },
   "src/modules/messaging/whatsapp/direct/code-send.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/whatsapp/direct/code-send.ts": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 10
     }
@@ -7665,14 +7352,6 @@
   },
   "src/modules/messaging/whatsapp/live-client.kapso.test.ts": {
     "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/live-client.test.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -8063,49 +7742,31 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/whatsapp/numbers/media-client.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/whatsapp/numbers/number-clients.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/whatsapp/numbers/number-clients.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/messaging/whatsapp/numbers/number-route.crm.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/whatsapp/numbers/number-route.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -8119,9 +7780,6 @@
     }
   },
   "src/modules/messaging/whatsapp/numbers/number-route.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 10
     }
@@ -8140,9 +7798,6 @@
   "src/modules/messaging/whatsapp/numbers/number-routes.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 8
@@ -8191,9 +7846,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.dispatch.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 1
     }
@@ -8257,9 +7909,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.sender.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 4
     }
@@ -8305,9 +7954,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.number.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -8560,9 +8206,6 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 6
     }
@@ -8715,17 +8358,11 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-sync.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-sync.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 14
     }
@@ -8739,9 +8376,6 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
@@ -8826,9 +8460,6 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/templates.numbers.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -9176,17 +8807,9 @@
       "count": 1
     }
   },
-  "src/modules/people/portal/home/chat-number.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/people/portal/home/chat-number.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 4
@@ -10483,9 +10106,6 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 6
     }
@@ -10696,9 +10316,6 @@
     }
   },
   "src/modules/platform/google-sync/oauth/google-connection.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -11039,9 +10656,6 @@
     }
   },
   "src/modules/platform/process-role/config-reload.job.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 3
     }
@@ -11049,9 +10663,6 @@
   "src/modules/platform/process-role/config-reload.job.ts": {
     "@typescript-eslint/no-empty-function": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "max-len": {
       "count": 6
@@ -11101,9 +10712,6 @@
     }
   },
   "src/modules/platform/process-role/roles.boot.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -11152,9 +10760,6 @@
     }
   },
   "src/modules/platform/translations/translations.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -15199,9 +14804,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.numbers.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
     }
@@ -17579,11 +17181,6 @@
   "src/openapi.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    }
-  },
-  "src/scripts/config-import-env.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/scripts/import-env.ts": {

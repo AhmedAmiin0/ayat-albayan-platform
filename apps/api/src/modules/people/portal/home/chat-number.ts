@@ -1,10 +1,10 @@
 import { isWaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { activeNumberId, overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { dbError } from '../../../../common/http/http';
-import { lineNumbers, loadEnv } from '../../../../config/env/env';
-import { currentRows } from '../../../messaging/whatsapp';
+import { DB, type Db } from '@/common/db/db.module';
+import { activeNumberId, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { dbError } from '@/common/http/http';
+import { lineNumbers, loadEnv } from '@/config/env/env';
+import { currentRows } from '@/modules/messaging/whatsapp';
 
 /**
  * The academy's CHAT line as E.164 («تواصل معنا للتجديد»), from the configured numbers, never typed in

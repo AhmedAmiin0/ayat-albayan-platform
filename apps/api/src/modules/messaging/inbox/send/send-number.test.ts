@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { threadRow } from '../inbox.fakes';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { pickSendLine } from './send-line';
 import { CHAT_DEFAULT, CHAT_OFF, CHAT_TWO, NOTIF_DEFAULT, NUMBERS } from './send-number.fakes';
 import { numberWindows, pickNumber, pickSend, type ThreadWindow } from './send-number';

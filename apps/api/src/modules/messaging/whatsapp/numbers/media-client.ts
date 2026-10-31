@@ -1,10 +1,10 @@
 import { isWaLine, type WaLine } from '@ab/shared';
-import { callsNumber } from '../../../../common/integrations/calls-number';
-import { overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { allowedRecipients, loadEnv } from '../../../../config/env/env';
-import { whatsappClient } from '../client-factory';
-import type { MediaMessage, MediaNumber } from '../messages/inbound-media.queries';
-import type { WhatsappClient, WhatsappLines } from '../whatsapp.types';
+import { callsNumber } from '@/common/configuration/integrations/calls-number';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { allowedRecipients, loadEnv } from '@/config/env/env';
+import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
+import type { MediaMessage, MediaNumber } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import type { WhatsappClient, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { NumberClients } from './number-clients';
 
 /** Who can fetch a message's media id: a client (and the line it stands for), or the CRM (no client). */

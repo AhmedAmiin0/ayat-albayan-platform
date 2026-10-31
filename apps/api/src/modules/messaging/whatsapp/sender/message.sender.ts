@@ -1,7 +1,7 @@
 import {
   Inject, Injectable, Logger, Optional, type OnApplicationBootstrap, type OnModuleDestroy,
 } from '@nestjs/common';
-import { overlayNumbers, type OverlayNumber } from '@/common/integrations/numbers-overlay';
+import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import { MessageWorker, type PassJob, type SendOutcome } from './message.worker';
 import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
