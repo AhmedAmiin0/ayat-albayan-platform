@@ -18,7 +18,7 @@ function show(value: readonly Permission[]) {
 
 describe('PermissionMatrix «تحديد الكل»', () => {
   it('is indeterminate while only part of the area is held, and follows the value', () => {
-    const view = render(show([group.keys[0] as Permission]));
+    const view = render(show(group.keys.slice(0, 1)));
     expect(selectAll().indeterminate).toBe(true);
     expect(selectAll().checked).toBe(false);
     view.rerender(show(group.keys));
