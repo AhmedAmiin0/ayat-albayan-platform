@@ -2,7 +2,7 @@
 
 Owner request, 2026-10-28: «add stripe integration. i need to be able to send link to the customer this payment link will make him subscribe and automaticly give the assistant his comission. also this works for the renewal. the assistant contacts the customer and generates the payment amount based on the conversation with the customer» + «make a test build only for stripe» + «dont make stripe available for the normal production build» + «I want a new seperate build with stripe and all the features continue normally on the current build».
 
-> Status: **test build only, sandbox keys only.** `FEATURE_STRIPE=test` is on for **staging** (deploy/staging/docker-compose.yml, docs/09); nothing here is reachable in the normal web or mobile build, and every route is 404 until the admin switch is on. The go-live checklist at the end is explicitly **NOT done**.
+> Status: **test build only, sandbox keys only.** `FEATURE_STRIPE=test` is on for **staging** only (since the 2026-10-31 split the NEW staging: deploy/stg/docker-compose.yml, Supabase gqkqbxxgqttfbbqoqedf, docs/09 «Staging»; production's deploy/staging compose no longer sets it); nothing here is reachable in the normal web or mobile build, and every route is 404 until the admin switch is on. The go-live checklist at the end is explicitly **NOT done**.
 
 ## 1. The flow
 
@@ -37,7 +37,7 @@ Owner request, 2026-10-28: «add stripe integration. i need to be able to send l
 
 | Layer | Off unless |
 |---|---|
-| API | env `FEATURE_STRIPE=test` (set only in the staging compose, docs/09; remove the line and redeploy to switch it off). Without it `StripeTestModule` is empty: no controller, the webhook route not mounted, every Stripe URL 404. With it, «الدفع الإلكتروني (اختبار)» (`/admin/stripe/settings`) and `GET /stripe/feature` exist, and **every other route except the signed webhook is still 404** until the admin turns on `stripe_settings.stripe_enabled` (default false); a signed-out call to a sales route answers 401 first. |
+| API | env `FEATURE_STRIPE=test` (set only in the staging compose deploy/stg/docker-compose.yml, docs/09; remove the line and let staging redeploy to switch it off). Without it `StripeTestModule` is empty: no controller, the webhook route not mounted, every Stripe URL 404. With it, «الدفع الإلكتروني (اختبار)» (`/admin/stripe/settings`) and `GET /stripe/feature` exist, and **every other route except the signed webhook is still 404** until the admin turns on `stripe_settings.stripe_enabled` (default false); a signed-out call to a sales route answers 401 first. |
 | Web | build flag `VITE_FEATURE_STRIPE=1` **and** `GET /stripe/feature` → `{ stripe: true }`. With the flag off no request is made and nothing renders (`/pay/<token>` is a not-found page). |
 | Mobile | the EAS profile `stripe-test` only: a separate app (`…stripetest` package, «Ayat – Stripe test», update channel `stripe-test`) built with `EXPO_PUBLIC_FEATURE_STRIPE=1`; it has every normal feature plus «دفع إلكتروني» inside «اشتراك جديد» / «جدّد الاشتراك», «روابط الدفع» under «المزيد», and the admin's «الإعدادات» → «الدفع الإلكتروني (اختبار)». No FCM push in it (no google-services.json; registration fails soft). The constant is inlined at bundle time, so in `preview` / `production` the Stripe UI is dead code; a unit test fails if those profiles ever set it. The app has no Stripe SDK: it only shares the platform link. |
 | Keys | Vault (`stripe:api_key`, `stripe:webhook_secret`), entered in the test app's «الإعدادات» (or a web build's /admin/settings), write-only, masked on read, never in the repo, env files, logs, audit rows or responses. **Test keys only**: `rk_test_` / `sk_test_` (the API and the SQL function both refuse a live key). |
@@ -48,10 +48,10 @@ Data: migration `20261028000941_stripe_payment_links.sql` (`payment_links`, `str
 
 1. In Stripe, create a **sandbox** (never the live account).
 2. In the sandbox: Developers → API keys → **Create restricted key** with only: *Checkout Sessions* **Write**, *Events* **Read**, *Charges* **Read**, *Refunds* **Read** (everything else None). Copy the `rk_test_…` key.
-3. Staging already has `FEATURE_STRIPE=test` (docs/09). Build the test app: GitHub → Actions → **mobile** → Run workflow on `develop`, `action` = `build-android-apk`, `profile` = `stripe-test`; install the APK (beside the normal app) and sign in as an admin.
+3. Staging already has `FEATURE_STRIPE=test` (docs/09 «Staging»; the test app talks to staging-api since 2026-10-31, so an APK built before that still talks to production: build a new one). Build the test app: GitHub → Actions → **mobile** → Run workflow on `develop`, `action` = `build-android-apk`, `profile` = `stripe-test`; install the APK (beside the normal app) and sign in as an admin.
 4. In the test app: «المزيد» → «الإعدادات» → «الدفع الإلكتروني (اختبار)»: copy «رابط الـWebhook». In the sandbox: Developers → Webhooks → **Add endpoint** with that URL and the six events above; copy its signing secret `whsec_…`.
 5. Back in the section: paste the restricted key and the webhook secret, optionally a maximum discount, and turn on «تفعيل روابط الدفع».
-6. OTA updates for the test app: the same workflow with `action` = `ota-update`, `profile` = `stripe-test` (channel `stripe-test` only, bundled with `EXPO_PUBLIC_FEATURE_STRIPE=1`); never put that variable in the EAS «preview» environment. Push notifications: the test app is built without `google-services.json`, so it gets no FCM push (registration fails soft); to add push later, add the `…stripetest` Android app to Firebase and give the variant its file back.
+6. OTA updates for the test app: the same workflow with `action` = `ota-update`, `profile` = `stripe-test` (channel `stripe-test` only, bundled with `EXPO_PUBLIC_FEATURE_STRIPE=1`); never put that variable in an EAS environment (`preview` is the production app; the staging app and dev clients read `development`, which the test app also uses for its staging anon key since 2026-10-31). Push notifications: the test app is built without `google-services.json`, so it gets no FCM push (registration fails soft); to add push later, add the `…stripetest` Android app to Firebase and give the variant its file back.
 7. Try it: create a link for a test student, open it, pay with Stripe's test card `4242 4242 4242 4242`; the package turns active and the commission row appears. Refund it in the Stripe Dashboard: a refund payment appears.
 
 ## 4. Go-live checklist — NOT DONE
@@ -64,6 +64,6 @@ None of this is done; do not enable Stripe in production until the owner decides
 - [ ] Legal: terms, refund policy, privacy notice for card payments.
 - [ ] Reconciliation: Stripe payouts vs platform payments, fees as expenses, the dispute workflow.
 - [ ] Expired links: a job closing them and cancelling their unpaid packages (today an expired link only reads as expired).
-- [ ] A default discount cap: with `max_discount_pct` empty and a FIXED commission, a tiny agreed amount still earns the full fixed commission (set the cap on staging; staging must use its own database).
+- [ ] A default discount cap: with `max_discount_pct` empty and a FIXED commission, a tiny agreed amount still earns the full fixed commission (set the cap on staging; since 2026-10-31 staging has its own database, gqkqbxxgqttfbbqoqedf).
 - [ ] e2e journey against the Stripe CLI / a mock, and monitoring of webhook failures.
 - [ ] WhatsApp template for sending a link outside the 24-hour window.

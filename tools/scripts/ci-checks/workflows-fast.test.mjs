@@ -12,10 +12,10 @@ const load = (f) =>
       'utf8',
     ),
   );
-const deploy = load('deploy-staging.yml');
+const deploy = load('deploy-production.yml');
 const ci = load('ci.yml');
 
-test('automatic deploys skip migrate only when plan said exactly "false"', () => {
+test('production deploys skip migrate only when plan said exactly "false"', () => {
   const cond = deploy.jobs.migrate.if;
   assert.match(cond, /needs\.plan\.outputs\.migrations != 'false'/);
   assert.match(cond, /!cancelled\(\)/, 'a failed plan must not skip migrate');
@@ -94,12 +94,12 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   assert.ok(!('pull_request_target' in ci.on));
 });
 
-test('mobile.yml profile: preview by default (every automatic run), stripe-test only by hand, on its own channel', () => {
+test('mobile.yml profile: preview by default (production), the side apps on their own channel', () => {
   const mobile = load('mobile.yml');
   const input = mobile.on.workflow_dispatch.inputs.profile;
-  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test'], 'preview']);
+  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test', 'staging'], 'preview']);
   const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
-  assert.doesNotMatch(dispatch, /profile|stripe/i, 'deploy-staging must leave the profile at preview');
+  assert.doesNotMatch(dispatch, /profile|stripe/i, 'deploy-production must leave the profile at preview');
   const step = (job, name) => mobile.jobs[job].steps.find((s) => s.name?.startsWith(name));
   assert.match(step('build', 'EAS build').run, /--profile "\$PROFILE"/);
   const guard = step('ota', 'Native-change guard');
@@ -110,12 +110,13 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   }
   const update = step('ota', 'EAS update').run;
   const [side, normal] = update.split('exit 0');
-  assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
-  assert.match(side, /EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest/);
-  assert.match(side, /--channel stripe-test --environment preview/);
+  assert.match(side, /if \[ "\$PROFILE" != preview \]/);
+  // A side app's bundle gets its eas.json profile env (APP_VARIANT, staging hosts, Stripe flag).
+  assert.match(side, /require\("\.\/eas\.json"\)\.build\[process\.env\.PROFILE\]\.env\)/);
+  assert.match(side, /--channel "\$PROFILE" --environment "\$\(node -p 'require\("\.\/eas\.json"\)\.build\[process\.env\.PROFILE\]\.environment'\)"/);
   assert.doesNotMatch(normal, /STRIPE|APP_VARIANT|channel/);
   assert.match(normal, /update --branch "\$EAS_BRANCH" --environment "\$EAS_BRANCH"/);
-  assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
+  assert.match(mobile['run-name'], /inputs\.profile != 'preview' && inputs\.profile \|\| inputs\.branch/);
 });
 
 test('release tags: only after a green release, no environment or secret, a failure never fails the run', () => {
@@ -129,7 +130,7 @@ test('release tags: only after a green release, no environment or secret, a fail
   assert.match(app.if, /needs\.deploy\.result == 'success' && !inputs\.env_only/);
   assert.match(phone.if, /needs\.build\.result == 'success' \|\| needs\.ota\.result == 'success'/);
   const step = (job, kind) => job.steps.find((s) => s.env?.KIND === kind);
-  assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
+  assert.equal(step(app, 'app').env.SHA, '${{ inputs.sha || github.sha }}');
   assert.equal(step(phone, 'apk').if, "${{ needs.build.result == 'success' }}");
   assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
   assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.profile.*\}\}/)[0]);
@@ -140,7 +141,7 @@ test('release tags: only after a green release, no environment or secret, a fail
   assert.match(mobile.jobs.build.steps.find((s) => s.id === 'eas').run, /set -o pipefail\n.*\| tee /);
 });
 
-test('deploy-staging merges LOGIN_CODE_PEPPER from a secret into the server .env (docs/30 §8)', () => {
+test('deploy-production merges LOGIN_CODE_PEPPER from a secret into the server .env (docs/30 §8)', () => {
   const step = deploy.jobs.deploy.steps.find((s) => s.name?.startsWith('Merge the server .env'));
   assert.equal(step.env.LOGIN_CODE_PEPPER, '${{ secrets.LOGIN_CODE_PEPPER }}');
   const keys = /keys="([^"]+)"/.exec(step.run)?.[1].split(/\s+/) ?? [];

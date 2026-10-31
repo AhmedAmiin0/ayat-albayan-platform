@@ -1,28 +1,57 @@
 # 09 — Deployment
 
-## Staging (live since 2026-10-02)
+Two separate environments since 2026-10-31 (owner: «keep the current and make it the production, and make a new one and make it the staging»). They share only the Hostinger VPS (and the owner's live CRM on it, which neither touches). Every name in the production column that still says «staging» is **legacy and kept on purpose**: renaming the live directory, compose project, image, Supabase project or GitHub environment would touch live state.
 
-> **Hosts since 2026-10-03:** the web app is **https://app.ayatalbayan.com** and the API **https://api.ayatalbayan.com** (the domain has a wildcard A record `*.ayatalbayan.com` → 148.230.116.195; Caddy issues the certificates). The older sslip.io hosts below keep working (the API accepts both origins in `WEB_ORIGIN`), and installed Android builds still call the sslip.io API. WhatsApp URL buttons (the feedback template, `https://app.ayatalbayan.com/feedback/{{1}}`) are fixed by Meta at approval, so they always use the domain name. Supabase auth `site_url` is the domain (config.toml `[remotes.staging.auth]`).
+| | **Production** (the live app, real data) | **Staging** (new, DEMO data only) |
+|---|---|---|
+| Web app | https://app.ayatalbayan.com | https://staging-app.ayatalbayan.com |
+| API | https://api.ayatalbayan.com (`/health`, `/docs`) | https://staging-api.ayatalbayan.com |
+| Supabase | `knxfwiimjcifwckhwbim` (named `ayat-albayan-staging`), eu-central-1 | `gqkqbxxgqttfbbqoqedf` (`ayat-albayan-stg`), eu-central-1, Free plan |
+| Server folder | `/opt/ayat-albayan-staging` | `/opt/ayat-albayan-stg` |
+| Compose project, image, port | `ayat-albayan-staging`, `ayat-api:staging`, `127.0.0.1:3110` (`deploy/staging/`: two API copies + worker + PDF sandbox + Redis + LB, ≈ 2.3 GB) | `ayat-albayan-stg`, `ayat-api:stg`, `127.0.0.1:3120` (`deploy/stg/`: one API process + PDF sandbox, 1 GB) |
+| Deploy | **by hand only**, on the owner's «go»: Actions → `deploy-production` | **automatic** after every green `ci` on `develop`; by hand: Actions → `deploy-staging` |
+| GitHub environment | `develop` (+ `staging-db` for migrations, owner as required reviewer) | `staging` (migrations included, no reviewer) |
+| Mobile | EAS profile `preview`, channel `preview` (APK 0.4.0, the phones in use), EAS environment `preview` | EAS profile `staging` («آيات البيان (تجريبي)», package `com.ayatalbayan.admin.staging`), channel `staging`, EAS environment `development`; the Stripe test app (`stripe-test`) points at staging too |
+| Stripe test links | off (every Stripe route 404) | on (`FEATURE_STRIPE=test`, docs/30) |
+| WhatsApp | the real lines (cut-over runbook below) | Kapso sandbox / Meta test numbers only, with `WA_ALLOWED_RECIPIENTS` |
+| Release tags | `v<date>-<n>` per deploy | none |
+
+## Production (the current stack, live since 2026-10-02)
+
+> **Hosts since 2026-10-03:** the web app is **https://app.ayatalbayan.com** and the API **https://api.ayatalbayan.com** (the domain has a wildcard A record `*.ayatalbayan.com` → 148.230.116.195; Caddy issues the certificates). The older sslip.io hosts keep working (the API accepts both origins in `WEB_ORIGIN`), and installed Android builds still call the sslip.io API. WhatsApp URL buttons (the feedback template, `https://app.ayatalbayan.com/feedback/{{1}}`) are fixed by Meta at approval, so they always use the domain name. Supabase auth `site_url` is the domain (config.toml `[remotes.production.auth]`).
 
 | What | Where |
 |---|---|
-| Web app (admin / teacher / portal) | https://app-staging.148-230-116-195.sslip.io |
-| API (NestJS) | https://api-staging.148-230-116-195.sslip.io (`/health`, `/docs`) |
+| Web app (admin / teacher / portal) | https://app.ayatalbayan.com (older: https://app-staging.148-230-116-195.sslip.io) |
+| API (NestJS) | https://api.ayatalbayan.com (older: https://api-staging.148-230-116-195.sslip.io) |
 | Database + Auth | Supabase project `ayat-albayan-staging`, ref `knxfwiimjcifwckhwbim`, region eu-central-1 (Frankfurt — no Middle East region is offered) |
 | Mobile | EAS project `@holdmycup/ayat-albayan-admin`, profile `preview` (internal APK), EAS environment `preview` holds the `EXPO_PUBLIC_*` values |
 | Server | Hostinger VPS `srv939652` (148.230.116.195), ssh alias `hostinger`; files in `/opt/ayat-albayan-staging` (`.env` is root-only, `src/` = shipped HEAD, `web/` = built SPA) |
 
-The same VPS runs the owner's **live WhatsApp CRM** (`/opt/wacrm`, container `wacrm-app-1`, `crm.ayatalbayan.com`). Never stop, rebuild or edit it. The staging API is reached on `127.0.0.1:3110` only (since the layout switch that is `ayat-lb`, the load balancer in our own compose project, see «Two API copies + one worker»); Caddy (`/etc/caddy/Caddyfile`, backups `Caddyfile.bak-*`) terminates TLS for the two staging hosts, which were appended as separate site blocks.
+The same VPS runs the owner's **live WhatsApp CRM** (`/opt/wacrm`, container `wacrm-app-1`, `crm.ayatalbayan.com`). Never stop, rebuild or edit it. The production API is reached on `127.0.0.1:3110` only (since the layout switch that is `ayat-lb`, the load balancer in our own compose project, see «Two API copies + one worker»); Caddy (`/etc/caddy/Caddyfile`, backups `Caddyfile.bak-*`) terminates TLS for every host, each a separate site block.
 
-The rate limits key on `req.ip`, which is only the visitor while Fastify trusts exactly the proxies in front of it: `TRUST_PROXY_HOPS` (default 1 = the host Caddy alone; staging's API copies set 2 = the host Caddy + `ayat-lb`). Never publish an API copy's port, and change `TRUST_PROXY_HOPS` with the proxy depth. The family sign-in limits, and the per-phone send buckets taken before a sign-in code is sent, are in the database (migration 935, shared by every copy); the feedback, classroom-join, mute and activity limiters are still in memory per copy, so behind two copies their budgets are per copy (at most twice the number); the hard guards (unique rows, compare-and-set) do not depend on them.
+The rate limits key on `req.ip`, which is only the visitor while Fastify trusts exactly the proxies in front of it: `TRUST_PROXY_HOPS` (default 1 = the host Caddy alone; production's API copies set 2 = the host Caddy + `ayat-lb`). Never publish an API copy's port, and change `TRUST_PROXY_HOPS` with the proxy depth. The family sign-in limits, and the per-phone send buckets taken before a sign-in code is sent, are in the database (migration 935, shared by every copy); the feedback, classroom-join, mute and activity limiters are still in memory per copy, so behind two copies their budgets are per copy (at most twice the number); the hard guards (unique rows, compare-and-set) do not depend on them.
 
-`*.sslip.io` hosts resolve to the VPS IP, so no DNS change was needed. To move to real names, add A records for e.g. `app-staging.ayatalbayan.com` and `api-staging.ayatalbayan.com` → `148.230.116.195` at **Namecheap** (the domain's DNS), then rename the two Caddy blocks, update `WEB_ORIGIN` in `/opt/ayat-albayan-staging/.env`, the `[remotes.staging.auth]` URLs in `packages/db/supabase/config.toml` (`supabase config push --project-ref knxfwiimjcifwckhwbim`), `.claude/artifacts/staging/web.env` and the EAS `preview` variables.
+**Deploy production** (the owner's «go» only; agents and cloud routines never start it and never approve `staging-db`): GitHub → **Actions → deploy-production → Run workflow** on `develop`. Inputs: `sha` (a commit already on `develop`; empty = develop's head; anything else is refused), `migrate` (default on: waits in `staging-db` for the reviewer; skipped when no migration changed since the last production deploy), `env_only`. It runs the same jobs as the old automatic deploy: plan → migrate → deploy with automatic rollback → OTA to `preview` when mobile JS changed and no native change → release tag. The first run after the split has no `deploy-production <sha>` history yet, so its migrate job runs and waits for review (fail safe). The environment keeps the name `develop`; the owner may rename it `production` later (then rename it in the workflow too) and add himself as required reviewer, so every production deploy waits for his click.
 
-## Two API copies + one worker (code since 2026-10-28, staging layout after it)
+## Staging (new, 2026-10-31)
+
+DEMO data only, never the owner's sheets or real families. Everything is separate from production: its own Supabase project, folder, compose project, image tag, port, hosts, GitHub environment and EAS channel. `deploy-staging.yml` reads only `STG_*` secrets: repository-level secrets hold production values and GitHub hands them to any job whose environment lacks the name (`tools/scripts/ci-checks/env-split/workflows-split.test.mjs` keeps it so).
+
+- **Automatic:** every green `ci` on `develop` → `deploy-staging`: migrations (`db-migrate`, target `staging`, every run; the first applies all of them to the empty project) → web build (`VITE_API_URL` staging-api, `VITE_SUPABASE_URL` the staging project) → server `.env` merge (`STG_SUPABASE_SERVICE_ROLE_KEY`, `STG_SUPABASE_JWT_SECRET`, `STG_FEEDBACK_TOKEN_SECRET`, `STG_LOGIN_CODE_PEPPER`; `SUPABASE_URL`, `WEB_ORIGIN`, the Google callback, `FEATURE_STRIPE`, `API_PUBLIC_URL` and `WA_TEMPLATE_SYNC=false` are pinned in `deploy/stg/docker-compose.yml`, never read from `.env`) → code and `deploy/stg` swapped in under `flock .deploy.lock` and rolled (`roll.sh`; a failed roll runs `rollback.sh` in the same command) → web swap → host Caddy blocks (only when missing) → `/health` → Supabase auth config push → OTA to the `staging` channel when a staging APK exists and mobile JS changed.
+- **Until the owner adds `STG_SSH_PRIVATE_KEY`** to the environment `staging`, the automatic run is skipped with a warning (merging first is harmless); a manual run fails and names what is missing.
+- **By hand:** Actions → **deploy-staging** → Run workflow on `develop`: `env_only` (only the `.env`, then `roll.sh --env-only`), `seed_demo` (after the migrations, `tools/scripts/seed/seed-demo.mjs --allow-remote-staging` against `STG_DATABASE_URL`; the seed refuses any database but `gqkqbxxgqttfbbqoqedf`, and production's `knxf…` whatever the flag).
+- **Server:** `deploy/stg/docker-compose.yml`: `ayat-api` (`APP_ROLE` unset = HTTP and every job in one process, 896 MB, 384 MB heap) and `ayat-pdf` (production's sandbox, the same hardening, 128 MB). No Redis, no LB, `EXPO_API_BASE` unset (pushes recorded, never sent), no LiveKit (the classroom answers 503). A deploy has a short downtime (one process). `roll.sh` prunes only `ayat-albayan-stg` images, never the build cache. Roll back by hand: `cd /opt/ayat-albayan-stg && flock -n .deploy.lock sh rollback.sh`. Known gap: a production and a staging Docker build at the same moment are not serialised (production deploys are rare and by hand); check `free -m` before a production «go» while a staging deploy runs.
+- **Host Caddy** (`deploy/stg/caddy-sites.sh`, run by the workflow as root): when neither `staging-app.ayatalbayan.com` nor `staging-api.ayatalbayan.com` is in `/etc/caddy/Caddyfile`, it backs the file up (`Caddyfile.bak-*`), **appends** two site blocks (the SPA from `/opt/ayat-albayan-stg/web` with `try_files {path} /index.html`; `reverse_proxy 127.0.0.1:3120`), runs `caddy validate` and only then `systemctl reload caddy`; a refused validate or reload restores the backup and fails. Existing blocks (the CRM's, production's) are never edited or reordered; only one of the two hosts present stops it (fix by hand).
+- **Supabase auth** (`packages/db/supabase/config.toml` `[remotes.stg]`): `supabase config push --project-ref gqkqbxxgqttfbbqoqedf` after each deploy when `STG_SUPABASE_ACCESS_TOKEN` is set: site URL and redirects for staging-app, sign-up off, and the `custom_access_token_hook` (without it no login carries a role). The token is account-wide (it can reach production too): keep it only in the environment `staging`, or leave it out and set those things by hand in the dashboard. The push sends the whole merged config file; a failure only warns.
+- **Mobile:** EAS profile `staging` (`APP_VARIANT=staging`, its own package and name, no FCM push, `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_WEB_ORIGIN` in `eas.json`, the anon key from the EAS environment `development`). Build it: Actions → `mobile` → `build-android-apk`, profile `staging`; then set the repository variable `STG_OTA_BASELINE_SHA` to that commit, so deploys send it OTAs (channel `staging`, never `preview`). The dev-client profile `development` reads the same EAS environment, so it talks to staging too.
+- **WhatsApp:** the Kapso sandbox (or Meta test numbers) only, configured in `/admin/settings` on staging, plus `WA_ALLOWED_RECIPIENTS` set by hand in `/opt/ayat-albayan-stg/.env` (no workflow sets it). Never the real numbers or real families. **Google sync** stays off (`google_sync_enabled` false); staging's callback is staging-api's: add it to the Google OAuth client only if Google sync is ever tested there.
+
+## Two API copies + one worker (production layout since 2026-10-28)
 
 The owner asked for «threads and instances» because the API got slow. The API can run as separate processes: API copies behind a load balancer that serve HTTP, and one worker that runs every background job. The code ships first and is **inert on a single container** (`APP_ROLE` unset = `all`, `TRUST_PROXY_HOPS` unset = 1, `WORKER_URL` unset = no forwarding); the staging layout below switches it on. **Merge order:** the layout PR (#341) merges only after the code PR (#314) is merged **and** its staging deploy is green, so the server's `src.old` already knows the roles (`roll.sh` refuses code from before `APP_ROLE`).
 
-Staging runs **six containers** in the compose project `ayat-albayan-staging` (`deploy/staging/docker-compose.yml`), all from **one image** (`ayat-api:staging`, built once per deploy by `ayat-worker`'s `build:`, never pulled):
+Production runs **six containers** in the compose project `ayat-albayan-staging` (`deploy/staging/docker-compose.yml`), all from **one image** (`ayat-api:staging`, built once per deploy by `ayat-worker`'s `build:`, never pulled):
 
 | Service | `APP_ROLE` | Does | Port | Memory |
 |---|---|---|---|---|
@@ -88,11 +117,11 @@ The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox
 
 ## Redeploy
 
-From GitHub only (below). `tools/scripts/env/deploy-staging.sh` (the laptop deploy) now refuses and points there: it had no deploy lock and no rollback for the two-copies layout, so it could race the workflow or leave `127.0.0.1:3110` down.
+From GitHub only: production by hand (`deploy-production`, «Production» above), staging automatically (`deploy-staging`, «Staging» above). `tools/scripts/env/deploy-staging.sh` (the laptop deploy) now refuses and points there: it had no deploy lock and no rollback for the two-copies layout, so it could race the workflow or leave `127.0.0.1:3110` down.
 
-### From GitHub (no laptop secrets)
+### Production from GitHub (no laptop secrets)
 
-**Automatic:** every merge into `develop` deploys staging once `ci` has passed on that commit (a failed `ci` deploys nothing). **By hand:** GitHub → **Actions → deploy-staging → Run workflow** (`.github/workflows/deploy-staging.yml`). Both do the same five steps from a GitHub runner, reading every value from the repository environment **develop** (Settings → Environments → develop). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
+**By hand only:** GitHub → **Actions → deploy-production → Run workflow** (`.github/workflows/deploy-production.yml`) on `develop`. It runs from a GitHub runner, reading every value from the repository environment **develop** (Settings → Environments → develop; the values below are production's, the legacy names stay). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
 
 The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mjs`): a key that is empty or missing in GitHub keeps the server's value, a timestamped `.env.bak-*` is left next to it, and the log names the keys it set, never their values.
 
@@ -101,8 +130,8 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mj
 | Kind | Name | What |
 |---|---|---|
 | secret | `SSH_PRIVATE_KEY` (or `VPS_SSH_PRIVATE_KEY`) | A key used only for deploys; its public half in `~/.ssh/authorized_keys` of the deploy user on the VPS |
-| secret | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` | Supabase CLI token and the staging database password (migrations) |
-| variable | `VITE_SUPABASE_ANON_KEY` | Staging anon key (public by design) for the web build |
+| secret | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` | Supabase CLI token and the production database password (migrations) |
+| variable | `VITE_SUPABASE_ANON_KEY` | Production anon key (public by design) for the web build |
 
 **Built-in defaults** (a variable of the same name overrides): `SSH_HOST` 148.230.116.195, `SSH_USER` root, `DEPLOY_DIR` /opt/ayat-albayan-staging, `SUPABASE_PROJECT_REF` knxfwiimjcifwckhwbim, `API_URL` and `VITE_API_URL` https://api.ayatalbayan.com, `VITE_SUPABASE_URL` https://knxfwiimjcifwckhwbim.supabase.co, `WA_API_BASE` https://graph.facebook.com. The workflow no longer sets the WhatsApp phone number id or the messaging switch at all (see «GitHub Actions» below).
 
@@ -110,11 +139,11 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mj
 
 On every run: the web app is built on the runner before anything on the server changes; if `/health` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
 
-Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
+Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. Since the split nothing deploys production automatically, so a required reviewer (the owner) on `develop` costs one click per production deploy and is recommended.
 
-Mobile preview APK: `cd apps/mobile && npx eas-cli build --platform android --profile preview` (EAS keeps the Android keystore). Install link: the build page on expo.dev.
+Mobile preview (production) APK: Actions → `mobile` → `build-android-apk`, or `cd apps/mobile && npx eas-cli build --platform android --profile preview` (EAS keeps the Android keystore). Install link: the build page on expo.dev.
 
-Demo data: `DATABASE_URL=<staging session pooler, aws-1-eu-central-1> node tools/scripts/seed/seed-demo.mjs --allow-remote-staging` (all rows marked DEMO; production is always refused).
+Demo data: staging only, through Actions → `deploy-staging` with `seed_demo` («Staging» above; all rows marked DEMO; production is always refused).
 
 Teachers 24/7 (owner 2026-10-12): migration 320 seeds `settings.teachers_always_available = true`, so from that deploy every teacher can be booked at any hour (time off and booked lessons still block). The saved teacher grids are not changed; switch it off on /admin/settings → «الجدول والحلقات» to book inside them again. Lessons generated earlier with an `outside_availability` flag keep it.
 
@@ -129,17 +158,17 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on s
 
 ## Stripe payment links — TEST BUILD ONLY (docs/30)
 
-Owner rule (2026-10-28): «dont make stripe available for the normal production build», then «I want a new seperate build with stripe and all the features continue normally on the current build». The API mounts the Stripe module **only** when the server env has `FEATURE_STRIPE=test`. **It is ON for staging since 2026-10-28**: `deploy/staging/docker-compose.yml` sets `FEATURE_STRIPE: test` and `API_PUBLIC_URL` (the API host of the family's pages) for the `ayat-api` service. No production file, `.env.example` or workflow sets it; never on a production host (the worker ignores it, it serves `/health` only). Even with it every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع» in «الدفع الإلكتروني (اختبار)» (`stripe_settings.stripe_enabled`, default false).
+Owner rule (2026-10-28): «dont make stripe available for the normal production build», then «I want a new seperate build with stripe and all the features continue normally on the current build». The API mounts the Stripe module **only** when the server env has `FEATURE_STRIPE=test`. **Since the 2026-10-31 split it is ON for the new staging only**: `deploy/stg/docker-compose.yml` sets `FEATURE_STRIPE: test` and `API_PUBLIC_URL` (https://staging-api.ayatalbayan.com, the host of the family's pages) on `ayat-api`. Production's `deploy/staging/docker-compose.yml` no longer sets either (its next deploy makes every Stripe route 404 there), and no `.env.example` or workflow sets it. Even with it every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع» in «الدفع الإلكتروني (اختبار)» (`stripe_settings.stripe_enabled`, default false).
 
 - The family's pages are served by the API itself (`https://<API_PUBLIC_URL>/pay/<token>`, its `/checkout`, `/done`, `/cancelled`): no web build flag is needed, and the staging web build stays the normal one (no `VITE_FEATURE_STRIPE`, no Stripe UI, no Stripe request).
-- The admin settings live in the **Stripe test app** (EAS profile `stripe-test`, «Ayat – Stripe test», installs beside the normal app): «الإعدادات» → «الدفع الإلكتروني (اختبار)». Build it from GitHub: **Actions → mobile → Run workflow** on `develop` with `action` = `build-android-apk` and `profile` = `stripe-test`. Its OTA updates: same workflow, `action` = `ota-update`, `profile` = `stripe-test` (channel `stripe-test`, bundled with `EXPO_PUBLIC_FEATURE_STRIPE=1`; the native guard compares with the last finished stripe-test build). deploy-staging's automatic OTA stays `preview` only. The test app has **no FCM push** (no `google-services.json` for its `.stripetest` package): push registration fails soft, the bell list still works.
+- The admin settings live in the **Stripe test app** (EAS profile `stripe-test`, «Ayat – Stripe test», installs beside the normal app): «الإعدادات» → «الدفع الإلكتروني (اختبار)». Build it from GitHub: **Actions → mobile → Run workflow** on `develop` with `action` = `build-android-apk` and `profile` = `stripe-test`. Its OTA updates: same workflow, `action` = `ota-update`, `profile` = `stripe-test` (channel `stripe-test`, bundled with `EXPO_PUBLIC_FEATURE_STRIPE=1`; the native guard compares with the last finished stripe-test build). Since the split it points at staging (eas.json `stripe-test` env: the staging hosts; EAS environment `development` for its anon key), so build a new stripe-test APK once and enter the sandbox keys again (they live in the staging database's Vault now). The automatic OTAs never use this channel. The test app has **no FCM push** (no `google-services.json` for its `.stripetest` package): push registration fails soft, the bell list still works.
 - Keys are entered in the test app (Vault, sandbox keys only), never in an env file.
-- **To switch it all off:** delete the `FEATURE_STRIPE` and `API_PUBLIC_URL` lines from `deploy/staging/docker-compose.yml` and redeploy (every Stripe URL is 404 again; the test app's Stripe screens then show nothing).
+- **To switch it all off:** delete the `FEATURE_STRIPE` and `API_PUBLIC_URL` lines from `deploy/stg/docker-compose.yml` and let staging redeploy (every Stripe URL is 404 again; the test app's Stripe screens then show nothing).
 
 ## Roll back
 
-- API: on the VPS `cd /opt/ayat-albayan-staging && flock -n .deploy.lock sh rollback.sh` (see «Two API copies + one worker» → «Roll back»).
-- Web: `mv web web.bad && mv web.old web` (Caddy serves the folder directly; no reload needed).
+- API, production: on the VPS `cd /opt/ayat-albayan-staging && flock -n .deploy.lock sh rollback.sh` (see «Two API copies + one worker» → «Roll back»). Staging: `cd /opt/ayat-albayan-stg && flock -n .deploy.lock sh rollback.sh`.
+- Web: in that folder, `mv web web.bad && mv web.old web` (Caddy serves the folder directly; no reload needed).
 - Caddy: restore the newest `/etc/caddy/Caddyfile.bak-*`, `caddy validate`, `systemctl reload caddy`.
 - Database: migrations are forward-only; restore from the Supabase dashboard backup if needed.
 
@@ -162,18 +191,19 @@ Local check against a real LiveKit: `docker run -d --name lk -p 7880:7880 -p 788
 
 A sign-in account with role teacher («معلم تجريبي», English name `Test Teacher (DEMO)`, fake phone +1 555 000 1001, Sun–Thu 16:00–22:00 Asia/Riyadh) and a DEMO guardian «ولي أمر تجريبي» with one active student «طالب تجريبي» assigned to it (student code generated by the database). Script: `tools/scripts/seed/seed-test-account.mjs`; workflow: `.github/workflows/staging-test-account.yml`. Idempotent; the log shows ids and counts only, never the email or the password.
 
-1. GitHub → Settings → Environments → **develop**: add the **secret `TEST_ACCOUNT_PASSWORD`** (at least 10 characters) and the **variable `TEST_TEACHER_EMAIL`** (or a secret with that name if the address should stay private). `SUPABASE_DB_PASSWORD` is already there. Optional: the secret `SUPABASE_SERVICE_ROLE_KEY` (the staging service-role key) makes the login go through the Supabase Admin API; without it the script writes `auth.users` + `auth.identities` with SQL (bcrypt, email confirmed), which signs in the same way.
+Since the 2026-10-31 split it runs on the NEW staging (Supabase `gqkqbxxgqttfbbqoqedf`, environment `staging`, `STG_*` names only); the script refuses production.
+
+1. GitHub → Settings → Environments → **staging**: add the **secret `STG_TEST_ACCOUNT_PASSWORD`** (at least 10 characters) and the **variable `STG_TEST_TEACHER_EMAIL`**. `STG_DATABASE_URL` is already there for the deploy. Optional: `STG_SUPABASE_SERVICE_ROLE_KEY` (also the deploy's) makes the login go through the Supabase Admin API; without it the script writes `auth.users` + `auth.identities` with SQL (bcrypt, email confirmed), which signs in the same way.
 2. Actions → **staging-test-account** → Run workflow → action **create**. Running it again keeps the same rows and resets the password to the current secret. It refuses an email that already belongs to an account it did not create.
-3. Sign in at **https://app.ayatalbayan.com** with that email and password: the teacher pages open and «طالب تجريبي» is under «طلابي».
+3. Sign in at **https://staging-app.ayatalbayan.com** with that email and password: the teacher pages open and «طالب تجريبي» is under «طلابي».
 4. To remove: run the workflow with action **remove** (the student, the guardian, the teacher row and the login). `pnpm clear:demo --apply --allow-remote-staging` also removes the rows but leaves the login. Lessons or reports created for the test student make either refuse (nothing is deleted); delete those first.
 
 Locally: `TEST_TEACHER_EMAIL=… TEST_ACCOUNT_PASSWORD=… pnpm seed:test-account` (`--remove` to delete), against the local Supabase from `pnpm env:local`.
 
-## Not on staging yet
+## Not on production yet
 
-- WhatsApp (Phase 4). The code is shipped; the credentials stay off staging until the owner runs the cut-over below.
+- WhatsApp (Phase 4). The code is shipped; the real credentials wait for the owner's cut-over below.
 - Android push credentials (FCM V1 via a Firebase project) and iOS (Apple Developer account). `EXPO_ACCESS_TOKEN` is already on the server; **add `EXPO_API_BASE=https://exp.host`** with the Phase 4 fixes release, or admin pushes stay on the server (recorded, never sent).
-- Production: a separate Supabase project and hosts, created at go-live.
 
 ## WhatsApp messaging (Phase 4)
 
@@ -331,26 +361,30 @@ It copies the **current non-empty** env values of the keys above into the table 
 
 Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and the Claude routines run from GitHub, not from a PC. Files: `.github/workflows/`. Guarded by `tools/scripts/ci-checks/workflows.test.mjs` (every secret below must stay in this table).
 
-> **THE REPOSITORY IS PUBLIC (the owner wants it private).** Strangers can open PRs and issues, and read every workflow and every log. So: no workflow uses `pull_request_target`; every workflow has `permissions: contents: read` at the top; deploys run only on push to `develop` (through `ci`) or by hand; secrets are only bound to jobs that name a protected environment; logs show key *names*, ids and counts, never values. **Make the repository private as soon as you can**, and set Settings → Actions → General → *Fork pull request workflows* → «Require approval for all outside collaborators». Repository-level secrets are readable by any workflow in the repo, so prefer creating them as **environment** secrets (table below) and restricting each environment's *Deployment branches* to `develop`.
+> **THE REPOSITORY IS PUBLIC (the owner wants it private).** Strangers can open PRs and issues, and read every workflow and every log. So: no workflow uses `pull_request_target`; every workflow has `permissions: contents: read` at the top; the staging deploy runs only on push to `develop` (through `ci`) or by hand, production only by hand; secrets are only bound to jobs that name a protected environment; logs show key *names*, ids and counts, never values. **Make the repository private as soon as you can**, and set Settings → Actions → General → *Fork pull request workflows* → «Require approval for all outside collaborators». Repository-level secrets are readable by any workflow in the repo, so prefer creating them as **environment** secrets (table below) and restricting each environment's *Deployment branches* to `develop`.
 
 ### Workflows
 
 | Workflow | Trigger | What it does | Environment | If a stranger opens a PR |
 |---|---|---|---|---|
 | `ci` | push (not one that only touches `refactor/guards/`), PR, manual | lint, typecheck, unit, guards, e2e; on a green `develop` push, job `baselines` commits the knip/queries entries that are fixed («Guard baselines») | none | runs without secrets (forks get none); `baselines` never runs on a PR |
-| `deploy-staging` | `ci` green on a push to `develop`; manual | migrations (via `db-migrate`), env merge, API image, web swap, health check, auto rollback, release tag («Release tags») | `develop` (+ `staging-db` for the migration job) | never triggered by a PR |
-| `db-migrate` | PR touching migrations; manual `apply` (+ `include_all`); called by `deploy-staging` | PR: read-only name/SQL check, no secrets (no database dry-run on PRs: a PR run uses the PR's own workflow and lockfile). Apply: `db push` to staging; manual runs may tick `include_all` | apply: `staging-db` | check only, no secrets |
-| `mobile` | manual, on `develop`; `ota-update` to `preview` started by `deploy-staging` (see «Automatic OTA») | `build-android-apk` (EAS preview), `ota-update` (`eas update`), or `both`; OTA is refused if native deps/plugins/app.json native fields changed since the last build unless `force_ota` (images in `assets/<folder>/` and pure-JS packages such as Google fonts ship by OTA; check `node tools/scripts/ci-checks/native-changes.mjs <last OTA commit>` before forcing); a release tag per shipped APK / OTA | `mobile` | never triggered by a PR |
+| `deploy-production` | **manual only** (the owner's «go»), on `develop`, optional `sha` | PRODUCTION: migrations (via `db-migrate`, target `production`), env merge, API image, web swap, health check, auto rollback, OTA to `preview`, release tag («Release tags») | `develop` (+ `staging-db` for the migration job) | never triggered by a PR |
+| `deploy-staging` | `ci` green on a push to `develop`; manual (`env_only`, `seed_demo`) | STAGING («Staging» above): migrations (target `staging`, every run), env merge, API image, web swap, host Caddy blocks, health check, auth config push, DEMO seed by hand, OTA to `staging` | `staging` | never triggered by a PR |
+| `db-migrate` | PR touching migrations; manual `apply` with `target` (+ `include_all`); called by both deploys | PR: read-only name/SQL check, no secrets (no database dry-run on PRs: a PR run uses the PR's own workflow and lockfile). Apply: `db push` to the target; manual runs may tick `include_all` (production) | apply (production): `staging-db`; apply-staging: `staging` | check only, no secrets |
+| `mobile` | manual, on `develop`; `ota-update` to `preview` started by `deploy-production`, profile `staging` by `deploy-staging` (see «Automatic OTA») | `build-android-apk` (EAS profile `preview`, `stripe-test` or `staging`), `ota-update` (`eas update`), or `both`; OTA is refused if native deps/plugins/app.json native fields changed since the last build unless `force_ota` (images in `assets/<folder>/` and pure-JS packages such as Google fonts ship by OTA; check `node tools/scripts/ci-checks/native-changes.mjs <last OTA commit>` before forcing); a release tag per shipped APK / OTA | `mobile` | never triggered by a PR |
 | `claude-tasks` | manual with a `prompt`; `@claude` comment | Claude Code opens a PR into `develop` | none (no deploy secrets) | ignored: needs the owner as actor, as author of the issue/PR and of every comment in the thread |
-| `roster-report`, `staging-test-account` | manual | read-only roster CSV; test teacher + student on staging | `develop` | never triggered by a PR |
+| `roster-report` | manual | read-only roster CSV of PRODUCTION (legacy «staging» names) | `develop` | never triggered by a PR |
+| `staging-test-account` | manual | test teacher + student on STAGING | `staging` | never triggered by a PR |
 
-Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. Since 2026-10-23 an automatic deploy **skips** the migrate job (no approval click) only when its `plan` job proves that nothing under `packages/db/supabase/migrations/` changed since the last deploy that pushed migrations (`tools/scripts/env/deploy-baseline.mjs` reads the run titles `deploy-staging <sha>`); if that deploy cannot be found or anything fails, migrate runs and waits for review as before. Every apply that does run pauses at «waiting for review»; approve it after reading the diff.
+`claude-tasks` keeps its behaviour: it holds no deploy, database or Supabase secret and cannot start a deploy; its PRs reach staging only once merged (and ci green), production only by the owner's `deploy-production`.
 
-**Automatic OTA** (2026-10-23): after a green automatic or manual (non-`env_only`) deploy, `deploy-staging` starts `mobile` (`ota-update`, `preview`) when `apps/mobile/**` or `packages/shared/**` changed since the last green preview OTA (else the last deploy) and `native-changes.mjs <OTA_BASELINE_SHA>` finds no native change (repository variable `OTA_BASELINE_SHA`, default `c140b4cc` = the installed APK; update it after each new APK). Never an APK, iOS or production; `mobile` keeps its own native-change refusal. Manual runs apply only from `develop` (`deploy-staging` also refuses a manual run on any other branch). Untick `migrate` on `deploy-staging` to deploy code only.
+Production migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. A production deploy **skips** the migrate job (no approval click) only when its `plan` job proves that nothing under `packages/db/supabase/migrations/` changed since the last production deploy that pushed migrations (`tools/scripts/env/deploy-baseline.mjs` reads the run titles `deploy-production <sha>`; the older `deploy-staging <sha>` runs are never read, the file now deploys staging); if that deploy cannot be found or anything fails, migrate runs and waits for review as before. Every production apply that does run pauses at «waiting for review»; the owner approves it after reading the diff (agents never do: the earlier «approve staging-db myself» rule now means production and is retired). Staging (`apply-staging`) applies at once, no reviewer: DEMO data only.
+
+**Automatic OTA** (2026-10-23): after a green (non-`env_only`) production deploy, `deploy-production` starts `mobile` (`ota-update`, `preview`) when `apps/mobile/**` or `packages/shared/**` changed since the last green preview OTA (else the last deploy) and `native-changes.mjs <OTA_BASELINE_SHA>` finds no native change (repository variable `OTA_BASELINE_SHA`, default `c140b4cc` = the installed APK; update it after each new APK). Never an APK or iOS; `mobile` keeps its own native-change refusal. A manual `ota-update` to `preview` reaches the production phones: run it only with or after a production deploy. Staging's own OTA (`deploy-staging` → profile `staging`, channel `staging`) waits for a staging APK (repository variable `STG_OTA_BASELINE_SHA`) and follows the same rules against the last green `mobile ota-update staging`. Manual runs apply only from `develop` (both deploys refuse a manual run on any other branch). Untick `migrate` on `deploy-production` to deploy code only.
 
 **e2e on PRs** (2026-10-27): a pull request runs only the e2e specs its change can reach, plus the «single line» smoke set (the six journeys). `tools/scripts/ci-checks/e2e-areas/select.mjs` follows each changed file through the import graph (web, API, `packages/shared`, `packages/client-core`, e2e; changed `ar.json`/`en.json` keys to the files that read them) to the page routes and API modules that use it (a layout route counts with every page it renders; an edited barrel with everyone importing from it), and `e2e/areas.json` names the specs that drive those; the shard count follows their measured time. **Full suite** when a change is not understood: migrations and `packages/db`, any `package.json` or the lockfile, `.github`, e2e config and `e2e/support`, `apps/api/src/common`, `config`, `main.ts`, `app.module.ts`, web shell/layout routes, `apps/web/src/lib`, auth (web `people/auth`, API `people/sign-in`), anything the graph reaches that no area lists, a UI string nobody is found to read, or any error. Pushes to `develop`/`main` always run every spec on both projects. The `guards` job fails when a spec is in no area and not in `developOnly` (the SQL-only specs, which run whenever `packages/db` changes), or when an area path matches no file. A new page or API module: add it to an area of `e2e/areas.json`, or every PR that reaches it runs the full suite.
 
-**`include_all`** (manual `db-migrate` run only, default off): adds `--include-all` to `supabase db push`. Staging has migration 212 applied while 206 and 213 are pending, so a plain push fails «out of order». Run `db-migrate` once with `apply` and `include_all` ticked, then leave it off. The automatic deploy never forces order.
+**`include_all`** (manual `db-migrate` run with target `production` only, default off): adds `--include-all` to `supabase db push`. Production had migration 212 applied while 206 and 213 are pending, so a plain push fails «out of order». Run `db-migrate` once with `apply` and `include_all` ticked, then leave it off. The automatic deploy never forces order.
 
 ### Release tags
 
@@ -358,9 +392,9 @@ Owner request 2026-10-30: «after each app release make a release tag for it». 
 
 | Release | Tag (on the shipped commit) | Made after |
 |---|---|---|
-| Web + API, the live app | `v<YYYY.MM.DD>-<n>` (UTC day, n = 1 + that day's highest); the repository's «Latest» release | a green `deploy` job of `deploy-staging`, never `env_only` |
-| Android APK | `mobile-v<apps/mobile/app.json version>-b<run number>` (profile `stripe-test`: `mobile-stripe-test-v…`); the notes link the EAS build page | a green `build` job of `mobile` |
-| OTA | `ota-<channel>-<YYYY.MM.DD>-<n>` (`preview`, `development` or `stripe-test`) | a green `ota` job of `mobile` (the automatic OTA after a deploy too) |
+| Web + API, the live app (production) | `v<YYYY.MM.DD>-<n>` (UTC day, n = 1 + that day's highest); the repository's «Latest» release | a green `deploy` job of `deploy-production`, never `env_only` (staging makes no app tag) |
+| Android APK | `mobile-v<apps/mobile/app.json version>-b<run number>` (profile `stripe-test` / `staging`: `mobile-stripe-test-v…` / `mobile-staging-v…`); the notes link the EAS build page | a green `build` job of `mobile` |
+| OTA | `ota-<channel>-<YYYY.MM.DD>-<n>` (`preview`, `development`, `stripe-test` or `staging`) | a green `ota` job of `mobile` (the automatic OTA after a deploy too) |
 
 The notes are one line on what shipped and the run link, then GitHub's generated notes (merged PRs) since the previous tag of the same family. **Skipped** when the commit already carries a tag of that family (a re-run, or a redeploy of the same commit), and never made after a failed, rolled-back or `env_only` deploy. The two `release` jobs and ci's `baselines` job (below) are the only jobs besides `claude-tasks` with `contents: write`; they bind no environment and read no secret. A tag that cannot be made only warns (`::warning::`, and the job is `continue-on-error`), so the release and its run stay green (`deploy-baseline.mjs` reads green runs). Guarded by `workflows.test.mjs` and `workflows-fast.test.mjs`. A wrong one: `gh release delete <tag> --cleanup-tag`.
 
@@ -370,47 +404,67 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 
 ### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
 
-**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer).
+**Environments:** `develop` (production's, exists; Deployment branches = `develop`; recommended: required reviewer = you), `staging-db` (production migrations: **required reviewer = you**; branches `develop`), `staging` (the new staging: branches `develop`, **no** reviewer), `mobile` (branches `develop`; optional reviewer).
+
+**Production** (legacy names; the `STAGING_*` secrets hold PRODUCTION values):
 
 | Secret | Where to get it | Used by |
 |---|---|---|
-| `VPS_SSH_PRIVATE_KEY` (or `SSH_PRIVATE_KEY`) | A deploy-only key; public half in `authorized_keys` of the deploy user | `deploy-staging` |
-| `VPS_HOST`, `VPS_USER` | The VPS address and login (variables `SSH_HOST`, `SSH_USER` win if set) | `deploy-staging` |
-| `SSH_KNOWN_HOSTS` | **Recommended, not yet created:** `ssh-keyscan -t ed25519 <host>` from your PC, paste the line. Without it the run warns and uses `ssh-keyscan` | `deploy-staging` |
-| `STAGING_SUPABASE_URL` | Supabase → Project Settings → API | `deploy-staging`, `staging-test-account` |
-| `STAGING_SUPABASE_ANON_KEY` (or `VITE_SUPABASE_ANON_KEY`) | Same page, `anon` key (public by design) | `deploy-staging` (web build) |
-| `STAGING_SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`) | Same page, `service_role` | `deploy-staging` (server .env), `staging-test-account` |
-| `STAGING_DATABASE_URL` | Supabase → Connect → **Session pooler** URI (GitHub runners have no IPv6, so not the `db.` host) | `db-migrate` |
-| `STAGING_DB_PASSWORD` (or `SUPABASE_DB_PASSWORD`) | Supabase → Database settings | `db-migrate` (fallback path), `roster-report`, `staging-test-account` |
-| `SUPABASE_ACCESS_TOKEN` | **Not created yet, optional:** supabase.com → Account → Access Tokens. Only needed if you do not set `STAGING_DATABASE_URL` | `db-migrate` |
-| `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET` | Optional; empty keeps the server's value | `deploy-staging` |
-| `LOGIN_CODE_PEPPER` | `openssl rand -base64 48` (>= 32 characters). The WhatsApp sign-in code pepper (docs/30 §3); optional, empty keeps the server's value | `deploy-staging` (server .env) |
-| `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` | Meta app; optional, empty keeps the server's value | `deploy-staging` |
-| `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | LiveKit project; optional | `deploy-staging` |
-| `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN` | Optional server keys | `deploy-staging` |
+| `VPS_SSH_PRIVATE_KEY` (or `SSH_PRIVATE_KEY`) | A deploy-only key; public half in `authorized_keys` of the deploy user | `deploy-production` |
+| `VPS_HOST`, `VPS_USER` | The VPS address and login (variables `SSH_HOST`, `SSH_USER` win if set) | `deploy-production` |
+| `SSH_KNOWN_HOSTS` | **Recommended, not yet created:** `ssh-keyscan -t ed25519 <host>` from your PC, paste the line. Without it the run warns and uses `ssh-keyscan` | `deploy-production` |
+| `STAGING_SUPABASE_URL` | Supabase → Project Settings → API (project `knxf…`) | `deploy-production` |
+| `STAGING_SUPABASE_ANON_KEY` (or `VITE_SUPABASE_ANON_KEY`) | Same page, `anon` key (public by design) | `deploy-production` (web build) |
+| `STAGING_SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`) | Same page, `service_role` | `deploy-production` (server .env) |
+| `STAGING_DATABASE_URL` | Supabase → Connect → **Session pooler** URI (GitHub runners have no IPv6, so not the `db.` host) | `db-migrate` (production) |
+| `STAGING_DB_PASSWORD` (or `SUPABASE_DB_PASSWORD`) | Supabase → Database settings | `db-migrate` (fallback path), `roster-report` |
+| `SUPABASE_ACCESS_TOKEN` | **Optional:** supabase.com → Account → Access Tokens. Only needed if you do not set `STAGING_DATABASE_URL` | `db-migrate` (production) |
+| `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET` | Optional; empty keeps the server's value | `deploy-production` |
+| `LOGIN_CODE_PEPPER` | `openssl rand -base64 48` (>= 32 characters). The WhatsApp sign-in code pepper (docs/30 §3); optional, empty keeps the server's value | `deploy-production` (server .env) |
+| `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` | Meta app; optional, empty keeps the server's value | `deploy-production` |
+| `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | LiveKit project; optional | `deploy-production` |
+| `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN` | Optional server keys | `deploy-production` |
 | `EXPO_TOKEN` | expo.dev → Account → Access tokens | `mobile` |
-| `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
+| `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA, profile `preview` only) |
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees) |
-| `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
 
-Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `OTA_BASELINE_SHA`. The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
+**Staging** (environment `staging` only; the `STG_` prefix exists at no other level, so a missing one is empty, never production's):
 
-Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
+| Secret | Where to get it | Used by |
+|---|---|---|
+| `STG_SSH_PRIVATE_KEY` | A new deploy-only key (`ssh-keygen -t ed25519`); public half in `/root/.ssh/authorized_keys` on the VPS. Without it every automatic run is skipped with a warning | `deploy-staging` |
+| `STG_SSH_KNOWN_HOSTS` | Recommended: `ssh-keyscan -t ed25519 148.230.116.195` | `deploy-staging` |
+| `STG_SUPABASE_ANON_KEY` | Supabase project `gqkqbxxgqttfbbqoqedf` → Project Settings → API, `anon` key | `deploy-staging` (web build) |
+| `STG_SUPABASE_SERVICE_ROLE_KEY` | Same page, `service_role` | `deploy-staging` (server .env), `staging-test-account` |
+| `STG_DATABASE_URL` | The same project → Connect → **Session pooler** URI with its database password (reset the password in the dashboard first; user `postgres.gqkqbxxgqttfbbqoqedf`, anything else is refused) | `db-migrate` (apply-staging), `deploy-staging` (seed), `staging-test-account` |
+| `STG_FEEDBACK_TOKEN_SECRET`, `STG_LOGIN_CODE_PEPPER` | New random values (`openssl rand -base64 48`), never production's | `deploy-staging` (server .env) |
+| `STG_SUPABASE_JWT_SECRET` | Optional (the project's legacy JWT secret) | `deploy-staging` (server .env) |
+| `STG_SUPABASE_ACCESS_TOKEN` | Optional: a Supabase access token for the auth config push. **Account-wide (reaches production too)**: only here, or leave it out and set the auth URLs, sign-up off and the custom access token hook by hand | `deploy-staging` |
+| `STG_TEST_ACCOUNT_PASSWORD` | Your choice, at least 10 characters (see «Test teacher on staging») | `staging-test-account` |
 
-### Owner checklist (before and after merging the Actions PR)
+Variables (all optional, defaults in the workflows): production `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR` (must stay `/opt/ayat-albayan-staging`), `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `OTA_BASELINE_SHA`; staging `STG_TEST_TEACHER_EMAIL` (environment `staging`) and the repository variable `STG_OTA_BASELINE_SHA` (the commit of the staging APK; unset = no staging OTA); `RUN_E2E`. The staging workflow reads no other variable: a repository variable could hold a production value. The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 
-Before merging:
+Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them. Recommended: move the repository-level production secrets into the environments `develop` / `staging-db` and delete the repository copies, so no future job can pick them up by accident.
 
-1. Settings → Environments: create **`staging-db`** (required reviewer = you; deployment branches = `develop`) and **`mobile`** (deployment branches = `develop`). Without them the jobs wait or fail.
-2. Apply the pending migrations **206 and 213** once: Actions → `db-migrate` → Run workflow on `develop` with `apply` and `include_all` ticked, approve in `staging-db`.
-3. Compare `/opt/ayat-albayan-staging/.env` with the secrets that will overwrite it (`STAGING_SUPABASE_URL`, `STAGING_SUPABASE_SERVICE_ROLE_KEY`, `LIVEKIT_API_KEY`/`LIVEKIT_API_SECRET`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`): a secret that is set replaces the server's value, an empty one keeps it. Also check `WA_PHONE_NUMBER_ID` on the server (no workflow touches it) and «إرسال الرسائل» in `/admin/settings`.
-4. Create the secret **`SSH_KNOWN_HOSTS`** (`ssh-keyscan -t ed25519 <host>`).
+### Owner checklist: the production / staging split (2026-10-31)
 
-After merging:
+Before or right after merging (the merge itself deploys nothing to production, and staging stays skipped until step 1):
 
-5. Settings → Branches: protect **`develop`** and **`main`** (PR required, `ci` must pass).
-6. Settings → Actions → General → Fork pull request workflows: «Require approval for all outside collaborators».
-7. Delete the unused repository secrets `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`.
+1. Settings → Environments → **New environment `staging`**: Deployment branches = `develop`, no reviewer. Add the secrets of the «Staging» table (at least `STG_SSH_PRIVATE_KEY`, `STG_SUPABASE_ANON_KEY`, `STG_SUPABASE_SERVICE_ROLE_KEY`, `STG_DATABASE_URL`; the new random `STG_FEEDBACK_TOKEN_SECRET` and `STG_LOGIN_CODE_PEPPER`). Never production's values.
+2. On the VPS, once: append the public half of the new deploy key to `/root/.ssh/authorized_keys`, check `free -m`, `df -h` (a second image is about 1.5 GB) and that port 3120 is free (`ss -ltn | grep 3120`). The workflow creates `/opt/ayat-albayan-stg` and the two Caddy site blocks itself.
+3. Settings → Environments → **`develop`** (production): add yourself as **required reviewer** (optional but recommended now that nothing deploys it automatically), and keep yourself on **`staging-db`**. Agents and cloud routines never start `deploy-production` or approve `staging-db`.
+4. Supabase `gqkqbxxgqttfbbqoqedf`: reset the database password and build `STG_DATABASE_URL` from Connect → Session pooler. Either add `STG_SUPABASE_ACCESS_TOKEN` (the deploy pushes `[remotes.stg]`), or set by hand: Auth → URL configuration (site `https://staging-app.ayatalbayan.com`, redirects `/`, `/set-password`, `ayatalbayan://`), sign-ups off, Auth → Hooks → Custom access token → `public.custom_access_token_hook` (after the first migration run). Free plan: the project pauses after 7 days without activity; 500 MB database.
+5. EAS (expo.dev → project → Environment variables → `development`): `EXPO_PUBLIC_SUPABASE_ANON_KEY` = the staging anon key (and, to match eas.json, `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_WEB_ORIGIN` = the staging values). `EXPO_TOKEN` already lives in the environment `mobile`.
+
+After the first green staging deploy:
+
+6. Check https://staging-api.ayatalbayan.com/health and https://staging-app.ayatalbayan.com. Create the first admin: Supabase → Authentication → Add user (email confirmed), then `insert into public.profiles (id, role, full_name) values ('<user id>', 'admin', '<name>');` in the SQL editor of the staging project.
+7. DEMO data: Actions → `deploy-staging` → Run workflow with `seed_demo`; the test teacher: Actions → `staging-test-account` → `create` (`STG_TEST_TEACHER_EMAIL`, `STG_TEST_ACCOUNT_PASSWORD`).
+8. WhatsApp on staging: the Kapso sandbox only (Meta test credentials otherwise), set in `/admin/settings` on staging; add `WA_ALLOWED_RECIPIENTS=<test numbers>` by hand in `/opt/ayat-albayan-stg/.env` and run `deploy-staging` with `env_only`. Never the real numbers. Leave Google sync off.
+9. Mobile: Actions → `mobile` → `build-android-apk` with profile `staging` (and once more with `stripe-test`: it now points at staging; enter the Stripe sandbox keys again in the test app). Then set the repository variable `STG_OTA_BASELINE_SHA` to the staging build's commit.
+10. Production «go»: Actions → `deploy-production` on `develop`; approve `staging-db` if migrations changed. That run also removes `FEATURE_STRIPE` from production and is now the only one that OTAs `preview`.
+
+Still open from before: protect **`develop`** and **`main`** (PR required, `ci` must pass); Settings → Actions → General → Fork pull request workflows: «Require approval for all outside collaborators»; delete the unused repository secrets `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`.
 
 Plan note: a **private** repository on the GitHub **Free** plan loses environment protection (required reviewers and deployment-branch rules), so the `staging-db` gate would no longer pause anything. Keep the repository public, or move to a paid plan, before relying on it.
 
@@ -418,16 +472,17 @@ Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` 
 
 ### Roll back
 
-- **Staging deploy:** automatic. If a container never gets healthy or `/health` fails after the swap, the workflow restores `src.old`, the previous compose files and (when it was swapped) `web.old` (kept as `src.bad` / `web.bad`) and rolls again. By hand see «Roll back» above.
-- **A good deploy you do not want:** revert the commit on `develop`; the next deploy replaces it.
+- **Production deploy:** automatic. If a container never gets healthy or `/health` fails after the swap, the workflow restores `src.old`, the previous compose files and (when it was swapped) `web.old` (kept as `src.bad` / `web.bad`) and rolls again. By hand see «Roll back» above.
+- **Staging deploy:** a failed roll runs `deploy/stg/rollback.sh` in the same command (not after a failed public health check: fix forward, or roll back by hand, «Staging» above).
+- **A good deploy you do not want:** revert the commit on `develop`; staging redeploys on its own, production on the next `deploy-production`.
 - **Migrations:** forward-only, no automatic undo. Write a new migration that reverses the change, or restore the Supabase backup (dashboard → Database → Backups).
 - **OTA:** run `mobile` with `ota-update` on a `develop` that is reverted, or on expo.dev → Updates → republish an older update to the branch.
-- **Server `.env`:** `deploy-staging` leaves `.env.bak-*` next to it.
+- **Server `.env`:** both deploys leave `.env.bak-*` next to it.
 
 ### Deliberately NOT automated
 
-- `WA_PHONE_NUMBER_ID`, `WA_CHAT_*`, `WA_ALLOWED_RECIPIENTS` and `WA_TEMPLATE_SYNC`: no workflow sets them (`tools/scripts/ci-checks/workflows.test.mjs` guards `WA_PHONE_NUMBER_ID`, `WA_CHAT_PHONE_NUMBER_ID` and `WA_ALLOWED_RECIPIENTS`). Sending is switched on only in `/admin/settings` (cut-over runbook); a repository variable or server env `MESSAGING_ENABLED` has no effect any more.
-- The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to the label `com.docker.compose.project=ayat-albayan-staging` (no `docker builder prune`: the build cache cannot be limited to one project).
-- Production: no production deploy, import (docs/06) or `production` EAS profile.
+- `WA_PHONE_NUMBER_ID`, `WA_CHAT_*`, `WA_ALLOWED_RECIPIENTS` and `WA_TEMPLATE_SYNC`: no workflow sets them (`tools/scripts/ci-checks/workflows.test.mjs` guards `WA_PHONE_NUMBER_ID`, `WA_CHAT_PHONE_NUMBER_ID` and `WA_ALLOWED_RECIPIENTS`; staging's compose file pins `WA_TEMPLATE_SYNC=false`). Sending is switched on only in `/admin/settings` (cut-over runbook); a repository variable or server env `MESSAGING_ENABLED` has no effect any more.
+- The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to one compose project's label (`ayat-albayan-staging` or `ayat-albayan-stg`; no `docker builder prune`: the build cache cannot be limited to one project).
+- Starting a production deploy: only the owner, by hand. No production import (docs/06) or `production` EAS profile build.
 - iOS / Apple builds, signing and store submission.
 - Creating, rotating or reading secrets.

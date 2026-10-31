@@ -1,6 +1,6 @@
-// A scratch /opt/ayat-albayan-staging for roll.test.mjs: deploy/staging's scripts with a fake `docker` and `curl`
-// (and a `sleep` that returns at once) that log every call and succeed (a container is «up» once `up -d` named it;
-// `inspect` reports healthy).
+// A scratch /opt/ayat-albayan-staging for roll.test.mjs (or /opt/ayat-albayan-stg: `dir` deploy/stg, `project`
+// ayat-albayan-stg): the scripts with a fake `docker` and `curl` (and a `sleep` that returns at once) that log every
+// call and succeed (a container is «up» once `up -d` named it; `inspect` reports healthy).
 import { execFileSync } from 'node:child_process';
 import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -9,9 +9,8 @@ import { fileURLToPath } from 'node:url';
 
 export const root = (p) => fileURLToPath(new URL(`../../../${p}`, import.meta.url));
 export const ROLE_FILE = 'src/apps/api/src/config/role/app-role.ts';
-const P = 'ayat-albayan-staging';
 
-const DOCKER = `#!/bin/sh
+const docker = (P) => `#!/bin/sh
 echo "docker $*" >> "$FAKE/log"
 printf '%s\\n' "$FAKE_FAIL" | while IFS= read -r bad; do [ -z "$bad" ] || case "$*" in *"$bad"*) exit 1 ;; esac; done || exit 1
 last=""; for a in "$@"; do last=$a; done
@@ -21,20 +20,22 @@ case "$*" in
   "compose -p ${P} ps -q "*) [ ! -f "$FAKE/up-$last" ] || echo "id-$last" ;;
   "compose -p ${P} up -d --no-deps"*) touch "$FAKE/up-$last" ;;
   "compose -p ${P} up -d") touch "$FAKE/up-ayat-api" ;;
+  "compose -p ${P} up -d --remove-orphans"|"compose -p ${P} up -d --force-recreate --remove-orphans")
+    touch "$FAKE/up-ayat-api" "$FAKE/up-ayat-pdf" ;;
   "inspect "*) echo healthy ;;
 esac
 exit 0
 `;
 
 /**
- * Runs `script` (roll.sh or rollback.sh) in a scratch folder. `up`: services already running; `files`: extra
- * files (path → text); `fail`: substrings of docker calls that fail. Returns the exit code, output, call log
- * and which files exist afterwards.
+ * Runs `script` (roll.sh or rollback.sh of `from`, default deploy/staging) in a scratch folder. `up`: services
+ * already running; `files`: extra files (path → text); `fail`: substrings of docker calls that fail. Returns the
+ * exit code, output, call log and which files exist afterwards.
  */
-export function run(script, { args = [], up = [], files = {}, fail = [], roles = true } = {}) {
+export function run(script, { args = [], up = [], files = {}, fail = [], roles = true, from = 'deploy/staging', project = 'ayat-albayan-staging' } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'roll-'));
   try {
-    for (const f of ['roll.sh', 'rollback.sh']) copyFileSync(root(`deploy/staging/${f}`), join(dir, f));
+    for (const f of ['roll.sh', 'rollback.sh']) copyFileSync(root(`${from}/${f}`), join(dir, f));
     mkdirSync(join(dir, 'lb'));
     writeFileSync(join(dir, 'lb/Caddyfile'), ':8080 {}\n');
     if (roles) {
@@ -48,7 +49,7 @@ export function run(script, { args = [], up = [], files = {}, fail = [], roles =
     const fake = join(dir, '.fake');
     mkdirSync(join(fake, 'bin'), { recursive: true });
     for (const s of up) writeFileSync(join(fake, `up-${s}`), '');
-    writeFileSync(join(fake, 'bin/docker'), DOCKER);
+    writeFileSync(join(fake, 'bin/docker'), docker(project));
     writeFileSync(join(fake, 'bin/curl'), '#!/bin/sh\necho "curl $*" >> "$FAKE/log"\n');
     // healthy()'s 90 waits of 2 s, at once: a container that never gets healthy fails in a moment, not 3 minutes.
     writeFileSync(join(fake, 'bin/sleep'), '#!/bin/sh\n');

@@ -12,19 +12,22 @@ export const DEMO_DATA = {
   FAMILIES: [...FAMILIES, { phone: TEST_FAMILY.phone, students: [TEST_FAMILY.student] }],
 };
 
-/** Hosted STAGING project (same pooler/user as tools/migrate/src/config.ts). */
-export const STAGING_REF = 'knxfwiimjcifwckhwbim';
-const STAGING_POOLER = 'aws-1-eu-central-1.pooler.supabase.com';
+/** The hosted STAGING project since the 2026-10-31 split (DEMO data only; docs/09). */
+export const STAGING_REF = 'gqkqbxxgqttfbbqoqedf';
+/** PRODUCTION (the live app, real data; «staging» before the split): always refused. */
+export const PRODUCTION_REF = 'knxfwiimjcifwckhwbim';
+// Any Frankfurt pooler host (aws-0-/aws-1-): the pooler user `postgres.<ref>` names the project.
+const POOLER = /^aws-\d+-eu-central-1\.pooler\.supabase\.com$/;
 const LOCAL_HOSTS = ['127.0.0.1', 'localhost', '[::1]'];
 
 /** seed:demo + clear:demo guard: local DB, or STAGING with --allow-remote-staging. Never prod. */
 export function allowedTarget(url, argv) {
-  if (!URL.canParse(url)) return false;
+  if (!URL.canParse(url) || url.includes(PRODUCTION_REF)) return false;
   const u = new URL(url);
   if (LOCAL_HOSTS.includes(u.hostname)) return true;
   const user = decodeURIComponent(u.username);
   const isStaging =
-    (u.hostname === STAGING_POOLER && user === `postgres.${STAGING_REF}`) ||
+    (POOLER.test(u.hostname) && user === `postgres.${STAGING_REF}`) ||
     u.hostname === `db.${STAGING_REF}.supabase.co`;
   return isStaging && argv.includes('--allow-remote-staging');
 }
