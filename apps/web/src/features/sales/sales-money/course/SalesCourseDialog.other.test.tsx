@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next } from '@/features/teaching/booking/wizard-fixture';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { COURSE_STUDENT_ID, COURSE_VIEW, RENEWAL_VIEW, routeCourseSend, routeRenewal } from './course-fixture';

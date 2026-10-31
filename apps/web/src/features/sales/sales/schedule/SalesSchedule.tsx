@@ -7,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { useNow } from '@/lib/time/use-now';
-import { zonedParts } from '@/features/teaching/schedule/tz';
+import { zonedParts } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { salesScheduleQuery, salesTeachersQuery } from '../academy-api';
 import { SalesDayBoard } from './SalesDayBoard';

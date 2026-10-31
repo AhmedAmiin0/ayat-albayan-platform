@@ -11,7 +11,7 @@ import { t } from '@/lib/i18n/i18n';
 import { ASSISTANTS_KEY, assistantsQuery, broughtByQuery, setBroughtBy } from '../api';
 import { broughtAtOf } from './brought-at';
 import { errorText } from '../status';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 
 const B = t.assistants.brought;
 

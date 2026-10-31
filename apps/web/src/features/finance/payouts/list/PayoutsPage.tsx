@@ -11,7 +11,7 @@ import { downloadCsv } from '@/features/reporting/exports/api';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import {
   approvePayout,

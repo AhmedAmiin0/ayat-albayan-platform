@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
 import { usePhone } from '@/components/ui/layout/use-narrow';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { sendText } from '../../api/api';

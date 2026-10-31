@@ -1,5 +1,5 @@
 import { lessonWhenAt, type TrialDateRow } from '@ab/shared';
-import { dateLabel, zonedParts } from '@/features/teaching/schedule/tz';
+import { dateLabel, zonedParts } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import type { Clock } from '@/lib/clock';
 

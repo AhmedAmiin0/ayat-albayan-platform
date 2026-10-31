@@ -3,7 +3,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import type { ServerListPatch, ServerListSearch } from '@/lib/list/server-list-search';

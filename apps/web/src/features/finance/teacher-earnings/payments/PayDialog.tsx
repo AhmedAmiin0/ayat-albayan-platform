@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { PaymentFields, type PaymentForm } from '@/features/finance/payments/record/PaymentFields';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
-import { apiErrorText, moneyText } from '@/features/finance/subscriptions/format';
+import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { usePayTeacher } from './use-pay-teacher';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';

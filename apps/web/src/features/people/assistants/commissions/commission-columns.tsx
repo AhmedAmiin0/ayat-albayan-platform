@@ -5,7 +5,7 @@ import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import type { AssistantCommissionView } from '../api';

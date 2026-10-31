@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Select } from '@/components/ui/form/select';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { changeLeadStatus, type InboxLead } from '../api/api';
 

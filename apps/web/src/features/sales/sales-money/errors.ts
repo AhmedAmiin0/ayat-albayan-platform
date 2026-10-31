@@ -1,4 +1,4 @@
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { paymentLinkErrorText } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 

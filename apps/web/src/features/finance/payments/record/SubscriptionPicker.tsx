@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/finance/subscriptions/api';
-import { moneyText, packageName } from '@/features/finance/subscriptions/format';
+import { moneyText, packageName } from '@/features/finance/subscriptions';
 import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
 
