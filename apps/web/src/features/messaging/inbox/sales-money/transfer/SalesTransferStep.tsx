@@ -3,13 +3,13 @@ import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { CancelPackageDialog } from '@/features/finance/subscriptions';
+import { CancelPackageDialog, todayIn } from '@/features/finance/subscriptions';
 import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions/format';
 import { ShortfallNote } from '@/features/finance/payments';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import { cancelSalesSubscription, SALES_MONEY_KEY, type Bind } from '../api';
-import { salesErrorText } from '../errors';
+import { cancelSalesSubscription, SALES_MONEY_KEY, type Bind } from '@/features/messaging/inbox/sales-money/api';
+import { salesErrorText } from '@/features/messaging/inbox/sales-money/errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
 import { attachmentsFor, type ReceiptChoice } from './receipt';
@@ -29,10 +29,9 @@ type Props = {
   bindOf?: ((studentId: string) => Bind) | undefined;
 };
 
-const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
-const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
+const formFor = (s: SalesMoneySubscriptionView | undefined, day: string): TransferForm => ({
   amount: s ? String(s.due || s.price) : '',
-  day: today(),
+  day,
   note: '',
 });
 
@@ -46,7 +45,10 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
   const maxBytes = useUploadMaxBytes();
   const [pickedId, setPickedId] = useState(() => fixed?.id ?? (packages.length === 1 ? (packages[0]?.id ?? '') : ''));
   const sub = fixed ?? packages.find((p) => p.id === pickedId);
-  const [form, setForm] = useState<TransferForm>(() => formFor(sub));
+  // Riyadh's day when the dialog opened, held (as SalesSubscribeStep): the default day and the
+  // date field's max. A dialog left open past midnight keeps it until it is opened again.
+  const [today] = useState(() => todayIn('Asia/Riyadh'));
+  const [form, setForm] = useState<TransferForm>(() => formFor(sub, today));
   const [chosen, setChosen] = useState<ReceiptChoice[]>([]);
   const [amountError, setAmountError] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
@@ -56,7 +58,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
 
   const pick = (id: string) => {
     setPickedId(id);
-    setForm(formFor(packages.find((p) => p.id === id)));
+    setForm(formFor(packages.find((p) => p.id === id), today));
   };
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
@@ -100,7 +102,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
                 </Button>
               )}
               <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} bind={bind} />
-              <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
+              <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today} amountError={amountError} />
               <ShortfallNote amount={form.amount} due={sub.due} currencyLabel={currencySymbol(sub.currency)} />
             </>
           )}

@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 289 renames the sales role's label back to «المبيعات» / 'Sales' (owner, 2026-10-11);
 // the classroom assistant keeps the label migration 274 gave it.
-const MIGRATIONS = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const MIGRATIONS = MIGRATIONS_DIR;
 const read = (file: string): string => readFileSync(join(MIGRATIONS, file), 'utf8');
 const LABEL = /update public\.roles set name_ar = '([^']*)', name_en = '([^']*)' where is_system and key = '([a-z]+)';/g;
 

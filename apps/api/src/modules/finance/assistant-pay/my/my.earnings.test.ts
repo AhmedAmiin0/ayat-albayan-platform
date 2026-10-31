@@ -1,6 +1,6 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { buildEarnings, commissionsTotal, frozenLines } from './my.earnings';
+import { buildEarnings, frozenLines } from './my.earnings';
 import type { MyAdjustment, MyCommission } from './my.queries';
 
 const NOW = '2026-10-15T10:00:00Z';
@@ -17,14 +17,6 @@ const statement = (over: Partial<AssistantStatementView> = {}): AssistantStateme
   lines: [], approved_at: null, paid_at: null, method: null, note: null, has_receipt: false, ...over,
 });
 const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], adjustments: [], frozen: [], statements: [] };
-
-describe('commissionsTotal', () => {
-  it('sums per currency in exact cents and never across currencies', () => {
-    const rows = [{ amount: 0.1, currency: 'SAR' }, { amount: 0.2, currency: 'SAR' }, { amount: 50, currency: 'EGP' }];
-    expect(commissionsTotal(rows)).toEqual({ SAR: 0.3, EGP: 50 });
-    expect(commissionsTotal([])).toEqual({});
-  });
-});
 
 describe('buildEarnings: this month so far', () => {
   it('the salary plus the commissions not yet in a frozen statement, per currency', () => {

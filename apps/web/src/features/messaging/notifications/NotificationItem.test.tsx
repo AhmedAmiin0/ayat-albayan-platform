@@ -15,7 +15,7 @@ vi.mock('@/features/people/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'
 const row = (item = ITEM, onPick = vi.fn()) =>
   renderWithClient(
     <ul>
-      <NotificationItem item={item} onPick={onPick} />
+      <NotificationItem item={item} onPick={onPick} now={new Date()} />
     </ul>,
   );
 

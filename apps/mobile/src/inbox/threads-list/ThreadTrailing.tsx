@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { rowTime } from '../messages/days/day-label';
+import { rowTime } from '@/inbox/messages/days/day-label';
 import { UnreadCount } from './UnreadCount';
 
 /** Our last send failed (the admin's turn), else the unread count (WhatsApp's green circle), else nothing. */
@@ -21,13 +21,13 @@ function turnChip(th: ThreadView): ReactNode {
 /**
  * The row's end as WhatsApp's chat list (owner 2026-10-29): the last message's time on top (the clock
  * today, «أمس», the weekday, else the date), green while the chat has unread messages; the count or
- * the failed chip under it.
+ * the failed chip under it. `now` is the list's one clock (ThreadsList → useToday).
  */
-export function ThreadTrailing({ thread: th }: { thread: ThreadView }) {
+export function ThreadTrailing({ thread: th, now }: { thread: ThreadView; now: Date }) {
   const cycle = useClockCycle();
   const { color } = useTheme();
   const unread = th.unread_count > 0;
-  const time = rowTime(th.last_message_at, cycle);
+  const time = rowTime(th.last_message_at, cycle, { now });
   return (
     <View style={{ alignItems: 'flex-end', gap: 6 }}>
       {time ? (

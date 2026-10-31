@@ -1,20 +1,25 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { API_SRC } from '@/common/db/repo-paths.test-util';
 
 // docs/26 §2e boundary tests: config-store imports no consumer (only shared helpers); the settings
 // table is touched only where listed below.
 
-const SRC = resolve(__dirname, '..');
+const SRC = API_SRC;
 
 const files = (dir: string): string[] =>
   readdirSync(join(SRC, dir), { recursive: true, encoding: 'utf8' })
     .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts') && !f.endsWith('.fakes.ts') && !f.includes('test-util') && !f.includes('test-app'))
     .map((f) => join(SRC, dir, f));
 
+/** Where a `./`, `../` or `@/` specifier lands, relative to src/ (posix). */
+const target = (file: string, spec: string): string =>
+  spec.startsWith('@/') ? join(SRC, spec.slice(2)) : resolve(dirname(file), spec);
+
 const relImports = (file: string): string[] =>
-  [...readFileSync(file, 'utf8').matchAll(/from\s+['"](\.[^'"]+)['"]/g)].map((m) =>
-    relative(SRC, resolve(dirname(file), m[1] ?? '')).split(sep).join('/'),
+  [...readFileSync(file, 'utf8').matchAll(/from\s+['"]((?:\.|@\/)[^'"]+)['"]/g)].map((m) =>
+    relative(SRC, target(file, m[1] ?? '')).split(sep).join('/'),
   );
 
 /** What config-store may import outside itself: infrastructure (incl. the process-role gate of its seeder and the config-reload kick) and the one parse helper. */
@@ -45,7 +50,9 @@ describe('config-store boundaries (docs/26 §2e)', () => {
 
   it('common/settings imports only config-store among the config folders', () => {
     const bad = files('common/settings').flatMap((f) =>
-      relImports(f).filter((t) => /^common\/(custom-config|public-config)\//.test(t)).map((t) => `${relative(SRC, f)} → ${t}`),
+      relImports(f)
+        .filter((t) => ['common/custom-config', 'common/public-config'].some((p) => t === p || t.startsWith(`${p}/`)))
+        .map((t) => `${relative(SRC, f)} → ${t}`),
     );
     expect(bad).toEqual([]);
   });

@@ -3,18 +3,19 @@ import { View } from 'react-native';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { familyTz } from '@/teaching/reschedule/reschedule-body';
 import { Button } from '@/core/ui/primitives/Button';
-import { canSubmit, editBody, lengthOf, type EditState } from '../lib/edit-time-body';
-import { editTimeFailure } from '../lib/edit-time-errors';
-import { lengthLocked, payoutLockOf, type PayoutLock } from '../lib/edit-time-lock';
+import { canSubmit, editBody, lengthOf, type EditState } from '@/edit-time/lib/edit-time-body';
+import { editTimeFailure } from '@/edit-time/lib/edit-time-errors';
+import { lengthLocked, payoutLockOf, type PayoutLock } from '@/edit-time/lib/edit-time-lock';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone } from './EditTimeDone';
 import { EditTimeFields } from './EditTimeFields';
 import { EditTimeHeader } from './EditTimeHeader';
 import { PayoutLockNotice } from './PayoutLockNotice';
-import { useEditTime } from '../lib/queries';
-import { editMode, type EditableLesson } from '../lib/types';
+import { useEditTime } from '@/edit-time/lib/queries';
+import { editMode, type EditableLesson } from '@/edit-time/lib/types';
 
 export interface EditTimeFormProps {
   lesson: EditableLesson;
@@ -29,6 +30,7 @@ export interface EditTimeFormProps {
  * arrived says it is not sure it landed. Booking over a clash with a reason stays on the web.
  */
 export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
+  const cycle = useClockCycle();
   const tz = familyTz(lesson);
   const mode = editMode(lesson);
   const edit = useEditTime(lesson.id);
@@ -36,7 +38,7 @@ export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
   const [state, setState] = useState<EditState>({ picked: null, durationMin: lengthOf(lesson), reason: '', notify: true });
   // payout_locked outlives edit.reset(): it holds the length back however the form changes after it.
   const [lock, setLock] = useState<PayoutLock | null>(null);
-  const failure = edit.isError ? editTimeFailure(edit.error) : null;
+  const failure = edit.isError ? editTimeFailure(edit.error, cycle) : null;
   const clash = failure?.kind === 'conflict' ? failure : null;
   const frozen = lengthLocked(lock, lesson, state);
   const change = (patch: Partial<EditState>) => {
