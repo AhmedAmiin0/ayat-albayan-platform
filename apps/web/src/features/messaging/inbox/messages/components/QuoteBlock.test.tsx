@@ -1,5 +1,5 @@
 import { UNAVAILABLE_QUOTE, type MessageQuote, type ReplyQuote } from '@ab/shared';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
@@ -59,23 +59,19 @@ describe('QuoteBlock', () => {
     expect(box().textContent).toContain(line);
   });
 
-  it('a photo shows its thumb once the bubble opened it (read from the cache only)', () => {
+  it('a photo shows its thumb once the bubble opened it (read from the cache only)', async () => {
     const client = show(quote({ id: 'p1', body: null, media_mime: 'image/jpeg' }));
     expect(document.querySelector('img')).toBeNull();
     const key = threadFileQuery(PHONE, 'p1').queryKey;
-    act(() => {
-      client.setQueryData(key, { ...SIGNED, mime: 'image/jpeg' });
-    });
-    expect(document.querySelector('img')?.getAttribute('src')).toBe(SIGNED.url);
+    client.setQueryData(key, { ...SIGNED, mime: 'image/jpeg' });
+    await waitFor(() => expect(document.querySelector('img')?.getAttribute('src')).toBe(SIGNED.url));
   });
 
-  it('a PDF shows page 1 once the bubble rendered it', () => {
+  it('a PDF shows page 1 once the bubble rendered it', async () => {
     const client = show(quote({ id: 'd1', body: 'الفاتورة', media_mime: 'application/pdf' }));
     const key = threadPdfPageQuery(PHONE, 'd1', 1).queryKey;
-    act(() => {
-      client.setQueryData(key, { ...SIGNED, page: 1, pages: 2, bytes: 900 });
-    });
-    expect(document.querySelector('img')?.getAttribute('src')).toBe(SIGNED.url);
+    client.setQueryData(key, { ...SIGNED, page: 1, pages: 2, bytes: 900 });
+    await waitFor(() => expect(document.querySelector('img')?.getAttribute('src')).toBe(SIGNED.url));
     expect(box().textContent).toContain('📄 الفاتورة');
   });
 

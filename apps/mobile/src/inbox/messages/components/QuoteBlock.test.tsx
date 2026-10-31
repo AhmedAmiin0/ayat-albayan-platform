@@ -68,7 +68,7 @@ test('a PDF: its icon and «ملف PDF»; page 1 only from the cache (the quote 
   await act(async () => {
     client.setQueryData(pdfPageQuery(PHONE, 'd1', 1).queryKey, pdfPage(1));
   });
-  expect(screen.getByTestId('quote-thumb-d1').props.source).toEqual({ uri: pageUrl(1) });
+  expect((await screen.findByTestId('quote-thumb-d1')).props.source).toEqual({ uri: pageUrl(1) });
 });
 
 test('a teacher asks for no file: the icon only', async () => {
