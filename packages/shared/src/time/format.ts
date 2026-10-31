@@ -44,6 +44,15 @@ export function dateTextParts(
   return dateFormat(opts, fields).formatToParts(at);
 }
 
+/** «السبت، 10 – الاثنين، 12 أكتوبر»: Intl's range of two dates (shared parts said once). */
+export function dateRangeText(
+  range: { from: Date | number; to: Date | number },
+  opts: DateTextOptions,
+  fields: DateFields,
+): string {
+  return dateFormat(opts, fields).formatRange(range.from, range.to);
+}
+
 const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 
 /** «الأحد 4 أكتوبر»: weekday, day and month joined by spaces (without Intl's «، »). */
@@ -67,4 +76,9 @@ export function dateClockText(at: Date | number, opts: ClockOptions, fields: Dat
 /** The device's zone as the engine reports it (resolveViewerTz validates it). */
 export function engineTimeZone(): string | undefined {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+/** The engine's (browser's, phone's) default hour cycle: h11 / h12 = 12 h, undefined if unknown. */
+export function engineHourCycle(): string | undefined {
+  return new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
 }

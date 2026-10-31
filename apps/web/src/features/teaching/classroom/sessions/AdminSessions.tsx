@@ -1,4 +1,4 @@
-import { intlLocale, type LessonView } from '@ab/shared';
+import { dateText, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { TableBox } from '@/components/data-table/TableBox';
@@ -18,9 +18,11 @@ import { adminDayQuery, dayAround } from '../api/api';
 import { SessionCard } from './SessionCard';
 import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
 import { useNow } from '@/lib/time/use-now';
+import { viewerZone } from '@/lib/clock-text';
 
 // The day in the UI language with Western digits («الاثنين 5 أكتوبر»), not English.
-const DAY = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
+const DAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+const dayText = (iso: string): string => dateText(new Date(iso), { tz: viewerZone(), locale }, DAY);
 
 function Group({ group, lessons }: { group: SessionGroup; lessons: LessonView[] }) {
   const id = `sessions-${group}`;
@@ -90,7 +92,7 @@ export function AdminSessions({ actions }: { actions?: ReactNode }) {
           <NewMeetingMenu />
         </div>
       </PageHead>
-      <DaySwitcher offset={offset} onOffset={setOffset} day={DAY.format(new Date(day.from))} />
+      <DaySwitcher offset={offset} onOffset={setOffset} day={dayText(day.from)} />
       <TableBox center={lessons.isSuccess && none} className="gap-6 border-0 p-0.5">
         {body}
       </TableBox>
