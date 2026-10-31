@@ -4446,7 +4446,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/messaging/inbox/files/voice-ogg.test.ts": {
@@ -11607,13 +11607,13 @@
   },
   "src/modules/sales/sales-money/chat/sales-chat-files.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 6
+      "count": 4
     },
     "max-len": {
-      "count": 10
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/chat/sales-chat-receipts.service.ts": {

@@ -51,7 +51,7 @@ export function mocks() {
     sales: { ownership: vi.fn() },
     family: { studentsOfPhone: vi.fn(), familyPhone: vi.fn(), phoneOf: vi.fn(), phonesOf: vi.fn(), studentStatus: vi.fn(), linkPackages: vi.fn() },
     media: { load: vi.fn(), cache: vi.fn(), ensure: vi.fn() },
-    mediaQueries: { recent: vi.fn(), message: vi.fn(), setPath: vi.fn() },
+    mediaQueries: { receipts: vi.fn(), message: vi.fn(), setPath: vi.fn() },
   };
 }
 export type Mocks = ReturnType<typeof mocks>;
