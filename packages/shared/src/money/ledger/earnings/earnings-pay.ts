@@ -1,4 +1,4 @@
-import { toCents } from './earnings.js';
+import { toCents } from '../cents.js';
 
 // The pay dialog's rules, shared by the web dialog and the mobile form (docs/11 §10).
 

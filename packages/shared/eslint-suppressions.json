@@ -834,7 +834,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/money/ledger/usage/receivables.ts": {
@@ -983,7 +983,7 @@
   },
   "src/notifications/catalogue/catalogue.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/notifications/catalogue/catalogue.types.ts": {
@@ -1463,7 +1463,7 @@
   },
   "src/sales/student/student-attendance.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/sales/student/student-details.ts": {

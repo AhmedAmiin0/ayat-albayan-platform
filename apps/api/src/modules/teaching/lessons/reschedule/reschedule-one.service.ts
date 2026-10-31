@@ -2,6 +2,7 @@ import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { ScheduleChange } from '@/common/events/lesson-events';
 import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict } from '../../../../common/http/errors';
 import { TeachersQueries } from '../../../people/teachers/teachers.queries';
@@ -9,6 +10,11 @@ import { confirmationMessages, forMessages } from '../status/confirmation-messag
 import { studentIdsOf, type LessonRow } from '../store/lesson-row';
 import { LessonStore } from '../store/lesson-store';
 import { invalidTransition } from '../status/transition';
+
+/** The teacher and the family hear the move (ScheduleNotices, owner 2026-10-30). */
+function movedNotice(old: LessonRow, lessonId: string, actor: AuthUser): ScheduleChange {
+  return { kind: 'lesson_rescheduled', lessonId, fromStartsAt: old.starts_at, actorId: actor.id };
+}
 
 type One = Extract<RescheduleRequest, { scope: 'one' }>;
 type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
@@ -72,6 +78,7 @@ export class RescheduleOneService {
         after: { lesson_id: next.id, starts_at: next.starts_at, teacher_id: teacherId, override_reason: next.override_reason },
       },
       transition: { from: old.status, event: 'reschedule' },
+      notice: movedNotice(old, next.id, actor),
     });
     return next.id;
   }

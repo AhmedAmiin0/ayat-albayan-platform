@@ -23,6 +23,7 @@ const LEGACY_PAGE_ORDER = [
   'upload_max_mb',
   'academy_whatsapp_e164', 'academy_timezone', 'feedback_rate_window_min', 'academy_contact',
   'recording_consent_notice', 'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts',
+  'presence_enabled',
   'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
   'renewal_commission_percent',

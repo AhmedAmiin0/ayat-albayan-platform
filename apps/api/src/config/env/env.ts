@@ -1,6 +1,6 @@
 import { isIntegrationKey } from '@ab/shared';
 import { z } from 'zod';
-import { numbersOverlay } from '../../common/integrations/numbers-overlay';
+import { numbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { blankIsUnset, optionalSecret } from './env.blank';
 import { recipientList } from './whatsapp/env.recipient-list';
 import { envCandidates } from './env.sources';

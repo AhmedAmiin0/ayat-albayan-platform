@@ -1,10 +1,10 @@
 // Acyclic folders (docs/32 §3.4 k1a): inside a package that lane K splits, the top folders may not
 // import each other in a cycle, or the packages cut from them would depend on each other.
-// refactor/guards/cycles.json counts, per root, the folder edges that sit on a cycle; a count above
-// it is a new cycle, one below it fails too until it is lowered (--write), so the count only
-// shrinks.
-// Usage: node tools/scripts/ci-checks/lint/cycles-gate.mjs [--write]
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+// It counts, per root, the folder edges that sit on a cycle. On a PR, CI checks the base branch
+// out beside it (GUARD_BASE): a count above the base's own is a new cycle; equal or below passes.
+// Nothing is stored, so no PR edits a baseline and none conflict.
+// Usage: [GUARD_BASE=<base checkout>] node tools/scripts/ci-checks/lint/cycles-gate.mjs
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -70,15 +70,14 @@ export function cycleEdges(graph) {
     .sort();
 }
 
-/** One line per root whose count differs from the baseline (above: a new cycle; below: lower). */
-export function check(now, baseline) {
+/**
+ * One line per root whose count is above the base branch's (a new cycle); equal or below passes.
+ * A root the base lacks (added by this PR) takes its first count as the baseline.
+ */
+export function check(now, base) {
   return Object.entries(now)
-    .filter(([root, n]) => n !== (baseline[root] ?? 0))
-    .map(([root, n]) =>
-      n > (baseline[root] ?? 0)
-        ? `${root}: ${n} cycle edges > baseline ${baseline[root] ?? 0}`
-        : `${root}: ${n} < baseline ${baseline[root]}, lower it: pnpm guard:cycles -- --write`,
-    );
+    .filter(([root, n]) => n > (base[root] ?? n))
+    .map(([root, n]) => `${root}: ${n} cycle edges > the base branch's ${base[root]}`);
 }
 
 function filesOf(root, rel = '') {
@@ -89,18 +88,24 @@ function filesOf(root, rel = '') {
   });
 }
 
-function main(args) {
+/** `{ root: cycle edge count }` of the tree at `dir`, for the roots it has. */
+function counts(dir) {
+  const roots = ROOTS.filter((r) => existsSync(join(dir, r)));
+  const count = (r) => cycleEdges(folderGraph(filesOf(join(dir, r)))).length;
+  return Object.fromEntries(roots.map((r) => [r, count(r)]));
+}
+
+function main() {
   const repo = join(dirname(fileURLToPath(import.meta.url)), '../../../..');
   const graphs = Object.fromEntries(ROOTS.map((r) => [r, folderGraph(filesOf(join(repo, r)))]));
   const now = Object.fromEntries(ROOTS.map((r) => [r, cycleEdges(graphs[r]).length]));
-  const file = join(repo, 'refactor', 'guards', 'cycles.json');
-  if (args.includes('--write')) writeFileSync(file, `${JSON.stringify(now, null, 2)}\n`);
-  const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
-  console.log(`cycles: ${JSON.stringify(now)} (baseline ${JSON.stringify(baseline)})`);
+  const dir = process.env.GUARD_BASE;
+  const base = dir ? counts(dir) : now;
+  console.log(`cycles: ${JSON.stringify(now)} (base branch ${dir ? JSON.stringify(base) : 'not given'})`);
   for (const r of ROOTS) for (const scc of cycles(graphs[r])) console.log(`  ${r}: ${scc.join(' ↔ ')}`);
-  const problems = check(now, baseline);
+  const problems = check(now, base);
   for (const p of problems) console.log(`  ${p}`);
   if (problems.length > 0) process.exit(1);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main(process.argv.slice(2));
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();

@@ -30,6 +30,13 @@ export function useMeReady(signedIn: boolean): boolean {
   return !signedIn || (meLoaded(me.data) && zoned);
 }
 
+/** The signed-in profile's id from /auth/me; '' until it answers, and signed out (no fetch). */
+export function useMeId(signedIn: boolean): string {
+  const me = useQuery({ ...meQuery(), enabled: signedIn });
+  const id: unknown = signedIn && meLoaded(me.data) ? Reflect.get(me.data, 'id') : null;
+  return typeof id === 'string' ? id : '';
+}
+
 /**
  * Does /auth/me list this key? false until it answers, as usePermissions. For a key that switches a
  * screen to another role's view (self.sales: a salesperson's chat).

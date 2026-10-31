@@ -23,6 +23,15 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath(data, 'sales')).toBe('/sales/students');
   });
 
+  it('a schedule change: the teacher calendar for teachers, the student else; a family the portal', () => {
+    for (const kind of ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed']) {
+      const data = { kind, studentId: STUDENT, lessonId: MEETING };
+      expect(webNotificationPath(data, 'teacher')).toBe('/teacher/calendar');
+      expect(webNotificationPath(data, 'admin')).toBe(`/admin/students/${STUDENT}`);
+      expect(webNotificationPath(data, 'guardian')).toBe('/portal');
+    }
+  });
+
   it('meeting_invite: the meeting room, or each portal’s meetings list without a valid id', () => {
     expect(webNotificationPath({ kind: 'meeting_invite', meetingId: MEETING }, 'sales')).toBe(`/meeting/${MEETING}`);
     expect(webNotificationPath({ kind: 'meeting_invite', meetingId: '../x' }, 'admin')).toBe('/admin/classrooms');

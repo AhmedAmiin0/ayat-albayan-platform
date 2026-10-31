@@ -36,6 +36,10 @@ export function channelMessagesPath(input: { audience: ChannelAudience; studentI
   return input.before ? `${path}?before=${encodeURIComponent(input.before)}` : path;
 }
 
+/** GET …/presence: the chat's people this viewer may see online (docs/33). */
+export const channelPresencePath = (audience: ChannelAudience, studentId: string): string =>
+  `${BASE[audience](studentId)}/presence`;
+
 /** POST …/read (participants only). */
 export const channelReadPath = (audience: ChannelAudience, studentId: string): string => `${BASE[audience](studentId)}/read`;
 

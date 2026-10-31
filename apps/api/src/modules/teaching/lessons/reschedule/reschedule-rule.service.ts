@@ -91,6 +91,13 @@ export class RescheduleRuleService {
         },
       },
       transition: { from: lesson.status, event: 'reschedule' },
+      // One notice for the series: the tapped lesson's time → the first new lesson's.
+      notice: {
+        kind: 'lesson_rescheduled',
+        lessonId: first.id,
+        fromStartsAt: lesson.starts_at,
+        actorId: actor.id,
+      },
     });
     return first.id;
   }

@@ -53,7 +53,15 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
     // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي».
     // lesson_join_link is both: the reminders job's (settings.meeting_link_auto) is automatic, the admin's send carries created_by.
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
+    // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
+    onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
+  });
+
+  it('the schedule-change notices are not automatic, even job-made (a resume by the daily job)', () => {
+    for (const key of ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed']) {
+      expect(isAutomatic({ template_key: key, created_by: null }), key).toBe(false);
+    }
   });
 });
 

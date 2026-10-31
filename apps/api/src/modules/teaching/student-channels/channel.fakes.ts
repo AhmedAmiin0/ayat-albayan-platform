@@ -6,6 +6,8 @@ import { bootWith } from '../../../common/auth/auth.fakes';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { PushService } from '../../../common/push/push.service';
 import { PortalScopeQueries } from '../../people/portal/scope/portal-scope.queries';
+import { PresenceRepo, PresenceSettings } from '@/modules/people/presence';
+import { fakePresence } from '@/modules/people/presence/presence.fakes';
 import { TeachersQueries } from '../../people/teachers';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import type { ChannelMessageRow } from './channel.queries';
@@ -58,14 +60,17 @@ export async function channelApp() {
   const scope = { studentsOf: vi.fn(async (id: string) => (id === 'p-g' || id === 'p-c' ? own(false) : id === 'p-s' ? own(true) : [])) };
   const teachers = { idByProfile: vi.fn(async (id: string) => ({ 'p-t1': 't1', 'p-t2': 't2' })[id] ?? null) };
   const push = { notifyProfiles: vi.fn(async () => undefined), notifyAdmins: vi.fn(), notifySales: vi.fn() };
+  const presence = fakePresence();
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(ChannelQueries).useValue(queries)
     .overrideProvider(ChannelPeopleQueries).useValue(people)
     .overrideProvider(PortalScopeQueries).useValue(scope)
     .overrideProvider(TeachersQueries).useValue(teachers)
-    .overrideProvider(PushService).useValue(push);
+    .overrideProvider(PushService).useValue(push)
+    .overrideProvider(PresenceRepo).useValue(presence.repo)
+    .overrideProvider(PresenceSettings).useValue(presence.settings);
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who: Who) => app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
   const post = (url: string, who: Who, payload: object) => app.inject({ method: 'POST', url, headers: { authorization: `Bearer ${who}` }, payload });
-  return { app, call, post, queries, people, scope, teachers, push };
+  return { app, call, post, queries, people, scope, teachers, push, presence };
 }

@@ -1,25 +1,17 @@
 import {
-  fromCents,
   monthOf,
   planStatement,
-  toCents,
+  sumByCurrency,
   walletTotals,
   type AssistantStatementView,
   type AssistantTermsView,
   type MyEarnings,
   type WalletLine,
 } from '@ab/shared';
-import type { StatementRow } from '../statements/statements.mapper';
+import type { StatementRow } from '@/modules/finance/assistant-pay/statements/statements.mapper';
 import type { MyAdjustment, MyCommission, StatementState } from './my.queries';
 
 const frozen = (r: StatementState): boolean => r.statement?.status === 'approved' || r.statement?.status === 'paid';
-
-/** Earned commissions per currency, in exact cents (never summed across currencies). */
-export function commissionsTotal(commissions: readonly Pick<MyCommission, 'amount' | 'currency'>[]): Record<string, number> {
-  const cents: Record<string, number> = {};
-  for (const c of commissions) cents[c.currency] = (cents[c.currency] ?? 0) + toCents(c.amount);
-  return Object.fromEntries(Object.entries(cents).map(([currency, v]) => [currency, fromCents(v)]));
-}
 
 /**
  * The commission money my approved and paid statements hold, as they froze it: their commission lines and
@@ -80,7 +72,7 @@ export function buildEarnings(i: {
   return {
     terms: i.terms,
     this_month: issued ? issued.totals : plan.totals,
-    commissions_total: commissionsTotal(i.commissions),
+    commissions_total: sumByCurrency(i.commissions),
     wallet: walletTotals(walletLines(i), i.commissions, { month, tz: i.tz }),
     statements: [...i.statements],
   };

@@ -1,6 +1,6 @@
 // Hard code rules (CLAUDE.md §1-3, R-NFR-05) and the strict type-aware set (docs/31a). CI fails on any
 // violation; the ones that predate a rule sit in each package's eslint-suppressions.json, whose per-rule
-// totals may only shrink (refactor/guards/lint.json, pnpm guard:lint).
+// totals may not rise above the base branch's on a PR (pnpm guard:lint).
 import { readFileSync } from 'node:fs';
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';

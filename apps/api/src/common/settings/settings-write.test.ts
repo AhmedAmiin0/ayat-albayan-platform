@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { configRow, fakeConfigStore } from '../config-store/config-store.fakes';
-import { ConfigConflictError } from '../config-store/config-store.types';
+import { configRow, fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
+import { ConfigConflictError } from '@/common/configuration/config-store/config-store.types';
 import { writeLatest } from './settings-write';
 
 describe('writeLatest (the PATCH /settings alias over config_set)', () => {

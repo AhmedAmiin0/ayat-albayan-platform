@@ -1,6 +1,7 @@
 import { MonitorChannelController } from './channel.monitor.controller';
 import { PortalChannelController } from './channel.portal.controller';
+import { ChannelPresenceController } from './channel.presence.controller';
 import { TeacherChannelsController } from './channel.teacher.controller';
 
 /** Every controller of the student channel: participants (teacher, family) and monitors (admin, sales). */
-export const CHANNEL_CONTROLLERS = [TeacherChannelsController, PortalChannelController, MonitorChannelController];
+export const CHANNEL_CONTROLLERS = [TeacherChannelsController, PortalChannelController, MonitorChannelController, ChannelPresenceController];

@@ -65,6 +65,7 @@ export function entryView(entry: NotificationEntry<NotificationKey>, inputs: Cat
   return {
     key: entry.key,
     audience: entry.audience,
+    ...('alsoTo' in entry && entry.alsoTo ? { also_to: [...entry.alsoTo] } : {}),
     channels: [...entry.channels],
     automatic: entry.automatic,
     manual: entry.manual,

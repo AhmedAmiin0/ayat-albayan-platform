@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { backgroundJobs } from '../../../config/role/background-job';
+import { backgroundJobs } from '@/config/role/background-job';
 import { bootIn } from './roles.boot.probe';
 
 /**
@@ -7,7 +7,7 @@ import { bootIn } from './roles.boot.probe';
  * and buffers, never a pass over shared rows. Anything else that starts a timer must be a @BackgroundJob.
  */
 const PER_COPY: Record<string, string> = {
-  'common/integrations/integration-config.service.ts':
+  'common/configuration/integrations/integration-config.service.ts':
     'refreshes its own copy of the saved integration keys',
   'modules/messaging/numbers/config/numbers.config.ts':
     'refreshes its own copy of the numbers overlay',
@@ -15,6 +15,7 @@ const PER_COPY: Record<string, string> = {
     'refreshes its own copy of the UI strings',
   'common/client-usage/client-usage.service.ts': 'logs this copy’s own client-version counters',
   'common/activity/activity.writer.ts': 'flushes this copy’s own buffered activity rows',
+  'modules/people/presence/last-seen.service.ts': 'flushes this copy’s own queued last-seen users',
 };
 
 /** Jobs that start no timer in a test boot, and why (every other registered job must). */

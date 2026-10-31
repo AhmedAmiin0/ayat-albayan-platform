@@ -1,4 +1,4 @@
-import { integrationOverlay } from '../../common/integrations/integration-overlay';
+import { integrationOverlay } from '@/common/configuration/integrations/integration-overlay';
 
 // What loadEnv() tries, in order, before env alone (env.ts). Legacy (numbers null): exactly the old
 // behaviour, process.env with the integration overlay on top when it holds anything. Module: the
