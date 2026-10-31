@@ -39,9 +39,10 @@ test('an acyclic tree has no cycle edges', () => {
   assert.deepEqual(cycleEdges(graph), []);
 });
 
-test('check: above the baseline is a new cycle, below it asks to lower the baseline', () => {
+test('check: above the base branch is a new cycle; equal or below passes with nothing to edit', () => {
   assert.deepEqual(check({ r: 3 }, { r: 3 }), []);
-  assert.match(check({ r: 4 }, { r: 3 })[0] ?? '', /4 cycle edges > baseline 3/);
-  assert.match(check({ r: 2 }, { r: 3 })[0] ?? '', /lower it/);
-  assert.match(check({ r: 1 }, {})[0] ?? '', /> baseline 0/);
+  assert.deepEqual(check({ r: 4 }, { r: 3 }), ["r: 4 cycle edges > the base branch's 3"]);
+  assert.deepEqual(check({ r: 2 }, { r: 3 }), []);
+  // A root the base lacks (this PR adds it): its first count is the baseline.
+  assert.deepEqual(check({ r: 1 }, {}), []);
 });

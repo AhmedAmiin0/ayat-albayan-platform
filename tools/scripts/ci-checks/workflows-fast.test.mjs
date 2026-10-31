@@ -64,10 +64,12 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
     ),
   );
   const runs = ci.jobs.guards.steps.map((s) => s.run ?? '');
-  assert.ok(['pnpm guard:dup', 'pnpm guard:knip', 'pnpm guard:queries'].every((r) => runs.includes(r)));
-  // guard:lint on every run; on a PR also against the base branch's lint.json (docs/31a §5.1), so the full history.
-  const lint = runs.find((r) => r.includes('pnpm guard:lint -- --base'));
-  assert.ok(lint?.includes('git merge-base "origin/$BASE_REF" HEAD') && lint.includes('then pnpm guard:lint; exit'));
+  assert.ok(['pnpm guard:dup', 'pnpm guard:knip', 'pnpm guard:queries', 'pnpm guard:cycles'].every((r) => runs.includes(r)));
+  // On a PR the count gates also measure the merge base (GUARD_BASE): no PR edits a baseline.
+  const base = ci.jobs.guards.steps.find((s) => s.if === "github.event_name == 'pull_request'" && s.name?.startsWith('Base branch'));
+  assert.match(base.run, /merge-base "origin\/\$BASE_REF" HEAD\)\n.*worktree add --detach "\$RUNNER_TEMP\/base"[\s\S]*\.bin\/jscpd"\)\n.*GUARD_BASE=/);
+  const lint = runs.find((r) => r.includes('pnpm guard:lint -- --configs'));
+  assert.ok(lint?.includes('if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi'));
   // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
   assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);

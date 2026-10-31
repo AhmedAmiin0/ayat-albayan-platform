@@ -1,3 +1,5 @@
+export { packageSummaries } from './academy/sales-package.mapper';
+export { SalesRosterRepo } from './academy/sales-roster.repo';
 export { SalesAssignService } from './assign/sales-assign.service';
 export { toSalesHistory } from './history/sales-history.mapper';
 export { type HistoryBundle, SalesHistoryQueries } from './history/sales-history.queries';
@@ -29,3 +31,9 @@ export {
   withMine,
 } from './schedule/sales-schedule.mapper';
 export type { SalesScheduleRow } from './schedule/sales-schedule.queries';
+export {
+  nextStarts,
+  toWeeklySlot,
+  WEEKLY_RULE_COLUMNS,
+  type WeeklyRuleRow,
+} from './schedule/weekly-slot';

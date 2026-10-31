@@ -435,9 +435,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -668,11 +665,6 @@
       "count": 1
     },
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/assistants/statements/hooks/totals.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -10332,9 +10324,6 @@
     "ab/no-parent-imports": {
       "count": 1
     },
-    "max-len": {
-      "count": 6
-    },
     "max-lines-per-function": {
       "count": 1
     },
@@ -10391,7 +10380,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1
