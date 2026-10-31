@@ -1,6 +1,6 @@
 import { retry } from '@ab/shared';
-import { Injectable, Logger, Optional } from '@nestjs/common';
-import { sleep } from '@/common/cache/sleep';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { sleep } from '@/common/infra/cache/sleep';
 import { PushService } from '@/common/push/push.service';
 import { PAYMENT_HOLD_EXPIRED, paymentSubject, WA_PAYMENT_HOLD } from './hold/payment-hold';
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
@@ -10,6 +10,7 @@ import type { FailurePlan } from './send-plan';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
+import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { PassJob, SendJob, SendOutcome } from './message.job';
@@ -26,6 +27,8 @@ export class MessageWorker {
   private readonly log = new Logger(MessageWorker.name);
   /** Backoff wait for the «sent» write; tests replace it. */
   wait: (ms: number) => Promise<void> = sleep;
+  /** Meta #132001 on a crm send marks its template missing (templates/check); unit tests: none. */
+  @Optional() @Inject(TemplateMissing) missing?: TemplateMissing;
 
   constructor(
     private readonly queries: SenderQueries,
@@ -77,6 +80,7 @@ export class MessageWorker {
     const { row, now, line, route } = input;
     const plan = await this.plan(input);
     await this.queries.failure(row.id, plan);
+    await this.missing?.check({ key: row.template_key, line, error: input.error, now });
     // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
     if (plan.error_code === CRM_RATE_LIMITED) return 'paused';
     if (plan.error_code === WA_PAYMENT_HOLD) {

@@ -1,6 +1,6 @@
 import { DURATIONS, type PackageSize, type PaymentKind, type PaymentMethod, type PayoutStatus } from '@ab/shared';
 import type { Json } from '@ab/db';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
 // Payments and payouts CSV rows (R-RPT-03, R-TCH-04). Money as numbers, in the row's currency.

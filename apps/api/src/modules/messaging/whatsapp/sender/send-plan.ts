@@ -9,7 +9,7 @@ import {
   type TemplateButton,
   type TemplateParams,
 } from '@ab/shared';
-import { ar } from '@/common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
 import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';

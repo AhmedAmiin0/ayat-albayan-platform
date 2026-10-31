@@ -39,4 +39,14 @@ export const CLASSROOM_SETTINGS = {
     type: 'bool', default: false, public: true,
     labelKey: 'settings.meetingLinkAuto', hintKey: 'settings.hints.meetingLinkAuto',
   },
+  /**
+   * ON (default): the mobile app opens platform lessons and internal meetings in its own
+   * LiveKit room (docs/35); OFF: the browser, as before. An APK without the native module
+   * always opens the browser.
+   */
+  meetings_in_app: {
+    module: 'classroom', group: 'classroom',
+    type: 'bool', default: true, public: true,
+    labelKey: 'settings.meetingsInApp', hintKey: 'settings.hints.meetingsInApp',
+  },
 } as const satisfies Record<string, SettingDef>;

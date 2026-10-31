@@ -7,7 +7,7 @@ import { notFound } from '@/common/http/errors';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
-import { LessonEvents } from '@/common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { CourseStopRepo, type StopSub } from './course-stop.repo';
 
 export const STUDENT = '5a000000-0000-4000-8000-0000000000a1';

@@ -1,11 +1,11 @@
 import type { Json, Tables, TablesInsert } from '@ab/db';
-import { isWaLine, type TemplateLineSync, type WaLine } from '@ab/shared';
+import { isWaLine, type TemplateLineSync, type TemplateStatus, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { SharedCache } from '../../../../../common/cache/shared-cache';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import type { ImportRow } from '../sync/template-import';
-import type { TemplatePatch } from '../sync/template-sync';
-import { templateRow, templateRows, type TemplateRow } from '../../whatsapp.types';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
+import { DB, type Db } from '@/common/db/db.module';
+import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
+import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
+import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;
@@ -15,8 +15,10 @@ export type NumberRef = Pick<Tables<'wa_numbers'>, 'id' | 'purpose' | 'is_defaul
 
 /** How long cached() trusts its copy of a template (another API copy may have written since). */
 const TEMPLATE_COPY_MS = 60_000;
+/** A row, or null when none matched. */
+type MaybeRow = TemplateRow | null;
 
-/** message_templates (R-MSG-01): the API is its only writer (health sync and import, submit, starter flag). */
+/** message_templates (R-MSG-01): the API is its only writer (sync and import, create, submit, starter flag). */
 @Injectable()
 export class TemplatesQueries {
   /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
@@ -61,13 +63,10 @@ export class TemplatesQueries {
     return templateRow(data);
   }
 
-  async update(key: string, patch: TemplatePatch): Promise<TemplateRow | null> {
-    const { data, error } = await this.db
-      .from('message_templates')
-      .update(patch)
-      .eq('key', key)
-      .select('*')
-      .maybeSingle();
+  /** `onlyIf`: only while the row still has that status (compare-and-set); null = none matched. */
+  async update(key: string, patch: TemplatePatch, onlyIf?: TemplateStatus): Promise<MaybeRow> {
+    const base = this.db.from('message_templates').update(patch).eq('key', key);
+    const { data, error } = await (onlyIf ? base.eq('status', onlyIf) : base).select('*').maybeSingle();
     this.forget();
     if (error) throw new Error(`template update failed: ${error.message}`);
     return templateRow(data);
@@ -85,6 +84,15 @@ export class TemplatesQueries {
       .maybeSingle();
     this.forget();
     if (error) throw new Error(`template insert failed: ${error.message}`);
+    return templateRow(data);
+  }
+
+  /** An admin's new template (templates/create): null = its key or name + language is taken. */
+  async create(row: ImportRow): Promise<MaybeRow> {
+    const { data, error } = await this.db.from('message_templates').insert(row).select('*').maybeSingle();
+    this.forget();
+    if (error?.code === '23505') return null;
+    if (error) throw new Error(`template create failed: ${error.message}`);
     return templateRow(data);
   }
 

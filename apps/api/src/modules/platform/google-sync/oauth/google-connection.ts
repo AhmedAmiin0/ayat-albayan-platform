@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
-import { TtlCache } from '@/common/cache/ttl-cache';
+import { TtlCache } from '@/common/infra/cache/ttl-cache';
 import { SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
 import { GoogleAccountQueries } from './google-account.queries';
 import { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';

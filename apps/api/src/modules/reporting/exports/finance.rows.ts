@@ -1,5 +1,5 @@
 import { round2, type PaymentMethod, type ReceivableRow } from '@ab/shared';
-import { ar } from '@/common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
 // Finance CSV rows (owner, 2026-10-05): expenses, the teacher ledger, receivables. Money as numbers.

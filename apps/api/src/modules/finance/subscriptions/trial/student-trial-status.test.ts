@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { LessonEvents, LessonsChangedListener } from '../../../../common/events/lesson-events';
-import type { StudentStatusQueries } from '../student-lifecycle/student-status.queries';
+import type { LessonEvents, LessonsChangedListener } from '@/common/infra/events/lesson-events';
+import type { StudentStatusQueries } from '@/modules/finance/subscriptions/student-lifecycle/student-status.queries';
 import { StudentTrialStatus } from './student-trial-status';
 import type { TrialLessonRow } from './student-trial.plan';
 import type { StudentTrialQueries } from './student-trial.queries';

@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '../cache/cache.fakes';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import { AccountDisabledError } from './permissions';
 import { PERMISSION_TTL_MS, PermissionCache } from './permission.cache';
 

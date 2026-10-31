@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '@/common/cache/cache.fakes';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import { setIntegrationOverlay } from './integration-overlay';
 import { loadEnv } from '@/config/env/env';
 import { asQueries, fakeQueries } from './integration-config.fakes';

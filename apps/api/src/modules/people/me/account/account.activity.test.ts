@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { toEntry } from '../../../../common/activity/activity.entry';
-import { actionKey } from '../../../../common/activity/activity.route';
+import { toEntry } from '@/common/telemetry/activity/activity.entry';
+import { actionKey } from '@/common/telemetry/activity/activity.route';
 
 // Every /me change is logged by the global ActivityInterceptor: field NAMES only, never a value.
 

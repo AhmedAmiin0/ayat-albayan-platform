@@ -1177,6 +1177,41 @@
     "linkForbidden": "You are not allowed to send or copy lesson links",
     "sendFailed": "The message was not delivered, try again"
   },
+  "mobileRoom": {
+    "openInBrowser": "Open in the browser",
+    "back": "Back",
+    "count": "Participants: {n}",
+    "connecting": "Connecting…",
+    "ended": "You left the room",
+    "duplicate": "You joined from another device or window, so the room closed here",
+    "missing": "Your entry expired; join again from the list",
+    "permission": {
+      "title": "Camera and microphone",
+      "body": "The app needs the microphone so others can hear you, and the camera so they can see you. You can turn either off at any time.",
+      "allow": "Allow and continue",
+      "skip": "Continue without them",
+      "denied": "The camera or microphone was not allowed, so you will join without it.",
+      "blocked": "The camera or microphone is blocked in the device settings. Allow them there, then come back.",
+      "openSettings": "Open settings"
+    },
+    "preview": {
+      "title": "Before you join",
+      "camOff": "Camera off",
+      "join": "Join now"
+    },
+    "controls": {
+      "mute": "Mute",
+      "camera": "Camera",
+      "switchCamera": "Switch camera",
+      "speaker": "Speaker",
+      "earpiece": "Earpiece",
+      "leave": "Leave"
+    },
+    "native": {
+      "mic": "We need the microphone for WhatsApp voice calls with families, and to speak in lessons and meetings inside the app.",
+      "camera": "We need the camera to photograph transfer receipts for payments, and to appear on video in lessons and meetings inside the app."
+    }
+  },
   "alerts": {
     "needsTeacher": "Needs a teacher"
   },
@@ -3306,7 +3341,8 @@
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
       "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
       "allow_list_only": "Managing templates is for the admin only",
-      "unknown_number": "This number no longer exists. Refresh the page and pick another number."
+      "unknown_number": "This number no longer exists. Refresh the page and pick another number.",
+      "template_exists": "The registry already has a template with this name, or with this name and language. Pick another name."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -3327,6 +3363,8 @@
       "contact_name": "Ahmed"
     },
     "teacherLessonMinutes": "{n} minutes",
+    "teacherReminderCrm": "{when} · {students} · Lesson link: {join} · Lesson report: {report}",
+    "teacherReminderCrmStudent": "{name} ({code})",
     "teacherNewStudentKind": {
       "trial": "Trial",
       "subscription": "Subscription"
@@ -3347,6 +3385,56 @@
       "notApproved": "Number saved, but the template is not approved on it yet. Sync this number’s templates or submit the template on its account; until then the message goes out from the next number in order.",
       "unknownNumber": "Unknown number",
       "disabledMark": "(stopped)"
+    },
+    "create": {
+      "open": "New template",
+      "title": "New template",
+      "description": "The template is saved to the registry without being sent; then you send it to Meta for review from its number, after a confirmation.",
+      "key": "Template name on Meta",
+      "keyHint": "Lower-case English letters, digits and underscores only, e.g. welcome_back. It cannot change after saving.",
+      "line": "Number it is sent from",
+      "category": "Category",
+      "language": "Language code",
+      "languageHint": "As Meta knows it, e.g. ar or en_US.",
+      "header": "Header (optional)",
+      "headerHint": "Fixed text without variables, up to {max} characters.",
+      "body": "Message text",
+      "bodyHint": "Put {{1}}, then {{2}}… where each variable goes, in order. Do not start or end the text with a variable, and do not put two variables side by side.",
+      "footer": "Footer (optional)",
+      "footerHint": "Fixed text without variables, up to {max} characters.",
+      "variables": "Variables",
+      "variablesHint": "For each variable in the text: what it stands for, and a realistic example for Meta's reviewer.",
+      "variablesNone": "The text has no variables.",
+      "variableName": "What variable {n} stands for",
+      "variableGeneric": "A value the sender types",
+      "sample": "Example for variable {n}",
+      "buttons": "Buttons (optional)",
+      "buttonsHint": "Up to {max} buttons, at most one of them a link button.",
+      "addUrl": "Add a link button",
+      "addReply": "Add a quick-reply button",
+      "buttonText": "Button {n} text",
+      "buttonUrl": "Button {n} link",
+      "buttonUrlHint": "Starts with https:// and may end with {{1}} for the sender to complete.",
+      "buttonIntent": "Button {n} action",
+      "removeFor": "Remove button {n}",
+      "remove": "Remove",
+      "intents": {
+        "confirm": "Confirm the lesson",
+        "reschedule": "Ask to change the time",
+        "stop": "Stop messages"
+      },
+      "invalidField": "This value is not valid; see the note under the field.",
+      "save": "Save template",
+      "saved": "Template «{name}» saved.",
+      "crmNote": "This number's templates are managed in the CRM, so the template is not sent to Meta from here. After saving, create it in the CRM with the same name, language, text and buttons (Settings → Templates → New template), sync it from Meta there, then mark it approved here."
+    },
+    "crmCheck": {
+      "title": "Template check",
+      "intro": "The CRM's API cannot read its templates, so their statuses here are set by hand. If Meta refuses to send a template with error 132001 (the template is not on the WhatsApp account connected to the CRM), the template is marked «not available» at once and its messages stop until you fix it.",
+      "none": "No templates are unavailable on this number.",
+      "missing": "Unavailable templates ({count}):",
+      "item": "{name} ({meta})",
+      "fix": "To fix one: create the template in the CRM with the same name and language (Settings → Templates → New template, then sync from Meta), then mark it approved in the table."
     }
   },
   "mobileAdmin": {
@@ -3894,6 +3982,7 @@
       "defaultMeetingTitle": "Used when a meeting is created without a title.",
       "meetingMaxMinutes": "Every five minutes, meetings and lesson rooms open longer than this are closed automatically; their recording is kept. A lesson's status, attendance and the teacher's earnings never change. 0 turns the automatic close off.",
       "meetingLinkAuto": "This is the default for teachers whose lesson attendance is set to «Follow the academy setting»; it can be changed per teacher from the teacher's page. When on, the platform's online classroom links replace the teacher's fixed link: the guardian gets a personal join link with the reminder before the lesson, not with the booking confirmation, and the teacher gets the lesson's classroom page. Without the classroom server configured no link is sent; until Meta approves the «Online classroom link» template, the guardian's reminder carries no link.",
+      "meetingsInApp": "When on, online lessons and internal meetings open inside the mobile app with audio and video. When off, they open in the browser as before. Needs app version 0.4.0 or later; older versions always open the browser. Nothing changes on the website.",
       "fxFreshHours": "After this, a new rate is fetched from the provider.",
       "uploadMaxMb": "For receipts, booking invoices and files sent from the chat, up to 10 MB.",
       "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
@@ -3920,6 +4009,7 @@
     "defaultMeetingTitle": "Default internal meeting title",
     "meetingMaxMinutes": "Longest open meeting or lesson room (minutes)",
     "meetingLinkAuto": "Default: lessons in the academy platform",
+    "meetingsInApp": "Lessons and meetings inside the mobile app",
     "fxFreshHours": "Reuse a stored exchange rate for (hours)",
     "uploadMaxMb": "Maximum upload size (MB)",
     "academyWhatsapp": "Academy WhatsApp number",

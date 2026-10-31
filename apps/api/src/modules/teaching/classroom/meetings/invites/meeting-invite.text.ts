@@ -1,6 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
-import { ar } from '../../../../../common/i18n/server-text';
-import { cityOf, fill } from '../../../../reporting/report-pdf/render/pdf-text';
+import { ar } from '@/common/infra/i18n/server-text';
+import { cityOf, fill } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { INVITE_DEDUP_PREFIX } from './meeting-invitees.queries';
 
 // R-MEET-02: the invitation's words (ar.json meetingInvites.message, read per call so the admins'

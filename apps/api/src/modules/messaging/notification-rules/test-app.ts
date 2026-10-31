@@ -5,14 +5,14 @@ import { publicSettings, SETTING_DEFAULTS, systemPermissionsOf, type AcademySett
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { ActivityWriter } from '../../../common/activity/activity.writer';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SETTINGS_CACHE_MS, SettingsService } from '../../../common/settings/settings.service';
-import { SendGate } from '../whatsapp/gate/send-gate';
+import { AppModule } from '@/app.module';
+import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SETTINGS_CACHE_MS, SettingsService } from '@/common/settings/settings.service';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { RulesQueries } from './rules.queries';
 import { RulesTable, type RuleRowWrite } from './store/rules.table';
 

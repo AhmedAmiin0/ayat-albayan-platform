@@ -1,11 +1,11 @@
 import type { TablesInsert } from '@ab/db';
 import type { MessageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { sleep } from '../../../../common/cache/sleep';
-import { appRole } from '../../../../config/role/app-role';
-import { MessageSender } from '../../whatsapp/sender/message.sender';
-import { MessageViews } from '../../whatsapp/messages/message.views';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { sleep } from '@/common/infra/cache/sleep';
+import { appRole } from '@/config/role/app-role';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
 
 /** The row as the clients see it; `replayed` = a repeated request id, nothing new was queued. */
 export type Sent = { view: MessageView; replayed: boolean };

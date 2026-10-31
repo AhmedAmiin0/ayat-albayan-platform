@@ -4,11 +4,11 @@ import type { SettingKey } from './registry.js';
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
 // old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
-/** The editable groups of «القيم», in list order (39 keys). */
+/** The editable groups of «القيم», in list order (40 keys). */
 export const VALUE_GROUPS = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
-    'meeting_link_auto'],
+    'meeting_link_auto', 'meetings_in_app'],
   reports: ['report_teacher_edit_hours', 'report_form_v2'],
   accounts: [
     'reporting_currency',

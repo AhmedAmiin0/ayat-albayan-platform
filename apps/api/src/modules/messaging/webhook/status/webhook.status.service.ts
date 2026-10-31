@@ -1,9 +1,9 @@
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
-import { PushService } from '../../../../common/push/push.service';
-import { ExternalStatus } from '../external/external-status';
-import type { EchoEvent, StatusEvent } from '../webhook.events';
-import { WebhookQueries, type OutboundRow } from '../webhook.queries';
+import { PushService } from '@/common/push/push.service';
+import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
+import type { EchoEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { WebhookQueries, type OutboundRow } from '@/modules/messaging/webhook/webhook.queries';
 import { statusPatch } from './webhook.status';
 
 const TEMPLATE_NAMES: Record<string, string> = ar.templates.names;

@@ -44,7 +44,7 @@ describe('«القيم» rows', () => {
 
   it('counts the editable values', () => {
     const counts = valueCounts({ ...SETTINGS, booking_horizon_weeks: 4 });
-    expect(counts.total).toBe(40);
+    expect(counts.total).toBe(41);
     expect(counts.modified).toBe(1);
     expect(counts.public).toBeGreaterThan(0);
     const [row] = groupRows('schedule', []);
