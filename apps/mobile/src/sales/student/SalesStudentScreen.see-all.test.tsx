@@ -38,7 +38,7 @@ test('another assistant\'s student: status, subscription with what is paid, less
   expect(screen.queryByText(/ليس من طلابك/)).toBeNull();
 });
 
-test('the money action stays on her own students only (writes unchanged)', async () => {
+test('the money action of a student not hers needs the family view to list it (sales.renew_any)', async () => {
   mockApiFetch.mockResolvedValue(other());
   await renderWithQuery(<SalesStudentScreen />);
   await screen.findByText(s.current);

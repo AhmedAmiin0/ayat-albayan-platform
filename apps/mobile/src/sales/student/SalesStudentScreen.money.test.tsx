@@ -64,3 +64,27 @@ test('without self.sales_money the family is never read and nothing shows', asyn
   expect(mockApiFetch).not.toHaveBeenCalledWith(FAMILY);
   expect(screen.queryByText(m.renew)).toBeNull();
 });
+
+// sales.renew_any (owner 2026-11-01): ANY student, whoever brought it (or nobody); else hers.
+function serveOther(permissions: string[]) {
+  const other = kid({ renew_due: true, mine: false });
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { permissions } : path === FAMILY ? { students: [other] } : details({ mine: false }),
+  );
+}
+
+test('not hers, with sales.renew_any: «تجديد» opens the subscribe screen for that child', async () => {
+  serveOther(['self.sales', 'self.sales_money', 'sales.renew_any']);
+  await open();
+  await fireEvent.press(await screen.findByRole('button', { name: m.renewFor.replace('{name}', 'يوسف أحمد') }));
+  expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/sales-subscribe', params: { phone: PHONE, studentId: 'st1', renew: '1' } });
+});
+
+test('not hers, without sales.renew_any: no money action and the family is never read', async () => {
+  serveOther(['self.sales', 'self.sales_money']);
+  await open();
+  expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
+  expect(mockApiFetch).not.toHaveBeenCalledWith(FAMILY);
+  expect(screen.queryByText(m.renew)).toBeNull();
+});

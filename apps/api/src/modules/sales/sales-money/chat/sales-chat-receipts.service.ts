@@ -7,8 +7,8 @@ import { SalesMoneyServices } from '../sales-money.services';
 
 /**
  * «اختر صورة الإيصال من المحادثة» (owner 2026-10-12, docs/16 row 18): the receipt the family sent in its
- * chat, for a student she owns only (403 not_your_student; with sales.renew_any any student of the chat's
- * family, still only its own chat's files), never a general inbox.media grant.
+ * chat, for a student she owns only (403 not_your_student; with sales.renew_any ANY student, still only the
+ * files of that student's own family chat), never a general inbox.media grant.
  */
 @Injectable()
 export class SalesChatReceipts {

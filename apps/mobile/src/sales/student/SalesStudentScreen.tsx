@@ -1,6 +1,7 @@
 import { formatPhone, studentStatusStyle, type SalesStudentDetails } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
+import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { CourseActionsSection, CoursePauseSection } from '@/students';
@@ -34,12 +35,15 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
  * lessons used / left, past ones folded), «الجدول», the attendance and the sent reports as the teacher
  * sees them. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that family's chat;
  * under it (it loads after the page: nothing shifts) the one money action, on HER students only (`mine`,
- * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»). An unknown id answers 404:
- * «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner for ANY student.
+ * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»), ANY with sales.renew_any.
+ * An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
+ * for ANY student.
  */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const student = useSalesStudent(id);
+  // sales.renew_any (owner 2026-11-01): the money action of ANY student, not only hers.
+  const renewsAny = useHolds('sales.renew_any');
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
   const mine = data.mine !== false;
@@ -62,7 +66,7 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
+          {mine || renewsAny ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <CoursePauseSection studentId={data.student.id} />
           <CourseActionsSection studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
