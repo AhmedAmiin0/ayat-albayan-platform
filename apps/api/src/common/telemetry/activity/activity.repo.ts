@@ -55,7 +55,7 @@ function toView(r: Row): ActivityView {
 
 /** GET /activity: one page of v_activity_log (service role; the controller is admin only). */
 @Injectable()
-export class ActivityQueries {
+export class ActivityRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: ActivityListQuery): Promise<ActivityPage> {

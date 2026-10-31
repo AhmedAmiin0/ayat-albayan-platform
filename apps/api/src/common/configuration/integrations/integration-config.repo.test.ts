@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import { IntegrationConfigQueries } from './integration-config.queries';
+import { IntegrationConfigRepo } from './integration-config.repo';
 
 const T = 'integration_config';
 
@@ -10,17 +10,17 @@ describe('IntegrationConfigQueries: the table and the Vault functions', () => {
       [T]: [{ data: [{ key: 'WA_WABA_ID', value: 'w' }, { key: 'WA_ACCESS_TOKEN', value: 'not-from-the-table' }] }],
       'rpc:integration_secrets_read': [{ data: [{ key: 'WA_ACCESS_TOKEN', value: 'vault-fake' }, { key: 'WA_WABA_ID', value: 'x' }] }],
     });
-    expect(await new IntegrationConfigQueries(db).rawValues()).toEqual({ WA_WABA_ID: 'w', WA_ACCESS_TOKEN: 'vault-fake' });
+    expect(await new IntegrationConfigRepo(db).rawValues()).toEqual({ WA_WABA_ID: 'w', WA_ACCESS_TOKEN: 'vault-fake' });
   });
 
   it('a failed read throws with the database message (the service turns it into a warning)', async () => {
     const { db } = fakeDb({ [T]: [{ data: [] }], 'rpc:integration_secrets_read': [{ error: { message: 'does not exist' } }] });
-    await expect(new IntegrationConfigQueries(db).rawValues()).rejects.toThrow('does not exist');
+    await expect(new IntegrationConfigRepo(db).rawValues()).rejects.toThrow('does not exist');
   });
 
   it('writePlain upserts a value with the admin and deletes a null', async () => {
     const { db, calls } = fakeDb({ [T]: [{}, {}] });
-    await new IntegrationConfigQueries(db).writePlain({ WA_WABA_ID: 'w', FX_API_URL: null }, 'admin-id');
+    await new IntegrationConfigRepo(db).writePlain({ WA_WABA_ID: 'w', FX_API_URL: null }, 'admin-id');
     expect(calls.filter((c) => c.table === T).map((c) => [c.method, c.args])).toEqual([
       ['upsert', [{ key: 'WA_WABA_ID', value: 'w', updated_by: 'admin-id' }]],
       ['delete', []],
@@ -34,7 +34,7 @@ describe('IntegrationConfigQueries: the table and the Vault functions', () => {
       'rpc:integration_secret_clear': [{ data: false }],
       'rpc:integration_secrets_status': [{ data: [{ key: 'WA_APP_SECRET', updated_at: '2026-10-12T00:00:00Z' }] }],
     });
-    const q = new IntegrationConfigQueries(db);
+    const q = new IntegrationConfigRepo(db);
     await q.setSecret({ key: 'WA_APP_SECRET', value: 'fake' });
     expect(await q.clearSecret('LIVEKIT_API_KEY')).toBe(false);
     expect(await q.secretStatus()).toEqual([{ key: 'WA_APP_SECRET', updated_at: '2026-10-12T00:00:00Z' }]);

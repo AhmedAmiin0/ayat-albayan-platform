@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
-import { NotificationsQueries, WEB_PUSH_MAX_PER_PROFILE } from './notifications.queries';
+import type { Db } from '@/common/db/db.module';
+import { NotificationsRepo, WEB_PUSH_MAX_PER_PROFILE } from './notifications.repo';
 
 // The takeover check has its own tests (web-push.claim.test.ts); here every browser is free.
 vi.mock('./web/web-push.claim', () => ({ assertBrowserClaim: vi.fn(async () => undefined) }));
@@ -36,13 +36,13 @@ const ROW = { id: 'n1', kind: 'new_student', title: 't', body: 'b', data: { kind
 describe('NotificationsQueries (R-NOT-01)', () => {
   it('lists the profile’s own rows, newest first, hiding superseded ones; counts unread', async () => {
     const { db } = recordingDb((calls) => (calls.some((c) => c[0] === 'is') ? { data: null, count: 4, error: null } : { data: [ROW], count: 9, error: null }));
-    const page = await new NotificationsQueries(db).list('p1', { page: 2, pageSize: 5 });
+    const page = await new NotificationsRepo(db).list('p1', { page: 2, pageSize: 5 });
     expect(page).toEqual({ items: [{ ...ROW, data: { kind: 'new_student', lessonId: 'l1' } }], total: 9, page: 2, pageSize: 5, unread: 4 });
   });
 
   it('scopes every query to the profile and the :old: filter', async () => {
     const { db, queries } = recordingDb(() => ({ data: [], count: 0, error: null }));
-    await new NotificationsQueries(db).list('p1', { page: 2, pageSize: 5 });
+    await new NotificationsRepo(db).list('p1', { page: 2, pageSize: 5 });
     for (const calls of queries) {
       expect(calls).toContainEqual(['eq', 'profile_id', 'p1']);
       expect(calls).toContainEqual(['not', 'dedup_key', 'like', '%:old:%']);
@@ -53,7 +53,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
 
   it('marks read only the profile’s unread rows (the ids given, or all)', async () => {
     const { db, queries } = recordingDb(() => ({ error: null }));
-    const q = new NotificationsQueries(db);
+    const q = new NotificationsRepo(db);
     await q.readMine('p1', ['n1']);
     await q.readMine('p1');
     expect(queries[0]).toEqual(expect.arrayContaining([['eq', 'profile_id', 'p1'], ['is', 'read_at', null], ['in', 'id', ['n1']]]));
@@ -63,7 +63,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
 
   it('upserts a browser on its endpoint for the caller (newest again); deletes only the caller’s row', async () => {
     const { db, queries } = recordingDb(() => ({ error: null, data: [] }));
-    const q = new NotificationsQueries(db);
+    const q = new NotificationsRepo(db);
     await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } }, 'sess-1');
     await q.unsubscribe('p1', 'https://fcm.googleapis.com/x');
     const row = {
@@ -95,7 +95,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
       error: null,
       data: calls.some((c) => c[0] === 'range') ? [{ id: 's11' }, { id: 's12' }] : [],
     }));
-    await new NotificationsQueries(db).subscribe('p1', {
+    await new NotificationsRepo(db).subscribe('p1', {
       endpoint: 'https://fcm.googleapis.com/y',
       keys: { p256dh: 'k', auth: 'a' },
     }, 'sess-1');
@@ -117,7 +117,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
   it('a session that has just ended (FK violation): 401 no_session, nothing else runs', async () => {
     const { db, queries } = recordingDb(() => ({ error: { code: '23503', message: 'fk' }, data: null }));
     const sub = { endpoint: 'https://fcm.googleapis.com/z', keys: { p256dh: 'k', auth: 'a' } };
-    await expect(new NotificationsQueries(db).subscribe('p1', sub, 'sess-gone')).rejects.toMatchObject({ status: 401 });
+    await expect(new NotificationsRepo(db).subscribe('p1', sub, 'sess-gone')).rejects.toMatchObject({ status: 401 });
     expect(queries).toHaveLength(1);
   });
 });

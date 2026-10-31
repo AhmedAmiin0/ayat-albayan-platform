@@ -1,7 +1,7 @@
 import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@ab/shared';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { dbError } from '../http/http';
-import { DB, type Db } from '../db/db.module';
+import { dbError } from '@/common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
 import { notificationItem } from './notifications.mapper';
 import { assertBrowserClaim } from './web/web-push.claim';
 import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
@@ -17,7 +17,7 @@ export const WEB_PUSH_MAX_PER_PROFILE = 10;
  * the caller's profile id here, never to an id from the request.
  */
 @Injectable()
-export class NotificationsQueries {
+export class NotificationsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(profileId: string, q: NotificationsQuery): Promise<NotificationsPage> {

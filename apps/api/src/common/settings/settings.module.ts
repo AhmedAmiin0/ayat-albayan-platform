@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { SettingsMetaController } from './settings-meta.controller';
-import { SettingsMetaQueries } from './settings-meta.queries';
+import { SettingsMetaRepo } from './settings-meta.repo';
 import { SettingsController } from './settings.controller';
 import { SettingsService } from './settings.service';
 
@@ -14,7 +14,7 @@ import { SettingsService } from './settings.service';
 @Global()
 @Module({
   controllers: [SettingsController, SettingsMetaController],
-  providers: [SettingsService, SettingsMetaQueries],
+  providers: [SettingsService, SettingsMetaRepo],
   exports: [SettingsService],
 })
 export class SettingsModule {}

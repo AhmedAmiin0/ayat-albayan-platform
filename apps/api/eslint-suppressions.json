@@ -285,12 +285,12 @@
       "count": 2
     }
   },
-  "src/common/configuration/config-store/store/config-store.queries.test.ts": {
+  "src/common/configuration/config-store/store/config-store.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/configuration/config-store/store/config-store.queries.ts": {
+  "src/common/configuration/config-store/store/config-store.repo.ts": {
     "max-len": {
       "count": 3
     }
@@ -355,7 +355,7 @@
       "count": 1
     }
   },
-  "src/common/configuration/integrations/integration-config.queries.ts": {
+  "src/common/configuration/integrations/integration-config.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -641,9 +641,6 @@
     }
   },
   "src/common/push/notifications.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -651,9 +648,6 @@
   "src/common/push/notifications.http.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 1
@@ -667,15 +661,7 @@
       "count": 2
     }
   },
-  "src/common/push/notifications.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/common/push/notifications.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/common/push/notifications.repo.ts": {
     "max-len": {
       "count": 4
     }
@@ -693,9 +679,6 @@
   },
   "src/common/push/push.module.ts": {
     "@typescript-eslint/require-await": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -755,9 +738,6 @@
   "src/common/push/web/web-push.http.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -843,28 +823,15 @@
       "count": 1
     }
   },
-  "src/common/settings/settings-meta.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/common/settings/settings-meta.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/common/settings/settings-meta.queries.test.ts": {
+  "src/common/settings/settings-meta.repo.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
     "@typescript-eslint/dot-notation": {
       "count": 6
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
-  "src/common/settings/settings-meta.queries.ts": {
+  "src/common/settings/settings-meta.repo.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
@@ -1143,7 +1110,7 @@
       "count": 1
     }
   },
-  "src/common/telemetry/activity/activity.queries.test.ts": {
+  "src/common/telemetry/activity/activity.repo.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -1151,7 +1118,7 @@
       "count": 1
     }
   },
-  "src/common/telemetry/activity/activity.queries.ts": {
+  "src/common/telemetry/activity/activity.repo.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },

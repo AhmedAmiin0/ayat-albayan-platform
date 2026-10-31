@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { ConfigStoreQueries, rpcError } from './config-store.queries';
+import { ConfigStoreRepo, rpcError } from './config-store.repo';
 import { ConfigConflictError } from '@/common/configuration/config-store/config-store.types';
 
 const dbRow = { key: 'upload_max_mb', value: 4, version: 3, description: null, description_seed: 'نص', description_edited: false, updated_at: 't', updated_by: 'u1', retired_at: null };
@@ -17,7 +17,7 @@ function fakeDb(opts: { revs?: (number | null)[]; rows?: unknown[]; rpc?: { erro
     table === 'settings_revision' ? { select: () => ({ eq: () => ({ maybeSingle }) }) } : { select: rowsSelect },
   );
   const rpc = vi.fn(async () => opts.rpc ?? { error: null });
-  return { q: new ConfigStoreQueries({ from, rpc } as unknown as Db), rpc, rowsSelect };
+  return { q: new ConfigStoreRepo({ from, rpc } as unknown as Db), rpc, rowsSelect };
 }
 
 describe('rpcError', () => {

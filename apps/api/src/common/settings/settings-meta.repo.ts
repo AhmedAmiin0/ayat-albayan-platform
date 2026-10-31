@@ -8,7 +8,7 @@ import { DB, type Db } from '@/common/db/db.module';
  * a row the seeder created (JSON null with no writer; an admin's null save has updated_by set).
  */
 @Injectable()
-export class SettingsMetaQueries {
+export class SettingsMetaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async meta(): Promise<Record<string, SettingMeta>> {
