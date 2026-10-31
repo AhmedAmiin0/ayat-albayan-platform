@@ -1,9 +1,9 @@
 import { Injectable, Optional } from '@nestjs/common';
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { RulesReader } from '../../notification-rules/store/rules.reader';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { RulesReader } from '@/modules/messaging/notification-rules/store/rules.reader';
 import { messagingNumbers, routable, ruleNumbers, type RoutePass } from './number-route';
 import { RouteQueries } from './route.queries';
-import type { TemplateRow } from '../whatsapp.types';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
  * Loads what one module-mode send pass routes with (docs/23c): the numbers, every template approval on

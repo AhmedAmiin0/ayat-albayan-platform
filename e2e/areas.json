@@ -304,7 +304,8 @@
         "apps/api/src/modules/people/users/",
         "apps/api/src/modules/people/roles/",
         "apps/api/src/modules/people/me/",
-        "apps/api/src/modules/people/portal/"
+        "apps/api/src/modules/people/portal/",
+        "apps/api/src/modules/people/presence/"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -319,6 +320,7 @@
         "messaging/inbox-send-file.spec.ts",
         "finance/journey-3-payment-renewal.spec.ts",
         "people/journey-6-duplicate-student.spec.ts",
+        "people/presence-staff.spec.ts",
         "sales/journey-7-assistant-cycle.spec.ts",
         "messaging/kapso-driver.spec.ts",
         "sales/lead-to-subscription.spec.ts",

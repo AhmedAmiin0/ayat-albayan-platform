@@ -43,6 +43,7 @@ import { SalesTrialDateController, TrialDateController } from './trial-date/tria
 import { TrialDateQueries } from './trial-date/trial-date.queries';
 import { TrialDateDeps, TrialDates } from './trial-date/trial-date.service';
 import { SalesTrialDates } from './sales/course/sales-trial-date.service';
+import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
 
 /**
  * Booking wizard: teacher filter, slot grid with conflict reasons, POST /booking in one transaction,
@@ -52,7 +53,13 @@ import { SalesTrialDates } from './sales/course/sales-trial-date.service';
  * R-SCH-04, R-SCH-06, R-LEAD-06. Owner: Phase 2 builder B2 (docs/10-phase2-contracts.md §1).
  */
 @Module({
-  imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule],
+  imports: [
+    TeachersModule,
+    SchedulingModule,
+    SalesModule,
+    SubscriptionsModule,
+    ScheduleNoticesModule,
+  ],
   controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
   providers: [
     BookingSettings,

@@ -60,8 +60,8 @@ describe('«التواصل» ?tab=', () => {
 
   it('that group holds both timing values and the reopen template, editable there; the public number sits in «الأكاديمية»', () => {
     const timing = ['quick_reply_window_hours', 'reminder_lookahead_hours'] as const;
-    // The chat reopen template, the WhatsApp calls switch and permission template (docs/28) and the old CRM files host and copy switch sit in the same messaging group.
-    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual(['calls_permission_template', 'chat_reopen_template', 'crm_media_copy_all', 'crm_media_host', ...timing, 'whatsapp_calls_enabled']);
+    // The chat reopen template, the WhatsApp calls switch and permission template (docs/28) and the old CRM files host and copy switch and the presence switch (docs/33) sit in the same messaging group.
+    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual(['calls_permission_template', 'chat_reopen_template', 'crm_media_copy_all', 'crm_media_host', 'presence_enabled', ...timing, 'whatsapp_calls_enabled']);
     expect(timing.every((k) => isEditableValueKey(k))).toBe(true);
     expect(VALUE_GROUPS[VALUES_GROUP.academy]).toContain('academy_whatsapp_e164');
   });

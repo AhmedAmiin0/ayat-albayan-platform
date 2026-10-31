@@ -969,7 +969,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/money/ledger/usage/receivables.ts": {
@@ -1064,7 +1064,7 @@
   },
   "src/notifications/catalogue/catalogue.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/notifications/catalogue/catalogue.types.ts": {

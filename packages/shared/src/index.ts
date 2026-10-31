@@ -62,5 +62,6 @@ export * from './catalog/integrations/index.js';
 export * from './google/index.js';
 export * from './people/users/index.js';
 export * from './people/account/index.js';
+export * from './people/presence/index.js';
 export * from './notifications/index.js';
 export * from './messaging/numbers/index.js';

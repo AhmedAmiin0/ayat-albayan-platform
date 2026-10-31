@@ -36,7 +36,8 @@ const riyadhStart = (date: string): Date => startOfLocalDay(date, RIYADH_TZ);
 /**
  * «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b, docs/16 row 37c): ANY student, for whoever holds courses.pause
  * (admins and assistants by default). The work is one RPC each (migration 956); this checks the dates first (400),
- * then runs the follow-ups (CoursePauseFollowUps). Never a message to the family.
+ * then runs the follow-ups (CoursePauseFollowUps); the teacher and the family hear a pause or a
+ * resume once.
  */
 @Injectable()
 export class CoursePauseService {
@@ -67,7 +68,10 @@ export class CoursePauseService {
     const until = body.untilDate ?? null;
     this.check(from, until);
     const p = { student_id: studentId, from_date: from, until_date: until, reason: body.reason ?? null, actor: actor.id };
-    return this.done(await this.queries.call('course_pause_start', p), actor.id);
+    const out = await this.queries.call('course_pause_start', p);
+    const result = await this.done(out, actor.id);
+    await this.follow.paused(out, actor.id);
+    return result;
   }
 
   /** Extend or shorten the open pause; lessons after a shortened end come back (clash-checked). */
@@ -99,13 +103,18 @@ export class CoursePauseService {
   async resumePause(pauseId: string, actorId: string | null): Promise<CoursePauseResult> {
     const out = await this.queries.call('course_pause_resume', { pause_id: pauseId, actor: actorId });
     if (out.resumed === false) return this.result(out, 0);
-    return this.done(out, actorId);
+    const result = await this.done(out, actorId);
+    await this.follow.resumed(out, actorId);
+    return result;
   }
 
   /** The hourly job: a pause from a later day begins on its from day (idempotent: started false changes nothing). */
   async beginPause(pauseId: string): Promise<void> {
     const out = await this.queries.call('course_pause_begin', { pause_id: pauseId, actor: null });
-    if (out.started) await this.follow.after(out, null);
+    if (!out.started) return;
+    await this.follow.after(out, null);
+    // Usually told at start already (same pause: one notice); this covers lessons booked since.
+    await this.follow.paused(out, null);
   }
 
   private async done(out: RpcOut, actorId: string | null): Promise<CoursePauseResult> {
