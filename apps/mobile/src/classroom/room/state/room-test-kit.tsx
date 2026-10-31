@@ -17,6 +17,7 @@ export interface FakeClient extends RoomClient {
   push: (next: Partial<RoomSnapshot>) => void;
   connect: jest.Mock;
   disconnect: jest.Mock;
+  close: jest.Mock;
   setMic: jest.Mock;
   setCamera: jest.Mock;
   switchCamera: jest.Mock;
@@ -32,6 +33,7 @@ function fakeClient(): FakeClient {
     },
     connect: jest.fn(() => Promise.resolve()),
     disconnect: jest.fn(),
+    close: jest.fn(),
     snapshot: () => snap,
     subscribe(l) {
       listeners.add(l);

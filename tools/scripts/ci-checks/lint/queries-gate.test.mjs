@@ -14,7 +14,7 @@ test('isQueries: a *queries.ts(x) name or a class XQueries, in TypeScript only',
   assert.equal(isQueries('apps/api/src/a/b.ts', text('// QueriesClient, class XQueriesLike')), false);
 });
 
-test('compare: a new queries file and a listed one that is gone both count', () => {
+test('compare: a new queries file is added (fails); a listed one that is gone is fixed (passes)', () => {
   const listed = ['a.queries.ts', 'b.queries.ts'];
   assert.deepEqual(compare(['a.queries.ts', 'c.queries.ts'], listed), {
     added: ['c.queries.ts'],

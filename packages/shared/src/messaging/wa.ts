@@ -27,15 +27,6 @@ export function sessionWindowOpen(lastInboundAt: Date | string | null | undefine
   return now.getTime() - at < SESSION_WINDOW_MS;
 }
 
-/**
- * R-MSG-03 fallback: «https://wa.me/966598917071?text=…» with the text prefilled. No URL /
- * URLSearchParams: @ab/shared also runs on Hermes. wa.me wants the number without the +.
- */
-export function clickToChatLink(phoneE164: string, text?: string): string {
-  const base = `https://wa.me/${phoneE164.replace(/\D/g, '')}`;
-  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
-}
-
 /** Tries per outbound message before it is `failed` (and the admin gets reminder_failed). */
 export const MAX_SEND_ATTEMPTS = 3;
 
@@ -65,6 +56,17 @@ const AUTH = new Set([10, 190, 200]);
 
 export function isWaAuthError(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && AUTH.has(code);
+}
+
+/**
+ * Account-level billing / eligibility (Meta Cloud API error codes): 131042 «Business eligibility
+ * payment issue», no valid payment method on the WABA. Every send fails the same way until the
+ * owner fixes billing in Meta, so the sender holds the row instead of failing it (docs/12 §3.3).
+ */
+const PAYMENT_HOLD = new Set([131042]);
+
+export function isWaPaymentHold(code: number | null | undefined): boolean {
+  return code !== null && code !== undefined && PAYMENT_HOLD.has(code);
 }
 
 /** The fields of a WhatsApp error that say whether the credential was refused. */

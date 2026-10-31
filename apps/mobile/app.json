@@ -20,7 +20,10 @@
     },
     "android": {
       "package": "com.ayatalbayan.admin",
-      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"],
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#FDF8F0",
         "foregroundImage": "./assets/android-icon-foreground.png",

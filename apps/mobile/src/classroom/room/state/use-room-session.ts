@@ -40,6 +40,7 @@ export function useRoomSession({ platform, target, fetchJoin }: RoomSessionInput
       dispatch({ type: 'joined' });
     } catch (e) {
       client.disconnect();
+      void platform.audio.stop();
       dispatch({ type: 'failed', message: roomFailure(e) });
     }
   };

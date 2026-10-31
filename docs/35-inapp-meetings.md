@@ -53,7 +53,7 @@ names no package, so it serves the fork as well.
 
 - **Flag** `meetings_in_app` (classroom settings, public, **default true**). Off = the browser, as before.
   It is read from `/settings/public`, and it needs no migration: the config seeder seeds it like every key.
-- **Choice** (`classroom/room/state/room-mode.ts`): app when the flag is on **and** the native module is
+- **Choice** (`classroom/room/model/room-mode.ts`): app when the flag is on **and** the native module is
   present (`NativeModules.LivekitReactNativeModule`, loaded lazily like the calls code). Otherwise the
   browser link opens. An older APK never crashes at boot: nothing imports the SDK at module scope.
 - **Press**: the join API is called first, as today, so a refusal still reads in the sheet. On success
@@ -86,8 +86,9 @@ names no package, so it serves the fork as well.
 
 ## 5. Background
 
-- **Android**: the app has no foreground service. The remote audio keeps playing while Android keeps the
-  process alive. From Android 9 the microphone is silenced in the background, and the camera always is.
+- **Android**: the app has no foreground service (`FOREGROUND_SERVICE`, declared by
+  `@livekit/react-native` for screen share, is blocked in `app.json`). The remote audio keeps
+  playing while Android keeps the process alive. From Android 9 the microphone is silenced in the background, and the camera always is.
   Back in the foreground everything resumes in the same room. A foreground service
   (`FOREGROUND_SERVICE_MICROPHONE`, e.g. through notifee) is a follow-up native change.
 - **iOS**: no `UIBackgroundModes: audio`, so iOS suspends the audio in the background. Same follow-up.

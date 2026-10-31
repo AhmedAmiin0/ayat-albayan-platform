@@ -64,7 +64,7 @@ export function LazyList<T>({ endSpace = 0, inset = true, tabBar = true, gap, pa
   const end = tabBar ? 24 + bar + endSpace : endSpace;
   const content = useMemo(() => ({ paddingBottom: end }), [end]);
   const rows = data ?? paged?.items;
-  const cells = useInsetRows(props.renderItem, rows?.length ?? 0);
+  const cells = useInsetRows(props.renderItem, rows?.length ?? 0, rows);
   return (
     <FlashList
       style={FILL}
