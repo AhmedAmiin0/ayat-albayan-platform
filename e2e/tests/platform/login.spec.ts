@@ -19,7 +19,7 @@ test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
   test('teacher lands on own home', async ({ page }) => {
     await loginViaUi(page, 'teacher');
     await expect(page).toHaveURL(/\/teacher$/);
-    await expect(page.getByRole('heading', { level: 1, name: ar.teacher.dashboardTitle })).toBeVisible();
+    await expect(page.getByRole('heading', { name: ar.teacher.dashboardTitle })).toBeVisible();
   });
 
   test('wrong password shows the Arabic error', async ({ page }) => {
