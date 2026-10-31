@@ -5758,9 +5758,6 @@
   "src/features/people/roles/PermissionMatrix.tsx": {
     "max-len": {
       "count": 3
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/people/roles/RoleDialog.tsx": {
@@ -6755,9 +6752,6 @@
   },
   "src/features/people/users/actions/SetPasswordPage.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },
