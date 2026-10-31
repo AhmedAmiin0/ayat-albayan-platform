@@ -1,12 +1,13 @@
 name: db-migrate
-# Staging database migrations (docs/09-deployment.md «GitHub Actions»). Staging holds the owner's REAL
-# data, so nothing is applied by surprise:
+# Database migrations (docs/09-deployment.md «GitHub Actions»), one target per run:
 #  - pull_request (migrations touched): a READ-ONLY, secret-free check only: numbering and light SQL lint.
 #    There is deliberately no PR dry-run against the database: a pull_request run uses the PR's own
 #    workflow file, lockfile and dependencies, so it must never hold the database credentials.
-#  - apply: only workflow_dispatch with apply=true on develop, or the call from deploy-staging.yml
-#    (push to develop → ci green → deploy-staging → here), always inside the environment `staging-db`,
-#    where the owner adds a REQUIRED REVIEWER, so every apply waits for an approval click.
+#  - target production (Supabase knxfwiimjcifwckhwbim, the owner's REAL data; job «apply»): workflow_dispatch with
+#    apply=true on develop, or the call from deploy-production.yml, always inside the environment `staging-db`
+#    (legacy name), where the owner adds a REQUIRED REVIEWER, so every apply waits for an approval click.
+#  - target staging (Supabase gqkqbxxgqttfbbqoqedf, DEMO data; job «apply-staging»): the call from
+#    deploy-staging.yml after every green develop push, or by hand; environment `staging`, STG_DATABASE_URL only.
 # Forward-only: there is no automatic undo (docs/09 «Roll back»). The repo is public: no
 # pull_request_target, and the secrets are only bound to environment jobs.
 on:
@@ -16,8 +17,13 @@ on:
       - .github/workflows/db-migrate.yml
   workflow_dispatch:
     inputs:
+      target:
+        description: Which database (production waits for the staging-db reviewer)
+        type: choice
+        options: [staging, production]
+        default: staging
       apply:
-        description: Apply pending migrations to STAGING (waits for the staging-db reviewer). Off = check only.
+        description: Apply pending migrations to the target. Off = check only.
         type: boolean
         default: false
       include_all:
@@ -26,6 +32,10 @@ on:
         default: false
   workflow_call:
     inputs:
+      target:
+        description: production or staging
+        type: string
+        required: true
       apply:
         type: boolean
         default: false
@@ -37,8 +47,9 @@ on:
 permissions:
   contents: read
 
+# One run per target at a time; a PR's read-only check never queues with (or cancels) an apply.
 concurrency:
-  group: db-migrate-staging
+  group: db-migrate-${{ github.event_name == 'pull_request' && github.ref || inputs.target }}
   cancel-in-progress: false
 
 jobs:
@@ -60,9 +71,10 @@ jobs:
           BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
         run: node tools/scripts/ci-checks/migration-check.mjs $BASE_REF
 
+  # PRODUCTION (the live app).
   apply:
     needs: check
-    if: ${{ inputs.apply }}
+    if: ${{ inputs.apply && inputs.target == 'production' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: staging-db
@@ -84,7 +96,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - name: supabase db push (staging)
+      - name: supabase db push (production)
         env:
           DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -107,3 +119,41 @@ jobs:
             pnpm exec supabase db push --dry-run -p "$DB_PASSWORD" $INCLUDE_ALL
             pnpm exec supabase db push --yes -p "$DB_PASSWORD" $INCLUDE_ALL
           fi
+
+  # STAGING: only the staging project's URL (its pooler user names the project), never a fallback to another secret.
+  apply-staging:
+    needs: check
+    if: ${{ inputs.apply && inputs.target == 'staging' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: staging
+    steps:
+      - name: Only develop may change the database
+        env:
+          REF: ${{ github.ref }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ] && [ "$REF" != refs/heads/develop ]; then
+            echo "::error::migrations are applied from develop only (this run is on $REF)"; exit 1
+          fi
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: supabase db push (staging)
+        env:
+          DB_URL: ${{ secrets.STG_DATABASE_URL }}
+        run: |
+          case "$DB_URL" in
+            postgres*://postgres.gqkqbxxgqttfbbqoqedf:*@*) ;;
+            *) echo "::error::STG_DATABASE_URL must be the staging project's session pooler URL (user postgres.gqkqbxxgqttfbbqoqedf)"; exit 1 ;;
+          esac
+          echo "::add-mask::$DB_URL"
+          pnpm i --frozen-lockfile --filter @ab/db
+          cd packages/db
+          pnpm exec supabase db push --yes --db-url "$DB_URL"

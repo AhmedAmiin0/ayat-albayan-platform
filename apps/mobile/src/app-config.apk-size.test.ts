@@ -12,7 +12,7 @@ interface Profile {
 }
 const profiles: Record<string, Profile> = eas.build;
 
-test.each(['preview', 'stripe-test'])('the %s APK builds only the arm ABIs', (name) => {
+test.each(['preview', 'stripe-test', 'staging'])('the %s APK builds only the arm ABIs', (name) => {
   const profile = profiles[name];
   expect(profile?.android?.buildType).toBe('apk');
   expect(profile?.env?.ORG_GRADLE_PROJECT_reactNativeArchitectures).toBe('arm64-v8a,armeabi-v7a');

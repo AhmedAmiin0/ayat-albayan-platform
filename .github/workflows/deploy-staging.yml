@@ -1,32 +1,29 @@
 name: deploy-staging
-# Deploy staging from GitHub (docs/09-deployment.md §GitHub deploy): Actions → deploy-staging → Run workflow.
-# Every value comes from the GitHub environment "develop" (Settings → Environments → develop) or the
-# repository secrets: secrets for anything private. The public staging values below are defaults; a
-# variable of the same name overrides one. Nothing is read from a laptop.
-# The server's .env is MERGED, not replaced: a key left empty in GitHub keeps the server's value.
-# SAFETY: this workflow never sets WA_PHONE_NUMBER_ID (the WhatsApp cut-over is the owner's, by hand;
-# sending itself is switched only in /admin/settings, settings.messaging_enabled, docs/23), never touches /opt/wacrm, and only runs on develop (push → ci → here) or by hand.
-# The repo is public: no pull_request trigger, no pull_request_target, secrets only in environment jobs.
-# The title carries the deployed commit (and a marker when migrations or code were skipped by hand):
-# the «plan» job of the next run reads it back to know what staging last received.
+# STAGING (owner 2026-10-31: «make a new one and make it the staging»), separate from production in every part:
+# Supabase gqkqbxxgqttfbbqoqedf, /opt/ayat-albayan-stg on the shared VPS (compose project ayat-albayan-stg, API on
+# 127.0.0.1:3120), https://staging-app.ayatalbayan.com + https://staging-api.ayatalbayan.com, GitHub environment
+# «staging», EAS channel «staging». DEMO data only. docs/09-deployment.md «Staging».
+# Automatic: every merge into develop once ci passed on it; by hand: Actions → deploy-staging → Run workflow.
+# B1 (docs/09): repository-level secrets hold PRODUCTION values and resolve in any job whose environment lacks the
+# name, so this file reads ONLY secrets.STG_* (no repository secret has that prefix) and hard-codes every public
+# staging value; tools/scripts/ci-checks/env-split/workflows-split.test.mjs keeps it so.
+# Never production: not its Supabase ref, server directory, port, preview OTA channel or release tags.
+# Never WA_PHONE_NUMBER_ID / WA_ALLOWED_RECIPIENTS (by hand on the server only), never /opt/wacrm.
 run-name: >-
-  deploy-staging ${{ github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only'
-  || (github.event_name == 'workflow_dispatch' && !inputs.migrate) && ' no-migrate' || '' }}
+  deploy-staging ${{ github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only' || '' }}
 on:
-  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
   workflow_run:
     workflows: [ci]
     types: [completed]
     branches: [develop]
-  # By hand: Actions → deploy-staging → Run workflow.
   workflow_dispatch:
     inputs:
-      migrate:
-        description: Push database migrations to the staging Supabase first
-        type: boolean
-        default: true
       env_only:
         description: Only update the server .env and restart the API (no code, no web, no migrations)
+        type: boolean
+        default: false
+      seed_demo:
+        description: After the migrations, load the DEMO data (tools/scripts/seed/seed-demo.mjs) into the staging database
         type: boolean
         default: false
 
@@ -38,8 +35,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Is the develop environment set up? Without the deploy key an automatic run is skipped with a
-  # warning (not a red ✗ on every merge); a run started by hand still fails and says what is missing.
+  # Without the deploy key an automatic run is skipped with a warning (so merging before the owner's setup is
+  # harmless); a run started by hand fails and says what is missing.
   preflight:
     if: >-
       github.event_name == 'workflow_dispatch' ||
@@ -48,7 +45,7 @@ jobs:
        && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    environment: develop
+    environment: staging
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
@@ -59,123 +56,93 @@ jobs:
           exit 1
       - id: check
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY || secrets.VPS_SSH_PRIVATE_KEY }}
+          STG_SSH_PRIVATE_KEY: ${{ secrets.STG_SSH_PRIVATE_KEY }}
+          STG_SUPABASE_ANON_KEY: ${{ secrets.STG_SUPABASE_ANON_KEY }}
+          STG_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STG_SUPABASE_SERVICE_ROLE_KEY }}
+          STG_DATABASE_URL: ${{ secrets.STG_DATABASE_URL }}
         run: |
-          if [ -n "$SSH_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          echo "ready=false" >> "$GITHUB_OUTPUT"
-          msg="staging deploy skipped: add the secret VPS_SSH_PRIVATE_KEY (or SSH_PRIVATE_KEY) and the STAGING_* secrets, see docs/09-deployment.md «GitHub Actions»"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "::error::$msg"; exit 1; fi
-          echo "::warning::$msg"
+          if [ -z "$STG_SSH_PRIVATE_KEY" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            msg="staging deploy skipped: the environment «staging» has no STG_SSH_PRIVATE_KEY yet (docs/09-deployment.md «Staging»)"
+            if [ "${{ github.event_name }}" = workflow_dispatch ]; then echo "::error::$msg"; exit 1; fi
+            echo "::warning::$msg"; exit 0
+          fi
+          missing=""
+          for v in STG_SUPABASE_ANON_KEY STG_SUPABASE_SERVICE_ROLE_KEY STG_DATABASE_URL; do [ -n "${!v}" ] || missing="$missing $v"; done
+          if [ -n "$missing" ]; then echo "::error::add to the environment «staging»:$missing"; exit 1; fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
 
-  # What changed since staging last got it (owner 2026-10-23: no approval click when no migration changed,
-  # automatic OTA). GitHub API with actions: read only; no environment, no secret.
-  #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/env/deploy-baseline.mjs)
-  #    AND nothing under packages/db/supabase/migrations/ changed since. FAIL SAFE: an unknown or unfound
-  #    baseline, an API or git error, or an empty output all leave the gated migrate job ON.
-  #  - ota: true only when apps/mobile or packages/shared (the JS the app bundles) changed since the last green
-  #    preview OTA (else since the last deploy) AND native-changes.mjs finds no native change since the last
-  #    APK (repository variable OTA_BASELINE_SHA, default c140b4cc). Anything unclear = no OTA.
+  # Every run migrates (the first one applies every migration to the empty project). No reviewer: DEMO data only.
+  migrate:
+    needs: preflight
+    if: ${{ needs.preflight.outputs.ready == 'true' && !inputs.env_only }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/db-migrate.yml
+    with:
+      apply: true
+      target: staging
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+    secrets: inherit
+
+  # The staging app's OTA (channel «staging», never preview): only once a staging APK exists (repository variable
+  # STG_OTA_BASELINE_SHA = its commit), when mobile JS changed since the last green staging OTA (else that APK)
+  # and native-changes.mjs finds no native change for the staging profile. Anything unclear = no OTA.
   plan:
     needs: preflight
-    if: needs.preflight.outputs.ready == 'true'
+    if: ${{ needs.preflight.outputs.ready == 'true' && !inputs.env_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
       actions: read
     outputs:
-      migrations: ${{ steps.migrations.outputs.migrations }}
       ota: ${{ steps.ota.outputs.ota }}
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
-      - id: base
+      - id: ota
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node tools/scripts/env/deploy-baseline.mjs | tee -a "$GITHUB_OUTPUT"
-      - id: migrations
-        env:
-          BASE: ${{ steps.base.outputs.migrate_base }}
-        run: |
-          migrations=true
-          if [ -z "$BASE" ]; then
-            echo "::notice::last migrated deploy unknown: the gated migrate job runs"
-          elif ! changed=$(git diff --name-only "$BASE" HEAD -- packages/db/supabase/migrations/); then
-            echo "::warning::git diff against $BASE failed: the gated migrate job runs"
-          elif [ -n "$changed" ]; then
-            printf 'migrations changed since %s:\n%s\n' "${BASE:0:7}" "$changed"
-          else
-            migrations=false
-            echo "::notice::no migration changed since ${BASE:0:7}: migrate skipped (no staging-db approval needed)"
-          fi
-          echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
-      - id: ota
-        if: ${{ !inputs.env_only }}
-        env:
-          BASE: ${{ steps.base.outputs.ota_base || steps.base.outputs.code_base }}
-          NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
+          NATIVE_BASE: ${{ vars.STG_OTA_BASELINE_SHA }}
         run: |
           ota=false
-          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages/shared \
+          base=$(node tools/scripts/env/deploy-baseline.mjs staging | sed -n 's/^ota_base=//p')
+          base=${base:-$NATIVE_BASE}
+          js() { git diff --name-only "$base" HEAD -- apps/mobile packages/shared \
             ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
-          if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
-          elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
-          elif [ -z "$(js)" ]; then echo "no mobile JS change since ${BASE:0:7}: no OTA"
-          elif ! node tools/scripts/ci-checks/native-changes.mjs "$NATIVE_BASE"; then
-            echo "::warning::native change since the last APK ($NATIVE_BASE): no automatic OTA. Build an APK by hand (mobile → build-android-apk), then set OTA_BASELINE_SHA."
-          else ota=true; echo "mobile JS changed since ${BASE:0:7} and no native change: OTA to preview after the deploy"; fi
+          if [ -z "$NATIVE_BASE" ]; then echo "::notice::no staging APK recorded (variable STG_OTA_BASELINE_SHA): no OTA"
+          elif ! git merge-base --is-ancestor "$base" HEAD; then echo "::notice::${base:0:7} is not behind this commit: no OTA"
+          elif [ -z "$(js)" ]; then echo "no mobile JS change since ${base:0:7}: no OTA"
+          elif ! node tools/scripts/ci-checks/native-changes.mjs "$NATIVE_BASE" staging; then
+            echo "::warning::native change since the staging APK: build one (mobile → build-android-apk, profile staging), then set STG_OTA_BASELINE_SHA"
+          else ota=true; fi
           echo "ota=$ota" >> "$GITHUB_OUTPUT"
-
-  # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
-  # Automatic runs skip it only when «plan» proved no migration changed (any other plan result, a failed
-  # plan included, runs it). By hand: the migrate / env_only inputs decide, exactly as before.
-  migrate:
-    needs: [preflight, plan]
-    if: >-
-      ${{ !cancelled() && needs.preflight.outputs.ready == 'true' &&
-      ((github.event_name == 'workflow_run' && needs.plan.outputs.migrations != 'false')
-       || (github.event_name == 'workflow_dispatch' && inputs.migrate && !inputs.env_only)) }}
-    permissions:
-      contents: read
-    uses: ./.github/workflows/db-migrate.yml
-    with:
-      apply: true
-      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-    secrets: inherit
 
   deploy:
     needs: [preflight, migrate]
-    # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
     if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
     runs-on: ubuntu-latest
-    # A build, five health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
-    # (failure() false) would skip the rollback.
-    timeout-minutes: 60
-    environment: develop
+    timeout-minutes: 45
+    environment: staging
     permissions:
       contents: read
     env:
-      DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
-      SSH_HOST: ${{ vars.SSH_HOST || secrets.VPS_HOST || '148.230.116.195' }}
-      SSH_USER: ${{ vars.SSH_USER || secrets.VPS_USER || 'root' }}
+      DEST: /opt/ayat-albayan-stg
+      SSH_HOST: 148.230.116.195
+      API_URL: https://staging-api.ayatalbayan.com
     steps:
-      - name: Only the staging directory may be deployed to
-        run: |
-          case "$DEST" in
-            /opt/ayat-albayan-staging*) ;;
-            *) echo "::error::DEPLOY_DIR must be /opt/ayat-albayan-staging (got $DEST)"; exit 1 ;;
-          esac
-          case "$DEST" in *..*|*' '*|*';'*) echo "::error::DEPLOY_DIR has unsafe characters"; exit 1 ;; esac
       - uses: actions/checkout@v5
         with:
-          # The exact commit ci passed on (auto), or the chosen branch (by hand).
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -185,170 +152,113 @@ jobs:
       - name: Build the web app (before anything on the server changes)
         if: ${{ !inputs.env_only }}
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
-          # Public by design; accepted as a variable or a secret.
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
+          VITE_API_URL: https://staging-api.ayatalbayan.com
+          VITE_SUPABASE_URL: https://gqkqbxxgqttfbbqoqedf.supabase.co
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.STG_SUPABASE_ANON_KEY }}
         run: |
-          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
           pnpm --filter @ab/db --filter @ab/shared --filter @ab/client-core build >/dev/null
           pnpm --filter web build
 
       - name: SSH key
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY || secrets.VPS_SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_PRIVATE_KEY: ${{ secrets.STG_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.STG_SSH_KNOWN_HOSTS }}
         run: |
-          test -n "$SSH_PRIVATE_KEY" || { echo "::error::add the secret VPS_SSH_PRIVATE_KEY (or SSH_PRIVATE_KEY)"; exit 1; }
           echo "::add-mask::$SSH_HOST"
           install -d -m 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
-          if [ -n "$SSH_KNOWN_HOSTS" ]; then
-            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          else
-            echo "::warning::SSH_KNOWN_HOSTS is not set: the host key is fetched with ssh-keyscan on every run, so a man-in-the-middle on the runner network would go unnoticed. Pin it: ssh-keyscan -t ed25519 <host> and save the line as the secret SSH_KNOWN_HOSTS."
-            ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
-          fi
-          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n  ServerAliveCountMax 6\n' \
-            "$SSH_HOST" "$SSH_USER" > ~/.ssh/config
-          ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else echo "::warning::STG_SSH_KNOWN_HOSTS is not set: the host key is fetched with ssh-keyscan"; ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts; fi
+          printf 'Host target\n  HostName %s\n  User root\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n  ServerAliveCountMax 6\n' \
+            "$SSH_HOST" > ~/.ssh/config
+          # 711: the host Caddy (user caddy) reaches web/ but cannot list the folder; .env stays root-only (umask 077).
+          ssh target "install -d -m 711 $DEST"
 
       - name: Merge the server .env (key names only are logged)
-        # API .env keys (apps/api/src/config/env/env.ts), scoped to this step only. The WhatsApp phone number id and
-        # the messaging switch are deliberately NOT here: they stay whatever the server has.
+        # SUPABASE_URL, WEB_ORIGIN and the hosts are pinned in deploy/stg/docker-compose.yml, never in .env.
         env:
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
-          WA_ACCESS_TOKEN: ${{ secrets.WA_ACCESS_TOKEN }}
-          WA_APP_SECRET: ${{ secrets.WA_APP_SECRET }}
-          WA_VERIFY_TOKEN: ${{ secrets.WA_VERIFY_TOKEN }}
-          FEEDBACK_TOKEN_SECRET: ${{ secrets.FEEDBACK_TOKEN_SECRET }}
-          LOGIN_CODE_PEPPER: ${{ secrets.LOGIN_CODE_PEPPER }}
-          LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
-          LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
-          RECORDING_S3_ACCESS_KEY: ${{ secrets.RECORDING_S3_ACCESS_KEY }}
-          RECORDING_S3_SECRET: ${{ secrets.RECORDING_S3_SECRET }}
-          EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
-          # … and variables:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
-          WEB_ORIGIN: ${{ vars.WEB_ORIGIN }}
-          WA_API_BASE: ${{ vars.WA_API_BASE }}
-          WA_API_VERSION: ${{ vars.WA_API_VERSION }}
-          WA_WABA_ID: ${{ vars.WA_WABA_ID }}
-          WA_APP_ID: ${{ vars.WA_APP_ID }}
-          LIVEKIT_URL: ${{ vars.LIVEKIT_URL }}
-          RECORDING_S3_ENDPOINT: ${{ vars.RECORDING_S3_ENDPOINT }}
-          RECORDING_S3_REGION: ${{ vars.RECORDING_S3_REGION }}
-          RECORDING_S3_BUCKET: ${{ vars.RECORDING_S3_BUCKET }}
-          EXPO_API_BASE: ${{ vars.EXPO_API_BASE }}
-          FX_API_URL: ${{ vars.FX_API_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STG_SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_JWT_SECRET: ${{ secrets.STG_SUPABASE_JWT_SECRET }}
+          FEEDBACK_TOKEN_SECRET: ${{ secrets.STG_FEEDBACK_TOKEN_SECRET }}
+          LOGIN_CODE_PEPPER: ${{ secrets.STG_LOGIN_CODE_PEPPER }}
         run: |
           umask 077
-          # Missing file = start empty; present but unreadable = stop (never write a partial .env).
           ssh target "if [ -e $DEST/.env ]; then cat $DEST/.env; fi" > current.env
-          keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
-            WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
-            FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
-            RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
+          keys="SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env
             echo "server .env updated (backup kept next to it)"; fi
           rm -f current.env new.env
 
-      # docs/09 «Two API copies + one worker»: the code, the compose file, roll.sh, rollback.sh and the load balancer
-      # config go up as *.new. The next step swaps them in with ONE command (the server never pairs a new layout with
-      # old code; the previous ones stay as *.old) and rolls: roll.sh builds the image ONCE and rolls ayat-worker →
-      # ayat-pdf → ayat-api-a → ayat-api-b (each healthy first; ayat-lb serves from the other copy; an unhealthy
-      # ayat-pdf only warns), reloads ayat-lb only when its validated config changed and prunes this project's old
-      # images only (no global prune; the build cache is shared with the CRM and cannot be scoped to one project, so it
-      # is left alone).
-      - name: Ship the API code and the compose files
-        id: ship
+      # The code and deploy/stg go up as *.new, then ONE command under the deploy lock swaps them in (the previous ones
+      # kept as *.old) and rolls; a failed roll runs rollback.sh in the same command. setsid -w + .deploy.log: an ssh
+      # drop never stops it halfway. Exit codes: 75 lock held (nothing changed), 1 rolled back, 3 rollback failed too
+      # (the first deploy has nothing to roll back to), 4 the swap failed partway, 255 ssh lost.
+      - name: Ship the API code and deploy/stg
         if: ${{ !inputs.env_only }}
         run: |
-          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new $DEST/lb"
+          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
-          scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml.new"
-          scp -q deploy/staging/roll.sh "target:$DEST/roll.sh.new"
-          scp -q deploy/staging/rollback.sh "target:$DEST/rollback.sh.new"
-          scp -q deploy/staging/lb/Caddyfile "target:$DEST/lb/Caddyfile.new"
+          for f in docker-compose.yml roll.sh rollback.sh; do scp -q "deploy/stg/$f" "target:$DEST/$f.new"; done
 
-      # Swap and roll under the deploy lock (flock -n: a second deploy refuses at once, before any change), and a failed
-      # roll rolls back in the SAME command (rollback.sh, docs/09 «Roll back»), so 127.0.0.1:3110 keeps serving.
-      # setsid -w, output to $DEST/.deploy.log: an ssh drop never kills the roll or its rollback halfway (they run to
-      # the end on the server; the log is printed here once done). lb/Caddyfile in place (cat >, same inode): ayat-lb
-      # mounts the lb/ directory and reloads the file. Exit codes: 75 lock held (nothing changed), 1 rolled back,
-      # 3 the rollback failed too, 255 ssh lost.
-      - name: Swap in and roll the API (one build, one container at a time)
-        id: roll
+      - name: Swap in and roll the API
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh -c '
-            for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done &&
+            for f in docker-compose.yml roll.sh; do [ ! -f \$f ] || cp \$f \$f.old; done &&
             rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src &&
-            mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh &&
-            cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new || exit 4
+            mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh || exit 4
             { sh roll.sh || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
             rc=$?
             case "$rc" in
               75) echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed" ;;
               1) echo "::error::the roll failed: rollback.sh put the previous version back (bad code kept in src.bad)" ;;
-              3) echo "::error::the roll failed AND rollback.sh failed: 127.0.0.1:3110 may be down, fix by hand (docs/09 «Roll back»)" ;;
+              3) echo "::error::the roll failed and there was nothing (or no way) to roll back: see $DEST/.deploy.log" ;;
               4) echo "::error::the swap failed partway: nothing was rolled; check $DEST by hand (src, src.old, *.new)" ;;
-              255) echo "::error::ssh lost: the roll (and any rollback) goes on on the server, see $DEST/.deploy.log" ;;
+              255) echo "::error::ssh lost: the roll goes on on the server, see $DEST/.deploy.log" ;;
               *) echo "::error::the roll step failed ($rc), see $DEST/.deploy.log" ;;
             esac
             exit "$rc"
           }
 
-      # One container at a time too (roll.sh --env-only, no build), under the same lock; a server still on the
-      # single-container layout restarts it.
       - name: Restart the API with the new .env
         if: ${{ inputs.env_only }}
-        run: |
-          ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh -c 'if [ -f roll.sh ] && grep -q ayat-lb roll.sh && grep -q \"^  ayat-lb:\" docker-compose.yml; then sh roll.sh --env-only; \
-            else docker compose up -d --force-recreate --remove-orphans; fi'"
+        run: ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh roll.sh --env-only"
 
       - name: Upload the web app (atomic swap)
-        id: web
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
           tar -C apps/web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/web.new && chmod -R o+rX $DEST/web.new \
             && rm -rf $DEST/web.old && { [ ! -d $DEST/web ] || mv $DEST/web $DEST/web.old; } && mv $DEST/web.new $DEST/web"
 
+      # Appends the two staging site blocks to the host Caddy only when they are missing (backup, validate, reload;
+      # an invalid file is restored). Never edits an existing block (the CRM's, production's).
+      - name: Host Caddy site blocks (only when missing)
+        run: ssh target "sh -s" < deploy/stg/caddy-sites.sh
+
       - name: Health check
-        id: health
-        env:
-          API_URL: ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}
         run: |
-          url="${API_URL}"
-          if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health"
-          else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
+          curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$API_URL/health"
           echo; echo "staging is up"
 
-      # The roll succeeded but the public health check failed: the same rollback.sh (under the deploy lock) puts the
-      # previous code, compose files and Caddyfile back and rolls the previous layout; the web build is swapped back
-      # only when this run swapped it. Database migrations are not undone (they only add). A failed roll already
-      # rolled back in its own step.
-      - name: Roll back to the previous version
-        if: ${{ failure() && steps.roll.outcome == 'success' && steps.health.outcome == 'failure' && !inputs.env_only }}
+      # Auth URLs, sign-up off and the custom access token hook (logins carry their role) from config.toml
+      # [remotes.stg], to the staging project only. Needs STG_SUPABASE_ACCESS_TOKEN (account-wide: it can reach
+      # production too, so it lives only in the environment «staging»). A failure only warns.
+      - name: Push the Supabase auth config (staging project only)
+        if: ${{ !inputs.env_only }}
+        continue-on-error: true
+        working-directory: packages/db
         env:
-          WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STG_SUPABASE_ACCESS_TOKEN }}
         run: |
-          # Detached like the roll (setsid, output in .deploy.log): an ssh drop or a cancel never stops it halfway.
-          ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh rollback.sh > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc"
-          if [ "$WEB_SWAPPED" = "true" ]; then
-            ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
-          fi
-          echo "::error::staging failed its health check: rolled back to the previous version (bad build kept in src.bad / web.bad)"
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then echo "::warning::no STG_SUPABASE_ACCESS_TOKEN: set the auth URLs and the hook by hand (docs/09 «Staging»)"; exit 0; fi
+          pnpm exec supabase config push --project-ref gqkqbxxgqttfbbqoqedf --yes
 
       - name: Summary
         if: always()
-        env:
-          API_URL: ${{ vars.API_URL }}
         run: |
           {
             echo "### Staging deploy: ${{ job.status }}"
@@ -356,19 +266,38 @@ jobs:
             echo "| | |"
             echo "|---|---|"
             echo "| Commit | \`$(git rev-parse --short HEAD)\` $(git log -1 --format=%s | head -c 90) |"
-            echo "| Trigger | ${{ github.event_name }} |"
-            echo "| Web | https://app.ayatalbayan.com |"
-            echo "| API | ${API_URL:-https://api.ayatalbayan.com}/health |"
+            echo "| Web | https://staging-app.ayatalbayan.com |"
+            echo "| API | $API_URL/health |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Remove the key
         if: always()
         run: rm -rf ~/.ssh/id_deploy
 
-  # Automatic OTA (owner 2026-10-23): after a green deploy, when «plan» found mobile JS changes and no native
-  # change, start mobile.yml (ota-update → preview) through the API, exactly like the manual button: it runs on
-  # develop in the environment `mobile`, keeps its own native-change refusal, and never builds an APK, iOS or
-  # production. Only when develop still points at the deployed commit, so the OTA ships what passed ci.
+  # DEMO data on staging only: seed-demo.mjs refuses any database but the staging project (allowedTarget).
+  seed:
+    needs: [preflight, migrate]
+    if: ${{ !cancelled() && needs.migrate.result == 'success' && inputs.seed_demo }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: staging
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm turbo build --filter=@ab/shared
+      - name: seed-demo on staging
+        env:
+          DATABASE_URL: ${{ secrets.STG_DATABASE_URL }}
+        run: node tools/scripts/seed/seed-demo.mjs --allow-remote-staging
+
+  # After a green deploy, start mobile.yml (ota-update, profile staging → channel staging) like the manual button.
   ota:
     needs: [plan, deploy]
     if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.plan.outputs.ota == 'true' }}
@@ -385,34 +314,7 @@ jobs:
           api="$GITHUB_API_URL/repos/$GITHUB_REPOSITORY"
           auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
           head=$(curl -fsS "${auth[@]}" "$api/branches/develop" | jq -r .commit.sha)
-          if [ "$head" != "$SHA" ]; then
-            echo "::notice::develop moved on (${head:0:7}): no OTA now; the next deploy decides"; exit 0
-          fi
+          if [ "$head" != "$SHA" ]; then echo "::notice::develop moved on (${head:0:7}): no OTA now"; exit 0; fi
           curl -fsS -X POST "${auth[@]}" "$api/actions/workflows/mobile.yml/dispatches" \
-            -d '{"ref":"develop","inputs":{"action":"ota-update","branch":"preview"}}'
-          echo "### OTA to preview started (mobile.yml) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
-
-  # Release tag + GitHub Release (owner 2026-10-30, docs/09 «Release tags»): v<UTC day>-<n> on the deployed commit
-  # after a green code deploy (never env_only; a failed or rolled-back deploy fails «deploy» first), skipped when
-  # that commit already has one (a re-run, a redeploy). The only job here that may write contents; no environment,
-  # no secret. A failure only warns, and continue-on-error keeps the run green (deploy-baseline.mjs reads green runs).
-  release:
-    needs: deploy
-    if: ${{ !cancelled() && needs.deploy.result == 'success' && !inputs.env_only }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    continue-on-error: true
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-          persist-credentials: false
-      - name: Tag the release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          KIND: app
-          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
-        run: node tools/scripts/ci-checks/release-tags/release-tag.mjs
+            -d '{"ref":"develop","inputs":{"action":"ota-update","profile":"staging"}}'
+          echo "### OTA to staging started (mobile.yml) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"

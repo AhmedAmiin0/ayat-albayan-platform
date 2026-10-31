@@ -1,18 +1,22 @@
-// What did staging last receive? Used by deploy-staging.yml «plan» (GitHub API, actions: read, no secret).
-//   migrate_base  the newest green deploy-staging run whose «deploy» job passed and that did not skip
-//                 migrations: run-name «deploy-staging <sha>» with no marker (a marker = env-only / no-migrate)
-//   code_base     the newest green deploy-staging run that shipped code (no «env-only» marker)
-//   ota_base      the commit of the newest green mobile run that shipped an OTA to preview
-//                 (run-name «mobile ota-update preview» / «mobile both preview»); empty if none is known
-// An empty value means «unknown»: the workflow then fails safe (the gated migrate job runs; no OTA).
-// Usage: GITHUB_TOKEN=… GITHUB_REPOSITORY=o/r node tools/scripts/deploy-baseline.mjs   → key=value lines
+// What did an app last receive? Used by the «plan» jobs (GitHub API, actions: read, no secret).
+//   channel preview (default) = PRODUCTION, deploy-production.yml:
+//   migrate_base  the newest green deploy-production run whose «deploy» job passed and that did
+//                 not skip migrations: run-name «deploy-production <sha>» with no marker
+//                 (a marker = env-only / no-migrate)
+//   code_base     the newest green deploy-production run that shipped code (no «env-only» marker)
+//   ota_base      the commit of the newest green mobile run that shipped an OTA to the channel
+//                 («mobile ota-update <channel>» / «mobile both <channel>»); empty if none known
+//   any other channel (staging): ota_base only. deploy-staging.yml's runs from before the
+//   2026-10-31 split are PRODUCTION deploys under the same file: none is ever read.
+// An empty value means «unknown»: the workflow then fails safe (gated migrate runs; no OTA).
+// Usage: GITHUB_TOKEN=… GITHUB_REPOSITORY=o/r node tools/scripts/env/deploy-baseline.mjs [channel]
 import { fileURLToPath } from 'node:url';
 
 const SHA = /^[0-9a-f]{40}$/;
 
-/** «deploy-staging <sha>[ env-only| no-migrate]» → { sha, marker }; anything else (old runs) → null. */
+/** «deploy-production <sha>[ env-only| no-migrate]» → { sha, marker }; anything else (old runs) → null. */
 export function parseDeployTitle(title) {
-  const m = /^deploy-staging ([0-9a-f]{40})(?: (env-only|no-migrate))?$/.exec(String(title ?? ''));
+  const m = /^deploy-production ([0-9a-f]{40})(?: (env-only|no-migrate))?$/.exec(String(title ?? ''));
   return m ? { sha: m[1], marker: m[2] ?? '' } : null;
 }
 
@@ -35,11 +39,10 @@ export async function pickDeployBases(runs, deployed) {
   return out;
 }
 
-/** The commit the newest green preview OTA was built from (a dispatch run's head_sha is that commit). */
-export function pickOtaBase(runs) {
-  const run = runs.find(
-    (r) => onDevelop(r) && /^mobile (ota-update|both) preview$/.test(String(r.display_title)),
-  );
+/** The commit the newest green OTA to `channel` was built from (a dispatch run's head_sha). */
+export function pickOtaBase(runs, channel = 'preview') {
+  const shipped = (r) => /^mobile (?:ota-update|both) ([a-z-]+)$/.exec(String(r.display_title))?.[1];
+  const run = runs.find((r) => onDevelop(r) && shipped(r) === channel);
   return run && SHA.test(run.head_sha) ? run.head_sha : '';
 }
 
@@ -67,8 +70,12 @@ async function deployJobPassed(run) {
 }
 
 async function main() {
-  const out = await pickDeployBases(await greenRuns('deploy-staging.yml'), deployJobPassed);
-  out.ota_base = pickOtaBase(await greenRuns('mobile.yml'));
+  const channel = process.argv[2] ?? 'preview';
+  if (!/^[a-z][a-z-]*$/.test(channel)) throw new Error(`bad channel ${channel}`);
+  const out = channel === 'preview'
+    ? await pickDeployBases(await greenRuns('deploy-production.yml'), deployJobPassed)
+    : { migrate_base: '', code_base: '' };
+  out.ota_base = pickOtaBase(await greenRuns('mobile.yml'), channel);
   for (const [k, v] of Object.entries(out)) console.log(`${k}=${v}`);
 }
 

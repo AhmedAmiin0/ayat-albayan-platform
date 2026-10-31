@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { at, root, run } from './roll-fake.mjs';
 
-const workflow = readFileSync(root('.github/workflows/deploy-staging.yml'), 'utf8');
+const workflow = readFileSync(root('.github/workflows/deploy-production.yml'), 'utf8');
 const P = 'compose -p ayat-albayan-staging';
 
 test('src from before APP_ROLE: refused before any docker call, build and --env-only alike', () => {

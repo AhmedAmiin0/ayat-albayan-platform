@@ -18,10 +18,10 @@ const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'sche
 // inside the OTA bundle, so they are not native.
 const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
 const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
-// eas.json profiles that never build the normal app (docs/30: the separate Stripe test app): editing one is no
-// reason for a new preview / production APK. Every other part of eas.json still is. For a side profile's own
-// OTA it is the reverse: only that profile (and the non-build parts) decide.
-export const SIDE_PROFILES = ['stripe-test'];
+// eas.json profiles that never build the normal app (docs/30: the Stripe test app; docs/09: the staging app):
+// editing one is no reason for a new preview / production APK. Every other part of eas.json still is. For a side
+// profile's own OTA it is the reverse: only that profile (and the non-build parts) decide.
+export const SIDE_PROFILES = ['stripe-test', 'staging'];
 const easCore = (text, profile) => {
   try {
     const eas = JSON.parse(text);
