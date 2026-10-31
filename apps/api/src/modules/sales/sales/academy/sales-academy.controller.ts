@@ -33,8 +33,8 @@ export class SalesAcademyController {
 
   @Get('subscriptions/:id/history')
   @Permissions('self.sales')
-  history(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesSubscriptionHistory> {
-    return this.academy.history(user, id);
+  history(@Param('id', ParseUUIDPipe) id: string): Promise<SalesSubscriptionHistory> {
+    return this.academy.history(id);
   }
 
   @Get('teachers')

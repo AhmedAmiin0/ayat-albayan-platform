@@ -8,7 +8,7 @@ import { templateRow } from '../whatsapp.fakes';
 
 const gate = fakeSwitches();
 const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn() };
-const worker = { process: vi.fn() };
+const worker = { process: vi.fn(), deferRest: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const booking = templateRow();
 const reminder = templateRow({ key: 'lesson_reminder', meta_name: 'lesson_reminder_v2' });

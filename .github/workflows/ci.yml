@@ -2,6 +2,8 @@ name: ci
 on:
   push:
     branches: [main, develop]
+    # The «baselines» job's own commit (it touches only these lists) never starts a run.
+    paths-ignore: ['refactor/guards/**']
   pull_request:
   # Run by hand from the Actions tab (e2e included).
   workflow_dispatch:
@@ -149,8 +151,7 @@ jobs:
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
       # ESLint fails on a suppression that no longer occurs (a fixed long line, a split function). On a red lint
-      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` and
-      # `pnpm guard:lint -- --write` locally, docs/31a §5).
+      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` locally, docs/31a §5).
       - name: Suppressions to prune (commit this diff)
         if: failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'
         env:
@@ -186,11 +187,13 @@ jobs:
           if [ -n "$MAPS" ]; then node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD
           else echo "not a move PR ($HEAD_REF): skipped"; fi
 
-  # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
-  # more clones, duplicated lines or cross-app clones), knip (no new unused file, export, type or
-  # dependency) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a
-  # new violation, this gate on a count raised by hand, a stale baseline or an entry whose file is gone; on a PR no
-  # total may rise above the base branch's lint.json either, so rewriting both files cannot pass). The e2e area
+  # Code-health gates (docs/27 Wave F). Counts are measured on both sides, never stored: on a PR the merge base is
+  # checked out beside the head (GUARD_BASE) and jscpd (clones, duplicated lines, cross-app clones), cycles and lint
+  # (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
+  # gate on a count raised by hand or an entry whose file is gone) fail only above the base branch's own measure.
+  # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
+  # queries keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
+  # job «baselines» drops it on develop. Pushes print the counts (each change was compared on its PR). The e2e area
   # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
@@ -207,31 +210,69 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm i --frozen-lockfile
+      # The base branch's own tree, with its jscpd report, for the count gates below. A git error fails the step.
+      - name: Base branch checkout (on a PR)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          base=$(git merge-base "origin/$BASE_REF" HEAD)
+          git worktree add --detach "$RUNNER_TEMP/base" "$base"
+          (cd "$RUNNER_TEMP/base" && "$GITHUB_WORKSPACE/node_modules/.bin/jscpd")
+          echo "GUARD_BASE=$RUNNER_TEMP/base" >> "$GITHUB_ENV"
       - run: pnpm guard:dup
       - run: pnpm guard:knip
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
-      # A base without lint.json (before the ratchet) has nothing to compare with; a git error fails the step.
-      - name: pnpm guard:lint (on a PR, also against the base branch)
-        env:
-          BASE_REF: ${{ github.base_ref }}
+      - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
         run: |
-          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then pnpm guard:lint; exit; fi
-          base=$(git merge-base "origin/$BASE_REF" HEAD)
-          if ! git cat-file -e "$base:refactor/guards/lint.json" 2>/dev/null; then
-            echo "::notice::no lint.json on $BASE_REF: in-tree check only"; pnpm guard:lint; exit
-          fi
-          git show "$base:refactor/guards/lint.json" > "$RUNNER_TEMP/lint-base.json"
+          if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi
           # The ESLint config sources of both sides: a rule only the head names gets its one-time baseline.
           configs() {
             git ls-tree -r --name-only "$1" | grep -E '(^packages/config/[^/]+|(^|/)eslint\.config)\.[cm]?js$' \
               | grep -v '\.test\.' | while read -r f; do git show "$1:$f"; done
           }
-          configs "$base" > "$RUNNER_TEMP/configs-base.txt"
+          configs "$(git -C "$GUARD_BASE" rev-parse HEAD)" > "$RUNNER_TEMP/configs-base.txt"
           configs HEAD > "$RUNNER_TEMP/configs-head.txt"
-          pnpm guard:lint -- --base "$RUNNER_TEMP/lint-base.json" \
-            --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
+          pnpm guard:lint -- --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
+
+  # develop only, after green guards: drop the knip and queries entries that are fixed (the gates pass on them, so
+  # PRs never edit the lists for that; after a green gate `--write` can only remove lines). The commit says
+  # [skip ci], touches only refactor/guards/ (paths-ignore above) and is pushed with the built-in token, which
+  # starts no workflow: nothing loops and nothing deploys. The only ci job that may write contents; the token
+  # reaches only the push step. continue-on-error: a rejected push (develop moved meanwhile) only warns and the
+  # next push prunes, so ci stays green for deploy-staging.
+  baselines:
+    needs: guards
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm guard:knip -- --write
+      - run: pnpm guard:queries -- --write
+      - name: Commit the pruned lists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- refactor/guards; then echo "nothing to prune"; exit 0; fi
+          git -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m 'chore(guards): drop fixed knip and queries entries [skip ci]' -- refactor/guards
+          git push "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:develop \
+            || echo "::warning::develop moved: the next push prunes the lists"
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.

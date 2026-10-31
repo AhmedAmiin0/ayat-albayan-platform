@@ -1726,9 +1726,6 @@
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 13
     }
@@ -8165,9 +8162,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.job.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8208,11 +8202,8 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
@@ -8272,11 +8263,8 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/sender/send-line.ts": {
@@ -8304,9 +8292,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/send-plan.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 13
     }
@@ -8342,9 +8327,6 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.due.ts": {
     "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -8841,9 +8823,6 @@
   "src/modules/messaging/whatsapp/whatsapp.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 6
@@ -12772,7 +12751,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.queries.test.ts": {
@@ -12801,17 +12780,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/details/sales-student-schedule.mapper.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/details/sales-student-trial.mapper.test.ts": {
@@ -12832,7 +12806,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.http.test.ts": {
@@ -12848,7 +12822,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
@@ -12904,7 +12878,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 9
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.controller.ts": {
@@ -12963,7 +12937,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 10
+      "count": 7
     }
   },
   "src/modules/sales/sales-students/sales-students.fakes.ts": {
@@ -13018,7 +12992,7 @@
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.ts": {
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 5
@@ -13092,7 +13066,7 @@
       "count": 7
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/sales/sales/assign/sales-assign.fakes.ts": {

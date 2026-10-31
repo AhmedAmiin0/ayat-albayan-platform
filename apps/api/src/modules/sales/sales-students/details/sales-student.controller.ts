@@ -7,7 +7,8 @@ import { SalesStudentService } from './sales-student.service';
 
 /**
  * «تفاصيل الطالب» (owner 2026-10-27, docs/16 row 36): a tap on a student in «الطلاب» or in a
- * lesson's details (any student since 2026-10-28). self.sales_academy (the gate of «الطلاب»); any student (owner 2026-10-28), `mine` on hers.
+ * lesson's details. self.sales_academy (the gate of «الطلاب»); any student read in full (owner
+ * 2026-10-30), `mine` on hers.
  */
 @ApiTags('sales')
 @ApiBearerAuth()
@@ -16,19 +17,18 @@ import { SalesStudentService } from './sales-student.service';
 export class SalesStudentController {
   constructor(private readonly students: SalesStudentService) {}
 
-  /** Any student: trial, «الجدول», attendance; hers also subscriptions and sent reports (`mine`); 404 student_not_found. */
+  /** Any student: trial, «الجدول», attendance, subscriptions, sent reports; 404 student_not_found. */
   @Get(':id')
   details(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesStudentDetails> {
     return this.students.details(user, id);
   }
 
-  /** 1 h signed URL of a sent report's PDF; 404 for another student's report, 409 pdf_not_ready. */
+  /** 1 h signed URL of any student's sent report PDF; 404 another student's, 409 pdf_not_ready. */
   @Get(':id/reports/:reportId/pdf')
   reportPdf(
     @Param('id', ParseUUIDPipe) id: string,
     @Param('reportId', ParseUUIDPipe) reportId: string,
-    @CurrentUser() user: AuthUser,
   ): Promise<SignedDownload> {
-    return this.students.reportPdf(user, { studentId: id, reportId });
+    return this.students.reportPdf({ studentId: id, reportId });
   }
 }

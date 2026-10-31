@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { aboveBase, differences, gone, newRule, oxlintSuppressed, totals } from './lint-gate.mjs';
+import { aboveBase, gone, newRule, oxlintSuppressed, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -11,23 +11,13 @@ test('totals sums each rule over every file of every package, rules sorted', () 
   assert.deepEqual(totals([]), {});
 });
 
-test('differences: equal totals pass; a grown or new rule and a shrunk or gone one each fail', () => {
-  const baseline = { complexity: 5, 'max-depth': 2, 'no-console': 1 };
-  assert.deepEqual(differences({ ...baseline }, baseline), []);
-  assert.deepEqual(differences({ complexity: 6, 'max-depth': 1, eqeqeq: 1 }, baseline), [
-    'grew: complexity 5 -> 6',
-    'grew: eqeqeq 0 -> 1',
-    'shrank: max-depth 2 -> 1 (pnpm guard:lint -- --write)',
-    'shrank: no-console 1 -> 0 (pnpm guard:lint -- --write)',
-  ]);
-});
-
-test('aboveBase: no total may rise above the base branch, even when lint.json was rewritten to match', () => {
-  const base = { complexity: 5, 'max-depth': 2 };
+test('aboveBase: equal or below the base branch passes with nothing to edit; above it fails', () => {
+  const base = { complexity: 5, 'max-depth': 2, 'no-console': 1 };
+  assert.deepEqual(aboveBase({ ...base }, base), []);
+  // Fixed violations (a lower total, a rule gone): no baseline to lower, the PR only prunes.
   assert.deepEqual(aboveBase({ complexity: 5, 'max-depth': 1 }, base), []);
-  // `eslint . --suppress-all` then `pnpm guard:lint -- --write`: both files rose together, the in-tree check passes.
+  // `eslint . --suppress-all` raised the suppressions: above the base branch's own totals.
   const raised = { complexity: 7, eqeqeq: 1, 'max-depth': 2 };
-  assert.deepEqual(differences(raised, raised), []);
   assert.deepEqual(aboveBase(raised, base), [
     'above the base branch: complexity 5 -> 7 (fix the new violations)',
     'above the base branch: eqeqeq 0 -> 1 (fix the new violations)',
@@ -67,6 +57,6 @@ test('aboveBase: a rule the PR turns on gets its one-time baseline; a known or p
   assert.equal(aboveBase({ 'max-len': 1 }, {}, both).length, 1);
   // An unquoted key in the base (`complexity: …`) is named too.
   assert.equal(aboveBase({ complexity: 1 }, {}, newRule({ base: '{ complexity: 10 }', head: "'complexity'" })).length, 1);
-  // Once in the base's lint.json, a new rule only shrinks.
+  // Once in the base branch's suppressions, a new rule only shrinks.
   assert.equal(aboveBase({ 'max-len': 901 }, { 'max-len': 900 }, isNew).length, 1);
 });

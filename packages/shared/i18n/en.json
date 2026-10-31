@@ -3449,6 +3449,7 @@
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
+      "wa_payment_hold": "The WhatsApp Business account has no valid payment method — the messages wait in the queue and go out automatically once the admin fixes billing in Meta",
       "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
       "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
       "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
@@ -4478,7 +4479,18 @@
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
       "detailsHint": "Opens the student details",
-      "openStudent": "Open {name}'s student file"
+      "openStudent": "Open {name}'s student file",
+      "schedule": "Schedule",
+      "attendance": "Attendance",
+      "noSchedule": "No fixed schedule",
+      "attendedPackage": "Attended {n} of {of} in the current package",
+      "attendedRecent": "Attended {n} of {of} in the last 30 days",
+      "noHeldPackage": "No lessons held in the current package yet",
+      "noHeldRecent": "No lessons held in the last 30 days",
+      "groupSeparator": "; ",
+      "package": "Package",
+      "packageLine": "Package: {line}",
+      "noPackage": "No current package"
     },
     "live": {
       "title": "Lessons running now",
@@ -4497,6 +4509,7 @@
       "starts": "Starts: {date}",
       "renews": "Renews: {date}",
       "ended": "Ended: {date}",
+      "projectedEnd": "Expected end: {date}",
       "changes": "Status changes",
       "created": "Created as {to}",
       "changed": "From {from} to {to}",
@@ -4539,7 +4552,6 @@
         "showAll": "Show all ({n})",
         "showLess": "Show less"
       },
-      "notMine": "Not one of your students: subscriptions and reports are not shown here",
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",

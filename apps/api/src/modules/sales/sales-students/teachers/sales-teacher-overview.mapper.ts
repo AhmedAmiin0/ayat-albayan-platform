@@ -7,7 +7,7 @@ import {
   type SalesTeacherSlot,
 } from '@ab/shared';
 import { DAY } from '../../../people/teachers';
-import { nextStarts } from '../details/sales-student-schedule.mapper';
+import { nextStarts } from '@/modules/sales/sales';
 import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.queries';
 
 /** «الحضور» covers the last 30 days and lists the latest 20 lessons. */

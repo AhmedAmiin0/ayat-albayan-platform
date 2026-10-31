@@ -17,11 +17,14 @@ pnpm imports:absolute -- <workspace|paths…> [--write]                  # `../`
 ```
 
 Every move PR writes `@/` imports in the app files it creates or edits (docs/32 R12): move-module.ts already does for the
-paths it rewrites; run `imports:absolute` on the rest, then `pnpm lint:prune` and `pnpm guard:lint -- --write`.
+paths it rewrites; run `imports:absolute` on the rest, then `pnpm lint:prune`.
 
-- `guards/` — baselines that may only shrink: `jscpd.json` (`pnpm guard:dup`), `knip.json` (`pnpm guard:knip`) and
-  `lint.json` (`pnpm guard:lint`: per-rule totals of every package's `eslint-suppressions.json`, docs/31a §5). After a
-  PR that fixes violations: `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write`.
+- `guards/` — lists that may only shrink: `knip.json` (`pnpm guard:knip`) and `queries.json` (`pnpm guard:queries`).
+  A new entry fails; a fixed one passes and ci's `baselines` job drops it after a green push to `develop`, so a PR
+  never edits them for a fix (move-module still rewrites the paths of moved files). The counts store nothing: on a PR,
+  jscpd (`pnpm guard:dup`), folder cycles (`pnpm guard:cycles`) and the per-rule lint totals (`pnpm guard:lint`, summed
+  over every package's `eslint-suppressions.json`, docs/31a §5) fail only above the base branch's own measure. After a
+  PR that fixes violations: `eslint . --prune-suppressions` in the package, nothing else.
 
 A move PR may also update a guard's path list in a test (for example the Meta callers whitelist): the pure-move
 check accepts a string or anchored regex literal that changes exactly by a rename of the same diff.
