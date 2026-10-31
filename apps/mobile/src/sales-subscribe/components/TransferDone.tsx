@@ -10,6 +10,13 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 
+interface TransferDoneProps {
+  payment: SalesPaymentView;
+  onDone: () => void;
+  /** Off for a child not hers (sales.renew_any): «أيام الحلقات» stay hers (docs/16 row 38). */
+  courseDays?: boolean;
+}
+
 /**
  * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),
  * else «تم تسجيل التحويل»; then «تم» back to the chat (the one filled button, alone), and ONE ButtonRow
@@ -17,7 +24,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
  * «مدفوعاتي» (her recorded payments: a tab's screen, so dismissTo pops the chat group back to the
  * tabs; a push would stack a second tab host).
  */
-export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; onDone: () => void }) {
+export function TransferDone({ payment, onDone, courseDays = true }: TransferDoneProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
   const base = useTreeBase();
@@ -44,7 +51,9 @@ export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; o
       </AppText>
       <Button label={m.done} onPress={onDone} />
       <ButtonRow testID="transfer-done-actions">
-        <Button variant="secondary" label={t.booking.bookCourseDays} onPress={() => router.push(inTree(base, course))} />
+        {courseDays ? (
+          <Button variant="secondary" label={t.booking.bookCourseDays} onPress={() => router.push(inTree(base, course))} />
+        ) : null}
         <Button variant="secondary" label={m.openMyPayments} onPress={() => router.dismissTo(`${more}/earnings?view=payments`)} />
       </ButtonRow>
     </View>
