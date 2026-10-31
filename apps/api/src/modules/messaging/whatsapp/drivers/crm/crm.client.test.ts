@@ -58,10 +58,19 @@ describe('CrmWhatsappClient', () => {
     expect(await failure(new CrmWhatsappClient(CRM_ENV, { fetch: limited }).sendText({ to: TO, text: 'x' }))).toMatchObject({ retryAfterMs: 17_000 });
     for (const [status, code] of [[502, 'meta_error'], [500, 'template_malformed'], [400, 'bad_request'], [404, 'not_found']] as const) {
       const info = await failure(client(scriptedFetch(crmFailure(status, code, 'Meta said no'))).sendTemplate(send));
-      expect(info).toMatchObject({ status, crmCode: code, details: 'Meta said no' });
+      expect(info).toMatchObject({ status, crmCode: code, details: 'Meta said no', template: 'booking_confirmation' });
       expect(info.uncertain).toBeUndefined();
       expect(info.credential).toBeUndefined();
     }
+  });
+
+  it('a refused template names the one sent: a Meet reminder without CRM values went by its meta_name', async () => {
+    const meet = templateRow({ key: 'teacher_lesson_reminder_meet', meta_name: 'teacher_lesson_reminder_meet' });
+    const refused = () => scriptedFetch(crmFailure(502, 'meta_error'));
+    expect(await failure(client(refused()).sendTemplate({ ...send, template: meet }))).toMatchObject({ template: 'teacher_lesson_reminder_meet' });
+    const crm = { ...send, template: meet, params: { ...send.params, crm: { body: ['أحمد', 'الآن'] } } };
+    expect(await failure(client(refused()).sendTemplate(crm))).toMatchObject({ template: 'teacher_lesson_reminder' });
+    expect((await failure(client(refused()).sendText({ to: TO, text: 'x' }))).template).toBeUndefined();
   });
 
   it('500 internal, another 5xx, a timeout or a lost connection: uncertain (never resent); a refused connection is not', async () => {
