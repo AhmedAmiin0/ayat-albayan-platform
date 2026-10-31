@@ -23,3 +23,40 @@ export function changeRequest({ subscriptionId, picks, tz, requestId, prefilled 
   const { dayTimes, ...rule } = picked;
   return { subscriptionId, ...rule, ...(dayTimes.length > 0 ? { dayTimes } : {}), clientRequestId: requestId };
 }
+
+/**
+ * The student profile's «تغيير المعلم» / «تغيير موعد الحلقات» (owner 2026-10-30): the same
+ * flow against another route, optionally with a new teacher (its slots and the body's
+ * teacherId), straight to the review with the course's own days (a teacher change keeping
+ * them), and the admin's clash override.
+ */
+export interface ChangeTarget {
+  /** POST `${path}/check` and `${path}`. */
+  path: string;
+  teacherId?: string | undefined;
+  title?: string | undefined;
+  /** Open on the review with the course's own (prefilled) days. */
+  review?: boolean | undefined;
+  /** The admin: a clash may be saved with a reason (override.reason). */
+  override?: boolean | undefined;
+}
+
+/** The target's route; undefined = the assistant's own. */
+export const targetPath = (target: ChangeTarget | undefined): string | undefined => target?.path;
+
+/** The body with the target's new teacher, when it has one. */
+export function withTeacher(
+  body: CourseChangeRequest | null,
+  target?: ChangeTarget,
+): (CourseChangeRequest & { teacherId?: string }) | null {
+  if (!body || target?.teacherId === undefined) return body;
+  return { ...body, teacherId: target.teacherId };
+}
+
+/** The admin's «احفظ رغم التعارض»: the body with override.reason; none = the body as it is. */
+export function withOverride(
+  body: CourseChangeRequest,
+  reason: string | undefined,
+): CourseChangeRequest {
+  return reason ? { ...body, override: { reason } } : body;
+}

@@ -82,6 +82,7 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     SubscriptionAlertsService,
     SubscriptionCancel,
     SubscriptionCreator,
+    SubscriptionsQueries,
     SubscriptionsService,
     UnpaidFlags,
   ],

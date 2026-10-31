@@ -149,6 +149,7 @@
         "apps/web/src/routes/teacher/index.tsx",
         "apps/web/src/routes/sales/schedule.tsx",
         "apps/api/src/modules/teaching/booking/",
+        "apps/api/src/modules/teaching/course-stop/",
         "apps/api/src/modules/teaching/scheduling/",
         "apps/api/src/modules/teaching/lessons/"
       ],
@@ -164,6 +165,9 @@
         "teaching/booking-makeup-invoice.spec.ts",
         "teaching/booking-override.spec.ts",
         "sales/chat-subscribe.spec.ts",
+        "teaching/course-change-unlinked.sql.spec.ts",
+        "teaching/course-stop-money.sql.spec.ts",
+        "teaching/course-stop-rules.sql.spec.ts",
         "teaching/edit-session-time.held.spec.ts",
         "teaching/edit-session-time.spec.ts",
         "reporting/feedback.spec.ts",

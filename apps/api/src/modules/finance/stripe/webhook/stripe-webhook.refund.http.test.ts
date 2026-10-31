@@ -30,7 +30,7 @@ describe('POST /webhooks/stripe: refunds reverse through a refund payment, dispu
     resetMocks(m);
     stripeDefaults(s);
     s.links.byPaymentIntent.mockResolvedValue(linkRow({ status: 'paid', paid_payment_id: PAYMENT_ID, stripe_payment_intent: 'pi_1' }));
-    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'active' });
+    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'active', cancel_kind: null });
     m.payments.netPaid.mockResolvedValue(120);
     m.payments.insert.mockResolvedValue(paymentRow({ kind: 'refund', method: 'card', amount: 50 }));
     m.payments.get.mockResolvedValue(paymentRow({ kind: 'refund', method: 'card', amount: 50 }));

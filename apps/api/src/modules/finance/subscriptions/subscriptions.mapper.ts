@@ -1,5 +1,5 @@
 import type { BalanceView, Duration, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
-import { livePackages, studentRemaining } from '@ab/shared';
+import { countsForMoney, livePackages, studentRemaining } from '@ab/shared';
 import { emptyBalance, type BalanceRow } from './money/balance.queries';
 import type { StudentRef, SubRow } from './subscriptions.queries';
 
@@ -7,9 +7,12 @@ export function studentRef(s: StudentRef | null, fallbackId: string): Subscripti
   return { id: s?.id ?? fallbackId, code: s?.code ?? '', name: s?.name ?? '' };
 }
 
-/** A cancelled package has no balance row (v_subscription_balance, migration 934) and nothing left. */
+/**
+ * An unused-cancelled package has no balance row (v_subscription_balance, migration 934) and nothing
+ * left; a stopped one keeps its row (its held lessons stay on it, migration 991).
+ */
 function balanceView(sub: SubRow, row: BalanceRow | undefined): BalanceView {
-  if (sub.status === 'cancelled') return { ...emptyBalance(sub), remaining: 0 };
+  if (!countsForMoney(sub)) return { ...emptyBalance(sub), remaining: 0 };
   if (!row) return emptyBalance(sub);
   return {
     subscription_id: row.subscription_id,
@@ -43,6 +46,7 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
     price_source: sub.price_source as unknown as QuoteResponse,
     starts_on: sub.starts_on,
     status: sub.status,
+    cancel_kind: sub.cancel_kind,
     renews_on: sub.renews_on,
     notes: sub.notes,
     paid: ctx.paid.get(sub.id) ?? 0,

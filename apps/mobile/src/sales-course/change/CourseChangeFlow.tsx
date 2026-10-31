@@ -11,20 +11,22 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { type, useTheme } from '@/theme';
 import { daysText } from '@/sales-course/lib/course-days';
-import { changeRequest } from './change-body';
+import { changeRequest, withOverride, withTeacher, type ChangeTarget } from './change-body';
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
 import { useClockCycle } from '@/core/lib/clock';
 
 interface CourseChangeFlowProps {
-  student: SalesCourseView['student'];
+  student: Pick<SalesCourseView['student'], 'id' | 'name' | 'code'>;
   /** The course to change (view.current: running today, else the next one booked ahead). */
   course: BookedCourse;
   /** «رجوع» from the days: back to the course screen. */
   onLeave: () => void;
   /** After the change: out of the screen. */
   onDone: () => void;
+  /** The student profile's routes (owner 2026-10-30); absent = the assistant's own. */
+  target?: ChangeTarget | undefined;
 }
 
 /**
@@ -37,17 +39,18 @@ interface CourseChangeFlowProps {
  * pending change's old days before its startsOn cannot be picked here (web pages back to them). The
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
  */
-export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseChangeFlowProps) {
+export function CourseChangeFlow({ student, course, onLeave, onDone, target }: CourseChangeFlowProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();
-  const [step, setStep] = useState<'slot' | 'review'>('slot');
+  const [step, setStep] = useState<'slot' | 'review'>(target?.review ? 'review' : 'slot');
   const [now] = useState(() => new Date());
   const [first] = useState(() => changePicks(course, now));
   const [from] = useState(() => dayStartUtc(changePrefillFrom(course, now), course.tz).toISOString());
   const [picks, setPicks] = useState(() => first.map((p) => p.at));
   const [requestId] = useState(newRequestId);
-  const change = useChangeCourse();
-  const body = changeRequest({ subscriptionId: course.subscriptionId, picks, tz: course.tz, requestId, prefilled: first });
+  const change = useChangeCourse(target?.path);
+  const draft = { subscriptionId: course.subscriptionId, picks, tz: course.tz, requestId };
+  const body = withTeacher(changeRequest({ ...draft, prefilled: first }), target);
   const go = (next: 'slot' | 'review') => {
     change.reset();
     setStep(next);
@@ -67,7 +70,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
           <SlotStep
-            teacherId={course.teacherId}
+            teacherId={target?.teacherId ?? course.teacherId}
             tz={course.tz}
             durationMin={course.durationMin}
             from={from}
@@ -82,10 +85,11 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
         course={course}
         picks={picks}
         body={body}
+        target={target}
         saving={{
           busy: change.isPending,
           failure: change.isError ? bookFailure(change.error, cycle) : null,
-          submit: () => (body ? change.mutate(body) : undefined),
+          submit: (reason) => (body ? change.mutate(withOverride(body, reason)) : undefined),
         }}
         onChangeSlot={() => go('slot')}
       />
@@ -94,7 +98,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
   return (
     <>
       <ScreenHeader
-        title={t.booking.courseChange.changeDays}
+        title={target?.title ?? t.booking.courseChange.changeDays}
         subtitle={`${student.name} · ${student.code}`}
         trailing={<Button variant="ghost" label={t.common.back} busy={change.isPending} onPress={back} />}
       />
