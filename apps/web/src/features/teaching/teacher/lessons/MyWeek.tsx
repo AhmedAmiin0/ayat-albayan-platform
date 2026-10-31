@@ -12,7 +12,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
-import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
+import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
 import { t } from '@/lib/i18n/i18n';
 import { useFollowingDay } from '@/lib/time/use-following-day';

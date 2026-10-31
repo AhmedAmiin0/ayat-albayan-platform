@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { CancelPackageDialog, todayIn } from '@/features/finance/subscriptions';
-import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions';
 import { ShortfallNote } from '@/features/finance/payments';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';

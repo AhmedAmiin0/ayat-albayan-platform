@@ -6,7 +6,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Select } from '@/components/ui/form/select';
 import type { SubscriptionView } from '@/features/finance/subscriptions/api';
-import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';

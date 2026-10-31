@@ -2,7 +2,7 @@ import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { NoCommissionNote, UsedBeforeField } from '@/features/finance/subscriptions';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 
 /** `usedBefore`: «حلقات مستخدمة من الباقة», only with «بدأ الاشتراك سابقًا» (0 otherwise). */

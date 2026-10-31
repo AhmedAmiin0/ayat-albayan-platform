@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { classroomErrorText } from '../room/livekit/errors';

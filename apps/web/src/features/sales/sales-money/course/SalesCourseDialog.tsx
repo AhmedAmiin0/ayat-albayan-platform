@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
-import { lessonErrorText } from '@/features/teaching/schedule/api';
+import { lessonErrorText } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { refreshAfterSalesWrite, salesCourseQuery } from '@/features/sales/sales-money/api';
 import { continuePlan, type ContinuePlan } from './course-continue';

@@ -1,4 +1,4 @@
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { StudentBalanceView, SubscriptionView } from '../api';

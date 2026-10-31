@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { byLocalDay } from '@/features/teaching/schedule/reschedule/slots';
-import { dayMonthLabel, weekdayOf } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel, weekdayOf } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherLessonCard } from './TeacherLessonCard';
 

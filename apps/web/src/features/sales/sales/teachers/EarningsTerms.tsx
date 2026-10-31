@@ -1,6 +1,6 @@
 import type { AssistantTermsView } from '@ab/shared';
-import { formatDate } from '@/features/sales/leads/format';
-import { moneyText } from '@/features/finance/subscriptions/format';
+import { formatDate } from '@/features/sales/leads';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 const p = t.assistantPortal.earnings;

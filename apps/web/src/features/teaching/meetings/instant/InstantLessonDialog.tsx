@@ -10,7 +10,7 @@ import { Select } from '@/components/ui/form/select';
 import { bookingTeachersQuery } from '@/features/teaching/booking/api';
 import { startInstant } from '@/features/teaching/classroom/api/meetings-api';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
-import { conflictsOf } from '@/features/teaching/schedule/api';
+import { conflictsOf } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { DEFAULT_DURATION, draftProblem, instantBody, type InstantDraft } from './instant-form';

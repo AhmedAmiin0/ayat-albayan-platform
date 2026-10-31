@@ -1,6 +1,6 @@
 import { courseOpensOn, prefillDays, type SalesCourseView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { adjustText, continuePlan, continueText } from './course-continue';
 import { courseDraft } from './course-draft';

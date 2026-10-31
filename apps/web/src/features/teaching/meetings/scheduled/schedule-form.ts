@@ -6,7 +6,7 @@ import {
   scheduleProblem,
   type CreateMeeting,
 } from '@ab/shared';
-import { zonedParts, zonedToUtc } from '@/features/teaching/schedule/tz';
+import { zonedParts, zonedToUtc } from '@/features/teaching/schedule';
 import type { PickedInvitee } from '../invitees/invitee-list';
 
 // «اجتماع مجدول» (R-MEET-01): a date + a 15-minute time select on the viewer's own clock (rule 6:

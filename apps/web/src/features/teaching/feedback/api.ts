@@ -1,5 +1,5 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 import { t } from '@/lib/i18n/i18n';
