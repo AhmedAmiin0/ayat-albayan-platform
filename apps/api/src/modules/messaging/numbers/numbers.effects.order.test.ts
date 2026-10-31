@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
-import { fakeRedis, settle } from '@/common/cache/cache.fakes';
-import { CACHE_KEYS } from '@/common/cache/cache-keys';
-import type { SharedCache } from '@/common/cache/shared-cache';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
+import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
+import type { SharedCache } from '@/common/infra/cache/shared-cache';
 import { ConfigCacheBridge } from '@/common/configuration/config-store/store/config-cache.bridge';
 import type { ConfigStoreQueries } from '@/common/configuration/config-store/store/config-store.queries';
 import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { LessonEvents, type ScheduleChange } from '@/common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { PAUSE, pauseMocks, resetPauseMocks, rpcOut, STUDENT } from './course-pause.fakes';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import type { CoursePauseLessonsBack } from './course-pause.lessons-back';

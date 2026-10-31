@@ -1,9 +1,9 @@
 import { Controller, Get, Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { loadEnv } from '../../config/env/env';
-import { SharedCache } from '../cache/shared-cache';
-import { DB, type Db } from '../db/db.module';
+import { loadEnv } from '@/config/env/env';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
+import { DB, type Db } from '@/common/db/db.module';
 import { AuthGuard, TOKEN_VERIFIER } from './auth.guard';
 import { dbPermissionResolver } from './db-permission.resolver';
 import { CurrentUser, SignedIn } from './decorators';

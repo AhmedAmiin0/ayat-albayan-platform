@@ -1,8 +1,8 @@
 import { applyStrings, type FlatStrings, type Locale, type TranslationKeysPage, type TranslationKeysQuery } from '@ab/shared';
 import { BadRequestException, Injectable, Logger, NotFoundException, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { createHash } from 'node:crypto';
-import { ar } from '../../../common/i18n/server-text';
-import { kickConfigReload } from '../../../config/role/worker-kick';
+import { ar } from '@/common/infra/i18n/server-text';
+import { kickConfigReload } from '@/config/role/worker-kick';
 import { DEFAULTS, listKeys, overrideProblem, type OverrideMaps } from './translations.catalog';
 import { TranslationsQueries, type OverrideRow, type OverrideWrite } from './translations.queries';
 import { assertNotValuesOwned } from './values-owned';

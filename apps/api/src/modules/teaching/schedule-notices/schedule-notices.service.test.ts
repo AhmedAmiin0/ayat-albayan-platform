@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { TakenLessonRow } from './notice.build';
 import { FROM, harness, lessonRow, NOW, teacher } from './schedule-notices.fakes';
 

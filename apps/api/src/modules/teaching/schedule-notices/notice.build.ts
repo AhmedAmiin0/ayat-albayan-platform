@@ -1,4 +1,4 @@
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { Notice, NoticeStudent, NoticeTeacher } from './notice.types';
 
 // A ScheduleChange and what ScheduleNoticesRepo read for it → the Notice to plan. Pure.
@@ -50,6 +50,7 @@ export function lessonNotice(change: LessonChange, row: NoticeLessonRow): Notice
     students: studentsOf(row),
     familyWhatsApp: change.kind !== 'lesson_rescheduled' || change.familyNotice === true,
     actorId: change.actorId,
+    ...(change.audience ? { audience: change.audience } : {}),
   };
 }
 

@@ -8,7 +8,7 @@ import {
   type TranslationKeysPage,
   type TranslationKeysQuery,
 } from '@ab/shared';
-import { BUNDLES } from '../../../common/i18n/server-text';
+import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { VALUES_HINT_KEYS } from './values-owned';
 
 // Pure side of the translations editor: the key catalogue from the bundled JSON, the search /

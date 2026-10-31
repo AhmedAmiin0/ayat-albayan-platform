@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { rpcOut, STUDENT } from './course-pause.fakes';
-import { LessonEvents } from '@/common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { CoursePauseLessonsBack, type PauseClashes, type PauseScheduling } from './course-pause.lessons-back';
 import { changedLessons, type RpcOut } from './course-pause.mapper';

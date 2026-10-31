@@ -38,8 +38,8 @@ jest.mock('./src/core/lib/http/supabase', () => ({
   },
 }));
 
-// WhatsApp calls (docs/28 PR 2): react-native-webrtc is a native module; the call tests inject fakes.
-jest.mock('react-native-webrtc', () => ({
+// WhatsApp calls (docs/28 PR 2): LiveKit's react-native-webrtc fork (docs/35) is a native module; the call tests inject fakes.
+jest.mock('@livekit/react-native-webrtc', () => ({
   RTCPeerConnection: jest.fn(),
   mediaDevices: { getUserMedia: jest.fn(async () => { throw new Error('no webrtc in tests'); }) },
 }));

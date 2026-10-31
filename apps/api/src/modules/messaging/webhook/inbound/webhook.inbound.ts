@@ -8,12 +8,12 @@ import {
   type PushKind,
   type QuickReplyIntent,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { z } from 'zod';
-import type { PushEvent } from '../../../../common/push/push.service';
-import { fill } from '../../../reporting/report-pdf/render/pdf-text';
-import type { InboundEvent } from '../webhook.events';
-import type { Contact } from '../webhook.queries';
+import type { PushEvent } from '@/common/push/push.service';
+import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
+import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
+import type { Contact } from '@/modules/messaging/webhook/webhook.queries';
 
 // Pure parts of storing an inbound message (R-MSG-04, R-LEAD-01) and the admin push (R-MOB-01).
 

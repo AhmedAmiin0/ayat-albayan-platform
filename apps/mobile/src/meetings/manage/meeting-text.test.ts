@@ -1,10 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { manageOf, meetingError, meetingsBase, meetingUrl, meetingWhen } from './meeting-text';
-
-test('the room url is the web origin plus /meeting/<id>', () => {
-  expect(meetingUrl('m-1')).toBe('https://app.ayatalbayan.com/meeting/m-1');
-});
+import { manageOf, meetingError, meetingsBase, meetingWhen } from './meeting-text';
 
 test('the time is on the Riyadh clock with Western digits', () => {
   expect(meetingWhen('2026-10-05T11:30:00.000Z', 'Asia/Riyadh', '24')).toMatch(/14:30/);
