@@ -45,6 +45,9 @@ test('not hers: the transfer and the chat receipts carry the chat phone; «إل�
   await waitFor(() => expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG, phone: CHAT }));
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }));
+  // Done: «أيام الحلقات» stay hers (docs/16 row 38), never a 403 «هذا الطالب ليس من طلابك.» screen.
+  expect(await screen.findByRole('button', { name: m.openMyPayments })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.booking.bookCourseDays })).toBeNull();
 });
 
 test('hers (mine: true): the bodies stay as they were (no phone) and «إلغاء الباقة» is offered', async () => {
@@ -56,4 +59,5 @@ test('hers (mine: true): the bodies stay as they were (no phone) and «إلغا�
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')).toHaveLength(1));
   expect(sent('/sales/payments')[0]?.[2]).not.toHaveProperty('phone');
+  expect(await screen.findByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
 });

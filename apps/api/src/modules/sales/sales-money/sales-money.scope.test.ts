@@ -38,13 +38,21 @@ describe('SalesMoneyScope: ownershipOf(...).studentIds, never the booking switch
     expect(t.family.phonesOf).toHaveBeenCalledWith('s1');
   });
 
-  it('assertOwns with sales.renew_any: a student of the chat’s family by its second number passes; none without it', async () => {
+  it('assertRenews with sales.renew_any (owner 2026-11-01): ANY student, no ownership read', async () => {
     const t = setup();
     t.sales.ownership.mockResolvedValue({ ...OWN, studentIds: [] });
     const renewer: AuthUser = { ...USER, permissions: ['sales.renew_any'] };
-    await expect(t.scope.assertOwns(renewer, 's1', '+966552220000')).resolves.toBeUndefined();
-    await expect(t.scope.assertOwns(renewer, 's1', '+966559990000')).rejects.toThrow();
-    await expect(t.scope.assertOwns(USER, 's1', '+966552220000')).rejects.toThrow();
+    await expect(t.scope.assertRenews(renewer, 's2')).resolves.toBeUndefined();
+    expect(t.sales.ownership).not.toHaveBeenCalled();
+    expect(await t.scope.familyChat(renewer, 's2', '+966559990000')).toBe('+966551110000');
+    await expect(t.scope.assertRenews(USER, 's2')).rejects.toThrow();
+  });
+
+  it('assertOwns stays hers only, whatever the key («إلغاء الباقة», a payment link’s teacher)', async () => {
+    const t = setup();
+    const renewer: AuthUser = { ...USER, permissions: ['sales.renew_any'] };
+    await expect(t.scope.assertOwns(renewer, 's1')).resolves.toBeUndefined();
+    await expect(t.scope.assertOwns(renewer, 's2')).rejects.toThrow();
   });
 });
 
