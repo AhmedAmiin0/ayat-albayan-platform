@@ -124,21 +124,6 @@
       "count": 6
     }
   },
-  "ci-checks/jscpd-gate.mjs": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/jscpd-gate.test.mjs": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "ci-checks/lint/lint-gate.test.mjs": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "ci-checks/lint/queries-gate.mjs": {
     "max-len": {
       "count": 4
@@ -327,7 +312,7 @@
   },
   "ci-checks/workflows-fast.test.mjs": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "ci-checks/workflows.test.mjs": {
