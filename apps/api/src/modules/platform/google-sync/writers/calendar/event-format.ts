@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import { isClosedLesson, type LessonStatus } from '@ab/shared';
 import { ar } from '../../../../../common/i18n/server-text';
 import type { GoogleEventBody } from '../../google-client.port';
 import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '../../google-format';
@@ -23,8 +23,7 @@ export interface EventLesson {
 }
 
 /** Cancelled or moved lessons have no event (the script deletes both copies for any other status). */
-const ABSENT: ReadonlySet<LessonStatus> = new Set(['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled']);
-export const eventWanted = (status: LessonStatus): boolean => !ABSENT.has(status);
+export const eventWanted = (status: LessonStatus): boolean => !isClosedLesson(status);
 
 const names = (l: EventLesson): string => l.students.map((s) => s.name.trim()).filter(Boolean).join('، ') || EVENT.newStudent;
 
