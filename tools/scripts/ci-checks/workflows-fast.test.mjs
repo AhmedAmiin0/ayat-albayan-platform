@@ -111,7 +111,6 @@ test('mobile.yml profile: preview by default (production), the side apps on thei
   const update = step('ota', 'EAS update').run;
   const [side, normal] = update.split('exit 0');
   assert.match(side, /if \[ "\$PROFILE" != preview \]/);
-  // A side app's bundle gets its eas.json profile env (APP_VARIANT, staging hosts, Stripe flag).
   assert.match(side, /require\("\.\/eas\.json"\)\.build\[process\.env\.PROFILE\]\.env\)/);
   assert.match(side, /--channel "\$PROFILE" --environment "\$\(node -p 'require\("\.\/eas\.json"\)\.build\[process\.env\.PROFILE\]\.environment'\)"/);
   assert.doesNotMatch(normal, /STRIPE|APP_VARIANT|channel/);
