@@ -7,6 +7,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.queries';
 import { SalesAcademyQueries } from './sales-academy.queries';
+import { type RosterBalanceRow, type RosterLessonRow, type RosterPackageRow, type RosterRuleRow, SalesRosterRepo } from './sales-roster.repo';
 import type { HistoryBundle } from '../history/sales-history.queries';
 import { SalesHistoryQueries } from '../history/sales-history.queries';
 import type { SalesScheduleRow } from '../schedule/sales-schedule.queries';
@@ -81,10 +82,17 @@ export async function academyApp() {
   const academy = { teachers: vi.fn(async () => [teacherRow()]), students: vi.fn(async () => ({ rows: [studentRow()], total: 41 })), live: vi.fn(async () => [liveRow()]) };
   const schedule = { day: vi.fn(async () => [scheduleRow()]), upcoming: vi.fn(async () => [{ starts_at: '2026-10-12T15:00:00.000Z', lesson_students: [{ student_id: 's1' }] }]) };
   const history = { studentOf: vi.fn(async (id: string) => (id === SUB ? 's1' : null)), history: vi.fn(async () => bundle()) };
+  const roster = {
+    rules: vi.fn(async (): Promise<RosterRuleRow[]> => []),
+    packages: vi.fn(async (): Promise<RosterPackageRow[]> => []),
+    lessons: vi.fn(async (): Promise<RosterLessonRow[]> => []),
+    balances: vi.fn(async (): Promise<RosterBalanceRow[]> => []),
+  };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SalesQueries).useValue(sales)
     .overrideProvider(SalesAcademyQueries).useValue(academy)
+    .overrideProvider(SalesRosterRepo).useValue(roster)
     .overrideProvider(SalesHistoryQueries).useValue(history)
     .overrideProvider(SalesScheduleQueries).useValue(schedule)
     .overrideProvider(SettingsService).useValue(fakeSettings())
@@ -93,5 +101,5 @@ export async function academyApp() {
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const get = (url: string, token: keyof typeof USERS) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
-  return { app, get, sales, academy, history, schedule };
+  return { app, get, sales, academy, history, schedule, roster };
 }

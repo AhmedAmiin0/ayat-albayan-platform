@@ -12430,7 +12430,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.queries.test.ts": {
@@ -12459,17 +12459,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/details/sales-student-schedule.mapper.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
     "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/details/sales-student-trial.mapper.test.ts": {
@@ -12490,7 +12485,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.http.test.ts": {
@@ -12506,7 +12501,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
@@ -12562,7 +12557,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 9
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.controller.ts": {
@@ -12621,7 +12616,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 10
+      "count": 7
     }
   },
   "src/modules/sales/sales-students/sales-students.fakes.ts": {
@@ -12676,7 +12671,7 @@
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.ts": {
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 5
@@ -12750,7 +12745,7 @@
       "count": 7
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/sales/sales/assign/sales-assign.fakes.ts": {

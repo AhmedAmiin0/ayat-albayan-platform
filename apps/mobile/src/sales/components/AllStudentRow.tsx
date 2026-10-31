@@ -8,13 +8,16 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { PhoneText } from '@/core/ui/layout/PhoneText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { fill, guardianLine, studentSubtitle } from '@/sales/lib/sales-text';
+import { RosterLines } from '@/sales/roster/RosterLines';
 
 const S = t.sales.allStudents;
 
 /**
  * One student of the academy: the name as the row's header (a link to the file) with its readable
- * code, teacher · program, the guardian's phone and name, the status chip. Never a balance, package,
- * note or meeting link. Every row, in every tree, opens the student's details (owner 2026-10-28: the
+ * code, teacher · program, the guardian's phone and name, the current package (size, status,
+ * lessons used / left, dates; no price), the weekly schedule and attendance (owner 2026-10-30,
+ * RosterLines),
+ * the status chip. Never a price, payment, note or meeting link. Every row, in every tree, opens the student's details (owner 2026-10-28: the
  * same tap every time, never the chat): «تفاصيل الطالب» in the sales tree (docs/16 row 36), the
  * admin's student file under «المزيد» › «المبيعات». The family's chat is a button on those screens.
  */
@@ -36,6 +39,7 @@ export const AllStudentRow = memo(function AllStudentRow({ student }: { student:
         <>
           {phone ? <PhoneText phone={phone} /> : null}
           <Note>{guardianLine(student)}</Note>
+          <RosterLines student={student} />
         </>
       }
       trailing={
