@@ -6,7 +6,7 @@ import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-al
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 import type { CourseTold } from './course-change.notice-plan';
 import { CourseChangeNotices } from './course-change.notices';
-import { CourseChangeWriter } from './course-change.writer';
+import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
 
 // change_course and who hears it (owner 2026-10-30): the family's ONE message (FamilyMoveNotice),
 // then ScheduleNotices and, for a new teacher, TeacherAlert. Nothing is sent: every sink is a fake.

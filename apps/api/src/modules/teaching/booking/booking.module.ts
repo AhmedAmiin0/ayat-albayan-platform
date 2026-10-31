@@ -16,7 +16,7 @@ import { BookingWriter } from './core/booking.writer';
 import { ConflictContext } from './plan/conflict-context';
 import { CourseChangeController } from './course-change/course-change.controller';
 import { CourseLessonQueries } from './course-change/course-change.lessons';
-import { CourseChangeNotices } from './course-change/course-change.notices';
+import { CourseChangeNotices } from './course-change/notices/course-change.notices';
 import { CourseChangePlanner } from './course-change/course-change.planner';
 import { CourseChangeQueries } from './course-change/course-change.queries';
 import { CourseChange } from './course-change/course-change.service';

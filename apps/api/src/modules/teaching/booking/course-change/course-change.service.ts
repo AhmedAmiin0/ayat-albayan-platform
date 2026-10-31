@@ -8,7 +8,7 @@ import {
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { domainError } from '../booking.errors';
-import { addedLessons, type CourseTold } from './course-change.notice-plan';
+import { addedLessons, type CourseTold } from './notices/course-change.notice-plan';
 import { changePayload } from './course-change.payload';
 import type { ChangeRole } from './course-change.plan';
 import type { Loaded, Planned } from './course-change.planner';

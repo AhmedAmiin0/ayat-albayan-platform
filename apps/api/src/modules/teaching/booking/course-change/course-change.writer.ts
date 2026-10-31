@@ -9,8 +9,8 @@ import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { callRpc } from '../../scheduling/rpc';
 import { dbError } from '../../../../common/http/http';
 import { CourseChangePlanner } from './course-change.planner';
-import type { CourseTold } from './course-change.notice-plan';
-import { CourseChangeNotices } from './course-change.notices';
+import type { CourseTold } from './notices/course-change.notice-plan';
+import { CourseChangeNotices } from './notices/course-change.notices';
 
 const changeResult = z.object({ rule_ids: z.array(z.string()), ends_on: z.string().nullable() });
 

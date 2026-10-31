@@ -7,7 +7,7 @@ import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import type { BookingPayload } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
 import { CourseChangeWriter } from '../course-change/course-change.writer';
-import { CourseChangeNotices } from '@/modules/teaching/booking/course-change/course-change.notices';
+import { CourseChangeNotices } from '@/modules/teaching/booking/course-change/notices/course-change.notices';
 import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.service';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
