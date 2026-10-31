@@ -13,7 +13,7 @@ vi.mock('@/lib/http/supabase', () => ({
 }));
 
 // Owner 2026-10-31: after the 24 h window, a Kapso chat line (try_after_window) still lets staff
-// type; the note says WhatsApp may refuse it and the template toggle stays.
+// type; the note says the chat is reopened on send («dont use templates»: no highlighted toggle).
 
 const props = { context: {}, gateNote: null, mode: 'text' as const, onMode: vi.fn(), teacher: false };
 const box = () => screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel });
@@ -36,12 +36,14 @@ function show(mode: InboxMode, tries: boolean) {
 afterEach(() => apiFetch.mockReset());
 
 describe('ComposerPhone after the 24 h window', () => {
-  it.each(['admin', 'sales'] as const)('%s on a Kapso chat line: the note, the box, the toggle', async (mode) => {
+  it.each(['admin', 'sales'] as const)('%s on a Kapso chat line: the reopen note, the box', async (mode) => {
     show(mode, true);
     expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
     expect(screen.queryByText(t.inbox.sessionClosed)).toBeNull();
     expect(box()).toBeTruthy();
     await waitFor(() => expect(toggle()).toBeTruthy());
+    expect(toggle()?.getAttribute('aria-pressed')).toBe('false');
+    expect(toggle()?.className).not.toContain('bg-lapis-wash');
   });
 
   it('a meta chat line (no flag): templates only, as before', () => {

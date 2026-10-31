@@ -23,9 +23,6 @@ export interface ChatActions {
   reactable: (m: MessageView) => boolean;
   /** Ours on `m` (null removes it): optimistic, one send. */
   react: (m: MessageView, emoji: string | null) => void;
-  /** «أرسل قالبًا» under a text WhatsApp refused (131047): asks so far; the composer follows. */
-  templateAsk: number;
-  askTemplate: () => void;
 }
 
 const noop = () => undefined;
@@ -41,8 +38,6 @@ export const ChatActionsContext = createContext<ChatActions>({
   notLoaded: noop,
   reactable: () => false,
   react: noop,
-  templateAsk: 0,
-  askTemplate: noop,
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);

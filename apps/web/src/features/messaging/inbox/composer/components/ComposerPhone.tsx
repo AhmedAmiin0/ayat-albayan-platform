@@ -98,7 +98,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
     <IconButton
       label={t.inbox.composer.modeTemplate}
       aria-pressed={mode === 'template'}
-      className={cn('rounded-full', (trying || mode === 'template') && 'bg-lapis-wash text-lapis')}
+      className={cn('rounded-full', mode === 'template' && 'bg-lapis-wash text-lapis')}
       onClick={() => onMode(mode === 'template' ? 'text' : 'template')}
     >
       <Icon name="template" className="size-5" />

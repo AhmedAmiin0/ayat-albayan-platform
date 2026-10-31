@@ -16,8 +16,6 @@ interface FailedSheetProps {
   onClose: () => void;
   /** A refused action in words, for the chat's notice line. */
   onError: (text: string) => void;
-  /** 131047 (a text after the 24 h window, owner 2026-10-31): «أرسل قالبًا» opens the templates. */
-  onTemplate?: () => void;
 }
 
 /** The sender claimed the row meanwhile (409 not_manual): it is going out, never send it by hand too. */
@@ -31,7 +29,7 @@ const claimed = (e: unknown) => e instanceof ApiError && (e.body as { code?: unk
  * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. Drawn once
  * per chat and always mounted: a hand-off answered after the sheet closed still opens WhatsApp.
  */
-export function FailedSheet({ phone, message: m, onClose, onError, onTemplate }: FailedSheetProps) {
+export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheetProps) {
   const { color } = useTheme();
   const retry = useMessageAction(phone, 'retry');
   const handOff = useMessageAction(phone, 'hand-off');
@@ -41,7 +39,6 @@ export function FailedSheet({ phone, message: m, onClose, onError, onTemplate }:
   const why = failed || (!!m?.error_code && m.error_code !== 'sending');
   const link = m?.click_to_chat ?? null;
   const fail = (e: unknown) => onError(claimed(e) ? t.messages.alreadySending : t.common.error);
-  const template = m?.status === 'failed' && m.error_code === '131047' ? onTemplate : undefined;
   const tryAgain = (row: MessageView) => {
     onClose();
     retry.mutate(row.id, { onError: fail });
@@ -60,15 +57,6 @@ export function FailedSheet({ phone, message: m, onClose, onError, onTemplate }:
       ) : null}
       {m && failed && canRetryCode(m.error_code) ? (
         <Button variant="secondary" label={t.messages.retry} onPress={() => tryAgain(m)} />
-      ) : null}
-      {template ? (
-        <Button
-          label={t.inbox.composer.sendTemplate}
-          onPress={() => {
-            onClose();
-            template();
-          }}
-        />
       ) : null}
       {m && link ? <Button variant="secondary" label={t.messages.clickToChat} onPress={() => byHand(m, link)} /> : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />

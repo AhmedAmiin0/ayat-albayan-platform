@@ -5,7 +5,7 @@ import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // Owner 2026-10-31: after the 24 h window a Kapso chat line (try_after_window) lets staff type
-// a text (no files, no voice); the note says WhatsApp may refuse it; «أرسل قالبًا» in the pill.
+// a text (no files, no voice); the note says the chat is reopened on send (no template nudge).
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -30,11 +30,10 @@ async function open(th: typeof thread) {
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('a Kapso chat line after the window: the try note, the box, «أرسل قالبًا», no paperclip', async () => {
+test('a Kapso chat line after the window: the reopen note, the box, no paperclip', async () => {
   await open({ ...CLOSED, try_after_window: true });
   expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
   expect(screen.getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.inbox.composer.sendTemplate })).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.inbox.composer.attach })).toBeNull();
   expect(screen.queryByTestId('closed-row')).toBeNull();
 });

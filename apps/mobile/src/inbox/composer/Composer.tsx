@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import { usePermissions } from '@/auth';
 import { ClosedRow } from '../threads-list/ClosedRow';
 import { t } from '@/core/lib/i18n/i18n';
-import { useTemplateOnAsk } from '@/inbox/thread/hooks/chat-actions';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
@@ -62,7 +61,6 @@ export function Composer({
   // Owner 2026-10-31: a Kapso chat line still tries staff's free text after the window (no files).
   const trying = !open && staff && thread?.try_after_window === true;
   const pick = () => setPicking(true);
-  useTemplateOnAsk(pick);
   const type = (v: string) => {
     replies.typed(v);
     setText(v);
@@ -91,6 +89,7 @@ export function Composer({
           onLeave={replies.dismiss}
           staff={staff && open}
           onTemplate={pick}
+          quietTemplate={trying}
           onReplies={replies.open}
           onFileError={setFileError}
           onQuote={quote ? () => setQuoting(true) : undefined}

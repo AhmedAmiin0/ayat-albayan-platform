@@ -2815,7 +2815,7 @@
       }
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "The 24-hour window has ended: we will try to send, but WhatsApp may refuse it — a template always arrives",
+    "tryAfterWindow": "The last message was more than 24 hours ago: we will reopen the conversation when you send",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
