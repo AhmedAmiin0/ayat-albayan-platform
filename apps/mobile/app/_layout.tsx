@@ -78,6 +78,9 @@ export default function RootLayout() {
   );
 }
 
+/** The in-app room (docs/35) covers the tabs and is left only by its own «غادر» / «رجوع». */
+const ROOM_SCREEN = { presentation: 'fullScreenModal', gestureEnabled: false } as const;
+
 interface GatedRootProps {
   gate: GateStatus;
   /** Fonts, language, overrides and the session gate are settled. */
@@ -127,11 +130,8 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
               <Stack.Protected guard={gate === 'assistant'}>
                 <Stack.Screen name="assistant" />
               </Stack.Protected>
-              <Stack.Protected guard={gate !== 'out' && gate !== 'booting'}>
-                <Stack.Screen
-                  name="room/[kind]/[id]"
-                  options={{ presentation: 'fullScreenModal', gestureEnabled: false }}
-                />
+              <Stack.Protected guard={signedIn}>
+                <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
               </Stack.Protected>
               <Stack.Protected guard={gate === 'out'}>
                 <Stack.Screen name="login" />
