@@ -24,6 +24,7 @@ export * from './chat/sender.js';
 export * from './chat/status-style.js';
 export * from './templates/templates.js';
 export * from './templates/template-number.js';
+export * from './templates/template-create.js';
 export * from './chat/thread-reopen.js';
 export * from './chat/ticks.js';
 export * from './chat/thread-people.js';

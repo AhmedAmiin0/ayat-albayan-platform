@@ -1,4 +1,4 @@
-import type { CRM_TEMPLATE_STATUSES, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
+import type { CRM_TEMPLATE_STATUSES, TemplateCreateInput, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
@@ -23,6 +23,9 @@ export const checkTemplateHealth = (line?: WaLine) =>
   line
     ? apiSend<TemplateHealthView>('POST', '/messaging/templates/health', { line })
     : apiSend<TemplateHealthView>('POST', '/messaging/templates/health');
+
+/** «قالب جديد» (owner 2026-10-31): a new row, not submitted; 409 template_exists. */
+export const createTemplate = (input: TemplateCreateInput) => apiSend<TemplateView>('POST', '/messaging/templates', input);
 
 /** T3: not_submitted / rejected / missing → pending, on the WABA of the row's own line. */
 export const submitTemplate = (key: string) =>

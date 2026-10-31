@@ -22,7 +22,7 @@ export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: 
 
 /** «image/jpeg; codecs=…» → «image/jpeg» (shared since owner 2026-10-19 #1). */
 export { baseMime };
-export const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
+const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 
 /**
  * The gate of a file we may serve: inbound, with a media id (or an old-CRM file link, isCrmHistoryRow),

@@ -25,6 +25,12 @@ const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 export const crmUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the crm driver (templates and media live in the CRM)`, { code: null, status: 0, unsupported: 'crm' });
 
+/** A refused template send keeps the name the CRM was asked for (a fallback is not the key's). */
+const sentAs = (e: unknown, body: CrmBody): unknown => {
+  if (!(e instanceof WaError) || body.type !== 'template') return e;
+  return new WaError(e.message, { ...e.info, template: body.template.name });
+};
+
 /**
  * WhatsappClient over the CRM's REST API. Without the env every call throws WaError(code null, status 0)
  * before any request, like HttpWhatsappClient. The allow-list is checked before any request.
@@ -91,7 +97,10 @@ export class CrmWhatsappClient implements WhatsappClient {
   private async send(to: string, build: () => CrmBody): Promise<WaSent> {
     const c = this.connection();
     if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
-    const data = await crmJson(c, { path: 'messages', method: 'POST', body: build() });
+    const body = build();
+    const data = await crmJson(c, { path: 'messages', method: 'POST', body }).catch((e: unknown) => {
+      throw sentAs(e, body);
+    });
     const sent = sentSchema.safeParse(data);
     // A 2xx means the CRM sent it: without the wamid it cannot be matched, and a resend would duplicate it.
     if (!sent.success) throw new WaError('the CRM answered without a whatsapp_message_id', { code: null, status: 201, uncertain: true });

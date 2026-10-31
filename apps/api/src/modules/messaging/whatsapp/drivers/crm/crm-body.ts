@@ -20,26 +20,38 @@ export type CrmBody =
   | { to: string; type: 'template'; template: { name: string; language: string; params: CrmTemplateParams } }
   | { to: string; type: 'image' | 'document'; media_url: string; filename?: string; text?: string };
 
+/** The old script's name for this key (CRM_DEFAULT_NAMES), not one an admin set. */
+const byDefault = (t: TemplateSend['template']): boolean =>
+  !t.crm_name && crmTemplateName(t) === CRM_DEFAULT_NAMES[t.key];
+
 /**
- * The name the CRM gets for this row: crmTemplateName, except that the old script's default (teacher_lesson_v2)
- * needs the producer's CRM values; a row without them (queued before they existed, or a value missing) keeps
- * meta_name and its Meta values, as before the mapping. An admin's crm_name is always sent as set.
+ * The name the CRM gets for this row: crmTemplateName, except that the old script's default
+ * (teacher_lesson_v2, teacher_lesson_reminder) needs the producer's CRM values; a row without them
+ * (queued before they existed, or a value missing) keeps meta_name and its Meta values, as before
+ * the mapping. An admin's crm_name is always sent as set.
  */
 function crmRowName(input: TemplateSend): string {
   const { template } = input;
-  const name = crmTemplateName(template);
-  const byDefault = !template.crm_name && name === CRM_DEFAULT_NAMES[template.key];
-  return byDefault && !input.params.crm?.body ? template.meta_name : name;
+  const fallback = byDefault(template) && !input.params.crm?.body;
+  return fallback ? template.meta_name : crmTemplateName(template);
 }
 
 /**
- * The producer's CRM values (params.crm) fit only the CRM's OWN template (e.g. teacher_lesson_v2): when the name
- * the CRM gets is the Meta name (an admin's crm_name pointing at the CRM's copy of the Meta template, or the
- * fallback above), the Meta values go, or a 3-variable template would get 5 values.
+ * The producer's CRM values (params.crm) fit only the CRM's OWN template: the old script's
+ * default, even when it is the Meta name as well (teacher_lesson_reminder), or an admin's crm_name
+ * other than meta_name. When the CRM gets the Meta name otherwise (an admin's crm_name pointing at
+ * the CRM's copy of the Meta template), the Meta values go, or a 3-variable template would get 5.
  */
-const ownCrm = (input: TemplateSend) => (crmRowName(input) === input.template.meta_name ? undefined : input.params.crm);
+function ownCrm(input: TemplateSend) {
+  const { template, params } = input;
+  if (byDefault(template)) return params.crm?.body ? params.crm : undefined;
+  return crmRowName(input) === template.meta_name ? undefined : params.crm;
+}
 
-/** URL-button suffixes / payloads by index: the producer's CRM values (params.crm.buttons), else the meta driver's. */
+/**
+ * URL-button suffixes / payloads by index: the producer's CRM values (params.crm.buttons; [] =
+ * none, the CRM's template has no buttons), else the meta driver's.
+ */
 function crmButtons(input: TemplateSend): [string, string][] {
   const own = ownCrm(input)?.buttons;
   if (own) return own.map((value, i) => [String(i), value]);

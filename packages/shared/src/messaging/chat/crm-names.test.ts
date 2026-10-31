@@ -15,6 +15,13 @@ describe('crm template names (docs/19 «crm driver»)', () => {
     expect(crmTemplateName(row({ key: 'teacher_new_student', crm_name: 'teacher_alert_x' }))).toBe('teacher_alert_x');
   });
 
+  it('both same-day teacher reminders go as the old script\'s teacher_lesson_reminder', () => {
+    for (const key of ['teacher_lesson_reminder', 'teacher_lesson_reminder_meet']) {
+      expect(crmTemplateName({ ...row({ key }), meta_name: key })).toBe('teacher_lesson_reminder');
+    }
+    expect(crmTemplateName(row({ key: 'teacher_lesson_reminder_meet', crm_name: 'x_y' }))).toBe('x_y');
+  });
+
   it('the language: crm_language, else the template\'s own', () => {
     expect(crmTemplateLanguage(row())).toBe('ar');
     expect(crmTemplateLanguage(row({ crm_language: 'en_US' }))).toBe('en_US');

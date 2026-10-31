@@ -42,4 +42,15 @@ describe('MessageWorker — crm failures', () => {
     expect(queries.failure).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error_code: CRM_AUTH }));
     expect(push.notifyAdmins).toHaveBeenCalledTimes(1);
   });
+
+  it('a failure is recorded first, then handed to the 132001 check with its key and line', async () => {
+    const error = answer(502, 'meta_error');
+    dispatch.send.mockRejectedValue(error);
+    const w = worker();
+    const check = vi.fn(async () => undefined);
+    Object.assign(w, { missing: { check } });
+    await expect(w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true })).resolves.toBe('failed');
+    expect(queries.failure).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error_code: 'crm_meta_error' }));
+    expect(check).toHaveBeenCalledWith({ key: 'booking_confirmation', line: 'notifications', error, now: NOW });
+  });
 });
