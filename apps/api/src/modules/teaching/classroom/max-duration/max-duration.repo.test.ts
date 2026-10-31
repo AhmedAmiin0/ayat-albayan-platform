@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { MaxDurationRepo, RUN_CAP } from './max-duration.repo';
-import { L1, L2 } from './max-duration.fakes';
 
 type Call = [string, ...unknown[]];
-const READS = ['select', 'is', 'or', 'order', 'limit', 'in', 'lt'];
+const READS = ['select', 'is', 'or', 'order', 'limit'];
 
 /** A PostgREST stand-in that records reads and fails the test on any write. */
 function fakeDb(data: unknown[]) {
@@ -39,22 +38,5 @@ describe('MaxDurationRepo', () => {
       ['order', 'created_at', { ascending: true }],
       ['limit', RUN_CAP],
     ]);
-  });
-
-  it('only reads lessons (status, attendance, reports and earnings are never written)', async () => {
-    const { db, calls } = fakeDb([{ id: L1 }]);
-    expect(await new MaxDurationRepo(db).lessonsOpenedBefore([L1, L2], CUTOFF)).toEqual([L1]);
-    expect(calls).toEqual([
-      ['from', 'lessons'],
-      ['select', 'id'],
-      ['in', 'id', [L1, L2]],
-      ['lt', 'room_opened_at', CUTOFF.toISOString()],
-    ]);
-  });
-
-  it('asks nothing for no lesson rooms', async () => {
-    const { db, calls } = fakeDb([]);
-    expect(await new MaxDurationRepo(db).lessonsOpenedBefore([], CUTOFF)).toEqual([]);
-    expect(calls).toEqual([]);
   });
 });

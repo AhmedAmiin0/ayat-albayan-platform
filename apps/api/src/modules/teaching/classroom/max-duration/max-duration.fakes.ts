@@ -53,12 +53,8 @@ function fakeLivekit(rooms: FakeRoom[]) {
 }
 
 /** MaxDurationRepo over `meetings`: one in `ended` is no longer selected (ends_at is null). */
-function fakeRepo(meetings: OverdueMeeting[], openedLong: string[], ended: Map<string, string>) {
-  return {
-    overdueMeetings: vi.fn(async () => meetings.filter((m) => !ended.has(m.id))),
-    lessonsOpenedBefore: vi.fn(async (ids: readonly string[]) =>
-      ids.filter((id) => openedLong.includes(id))),
-  };
+function fakeRepo(meetings: OverdueMeeting[], ended: Map<string, string>) {
+  return { overdueMeetings: vi.fn(async () => meetings.filter((m) => !ended.has(m.id))) };
 }
 
 /** InternalMeetingsQueries.end as the database answers it: stamped once, then kept. */
@@ -80,7 +76,6 @@ export const overdue = (id: string, over: Partial<OverdueMeeting> = {}): Overdue
 interface JobParts {
   minutes?: number;
   meetings?: OverdueMeeting[];
-  openedLong?: string[];
   rooms?: FakeRoom[];
   egress?: Record<string, string>;
 }
@@ -88,7 +83,7 @@ interface JobParts {
 export function jobWith(parts: JobParts = {}) {
   const lk = fakeLivekit(parts.rooms ?? []);
   const store = fakeMeetingStore();
-  const repo = fakeRepo(parts.meetings ?? [], parts.openedLong ?? [], store.ended);
+  const repo = fakeRepo(parts.meetings ?? [], store.ended);
   const audit = { record: vi.fn(async () => undefined) };
   const egress = parts.egress ?? {};
   const recordings = { runningEgress: vi.fn(async (t: { id: string }) => egress[t.id] ?? null) };

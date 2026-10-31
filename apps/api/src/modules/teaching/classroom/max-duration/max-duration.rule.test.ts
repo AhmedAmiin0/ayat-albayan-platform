@@ -5,7 +5,6 @@ import {
   meetingOverdue,
   openTooLong,
   ownedRooms,
-  roomOverdue,
 } from './max-duration.rule';
 import { L1, M1, NOW, overdue } from './max-duration.fakes';
 
@@ -76,17 +75,5 @@ describe('rooms', () => {
       .map((name) => ({ name, createdAt: new Date(0) }));
     const owned = ownedRooms(rooms, new Set([`meeting-${M1}`]));
     expect(owned.map((r) => r.target)).toEqual([{ kind: 'lesson', id: L1 }]);
-  });
-
-  it('closes a room created over the limit, or a lesson room opened over the limit', () => {
-    const lesson = { name: `lesson-${L1}`, createdAt: new Date(ago(10)), target: { kind: 'lesson' as const, id: L1 } };
-    const none = { cutoff, lessonsOpenedLong: new Set<string>() };
-    expect(roomOverdue(lesson, none)).toBe(false);
-    expect(roomOverdue({ ...lesson, createdAt: new Date(ago(120)) }, none)).toBe(false);
-    expect(roomOverdue({ ...lesson, createdAt: new Date(ago(121)) }, none)).toBe(true);
-    expect(roomOverdue({ ...lesson, createdAt: null }, none)).toBe(false);
-    expect(roomOverdue(lesson, { cutoff, lessonsOpenedLong: new Set([L1]) })).toBe(true);
-    const meeting = { ...lesson, target: { kind: 'meeting' as const, id: L1 } };
-    expect(roomOverdue(meeting, { cutoff, lessonsOpenedLong: new Set([L1]) })).toBe(false);
   });
 });

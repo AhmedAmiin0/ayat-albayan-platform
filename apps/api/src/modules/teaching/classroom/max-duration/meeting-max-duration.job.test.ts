@@ -18,9 +18,8 @@ describe('MeetingMaxDurationJob', () => {
     expect(deletes(t.lk.http)).toBe(1);
   });
 
-  it('closes lesson rooms opened over the limit and owned rooms created over it; never others', async () => {
+  it('closes owned rooms LiveKit created over the limit; a fresh lesson room stays open', async () => {
     const t = jobWith({
-      openedLong: [L1],
       rooms: [
         { name: `lesson-${L1}`, minutesAgo: 20 },
         { name: `lesson-${L2}`, minutesAgo: 121 },
@@ -29,11 +28,11 @@ describe('MeetingMaxDurationJob', () => {
         { name: 'lesson-not-a-uuid', minutesAgo: 600 },
       ],
     });
-    expect(await t.job.runOnce(NOW)).toEqual({ ended: 0, closed: 2, failed: 0 });
-    expect(t.lk.deleted.sort()).toEqual([`lesson-${L1}`, `lesson-${L2}`]);
-    expect(deletes(t.lk.http)).toBe(2);
-    // LiveKit only: no lesson row, report or earning is written (the repo only reads lessons).
-    expect(t.repo.lessonsOpenedBefore).toHaveBeenCalledWith([L1, L2], expect.any(Date));
+    expect(await t.job.runOnce(NOW)).toEqual({ ended: 0, closed: 1, failed: 0 });
+    expect(t.lk.deleted).toEqual([`lesson-${L2}`]);
+    expect(deletes(t.lk.http)).toBe(1);
+    // LiveKit only: the repo reads meetings, never lessons (lessons.room_opened_at is not used).
+    expect(Object.keys(t.repo)).toEqual(['overdueMeetings']);
     expect(t.store.end).not.toHaveBeenCalled();
     expect(t.audit.record).not.toHaveBeenCalled();
   });

@@ -81,15 +81,3 @@ export function ownedRooms(rooms: readonly LiveRoom[], skip: ReadonlySet<string>
   }
   return out;
 }
-
-/**
- * Close an owned room created before the cutoff (the orphan sweep), or a lesson's room whose
- * lessons.room_opened_at is before it (`lessonsOpenedLong`).
- */
-export function roomOverdue(
-  room: OwnedRoom,
-  ctx: { cutoff: Date; lessonsOpenedLong: ReadonlySet<string> },
-): boolean {
-  if (openTooLong(room.createdAt, ctx.cutoff)) return true;
-  return room.target.kind === 'lesson' && ctx.lessonsOpenedLong.has(room.target.id);
-}

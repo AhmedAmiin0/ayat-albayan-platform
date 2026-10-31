@@ -8,7 +8,7 @@ export type OverdueMeeting = MeetingTimes & { id: string };
 /** A run's ceiling: the rest waits five minutes for the next one. */
 export const RUN_CAP = 200;
 
-/** What MeetingMaxDurationJob reads (service role). It never writes a lesson. */
+/** What MeetingMaxDurationJob reads (service role): meetings only, never lessons. */
 @Injectable()
 export class MaxDurationRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -26,17 +26,5 @@ export class MaxDurationRepo {
       .limit(RUN_CAP);
     if (error) throw dbError(error);
     return data;
-  }
-
-  /** Of these lessons, the ones whose room was opened («افتح الحلقة الآن») before `cutoff`. */
-  async lessonsOpenedBefore(ids: readonly string[], cutoff: Date): Promise<string[]> {
-    if (ids.length === 0) return [];
-    const { data, error } = await this.db
-      .from('lessons')
-      .select('id')
-      .in('id', [...ids])
-      .lt('room_opened_at', cutoff.toISOString());
-    if (error) throw dbError(error);
-    return data.map((r) => r.id);
   }
 }

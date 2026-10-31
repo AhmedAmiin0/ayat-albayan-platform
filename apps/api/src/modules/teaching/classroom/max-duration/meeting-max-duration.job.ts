@@ -6,7 +6,7 @@ import {
   roomNameOf,
 } from '@/modules/teaching/classroom/recordings/recording-target';
 import { MaxDurationRepo } from './max-duration.repo';
-import { cutoffOf, meetingOverdue, ownedRooms, roomOverdue, type OwnedRoom } from './max-duration.rule';
+import { cutoffOf, meetingOverdue, openTooLong, ownedRooms, type OwnedRoom } from './max-duration.rule';
 import { MaxDurationSettings } from './max-duration.settings';
 import { MeetingAutoEnd } from './meeting-auto-end';
 import { RoomCloser } from './room-closer';
@@ -26,9 +26,11 @@ const why = (e: unknown): string => (e instanceof Error ? e.message : String(e))
  * settings.meeting_max_minutes (0 = off) is the limit.
  * 1. A meeting not ended nor cancelled, started (else created) before the limit, is ended like
  *    «إنهاء» (ends_at + audit reason auto_max_duration) and its room closed.
- * 2. A lesson room whose lessons.room_opened_at is before the limit is closed in LiveKit only: the
- *    lesson's status, attendance, report and the teacher's earnings are never touched.
- * 3. Any `lesson-`/`meeting-` room LiveKit created before the limit is closed; other rooms never.
+ * 2. Any `lesson-`/`meeting-` room LiveKit created before the limit is closed in LiveKit only;
+ *    other rooms never. The job reads nothing from lessons and writes none (status, attendance,
+ *    report, earnings stay). Not lessons.room_opened_at: it is stamped once and kept when a lesson
+ *    is moved, so it would close a fresh room. LiveKit drops an empty room after 10 minutes, so a
+ *    room really open past the limit has an old creation time.
  * A running recording is stopped first, so the file is kept. One room's failure never stops the
  * run; a re-run finds nothing left (ended meetings are not selected, closed rooms not listed).
  */
@@ -94,14 +96,11 @@ export class MeetingMaxDurationJob implements OnApplicationBootstrap, OnModuleDe
     return handled;
   }
 
-  /** Steps 2 and 3, over the rooms LiveKit has now. */
+  /** Step 2, over the rooms LiveKit has now. */
   private async sweepRooms(run: Run, handled: ReadonlySet<string>): Promise<void> {
     if (!this.rooms.configured) return;
     const owned = ownedRooms(await this.rooms.list(), handled);
-    const lessonIds = owned.filter((r) => r.target.kind === 'lesson').map((r) => r.target.id);
-    const lessonsOpenedLong = new Set(await this.repo.lessonsOpenedBefore(lessonIds, run.cutoff));
-    const ctx = { cutoff: run.cutoff, lessonsOpenedLong };
-    const due = owned.filter((r) => roomOverdue(r, ctx));
+    const due = owned.filter((r) => openTooLong(r.createdAt, run.cutoff));
     for (const room of due) await this.close({ ...run, target: room.target });
   }
 
