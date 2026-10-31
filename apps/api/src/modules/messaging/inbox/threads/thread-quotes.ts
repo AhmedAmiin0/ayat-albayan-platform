@@ -1,4 +1,4 @@
-import { QUOTE_BODY_MAX, type MessageQuote, type MessageView } from '@ab/shared';
+import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageQuote, type MessageView } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { looksCrmHistory } from '../../whatsapp';
@@ -67,14 +67,20 @@ export function quoteOf(row: QuotedRow): MessageQuote {
 const goneFromQuotes = (row: QuotedRow): boolean =>
   Boolean(row.deleted_at) || Boolean(row.hidden_at);
 
-/** Each view with its quote (same chat only); views without one are returned as they are. */
+/**
+ * Each view with its quote (same chat only). A reply whose quoted row we do not hold (WhatsApp
+ * named a wamid we never stored, owner 2026-10-31) gets the «رسالة غير متاحة» marker; a view that
+ * answers nothing, or is hidden from the platform, is returned as it is.
+ */
 export function withQuotes(
   views: readonly MessageView[],
   quotes: ReadonlyMap<string, MessageQuote>,
 ): MessageView[] {
-  return views.map((v) =>
-    v.reply_to_message_id ? { ...v, reply_to: quotes.get(v.reply_to_message_id) ?? null } : v,
-  );
+  return views.map((v) => {
+    if (v.hidden || !(v.reply_to_message_id || v.reply_to_wa_id)) return v;
+    const quote = v.reply_to_message_id ? quotes.get(v.reply_to_message_id) : undefined;
+    return { ...v, reply_to: quote ?? UNAVAILABLE_QUOTE };
+  });
 }
 
 /**
@@ -109,7 +115,7 @@ export class ThreadQuotes {
     const ids = [
       ...new Set(views.flatMap((v) => (v.reply_to_message_id ? [v.reply_to_message_id] : []))),
     ];
-    if (ids.length === 0) return [...views];
+    if (ids.length === 0) return withQuotes(views, new Map());
     const { data, error } = await this.db
       .from('messages')
       .select(QUOTE_SELECT)

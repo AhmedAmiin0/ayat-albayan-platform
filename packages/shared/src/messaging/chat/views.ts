@@ -1,6 +1,6 @@
 import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '../../enums/index.js';
 import type { ChatListRef } from './chat-lists.js';
-import type { MessageQuote } from '../replies/reply-forward.js';
+import type { ReplyQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
 import type { MessageMarks, ThreadNote } from '../markers/marker-notes.js';
 import type { TemplatedMessage } from '../templates/template-block.js';
@@ -73,8 +73,8 @@ export interface MessageView extends TemplatedMessage, MessageMarks {
   reply_to_wa_id: string | null;
   /** Our row of the message this one answers (same chat); null when none or not ours. Absent in an old cache. */
   reply_to_message_id?: string | null;
-  /** The message this one answers (same chat), when we hold it (owner 2026-10-25). Absent in an old cache. */
-  reply_to?: MessageQuote | null;
+  /** The message this one answers (same chat), or «unavailable» when we lack it (10-31). Absent in an old cache. */
+  reply_to?: ReplyQuote | null;
   /** WhatsApp knows it (it has a wamid): «رد» may quote it. Absent in an old cache. */
   replyable?: boolean;
   /** A text or a file we can copy: «إعادة توجيه». Absent in an old cache. */

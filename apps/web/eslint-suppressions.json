@@ -2305,7 +2305,7 @@
   },
   "src/features/messaging/inbox/composer/components/ReplyStrip.tsx": {
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/components/TemplateComposer.contact.test.tsx": {
@@ -3087,11 +3087,6 @@
     },
     "max-len": {
       "count": 6
-    }
-  },
-  "src/features/messaging/inbox/messages/components/QuoteBlock.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/features/messaging/inbox/messages/forward/ForwardDialog.test.tsx": {
