@@ -24,6 +24,7 @@ export type ThreadRow = Tables<'v_threads'>;
  * guardian without students is «مش مشترك», a row without a guardian has no badge.
  */
 export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, tag: FamilyTag | null = null): ThreadView {
+  const chat = lineEnvs(loadEnv()).chat;
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -40,7 +41,9 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     last_inbound_line: row.last_inbound_line,
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
-    reply_line: shownReplyLine(row, now),
+    reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
+    // Owner 2026-10-31: a Kapso chat line still tries free text after the window (textLine).
+    ...(chat?.provider === 'kapso' ? { try_after_window: true } : {}),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,
@@ -94,10 +97,9 @@ export function threadReplyLine(row: ThreadRow, opts: { chatConfigured: boolean;
  * line (no note, as before two lines) and 'chat' when only the chat window is open but its line
  * cannot send (the reply answers 503).
  */
-function shownReplyLine(row: ThreadRow, now: Date): WaLine | null {
-  const chatConfigured = Boolean(lineEnvs(loadEnv()).chat);
-  const line = threadReplyLine(row, { chatConfigured, now });
-  return chatConfigured || line === 'chat' ? line : null;
+function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date }): WaLine | null {
+  const line = threadReplyLine(row, at);
+  return at.chatConfigured || line === 'chat' ? line : null;
 }
 
 /** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */

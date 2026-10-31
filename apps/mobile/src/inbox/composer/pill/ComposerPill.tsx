@@ -20,6 +20,8 @@ export interface PillProps {
   /** Staff (not a teacher): the price tag and the paperclip; a teacher gets emoji and template icons. */
   staff: boolean;
   onTemplate: () => void;
+  /** Tried after the 24 h window (owner 2026-10-31): a plain, not highlighted, template icon. */
+  quietTemplate?: boolean;
   onReplies: () => void;
   /** «عرض سعر» (staff with pricing.read); absent → no price tag in the bar. */
   onQuote?: (() => void) | undefined;
@@ -76,7 +78,7 @@ export function PillContents(p: PillProps) {
       {smile}
       {box}
       <IconButton label={t.inbox.composer.sendTemplate} onPress={p.onTemplate}>
-        <TemplateIcon color={color.lapis} />
+        <TemplateIcon color={p.quietTemplate ? color.ink3 : color.lapis} />
       </IconButton>
       {sheet}
     </>
