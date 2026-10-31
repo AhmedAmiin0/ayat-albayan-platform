@@ -10321,9 +10321,6 @@
     "ab/no-parent-imports": {
       "count": 1
     },
-    "max-len": {
-      "count": 6
-    },
     "max-lines-per-function": {
       "count": 1
     },
@@ -10380,7 +10377,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1

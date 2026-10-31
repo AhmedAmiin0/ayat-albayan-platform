@@ -4456,7 +4456,18 @@
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
       "detailsHint": "Opens the student details",
-      "openStudent": "Open {name}'s student file"
+      "openStudent": "Open {name}'s student file",
+      "schedule": "Schedule",
+      "attendance": "Attendance",
+      "noSchedule": "No fixed schedule",
+      "attendedPackage": "Attended {n} of {of} in the current package",
+      "attendedRecent": "Attended {n} of {of} in the last 30 days",
+      "noHeldPackage": "No lessons held in the current package yet",
+      "noHeldRecent": "No lessons held in the last 30 days",
+      "groupSeparator": "; ",
+      "package": "Package",
+      "packageLine": "Package: {line}",
+      "noPackage": "No current package"
     },
     "live": {
       "title": "Lessons running now",
@@ -4475,6 +4486,7 @@
       "starts": "Starts: {date}",
       "renews": "Renews: {date}",
       "ended": "Ended: {date}",
+      "projectedEnd": "Expected end: {date}",
       "changes": "Status changes",
       "created": "Created as {to}",
       "changed": "From {from} to {to}",
@@ -4517,7 +4529,6 @@
         "showAll": "Show all ({n})",
         "showLess": "Show less"
       },
-      "notMine": "Not one of your students: subscriptions and reports are not shown here",
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",
