@@ -9,8 +9,17 @@ import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { callRpc } from '../../scheduling/rpc';
 import { dbError } from '../../../../common/http/http';
 import { CourseChangePlanner } from './course-change.planner';
+import type { CourseTold } from './notices/course-change.notice-plan';
+import { CourseChangeNotices } from './notices/course-change.notices';
 
 const changeResult = z.object({ rule_ids: z.array(z.string()), ends_on: z.string().nullable() });
+
+/** One change_course write and who hears it. */
+interface CourseWrite {
+  payload: Record<string, unknown>;
+  subscriptionId: string;
+  told: CourseTold;
+}
 
 /** change_course (migration 480) and its replay by clientRequestId (rule 8). Service role. */
 @Injectable()
@@ -19,6 +28,7 @@ export class CourseChangeWriter {
     @Inject(DB) private readonly db: Db,
     private readonly events: LessonEvents,
     private readonly policy: NotificationPolicy,
+    private readonly notices: CourseChangeNotices,
   ) {}
 
   /** The change this clientRequestId already made (a retry), or null. */
@@ -32,13 +42,18 @@ export class CourseChangeWriter {
   /**
    * One transaction: the old rules end, their open lessons move, the new rules and lessons, the audit
    * row. Then the balance alerts (R-SUB-02) hear which lessons moved, as LessonStore.commit. Its
-   * booking_confirmation* rows only while that notification rule is on (gateConfirmations).
+   * booking_confirmation* rows only while that notification rule is on (gateConfirmations) and the
+   * family does not hear the move by lesson_rescheduled instead; then the teacher and the family
+   * hear it (CourseChangeNotices, owner 2026-10-30).
    */
-  async apply(change: { payload: Record<string, unknown>; subscriptionId: string; moved: readonly string[] }): Promise<CourseChangeResult> {
-    const { messages } = change.payload;
-    const p = Array.isArray(messages) ? { ...change.payload, messages: await gateConfirmations(this.policy, messages) } : change.payload;
+  async apply(change: CourseWrite): Promise<CourseChangeResult> {
+    const { payload, told } = change;
+    const listed: unknown[] = Array.isArray(payload.messages) ? payload.messages : [];
+    const kept = await this.notices.prepare(told, await gateConfirmations(this.policy, listed));
+    const p = Array.isArray(payload.messages) ? { ...payload, messages: kept.messages } : payload;
     const result = this.result(await callRpc(this.db, 'change_course', { p }), change.subscriptionId);
-    await this.events.changed(change.moved);
+    await this.events.changed(told.moved.map((m) => m.id));
+    await this.notices.announce(told, kept.changes);
     return result;
   }
 

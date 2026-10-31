@@ -57,4 +57,6 @@ export interface Notice {
   familyWhatsApp: boolean;
   /** Who made the change: no push to them about it (they still get the WhatsApp, owner: «both»). */
   actorId: string | null;
+  /** Only the teachers or only the family (ScheduleChange.audience); absent: both. */
+  audience?: 'teacher' | 'family';
 }
