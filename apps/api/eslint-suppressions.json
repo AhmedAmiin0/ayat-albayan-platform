@@ -432,6 +432,29 @@
       "count": 3
     }
   },
+  "src/common/db/list-sort.test.ts": {
+    "@typescript-eslint/prefer-return-this-type": {
+      "count": 1
+    }
+  },
+  "src/common/db/list-sort.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/common/db/read-all.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/common/db/read-all.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
   "src/common/http/http.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -517,19 +540,6 @@
     }
   },
   "src/common/infra/i18n/server-text.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/common/list-sort.test.ts": {
-    "@typescript-eslint/prefer-return-this-type": {
-      "count": 1
-    }
-  },
-  "src/common/list-sort.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -1932,9 +1942,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -2142,9 +2149,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -2185,10 +2189,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 6
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -2453,12 +2454,6 @@
       "count": 1
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -2893,10 +2888,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 1
     },
     "max-len": {
       "count": 5
@@ -3001,9 +2993,6 @@
     }
   },
   "src/modules/finance/subscriptions/list/subscriptions.list-query.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -3014,12 +3003,6 @@
     }
   },
   "src/modules/finance/subscriptions/money/balance.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -3226,18 +3209,7 @@
       "count": 7
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -3363,9 +3335,6 @@
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/finance/subscriptions/subscriptions.replay.http.test.ts": {
@@ -3436,18 +3405,7 @@
       "count": 5
     }
   },
-  "src/modules/finance/subscriptions/trial/student-trial.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/trial/student-trial.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -3598,9 +3556,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 2
@@ -4077,10 +4032,7 @@
   },
   "src/modules/messaging/follow-ups/follow-ups.queries.ts": {
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 6
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -5146,9 +5098,6 @@
     "ab/forbidden-imports": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 7
     }
@@ -5242,9 +5191,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 9
     },
     "max-len": {
       "count": 12
@@ -5926,10 +5872,7 @@
   },
   "src/modules/messaging/push/push-receipts.queries.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/push/push-transport.test.ts": {
@@ -6098,12 +6041,6 @@
   "src/modules/messaging/reminders/reminders.queries.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 3
@@ -9114,9 +9051,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -9182,9 +9116,6 @@
   },
   "src/modules/people/students/students.sort.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -9384,9 +9315,6 @@
     }
   },
   "src/modules/people/teachers/teachers.list.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -9426,12 +9354,6 @@
     }
   },
   "src/modules/people/teachers/teachers.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 7
     }
@@ -10545,12 +10467,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -10595,12 +10511,6 @@
   "src/modules/reporting/dashboard/finance/finance.queries.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 2
@@ -10684,12 +10594,6 @@
     }
   },
   "src/modules/reporting/dashboard/work/work.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -10734,10 +10638,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -10780,10 +10681,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -11155,12 +11053,6 @@
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -11452,9 +11344,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 4
     }
@@ -11544,9 +11433,6 @@
     }
   },
   "src/modules/sales/job-applicants/job-applicants.list.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -11557,9 +11443,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -11679,9 +11562,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -12993,10 +12873,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -15266,9 +15143,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "complexity": {
       "count": 1
     },
@@ -15424,10 +15298,7 @@
   },
   "src/modules/teaching/lesson-rating/rating.queries.ts": {
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 6
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -15543,12 +15414,6 @@
   "src/modules/teaching/lessons/lessons.queries.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 4
@@ -15687,12 +15552,6 @@
   "src/modules/teaching/lessons/proposals/lesson-proposals.queries.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -16172,9 +16031,6 @@
     }
   },
   "src/modules/teaching/scheduling/conflicts/busy.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -16315,19 +16171,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/scheduling/read-all.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/scheduling/read-all.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/scheduling/rpc.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -16375,9 +16218,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -16418,9 +16258,6 @@
     }
   },
   "src/modules/teaching/scheduling/schedule.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }

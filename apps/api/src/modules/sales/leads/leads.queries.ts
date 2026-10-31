@@ -1,10 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { NO_ASSIGNEE, type LeadSortKey, type LeadSource, type LeadStatus, type ListSort } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { applySort, type SortSpec } from '../../../common/list-sort';
-import { guardianSearchFilter } from '../../people/guardians/guardians.mapper';
-import { OwnNumbers } from '../../messaging/numbers';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
+import { guardianSearchFilter } from '@/modules/people/guardians/guardians.mapper';
+import { OwnNumbers } from '@/modules/messaging/numbers';
 import { pageRange, throwIfDbError, type PageQuery } from './http';
 
 export type LeadRow = Tables<'leads'>;

@@ -1,8 +1,8 @@
 import { OPEN_LESSON_STATUSES, type CourseLessonFact } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readAll } from '../../scheduling/read-all';
-import { generatedKey } from '../../scheduling/rules/rule-projection';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll } from '@/common/db/read-all';
+import { generatedKey } from '@/modules/teaching/scheduling/rules/rule-projection';
 import type { OpenCourseLesson } from './course-change.queries';
 
 export type MovedLesson = OpenCourseLesson & { rule_id: string | null; starts_at: string };

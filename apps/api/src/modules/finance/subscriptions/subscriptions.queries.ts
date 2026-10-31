@@ -2,9 +2,9 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { round2 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, ilikeContains } from '@/common/list-sort';
+import { applySort, ilikeContains } from '@/common/db/list-sort';
 import { dbError, type Page } from '@/common/http/http';
-import { readChunked } from '@/modules/teaching/scheduling/read-all';
+import { readChunked } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 
 export type { SubListQuery } from './list/subscriptions.list-query';

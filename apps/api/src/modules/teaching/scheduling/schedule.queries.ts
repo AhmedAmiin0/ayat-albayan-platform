@@ -1,8 +1,8 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
-import { readAll } from './read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { readAll } from '@/common/db/read-all';
 
 const RULE_SELECT =
   '*, teacher:teachers(id, meeting_link, tz), schedule_rule_students(student_id, student:students(meeting_link_override))' as const;
