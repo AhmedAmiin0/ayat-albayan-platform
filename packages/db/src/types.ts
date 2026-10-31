@@ -3185,6 +3185,29 @@ export type Database = {
           },
         ];
       };
+      profile_presence: {
+        Row: {
+          last_seen_at: string;
+          profile_id: string;
+        };
+        Insert: {
+          last_seen_at: string;
+          profile_id: string;
+        };
+        Update: {
+          last_seen_at?: string;
+          profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'profile_presence_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: true;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_path: string | null;
@@ -5534,6 +5557,11 @@ export type Database = {
           tz: string;
         }[];
       };
+      presence_can_watch: { Args: { p_target: string }; Returns: boolean };
+      presence_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
+      presence_install: { Args: Record<PropertyKey, never>; Returns: boolean };
+      presence_topic_profile: { Args: { p_topic: string }; Returns: string };
+      presence_touch: { Args: { p_profiles: string[] }; Returns: undefined };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       rate_limit_take: { Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number }; Returns: boolean };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
@@ -5706,7 +5734,11 @@ export type Database = {
         | 'meeting_invite'
         | 'google_sync_alert'
         | 'channel_message'
-        | 'commission_earned';
+        | 'commission_earned'
+        | 'lesson_rescheduled'
+        | 'lesson_cancelled'
+        | 'course_paused'
+        | 'course_resumed';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -5904,6 +5936,10 @@ export const Constants = {
         'google_sync_alert',
         'channel_message',
         'commission_earned',
+        'lesson_rescheduled',
+        'lesson_cancelled',
+        'course_paused',
+        'course_resumed',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

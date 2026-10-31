@@ -52,6 +52,12 @@ const PINS: Pin[] = [
     re: /s\.key = 'renewal_commission_percent' and jsonb_typeof\(s\.value\) = 'number'\), (\d+)\)/,
     parse: Number,
   },
+  {
+    fn: 'public.presence_enabled',
+    key: 'presence_enabled',
+    re: /s\.key = 'presence_enabled' and jsonb_typeof\(s\.value\) = 'boolean'\s*\), (true|false)\)/,
+    parse: bool,
+  },
 ];
 
 /** Known differences today: none. Add `'fn:key'` here (with a comment and a follow-up) rather than changing SQL in a test PR. */

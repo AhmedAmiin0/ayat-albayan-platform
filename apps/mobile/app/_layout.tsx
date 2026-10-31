@@ -8,8 +8,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { type GateStatus, retryGate, useAuthGate, useMeReady } from '@/auth';
+import { type GateStatus, retryGate, useAuthGate, useMeId, useMeReady } from '@/auth';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
+import { usePresenceSelf } from '@/core/lib/presence';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/query-client';
@@ -91,8 +92,11 @@ interface GatedRootProps {
  */
 function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   const { color } = useTheme();
-  const meReady = useMeReady(gate !== 'booting' && gate !== 'out');
+  const signedIn = gate !== 'booting' && gate !== 'out';
+  const meReady = useMeReady(signedIn);
   const ready = settled && meReady;
+  // Online now for the others (docs/33 §1.1), in every tree, while the app is open.
+  usePresenceSelf(useMeId(ready && signedIn));
   return (
     <>
       {ready ? (

@@ -30,6 +30,7 @@ export {
   useHideRights,
   useHolds,
   useIsAdmin,
+  useMeId,
   useMeReady,
   usePermissions,
   useSendsAllTemplates,

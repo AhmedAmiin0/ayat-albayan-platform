@@ -5,6 +5,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { ChannelPresenceLine } from '@/features/platform/presence';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { CHANNEL_COUNT_KEYS, channelQuery, markChannelRead, sendChannelMessage, type ChannelRef } from './api';
@@ -42,7 +43,8 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   const writes = mode === 'write';
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   const newest = first?.messages.at(-1);
-  // One ticking clock for every bubble (not new Date() in render, which the compiler would keep).
+  // One ticking clock for every bubble and the presence line (not new Date() in render, which the
+  // compiler would keep).
   const now = useNow();
   const send = useMutation({
     mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),
@@ -72,6 +74,7 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   return (
     <section aria-label={label} className="grid gap-3">
       {named && name && <h2 className="font-display text-h3 font-bold">{name}</h2>}
+      <ChannelPresenceLine chat={refs} tz={tz} now={now} />
       {!writes && <p className={NOTE}>{readOnlyText(first?.open)}</p>}
       {query.hasNextPage && (
         <Button type="button" variant="ghost" size="sm" className="justify-self-center" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>

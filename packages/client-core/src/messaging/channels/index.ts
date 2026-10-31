@@ -7,6 +7,7 @@ export {
   type ChannelAudience,
   channelKey,
   channelMessagesPath,
+  channelPresencePath,
   channelReadPath,
   channelTimeText,
   olderCursor,
@@ -31,3 +32,16 @@ export {
   channelMessagePath,
   threadHidePath,
 } from './channel-edits.js';
+export {
+  channelPresenceKey,
+  PRESENCE_SELF_PATH,
+  type PresenceChannelLike,
+  type PresenceRealtimeLike,
+  presenceSelfKey,
+  presenceTopic,
+  type PresenceWatch,
+  STAFF_PRESENCE_PATH,
+  staffPresenceKey,
+  trackSelf,
+} from './presence-live.js';
+export { presenceWatchKey, watchPresence } from './presence-watch.js';

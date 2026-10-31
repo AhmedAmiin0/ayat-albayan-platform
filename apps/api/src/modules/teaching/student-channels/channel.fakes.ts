@@ -10,6 +10,8 @@ import { PortalScopeQueries } from '@/modules/people/portal/scope/portal-scope.q
 import { TeachersQueries } from '@/modules/people/teachers';
 import { AuditService } from '@/common/audit/audit.service';
 import { ChannelEditsRepo } from './channel-edits.repo';
+import { PresenceRepo, PresenceSettings } from '@/modules/people/presence';
+import { fakePresence } from '@/modules/people/presence/presence.fakes';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.queries';
 import { ChannelQueries } from './channel.queries';
@@ -107,6 +109,7 @@ export async function channelApp() {
     ),
   };
   const audit = { record: vi.fn(async () => undefined) };
+  const presence = fakePresence();
   const push = {
     notifyProfiles: vi.fn(async () => undefined),
     notifyAdmins: vi.fn(),
@@ -126,7 +129,11 @@ export async function channelApp() {
     .overrideProvider(ChannelEditsRepo)
     .useValue(edits)
     .overrideProvider(AuditService)
-    .useValue(audit);
+    .useValue(audit)
+    .overrideProvider(PresenceRepo)
+    .useValue(presence.repo)
+    .overrideProvider(PresenceSettings)
+    .useValue(presence.settings);
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST' | 'DELETE', url: string, who: Who) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
@@ -144,5 +151,6 @@ export async function channelApp() {
     push,
     edits,
     audit,
+    presence,
   };
 }

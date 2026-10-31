@@ -5,6 +5,7 @@ import { Avatar } from '@/components/ui/display/avatar';
 import { Icon } from '@/components/ui/display/icon';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
+import { LastMessageLine } from '@/features/platform/presence';
 import { t } from '@/lib/i18n/i18n';
 import { threadKind, threadTitle, timesInText } from '../../format';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
@@ -70,6 +71,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
         ) : (
           <span className="font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
+        <LastMessageLine lastInboundAt={th.last_inbound_at} />
         <WindowBanner thread={th} compact />
         {badge && <SubscriptionChip size="sm" badge={badge} />}
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}

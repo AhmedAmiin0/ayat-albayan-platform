@@ -16,6 +16,7 @@ import { StorageModule } from './common/storage/storage.service';
 import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
 import { CoursePauseModule } from './modules/teaching/course-pause';
+import { ScheduleNoticesModule } from './modules/teaching/schedule-notices';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
 import { ExportsModule } from './modules/reporting/exports/exports.module';
@@ -34,6 +35,7 @@ import { LessonRatingModule } from './modules/teaching/lesson-rating/lesson-rati
 import { LessonsModule } from './modules/teaching/lessons/lessons.module';
 import { MeModule } from './modules/people/me/me.module';
 import { PortalModule } from './modules/people/portal';
+import { PresenceModule } from './modules/people/presence';
 import { MessagingJobsModule } from './modules/messaging/messaging-jobs/messaging-jobs.module';
 import { NotificationRulesModule } from './modules/messaging/notification-rules/rules.module';
 import { PaymentsModule } from './modules/finance/payments/payments.module';
@@ -94,6 +96,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     JobApplicantsModule,
     MeModule,
     PortalModule,
+    PresenceModule,
     FxModule,
     PricingModule,
     SchedulingModule,
@@ -102,6 +105,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     ReceivablesModule,
     LessonsModule,
     CoursePauseModule,
+    ScheduleNoticesModule,
     ReportsModule,
     RolesModule,
     UsersModule,

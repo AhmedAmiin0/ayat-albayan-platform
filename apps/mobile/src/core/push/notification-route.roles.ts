@@ -44,6 +44,11 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   // docs/31 §2: teachers only; never sent to a salesperson.
   channel_message: () => SALES_MORE,
   commission_earned: toSalesWallet,
+  // Teachers and families only today (owner 2026-10-30); a salesperson would open «الطلاب».
+  lesson_rescheduled: toSalesStudents,
+  lesson_cancelled: toSalesStudents,
+  course_paused: toSalesStudents,
+  course_resumed: toSalesStudents,
 };
 
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */

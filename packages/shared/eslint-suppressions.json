@@ -1059,7 +1059,7 @@
   },
   "src/notifications/catalogue/catalogue.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/notifications/catalogue/catalogue.types.ts": {
