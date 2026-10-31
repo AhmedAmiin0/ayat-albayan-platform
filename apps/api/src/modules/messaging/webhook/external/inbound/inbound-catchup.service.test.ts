@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '@/common/integrations/numbers-overlay';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { KAPSO_NUMBER_ID, kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
 import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';

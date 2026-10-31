@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '@/common/integrations/numbers-overlay';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { fakeQueries } from '@/modules/messaging/webhook/webhook.fakes';
 import { ExternalCatchUpJob } from './external-catchup.job';
 import { externalServices, kapsoOverlay, kapsoText } from './external.fakes';

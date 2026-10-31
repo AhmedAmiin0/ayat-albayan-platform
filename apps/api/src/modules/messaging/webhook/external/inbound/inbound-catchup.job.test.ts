@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '@/common/integrations/numbers-overlay';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { ExternalCatchUpJob, FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { kapsoEnv, kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
 import type { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
