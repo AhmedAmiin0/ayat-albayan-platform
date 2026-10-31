@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { SubscriptionFact } from './first-paid.js';
 import { planRenewalCommission, renewalShareNow } from './renewal.js';
 
-// «عمولة التجديد» off (owner 2026-11-01, migration 20261101000996): renewals earn nothing;
+// «عمولة التجديد» off (owner 2026-11-01, migration 20261101000996): a new renewal earns nothing;
 // the percent is kept.
 interface At {
   created: string;
@@ -22,7 +22,7 @@ const plan = (share: number) =>
 const now = (enabled: boolean, percent: number) =>
   renewalShareNow({ renewal_commission_enabled: enabled, renewal_commission_percent: percent });
 
-describe('renewalShareNow (twin of renewal_commission_share)', () => {
+describe('renewalShareNow (the share a new renewal earns now, for the screens)', () => {
   it('on: the percent; off: 0 whatever the percent', () => {
     expect([now(true, 50), now(true, 0), now(false, 80)]).toEqual([50, 0, 0]);
   });

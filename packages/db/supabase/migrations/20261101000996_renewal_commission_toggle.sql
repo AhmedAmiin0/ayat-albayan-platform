@@ -1,17 +1,20 @@
 -- «عمولة التجديد» on / off (owner 2026-11-01: «dont apply the commission on renewal — toggle it off from
--- configuration»). Twin of @ab/shared assistant/renewal.ts (renewalShareNow). Expand only, idempotent.
+-- configuration»). Expand only, idempotent.
 --   * settings.renewal_commission_enabled (bool, default true: nothing changes until the owner turns it off;
---     missing, JSON null or not a boolean -> true). renewal_commission_percent is kept: it applies while on.
---   * OFF: renewal_commission_share() reads 0, so assistant_commission_plan plans no 'renewal' row (amount 0),
+--     missing, JSON null or not a boolean -> true). renewal_commission_share() is migration 751's, untouched.
+--   * OFF: evaluate_assistant_commission settles no NEW 'renewal' row (a renewal subscription holding no row),
 --     on every earn path (the payment and price triggers, set_student_brought_by, the API's evaluate after new
---     terms): all of them reach the plan through evaluate -> settle_assistant_commission. 'first' unchanged.
---   * An EARNED row stays earned (settle keeps it while fully paid before it asks the plan): no void, no
---     clawback. A row voided by a payment change (refund) is not reinstated while off; it is on the next
---     evaluation once on again. An admin's void stays. There is no pending state (earned | voided).
---   * No backfill (as the cutoff of migration 751): a renewal with no row yet evaluated while off and fully
---     paid is recorded in assistant_commission_exclusions ('renewal_off'), so turning the switch on again
---     never mints a commission for a renewal paid while it was off.
--- SQL test plan: e2e/tests/finance/assistant-renewal-commission-toggle.sql.spec.ts.
+--     terms): all of them reach settle_assistant_commission through evaluate. 'first' unchanged.
+--   * An EXISTING renewal row settles as in 751, whatever the switch: kept while fully paid, auto-voided when
+--     not (a refund), earned again when fully paid again (its pending reversal cancelled out): a payment
+--     correction never takes away a commission earned while on. An admin's void stays.
+--   * No backfill: a renewal with no row, fully paid at or after the instant the switch was turned off
+--     (renewal_commission_off_since: settings.updated_at, moved by settings_before_update on a value or
+--     description change; a description edit only narrows it) and evaluated while off, is recorded in
+--     assistant_commission_exclusions ('renewal_off'): turning the switch on again never mints one for it.
+--     A renewal fully paid before that instant is never excluded: it earns once on again (terms, attribution).
+-- Display twin: @ab/shared assistant/renewal.ts (renewalShareNow: 0 while off). SQL test plan:
+-- e2e/tests/finance/assistant-renewal-commission-toggle.sql.spec.ts.
 
 set local lock_timeout = '5s';
 
@@ -24,24 +27,21 @@ create or replace function public.renewal_commission_enabled() returns boolean
   ), true)
 $$;
 
--- Migration 751's share while on; 0 while off (the plan then earns nothing: amount 0).
-create or replace function public.renewal_commission_share() returns smallint
+-- When the switch was turned off; null while on (only JSON false is off, as above). Service role only.
+create or replace function public.renewal_commission_off_since() returns timestamptz
   language sql stable set search_path = '' as $$
-  select case when public.renewal_commission_enabled() then
-           coalesce((select least(greatest(round((s.value #>> '{}')::numeric), 0), 100)
-                       from public.settings s
-                      where s.key = 'renewal_commission_percent' and jsonb_typeof(s.value) = 'number'), 50)
-         else 0 end::smallint
+  select s.updated_at from public.settings s
+   where s.key = 'renewal_commission_enabled' and s.value = 'false'::jsonb
 $$;
 
--- The third reason: fully paid while the switch was off.
+-- The third reason: fully paid while the switch is off.
 alter table public.assistant_commission_exclusions
   drop constraint if exists assistant_commission_exclusions_reason_check;
 alter table public.assistant_commission_exclusions
   add constraint assistant_commission_exclusions_reason_check
   check (reason in ('paid_before_cutoff', 'student_merged', 'renewal_off'));
 
--- Migration 751's evaluator, plus the 'renewal_off' snapshot next to the cutoff's.
+-- Migration 751's evaluator, plus the 'renewal_off' snapshot next to the cutoff's and the switch on a new row.
 create or replace function public.evaluate_assistant_commission(p_subscription uuid) returns uuid
   language plpgsql security definer set search_path = '' as $$
 declare
@@ -91,14 +91,15 @@ begin
     insert into public.assistant_commission_exclusions (subscription_id, reason)
     values (p_subscription, 'paid_before_cutoff') on conflict do nothing;
   end if;
-  if r.id is null and not public.renewal_commission_enabled()
-     and public.subscription_full_at(p_subscription) is not null
+  if r.id is null and public.subscription_full_at(p_subscription) >= public.renewal_commission_off_since()
      and public.subscription_commission_kind(p_subscription) = 'renewal' then
-    -- A renewal fully paid while «عمولة التجديد» is off: never a commission, even once it is on again.
+    -- A renewal fully paid since «عمولة التجديد» was turned off: never a commission, even once it is on again.
     insert into public.assistant_commission_exclusions (subscription_id, reason)
     values (p_subscription, 'renewal_off') on conflict do nothing;
   end if;
-  if r.kind = 'renewal' or (r.id is null and public.subscription_commission_kind(p_subscription) = 'renewal') then
+  -- Off: no NEW renewal row; an existing one settles as in 751 (no clawback on a payment correction).
+  if r.kind = 'renewal' or (r.id is null and public.renewal_commission_enabled()
+                            and public.subscription_commission_kind(p_subscription) = 'renewal') then
     v_renewal := public.settle_assistant_commission('renewal', r.id, v_assistant, v_brought, p_subscription, v_student);
   end if;
   return coalesce(v_renewal, v_first);
@@ -108,10 +109,12 @@ end $$;
 insert into public.settings (key, value) values ('renewal_commission_enabled', 'true'::jsonb)
 on conflict (key) do nothing;
 
-revoke execute on function public.renewal_commission_enabled() from public, anon, authenticated;
-grant execute on function public.renewal_commission_enabled() to service_role;
+revoke execute on function public.renewal_commission_enabled(), public.renewal_commission_off_since()
+  from public, anon, authenticated;
+grant execute on function public.renewal_commission_enabled(), public.renewal_commission_off_since() to service_role;
 
--- MANUAL ROLLBACK (after the code rollback): re-run renewal_commission_share and evaluate_assistant_commission
--- of migration 20261027000751; delete from public.assistant_commission_exclusions where reason = 'renewal_off'
--- (only if those renewals may earn again), re-add the two-reason check; drop function
--- public.renewal_commission_enabled(); delete from public.settings where key = 'renewal_commission_enabled'.
+-- MANUAL ROLLBACK (after the code rollback): re-run evaluate_assistant_commission of migration 20261027000751;
+-- delete from public.assistant_commission_exclusions where reason = 'renewal_off' (only if those renewals may
+-- earn again), re-add the two-reason check; drop functions public.renewal_commission_enabled() and
+-- public.renewal_commission_off_since();
+-- delete from public.settings where key = 'renewal_commission_enabled'.

@@ -64,6 +64,13 @@ const PINS: Pin[] = [
     re: /s\.key = 'renewal_commission_enabled' and jsonb_typeof\(s\.value\) = 'boolean'\s*\), (true|false)\)/,
     parse: bool,
   },
+  {
+    // The switch-off instant: only the captured JSON value is off, anything else (missing, null) is on.
+    fn: 'public.renewal_commission_off_since',
+    key: 'renewal_commission_enabled',
+    re: /s\.key = 'renewal_commission_enabled' and s\.value = '(true|false)'::jsonb/,
+    parse: (s) => !bool(s),
+  },
 ];
 
 /** Known differences today: none. Add `'fn:key'` here (with a comment and a follow-up) rather than changing SQL in a test PR. */

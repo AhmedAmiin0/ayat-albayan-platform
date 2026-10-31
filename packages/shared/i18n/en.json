@@ -4761,7 +4761,7 @@
     },
     "renewalCommission": {
       "enabledLabel": "Renewal commission",
-      "enabledHint": "When off, assistants earn no commission on subscription renewals; commissions already earned stay as they are. A renewal paid in full while it is off never earns one later. The renewal commission share applies only while it is on.",
+      "enabledHint": "When off, assistants earn no new commission on subscription renewals; commissions already earned stay as they are, and a payment correction on the renewal does not take them away. A renewal paid in full while it is off never earns one later.",
       "label": "Renewal commission share",
       "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
     },
