@@ -115,25 +115,15 @@ export async function channelApp() {
     notifyAdmins: vi.fn(),
     notifySales: vi.fn(),
   };
-  const builder = Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(ChannelQueries)
-    .useValue(queries)
-    .overrideProvider(ChannelPeopleQueries)
-    .useValue(people)
-    .overrideProvider(PortalScopeQueries)
-    .useValue(scope)
-    .overrideProvider(TeachersQueries)
-    .useValue(teachers)
-    .overrideProvider(PushService)
-    .useValue(push)
-    .overrideProvider(ChannelEditsRepo)
-    .useValue(edits)
-    .overrideProvider(AuditService)
-    .useValue(audit)
-    .overrideProvider(PresenceRepo)
-    .useValue(presence.repo)
-    .overrideProvider(PresenceSettings)
-    .useValue(presence.settings);
+  const overrides: [unknown, unknown][] = [
+    [ChannelQueries, queries], [ChannelPeopleQueries, people], [PortalScopeQueries, scope],
+    [TeachersQueries, teachers], [PushService, push], [ChannelEditsRepo, edits],
+    [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
+  ];
+  const builder = overrides.reduce(
+    (b, [token, value]) => b.overrideProvider(token).useValue(value),
+    Test.createTestingModule({ imports: [AppModule] }),
+  );
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST' | 'DELETE', url: string, who: Who) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
