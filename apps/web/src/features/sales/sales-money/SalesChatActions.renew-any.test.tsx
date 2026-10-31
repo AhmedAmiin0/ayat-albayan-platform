@@ -17,7 +17,7 @@ const FAMILY = thread({ guardian_id: 'g-1', lead_id: null, lead_status: null, gu
 describe('the sales chat actions for a child not hers', () => {
   afterEach(() => apiFetch.mockReset());
 
-  it('«جدّد الاشتراك», «اشتراك جديد» and «سجّل تحويلًا بنكيًا» appear; no trial date for it', async () => {
+  it('«جدّد الاشتراك», «اشتراك جديد», «سجّل تحويلًا بنكيًا» and «أيام الحلقات» appear; no trial date', async () => {
     routeFetch(apiFetch, [['/sales/money/family', { students: [student({ mine: false, renew_due: true, open: [OPEN_SUB] })] }]]);
     renderWithClient(
       <InboxModeContext.Provider value="sales">
@@ -28,6 +28,8 @@ describe('the sales chat actions for a child not hers', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.more }));
     expect(screen.getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.salesMoney.recordTransfer })).toBeTruthy();
+    // owner 2026-11-01: its weekly days too, like her own children's.
+    expect(screen.getByRole('button', { name: t.booking.courseDays })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.trialDate.action })).toBeNull();
   });
 });

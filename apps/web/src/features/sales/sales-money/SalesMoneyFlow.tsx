@@ -55,9 +55,10 @@ export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', 
 type FlowStepProps = Omit<Props, 'start'> & { step: Step; setStep: (s: Step) => void; onCourse: (studentId: string) => void };
 
 function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone = '', sessionOpen = false, onClose }: FlowStepProps) {
-  // A child not hers (sales.renew_any, docs/16 row 38): subscribe / renew / transfer only; «أيام الحلقات» stays hers.
+  // A child not hers (sales.renew_any, docs/16 row 38): its writes carry the chat phone; «أيام الحلقات» too
+  // (owner 2026-11-01).
   const bindOf = (id: string) => chatBinding(students, { studentId: id, phone });
-  const course = (id: string) => (bindOf(id).phone ? undefined : () => onCourse(id));
+  const course = (id: string) => () => onCourse(id);
   if (step.kind === 'subscribe') {
     const onSaved = (sub: SalesMoneySubscriptionView) => setStep({ kind: 'transfer', sub });
     const onLinked = (link: PaymentLinkView) => setStep({ kind: 'link', link });

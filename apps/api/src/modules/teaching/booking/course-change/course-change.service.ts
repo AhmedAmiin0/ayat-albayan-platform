@@ -17,7 +17,7 @@ import { CourseChangeDeps } from './course-change.writer';
 import { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '../sales/booking/sales-booking.scope';
 
-/** anyStudent: the profile's routes (owner 2026-10-30, a permission key) skip «her own students». */
+/** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
 /** teacherId: «تغيير المعلم» (owner 2026-10-30), the new rules' teacher; absent = the course's. */
 export type CourseMove = CourseChangeRequest & { teacherId?: string };
