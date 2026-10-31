@@ -13668,15 +13668,7 @@
   },
   "src/modules/teaching/booking/teacher/teacher-alert.crm.test.ts": {
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/booking/teacher/teacher-alert.crm.ts": {
-    "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 7
     }
   },
   "src/modules/teaching/booking/teacher/teacher-alert.fakes.ts": {

@@ -13,6 +13,7 @@ import {
 import type { PushEvent } from '../../../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../queued-row';
 import { staffReachable, type StaffOnRecord } from './staff-reachable';
+import { teacherLessonCrm } from './teacher-lesson.crm';
 
 // R-MSG-02 reminder planning (docs/12 §7). Pure: the job calls it every tick; the dedup keys
 // (docs/12 §2.2, one per lesson + recipient + type) make a repeated tick a no-op (rule 8).
@@ -34,7 +35,7 @@ export interface ReminderLesson {
   teacher:
     | ({ id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } & StaffOnRecord)
     | null;
-  students: { id: string; name: string; guardian: ReminderGuardian | null }[];
+  students: { id: string; name: string; code?: string | null; guardian: ReminderGuardian | null }[];
 }
 
 export interface ReminderPlanInput {
@@ -97,13 +98,12 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
   const minutesBefore = input.teacherMinutesBefore ?? input.minutesBefore;
   const due = reminderDue({ kind: 'same_day', startsAt, tz: teacher.tz, minutesBefore, now: input.now });
   if (!due) return [];
-  const template: OutboundTemplate = teacherReminderMessage({
-    names: lesson.students.map((s) => s.name),
-    startsAt,
-    tz: teacher.tz,
-    meetingLink: lesson.meeting_link,
-    teacherName: teacher.display_name_ar,
-  });
+  const names = lesson.students.map((s) => s.name);
+  const message = { names, startsAt, tz: teacher.tz, meetingLink: lesson.meeting_link };
+  const meta = teacherReminderMessage({ ...message, teacherName: teacher.display_name_ar });
+  // The CRM's teacher_lesson_v2 values beside the Meta ones (docs/19); null: the Meta values only.
+  const crm = teacherLessonCrm({ teacher, lesson, students: lesson.students });
+  const template: OutboundTemplate = crm ? { ...meta, params: { ...meta.params, crm } } : meta;
   const dedupKey = `teacher_lesson_reminder:${lesson.id}:${teacher.id}`;
   const to = { phone: teacher.phone_e164, lessonId: lesson.id, now: input.now, expiresAt: startsAt };
   return [queuedRow({ ...to, template, dedupKey })];

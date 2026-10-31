@@ -546,7 +546,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/messaging/chat/line-views.ts": {

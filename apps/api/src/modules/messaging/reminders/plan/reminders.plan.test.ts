@@ -82,6 +82,28 @@ describe('planReminders: same-day window (R-MSG-02)', () => {
   it('confirmed lessons still get reminders', () => {
     expect(plan({ lessons: [sampleLesson({ status: 'confirmed' })] })).toHaveLength(3);
   });
+
+  it('the teacher row adds the CRM\'s teacher_lesson_v2 values (codes, duration) beside Meta\'s', () => {
+    const students = [
+      { id: 's-1', name: 'سهيلة', code: 'AB-0101', guardian: RIYADH_GUARDIAN },
+      { id: 's-3', name: 'ياسين', code: 'AB-0103', guardian: null },
+    ];
+    const lesson = sampleLesson({ students, meeting_link: 'https://meet.google.com/abc-defg-hij' });
+    const row = plan({ lessons: [lesson] }).find((r) => r.template_key === 'teacher_lesson_reminder_meet');
+    expect(row?.template_params).toEqual({
+      '1': 'هدى',
+      '2': '17:00 — سهيلة وياسين',
+      button: 'abc-defg-hij',
+      crm: {
+        body: ['هدى', 'سهيلة وياسين', 'AB-0101، AB-0103', expect.stringContaining('17:00'), '45 دقيقة'],
+        buttons: ['classroom/lesson-1', 'teacher/report/lesson-1'],
+      },
+    });
+  });
+
+  it('a student without a code: the teacher row keeps only the Meta values', () => {
+    expect(plan()[2]?.template_params).not.toHaveProperty('crm');
+  });
 });
 
 describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {

@@ -3,7 +3,7 @@ import { callsOf, chainDb } from './chain-db.fake';
 import { queueMessages, REMINDER_KEYS, RemindersQueries } from './reminders.queries';
 
 describe('RemindersQueries', () => {
-  it('upcoming: open lessons in (now, until], students flattened from lesson_students', async () => {
+  it('upcoming: open lessons in (now, until], students (with their code) flattened from lesson_students', async () => {
     const lesson = {
       id: 'l1',
       starts_at: '2026-10-04T14:00:00Z',
@@ -11,7 +11,7 @@ describe('RemindersQueries', () => {
       status: 'scheduled',
       meeting_link: null,
       teacher: null,
-      lesson_students: [{ student: { id: 's-1', name: 'سهيلة', guardian: null } }, { student: null }],
+      lesson_students: [{ student: { id: 's-1', name: 'سهيلة', code: 'AB-0101', guardian: null } }, { student: null }],
     };
     const { db, log } = chainDb({ lessons: [{ data: [lesson] }] });
     const rows = await new RemindersQueries(db).upcoming({ now: new Date('2026-10-04T13:00:00Z'), until: new Date('2026-10-05T14:00:00Z') });
@@ -23,11 +23,12 @@ describe('RemindersQueries', () => {
         status: 'scheduled',
         meeting_link: null,
         teacher: null,
-        students: [{ id: 's-1', name: 'سهيلة', guardian: null }],
+        students: [{ id: 's-1', name: 'سهيلة', code: 'AB-0101', guardian: null }],
       },
     ]);
     expect(callsOf(log, 'lessons')).toEqual(
       expect.arrayContaining([
+        ['select', [expect.stringContaining('students(id, name, code, guardian:')]],
         ['in', ['status', ['scheduled', 'confirmed']]],
         ['gt', ['starts_at', '2026-10-04T13:00:00.000Z']],
         ['lte', ['starts_at', '2026-10-05T14:00:00.000Z']],
