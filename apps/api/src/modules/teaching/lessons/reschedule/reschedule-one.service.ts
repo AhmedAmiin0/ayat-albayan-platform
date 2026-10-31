@@ -2,7 +2,7 @@ import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict } from '../../../../common/http/errors';
 import { TeachersQueries } from '../../../people/teachers/teachers.queries';

@@ -1,6 +1,6 @@
 import { WA_PROVIDERS, type ImportResult, type ImportRoleView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { ar } from '@/common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { integrationOverlay } from '@/common/configuration/integrations/integration-overlay';
 import { envFrom } from '@/config/env/env';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';

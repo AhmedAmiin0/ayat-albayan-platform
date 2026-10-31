@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/shared';
 import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
-import { SharedCache } from '@/common/cache/shared-cache';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '@/config/env/env';
 import { kickConfigReload } from '@/config/role/worker-kick';

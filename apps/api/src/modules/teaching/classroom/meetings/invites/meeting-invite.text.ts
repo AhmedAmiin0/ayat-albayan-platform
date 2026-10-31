@@ -1,5 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { ar } from '../../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { cityOf, fill } from '../../../../reporting/report-pdf/render/pdf-text';
 import { INVITE_DEDUP_PREFIX } from './meeting-invitees.queries';
 

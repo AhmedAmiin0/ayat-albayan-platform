@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { AppModule } from '../../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { LessonEvents } from '../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { PushService } from '../../../common/push/push.service';
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';

@@ -1,7 +1,7 @@
 import type { CallPermissionView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { conflict } from '../../../../common/http/errors';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { Outbox, type Sent } from '../../inbox/send/outbox';
 import { pickSend, type SendPick } from '../../inbox/send/send-number';
 import { dedupKey, outboundBase } from '../../inbox/send/thread-send.service';

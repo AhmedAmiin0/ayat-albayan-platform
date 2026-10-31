@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import {
   followUpCycle,
   followUpKey,

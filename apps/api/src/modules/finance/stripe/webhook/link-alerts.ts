@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '../../../../common/push/push.service';
 import type { LinkRow } from '../links/payment-links.queries';
 

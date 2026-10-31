@@ -1,6 +1,6 @@
 import { paymentLinkUrl, toMinorUnits } from '@ab/shared';
 import type Stripe from 'stripe';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { integrationIdentifier } from '../links/link-ids';
 import type { LinkRow } from '../links/payment-links.queries';
 

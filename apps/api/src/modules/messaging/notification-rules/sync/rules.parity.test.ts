@@ -1,6 +1,6 @@
 import { RULE_SETTING_KEYS, SETTING_DEFAULTS, type AcademySettings, type NotificationRuleRow } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { ActivityWriter } from '../../../../common/activity/activity.writer';
+import type { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import type { AuditService } from '../../../../common/audit/audit.service';
 import { fakeSettings } from '../../../../common/settings/settings.fakes';
 import { RulesSourceSettings } from '../rules-source.settings';

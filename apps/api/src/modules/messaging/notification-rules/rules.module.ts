@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { ActivityModule } from '../../../common/activity/activity.module';
+import { ActivityModule } from '@/common/telemetry/activity/activity.module';
 import { SettingsRulesPort } from '../../../common/settings/settings-rules.port';
 import { livekitEnv } from '../../../config/env/env.livekit';
 import { loadEnv } from '../../../config/env/env';

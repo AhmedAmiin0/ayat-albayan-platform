@@ -5,7 +5,7 @@ import {
   type OnModuleDestroy,
   type OnModuleInit,
 } from '@nestjs/common';
-import { LessonEvents } from '../../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService } from './alerts.service';
 import { BackgroundJob } from '../../../../config/role/background-job';

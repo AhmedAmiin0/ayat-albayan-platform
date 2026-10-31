@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { AppModule } from '../../../app.module';
-import { ActivityWriter } from '../../../common/activity/activity.writer';
+import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { fakeSettings } from '../../../common/settings/settings.fakes';

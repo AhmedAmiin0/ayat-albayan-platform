@@ -1,4 +1,4 @@
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../../../common/push/push.service';

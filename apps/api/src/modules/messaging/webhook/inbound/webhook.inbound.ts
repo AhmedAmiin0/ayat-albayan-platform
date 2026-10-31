@@ -8,7 +8,7 @@ import {
   type PushKind,
   type QuickReplyIntent,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { z } from 'zod';
 import type { PushEvent } from '../../../../common/push/push.service';
 import { fill } from '../../../reporting/report-pdf/render/pdf-text';

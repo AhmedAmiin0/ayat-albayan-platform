@@ -1,7 +1,7 @@
 // Test fixtures for the schedule-change notices (test-only, excluded from the build by *.fakes.ts).
 import type { NotificationRuleRow } from '@ab/shared';
 import { vi } from 'vitest';
-import { LessonEvents } from '@/common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import type { PushService, PushTarget } from '@/common/push/push.service';
 import { NotificationPolicy, type RulesReader } from '@/modules/messaging/notification-rules';
 import type { MessageSender } from '@/modules/messaging/whatsapp';

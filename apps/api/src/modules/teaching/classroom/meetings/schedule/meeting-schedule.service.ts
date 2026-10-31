@@ -1,7 +1,7 @@
 import { meetingState, updateMeetingSchema } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { ar } from '../../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { parseOrThrow } from '../../../../../common/http/http';
 import { meetingEnded } from '../../internal-meetings/internal-meetings.join.service';
 import { InternalMeetingsQueries, type MeetingRow } from '../../internal-meetings/internal-meetings.queries';

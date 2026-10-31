@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { DB, type Db } from '../db/db.module';
-import { BackgroundJob } from '../../config/role/background-job';
+import { DB, type Db } from '@/common/db/db.module';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 24 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */

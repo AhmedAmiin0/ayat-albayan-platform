@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LessonEvents } from '../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries, SchedulingSettings } from '../scheduling';
 import { changedLessons, type RpcOut } from './course-pause.mapper';
 import { CoursePauseQueries, type ReopenedLesson } from './course-pause.queries';

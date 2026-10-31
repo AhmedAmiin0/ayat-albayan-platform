@@ -1,7 +1,7 @@
 import type { LessonEvent, LessonStatus } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuditEntry } from '../../../../common/audit/audit.service';
-import { LessonEvents, type ScheduleChange } from '../../../../common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/change-set';
 import { errorCode } from '../../../../common/http/errors';
 import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';

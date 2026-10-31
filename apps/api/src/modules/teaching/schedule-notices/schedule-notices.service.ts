@@ -1,5 +1,5 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { LessonEvents, type ScheduleChange } from '@/common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { PushService } from '@/common/push/push.service';
 import { MessageSender } from '@/modules/messaging/whatsapp';
 import { lessonNotice, pausedNotice, resumedNotice } from './notice.build';

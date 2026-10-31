@@ -9,7 +9,7 @@
       "count": 42
     }
   },
-  "src/common/activity/activity.controller.ts": {
+  "src/common/telemetry/activity/activity.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -17,7 +17,7 @@
       "count": 4
     }
   },
-  "src/common/activity/activity.entry.ts": {
+  "src/common/telemetry/activity/activity.entry.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -25,12 +25,12 @@
       "count": 1
     }
   },
-  "src/common/activity/activity.http.test.ts": {
+  "src/common/telemetry/activity/activity.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
     }
   },
-  "src/common/activity/activity.interceptor.test.ts": {
+  "src/common/telemetry/activity/activity.interceptor.test.ts": {
     "@typescript-eslint/no-empty-function": {
       "count": 2
     },
@@ -38,17 +38,17 @@
       "count": 3
     }
   },
-  "src/common/activity/activity.interceptor.ts": {
+  "src/common/telemetry/activity/activity.interceptor.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/activity/activity.module.ts": {
+  "src/common/telemetry/activity/activity.module.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/activity/activity.queries.test.ts": {
+  "src/common/telemetry/activity/activity.queries.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -59,7 +59,7 @@
       "count": 1
     }
   },
-  "src/common/activity/activity.queries.ts": {
+  "src/common/telemetry/activity/activity.queries.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
@@ -70,12 +70,12 @@
       "count": 1
     }
   },
-  "src/common/activity/activity.retention.job.test.ts": {
+  "src/common/telemetry/activity/activity.retention.job.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/common/activity/activity.retention.job.ts": {
+  "src/common/telemetry/activity/activity.retention.job.ts": {
     "ab/forbidden-imports": {
       "count": 2
     },
@@ -83,17 +83,17 @@
       "count": 2
     }
   },
-  "src/common/activity/activity.route.ts": {
+  "src/common/telemetry/activity/activity.route.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/common/activity/activity.writer.test.ts": {
+  "src/common/telemetry/activity/activity.writer.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/common/activity/activity.writer.ts": {
+  "src/common/telemetry/activity/activity.writer.ts": {
     "ab/forbidden-imports": {
       "count": 2
     },
@@ -264,7 +264,7 @@
       "count": 1
     }
   },
-  "src/common/cache/backoff-pins.test.ts": {
+  "src/common/infra/cache/backoff-pins.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -272,22 +272,22 @@
       "count": 2
     }
   },
-  "src/common/cache/cache-env.ts": {
+  "src/common/infra/cache/cache-env.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/cache/cache-guard.ts": {
+  "src/common/infra/cache/cache-guard.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/common/cache/cache-keys.ts": {
+  "src/common/infra/cache/cache-keys.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/cache/cache-store.ts": {
+  "src/common/infra/cache/cache-store.ts": {
     "@typescript-eslint/no-unnecessary-type-parameters": {
       "count": 1
     },
@@ -295,7 +295,7 @@
       "count": 4
     }
   },
-  "src/common/cache/cache.fakes.ts": {
+  "src/common/infra/cache/cache.fakes.ts": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
@@ -303,37 +303,37 @@
       "count": 4
     }
   },
-  "src/common/cache/cache.module.ts": {
+  "src/common/infra/cache/cache.module.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/cache/memory-cache.store.ts": {
+  "src/common/infra/cache/memory-cache.store.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/cache/redis-cache.store.ts": {
+  "src/common/infra/cache/redis-cache.store.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/cache/redis-connect.test.ts": {
+  "src/common/infra/cache/redis-connect.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/common/cache/redis-connect.ts": {
+  "src/common/infra/cache/redis-connect.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/common/cache/shared-cache.fallback.test.ts": {
+  "src/common/infra/cache/shared-cache.fallback.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/cache/shared-cache.ts": {
+  "src/common/infra/cache/shared-cache.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
     },
@@ -341,17 +341,17 @@
       "count": 10
     }
   },
-  "src/common/cache/ttl-cache.ts": {
+  "src/common/infra/cache/ttl-cache.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/client-usage/client-tag.ts": {
+  "src/common/telemetry/client-usage/client-tag.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/client-usage/client-usage.counter.ts": {
+  "src/common/telemetry/client-usage/client-usage.counter.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -359,12 +359,12 @@
       "count": 3
     }
   },
-  "src/common/client-usage/client-usage.hook.test.ts": {
+  "src/common/telemetry/client-usage/client-usage.hook.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/client-usage/client-usage.hook.ts": {
+  "src/common/telemetry/client-usage/client-usage.hook.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -372,12 +372,12 @@
       "count": 1
     }
   },
-  "src/common/client-usage/client-usage.module.ts": {
+  "src/common/telemetry/client-usage/client-usage.module.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/common/client-usage/client-usage.service.ts": {
+  "src/common/telemetry/client-usage/client-usage.service.ts": {
     "max-len": {
       "count": 1
     }
@@ -669,7 +669,7 @@
       "count": 1
     }
   },
-  "src/common/i18n/server-text.ts": {
+  "src/common/infra/i18n/server-text.ts": {
     "max-len": {
       "count": 2
     }

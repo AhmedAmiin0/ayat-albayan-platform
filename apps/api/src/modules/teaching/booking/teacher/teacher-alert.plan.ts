@@ -1,5 +1,5 @@
 import { joinNames, lessonWhenText, type BookingKind, type OutboundTemplate } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import type { PushTarget } from '../../../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../../../messaging/reminders/queued-row';
 import { staffReachable, type StaffOnRecord } from '../../../messaging/reminders/plan/staff-reachable';

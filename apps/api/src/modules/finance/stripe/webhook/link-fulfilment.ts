@@ -2,7 +2,7 @@ import { fromMinorUnits } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
 import { conflict, errorCode } from '../../../../common/http/errors';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PaymentsQueries } from '../../payments';
 import { uuidFor } from '../links/link-ids';
 import { LinkPackages } from '../links/link-packages';

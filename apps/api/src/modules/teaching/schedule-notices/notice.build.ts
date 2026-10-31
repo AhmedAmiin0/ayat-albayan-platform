@@ -1,4 +1,4 @@
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { Notice, NoticeStudent, NoticeTeacher } from './notice.types';
 
 // A ScheduleChange and what ScheduleNoticesRepo read for it → the Notice to plan. Pure.

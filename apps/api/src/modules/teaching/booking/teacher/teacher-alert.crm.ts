@@ -1,5 +1,5 @@
 import { joinNames, lessonWhenText, type CrmValues } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { classroomUrl, teacherReportUrl } from '../../../messaging/reminders/plan/reminders.links';
 import type { AlertLesson, AlertTeacher } from './teacher-alert.plan';
 

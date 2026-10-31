@@ -1,7 +1,7 @@
 import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { TimeEditChange } from '../../scheduling/change-set';
 import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict, errorCode } from '../../../../common/http/errors';

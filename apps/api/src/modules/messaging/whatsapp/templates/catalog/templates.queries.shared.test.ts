@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeRedis, settle } from '../../../../../common/cache/cache.fakes';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import { fakeDb } from '../../../../people/guardians/fake-db';
 import { templateRow } from '../../whatsapp.fakes';
 import { TemplatesQueries } from './templates.queries';

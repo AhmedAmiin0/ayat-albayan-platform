@@ -1,7 +1,7 @@
 import { formatAmount } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '../../../../common/push/push.service';
 
 /** An earning this recent is news; an older one was told already, or before this bell existed. */

@@ -1,5 +1,5 @@
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import type { SalesLessonRow } from './schedule/sales-lessons';
 import type { SalesSubscriptionRow } from './sales.queries';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { toCommissionView, type CommissionRow } from '../commissions/commissions.mapper';
 import { reasonText } from './reasons';
 import { statementRow } from './rows.fakes';

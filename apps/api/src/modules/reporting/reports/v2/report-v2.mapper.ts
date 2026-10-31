@@ -12,7 +12,7 @@ import {
   type ReportV2Submit,
   type ReportView,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { formColumns, submitColumns, type FormColumns } from '../report.mapper';
 
 type StoredForm = { form_version: number; content: Json | null };

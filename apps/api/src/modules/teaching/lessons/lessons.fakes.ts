@@ -5,7 +5,7 @@ import type { AuthUser } from '../../../common/auth/verify-token';
 import type { LessonWriter } from '../scheduling/occurrences/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
 import type { LessonRow } from './store/lesson-row';
-import { LessonEvents } from '../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { LessonStore } from './store/lesson-store';
 import type { LessonsQueries } from './lessons.queries';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';

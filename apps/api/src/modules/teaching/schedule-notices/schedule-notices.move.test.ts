@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { FROM, harness, NOW } from './schedule-notices.fakes';
 
 // A move's family WhatsApp follows FamilyMoveNotice's choice (one family message per move); the

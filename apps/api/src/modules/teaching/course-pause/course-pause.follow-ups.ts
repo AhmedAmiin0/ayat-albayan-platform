@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../../common/audit/audit.service';
-import { LessonEvents } from '@/common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { SubscriptionAlertsService } from '../../finance/subscriptions';
 import { CoursePauseLessonsBack } from './course-pause.lessons-back';
 import type { RpcOut } from './course-pause.mapper';

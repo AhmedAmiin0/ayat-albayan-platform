@@ -8,7 +8,7 @@ import {
   type Program,
   type StudentStatus,
 } from '@ab/shared';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhDate } from '../dashboard/range';
 import { riyadhStamp, safeText, type Cell } from './csv';
 

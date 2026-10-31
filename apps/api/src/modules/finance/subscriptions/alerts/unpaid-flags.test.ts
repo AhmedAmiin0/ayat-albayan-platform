@@ -4,7 +4,7 @@ import type { AlertsQueries } from './alerts.queries';
 import { AlertsJob } from './alerts.job';
 import type { SubscriptionAlertsService } from './alerts.service';
 import type { BalanceQueries, BalanceRow } from '../money/balance.queries';
-import { LessonEvents } from '../../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { subRow } from '../money/money.fakes';
 import type { SubscriptionsQueries } from '../subscriptions.queries';
 import { SubscriptionsSettings } from '../subscriptions.settings';

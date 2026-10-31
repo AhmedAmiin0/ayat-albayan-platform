@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { conflict } from '../../../../common/http/errors';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { dedupKey, outboundBase, type Sent } from '../../inbox';
 import { CALL_PERMISSION_PAYLOAD } from '../../whatsapp';
 import type { CallActor } from '../access/call-access';

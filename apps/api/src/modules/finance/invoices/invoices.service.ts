@@ -1,5 +1,5 @@
 import type { InvoiceView, SignedDownload } from '@ab/shared';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '../../../common/storage/storage.paths';
 import { StorageService } from '../../../common/storage/storage.service';

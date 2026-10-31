@@ -6,7 +6,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../../app.module';
-import { ActivityWriter } from '../../../common/activity/activity.writer';
+import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../../common/auth/permissions';

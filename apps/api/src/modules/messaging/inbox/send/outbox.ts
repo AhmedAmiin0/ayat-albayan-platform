@@ -1,7 +1,7 @@
 import type { TablesInsert } from '@ab/db';
 import type { MessageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { sleep } from '../../../../common/cache/sleep';
+import { sleep } from '@/common/infra/cache/sleep';
 import { appRole } from '../../../../config/role/app-role';
 import { MessageSender } from '../../whatsapp/sender/message.sender';
 import { MessageViews } from '../../whatsapp/messages/message.views';

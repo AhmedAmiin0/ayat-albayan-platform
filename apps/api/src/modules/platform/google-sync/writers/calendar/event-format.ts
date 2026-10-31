@@ -1,5 +1,5 @@
 import type { LessonStatus } from '@ab/shared';
-import { ar } from '../../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import type { GoogleEventBody } from '../../google-client.port';
 import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '../../google-format';
 

@@ -1,7 +1,7 @@
 import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { LessonEvents, type ScheduleChange } from '../../../../common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { gateConfirmations } from '../../../../common/rules/confirmations';
 import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
 import { domainError } from '../booking.errors';

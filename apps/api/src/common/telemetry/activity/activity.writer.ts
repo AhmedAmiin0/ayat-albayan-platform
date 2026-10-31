@@ -1,6 +1,6 @@
 import type { TablesInsert } from '@ab/db';
 import { Inject, Injectable, Logger, type OnModuleDestroy } from '@nestjs/common';
-import { DB, type Db } from '../db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 export type ActivityInsert = TablesInsert<'activity_log'>;
 

@@ -1,5 +1,5 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
-import { LessonEvents } from '../../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { Ticker } from '../../../messaging/reminders/ticker';
 import { RATING_LOOKBACK_MS } from '../rating.plan';
 import { RatingQueries } from '../rating.queries';

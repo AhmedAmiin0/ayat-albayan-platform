@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import type { EffectiveRule, RuleSettings } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { ActivityWriter } from '../../../../common/activity/activity.writer';
+import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../../../../common/audit/singleton-entity';
 import type { AuthUser } from '../../../../common/auth/verify-token';

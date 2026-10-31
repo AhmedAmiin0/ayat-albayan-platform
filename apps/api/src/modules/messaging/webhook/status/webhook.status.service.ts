@@ -1,4 +1,4 @@
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { PushService } from '../../../../common/push/push.service';
 import { ExternalStatus } from '../external/external-status';
