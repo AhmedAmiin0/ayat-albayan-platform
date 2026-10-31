@@ -1,13 +1,13 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { View } from 'react-native';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { chipOf, factsOf, whenOf } from '../../settings/catalogue-words';
-import { controlOf, heldLine, nameOf, partialLine, ruleOf } from '../lib/rule-words';
+import { chipOf, factsOf, whenOf } from '@/ops/settings/catalogue-words';
+import { controlOf, heldLine, nameOf, partialLine, ruleOf } from '@/ops/notif-rules/lib/rule-words';
 import { RowAsk } from './RowAsk';
 import { RuleControl } from './RuleControl';
-import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
+import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
 
 interface CatalogueRowProps {
   entry: NotificationEntryView;

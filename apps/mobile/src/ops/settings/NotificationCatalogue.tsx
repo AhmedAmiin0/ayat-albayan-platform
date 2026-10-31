@@ -1,17 +1,17 @@
 import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { numberLine } from './catalogue-words';
-import type { AudienceTab } from '../notif-rules/lib/audience-tabs';
-import { CatalogueAudience } from '../notif-rules/components/CatalogueAudience';
-import { ruleOf } from '../notif-rules/lib/rule-words';
-import { TypedOffSheet } from '../notif-rules/components/TypedOffSheet';
-import { useCatalogueToggles } from '../notif-rules/hooks/use-catalogue-toggles';
-import { useCatalogue } from '../notif-rules/hooks/use-catalogue';
-import { useCanManageNotifications } from '../notif-rules/hooks/use-toggle-rule';
+import type { AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
+import { CatalogueAudience } from '@/ops/notif-rules/components/CatalogueAudience';
+import { ruleOf } from '@/ops/notif-rules/lib/rule-words';
+import { TypedOffSheet } from '@/ops/notif-rules/components/TypedOffSheet';
+import { useCatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
+import { useCatalogue } from '@/ops/notif-rules/hooks/use-catalogue';
+import { useCanManageNotifications } from '@/ops/notif-rules/hooks/use-toggle-rule';
 
 const c = t.notificationCatalogue;
 const r = t.mobileNotificationRules;

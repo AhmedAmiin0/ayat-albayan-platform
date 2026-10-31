@@ -1,11 +1,11 @@
 import { studentStatusStyle, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import type { CheckBy } from '../lib/registration-check';
+import type { CheckBy } from '@/registration-check/lib/registration-check';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**

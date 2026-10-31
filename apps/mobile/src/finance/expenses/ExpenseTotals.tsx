@@ -1,12 +1,12 @@
 import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { categoryLabel } from './categories';
 import { totalsByCurrency } from './expense-math';
-import { amountText } from '../shared/format';
+import { amountText } from '@/finance/shared/format';
 
 interface ExpenseTotalsProps {
   rows: readonly ExpenseView[];

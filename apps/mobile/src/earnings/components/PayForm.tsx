@@ -10,11 +10,11 @@ import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Note } from '@/more/Note';
-import { earningsErrorText } from '../lib/earnings-errors';
-import { egp } from '../lib/format';
-import { checkPayDraft, type PayDraft } from '../lib/pay-draft';
-import { usePayTeacher } from '../hooks/use-pay-teacher';
+import { Note } from '@/core/ui/feedback/Note';
+import { earningsErrorText } from '@/earnings/lib/earnings-errors';
+import { egp } from '@/earnings/lib/format';
+import { checkPayDraft, type PayDraft } from '@/earnings/lib/pay-draft';
+import { usePayTeacher } from '@/earnings/hooks/use-pay-teacher';
 
 const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 

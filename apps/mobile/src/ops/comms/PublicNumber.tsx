@@ -1,10 +1,10 @@
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { useSettings } from '../settings/use-settings';
+import { useSettings } from '@/ops/settings/use-settings';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**

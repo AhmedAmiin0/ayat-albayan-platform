@@ -7522,7 +7522,7 @@
       "count": 1
     }
   },
-  "src/more/Note.tsx": {
+  "src/core/ui/feedback/Note.tsx": {
     "max-len": {
       "count": 1
     }

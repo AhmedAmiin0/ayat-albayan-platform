@@ -2,19 +2,19 @@ import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { type ReactNode, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useSavedReplies } from '../hooks/api';
-import { ManageReplies } from '../quick-list/ManageReplies';
-import { QuickReplyRow } from '../quick-list/QuickReplyRow';
-import { filterReplies } from '../lib/reply-text';
-import { FILL_FRAME } from '../quick-list/FillReplyForm';
-import { ReplySheetFrame } from '../quick-list/ReplySheetFrame';
-import { ScopeTabs } from '../quick-list/ScopeTabs';
+import { useSavedReplies } from '@/inbox/saved-replies/hooks/api';
+import { ManageReplies } from '@/inbox/saved-replies/quick-list/ManageReplies';
+import { QuickReplyRow } from '@/inbox/saved-replies/quick-list/QuickReplyRow';
+import { filterReplies } from '@/inbox/saved-replies/lib/reply-text';
+import { FILL_FRAME } from '@/inbox/saved-replies/quick-list/FillReplyForm';
+import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
+import { ScopeTabs } from '@/inbox/saved-replies/quick-list/ScopeTabs';
 
 interface SavedRepliesSheetProps {
   onClose: () => void;

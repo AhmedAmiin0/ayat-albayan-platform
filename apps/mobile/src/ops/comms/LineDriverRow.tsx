@@ -2,7 +2,7 @@ import { driverMissing, WA_PROVIDERS, type IntegrationConfigItem, type WaLine, t
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Ltr } from '@/core/ui/primitives/Ltr';

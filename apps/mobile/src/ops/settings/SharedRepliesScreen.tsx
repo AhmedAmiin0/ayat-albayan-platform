@@ -2,7 +2,7 @@ import type { SavedReply } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -16,7 +16,7 @@ import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
 import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';
 import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
-import { SubScreenHeader } from '../shared/SubScreenHeader';
+import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 
 /** «إلى الأعلى» / «إلى الأسفل» (none at the ends, none while a move is saving) and «احذف», 44pt each. */
 function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; busy: boolean; onMove: (d: 'up' | 'down') => void; onDelete: () => void }) {

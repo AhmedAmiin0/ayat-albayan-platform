@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import type { BookingKind } from '../../shared/contract';
-import type { TrialDraft } from '../lib/draft';
+import type { BookingKind } from '@/booking/shared/contract';
+import type { TrialDraft } from '@/booking/trial/lib/draft';
 
 interface KindPillsProps {
   value: TrialDraft['kind'];

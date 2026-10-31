@@ -2,11 +2,11 @@ import type { SalesHistoryEntry, SalesStudentSubscription } from '@ab/shared';
 import { View } from 'react-native';
 import { useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { partPaidLine } from '@/payments';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { historyLines } from '../lib/sales-text';
+import { historyLines } from '@/sales/lib/sales-text';
 import { SmallHeading } from './SmallHeading';
 
 interface HistoryEntryCardProps {
