@@ -5924,9 +5924,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
     },
@@ -6093,16 +6090,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/features/people/assistants/statements/totals.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/people/assistants/statements/totals.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/people/assistants/statements/use-pay-statement.ts": {
