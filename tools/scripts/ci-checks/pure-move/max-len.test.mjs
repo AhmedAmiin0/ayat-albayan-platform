@@ -11,7 +11,8 @@ const base = {
   'src/t/t.queries.ts': { [RULE]: { count: 2 } },
   'src/t/t.counts.test.ts': { [RULE]: { count: 2 }, 'max-lines': { count: 1 } },
 };
-const check = (head) => suppressionsMoved(FILE, { base: JSON.stringify(base), head: JSON.stringify(head) }, MOVES);
+const texts = (head) => ({ base: JSON.stringify(base), head: JSON.stringify(head) });
+const check = (head) => suppressionsMoved(FILE, texts(head), MOVES);
 const repo = { 'src/t/t.repo.ts': { [RULE]: { count: 2 } } };
 
 test('a move may lower or drop max-len entries', () => {

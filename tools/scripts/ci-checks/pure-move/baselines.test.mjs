@@ -6,7 +6,8 @@ const RENAMES = [
   ['apps/web/src/features/payouts/PayoutsPage.tsx', 'apps/web/src/features/payouts/list/PayoutsPage.tsx'],
   ['apps/web/src/features/payouts/use-pay.ts', 'apps/web/src/features/payouts/pay/use-pay.ts'],
 ];
-// max-lines: a rule a move may never change (no-parent-imports, module-boundaries, max-len may shrink).
+// max-lines: a rule a move may never change
+// (no-parent-imports, module-boundaries and max-len may shrink).
 const entry = (count) => ({ 'max-lines': { count } });
 const SUPP = { 'src/boot.tsx': entry(1), 'src/features/payouts/PayoutsPage.tsx': entry(4), 'src/features/payouts/use-pay.ts': entry(3) };
 const moved = { ...SUPP };
