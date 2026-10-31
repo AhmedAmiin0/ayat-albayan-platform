@@ -18,7 +18,7 @@ export interface HideChange {
   at: string;
 }
 
-/** messages.hidden_at / hidden_by («حذف من المنصة», migration 986; service role). */
+/** messages.hidden_at / hidden_by («حذف من المنصة», migration 993; service role). */
 @Injectable()
 export class MessageHideRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

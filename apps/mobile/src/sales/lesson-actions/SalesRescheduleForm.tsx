@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
 import { ErrorLine } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { Button } from '@/core/ui/primitives/Button';
 import { lessonDuration, RescheduleDone, rescheduleFailure, RescheduleHeading, SlotPicker } from '@/teaching';
 import { useSalesReschedule } from './lesson-actions-api';
@@ -21,11 +22,12 @@ interface SalesRescheduleFormProps {
 }
 
 export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps) {
+  const cycle = useClockCycle();
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const durationMin = lessonDuration(lesson);
   const move = useSalesReschedule(lesson.id);
   const [startsAt, setStartsAt] = useState<string | null>(null);
-  const failure = move.isError ? rescheduleFailure(move.error) : null;
+  const failure = move.isError ? rescheduleFailure(move.error, cycle) : null;
   const pick = (slot: string | null) => {
     move.reset();
     setStartsAt(slot);

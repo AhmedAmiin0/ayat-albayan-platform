@@ -30,7 +30,12 @@ export function showBubble(message: ChannelMessageView, audience: ChannelAudienc
   render(
     <QueryClientProvider client={client}>
       <ol>
-        <ChannelBubble message={message} tz="Asia/Riyadh" refs={{ audience, studentId: 's1' }} />
+        <ChannelBubble
+          message={message}
+          tz="Asia/Riyadh"
+          refs={{ audience, studentId: 's1' }}
+          now={new Date()}
+        />
       </ol>
     </QueryClientProvider>,
   );

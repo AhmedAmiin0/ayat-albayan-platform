@@ -195,7 +195,7 @@ row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/sales/chan
 ### Edit and delete (owner 2026-10-30: «also add edit and delete message ability»)
 
 WhatsApp's Cloud API (so Kapso and the CRM drivers) cannot edit or revoke a sent message; only the
-WhatsApp Business app can (those arrive as `smb_message_echoes` edit / revoke, migration 985). So:
+WhatsApp Business app can (those arrive as `smb_message_echoes` edit / revoke, migration 992). So:
 
 | Chat | Who | What |
 | --- | --- | --- |
@@ -217,4 +217,4 @@ WhatsApp Business app can (those arrive as `smb_message_echoes` edit / revoke, m
 - A hidden WhatsApp message is «أُخفيت من المنصة — ما زالت ظاهرة عند العميل» with who / when for every
   staff reader; its file 404s, it is never quoted or forwarded; v_threads (preview, unread) is
   untouched. Nothing is sent to WhatsApp. Every change writes an audit_log row.
-- Migration `20261030000986_chat_edit_delete.sql` (expand only, idempotent, RLS on).
+- Migration `20261030000993_chat_edit_delete.sql` (expand only, idempotent, RLS on).

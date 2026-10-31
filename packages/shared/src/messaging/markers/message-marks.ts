@@ -1,7 +1,7 @@
 import type { MessageView } from '../chat/views.js';
 
 // A view's edit / delete marks (owner 2026-10-30) from messages.edited_at / deleted_at (migration
-// 985). A message deleted for everyone keeps its row (audit) but nobody reads it again: its text,
+// 992). A message deleted for everyone keeps its row (audit) but nobody reads it again: its text,
 // file and payload are withheld, and it can no longer be quoted, forwarded or handed off.
 
 interface MarkedRow {

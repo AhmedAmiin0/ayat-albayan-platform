@@ -1,3 +1,4 @@
+import { counted } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
@@ -24,8 +25,8 @@ export class InboundGapAlert {
     const subject = `kapso-webhook:${n.numberId ?? n.line}:${dayOf(late.now)}`;
     if (this.raised.has(subject)) return;
     this.raised.add(subject);
-    const text = ar.notifications.kapsoWebhookGap;
-    const body = text.body.replace('{count}', String(late.count));
+    const text = ar.notifications.kapso_webhook_gap;
+    const body = counted(text.body, late.count);
     await this.push.notifyAdmins('new_message', {
       subject,
       title: text.title,

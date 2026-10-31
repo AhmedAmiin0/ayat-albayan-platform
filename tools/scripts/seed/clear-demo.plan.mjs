@@ -55,7 +55,7 @@ export const DELETE_ORDER = [
   'student_join_links',
   // The demo students' teacher–family channels, their messages and read marks (migration 800, docs/31).
   'channel_reads',
-  // Their edit / delete history (migration 986), before the messages it points at.
+  // Their edit / delete history (migration 993), before the messages it points at.
   'channel_message_edits',
   'channel_messages',
   'student_channels',

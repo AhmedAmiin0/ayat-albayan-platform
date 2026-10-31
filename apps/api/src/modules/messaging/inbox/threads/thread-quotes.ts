@@ -11,9 +11,9 @@ export interface QuotedRow {
   body: string | null;
   media_mime: string | null;
   template_key: string | null;
-  /** Deleted for everyone (migration 985): the quote shows nothing of it. */
+  /** Deleted for everyone (migration 992): the quote shows nothing of it. */
   deleted_at?: string | null;
-  /** Hidden from the platform («حذف من المنصة», 986): quoted with neither text nor file. */
+  /** Hidden from the platform («حذف من المنصة», 993): quoted with neither text nor file. */
   hidden_at?: string | null;
   sender?: { full_name: string } | null;
 }

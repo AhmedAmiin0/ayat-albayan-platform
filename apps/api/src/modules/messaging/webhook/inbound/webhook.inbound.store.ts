@@ -38,10 +38,11 @@ export class InboundStore {
 
   /**
    * A guardian's or teacher's message never creates a lead (docs/12 §3.5); anyone else is upserted
-   * (R-LEAD-01). upsertByPhone returns null for a job applicant (R-LEAD-04): no lead then.
+   * (R-LEAD-01). upsertByPhone returns null for a job applicant (R-LEAD-04): no lead then. `at`
+   * (default: the message time) is the lead's last_inbound_at: its follow-up cycle starts there.
    */
-  async sender(input: { m: InboundEvent; phone: string }): Promise<Sender> {
-    const { m, phone } = input;
+  async sender(input: { m: InboundEvent; phone: string; at?: Date }): Promise<Sender> {
+    const { m, phone, at = m.at } = input;
     const who = await this.queries.identify(phone);
     const known = {
       id: who.lead?.id ?? null,
@@ -50,7 +51,7 @@ export class InboundStore {
       owner: null,
     };
     if (who.guardian || who.teacher) return { who, lead: known };
-    const row = await this.leads.upsertByPhone({ phone, name: m.name, at: m.at });
+    const row = await this.leads.upsertByPhone({ phone, name: m.name, at });
     if (!row) return { who, lead: known };
     const created = who.lead ? null : row.id;
     return {
@@ -89,7 +90,7 @@ export class InboundStore {
   }
 
   /**
-   * A family's edit, revoke or reaction kept as a hidden marker row (migration 985 applies it to
+   * A family's edit, revoke or reaction kept as a hidden marker row (migration 992 applies it to
    * the message it names, now or when that arrives): already read, no lead, no text; false = a
    * replay.
    */

@@ -950,9 +950,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 1
     },
@@ -1072,11 +1069,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/booking/shared/booking-errors.test.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -1274,9 +1266,6 @@
     }
   },
   "src/booking/trial/components/TrialWizard.tsx": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -2021,11 +2010,6 @@
       "count": 1
     }
   },
-  "src/core/lib/phone.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/lib/query/paged-result.test.tsx": {
     "max-len": {
       "count": 2
@@ -2634,13 +2618,10 @@
   },
   "src/core/ui/layout/ListRow.tsx": {
     "ab/no-parent-imports": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 7
     },
     "max-lines-per-function": {
       "count": 1
@@ -3152,9 +3133,6 @@
   "src/edit-time/components/EditTimeForm.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "complexity": {
       "count": 1
@@ -4862,11 +4840,8 @@
     }
   },
   "src/inbox/messages/days/day-label.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/inbox/messages/days/day-separators.test.ts": {
@@ -5365,9 +5340,6 @@
   "src/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
     "ab/forbidden-imports": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/inbox/messages/reply-actions/ReplyNoteLine.flow.test.tsx": {
@@ -6978,9 +6950,6 @@
     }
   },
   "src/inbox/threads-list/ThreadRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 6
     },
@@ -6996,15 +6965,7 @@
       "count": 2
     }
   },
-  "src/inbox/threads-list/ThreadTrailing.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/inbox/threads-list/ThreadTrailing.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -7083,9 +7044,6 @@
     }
   },
   "src/inbox/threads-list/ThreadsList.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -7353,9 +7311,6 @@
     }
   },
   "src/meetings/manage/use-meeting-manage.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -9293,9 +9248,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     },
@@ -9467,9 +9419,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 4
     },
@@ -9559,9 +9508,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 8
@@ -10435,11 +10381,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-restricted-syntax": {
       "count": 1
@@ -10636,11 +10579,8 @@
     }
   },
   "src/sales/lib/sales-href.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/lib/sales-text.test.ts": {
@@ -10822,7 +10762,7 @@
       "count": 2
     },
     "ab/no-parent-imports": {
-      "count": 5
+      "count": 4
     },
     "max-len": {
       "count": 7
@@ -12893,9 +12833,6 @@
   "src/trial-date/screens/TrialDateWizard.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "complexity": {
       "count": 1

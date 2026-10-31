@@ -4,7 +4,7 @@ import type { ReactionOutcome } from './webhook.reaction';
 
 // A family's edit, revoke or reaction (webhook, and the inbound catch-up, which calls the same
 // handle): never a new bubble, lead, push or unread. An edit or revoke, or a reaction whose message
-// is not stored yet, is a hidden marker row the database applies (migration 985).
+// is not stored yet, is a hidden marker row the database applies (migration 992).
 
 const ORIGINAL = 'wamid.FAMILY1';
 const edit = event({

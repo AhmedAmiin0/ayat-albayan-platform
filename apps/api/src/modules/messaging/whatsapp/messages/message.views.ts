@@ -12,8 +12,8 @@ import { withHidden } from './hidden/hidden-view';
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
  * hand, the report PDF link (7 days) in the wa.me text. B2's threads can reuse it per row. An
- * edited or deleted message is marked (withMarks, migration 985): a deleted one shows nothing. A
- * message hidden from the platform (migration 986) is only the placeholder (withHidden).
+ * edited or deleted message is marked (withMarks, migration 992): a deleted one shows nothing. A
+ * message hidden from the platform (migration 993) is only the placeholder (withHidden).
  */
 @Injectable()
 export class MessageViews {

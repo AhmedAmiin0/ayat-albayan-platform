@@ -19,7 +19,7 @@ export interface ChannelSummaryRow {
   last_body: string | null;
   last_role: string | null;
   last_at: string | null;
-  /** The newest message was deleted for everyone (migration 986). */
+  /** The newest message was deleted for everyone (migration 993). */
   last_deleted?: boolean | null;
 }
 

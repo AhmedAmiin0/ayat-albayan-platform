@@ -1,3 +1,4 @@
+import { FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { messageTime } from '@/modules/messaging/webhook/external/external-message';
 import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { field, get, toInbound } from '@/modules/messaging/webhook/parse/webhook.parse';
@@ -7,7 +8,8 @@ import { MEDIA_TYPES, type InboundEvent } from '@/modules/messaging/webhook/webh
 // A history item is Meta's message object plus a `kapso` block, so it goes through the webhook's
 // parser (toInbound) after three small fixes: the time as Meta's unix seconds (Kapso may send ISO),
 // `from` from kapso.phone_number when the item names the family only by a business-scoped
-// from_user_id, and a media part's mime from kapso.media_data when Meta's is missing. Pure.
+// from_user_id, and a media part's mime from kapso.media_data when Meta's is missing. The family's
+// WhatsApp name is kapso.contact_name (the webhook's contacts[].profile.name). Pure.
 
 /** Never more than a week back: older gaps are out of scope (and Meta's media ids age out). */
 export const MAX_BACK_MS = 7 * 86_400_000;
@@ -18,11 +20,13 @@ export const LATE_MS = 15 * 60_000;
 
 /**
  * From the newest inbound row of the number, or the last day when that is newer; never more than a
- * week back. The first run after a deploy (`full`) reads the whole week: a gap that ended before
- * the deploy (the webhook recreated, newer rows already in) is still found.
+ * week back nor before FLOOR (the chat import holds everything older, as the outbound catch-up).
+ * A `full` run reads the whole week: a gap that ended before the deploy (the webhook recreated,
+ * newer rows already in) is still found.
  */
 export function inboundSince(newest: Date | null, opts: { now: Date; full: boolean }): Date {
-  const floor = new Date(opts.now.getTime() - MAX_BACK_MS);
+  const week = new Date(opts.now.getTime() - MAX_BACK_MS);
+  const floor = week < FLOOR ? FLOOR : week;
   if (!newest || opts.full) return floor;
   const back = new Date(opts.now.getTime() - LOOKBACK_MS);
   const from = newest < back ? newest : back;
@@ -54,5 +58,6 @@ export function historyInbound(m: unknown, at: Receiving): InboundEvent | null {
   if (!time || !from) return null;
   const timestamp = String(Math.floor(time.getTime() / 1000));
   const meta = { ...m, from, timestamp, ...mediaPart(m, field(m, 'type') ?? '') };
-  return toInbound(meta, { names: new Map(), now: time, at });
+  const names = new Map([[from, field(m, 'kapso.contact_name')?.trim() ?? '']]);
+  return toInbound(meta, { names, now: time, at });
 }

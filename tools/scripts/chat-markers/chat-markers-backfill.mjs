@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Backfill of the old «[edit]» / «[revoke]» / «[image]» … rows (owner 2026-10-30, migration
-// 20261030000985 first). Never connects to a database: the operator exports, reviews and runs.
+// 20261030000992 first). Never connects to a database: the operator exports, reviews and runs.
 //
 //   1. node tools/scripts/chat-markers/chat-markers-backfill.mjs --export > export.sql
 //      psql "$DB" -At -f export.sql > markers.json        (read only)

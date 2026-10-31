@@ -4,7 +4,7 @@ import { dbError } from '@/common/http/http';
 import { COLUMNS, type ChannelMessageRow } from './channel.queries';
 
 /**
- * A deleted message's body: the check stays 1..2000 and the API never serves it (migration 986).
+ * A deleted message's body: the check stays 1..2000 and the API never serves it (migration 993).
  */
 export const DELETED_BODY = '-';
 

@@ -1,16 +1,17 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261030000985 (chat markers) read as text: expand only and re-runnable. The rows are
+// Migration 20261030000992 (chat markers) read as text: expand only and re-runnable. The rows are
 // proven in e2e/tests/messaging/chat-markers.sql.spec.ts (a real database).
-const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
-const NAME = '20261030000985_chat_markers.sql';
+const dir = MIGRATIONS_DIR;
+const NAME = '20261030000992_chat_markers.sql';
 const SQL = readFileSync(join(dir, NAME), 'utf8').replace(/--.*$/gm, '');
 /** Outside the function bodies: what the migration itself runs. */
 const TOP = SQL.replace(/\$\$[\s\S]*?\$\$/g, '');
 
-describe('migration 20261030000985: chat markers', () => {
+describe('migration 20261030000992: chat markers', () => {
   it('sorts after every migration before it (develop through 984)', () => {
     const all = readdirSync(dir)
       .filter((f) => f.endsWith('.sql'))

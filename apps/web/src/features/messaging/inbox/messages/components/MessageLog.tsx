@@ -13,6 +13,7 @@ import { WithThreadCalls } from '@/features/messaging/inbox/calls/entries/use-th
 import { useCallsEnabled } from '@/features/messaging/inbox/calls/state/call-context';
 import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { isNearBottom } from '@/features/messaging/inbox/messages/lib/stick-to-bottom';
+import { logNow } from '@/features/messaging/inbox/messages/lib/log-now';
 import { ReplyActionsProvider } from '@/features/messaging/inbox/messages/reply-actions';
 
 export interface MessageLogProps {
@@ -93,8 +94,10 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
     pinned.current = true;
     setAwayAt(null);
   };
-  // A ticking clock, not new Date(): the compiler would keep one render's time.
-  const now = useNow();
+  // A ticking clock, not new Date() (the compiler keeps one render's time), never older than the
+  // newest row: one that lands in the minute after midnight opens «اليوم», not yesterday.
+  const stamps = [messages.at(-1)?.created_at, ...(calls ?? []).map((c) => c.started_at)];
+  const now = logNow(useNow(), stamps);
   const from = hasMore ? (messages[0]?.created_at ?? null) : null;
   const items: LogItem[] = withDays(messages, now, calls && { list: calls, from });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);

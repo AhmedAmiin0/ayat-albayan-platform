@@ -13,6 +13,8 @@ interface Props {
   message: ChannelMessageView;
   tz: string;
   refs: ChannelRef;
+  /** The thread's one ticking clock (ChannelThread): bubbles gain their date at midnight. */
+  now: Date;
 }
 
 const a = t.studentChannel.actions;
@@ -23,14 +25,14 @@ const a = t.studentChannel.actions;
  * «خيارات
  * الرسالة» beside it where «تعديل» / «حذف للجميع» are allowed (owner 2026-10-30).
  */
-export function ChannelBubble({ message: m, tz, refs }: Props) {
+export function ChannelBubble({ message: m, tz, refs, now }: Props) {
   const clock = useClock();
   const tools = useBubbleEditing({ refs, message: m });
   const roles = t.studentChannel.roles;
   const who = m.mine
     ? t.studentChannel.you
     : [m.sender_name, roles[m.sender_role]].filter(Boolean).join(' · ');
-  const time = channelTimeText({ iso: m.created_at, tz, now: new Date(), ...clock });
+  const time = channelTimeText({ iso: m.created_at, tz, now, ...clock });
   const menu = <ChannelBubbleMenu offers={tools.offers} mine={m.mine} onPick={tools.open} />;
   return (
     <li className={cn('group flex items-start gap-1', m.mine ? 'justify-start' : 'justify-end')}>

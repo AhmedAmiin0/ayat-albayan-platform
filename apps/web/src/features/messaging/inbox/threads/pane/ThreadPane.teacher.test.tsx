@@ -3,15 +3,15 @@ import { screen, within } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { detail, message, PHONE, pupil, thread } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { detail, message, PHONE, pupil, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from './ThreadPane';
-import { ThreadRow } from '../list/ThreadRow';
+import { ThreadRow } from '@/features/messaging/inbox/threads/list/ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null } as const;
@@ -62,7 +62,7 @@ describe('teacher mode in the chat (R-TCH-03, R-MSG-05)', () => {
 
   it('a thread row opens /teacher/inbox and carries no lead source or «مشترك»', () => {
     const th = thread({ ...FAMILY, subscribed: true, lead_source: 'facebook_ad' });
-    render('teacher', <ul><ThreadRow thread={th} search={{ page: 1 }} active={false} /></ul>);
+    render('teacher', <ul><ThreadRow thread={th} search={{ page: 1 }} active={false} now={new Date()} /></ul>);
     const link = screen.getByRole('link');
     expect(link.getAttribute('href')).toBe(`/teacher/inbox?page=1&phone=${encodeURIComponent(PHONE)}`);
     expect(within(link).queryByText(t.enums.leadSource.facebook_ad)).toBeNull();

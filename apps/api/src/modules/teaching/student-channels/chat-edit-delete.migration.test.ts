@@ -1,18 +1,19 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 import { DELETED_BODY } from './channel-edits.repo';
 
-// Migration 986 (owner 2026-10-30: edit and delete), read as text: no database in unit tests.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+// Migration 993 (owner 2026-10-30: edit and delete), read as text: no database in unit tests.
+const dir = MIGRATIONS_DIR;
 const strip = (sql: string) =>
   sql
     .split('\n')
     .filter((l) => !l.trim().startsWith('--'))
     .join('\n');
-const code = strip(readFileSync(join(dir, '20261030000986_chat_edit_delete.sql'), 'utf8'));
+const code = strip(readFileSync(join(dir, '20261030000993_chat_edit_delete.sql'), 'utf8'));
 
-describe('migration 986: chat edit / delete', () => {
+describe('migration 993: chat edit / delete', () => {
   it('expand only: nullable columns added if missing, no data change, no drop of a table or column', () => {
     for (const c of ['edited_at timestamptz;', 'deleted_at timestamptz;']) {
       expect(code).toContain(`alter table public.channel_messages add column if not exists ${c}`);

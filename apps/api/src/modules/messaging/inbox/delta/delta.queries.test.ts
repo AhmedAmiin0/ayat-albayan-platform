@@ -15,7 +15,7 @@ describe('DeltaQueries (the delta refresh reads)', () => {
     expect(f.argsOf('messages', 'limit')).toEqual([51]);
   });
 
-  it('newer: never a hidden row (a reaction, edit or revoke marker: migration 985)', async () => {
+  it('newer: never a hidden row (a reaction, edit or revoke marker: migration 992)', async () => {
     const f = fakeDb({ messages: [{ data: [] }] });
     const after = '2026-10-27T10:00:00.000Z';
     await new DeltaQueries(f.db).newer({ phone: PHONE, after, limit: 50 });

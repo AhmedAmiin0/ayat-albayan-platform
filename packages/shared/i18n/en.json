@@ -3562,9 +3562,14 @@
       "title": "New commission",
       "body": "{amount} — {code} {student}"
     },
-    "kapsoWebhookGap": {
+    "kapso_webhook_gap": {
       "title": "Families' messages are not arriving from Kapso directly",
-      "body": "Check the webhook in Kapso: {count} late messages were fetched by the periodic catch-up"
+      "body": {
+        "one": "Check the webhook in Kapso: 1 late message was fetched by the periodic catch-up",
+        "two": "Check the webhook in Kapso: 2 late messages were fetched by the periodic catch-up",
+        "few": "Check the webhook in Kapso: {n} late messages were fetched by the periodic catch-up",
+        "other": "Check the webhook in Kapso: {n} late messages were fetched by the periodic catch-up"
+      }
     }
   },
   "bell": {
@@ -4472,7 +4477,8 @@
       "guardian": "Guardian",
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
-      "detailsHint": "Opens the student details"
+      "detailsHint": "Opens the student details",
+      "openStudent": "Open {name}'s student file"
     },
     "live": {
       "title": "Lessons running now",

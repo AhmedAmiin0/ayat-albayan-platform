@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// WhatsApp edits, deletes and reactions (migration 20261030000985, owner 2026-10-30): a marker row
+// WhatsApp edits, deletes and reactions (migration 20261030000992, owner 2026-10-30): a marker row
 // applies to the message it names on the same phone, now or when that message arrives (pending),
 // the newest edit wins whatever the arrival order, and a marker is never the chat's last message
 // nor unread. Rolled back; database only, no message is ever sent.
@@ -30,7 +30,7 @@ async function row(tx: Tx, id: string) {
 }
 const edit = (target: string, text: string) => ({ type: 'edit', marker: true, target, text });
 
-test.describe('chat markers (migration 20261030000985)', () => {
+test.describe('chat markers (migration 20261030000992)', () => {
   test.beforeEach(() =>
     test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
   );

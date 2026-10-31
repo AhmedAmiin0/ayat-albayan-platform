@@ -9,6 +9,8 @@ import { get } from '../parse/webhook.parse';
 
 /** The Kapso extras an external row needs: direction, status, recipient and media metadata. */
 export const KAPSO_FIELDS = 'kapso(direction,status,phone_number,media_data)';
+/** An inbound page adds the family's WhatsApp name (a lead created by the catch-up gets it). */
+const INBOUND_FIELDS = 'kapso(direction,status,phone_number,media_data,contact_name)';
 /** Kapso's page size cap. */
 export const PAGE_LIMIT = 100;
 /** A webhook item must answer within the 5 s budget; the job is not in a hurry. */
@@ -62,7 +64,8 @@ export class KapsoHistory {
   private async page(env: KapsoLineEnv, q: Directed): Promise<HistoryPage> {
     const { direction, since } = q;
     const limit = String(PAGE_LIMIT);
-    const params = new URLSearchParams({ direction, since, limit, fields: KAPSO_FIELDS });
+    const fields = direction === 'inbound' ? INBOUND_FIELDS : KAPSO_FIELDS;
+    const params = new URLSearchParams({ direction, since, limit, fields });
     if (q.after) params.set('after', q.after);
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages?${params}`;
     const body = await graphJson(this.conn(env), { path });
