@@ -15,8 +15,8 @@ import { SalesQueries } from '../sales.queries';
 
 /**
  * The salesperson's assistant side and a subscription's history (docs/16). Read-only. Students and
- * running lessons are the academy's (teachers and the schedule: SalesScheduleService); the history is
- * only for a subscription she made, by the SAME ownership rule as «الاشتراكات» (SalesService.subscriptions).
+ * running lessons are the academy's (teachers and the schedule: SalesScheduleService); so is a subscription's
+ * history (owner 2026-10-30); «الاشتراكات» (SalesService.subscriptions) still lists hers only.
  */
 @Injectable()
 export class SalesAcademyService {
@@ -74,11 +74,10 @@ export class SalesAcademyService {
     return (await this.academy.live(now)).map(toSalesLive);
   }
 
-  /** 404 subscription_not_found for an unknown id AND for one she did not make (no existence leak). */
-  async history(user: AuthUser, subscriptionId: string): Promise<SalesSubscriptionHistory> {
+  /** Any student's subscription (owner 2026-10-30: «Make all assistants see all»); 404 for an unknown id. */
+  async history(subscriptionId: string): Promise<SalesSubscriptionHistory> {
     const studentId = await this.histories.studentOf(subscriptionId);
-    const own = studentId ? await this.sales.ownership(user.id) : null;
-    if (!studentId || !own?.studentIds.includes(studentId)) throw notFound('subscription_not_found');
+    if (!studentId) throw notFound('subscription_not_found');
     const bundle = await this.histories.history(studentId);
     if (!bundle) throw notFound('subscription_not_found');
     return toSalesHistory(subscriptionId, bundle);

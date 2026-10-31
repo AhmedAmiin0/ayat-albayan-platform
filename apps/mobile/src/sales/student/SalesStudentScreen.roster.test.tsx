@@ -31,26 +31,22 @@ const open = () =>
     </TreeBaseProvider>,
   );
 
-// Owner 2026-10-30: any student's schedule and full attendance log; money and reports: hers only.
-test('another assistant\'s student: schedule, attendance and the full log; the reworded note; no package or report', async () => {
+// Owner 2026-10-30: any student's schedule and full attendance log, without any «not yours» note.
+test('another assistant\'s student: schedule, attendance and the full log; no note', async () => {
   mockApiFetch.mockResolvedValue(other());
   await open();
-  expect(await screen.findByText(s.notMine)).toBeTruthy();
-  expect(s.notMine).toContain('الجدول والحضور');
-  expect(screen.getByRole('header', { name: s.schedule.title })).toBeTruthy();
+  expect(await screen.findByRole('header', { name: s.schedule.title })).toBeTruthy();
   expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
   expect(screen.getByText(s.attendance)).toBeTruthy();
-  expect(screen.queryByText(s.subscription)).toBeNull();
-  expect(screen.queryByText(t.reports.noReports)).toBeNull();
+  expect(screen.queryByText(/ليس من طلابك/)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: s.log.open }));
   expect(router.push).toHaveBeenCalledWith('/sales/students/st1/attendance');
 });
 
-test('one of hers: the same schedule and log, and her package; no «not one of yours» note', async () => {
+test('one of hers: the same schedule and log, and her package', async () => {
   mockApiFetch.mockResolvedValue(details({ schedule }));
   await open();
   expect(await screen.findByText(s.current)).toBeTruthy();
-  expect(screen.queryByText(s.notMine)).toBeNull();
   expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
   expect(screen.getByRole('button', { name: s.log.open })).toBeTruthy();
 });

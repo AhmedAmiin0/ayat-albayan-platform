@@ -13,7 +13,6 @@ import { SalesLoadScreen } from '../components/SalesLoadScreen';
 import { familyChatHref } from '../lib/sales-href';
 import { fill } from '../lib/sales-text';
 import { MoneyActionButton } from '../money-action';
-import { PackageSection } from './PackageSection';
 import { AttendanceSection } from './AttendanceSection';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
@@ -30,14 +29,13 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
 }
 
 /**
- * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) — the trial first,
- * «الجدول» and the attendance of the past lessons; of HER students (`mine`, absent in an old cache = hers)
- * also the subscription (start, renewal / end, lessons used / left, past ones folded) and the sent reports
- * as the teacher sees them; move / cancel only on her students' lessons (the sheet checks `mine`).
- * Of ANY student the status chip and the current package (owner 2026-10-30: size, status, dates,
- * lessons used / left; PackageSection for another's). No price or payment shown. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that
- * family's chat; under it (it loads after the page: nothing shifts) the one money action of hers (UX review #9: «تسجيل تحويل» / «تجديد»). An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
- * for ANY student, as in the admin's file.
+ * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student reads as hers (owner 2026-10-30, «Make
+ * all assistants see all»): the status chip, the trial first, the subscription (start, renewal / end,
+ * lessons used / left, past ones folded), «الجدول», the attendance and the sent reports as the teacher
+ * sees them. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that family's chat;
+ * under it (it loads after the page: nothing shifts) the one money action, on HER students only (`mine`,
+ * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»). An unknown id answers 404:
+ * «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner for ANY student.
  */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -64,13 +62,13 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : <Note>{t.sales.student.notMine}</Note>}
+          {mine ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <CoursePauseSection studentId={data.student.id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
-          {mine ? <SubscriptionSection data={data} /> : <PackageSection summary={data.package} />}
+          <SubscriptionSection data={data} />
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
           <AttendanceSection studentId={data.student.id} attendance={data.attendance} />
-          {mine ? <ReportsSection studentId={data.student.id} reports={data.reports} /> : null}
+          <ReportsSection studentId={data.student.id} reports={data.reports} />
         </View>
       </ScrollView>
     </Screen>

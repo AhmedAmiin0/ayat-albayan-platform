@@ -4526,7 +4526,6 @@
         "showAll": "Show all ({n})",
         "showLess": "Show less"
       },
-      "notMine": "Not one of your students: the status, package, schedule and attendance are shown; amounts and reports are for your own students only",
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",
