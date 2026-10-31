@@ -1,5 +1,4 @@
 import { permissionGroups, type Permission } from '@ab/shared';
-import { useEffect, useRef } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { groupState, type GroupState } from './role-form';
 
@@ -10,10 +9,10 @@ const areas: Record<string, string> = t.permissions.areas;
 const hints: Partial<Record<string, string>> = t.permissions.hints;
 
 function GroupBox({ state, label, onToggle, disabled }: { state: GroupState; label: string; onToggle: () => void; disabled: boolean }) {
-  const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (ref.current) ref.current.indeterminate = state === 'some';
-  }, [state]);
+  // `indeterminate` has no attribute: the ref callback sets it whenever `state` changes.
+  const ref = (el: HTMLInputElement | null) => {
+    if (el) el.indeterminate = state === 'some';
+  };
   return (
     <label className="flex items-center gap-2 text-xs font-semibold text-lapis">
       <input ref={ref} type="checkbox" className={BOX} checked={state === 'all'} onChange={onToggle} disabled={disabled} aria-label={label} />

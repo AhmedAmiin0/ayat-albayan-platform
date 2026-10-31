@@ -1,6 +1,6 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useEffect, useState, type SubmitEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { Field } from '@/components/ui/form/field';
@@ -12,6 +12,21 @@ import { hasRecoverySession, savePassword, setPasswordError } from './set-passwo
 const S = t.users.setPassword;
 type Phase = 'checking' | 'ready' | 'invalid';
 
+/** Checked once per visit: never cached, refetched or retried (an error stays «checking»). */
+function usePhase(): Phase {
+  const { data } = useQuery({
+    queryKey: ['set-password', 'recovery-session'],
+    queryFn: hasRecoverySession,
+    gcTime: 0,
+    staleTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+  if (data === undefined) return 'checking';
+  return data ? 'ready' : 'invalid';
+}
+
 /**
  * /set-password: where the invite / reset link lands. supabase-js reads the recovery session from
  * the URL on load; with one, the user types a new password twice and goes to their home.
@@ -19,14 +34,11 @@ type Phase = 'checking' | 'ready' | 'invalid';
 export function SetPasswordPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [phase, setPhase] = useState<Phase>('checking');
+  const phase = usePhase();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | undefined>();
   const [busy, setBusy] = useState(false);
-  useEffect(() => {
-    void hasRecoverySession().then((ok) => setPhase(ok ? 'ready' : 'invalid'));
-  }, []);
 
   const submit = async (e: SubmitEvent) => {
     e.preventDefault();
