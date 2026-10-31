@@ -8,8 +8,8 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 // Twin: @ab/shared assistant/renewal.ts (renewalShareNow).
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
-const setOn = (tx: Tx, on: boolean | null) => tx`insert into public.settings (key, value)
-  values ('renewal_commission_enabled', ${JSON.stringify(on)}::jsonb) on conflict (key) do update set value = excluded.value`;
+const setOn = (tx: Tx, on: boolean) => tx`insert into public.settings (key, value)
+  values ('renewal_commission_enabled', ${tx.json(on)}) on conflict (key) do update set value = excluded.value`;
 const reason = async (tx: Tx, sub: string) =>
   (await tx<{ reason: string }[]>`select reason from public.assistant_commission_exclusions where subscription_id = ${sub}`)[0]?.reason;
 const now = async (tx: Tx) =>
@@ -23,7 +23,7 @@ test.describe('renewal commission switch (20261101000996)', () => {
     await rolledBack(async (tx) => {
       await tx`delete from public.settings where key = 'renewal_commission_enabled'`;
       expect(await now(tx)).toEqual({ enabled: true, share: 50 });
-      await setOn(tx, null);
+      await tx`insert into public.settings (key, value) values ('renewal_commission_enabled', 'null'::jsonb)`;
       expect(await now(tx)).toEqual({ enabled: true, share: 50 });
       await tx`insert into public.settings (key, value) values ('renewal_commission_percent', '80'::jsonb)
         on conflict (key) do update set value = excluded.value`;
