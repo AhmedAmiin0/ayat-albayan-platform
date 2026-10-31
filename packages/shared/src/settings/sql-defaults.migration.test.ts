@@ -65,7 +65,7 @@ const PINS: Pin[] = [
     parse: bool,
   },
   {
-    // The switch-off instant: only the captured JSON value is off, anything else (missing, null) is on.
+    // The switch-off instant: only the captured JSON value is off; missing or null is on.
     fn: 'public.renewal_commission_off_since',
     key: 'renewal_commission_enabled',
     re: /s\.key = 'renewal_commission_enabled' and s\.value = '(true|false)'::jsonb/,
