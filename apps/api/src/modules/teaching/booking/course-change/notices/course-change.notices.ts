@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LessonEvents, type ScheduleChange } from '@/common/events/lesson-events';
+import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.service';
 import { FamilyMoveNotice } from '@/modules/teaching/schedule-notices';
 import { courseChanges, courseMove, earliest, type CourseTold } from './course-change.notice-plan';

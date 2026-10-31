@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { ActivityWriter, type ActivityInsert } from './activity.writer';
 
 const row = (over: Partial<ActivityInsert> = {}): ActivityInsert => ({

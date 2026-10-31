@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { body, LESSON_ID, NOW, retimed, timeSetup } from './time-edit.fakes';
 
 // «عدّل الوقت» and the schedule-change notices: lesson_rescheduled only when the admin left

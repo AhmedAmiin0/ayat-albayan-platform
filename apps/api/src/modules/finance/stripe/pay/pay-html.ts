@@ -1,5 +1,5 @@
 import { type PublicPaymentLink } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PAY_CSS } from './pay-css';
 
 /** Every value that reaches the page goes through this (text and attribute safe). */

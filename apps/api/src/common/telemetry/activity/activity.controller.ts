@@ -1,10 +1,10 @@
 import { activityListQuery, type ActivityPage } from '@ab/shared';
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Ip, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '../http/http';
-import { WindowCounter } from '../../modules/teaching/feedback/public/feedback.rate-limit';
-import { CurrentUser, Permissions, Public, SignedIn } from '../auth/decorators';
-import type { AuthUser } from '../auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
+import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { ActivityQueries } from './activity.queries';
 
 /** «سجل النشاط»: GET /activity, admin only, paged + filtered + sorted (R-NFR-08). */

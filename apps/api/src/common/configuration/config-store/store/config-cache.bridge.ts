@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@nestjs/common';
-import { CACHE_KEYS } from '@/common/cache/cache-keys';
-import { SharedCache } from '@/common/cache/shared-cache';
+import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { ConfigStore } from './config-store.service';
 
 /**

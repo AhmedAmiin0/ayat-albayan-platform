@@ -1,7 +1,7 @@
 import type { CourseStopPreview, CourseStopRequest, CourseStopResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { LessonEvents } from '@/common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';

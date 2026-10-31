@@ -1,6 +1,6 @@
 import { counted } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { ar } from '@/common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
 import type { KapsoNumber } from '@/modules/messaging/webhook/external/kapso-numbers';
 

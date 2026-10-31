@@ -1,5 +1,5 @@
 [
-  "apps/api/src/common/activity/activity.queries.ts",
+  "apps/api/src/common/telemetry/activity/activity.queries.ts",
   "apps/api/src/common/configuration/config-store/store/config-store.queries.ts",
   "apps/api/src/common/configuration/integrations/integration-config.queries.ts",
   "apps/api/src/common/push/notifications.queries.ts",

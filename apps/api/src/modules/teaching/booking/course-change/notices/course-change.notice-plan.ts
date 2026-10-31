@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ScheduleChange } from '@/common/events/lesson-events';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 
 // Who hears a course change (owner 2026-10-30: «on any reschedule notify both the teacher and the
 // family»): «تغيير موعد الحلقات» and «تغيير المعلم» from the profile, and the drawer's «تغيير أيام

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ar } from '../../../common/i18n/server-text';
-import { PushService } from '../../../common/push/push.service';
+import { ar } from '@/common/infra/i18n/server-text';
+import { PushService } from '@/common/push/push.service';
 
 /**
  * The Google sync's admin alerts (docs/24 §3): a bell row only, never WhatsApp or a push. One row

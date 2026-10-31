@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { ActivityRetentionJob } from './activity.retention.job';
 
 const dbWith = (rpc: ReturnType<typeof vi.fn>) => ({ rpc }) as unknown as Db;

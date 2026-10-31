@@ -1,4 +1,4 @@
-import type { AuthUser } from '../auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { entityOf, fieldNames, responseId } from './activity.route';
 import type { ActivityInsert } from './activity.writer';
 

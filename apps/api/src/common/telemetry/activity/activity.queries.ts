@@ -1,9 +1,9 @@
 import { addCalendarDays } from '@ab/shared';
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { dbError } from '../http/http';
-import { DB, type Db } from '../db/db.module';
-import { applySort, type SortSpec } from '../list-sort';
+import { dbError } from '@/common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, type SortSpec } from '@/common/list-sort';
 
 /** Newest first by default; every key sorts server-side (R-NFR-08). */
 const SORT: SortSpec<ActivitySortKey> = {

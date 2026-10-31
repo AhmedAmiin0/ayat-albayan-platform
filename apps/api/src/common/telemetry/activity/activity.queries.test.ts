@@ -1,6 +1,6 @@
 import { activityListQuery } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { ActivityQueries, likePrefix, nextDayStart } from './activity.queries';
 
 type Call = [string, ...unknown[]];

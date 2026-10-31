@@ -261,7 +261,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
    - `StorageService` gains `removeMany({ bucket, paths })`: one Supabase `remove(paths)` call. Removing a path that does not exist is a no-op.
    - `InboundMediaQueries` gains `cachedBefore({ before, limit })`: id and media_path of inbound rows with `media_path` set and `created_at < before`, oldest first.
    - It also gains `clearPaths(ids)`: `update media_path = null where id in ids and direction = 'inbound'`.
-   - New `apps/api/src/modules/messaging/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
+   - New `apps/api/src/modules/messaging/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/telemetry/activity/activity.retention.job.ts`:
      - first run 15 min after boot, then every 24 h;
      - `runOnce()` loops batches of 100 until a batch is empty, with a cap of 50 batches per run (the staging backlog);
      - each batch calls `removeMany`, then `clearPaths`;

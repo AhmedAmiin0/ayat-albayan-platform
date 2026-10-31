@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '@/common/cache/cache.fakes';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import type { Db } from '@/common/db/db.module';
 import { CustomConfigService } from './custom-config.service';
 

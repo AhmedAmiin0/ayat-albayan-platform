@@ -1,9 +1,9 @@
 import { trialMove, type TrialFacts } from '@ab/shared';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { LessonEvents } from '../../../../common/events/lesson-events';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { NO_TRIAL, trialFactsOf } from './student-trial.plan';
 import { StudentTrialQueries } from './student-trial.queries';
-import { StudentStatusQueries } from '../student-lifecycle/student-status.queries';
+import { StudentStatusQueries } from '@/modules/finance/subscriptions/student-lifecycle/student-status.queries';
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
