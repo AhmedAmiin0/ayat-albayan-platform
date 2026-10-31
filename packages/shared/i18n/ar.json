@@ -520,6 +520,9 @@
     "synced": "تمت مزامنة الجدول: أُضيفت {n} حلقة",
     "syncedNone": "الجدول متزامن، لا توجد حلقات ناقصة",
     "riyadhTime": "بتوقيت الرياض",
+    "viewerTime": "بتوقيتك",
+    "familyAt": "{time} بتوقيت العائلة",
+    "zoneNote": "الأوقات بتوقيتك ({city})",
     "studentTime": "عند الطالب {time}",
     "teacherTime": "عند المعلم/ة {time}",
     "lessonCount": {
@@ -644,6 +647,7 @@
     "slotsError": "تعذّر تحميل المواعيد المتاحة، حاول مرة أخرى",
     "pickSlotFirst": "اختر موعدًا من المواعيد المتاحة",
     "slotLegend": "الساعة الكبيرة بتوقيت الرياض، والصغيرة بتوقيت الطالب في {city}",
+    "slotLegendViewer": "الساعة الكبيرة بتوقيتك، والصغيرة بتوقيت الطالب في {city}",
     "trialFor": "حجز حلقة تجريبية ل{name}",
     "overridePlaceholder": "مثلًا: طلب ولي الأمر هذا الموعد",
     "teacherClock": "عند المعلم/ة {time} بتوقيت {city}",
@@ -975,7 +979,7 @@
       "captionReschedule": "يغلق هذه الحلقة ويفتح حلقة جديدة، وقد يشمل كل الحلقات القادمة",
       "reasonLine": "السبب: {reason}",
       "durationOther": "{n} دقيقة",
-      "riyadhEquiv": "= {time} بتوقيت الرياض",
+      "viewerEquiv": "= {time} بتوقيتك",
       "lockedMonth": "مستحقات المعلم/ة لشهر {month} {status}، لذا لا يمكن تغيير مدة هذه الحلقة",
       "startOnly": "يمكنك تصحيح وقت البداية فقط",
       "restoreLength": "أعد المدة إلى {len}",
@@ -2701,7 +2705,7 @@
       "failed": "تعذّر تنزيل الملف، حاول مرة أخرى"
     },
     "quickReply": {
-      "confirmed": "تم تأكيد حلقة {when} (بتوقيت الرياض)",
+      "confirmed": "تم تأكيد حلقة {when} (بتوقيتك)",
       "reschedule": "طلب تغيير موعد الحلقة",
       "rescheduleNoLesson": "طلب تغيير الموعد",
       "rescheduled": "تم تغيير موعد الحلقة",
@@ -2709,9 +2713,9 @@
     },
     "replyAction": {
       "confirm": "تأكيد الحلقة",
-      "confirmLabel": "تأكيد حلقة {when} (بتوقيت الرياض)",
+      "confirmLabel": "تأكيد حلقة {when} (بتوقيتك)",
       "reschedule": "تغيير الموعد",
-      "rescheduleLabel": "تغيير موعد حلقة {when} (بتوقيت الرياض)",
+      "rescheduleLabel": "تغيير موعد حلقة {when} (بتوقيتك)",
       "notFound": "تعذر فتح الحلقة، فقد تغيّر موعدها أو أُلغيت. حدّث المحادثة وحاول مرة أخرى."
     },
     "composer": {
@@ -4643,6 +4647,8 @@
       "emptyTeacher": "لا توجد حلقات لهذا المعلم في هذا اليوم",
       "lessonsCount": "عدد الحلقات: {n}",
       "liveNow": "جارية الآن",
+      "riyadhDay": "يوم الأكاديمية بتوقيت الرياض، والأوقات بتوقيتك",
+      "otherDay": "{day} بتوقيتك",
       "makeupTag": "تعويضية",
       "lessonLabel": "حلقة {time} مع {teacher}",
       "status": {

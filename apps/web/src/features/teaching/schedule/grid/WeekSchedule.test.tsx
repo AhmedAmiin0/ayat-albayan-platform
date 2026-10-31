@@ -98,11 +98,11 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     expect(await screen.findByRole('heading', { name: t.booking.noTeachers })).toBeTruthy();
   });
 
-  it('a chip opens the lesson drawer with Riyadh and the student time', async () => {
+  it('a chip opens the lesson drawer with the viewer and the student time', async () => {
     renderWeek();
     fireEvent.click(await screen.findByRole('button', { name: /17:00/ }));
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
-    expect(within(drawer).getByText(new RegExp(t.schedule.riyadhTime)).textContent).toContain('17:00');
+    expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime)).textContent).toContain('17:00');
     expect(within(drawer).getByRole('button', { name: t.lessons.event.confirm })).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: new RegExp(t.lessons.join) }).getAttribute('href')).toBe(SUNDAY.meeting_link);
   });

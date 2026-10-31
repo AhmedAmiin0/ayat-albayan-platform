@@ -11,7 +11,7 @@ import {
   reactionText,
   type ThreadView,
 } from '@ab/shared';
-import { clockIn } from '@/core/lib/clock';
+import { clockIn, phoneTz } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -79,8 +79,9 @@ export function threadPreview(th: ThreadView): string {
   return th.last_direction === 'outbound' ? `${t.inbox.you} ${text}` : text;
 }
 
+/** The thread's zone: the phone's (phoneTz). */
 export function deviceTimeZone(): string {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return phoneTz();
 }
 
 interface StampOptions {

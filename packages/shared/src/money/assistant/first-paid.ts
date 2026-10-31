@@ -2,6 +2,7 @@ import { toCents } from '../ledger/cents.js';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
 import { commissionKindOf } from './kind.js';
 import { subscriptionAlreadyStarted, type StartFact } from './started.js';
+import { localDateIn } from '../../time/index.js';
 
 // "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).
 // Derived from the payments, never stored: net paid (payments - refunds, in the package currency) has
@@ -69,7 +70,7 @@ export function firstFullyPaid(subs: readonly SubscriptionFact[]): FirstFullyPai
 
 /** The calendar day (YYYY-MM-DD) of an instant in a time zone. */
 export function localDay(iso: string, tz: string): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(iso));
+  return localDateIn(new Date(iso), tz);
 }
 
 export interface CommissionTermsInput {

@@ -10,6 +10,3 @@ export function windowStateAt(w: Pick<JoinWindow, 'opens_at' | 'closes_at'>, now
 /** «حلقتك الآن» once the lesson has started (until it ends), «حلقتك القادمة» before. */
 export const isLessonNow = (l: { starts_at: string; ends_at: string }, now: Date): boolean =>
   Date.parse(l.starts_at) <= now.getTime() && now.getTime() < Date.parse(l.ends_at);
-
-/** The viewer's own zone (the page has no login, so no stored tz). */
-export const viewerTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';

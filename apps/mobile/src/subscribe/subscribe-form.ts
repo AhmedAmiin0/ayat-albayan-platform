@@ -1,5 +1,5 @@
 import {
-  addDays,
+  addCalendarDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -54,13 +54,13 @@ export function pricingOf(f: SubscribeForm): SubscriptionPricing {
  */
 export function startDays(now: Date, tz: string, first?: string): string[] {
   const today = localDate(now, tz);
-  const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
+  const days = Array.from({ length: 7 }, (_, i) => addCalendarDays(today, i));
   return first && !days.includes(first) ? [first, ...days] : days;
 }
 
-/** «النهارده», else «الأحد 4 أكتوبر» (Western digits) for a local date. */
+/** «النهارده», else «الأحد 4 أكتوبر» (Western digits) for a local date (a day: read in UTC). */
 export function startDayLabel(date: string, today: string): string {
-  return date === today ? t.mobile.today : dayLabel(new Date(`${date}T12:00:00Z`));
+  return date === today ? t.mobile.today : dayLabel(new Date(`${date}T12:00:00Z`), 'UTC');
 }
 
 function codeOf(error: unknown): string | undefined {

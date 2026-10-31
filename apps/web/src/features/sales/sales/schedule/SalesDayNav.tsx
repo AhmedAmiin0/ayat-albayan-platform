@@ -14,7 +14,11 @@ export interface SalesDayNavProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/** «اليوم السابق | اليوم | اليوم التالي» and the day shown (the admin schedule's words), in Riyadh time. */
+/**
+ * «اليوم السابق | اليوم | اليوم التالي» and the day shown (the admin schedule's words). academy day
+ * (docs/34 b): GET /sales/schedule pages by Riyadh days, so the note says so while the times inside
+ * read in the viewer's zone (a row on another day for the viewer names it, ScheduleLessonItem).
+ */
 export function SalesDayNav({ date, today, onDate }: SalesDayNavProps) {
   const step = (n: number) => {
     const next = addDays(date, n);
@@ -36,7 +40,7 @@ export function SalesDayNav({ date, today, onDate }: SalesDayNavProps) {
       <span aria-live="polite" className="ms-1 text-sm font-semibold tabular-nums">
         {`${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`}
       </span>
-      <span className="text-xs text-ink-3">{t.schedule.riyadhTime}</span>
+      <span className="text-xs text-ink-3">{t.sales.academySchedule.riyadhDay}</span>
     </div>
   );
 }

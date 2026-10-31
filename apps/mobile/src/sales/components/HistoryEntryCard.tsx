@@ -1,5 +1,6 @@
 import type { SalesHistoryEntry, SalesStudentSubscription } from '@ab/shared';
 import { View } from 'react-native';
+import { useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { partPaidLine } from '@/payments';
@@ -22,7 +23,8 @@ interface HistoryEntryCardProps {
 export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntryCardProps) {
   const { color } = useTheme();
   const h = t.sales.history;
-  const lines = historyLines({ status_changes: [], payments: [], ...entry });
+  const tz = useViewerTz();
+  const lines = historyLines({ status_changes: [], payments: [], ...entry }, tz);
   const body = { fontFamily: type.ui[400], fontSize: type.size.body, color: color.ink } as const;
   // Only a self.sales_money viewer gets part_paid, and only while 0 < paid < price (owner 2026-10-28).
   const part = 'part_paid' in entry && entry.part_paid ? partPaidLine(entry.part_paid) : null;

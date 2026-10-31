@@ -1,5 +1,5 @@
 import type { ClockCycle, Locale, PresenceText } from '@ab/shared';
-import { useClockCycle } from '@/core/lib/clock';
+import { phoneTz, useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { useNow } from '@/core/lib/time/use-now';
@@ -13,10 +13,10 @@ export interface PresenceClock {
   words: PresenceText;
 }
 
-/** The viewer's zone (the phone's), as the channel thread's message times. */
-const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-
-/** The relative text's inputs; `now` ticks every minute (and on coming back to the foreground). */
+/**
+ * The relative text's inputs, in the phone's zone (phoneTz) as the thread's message times; `now`
+ * ticks every minute (and on coming back to the foreground).
+ */
 export function usePresenceClock(): PresenceClock {
   const now = useNow();
   const cycle = useClockCycle();

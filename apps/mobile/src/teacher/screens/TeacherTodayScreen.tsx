@@ -1,4 +1,4 @@
-import { counted, formatRunningHead, RIYADH_TZ } from '@ab/shared';
+import { counted, formatRunningHead } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import { LiveSessions } from '@/live/LiveSessions';
@@ -20,9 +20,9 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { dayWindow, lessonsOn, reportAction } from '../lib/day';
-import { useMyLessons, usePendingReports, useTeacherMe } from '../lib/queries';
+import { useMyLessons, usePendingReports } from '../lib/queries';
 import { TeacherLessonCard } from '../components/TeacherLessonCard';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
@@ -50,7 +50,7 @@ function PendingBanner({ count }: { count: number }) {
 export function TeacherTodayScreen() {
   const cycle = useClockCycle();
   const now = useNow();
-  const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const today = localDate(now, tz);
   const day = useMyLessons(dayWindow(today));
   const pending = usePendingReports();
@@ -69,7 +69,7 @@ export function TeacherTodayScreen() {
         size="h2"
         connecting
         trailing={<BellButton tree="teacher" />}
-        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
+        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle, tz))}` : dateLine}
       />
       <LiveSessions lessons={lessons} />
       <PendingBanner count={pending.data?.length ?? 0} />

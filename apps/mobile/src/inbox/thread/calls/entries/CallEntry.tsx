@@ -7,7 +7,7 @@ import { bubbleSide } from '../../../messages/hooks/bubble-side';
 import { clockAt } from '../../../shared/format';
 import { CallArrowIcon, PhoneIcon } from '../screen/call-icons';
 import { callEntryText, callInk } from './call-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CallEntryProps {
   call: CallView;
@@ -22,6 +22,7 @@ interface CallEntryProps {
  */
 export function CallEntry({ call, onCallBack }: CallEntryProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const kind = callEntryKind(call);
   const ink = callInk(kind, color);
@@ -55,7 +56,7 @@ export function CallEntry({ call, onCallBack }: CallEntryProps) {
         </AppText>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <CallArrowIcon out={ours} color={ink} size={12} />
-          <AppText style={{ fontSize: type.size['2xs'], color: color.ink3, fontVariant: ['tabular-nums'] }}>{clockAt(Date.parse(call.started_at), cycle)}</AppText>
+          <AppText style={{ fontSize: type.size['2xs'], color: color.ink3, fontVariant: ['tabular-nums'] }}>{clockAt(Date.parse(call.started_at), cycle, tz)}</AppText>
         </View>
       </View>
     </Pressable>

@@ -5,6 +5,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { meQuery } from '@/features/people/auth';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { t } from '@/lib/i18n/i18n';
 import { putTeacherCalendarOwner, teacherCalendarQuery } from '../google-api';
 import { fill, formatAt } from '../google-format';
@@ -17,7 +18,7 @@ import { fill, formatAt } from '../google-format';
 export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
   const T = t.googleSync.teacherCalendar;
   const noteId = useId();
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const admin = useQuery(meQuery).data?.role === 'admin';
   const query = useQuery({ ...teacherCalendarQuery(teacherId), enabled: admin });
   const client = useQueryClient();

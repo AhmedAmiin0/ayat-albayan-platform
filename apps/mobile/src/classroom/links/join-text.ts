@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import type { ClockCycle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { riyadhTime } from '@/today/lib/lesson-text';
+import { lessonClock } from '@/today/lib/lesson-text';
 
 const errors: Record<string, string | undefined> = t.classroom.error;
 
@@ -13,6 +13,6 @@ export function joinError(error: unknown): string {
   return (typeof code === 'string' ? errors[code] : undefined) ?? errors['unknown'] ?? t.common.error;
 }
 
-/** «بتفتح الساعة 15:45», on the Riyadh clock like the row's own time. */
-export const opensAtLine = (opensAt: string, cycle: ClockCycle): string =>
-  t.classroom.opensAt.replace('{time}', riyadhTime(opensAt, cycle));
+/** «بتفتح الساعة 15:45», on the viewer's clock `tz` like the row's own time. */
+export const opensAtLine = (opensAt: string, cycle: ClockCycle, tz: string): string =>
+  t.classroom.opensAt.replace('{time}', lessonClock(opensAt, tz, cycle));

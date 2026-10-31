@@ -16,6 +16,7 @@ import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { DEFAULT_DURATION, draftProblem, instantBody, type InstantDraft } from './instant-form';
 import { MeetingStudentPicker } from '../MeetingStudentPicker';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 interface Props {
   onClose: () => void;
@@ -30,7 +31,7 @@ const durations: Record<string, string> = t.enums.duration;
  * with its room open. A clash comes back 409 with the list; the admin may start anyway with a reason.
  */
 export function InstantLessonDialog({ onClose, onStarted }: Props) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const [draft, setDraft] = useState<InstantDraft>({ students: [], teacherId: '', durationMin: DEFAULT_DURATION, reason: '' });
   const [requestId] = useState(() => crypto.randomUUID());
   const [tried, setTried] = useState(false);

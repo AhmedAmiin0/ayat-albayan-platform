@@ -11,7 +11,7 @@ import { ReviewNotices } from './ReviewNotices';
 import type { TrialDateBody, TrialDateDraft } from '../lib/trial-date-body';
 import { effectLine } from '../lib/trial-date-text';
 import { TrialDateWarn } from './TrialDateWarn';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface TrialDateReviewProps {
   draft: TrialDateDraft;
@@ -30,15 +30,16 @@ interface TrialDateReviewProps {
  */
 export function TrialDateReview({ draft, history, body, submit, onChangeSlot }: TrialDateReviewProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const check = useTrialDateCheck(body);
-  const clashes = (check.data?.conflicts ?? []).map((c) => conflictLine(c, cycle));
+  const clashes = (check.data?.conflicts ?? []).map((c) => conflictLine(c, cycle, tz));
   const blocked = clashes.length > 0 || submit.failure?.kind === 'conflict';
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <View style={{ gap: 14 }}>
       <PickedLines draft={draft} />
-      <AppText style={note}>{effectLine(history, cycle)}</AppText>
+      <AppText style={note}>{effectLine(history, { tz, cycle })}</AppText>
       <TrialDateWarn count={history.count} />
       {check.isFetching ? <AppText style={note}>{t.common.loading}</AppText> : null}
       <ReviewNotices clashes={clashes} failure={submit.failure} onChangeSlot={onChangeSlot} />

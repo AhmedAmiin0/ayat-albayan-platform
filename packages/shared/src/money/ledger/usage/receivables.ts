@@ -1,3 +1,4 @@
+import { calendarDaysBetween } from '../../../time/index.js';
 // Receivables («مستحق على الطلاب», owner 2026-10-05): who still owes on a package, how much and
 // for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
 
@@ -30,11 +31,9 @@ export function agingBucket(days: number): AgingBucket {
   return days <= 90 ? '61_90' : '90_plus';
 }
 
-const DAY = 86_400_000;
-
 /** Days from `startsOn` to `today` (both YYYY-MM-DD), never below 0. */
 export function daysSince(startsOn: string, today: string): number {
-  return Math.max(0, Math.round((Date.parse(today) - Date.parse(startsOn)) / DAY));
+  return Math.max(0, calendarDaysBetween(startsOn, today));
 }
 
 /** Packages that still owe (owed = price − net paid > 0), the oldest debt first. */

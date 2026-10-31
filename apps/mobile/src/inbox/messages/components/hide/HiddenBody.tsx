@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { clockAt } from '@/inbox/shared/format';
@@ -14,9 +14,10 @@ export function HiddenBody({ message: m }: { message: MessageView }) {
   const { color } = useTheme();
   const small = useSmall();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const hidden = m.hidden;
   if (!hidden) return null;
-  const time = clockAt(Date.parse(hidden.at), cycle);
+  const time = clockAt(Date.parse(hidden.at), cycle, tz);
   const by = hidden.by_name
     ? t.inbox.hide.by.replace('{name}', hidden.by_name).replace('{time}', time)
     : t.inbox.hide.byUnknown.replace('{time}', time);

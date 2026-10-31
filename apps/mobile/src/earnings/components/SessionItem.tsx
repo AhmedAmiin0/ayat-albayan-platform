@@ -6,7 +6,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { egp, sessionDetail, sessionWhen } from '../lib/format';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface SessionItemProps {
   row: TeacherEarningView;
@@ -40,6 +40,7 @@ function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
 /** One session: when, length and students, what it earned and still owes, its status. */
 export const SessionItem = memo(function SessionItem({ row, checked = false, onToggle }: SessionItemProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const payable = row.outstanding > 0;
   const toggle = useCallback(() => onToggle?.(row), [onToggle, row]);
@@ -48,7 +49,7 @@ export const SessionItem = memo(function SessionItem({ row, checked = false, onT
       {onToggle ? <Tick checked={checked} disabled={!payable} /> : null}
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
-          {sessionWhen(row.starts_at, cycle)}
+          {sessionWhen(row.starts_at, cycle, tz)}
         </AppText>
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>{sessionDetail(row)}</AppText>
       </View>
@@ -64,7 +65,7 @@ export const SessionItem = memo(function SessionItem({ row, checked = false, onT
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle))}
+      accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle, tz))}
       accessibilityState={{ checked, disabled: !payable }}
       disabled={!payable}
       onPress={toggle}

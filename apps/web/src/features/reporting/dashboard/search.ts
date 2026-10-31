@@ -1,4 +1,4 @@
-import { dateRangeQuery, riyadhToday } from '@ab/shared';
+import { addCalendarMonths, dateRangeQuery, riyadhToday } from '@ab/shared';
 import { addDays, weekStart } from '@/features/teaching/schedule/tz';
 import type { DayRange } from './types';
 
@@ -18,15 +18,13 @@ export function parseDashboardSearch(s: Record<string, unknown>): DashboardSearc
   return Object.fromEntries(Object.entries(out).filter(([, v]) => v !== undefined));
 }
 
+// academy day (docs/34 b): the API reads ?from&to as Riyadh days (docs/11 §3).
 /** Today in Riyadh, "YYYY-MM-DD" (ranges are Riyadh days, docs/11 §3); shared with the mobile calendar. */
 export { riyadhToday };
 
 /** Default period: the 1st of the month five months back → today (six bars in «by month»). */
 export function defaultPeriod(today: string): DayRange {
-  const y = Number(today.slice(0, 4));
-  const m = Number(today.slice(5, 7)) - 5;
-  const first = new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10);
-  return { from: first, to: today };
+  return { from: addCalendarMonths(today, -5), to: today };
 }
 
 export function periodOf(search: DashboardSearch, today: string): DayRange {

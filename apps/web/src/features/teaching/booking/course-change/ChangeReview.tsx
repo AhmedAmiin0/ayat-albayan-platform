@@ -17,6 +17,7 @@ import {
 import { currentDaysText, newDaysText } from './change-text';
 import { refreshAfterCourseChange } from './refresh';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface ChangeReviewProps {
   body: CourseChangeBody;
@@ -31,7 +32,7 @@ type SummaryProps = Pick<ChangeReviewProps, 'body' | 'course'> & { check: Course
 
 /** The current and the new days, then what is left, the new last lesson and the first new one. */
 function ChangeSummary({ body, course, check }: SummaryProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { tz } = course;
   return (
     <div role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">

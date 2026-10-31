@@ -1,5 +1,5 @@
-import { clockTime, RIYADH_TZ, type ClockCycle, type LessonView } from '@ab/shared';
-import { clockIn } from '@/core/lib/clock';
+import { sameClockAt, type ClockCycle, type LessonView } from '@ab/shared';
+import { clockIn, type ViewerClock } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
@@ -8,38 +8,45 @@ import type { AvailabilityRow } from '@/more/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { addDays, weekdayOf } from '../lib/week';
 
-// What the agenda lays out (R-SCH-01, R-TCH-02): lessons by Riyadh day or by teacher, the
-// teacher's own clock, and a day's availability. Closed lessons (cancelled, moved) stay hidden,
-// as on Today. Pure, unit-tested.
+// What the agenda lays out (R-SCH-01, R-TCH-02): lessons by the viewer's day or by teacher, the
+// teacher's own clock beside the viewer's, a day's availability. Closed lessons (cancelled,
+// moved) stay hidden, as on Today. Pure, unit-tested.
 
 export interface AgendaDay {
-  /** Riyadh calendar day, YYYY-MM-DD. */
+  /** The viewer's calendar day, YYYY-MM-DD. */
   date: string;
   lessons: LessonView[];
 }
 
-/** `count` days from `start`, each with its lessons on the Riyadh calendar, earliest first. */
-export function agendaDays(lessons: readonly LessonView[], start: string, count = 7): AgendaDay[] {
-  const days: AgendaDay[] = Array.from({ length: count }, (_, i) => ({ date: addDays(start, i), lessons: [] }));
+/**
+ * The 7 days from `start`, each with its lessons on the viewer's calendar `tz`, earliest first: the
+ * day a lesson sits under is the day its clock reads in (a Cairo teacher's 00:30 Riyadh Sunday
+ * lesson is Saturday 23:30 for them, so under السبت). The week window is the same zone's (weekWindow).
+ */
+export function agendaDays(lessons: readonly LessonView[], start: string, tz: string): AgendaDay[] {
+  const days: AgendaDay[] = Array.from({ length: 7 }, (_, i) => ({
+    date: addDays(start, i),
+    lessons: [],
+  }));
   for (const lesson of visibleLessons(lessons)) {
-    const date = localDate(new Date(lesson.starts_at), RIYADH_TZ);
+    const date = localDate(new Date(lesson.starts_at), tz);
     days.find((d) => d.date === date)?.lessons.push(lesson);
   }
   return days;
 }
 
 /**
- * «عند المعلم/ة 15:00 بتوقيت القاهرة» when the teacher's wall clock reads differently from
- * Riyadh's (Cairo in winter); null when it reads the same (Riyadh, or Cairo on summer time). Past
+ * «عند المعلم/ة 15:00 بتوقيت القاهرة» when the teacher's wall clock reads differently from the
+ * viewer's `viewer` zone (a Riyadh admin, Cairo in winter); null when it reads the same. Past
  * midnight it names the teacher's day: «عند المعلم/ة الجمعة 23:30 بتوقيت القاهرة».
  */
-export function teacherClock(lesson: LessonView, cycle: ClockCycle): string | null {
+export function teacherClock(lesson: LessonView, cycle: ClockCycle, viewer: string): string | null {
   const at = new Date(lesson.starts_at);
   const { tz } = lesson.teacher;
-  if (clockTime(at, tz) === clockTime(at, RIYADH_TZ)) return null;
+  if (sameClockAt(at, { a: tz, b: viewer })) return null;
   const time = clockIn(at, tz, cycle);
   const date = localDate(at, tz);
-  const day = date === localDate(at, RIYADH_TZ) ? '' : `${weekday[String(weekdayOf(date))]} `;
+  const day = date === localDate(at, viewer) ? '' : `${weekday[String(weekdayOf(date))]} `;
   return t.booking.teacherClock.replace('{time}', `${day}${time}`).replace('{city}', cityOf(tz));
 }
 
@@ -71,8 +78,9 @@ export function availabilityLine(
 export function headerLine(
   parts: readonly string[],
   query: { isError: boolean; data: unknown; dataUpdatedAt: number },
-  cycle: ClockCycle,
+  viewer: ViewerClock,
 ): string {
   const stale = query.isError && query.data !== undefined;
-  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle))] : [])].join(' · ');
+  const at = () => clockAt(query.dataUpdatedAt, viewer.cycle, viewer.tz);
+  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', at())] : [])].join(' · ');
 }

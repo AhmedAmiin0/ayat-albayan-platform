@@ -1,3 +1,4 @@
+import { addCalendarDays } from '@ab/shared';
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { dbError } from '../http/http';
@@ -19,9 +20,7 @@ const SORT: SortSpec<ActivitySortKey> = {
 const RIYADH = '+03:00';
 const dayStart = (day: string): string => `${day}T00:00:00${RIYADH}`;
 export function nextDayStart(day: string): string {
-  const d = new Date(`${day}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + 1);
-  return dayStart(d.toISOString().slice(0, 10));
+  return dayStart(addCalendarDays(day, 1));
 }
 
 /** `like` prefix with the wildcards escaped ('students_x' matches literally). */

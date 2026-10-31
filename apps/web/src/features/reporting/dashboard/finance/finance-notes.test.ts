@@ -21,13 +21,14 @@ const finance = (over: Partial<DashboardData['finance']> = {}): DashboardData['f
 
 describe('financeNotes (R-RPT-02)', () => {
   it('nothing converted: says every amount is in the reporting currency', () => {
-    expect(financeNotes(finance())).toEqual([
+    expect(financeNotes(finance(), 'Asia/Riyadh')).toEqual([
       { text: t.dashboard.allInCurrency.replace('{currency}', t.pricing.currencies.SAR), warn: false },
     ]);
   });
 
   it('converted: the currency and the rate date; gaps are warnings', () => {
-    const notes = financeNotes(finance({ fx_date: '2026-10-01T00:00:00Z', fx_missing: ['KWD', 'OMR'], unrated_lessons: 3 }));
+    const f = finance({ fx_date: '2026-10-01T00:00:00Z', fx_missing: ['KWD', 'OMR'], unrated_lessons: 3 });
+    const notes = financeNotes(f, 'Asia/Riyadh');
     expect(notes[0]?.text).toContain(t.pricing.currencies.SAR);
     expect(notes[0]?.warn).toBe(false);
     expect(notes[1]).toEqual({ text: t.dashboard.fxMissing.replace('{currencies}', 'KWD، OMR'), warn: true });

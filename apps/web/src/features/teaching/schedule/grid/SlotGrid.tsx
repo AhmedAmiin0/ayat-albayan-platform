@@ -3,12 +3,13 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { byLocalDay, zoneLabel } from '../reschedule/slots';
-import { dayMonthLabel, RIYADH_TZ, weekDays, weekdayOf } from '../tz';
+import { dayMonthLabel, weekDays, weekdayOf } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { clockDir } from '@/lib/clock-text';
 
 export interface SlotGridProps {
-  /** Saturday of the Riyadh week shown. */
+  /** Saturday of the week shown (the viewer's zone). */
   week: string;
   slots: readonly SlotView[];
   /** Zone of the small times under each slot (the student's). */
@@ -23,12 +24,12 @@ export interface SlotGridProps {
 const weekday: Record<string, string> = t.enums.weekday;
 
 /**
- * The teacher's candidate starts as 7 Riyadh day columns (R-SCH-06). Times are picked, never
+ * The teacher's candidate starts as 7 day columns in the viewer's zone (R-SCH-06). Times are picked, never
  * typed (rule 6). A start with conflicts stays pickable but reads «مش فاضي» (struck nuqta): booking
  * it shows the conflict and the book-anyway path (R-SCH-04).
  */
 export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: SlotGridProps) {
-  const days = byLocalDay(slots, RIYADH_TZ);
+  const days = byLocalDay(slots, useViewerTz());
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.
   return (
     <div role="group" aria-label={t.booking.freeSlots} className="@container">
@@ -75,7 +76,8 @@ interface SlotButtonProps {
 function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
   const busy = slot.conflicts.length > 0;
   const clock = useClock();
-  const small = zoneLabel(slot.starts_at, { tz: studentTz, base: RIYADH_TZ }, clock);
+  const tz = useViewerTz();
+  const small = zoneLabel(slot.starts_at, { tz: studentTz, base: tz }, clock);
   return (
     <button
       type="button"
@@ -92,7 +94,7 @@ function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
     >
       <span className="flex items-center gap-1">
         {busy && <NuqtaGlyph shape="struck" />}
-        <span dir={clockDir(clock)}>{clockOf(new Date(slot.starts_at), { ...clock, tz: RIYADH_TZ })}</span>
+        <span dir={clockDir(clock)}>{clockOf(new Date(slot.starts_at), { ...clock, tz })}</span>
       </span>
       {small && <span className="text-2xs text-ink-3">{small}</span>}
       {busy && <span className="text-2xs text-ink-3">{t.booking.slotBusy}</span>}

@@ -19,7 +19,7 @@ const BEFORE = new Date('2026-10-03T09:00:00.000Z');
 
 describe('all-teachers calendar in English', () => {
   it('the day board reads in English', () => {
-    const rows = boardRows([T_ABRAR, T_FATMA, T_NOUR], [lesson({ trial: true })]);
+    const rows = boardRows([T_ABRAR, T_FATMA, T_NOUR], [lesson({ trial: true })], 'Asia/Riyadh');
     render(<DayBoard day="2026-10-04" rows={rows} now={BEFORE} onOpen={vi.fn()} />);
     const abrar = screen.getByRole('region', { name: 'أبرار' });
     expect(within(abrar).getByText('Trial')).toBeTruthy();
@@ -29,7 +29,7 @@ describe('all-teachers calendar in English', () => {
   });
 
   it('a day off and the nav controls', () => {
-    render(<DayBoard day="2026-10-05" rows={boardRows([T_FATMA], [])} now={BEFORE} onOpen={vi.fn()} />);
+    render(<DayBoard day="2026-10-05" rows={boardRows([T_FATMA], [], 'Asia/Riyadh')} now={BEFORE} onOpen={vi.fn()} />);
     expect(screen.getByText('Day off · سفر')).toBeTruthy();
     render(<ScheduleNav search={{ view: 'day', day: '2026-10-05' }} today="2026-10-03" onSearch={vi.fn()} />);
     expect(screen.getByRole('button', { name: 'Day' }).getAttribute('aria-pressed')).toBe('true');

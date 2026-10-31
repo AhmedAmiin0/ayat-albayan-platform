@@ -1,9 +1,7 @@
-import { formatRunningHead, RIYADH_TZ } from '@ab/shared';
+import { addCalendarDays, formatRunningHead, RIYADH_TZ, wallToUtc } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { localDate } from '@/today/lib/timeline';
-
-const DAY = 86_400_000;
 
 /**
  * paid_at for the day picked `daysAgo` back on the Riyadh calendar (no typed dates, rule 6):
@@ -12,8 +10,9 @@ const DAY = 86_400_000;
  */
 export function paidAtFor(now: Date, daysAgo: number): Date {
   if (daysAgo <= 0) return now;
-  const day = localDate(new Date(now.getTime() - daysAgo * DAY), RIYADH_TZ);
-  return new Date(`${day}T09:00:00.000Z`);
+  // academy day (docs/34 b): a payment is booked on an academy day.
+  const day = addCalendarDays(localDate(now, RIYADH_TZ), -daysAgo);
+  return wallToUtc(day, 12 * 60, RIYADH_TZ);
 }
 
 /** «النهارده · الخميس 1 أكتوبر 2026», «امبارح · …», then the date alone. */

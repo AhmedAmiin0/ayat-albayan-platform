@@ -12,26 +12,28 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
-import { addDays, dayMonthLabel, RIYADH_TZ, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
+import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
 import { t } from '@/lib/i18n/i18n';
 import { useFollowingDay } from '@/lib/time/use-following-day';
 import { useNow } from '@/lib/time/use-now';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from '../api';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 /**
- * /teacher/calendar «جدولي» (R-TCH-03, R-SCH-08): my lessons on the academy's Riyadh week, one
+ * /teacher/calendar «جدولي» (R-TCH-03, R-SCH-08): my lessons on my own week (docs/34), one
  * row, the same grid as the admin's (GET /teachers/me/lessons, own lessons only). A lesson opens
  * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report.
  */
 export function MyWeek() {
   const now = useNow();
-  const thisWeek = currentWeekStart(now);
+  const tz = useViewerTz();
+  const thisWeek = currentWeekStart(now, tz);
   const [week, setWeek] = useFollowingDay(thisWeek);
   const me = useQuery(teacherMeQuery);
-  const lessons = useQuery(myLessonsQuery(weekWindow(week, RIYADH_TZ)));
+  const lessons = useQuery(myLessonsQuery(weekWindow(week, tz)));
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const open = lessons.data?.find((l) => l.id === openId);
@@ -57,14 +59,14 @@ export function MyWeek() {
           <Icon name="chevron-left" />
         </Button>
         <span className="ms-1 text-sm font-semibold tabular-nums">{t.schedule.weekOf.replace('{date}', dayMonthLabel(week))}</span>
-        <span className="text-xs text-ink-3">{t.schedule.riyadhTime}</span>
+        <span className="text-xs text-ink-3">{t.schedule.viewerTime}</span>
       </div>
-      <Body lessons={lessons} week={week} today={zonedParts(now, RIYADH_TZ).date} onOpen={(l) => setOpenId(l.id)} />
+      <Body lessons={lessons} week={week} today={zonedParts(now, tz).date} onOpen={(l) => setOpenId(l.id)} />
       {open && (
         <Drawer title={studentNames(open)} onClose={() => setOpenId(null)}>
           <TeacherLessonCard
             lesson={open}
-            tz={me.data?.tz ?? RIYADH_TZ}
+            tz={me.data?.tz ?? tz}
             fallbackLink={me.data?.meeting_link ?? null}
             onDone={setNotice}
           />

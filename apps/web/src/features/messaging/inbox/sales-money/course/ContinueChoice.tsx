@@ -7,6 +7,7 @@ import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { t } from '@/lib/i18n/i18n';
 import { adjustText, continueText } from './course-continue';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface ContinueChoiceProps {
   view: SalesCourseView;
@@ -29,7 +30,7 @@ export interface ContinueChoiceProps {
  * status line says so; a failed read (or refetch) is the error alert with a retry, never «unavailable».
  */
 export function ContinueChoice({ view, draft, now, onContinue, onOther }: ContinueChoiceProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const teachers = useQuery(bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'));
   const fits = continueFits(view);
   // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.

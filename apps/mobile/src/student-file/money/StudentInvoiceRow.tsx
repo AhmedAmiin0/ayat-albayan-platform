@@ -8,6 +8,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { invoiceDownloadUrl } from './money-queries';
+import { useViewerTz } from '@/core/lib/clock';
 
 const M = t.mobileStudentFile.money;
 
@@ -16,6 +17,7 @@ const M = t.mobileStudentFile.money;
  * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
  */
 export const StudentInvoiceRow = memo(function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -33,7 +35,7 @@ export const StudentInvoiceRow = memo(function StudentInvoiceRow({ invoice }: { 
   return (
     <View style={{ gap: 6, paddingHorizontal: 16, paddingVertical: 12 }}>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
-        {invoiceSubtitle(invoice)}
+        {invoiceSubtitle(invoice, tz)}
       </AppText>
       <View style={{ alignItems: 'flex-start' }}>
         <Button variant="secondary" label={M.viewInvoice} busy={busy} onPress={() => void open()} />

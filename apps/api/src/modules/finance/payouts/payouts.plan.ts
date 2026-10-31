@@ -1,5 +1,5 @@
+import { monthRangeIn } from '@ab/shared';
 import type { LessonStatus, PayoutLine, PayoutStatus } from '@ab/shared';
-import { zonedToUtc } from '../../people/teachers/availability/zoned-time';
 
 // Pure payout decisions (R-PAY-02, R-TCH-04, issue E3): the month window in the teacher's tz, and
 // what generate does with a teacher's row. WHICH lessons count and WHAT each pays is not decided
@@ -27,13 +27,8 @@ export interface PayoutBreakdown {
 
 /** `YYYY-MM` in `tz` → the half-open UTC window [1st 00:00, next 1st 00:00). */
 export function monthWindow(month: string, tz: string): { from: string; to: string } {
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  const first = Date.UTC(y, m - 1, 1);
-  const next = Date.UTC(y, m, 1);
-  return {
-    from: new Date(zonedToUtc(first, 0, tz)).toISOString(),
-    to: new Date(zonedToUtc(next, 0, tz)).toISOString(),
-  };
+  const { from, to } = monthRangeIn(month, tz);
+  return { from: from.toISOString(), to: to.toISOString() };
 }
 
 /** One line per (length, per-lesson amount); amounts summed in cents. */

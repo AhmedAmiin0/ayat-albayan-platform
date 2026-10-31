@@ -15,7 +15,7 @@ import { changeRequest, withOverride, withTeacher, type ChangeTarget } from './c
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseChangeFlowProps {
   student: Pick<SalesCourseView['student'], 'id' | 'name' | 'code'>;
@@ -41,6 +41,8 @@ interface CourseChangeFlowProps {
  */
 export function CourseChangeFlow({ student, course, onLeave, onDone, target }: CourseChangeFlowProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const [step, setStep] = useState<'slot' | 'review'>(target?.review ? 'review' : 'slot');
   const [now] = useState(() => new Date());
@@ -66,7 +68,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
       return (
         <>
           <AppText style={{ ...note, color: color.ink }}>
-            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}
+            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
           <SlotStep
@@ -88,7 +90,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
         target={target}
         saving={{
           busy: change.isPending,
-          failure: change.isError ? bookFailure(change.error, cycle) : null,
+          failure: change.isError ? bookFailure(change.error, cycle, tz) : null,
           submit: (reason) => (body ? change.mutate(withOverride(body, reason)) : undefined),
         }}
         onChangeSlot={() => go('slot')}

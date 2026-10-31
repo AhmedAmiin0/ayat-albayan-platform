@@ -15,6 +15,9 @@
   "calendar/calendar-slots.mjs": {
     "max-len": {
       "count": 1
+    },
+    "no-restricted-properties": {
+      "count": 1
     }
   },
   "calendar/calendar.fixture.mjs": {

@@ -1,5 +1,6 @@
 import { intlLocale, type Locale } from '../../i18n/locale.js';
-import { clockOf, type ClockOptions } from '../../core/format/index.js';
+import type { ClockOptions } from '../../core/format/index.js';
+import { clockOf, weekdayDayMonth } from '../../time/index.js';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with
@@ -32,24 +33,9 @@ export function bookingConfirmationTemplate(
   return host ? { key: BY_HOST[host], button: slug } : { key: 'booking_confirmation_plain', button: null };
 }
 
-const whenFormatters = new Map<string, Intl.DateTimeFormat>();
-
 /** «الأحد 4 أكتوبر 5:00 م» on a screen: lessonWhenText in the cycle the viewer chose (12 or 24 h). */
 export function lessonWhenAt(startsAt: Date, opts: ClockOptions): string {
-  const key = `${opts.locale}|${opts.tz}`;
-  let f = whenFormatters.get(key);
-  if (!f) {
-    f = new Intl.DateTimeFormat(intlLocale(opts.locale), {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      timeZone: opts.tz,
-    });
-    whenFormatters.set(key, f);
-  }
-  const parts = f.formatToParts(startsAt);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
-  return [part('weekday'), part('day'), part('month'), clockOf(startsAt, opts)].join(' ');
+  return `${weekdayDayMonth(startsAt, opts)} ${clockOf(startsAt, opts)}`;
 }
 
 /**

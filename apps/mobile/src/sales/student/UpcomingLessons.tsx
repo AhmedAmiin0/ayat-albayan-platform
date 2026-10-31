@@ -1,4 +1,5 @@
-import { RIYADH_TZ, wallParts, type SalesStudentLesson } from '@ab/shared';
+import { wallParts, type SalesStudentLesson } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { Fragment, useState } from 'react';
 import { View } from 'react-native';
 import { dayLabel, useLessonDetails } from '@/calendar';
@@ -23,7 +24,8 @@ export function UpcomingLessons({ lessons, studentId }: { lessons: readonly Sale
   const details = useLessonDetails(lessons);
   const s = t.sales.student.schedule;
   const shown = all ? lessons : lessons.slice(0, UPCOMING_SHOWN);
-  const dayOf = (l: SalesStudentLesson) => wallParts(l.starts_at, RIYADH_TZ).date;
+  const tz = useViewerTz();
+  const dayOf = (l: SalesStudentLesson) => wallParts(l.starts_at, tz).date;
   return (
     <View style={{ gap: 4 }}>
       <SmallHeading header>{s.upcoming}</SmallHeading>

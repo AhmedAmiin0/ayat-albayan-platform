@@ -7,6 +7,7 @@ import { dayPicks, withPicks } from '../draft/draft.days';
 import { picksReady } from './change-body';
 import { currentDaysText } from './change-text';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface ChangePickerProps {
   view: CourseChangeView;
@@ -28,7 +29,7 @@ export interface ChangePickerProps {
  * before its startsOn stay reachable.
  */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { course, student } = view;
   const zoned = { ...withPicks(picks), kind: 'package' as const, tz: course.tz };
   const listed = dayPicks(zoned);

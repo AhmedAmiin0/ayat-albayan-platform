@@ -1,4 +1,4 @@
-import { lessonStatusStyle, type LessonView, lessonWhenAt, subscriptionStatusStyle } from '@ab/shared';
+import { lessonStatusStyle, type LessonView, lessonWhenAt, sameClockAt, subscriptionStatusStyle } from '@ab/shared';
 import { Avatar } from '@/components/ui/display/avatar';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
@@ -12,18 +12,19 @@ import { EditTimeLink } from '../edit-time/EditTimeLink';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { DetailRow } from './DetailRow';
 import { LessonTags } from './LessonTags';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /**
- * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in Riyadh with every
- * student's and the teacher's own clock, the teacher, the copied meeting link (or «via the classroom»
+ * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in the viewer's zone
+ * with every student's and the teacher's own clock when it differs, the teacher, the copied meeting link (or «via the classroom»
  * when the lesson's teacher holds it in the platform classroom), any reason, and the
  * clashes the daily job found when it generated the lesson (R-SCH-04). `onEditTime` adds
  * «عدّل الوقت» under the time (R-SCH-11).
  */
 export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEditTime?: () => void }) {
   const clock = useClock();
+  const tz = useViewerTz();
   const at = new Date(lesson.starts_at);
   const teacherTz = lesson.teacher.tz;
   const mins = durationMin(lesson);
@@ -36,11 +37,11 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
       </div>
       <dl className="grid gap-3">
         <DetailRow label={t.schedule.time}>
-          <span className="block">{`${lessonWhenAt(at, { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`}</span>
-          {studentTimes(lesson, RIYADH_TZ, clock).map((line) => (
+          <span className="block">{`${lessonWhenAt(at, { tz, ...clock })} ${t.schedule.viewerTime}`}</span>
+          {studentTimes(lesson, tz, clock).map((line) => (
             <span key={line} className="block text-xs text-ink-2">{line}</span>
           ))}
-          {teacherTz !== RIYADH_TZ && (
+          {!sameClockAt(at, { a: teacherTz, b: tz }) && (
             <span className="block text-xs text-ink-2">
               {t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock))}
             </span>
@@ -49,7 +50,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
         </DetailRow>
         {lesson.makeup_of && (
           <DetailRow label={t.booking.makeup.missedLabel}>
-            {lessonWhenAt(new Date(lesson.makeup_of.starts_at), { tz: RIYADH_TZ, ...clock })}
+            {lessonWhenAt(new Date(lesson.makeup_of.starts_at), { tz, ...clock })}
             <span className="block text-xs text-ink-2">{t.booking.makeup.noUnit}</span>
           </DetailRow>
         )}
@@ -89,7 +90,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           <DetailRow label={t.schedule.needsReview}>
             <span className="block text-danger">{t.schedule.generatedConflict}</span>
             {lesson.conflicts.map((c, i) => (
-              <span key={`${c.kind}-${i}`} className="block text-xs text-ink-2">{conflictText(c, clock, teacherTz)}</span>
+              <span key={`${c.kind}-${i}`} className="block text-xs text-ink-2">{conflictText(c, { ...clock, tz }, teacherTz)}</span>
             ))}
           </DetailRow>
         )}

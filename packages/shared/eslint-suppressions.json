@@ -222,11 +222,6 @@
       "count": 1
     }
   },
-  "src/core/format/clock.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/format/highlight-diff.ts": {
     "@typescript-eslint/no-misused-spread": {
       "count": 3
@@ -248,14 +243,6 @@
       "count": 3
     }
   },
-  "src/core/format/running-head.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/core/format/text-dir.ts": {
     "max-len": {
       "count": 5
@@ -263,6 +250,9 @@
   },
   "src/core/schemas/common.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "no-restricted-properties": {
       "count": 1
     }
   },
@@ -464,11 +454,8 @@
     }
   },
   "src/schedule/lessons/series/day-times.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/schedule/lessons/series/time-edit.ts": {
@@ -478,7 +465,7 @@
   },
   "src/schedule/lessons/series/zoned.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/schedule/lessons/state-machine.ts": {
@@ -636,7 +623,7 @@
   },
   "src/messaging/lesson/rating.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -648,11 +635,8 @@
     }
   },
   "src/messaging/lesson/timing.day-before.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/lesson/timing.ts": {
@@ -727,7 +711,7 @@
   },
   "src/messaging/replies/reply-note.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -779,20 +763,12 @@
       "count": 1
     }
   },
-  "src/messaging/templates/lesson-params.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/messaging/templates/manages-templates.test.ts": {
     "max-len": {
       "count": 1
     }
   },
   "src/messaging/templates/params.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -1996,13 +1972,7 @@
     }
   },
   "src/time/riyadh-day.ts": {
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 3
-    },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
       "count": 1
     }
   },

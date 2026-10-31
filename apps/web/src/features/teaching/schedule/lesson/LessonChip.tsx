@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
 import { zoneLabel } from '../reschedule/slots';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { clockDir } from '@/lib/clock-text';
 
 // Literal class strings so Tailwind's scanner sees them (docs/07 §6 status chip tones).
@@ -54,17 +54,19 @@ export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonVi
 }
 
 /**
- * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
- * + word (shape carries state, colour only confirms), the student's own clock when it differs, and
+ * One lesson in the week grid (R-SCH-01, R-SCH-03): the viewer's time · student(s), the status as
+ * nuqta + word (shape carries state, colour only confirms), the student's own clock when it
+ * differs, and
  * a flag for a generated lesson that clashes (R-SCH-04), a student whose package is unpaid with
  * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية», a
  * makeup (R-SCH-10) «تعويضية».
  */
 export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
   const style = lessonStatusStyle[lesson.status];
-  const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
+  const viewer = useViewerTz();
+  const tz = lesson.students[0]?.tz ?? viewer;
   const clock = useClock();
-  const local = zoneLabel(lesson.starts_at, { tz, base: RIYADH_TZ }, clock);
+  const local = zoneLabel(lesson.starts_at, { tz, base: viewer }, clock);
   const Tag = onOpen ? 'button' : 'div';
   return (
     <Tag
@@ -77,7 +79,7 @@ export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher =
     >
       <span className="flex min-w-0 items-baseline gap-1.5">
         <span dir={clockDir(clock)} className="font-semibold tabular-nums">
-          {clockOf(new Date(lesson.starts_at), { ...clock, tz: RIYADH_TZ })}
+          {clockOf(new Date(lesson.starts_at), { ...clock, tz: viewer })}
         </span>
         <span className="truncate font-medium">{studentNames(lesson)}</span>
       </span>

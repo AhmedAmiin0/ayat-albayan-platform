@@ -1,13 +1,6 @@
-import {
-  chatDay,
-  clockOf,
-  counted,
-  dayParts,
-  isolateClock,
-  type ClockCycle,
-  type PluralForm,
-} from '../../core/format/index.js';
-import { intlLocale, type Locale } from '../../i18n/index.js';
+import { counted, isolateClock, type ClockCycle, type PluralForm } from '../../core/format/index.js';
+import type { Locale } from '../../i18n/index.js';
+import { chatDay, clockOf, dateText, dayParts, type DateFields } from '../../time/index.js';
 
 // «آخر ظهور …» / «آخر رسالة …» (docs/33 §4): how long ago, on the viewer's clock and zone. The
 // words come from each app's ar.json / en.json (`presence`), so this stays pure.
@@ -35,11 +28,10 @@ export interface PresenceWhenInput {
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 
-function dateText(at: Date, input: PresenceWhenInput): string {
+function dayText(at: Date, input: PresenceWhenInput): string {
   const sameYear = dayParts(at, input.tz).year === dayParts(input.now, input.tz).year;
-  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', timeZone: input.tz };
-  const format = sameYear ? options : { ...options, year: 'numeric' as const };
-  return new Intl.DateTimeFormat(intlLocale(input.locale), format).format(at);
+  const fields: DateFields = { day: 'numeric', month: 'long' };
+  return dateText(at, input, sameYear ? fields : { ...fields, year: 'numeric' });
 }
 
 /** «الآن» · «منذ 5 دقائق» · «اليوم 10:30» · «أمس» · «25 أكتوبر»; a future time (skew) is «الآن». */
@@ -54,5 +46,5 @@ export function presenceWhen(input: PresenceWhenInput): string {
     return input.words.today.split('{time}').join(time);
   }
   if (day.kind === 'yesterday') return input.words.yesterday;
-  return dateText(at, input);
+  return dayText(at, input);
 }

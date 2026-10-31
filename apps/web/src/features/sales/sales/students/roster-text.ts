@@ -1,4 +1,5 @@
 import {
+  localDateIn,
   localizedName,
   packageSummaryText,
   RIYADH_TZ,
@@ -42,14 +43,13 @@ export function rosterAttendanceLine(student: Pick<SalesStudentView, 'attendance
 
 const H = t.sales.history;
 const sizes: Record<string, string | undefined> = t.enums.packageSize;
-const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH_TZ, dateStyle: 'short' });
 /** A date as an LTR island inside the Arabic line. */
 const ltr = (text: string): string => `\u2066${text}\u2069`;
 
 const words: PackageWords = {
   size: (size) => (size ? (sizes[size] ?? size) : '—'),
   status: (status) => t.enums.subscriptionStatus[status],
-  day: (iso) => ltr(DAY.format(new Date(iso))),
+  day: (iso) => ltr(localDateIn(new Date(iso), RIYADH_TZ)),
   date: ltr,
   used: H.used,
   remaining: H.remaining,

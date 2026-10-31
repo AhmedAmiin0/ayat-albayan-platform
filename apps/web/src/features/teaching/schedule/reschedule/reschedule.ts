@@ -1,7 +1,6 @@
-import { DURATIONS, shiftByday, type LessonView, type RescheduleRequest } from '@ab/shared';
+import { ACADEMY_TZ, DURATIONS, shiftByday, type LessonView, type RescheduleRequest } from '@ab/shared';
 import { ruleFromSlot } from '@/features/teaching/booking/draft/draft';
 import { durationMin } from '../lesson/lessons';
-import { RIYADH_TZ } from '../tz';
 import type { Scope } from './ScopeRadios';
 
 export interface RescheduleInput {
@@ -17,7 +16,8 @@ export interface RescheduleInput {
 
 /** The family's zone: the (first) student's, so their wall clock stays fixed. */
 export function familyTz(lesson: Pick<LessonView, 'students'>): string {
-  return lesson.students[0]?.tz ?? RIYADH_TZ;
+  // data default (docs/34 —): a lesson without students
+  return lesson.students[0]?.tz ?? ACADEMY_TZ;
 }
 
 /**

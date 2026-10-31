@@ -11,6 +11,7 @@ import {
 } from '../pricing/catalog.js';
 import { optionalText } from '../../core/schemas/common.js';
 import { instant, localDate } from '../../schedule/schemas/scheduling.js';
+import { calendarDaysBetween } from '../../time/index.js';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
 // a subscription is priced by the API from the catalog (docs/08), the same quote as /pricing.
@@ -132,7 +133,7 @@ export const payoutPaySchema = z.object({ paidAt: pastInstant.optional(), method
 export const dateRangeQuery = z
   .object({ from: localDate, to: localDate })
   .refine((r) => r.from <= r.to, { message: 'invalid_range', path: ['to'] })
-  .refine((r) => Date.parse(r.to) - Date.parse(r.from) <= 366 * 86_400_000, {
+  .refine((r) => calendarDaysBetween(r.from, r.to) <= 366, {
     message: 'range_too_large',
     path: ['to'],
   });

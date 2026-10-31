@@ -1,3 +1,4 @@
+import { ACADEMY_TZ } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
@@ -6,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { useNow } from '@/lib/time/use-now';
-import { RIYADH_TZ, zonedParts } from '@/features/teaching/schedule/tz';
+import { zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { salesScheduleQuery, salesTeachersQuery } from '../academy-api';
 import { SalesDayBoard } from './SalesDayBoard';
@@ -27,7 +28,8 @@ export interface SalesScheduleProps {
  */
 export function SalesSchedule({ search, onSearch }: SalesScheduleProps) {
   const now = useNow();
-  const today = zonedParts(now, RIYADH_TZ).date;
+  // academy day (docs/34 b): GET /sales/schedule reads `date` as a Riyadh day (times: viewer's)
+  const today = zonedParts(now, ACADEMY_TZ).date;
   const date = search.date ?? today;
   const day = useQuery(salesScheduleQuery({ date, teacherId: search.teacherId }));
   const teachers = useQuery(salesTeachersQuery);
