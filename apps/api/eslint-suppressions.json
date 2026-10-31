@@ -14602,7 +14602,7 @@
       "count": 6
     },
     "max-len": {
-      "count": 22
+      "count": 21
     }
   },
   "src/modules/teaching/booking/trial-date/trial-date.target.ts": {
@@ -15791,7 +15791,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/teaching/course-pause/course-pause.http.test.ts": {
@@ -16665,7 +16665,7 @@
       "count": 6
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/lessons/status/lesson-status.group.test.ts": {
@@ -16763,9 +16763,6 @@
   "src/modules/teaching/lessons/store/lesson-store.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/lessons/store/lesson-store.ts": {

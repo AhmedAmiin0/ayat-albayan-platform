@@ -9,7 +9,8 @@ export type AudienceTab = NotificationAudience | 'manual';
 /** The rows of one tab: an audience's automatic/event rows, or every manual row. */
 export function rowsOf(entries: readonly NotificationEntryView[], tab: AudienceTab): NotificationEntryView[] {
   if (tab === 'manual') return entries.filter((e) => e.manual);
-  return entries.filter((e) => !e.manual && e.audience === tab);
+  // A row that also reaches this audience (a schedule change: the teacher) is listed here too.
+  return entries.filter((e) => !e.manual && (e.audience === tab || !!e.also_to?.includes(tab)));
 }
 
 /** The tabs with their counts; «يدوي» only when the catalogue has manual rows. Guardian first (the default). */

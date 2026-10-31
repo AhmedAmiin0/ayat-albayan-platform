@@ -24,6 +24,8 @@ export type TimingKey = Extract<SettingKey, 'reminder_minutes_before' | 'renewal
 export interface NotificationEntry<K extends string = string> {
   key: K;
   audience: NotificationAudience;
+  /** Others it reaches too (a schedule change: the lesson's teacher); listed in their tab too. */
+  alsoTo?: readonly NotificationAudience[];
   channels: readonly NotificationChannel[];
   /** The message_templates keys it may send (a variant is picked in code, e.g. by link host). */
   templates: readonly TemplateKey[];

@@ -5652,7 +5652,11 @@ export type Database = {
         | 'meeting_invite'
         | 'google_sync_alert'
         | 'channel_message'
-        | 'commission_earned';
+        | 'commission_earned'
+        | 'lesson_rescheduled'
+        | 'lesson_cancelled'
+        | 'course_paused'
+        | 'course_resumed';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -5850,6 +5854,10 @@ export const Constants = {
         'google_sync_alert',
         'channel_message',
         'commission_earned',
+        'lesson_rescheduled',
+        'lesson_cancelled',
+        'course_paused',
+        'course_resumed',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
