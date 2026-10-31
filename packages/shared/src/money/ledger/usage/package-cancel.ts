@@ -32,6 +32,20 @@ export function cancelBlock(facts: CancelFacts): CancelBlock | null {
 
 export const isCancelled = (p: { status: SubscriptionStatus }): boolean => p.status === 'cancelled';
 
+/**
+ * Whether the package still counts for money (owner 2026-10-30, migration 991): every one but an
+ * unused cancel. A STOPPED package («إلغاء الاشتراك»: the course stopped, the money kept) stays
+ * owed, paid into, used FIFO and commissioned. SQL twin: status <> 'cancelled' or cancel_kind =
+ * 'stopped'.
+ */
+export const countsForMoney = (p: {
+  status: SubscriptionStatus;
+  cancel_kind?: string | null;
+}): boolean => p.status !== 'cancelled' || p.cancel_kind === 'stopped';
+
+/** countsForMoney as a PostgREST `.or()` filter on subscriptions. */
+export const COUNTS_FOR_MONEY = 'status.neq.cancelled,cancel_kind.eq.stopped';
+
 /** The packages that still count (owed, current, alerts, renewals): every one but a cancelled one. */
 export function livePackages<T extends { status: SubscriptionStatus }>(packages: readonly T[]): T[] {
   return packages.filter((p) => !isCancelled(p));

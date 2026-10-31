@@ -29,11 +29,11 @@ test('«الجدول» (RTL): an imported (Riyadh) rule in Riyadh with the Cairo
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByRole('header', { name: s.title })).toBeTruthy();
   expect(screen.getByRole('header', { name: s.upcoming })).toBeTruthy();
-  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.riyadhTime}`)).toBeTruthy();
+  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.viewerTime}`)).toBeTruthy();
   expect(screen.getByText('عند الطالب: الأحد · الثلاثاء · الخميس الساعة 19:00 بتوقيت القاهرة')).toBeTruthy();
   expect(screen.getByText('مع أبرار محمد · 45 دقيقة')).toBeTruthy();
   await act(async () => setClockPref('12'));
-  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 8:00 م ${t.schedule.riyadhTime}`)).toBeTruthy();
+  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 8:00 م ${t.schedule.viewerTime}`)).toBeTruthy();
   expect(screen.getByText('عند الطالب: الأحد · الثلاثاء · الخميس الساعة 7:00 م بتوقيت القاهرة')).toBeTruthy();
 });
 

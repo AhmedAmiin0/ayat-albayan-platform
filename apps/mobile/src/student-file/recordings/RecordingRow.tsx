@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { RIYADH_TZ, type StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
@@ -9,7 +9,7 @@ import { durationText, sizeText, teacherLabel } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlay } from './RecordingPlay';
 import { RecordingVisibility } from './RecordingVisibility';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { useStableHandler } from '@/core/lib/stable-handler';
 
 const R = t.mobileStudentFile.recordings;
@@ -23,7 +23,8 @@ const CHIP = {
 interface RecordingRowProps {
   rec: StudentRecordingView;
   studentId: string;
-  tz?: string;
+  /** The viewer's zone (useViewerTz). */
+  tz: string;
   /** recordings.manage held: the toggle (if the row allows it). */
   canManage: boolean;
   /** Admin (and recordings.manage): the delete button. */
@@ -36,7 +37,7 @@ interface RecordingRowProps {
  * One recording: when, who taught, length, size, status, play, the visibility switch and delete. No fill
  * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
  */
-const RecordingRow = memo(function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDelete, getUrl }: RecordingRowProps) {
+const RecordingRow = memo(function RecordingRow({ rec, studentId, tz, canManage, canDelete, getUrl }: RecordingRowProps) {
   const cycle = useClockCycle();
   const url = useCallback(() => getUrl(rec.id), [getUrl, rec.id]);
   const { color } = useTheme();
@@ -70,8 +71,6 @@ const RecordingRow = memo(function RecordingRow({ rec, studentId, tz = RIYADH_TZ
 
 interface RecordingRowsOptions {
   studentId: string;
-  /** The teacher's own profile (their tz); none for the admin: Riyadh. */
-  me: { tz: string } | undefined;
   manage: boolean;
   /** The admin's list: delete too. */
   admin: boolean;
@@ -79,8 +78,8 @@ interface RecordingRowsOptions {
 }
 
 /** The list's renderItem, stable while its options are: a refetch redraws only the changed recordings. */
-export function useRecordingRow({ studentId, me, manage, admin, freshUrl }: RecordingRowsOptions) {
-  const tz = me?.tz ?? RIYADH_TZ;
+export function useRecordingRow({ studentId, manage, admin, freshUrl }: RecordingRowsOptions) {
+  const tz = useViewerTz();
   const getUrl = useStableHandler(freshUrl);
   // Keyed by the recording: play and delete hold state that a recycled row must not carry over.
   return useCallback(

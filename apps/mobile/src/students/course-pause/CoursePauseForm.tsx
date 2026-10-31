@@ -30,6 +30,7 @@ const bodyOf = (draft: { from: string; until: string | null; reason: string }): 
  * no message goes to the family. One primary «إيقاف الدورة» beside «إلغاء», equal widths.
  */
 export function CoursePauseForm({ studentId, onDone, onClose }: CoursePauseFormProps) {
+  // academy day (docs/34 b): a pause cuts at the academy's today.
   const [today] = useState(() => riyadhToday());
   const [from, setFrom] = useState(today);
   const [until, setUntil] = useState<string | null>(null);

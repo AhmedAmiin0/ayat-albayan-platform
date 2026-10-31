@@ -1,16 +1,15 @@
-import { ASSISTANT_COMMISSION_STATUSES } from '@ab/shared';
+import { ASSISTANT_COMMISSION_STATUSES, sumByCurrency } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { LoadState } from '@/sales-money/components/LoadState';
-import { useCommissions, type AssistantRow, type LedgerFilter } from '../api/api';
-import { AssistantPills } from '../list/AssistantPills';
+import { useCommissions, type AssistantRow, type LedgerFilter } from '@/assistants/api/api';
+import { AssistantPills } from '@/assistants/list/AssistantPills';
 import { commissionStatusStyle } from './commission-style';
 import { CommissionItem } from './CommissionItem';
 import { CurrencyTotalsLine } from './CurrencyTotalsLine';
 import { MonthFilter } from './MonthFilter';
-import { StatusPills } from '../list/StatusPills';
-import { sumByCurrency } from '../statements/hooks/totals';
+import { StatusPills } from '@/assistants/list/StatusPills';
 
 interface CommissionLedgerProps {
   /** The list for the salesperson filter; omit on one salesperson's page and pass `assistantId`. */

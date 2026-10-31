@@ -16,7 +16,8 @@ jest.mock('@/teacher', () => ({ openSigned: jest.fn(async () => undefined) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const w = t.sales.student.log;
-const openLabel = w.openReport.replace('{date}', dayDateOf('2026-10-27T15:00:00.000Z'));
+const openDay = dayDateOf('2026-10-27T15:00:00.000Z', 'Asia/Riyadh');
+const openLabel = w.openReport.replace('{date}', openDay);
 const inSales = (node: ReactElement) => renderWithQuery(<TreeBaseProvider value="/sales">{node}</TreeBaseProvider>);
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -41,11 +42,10 @@ test('a PDF not ready yet says so above the table', async () => {
   expect(await screen.findByText(t.reports.error.pdf_not_ready)).toBeTruthy();
 });
 
-test('not her student (`mine` false): no row opens anything', async () => {
+test('not her student (`mine` false): a sent report opens too (owner 2026-10-30)', async () => {
   mockApiFetch.mockResolvedValue(logTable({ mine: false }));
   await inSales(<AttendanceLogScreen />);
-  expect(await screen.findByText(w.sent)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: openLabel })).toBeNull();
+  expect(await screen.findByRole('button', { name: openLabel })).toBeTruthy();
 });
 
 test('the admin tree: the admin\'s route, and a sent report opens the admin\'s report view', async () => {

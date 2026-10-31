@@ -5,7 +5,7 @@ import { addDays, dayLabel, weekLabel, weekStart } from '../lib/week';
 
 interface SchedulePeriodProps {
   view: ScheduleView;
-  /** The picked Riyadh day; the week view shows its week. */
+  /** The picked day (the viewer's calendar); the week view shows its week. */
   date: string;
   today: string;
   onDate: (date: string) => void;

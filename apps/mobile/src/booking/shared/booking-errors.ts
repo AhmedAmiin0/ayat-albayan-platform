@@ -1,4 +1,4 @@
-import { CONFLICT_KINDS, RIYADH_TZ, type ClockCycle, type Conflict } from '@ab/shared';
+import { CONFLICT_KINDS, type ClockCycle, type Conflict } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -41,11 +41,11 @@ function toCandidate(v: unknown): Candidate | null {
   return { id: v['id'], name: v['name'], code: typeof v['code'] === 'string' ? v['code'] : null };
 }
 
-/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», Riyadh wall clock. */
-export function conflictLine(c: Conflict, cycle: ClockCycle): string {
+/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», viewer's `tz`. */
+export function conflictLine(c: Conflict, cycle: ClockCycle, tz: string): string {
   return t.booking.conflict[c.kind].replace(
     '{when}',
-    whenIn(new Date(c.startsAt), RIYADH_TZ, cycle),
+    whenIn(new Date(c.startsAt), tz, cycle),
   );
 }
 
@@ -57,13 +57,18 @@ function codedFailure(code: unknown): BookFailure | null {
 }
 
 /** The 409s that carry data: the clashes, or the similar-named children. */
-function conflictFailure(body: Record<string, unknown>, cycle: ClockCycle): BookFailure | null {
+function conflictFailure(
+  body: Record<string, unknown>,
+  cycle: ClockCycle,
+  tz: string,
+): BookFailure | null {
   const list = (key: string): unknown[] => {
     const v = body[key];
     return Array.isArray(v) ? v : [];
   };
   if (body['code'] === 'conflict') {
-    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map((c) => conflictLine(c, cycle)) };
+    const lines = list('conflicts').filter(isConflict).map((c) => conflictLine(c, cycle, tz));
+    return { kind: 'conflict', lines };
   }
   const candidates = list('candidates')
     .map(toCandidate)
@@ -79,14 +84,14 @@ export function isCodedRefusal(error: unknown): boolean {
   return error instanceof ApiError && isRecord(error.body) && codedFailure(error.body['code']) !== null;
 }
 
-/** `cycle`: the one the screen renders with (useClockCycle), for the clash lines. */
-export function bookFailure(error: unknown, cycle: ClockCycle): BookFailure {
+/** `cycle`, `tz`: the screen's (useClockCycle, useViewerTz), for the clash lines. */
+export function bookFailure(error: unknown, cycle: ClockCycle, tz: string): BookFailure {
   if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
   if (!(error instanceof ApiError) || !isRecord(error.body)) {
     return { kind: 'error', text: t.common.error };
   }
   const coded = codedFailure(error.body['code']);
   if (coded) return coded;
-  const data = error.status === 409 ? conflictFailure(error.body, cycle) : null;
+  const data = error.status === 409 ? conflictFailure(error.body, cycle, tz) : null;
   return data ?? { kind: 'error', text: t.common.error };
 }

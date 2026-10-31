@@ -9,6 +9,8 @@ import { dayLine } from '../shared/picks';
 import { uploadInvoice } from '../invoice/invoice-upload';
 import { fakeBookingApi, PHOTO, PREVIEW } from '../testing/test-utils';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -68,7 +70,7 @@ test('a lead from the chat books a package: size, a time per day, the required i
   await press('checkbox', '17:00');
   await press('checkbox', '18:00');
   expect(screen.getByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   await press('button', t.booking.next);
   const slotsPath = mockApiFetch.mock.calls
     .map((c: unknown[]) => String(c[0]))
@@ -87,8 +89,8 @@ test('a lead from the chat books a package: size, a time per day, the required i
   expect(screen.getByText(t.booking.kind.package)).toBeTruthy();
   expect(screen.getByText(t.enums.packageSize['12'])).toBeTruthy();
   expect(screen.getByText(t.booking.mobile.invoiceUploaded)).toBeTruthy();
-  expect(screen.getByText(dayLine(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(SUN_17, 'Asia/Riyadh', R24))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   expect(screen.getByText(t.booking.perWeek.two)).toBeTruthy();
   // 12 a month = 3 a week: the admin's warning stays (a note, not a block).
   expect(screen.getByText(packageDaysNote('12', 2) ?? '')).toBeTruthy();

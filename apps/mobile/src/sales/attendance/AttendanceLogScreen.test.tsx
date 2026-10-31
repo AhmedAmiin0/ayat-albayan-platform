@@ -24,7 +24,7 @@ test('the table: column header, one row per lesson (Riyadh day, 24 h time, teach
   await screen.findByText(w.sent);
   for (const c of [w.columns.date, w.columns.time, w.columns.teacher, w.columns.status, w.columns.report]) expect(screen.getByText(c)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/students/st1/attendance');
-  expect(screen.getByText(dayDateOf('2026-10-27T15:00:00.000Z'))).toBeTruthy();
+  expect(screen.getByText(dayDateOf('2026-10-27T15:00:00.000Z', 'Asia/Riyadh'))).toBeTruthy();
   expect(screen.getAllByText(clockIn(new Date('2026-10-27T15:00:00.000Z'), RIYADH_TZ, '24'))).toHaveLength(3);
   expect(screen.getAllByText('أبرار محمد')).toHaveLength(3);
   expect(screen.getByText(w.sent)).toBeTruthy();

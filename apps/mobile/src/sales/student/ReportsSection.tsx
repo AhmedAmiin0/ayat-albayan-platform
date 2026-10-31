@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type SalesStudentDetails } from '@ab/shared';
+import type { SalesStudentDetails } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
@@ -20,6 +21,7 @@ const pdfError = (e: unknown): string =>
  * lesson number, grade, «تحميل PDF» once ready), read-only: a row opens nothing else.
  */
 export function ReportsSection({ studentId, reports }: { studentId: string; reports: SalesStudentDetails['reports'] }) {
+  const tz = useViewerTz();
   const [error, setError] = useState<string | null>(null);
   const s = t.sales.student;
   return (
@@ -33,7 +35,7 @@ export function ReportsSection({ studentId, reports }: { studentId: string; repo
           <ReportHistoryRow
             key={row.id}
             row={row}
-            tz={RIYADH_TZ}
+            tz={tz}
             onPdf={() => void openStudentReportPdf(studentId, row.id).catch((e: unknown) => setError(pdfError(e)))}
           />
         ))}

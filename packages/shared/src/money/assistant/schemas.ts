@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { currencyIso, moneyAmount, monthParam, payoutPaySchema } from '../ledger/index.js';
+import {
+  currencyIso,
+  hasTwoDecimals,
+  moneyAmount,
+  monthParam,
+  payoutPaySchema,
+} from '../ledger/index.js';
 import { voidReasonSchema } from '../ledger/corrections-schemas.js';
 import { ASSISTANT_COMMISSION_TYPES } from './commission.js';
 import { PAYOUT_STATUSES } from '../../enums/index.js';
@@ -12,7 +18,7 @@ const commissionTerms = z
   .object({
     type: z.enum(ASSISTANT_COMMISSION_TYPES),
     /** percent: 0-100 points; fixed: an amount in `currency`. */
-    value: z.number().positive().max(9_999_999_999).refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'too_many_decimals'),
+    value: z.number().positive().max(9_999_999_999).refine(hasTwoDecimals, 'too_many_decimals'),
     currency: currencyIso.nullish(),
     /** No retroactive commission: only subscriptions fully paid on or after this day earn one. A new part cannot start in the past and a saved day cannot move earlier (termStartError). */
     startsOn: localDate,
@@ -48,7 +54,7 @@ export const assistantAdjustmentSchema = z.object({
   assistantId: z.uuid(),
   amount: z
     .number()
-    .refine((v) => v !== 0 && Math.abs(v) <= 9_999_999_999 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'invalid_amount'),
+    .refine((v) => v !== 0 && Math.abs(v) <= 9_999_999_999 && hasTwoDecimals(v), 'invalid_amount'),
   currency: currencyIso,
   reason: z.string().trim().min(3, 'reason_required').max(500),
   /** Idempotency key (rule 8): the client makes one per submit and repeats it on a retry; a repeat returns the first row. */

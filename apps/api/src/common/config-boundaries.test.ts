@@ -1,12 +1,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { API_SRC } from '@/common/db/repo-paths.test-util';
 
 // Settings, custom values and the public config are three modules with a one-way graph:
 // public-config → custom-config and public-config → settings. Settings knows neither; custom
 // values know neither settings nor the public config. The old shared config folder stays gone.
 
-const COMMON = __dirname;
+const COMMON = join(API_SRC, 'common');
 
 /** Every .ts file under common/<folder>. */
 function sources(folder: string): string[] {
@@ -23,12 +24,17 @@ const specifiers = (source: string): string[] =>
     ),
   ].map((m) => m[1] ?? m[2] ?? m[3] ?? '');
 
-/** The common/ folder a relative import of `file` lands in; null for a package or outside common/. */
+/** The three config folders, relative to common/ (posix). */
+const SETTINGS = 'settings';
+const CUSTOM = 'configuration/custom-config';
+const PUBLIC = 'configuration/public-config';
+
+/** The config folder a `./`, `../` or `@/` import of `file` lands in; null for anything else. */
 function landsIn(file: string, spec: string): string | null {
-  if (!spec.startsWith('.')) return null;
-  const rel = relative(COMMON, resolve(dirname(file), spec));
-  if (rel.startsWith('..')) return null;
-  return rel.split(sep)[0] ?? null;
+  if (!spec.startsWith('.') && !spec.startsWith('@/')) return null;
+  const abs = spec.startsWith('@/') ? join(API_SRC, spec.slice(2)) : resolve(dirname(file), spec);
+  const rel = relative(COMMON, abs).split(sep).join('/');
+  return [SETTINGS, CUSTOM, PUBLIC].find((f) => rel === f || rel.startsWith(`${f}/`)) ?? null;
 }
 
 /** `file → specifier` for each import from common/<from> into one of the `forbidden` folders. */
@@ -42,22 +48,22 @@ function crossings(from: string, forbidden: readonly string[]): string[] {
 
 describe('settings / custom-config / public-config boundaries', () => {
   it('scans the three folders', () => {
-    const names = ['settings', 'custom-config', 'public-config'].flatMap((f) => sources(f).map((p) => relative(COMMON, p)));
+    const names = [SETTINGS, CUSTOM, PUBLIC].flatMap((f) => sources(f).map((p) => relative(COMMON, p)));
     expect(names).toEqual(
       expect.arrayContaining([
-        join('settings', 'settings.module.ts'),
-        join('custom-config', 'custom-config.module.ts'),
-        join('public-config', 'public-config.module.ts'),
+        join(SETTINGS, 'settings.module.ts'),
+        join(CUSTOM, 'custom-config.module.ts'),
+        join(PUBLIC, 'public-config.module.ts'),
       ]),
     );
   });
 
   it('common/settings imports nothing from custom-config or public-config', () => {
-    expect(crossings('settings', ['custom-config', 'public-config'])).toEqual([]);
+    expect(crossings(SETTINGS, [CUSTOM, PUBLIC])).toEqual([]);
   });
 
   it('common/custom-config imports nothing from settings or public-config', () => {
-    expect(crossings('custom-config', ['settings', 'public-config'])).toEqual([]);
+    expect(crossings(CUSTOM, [SETTINGS, PUBLIC])).toEqual([]);
   });
 
   it('the old shared config folder does not come back', () => {
@@ -65,10 +71,12 @@ describe('settings / custom-config / public-config boundaries', () => {
   });
 
   it('the scanner sees a crossing when there is one', () => {
-    const file = join(COMMON, 'settings', 'settings.module.ts');
-    expect(landsIn(file, '../custom-config/custom-config.module')).toBe('custom-config');
-    expect(landsIn(file, '../../common/public-config/public-config.module')).toBe('public-config');
-    expect(landsIn(file, './settings.service')).toBe('settings');
+    const file = join(COMMON, SETTINGS, 'settings.module.ts');
+    expect(landsIn(file, '../configuration/custom-config/custom-config.module')).toBe(CUSTOM);
+    expect(landsIn(file, '../../common/configuration/public-config/public-config.module')).toBe(PUBLIC);
+    expect(landsIn(file, '@/common/configuration/custom-config/custom-config.module')).toBe(CUSTOM);
+    expect(landsIn(file, './settings.service')).toBe(SETTINGS);
+    expect(landsIn(file, '@/common/db/db.module')).toBeNull();
     expect(landsIn(file, '../../modules/teachers/http')).toBeNull();
     expect(landsIn(file, '@ab/shared')).toBeNull();
     expect(specifiers("import type { A } from '../a';\nexport * from './b';\nimport './c';\nconst d = import('../d');")).toEqual(['../a', './b', './c', '../d']);

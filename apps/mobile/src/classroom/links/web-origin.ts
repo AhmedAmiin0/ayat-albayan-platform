@@ -12,3 +12,6 @@ export function webOrigin(): string {
 
 /** The web classroom page of a lesson. */
 export const classroomUrl = (lessonId: string): string => `${webOrigin()}/classroom/${lessonId}`;
+
+/** The web room of an internal meeting (`/meeting/<id>`). */
+export const meetingUrl = (id: string): string => `${webOrigin()}/meeting/${id}`;

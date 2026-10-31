@@ -1,6 +1,6 @@
 import type { BookingPickFields } from '@ab/client-core';
-import { RIYADH_TZ, wallParts, type ClockCycle } from '@ab/shared';
-import { hhmm } from '@/core/lib/clock';
+import { wallParts } from '@ab/shared';
+import { hhmm, type ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { cityOf } from './slots';
 
@@ -21,13 +21,14 @@ const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
 /**
  * «الأحد الساعة 18:00» for a weekday and its time in `tz`, «… 18:00 بتوقيت دبي» when that is not
- * Riyadh (the web's dayAtText).
+ * the `viewer`'s zone (the web's dayAtText).
  */
-export function dayAtText(day: { weekday: number; time: string }, tz: string, cycle: ClockCycle): string {
-  const clock = hhmm(day.time, cycle);
-  const time = tz === RIYADH_TZ ? clock : t.schedule.inCity.replace('{time}', clock).replace('{city}', cityOf(tz));
+export function dayAtText(day: { weekday: number; time: string }, tz: string, viewer: ViewerClock): string {
+  const clock = hhmm(day.time, viewer.cycle);
+  const time = tz === viewer.tz ? clock : t.schedule.inCity.replace('{time}', clock).replace('{city}', cityOf(tz));
   return t.booking.dayAt.replace('{day}', weekdays[String(day.weekday)] ?? '').replace('{time}', time);
 }
 
 /** A pick's day in the family's zone (dayAtText). */
-export const dayLine = (pick: string, tz: string, cycle: ClockCycle): string => dayAtText(wallParts(pick, tz), tz, cycle);
+export const dayLine = (pick: string, tz: string, viewer: ViewerClock): string =>
+  dayAtText(wallParts(pick, tz), tz, viewer);

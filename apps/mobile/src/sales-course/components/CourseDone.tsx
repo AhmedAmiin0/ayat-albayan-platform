@@ -9,7 +9,7 @@ import { ButtonRow } from '@/core/ui/actions';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from '../lib/course-body';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseDoneProps {
   result: BookingResult;
@@ -23,6 +23,8 @@ interface CourseDoneProps {
 /** After POST /sales/booking 201: the first lesson the API made, when the course ends, the way on. */
 export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const [first] = result.lessons.map((l) => l.starts_at).sort();
   const total = view.subscription ? courseLessonCount(view.subscription) : 0;
@@ -39,7 +41,7 @@ export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneP
           {t.booking.booked}
         </AppText>
       </View>
-      {first ? <AppText style={line}>{t.booking.firstLesson.replace('{when}', whenText(first, view.student.tz, cycle))}</AppText> : null}
+      {first ? <AppText style={line}>{t.booking.firstLesson.replace('{when}', whenText(first, view.student.tz, viewer))}</AppText> : null}
       {ends ? <AppText style={line}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
       <ButtonRow testID="course-done-actions">
         {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}

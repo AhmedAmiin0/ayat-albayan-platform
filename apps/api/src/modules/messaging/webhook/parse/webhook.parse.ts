@@ -53,7 +53,8 @@ interface MessageContext {
   at: Receiving;
 }
 
-function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
+/** One Meta message object → an InboundEvent (also Kapso's inbound history, external/inbound). */
+export function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
   const [from, id, type] = [field(m, 'from'), field(m, 'id'), field(m, 'type')];
   if (!from || !id || !type) return null;
   const f = (path: string) => field(m, path);

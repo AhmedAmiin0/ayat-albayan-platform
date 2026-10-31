@@ -78,6 +78,7 @@ const COUNTRY_TZ: Record<PhoneCountry, string> = {
 /** The zone a phone's country suggests (the admin can change it); Riyadh when unknown. */
 export function tzForPhone(phone: string): string {
   const p = normalizePhone(phone);
+  // docs/34 b: an unknown country reads as the academy's zone (the family's data default).
   return p.ok && p.country ? COUNTRY_TZ[p.country] : RIYADH_TZ;
 }
 

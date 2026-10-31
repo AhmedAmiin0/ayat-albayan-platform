@@ -1,7 +1,7 @@
-import { RIYADH_TZ, type AttendanceTableRow, type ClockCycle } from '@ab/shared';
+import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
 import { memo } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
-import { clockIn } from '@/core/lib/clock';
+import { clockIn, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -25,25 +25,27 @@ interface AttendanceLogRowProps {
   /** Odd rows are striped. */
   striped: boolean;
   cycle: ClockCycle;
-  /** Given only when the row's report may open (`mine` and a sent report). */
+  /** Given only when the row has a sent report (any student, owner 2026-10-30). */
   onOpen?: (row: AttendanceTableRow) => void;
 }
 
 /** One past lesson of «سجل الحضور»: the five cells, then the trial / makeup tags and the cancel reason. */
 export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen }: AttendanceLogRowProps) {
   const { color } = useTheme();
+  const tz = useViewerTz();
   const w = t.sales.student.log;
   const cell = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink };
   const note = { ...cell, fontFamily: type.ui[400], color: color.ink3 };
   const tags = rowTags(row);
   const reason = cancelLine(row);
-  const date = dayDateOf(row.starts_at);
+  const date = dayDateOf(row.starts_at, tz);
+  const time = clockIn(new Date(row.starts_at), tz, cycle);
   const sent = row.report_sent;
   const body = (
     <>
       <View style={ROW_LINE}>
         <AppText style={[cell, COLUMNS.date]}>{date}</AppText>
-        <AppText style={[cell, COLUMNS.time]}>{clockIn(new Date(row.starts_at), RIYADH_TZ, cycle)}</AppText>
+        <AppText style={[cell, COLUMNS.time]}>{time}</AppText>
         <AppText style={[cell, COLUMNS.teacher]} numberOfLines={1}>{row.teacher_name ?? '—'}</AppText>
         <View style={COLUMNS.status}>
           <StatusChip {...rowChip(row)} size="sm" />

@@ -8,8 +8,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { type GateStatus, retryGate, useAuthGate, useMeReady } from '@/auth';
+import { type GateStatus, retryGate, useAuthGate, useMeId, useMeReady } from '@/auth';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
+import { usePresenceSelf } from '@/core/lib/presence';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/query-client';
@@ -77,6 +78,9 @@ export default function RootLayout() {
   );
 }
 
+/** The in-app room (docs/35) covers the tabs and is left only by its own «غادر» / «رجوع». */
+const ROOM_SCREEN = { presentation: 'fullScreenModal', gestureEnabled: false } as const;
+
 interface GatedRootProps {
   gate: GateStatus;
   /** Fonts, language, overrides and the session gate are settled. */
@@ -85,14 +89,18 @@ interface GatedRootProps {
 }
 
 /**
+ * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree.
  * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
  * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
  * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
  */
 function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   const { color } = useTheme();
-  const meReady = useMeReady(gate !== 'booting' && gate !== 'out');
+  const signedIn = gate !== 'booting' && gate !== 'out';
+  const meReady = useMeReady(signedIn);
   const ready = settled && meReady;
+  // Online now for the others (docs/33 §1.1), in every tree, while the app is open.
+  usePresenceSelf(useMeId(ready && signedIn));
   return (
     <>
       {ready ? (
@@ -121,6 +129,9 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
               </Stack.Protected>
               <Stack.Protected guard={gate === 'assistant'}>
                 <Stack.Screen name="assistant" />
+              </Stack.Protected>
+              <Stack.Protected guard={signedIn}>
+                <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
               </Stack.Protected>
               <Stack.Protected guard={gate === 'out'}>
                 <Stack.Screen name="login" />

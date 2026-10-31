@@ -12,7 +12,7 @@ import type { StudentChoice, TrialDraft } from '../lib/draft';
 import { effectiveByday } from '../lib/package-choice';
 import { picksOf } from '../../shared/picks';
 import { PicksList } from '../../shared/PicksList';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface ConfirmStepProps {
   draft: TrialDraft;
@@ -48,6 +48,8 @@ export function SummaryList({ rows }: { rows: SummaryRow[] }) {
  */
 export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: ConfirmStepProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const days = effectiveByday(draft);
   const note = {
@@ -58,7 +60,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
   };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={summary(draft, cycle)} />
+      <SummaryList rows={summary(draft, viewer)} />
       {draft.pkg === 'trial' ? (
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (

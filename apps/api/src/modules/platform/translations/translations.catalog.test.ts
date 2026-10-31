@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BUNDLES } from '../../../common/i18n/server-text';
+import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { DEFAULTS, listKeys, overrideProblem } from './translations.catalog';
 
 const none = { ar: {}, en: {} };

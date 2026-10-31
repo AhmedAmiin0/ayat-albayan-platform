@@ -19,7 +19,7 @@ test.each([
 
 test('the week window is Riyadh midnight to Riyadh midnight, seven days, in UTC', () => {
   expect(riyadhMidnight('2026-10-03')).toBe('2026-10-02T21:00:00.000Z');
-  expect(weekWindow('2026-10-03')).toEqual({
+  expect(weekWindow('2026-10-03', 'Asia/Riyadh')).toEqual({
     from: '2026-10-02T21:00:00.000Z',
     to: '2026-10-09T21:00:00.000Z',
   });

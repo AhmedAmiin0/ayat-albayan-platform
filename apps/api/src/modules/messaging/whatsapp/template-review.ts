@@ -1,4 +1,4 @@
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { paramNames } from './messages/wa-json';
 import type { SampleFile, TemplateRow } from './whatsapp.types';
 

@@ -41,7 +41,7 @@ describe('public settings', () => {
     expect([...PUBLIC_SETTING_KEYS].sort()).toEqual(
       [
         'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min',
-        'makeup_window_days', 'meeting_link_auto', 'recording_consent_notice', 'upload_max_mb',
+        'makeup_window_days', 'meeting_link_auto', 'meetings_in_app', 'recording_consent_notice', 'upload_max_mb',
       ].sort(),
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);

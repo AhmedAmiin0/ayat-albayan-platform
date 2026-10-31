@@ -149,6 +149,7 @@
         "apps/web/src/routes/teacher/index.tsx",
         "apps/web/src/routes/sales/schedule.tsx",
         "apps/api/src/modules/teaching/booking/",
+        "apps/api/src/modules/teaching/course-stop/",
         "apps/api/src/modules/teaching/scheduling/",
         "apps/api/src/modules/teaching/lessons/"
       ],
@@ -164,6 +165,9 @@
         "teaching/booking-makeup-invoice.spec.ts",
         "teaching/booking-override.spec.ts",
         "sales/chat-subscribe.spec.ts",
+        "teaching/course-change-unlinked.sql.spec.ts",
+        "teaching/course-stop-money.sql.spec.ts",
+        "teaching/course-stop-rules.sql.spec.ts",
         "teaching/edit-session-time.held.spec.ts",
         "teaching/edit-session-time.spec.ts",
         "reporting/feedback.spec.ts",
@@ -300,7 +304,8 @@
         "apps/api/src/modules/people/users/",
         "apps/api/src/modules/people/roles/",
         "apps/api/src/modules/people/me/",
-        "apps/api/src/modules/people/portal/"
+        "apps/api/src/modules/people/portal/",
+        "apps/api/src/modules/people/presence/"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -315,6 +320,7 @@
         "messaging/inbox-send-file.spec.ts",
         "finance/journey-3-payment-renewal.spec.ts",
         "people/journey-6-duplicate-student.spec.ts",
+        "people/presence-staff.spec.ts",
         "sales/journey-7-assistant-cycle.spec.ts",
         "messaging/kapso-driver.spec.ts",
         "sales/lead-to-subscription.spec.ts",
@@ -509,6 +515,7 @@
     "finance/change-course.sql.spec.ts",
     "sales/channel-after-subscribe.sql.spec.ts",
     "messaging/chat-files.sql.spec.ts",
+    "messaging/chat-markers.sql.spec.ts",
     "messaging/chat-list-auto-rules.sql.spec.ts",
     "messaging/chat-list-auto-triggers.sql.spec.ts",
     "messaging/chat-lists.sql.spec.ts",

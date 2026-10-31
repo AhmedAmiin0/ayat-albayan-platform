@@ -8,10 +8,16 @@ import { dateLabel } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { useBookingMode } from '../mode';
 import { pickedText } from '../steps/slots/SlotStep';
-import { changeCourse, courseChangeCheckQuery, type CourseChangeBody } from './api';
+import {
+  changeCourse,
+  courseChangeCheckQuery,
+  useCourseChangeTarget,
+  type CourseChangeBody,
+} from './api';
 import { currentDaysText, newDaysText } from './change-text';
 import { refreshAfterCourseChange } from './refresh';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface ChangeReviewProps {
   body: CourseChangeBody;
@@ -26,16 +32,20 @@ type SummaryProps = Pick<ChangeReviewProps, 'body' | 'course'> & { check: Course
 
 /** The current and the new days, then what is left, the new last lesson and the first new one. */
 function ChangeSummary({ body, course, check }: SummaryProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { tz } = course;
   return (
     <div role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">
       <ul className="grid gap-1">
         <li>{currentDaysText(course.days, tz, clock)}</li>
         <li className="font-semibold">{newDaysText(body, tz, clock)}</li>
-        <li className="font-semibold">{counted(t.booking.courseChange.remaining, check.remaining)}</li>
+        <li className="font-semibold">
+          {counted(t.booking.courseChange.remaining, check.remaining)}
+        </li>
         <li>{t.booking.courseChange.newEnd.replace('{date}', dateLabel(check.endsOn))}</li>
-        <li>{t.booking.courseChange.firstNew.replace('{when}', pickedText(body.startsAt, tz, clock))}</li>
+        <li>
+          {t.booking.courseChange.firstNew.replace('{when}', pickedText(body.startsAt, tz, clock))}
+        </li>
       </ul>
     </div>
   );
@@ -43,11 +53,21 @@ function ChangeSummary({ body, course, check }: SummaryProps) {
 
 /** A failed save that is not a clash (course_changed, no_change…) names its refusal; also after «احفظ رغم التعارض». */
 function SaveRefusal({ error }: { error: Error | null }) {
+  const text = useChangeErrorText();
   if (!error || conflictsOf(error)) return null;
-  return <FormAlert>{lessonErrorText(error)}</FormAlert>;
+  return <FormAlert>{text(error)}</FormAlert>;
 }
 
-const OVERRIDE = { override: t.booking.courseChange.overrideSave, reason: t.booking.courseChange.overrideReason };
+/** The refusal's text: the target's own codes first (the profile's same_teacher…), then the booking's. */
+function useChangeErrorText(): (error: unknown) => string {
+  const target = useCourseChangeTarget();
+  return (error) => target?.errorText?.(error) ?? lessonErrorText(error);
+}
+
+const OVERRIDE = {
+  override: t.booking.courseChange.overrideSave,
+  reason: t.booking.courseChange.overrideReason,
+};
 
 /**
  * «تغيير أيام الحلقات», step 2 (owner 2026-10-18): POST …/change/check, then the current and the new
@@ -58,18 +78,21 @@ const OVERRIDE = { override: t.booking.courseChange.overrideSave, reason: t.book
 export function ChangeReview({ body, course, onChangeSlot, onDone }: ChangeReviewProps) {
   const mode = useBookingMode();
   const queryClient = useQueryClient();
-  const check = useQuery(courseChangeCheckQuery(body, mode));
+  const target = useCourseChangeTarget();
+  const check = useQuery(courseChangeCheckQuery(body, mode, target));
   const save = useMutation({
-    mutationFn: (override?: string) => changeCourse(override ? { ...body, override: { reason: override } } : body, mode),
+    mutationFn: (override?: string) =>
+      changeCourse(override ? { ...body, override: { reason: override } } : body, mode, target),
     onSuccess: async () => {
       await refreshAfterCourseChange(queryClient, mode);
       onDone(t.booking.courseChange.done);
     },
   });
+  const errorText = useChangeErrorText();
   if (check.isError) {
     return (
       <FormAlert>
-        {lessonErrorText(check.error)}
+        {errorText(check.error)}
         <Button type="button" variant="secondary" size="sm" className="ms-3" onClick={onChangeSlot}>
           {t.booking.changeSlot}
         </Button>

@@ -22,8 +22,10 @@ export type MediaMessage = {
   line: NumberPurpose | null;
   /** Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it. */
   number?: MediaNumber | null;
+  /** Hidden from the platform («حذف من المنصة»): its file is refused like an unknown message. */
+  hidden_at?: string | null;
 };
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, created_at, line, number:wa_numbers(id, provider, purpose)';
+const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
 type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };

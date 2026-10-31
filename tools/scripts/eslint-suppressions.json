@@ -15,6 +15,9 @@
   "calendar/calendar-slots.mjs": {
     "max-len": {
       "count": 1
+    },
+    "no-restricted-properties": {
+      "count": 1
     }
   },
   "calendar/calendar.fixture.mjs": {
@@ -122,21 +125,6 @@
   "ci-checks/folder-cap.mjs": {
     "max-len": {
       "count": 6
-    }
-  },
-  "ci-checks/jscpd-gate.mjs": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/jscpd-gate.test.mjs": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "ci-checks/lint/lint-gate.test.mjs": {
-    "max-len": {
-      "count": 1
     }
   },
   "ci-checks/lint/queries-gate.mjs": {
@@ -327,7 +315,7 @@
   },
   "ci-checks/workflows-fast.test.mjs": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "ci-checks/workflows.test.mjs": {

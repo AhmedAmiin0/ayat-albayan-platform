@@ -1,6 +1,6 @@
-import { lessonStatusStyle, RIYADH_TZ, type SalesTeacherOverview } from '@ab/shared';
+import { lessonStatusStyle, type SalesTeacherOverview } from '@ab/shared';
 import { View } from 'react-native';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -15,6 +15,7 @@ import { statusWord } from '@/core/ui/feedback/lesson-status';
 /** «الحضور»: the last 30 days' totals in one line, then the latest lessons (Riyadh time, students, status chip). */
 export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherOverview['attendance'] }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const o = t.sales.teachers.overview;
   return (
     <>
@@ -28,7 +29,7 @@ export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherO
         {attendance.latest.map((l) => (
           <ListRow
             key={l.lesson_id}
-            title={whenIn(new Date(l.starts_at), RIYADH_TZ, cycle)}
+            title={whenIn(new Date(l.starts_at), tz, cycle)}
             subtitle={studentsLine(l.students)}
             trailing={<StatusChip {...lessonStatusStyle[l.status]} size="sm" label={statusWord(l.status)} />}
           />

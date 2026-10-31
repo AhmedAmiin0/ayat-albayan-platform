@@ -1,6 +1,6 @@
-import { callsNumber } from '../../../../common/integrations/calls-number';
-import { numbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { lineEnvs, loadEnv, type KapsoLineEnv } from '../../../../config/env/env';
+import { callsNumber } from '@/common/configuration/integrations/calls-number';
+import { numbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { lineEnvs, loadEnv, type KapsoLineEnv } from '@/config/env/env';
 
 /**
  * The number calls ring on (docs/28 §2, §10): the dedicated CALLS number when one is the enabled

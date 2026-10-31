@@ -15,6 +15,7 @@ import { fill } from '@/sales';
 import { type, useTheme } from '@/theme';
 import { STRIPE_FEATURE } from './flag';
 import { agreedLine, linkMessage, referenceLine } from './link-text';
+import { useViewerTz } from '@/core/lib/clock';
 
 interface LinkCreatedProps {
   link: PaymentLinkView;
@@ -33,6 +34,7 @@ const pl = t.paymentLinks;
  * (?from=<platform>): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
  */
 export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const client = useQueryClient();
   const [closed, setClosed] = useState(false);
@@ -50,7 +52,7 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const open = () => void Linking.openURL(appOpenUrl(link.url, STRIPE_FEATURE)).catch(() => setOpenFailed(true));
   return (
     <View style={{ gap: 12 }}>
-      <Note>{fill(pl.created, { when: instantDay(link.expires_at) })}</Note>
+      <Note>{fill(pl.created, { when: instantDay(link.expires_at, tz) })}</Note>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
         {referenceLine(link.reference_price, link.currency)}
       </AppText>

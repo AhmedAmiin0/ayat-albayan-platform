@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ar } from '../../../../common/i18n/server-text';
-import { PushService } from '../../../../common/push/push.service';
-import type { LinkRow } from '../links/payment-links.queries';
+import { ar } from '@/common/infra/i18n/server-text';
+import { PushService } from '@/common/push/push.service';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
 
 /**
  * The bell rows of the payment links (in-app only: bellOnly, never WhatsApp). They reuse the payment_due kind

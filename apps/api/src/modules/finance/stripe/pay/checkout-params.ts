@@ -1,8 +1,8 @@
 import { paymentLinkUrl, toMinorUnits } from '@ab/shared';
 import type Stripe from 'stripe';
-import { ar } from '../../../../common/i18n/server-text';
-import { integrationIdentifier } from '../links/link-ids';
-import type { LinkRow } from '../links/payment-links.queries';
+import { ar } from '@/common/infra/i18n/server-text';
+import { integrationIdentifier } from '@/modules/finance/stripe/links/link-ids';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
 
 const MIN = 60_000;
 /** Checkout accepts 30 min – 24 h; the session never outlives its link (but always lasts the minimum). */

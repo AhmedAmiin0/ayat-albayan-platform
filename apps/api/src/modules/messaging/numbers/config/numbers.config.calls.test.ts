@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { callsNumber, setCallsNumber } from '../../../../common/integrations/calls-number';
-import { numbersOverlay, setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { numberRow } from '../numbers.fakes';
-import type { NumbersQueries } from '../numbers.queries';
+import { callsNumber, setCallsNumber } from '@/common/configuration/integrations/calls-number';
+import { numbersOverlay, setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { numberRow } from '@/modules/messaging/numbers/numbers.fakes';
+import type { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
 import { config } from './numbers.config.fakes';
 
 const CALLS = numberRow({

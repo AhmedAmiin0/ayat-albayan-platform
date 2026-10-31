@@ -1,9 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261024000633 (docs/23 §3 phase 5, docs/23c) read as text: expand only, inert under legacy.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const FILE = '20261024000633_numbers_routing.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');
 const code = sql.replace(/--.*$/gm, '');

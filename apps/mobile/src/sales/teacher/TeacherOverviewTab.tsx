@@ -1,4 +1,5 @@
 import { ActivityIndicator, ScrollView } from 'react-native';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { useTheme } from '@/theme';
@@ -14,6 +15,7 @@ import { useTeacherOverview } from './teacher-overview-api';
 export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; view: 'schedule' | 'attendance' }) {
   const { color } = useTheme();
   const overview = useTeacherOverview(teacherId);
+  const tz = useViewerTz();
   const data = overview.data;
   if (!data) {
     return overview.isError ? (
@@ -24,7 +26,7 @@ export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; vie
   }
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 8, paddingBottom: 24 }}>
-      <Note>{t.schedule.riyadhTime}</Note>
+      <Note>{zoneNote(tz)}</Note>
       {view === 'schedule' ? <TeacherScheduleTab weekly={data.weekly} /> : <TeacherAttendanceTab attendance={data.attendance} />}
     </ScrollView>
   );

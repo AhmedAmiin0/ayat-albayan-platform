@@ -61,7 +61,8 @@ describe('CourseChange — where a change may start', () => {
     expect(await failed(service.check(check(), SALES))).toBe('course_exists');
     queries.others.mockResolvedValue([{ starts_on: '2026-11-18', ends_on: '2026-12-10', package: '8', subscription_id: 'other' }]);
     expect((await service.check(check(), SALES)).endsOn).toBe('2026-11-17');
-    expect(queries.others).toHaveBeenCalledWith(SUB);
+    // The course's own rules (course_rules_of, also unlinked ones) are never «another course».
+    expect(queries.others).toHaveBeenCalledWith(SUB, expect.arrayContaining([expect.any(String)]));
   });
 
   it('400 no_change: the same weekdays and times as now', async () => {

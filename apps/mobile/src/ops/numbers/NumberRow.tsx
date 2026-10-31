@@ -4,13 +4,14 @@ import { Note } from '@/more/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { checkedLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** One number, read-only: label, role and phone, state chips, last check; the health at the end. */
 export function NumberRow({ number }: { number: NumberView }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const health = healthChip(number);
-  const checked = checkedLine(number, cycle);
+  const checked = checkedLine(number, cycle, tz);
   return (
     <ListRow
       title={number.label}

@@ -11,6 +11,7 @@ import { days, toBookingRequest, type BookingDraft } from '../../draft/draft';
 import { useBookingMode } from '../../mode';
 import { trialDateCheckQuery } from '../../trial-date/api';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;
@@ -50,7 +51,7 @@ export function useCourseClean(draft: BookingDraft): boolean {
  * A renewal's prefilled day that clashes is named («موعد الأحد لم يعد متاحًا…», takenTexts).
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { body, check } = useSeriesCheck(draft);
   if (!body) return null;
   if (check.isError) return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
@@ -87,7 +88,7 @@ const emptyBody: BookingBody = {
   teacherId: '',
   byday: [0],
   startTimeLocal: '00:00',
-  tz: 'Asia/Riyadh',
+  tz: 'Asia/Riyadh', // placeholder (docs/34 —): this body is never sent
   durationMin: 45,
   startsOn: '2026-01-01',
   package: 'trial',

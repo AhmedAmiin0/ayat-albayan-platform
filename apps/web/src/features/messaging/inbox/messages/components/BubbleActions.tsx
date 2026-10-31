@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { useDismiss } from '@/components/ui/overlay/use-dismiss';
@@ -10,6 +10,8 @@ import { useChatActions } from '../../shared/chat-actions';
 import { useInboxMode } from '../../shared/mode';
 import { bubbleOffers, offersAny, type BubbleOffers } from '../lib/bubble-offers';
 import { useBubbleTools } from '../lib/use-bubble-tools';
+import { HideConfirm } from '@/features/messaging/inbox/messages/hide/HideConfirm';
+import { useHideRights } from '@/features/messaging/inbox/messages/hide/use-hide-rights';
 
 export interface BubbleActionsProps {
   message: MessageView;
@@ -20,7 +22,9 @@ export interface BubbleActionsProps {
 
 /** What this bubble's menu offers here (teacher mode: never «تنزيل», as MessageMedia). */
 export function useBubbleOffers(m: MessageView): BubbleOffers {
-  return bubbleOffers(m, { teacher: useInboxMode() === 'teacher', react: useChatActions().reactable(m) });
+  const teacher = useInboxMode() === 'teacher';
+  const { hide } = useHideRights();
+  return bubbleOffers(m, { teacher, react: useChatActions().reactable(m), hide: hide && !teacher });
 }
 
 /** The bubble offers «رد», «نسخ», «إعادة توجيه» or «تنزيل» in this chat. */
@@ -40,6 +44,7 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
   const tools = useBubbleTools();
   const box = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const [asking, setAsking] = useState(false);
   const close = (focus: boolean) => {
     if (focus) trigger.current?.focus();
     onMenu(false);
@@ -73,7 +78,8 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
       <IconButton ref={trigger} label={t.inbox.reply.menu} aria-expanded={menu} className="rounded-full" onClick={() => onMenu(!menu)}>
         <Icon name="more" />
       </IconButton>
-      {menu && <BubbleMenu message={m} outbound={outbound} offers={offers} tools={tools} onClose={() => close(true)} />}
+      {menu && <BubbleMenu message={m} outbound={outbound} offers={offers} tools={tools} onClose={() => close(true)} onHide={() => setAsking(true)} />}
+      <HideConfirm message={m} open={asking} onClose={() => setAsking(false)} />
       {tools.toast}
     </div>
   );

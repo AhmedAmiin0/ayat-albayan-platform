@@ -4,18 +4,8 @@
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
-export const PERMISSION_AREAS = [
-  'people',
-  'students',
-  'teachers',
-  'schedule',
-  'classroom',
-  'reports',
-  'messaging',
-  'finance',
-  'system',
-  'self',
-] as const;
+export const PERMISSION_AREAS = ['people', 'students', 'teachers', 'schedule', 'classroom', 'reports',
+  'messaging', 'finance', 'system', 'self'] as const;
 export type PermissionArea = (typeof PERMISSION_AREAS)[number];
 
 type Grant = 'teacher' | 'assistant' | 'sales' | 'guardian' | 'student';
@@ -56,6 +46,10 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
   // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/16 row 37c): the course pause routes, ANY student.
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
+  // The profile's course actions (owner 2026-10-30, migration 990): ANY student, audited.
+  { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
+  { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
+  { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },
   // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },

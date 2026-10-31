@@ -18,6 +18,7 @@ describe('externalMessage', () => {
       replyTo: null,
       status: 'delivered',
       direction: 'outbound',
+      payload: null,
     });
   });
 

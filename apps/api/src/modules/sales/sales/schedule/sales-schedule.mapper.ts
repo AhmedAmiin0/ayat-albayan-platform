@@ -1,4 +1,4 @@
-import { isOpenLesson, meetingModeOf, RIYADH_TZ, usesPlatform, type SalesScheduleLesson } from '@ab/shared';
+import { isCancelledLesson, isOpenLesson, meetingModeOf, RIYADH_TZ, usesPlatform, type SalesScheduleLesson } from '@ab/shared';
 import { DAY, localDay, zonedToUtc } from '../../../people/teachers/availability/zoned-time';
 import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 
@@ -6,9 +6,6 @@ import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 
 /** «الحلقة القادمة» looks this far ahead (weekly lessons: everyone booked has one inside it). */
 export const UPCOMING_DAYS = 8;
-
-/** Not counted in «حلقات اليوم»: cancelled ones (a moved-away one is never read). */
-const CANCELLED = new Set(['cancelled_by_teacher', 'cancelled_by_admin']);
 
 /** Today's Riyadh calendar day, "YYYY-MM-DD". */
 export function riyadhToday(now: Date): string {
@@ -76,7 +73,8 @@ export function teacherDayFacts(rows: readonly SalesScheduleRow[], now: Date): M
   const at = now.getTime();
   for (const row of rows) {
     const id = row.teacher?.id;
-    if (!id || CANCELLED.has(row.status)) continue;
+    // Not counted in «حلقات اليوم»: cancelled ones (a moved-away one is never read).
+    if (!id || isCancelledLesson(row.status)) continue;
     const running = isOpenLesson(row.status) && Date.parse(row.starts_at) <= at && at < Date.parse(row.ends_at);
     const prev = facts.get(id) ?? { lessons_today: 0, live_now: false };
     facts.set(id, { lessons_today: prev.lessons_today + 1, live_now: prev.live_now || running });

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { rpcOut, STUDENT } from './course-pause.fakes';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { CoursePauseLessonsBack, type PauseClashes, type PauseScheduling } from './course-pause.lessons-back';
 import { changedLessons, type RpcOut } from './course-pause.mapper';
@@ -47,7 +48,8 @@ describe('CoursePauseFollowUps', () => {
     h.queries.lessons.mockResolvedValue([]);
     const alerts = { evaluateStudents: vi.fn() };
     const audit = { record: vi.fn() };
-    const follow = new CoursePauseFollowUps(h.back, alerts as never, audit as never);
+    const events = new LessonEvents();
+    const follow = new CoursePauseFollowUps(h.back, alerts as never, audit as never, events);
     const out: RpcOut = rpcOut({ cancelled: ['a'], left: ['b'], reopened: ['a'] });
     expect(await follow.after(out, 'u1')).toBe(0);
     expect(h.events.changed).toHaveBeenCalledWith(['a', 'b']);

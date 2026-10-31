@@ -1,9 +1,9 @@
 [
-  "apps/api/src/common/activity/activity.queries.ts",
-  "apps/api/src/common/config-store/store/config-store.queries.ts",
-  "apps/api/src/common/integrations/integration-config.queries.ts",
+  "apps/api/src/common/configuration/config-store/store/config-store.queries.ts",
+  "apps/api/src/common/configuration/integrations/integration-config.queries.ts",
   "apps/api/src/common/push/notifications.queries.ts",
   "apps/api/src/common/settings/settings-meta.queries.ts",
+  "apps/api/src/common/telemetry/activity/activity.queries.ts",
   "apps/api/src/modules/finance/assistant-pay/commissions/commissions.queries.ts",
   "apps/api/src/modules/finance/assistant-pay/my/my.queries.ts",
   "apps/api/src/modules/finance/assistant-pay/statements/statements.queries.ts",

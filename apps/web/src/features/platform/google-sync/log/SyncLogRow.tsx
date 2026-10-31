@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { retryGoogleItem } from '../google-api';
 import { errorText, fill, formatAt, RETRYABLE, skipLabel, stateStyle } from '../google-format';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const s = t.googleSync.log;
 /** «مخطط: » before the LTR «POST calendar/…» island (the template ends with «{method} {target}»). */
@@ -38,7 +39,7 @@ function Detail({ item }: { item: GoogleSyncItemView }) {
 
 /** One sync item as a card that reads on a 390px phone; «إعادة المحاولة» on failed / gone / skipped. */
 export function SyncLogRow({ item, onRetried, onChanged }: Props) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const retry = useMutation({
     mutationFn: retryGoogleItem,
     onSuccess: async () => {

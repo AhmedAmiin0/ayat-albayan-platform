@@ -13,5 +13,5 @@ test('kind and source in words, with the Riyadh day first', () => {
   expect(invoiceKind(INVOICE(1, { kind: 'makeup', source: 'whatsapp' }))).toBe(
     `${t.finance.invoiceMakeup} · ${t.mobileFinance.invoices.sourceWhatsapp}`,
   );
-  expect(invoiceSubtitle(INVOICE(1))).toBe(`3 أكتوبر 2026 · ${invoiceKind(INVOICE(1))}`);
+  expect(invoiceSubtitle(INVOICE(1), 'Asia/Riyadh')).toBe(`3 أكتوبر 2026 · ${invoiceKind(INVOICE(1))}`);
 });

@@ -41,6 +41,9 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - «افحص الخطوط» on a kapso line says inbound arrives via the Kapso webhook (neutral) instead of comparing the WABA's subscribed apps with a Meta app id; with `KAPSO_WEBHOOK_SECRET` unset it says every Kapso delivery is refused (act). It reports only whether the secret is set, never its value.
 - WhatsApp voice calls (docs/28): the same route also reads changes whose field is `calls` (subscribe the webhook to `calls`); they move `wa_calls` rows and never become messages or ticks.
 - Answered within 5 s (`RESPONSE_BUDGET_MS`); Kapso times out at 10 s, retries 3 times within ~50 s and pauses a webhook that fails ≥ 85 % of the time, so a webhook item that fails answers 500 for a retry like the Meta route.
+- **A webhook gap never loses a message** (incident 2026-10-30: the chat number's Kapso webhook vanished at ~08:49 UTC and no family message arrived until it was recreated). Two read-only catch-up jobs list Kapso's message history every 10 minutes for each enabled Kapso chat number: `external-catch-up` (outbound: staff replies from Kapso's inbox) and `inbound-catch-up` (`webhook/external/inbound/`: the families' messages). The inbound one reads `direction=inbound` since the newest inbound row of the number (always the last 24 h, never more than 7 days; the first run after a deploy reads the whole 7 days), at most 20 pages of 100, and hands every wamid we do not hold to `InboundService.handle`, the webhook's own path (row, line and number, lead or guardian, auto-assign, quick reply, media id, reaction, unread, thread summary). Idempotent by wamid (unique `wa_message_id`): a webhook delivery racing it stores one row. A Kapso error stops that number's run only.
+- **Back-filled messages do not push.** A message more than 15 minutes old when the catch-up stores it (`LATE_MS`) is stored and counted unread (badges, thread summary) but fires no new-message / new-lead push; a fresh one pushes like a webhook message. One that staff already answered from Kapso's inbox is stamped read (as an outbound echo does). Late messages mean the webhook is not delivering: the admins get ONE alert per chat number per UTC day (bell + push, kind `new_message`, «لا تصل رسائل العائلات من Kapso مباشرة»: check the webhook in Kapso). The logs carry counts and the number id's last 4 characters only.
+- **Edits, deletes, reactions and other non-messages (owner 2026-10-30, migration `20261030000992`).** The WhatsApp Business app's actions reach us as echoes (`smb_message_echoes`) and history items, and families edit and delete too. One mapper (`echoPayload` / `chatMarkerOf`, `packages/shared/src/messaging/markers/`) serves the webhook echo, both catch-ups and the inbound path. An `edit`, `revoke` or `reaction` is a hidden marker row (`interactive_payload = {type, marker: true, target, text | reaction}`, idempotent by wamid, never a bubble, never unread, never the chats-list preview). The database applies it to the message it names on the same phone (`message_markers_apply`, an insert trigger): now, or when that message arrives (up to 7 days later). An edit replaces the text (`edited_at`, «تم التعديل»; the newest edit wins whatever the arrival order). A revoke sets `deleted_at` (the row and body stay for audit; the API withholds text, file and payload: «تم حذف هذه الرسالة»). A reaction sets `our_reaction` (echo) or `their_reaction` (family). Files from the app keep their file (no «[image]» caption; the mime falls back to Kapso's `media_data` or WhatsApp's default). Kapso's `errors` item (the click-to-WhatsApp ad's automatic welcome, origin `history_sync`) shows the ad's own welcome text when the item carries `referral.welcome_message.text`, else «رسالة الترحيب من الإعلان». An outbound `unsupported` shows «رسالة غير مدعومة». Rows stored before this: `tools/scripts/chat-markers/chat-markers-backfill.mjs` (export → `--dry-run` → reviewed SQL; the operator runs it).
 
 ## Keys
 
@@ -136,16 +139,32 @@ Meta values, never the producer's CRM values.
 
 | Ours (`key`) | The CRM's template | Values |
 |---|---|---|
-| `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain`, `teacher_lesson_reminder` | same names (no change) | the meta driver's values |
-| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` |
+| `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
+| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
+| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons |
 | `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
 
-The teacher alert's CRM values are written by `teacher-alert.crm.ts` into `template_params.crm` beside the Meta
-values {{1}}–{{3}} (the Meta path is unchanged); a row without its `crm` part (queued before this change, or a value
-missing: no teacher name, a student without a name or code, no end time) goes as before, `meta_name` with the
-Meta values (`crmRowName`); an admin's crm_name is always sent as set. The CRM template's two URL buttons must be
-`<WEB_ORIGIN>/{{1}}` (we send the path after the origin; both pages need a login). The report kind is
-`template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+The teacher alert's CRM values are built by `teacherLessonCrm`, the teacher reminder's by `teacherReminderCrm`
+(both `reminders/plan/teacher-lesson.crm.ts`; the reminder read adds `students.code`), into `template_params.crm`
+beside the Meta values (the alert's {{1}}–{{3}}, the reminder's {{1}}–{{2}} and Meet code; the Meta path is
+unchanged). The reminder's line is one line for Meta (no newline, no tab, never 4 spaces in a row); its texts are
+`templates.teacherReminderCrm` / `teacherReminderCrmStudent` in ar.json; `<join>` is the lesson's own link as the
+reminders send it (Meet, the teacher's fixed link, our classroom when LiveKit runs it), else our classroom, and
+`<report>` the teacher's report form, both absolute (`<WEB_ORIGIN>/classroom/<id>`, `<WEB_ORIGIN>/teacher/report/<id>`,
+login required); an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
+name carries the CRM values even when it equals `meta_name` (`teacher_lesson_reminder`). A row without its `crm`
+part (queued before this change, or a value missing: no teacher name, a student without a name or code, no web
+origin, the alert's end time) goes as before, `meta_name` with the Meta values (`crmRowName`): a `_meet` row then
+asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's crm_name is always sent as set.
+
+**teacher_lesson_v2's real buttons (read from the old script, 2026-10-31).** «ادخل الحلقة» is
+`https://meet.google.com/{{1}}` and «تقرير الحلقة» is `https://vercelayat-r.vercel.app/r/{{1}}`, a redirector to the
+**old Google report form** (`/r/<a>/<b>/<c>` → the form, prefilled). They are not `<WEB_ORIGIN>/{{1}}` (an earlier
+note here said so, never verified). So `teacher_new_student`'s two suffixes on a crm line open a broken Meet URL
+(`meet.google.com/classroom/<id>`) and the old form: **owner decision pending** (send a Meet code and the old form's
+values, a new CRM template with platform buttons, or a crm_name to a template without buttons); not changed yet.
+
+The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
 fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
 twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
@@ -176,7 +195,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
-6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
+6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
 7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
 8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 

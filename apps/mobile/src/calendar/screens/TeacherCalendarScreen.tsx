@@ -21,31 +21,33 @@ import { LessonDetailsSheet } from '../details/LessonDetailsSheet';
 import { useLessonDetails } from '../details/use-lesson-details';
 import { PeriodSwitcher } from '../overview/PeriodSwitcher';
 import { useAvailability, useTeacher, useWeekLessons } from '../lib/queries';
-import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/week';
-import { useClockCycle } from '@/core/lib/clock';
+import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '../lib/week';
+import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /**
  * «جدول المعلم/ة» (R-TCH-02, R-SCH-01): one teacher's week, السبت → الجمعة, as a day-by-day agenda
- * in Riyadh time with the teacher's own clock beside it when it differs, and each day's
+ * on the viewer's clock with the teacher's own beside it when it differs, and each day's
  * availability as a faint line. ‹ › moves a week; a lesson's «غيّر الميعاد» opens the reschedule
  * sheet and «عدّل الوقت» the in-place edit sheet; a tap on the row opens «تفاصيل الحلقة». Pull to refresh; offline the saved week stays with its «آخر تحديث».
  */
 export function TeacherCalendarScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
-  const today = riyadhToday(useNow());
+  // The viewer's days (docs/34): week window, day buckets and clock are one zone.
+  const today = viewerToday(useNow(), tz);
   const [start, setStart] = useFollowingDay(weekStart(today));
-  const lessons = useWeekLessons({ ...weekWindow(start), teacherId: id });
+  const lessons = useWeekLessons({ ...weekWindow(start, tz), teacherId: id });
   const teacher = useTeacher(id);
   const grid = useAvailability(id);
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
   const details = useLessonDetails(lessons.data);
   const loaded = lessons.data !== undefined;
-  const days = agendaDays(lessons.data ?? [], start);
+  const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
-  const tzLine = t.availability.tzHint.replace('{tz}', t.runningHead.riyadh);
-  const subtitle = headerLine([t.calendar.teacherCalendar, tzLine], lessons, cycle);
+  const zone = zoneNote(tz);
+  const subtitle = headerLine([t.calendar.teacherCalendar, zone], lessons, { cycle, tz });
 
   return (
     <Screen>

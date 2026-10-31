@@ -43,7 +43,7 @@ test('the sheet asks 15-minute starts for this lesson’s own length and student
   expect(path).toContain('stepMin=15');
   expect(path).toContain('excludeLessonId=l-up');
   expect(screen.getByRole('header', { name: t.editTime.title })).toBeTruthy();
-  expect(screen.getByText(t.reschedule.current.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.reschedule.current.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
   // Nothing changed yet: nothing to save, nothing to confirm, and the disabled button says why.
   expect(submit()).toBeDisabled();
@@ -74,7 +74,7 @@ test('a free start: the change line, the teacher’s clock, the guardian toggle 
   expect(await screen.findByText(t.editTime.saved)).toBeTruthy();
   // A short headline; the new time and the WhatsApp line are body text under it.
   expect(screen.getByText(t.editTime.notifiedLine)).toBeTruthy();
-  expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'السبت 3 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'السبت 3 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
   expect(client.getQueryState(lessonsKey)?.isInvalidated).toBe(true);
   await fireEvent.press(screen.getByRole('button', { name: t.reschedule.done }));
   expect(onClose).toHaveBeenCalled();

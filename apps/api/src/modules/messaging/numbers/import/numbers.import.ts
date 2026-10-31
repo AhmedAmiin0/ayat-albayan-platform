@@ -1,13 +1,13 @@
 import { WA_PROVIDERS, type ImportResult, type ImportRoleView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { ar } from '../../../../common/i18n/server-text';
-import { integrationOverlay } from '../../../../common/integrations/integration-overlay';
-import { envFrom } from '../../../../config/env/env';
-import { SINGLETON_ENTITY_ID } from '../../../../common/audit/singleton-entity';
-import { NumbersEffects } from '../numbers.effects';
+import { ar } from '@/common/infra/i18n/server-text';
+import { integrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import { envFrom } from '@/config/env/env';
+import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
+import { NumbersEffects } from '@/modules/messaging/numbers/numbers.effects';
 import { planAll, type RolePlan } from './numbers.import-plan';
-import { NumbersQueries } from '../numbers.queries';
-import { NumbersSecrets } from '../config/numbers.secrets';
+import { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
+import { NumbersSecrets } from '@/modules/messaging/numbers/config/numbers.secrets';
 
 /** The response view of a plan: no copy sources, no row draft. */
 const toView = (p: RolePlan): ImportRoleView => ({

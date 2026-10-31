@@ -5,15 +5,15 @@ import {
   type CallPermissionVia,
 } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import { ar } from '../../../../common/i18n/server-text';
-import { dedupKey, outboundBase, type Sent } from '../../inbox';
-import { CALL_PERMISSION_PAYLOAD } from '../../whatsapp';
-import type { CallActor } from '../access/call-access';
-import { CallsGate } from '../access/calls-gate';
-import type { CallingLine } from '../kapso/calling-line';
-import type { CallPermissionFacts } from '../kapso/calls-api';
-import { CallsNumberRepo, IN_FLIGHT } from '../store/calls-number.repo';
+import { conflict } from '@/common/http/errors';
+import { ar } from '@/common/infra/i18n/server-text';
+import { dedupKey, outboundBase, type Sent } from '@/modules/messaging/inbox';
+import { CALL_PERMISSION_PAYLOAD } from '@/modules/messaging/whatsapp';
+import type { CallActor } from '@/modules/messaging/calls/access/call-access';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import type { CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import type { CallPermissionFacts } from '@/modules/messaging/calls/kapso/calls-api';
+import { CallsNumberRepo, IN_FLIGHT } from '@/modules/messaging/calls/store/calls-number.repo';
 import { logCallError, requestFailed } from './call-errors';
 import { CallsKit } from './call-kit';
 

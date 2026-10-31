@@ -1,18 +1,18 @@
 import { isWaLine, type CommsSource } from '@ab/shared';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
-import { integrationRefreshMs } from '../../../../common/integrations/integration-refresh';
+import { integrationRefreshMs } from '@/common/configuration/integrations/integration-refresh';
 import {
   callsNumber,
   setCallsNumber,
   type CallsNumber,
-} from '../../../../common/integrations/calls-number';
-import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../../../config/env/env';
+} from '@/common/configuration/integrations/calls-number';
+import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { loadEnv } from '@/config/env/env';
 import { callsNumberOf, overlayNumber } from './numbers.env';
-import { moduleOverlay, type DefaultNumber } from '../lines/numbers.lines';
-import { NumbersQueries } from '../numbers.queries';
+import { moduleOverlay, type DefaultNumber } from '@/modules/messaging/numbers/lines/numbers.lines';
+import { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
 import { NumbersSecrets } from './numbers.secrets';
-import { NumbersSettings } from '../numbers.settings';
+import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 const MIN_REFRESH_MS = 1_000;
 

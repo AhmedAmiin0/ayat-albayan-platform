@@ -1,6 +1,6 @@
 import type { Enums } from '@ab/db';
 import { normalizeArabic } from '../../core/format/arabic.js';
-import { intlLocale } from '../../i18n/locale.js';
+import { weekdayDayMonth } from '../../time/index.js';
 import { joinNames } from './booking-confirmation.js';
 import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply.js';
 import type { OutboundTemplate } from '../templates/templates.js';
@@ -49,18 +49,9 @@ export function ratingOfInteractive(payload: unknown): LessonRating | null {
   return fromKey ?? (typeof text === 'string' ? ratingOfText(text) : null);
 }
 
-const dateFormats = new Map<string, Intl.DateTimeFormat>();
-
 /** {{2}}: «الأحد 4 أكتوبر», the lesson's day in the guardian's tz (Western digits). */
 export function lessonDateText(startsAt: Date, tz: string): string {
-  let f = dateFormats.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat(intlLocale('ar'), { weekday: 'long', day: 'numeric', month: 'long', timeZone: tz });
-    dateFormats.set(tz, f);
-  }
-  const parts = f.formatToParts(startsAt);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
-  return [part('weekday'), part('day'), part('month')].join(' ');
+  return weekdayDayMonth(startsAt, { tz, locale: 'ar' });
 }
 
 export interface RatingMessageInput {

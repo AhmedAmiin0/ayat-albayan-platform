@@ -1,17 +1,17 @@
-import type {
-  PaymentView,
-  QuoteResponse,
-  SalesMoneySubscriptionView,
-  SalesPaymentView,
-  SalesQuoteView,
-  StudentStatus,
-  SubscriptionView,
+import {
+  countsForMoney,
+  round2,
+  type PaymentView,
+  type QuoteResponse,
+  type SalesMoneySubscriptionView,
+  type SalesPaymentView,
+  type SalesQuoteView,
+  type StudentStatus,
+  type SubscriptionView,
 } from '@ab/shared';
 
 // The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a spread of
 // the admin's view, so a column added there never leaks here (fx rate, price_source, notes, recorder…).
-
-const cents = (n: number): number => Math.round(n * 100) / 100;
 
 export function toSalesQuote(q: QuoteResponse): SalesQuoteView {
   return {
@@ -38,8 +38,8 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    // A cancelled package is never owed (owner 2026-10-28).
-    due: s.status === 'cancelled' ? 0 : Math.max(0, cents(s.price - s.paid)),
+    // An unused cancel is never owed (owner 2026-10-28); a stopped package still is (2026-10-30).
+    due: countsForMoney(s) ? Math.max(0, round2(s.price - s.paid)) : 0,
   };
 }
 

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { ar } from '../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import {
   followUpCycle,
   followUpKey,
@@ -9,8 +9,8 @@ import {
   type FollowUpLead,
   type MessageStatus,
 } from '@ab/shared';
-import { queuedRow, type QueuedMessage } from '../reminders/queued-row';
-import { localDay } from '../../people/teachers/availability/zoned-time';
+import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
+import { localDay } from '@/modules/people/teachers/availability/zoned-time';
 
 // R-LEAD-05 follow-up planning (docs/12 §7). Pure.
 

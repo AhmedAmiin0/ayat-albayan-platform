@@ -1,11 +1,11 @@
 import type { Json, Tables, TablesInsert } from '@ab/db';
 import { isWaLine, type TemplateLineSync, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { SharedCache } from '../../../../../common/cache/shared-cache';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import type { ImportRow } from '../sync/template-import';
-import type { TemplatePatch } from '../sync/template-sync';
-import { templateRow, templateRows, type TemplateRow } from '../../whatsapp.types';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
+import { DB, type Db } from '@/common/db/db.module';
+import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
+import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
+import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;

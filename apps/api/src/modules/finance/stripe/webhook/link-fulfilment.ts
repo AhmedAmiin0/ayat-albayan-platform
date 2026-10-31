@@ -1,12 +1,12 @@
 import { fromMinorUnits } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
-import { conflict, errorCode } from '../../../../common/http/errors';
-import { ar } from '../../../../common/i18n/server-text';
-import { PaymentsQueries } from '../../payments';
-import { uuidFor } from '../links/link-ids';
-import { LinkPackages } from '../links/link-packages';
-import type { LinkRow } from '../links/payment-links.queries';
+import { conflict, errorCode } from '@/common/http/errors';
+import { ar } from '@/common/infra/i18n/server-text';
+import { PaymentsQueries } from '@/modules/finance/payments';
+import { uuidFor } from '@/modules/finance/stripe/links/link-ids';
+import { LinkPackages } from '@/modules/finance/stripe/links/link-packages';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
 import { WebhookDeps } from './webhook-deps';
 
 export const idOf = (v: string | { id: string } | null): string | null => (typeof v === 'string' ? v : (v?.id ?? null));

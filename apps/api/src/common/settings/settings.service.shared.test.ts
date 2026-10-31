@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '../cache/cache.fakes';
-import type { SharedCache } from '../cache/shared-cache';
-import { ConfigCacheBridge } from '../config-store/store/config-cache.bridge';
-import type { ConfigStoreQueries } from '../config-store/store/config-store.queries';
-import { ConfigStore } from '../config-store/store/config-store.service';
-import type { Db } from '../db/db.module';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
+import type { SharedCache } from '@/common/infra/cache/shared-cache';
+import { ConfigCacheBridge } from '@/common/configuration/config-store/store/config-cache.bridge';
+import type { ConfigStoreQueries } from '@/common/configuration/config-store/store/config-store.queries';
+import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
+import type { Db } from '@/common/db/db.module';
 import { SettingsService } from './settings.service';
 
 type Rows = { key: string; value: unknown }[];

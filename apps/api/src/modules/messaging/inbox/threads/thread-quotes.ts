@@ -11,46 +11,70 @@ export interface QuotedRow {
   body: string | null;
   media_mime: string | null;
   template_key: string | null;
+  /** Deleted for everyone (migration 992): the quote shows nothing of it. */
+  deleted_at?: string | null;
+  /** Hidden from the platform («حذف من المنصة», 993): quoted with neither text nor file. */
+  hidden_at?: string | null;
   sender?: { full_name: string } | null;
 }
 
-/** The reply fields of our outbound row: our id of the quoted message and its wamid (Meta's context). */
+/**
+ * The reply fields of our outbound row: our id of the quoted message and its wamid (Meta's
+ * context).
+ */
 export interface ReplyFields {
   reply_to_message_id: string;
-  /** null: the reply leaves from another number than the quoted message (that number never issued the wamid). */
+  /**
+   * null: the reply leaves from another number than the quoted message (that number never issued
+   * the wamid).
+   */
   reply_to_wa_id: string | null;
 }
 
 /** The number a send leaves from (sendLine): a line (legacy) and/or a number (module mode). */
 export type SendFrom = { line?: string | null; number_id?: string | null };
 
-/** Meta's context only names a wamid of the sending number: a known, different line or number drops it. */
+/**
+ * Meta's context only names a wamid of the sending number: a known, different line or number drops
+ * it.
+ */
 export function sameNumber(quoted: SendFrom, from: SendFrom): boolean {
   if (from.number_id && quoted.number_id) return from.number_id === quoted.number_id;
   return !(from.line && quoted.line && from.line !== quoted.line);
 }
 
-const QUOTE_SELECT = 'id, direction, body, media_mime, template_key, sender:profiles!messages_created_by_fkey(full_name)' as const;
+const QUOTE_SELECT =
+  'id, direction, body, media_mime, template_key, deleted_at, hidden_at, sender:profiles!messages_created_by_fkey(full_name)' as const;
 
 /**
  * A template's text is never quoted (a signed link could be in it): the bubble names it a template.
  * Nor an old-CRM file's body (only its storage link): the quote names the media.
  */
 export function quoteOf(row: QuotedRow): MessageQuote {
-  const hidden = row.template_key || looksCrmHistory(row);
+  const gone = goneFromQuotes(row);
+  const hidden = gone || row.template_key || looksCrmHistory(row);
   return {
     id: row.id,
     direction: row.direction,
     body: hidden ? null : (row.body?.slice(0, QUOTE_BODY_MAX) ?? null),
-    media_mime: row.media_mime,
+    media_mime: gone ? null : row.media_mime,
     template_key: row.template_key,
     sender_name: row.direction === 'outbound' ? (row.sender?.full_name ?? null) : null,
   };
 }
 
+/** Deleted for everyone, or hidden from the platform: the quote shows nothing of it. */
+const goneFromQuotes = (row: QuotedRow): boolean =>
+  Boolean(row.deleted_at) || Boolean(row.hidden_at);
+
 /** Each view with its quote (same chat only); views without one are returned as they are. */
-export function withQuotes(views: readonly MessageView[], quotes: ReadonlyMap<string, MessageQuote>): MessageView[] {
-  return views.map((v) => (v.reply_to_message_id ? { ...v, reply_to: quotes.get(v.reply_to_message_id) ?? null } : v));
+export function withQuotes(
+  views: readonly MessageView[],
+  quotes: ReadonlyMap<string, MessageQuote>,
+): MessageView[] {
+  return views.map((v) =>
+    v.reply_to_message_id ? { ...v, reply_to: quotes.get(v.reply_to_message_id) ?? null } : v,
+  );
 }
 
 /**
@@ -72,14 +96,25 @@ export class ThreadQuotes {
     if (error) throw new Error(`reply target read failed: ${error.message}`);
     if (!data?.wa_message_id) throw waHttpError('reply_not_in_thread', HttpStatus.BAD_REQUEST);
     // The bubble still quotes it; WhatsApp gets no context it would refuse or drop.
-    return { reply_to_message_id: data.id, reply_to_wa_id: sameNumber(data, from) ? data.wa_message_id : null };
+    return {
+      reply_to_message_id: data.id,
+      reply_to_wa_id: sameNumber(data, from) ? data.wa_message_id : null,
+    };
   }
 
-  /** The page's views with their quotes; no read at all when nothing on the page answers anything. */
+  /**
+   * The page's views with their quotes; no read at all when nothing on the page answers anything.
+   */
   async attach(views: readonly MessageView[], phone: string): Promise<MessageView[]> {
-    const ids = [...new Set(views.flatMap((v) => (v.reply_to_message_id ? [v.reply_to_message_id] : [])))];
+    const ids = [
+      ...new Set(views.flatMap((v) => (v.reply_to_message_id ? [v.reply_to_message_id] : []))),
+    ];
     if (ids.length === 0) return [...views];
-    const { data, error } = await this.db.from('messages').select(QUOTE_SELECT).in('id', ids).eq('phone_e164', phone);
+    const { data, error } = await this.db
+      .from('messages')
+      .select(QUOTE_SELECT)
+      .in('id', ids)
+      .eq('phone_e164', phone);
     if (error) throw new Error(`quoted messages read failed: ${error.message}`);
     return withQuotes(views, new Map((data ?? []).map((r) => [r.id, quoteOf(r)])));
   }

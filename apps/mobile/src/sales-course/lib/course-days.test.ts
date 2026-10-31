@@ -1,6 +1,8 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { daysText, requestDays, takenDays, takenTexts, weekdayName } from './course-days';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const sep = t.common.listSeparator;
 const at = (day: string, time: string) => t.booking.dayAt.replace('{day}', day).replace('{time}', time);
 const RIYADH = 'Asia/Riyadh';
@@ -17,13 +19,13 @@ describe('daysText: a course’s days with their times', () => {
   ];
   it('names each weekday with its time, السبت → الجمعة', () => {
     const want = [at(weekdayName(6), '09:00'), at(weekdayName(0), '17:00'), at(weekdayName(4), '18:00')];
-    expect(daysText(days, RIYADH, '24')).toBe(want.join(sep));
+    expect(daysText(days, RIYADH, R24)).toBe(want.join(sep));
   });
   it('outside Riyadh each time names the city (the web’s dayAtText)', () => {
     const inCairo = t.schedule.inCity.replace('{time}', '09:00').replace('{city}', t.tz['Africa/Cairo']);
-    expect(daysText(days, 'Africa/Cairo', '24').startsWith(at(weekdayName(6), inCairo))).toBe(true);
+    expect(daysText(days, 'Africa/Cairo', R24).startsWith(at(weekdayName(6), inCairo))).toBe(true);
   });
-  it('no days → empty', () => expect(daysText([], RIYADH, '24')).toBe(''));
+  it('no days → empty', () => expect(daysText([], RIYADH, R24)).toBe(''));
 });
 
 describe('requestDays: the weekdays and times a change asks for', () => {

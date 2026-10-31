@@ -1,5 +1,16 @@
 import { sendErrorReason } from '@ab/client-core';
-import { clockOf, counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import {
+  clockOf,
+  counted,
+  dateText,
+  formatPhone,
+  localDateIn,
+  previewNote,
+  SESSION_WINDOW_MS,
+  type MessageView,
+  type NoteWords,
+  type ThreadView,
+} from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
@@ -9,12 +20,20 @@ import { locale } from '@/lib/i18n/locale';
 // Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the
 // viewer's zone, 12 or 24 h as the viewer chose (useClock), Western digits (`nu-latn`).
 
-const LOCALE = intlLocale(locale);
-const dayMonth = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
-const day = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
+const dayMonth = (at: Date): string =>
+  dateText(at, { tz: viewerZone(), locale }, { day: 'numeric', month: 'short' });
+const sameDay = (a: Date, b: Date): boolean =>
+  localDateIn(a, viewerZone()) === localDateIn(b, viewerZone());
 const clockAt = (at: Date, clock: Clock): string => clockOf(at, { ...clock, tz: viewerZone() });
 
 export type MediaKind = keyof typeof t.inbox.media;
+
+/** A deleted message, the ad's welcome, an unsupported echo (owner 2026-10-30, marker-notes). */
+export const NOTE_WORDS: NoteWords = {
+  deleted: t.inbox.deletedMessage,
+  adWelcome: t.inbox.adWelcome,
+  unsupported: t.inbox.unsupportedEcho,
+};
 
 /** WhatsApp media by MIME: image / audio / video, PDFs and other files are documents. */
 export function mediaKind(mime: string | null): MediaKind {
@@ -51,6 +70,8 @@ export function templateLine(key: string): string {
 }
 
 function lastText(th: ThreadView): string {
+  const note = previewNote(th, NOTE_WORDS);
+  if (note) return note;
   const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
   if (media) return th.last_body ? `${media}: ${th.last_body}` : media;
   if (th.last_body) return th.last_body;
@@ -74,7 +95,7 @@ export const unreadLabel = (n: number): string => counted(t.inbox.unread, n);
  */
 export function listTime(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
-  return at.toDateString() === now.toDateString() ? clockAt(at, clock) : dayMonth.format(at);
+  return sameDay(at, now) ? clockAt(at, clock) : dayMonth(at);
 }
 
 export const clockText = (iso: string, clock: Clock): string => clockAt(new Date(iso), clock);
@@ -82,17 +103,18 @@ export const clockText = (iso: string, clock: Clock): string => clockAt(new Date
 /** A bubble's time: «05:53» today, «1 أكتوبر 05:53» another day (the 24 h window needs the day). */
 export function stampText(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
-  return at.toDateString() === now.toDateString() ? clockAt(at, clock) : `${dayMonth.format(at)} ${clockAt(at, clock)}`;
+  return sameDay(at, now) ? clockAt(at, clock) : `${dayMonth(at)} ${clockAt(at, clock)}`;
 }
 
 const CITIES: Record<string, string | undefined> = t.tz;
 
 /** «المواعيد بتوقيت الرياض»: the zone every time on the page is shown in (the viewer's). */
-export function timesInText(tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
+export function timesInText(tz: string = viewerZone()): string {
   return t.inbox.timesIn.replace('{city}', CITIES[tz] ?? tz);
 }
 /** «03/10/2026، 14:05»: the whole stamp (tooltips, notes). */
-export const fullTime = (iso: string, clock: Clock): string => dateAndClock(day, new Date(iso), { ...clock, tz: viewerZone() });
+export const fullTime = (iso: string, clock: Clock): string =>
+  dateAndClock(new Date(iso), { ...clock, tz: viewerZone() }, { dateStyle: 'medium' });
 
 /** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message. */
 export function sessionUntil(lastInboundAt: string, clock: Clock): string {

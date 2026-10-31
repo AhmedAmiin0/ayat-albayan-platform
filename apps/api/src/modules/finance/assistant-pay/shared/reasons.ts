@@ -1,4 +1,4 @@
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 
 /**
  * The database writes some reasons itself, as codes ('payment_voided': a refund or a deleted payment undid

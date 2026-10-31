@@ -5,11 +5,12 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { lastSignIn, recordText, statusStyle } from '../shared/format';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** Status (and why it is disabled), the linked record and the last sign-in, above the edit fields. */
 export function UserSummary({ user }: { user: UserDetail }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const label = { fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink3 };
   const value = { fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 };
@@ -30,7 +31,7 @@ export function UserSummary({ user }: { user: UserDetail }) {
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         <AppText style={label}>{t.users.cols.lastSignIn}</AppText>
-        <AppText style={value}>{lastSignIn(user.last_sign_in_at, cycle)}</AppText>
+        <AppText style={value}>{lastSignIn(user.last_sign_in_at, cycle, tz)}</AppText>
       </View>
     </View>
   );

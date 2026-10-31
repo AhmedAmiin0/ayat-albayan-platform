@@ -1,8 +1,8 @@
+import { RIYADH_TZ } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
   addDays,
   dayMonthLabel,
-  RIYADH_TZ,
   weekDays,
   weekStart,
   weekWindow,

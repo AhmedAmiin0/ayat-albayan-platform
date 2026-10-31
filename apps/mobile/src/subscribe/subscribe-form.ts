@@ -1,4 +1,5 @@
 import {
+  addCalendarDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -47,22 +48,19 @@ export function pricingOf(f: SubscribeForm): SubscriptionPricing {
   return f.plan === 'custom' ? { ...common, count: f.count } : { ...common, tier: f.plan };
 }
 
-const addDays = (date: string, n: number) =>
-  new Date(Date.parse(`${date}T12:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
-
 /**
  * The package's first day, picked never typed (rule 6): today and the next 6 days in the family's
  * zone; `first` (the booked first lesson's day) leads when it falls outside them.
  */
 export function startDays(now: Date, tz: string, first?: string): string[] {
   const today = localDate(now, tz);
-  const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
+  const days = Array.from({ length: 7 }, (_, i) => addCalendarDays(today, i));
   return first && !days.includes(first) ? [first, ...days] : days;
 }
 
-/** «النهارده», else «الأحد 4 أكتوبر» (Western digits) for a local date. */
+/** «النهارده», else «الأحد 4 أكتوبر» (Western digits) for a local date (a day: read in UTC). */
 export function startDayLabel(date: string, today: string): string {
-  return date === today ? t.mobile.today : dayLabel(new Date(`${date}T12:00:00Z`));
+  return date === today ? t.mobile.today : dayLabel(new Date(`${date}T12:00:00Z`), 'UTC');
 }
 
 function codeOf(error: unknown): string | undefined {

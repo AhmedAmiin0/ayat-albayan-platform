@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
-import { PERMISSION_PREFIX, permissionKey } from '../cache/cache-keys';
-import type { SharedCache } from '../cache/shared-cache';
+import { PERMISSION_PREFIX, permissionKey } from '@/common/infra/cache/cache-keys';
+import type { SharedCache } from '@/common/infra/cache/shared-cache';
 
 /** How long a user's resolved permission set is reused before the DB is read again. */
 export const PERMISSION_TTL_MS = 30_000;

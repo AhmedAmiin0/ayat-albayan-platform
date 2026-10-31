@@ -191,3 +191,30 @@ row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/sales/chan
   page and the assistant's «طلابي» list open the read-only thread.
 - Mobile (JS only, OTA): teacher «المزيد» → «رسائل الطلاب» (list + thread); the admin's student file and the
   assistant's «طلابي» rows open the read-only thread.
+
+### Edit and delete (owner 2026-10-30: «also add edit and delete message ability»)
+
+WhatsApp's Cloud API (so Kapso and the CRM drivers) cannot edit or revoke a sent message; only the
+WhatsApp Business app can (those arrive as `smb_message_echoes` edit / revoke, migration 992). So:
+
+| Chat | Who | What |
+| --- | --- | --- |
+| In-app channel | the sender | «تعديل» own text ≤ 15 min; «حذف للجميع» own message ≤ 48 h |
+| In-app channel | the admin (`/students/:id/channel`) | «حذف للجميع» any message (moderation) |
+| WhatsApp chat | admin, sales (`inbox.send`, not teacher mode) | «حذف من المنصة»: hidden for staff only |
+| WhatsApp chat | the admin | «إظهار» a hidden message again |
+
+- Rules live in `packages/shared/src/messaging/message-actions` (`channelActions`, `canHideMessages`,
+  `canUnhideMessages`); the API enforces each one (`ChannelEdits`, `MessageHideService`). Errors:
+  403 `not_your_message` / `edit_window_closed` / `delete_window_closed`, 409 `message_deleted`.
+- `PATCH` / `DELETE …/messages/:messageId` on the teacher and portal channel routes; `DELETE` on the
+  admin's monitor route; `POST` / `DELETE /threads/:phone/messages/:messageId/hide`.
+- An edit keeps the earlier text in `channel_message_edits` (admin read only, never shown); a delete
+  moves the text there and leaves `body = '-'` (never served). Bubbles show «تم التعديل» /
+  «تم حذف هذه الرسالة»; the teacher's list preview shows the deleted line; unread counts never move.
+- The channel's Realtime subscription listens to every change (`event: '*'`), so an edit or delete
+  re-reads the other side's thread at once.
+- A hidden WhatsApp message is «أُخفيت من المنصة — ما زالت ظاهرة عند العميل» with who / when for every
+  staff reader; its file 404s, it is never quoted or forwarded; v_threads (preview, unread) is
+  untouched. Nothing is sent to WhatsApp. Every change writes an audit_log row.
+- Migration `20261030000993_chat_edit_delete.sql` (expand only, idempotent, RLS on).

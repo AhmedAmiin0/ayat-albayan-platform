@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { cancelOffered, isCancelled, packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
+import { cancelOffered, countsForMoney, isCancelled, packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTabOpen } from '@/auth/use-tab-open';
@@ -61,7 +61,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
   const progress = subscriptionProgress(sub, threshold);
   const gone = isCancelled(sub);
   const due = !gone && progress.tone === 'act' && sub.status !== 'paused' && sub.status !== 'trial';
-  const partial = !gone && paymentState(sub) !== 'full';
+  const partial = countsForMoney(sub) && paymentState(sub) !== 'full';
   return (
     <ListRow
       title={sub.student.name}

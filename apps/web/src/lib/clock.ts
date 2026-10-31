@@ -1,5 +1,6 @@
 import {
   CLOCK_STORAGE_KEY,
+  engineHourCycle,
   parseClockPref,
   resolveHourCycle,
   uses24FromHourCycle,
@@ -24,7 +25,7 @@ function readPref(): ClockPref {
 /** Does this browser's locale use 24-hour times? h11/h12 → no; unknown → null (reads as 24 h). */
 export function deviceUses24(): boolean | null {
   try {
-    return uses24FromHourCycle(new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle);
+    return uses24FromHourCycle(engineHourCycle());
   } catch {
     return null;
   }

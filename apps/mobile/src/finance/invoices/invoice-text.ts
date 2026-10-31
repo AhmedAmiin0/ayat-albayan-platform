@@ -14,5 +14,6 @@ export function invoiceKind(i: Pick<InvoiceView, 'kind' | 'source'>): string {
   return m.summary.replace('{kind}', kinds[i.kind]).replace('{source}', i.source === 'whatsapp' ? m.sourceWhatsapp : m.sourceUpload);
 }
 
-/** The second line of a row: the day it was added, then kind and source. */
-export const invoiceSubtitle = (i: InvoiceView): string => `${instantDay(i.created_at)} · ${invoiceKind(i)}`;
+/** The second line of a row: the day it was added (the viewer's `tz`), then kind and source. */
+export const invoiceSubtitle = (i: InvoiceView, tz: string): string =>
+  `${instantDay(i.created_at, tz)} · ${invoiceKind(i)}`;

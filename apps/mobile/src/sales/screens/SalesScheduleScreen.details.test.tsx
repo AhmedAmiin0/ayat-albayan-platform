@@ -50,7 +50,8 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   expect(screen.getByRole('button', { name: t.sales.lessonActions.confirm })).toBeTruthy();
   expect(screen.getByText(ltr('AB-0200'))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
-  expect(screen.getByText(new RegExp(`^${t.schedule.teacherTime.replace('{time}', '')}`))).toBeTruthy();
+  // 12 Oct: Cairo is on summer time, the same clock as the (Riyadh) viewer: no teacher line.
+  expect(screen.queryByText(new RegExp(`^${t.schedule.teacherTime.replace('{time}', '')}`))).toBeNull();
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.reports.view]) {
     expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
   }

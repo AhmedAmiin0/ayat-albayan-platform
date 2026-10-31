@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeConfigStore } from '../config-store/config-store.fakes';
-import type { Db } from '../db/db.module';
+import { fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
+import type { Db } from '@/common/db/db.module';
 import { fakeSettings, readerOf } from './settings.fakes';
 import { readSlice, type SettingsSlice } from './settings-slice';
 import { SettingsService } from './settings.service';

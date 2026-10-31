@@ -11,16 +11,20 @@ import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
 import { CourseCheckNotice } from '../components/CourseCheckNotice';
 import { daysText, requestDays } from '../lib/course-days';
+import { targetPath, type ChangeTarget } from './change-body';
 import { useCourseChangeCheck } from './change-queries';
-import { useClockCycle } from '@/core/lib/clock';
+import { useOverride } from './OverrideField';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseChangeReviewProps {
   course: BookedCourse;
   picks: readonly string[];
   /** The request «احفظ الأيام الجديدة» sends; null until a day is picked. */
   body: CourseChangeRequest | null;
-  saving: { busy: boolean; failure: BookFailure | null; submit: () => void };
+  /** reason: the admin's clash override (target.override), else none. */
+  saving: { busy: boolean; failure: BookFailure | null; submit: (reason?: string) => void };
   onChangeSlot: () => void;
+  target?: ChangeTarget | undefined;
 }
 
 /**
@@ -28,20 +32,23 @@ interface CourseChangeReviewProps {
  * and the new last day (POST …/course/change/check), then the first lesson on the new days. A clash blocks the assistant (no override, owner
  * 2026-10-18): its only way out is «اختر موعدًا آخر».
  */
-export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }: CourseChangeReviewProps) {
+export function CourseChangeReview(props: CourseChangeReviewProps) {
+  const { course, picks, body, saving, onChangeSlot, target } = props;
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
-  const check = useCourseChangeCheck(body);
+  const check = useCourseChangeCheck(body, targetPath(target));
   const need = course.perWeek ?? course.days.length;
-  const clean = check.isSuccess && check.data.conflicts.length === 0;
-  const ready = body !== null && picks.length === need && clean;
+  const override = useOverride({ target, check });
+  const ready = body !== null && picks.length === need && !override.blocked;
   const line = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
   const texts = t.booking.courseChange;
   return (
     <View style={{ gap: 14 }}>
       <View style={{ gap: 4 }}>
-        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}</AppText>
-        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, cycle))}</AppText> : null}
+        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}</AppText>
+        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, viewer))}</AppText> : null}
       </View>
       {check.isSuccess ? (
         <View style={{ gap: 4 }}>
@@ -49,18 +56,19 @@ export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }
           <AppText style={line}>{texts.newEnd.replace('{date}', localDay(check.data.endsOn))}</AppText>
         </View>
       ) : null}
-      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz, cycle))}</AppText> : null}
+      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz, viewer))}</AppText> : null}
       {check.isPending ? (
         <AppText style={{ ...line, color: color.ink2 }}>{texts.checking}</AppText>
       ) : (
         <CourseCheckNotice check={check} onChangeSlot={onChangeSlot} />
       )}
+      {override.field}
       <SaveError failure={saving.failure} onChangeSlot={onChangeSlot} />
       <Button
         label={saving.busy ? texts.submitting : texts.submit}
         busy={saving.busy}
         disabled={!ready}
-        onPress={saving.submit}
+        onPress={() => saving.submit(override.reason)}
       />
     </View>
   );

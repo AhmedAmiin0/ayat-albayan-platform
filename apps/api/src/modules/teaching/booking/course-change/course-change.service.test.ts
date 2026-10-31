@@ -22,7 +22,9 @@ describe('CourseChange — «تغيير أيام الحلقات» (owner 2026-10
   it('change: one change_course write naming the course, then its result', async () => {
     const { service, writer } = setup();
     expect(await service.change(body(), SALES)).toEqual({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' });
-    expect(writer.apply).toHaveBeenCalledWith(expect.objectContaining({ subscriptionId: SUB_ID, moved: ['l9'] }));
+    const told = expect.objectContaining({ moved: [expect.objectContaining({ id: 'l9' })], teacherChanged: false });
+    const write = expect.objectContaining({ subscriptionId: SUB_ID, told });
+    expect(writer.apply).toHaveBeenCalledWith(write);
   });
 
   it('a clash blocks the assistant (409 conflict), even with a reason (403 override_not_allowed)', async () => {

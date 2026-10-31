@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261028000935 read as text: no database in unit tests (the SQL behaviour, max+1 calls and the
 // grants, is in e2e/tests/rate-limit-take.sql.spec.ts).
 const sql = readFileSync(
-  join(__dirname, '../../../../../../../packages/db/supabase/migrations/20261028000935_rate_limit_hits.sql'),
+  migrationPath('20261028000935_rate_limit_hits.sql'),
   'utf8',
 );
 const fn = /create or replace function public\.rate_limit_take[\s\S]*?\$\$;/.exec(sql)?.[0] ?? '';
