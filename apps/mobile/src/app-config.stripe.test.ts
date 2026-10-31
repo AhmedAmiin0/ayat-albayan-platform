@@ -40,7 +40,7 @@ test('only the stripe-test profile sets the flag; an internal APK on its own cha
     channel: 'stripe-test',
     android: { buildType: 'apk' },
     environment: 'preview',
-    env: { EXPO_PUBLIC_FEATURE_STRIPE: '1', APP_VARIANT: 'stripetest' },
+    env: { EXPO_PUBLIC_FEATURE_STRIPE: '1', APP_VARIANT: 'stripetest', ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a,armeabi-v7a' },
     node: eas.build.preview.node,
     pnpm: eas.build.preview.pnpm,
   });
