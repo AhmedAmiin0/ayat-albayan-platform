@@ -46,7 +46,8 @@ jobs:
   # run fails and says what is missing.
   preflight:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    # A full-history checkout (the sha check): the same clone «plan» does in 5.
+    timeout-minutes: 5
     environment: develop
     outputs:
       ready: ${{ steps.check.outputs.ready }}

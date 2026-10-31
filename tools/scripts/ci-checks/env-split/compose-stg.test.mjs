@@ -2,7 +2,10 @@
 // VPS with the live CRM: no shared project, image tag or port; one API process; the PDF sandbox
 // hardened exactly like production's; about 1 GB in all; Stripe on staging only.
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
@@ -67,5 +70,23 @@ test('about 1 GB in all, and every log rotates', () => {
   for (const [name, s] of Object.entries(stg.services)) {
     assert.equal(s.logging?.driver, 'json-file', name);
     assert.match(s.logging.options['max-size'], /^\d+m$/, name);
+  }
+});
+
+test('docker compose config accepts deploy/stg (when the Docker CLI is here)', (t) => {
+  try {
+    execFileSync('docker', ['compose', 'version'], { stdio: 'ignore' });
+  } catch {
+    t.skip('no docker compose CLI on this machine');
+    return;
+  }
+  const dir = mkdtempSync(join(tmpdir(), 'compose-stg-'));
+  try {
+    copyFileSync(root('deploy/stg/docker-compose.yml'), join(dir, 'docker-compose.yml'));
+    writeFileSync(join(dir, '.env'), '');
+    const file = join(dir, 'docker-compose.yml');
+    execFileSync('docker', ['compose', '-f', file, 'config', '--quiet'], { stdio: 'pipe' });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
   }
 });
