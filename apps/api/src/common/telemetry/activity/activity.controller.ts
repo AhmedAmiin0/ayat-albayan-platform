@@ -5,7 +5,7 @@ import { parseOrThrow } from '@/common/http/http';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
 import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ActivityQueries } from './activity.queries';
+import { ActivityRepo } from './activity.repo';
 
 /** «سجل النشاط»: GET /activity, admin only, paged + filtered + sorted (R-NFR-08). */
 @ApiTags('activity')
@@ -13,7 +13,7 @@ import { ActivityQueries } from './activity.queries';
 @Permissions('activity.read')
 @Controller('activity')
 export class ActivityController {
-  constructor(private readonly activity: ActivityQueries) {}
+  constructor(private readonly activity: ActivityRepo) {}
 
   @Get()
   list(@Query() query: unknown): Promise<ActivityPage> {

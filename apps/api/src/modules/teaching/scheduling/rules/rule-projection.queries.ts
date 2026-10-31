@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import type { UtcWindow } from '../occurrences/occurrences';
-import { readAll } from '../read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import type { UtcWindow } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { readAll } from '@/common/db/read-all';
 import { generatedKey, projectRules, type Projected, type ProjectedRule } from './rule-projection';
 
 export type ProjectionQuery = {

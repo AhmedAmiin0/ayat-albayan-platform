@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
 import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
+import { t } from '@/core/lib/i18n/i18n';
+import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
@@ -56,6 +58,8 @@ export function Composer({
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
   const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
+  // Owner 2026-10-31: a Kapso chat line still tries staff's free text after the window (no files).
+  const trying = !open && staff && thread?.try_after_window === true;
   const pick = () => setPicking(true);
   const type = (v: string) => {
     replies.typed(v);
@@ -71,19 +75,21 @@ export function Composer({
       ))}
       <GateNote />
       <ReopenNote phone={phone} closed={thread !== null && !open} />
+      {trying ? <ClosedNote known note={t.inbox.tryAfterWindow} /> : null}
       {open ? <QuoteStrip /> : null}
       {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {open && replies.search !== null ? (
         <SlashSuggestions search={replies.search} contact={{ thread, student }} onFill={replies.fill} />
       ) : null}
-      {open ? (
+      {open || trying ? (
         <OpenRow
           phone={phone}
           text={text}
           onText={type}
           onLeave={replies.dismiss}
-          staff={staff}
+          staff={staff && open}
           onTemplate={pick}
+          quietTemplate={trying}
           onReplies={replies.open}
           onFileError={setFileError}
           onQuote={quote ? () => setQuoting(true) : undefined}

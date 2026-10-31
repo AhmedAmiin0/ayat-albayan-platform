@@ -1,12 +1,12 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { netPaid, type PaymentKind, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { applySort } from '../../../common/list-sort';
-import type { StudentRef } from '../subscriptions/subscriptions.queries';
-import { readAll } from '../../teaching/scheduling/read-all';
-import { badRequest } from '../../../common/http/errors';
-import { dbError, type Page } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort } from '@/common/db/list-sort';
+import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.queries';
+import { readAll } from '@/common/db/read-all';
+import { badRequest } from '@/common/http/errors';
+import { dbError, type Page } from '@/common/http/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 
 export type { PaymentFilter } from './payments.list-query';

@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { formatDateTime } from '@/features/sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { useClock } from '@/lib/clock';

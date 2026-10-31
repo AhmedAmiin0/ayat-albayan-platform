@@ -1,5 +1,5 @@
 import type { ConfigEntryConflict, SettingKey } from '@ab/shared';
-import { formatAge } from '@/features/sales/leads/format';
+import { formatAge } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { valueText } from '../lib/value-format';
 

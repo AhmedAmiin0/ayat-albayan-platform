@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
-import { loadEnv, webPushEnv } from '../../config/env/env';
+import { loadEnv, webPushEnv } from '@/config/env/env';
 import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo/expo-push';
 import { NotificationsController, WebPushController } from './notifications.controller';
-import { NotificationsQueries } from './notifications.queries';
+import { NotificationsRepo } from './notifications.repo';
 import { PushAudience } from './dispatch/push.audience';
 import { PushChannels } from './dispatch/push.channels';
 import { PUSH_TRANSPORT, PushService, type PushTransport } from './push.service';
@@ -57,7 +57,7 @@ function expoTransport({ base, accessToken }: ExpoConn): PushTransport {
     PushService,
     PushAudience,
     PushChannels,
-    NotificationsQueries,
+    NotificationsRepo,
     WebPushSender,
     { provide: WEB_PUSH_TRANSPORT, useValue: fetchTransport },
     // WEB_PUSH_* read per send, like EXPO_*: all three unset (local, e2e) = browser push off.

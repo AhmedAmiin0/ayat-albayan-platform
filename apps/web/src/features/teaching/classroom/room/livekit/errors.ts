@@ -1,5 +1,5 @@
 import { CLASSROOM_ERRORS } from '@ab/shared';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import type { MediaDevice } from '../components/room-types';
 

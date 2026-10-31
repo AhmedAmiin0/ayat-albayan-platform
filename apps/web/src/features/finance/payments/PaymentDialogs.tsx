@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiErrorText, moneyText, studentLabel } from '@/features/finance/subscriptions/format';
+import { apiErrorText, moneyText, studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { deletePayment, type PaymentView } from './api';
 import { ConfirmDialog } from './record/ConfirmDialog';

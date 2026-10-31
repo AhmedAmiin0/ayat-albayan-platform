@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { EXPENSE_ID, expenseRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { ActivityQueries } from './activity.queries';
+import { ActivityRepo } from './activity.repo';
 import { ActivityWriter } from './activity.writer';
 
 describe('activity log over HTTP (real AppModule, interceptor and guards)', () => {
@@ -10,12 +10,12 @@ describe('activity log over HTTP (real AppModule, interceptor and guards)', () =
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
   let push: MockInstance<ActivityWriter['push']>;
-  let list: MockInstance<ActivityQueries['list']>;
+  let list: MockInstance<ActivityRepo['list']>;
 
   beforeAll(async () => {
     ({ app, m, call } = await moneyApp());
     push = vi.spyOn(app.get(ActivityWriter), 'push').mockImplementation(() => undefined);
-    list = vi.spyOn(app.get(ActivityQueries), 'list').mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 25 });
+    list = vi.spyOn(app.get(ActivityRepo), 'list').mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 25 });
   });
   afterAll(() => app.close());
   beforeEach(() => {

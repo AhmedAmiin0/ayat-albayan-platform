@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { kickConfigReload } from '@/config/role/worker-kick';
 import { configDef, seedEntryOf } from './config-defs';
 import { decodeAll, decodeValue } from './config-decode';
-import { ConfigStoreQueries } from './config-store.queries';
+import { ConfigStoreRepo } from './config-store.repo';
 import {
   DEFAULT_TTL_MS,
   OVERRIDES_REFRESH,
@@ -40,7 +40,7 @@ export class ConfigStore {
   private cache: CacheEntry | null = null;
 
   constructor(
-    private readonly queries: ConfigStoreQueries,
+    private readonly queries: ConfigStoreRepo,
     @Inject(SETTINGS_CACHE_MS) private readonly ttlMs: number = DEFAULT_TTL_MS,
     @Optional() @Inject(OVERRIDES_REFRESH) private readonly refreshOverrides?: OverridesRefresh,
   ) {}

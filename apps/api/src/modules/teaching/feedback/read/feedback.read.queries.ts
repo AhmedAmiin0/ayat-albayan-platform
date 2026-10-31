@@ -2,11 +2,11 @@ import { addCalendarDays } from '@ab/shared';
 import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '../../../../common/list-sort';
-import { studentIdsMatching } from '../../../../common/student-ids';
-import { dbError, type PageQuery } from '../../../../common/http/http';
-import type { FeedbackRow } from '../feedback.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { studentIdsMatching } from '@/common/student-ids';
+import { dbError, type PageQuery } from '@/common/http/http';
+import type { FeedbackRow } from '@/modules/teaching/feedback/feedback.queries';
 
 /**
  * Every column but the link hash and the guardian: those never leave the API. The teacher's name

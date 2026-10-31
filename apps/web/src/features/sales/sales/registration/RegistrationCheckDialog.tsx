@@ -7,7 +7,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { checkRequest, type CheckBy, type CheckErrorCode } from './registration-check';

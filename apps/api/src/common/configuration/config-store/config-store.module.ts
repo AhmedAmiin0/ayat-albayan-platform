@@ -6,7 +6,7 @@ import { ConfigEntriesService } from './io/config-entries.service';
 import { ConfigParityController } from './boundaries/config-parity';
 import { ConfigSeeder } from './boundaries/config-seeder';
 import { ConfigCacheBridge } from './store/config-cache.bridge';
-import { ConfigStoreQueries } from './store/config-store.queries';
+import { ConfigStoreRepo } from './store/config-store.repo';
 import { ConfigStore } from './store/config-store.service';
 import { SETTINGS_CACHE_MS } from './config-store.types';
 
@@ -20,7 +20,7 @@ import { SETTINGS_CACHE_MS } from './config-store.types';
   controllers: [ConfigEntriesController, ConfigParityController],
   providers: [
     { provide: SETTINGS_CACHE_MS, useFactory: (): number => loadEnv().SETTINGS_CACHE_MS },
-    ConfigStoreQueries,
+    ConfigStoreRepo,
     ConfigStore,
     ConfigCacheBridge,
     ConfigSeeder,

@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import type { InvoiceView } from './api';
 

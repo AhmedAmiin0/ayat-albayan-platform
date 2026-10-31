@@ -1,6 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { waSendKind } from '../chat/chat-files.js';
-import { canForward, canReply, FORWARD_MAX_TARGETS, mediaKindOf, quoteLine, threadForwardSchema } from './reply-forward.js';
+import {
+  canForward,
+  canReply,
+  FORWARD_MAX_TARGETS,
+  isUnavailableQuote,
+  mediaKindOf,
+  quoteIcon,
+  quoteKindOf,
+  quoteLine,
+  quoteSnippet,
+  threadForwardSchema,
+  UNAVAILABLE_QUOTE,
+} from './reply-forward.js';
 import { threadFileSendSchema, threadTextSchema } from '../schemas.js';
 
 const ID = '00000000-0000-4000-8000-000000000001';
@@ -73,5 +85,34 @@ describe('quoteLine / mediaKindOf / waSendKind', () => {
     expect(waSendKind('video/mp4')).toBe('video');
     expect(waSendKind('application/pdf')).toBe('document');
     expect(waSendKind(null)).toBe('document');
+  });
+});
+
+describe('quoteKindOf / quoteIcon / quoteSnippet / isUnavailableQuote (owner 2026-10-31)', () => {
+  const q = { id: 'q1', direction: 'inbound' as const, body: null, media_mime: null, template_key: null, sender_name: null };
+  const words = {
+    media: { image: 'صورة', audio: 'رسالة صوتية', video: 'فيديو', pdf: 'ملف PDF', document: 'ملف', other: '؟' },
+    template: 'رسالة قالب',
+  };
+
+  it('names a PDF apart from other files, each kind with its icon', () => {
+    expect(quoteKindOf('application/pdf; name=a.pdf')).toBe('pdf');
+    expect(quoteKindOf('application/msword')).toBe('document');
+    expect(quoteKindOf(null)).toBeNull();
+    const icons = ['image/jpeg', 'application/pdf', 'audio/ogg', 'video/mp4'].map((m) => quoteIcon({ media_mime: m }));
+    expect(icons).toEqual(['📷', '📄', '🎤', '🎥']);
+    expect(quoteIcon({ media_mime: null })).toBeNull();
+  });
+
+  it('the first line, else the kind of the file, else the template or «cannot be shown»', () => {
+    expect(quoteSnippet({ ...q, body: ' أهلًا \nثانٍ', media_mime: 'image/jpeg' }, words)).toBe('أهلًا');
+    expect(quoteSnippet({ ...q, media_mime: 'application/pdf' }, words)).toBe('ملف PDF');
+    expect(quoteSnippet({ ...q, template_key: 'renewal_due' }, words)).toBe('رسالة قالب');
+    expect(quoteSnippet(q, words)).toBe('؟');
+  });
+
+  it('tells the unavailable marker from a quoted message', () => {
+    expect(isUnavailableQuote(UNAVAILABLE_QUOTE)).toBe(true);
+    expect(isUnavailableQuote(q)).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
 import type { PaymentAttachmentView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { addAttachments, attachmentLabels } from './attachments';

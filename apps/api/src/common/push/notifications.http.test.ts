@@ -1,10 +1,10 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
-import type { AuthUser } from '../auth/verify-token';
-import { NotificationsQueries } from './notifications.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { NotificationsRepo } from './notifications.repo';
 
 const USERS: Record<string, AuthUser> = {
   teacher: { id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'teacher' },
@@ -27,7 +27,7 @@ describe('/me/notifications (R-NOT-01)', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(NotificationsQueries).useValue(q)
+      .overrideProvider(NotificationsRepo).useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

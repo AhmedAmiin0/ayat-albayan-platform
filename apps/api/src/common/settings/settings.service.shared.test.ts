@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import type { SharedCache } from '@/common/infra/cache/shared-cache';
 import { ConfigCacheBridge } from '@/common/configuration/config-store/store/config-cache.bridge';
-import type { ConfigStoreQueries } from '@/common/configuration/config-store/store/config-store.queries';
+import type { ConfigStoreRepo } from '@/common/configuration/config-store/store/config-store.repo';
 import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
 import type { Db } from '@/common/db/db.module';
 import { SettingsService } from './settings.service';
@@ -14,7 +14,7 @@ function copy(redis: ReturnType<typeof fakeRedis>, rows: () => Rows) {
   const select = vi.fn(async () => ({ data: rows(), error: null }));
   const db = { from: vi.fn(() => ({ select })) } as unknown as Db;
   const q = { snapshot: vi.fn(async () => ({ rev: 1, rows: [] })), revision: vi.fn(async () => 1), set: vi.fn(async () => undefined) };
-  const store = new ConfigStore(q as unknown as ConfigStoreQueries, 30_000);
+  const store = new ConfigStore(q as unknown as ConfigStoreRepo, 30_000);
   const { cache } = redis.copy();
   new ConfigCacheBridge(store, cache);
   const svc = new SettingsService(db, 30_000, store);

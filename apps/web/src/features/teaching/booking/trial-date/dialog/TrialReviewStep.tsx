@@ -2,7 +2,7 @@ import type { TrialDateResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule/api';
+import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
 import { toBookingRequest, type BookingDraft } from '../../draft/draft';

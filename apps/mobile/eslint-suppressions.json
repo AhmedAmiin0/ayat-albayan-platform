@@ -4476,14 +4476,6 @@
       "count": 7
     }
   },
-  "src/inbox/messages/components/QuoteBlock.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/inbox/messages/components/QuoteStrip.test.tsx": {
     "max-len": {
       "count": 1

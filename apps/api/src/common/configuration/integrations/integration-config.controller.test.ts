@@ -7,7 +7,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeQueries } from './integration-config.fakes';
-import { IntegrationConfigQueries } from './integration-config.queries';
+import { IntegrationConfigRepo } from './integration-config.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -32,7 +32,7 @@ describe('/settings/integrations («التكاملات»)', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(IntegrationConfigQueries).useValue(q)
+      .overrideProvider(IntegrationConfigRepo).useValue(q)
       .overrideProvider(AuditService).useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

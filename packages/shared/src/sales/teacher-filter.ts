@@ -1,4 +1,4 @@
-import { normalizeArabic } from '../core/format/arabic.js';
+import { matchesQuery } from '../core/format/arabic.js';
 import type { Gender, Program } from '../enums/index.js';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';
@@ -16,10 +16,9 @@ export const NO_TEACHER_FILTER: SalesTeacherFilter = { q: '', program: '', gende
 
 /** Name (Arabic-normalised, or the English name) contains the search; program and gender match when picked. */
 export function filterSalesTeachers(list: readonly SalesTeacherView[], f: SalesTeacherFilter): SalesTeacherView[] {
-  const q = normalizeArabic(f.q);
   return list.filter(
     (tc) =>
-      (!q || normalizeArabic(tc.name).includes(q) || normalizeArabic(tc.name_en ?? '').includes(q)) &&
+      matchesQuery([tc.name, tc.name_en ?? ''], f.q) &&
       (!f.program || tc.programs.includes(f.program)) &&
       (!f.gender || tc.gender === f.gender),
   );

@@ -1,5 +1,7 @@
+import { WA_ERROR } from '../../catalog/integrations/index.js';
+
 /** Meta's error on an inbound `unsupported` whose content it could not deliver: «This message is unavailable». */
-export const META_UNAVAILABLE = 131060;
+export const META_UNAVAILABLE = WA_ERROR.unavailable;
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 

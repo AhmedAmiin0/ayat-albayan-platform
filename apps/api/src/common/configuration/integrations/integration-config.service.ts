@@ -4,7 +4,7 @@ import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '@/config/env/env';
 import { kickConfigReload } from '@/config/role/worker-kick';
-import { IntegrationConfigQueries } from './integration-config.queries';
+import { IntegrationConfigRepo } from './integration-config.repo';
 import { integrationItems } from './integration-config.view';
 
 /** Injection token of the refresh period in ms (integrationRefreshMs; 0 = every second; null = off). */
@@ -33,7 +33,7 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
   private badKeys: ReadonlySet<string> = new Set();
 
   constructor(
-    private readonly queries: IntegrationConfigQueries,
+    private readonly queries: IntegrationConfigRepo,
     @Inject(INTEGRATION_REFRESH_MS) private readonly everyMs: number | null,
     @Optional() private readonly shared?: SharedCache,
   ) {}

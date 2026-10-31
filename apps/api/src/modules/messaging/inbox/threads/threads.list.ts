@@ -1,9 +1,9 @@
 import { LEAD_STATUSES, listSortShape, type LeadStatus, type ListSort } from '@ab/shared';
 import { z } from 'zod';
-import type { SortSpec } from '../../../../common/list-sort';
-import type { Db } from '../../../../common/db/db.module';
-import { pageQuerySchema } from '../../../../common/http/http';
-import { phoneList } from '../../numbers';
+import type { SortSpec } from '@/common/db/list-sort';
+import type { Db } from '@/common/db/db.module';
+import { pageQuerySchema } from '@/common/http/http';
+import { phoneList } from '@/modules/messaging/numbers';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
 

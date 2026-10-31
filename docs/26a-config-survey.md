@@ -370,13 +370,13 @@ Tests pin these: `apps/api/src/common/configuration/integrations/secret-keys.mig
 |---|---|---|---|
 | `apps/api/src/common/settings/settings.service.ts:67` | `settings` `select('key, value')` | read all | cached `SETTINGS_CACHE_MS`; `readSettings` fills defaults |
 | `settings.service.ts:57-58` | `settings` `delete().eq('key')` / `upsert({key, value, updated_by})` | write | **null → delete row**; upsert relies on PK `key` as conflict target |
-| `apps/api/src/common/settings/settings-meta.queries.ts:11` | `settings` `select('key, updated_at, updated_by')` | read | `GET /config/meta` — needs `updated_at`, `updated_by` columns |
+| `apps/api/src/common/settings/settings-meta.repo.ts:11` | `settings` `select('key, updated_at, updated_by')` | read | `GET /config/meta` — needs `updated_at`, `updated_by` columns |
 | `apps/api/src/modules/platform/google-sync/google-settings.ts:25` | `settings` `select('key, value').in('key', google keys)` | read (uncached) | |
 | `google-settings.ts:34` | `settings` `upsert({key, value, updated_by})` | write | `PUT /admin/google/settings` |
 | `apps/api/src/common/configuration/custom-config/custom-config.service.ts:13,19,26` | `custom_config` select `CUSTOM_COLUMNS` / `.eq('key')` / `.eq('is_public', true)` | read | `order('key')`; `maybeSingle()` |
 | `custom-config.service.ts:33` | `custom_config` `upsert({key, value, description, is_public, updated_by}).select().single()` | write | |
 | `custom-config.service.ts:40` | `custom_config` `delete().eq('key').select('key')` | delete | returns whether a row existed |
-| `apps/api/src/common/configuration/integrations/integration-config.queries.ts:27,36` | `integration_config` `select('key, value, updated_at')` + `rpc('integration_secrets_read')` | read | overlay over env |
+| `apps/api/src/common/configuration/integrations/integration-config.repo.ts:27,36` | `integration_config` `select('key, value, updated_at')` + `rpc('integration_secrets_read')` | read | overlay over env |
 | `integration-config.queries.ts:42` | `rpc('integration_secrets_status')` | read | |
 | `integration-config.queries.ts:52-53` | `integration_config` delete / `upsert({key, value, updated_by})` | write | null deletes (env applies again); `updated_by` may be null (import command `apps/api/src/scripts/config-import-env.ts`) |
 | `integration-config.queries.ts:59,65` | `rpc('integration_secret_set' / 'integration_secret_clear')` | write | |

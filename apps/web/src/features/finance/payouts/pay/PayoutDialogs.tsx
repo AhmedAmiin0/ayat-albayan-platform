@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiErrorText, moneyText } from '@/features/finance/subscriptions/format';
+import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { reopenPayout, unpayPayout, type PayoutView } from '../api';
 import { PayPayoutDialog } from './PayPayoutDialog';

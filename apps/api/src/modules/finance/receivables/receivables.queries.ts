@@ -1,7 +1,7 @@
 import { netPaid, type ReceivableIn, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { readAll, readChunked } from '../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll, readChunked } from '@/common/db/read-all';
 
 const SUB = 'id, price, currency, starts_on, status, student:students(id, code, name, guardian:guardians(name, phone_e164))';
 /**

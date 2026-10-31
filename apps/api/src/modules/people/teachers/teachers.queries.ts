@@ -1,10 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
-import { applySort } from '../../../common/list-sort';
-import { readAll } from '../../teaching/scheduling/read-all';
-import { dbError, type Page } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { applySort } from '@/common/db/list-sort';
+import { readAll } from '@/common/db/read-all';
+import { dbError, type Page } from '@/common/http/http';
 import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
 import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { amount, currencyLabel } from '../shared/format';
 import { workItem, workLink } from './PendingReportsList';

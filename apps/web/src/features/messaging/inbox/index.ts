@@ -36,7 +36,7 @@ export {
   unreadLabel,
 } from './format';
 export { inboxLive, useInboxLive, useInboxRealtime } from './api/live';
-export { CallProvider, type CallProviderProps } from './calls/state/CallProvider';
+export { CallProvider, type CallProviderProps } from '@/features/messaging/calls';
 export { DeliveryTicks, type DeliveryTicksProps } from './messages/components/DeliveryTicks';
 export {
   chatReceiptFileQuery,
@@ -53,7 +53,7 @@ export {
   type SalesQuoteBody,
   type SalesSubscriptionBody,
   uploadSalesReceipt,
-} from './sales-money/api';
+} from '@/features/sales/sales-money';
 export {
   createReply,
   deleteReply,
@@ -68,3 +68,17 @@ export {
 } from './saved-replies/lib/api';
 export { useReplyDialogs } from './saved-replies/hooks/use-reply-dialogs';
 export { clearTabMemories } from './shared/tab-memory';
+export { BUBBLE_ROW } from './messages/lib/bubble-side';
+export { getDraft, setDraft } from './composer/lib/draft-store';
+export { fillComposer } from './saved-replies/lib/filter';
+export { LinkFamilyDialog } from './lead/LinkFamilyDialog';
+export { SalesRegisterButton, SalesRegisterDialog } from './sales/SalesRegisterAction';
+export { canRegisterFrom } from './sales/sales-register';
+export { useThreadListsAction } from './lists/lib/use-thread-lists-action';
+export {
+  inboxBase,
+  type InboxMode,
+  InboxModeContext,
+  showsPhone,
+  useInboxMode,
+} from './shared/mode';
