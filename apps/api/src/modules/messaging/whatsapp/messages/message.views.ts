@@ -7,7 +7,7 @@ import { renderable } from '@/modules/messaging/whatsapp/templates/catalog/templ
 import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
 import { templateButtons, templateDisplay, templateParams } from './wa-json';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { withHidden } from './hidden-view';
+import { withHidden } from './hidden/hidden-view';
 
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by

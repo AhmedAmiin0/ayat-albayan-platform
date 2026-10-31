@@ -2,9 +2,10 @@ import { CHANNEL_BODY_MAX } from '@ab/shared';
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { channelInputStyle } from './channel-input-style';
 
 interface Props {
   pending: boolean;
@@ -33,19 +34,7 @@ export function ChannelComposer({ pending, failed, onSend }: Props) {
         onChangeText={setText}
         placeholder={t.studentChannel.placeholder}
         placeholderTextColor={color.ink3}
-        style={{
-          minHeight: 44,
-          maxHeight: 140,
-          paddingHorizontal: 12,
-          paddingVertical: 10,
-          borderWidth: 1,
-          borderColor: color.ruleInput,
-          borderRadius: shape.radius.md,
-          backgroundColor: color.raised,
-          color: color.ink,
-          fontFamily: type.ui[400],
-          fontSize: type.size.body,
-        }}
+        style={channelInputStyle(color)}
       />
       <Button label={pending ? t.studentChannel.sending : t.studentChannel.send} busy={pending} disabled={!body || tooLong} onPress={send} />
     </View>

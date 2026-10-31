@@ -1,5 +1,10 @@
 import { meLoaded, permissionsOf, permissionsView, type Can } from '@ab/client-core';
-import { sendsAllTemplates, type Permission } from '@ab/shared';
+import {
+  canHideMessages,
+  canUnhideMessages,
+  sendsAllTemplates,
+  type Permission,
+} from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -42,9 +47,24 @@ export function useIsAdmin(): boolean {
   return typeof me.data === 'object' && me.data !== null && Reflect.get(me.data, 'role') === 'admin';
 }
 
+/** /auth/me's base role, null until it answers. */
+function roleOf(data: unknown): string | null {
+  const role: unknown = typeof data === 'object' && data !== null ? Reflect.get(data, 'role') : null;
+  return typeof role === 'string' ? role : null;
+}
+
 /** Every template from the picker (shared sendsAllTemplates: never an assistant); false until /auth/me answers. */
 export function useSendsAllTemplates(): boolean {
   const me = useQuery(meQuery());
-  const role: unknown = typeof me.data === 'object' && me.data !== null ? Reflect.get(me.data, 'role') : null;
-  return sendsAllTemplates({ role: typeof role === 'string' ? role : null, permissions: permissionsOf(me.data) });
+  return sendsAllTemplates({ role: roleOf(me.data), permissions: permissionsOf(me.data) });
+}
+
+/**
+ * «حذف من المنصة» (admin, sales) and «إظهار» (the admin) on WhatsApp bubbles; false until /auth/me
+ * answers.
+ */
+export function useHideRights(): { hide: boolean; unhide: boolean } {
+  const me = useQuery(meQuery());
+  const who = { role: roleOf(me.data), permissions: permissionsOf(me.data) };
+  return { hide: canHideMessages(who), unhide: canUnhideMessages(who) };
 }

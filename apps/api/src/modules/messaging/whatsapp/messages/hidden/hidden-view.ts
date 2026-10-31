@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import type { ThreadMessageRow } from './message.mapper';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 
 /**
  * «حذف من المنصة» (owner 2026-10-30): a hidden row reaches every staff reader as a placeholder: no
