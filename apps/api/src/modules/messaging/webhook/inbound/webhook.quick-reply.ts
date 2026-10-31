@@ -49,8 +49,12 @@ export class QuickReplies {
     const answered = await this.answeredLesson({ m, phone, rating });
     if (answered || rating) return answered; // a rating only ever answers our lesson_rating message, never a guess
     // A typed «نعم» counts only for a lesson we messaged them about this recently (docs/12 §3.5).
+    // Never a message sent after the reply (a back-filled one, external/inbound): Meta's time is in
+    // whole seconds, so up to the end of the reply's second.
     const windowMs = await this.queries.replyWindowMs();
-    return this.queries.recentLessonOutbound({ phone, since: new Date(m.at.getTime() - windowMs) });
+    const since = new Date(m.at.getTime() - windowMs);
+    const until = new Date(Math.floor(m.at.getTime() / 1000) * 1000 + 999);
+    return this.queries.recentLessonOutbound({ phone, since, until });
   }
 
   /** The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating). */

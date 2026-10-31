@@ -25,6 +25,14 @@ export {
 } from './channel-live.js';
 export { type TeacherPick, teacherChoice } from './teacher-pick.js';
 export {
+  CHANNEL_EDIT_ERRORS,
+  type ChannelEditError,
+  channelBubbleActions,
+  channelEditError,
+  channelMessagePath,
+  threadHidePath,
+} from './channel-edits.js';
+export {
   channelPresenceKey,
   PRESENCE_SELF_PATH,
   type PresenceChannelLike,

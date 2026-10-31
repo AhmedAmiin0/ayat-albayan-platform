@@ -9,18 +9,28 @@ import {
 import type { ChannelStudent } from './channel-people.queries';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.queries';
 
-const roleOf = (r: string | null): ChannelSenderRole => CHANNEL_SENDER_ROLES.find((x) => x === r) ?? 'guardian';
+const roleOf = (r: string | null): ChannelSenderRole =>
+  CHANNEL_SENDER_ROLES.find((x) => x === r) ?? 'guardian';
 
-/** Whitelist: the text, who (role and name), mine or not, when. Never a profile id. */
-export function toMessageView(row: ChannelMessageRow, ctx: { me: string; names: ReadonlyMap<string, string> }): ChannelMessageView {
+/**
+ * Whitelist: the text, who (role and name), mine or not, when, edited / deleted. Never a profile
+ * id.
+ */
+export function toMessageView(
+  row: ChannelMessageRow,
+  ctx: { me: string; names: ReadonlyMap<string, string> },
+): ChannelMessageView {
   const sender = row.sender_profile_id;
+  const deleted = Boolean(row.deleted_at);
   return {
     id: row.id,
-    body: row.body,
+    body: deleted ? '' : row.body,
     sender_role: roleOf(row.sender_role),
     sender_name: sender ? (ctx.names.get(sender) ?? '') : '',
     mine: sender !== null && sender === ctx.me,
     created_at: row.created_at,
+    edited: !deleted && Boolean(row.edited_at),
+    deleted,
   };
 }
 
@@ -48,16 +58,46 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
 }
 
 /** What counts as unread for a participant: the other side's messages (a co-teacher's never). */
-export const unreadRolesFor = (role: ChannelSenderRole | null): ChannelSenderRole[] => (role === 'teacher' ? ['guardian', 'student'] : ['teacher']);
+export const unreadRolesFor = (role: ChannelSenderRole | null): ChannelSenderRole[] =>
+  role === 'teacher' ? ['guardian', 'student'] : ['teacher'];
 
 /** The teacher's list: newest activity first, then by name (Arabic collation). */
-export function toTeacherRows(students: readonly ChannelStudent[], summaries: readonly ChannelSummaryRow[]): TeacherChannelRow[] {
+export function toTeacherRows(
+  students: readonly ChannelStudent[],
+  summaries: readonly ChannelSummaryRow[],
+): TeacherChannelRow[] {
   const byStudent = new Map(summaries.map((s) => [s.student_id, s]));
   return students
     .map((s) => {
       const sum = byStudent.get(s.id);
-      const last = sum?.last_at && sum.last_body !== null ? { body: sum.last_body, sender_role: roleOf(sum.last_role), created_at: sum.last_at } : null;
-      return { student_id: s.id, student_name: s.name, student_code: s.code, last_message: last, unread: sum?.unread ?? 0 };
+      const last =
+        sum?.last_at && sum.last_body !== null
+          ? lastMessage({ ...sum, last_at: sum.last_at, last_body: sum.last_body })
+          : null;
+      return {
+        student_id: s.id,
+        student_name: s.name,
+        student_code: s.code,
+        last_message: last,
+        unread: sum?.unread ?? 0,
+      };
     })
-    .sort((a, b) => (b.last_message?.created_at ?? '').localeCompare(a.last_message?.created_at ?? '') || a.student_name.localeCompare(b.student_name, 'ar'));
+    .sort(
+      (a, b) =>
+        (b.last_message?.created_at ?? '').localeCompare(a.last_message?.created_at ?? '') ||
+        a.student_name.localeCompare(b.student_name, 'ar'),
+    );
+}
+
+/** A list preview: a message deleted for everyone shows as deleted, never its text. */
+function lastMessage(
+  sum: ChannelSummaryRow & { last_at: string; last_body: string },
+): TeacherChannelRow['last_message'] {
+  const deleted = sum.last_deleted === true;
+  return {
+    body: deleted ? '' : sum.last_body,
+    sender_role: roleOf(sum.last_role),
+    created_at: sum.last_at,
+    deleted,
+  };
 }

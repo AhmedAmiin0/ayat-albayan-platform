@@ -43,9 +43,13 @@ export function skipOf(e: unknown): ForwardSkip {
 function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput, 'input' | 'actorId'>): ThreadMessageRow {
   const hidden = !row || (who.scope && !who.scope.phones.has(row.phone_e164)) || (who.sales && !visibleToSales(row));
   if (hidden) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
-  if (row.template_key || (!row.body?.trim() && !row.media_mime)) throw waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
+  if (nothingToCopy(row)) throw waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
   return row;
 }
+
+/** A template, a message hidden from the platform («حذف من المنصة») or an empty row. */
+const nothingToCopy = (row: ThreadMessageRow): boolean =>
+  row.template_key !== null || row.hidden_at !== null || (!row.body?.trim() && !row.media_mime);
 
 /**
  * «إعادة توجيه» (owner 2026-10-25): one message copied to 1–5 chats, each through the normal session

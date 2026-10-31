@@ -530,11 +530,6 @@
       "count": 1
     }
   },
-  "src/messaging/channel/channel.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
   "src/messaging/chat/chat-files.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
