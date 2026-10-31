@@ -2999,6 +2999,18 @@
       "pageFailed": "Couldn't load the page. Tap to try again",
       "tapToPreview": "Tap to preview",
       "zoomHint": "Tap a page to zoom in"
+    },
+    "hide": {
+      "action": "Remove from platform",
+      "title": "Remove this message from the platform?",
+      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted from the customer's phone: they still see it in WhatsApp.",
+      "confirm": "Remove from platform",
+      "placeholder": "Hidden on the platform — still visible to the customer",
+      "by": "Hidden by {name} · {time}",
+      "byUnknown": "Hidden · {time}",
+      "unhide": "Show",
+      "failed": "Could not complete the action, please try again.",
+      "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
     }
   },
   "mobileFinance": {
@@ -7107,7 +7119,28 @@
     "noMessageYet": "No messages yet",
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
-    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher."
+    "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "actions": {
+      "menu": "Message options",
+      "edit": "Edit",
+      "deleteForAll": "Delete for everyone",
+      "edited": "Edited",
+      "deleted": "This message was deleted",
+      "editTitle": "Edit message",
+      "save": "Save",
+      "saving": "Saving…",
+      "deleteTitle": "Delete this message for everyone?",
+      "deleteBody": "The message will be deleted for everyone in this chat. This cannot be undone.",
+      "moderateBody": "This message will be deleted for everyone in the chat (admin moderation). This cannot be undone.",
+      "deleteConfirm": "Delete for everyone",
+      "failed": "Could not complete the action, please try again.",
+      "errors": {
+        "edit_window_closed": "The 15-minute edit window has passed.",
+        "delete_window_closed": "The 48-hour delete window has passed.",
+        "not_your_message": "You can only edit or delete your own messages.",
+        "message_deleted": "This message was already deleted."
+      }
+    }
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
