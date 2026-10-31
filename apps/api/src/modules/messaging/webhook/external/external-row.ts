@@ -54,7 +54,7 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     guardian_id: who.guardian?.id ?? null,
     lead_id: who.guardian ? null : (who.lead?.id ?? null),
     // Only real text or a caption, never a «[image]» placeholder (owner 2026-10-30): the
-    // payload says what a row without text is (migration 985 lets an outbound row carry only it).
+    // payload says what a row without text is (migration 992 lets an outbound row carry only it).
     body: secret ? null : msg.body,
     template_key: templateKey,
     template_params: secret ? null : msg.templateParams,
@@ -65,7 +65,7 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     media_name: msg.mediaName,
     created_at: at.toISOString(),
     created_by: null,
-    // An edit, revoke or reaction is a hidden marker the database applies (migration 985).
+    // An edit, revoke or reaction is a hidden marker the database applies (migration 992).
     ...(msg.payload === null ? {} : { interactive_payload: msg.payload }),
   };
 }

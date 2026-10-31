@@ -52,7 +52,7 @@ export class ExternalStore {
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
     if (!(await this.queries.insert(row))) return 'known';
-    // An edit, revoke or reaction is no reply (a marker, migration 985): unread stays as it is.
+    // An edit, revoke or reaction is no reply (a marker, migration 992): unread stays as it is.
     const marker = isHiddenPayload(row.interactive_payload);
     if (row.template_key !== ACCOUNT_CODE_TEMPLATE && !marker) await this.answered(phone, at);
     return 'stored';

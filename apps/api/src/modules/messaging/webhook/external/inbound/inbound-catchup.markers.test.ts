@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay } from '@/common/integrations/numbers-overlay';
 import { kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
 import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';
-import { catchUpRig, kapsoInbound, NOW, page } from './inbound.fakes';
+import { catchUpRig, GAP_TS, kapsoInbound, NOW, page } from './inbound.fakes';
 
 // A family's edit, revoke or reaction read from Kapso's inbound history goes through the webhook's
-// own path (InboundService.handle): a hidden marker row (migration 985), never a bubble, an
+// own path (InboundService.handle): a hidden marker row (migration 992), never a bubble, an
 // unread or a push; a reaction whose message we do not hold yet waits as a marker too.
 
 const RUN = { now: NOW, full: false };
@@ -26,15 +26,17 @@ describe('inbound catch-up: markers', () => {
   it('an edit and a revoke are read marker rows; no push, never counted as late messages', async () => {
     const x = catchUpRig();
     const edit = { original_message_id: ORIGINAL, message: { text: { body: 'غدًا' } } };
+    // Newest first, as Kapso lists it: the revoke a second after the edit.
     x.kapso.inbound.mockResolvedValue(
       page([
-        kapsoInbound({ id: 'wamid.E7', type: 'edit', text: undefined, edit }),
         kapsoInbound({
           id: 'wamid.V7',
           type: 'revoke',
           text: undefined,
+          timestamp: String(Number(GAP_TS) + 1),
           revoke: { original_message_id: ORIGINAL },
         }),
+        kapsoInbound({ id: 'wamid.E7', type: 'edit', text: undefined, edit }),
       ]),
     );
     await x.catchUp.number(chat(), RUN);

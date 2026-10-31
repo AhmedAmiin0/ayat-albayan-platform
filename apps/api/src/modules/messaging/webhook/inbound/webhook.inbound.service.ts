@@ -86,7 +86,7 @@ export class InboundService {
 
   /**
    * A reaction sets their_reaction (InboundReactions, no row) when its message is stored; else,
-   * and for an edit or a revoke, a hidden marker row the database applies (migration 985). False:
+   * and for an edit or a revoke, a hidden marker row the database applies (migration 992). False:
    * never a new message (no catch-up alert counts it).
    */
   private async marker(m: InboundEvent, phone: string): Promise<false> {

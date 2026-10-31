@@ -33,7 +33,7 @@ describe('quoteOf', () => {
     expect(quoteOf(row({ sender: { full_name: 'سارة' } })).sender_name).toBeNull();
   });
 
-  it('a message deleted for everyone (migration 985) quotes nothing of itself', () => {
+  it('a message deleted for everyone (migration 992) quotes nothing of itself', () => {
     const gone = row({ body: 'سر', media_mime: 'image/jpeg', deleted_at: '2026-10-30T10:00:00Z' });
     expect(quoteOf(gone)).toMatchObject({ body: null, media_mime: null });
   });

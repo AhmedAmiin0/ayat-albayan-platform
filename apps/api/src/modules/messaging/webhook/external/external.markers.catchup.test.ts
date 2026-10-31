@@ -16,7 +16,7 @@ import type { KapsoHistory } from './kapso-history';
 
 // The outbound catch-up (Kapso's history) stores the same rows as the webhook echo: one mapper
 // (echoPayload, @ab/shared). A marker read before its original is kept; the original arriving
-// later (any path) applies it in the database (migration 985's insert trigger).
+// later (any path) applies it in the database (migration 992's insert trigger).
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const kapsoItem = (m: Record<string, unknown>) => ({

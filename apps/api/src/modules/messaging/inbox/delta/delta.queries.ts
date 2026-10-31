@@ -38,7 +38,7 @@ export class DeltaQueries {
   /**
    * Outgoing rows whose status may still move: `ids` (validated uuids; this chat's rows only, whatever
    * the caller passes) and the chat's outbound rows queued / sent / delivered created after `since`.
-   * Also any row an edit, delete or reaction changed after `since` (migration 985 stamps now()).
+   * Also any row an edit, delete or reaction changed after `since` (migration 992 stamps now()).
    */
   async pending(q: { phone: string; ids: readonly string[]; since: string }): Promise<ThreadMessageRow[]> {
     const moving = `and(direction.eq.outbound,status.in.(queued,sent,delivered),created_at.gt."${q.since}")`;

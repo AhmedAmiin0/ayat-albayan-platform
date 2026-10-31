@@ -22,7 +22,7 @@ export type MessageRow = Tables<'messages'>;
  */
 export const MESSAGE_SELECT =
   '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name), reactor:profiles!messages_our_reaction_by_fkey(full_name)' as const;
-/** PostgREST filter: not a hidden row (a reaction row, 900; an edit / revoke marker, 985). */
+/** PostgREST filter: not a hidden row (a reaction row, 900; an edit / revoke marker, 992). */
 export const NOT_A_REACTION = 'interactive_payload->>type.is.null,interactive_payload->>type.not.in.(reaction,edit,revoke)' as const;
 /** A thread row: the message with its lesson, sending teacher and staff sender embedded (ThreadsQueries.messages). */
 export type ThreadMessageRow = MessageRow & {

@@ -11,7 +11,7 @@ import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
  * hand, the report PDF link (7 days) in the wa.me text. B2's threads can reuse it per row. An
- * edited or deleted message is marked (withMarks, migration 985): a deleted one shows nothing.
+ * edited or deleted message is marked (withMarks, migration 992): a deleted one shows nothing.
  */
 @Injectable()
 export class MessageViews {

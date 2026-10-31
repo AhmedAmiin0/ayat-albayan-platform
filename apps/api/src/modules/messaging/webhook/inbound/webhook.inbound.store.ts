@@ -90,7 +90,7 @@ export class InboundStore {
   }
 
   /**
-   * A family's edit, revoke or reaction kept as a hidden marker row (migration 985 applies it to
+   * A family's edit, revoke or reaction kept as a hidden marker row (migration 992 applies it to
    * the message it names, now or when that arrives): already read, no lead, no text; false = a
    * replay.
    */

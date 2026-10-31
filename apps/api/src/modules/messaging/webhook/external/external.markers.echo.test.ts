@@ -17,7 +17,7 @@ import {
 } from './kapso-markers.fixtures';
 
 // The WhatsApp Business app's actions through the webhook (smb_message_echoes): an edit, revoke or
-// reaction is a hidden marker row (the database applies it, migration 985), never a bubble; a file
+// reaction is a hidden marker row (the database applies it, migration 992), never a bubble; a file
 // is a file, never «[image]»; nothing reads the chat or pushes.
 
 const PHONE = '+966501234567';
