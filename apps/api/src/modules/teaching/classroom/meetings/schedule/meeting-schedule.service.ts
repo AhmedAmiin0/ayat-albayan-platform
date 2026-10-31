@@ -1,15 +1,15 @@
 import { meetingState, updateMeetingSchema } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
-import { parseOrThrow } from '../../../../../common/http/http';
-import { meetingEnded } from '../../internal-meetings/internal-meetings.join.service';
-import { InternalMeetingsQueries, type MeetingRow } from '../../internal-meetings/internal-meetings.queries';
-import { InternalMeetingsService } from '../../internal-meetings/internal-meetings.service';
-import { MeetingInviteSender } from '../invites/meeting-invite.sender';
-import { cancelDedupKey, cancellationText, inviteeWhen, inviteSubject } from '../invites/meeting-invite.text';
-import { MeetingInviteeResolver } from '../invites/meeting-invitee.resolver';
-import { MeetingInviteesQueries, type StoredInvitee } from '../invites/meeting-invitees.queries';
+import { parseOrThrow } from '@/common/http/http';
+import { meetingEnded } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.join.service';
+import { InternalMeetingsQueries, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
+import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.sender';
+import { cancelDedupKey, cancellationText, inviteeWhen, inviteSubject } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.text';
+import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
+import { MeetingInviteesQueries, type StoredInvitee } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.queries';
 import { rescheduleTimes } from './meeting-schedule.rules';
 
 const HOUR_MS = 3_600_000;

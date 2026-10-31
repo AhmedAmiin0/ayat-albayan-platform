@@ -1,14 +1,14 @@
 import type { LessonEvent, LessonStatus } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuditEntry } from '../../../../common/audit/audit.service';
+import type { AuditEntry } from '@/common/audit/audit.service';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/change-set';
-import { errorCode } from '../../../../common/http/errors';
-import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
+import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import { errorCode } from '@/common/http/errors';
+import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import type { LessonRow } from './lesson-row';
-import { LessonsQueries } from '../lessons.queries';
+import { LessonsQueries } from '@/modules/teaching/lessons/lessons.queries';
 import { FamilyMoveNotice } from '@/modules/teaching/schedule-notices';
-import { invalidTransition } from '../status/transition';
+import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
 export type Commit = {
   change: ChangeSet;

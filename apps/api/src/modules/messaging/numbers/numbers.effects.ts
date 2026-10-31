@@ -1,7 +1,7 @@
 import { Inject, Injectable, Optional, type OnModuleInit } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
-import { AuditService, type AuditEntry } from '../../../common/audit/audit.service';
-import { kickConfigReload } from '../../../config/role/worker-kick';
+import { AuditService, type AuditEntry } from '@/common/audit/audit.service';
+import { kickConfigReload } from '@/config/role/worker-kick';
 import { NumbersConfig } from './config/numbers.config';
 import { OwnNumbers } from './own/own-numbers';
 

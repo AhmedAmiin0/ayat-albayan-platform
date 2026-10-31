@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { PushService } from '../../../../common/push/push.service';
+import { PushService } from '@/common/push/push.service';
 import { ReportPdfQueue } from './report-pdf.queue';
 
 /**

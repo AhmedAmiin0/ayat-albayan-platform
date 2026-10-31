@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { RulesSourceSettings } from '../rules-source.settings';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { DbRulesReader } from './rules.store';
 import type { RulesTable } from './rules.table';
 

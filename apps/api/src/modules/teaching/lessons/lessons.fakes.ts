@@ -1,16 +1,16 @@
 // Test fixtures for the lessons tests (not shipped; excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
-import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import type { LessonWriter } from '../scheduling/occurrences/lesson-writer';
-import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
+import type { ChangeSet, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
+import { STUDENT_ID, TEACHER_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
 import type { LessonRow } from './store/lesson-row';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { LessonStore } from './store/lesson-store';
 import type { LessonsQueries } from './lessons.queries';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
-export { RULE_ID, STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
+export { RULE_ID, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000d1';
 export const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000e1';
 export const OTHER_TEACHER_ID = '00000000-0000-4000-8000-0000000000b2';

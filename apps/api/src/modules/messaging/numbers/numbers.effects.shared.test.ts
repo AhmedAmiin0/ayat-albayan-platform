@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import type { SharedCache } from '@/common/infra/cache/shared-cache';
 import type { NumbersConfig } from './config/numbers.config';

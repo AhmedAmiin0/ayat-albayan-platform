@@ -1,12 +1,12 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { AppModule } from '../../../app.module';
+import { AppModule } from '@/app.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 import { AvailabilityQueries } from './availability/availability.queries';
 import { TeachersModule } from './teachers.module';
 import { TeachersQueries } from './teachers.queries';

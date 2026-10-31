@@ -1,8 +1,8 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { Body, Controller, Get, Headers, Param, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { CLIENT_HEADER, parseClientTag, UNTAGGED } from '@/common/telemetry/client-usage/client-tag';
 import { RulesService } from './rules.service';
 import { RulesWriter } from './store/rules.writer';

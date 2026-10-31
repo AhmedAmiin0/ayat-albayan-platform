@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import type { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
+import type { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import { LessonStore } from './lesson-store';
-import type { LessonsQueries } from '../lessons.queries';
+import type { LessonsQueries } from '@/modules/teaching/lessons/lessons.queries';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 const storeOf = (writer: object, events: LessonEvents) =>

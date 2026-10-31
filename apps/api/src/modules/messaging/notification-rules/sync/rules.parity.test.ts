@@ -1,14 +1,14 @@
 import { RULE_SETTING_KEYS, SETTING_DEFAULTS, type AcademySettings, type NotificationRuleRow } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { RulesSourceSettings } from '../rules-source.settings';
-import { RulesJournal } from '../store/rules.journal';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
+import { RulesJournal } from '@/modules/messaging/notification-rules/store/rules.journal';
 import { RulesParity } from './rules.parity';
-import { RulesPersist } from '../store/rules.persist';
-import { DbRulesReader } from '../store/rules.store';
-import type { RulesTable } from '../store/rules.table';
+import { RulesPersist } from '@/modules/messaging/notification-rules/store/rules.persist';
+import { DbRulesReader } from '@/modules/messaging/notification-rules/store/rules.store';
+import type { RulesTable } from '@/modules/messaging/notification-rules/store/rules.table';
 
 const ROWS: NotificationRuleRow[] = [
   { key: 'lesson_reminder', enabled: true, channels: null, timing: { minutes_before: 30 }, number_id: null, updated_at: 'x', updated_by: null },

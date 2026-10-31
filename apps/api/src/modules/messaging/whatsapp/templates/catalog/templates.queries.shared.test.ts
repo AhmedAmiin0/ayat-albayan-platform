@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
-import { fakeDb } from '../../../../people/guardians/fake-db';
-import { templateRow } from '../../whatsapp.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { TemplatesQueries } from './templates.queries';
 
 const T = 'message_templates';

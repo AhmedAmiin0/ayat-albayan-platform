@@ -1,15 +1,15 @@
 import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { TimeEditChange } from '../../scheduling/change-set';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { conflict, errorCode } from '../../../../common/http/errors';
-import { studentIdsOf, type LessonRow } from '../store/lesson-row';
-import { LessonStore } from '../store/lesson-store';
+import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { conflict, errorCode } from '@/common/http/errors';
+import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { TimeEditPayout } from './time-edit.payout';
 import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from './time-edit.plan';
-import { forMessages } from '../status/confirmation-messages';
+import { forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
 type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };

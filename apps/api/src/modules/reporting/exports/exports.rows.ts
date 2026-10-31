@@ -9,7 +9,7 @@ import {
   type StudentStatus,
 } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
-import { riyadhDate } from '../dashboard/range';
+import { riyadhDate } from '@/modules/reporting/dashboard/range';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
 // Students and lessons CSV rows (R-RPT-03). Headers and enum words come from ar.json; instants are

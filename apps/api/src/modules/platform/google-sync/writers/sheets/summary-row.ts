@@ -1,6 +1,6 @@
 import { driveFolderLink, folderIdIn, normalizeArabic, sheetLink, type Program } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
-import type { CellValue, Rows } from '../../google-client.port';
+import type { CellValue, Rows } from '@/modules/platform/google-sync/google-client.port';
 import { textCell } from './attendance-row';
 
 // «سجل الطلاب المشتركين» (docs/24 §2.6): the platform upserts ONLY the row of a student it writes

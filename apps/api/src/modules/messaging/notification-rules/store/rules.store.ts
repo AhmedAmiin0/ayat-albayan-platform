@@ -2,7 +2,7 @@ import type { NotificationRuleRow } from '@ab/shared';
 import { Injectable, Optional } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { RulesReader, type RulesSnapshot } from './rules.reader';
-import { RulesSourceSettings } from '../rules-source.settings';
+import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { RulesTable } from './rules.table';
 
 /**

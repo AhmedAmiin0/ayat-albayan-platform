@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { fakePolicy, type FakePolicyInput } from '../../../messaging/notification-rules/policy/policy.fakes';
-import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/change-set';
-import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import type { BookingPayload } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
-import { CourseChangeWriter } from '../course-change/course-change.writer';
+import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
 
 // The booking_confirmation rule at each write that carries confirmations (create_booking,
 // apply_lesson_changes, edit_lesson_time, change_course): on = the payload unchanged; off = no confirmation.

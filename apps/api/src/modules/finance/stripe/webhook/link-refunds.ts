@@ -1,11 +1,11 @@
 import { fromMinorUnits } from '@ab/shared';
 import { HttpException, Injectable } from '@nestjs/common';
 import type Stripe from 'stripe';
-import { errorCode } from '../../../../common/http/errors';
+import { errorCode } from '@/common/http/errors';
 import { ar } from '@/common/infra/i18n/server-text';
-import { StripeClients, type StripeApi } from '../gate/stripe-clients';
-import { uuidFor } from '../links/link-ids';
-import type { LinkRow } from '../links/payment-links.queries';
+import { StripeClients, type StripeApi } from '@/modules/finance/stripe/gate/stripe-clients';
+import { uuidFor } from '@/modules/finance/stripe/links/link-ids';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
 import { idOf, pastIso } from './link-fulfilment';
 import { WebhookDeps } from './webhook-deps';
 

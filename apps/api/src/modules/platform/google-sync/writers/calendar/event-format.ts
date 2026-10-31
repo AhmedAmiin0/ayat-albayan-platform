@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
-import type { GoogleEventBody } from '../../google-client.port';
-import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '../../google-format';
+import type { GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
+import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '@/modules/platform/google-sync/google-format';
 
 /** Which copy: the teacher's calendar (no family phone) or the academy's main calendar (with it). */
 export type EventCopy = 'teacher' | 'main';

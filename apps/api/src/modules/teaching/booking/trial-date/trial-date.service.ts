@@ -2,11 +2,11 @@ import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, 
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
-import { gateConfirmations } from '../../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
-import { domainError } from '../booking.errors';
-import { BookingFollowUps } from '../core/booking.follow-ups';
-import { BookingPlanner } from '../plan/booking.planner';
+import { gateConfirmations } from '@/common/rules/confirmations';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingFollowUps } from '@/modules/teaching/booking/core/booking.follow-ups';
+import { BookingPlanner } from '@/modules/teaching/booking/plan/booking.planner';
 import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import type { MessageDraft } from '@/modules/teaching/booking/core/booking.messages';
 import { FamilyMoveNotice, familyMove, type FamilyMove } from '@/modules/teaching/schedule-notices';

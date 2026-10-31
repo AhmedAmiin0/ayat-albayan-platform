@@ -2,10 +2,10 @@
 import type { StudentStatus } from '@ab/shared';
 import { vi } from 'vitest';
 import type { LessonEvents } from '@/common/infra/events/lesson-events';
-import { ruleSettingsOf } from '../../../../common/rules/rule-settings.fakes';
-import { fakePolicy } from '../../../messaging/notification-rules/policy/policy.fakes';
-import { bookingRequest, fakePlanner, IDS } from '../booking.fakes';
-import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
+import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { bookingRequest, fakePlanner, IDS } from '@/modules/teaching/booking/booking.fakes';
+import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 import type { TrialLessonRead } from './trial-date.history';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialDateQueries } from './trial-date.queries';

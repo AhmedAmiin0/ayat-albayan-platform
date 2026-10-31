@@ -6,10 +6,10 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
-import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */

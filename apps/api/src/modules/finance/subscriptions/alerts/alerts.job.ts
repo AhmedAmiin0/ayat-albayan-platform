@@ -8,7 +8,7 @@ import {
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService } from './alerts.service';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 15 * 60_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */

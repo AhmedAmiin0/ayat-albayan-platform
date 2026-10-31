@@ -1,12 +1,12 @@
 import { ar } from '@/common/infra/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { PushService } from '../../../../common/push/push.service';
+import { PushService } from '@/common/push/push.service';
 import { AlertsQueries } from './alerts.queries';
-import { alertPlan, openTaskKeys, type AlertPlan } from '../money/packages.plan';
-import { PackagesService } from '../money/packages.service';
-import { StudentRenewal, type RenewalCause } from '../student-lifecycle/student-renewal';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import { alertPlan, openTaskKeys, type AlertPlan } from '@/modules/finance/subscriptions/money/packages.plan';
+import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { StudentRenewal, type RenewalCause } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 
 type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: RenewalCause };
 

@@ -1,15 +1,15 @@
 import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { conflict } from '../../../../common/http/errors';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { confirmationMessages, forMessages } from '../status/confirmation-messages';
-import { studentIdsOf, type LessonRow } from '../store/lesson-row';
-import { LessonStore } from '../store/lesson-store';
-import { invalidTransition } from '../status/transition';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { conflict } from '@/common/http/errors';
+import { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
+import { confirmationMessages, forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
+import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
+import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
 /** The teacher and the family hear the move (ScheduleNotices, owner 2026-10-30). */
 function movedNotice(old: LessonRow, lessonId: string, actor: AuthUser): ScheduleChange {
