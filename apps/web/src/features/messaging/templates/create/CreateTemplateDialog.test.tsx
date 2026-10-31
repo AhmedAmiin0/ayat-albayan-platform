@@ -13,7 +13,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend 
 
 const S = t.templates.create;
 const nth = (text: string, n: number) => text.replace('{n}', String(n));
-const field = (label: string) => screen.getByLabelText(label) as HTMLInputElement;
+const field = (label: string) => screen.getByLabelText<HTMLInputElement>(label);
 const type = (label: string, value: string) => {
   fireEvent.change(field(label), { target: { value } });
 };

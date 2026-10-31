@@ -27,7 +27,7 @@ const input = templateCreateSchema.parse({
 });
 
 /** A saved row as the database returns it (an insert row's `line` type also names `calls`). */
-const saved = (row: object) => ({ ...templateRow(), ...row }) as TemplateRow;
+const saved = (row: object): TemplateRow => ({ ...templateRow(), ...row });
 const queries = { create: vi.fn() };
 const audit = { record: vi.fn() };
 const creator = () =>

@@ -1,14 +1,12 @@
-import type { TemplateView, WaLine } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { otherLine, templatesQuery } from './api';
-import { CreateTemplateDialog } from './create/CreateTemplateDialog';
+import { NewTemplate } from './create/NewTemplate';
 import { CrmNameDialog } from './crm/CrmNameDialog';
 import { MoveLineDialog } from './lines/MoveLineDialog';
 import { SubmitTemplateDialog } from './numbers/SubmitTemplateDialog';
@@ -60,13 +58,6 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
     [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
   );
   const rows = templates.data ?? [];
-  const [creating, setCreating] = useState(false);
-  const onCrm = (line: WaLine) => factsOf(line)?.provider === 'crm';
-  const onCreated = (tpl: TemplateView) => {
-    setCreating(false);
-    a.setNotice({ message: t.templates.create.saved.replace('{name}', tpl.meta_name) });
-    if (!onCrm(tpl.line)) setSubmitting(tpl);
-  };
 
   return (
     <>
@@ -74,11 +65,12 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         <h2 id={headingId} className="font-display text-h4 font-bold">
           {t.templates.title}
         </h2>
-        {manage && (
-          <Button size="sm" className="ms-auto" onClick={() => setCreating(true)}>
-            {t.templates.create.open}
-          </Button>
-        )}
+        <NewTemplate
+          manage={manage}
+          factsOf={factsOf}
+          onNotice={a.setNotice}
+          onSubmit={setSubmitting}
+        />
       </div>
       <p className="mb-1 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
       <p className="mb-3 max-w-[70ch] text-sm text-ink-2">{t.templates.salesStarterIntro}</p>
@@ -125,7 +117,6 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       {crmName.editing && (
         <CrmNameDialog template={crmName.editing} busy={crmName.save.isPending} onSave={(input) => crmName.save.mutate(input)} onClose={() => onEditName(null)} />
       )}
-      {creating && <CreateTemplateDialog line="notifications" onCrm={onCrm} onCreated={onCreated} onClose={() => setCreating(false)} />}
       {a.notice && <Toast {...a.notice} onDismiss={() => a.setNotice(null)} />}
     </>
   );

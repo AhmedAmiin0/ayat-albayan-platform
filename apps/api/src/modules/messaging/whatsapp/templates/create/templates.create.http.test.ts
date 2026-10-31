@@ -24,7 +24,7 @@ describe('POST /messaging/templates', () => {
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    const saved = (row: object) => ({ ...templateRow(), ...row }) as TemplateRow;
+    const saved = (row: object): TemplateRow => ({ ...templateRow(), ...row });
     t.templates.create.mockImplementation(async (row: object) => saved(row));
   });
 
