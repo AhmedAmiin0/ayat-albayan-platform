@@ -2,6 +2,7 @@ import { PLAYABLE_MIMES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../../../people/guardians/fake-db';
 import { InboundMediaQueries, PLAYABLE_FILTER } from './inbound-media.queries';
+import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 
 const M = 'messages';
 
@@ -32,6 +33,22 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
     // A bare prefix also matched audio/mp4a-latm (not playable): the job skipped it forever.
     expect(parts.every((p) => !p.endsWith('*') || p.endsWith(';*'))).toBe(true);
     expect(PLAYABLE_FILTER).not.toMatch(/image|pdf/);
+  });
+
+  it('receipts: the pickers' filters run in the query, before its limit (stickers never push a PDF out)', async () => {
+    const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
+    await new InboundMediaQueries(db).receipts({ phone: '+966552147730', since: '2026-10-01T00:00:00.000Z', limit: 12 });
+    const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
+    expect(of('eq')).toEqual([['phone_e164', '+966552147730'], ['direction', 'inbound']]);
+    expect(of('is')).toEqual([['hidden_at', null]]);
+    expect(of('or')).toEqual([[RECEIPT_FILTERS.source], [RECEIPT_FILTERS.notSticker], [RECEIPT_FILTERS.kind]]);
+    // No more «media id only»: a stored copy without one (an imported photo) is offered too.
+    expect(of('not')).toEqual([]);
+    expect(of('order')).toEqual([['created_at', { ascending: false }]]);
+    const at = (method: string) => calls.findIndex((c) => c.method === method);
+    expect(calls.findLastIndex((c) => c.method === 'or')).toBeLessThan(at('limit'));
+    expect(of('limit')).toEqual([[12]]);
+    expect(of('select')[0]?.[0]).toContain('interactive_payload');
   });
 
   it('a read error throws', async () => {
