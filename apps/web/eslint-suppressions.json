@@ -1913,6 +1913,142 @@
       "count": 3
     }
   },
+  "src/features/messaging/calls/api/calls-api.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/api/use-calls-realtime.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/entries/CallEntry.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/entries/CallEntry.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/entries/call-text.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/entries/use-thread-calls.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/header/CallButton.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/log/CallsLog.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/log/CallsLogRow.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/rtc/call-peer.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/calls/rtc/call-peer.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/rtc/media.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/rtc/ringtone.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/calls/rtc/ringtone.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/screen/CallBar.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/screen/CallOverlay.tsx": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/calls/screen/CallScreen.tsx": {
+    "max-len": {
+      "count": 2
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/screen/IncomingCall.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/state/CallProvider.tsx": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "jsx-a11y/media-has-caption": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/state/call-context.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/calls/state/call-platform.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/calls/state/call-test-kit.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 5
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/calls/state/use-call-session.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
   "src/features/messaging/inbox/api/api.files.test.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
@@ -1971,201 +2107,6 @@
   "src/features/messaging/inbox/api/thread-delta.ts": {
     "max-len": {
       "count": 5
-    }
-  },
-  "src/features/messaging/inbox/calls/api/calls-api.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/api/use-calls-realtime.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/entries/CallEntry.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/entries/CallEntry.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/entries/call-text.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/entries/use-thread-calls.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/header/CallButton.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/header/CallButton.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/header/PermissionDialog.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/header/PermissionDialog.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/calls/log/CallsLog.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/log/CallsLog.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/log/CallsLogRow.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/log/CallsTabs.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/rtc/call-peer.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/calls/rtc/call-peer.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/rtc/media.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/rtc/ringtone.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/calls/rtc/ringtone.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/screen/CallBar.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/screen/CallOverlay.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/calls/screen/CallScreen.tsx": {
-    "max-len": {
-      "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/screen/IncomingCall.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/state/CallProvider.cancel.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/state/CallProvider.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/state/CallProvider.tsx": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "@typescript-eslint/no-deprecated": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "jsx-a11y/media-has-caption": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/state/call-context.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/calls/state/call-platform.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/calls/state/call-test-kit.ts": {
-    "@typescript-eslint/require-await": {
-      "count": 5
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/calls/state/use-call-session.ts": {
-    "max-len": {
-      "count": 6
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {
@@ -2659,9 +2600,6 @@
     }
   },
   "src/features/messaging/inbox/lead/link-family.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -3311,632 +3249,15 @@
       "count": 2
     }
   },
-  "src/features/messaging/inbox/sales-money/ChildChoiceDialog.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.link.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.payment-link.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.renew-any.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.trial.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatActions.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatFrame.converted.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatFrame.lead.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatFrame.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesChatFrame.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesCourseEntry.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesDoneStep.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesMoneyFlow.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesPrimaryAction.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesSubscribeAction.en.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesSubscribeAction.renew.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/SalesSubscribeAction.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/api.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/ContinueChoice.teacher.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/ContinueChoice.tsx": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.change.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.choice.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.clash.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.continue.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.count.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.other.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 11
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/SalesRunningCourse.tsx": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/course-continue.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/course-continue.ts": {
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/course-draft.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/course-draft.ts": {
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/course/course-fixture.ts": {
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/features/messaging/inbox/sales-money/errors.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/CreatedLink.test.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/CreatedLink.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/LinkQuote.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/OnlinePayFields.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/link.fixture.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/payment-link/use-link-pay.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/ChildPicker.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesQuotePreview.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesStartField.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "jsx-a11y/label-has-associated-control": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {
-    "@typescript-eslint/dot-notation": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.start.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.teacher.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 17
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.used-before.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/SalesTeacherField.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/sales-money/subscribe/start-body.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/ChatReceiptGrid.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/ChatReceiptThumb.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/PackagePicker.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/ReceiptChooser.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.cancel.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.chat.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.renew-any.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.shortfall.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.upload.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/TransferFields.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/due-line.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/receipt.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/receipt.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/features/messaging/inbox/sales-money/transfer/use-sales-payment.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/features/messaging/inbox/sales-money/use-sales-family-actions.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 20
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/sales/SalesFamilyLine.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/sales/SalesFamilyLine.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/features/messaging/inbox/sales/SalesRegisterAction.draft.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -4338,9 +3659,6 @@
     }
   },
   "src/features/messaging/inbox/threads/list/InboxPage.tsx": {
-    "ab/no-parent-imports": {
-      "count": 11
-    },
     "complexity": {
       "count": 1
     },
@@ -4430,17 +3748,11 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadHeader.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadHeader.tsx": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "complexity": {
       "count": 1
     },
@@ -4454,9 +3766,6 @@
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "complexity": {
       "count": 1
     },
@@ -4617,9 +3926,6 @@
   "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 12
     },
     "complexity": {
       "count": 1
@@ -10132,6 +9438,466 @@
       "count": 2
     }
   },
+  "src/features/sales/sales-money/ChildChoiceDialog.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/SalesChatActions.link.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesChatActions.renew-any.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesChatActions.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/SalesChatFrame.lead.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesChatFrame.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/SalesChatFrame.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesCourseEntry.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesDoneStep.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/SalesMoneyFlow.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/features/sales/sales-money/SalesPrimaryAction.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/SalesSubscribeAction.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/api.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/features/sales/sales-money/course/ContinueChoice.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.change.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.choice.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.clash.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.continue.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.count.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.other.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/course/SalesCourseDialog.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 4
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 11
+    }
+  },
+  "src/features/sales/sales-money/course/SalesRunningCourse.tsx": {
+    "@typescript-eslint/no-import-type-side-effects": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/features/sales/sales-money/course/course-continue.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/course/course-continue.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/course/course-draft.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/course/course-draft.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/features/sales/sales-money/course/course-fixture.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/features/sales/sales-money/errors.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/features/sales/sales-money/payment-link/CreatedLink.test.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/payment-link/CreatedLink.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/payment-link/LinkQuote.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/payment-link/OnlinePayFields.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/payment-link/link.fixture.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/payment-link/use-link-pay.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/features/sales/sales-money/subscribe/ChildPicker.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesQuotePreview.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesStartField.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "jsx-a11y/label-has-associated-control": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesSubscribeStep.teacher.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesSubscribeStep.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 17
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesSubscribeStep.used-before.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/subscribe/SalesTeacherField.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/forbidden-imports": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/features/sales/sales-money/subscribe/start-body.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/features/sales/sales-money/transfer/ChatReceiptGrid.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales-money/transfer/ChatReceiptThumb.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/transfer/PackagePicker.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/ReceiptChooser.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.cancel.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.chat.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.renew-any.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.shortfall.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/SalesTransferStep.upload.test.tsx": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales-money/transfer/TransferFields.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/due-line.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales-money/transfer/receipt.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/features/sales/sales-money/transfer/use-sales-payment.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/features/sales/sales-money/use-sales-family-actions.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 4
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 20
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
   "src/features/sales/sales/SalesNav.tsx": {
     "max-len": {
       "count": 5
@@ -10884,9 +10650,6 @@
   "src/features/teaching/booking/course-change/refresh.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 2
