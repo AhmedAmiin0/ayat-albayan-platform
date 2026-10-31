@@ -7,10 +7,10 @@ import { withDays, type LogItem } from '@/features/messaging/inbox/messages/lib/
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
 import { HiddenBubble } from '@/features/messaging/inbox/messages/hide/HiddenBubble';
-import { CallEntry } from '@/features/messaging/inbox/calls/entries/CallEntry';
+import { CallEntry } from '@/features/messaging/calls';
 import type { CallView } from '@ab/shared';
-import { WithThreadCalls } from '@/features/messaging/inbox/calls/entries/use-thread-calls';
-import { useCallsEnabled } from '@/features/messaging/inbox/calls/state/call-context';
+import { WithThreadCalls } from '@/features/messaging/calls';
+import { useCallsEnabled } from '@/features/messaging/calls';
 import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { isNearBottom } from '@/features/messaging/inbox/messages/lib/stick-to-bottom';
 import { logNow } from '@/features/messaging/inbox/messages/lib/log-now';
