@@ -3341,7 +3341,8 @@
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
       "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
       "allow_list_only": "Managing templates is for the admin only",
-      "unknown_number": "This number no longer exists. Refresh the page and pick another number."
+      "unknown_number": "This number no longer exists. Refresh the page and pick another number.",
+      "template_exists": "The registry already has a template with this name, or with this name and language. Pick another name."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -3382,6 +3383,56 @@
       "notApproved": "Number saved, but the template is not approved on it yet. Sync this number’s templates or submit the template on its account; until then the message goes out from the next number in order.",
       "unknownNumber": "Unknown number",
       "disabledMark": "(stopped)"
+    },
+    "create": {
+      "open": "New template",
+      "title": "New template",
+      "description": "The template is saved to the registry without being sent; then you send it to Meta for review from its number, after a confirmation.",
+      "key": "Template name on Meta",
+      "keyHint": "Lower-case English letters, digits and underscores only, e.g. welcome_back. It cannot change after saving.",
+      "line": "Number it is sent from",
+      "category": "Category",
+      "language": "Language code",
+      "languageHint": "As Meta knows it, e.g. ar or en_US.",
+      "header": "Header (optional)",
+      "headerHint": "Fixed text without variables, up to {max} characters.",
+      "body": "Message text",
+      "bodyHint": "Put {{1}}, then {{2}}… where each variable goes, in order. Do not start or end the text with a variable, and do not put two variables side by side.",
+      "footer": "Footer (optional)",
+      "footerHint": "Fixed text without variables, up to {max} characters.",
+      "variables": "Variables",
+      "variablesHint": "For each variable in the text: what it stands for, and a realistic example for Meta's reviewer.",
+      "variablesNone": "The text has no variables.",
+      "variableName": "What variable {n} stands for",
+      "variableGeneric": "A value the sender types",
+      "sample": "Example for variable {n}",
+      "buttons": "Buttons (optional)",
+      "buttonsHint": "Up to {max} buttons, at most one of them a link button.",
+      "addUrl": "Add a link button",
+      "addReply": "Add a quick-reply button",
+      "buttonText": "Button {n} text",
+      "buttonUrl": "Button {n} link",
+      "buttonUrlHint": "Starts with https:// and may end with {{1}} for the sender to complete.",
+      "buttonIntent": "Button {n} action",
+      "removeFor": "Remove button {n}",
+      "remove": "Remove",
+      "intents": {
+        "confirm": "Confirm the lesson",
+        "reschedule": "Ask to change the time",
+        "stop": "Stop messages"
+      },
+      "invalidField": "This value is not valid; see the note under the field.",
+      "save": "Save template",
+      "saved": "Template «{name}» saved.",
+      "crmNote": "This number's templates are managed in the CRM, so the template is not sent to Meta from here. After saving, create it in the CRM with the same name, language, text and buttons (Settings → Templates → New template), sync it from Meta there, then mark it approved here."
+    },
+    "crmCheck": {
+      "title": "Template check",
+      "intro": "The CRM's API cannot read its templates, so their statuses here are set by hand. If Meta refuses to send a template with error 132001 (the template is not on the WhatsApp account connected to the CRM), the template is marked «not available» at once and its messages stop until you fix it.",
+      "none": "No templates are unavailable on this number.",
+      "missing": "Unavailable templates ({count}):",
+      "item": "{name} ({meta})",
+      "fix": "To fix one: create the template in the CRM with the same name and language (Settings → Templates → New template, then sync from Meta), then mark it approved in the table."
     }
   },
   "mobileAdmin": {

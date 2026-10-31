@@ -112,6 +112,7 @@ const BASE_ROW: TemplateRow = {
   updated_at: '2026-10-01T00:00:00Z',
   line: 'notifications',
   sales_starter: false,
+  samples: null,
   number_id: null,
   crm_name: null,
   crm_language: null,
