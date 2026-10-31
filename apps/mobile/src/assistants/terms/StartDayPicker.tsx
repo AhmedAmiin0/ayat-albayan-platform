@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { localDay } from '@/payments/format';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';

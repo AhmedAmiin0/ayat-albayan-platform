@@ -2,13 +2,13 @@ import type { InvoiceView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { InvoiceRow } from './InvoiceRow';
-import { useInvoices } from '../shared/queries';
-import { StaleNote, StateNote } from '../shared/StateNote';
+import { useInvoices } from '@/finance/shared/queries';
+import { StaleNote, StateNote } from '@/finance/shared/StateNote';
 import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (i: InvoiceView) => i.id;

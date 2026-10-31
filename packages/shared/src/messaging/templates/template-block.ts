@@ -59,7 +59,7 @@ export interface TemplateBlockSource {
 const TOKEN_URL_KEYS: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
 
 /** Before the first sync with `display`: the registry's own buttons (the sender's view). */
-function registryButtons(buttons: readonly TemplateButton[]): TemplateDisplayButton[] {
+export function registryButtons(buttons: readonly TemplateButton[]): TemplateDisplayButton[] {
   return buttons.map((b) => (b.type === 'url' ? { type: 'url', text: b.text ?? '', url: b.url } : { type: 'quick_reply', text: b.text }));
 }
 

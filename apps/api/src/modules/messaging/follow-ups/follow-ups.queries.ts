@@ -1,11 +1,11 @@
 import { FOLLOW_UP_STATUSES, type FollowUpNote } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { OwnNumbers } from '../numbers';
-import type { QueuedMessage } from '../reminders/queued-row';
-import { approvedTemplates, queueMessages } from '../reminders/reminders.queries';
-import { readAll } from '../../teaching/scheduling/read-all';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { OwnNumbers } from '@/modules/messaging/numbers';
+import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
+import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.queries';
+import { readAll } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
 
 const LEAD_SELECT =

@@ -1,8 +1,8 @@
 import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { readAll } from '../scheduling/read-all';
-import { dbError, type Page, type PageQuery } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll } from '@/common/db/read-all';
+import { dbError, type Page, type PageQuery } from '@/common/http/http';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';

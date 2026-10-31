@@ -2,7 +2,7 @@ import type { SettingKey, SettingMeta } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
@@ -11,10 +11,10 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SheetNotes, SheetNotice } from './SheetNotes';
 import { SheetQuestion } from './SheetQuestion';
 import { ValueEditor } from './ValueEditor';
-import { editorOf } from '../lib/value-draft';
-import { labelOf, valueText } from '../lib/value-text';
-import type { SheetDescription } from '../hooks/use-description-editor';
-import type { ValueSheetState } from '../hooks/use-value-sheet';
+import { editorOf } from '@/ops/values/lib/value-draft';
+import { labelOf, valueText } from '@/ops/values/lib/value-text';
+import type { SheetDescription } from '@/ops/values/hooks/use-description-editor';
+import type { ValueSheetState } from '@/ops/values/hooks/use-value-sheet';
 
 interface ValueSheetBodyProps {
   valueKey: SettingKey;

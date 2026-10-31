@@ -406,6 +406,7 @@
   "TeachersController.remove": ["admin"],
   "TeachersController.update": ["admin"],
   "TemplateNumbersController.sync": ["admin"],
+  "TemplatesController.create": ["admin"],
   "TemplatesController.health": ["admin"],
   "TemplatesController.lines": ["admin"],
   "TemplatesController.list": ["admin","sales","teacher"],

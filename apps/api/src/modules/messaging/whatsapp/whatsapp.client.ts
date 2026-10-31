@@ -1,4 +1,5 @@
-import { recipientAllowed, type GraphEnv } from '../../../config/env/env';
+import { WA_ERROR } from '@ab/shared';
+import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './drivers/meta/graph';
 import { fetchMedia, nextTemplateCursor, templateEditPath } from './drivers/kapso/kapso';
 import {
@@ -132,7 +133,7 @@ export class HttpWhatsappClient implements WhatsappClient {
   /** The allow-list check runs BEFORE any request; only a bug can reach it (after the claim). */
   private async send(to: string, build: () => GraphBody): Promise<WaSent> {
     const c = this.connection();
-    if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: 131030, status: 0 });
+    if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
     const body = build();
     const res = parsed(sentSchema, await graphJson(c, { path: `${c.env.phoneNumberId}/messages`, method: 'POST', body }));
     const id = res.messages[0]?.id;

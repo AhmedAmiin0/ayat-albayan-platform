@@ -2,13 +2,13 @@ import type { SalesTeacherView } from '@ab/shared';
 import { memo } from 'react';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { countsLine } from '@/students/list/student-kinds';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { useSalesHrefs } from '../lib/sales-href';
-import { teacherCounts, teacherLabel, teacherSubtitle } from '../lib/sales-text';
+import { useSalesHrefs } from '@/sales/lib/sales-href';
+import { teacherCounts, teacherLabel, teacherSubtitle } from '@/sales/lib/sales-text';
 
 /**
  * One active teacher in «المعلمون» (web parity, owner report 2026-10-12): name, gender · programs, the

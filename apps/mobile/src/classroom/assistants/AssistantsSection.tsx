@@ -4,7 +4,7 @@ import { usePermissions } from '@/auth/use-permissions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';

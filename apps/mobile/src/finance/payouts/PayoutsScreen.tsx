@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { currentMonth } from '../shared/month';
-import { MonthPicker } from '../shared/MonthPicker';
+import { currentMonth } from '@/finance/shared/month';
+import { MonthPicker } from '@/finance/shared/MonthPicker';
 import { PayoutDetail } from './PayoutDetail';
 import { PayoutRow } from './PayoutRow';
-import { usePayouts } from '../shared/queries';
-import { StaleNote, StateNote } from '../shared/StateNote';
+import { usePayouts } from '@/finance/shared/queries';
+import { StaleNote, StateNote } from '@/finance/shared/StateNote';
 
 /**
  * «مستحقات المعلمين الشهرية» (admin; web /admin/payouts): pick a month, read the teachers'

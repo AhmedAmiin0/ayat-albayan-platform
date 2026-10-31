@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { withoutPushToken } from '../../people/me/push/push-tokens';
-import { readAll } from '../../teaching/scheduling/read-all';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { withoutPushToken } from '@/modules/people/me/push/push-tokens';
+import { readAll } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 
 export interface TicketRow {
   id: string;

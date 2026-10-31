@@ -1,8 +1,8 @@
 import type { Tables } from '@ab/db';
 import type { BalanceView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readChunked } from '../../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { readChunked } from '@/common/db/read-all';
 
 export type BalanceRow = BalanceView & { student_id: string; is_last: boolean };
 

@@ -1,9 +1,9 @@
 import { OCCUPYING_LESSON_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { BusyLesson, StudentBusyLesson } from './conflicts';
-import type { UtcWindow } from '../occurrences/occurrences';
-import { readAll } from '../read-all';
+import type { UtcWindow } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { readAll } from '@/common/db/read-all';
 
 const occupying = [...OCCUPYING_LESSON_STATUSES];
 

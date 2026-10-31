@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '../../../common/list-sort';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { dbError } from '@/common/http/http';
 import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
 export type InvoiceRowOut = {

@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import type { ThreadMediaItem } from '../shared/contract';
+import type { ThreadMediaItem } from '@/booking/shared/contract';
 import { useThreadMedia } from './invoice-queries';
 import { MediaCard } from './MediaCard';
 

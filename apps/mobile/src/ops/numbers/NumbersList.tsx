@@ -1,6 +1,6 @@
 import type { NumberView, ParityView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from './NumberRow';

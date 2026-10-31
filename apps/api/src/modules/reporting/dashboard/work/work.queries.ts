@@ -1,7 +1,7 @@
 import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readAll, readChunked } from '../../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll, readChunked } from '@/common/db/read-all';
 
 /** Open or with an outcome; never cancelled or moved (docs/11 R11). */
 const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
