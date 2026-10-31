@@ -32,7 +32,7 @@ const configFor = (variant: string): ExpoConfig => {
 };
 
 test('the staging profile: its own channel, the EAS development environment, staging hosts only', () => {
-  expect(profiles['staging']).toEqual({
+  expect(profiles.staging).toEqual({
     distribution: 'internal',
     channel: 'staging',
     android: { buildType: 'apk' },
@@ -45,7 +45,7 @@ test('the staging profile: its own channel, the EAS development environment, sta
     node: eas.build.preview.node,
     pnpm: eas.build.preview.pnpm,
   });
-  expect(profiles['staging']?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
+  expect(profiles.staging?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
 });
 
 test('the production profiles never point at staging, nor share its channel', () => {

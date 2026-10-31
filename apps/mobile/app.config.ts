@@ -42,7 +42,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
     },
   };
-  const variant = process.env.APP_VARIANT ?? '';
+  // process.env is untyped here: String() keeps `any` out of the calls below.
+  const variant = String(process.env.APP_VARIANT ?? '');
   const name = SIDE_APPS.get(variant);
   return name ? sideApp(base, variant, name) : base;
 };
