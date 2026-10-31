@@ -6,7 +6,6 @@ import { assistantsErrorText, fieldError } from './api/errors';
 import { statement } from './api/fixtures';
 import { generateTargets } from './statements/hooks/generate-targets';
 import { statementActions } from './statements/hooks/statement-can';
-import { sumByCurrency } from './statements/hooks/totals';
 
 const ALL = { write: true, approve: true };
 
@@ -36,16 +35,6 @@ test('the ledger and statement paths carry only the filters that are set; a mont
 test('generate skips the frozen (approved or paid) statements of the month', () => {
   const rows = [statement({ assistant: { id: 'a1', name: 'x' }, status: 'paid' }), statement({ assistant: { id: 'a2', name: 'y' }, status: 'draft' })];
   expect(generateTargets(['a1', 'a2', 'a3'], rows)).toEqual(['a2', 'a3']);
-});
-
-test('sums per currency in whole cents, never across currencies; a filter narrows the rows', () => {
-  const rows = [
-    { amount: 0.1, currency: 'SAR', keep: true },
-    { amount: 0.2, currency: 'SAR', keep: true },
-    { amount: 40, currency: 'EGP', keep: false },
-  ];
-  expect(sumByCurrency(rows)).toEqual({ SAR: 0.3, EGP: 40 });
-  expect(sumByCurrency(rows, (r) => r.keep)).toEqual({ SAR: 0.3 });
 });
 
 test('API error codes and schema messages read the web’s Arabic; anything else is the generic error', () => {

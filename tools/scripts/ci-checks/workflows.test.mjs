@@ -35,10 +35,28 @@ test('every workflow has top-level permissions of contents: read only', () => {
   for (const w of workflows) assert.deepEqual(w.doc.permissions, { contents: 'read' }, w.file);
 });
 
-test('only claude-tasks and the two release jobs may write contents (docs/09 «Release tags»)', () => {
+test('only claude-tasks, the two release jobs and ci baselines may write contents (docs/09)', () => {
   const writes = (j) => j.permissions === 'write-all' || j.permissions?.contents === 'write';
   const writers = workflows.flatMap((w) => jobsOf(w).filter(([, j]) => writes(j)).map(([n]) => `${w.file}/${n}`));
-  assert.deepEqual(writers.sort(), ['claude-tasks.yml/claude', 'deploy-staging.yml/release', 'mobile.yml/release']);
+  const expected = ['ci.yml/baselines', 'claude-tasks.yml/claude', 'deploy-staging.yml/release', 'mobile.yml/release'];
+  assert.deepEqual(writers.sort(), expected);
+});
+
+test('ci baselines: develop pushes after green guards, only prunes the two lists, never fails ci', () => {
+  const ci = workflows.find((w) => w.file === 'ci.yml').doc;
+  const job = ci.jobs.baselines;
+  assert.deepEqual([job.needs, job['continue-on-error'], job.environment], ['guards', true, undefined]);
+  assert.equal(job.if, "github.event_name == 'push' && github.ref == 'refs/heads/develop'");
+  assert.ok(!ci.jobs.check.needs.includes('baselines'));
+  assert.deepEqual(ci.on.push['paths-ignore'], ['refactor/guards/**']);
+  assert.equal(job.steps[0].with['persist-credentials'], false);
+  const runs = job.steps.map((s) => s.run ?? '');
+  assert.ok(['pnpm guard:knip -- --write', 'pnpm guard:queries -- --write'].every((r) => runs.includes(r)));
+  const push = job.steps.at(-1);
+  assert.deepEqual(Object.keys(push.env), ['GH_TOKEN']);
+  assert.match(push.run, /\[skip ci\]' -- refactor\/guards\n/);
+  assert.match(push.run, /HEAD:develop \\\n\s+\|\| echo "::warning::/);
+  assert.equal(job.steps.filter((s) => JSON.stringify(s).includes('token')).length, 1);
 });
 
 test('the flag guard catches every server-only messaging switch, as whole words only', () => {

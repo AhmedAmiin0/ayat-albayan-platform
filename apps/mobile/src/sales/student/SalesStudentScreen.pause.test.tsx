@@ -38,7 +38,6 @@ afterEach(() => jest.useRealTimers());
 test('another family\'s student too: «إيقاف مؤقت» with courses.pause opens the sheet', async () => {
   serve({ mine: false, open: null });
   await renderWithQuery(<SalesStudentScreen />, asSales([...GRANTABLE_PERMISSIONS]));
-  expect(await screen.findByText(t.sales.student.notMine)).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: c.action }));
   expect(await screen.findByText(c.preview.one)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students/st1/course-pause/preview?from=2026-10-28');

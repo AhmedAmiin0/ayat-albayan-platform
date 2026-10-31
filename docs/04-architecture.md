@@ -47,7 +47,7 @@ ayat-albayan/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/
 │  └─ scripts/{ci-checks, env, seed, calendar}   # ci-checks: folder cap, jscpd/knip gates, pure-move, native-changes
-├─ refactor/                     # move maps, folder-cap allow-lists, guards/ baselines (jscpd, knip)
+├─ refactor/                     # move maps, folder-cap allow-lists, guards/ lists (knip, queries)
 ├─ e2e/                          # Playwright project (web), fixtures, seeds
 ├─ turbo.json  pnpm-workspace.yaml  package.json  knip.json  .jscpd.json  .github/workflows/
 └─ CLAUDE.md  docs/
@@ -189,15 +189,16 @@ inline disable: its exception goes in `eslint-suppressions.json`, where `pnpm gu
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 
-Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:
+Structure guards (docs/27 §1, Wave F). Each fails CI against a baseline that may only shrink. The duplicate, cycle and lint counts store none: on a PR, CI checks the merge base out beside the head and fails only when the head is above the base branch's own measure, so no PR edits `refactor/guards/` to record an improvement and no two PRs conflict there. The knip and queries lists stay in `refactor/guards/`: a new entry fails, a fixed one passes, and ci's `baselines` job drops it after a green push to `develop`:
 
 | Guard | Rule | Baseline | Run |
 |-------|------|----------|-----|
 | Module boundaries | import another module (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`, a `packages/*/src/<folder>`) only through its `index.ts`; tests, fakes and `test/`/`testing/` folders are exempt | `eslint-suppressions.json` per package (ESLint bulk suppressions) | `pnpm turbo lint`; after removing deep imports `eslint . --prune-suppressions` in that package |
 | Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split) |
-| Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside) | `refactor/guards/jscpd.json` | `pnpm guard:dup` (`-- --write` after a dedup PR) |
-| Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` | `pnpm guard:knip` (`-- --write` after a clean-up) |
-| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package (a total that grew, a new rule, a stale baseline or an entry whose file is gone fails; on a PR also a total above the base branch's `lint.json`) | `refactor/guards/lint.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package, then `pnpm guard:lint -- --write` (docs/31a §5.3) |
+| Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside), none above the base branch's (jscpd also runs in the base checkout) | none: measured on both sides | `pnpm guard:dup` |
+| Import cycles | top folders of `packages/shared/src` (docs/32 k1a): cycle edges not above the base branch's | none: measured on both sides | `pnpm guard:cycles` |
+| Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` (fixed entries leave it on `develop`) | `pnpm guard:knip` |
+| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package and fails on a total above the base branch's own sum (a rule the PR turns on gets its one-time baseline) or an entry whose file is gone | none: derived from both sides' `eslint-suppressions.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package (docs/31a §5.3) |
 
 Code used by two apps goes to `packages/shared` (pure TS) or `packages/client-core` (web + mobile), never a copy.
 

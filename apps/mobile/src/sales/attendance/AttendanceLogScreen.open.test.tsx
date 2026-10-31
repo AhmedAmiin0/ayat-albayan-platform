@@ -41,11 +41,10 @@ test('a PDF not ready yet says so above the table', async () => {
   expect(await screen.findByText(t.reports.error.pdf_not_ready)).toBeTruthy();
 });
 
-test('not her student (`mine` false): no row opens anything', async () => {
+test('not her student (`mine` false): a sent report opens too (owner 2026-10-30)', async () => {
   mockApiFetch.mockResolvedValue(logTable({ mine: false }));
   await inSales(<AttendanceLogScreen />);
-  expect(await screen.findByText(w.sent)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: openLabel })).toBeNull();
+  expect(await screen.findByRole('button', { name: openLabel })).toBeTruthy();
 });
 
 test('the admin tree: the admin\'s route, and a sent report opens the admin\'s report view', async () => {

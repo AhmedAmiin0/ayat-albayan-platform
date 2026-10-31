@@ -4455,7 +4455,18 @@
       "noTeacher": "بلا معلم",
       "guardianPhone": "هاتف ولي الأمر",
       "detailsHint": "يفتح تفاصيل الطالب",
-      "openStudent": "فتح ملف الطالب {name}"
+      "openStudent": "فتح ملف الطالب {name}",
+      "schedule": "الجدول",
+      "attendance": "الحضور",
+      "noSchedule": "لا يوجد جدول ثابت",
+      "attendedPackage": "حضر {n} من {of} في الباقة الحالية",
+      "attendedRecent": "حضر {n} من {of} في آخر 30 يومًا",
+      "noHeldPackage": "لا حلقات منعقدة في الباقة الحالية بعد",
+      "noHeldRecent": "لا حلقات منعقدة في آخر 30 يومًا",
+      "groupSeparator": "؛ ",
+      "package": "الباقة",
+      "packageLine": "الباقة: {line}",
+      "noPackage": "لا توجد باقة حالية"
     },
     "live": {
       "title": "الحلقات الجارية الآن",
@@ -4474,6 +4485,7 @@
       "starts": "البدء: {date}",
       "renews": "التجديد: {date}",
       "ended": "الانتهاء: {date}",
+      "projectedEnd": "النهاية المتوقعة: {date}",
       "changes": "تغييرات الحالة",
       "created": "أُنشئ بحالة {to}",
       "changed": "من {from} إلى {to}",
@@ -4516,7 +4528,6 @@
         "showAll": "عرض الكل ({n})",
         "showLess": "عرض أقل"
       },
-      "notMine": "ليس من طلابك: لا تظهر هنا الاشتراكات ولا التقارير",
       "trial": {
         "title": "الحلقة التجريبية",
         "none": "لا توجد حلقة تجريبية",
