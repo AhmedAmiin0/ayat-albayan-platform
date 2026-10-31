@@ -5427,9 +5427,6 @@
     },
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-len": {
-      "count": 8
     }
   },
   "src/modules/messaging/inbox/threads/thread-summaries.migration.test.ts": {
@@ -7895,11 +7892,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/message.views.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/messages/messages.controller.ts": {
@@ -17274,17 +17266,6 @@
   "src/modules/teaching/student-channels/channel.fakes.ts": {
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/student-channels/channel.mapper.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/teaching/student-channels/channel.open.http.test.ts": {
@@ -17293,9 +17274,6 @@
     }
   },
   "src/modules/teaching/student-channels/channel.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 9
     }
@@ -17321,39 +17299,12 @@
       "count": 2
     }
   },
-  "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/student-channels/student-channels.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
