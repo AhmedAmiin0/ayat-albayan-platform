@@ -76,7 +76,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
           {first && toSchedule ? (
             <Button
               label={t.booking.openSchedule}
-              // The schedule's `date` param is a viewer day (docs/34): it pages by the viewer's calendar.
+              // The schedule's `date` is a viewer day (docs/34): it pages by the viewer's days.
               onPress={() => router.replace({ pathname: '/schedule', params: { date: viewerToday(new Date(first.starts_at), viewerZone) } })}
             />
           ) : null}
