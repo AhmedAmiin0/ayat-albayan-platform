@@ -2,5 +2,5 @@
 // import them from here.
 export { clockCycle, setClockPref, useClockCycle, useClockPref } from './clock-store';
 export { clockIn, dateWithClock, hhmm, isolated, rangeOf, whenIn } from './format';
-export { useViewerTz } from './viewer-tz';
+export { useViewerClock, useViewerTz, type ViewerClock } from './viewer-tz';
 export { zoneNote } from './zone-note';

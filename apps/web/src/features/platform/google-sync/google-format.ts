@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { googleErrorKey, intlLocale, type GoogleAccountStatus, type GoogleSkipReason, type GoogleSyncState, type Glyph, type Tone } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock } from '@/lib/clock-text';
@@ -8,10 +7,10 @@ import { locale } from '@/lib/i18n/locale';
 // Display helpers of the Google section. DB times are UTC; they read in the viewer's zone
 // (docs/34), 12 or 24 h as the viewer chose, Western digits.
 
-export function formatAt(iso: string, clock: Clock): string {
-  const tz = viewerTz();
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
-  return dateAndClock(day, new Date(iso), { ...clock, tz });
+/** The time with its date in `clock.tz`, the viewer's zone (useViewerTz()). */
+export function formatAt(iso: string, clock: Clock & { tz: string }): string {
+  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: clock.tz });
+  return dateAndClock(day, new Date(iso), clock);
 }
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });

@@ -2700,7 +2700,7 @@
       "failed": "Couldn't download the file, try again"
     },
     "quickReply": {
-      "confirmed": "Confirmed the {when} lesson (Riyadh time)",
+      "confirmed": "Confirmed the {when} lesson (your time)",
       "reschedule": "Asked to reschedule the lesson",
       "rescheduleNoLesson": "Asked to reschedule",
       "rescheduled": "The lesson was rescheduled",
@@ -2708,9 +2708,9 @@
     },
     "replyAction": {
       "confirm": "Confirm lesson",
-      "confirmLabel": "Confirm the {when} lesson (Riyadh time)",
+      "confirmLabel": "Confirm the {when} lesson (your time)",
       "reschedule": "Reschedule",
-      "rescheduleLabel": "Reschedule the {when} lesson (Riyadh time)",
+      "rescheduleLabel": "Reschedule the {when} lesson (your time)",
       "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
@@ -4581,6 +4581,8 @@
       "emptyTeacher": "No lessons for this teacher on this day",
       "lessonsCount": "Lessons: {n}",
       "liveNow": "Running now",
+      "riyadhDay": "Academy day (Riyadh time); times in your time",
+      "otherDay": "{day} in your time",
       "makeupTag": "Makeup",
       "lessonLabel": "Lesson at {time} with {teacher}",
       "status": {

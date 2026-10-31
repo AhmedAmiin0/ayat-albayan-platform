@@ -4,7 +4,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
-import { lessonClock, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
@@ -25,9 +25,11 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const teacher = teacherName(lesson.teacher, locale);
-  const time = t.classroom.admin.time
+  const range = t.classroom.admin.time
     .replace('{from}', lessonClock(lesson.starts_at, tz, cycle))
     .replace('{to}', lessonClock(lesson.ends_at, tz, cycle));
+  // The board pages by Riyadh days (GET /lessons/day): another day for the viewer is named.
+  const time = [viewerDayHint(lesson.starts_at, tz), range].filter(Boolean).join(' ');
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   return (
     <View

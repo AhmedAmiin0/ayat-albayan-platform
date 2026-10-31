@@ -6,6 +6,8 @@ import { booked, maryam, SUN_17 } from '../testing/fixtures';
 import { whenText } from '../shared/slots';
 import { fakeBookingApi, LEADS_KEY, seededClient, walkToConfirm } from '../testing/test-utils';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -42,7 +44,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
   expect(slotsPath).toContain('durationMin=45');
   expect(screen.getByText('يوسف')).toBeTruthy();
   expect(screen.getByText(maryam.display_name_ar)).toBeTruthy();
-  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh', R24))).toBeTruthy();
   expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
 
   mockApiSend.mockResolvedValue(booked(SUN_17));
@@ -78,7 +80,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
     },
   });
   expect(
-    screen.getByText(t.booking.firstLesson.replace('{when}', whenText(SUN_17, 'Asia/Riyadh', '24'))),
+    screen.getByText(t.booking.firstLesson.replace('{when}', whenText(SUN_17, 'Asia/Riyadh', R24))),
   ).toBeTruthy();
   expect(screen.getByText(t.booking.confirmationNote)).toBeTruthy();
   // The lead shows trial_booked at once (even if it leaves a filtered list), and the lists refetch.

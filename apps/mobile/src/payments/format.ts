@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { counted, formatAmount, intlLocale, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -28,9 +27,8 @@ const dayIn = (timeZone: string) =>
 const days = new Map<string, Intl.DateTimeFormat>();
 const calendarDay = dayIn('UTC');
 
-/** «1 أكتوبر 2026»: the viewer's day of an instant (docs/34). */
-export function instantDay(iso: string): string {
-  const tz = viewerTz();
+/** «1 أكتوبر 2026»: the day of an instant in the viewer's `tz` (docs/34; useViewerTz). */
+export function instantDay(iso: string, tz: string): string {
   const format = days.get(tz) ?? dayIn(tz);
   days.set(tz, format);
   return format.format(new Date(iso));

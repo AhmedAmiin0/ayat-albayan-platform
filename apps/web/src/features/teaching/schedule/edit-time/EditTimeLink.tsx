@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { wasText } from './edit-time-text';
 import { timeEditInfo, timeEditMode } from './edit-time.contract';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /**
  * Under the time in the drawer (R-SCH-11): «كان: …» and «السبب: …» once it was edited (the
@@ -13,7 +14,7 @@ import { useClock } from '@/lib/clock';
  * The button fills its column (docs/07 «الأزرار»: never shrink-wrapped).
  */
 export function EditTimeLink({ lesson, onEdit }: { lesson: LessonView; onEdit?: (() => void) | undefined }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const info = timeEditInfo(lesson);
   return (
     <>

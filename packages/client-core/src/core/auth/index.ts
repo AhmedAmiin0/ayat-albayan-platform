@@ -1,4 +1,4 @@
-export { setViewerPersonTz, subscribeViewerTz, viewerTz } from './viewer-tz.js';
+export { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz.js';
 export { meLoaded, permissionsOf, permissionsView, type Can, type PermissionsView } from './permissions.js';
 export {
   isEmailIdentifier,

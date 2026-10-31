@@ -5,7 +5,7 @@ import { bookFailure } from '@/booking/shared/booking-errors';
 import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { dayStartUtc } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -42,6 +42,7 @@ interface CourseWizardProps {
  */
 export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const previous = view.previous ?? null;
   const [now] = useState(() => new Date().toISOString());
   const [step, setStep] = useState<CourseStep>(firstStep(previous !== null));
@@ -113,7 +114,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
         body={body}
         booking={{
           busy: book.isPending,
-          failure: book.isError ? bookFailure(book.error, cycle) : null,
+          failure: book.isError ? bookFailure(book.error, cycle, tz) : null,
           submit: () => (body ? book.mutate(body) : undefined),
         }}
         onChangeSlot={() => go('slot')}

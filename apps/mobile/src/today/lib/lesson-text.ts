@@ -1,8 +1,9 @@
-import { otherZoneClock, teacherName, type ClockCycle } from '@ab/shared';
+import { ACADEMY_TZ, otherZoneClock, teacherName, weekdayOf, type ClockCycle } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { locale } from '@/core/lib/i18n/locale';
+import { localDate } from './timeline';
 import type { TodayLesson } from './today-lesson';
 
 // Card lines for a lesson (R-SCH-01, docs/34: the viewer's clock on the spine, the student's own
@@ -12,10 +13,23 @@ import type { TodayLesson } from './today-lesson';
 const MINUTE = 60_000;
 const durations: Record<string, string | undefined> = t.enums.duration;
 const cities: Record<string, string | undefined> = t.tz;
+const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
 /** «16:00»: an instant on the viewer's clock `tz` (useViewerTz), docs/07 §12. */
 export function lessonClock(iso: string, tz: string, cycle: ClockCycle): string {
   return clockIn(new Date(iso), tz, cycle);
+}
+
+/**
+ * «السبت» when `iso` falls on another day for the viewer (`tz`) than on the academy's
+ * calendar, else null. The `?date` screens (GET /lessons/day, /sales/schedule) page by Riyadh
+ * days (docs/34 b): a Cairo viewer's 00:30 Riyadh lesson on «الأحد» is Saturday 23:30 for them.
+ */
+export function viewerDayHint(iso: string, tz: string): string | null {
+  const at = new Date(iso);
+  const date = localDate(at, tz);
+  if (date === localDate(at, ACADEMY_TZ)) return null;
+  return weekdays[String(weekdayOf(date))] ?? null;
 }
 
 /** «45 دقيقة» from the lesson's own span; nothing for a length outside the duration enum. */

@@ -1,11 +1,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 983 (wa_line gains `calls`) and 984 (the calls number's reply-window filter, the
 // template check, wa_call_permissions), read as text: expand only, idempotent, RLS on, no data
 // written.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (f: string) => readFileSync(join(dir, f), 'utf8').replace(/--.*$/gm, '');
 const ENUM = read('20261030000983_wa_line_calls.sql');
 const NUMBER = read('20261030000984_calls_number.sql');

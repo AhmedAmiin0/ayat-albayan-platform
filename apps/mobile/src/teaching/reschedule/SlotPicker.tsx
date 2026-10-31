@@ -51,6 +51,7 @@ export function SlotPicker({
   slotsPath,
 }: SlotPickerProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
   const { color } = useTheme();
   const [now] = useState(() => new Date());
   // academy day (docs/34 b): weeks page as the calendar's; each slot reads in the viewer's zone.
@@ -99,7 +100,7 @@ export function SlotPicker({
         <AppText style={note}>{t.common.loading}</AppText>
       )}
       <AppText accessibilityLiveRegion="polite" style={note}>
-        {value ? t.booking.picked.replace('{when}', whenText(value, tz, cycle)) : t.lessons.newTimeHint}
+        {value ? t.booking.picked.replace('{when}', whenText(value, tz, { tz: viewerZone, cycle })) : t.lessons.newTimeHint}
       </AppText>
     </View>
   );
@@ -111,7 +112,7 @@ type WeekSlotsProps = Pick<SlotPickerProps, 'tz' | 'value' | 'onPick'> & { slots
 function WeekSlots({ slots, tz, value, onPick }: WeekSlotsProps) {
   const { color } = useTheme();
   const viewer = useViewerTz();
-  const days = freeSlotDays(slots);
+  const days = freeSlotDays(slots, viewer);
   const [chosen, setChosen] = useState<string | null>(null);
   const day = days.find((d) => d.date === chosen) ?? days[0];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };

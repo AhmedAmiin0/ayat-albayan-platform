@@ -46,10 +46,15 @@ describe('filterLessons (docs/10 §5.1)', () => {
 describe('teacherRows (R-SCH-01 week grid)', () => {
   it('one row per teacher by Arabic name, lessons in their Riyadh day', () => {
     const late = lesson({ id: 'late', starts_at: '2026-10-03T22:30:00.000Z' }); // 01:30 Sunday in Riyadh
-    const rows = teacherRows([B, A, late]);
+    const rows = teacherRows([B, A, late], RIYADH_TZ);
     expect(rows.map((r) => r.teacher.id)).toEqual([ABRAR.id, FATMA.id]);
     expect(rows[0]?.days.get('2026-10-04')?.map((l) => l.id)).toEqual(['late', 'a']);
     expect(rows[1]?.days.get('2026-10-05')?.map((l) => l.id)).toEqual(['b']);
+  });
+
+  it('buckets by the day of the zone it is given', () => {
+    const late = lesson({ id: 'late', starts_at: '2026-10-03T22:30:00.000Z' }); // Saturday in UTC
+    expect([...(teacherRows([late], 'UTC')[0]?.days.keys() ?? [])]).toEqual(['2026-10-03']);
   });
 });
 

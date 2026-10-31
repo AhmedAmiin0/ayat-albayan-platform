@@ -1,11 +1,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 20261028000921 (thread_summaries behind v_threads) and 863 (the catch-up's partial indexes)
 // read as text: idempotent, RLS on the new table, triggers before the backfill, the same v_threads columns.
 // The rows themselves are proven equal in e2e/tests/thread-summaries.sql.spec.ts (a real database).
-const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (f: string) => readFileSync(join(dir, f), 'utf8').replace(/--.*$/gm, '');
 const SUMMARY = read('20261028000921_thread_summaries.sql');
 const CATCHUP = read('20261028000922_external_catchup_index.sql');

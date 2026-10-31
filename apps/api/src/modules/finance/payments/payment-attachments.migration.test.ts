@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 // Migration 20261012000432 (docs/11 §7; rules 8, 9): the database backstop of «المرفقات» — bank transfers
 // only, at most 5 per payment (a replay of the same path still ignored), a payment with files stays 'bank'.
 
 const sql = readFileSync(
-  join(__dirname, '../../../../../../packages/db/supabase/migrations/20261012000432_payment_attachments_backstop.sql'),
+  migrationPath('20261012000432_payment_attachments_backstop.sql'),
   'utf8',
 );
 const code = sql.replace(/--.*$/gm, '');

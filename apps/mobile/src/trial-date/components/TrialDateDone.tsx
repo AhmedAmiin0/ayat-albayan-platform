@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { whenLines } from '../lib/trial-date-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface TrialDateDoneProps {
   /** The API's answer: its own starts_at, so a replayed request shows the truth. */
@@ -20,8 +20,10 @@ interface TrialDateDoneProps {
 /** After POST …/trial-date 201: «نُقلت الحلقة التجريبية…» or «تم حجز…», the time, the teacher, the note. */
 export function TrialDateDone({ result, teacherName, tz, onClose }: TrialDateDoneProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
+  const viewer = { tz: viewerZone, cycle };
   const { color } = useTheme();
-  const at = whenLines(result.starts_at, tz, cycle);
+  const at = whenLines(result.starts_at, tz, viewer);
   const line = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { ...line, fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (

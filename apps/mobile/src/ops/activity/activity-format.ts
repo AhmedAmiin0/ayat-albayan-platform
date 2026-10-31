@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { intlLocale } from '@ab/shared';
 import type { ActivityView, ClockCycle, StatusStyle } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
@@ -8,9 +7,8 @@ import { isolate } from '@/core/ui/primitives/Ltr';
 
 // The log's times read in the viewer's zone (docs/34), 12 or 24 h as they chose, Western digits.
 
-/** «03/10/2026، 16:30» / «… 4:30 م» on the viewer's clock. */
-export function formatAt(iso: string, cycle: ClockCycle): string {
-  const tz = viewerTz();
+/** «03/10/2026، 16:30» / «… 4:30 م» on the clock of the viewer's `tz`. */
+export function formatAt(iso: string, cycle: ClockCycle, tz: string): string {
   const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
   return dateWithClock(day.format(new Date(iso)), clockIn(new Date(iso), tz, cycle));
 }
@@ -46,8 +44,8 @@ export function actorLine(row: Pick<ActivityView, 'actor_name' | 'actor_role'>):
 }
 
 /** «الإدارة · طالب · 3 أكتوبر 2026 16:30»: the second line of a row. */
-export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle): string {
-  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle)]
+export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle, tz: string): string {
+  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle, tz)]
     .filter((p): p is string => p !== null)
     .join(' · ');
 }

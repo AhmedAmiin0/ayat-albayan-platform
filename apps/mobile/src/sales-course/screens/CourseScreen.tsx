@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import { bookFailure, isCodedRefusal } from '@/booking/shared/booking-errors';
 import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { t } from '@/core/lib/i18n/i18n';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
@@ -83,9 +83,10 @@ interface CourseStatusProps {
  */
 function CourseStatus({ course, block, missing }: CourseStatusProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   if (missing) return <EmptyState title={t.common.notFound} />;
   if (course.isError) {
-    const failure = bookFailure(course.error, cycle);
+    const failure = bookFailure(course.error, cycle, tz);
     if (failure.kind === 'error' && isCodedRefusal(course.error)) return <EmptyState title={failure.text} />;
     const message = failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
     return <ErrorState message={message} onRetry={() => void course.refetch()} />;

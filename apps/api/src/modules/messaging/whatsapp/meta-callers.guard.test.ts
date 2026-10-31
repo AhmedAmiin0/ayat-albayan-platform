@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { metaCallsIn, offenders, sources, stripComments } from './meta-callers.test-util';
+import { API_SRC } from '@/common/db/repo-paths.test-util';
 
-/** apps/api/src (not import.meta.url: TS1470 under NodeNext + commonjs; not process.cwd()). */
-const SRC = join(__dirname, '../../..');
+/** apps/api/src, from the repo root (not import.meta.url: TS1470 under NodeNext + commonjs). */
+const SRC = API_SRC;
 
 describe('Meta callers guard (docs/12 §13.5)', () => {
   it('scans the real apps/api/src tree', () => {

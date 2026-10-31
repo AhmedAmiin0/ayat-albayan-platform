@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 20261023000620–621 (docs/23 §3 phase 3) read as text: no database in unit tests. Expand only:
 // they create, never insert a number or copy a secret, and never touch a sending switch.
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (f: string) => readFileSync(join(dir, f), 'utf8');
 const table = read('20261023000620_wa_numbers.sql');
 const vault = read('20261023000621_wa_number_secrets.sql');

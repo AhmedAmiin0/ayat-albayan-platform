@@ -2,10 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migrations 20261022000610–612 (docs/24) read as text: no database in unit tests (the SQL behaviour is in
 // e2e/tests/google-sync.sql.spec.ts).
-const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const read = (f: string) => readFileSync(join(dir, f), 'utf8');
 const tables = read('20261022000610_google_sync.sql');
 const outbox = read('20261022000611_google_sync_outbox.sql');

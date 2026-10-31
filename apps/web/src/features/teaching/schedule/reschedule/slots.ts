@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { clockOf } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import type { Window } from '../api';
@@ -19,12 +18,12 @@ export function byLocalDay<T extends { starts_at: string }>(items: readonly T[],
 }
 
 /** The Saturday that starts the current week in `tz` (the viewer's). */
-export function currentWeekStart(now: Date, tz: string = viewerTz()): string {
+export function currentWeekStart(now: Date, tz: string): string {
   return weekStart(zonedParts(now, tz).date);
 }
 
 /** The bookable part of a week in `tz`: from now on; null once the whole week is past. */
-export function bookableWindow(start: string, now: Date, tz: string = viewerTz()): Window | null {
+export function bookableWindow(start: string, now: Date, tz: string): Window | null {
   const week = weekWindow(start, tz);
   if (week.to <= now) return null;
   return { from: week.from > now ? week.from : now, to: week.to };

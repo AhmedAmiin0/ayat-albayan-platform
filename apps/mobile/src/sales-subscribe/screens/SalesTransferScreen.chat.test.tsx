@@ -63,7 +63,7 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
   expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${KID}`);
-  const name = `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`;
+  const name = `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`;
   const expired = await screen.findByRole('button', { name: new RegExp(m.receiptExpired) });
   expect(expired).toBeDisabled();
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts/${MSG}?studentId=${KID}`));
@@ -100,14 +100,14 @@ test('an expired chat file (410): the reason, nothing chosen', async () => {
   mockApiSend.mockRejectedValue(new ApiError(410, { code: 'media_expired' }));
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
-  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}` }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}` }));
   expect(await screen.findByText(m.error.media_expired)).toBeTruthy();
   expect(screen.queryByText(FIRST)).toBeNull();
 });
 
 test('the same chat message picked again: no second copy, still one attachment', async () => {
   await renderWithQuery(<SalesTransferScreen />);
-  const name = `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`;
+  const name = `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`;
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
   await fireEvent.press(await screen.findByRole('button', { name }));
   expect(await screen.findByText(FIRST)).toBeTruthy();

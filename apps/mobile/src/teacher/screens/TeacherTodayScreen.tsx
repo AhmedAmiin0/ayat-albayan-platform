@@ -69,7 +69,7 @@ export function TeacherTodayScreen() {
         size="h2"
         connecting
         trailing={<BellButton tree="teacher" />}
-        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
+        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle, tz))}` : dateLine}
       />
       <LiveSessions lessons={lessons} />
       <PendingBanner count={pending.data?.length ?? 0} />

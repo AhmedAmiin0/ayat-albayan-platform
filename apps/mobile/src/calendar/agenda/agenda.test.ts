@@ -5,6 +5,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
 
 // Winter week (Cairo back on UTC+2 since 30 Oct): Saturday 31 Oct → Friday 6 Nov 2026.
+const VIEWER = { cycle: '24', tz: 'Asia/Riyadh' } as const;
 const START = '2026-10-31';
 const at = (id: string, startsAt: string, minutes = 45) =>
   lesson({
@@ -13,11 +14,11 @@ const at = (id: string, startsAt: string, minutes = 45) =>
     ends_at: new Date(Date.parse(startsAt) + minutes * 60_000).toISOString(),
   });
 
-test('seven days always, each with its lessons on the Riyadh calendar, earliest first', () => {
+test('seven days always, each with its lessons on the viewer’s (Riyadh) calendar, earliest first', () => {
   const late = at('late', '2026-11-04T21:30:00.000Z'); // Thu 00:30 in Riyadh, Wed 23:30 in Cairo
   const wedPm = at('wed-pm', '2026-11-04T14:00:00.000Z');
   const wedAm = at('wed-am', '2026-11-04T06:00:00.000Z');
-  const days = agendaDays([late, wedPm, wedAm], START);
+  const days = agendaDays([late, wedPm, wedAm], START, 'Asia/Riyadh');
   expect(days.map((d) => d.date)).toEqual([
     '2026-10-31',
     '2026-11-01',
@@ -37,15 +38,15 @@ test('an empty week is seven empty days; cancelled and moved lessons stay hidden
     lesson({ id: 'x', status: 'cancelled_by_admin', starts_at: '2026-11-01T10:00:00.000Z' }),
     lesson({ id: 'y', status: 'rescheduled', starts_at: '2026-11-02T10:00:00.000Z' }),
   ];
-  const days = agendaDays(gone, START);
+  const days = agendaDays(gone, START, 'Asia/Riyadh');
   expect(days).toHaveLength(7);
   expect(days.every((d) => d.lessons.length === 0)).toBe(true);
-  expect(agendaDays([], START).every((d) => d.lessons.length === 0)).toBe(true);
+  expect(agendaDays([], START, 'Asia/Riyadh').every((d) => d.lessons.length === 0)).toBe(true);
 });
 
 test('lessons outside the week are left out', () => {
   const next = at('next', '2026-11-06T21:00:00.000Z'); // Saturday 00:00 Riyadh: the next week
-  expect(agendaDays([next], START).flatMap((d) => d.lessons)).toEqual([]);
+  expect(agendaDays([next], START, 'Asia/Riyadh').flatMap((d) => d.lessons)).toEqual([]);
 });
 
 test('the teacher clock shows only when it reads differently from Riyadh', () => {
@@ -82,7 +83,7 @@ test('a day’s availability: its weekday’s windows by start, named in the gri
 
 test('the subtitle says how old a saved list is only while its refetch fails', () => {
   const ok = { isError: false, data: [], dataUpdatedAt: 0 };
-  expect(headerLine(['أ', 'ب'], ok, '24')).toBe('أ · ب');
-  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined }, '24')).toBe('أ');
-  expect(headerLine(['أ'], { ...ok, isError: true }, '24')).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
+  expect(headerLine(['أ', 'ب'], ok, VIEWER)).toBe('أ · ب');
+  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined }, VIEWER)).toBe('أ');
+  expect(headerLine(['أ'], { ...ok, isError: true }, VIEWER)).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
 });

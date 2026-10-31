@@ -1,20 +1,14 @@
-import {
-  RIYADH_TZ,
-  type Gender,
-  type LessonView,
-  type OverviewTeacher,
-  type OverviewTimeOff,
-  type Program,
-  type ScheduleOverview,
-  type Span,
-} from '@ab/shared';
+import type { Gender, LessonView, OverviewTeacher, OverviewTimeOff, Program } from '@ab/shared';
+import type { ScheduleOverview, Span } from '@ab/shared';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { agendaDays } from '../agenda/agenda';
-import { addDays, riyadhMidnight } from '../lib/week';
+import { addDays, zonedMidnight } from '../lib/week';
+import { clip, clipAll, freeAhead, joined } from './spans';
 
-// «الجدول» for every teacher (R-SCH-01, R-TCH-02): the overview cut to one Riyadh day or the
-// whole week, filtered by program and gender. Rows come from the teachers, so a teacher with
-// nothing booked still shows. Windows and free time are the API's; here they are only clipped.
+// «الجدول» for every teacher (R-SCH-01, R-TCH-02): the overview cut to one day of the viewer's
+// calendar (docs/34) or the whole week, filtered by program and gender. Rows come from the
+// teachers, so a teacher with nothing booked still shows. Windows and free time are the API's;
+// here they are only clipped (spans.ts).
 
 export type ScheduleView = 'day' | 'week';
 
@@ -26,7 +20,7 @@ export interface TeacherFilter {
 export type AgendaItem =
   | { kind: 'lesson'; lesson: LessonView }
   | { kind: 'free'; span: Span }
-  /** Week view: the Riyadh day the next lessons fall on. */
+  /** Week view: the viewer's day the next lessons fall on. */
   | { kind: 'day'; date: string };
 
 export interface TeacherAgenda {
@@ -38,35 +32,17 @@ export interface TeacherAgenda {
 }
 
 interface AgendaOptions {
-  /** First Riyadh day shown (YYYY-MM-DD). */
+  /** First day shown (YYYY-MM-DD) on the viewer's calendar `tz`. */
   start: string;
+  /** The viewer's zone: the period runs from its midnight, lessons sit under its days. */
+  tz: string;
   view: ScheduleView;
   filter: TeacherFilter;
   /** Free gaps start no earlier than this, rounded up to a quarter hour, as on the web board. */
   now?: Date;
 }
 
-const QUARTER = 15 * 60_000;
-/** Bookable free gaps are at least 30 min (the web board's rule). */
-const MIN_GAP = 30 * 60_000;
 const ms = (iso: string) => Date.parse(iso);
-
-function clip(span: Span, from: number, to: number): Span | null {
-  const a = Math.max(ms(span.starts_at), from);
-  const b = Math.min(ms(span.ends_at), to);
-  return a < b
-    ? { starts_at: new Date(a).toISOString(), ends_at: new Date(b).toISOString() }
-    : null;
-}
-
-const clipAll = (spans: readonly Span[], from: number, to: number): Span[] =>
-  spans.flatMap((s) => clip(s, from, to) ?? []);
-
-/** Free gaps still ahead: clipped to the period and to `now`, short remainders dropped. */
-const freeAhead = (spans: readonly Span[], period: { from: number; to: number; now?: Date }): Span[] => {
-  const after = period.now ? Math.ceil(period.now.getTime() / QUARTER) * QUARTER : 0;
-  return clipAll(spans, Math.max(period.from, after), period.to).filter((s) => ms(s.ends_at) - ms(s.starts_at) >= MIN_GAP);
-};
 
 export function matches(teacher: OverviewTeacher, f: TeacherFilter): boolean {
   return (
@@ -93,13 +69,12 @@ function dayItems(lessons: readonly LessonView[], free: readonly Span[]): Agenda
   return items.sort((a, b) => a.at - b.at).map((x) => x.item);
 }
 
-/** A week's lessons under their Riyadh day; days without lessons are left out. */
-function weekItems(lessons: readonly LessonView[]): AgendaItem[] {
+/** A week's lessons under the viewer's day (`tz`); days without lessons are left out. */
+function weekItems(lessons: readonly LessonView[], tz: string): AgendaItem[] {
   const items: AgendaItem[] = [];
   let last = '';
   for (const lesson of lessons) {
-    // academy day (docs/34 b): the week pages by Riyadh days, as the `?date` param.
-    const date = localDate(new Date(lesson.starts_at), RIYADH_TZ);
+    const date = localDate(new Date(lesson.starts_at), tz);
     if (date !== last) items.push({ kind: 'day', date });
     last = date;
     items.push({ kind: 'lesson', lesson });
@@ -110,8 +85,8 @@ function weekItems(lessons: readonly LessonView[]): AgendaItem[] {
 /** One agenda per matching teacher, by name: the day with its free gaps, or the week by day. */
 export function teacherAgendas(o: ScheduleOverview, opts: AgendaOptions): TeacherAgenda[] {
   const days = opts.view === 'day' ? 1 : 7;
-  const from = ms(riyadhMidnight(opts.start));
-  const to = ms(riyadhMidnight(addDays(opts.start, days)));
+  const from = ms(zonedMidnight(opts.start, opts.tz));
+  const to = ms(zonedMidnight(addDays(opts.start, days), opts.tz));
   const lessons = openLessons(o.lessons).filter(
     (l) => ms(l.starts_at) >= from && ms(l.starts_at) < to,
   );
@@ -122,8 +97,11 @@ export function teacherAgendas(o: ScheduleOverview, opts: AgendaOptions): Teache
       const own = lessons.filter((l) => l.teacher.id === teacher.id);
       return {
         teacher,
-        items: days === 1 ? dayItems(own, freeAhead(teacher.free, { from, to, now: opts.now })) : weekItems(own),
-        windows: clipAll(teacher.windows, from, to),
+        items:
+          days === 1
+            ? dayItems(own, freeAhead(teacher.free, { from, to, now: opts.now }))
+            : weekItems(own, opts.tz),
+        windows: joined(clipAll(teacher.windows, from, to)),
         timeOff: teacher.time_off.filter((off) => clip(off, from, to) !== null),
       };
     });
@@ -135,13 +113,14 @@ export function itemKey(item: AgendaItem): string {
   return item.kind === 'day' ? `day-${item.date}` : `free-${item.span.starts_at}`;
 }
 
-/** Lessons per day of the week starting `start`, for the matching teachers (the day pills). */
+/** Lessons per viewer's day of the week starting `start`, for the matching teachers (day pills). */
 export function dayCounts(
   o: ScheduleOverview,
-  start: string,
+  week: { start: string; tz: string },
   filter: TeacherFilter,
 ): { date: string; count: number }[] {
   const shown = new Set(o.teachers.filter((t) => matches(t, filter)).map((t) => t.id));
   const lessons = o.lessons.filter((l) => shown.has(l.teacher.id));
-  return agendaDays(lessons, start).map((d) => ({ date: d.date, count: d.lessons.length }));
+  const days = agendaDays(lessons, week.start, week.tz);
+  return days.map((d) => ({ date: d.date, count: d.lessons.length }));
 }

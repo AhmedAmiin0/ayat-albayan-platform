@@ -1,4 +1,3 @@
-import { viewerTz } from '@ab/client-core';
 import { clockOf, joinNames, sameClockAt, type LessonStatus, type LessonView } from '@ab/shared';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
@@ -43,7 +42,7 @@ export interface TeacherRow {
 }
 
 /** Week grid rows: one per teacher (by name), lessons bucketed by their day in `tz` (viewer's). */
-export function teacherRows(lessons: readonly LessonView[], tz: string = viewerTz()): TeacherRow[] {
+export function teacherRows(lessons: readonly LessonView[], tz: string): TeacherRow[] {
   const rows = new Map<string, TeacherRow>();
   const sorted = lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at));
   for (const lesson of sorted) {

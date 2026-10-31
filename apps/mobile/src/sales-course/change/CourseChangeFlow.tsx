@@ -15,7 +15,7 @@ import { changeRequest } from './change-body';
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseChangeFlowProps {
   student: SalesCourseView['student'];
@@ -39,6 +39,8 @@ interface CourseChangeFlowProps {
  */
 export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseChangeFlowProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const [step, setStep] = useState<'slot' | 'review'>('slot');
   const [now] = useState(() => new Date());
@@ -63,7 +65,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
       return (
         <>
           <AppText style={{ ...note, color: color.ink }}>
-            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}
+            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
           <SlotStep
@@ -84,7 +86,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
         body={body}
         saving={{
           busy: change.isPending,
-          failure: change.isError ? bookFailure(change.error, cycle) : null,
+          failure: change.isError ? bookFailure(change.error, cycle, tz) : null,
           submit: () => (body ? change.mutate(body) : undefined),
         }}
         onChangeSlot={() => go('slot')}

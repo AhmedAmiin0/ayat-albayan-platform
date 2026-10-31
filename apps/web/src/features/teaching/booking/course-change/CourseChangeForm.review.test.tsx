@@ -12,7 +12,7 @@ import { CourseChangeForm } from './CourseChangeForm';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

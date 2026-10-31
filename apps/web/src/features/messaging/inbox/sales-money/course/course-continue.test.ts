@@ -8,7 +8,7 @@ import { COURSE_SUB, COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } f
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const NOW = '2026-10-03T09:00:00.000Z';
 /** The previous course's days as the choice names them: Sunday 17:00, Wednesday 19:30. */

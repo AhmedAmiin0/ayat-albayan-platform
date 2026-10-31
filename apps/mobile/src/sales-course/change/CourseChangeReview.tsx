@@ -12,7 +12,7 @@ import { type, useTheme } from '@/theme';
 import { CourseCheckNotice } from '../components/CourseCheckNotice';
 import { daysText, requestDays } from '../lib/course-days';
 import { useCourseChangeCheck } from './change-queries';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseChangeReviewProps {
   course: BookedCourse;
@@ -30,6 +30,8 @@ interface CourseChangeReviewProps {
  */
 export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }: CourseChangeReviewProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const check = useCourseChangeCheck(body);
   const need = course.perWeek ?? course.days.length;
@@ -40,8 +42,8 @@ export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }
   return (
     <View style={{ gap: 14 }}>
       <View style={{ gap: 4 }}>
-        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}</AppText>
-        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, cycle))}</AppText> : null}
+        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}</AppText>
+        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, viewer))}</AppText> : null}
       </View>
       {check.isSuccess ? (
         <View style={{ gap: 4 }}>
@@ -49,7 +51,7 @@ export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }
           <AppText style={line}>{texts.newEnd.replace('{date}', localDay(check.data.endsOn))}</AppText>
         </View>
       ) : null}
-      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz, cycle))}</AppText> : null}
+      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz, viewer))}</AppText> : null}
       {check.isPending ? (
         <AppText style={{ ...line, color: color.ink2 }}>{texts.checking}</AppText>
       ) : (

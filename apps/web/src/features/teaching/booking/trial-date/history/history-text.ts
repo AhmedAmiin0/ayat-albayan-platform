@@ -1,4 +1,3 @@
-import { viewerTz as currentViewerTz } from '@ab/client-core';
 import { lessonWhenAt, type TrialDateRow } from '@ab/shared';
 import { dateLabel, zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
@@ -18,10 +17,11 @@ export interface RowTexts {
 export interface RowTextInput {
   row: TrialDateRow;
   familyTz: string;
-  viewerTz?: string | undefined;
+  /** The viewer's zone (useViewerTz()). */
+  viewerTz: string;
 }
 
-export function rowTexts({ row, familyTz, viewerTz = currentViewerTz() }: RowTextInput, clock: Clock): RowTexts {
+export function rowTexts({ row, familyTz, viewerTz }: RowTextInput, clock: Clock): RowTexts {
   const at = new Date(row.starts_at);
   const familyAt = lessonWhenAt(at, { tz: familyTz, ...clock });
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
