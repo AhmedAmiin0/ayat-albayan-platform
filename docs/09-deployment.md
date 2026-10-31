@@ -328,7 +328,7 @@ Staging may run on Meta TEST numbers (two test WABAs) so nothing reaches a real 
 7. **(g) Token expiry.** Meta test tokens expire in about 24 h: Graph 190 → auth hold (rows wait 15 min, nothing is lost) and ONE push per line per day (`whatsapp_auth:` / `whatsapp_auth:chat:`); the other line keeps sending.
 8. **(h) Recipients and wa.me.** Add (and verify) each test recipient in the Meta app's recipient list, else Meta answers 131030; list the same numbers in `WA_ALLOWED_RECIPIENTS`. `academy_whatsapp_e164` (wa.me links, PDF footer) should hold the CHAT number.
 9. **(i) `.env.example`.** The commented keys in «WhatsApp messaging (Phase 4)» above are for the owner to paste.
-10. **Migration first.** Never deploy this release with the `migrate` input unticked or with `env_only`: the API reads `messages.line` (see «Migration before API» above). Behaviour rollback (unset only `WA_CHAT_WABA_ID` + `WA_CHAT_ACCESS_TOKEN` to stop chat SENDING; never unset `WA_CHAT_PHONE_NUMBER_ID` / `WA_CHAT_APP_SECRET` before the chat app's webhook is repointed in Meta) is docs/12 §13.15.
+10. **Migration first.** Never deploy this release with the `deploy-production` `migrate` input unticked or with `env_only`: the API reads `messages.line` (see «Migration before API» above). Behaviour rollback (unset only `WA_CHAT_WABA_ID` + `WA_CHAT_ACCESS_TOKEN` to stop chat SENDING; never unset `WA_CHAT_PHONE_NUMBER_ID` / `WA_CHAT_APP_SECRET` before the chat app's webhook is repointed in Meta) is docs/12 §13.15.
 
 ## Integration config in the database
 
