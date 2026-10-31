@@ -1,0 +1,75 @@
+{
+  "id": "r1",
+  "seq": 213,
+  "moves": [
+    {
+      "from": "apps/api/src/common/telemetry/activity/activity.queries.ts",
+      "to": "apps/api/src/common/telemetry/activity/activity.repo.ts"
+    },
+    {
+      "from": "apps/api/src/common/configuration/config-store/store/config-store.queries.ts",
+      "to": "apps/api/src/common/configuration/config-store/store/config-store.repo.ts"
+    },
+    {
+      "from": "apps/api/src/common/configuration/integrations/integration-config.queries.ts",
+      "to": "apps/api/src/common/configuration/integrations/integration-config.repo.ts"
+    },
+    {
+      "from": "apps/api/src/common/push/notifications.queries.ts",
+      "to": "apps/api/src/common/push/notifications.repo.ts"
+    },
+    {
+      "from": "apps/api/src/common/settings/settings-meta.queries.ts",
+      "to": "apps/api/src/common/settings/settings-meta.repo.ts"
+    }
+  ],
+  "renames": {
+    "ActivityQueries": "ActivityRepo",
+    "ConfigStoreQueries": "ConfigStoreRepo",
+    "IntegrationConfigQueries": "IntegrationConfigRepo",
+    "NotificationsQueries": "NotificationsRepo",
+    "SettingsMetaQueries": "SettingsMetaRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/common/configuration/config-store/store/config-store.queries.test.ts",
+      "apps/api/src/common/configuration/config-store/store/config-store.repo.test.ts"
+    ],
+    [
+      "apps/api/src/common/configuration/config-store/store/config-store.queries.ts",
+      "apps/api/src/common/configuration/config-store/store/config-store.repo.ts"
+    ],
+    [
+      "apps/api/src/common/configuration/integrations/integration-config.queries.test.ts",
+      "apps/api/src/common/configuration/integrations/integration-config.repo.test.ts"
+    ],
+    [
+      "apps/api/src/common/configuration/integrations/integration-config.queries.ts",
+      "apps/api/src/common/configuration/integrations/integration-config.repo.ts"
+    ],
+    [
+      "apps/api/src/common/push/notifications.queries.test.ts",
+      "apps/api/src/common/push/notifications.repo.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/notifications.queries.ts",
+      "apps/api/src/common/push/notifications.repo.ts"
+    ],
+    [
+      "apps/api/src/common/settings/settings-meta.queries.test.ts",
+      "apps/api/src/common/settings/settings-meta.repo.test.ts"
+    ],
+    [
+      "apps/api/src/common/settings/settings-meta.queries.ts",
+      "apps/api/src/common/settings/settings-meta.repo.ts"
+    ],
+    [
+      "apps/api/src/common/telemetry/activity/activity.queries.test.ts",
+      "apps/api/src/common/telemetry/activity/activity.repo.test.ts"
+    ],
+    [
+      "apps/api/src/common/telemetry/activity/activity.queries.ts",
+      "apps/api/src/common/telemetry/activity/activity.repo.ts"
+    ]
+  ]
+}

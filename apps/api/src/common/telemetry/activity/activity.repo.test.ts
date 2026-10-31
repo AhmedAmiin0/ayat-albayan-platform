@@ -1,7 +1,7 @@
 import { activityListQuery } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { ActivityQueries, likePrefix, nextDayStart } from './activity.queries';
+import { ActivityRepo, likePrefix, nextDayStart } from './activity.repo';
 
 type Call = [string, ...unknown[]];
 
@@ -34,7 +34,7 @@ const row = {
 describe('ActivityQueries.list (GET /activity)', () => {
   it('reads the view newest first, paged, with an id tiebreaker', async () => {
     const { db, calls } = fakeDb({ data: [row], count: 1, error: null });
-    const page = await new ActivityQueries(db).list(activityListQuery.parse({}));
+    const page = await new ActivityRepo(db).list(activityListQuery.parse({}));
     expect(calls[0]).toEqual(['from', 'v_activity_log']);
     expect(calls).toContainEqual(['select', '*', { count: 'exact' }]);
     expect(calls).toContainEqual(['order', 'at', { ascending: false }]);
@@ -50,7 +50,7 @@ describe('ActivityQueries.list (GET /activity)', () => {
       action: 'lesson_x', entity: 'lessons', entity_id: 'L1', result: 'error', from: '2026-10-01', to: '2026-10-31',
       sort: 'status', dir: 'desc',
     });
-    await new ActivityQueries(db).list(q);
+    await new ActivityRepo(db).list(q);
     expect(calls).toEqual(expect.arrayContaining([
       ['eq', 'actor_id', 'a0000000-0000-4000-8000-000000000001'],
       ['eq', 'actor_role', 'teacher'],
@@ -68,13 +68,13 @@ describe('ActivityQueries.list (GET /activity)', () => {
 
   it('result=ok keeps statuses under 400', async () => {
     const { db, calls } = fakeDb({ data: [], count: 0, error: null });
-    await new ActivityQueries(db).list(activityListQuery.parse({ result: 'ok' }));
+    await new ActivityRepo(db).list(activityListQuery.parse({ result: 'ok' }));
     expect(calls).toContainEqual(['lt', 'status', 400]);
   });
 
   it('turns a DB error into an exception', async () => {
     const { db } = fakeDb({ data: [], count: 0, error: { code: 'XX000', message: 'boom' } });
-    await expect(new ActivityQueries(db).list(activityListQuery.parse({}))).rejects.toThrow(/boom/);
+    await expect(new ActivityRepo(db).list(activityListQuery.parse({}))).rejects.toThrow(/boom/);
   });
 });
 

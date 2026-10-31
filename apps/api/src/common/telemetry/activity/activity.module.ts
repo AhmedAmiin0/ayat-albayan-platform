@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ActivityController, AuthSessionController } from './activity.controller';
 import { ActivityInterceptor } from './activity.interceptor';
-import { ActivityQueries } from './activity.queries';
+import { ActivityRepo } from './activity.repo';
 import { ActivityRetentionJob } from './activity.retention.job';
 import { ActivityWriter } from './activity.writer';
 
@@ -14,7 +14,7 @@ import { ActivityWriter } from './activity.writer';
   controllers: [ActivityController, AuthSessionController],
   providers: [
     ActivityWriter,
-    ActivityQueries,
+    ActivityRepo,
     ActivityRetentionJob,
     { provide: APP_INTERCEPTOR, useClass: ActivityInterceptor },
   ],

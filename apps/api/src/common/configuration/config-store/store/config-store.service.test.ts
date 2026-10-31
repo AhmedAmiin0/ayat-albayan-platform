@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { configRow } from '@/common/configuration/config-store/config-store.fakes';
-import type { ConfigStoreQueries } from './config-store.queries';
+import type { ConfigStoreRepo } from './config-store.repo';
 import { ConfigStore } from './config-store.service';
 import type { ConfigSnapshot } from '@/common/configuration/config-store/config-store.types';
 
@@ -14,7 +14,7 @@ function store(opts: { ttl?: number; refresh?: () => Promise<unknown> } = {}) {
     describe: vi.fn(async () => undefined),
     names: vi.fn(async () => new Map<string, string>()),
   };
-  const s = new ConfigStore(q as unknown as ConfigStoreQueries, opts.ttl ?? 30_000, opts.refresh);
+  const s = new ConfigStore(q as unknown as ConfigStoreRepo, opts.ttl ?? 30_000, opts.refresh);
   const write = (value: unknown, newRev: number) => {
     snap = { rev: newRev, rows: [configRow('upload_max_mb', value)] };
     rev = newRev;

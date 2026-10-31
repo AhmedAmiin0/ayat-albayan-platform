@@ -1,5 +1,5 @@
 import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/shared';
-import type { PlainRow, SecretStatus } from './integration-config.queries';
+import type { PlainRow, SecretStatus } from './integration-config.repo';
 
 interface ViewInput {
   plain: readonly PlainRow[];

@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import type { IntegrationConfigQueries, PlainRow, SecretStatus } from './integration-config.queries';
+import type { IntegrationConfigRepo, PlainRow, SecretStatus } from './integration-config.repo';
 
 /** Tests only: IntegrationConfigQueries with vi.fn()s; values are obviously fake. */
 export function fakeQueries(over: { raw?: Record<string, string>; plain?: PlainRow[]; secrets?: SecretStatus[] } = {}) {
@@ -13,4 +13,4 @@ export function fakeQueries(over: { raw?: Record<string, string>; plain?: PlainR
   };
 }
 export type FakeQueries = ReturnType<typeof fakeQueries>;
-export const asQueries = (q: FakeQueries): IntegrationConfigQueries => q as unknown as IntegrationConfigQueries;
+export const asQueries = (q: FakeQueries): IntegrationConfigRepo => q as unknown as IntegrationConfigRepo;

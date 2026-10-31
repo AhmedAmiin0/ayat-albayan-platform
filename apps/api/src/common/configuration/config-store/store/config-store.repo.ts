@@ -55,7 +55,7 @@ interface DescribeCall {
 
 /** All database access of the config store: rows + revision, and the three service-role RPCs. */
 @Injectable()
-export class ConfigStoreQueries {
+export class ConfigStoreRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** settings_revision.rev (0 when the row is missing, e.g. right after a truncate). */

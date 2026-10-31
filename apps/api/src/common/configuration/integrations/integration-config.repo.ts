@@ -19,7 +19,7 @@ export interface SecretStatus {
  * service role. Error messages carry Postgres' text only, never a value.
  */
 @Injectable()
-export class IntegrationConfigQueries {
+export class IntegrationConfigRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every DB value of a registry key (plain from the table, secret from Vault), for the overlay. */
