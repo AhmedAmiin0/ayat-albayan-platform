@@ -1,7 +1,8 @@
 // Repositories, not queries (docs/32 R8, D2, correction 14): no new `*queries.ts(x)` file and no new
 // `class XQueries` in apps/, packages/ or e2e/. refactor/guards/queries.json lists the ones that predate
 // the rule; lane R renames them to `x.repo.ts` / `XRepo`. A listed file that is gone or no longer
-// qualifies fails too until it leaves the list (--write), so the list only shrinks.
+// qualifies passes (no PR edits the list for it); ci's «baselines» job drops it on develop
+// (--write), so the list only shrinks.
 // Usage: node tools/scripts/ci-checks/lint/queries-gate.mjs [--write]
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -36,8 +37,8 @@ function main(args) {
   const { added, fixed } = compare(now, listed);
   console.log(`queries: ${now.length} files, listed ${listed.length}, new ${added.length}, gone ${fixed.length}`);
   for (const f of added) console.log(`  new: ${f} (a repository: x.repo.ts with class XRepo)`);
-  for (const f of fixed) console.log(`  gone: ${f} (pnpm guard:queries -- --write)`);
-  if (added.length + fixed.length > 0) process.exit(1);
+  for (const f of fixed) console.log(`  gone: ${f} (develop drops it from the list)`);
+  if (added.length > 0) process.exit(1);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main(process.argv.slice(2));
