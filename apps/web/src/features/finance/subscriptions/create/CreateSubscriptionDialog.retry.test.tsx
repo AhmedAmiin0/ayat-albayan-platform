@@ -35,7 +35,8 @@ describe('CreateSubscriptionDialog retries (rule 8: never two packages for one s
     expect(retry?.clientRequestId).toBe(first?.clientRequestId);
 
     fail = false;
-    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.startsOn), { target: { value: '2026-11-01' } });
+    // a day that is never the default (today, Riyadh): a fixed date became today on 2026-11-01
+    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.startsOn), { target: { value: '2099-01-01' } });
     save();
     await vi.waitFor(() => expect(posts()).toHaveLength(3));
     expect(posts()[2]?.clientRequestId).not.toBe(first?.clientRequestId);
