@@ -1,6 +1,7 @@
 import {
   restrictedMay,
   sendsAllTemplates,
+  templateCreateSchema,
   templateHealthSchema,
   templateCrmNameSchema,
   templateCrmStatusSchema,
@@ -18,6 +19,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../../../common/http/http';
+import { TemplateCreator } from '@/modules/messaging/whatsapp/templates/create/template-create';
 import { TemplateManagerGuard } from './template-manager.guard';
 import { TemplateNumbers } from '../sync/template-numbers.service';
 import { TemplateStarters } from './template-starters';
@@ -39,6 +41,7 @@ export class TemplatesController {
     private readonly registry: TemplateRegistry,
     private readonly starters: TemplateStarters,
     private readonly numbers: TemplateNumbers,
+    private readonly creator: TemplateCreator,
   ) {}
 
   @Get()
@@ -46,6 +49,16 @@ export class TemplatesController {
   async list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
     const all = await this.registry.list();
     return sendsAllTemplates(user) ? all : all.filter(restrictedMay);
+  }
+
+  /**
+   * «قالب جديد» (owner 2026-10-31): a new row on one line, not submitted (its «إرسال إلى ميتا»
+   * is the separate submit below); 409 invalid_template / template_exists; audited.
+   */
+  @Post()
+  @UseGuards(TemplateManagerGuard)
+  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
+    return this.creator.create(parseOrThrow(templateCreateSchema, body), user.id);
   }
 
   /** Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last sync. */

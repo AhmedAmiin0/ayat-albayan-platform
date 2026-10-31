@@ -2589,6 +2589,7 @@ export type Database = {
           params: NonNullable<Json>;
           quality: string | null;
           sales_starter: boolean;
+          samples: Json | null;
           status: Database['public']['Enums']['template_status'];
           submitted_at: string | null;
           updated_at: string;
@@ -2613,6 +2614,7 @@ export type Database = {
           params?: NonNullable<Json>;
           quality?: string | null;
           sales_starter?: boolean;
+          samples?: Json | null;
           status?: Database['public']['Enums']['template_status'];
           submitted_at?: string | null;
           updated_at?: string;
@@ -2637,6 +2639,7 @@ export type Database = {
           params?: NonNullable<Json>;
           quality?: string | null;
           sales_starter?: boolean;
+          samples?: Json | null;
           status?: Database['public']['Enums']['template_status'];
           submitted_at?: string | null;
           updated_at?: string;

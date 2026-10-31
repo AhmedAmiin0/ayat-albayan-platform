@@ -32,6 +32,8 @@ import { SendGate } from './gate/send-gate';
 import { NumberRoutes } from './numbers/number-routes';
 import { RouteQueries } from './numbers/route.queries';
 import { SenderQueries } from './sender/sender.queries';
+import { TemplateCreator } from './templates/create/template-create';
+import { TemplateMissing } from './templates/check/template-missing';
 import { TemplateNumbersController } from './templates/sync/template-numbers.controller';
 import { TemplateNumbers } from './templates/sync/template-numbers.service';
 import { TemplateStarters } from './templates/catalog/template-starters';
@@ -73,6 +75,8 @@ function lines(): WhatsappLines {
     TemplateRegistry,
     TemplateStarters,
     TemplateNumbers,
+    TemplateCreator,
+    TemplateMissing,
     WhatsappSettings,
     GateSettings,
     SendGate,
