@@ -1,16 +1,16 @@
 // Test-only fakes for the booking module: one in-memory academy, every DB touch a vi.fn.
 import { bookingRequestSchema, type AcademySettings, type BookingRequest } from '@ab/shared';
 import { vi } from 'vitest';
-import type { BusyQueries } from '../scheduling/conflicts/busy.queries';
-import { ConflictChecker } from '../scheduling/conflicts/conflict-checker';
-import type { RuleProjectionQueries } from '../scheduling/rules/rule-projection.queries';
-import type { AvailabilityQueries } from '../../people/teachers/availability/availability.queries';
+import type { BusyQueries } from '@/modules/teaching/scheduling/conflicts/busy.queries';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import type { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
+import type { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import { BookingParties } from './core/booking.parties';
 import { BookingPlanner } from './plan/booking.planner';
 import type { BookingQueries, BookingStudent } from './core/booking.queries';
 import { BookingSettings } from './booking.settings';
 import { ConflictContext } from './plan/conflict-context';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 
 export const IDS = {
   teacher: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
@@ -85,7 +85,7 @@ export function fakeContext() {
   const availability = fakeAvailability();
   const { busy } = fakeBusy();
   const context = new ConflictContext(
-    availability as unknown as AvailabilityQueries,
+    availability as unknown as AvailabilityRepo,
     busy as unknown as BusyQueries,
   );
   return { queries, availability, busy, context };
@@ -98,7 +98,7 @@ export function fakePlanner(over: Partial<AcademySettings> = {}) {
   const { busy, projection } = fakeBusy();
   const checker = new ConflictChecker(
     busy as unknown as BusyQueries,
-    availability as unknown as AvailabilityQueries,
+    availability as unknown as AvailabilityRepo,
     projection as unknown as RuleProjectionQueries,
   );
   const settings = fakeSettings(over);

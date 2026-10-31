@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
-import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
-import { TeachersQueries } from './teachers.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
+import { TeachersRepo } from './teachers.repo';
 
 const page = { page: 1, pageSize: 25 };
 
-async function list(q: Parameters<TeachersQueries['list']>[0]) {
+async function list(q: Parameters<TeachersRepo['list']>[0]) {
   const fake = fakeDb({ teachers: [{ data: [], count: 0 }] });
-  await new TeachersQueries(fake.db, fakePhotos().photos).list(q);
+  await new TeachersRepo(fake.db, fakePhotos().photos).list(q);
   const of = (method: string) => fake.calls.filter((c) => c.method === method).map((c) => c.args);
   return of;
 }

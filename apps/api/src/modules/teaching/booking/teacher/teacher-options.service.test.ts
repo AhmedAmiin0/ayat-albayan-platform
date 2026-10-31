@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeQueries, IDS, STUDENTS } from '../booking.fakes';
-import type { BookingQueries } from '../core/booking.queries';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
+import { fakeQueries, IDS, STUDENTS } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingQueries } from '@/modules/teaching/booking/core/booking.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { TeacherOptionsQueries } from './teacher-options.queries';
 import { TeacherOptionsService } from './teacher-options.service';
 
@@ -27,7 +27,7 @@ function setup() {
   const service = new TeacherOptionsService(
     options as unknown as TeacherOptionsQueries,
     queries as unknown as BookingQueries,
-    teachers as unknown as TeachersQueries,
+    teachers as unknown as TeachersRepo,
   );
   return { options, queries, service, teachers };
 }

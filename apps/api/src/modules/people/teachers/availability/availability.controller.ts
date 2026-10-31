@@ -13,11 +13,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { orNotFound, parseOrThrow } from '../../../../common/http/http';
-import { OwnTeacherGuard } from '../own-teacher.guard';
-import { AvailabilityQueries, type AvailabilityRow, type TimeOff } from './availability.queries';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { orNotFound, parseOrThrow } from '@/common/http/http';
+import { OwnTeacherGuard } from '@/modules/people/teachers/own-teacher.guard';
+import { AvailabilityRepo, type AvailabilityRow, type TimeOff } from './availability.repo';
 
 const uuid = new ParseUUIDPipe();
 
@@ -28,7 +28,7 @@ const uuid = new ParseUUIDPipe();
 @Permissions('availability.write')
 @Controller('teachers/:id')
 export class AvailabilityController {
-  constructor(private readonly availability: AvailabilityQueries) {}
+  constructor(private readonly availability: AvailabilityRepo) {}
 
   @Get('availability')
   @Permissions('availability.read')

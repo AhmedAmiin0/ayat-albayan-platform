@@ -1,13 +1,13 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TeachersQueries } from '../../people/teachers/teachers.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { StudentRecordingAccess } from './student-recordings.access';
 import type { StudentRecordingQueries } from './student-recordings.queries';
 import { ADMIN, ASSISTANT, GUARDIAN, OTHER_ASSISTANT, OTHER_TEACHER, SALES, STUDENT, studentQueries, TEACHER, teachersFake } from './student-recordings.fakes';
 
 let q: ReturnType<typeof studentQueries>;
 const scope = (user = ADMIN) =>
-  new StudentRecordingAccess(q as unknown as StudentRecordingQueries, teachersFake() as unknown as TeachersQueries).scopeFor(user, STUDENT);
+  new StudentRecordingAccess(q as unknown as StudentRecordingQueries, teachersFake() as unknown as TeachersRepo).scopeFor(user, STUDENT);
 
 beforeEach(() => {
   q = studentQueries();

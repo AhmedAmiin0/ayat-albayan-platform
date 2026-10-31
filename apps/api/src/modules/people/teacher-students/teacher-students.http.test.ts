@@ -1,10 +1,10 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { TeachersQueries } from '../teachers/teachers.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ADMIN, GUARDIAN, OTHER, OTHER_ID, student, TEACHER, TEACHER_ID, lesson } from './teacher-students.fakes';
 import { TeacherStudentsQueries } from './teacher-students.queries';
 
@@ -25,7 +25,7 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(TeachersQueries).useValue(teachers)
+      .overrideProvider(TeachersRepo).useValue(teachers)
       .overrideProvider(TeacherStudentsQueries).useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
