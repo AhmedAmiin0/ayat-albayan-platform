@@ -87,7 +87,9 @@ describe('QuoteBlock', () => {
 
   it('unavailable: «رسالة غير متاحة», greyed, nothing to click', () => {
     show(UNAVAILABLE_QUOTE);
-    expect(screen.getByText(t.inbox.reply.unavailable).className).toContain('text-ink-3');
-    expect(screen.queryByRole('button')).toBeNull();
+    const line = screen.getByText(t.inbox.reply.unavailable);
+    expect(line.tagName).toBe('P');
+    expect(line.className).toContain('text-ink-3');
+    expect(line.closest('button')).toBeNull();
   });
 });
