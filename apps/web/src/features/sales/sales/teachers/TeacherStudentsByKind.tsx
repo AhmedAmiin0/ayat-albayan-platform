@@ -24,7 +24,7 @@ export function TeacherStudentsByKind({ teacher }: { teacher: SalesTeacherView }
     <section aria-label={t.sales.teachers.students} className="grid gap-2">
       <h3 className="flex items-baseline justify-between gap-2 font-semibold">
         {t.sales.teachers.students}
-        <span className="text-xs font-normal text-ink-3">{t.schedule.riyadhTime}</span>
+        <span className="text-xs font-normal text-ink-3">{t.schedule.viewerTime}</span>
       </h3>
       <SegmentedControl label={L.kinds} options={options} value={kind} onChange={setKind} className="justify-self-start" />
       {shown.length === 0 ? (

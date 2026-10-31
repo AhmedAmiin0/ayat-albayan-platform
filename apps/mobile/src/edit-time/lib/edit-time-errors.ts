@@ -28,9 +28,9 @@ export const isStale = (error: unknown): boolean =>
  * stale_time, payout_locked, date_in_future, correction_cross_day… → editTime.error; the older
  * codes (date_in_past, invalid_transition…) → lessons.error; anything else → the general error.
  */
-export function editTimeFailure(error: unknown, cycle: ClockCycle): EditTimeFailure {
+export function editTimeFailure(error: unknown, cycle: ClockCycle, tz: string): EditTimeFailure {
   if (isOffline(error)) return { kind: 'error', text: t.editTime.offline };
-  const booked = bookFailure(error, cycle);
+  const booked = bookFailure(error, cycle, tz);
   if (booked.kind === 'conflict') return booked;
   const code = failureCode(error);
   return { kind: 'error', text: (code && (own[code] ?? shared[code])) || t.common.error };

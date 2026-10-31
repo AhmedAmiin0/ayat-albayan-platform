@@ -45,7 +45,4 @@ export function convert(c: Conversion, amount: number, currency: string): number
   return rate === undefined ? null : amount / rate;
 }
 
-/** Money is shown to 2 decimals. */
-export function round2(n: number): number {
-  return Math.round(n * 100) / 100;
-}
+export { round2 } from '@ab/shared';

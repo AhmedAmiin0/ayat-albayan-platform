@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './slots';
-import { RIYADH_TZ } from '../tz';
+import { RIYADH_TZ } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
@@ -21,15 +21,16 @@ describe('slot grid helpers (R-SCH-06, R-SCH-01)', () => {
   });
 
   it('currentWeekStart is the Riyadh Saturday (Friday 22:00Z is already Saturday in Riyadh)', () => {
-    expect(currentWeekStart(new Date('2026-10-07T10:00:00Z'))).toBe('2026-10-03');
-    expect(currentWeekStart(new Date('2026-10-09T22:00:00Z'))).toBe('2026-10-10');
+    expect(currentWeekStart(new Date('2026-10-07T10:00:00Z'), RIYADH_TZ)).toBe('2026-10-03');
+    expect(currentWeekStart(new Date('2026-10-09T22:00:00Z'), RIYADH_TZ)).toBe('2026-10-10');
+    expect(currentWeekStart(new Date('2026-10-09T22:00:00Z'), 'UTC')).toBe('2026-10-03');
   });
 
   it('bookableWindow starts now inside the current week and is null for a past week', () => {
     const now = new Date('2026-10-07T10:00:00Z');
-    expect(bookableWindow('2026-10-03', now)).toEqual({ from: now, to: new Date('2026-10-09T21:00:00Z') });
-    expect(bookableWindow('2026-10-10', now)?.from.toISOString()).toBe('2026-10-09T21:00:00.000Z');
-    expect(bookableWindow('2026-09-26', now)).toBeNull();
+    expect(bookableWindow('2026-10-03', now, RIYADH_TZ)).toEqual({ from: now, to: new Date('2026-10-09T21:00:00Z') });
+    expect(bookableWindow('2026-10-10', now, RIYADH_TZ)?.from.toISOString()).toBe('2026-10-09T21:00:00.000Z');
+    expect(bookableWindow('2026-09-26', now, RIYADH_TZ)).toBeNull();
   });
 
   it('zoneLabel shows the student wall clock, with the weekday when the day differs', () => {

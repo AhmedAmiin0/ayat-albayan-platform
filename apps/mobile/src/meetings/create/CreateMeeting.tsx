@@ -8,7 +8,7 @@ import { CreateMeetingDone } from './CreateMeetingDone';
 import { CreateMeetingForm } from './CreateMeetingForm';
 import { createMeetingWith } from '../invite/invite-api';
 import { inviteError } from '../invite/invite-text';
-import { useViewerTz } from '../manage/use-viewer-tz';
+import { useViewerTz } from '@/core/lib/clock';
 
 type Mode = 'instant' | 'scheduled' | null;
 

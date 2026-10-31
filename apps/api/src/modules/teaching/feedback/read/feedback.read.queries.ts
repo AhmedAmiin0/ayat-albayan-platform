@@ -1,3 +1,4 @@
+import { addCalendarDays } from '@ab/shared';
 import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
@@ -35,7 +36,6 @@ export type FeedbackListRow = Pick<
 export type FeedbackPage = { rows: FeedbackListRow[]; total: number };
 export type AverageRow = FeedbackAverage & { teacher_id: string };
 
-const DAY_MS = 86_400_000;
 
 const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p.page * p.pageSize - 1];
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
@@ -69,7 +69,7 @@ export class FeedbackReadQueries {
     if (filter.note) q = q.ilike('note', ilikeContains(filter.note));
     if (students) q = q.in('student_id', students);
     if (filter.from) q = q.gte('requested_at', `${filter.from}T00:00:00Z`);
-    if (filter.to) q = q.lt('requested_at', new Date(Date.parse(`${filter.to}T00:00:00Z`) + DAY_MS).toISOString());
+    if (filter.to) q = q.lt('requested_at', `${addCalendarDays(filter.to, 1)}T00:00:00.000Z`);
     return rows(await applySort(q, filter, FEEDBACK_SORT).range(...bounds(page)));
   }
 

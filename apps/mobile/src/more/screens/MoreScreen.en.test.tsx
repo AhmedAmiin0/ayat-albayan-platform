@@ -24,5 +24,5 @@ test('an LTR run reads en.json, and «اللغة» offers العربية', async
 });
 
 test('dates follow the UI language, Western digits', () => {
-  expect(instantDay('2026-09-30T22:30:00Z')).toBe('1 October 2026');
+  expect(instantDay('2026-09-30T22:30:00Z', 'Asia/Riyadh')).toBe('1 October 2026');
 });

@@ -60,6 +60,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   };
   const [now] = useState(() => new Date());
   // The academy's (Riyadh) day everywhere: the API checks the start against it, whatever the family's zone.
+  // academy day (docs/34 b): a subscription starts on an academy day.
   const academyToday = localDate(now, RIYADH_TZ);
   const canSet = useHolds('subscriptions.set_start_date');
   const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday, usedBefore: 0 });

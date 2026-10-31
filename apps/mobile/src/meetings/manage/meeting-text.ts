@@ -1,4 +1,4 @@
-import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
+import { dateText, type ClockCycle, type MeetingView } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -9,7 +9,7 @@ const errors: Record<string, string | undefined> = t.classroom.error;
 /** «5 أكتوبر، 14:30» / «5 أكتوبر، 2:30 م» in the viewer's zone, Western digits. */
 export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): string {
   const at = new Date(iso);
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'short', timeZone }).format(at);
+  const day = dateText(at, { tz: timeZone, locale }, { day: 'numeric', month: 'short' });
   return dateWithClock(day, clockIn(at, timeZone, cycle));
 }
 
@@ -26,7 +26,7 @@ function refusal(code: unknown, opensAt: unknown, clock: { tz: string; cycle: Cl
  * The line for a refused meeting call: a join refusal (refusal()), a bare 403 «غير مسموح لك بدخول هذا
  * الاجتماع»; then the API's `code` in words (meeting_ended, meeting_not_found, forbidden), else the generic one.
  */
-export function meetingError(error: unknown, cycle: ClockCycle, tz = 'Asia/Riyadh'): string {
+export function meetingError(error: unknown, cycle: ClockCycle, tz: string): string {
   const body = error instanceof ApiError ? error.body : null;
   const read = (key: string): unknown => (typeof body === 'object' && body !== null ? Reflect.get(body, key) : undefined);
   const code = read('code');

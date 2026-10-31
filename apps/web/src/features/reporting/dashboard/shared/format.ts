@@ -1,10 +1,10 @@
-import { clockOf, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { clockOf, dateText, formatAmount } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import type { Clock } from '@/lib/clock';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
-// units (the table and the CSV keep the exact amounts), Riyadh times with the zone said once.
+// units (the table and the CSV keep the exact amounts), times in the viewer's zone (docs/34).
 
 const currencies: Readonly<Record<string, string>> = t.pricing.currencies;
 
@@ -24,24 +24,22 @@ export function percent(rate: number | null): string {
   return rate === null ? '—' : `${Math.round(rate * 100)}%`;
 }
 
-const monthFormat = new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric', timeZone: 'UTC' });
-
 /** "2026-09" → «سبتمبر 2026». */
 export function monthLabel(month: string): string {
-  return monthFormat.format(new Date(`${month}-01T00:00:00Z`));
+  const first = new Date(`${month}-01T00:00:00Z`);
+  return dateText(first, { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
 }
 
-const dayFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone: RIYADH_TZ });
+const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 
-/** «الخميس، 1 أكتوبر 16:00» in Riyadh time. */
-export function whenRiyadh(iso: string, clock: Clock): string {
+/** «الخميس، 1 أكتوبر 16:00» in `clock.tz`, the viewer's zone (useViewerTz()). */
+export function whenViewer(iso: string, clock: Clock & { tz: string }): string {
   const at = new Date(iso);
-  return `${dayFormat.format(at)} ${clockOf(at, { tz: RIYADH_TZ, ...clock })}`;
+  return `${dateText(at, { tz: clock.tz, locale }, WEEKDAY_DAY_MONTH)} ${clockOf(at, clock)}`;
 }
 
-const dateFormat = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: RIYADH_TZ });
-
-/** A provider rate time as a Riyadh date. */
-export function rateDate(iso: string): string {
-  return dateFormat.format(new Date(iso));
+/** A provider rate time as a date in `tz`, the viewer's zone (useViewerTz()). */
+export function rateDate(iso: string, tz: string): string {
+  const fields = { day: 'numeric', month: 'long', year: 'numeric' } as const;
+  return dateText(new Date(iso), { tz, locale }, fields);
 }

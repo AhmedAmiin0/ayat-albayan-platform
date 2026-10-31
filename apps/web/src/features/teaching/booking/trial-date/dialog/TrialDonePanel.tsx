@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { useChatReturn } from '../../mode';
 import { pickedText } from '../../steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface TrialDonePanelProps {
   result: TrialDateResult;
@@ -14,7 +15,7 @@ export interface TrialDonePanelProps {
 
 /** After POST {base}/trial-date: booked or moved, the new time, the guardian's confirmation, «إغلاق». */
 export function TrialDonePanel({ result, tz }: TrialDonePanelProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const close = useChatReturn();
   return (
     <section aria-labelledby="trial-done-title" data-testid="trial-date-done" className="grid justify-items-start gap-3 py-2">

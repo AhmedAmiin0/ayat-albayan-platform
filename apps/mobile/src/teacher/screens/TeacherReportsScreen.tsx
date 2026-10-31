@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type TeacherReportView } from '@ab/shared';
+import type { TeacherReportView } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { useState, type ReactElement } from 'react';
 
 import { t } from '@/core/lib/i18n/i18n';
@@ -49,7 +50,7 @@ interface Rows {
 export function TeacherReportsScreen() {
   const [view, setView] = useState<View>('pending');
   const me = useTeacherMe();
-  const tz = me.data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const pending = usePendingReports();
   const sent = usePagedList<TeacherReportView>({ path: '/teachers/me/reports' });
   const rows: Record<View, Rows> = {

@@ -1,3 +1,4 @@
+import { addCalendarMonths } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -28,8 +29,7 @@ export interface DashboardPageProps {
 
 /** "2026-10-02" → "2026-09": payouts are approved for the month that just ended. */
 export function previousMonth(today: string): string {
-  const d = new Date(Date.UTC(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 2, 1));
-  return d.toISOString().slice(0, 7);
+  return addCalendarMonths(today, -1).slice(0, 7);
 }
 
 const card = 'rounded-md border border-rule p-4';
@@ -43,7 +43,7 @@ const card = 'rounded-md border border-rule p-4';
 export function DashboardPage({ search, onSearch }: DashboardPageProps) {
   const now = useNow();
   const win = useJoinWindow();
-  const today = riyadhToday();
+  const today = riyadhToday(); // academy day (docs/34 b): the period's ?from&to are Riyadh days
   const week = thisWeek(today);
   const period = periodOf(search, today);
   const weekQ = useQuery(summaryQuery(week));

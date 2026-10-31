@@ -1,6 +1,7 @@
 import { counted, togglePick } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/teaching/reschedule/SlotButton';
@@ -9,7 +10,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { type, useTheme } from '@/theme';
 import { MultiFooter } from './MultiFooter';
 import { useSlots } from '../../shared/queries';
-import { freeSlotDays, slotLegend, slotWindow, windowStart } from '../../shared/slots';
+import { freeSlotDays, slotWindow, windowStart } from '../../shared/slots';
 
 /** A weekly package: one slot per weekday of the family's zone, each with its own time. */
 export interface SlotMulti {
@@ -23,7 +24,7 @@ export interface SlotMulti {
 
 export interface SlotStepProps {
   teacherId: string;
-  /** The family's zone: the small clock under each Riyadh time, and the picks' weekdays. */
+  /** The family's zone: the small clock under each viewer's time, and the picks' weekdays. */
   tz: string;
   /** The lesson length the slot must fit (the draft's «المده»). */
   durationMin: number;
@@ -40,17 +41,19 @@ export interface SlotStepProps {
 }
 
 /**
- * The slot step (R-SCH-06): the teacher's free starts over the next 7 days, by Riyadh day. Each is
- * a button with the Riyadh time and the student's own; nothing is typed (rule 6). A package picks
- * one start per weekday (togglePick: the same one again removes it, another on that day replaces
- * it). Mounting again (after a clash) asks the API afresh from now (or `from`, when later).
+ * The slot step (R-SCH-06): the teacher's free starts over the next 7 days, by the viewer's day.
+ * Each is a button with the viewer's time and the student's own; nothing is typed (rule 6). A
+ * package picks one start per weekday (togglePick: the same one again removes it, another on that
+ * day replaces it). Mounting again (after a clash) asks the API afresh from now (or `from`, when
+ * later).
  */
 export function SlotStep(props: SlotStepProps) {
   const { teacherId, tz, durationMin, onPick, multi, from, exclude, excludeLessonId } = props;
   const { color } = useTheme();
+  const viewerZone = useViewerTz();
   const [now] = useState(() => new Date());
   const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude, excludeLessonId) });
-  const days = slots.data ? freeSlotDays(slots.data.slots) : [];
+  const days = slots.data ? freeSlotDays(slots.data.slots, viewerZone) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
   const tap = (slot: string) =>
@@ -60,7 +63,7 @@ export function SlotStep(props: SlotStepProps) {
     <View style={{ gap: 12 }}>
       <FormLabel required>{multi ? t.booking.pickDayTimes : t.booking.pickTime}</FormLabel>
       {multi?.need ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.pickNDays, multi.need)}</AppText> : null}
-      <AppText style={note}>{slotLegend(tz)}</AppText>
+      <AppText style={note}>{zoneNote(viewerZone)}</AppText>
       <SlotsStatus slots={slots} empty={days.length === 0} />
       {days.length > 0 && !multi ? <FormLabel>{t.booking.startsOn}</FormLabel> : null}
       {days.map((day) => (

@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { activeNumberId } from '@/common/integrations/numbers-overlay';
+import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import type { MessageDispatch, SendVia } from './message.dispatch';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { lineOf } from './send-line';

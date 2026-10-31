@@ -37,7 +37,7 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
   if (!canSet) {
     return (
       <Section title={m.startsOn}>
-        <Note>{m.startsOnDefault.replace('{date}', dayLabel(new Date(`${academyToday}T12:00:00Z`)))}</Note>
+        <Note>{m.startsOnDefault.replace('{date}', dayLabel(new Date(`${academyToday}T12:00:00Z`), 'UTC'))}</Note>
       </Section>
     );
   }

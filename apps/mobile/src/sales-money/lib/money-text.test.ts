@@ -5,9 +5,9 @@ import { byCurrency, commissionNote, commissionText, lineText, myCommissionText,
 const p = t.assistantPortal.earnings;
 
 test('a statement says when it was paid, else approved, else nothing (a draft)', () => {
-  expect(statementWhen({ paid_at: '2026-10-03T09:00:00Z', approved_at: '2026-10-01T09:00:00Z' })).toMatch(p.paidAt.replace('{date}', ''));
-  expect(statementWhen({ paid_at: null, approved_at: '2026-10-01T09:00:00Z' })).toMatch(p.approvedAt.replace('{date}', ''));
-  expect(statementWhen({ paid_at: null, approved_at: null })).toBeNull();
+  expect(statementWhen({ paid_at: '2026-10-03T09:00:00Z', approved_at: '2026-10-01T09:00:00Z' }, 'Asia/Riyadh')).toMatch(p.paidAt.replace('{date}', ''));
+  expect(statementWhen({ paid_at: null, approved_at: '2026-10-01T09:00:00Z' }, 'Asia/Riyadh')).toMatch(p.approvedAt.replace('{date}', ''));
+  expect(statementWhen({ paid_at: null, approved_at: null }, 'Asia/Riyadh')).toBeNull();
 });
 
 test('statement lines: salary, a commission with its student, an adjustment with its reason', () => {

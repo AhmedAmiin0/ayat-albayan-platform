@@ -11,6 +11,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { StatementActionBar } from './StatementActionBar';
 import type { StatementCan } from '../hooks/statement-can';
 import { StatementTotals } from './StatementTotals';
+import { useViewerTz } from '@/core/lib/clock';
 
 interface StatementItemProps {
   statement: AssistantStatementView;
@@ -21,8 +22,9 @@ interface StatementItemProps {
 
 /** One salesperson's month (web statement-columns): name and month, status and when, totals per currency, its actions. */
 export function StatementItem({ statement: s, can, onPay, onNotice }: StatementItemProps) {
+  const tz = useViewerTz();
   const [linesOpen, setLinesOpen] = useState(false);
-  const when = statementWhen(s);
+  const when = statementWhen(s, tz);
   return (
     <MoneyCard>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>

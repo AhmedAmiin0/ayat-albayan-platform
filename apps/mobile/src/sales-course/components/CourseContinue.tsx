@@ -8,7 +8,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { type, useTheme } from '@/theme';
 import { daysText } from '../lib/course-days';
 import type { KnownTeacher } from '../hooks/use-known-teacher';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseContinueProps {
   /** The latest course of the student's earlier subscription. */
@@ -36,10 +36,12 @@ interface CourseContinueProps {
  */
 export function CourseContinue(props: CourseContinueProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { previous, opensOn, teacher, adjustTo, onSame, onOther, transfer } = props;
   const { color } = useTheme();
   const texts = t.booking.courseChange;
-  const days = daysText(previous.days, previous.tz, cycle);
+  const days = daysText(previous.days, previous.tz, viewer);
   const hint =
     adjustTo === null
       ? texts.continueHint.replace('{days}', days).replace('{date}', localDay(opensOn))

@@ -30,6 +30,7 @@ import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialD
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
 import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
+import { ProfileCourseActions } from '@/features/teaching/course-actions';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -95,6 +96,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               </Button>
               <CreateAccountButton student={student} />
               <CoursePauseAction studentId={student.id} onDone={setNotice} />
+              <ProfileCourseActions studentId={student.id} onDone={setNotice} />
             </>
           }
         />

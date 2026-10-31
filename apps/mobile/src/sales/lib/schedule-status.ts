@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import { isCancelledLesson, type LessonStatus } from '@ab/shared';
 
 // «جدول الحلقات» status pills (UX review 2026-10-29 #6): the same shape as Today's summary filter
 // (today/lib/timeline.ts), over the day the API returned. Pure, so the screen only lays it out.
@@ -6,12 +6,10 @@ import type { LessonStatus } from '@ab/shared';
 export const SCHEDULE_STATUSES = ['all', 'scheduled', 'confirmed', 'cancelled'] as const;
 export type ScheduleStatus = (typeof SCHEDULE_STATUSES)[number];
 
-const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_by_admin'];
-
 /** Which pill a lesson counts under besides «الكل» (held, absent, moved: none). */
 function statusOf(status: LessonStatus): ScheduleStatus | null {
   if (status === 'scheduled' || status === 'confirmed') return status;
-  return CANCELLED.includes(status) ? 'cancelled' : null;
+  return isCancelledLesson(status) ? 'cancelled' : null;
 }
 
 export function byScheduleStatus<L extends { status: LessonStatus }>(lessons: readonly L[], filter: ScheduleStatus): L[] {

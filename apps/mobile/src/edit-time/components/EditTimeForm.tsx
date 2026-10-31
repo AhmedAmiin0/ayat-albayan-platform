@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { familyTz } from '@/teaching/reschedule/reschedule-body';
 import { Button } from '@/core/ui/primitives/Button';
 import { canSubmit, editBody, lengthOf, type EditState } from '@/edit-time/lib/edit-time-body';
@@ -31,6 +31,7 @@ export interface EditTimeFormProps {
  */
 export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
   const tz = familyTz(lesson);
   const mode = editMode(lesson);
   const edit = useEditTime(lesson.id);
@@ -38,7 +39,7 @@ export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
   const [state, setState] = useState<EditState>({ picked: null, durationMin: lengthOf(lesson), reason: '', notify: true });
   // payout_locked outlives edit.reset(): it holds the length back however the form changes after it.
   const [lock, setLock] = useState<PayoutLock | null>(null);
-  const failure = edit.isError ? editTimeFailure(edit.error, cycle) : null;
+  const failure = edit.isError ? editTimeFailure(edit.error, cycle, viewerZone) : null;
   const clash = failure?.kind === 'conflict' ? failure : null;
   const frozen = lengthLocked(lock, lesson, state);
   const change = (patch: Partial<EditState>) => {

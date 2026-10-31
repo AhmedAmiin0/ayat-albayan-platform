@@ -1,5 +1,8 @@
+import { calendarDaysBetween } from '../../../time/index.js';
 // Receivables («مستحق على الطلاب», owner 2026-10-05): who still owes on a package, how much and
 // for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
+
+import { round2, toCents } from '../cents.js';
 
 export const AGING_BUCKETS = ['0_30', '31_60', '61_90', '90_plus'] as const;
 export type AgingBucket = (typeof AGING_BUCKETS)[number];
@@ -28,11 +31,9 @@ export function agingBucket(days: number): AgingBucket {
   return days <= 90 ? '61_90' : '90_plus';
 }
 
-const DAY = 86_400_000;
-
 /** Days from `startsOn` to `today` (both YYYY-MM-DD), never below 0. */
 export function daysSince(startsOn: string, today: string): number {
-  return Math.max(0, Math.round((Date.parse(today) - Date.parse(startsOn)) / DAY));
+  return Math.max(0, calendarDaysBetween(startsOn, today));
 }
 
 /** Packages that still owe (owed = price − net paid > 0), the oldest debt first. */
@@ -44,7 +45,7 @@ export function receivablesOf(input: {
   return input.subs
     .flatMap((s) => {
       const paid = input.paid.get(s.id) ?? 0;
-      const owed = Math.round((Number(s.price) - paid) * 100) / 100;
+      const owed = round2(Number(s.price) - paid);
       if (owed <= 0) return [];
       const days = daysSince(s.starts_on, input.today);
       return [{ ...s, paid, owed, days_overdue: days, bucket: agingBucket(days) }];
@@ -61,8 +62,8 @@ export function receivableTotals(rows: readonly ReceivableRow[]): {
   const by = new Map<string, Record<AgingBucket | 'owed', number>>();
   for (const r of rows) {
     const t = by.get(r.currency) ?? { owed: 0, '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 0 };
-    t.owed += Math.round(r.owed * 100);
-    t[r.bucket] += Math.round(r.owed * 100);
+    t.owed += toCents(r.owed);
+    t[r.bucket] += toCents(r.owed);
     by.set(r.currency, t);
   }
   return [...by.entries()].sort().map(([currency, t]) => ({

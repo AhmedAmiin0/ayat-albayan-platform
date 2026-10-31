@@ -64,8 +64,11 @@ describe('ChannelThread (docs/31 §2)', () => {
   });
 
   it('«الرسائل الأقدم» pages back by the oldest message shown', async () => {
-    apiFetch.mockResolvedValueOnce(channelPage({ has_more: true }));
-    apiFetch.mockResolvedValueOnce(channelPage({ messages: [{ id: 'm0', body: 'أقدم', sender_role: 'guardian', sender_name: '', mine: false, created_at: '2026-10-26T10:00:00.000Z' }] }));
+    const older = channelPage({ messages: [{ id: 'm0', body: 'أقدم', sender_role: 'guardian', sender_name: '', mine: false, created_at: '2026-10-26T10:00:00.000Z', edited: false, deleted: false }] });
+    // By path: the header's presence line reads its own route (docs/33) beside the thread's pages.
+    apiFetch.mockImplementation(async (path: string) =>
+      path.includes('?before=') ? older : channelPage({ has_more: true }),
+    );
     show('sales');
     fireEvent.click(await screen.findByRole('button', { name: c.older }));
     expect(await screen.findByText('أقدم')).toBeTruthy();

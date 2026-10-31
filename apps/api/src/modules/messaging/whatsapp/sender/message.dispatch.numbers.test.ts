@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import type { StorageService } from '@/common/storage/storage.service';
 import { MessageDispatch } from './message.dispatch';
-import type { NumberClients } from '../numbers/number-clients';
-import { N1, N2 } from '../numbers/number-route.fakes';
+import type { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
+import { N1, N2 } from '@/modules/messaging/whatsapp/numbers/number-route.fakes';
 import { dueMessage } from './sender.fakes';
-import { templateRow } from '../whatsapp.fakes';
-import type { WhatsappLines } from '../whatsapp.types';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/23c: a routed row leaves through its number's own client; the line clients are never used for it.
 

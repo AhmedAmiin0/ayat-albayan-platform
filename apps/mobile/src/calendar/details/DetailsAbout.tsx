@@ -4,7 +4,7 @@ import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { DetailsFact, DetailsGroup, DetailsLine } from './DetailsGroup';
 import { DetailsLink } from './DetailsLink';
 import type { DetailsLesson, DetailsRole } from './details-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { DetailsTeacher } from './DetailsTeacher';
 
 /** Neither field sent (sales' «الجدول» never gets the way in): unknown, not «لا يوجد رابط». */
@@ -17,6 +17,7 @@ const linkKnown = (l: DetailsLesson): boolean => l.meeting_link !== undefined ||
  */
 export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: DetailsRole }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const platform = usePlatformClassroom(lesson.platform_classroom);
   // The override reason and the generated clashes are the admin's (no teacher screen shows them).
   const admin = role === 'admin';
@@ -35,7 +36,7 @@ export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: De
         <DetailsFact label={t.schedule.needsReview}>
           <DetailsLine tone="bad">{t.schedule.generatedConflict}</DetailsLine>
           {conflicts.map((c, i) => (
-            <DetailsLine key={`${c.kind}-${i}`}>{conflictLine(c, cycle)}</DetailsLine>
+            <DetailsLine key={`${c.kind}-${i}`}>{conflictLine(c, cycle, tz)}</DetailsLine>
           ))}
         </DetailsFact>
       ) : null}

@@ -1,9 +1,9 @@
 // Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a vi.fn().
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import type { KapsoLineEnv } from '../../../../config/env/env';
-import type { WebhookQueries } from '../webhook.queries';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { KapsoLineEnv } from '@/config/env/env';
+import type { WebhookQueries } from '@/modules/messaging/webhook/webhook.queries';
 import { ExternalStatus } from './external-status';
 import type { ExternalQueries } from './external.queries';
 import { ExternalStore } from './external.store';
@@ -69,9 +69,12 @@ export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
   };
 }
 
+const emptyPage = () => ({ messages: [] as unknown[], after: undefined as string | undefined });
+
 export const fakeKapso = () => ({
   message: vi.fn().mockResolvedValue(kapsoText() as unknown),
-  outbound: vi.fn().mockResolvedValue({ messages: [] as unknown[], after: undefined as string | undefined }),
+  outbound: vi.fn().mockResolvedValue(emptyPage()),
+  inbound: vi.fn().mockResolvedValue(emptyPage()),
 });
 
 /** The real external services over the fakes; `queries` is fakeQueries() (identify, latestInSecond, numberIdFor). */

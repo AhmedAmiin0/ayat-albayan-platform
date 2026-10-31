@@ -1,8 +1,8 @@
 import type { WaLine } from '@ab/shared';
-import { overlayNumbers } from '../../../../common/integrations/numbers-overlay';
-import { lineProvider, loadEnv } from '../../../../config/env/env';
-import { pickSend } from '../send/send-number';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import { lineProvider, loadEnv } from '@/config/env/env';
+import { pickSend } from '@/modules/messaging/inbox/send/send-number';
+import type { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
 
 /** Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number. */
 type ReactFrom = { line?: WaLine; number_id?: string };

@@ -1,8 +1,8 @@
-import { canPickTrialDate, RIYADH_TZ, type SalesStudentDetails, type SalesTrialLesson, type TrialOutcome } from '@ab/shared';
+import { canPickTrialDate, type SalesStudentDetails, type SalesTrialLesson, type TrialOutcome } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useHolds } from '@/auth';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
@@ -29,6 +29,7 @@ const MISSED: readonly TrialOutcome[] = ['absent', 'cancelled'];
 export function TrialSection({ trial, student }: { trial: readonly SalesTrialLesson[] | undefined; student: TrialStudent | null }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const allowed = useHolds('self.sales_money');
   const base = useTreeBase();
   if (!trial) return null;
@@ -42,7 +43,7 @@ export function TrialSection({ trial, student }: { trial: readonly SalesTrialLes
       {trial.map((l) => (
         <View key={l.lesson_id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, borderBottomWidth: 1, borderBottomColor: color.rule }}>
           <View style={{ flex: 1 }}>
-            <AppText style={text}>{`${whenIn(new Date(l.starts_at), RIYADH_TZ, cycle)} ${t.schedule.riyadhTime}`}</AppText>
+            <AppText style={text}>{`${whenIn(new Date(l.starts_at), tz, cycle)} ${t.schedule.viewerTime}`}</AppText>
             {l.teacher_name ? <Note>{fill(s.teacher, { name: l.teacher_name })}</Note> : null}
           </View>
           <StatusChip {...trialOutcomeStyle[l.outcome]} label={t.trialDate.outcome[l.outcome]} size="sm" />

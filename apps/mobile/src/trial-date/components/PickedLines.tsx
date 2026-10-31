@@ -6,13 +6,15 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import type { TrialDateDraft } from '../lib/trial-date-body';
 import { whenLines } from '../lib/trial-date-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The review's picks: the new time (the viewer's clock, the family's under it when it differs), the teacher. */
 export function PickedLines({ draft }: { draft: TrialDateDraft }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
-  const at = draft.startsAt ? whenLines(draft.startsAt, draft.tz, cycle) : null;
+  const at = draft.startsAt ? whenLines(draft.startsAt, draft.tz, viewer) : null;
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <>

@@ -1,4 +1,5 @@
 import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
+import { isCancelledLesson } from '../../schedule/lessons/index.js';
 import { isNotSubscribed } from './status-flow.js';
 
 // «موعد تجريبي جديد» (owner 2026-10-25): a new free-trial date for an existing student who has no
@@ -63,7 +64,6 @@ export const canPickTrialDate = (status: StudentStatus | null | undefined): bool
 export const warnsTrialDate = (count: number): boolean => count + 1 >= TRIAL_DATE_WARN_FROM;
 
 const OPEN: readonly LessonStatus[] = ['scheduled', 'confirmed'];
-const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_by_admin'];
 const MISSED_STATUS: readonly LessonStatus[] = ['no_show', 'excused'];
 const MISSED: readonly (Attendance | null)[] = ['absent', 'excused'];
 
@@ -79,7 +79,7 @@ export interface TrialOutcomeInput {
 export function trialOutcome(input: TrialOutcomeInput): TrialOutcome {
   const { status, attendance } = input;
   if (status === 'rescheduled') return 'moved';
-  if (CANCELLED.includes(status)) return 'cancelled';
+  if (isCancelledLesson(status)) return 'cancelled';
   if (MISSED_STATUS.includes(status) || MISSED.includes(attendance)) return 'absent';
   if (OPEN.includes(status)) return Date.parse(input.starts_at) > input.now.getTime() ? 'upcoming' : 'awaiting';
   return 'attended';

@@ -45,7 +45,7 @@ afterEach(() => jest.useRealTimers());
 test('without subscriptions.set_start_date: no day picker, «تبدأ الباقة اليوم», the body has no startsOn', async () => {
   asSales();
   await open();
-  const today = dayLabel(new Date('2026-10-12T12:00:00Z'));
+  const today = dayLabel(new Date('2026-10-12T12:00:00Z'), 'UTC');
   expect(screen.getByText(m.startsOnDefault.replace('{date}', today))).toBeTruthy();
   expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
   expect(screen.queryByRole('switch', { name: m.alreadyStarted })).toBeNull();

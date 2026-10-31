@@ -1,8 +1,15 @@
-import { clockTime } from '../../../core/format/running-head.js';
+import {
+  addCalendarDays,
+  calendarDaysBetween,
+  clockTime,
+  localDateIn,
+  weekdayIn,
+  weekdayOfDate,
+} from '../../../time/index.js';
 
 // A weekly package where each picked weekday has its own time (owner 2026-10-18: «اختر موعدًا لكل
 // يوم»). The DB keeps ONE schedule_rules row per distinct time (days sharing a time stay one rule,
-// like the imported HEART timetables), so a booking is grouped by time. Pure, Intl only.
+// like the imported HEART timetables), so a booking is grouped by time. Pure (the date-fns facade).
 
 /** A weekday whose time differs from the booking's startTimeLocal (0 = الأحد … 6 = السبت). */
 export interface DayTime {
@@ -40,26 +47,14 @@ export interface WallParts {
   weekday: number;
 }
 
-const DAY_MS = 86_400_000;
-const dateFormats = new Map<string, Intl.DateTimeFormat>();
-const utcOf = (date: string): number => Date.parse(`${date}T00:00:00Z`);
-
-/** Local day, time and weekday of an instant in `tz`. */
+/** Local day, time and weekday of an instant in `tz` (the date-fns facade). */
 export function wallParts(instant: string, tz: string): WallParts {
-  let f = dateFormats.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
-    dateFormats.set(tz, f);
-  }
   const at = new Date(instant);
-  const parts = f.formatToParts(at);
-  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value ?? '00';
-  const date = `${get('year')}-${get('month')}-${get('day')}`;
-  return { date, time: clockTime(at, tz), weekday: new Date(utcOf(date)).getUTCDay() };
+  return { date: localDateIn(at, tz), time: clockTime(at, tz), weekday: weekdayIn(at, tz) };
 }
 
 /** Whole local days from a to b ("YYYY-MM-DD"). */
-export const daysBetween = (a: string, b: string): number => Math.round((utcOf(b) - utcOf(a)) / DAY_MS);
+export const daysBetween = (a: string, b: string): number => calendarDaysBetween(a, b);
 
 export interface PickInput {
   /** The picked slots (UTC instants), one per weekday of the family's zone. */
@@ -130,9 +125,9 @@ export function courseEndsOn({ groups, startsOn, lessonsTotal }: CourseEndInput)
   const days = new Set(groups.flatMap((g) => g.byday));
   if (days.size === 0 || lessonsTotal < 1) return null;
   let seen = 0;
-  for (let day = utcOf(startsOn); ; day += DAY_MS) {
-    const count = groups.filter((g) => g.byday.includes(new Date(day).getUTCDay())).length;
-    seen += count;
-    if (seen >= lessonsTotal) return new Date(day).toISOString().slice(0, 10);
+  for (let day = startsOn; ; day = addCalendarDays(day, 1)) {
+    const weekday = weekdayOfDate(day);
+    seen += groups.filter((g) => g.byday.includes(weekday)).length;
+    if (seen >= lessonsTotal) return day;
   }
 }

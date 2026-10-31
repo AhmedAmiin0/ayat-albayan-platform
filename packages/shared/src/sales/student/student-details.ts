@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
+import { isCancelledLesson } from '../../schedule/lessons/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesPackageSummary } from './student-package.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
@@ -82,7 +83,6 @@ export interface SalesLessonMoved {
 }
 
 const HELD: readonly LessonStatus[] = ['completed', 'late'];
-const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_by_admin'];
 
 /**
  * The student's own attendance wins (on time / late = حضر, absent = غاب, excused); without it the lesson's
@@ -91,7 +91,7 @@ const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_b
  */
 export function attendanceKind(status: LessonStatus, attendance: Attendance | null): AttendanceKind | null {
   if (status === 'rescheduled') return null;
-  if (CANCELLED.includes(status)) return 'cancelled';
+  if (isCancelledLesson(status)) return 'cancelled';
   if (attendance === 'on_time' || attendance === 'late') return 'present';
   if (attendance === 'absent') return 'absent';
   if (attendance === 'excused') return 'excused';

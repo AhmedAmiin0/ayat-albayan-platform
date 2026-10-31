@@ -27,8 +27,10 @@ export {
 export {
   type Can,
   permissionsOf,
+  useHideRights,
   useHolds,
   useIsAdmin,
+  useMeId,
   useMeReady,
   usePermissions,
   useSendsAllTemplates,

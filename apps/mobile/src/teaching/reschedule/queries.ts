@@ -27,6 +27,7 @@ interface RescheduleSlotsParams {
  * week. GET /booking/slots caps a window at 14 days; a week is 7.
  */
 export function slotWindow(week: string, now: Date): { from: string; to: string } {
+  // academy day (docs/34 b): the slot weeks page as the calendar's Riyadh weeks.
   const start = riyadhMidnight(week);
   return {
     from: start > now.toISOString() ? start : now.toISOString(),

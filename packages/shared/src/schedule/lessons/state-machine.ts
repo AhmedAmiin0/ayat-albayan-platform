@@ -17,11 +17,20 @@ import type { LessonStatus } from '../../enums/index.js';
 //   scheduled, the guardian confirmed the old time) is a direct update in that RPC, not an edge.
 
 const OUTCOMES = ['completed', 'late', 'excused', 'no_show'] as const;
-const CLOSERS = ['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'] as const;
+/** Cancelled by the teacher or the admin (a student's cancellation is `excused`). */
+export const CANCELLED_LESSON_STATUSES = [
+  'cancelled_by_teacher',
+  'cancelled_by_admin',
+] as const satisfies readonly LessonStatus[];
+/** Will not happen at this time: cancelled, or moved to a new row. */
+export const CLOSED_LESSON_STATUSES = [
+  ...CANCELLED_LESSON_STATUSES,
+  'rescheduled',
+] as const satisfies readonly LessonStatus[];
 
 export const LESSON_TRANSITIONS: Record<LessonStatus, readonly LessonStatus[]> = {
-  scheduled: ['confirmed', ...OUTCOMES, ...CLOSERS],
-  confirmed: [...OUTCOMES, ...CLOSERS],
+  scheduled: ['confirmed', ...OUTCOMES, ...CLOSED_LESSON_STATUSES],
+  confirmed: [...OUTCOMES, ...CLOSED_LESSON_STATUSES],
   completed: [],
   late: [],
   excused: [],
@@ -100,4 +109,12 @@ export function allowedLessonEvents(status: LessonStatus): LessonEvent[] {
 
 export function isOpenLesson(status: LessonStatus): boolean {
   return (OPEN_LESSON_STATUSES as readonly LessonStatus[]).includes(status);
+}
+
+export function isCancelledLesson(status: string): boolean {
+  return (CANCELLED_LESSON_STATUSES as readonly string[]).includes(status);
+}
+
+export function isClosedLesson(status: string): boolean {
+  return (CLOSED_LESSON_STATUSES as readonly string[]).includes(status);
 }

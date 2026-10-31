@@ -1,7 +1,7 @@
 import { CHANNEL_PAGE_SIZE, channelOpen, type ChannelSenderRole } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 export interface ChannelMessageRow {
   id: string;
@@ -9,6 +9,8 @@ export interface ChannelMessageRow {
   sender_profile_id: string | null;
   sender_role: string;
   created_at: string;
+  edited_at?: string | null;
+  deleted_at?: string | null;
 }
 
 export interface ChannelSummaryRow {
@@ -17,9 +19,11 @@ export interface ChannelSummaryRow {
   last_body: string | null;
   last_role: string | null;
   last_at: string | null;
+  /** The newest message was deleted for everyone (migration 993). */
+  last_deleted?: boolean | null;
 }
 
-const COLUMNS = 'id, body, sender_profile_id, sender_role, created_at' as const;
+export const COLUMNS = 'id, body, sender_profile_id, sender_role, created_at, edited_at, deleted_at' as const;
 
 /** Student channel reads and writes (migration 800; service role, ChannelAccess decides who may ask). */
 @Injectable()

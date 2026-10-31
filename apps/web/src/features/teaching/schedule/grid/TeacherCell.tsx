@@ -1,4 +1,4 @@
-import type { OverviewTeacher } from '@ab/shared';
+import { sameClockAt, type OverviewTeacher } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Avatar } from '@/components/ui/display/avatar';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
@@ -7,12 +7,12 @@ import { formatTimeOff } from '@/features/people/teachers/time-off/time-off';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { timeInCity } from '../lesson/lessons';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface TeacherCellProps {
   teacher: OverviewTeacher;
-  /** For the teacher's own clock when their zone is not Riyadh. */
+  /** For the teacher's own clock when it reads differently from the viewer's. */
   now: Date;
   /** The teacher's photo (BoardRow.photo); absent = initials. */
   photo?: string | null;
@@ -20,11 +20,13 @@ export interface TeacherCellProps {
 
 /**
  * The teacher at the head of a calendar row (R-SCH-01): photo + name → profile, «معلمة · القرآن الكريم»,
- * their own clock when not Riyadh, the load «4 من 10» as a neutral meter (a full teacher is not
- * the admin's work, so no saffron), and any time off in the window as one marginal note each.
+ * their own clock when it differs from the viewer's, the load «4 من 10» as a neutral meter (a full
+ * teacher is not the admin's work, so no saffron), and any time off in the window as one
+ * marginal note each.
  */
 export function TeacherCell({ teacher, now, photo }: TeacherCellProps) {
   const clock = useClock();
+  const own = !sameClockAt(now, { a: teacher.tz, b: useViewerTz() });
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   const load = { students: teacher.students_count, max_students: teacher.max_students };
   return (
@@ -38,7 +40,7 @@ export function TeacherCell({ teacher, now, photo }: TeacherCellProps) {
         <span className="truncate">{teacherLabel(teacher)}</span>
       </Link>
       <span className="text-xs font-normal text-ink-3">{`${t.teachers.genderLabel[teacher.gender]} · ${programs}`}</span>
-      {teacher.tz !== RIYADH_TZ && (
+      {own && (
         <span className="text-2xs font-normal text-ink-3">
           {t.schedule.teacherTime.replace('{time}', timeInCity(now.toISOString(), teacher.tz, clock))}
         </span>

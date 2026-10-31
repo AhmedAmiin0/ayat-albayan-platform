@@ -10,6 +10,7 @@ import { FOLLOW_UP_SETTINGS } from './domains/follow-ups.js';
 import { MESSAGING_SETTINGS } from './domains/messaging.js';
 import { NOTIFICATION_SETTINGS } from './domains/notifications.js';
 import { PAYOUT_SETTINGS } from './domains/finance/payouts.js';
+import { PRESENCE_SETTINGS } from './domains/presence.js';
 import { RECORDING_SETTINGS } from './domains/teaching/recordings.js';
 import { REPORT_SETTINGS } from './domains/teaching/reports.js';
 import { SALES_SETTINGS } from './domains/sales.js';
@@ -40,6 +41,7 @@ export const SETTINGS_REGISTRY = {
   ...SALES_SETTINGS,
   ...ACTIVITY_SETTINGS,
   ...FAMILY_LOGIN_SETTINGS,
+  ...PRESENCE_SETTINGS,
 } as const satisfies Record<string, SettingDef>;
 
 type Registry = typeof SETTINGS_REGISTRY;

@@ -1,6 +1,7 @@
 import { Outlet, useChildMatches, useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
+import { usePresenceSelf } from '@/features/platform/presence';
 import { RouteFade } from './RouteFade';
 import { AdminLayout } from './AdminLayout';
 import { FixedTopBarLayout } from './FixedTopBarLayout';
@@ -28,9 +29,11 @@ export interface AppShellProps {
  * Signed-in layout (docs/07 §7): margin + running head + ONE work page. Child routes render
  * inside the page and own its title; the section home shows `title`. Below 900px every area gets
  * the same compact bar with «القائمة» (MenuBar). Admin and teacher layouts are viewport-high
- * frames: only the page content scrolls, never the browser page.
+ * frames: only the page content scrolls, never the browser page. Every signed-in user is tracked
+ * «متصل الآن» here while the tab is visible (docs/33).
  */
 export function AppShell({ title, home, nav, topNav, titles = [], wide, homePage }: AppShellProps) {
+  usePresenceSelf();
   const isHome = useChildMatches().length === 0;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bar = { home, title: isHome ? title : titleFor(pathname, titles, title) };

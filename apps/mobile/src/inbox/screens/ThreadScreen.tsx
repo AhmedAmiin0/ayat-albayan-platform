@@ -25,7 +25,8 @@ import { useHeaderStudents } from '../thread/components/HeaderStudents';
 import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
-import { useClockCycle } from '@/core/lib/clock';
+import { useLastMessageLine } from '@/inbox/thread/hooks/use-last-message';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -42,10 +43,10 @@ const contactAvatar = (thread: ThreadView | null, phone: string) => (
 );
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
-  const { teacher, cycle } = who;
+function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle; tz: string }): string {
+  const { teacher, cycle, tz } = who;
   if (query.isError && query.data) {
-    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle));
+    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle, tz));
   }
   const thread = query.data?.pages[0]?.thread;
   return thread?.display_name && !teacher
@@ -69,6 +70,7 @@ function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; 
  */
 export function ThreadScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
@@ -78,6 +80,7 @@ export function ThreadScreen() {
   // Opening the chat reads it on the server: its unread badge leaves the list at once.
   useInboxRead(phone, query);
   const thread = query.data?.pages[0]?.thread ?? null;
+  const lastMessage = useLastMessageLine(thread?.last_inbound_at);
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
   const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
@@ -90,7 +93,8 @@ export function ThreadScreen() {
       <Screen chat>
         <ChatHeader
           title={title}
-          subtitle={subtitleOf(phone, query, { teacher, cycle })}
+          subtitle={subtitleOf(phone, query, { teacher, cycle, tz })}
+          status={lastMessage}
           onBack={back}
           avatar={contactAvatar(thread, phone)}
           onTitlePress={students.onPress}

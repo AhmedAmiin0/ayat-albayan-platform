@@ -1,3 +1,6 @@
+import { addHours } from 'date-fns';
+import { offsetMinutesIn } from './zoned.js';
+
 // Time-zone choices and DST look-ahead (rule 6: every person has a tz, picked, never typed).
 // City labels live in ar.json `tz.<id>`; this module holds no Arabic.
 
@@ -44,40 +47,22 @@ export interface DstShift {
   dir: 'forward' | 'back';
 }
 
-const HOUR = 3_600_000;
-
-function offsetMinutes(fmt: Intl.DateTimeFormat, at: Date): number {
-  const name = fmt.formatToParts(at).find((p) => p.type === 'timeZoneName')?.value ?? '';
-  const m = /([+-])(\d{1,2}):?(\d{2})?/.exec(name); // "GMT+03:00"; plain "GMT" is UTC
-  if (!m) return 0;
-  const minutes = Number(m[2]) * 60 + Number(m[3] ?? 0);
-  return m[1] === '-' ? -minutes : minutes;
-}
-
-const offsetFormats = new Map<string, Intl.DateTimeFormat>();
-
 /** UTC offset of `tz` at `at`, in minutes (Riyadh +180, Cairo +120 / +180 in summer). */
 export function utcOffsetMinutes(tz: string, at: Date): number {
-  let fmt = offsetFormats.get(tz);
-  if (!fmt) {
-    fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' });
-    offsetFormats.set(tz, fmt);
-  }
-  return offsetMinutes(fmt, at);
+  return offsetMinutesIn(tz, at);
 }
 
 /**
  * The next UTC-offset change of `tz` within `days` after `now`, or null (docs/07 §8 DST note:
- * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). ponytail: an hourly scan (≤720 Intl calls);
+ * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). ponytail: an hourly scan (≤720 offset reads);
  * fine for one note per screen.
  */
 export function nextDstTransition(tz: string, now: Date, days = 30): DstShift | null {
-  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' });
-  const before = offsetMinutes(fmt, now);
+  const before = offsetMinutesIn(tz, now);
   for (let h = 1; h <= days * 24; h += 1) {
-    const at = new Date(now.getTime() + h * HOUR);
-    const after = offsetMinutes(fmt, at);
-    if (after !== before) return { day: new Date(at.getTime() + 12 * HOUR), dir: after > before ? 'forward' : 'back' };
+    const at = addHours(now, h);
+    const after = offsetMinutesIn(tz, at);
+    if (after !== before) return { day: addHours(at, 12), dir: after > before ? 'forward' : 'back' };
   }
   return null;
 }

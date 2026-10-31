@@ -4,6 +4,7 @@ import { StaffClassroomPage } from '@/features/teaching/classroom/join/StaffClas
 import { joinMeeting } from '@/features/teaching/meetings/internal/internal-api';
 import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-join-errors';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /**
  * /meeting/:id: an internal meeting's room («اجتماع داخلي») for any staff login, the classroom room UI
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/meeting/$id')({
 });
 
 function MeetingRoute() {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { id } = Route.useParams();
-  return <StaffClassroomPage lessonId={id} join={joinMeeting} problem={(e) => meetingJoinProblem(e, clock)} />;
+  return <StaffClassroomPage lessonId={id} join={joinMeeting} problem={(e) => meetingJoinProblem(e, clock, clock.tz)} />;
 }

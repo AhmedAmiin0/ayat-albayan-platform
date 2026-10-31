@@ -7,6 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { rowTexts } from './history-text';
 import { trialOutcomeStyle } from './outcome-style';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /** Rows shown before «عرض كل المواعيد»: the history stays a compact block. */
 export const TRIAL_ROWS_SHOWN = 5;
@@ -17,12 +18,14 @@ const c = t.trialDate.columns;
 
 export interface TrialHistoryTableProps {
   history: TrialHistory;
-  /** The viewer's zone; default the academy's (Riyadh). */
+  /** The viewer's zone; useViewerTz() by default. */
   viewerTz?: string | undefined;
 }
 
 /** «مواعيد الحلقة التجريبية» (R-STU-05, R-SCH-07): newest pick first, the first 5 then «عرض كل المواعيد». */
-export function TrialHistoryTable({ history, viewerTz }: TrialHistoryTableProps) {
+export function TrialHistoryTable({ history, viewerTz: pinned }: TrialHistoryTableProps) {
+  const own = useViewerTz();
+  const viewerTz = pinned ?? own;
   const clock = useClock();
   const [all, setAll] = useState(false);
   const rows = all ? history.items : history.items.slice(0, TRIAL_ROWS_SHOWN);

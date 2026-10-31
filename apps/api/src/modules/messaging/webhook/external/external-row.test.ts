@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { StatusEvent } from '../webhook.events';
-import { nobody } from '../webhook.fakes';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { nobody } from '@/modules/messaging/webhook/webhook.fakes';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow, templateKeyFor } from './external-row';
 import { kapsoText, KAPSO_NUMBER_ID, SENT_AT } from './external.fakes';
@@ -52,12 +52,13 @@ describe('externalRow', () => {
     expect(externalRow({ msg: msg(), phone: '+1', who: lead, from, at: SENT_AT })).toMatchObject({ guardian_id: null, lead_id: 'l1' });
   });
 
-  it('a template keeps its key and params; a caption-less media gets a type marker; no line → no key', () => {
+  it('a template keeps its key and params; a caption-less media has no placeholder body; no line → no key', () => {
     const t = msg({ type: 'template', text: undefined, template: { name: 'lesson_reminder_v2', components: [] } });
     expect(externalRow({ msg: t, phone: '+1', who: nobody(), from, at: SENT_AT })).toMatchObject({ template_key: 'lesson_reminder', body: null });
     const img = msg({ type: 'image', text: undefined, image: { id: 'm1', mime_type: 'image/jpeg' } });
     const row = externalRow({ msg: img, phone: '+1', who: nobody(), from: { line: null, numberId: null }, at: SENT_AT });
-    expect(row).toMatchObject({ body: '[image]', media_id: 'm1', media_mime: 'image/jpeg' });
+    expect(row).toMatchObject({ body: null, media_id: 'm1', media_mime: 'image/jpeg' });
+    expect(row.interactive_payload).toEqual({ type: 'image', image: { id: 'm1', mime_type: 'image/jpeg' } });
     expect(row).not.toHaveProperty('line');
     expect(row).not.toHaveProperty('number_id');
     expect(templateKeyFor('follow_up_slots')).toBe('follow_up_slots');

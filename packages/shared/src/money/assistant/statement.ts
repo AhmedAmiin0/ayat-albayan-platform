@@ -1,5 +1,6 @@
-import { fromCents, toCents } from '../ledger/earnings/earnings.js';
+import { fromCents, toCents } from '../ledger/cents.js';
 import { localDay } from './first-paid.js';
+import { addCalendarDays, addCalendarMonths } from '../../time/index.js';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:
 // salary + the commissions earned up to that month +/- adjustments, per currency, never summed across
@@ -51,8 +52,7 @@ export const monthOf = (iso: string, tz: string): string => `${localDay(iso, tz)
 
 /** The last day of a YYYY-MM-01 month: YYYY-MM-DD. */
 export function lastDayOf(month: string): string {
-  const [y, m] = month.split('-').map(Number);
-  return new Date(Date.UTC(y ?? 1970, m ?? 1, 0)).toISOString().slice(0, 10);
+  return addCalendarDays(addCalendarMonths(month, 1), -1);
 }
 
 /** What is in the statement of `month` (YYYY-MM-01) for an assistant whose time zone is `tz`. */
@@ -102,8 +102,7 @@ export function totalsOf(lines: readonly StatementLine[]): Record<string, Curren
 export function nextOpenMonth(input: { now: string; tz: string; latestFrozenMonth: string | null }): string {
   const current = monthOf(input.now, input.tz);
   if (!input.latestFrozenMonth) return current;
-  const [y, m] = input.latestFrozenMonth.split('-').map(Number);
-  const after = new Date(Date.UTC(y ?? 1970, m ?? 1, 1)).toISOString().slice(0, 10);
+  const after = addCalendarMonths(input.latestFrozenMonth, 1);
   return after > current ? after : current;
 }
 

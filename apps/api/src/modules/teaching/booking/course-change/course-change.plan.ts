@@ -50,12 +50,14 @@ type StartFacts = {
   subStartsOn: string;
   /** Every rule of the course (any status). */
   rules: readonly { status: string; starts_on: string; ends_on: string | null; byday: readonly number[]; start_time_local: string }[];
+  /** «تغيير المعلم» (owner 2026-10-30): the same days are a change when the teacher changes. */
+  teacherChanged?: boolean;
 };
 
 /**
  * 400 starts_before_subscription (before the subscription starts), 400 starts_before_course (before the
  * course's first rule starts), 400 no_change (the same weekdays and times as the rules running at the
- * change point, for a client that did not stop it).
+ * change point, for a client that did not stop it; a new teacher is a change on the same days).
  */
 export function assertStart(req: CourseChangeRequest, facts: StartFacts): void {
   if (req.startsOn < facts.subStartsOn) throw domainError(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
@@ -64,7 +66,7 @@ export function assertStart(req: CourseChangeRequest, facts: StartFacts): void {
   const days = facts.rules
     .filter((r) => r.status === 'active' && (r.ends_on === null || r.ends_on >= req.startsOn))
     .flatMap((r) => r.byday.map((weekday) => ({ weekday, startTimeLocal: r.start_time_local.slice(0, 5) })));
-  if (days.length > 0 && sameDays(req, days)) throw domainError(HttpStatus.BAD_REQUEST, 'no_change');
+  if (days.length > 0 && facts.teacherChanged !== true && sameDays(req, days)) throw domainError(HttpStatus.BAD_REQUEST, 'no_change');
 }
 
 export type ChangePlan = {

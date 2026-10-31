@@ -1,5 +1,6 @@
 import type { LeadStatus } from '../../enums/index.js';
 import { dayBeforeSendAt, localDate } from './timing.day-before.js';
+import { addCalendarDays } from '../../time/index.js';
 
 export { dayBeforeSendAt, localDayStart } from './timing.day-before.js';
 
@@ -89,7 +90,5 @@ export function reminderDue(t: ReminderTiming): boolean {
   if (now >= start) return false;
   if (t.kind === 'same_day') return now >= start - t.minutesBefore * MINUTE;
   if (now < dayBeforeSendAt(t.startsAt, t.tz, t.sendAtLocal ?? null).getTime()) return false;
-  const tomorrow = new Date(`${localDate(t.now, t.tz)}T12:00:00Z`);
-  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-  return localDate(t.startsAt, t.tz) === tomorrow.toISOString().slice(0, 10);
+  return localDate(t.startsAt, t.tz) === addCalendarDays(localDate(t.now, t.tz), 1);
 }

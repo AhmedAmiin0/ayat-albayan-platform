@@ -1,6 +1,7 @@
-import { counted, type BookingRequest, type ClockCycle, type SalesCourseView } from '@ab/shared';
+import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
 import type { SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import { whenText } from '@/booking/shared/slots';
+import type { ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 
 const durations: Record<string, string | undefined> = t.enums.duration;
@@ -19,16 +20,17 @@ interface CourseRowsInput {
   view: SalesCourseView;
   teacherName: string;
   body: BookingRequest | null;
-  cycle: ClockCycle;
+  /** The viewer's zone and cycle (useViewerTz, useClockCycle). */
+  viewer: ViewerClock;
 }
 
 /** The review's lines: the student, the teacher (no row while her name is unknown), the plan, the first lesson. */
-export function courseRows({ view, teacherName, body, cycle }: CourseRowsInput): SummaryRow[] {
+export function courseRows({ view, teacherName, body, viewer }: CourseRowsInput): SummaryRow[] {
   const rows: SummaryRow[] = [
     [t.booking.studentSection, view.student.name],
     ...(teacherName ? [[t.booking.steps.teacher, teacherName] satisfies SummaryRow] : []),
     [t.booking.steps.package, courseFixedText(view.subscription)],
   ];
-  if (body?.startsAt) rows.push([t.booking.startsOn, whenText(body.startsAt, view.student.tz, cycle)]);
+  if (body?.startsAt) rows.push([t.booking.startsOn, whenText(body.startsAt, view.student.tz, viewer)]);
   return rows;
 }

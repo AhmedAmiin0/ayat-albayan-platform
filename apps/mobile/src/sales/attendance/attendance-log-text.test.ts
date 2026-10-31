@@ -35,7 +35,7 @@ test('the cancel reason as a line, none without one', () => {
 });
 
 test('the Riyadh day: 21:30 UTC on the 31st is already the 1st in Riyadh; months name the year', () => {
-  expect(dayDateOf('2026-10-31T21:30:00Z').replace(/\u200f/g, '')).toContain('1/11');
+  expect(dayDateOf('2026-10-31T21:30:00Z', 'Asia/Riyadh').replace(/\u200f/g, '')).toContain('1/11');
   expect(monthOf('2026-10')).toContain('2026');
 });
 

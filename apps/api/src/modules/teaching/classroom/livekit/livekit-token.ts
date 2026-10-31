@@ -78,6 +78,7 @@ export interface ServerGrant {
   roomAdmin?: boolean;
   roomCreate?: boolean;
   roomRecord?: boolean;
+  roomList?: boolean;
 }
 
 const SERVER_TTL_S = 600;

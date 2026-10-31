@@ -1,11 +1,12 @@
-import { isRunningLesson, lessonStatusStyle, RIYADH_TZ, wallParts, type SalesScheduleLesson } from '@ab/shared';
+import { isRunningLesson, lessonStatusStyle, wallParts } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { dayLabel } from '@/calendar';
 import { useNow } from '@/core/lib/time/use-now';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { riyadhTime, rowSubtitle, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';
@@ -22,12 +23,12 @@ interface SalesLessonRowProps {
 }
 
 /**
- * One lesson in sales' day, laid out like Today's LessonRow (docs/29 §4): the Riyadh time on ONE line,
+ * One lesson in sales' day, laid out like Today's LessonRow (docs/29 §4): the local time on ONE line,
  * the students over «تجريبية · أ. سامية · 45 دقيقة», and at the end a 7pt dot with a word in its tone: the
  * status, or «جارية الآن» while it runs; a running lesson not yet confirmed shows both, one over the
  * other (no status word under «للتأكيد» / «مؤكدة», `hideStatus`). The row is one 44pt button to «تفاصيل
  * الحلقة» (`onOpen`) with no buttons on it (UX review 2026-10-29: «ادخل الحلقة» is the sheet's first
- * action). Its hint reads the Riyadh day and time, the status and the second line; `dated` puts the day
+ * action). Its hint reads the local day and time, the status and the second line; `dated` puts the day
  * and time in its name too. In the day's inset card (owner 2026-10-28: one container rule) it takes the
  * card's 16pt padding and leaves the rule between rows to the card; alone (a student's «الحلقات القادمة»)
  * it keeps its own rule. The time cell widens with the font scale (up to 1.3×) before the text shrinks.
@@ -38,12 +39,15 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const { fontScale } = useWindowDimensions();
   const inset = useInset();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const now = useNow();
   const running = isRunningLesson(lesson, now);
-  const time = riyadhTime(lesson.starts_at, cycle);
+  const time = lessonClock(lesson.starts_at, tz, cycle);
   const who = studentNames(lesson);
-  const subtitle = rowSubtitle(lesson);
-  const when = `${dayLabel(wallParts(lesson.starts_at, RIYADH_TZ).date)} ${time}`;
+  // A `?date` (Riyadh) day: another day for the viewer is named (dated rows already say it).
+  const hint = dated ? null : viewerDayHint(lesson.starts_at, tz);
+  const subtitle = [hint, rowSubtitle(lesson)].filter(Boolean).join(' · ');
+  const when = `${dayLabel(wallParts(lesson.starts_at, tz).date)} ${time}`;
   const label = t.lessons.sheet.openRow.replace('{names}', who);
   // A running lesson already confirmed reads «جارية الآن» alone; one still to confirm keeps its word too.
   const status = !running || lesson.status !== 'confirmed';

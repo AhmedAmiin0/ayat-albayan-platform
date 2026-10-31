@@ -1,12 +1,11 @@
-import { RIYADH_TZ } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useRoomsInApp } from '@/classroom';
 import { useClockCycle } from '@/core/lib/clock';
 import { enterMeeting } from './api';
 import { meetingError } from './meeting-text';
 
-/** «ادخل الاجتماع» with its own busy flag and error line (times in `tz`, the viewer's); one call at a time. */
-export function useEnterMeeting(tz: string = RIYADH_TZ) {
+/** «ادخل الاجتماع» with its own busy flag and error line (times in `tz`, the viewer's: useViewerTz); one call at a time. */
+export function useEnterMeeting(tz: string) {
   const [pending, setPending] = useState(false);
   const cycle = useClockCycle();
   // The refusal itself, put in words while rendering: a later «تنسيق الوقت» switch re-words it.

@@ -5,9 +5,9 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from '../api';
 import { ConflictNotice } from './ConflictNotice';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
 
 export interface ProposalBoxProps {
@@ -22,6 +22,7 @@ export interface ProposalBoxProps {
  */
 export function ProposalBox({ lesson, onDone }: ProposalBoxProps) {
   const clock = useClock();
+  const tz = useViewerTz();
   const queryClient = useQueryClient();
   const proposal = lesson.pending_proposal;
   const done = async (message: string) => {
@@ -39,7 +40,7 @@ export function ProposalBox({ lesson, onDone }: ProposalBoxProps) {
   if (!proposal) return null;
   const conflicts = conflictsOf(approve.error);
   const busy = approve.isPending || reject.isPending;
-  const when = `${lessonWhenAt(new Date(proposal.proposed_starts_at), { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`;
+  const when = `${lessonWhenAt(new Date(proposal.proposed_starts_at), { tz, ...clock })} ${t.schedule.viewerTime}`;
 
   return (
     <section aria-label={t.lessons.proposal.title} className="grid gap-3 rounded-md bg-act-soft px-4 py-3.5">

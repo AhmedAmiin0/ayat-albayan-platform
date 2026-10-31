@@ -35,6 +35,7 @@ import { ModerationQueries } from './moderation/moderation.queries';
 import { MuteLimit } from './moderation/mute-limit';
 import { LessonMuteController, MeetingMuteController } from './moderation/mute.controller';
 import { MeetingMuteService, MuteService } from './moderation/mute.service';
+import { MAX_DURATION_PROVIDERS } from './max-duration/max-duration.providers';
 import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recordings/recording-list.service';
 import { MeetingRecordingsController, RecordingStatusController } from './recordings/recordings.controller';
 import { RecordingLifecycle } from './recordings/recording.lifecycle';
@@ -119,6 +120,7 @@ import { StudentLinkService } from './student-link/student-link.service';
     MeetingRecordingListService,
     LivekitWebhookService,
     ...INTERNAL_MEETING_PROVIDERS,
+    ...MAX_DURATION_PROVIDERS,
   ],
   // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
   // family portal (modules/people/portal) admits its own student like the student's link does.

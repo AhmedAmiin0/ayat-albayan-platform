@@ -1,5 +1,6 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { View } from 'react-native';
+import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
@@ -20,6 +21,7 @@ interface AttendanceLogHeadProps {
  * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
  */
 export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadProps) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const w = t.sales.student.log;
   const head = { fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 };
@@ -38,7 +40,7 @@ export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadPro
           </AppText>
         ))}
       </View>
-      <Note>{t.schedule.riyadhTime}</Note>
+      <Note>{zoneNote(tz)}</Note>
       <View
         accessibilityRole="header"
         style={[ROW_LINE, { marginHorizontal: -16, paddingHorizontal: 16, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: color.ruleStrong }]}

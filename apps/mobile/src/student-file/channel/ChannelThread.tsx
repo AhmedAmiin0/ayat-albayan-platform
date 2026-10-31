@@ -1,6 +1,8 @@
-import { channelMode, liveChannelId, threadMessages } from '@ab/client-core';
+import { channelBubbleActions, channelMode, liveChannelId, threadMessages } from '@ab/client-core';
+import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
+import { phoneTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -12,13 +14,11 @@ import { ChannelBubble } from './ChannelBubble';
 import { ChannelComposer } from './ChannelComposer';
 import { useChannel, useMarkRead, useSendChannel, type ChannelRef } from './channel-queries';
 import { useChannelLive } from './use-channel-live';
+import { ChannelMessageMenu } from '@/student-file/channel/edits/ChannelMessageMenu';
 
 /** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
 const readOnlyText = (open: boolean | undefined) =>
   open === false ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}` : t.studentChannel.readOnly;
-
-/** The viewer's clock (the phone's zone). */
-const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 /**
  * One student's channel (docs/31 §2): an inverted list, so it opens on the newest message and a new one
@@ -29,6 +29,8 @@ const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone |
 export function ChannelThread({ refs }: { refs: ChannelRef }) {
   const { color } = useTheme();
   const [live, setLive] = useState(false);
+  // «تعديل» / «حذف للجميع» (owner 2026-10-30): the long-pressed message's menu.
+  const [held, setHeld] = useState<ChannelMessageView | null>(null);
   const query = useChannel(refs, live);
   const send = useSendChannel(refs);
   const first = query.data?.pages[0];
@@ -51,6 +53,10 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
     );
   }
   const tz = phoneTz();
+  const holdOf = (m: ChannelMessageView) => {
+    const may = channelBubbleActions({ audience: refs.audience, message: m, now: new Date() });
+    return may.edit || may.delete ? () => setHeld(m) : undefined;
+  };
   const newestFirst = threadMessages(query.data.pages).reverse();
   return (
     <KeyboardFrame style={{ flex: 1 }}>
@@ -66,7 +72,9 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
           contentContainerStyle={{ gap: 8, paddingVertical: 8 }}
           data={newestFirst}
           keyExtractor={(m) => m.id}
-          renderItem={({ item }) => <ChannelBubble message={item} tz={tz} />}
+          renderItem={({ item }) => (
+            <ChannelBubble message={item} tz={tz} onLongPress={holdOf(item)} />
+          )}
           ListFooterComponent={
             query.hasNextPage ? (
               <Button variant="ghost" label={t.studentChannel.older} busy={query.isFetchingNextPage} onPress={() => void query.fetchNextPage()} />
@@ -79,6 +87,7 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
           <ChannelComposer pending={send.isPending} failed={send.isError} onSend={(body) => send.mutateAsync(body)} />
         </View>
       ) : null}
+      <ChannelMessageMenu key={held?.id ?? 'none'} refs={refs} message={held} onClose={() => setHeld(null)} />
     </KeyboardFrame>
   );
 }

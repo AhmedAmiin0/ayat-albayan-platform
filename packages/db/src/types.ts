@@ -513,11 +513,56 @@ export type Database = {
         };
         Relationships: [];
       };
+      channel_message_edits: {
+        Row: {
+          actor_profile_id: string | null;
+          created_at: string;
+          id: string;
+          kind: string;
+          message_id: string;
+          previous_body: string;
+        };
+        Insert: {
+          actor_profile_id?: string | null;
+          created_at?: string;
+          id?: string;
+          kind: string;
+          message_id: string;
+          previous_body: string;
+        };
+        Update: {
+          actor_profile_id?: string | null;
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          message_id?: string;
+          previous_body?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_message_edits_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'channel_messages';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_message_edits_actor_profile_id_fkey';
+            columns: ['actor_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       channel_messages: {
         Row: {
           body: string;
           channel_id: string;
           created_at: string;
+          deleted_at: string | null;
+          deleted_by: string | null;
+          edited_at: string | null;
           id: string;
           sender_profile_id: string | null;
           sender_role: string;
@@ -526,6 +571,9 @@ export type Database = {
           body: string;
           channel_id: string;
           created_at?: string;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
+          edited_at?: string | null;
           id?: string;
           sender_profile_id?: string | null;
           sender_role: string;
@@ -534,11 +582,21 @@ export type Database = {
           body?: string;
           channel_id?: string;
           created_at?: string;
+          deleted_at?: string | null;
+          deleted_by?: string | null;
+          edited_at?: string | null;
           id?: string;
           sender_profile_id?: string | null;
           sender_role?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'channel_messages_deleted_by_fkey';
+            columns: ['deleted_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'channel_messages_channel_id_fkey';
             columns: ['channel_id'];
@@ -2649,13 +2707,17 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           dedup_key: string | null;
+          deleted_at: string | null;
           delivered_at: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at: string | null;
           error_code: string | null;
           error_text: string | null;
           expires_at: string | null;
           forwarded_from_id: string | null;
           guardian_id: string | null;
+          hidden_at: string | null;
+          hidden_by: string | null;
           id: string;
           interactive_payload: Json | null;
           lead_id: string | null;
@@ -2695,13 +2757,17 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
           forwarded_from_id?: string | null;
           guardian_id?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
           id?: string;
           interactive_payload?: Json | null;
           lead_id?: string | null;
@@ -2741,13 +2807,17 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
+          deleted_at?: string | null;
           delivered_at?: string | null;
           direction?: Database['public']['Enums']['message_direction'];
+          edited_at?: string | null;
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
           forwarded_from_id?: string | null;
           guardian_id?: string | null;
+          hidden_at?: string | null;
+          hidden_by?: string | null;
           id?: string;
           interactive_payload?: Json | null;
           lead_id?: string | null;
@@ -2781,6 +2851,13 @@ export type Database = {
           wa_pricing_category?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'messages_hidden_by_fkey';
+            columns: ['hidden_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'messages_our_reaction_by_fkey';
             columns: ['our_reaction_by'];
@@ -3105,6 +3182,29 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_subscription_balance';
             referencedColumns: ['subscription_id'];
+          },
+        ];
+      };
+      profile_presence: {
+        Row: {
+          last_seen_at: string;
+          profile_id: string;
+        };
+        Insert: {
+          last_seen_at: string;
+          profile_id: string;
+        };
+        Update: {
+          last_seen_at?: string;
+          profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'profile_presence_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: true;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -3968,6 +4068,7 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          cancel_kind: string | null;
           cancel_reason: string | null;
           cancelled_at: string | null;
           cancelled_by: string | null;
@@ -3980,6 +4081,7 @@ export type Database = {
           fx_rate: number | null;
           id: string;
           lessons_total: number;
+          lessons_used_at_stop: number | null;
           lessons_used_before: number;
           notes: string | null;
           package: Database['public']['Enums']['package_size'] | null;
@@ -3988,10 +4090,12 @@ export type Database = {
           renews_on: string | null;
           starts_on: string;
           status: Database['public']['Enums']['subscription_status'];
+          stop_request_id: string | null;
           student_id: string;
           updated_at: string;
         };
         Insert: {
+          cancel_kind?: string | null;
           cancel_reason?: string | null;
           cancelled_at?: string | null;
           cancelled_by?: string | null;
@@ -4004,6 +4108,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
@@ -4012,10 +4117,12 @@ export type Database = {
           renews_on?: string | null;
           starts_on: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_request_id?: string | null;
           student_id: string;
           updated_at?: string;
         };
         Update: {
+          cancel_kind?: string | null;
           cancel_reason?: string | null;
           cancelled_at?: string | null;
           cancelled_by?: string | null;
@@ -4028,6 +4135,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total?: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
@@ -4036,6 +4144,7 @@ export type Database = {
           renews_on?: string | null;
           starts_on?: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_request_id?: string | null;
           student_id?: string;
           updated_at?: string;
         };
@@ -5277,6 +5386,17 @@ export type Database = {
       course_pause_set_until: { Args: { p: Json }; Returns: Json };
       course_pause_start: { Args: { p: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
+      course_rules_of: {
+        Args: { p_subscription: string };
+        Returns: {
+          rule_id: string;
+          linked: boolean;
+          clean: boolean;
+          from_on: string | null;
+          until_on: string | null;
+        }[];
+      };
+      course_stop_plan: { Args: { p_at: string; p_subscription: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       crm_media_copy_batch: {
@@ -5457,6 +5577,11 @@ export type Database = {
           tz: string;
         }[];
       };
+      presence_can_watch: { Args: { p_target: string }; Returns: boolean };
+      presence_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
+      presence_install: { Args: Record<PropertyKey, never>; Returns: boolean };
+      presence_topic_profile: { Args: { p_topic: string }; Returns: string };
+      presence_touch: { Args: { p_profiles: string[] }; Returns: undefined };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       rate_limit_take: { Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number }; Returns: boolean };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
@@ -5522,6 +5647,7 @@ export type Database = {
       student_first_paid_at: { Args: { p_student: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
       submit_report_content: { Args: { p: Json }; Returns: Json };
+      stop_course: { Args: { p: Json }; Returns: Json };
       subscription_full_at: { Args: { p_subscription: string }; Returns: string };
       sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {
@@ -5534,6 +5660,7 @@ export type Database = {
           channel_id: string;
           last_at: string | null;
           last_body: string | null;
+          last_deleted: boolean | null;
           last_role: string | null;
           student_id: string;
           unread: number;
@@ -5552,6 +5679,10 @@ export type Database = {
         }[];
       };
       message_is_reaction: { Args: { p: Json }; Returns: boolean };
+      message_markers_apply: {
+        Args: { p_phone: string; p_since: string; p_wamid: string };
+        Returns: number;
+      };
       messages_reaction_backfill: { Args: never; Returns: number };
       teacher_unread: {
         Args: { p_phones: string[]; p_teacher_id: string };
@@ -5624,7 +5755,11 @@ export type Database = {
         | 'meeting_invite'
         | 'google_sync_alert'
         | 'channel_message'
-        | 'commission_earned';
+        | 'commission_earned'
+        | 'lesson_rescheduled'
+        | 'lesson_cancelled'
+        | 'course_paused'
+        | 'course_resumed';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -5822,6 +5957,10 @@ export const Constants = {
         'google_sync_alert',
         'channel_message',
         'commission_earned',
+        'lesson_rescheduled',
+        'lesson_cancelled',
+        'course_paused',
+        'course_resumed',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

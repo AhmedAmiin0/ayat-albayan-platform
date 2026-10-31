@@ -1,8 +1,15 @@
-import { DEFAULT_MEETING_DURATION, MEETING_DURATION_MAX, MEETING_DURATION_MIN, utcOffsetMinutes } from '@ab/shared';
+import {
+  DEFAULT_MEETING_DURATION,
+  localDateIn,
+  MEETING_DURATION_MAX,
+  MEETING_DURATION_MIN,
+  wallToUtc,
+  zonedFieldsIn,
+} from '@ab/shared';
 import { addDays } from '@/calendar/lib/week';
 
 // The schedule form's wall clock (rule 6): a local day, an hour and a minute in the viewer's zone,
-// turned into a UTC instant for the API. No date-picker and no tz library: Intl offsets only.
+// turned into a UTC instant for the API through the date-fns facade (docs/34 §7). No date-picker.
 
 const MIN = 60_000;
 const QUARTER = 15;
@@ -15,28 +22,15 @@ export interface Slot {
   durationMin: number;
 }
 
-const pad = (n: number): string => String(n).padStart(2, '0');
-
 /** Local day, hour and minute of `instant` in `tz`. */
 export function zonedClock(instant: Date, tz: string): Pick<Slot, 'date' | 'hour' | 'minute'> {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: tz,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(instant);
-  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value ?? '00';
-  return { date: `${get('year')}-${get('month')}-${get('day')}`, hour: Number(get('hour')) % 24, minute: Number(get('minute')) };
+  const { hour, minute } = zonedFieldsIn(instant, tz);
+  return { date: localDateIn(instant, tz), hour, minute };
 }
 
-/** The UTC instant (ISO) of a wall clock in `tz`; a second pass settles a DST change in between. */
+/** The UTC instant (ISO) of a wall clock in `tz` (wallToUtc: two offset reads, as before). */
 export function startsAtUtc(slot: Pick<Slot, 'date' | 'hour' | 'minute'>, tz: string): string {
-  const wall = Date.parse(`${slot.date}T${pad(slot.hour)}:${pad(slot.minute)}:00Z`);
-  const first = wall - utcOffsetMinutes(tz, new Date(wall)) * MIN;
-  return new Date(wall - utcOffsetMinutes(tz, new Date(first)) * MIN).toISOString();
+  return wallToUtc(slot.date, slot.hour * 60 + slot.minute, tz).toISOString();
 }
 
 /** A fresh form: the next quarter hour at least 15 minutes from now, one hour long. */

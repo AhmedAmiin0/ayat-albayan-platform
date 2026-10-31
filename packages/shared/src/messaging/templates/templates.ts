@@ -22,6 +22,10 @@ export const TEMPLATE_KEYS = [
   'lesson_join_link',
   'lesson_rating',
   'teacher_new_student',
+  'lesson_rescheduled',
+  'lesson_cancelled',
+  'course_paused',
+  'course_resumed',
 ] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 

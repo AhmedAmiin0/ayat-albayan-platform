@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { lengthOf } from '../lib/edit-time-body';
 import { lengthText } from '../lib/edit-time-text';
 import type { EditableLesson, TimeEditMode } from '../lib/types';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface EditTimeHeaderProps {
   lesson: EditableLesson;
@@ -22,6 +22,8 @@ interface EditTimeHeaderProps {
  */
 export function EditTimeHeader({ lesson, mode, tz }: EditTimeHeaderProps) {
   const cycle = useClockCycle();
+  const viewerZone = useViewerTz();
+  const viewer = { tz: viewerZone, cycle };
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
@@ -29,7 +31,7 @@ export function EditTimeHeader({ lesson, mode, tz }: EditTimeHeaderProps) {
       <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
         {studentNames(lesson)}
       </AppText>
-      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz, cycle))}</AppText>
+      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz, viewer))}</AppText>
       <AppText style={text}>{t.editTime.currentLength.replace('{len}', lengthText(lengthOf(lesson)))}</AppText>
       {mode === 'move' ? <AppText style={text}>{t.editTime.vsReschedule}</AppText> : null}
     </View>

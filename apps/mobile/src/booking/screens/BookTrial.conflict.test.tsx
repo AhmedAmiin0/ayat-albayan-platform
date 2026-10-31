@@ -7,6 +7,8 @@ import { booked, MON_19, slot, SUN_17 } from '../testing/fixtures';
 import { whenText } from '../shared/slots';
 import { fakeBookingApi, seededClient, walkToConfirm } from '../testing/test-utils';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -53,7 +55,7 @@ test('409 conflict: the Arabic clash lines, «اختر موعدًا آخر» →
   await fireEvent.press(await screen.findByRole('button', { name: '19:00' }));
   expect(slotCalls()).toBeGreaterThan(before);
   expect(screen.queryByText(t.booking.conflictTitle)).toBeNull();
-  expect(screen.getByText(whenText(MON_19, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(whenText(MON_19, 'Asia/Riyadh', R24))).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: t.booking.submit }));
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();

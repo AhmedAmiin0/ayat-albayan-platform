@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '../../../../../common/integrations/numbers-overlay';
-import { ADMIN, whatsappApp } from '../../test-app';
-import type { ApprovalRow } from '../catalog/templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
+import type { ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Templates per number over HTTP (docs/23c decision 9): numbers[] on the list, PUT …/:key/number and
 // POST /admin/numbers/:id/templates/sync (templates.manage; never sales or a teacher).

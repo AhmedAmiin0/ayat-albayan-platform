@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { wasText } from '../edit-time/edit-time-text';
 import { timeEditInfo } from '../edit-time/edit-time.contract';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const TAG = 'shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2';
 
@@ -13,7 +14,7 @@ const TAG = 'shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold 
  * a note, not a button: a nuqta and muted text without the pill, with «كان: …» as its tooltip.
  */
 export function LessonTags({ lesson }: { lesson: Pick<LessonView, 'trial' | 'makeup' | 'time_edit'> }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const edited = timeEditInfo(lesson);
   return (
     <>
