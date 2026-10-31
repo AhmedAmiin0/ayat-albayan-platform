@@ -13,7 +13,6 @@ export {
   CRM_NO_MEDIA,
   type InboundFile,
   InboundMedia,
-  isInvoiceMime,
   MEDIA_FETCH_DAYS,
   mediaExpired,
   servable,
@@ -28,6 +27,7 @@ export {
   toMessageView,
 } from './messages/message.mapper';
 export { MessageViews } from './messages/message.views';
+export { receiptMime, receiptName } from './messages/receipts/receipt-candidates';
 export { CALL_PERMISSION_PAYLOAD, callPermissionMessage } from './messages/wa-call-permission';
 export { type GraphBody, waTo } from './messages/wa-components';
 export {

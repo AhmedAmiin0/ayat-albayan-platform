@@ -89,7 +89,7 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | Text / files | `type:"text"` (reply-to dropped: the CRM wants its own uuid) · `type:"document"\|"image"` with `media_url`, `filename`, caption as `text` |
 | wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
 | markRead | no-op (the CRM owns the conversation) |
-| Template list / submit / samples / inbound media | `WaError {unsupported:'crm'}`: the sync answers `crm_managed` (no call, **no row touched**: nothing is marked missing or not_submitted), submit is 409 `crm_managed`, a number's sync `crm_managed`, inbound media 409 `crm_no_media`; `canUploadSamples()` false |
+| Template list / submit / samples / inbound media | `WaError {unsupported:'crm'}`: the sync answers `crm_managed` (no call, **no row touched**: nothing is marked missing or not_submitted; the one exception is a send Meta refuses with #132001, «تحقق من القالب» below), submit is 409 `crm_managed`, a number's sync `crm_managed`, inbound media 409 `crm_no_media`; `canUploadSamples()` false |
 | 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…») |
 | 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
 | 502 `meta_error`, 500 `template_malformed`, any other 4xx, a 3xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent). Redirects are never followed (`redirect: 'manual'`); a body that is not the CRM's envelope is kept as `http_<status>` only |
@@ -113,6 +113,44 @@ overwrites it while the line stays on crm. Moving a template to a crm line reset
 any move does; set it by hand afterwards. **Switching a line to crm keeps every status from the last Meta
 sync**: an `approved` row starts going to the CRM as soon as `WA_PROVIDER` is saved (the
 `WA_ALLOWED_RECIPIENTS` guard covers steps 4–6 below), so review every row of that line (step 5).
+
+**«تحقق من القالب» (owner 2026-10-31).** Hand-set statuses go stale: a teacher reminder failed with Meta #132001
+while our row said approved. The CRM does not gate sends on its own template list (wacrm's `resolveTemplateRow`
+sends even without a local row), so #132001 means the WABA the CRM sends from lacks that name + language. When a
+crm send fails with the CRM's `502 meta_error` carrying #132001 («Template name does not exist in the
+translation»), `templates/check/template-missing.ts` (called by the worker after it records the failure) sets that
+row `missing`: compare-and-set from `approved`, only while the row's line is the line it went from, the CRM's words
+in `last_error`, audited `template_marked_missing` (actor null), never thrown into the worker. Only when the name
+the CRM was asked for (`WaError.info.template`, set by the crm client) is the key's own `crmTemplateName`: a row
+that went by a fallback (`crmRowName`: a `_meet` reminder or a new-student alert without its `crm` values, by
+`meta_name`) fails alone and the key stays approved, or every later row of it would stop. The sender stops
+reading its rows (`due()` reads approved templates only). «القوالب» lists the number's missing templates under
+«تحقق من القالب» in the crm number's block, with how to fix one; once the CRM holds it, «علِّمه معتمدًا» again.
+Meta and Kapso lines are not touched by this: their sync reads the WABA's own list.
+
+**Creating a template («قالب جديد», owner 2026-10-31).** `POST /messaging/templates` (templates.manage +
+`TemplateManagerGuard`; 400 on a bad body, 409 `invalid_template` / `template_exists`; audited `template_created`;
+no Meta call): key = the Meta name (`[a-z0-9_]`), line, category utility / marketing, language, an optional fixed
+text header (kept in `display.header`, sent by the submit as a TEXT header) and footer, the body with {{1}}…{{9}},
+each variable's name (one the composers label and prefill, or `var_n`) and its review sample (`samples`, migration
+`20261031000994_template_samples.sql`, expand-only), up to three buttons (one URL with an optional `{{1}}` suffix;
+quick replies that confirm / ask to reschedule / stop). The row is `not_submitted`. On a meta / kapso line the web
+opens the existing «إرسال إلى ميتا» confirm next: the same submit, then the same line sync. On a crm line it stays
+`not_submitted` here: create it in the CRM (Settings → Templates → New template, then sync from Meta) with the same
+name, language, text and buttons, then «علِّمه معتمدًا». Not built: editing or deleting a row, authentication
+templates, a variable in the header, a media header on a new row, admin template screens on mobile.
+
+**What the CRM would need for real create / sync from here.** wacrm's public API (pinned 98b5bd26, and main at
+c81299d1 on 2026-10-30) has no templates resource and no `templates:*` scope (`src/lib/api-keys/scopes.ts`), and its
+outbound webhooks carry no template event. Its dashboard does it all through session-cookie routes for a CRM admin:
+`POST /api/whatsapp/templates/submit` (creates on Meta with the CRM's token), `POST /api/whatsapp/templates/sync`
+(pulls from Meta, upserts by name + language), `PATCH` / `DELETE /api/whatsapp/templates/{id}`; the list is a direct
+read of its `message_templates` table. Calling those from our API would need a CRM admin's password and Supabase
+cookies: not done. The clean path is a wacrm change (upstream PR, then a pin bump, or a local patch; the owner's
+go): scopes `templates:read` / `templates:write`, `GET /api/v1/templates` (the account's rows, paged), `POST
+/api/v1/templates` (the submit route's core), `POST /api/v1/templates/sync`, `DELETE /api/v1/templates/{id}`, the
+key's minter (`createdBy`) as the row's `user_id` (409 when there is none), then a key minted with those scopes.
+`crm.client.ts` `getTemplates` / `submitTemplate` would then map onto it and the crm line would sync like the others.
 
 **Webhook `POST /webhooks/wacrm`** (public, raw body, never in the activity log). `X-Wacrm-Signature:
 t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody}`), constant-time; `t` more
@@ -139,16 +177,32 @@ Meta values, never the producer's CRM values.
 
 | Ours (`key`) | The CRM's template | Values |
 |---|---|---|
-| `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain`, `teacher_lesson_reminder` | same names (no change) | the meta driver's values |
-| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` |
+| `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
+| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
+| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons |
 | `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
 
-The teacher alert's CRM values are written by `teacher-alert.crm.ts` into `template_params.crm` beside the Meta
-values {{1}}–{{3}} (the Meta path is unchanged); a row without its `crm` part (queued before this change, or a value
-missing: no teacher name, a student without a name or code, no end time) goes as before, `meta_name` with the
-Meta values (`crmRowName`); an admin's crm_name is always sent as set. The CRM template's two URL buttons must be
-`<WEB_ORIGIN>/{{1}}` (we send the path after the origin; both pages need a login). The report kind is
-`template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+The teacher alert's CRM values are built by `teacherLessonCrm`, the teacher reminder's by `teacherReminderCrm`
+(both `reminders/plan/teacher-lesson.crm.ts`; the reminder read adds `students.code`), into `template_params.crm`
+beside the Meta values (the alert's {{1}}–{{3}}, the reminder's {{1}}–{{2}} and Meet code; the Meta path is
+unchanged). The reminder's line is one line for Meta (no newline, no tab, never 4 spaces in a row); its texts are
+`templates.teacherReminderCrm` / `teacherReminderCrmStudent` in ar.json; `<join>` is the lesson's own link as the
+reminders send it (Meet, the teacher's fixed link, our classroom when LiveKit runs it), else our classroom, and
+`<report>` the teacher's report form, both absolute (`<WEB_ORIGIN>/classroom/<id>`, `<WEB_ORIGIN>/teacher/report/<id>`,
+login required); an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
+name carries the CRM values even when it equals `meta_name` (`teacher_lesson_reminder`). A row without its `crm`
+part (queued before this change, or a value missing: no teacher name, a student without a name or code, no web
+origin, the alert's end time) goes as before, `meta_name` with the Meta values (`crmRowName`): a `_meet` row then
+asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's crm_name is always sent as set.
+
+**teacher_lesson_v2's real buttons (read from the old script, 2026-10-31).** «ادخل الحلقة» is
+`https://meet.google.com/{{1}}` and «تقرير الحلقة» is `https://vercelayat-r.vercel.app/r/{{1}}`, a redirector to the
+**old Google report form** (`/r/<a>/<b>/<c>` → the form, prefilled). They are not `<WEB_ORIGIN>/{{1}}` (an earlier
+note here said so, never verified). So `teacher_new_student`'s two suffixes on a crm line open a broken Meet URL
+(`meet.google.com/classroom/<id>`) and the old form: **owner decision pending** (send a Meet code and the old form's
+values, a new CRM template with platform buttons, or a crm_name to a template without buttons); not changed yet.
+
+The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
 fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
 twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
@@ -179,7 +233,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
-6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
+6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
 7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
 8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 

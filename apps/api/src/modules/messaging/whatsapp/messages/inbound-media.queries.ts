@@ -1,6 +1,7 @@
 import { PLAYABLE_MIMES, type NumberPurpose } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
 export type MediaNumber = { id: string; provider: string; purpose: NumberPurpose };
@@ -24,8 +25,10 @@ export type MediaMessage = {
   number?: MediaNumber | null;
   /** Hidden from the platform («حذف من المنصة»): its file is refused like an unknown message. */
   hidden_at?: string | null;
+  /** Meta's message part ({type, [type]: …}); a «sticker» is never a receipt (receiptMime). */
+  interactive_payload?: unknown;
 };
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
+const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
 type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };
@@ -50,14 +53,21 @@ export class InboundMediaQueries {
     return data;
   }
 
-  /** Inbound files of one phone since `since`, newest first (the caller filters by mime). */
-  async recent(input: { phone: string; since: string; limit: number }): Promise<MediaMessage[]> {
+  /**
+   * The pickers' files of one phone since `since`, newest first, never hidden: RECEIPT_FILTERS
+   * run here, before the limit, so a run of stickers or voice notes never pushes a PDF out
+   * (owner 2026-10-31).
+   */
+  async receipts(input: { phone: string; since: string; limit: number }): Promise<MediaMessage[]> {
     const { data, error } = await this.db
       .from('messages')
       .select(COLUMNS)
       .eq('phone_e164', input.phone)
       .eq('direction', 'inbound')
-      .not('media_id', 'is', null)
+      .is('hidden_at', null)
+      .or(RECEIPT_FILTERS.source)
+      .or(RECEIPT_FILTERS.notSticker)
+      .or(RECEIPT_FILTERS.kind)
       .gte('created_at', input.since)
       .order('created_at', { ascending: false })
       .limit(input.limit);
