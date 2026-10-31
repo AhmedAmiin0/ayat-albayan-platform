@@ -37,7 +37,7 @@ export function afterDocument(error: unknown): WaError {
   const said = error instanceof Error ? error.message : String(error);
   const details = [said, inner?.details].filter(Boolean).join(' — ');
   const message = inner && !inner.uncertain ? REFUSED : UNKNOWN;
-  return new WaError(message, { code: inner?.code ?? null, status: inner?.status ?? 0, crmCode: inner?.crmCode, credential: inner?.credential, uncertain: true, details });
+  return new WaError(message, { code: inner?.code ?? null, status: inner?.status ?? 0, crmCode: inner?.crmCode, credential: inner?.credential, template: inner?.template, uncertain: true, details });
 }
 
 const REFUSED = 'the report PDF was sent, the CRM refused its template (a retry sends the PDF again)';

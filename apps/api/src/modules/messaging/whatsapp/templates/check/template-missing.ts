@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import { crmTemplateName, type WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
@@ -64,11 +64,18 @@ export class TemplateMissing {
    * An approved row of the line it went from → missing, compare-and-set: one write and one audit
    * row however many sends fail at once. A row on another line (moved meanwhile) or already not
    * approved stays as it is. The admin marks it approved again once the CRM holds it («علِّمه
-   * معتمدًا»).
+   * معتمدًا»). Only the key's own CRM name (crmTemplateName) counts: a row that went by a fallback
+   * (crm-body.ts crmRowName: meta_name teacher_lesson_reminder_meet, not the CRM's
+   * teacher_lesson_reminder) fails alone, or every later row of that key would stop.
    */
   private async mark(m: Absent): Promise<void> {
     const row = await this.queries.get(m.key);
     if (row?.status !== 'approved' || row.line !== m.line) return;
+    const own = crmTemplateName(row);
+    if (m.error.info.template !== own) {
+      this.log.warn(`template ${m.key} kept: #132001 for ${m.error.info.template ?? '?'}, not ${own}`);
+      return;
+    }
     const last_error = (m.error.info.details ?? m.error.message).slice(0, ERROR_MAX);
     const patch = { status: 'missing' as const, last_error, last_checked_at: m.now.toISOString() };
     if (!(await this.queries.update(m.key, patch, 'approved'))) return;

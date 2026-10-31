@@ -14,7 +14,12 @@ const crm = (status: number, code: string, message?: string) => {
   const text = JSON.stringify(crmFailure(status, code, message).body);
   return crmErrorFrom({ status, text, retryAfter: null });
 };
-const absent = crm(502, 'meta_error', META_132001);
+/** A #132001 for the template the CRM was asked for (crm.client.ts sentAs). */
+const absentAs = (template: string) => {
+  const e = crm(502, 'meta_error', META_132001);
+  return new WaError(e.message, { ...e.info, template });
+};
+const absent = absentAs('teacher_lesson_v2');
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
@@ -76,6 +81,33 @@ describe('TemplateMissing.check', () => {
     await marker().check(send());
     expect(queries.update).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('only the key’s own CRM name: a fallback (meta_name) or an unnamed failure leaves the row', async () => {
+    const meet = 'teacher_lesson_reminder_meet';
+    queries.get.mockResolvedValue(templateRow({ key: meet, meta_name: meet, status: 'approved' }));
+    await marker().check(send({ key: meet, error: absentAs(meet) }));
+    await marker().check(send({ key: meet, error: crm(502, 'meta_error', META_132001) }));
+    queries.get.mockResolvedValue(templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student' }));
+    await marker().check(send({ error: absentAs('teacher_new_student') }));
+    expect(queries.update).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('the Meet reminder by its CRM name (teacher_lesson_reminder) → missing', async () => {
+    const meet = 'teacher_lesson_reminder_meet';
+    queries.get.mockResolvedValue(templateRow({ key: meet, meta_name: meet, status: 'approved' }));
+    await marker().check(send({ key: meet, error: absentAs('teacher_lesson_reminder') }));
+    expect(queries.update).toHaveBeenCalledWith(meet, expect.objectContaining({ status: 'missing' }), 'approved');
+  });
+
+  it('an admin’s crm_name is the key’s own name, the default then a fallback', async () => {
+    const row = templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', crm_name: 'tn_v3' });
+    queries.get.mockResolvedValue(row);
+    await marker().check(send({ error: absent }));
+    expect(queries.update).not.toHaveBeenCalled();
+    await marker().check(send({ error: absentAs('tn_v3') }));
+    expect(queries.update).toHaveBeenCalledTimes(1);
   });
 
   it('a second failure that lost the compare-and-set writes no second audit row', async () => {

@@ -120,7 +120,10 @@ sends even without a local row), so #132001 means the WABA the CRM sends from la
 crm send fails with the CRM's `502 meta_error` carrying #132001 («Template name does not exist in the
 translation»), `templates/check/template-missing.ts` (called by the worker after it records the failure) sets that
 row `missing`: compare-and-set from `approved`, only while the row's line is the line it went from, the CRM's words
-in `last_error`, audited `template_marked_missing` (actor null), never thrown into the worker. The sender stops
+in `last_error`, audited `template_marked_missing` (actor null), never thrown into the worker. Only when the name
+the CRM was asked for (`WaError.info.template`, set by the crm client) is the key's own `crmTemplateName`: a row
+that went by a fallback (`crmRowName`: a `_meet` reminder or a new-student alert without its `crm` values, by
+`meta_name`) fails alone and the key stays approved, or every later row of it would stop. The sender stops
 reading its rows (`due()` reads approved templates only). «القوالب» lists the number's missing templates under
 «تحقق من القالب» in the crm number's block, with how to fix one; once the CRM holds it, «علِّمه معتمدًا» again.
 Meta and Kapso lines are not touched by this: their sync reads the WABA's own list.
