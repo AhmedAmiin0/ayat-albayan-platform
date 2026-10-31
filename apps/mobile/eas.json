@@ -28,10 +28,29 @@
       "android": {
         "buildType": "apk"
       },
-      "environment": "preview",
+      "environment": "development",
       "env": {
         "EXPO_PUBLIC_FEATURE_STRIPE": "1",
-        "APP_VARIANT": "stripetest"
+        "APP_VARIANT": "stripetest",
+        "EXPO_PUBLIC_API_URL": "https://staging-api.ayatalbayan.com",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://gqkqbxxgqttfbbqoqedf.supabase.co",
+        "EXPO_PUBLIC_WEB_ORIGIN": "https://staging-app.ayatalbayan.com"
+      },
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
+    },
+    "staging": {
+      "distribution": "internal",
+      "channel": "staging",
+      "android": {
+        "buildType": "apk"
+      },
+      "environment": "development",
+      "env": {
+        "APP_VARIANT": "staging",
+        "EXPO_PUBLIC_API_URL": "https://staging-api.ayatalbayan.com",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://gqkqbxxgqttfbbqoqedf.supabase.co",
+        "EXPO_PUBLIC_WEB_ORIGIN": "https://staging-app.ayatalbayan.com"
       },
       "node": "24.15.0",
       "pnpm": "11.25.0"
