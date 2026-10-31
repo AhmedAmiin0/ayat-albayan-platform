@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm';
 import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { t } from '@/lib/i18n/i18n';
+import { SalesCourseActions } from './SalesCourseActions';
 
 export interface SalesRunningCourseProps {
   view: SalesCourseView;
@@ -54,6 +55,7 @@ export function SalesRunningCourse({ view, current, children }: SalesRunningCour
         <Button type="button" variant={children ? 'secondary' : 'primary'} onClick={() => setStage('change')}>
           {t.booking.courseChange.changeDays}
         </Button>
+        <SalesCourseActions studentId={id} subscriptionId={current.subscriptionId} />
       </div>
       {children}
     </div>

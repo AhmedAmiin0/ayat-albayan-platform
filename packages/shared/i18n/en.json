@@ -765,7 +765,8 @@
       "no_change": "You have not changed any time yet; pick another day or time",
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
-      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more."
+      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -5286,6 +5287,9 @@
       "saved_replies.manage": "Manage shared quick replies",
       "student_channels.monitor": "Read student–teacher channels",
       "courses.pause": "Pause and resume any student's course",
+      "subscriptions.stop": "Cancel any student's subscription and stop the course",
+      "students.change_teacher": "Change any student's teacher for the rest of the course",
+      "courses.reschedule": "Change any student's lesson days and times",
       "sales.renew_any": "Renew any student's subscription from the chat",
       "leads.link_family": "Link a lead's number to an existing student's family"
     },
@@ -5298,6 +5302,9 @@
       "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
       "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
       "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
+      "subscriptions.stop": "Cancels the subscription's upcoming lessons, ends its schedule and marks the student churned. Payments, past lessons, reports and teacher pay stay as they are.",
+      "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
+      "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
       "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
@@ -7271,6 +7278,86 @@
       "invalidSecret": "The webhook secret starts with whsec_.",
       "copyUrl": "Copy the URL",
       "urlCopied": "URL copied"
+    }
+  },
+  "courseActions": {
+    "stop": {
+      "action": "Cancel subscription",
+      "title": "Cancel subscription and stop the course",
+      "intro": "What happens when you confirm:",
+      "lessons": {
+        "zero": "No upcoming lessons to cancel",
+        "one": "1 upcoming lesson will be cancelled",
+        "two": "2 upcoming lessons will be cancelled",
+        "few": "{n} upcoming lessons will be cancelled",
+        "other": "{n} upcoming lessons will be cancelled"
+      },
+      "schedule": "The subscription's weekly schedule ends today",
+      "money": "Recorded payments ({amount}) stay as they are, no refund",
+      "history": "Past lessons, their reports and teacher pay stay as they are",
+      "status": "The student's status becomes «Churned»",
+      "reason": "Cancellation reason",
+      "reasonHint": "A short reason kept in the log",
+      "confirm": "Confirm cancellation",
+      "done": "Subscription cancelled and course stopped",
+      "stopped": "Subscription cancelled on {date}",
+      "stoppedReason": "Reason: {reason}"
+    },
+    "teacher": {
+      "action": "Change teacher",
+      "title": "Change teacher",
+      "current": "Current teacher",
+      "pick": "New teacher",
+      "noTeachers": "No teachers available for this student",
+      "keepDays": "Keep the current days and times",
+      "changeDays": "Change the days and times too",
+      "confirm": "Confirm teacher change",
+      "done": "The remaining lessons moved to the new teacher"
+    },
+    "times": {
+      "action": "Change lesson times",
+      "title": "Change lesson times",
+      "days": "New days and times",
+      "confirm": "Save the new times",
+      "done": "The remaining lessons' times changed"
+    },
+    "from": "Change starts from",
+    "fromHint": "Default: the day of the next lesson",
+    "zoneNote": "Times in your zone ({tz})",
+    "remaining": {
+      "zero": "No lessons left in the course",
+      "one": "1 remaining lesson moves",
+      "two": "2 remaining lessons move",
+      "few": "{n} remaining lessons move",
+      "other": "{n} remaining lessons move"
+    },
+    "endsOn": "Last lesson on {date}",
+    "checking": "Checking the times…",
+    "conflicts": "The new time clashes with the teacher's or the student's time:",
+    "overrideReason": "Reason to override the clash",
+    "override": "Save despite the clash",
+    "errors": {
+      "generic": "Could not complete the request, try again",
+      "already_cancelled": "This subscription is already cancelled",
+      "has_future_lessons": "Some upcoming lessons were not cancelled yet, try again",
+      "subscription_not_found": "Subscription not found",
+      "conflict": "The time clashes with the teacher's or the student's time",
+      "course_finished": "No lessons left in the course to move",
+      "course_not_found": "This subscription has no weekly schedule",
+      "course_exists": "The new days overlap another course of the student",
+      "course_changed": "The schedule changed since you opened this, reopen it",
+      "custom_count_admin": "Custom lesson count: only an admin can change it",
+      "date_in_past": "Pick an upcoming date",
+      "days_count_mismatch": "Pick the same number of days a week",
+      "no_change": "The days and times did not change",
+      "no_occurrences": "No lessons fall on the picked days",
+      "override_not_allowed": "Only an admin can override a clash",
+      "same_teacher": "This is already the student's teacher",
+      "starts_before_course": "The date is before the course starts",
+      "starts_before_subscription": "The date is before the subscription starts",
+      "teacher_inactive": "This teacher is inactive",
+      "teacher_not_found": "Teacher not found",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first."
     }
   },
   "coursePause": {

@@ -16,11 +16,17 @@ export interface OrderFact {
   id: string;
   price: number;
   created_at: string;
-  /** Absent = a live package. A cancelled one (migration 934) is no kind and never counts as earlier. */
+  /**
+   * Absent = a live package. An unused-cancelled one (migration 934) is no kind and never counts as
+   * earlier; a stopped one (cancel_kind 'stopped', migration 991) keeps its kind and counts.
+   */
   status?: SubscriptionStatus;
+  cancel_kind?: string | null;
 }
 
-const counts = (s: OrderFact): boolean => s.price > 0 && s.status !== 'cancelled';
+/** price > 0 and countsForMoney (money/ledger; not imported: the ledger reads this module). */
+const counts = (s: OrderFact): boolean =>
+  s.price > 0 && (s.status !== 'cancelled' || s.cancel_kind === 'stopped');
 
 /** created_at, then id (uuid order = lowercase hex order). */
 const before = (a: OrderFact, b: OrderFact): boolean =>

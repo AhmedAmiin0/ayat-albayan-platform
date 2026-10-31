@@ -10,11 +10,11 @@ import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } fro
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
-type CancelInput = { lessonId: string; body: CancelBody; actor: AuthUser };
-type RuleCancelInput = { ruleId: string; body: RuleCancelRequest; actor: AuthUser };
+interface CancelInput { lessonId: string; body: CancelBody; actor: AuthUser }
+interface RuleCancelInput { ruleId: string; body: RuleCancelRequest; actor: AuthUser }
 
-type Cancel = { by: CancelRequest['by']; reason: string | null };
-type EndRule = {
+interface Cancel { by: CancelRequest['by']; reason: string | null }
+interface EndRule {
   rule: RuleWithLinks;
   /** First local day without lessons; the rule's ends_on becomes the day before. */
   from: string;
@@ -22,7 +22,7 @@ type EndRule = {
   cutoff: Date;
   body: Cancel;
   actor: AuthUser;
-};
+}
 
 /**
  * Cancel one occurrence, or this one and the rest of its rule (R-SCH-07). Returns the ids of

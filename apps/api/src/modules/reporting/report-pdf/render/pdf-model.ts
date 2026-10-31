@@ -46,6 +46,8 @@ export interface SlotPackage {
   lessonsTotal: number;
   /** Taken before the platform (migration 932): the package holds lessonsTotal − this platform lessons. */
   lessonsUsedBefore?: number;
+  /** A stopped package (migration 991): it holds lessonsUsedAtStop − lessonsUsedBefore, no more. */
+  lessonsUsedAtStop?: number | null;
   /** Local date YYYY-MM-DD. */
   startsOn: string;
   /** ISO instant. */
@@ -69,10 +71,11 @@ export function packageSlot(n: number | null, packages: readonly SlotPackage[]):
   let capFrom = 0;
   for (const [i, p] of sorted.entries()) {
     const before = p.lessonsUsedBefore ?? 0;
-    if (n <= capFrom + p.lessonsTotal - before || i === sorted.length - 1) {
+    const cap = (p.lessonsUsedAtStop ?? p.lessonsTotal) - before;
+    if (n <= capFrom + cap || i === sorted.length - 1) {
       return { position: n - capFrom + before, total: p.lessonsTotal };
     }
-    capFrom += p.lessonsTotal - before;
+    capFrom += cap;
   }
   return null;
 }

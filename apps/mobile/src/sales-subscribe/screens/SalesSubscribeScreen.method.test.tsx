@@ -37,7 +37,7 @@ beforeEach(() => {
 test('her own child: two methods, «تحويل بنكي» first and picked; saving is today’s package, then its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('radio', { name: t.enums.paymentMethod.bank, checked: true })).toBeTruthy();
-  expect(screen.getByRole('radio', { name: m.payOnline, checked: false })).toBeTruthy();
+  expect(await screen.findByRole('radio', { name: m.payOnline, checked: false })).toBeTruthy();
   expect(screen.getByText(t.payments.method)).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
   await waitFor(() => expect(posted('/sales/subscriptions')).toHaveLength(1));
