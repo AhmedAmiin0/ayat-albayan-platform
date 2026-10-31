@@ -4,10 +4,17 @@ import { planRenewalCommission, renewalShareNow } from './renewal.js';
 
 // «عمولة التجديد» off (owner 2026-11-01, migration 20261101000996): renewals earn nothing;
 // the percent is kept.
-const sub = (id: string, price: number, created_at: string, paid_at: string): SubscriptionFact => ({
-  id, price, currency: 'SAR', created_at, payments: [{ amount: price, kind: 'payment', paid_at }],
+interface At {
+  created: string;
+  paid: string;
+}
+const sub = (id: string, price: number, at: At): SubscriptionFact => ({
+  id, price, currency: 'SAR', created_at: at.created, payments: [{ amount: price, kind: 'payment', paid_at: at.paid }],
 });
-const subs = [sub('s1', 200, '2026-10-03T00:00:00Z', '2026-10-04T09:00:00Z'), sub('s2', 300, '2026-10-28T00:00:00Z', '2026-11-02T09:00:00Z')];
+const subs = [
+  sub('s1', 200, { created: '2026-10-03T00:00:00Z', paid: '2026-10-04T09:00:00Z' }),
+  sub('s2', 300, { created: '2026-10-28T00:00:00Z', paid: '2026-11-02T09:00:00Z' }),
+];
 const terms = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const plan = (share: number) =>
   planRenewalCommission({ broughtBy: 'a1', broughtAt: '2026-10-02T08:00:00Z', terms, tz: 'Asia/Riyadh', share, subscriptionId: 's2', subscriptions: subs });
