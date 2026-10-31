@@ -20,7 +20,7 @@ test('closed before the join: connect never reaches LiveKit', async () => {
 
 test('closed while connecting: the room is left and no device turns on', async () => {
   const { client, room, local } = setup();
-  let finish = () => undefined as void;
+  let finish: () => void = () => undefined;
   room.connect.mockImplementationOnce(() => new Promise<void>((r) => (finish = r)));
   const joining = client.connect(JOIN, MEDIA);
   client.close();

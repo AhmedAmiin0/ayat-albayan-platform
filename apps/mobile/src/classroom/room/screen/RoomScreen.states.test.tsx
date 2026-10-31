@@ -119,7 +119,7 @@ test('leaving the screen (back) disconnects the room', async () => {
 });
 
 test('left while the token was awaited: the client is closed and the audio stopped', async () => {
-  let give = (_c: typeof CREDS) => undefined as void;
+  let give: (c: typeof CREDS) => void = () => undefined;
   fetchJoin.mockImplementationOnce(() => new Promise((r) => (give = r)));
   p.client.connect.mockRejectedValueOnce(new Error('room client closed'));
   await render(
