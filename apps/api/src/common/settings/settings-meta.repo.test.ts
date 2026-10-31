@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
-import { SettingsMetaQueries } from './settings-meta.queries';
+import type { Db } from '@/common/db/db.module';
+import { SettingsMetaRepo } from './settings-meta.repo';
 
 type Result = { data: unknown; error: { message: string } | null };
 type MetaRow = { key: string; value: unknown; updated_at: string; updated_by: string | null };
@@ -14,7 +14,7 @@ function queries(rows: Result, profiles: Result = ok([])) {
   const from = vi.fn((table: string) =>
     table === 'settings' ? { select: vi.fn().mockResolvedValue(rows) } : { select: vi.fn().mockReturnValue({ in: inIds }) },
   );
-  return { q: new SettingsMetaQueries({ from } as unknown as Db), from, inIds };
+  return { q: new SettingsMetaRepo({ from } as unknown as Db), from, inIds };
 }
 
 const row = (key: string, by: string | null, value: unknown = 1): MetaRow => ({ key, value, updated_at: '2026-10-05T00:00:00Z', updated_by: by });

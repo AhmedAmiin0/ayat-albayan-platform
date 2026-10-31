@@ -1,10 +1,10 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
-import type { AuthUser } from '../auth/verify-token';
-import { SettingsMetaQueries } from './settings-meta.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsMetaRepo } from './settings-meta.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -26,7 +26,7 @@ describe('GET /config/meta', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-      .overrideProvider(SettingsMetaQueries).useValue(queries)
+      .overrideProvider(SettingsMetaRepo).useValue(queries)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
