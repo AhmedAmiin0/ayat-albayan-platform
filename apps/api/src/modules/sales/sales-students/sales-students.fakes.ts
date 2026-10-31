@@ -7,7 +7,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../../co
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
 import { ReportFilesService, ReportHistoryQueries } from '../../reporting/reports';
-import { SalesHistoryQueries, SalesQueries } from '../sales';
+import { SalesHistoryQueries, SalesQueries, SalesRosterRepo } from '../sales';
 import { A, NONE, OWN_A } from '../sales/sales.fakes';
 import { bundle, verify } from '../sales/academy/sales-academy.fakes';
 import type { TrialLessonRead } from '../../teaching/booking';
@@ -73,6 +73,7 @@ export async function studentsApp() {
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
   const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
   const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() } };
+  const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SalesQueries).useValue(sales)
@@ -83,6 +84,7 @@ export async function studentsApp() {
     .overrideProvider(LessonServices).useValue(lessons)
     .overrideProvider(SalesTeacherOverviewQueries).useValue(overview)
     .overrideProvider(StudentAttendanceQueries).useValue(attendance)
+    .overrideProvider(SalesRosterRepo).useValue(roster)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -109,6 +111,8 @@ export async function studentsApp() {
     schedule.upcoming.mockResolvedValue([upcomingRow(MINE)]);
     resetOverview(overview);
     resetAttendance(attendance);
+    roster.packages.mockResolvedValue([]);
+    roster.balances.mockResolvedValue([]);
   };
-  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview, attendance };
+  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview, attendance, roster };
 }

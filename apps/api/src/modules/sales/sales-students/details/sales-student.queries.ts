@@ -3,7 +3,7 @@ import { OPEN_LESSON_STATUSES, type Attendance, type LessonStatus } from '@ab/sh
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
-import type { SalesScheduleRow } from '../../sales';
+import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '../../sales';
 import { TrialDateQueries } from '../../../teaching/booking';
 
 /** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
@@ -32,12 +32,6 @@ export interface LessonFacts {
   lesson_students: { student_id: string }[];
 }
 
-/** An active rule of the student: never its meeting_link, subscription or creator. */
-export type WeeklyRuleRow = Pick<
-  Tables<'schedule_rules'>,
-  'id' | 'byday' | 'start_time_local' | 'tz' | 'duration_min' | 'package' | 'starts_on' | 'ends_on' | 'status'
-> & { teacher: { display_name_ar: string; display_name_en: string | null } | null };
-
 /**
  * The sales schedule's whitelist (SalesScheduleRow) without the way in: no meeting_link, no meeting_mode.
  * `own` keeps only the student's lessons; `lesson_students` still lists every student (for `mine`).
@@ -45,8 +39,7 @@ export type WeeklyRuleRow = Pick<
 const UPCOMING_SELECT =
   'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), own:lesson_students!inner(student_id), lesson_students(student:students(id, code, name, tz))' as const;
 
-const RULE_SELECT =
-  'rule:schedule_rules!inner(id, byday, start_time_local, tz, duration_min, package, starts_on, ends_on, status, teacher:teachers(display_name_ar, display_name_en))' as const;
+const RULE_SELECT = `rule:schedule_rules!inner(${WEEKLY_RULE_COLUMNS})` as const;
 
 interface Window {
   from: Date;

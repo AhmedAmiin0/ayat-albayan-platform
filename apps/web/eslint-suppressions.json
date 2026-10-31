@@ -10506,11 +10506,6 @@
       "count": 2
     }
   },
-  "src/features/sales/sales/students/all-student-columns.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/sales/sales/students/my-student-columns.tsx": {
     "ab/module-boundaries": {
       "count": 2
