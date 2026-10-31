@@ -20,6 +20,9 @@ describe('lessonNotice: which event → which key, and its subject', () => {
     expect(lessonNotice(move, lessonRow()).familyWhatsApp).toBe(false);
     const cancel = { kind: 'lesson_cancelled', lessonId: 'L1', actorId: null } as const;
     expect(lessonNotice(cancel, lessonRow()).familyWhatsApp).toBe(true);
+    expect(lessonNotice(cancel, lessonRow()).audience).toBeUndefined();
+    const toTeacher = { ...cancel, audience: 'teacher' } as const;
+    expect(lessonNotice(toTeacher, lessonRow()).audience).toBe('teacher');
   });
 
   it('a cancel names the lesson only; every student on it; a lesson without a teacher → no teacher', () => {

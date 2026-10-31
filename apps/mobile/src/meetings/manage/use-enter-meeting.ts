@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useRoomsInApp } from '@/classroom';
 import { useClockCycle } from '@/core/lib/clock';
 import { enterMeeting } from './api';
 import { meetingError } from './meeting-text';
@@ -10,13 +11,14 @@ export function useEnterMeeting(tz: string) {
   // The refusal itself, put in words while rendering: a later «تنسيق الوقت» switch re-words it.
   const [failed, setFailed] = useState<{ error: unknown } | null>(null);
   const inFlight = useRef(false);
+  const inApp = useRoomsInApp();
   const run = async (id: string) => {
     if (inFlight.current) return;
     inFlight.current = true;
     setPending(true);
     setFailed(null);
     try {
-      await enterMeeting(id);
+      await enterMeeting(id, inApp);
     } catch (e) {
       setFailed({ error: e });
     } finally {

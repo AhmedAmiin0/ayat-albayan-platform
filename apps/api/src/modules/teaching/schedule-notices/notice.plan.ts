@@ -130,7 +130,7 @@ function familyParts(notice: Notice, now: Date, plan: NoticePlan): void {
 export function planNotice(notice: Notice, now: Date): NoticePlan {
   const plan: NoticePlan = { messages: [], pushes: [] };
   if (!isUpcoming(notice, now)) return plan;
-  teacherParts(notice, now, plan);
-  familyParts(notice, now, plan);
+  if (notice.audience !== 'family') teacherParts(notice, now, plan);
+  if (notice.audience !== 'teacher') familyParts(notice, now, plan);
   return plan;
 }

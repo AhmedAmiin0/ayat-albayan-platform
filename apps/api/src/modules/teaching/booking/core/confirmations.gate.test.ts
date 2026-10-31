@@ -7,6 +7,9 @@ import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-w
 import type { BookingPayload } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
 import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
+import { CourseChangeNotices } from '@/modules/teaching/booking/course-change/notices/course-change.notices';
+import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.service';
+import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 // The booking_confirmation rule at each write that carries confirmations (create_booking,
 // apply_lesson_changes, edit_lesson_time, change_course): on = the payload unchanged; off = no confirmation.
@@ -61,7 +64,11 @@ describe('booking_confirmation at the writes', () => {
   ])('change_course — %s', async (_name, rules, messages) => {
     const { db, calls } = fakeDb({ 'rpc:change_course': [{ data: { rule_ids: ['r2'], ends_on: null } }] });
     const payload = { actor: 'a1', messages: [msg] };
-    await new CourseChangeWriter(db, new LessonEvents(), fakePolicy(rules)).apply({ payload, subscriptionId: 's1', moved: [] });
+    const events = new LessonEvents();
+    const notices = new CourseChangeNotices(fakeFamilyMove().move, events, {} as TeacherAlert);
+    const told = { moved: [], added: [], actorId: 'a1', studentIds: [], teacherChanged: false };
+    const writer = new CourseChangeWriter(db, events, fakePolicy(rules), notices);
+    await writer.apply({ payload, subscriptionId: 's1', told });
     expect(rpcArg(calls, 'change_course')).toEqual({ p: { ...payload, messages } });
   });
 });

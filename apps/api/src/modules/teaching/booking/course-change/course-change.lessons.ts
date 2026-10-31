@@ -5,7 +5,7 @@ import { readAll } from '../../scheduling/read-all';
 import { generatedKey } from '../../scheduling/rules/rule-projection';
 import type { OpenCourseLesson } from './course-change.queries';
 
-export type MovedLesson = OpenCourseLesson & { rule_id: string | null };
+export type MovedLesson = OpenCourseLesson & { rule_id: string | null; starts_at: string };
 /** A lesson of the course, its rule and local day (a rule without subscription_id is bounded). */
 interface CourseLesson extends CourseLessonFact {
   id: string;
@@ -46,12 +46,15 @@ export class CourseLessonQueries {
     }));
   }
 
-  /** The open lessons of these rules from `cutoff` on: they move (rescheduled, chargeable false). */
+  /**
+   * The open lessons of these rules from `cutoff` on, earliest first: they move (rescheduled,
+   * chargeable false); their starts tell who hears it (CourseChangeNotices).
+   */
   async openFrom(ruleIds: readonly string[], cutoff: Date): Promise<MovedLesson[]> {
     return readAll((from, to) =>
       this.db
         .from('lessons')
-        .select('id, status, rule_id')
+        .select('id, status, rule_id, starts_at')
         .in('rule_id', [...ruleIds])
         .in('status', [...OPEN_LESSON_STATUSES])
         .gte('starts_at', cutoff.toISOString())

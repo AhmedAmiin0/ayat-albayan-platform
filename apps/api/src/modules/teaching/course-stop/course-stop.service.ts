@@ -23,6 +23,9 @@ interface StopInput {
  * payments, held lessons, reports, earnings and the assistant's commission never change. A retry
  * with the same clientRequestId answers the first stop; 409 course_unattributed when a running rule
  * cannot be attributed (a group, or one running into the next package). No per-lesson notice.
+ * Silent on purpose (owner 2026-10-30, «notify both» covers moves, cancels and pauses): no push or
+ * template says «the course stopped» (course_paused says «مؤقتًا», lesson_cancelled names one
+ * lesson); a course_stopped template and push kind wait for the owner's approval.
  */
 @Injectable()
 export class CourseStop {
