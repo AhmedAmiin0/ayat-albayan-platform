@@ -11,7 +11,7 @@ import { Field } from '@/core/ui/form/Field';
 import { Screen } from '@/core/ui/layout/Screen';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ComposeIcon } from '@/inbox/shared/chat-icons';
 import { threadHref } from '@/inbox/thread/hooks/thread-cache';
 

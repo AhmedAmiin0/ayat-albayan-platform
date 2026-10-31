@@ -2,14 +2,14 @@ import type { MeetingView } from '@ab/shared';
 import { router, useSegments } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { manageOf, meetingsBase } from './meeting-text';
 import { MeetingLinkShare } from './MeetingLinkShare';
 import { MeetingManageButtons } from './MeetingManageButtons';
-import { RescheduleMeeting } from '../create/RescheduleMeeting';
+import { RescheduleMeeting } from '@/meetings/create/RescheduleMeeting';
 import { useEnterMeeting } from './use-enter-meeting';
 import { useMeetingManage } from './use-meeting-manage';
 

@@ -3558,7 +3558,7 @@
       "count": 2
     }
   },
-  "src/inbox/ErrorLine.tsx": {
+  "src/core/ui/feedback/ErrorLine.tsx": {
     "max-len": {
       "count": 1
     }

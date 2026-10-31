@@ -11,9 +11,9 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '../ErrorLine';
-import { refreshInbox } from '../thread/hooks/inbox-sync';
-import { threadPath } from '../thread/hooks/thread-cache';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
 const TEMPLATES = '/messaging/templates';

@@ -1,7 +1,7 @@
 import type { CreateMeeting } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId } from '@/core/lib/http/request-id';
 import { Note } from '@/core/ui/feedback/Note';

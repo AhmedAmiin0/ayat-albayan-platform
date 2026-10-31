@@ -13,15 +13,15 @@ import type { RefObject } from 'react';
 import type { ScrollView } from 'react-native';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { AttachmentsField } from './AttachmentsField';
 import { ChoiceChips } from './ChoiceChips';
 import { IdentityBlock, MeetingLink } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
 import { RubricSection } from './RubricSection';
-import { useReportEntry } from '../hooks/use-report-entry';
-import { useScrollToInvalid } from '../hooks/use-scroll-to-invalid';
+import { useReportEntry } from '@/teacher/report/hooks/use-report-entry';
+import { useScrollToInvalid } from '@/teacher/report/hooks/use-scroll-to-invalid';
 
 const attendances = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
 const programs = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));

@@ -18,9 +18,9 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { ErrorLine } from '../ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { TemplatePreview } from './TemplatePreview';
-import type { Outgoing } from '../thread/hooks/use-thread';
+import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 type Position = BodySlot;

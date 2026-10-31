@@ -10,7 +10,7 @@ import { IconButton } from '@/core/ui/primitives/IconButton';
 import { Screen } from '@/core/ui/layout/Screen';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/hooks/api';
 import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
 import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';

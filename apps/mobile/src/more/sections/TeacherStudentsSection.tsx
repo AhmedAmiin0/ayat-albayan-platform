@@ -11,7 +11,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 const L = t.studentLists;

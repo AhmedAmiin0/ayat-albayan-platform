@@ -1,15 +1,15 @@
 import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { FormLabel } from '@/payments/FormLabel';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { CurrencyPills } from '../list/CurrencyPills';
-import { fieldError } from '../api/errors';
-import type { TermsFieldsProps } from '../terms/SalaryFields';
-import { StartDayPicker } from '../terms/StartDayPicker';
+import { CurrencyPills } from '@/assistants/list/CurrencyPills';
+import { fieldError } from '@/assistants/api/errors';
+import type { TermsFieldsProps } from '@/assistants/terms/SalaryFields';
+import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
 
 const T = t.assistants.terms;
 

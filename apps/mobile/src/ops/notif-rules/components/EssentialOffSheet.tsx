@@ -1,7 +1,7 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { shape, useTheme } from '@/theme';

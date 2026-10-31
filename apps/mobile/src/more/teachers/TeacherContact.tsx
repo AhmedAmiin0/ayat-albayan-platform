@@ -4,8 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
-import { Section } from '../Section';
-import type { Teacher } from '../types';
+import { Section } from '@/core/ui/surface/Section';
+import type { Teacher } from '@/more/types';
 import { locale } from '@/core/lib/i18n/locale';
 
 /** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */

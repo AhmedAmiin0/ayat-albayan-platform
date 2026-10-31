@@ -1,7 +1,7 @@
 import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/students/list/SectionLabel';
 import { Field } from '@/core/ui/form/Field';
