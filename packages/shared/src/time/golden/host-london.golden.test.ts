@@ -1,8 +1,8 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 
 // The goldens again, with the HOST zone in London (GMT / BST): same digests as under TZ=UTC, though
 // London is UTC itself half the year (host-new-york.golden explains why).
-process.env.TZ = 'Europe/London';
+vi.stubEnv('TZ', 'Europe/London');
 await import('./zoned.golden.test.js');
 await import('./reminders.golden.test.js');
 

@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   addCalendarDays,
   addDaysIn,
@@ -10,22 +10,21 @@ import {
   weekdayOfDate,
 } from './calendar.js';
 
-// The calendar helpers on a phone or browser whose own zone has DST (Node applies a runtime TZ
-// change). Every value is what TZ=UTC gives: only the zone passed in may decide. addDaysIn once
-// stepped with date-fns addDays on a plain Date, i.e. the HOST's setDate: across the host's change
-// the step was 23 / 25 h, and even a Riyadh lesson (no DST) moved an hour.
+// The calendar helpers on a phone or browser whose own zone has DST (vi.stubEnv sets
+// process.env.TZ, and Node applies a runtime TZ change). Every value is what TZ=UTC gives: only
+// the zone passed in may decide. addDaysIn once stepped with date-fns addDays on a plain Date, i.e.
+// the HOST's setDate: across the host's change the step was 23 / 25 h, and even a Riyadh lesson
+// (no DST) moved an hour.
 
 const iso = (d: Date): string => d.toISOString();
 const at = (s: string): Date => new Date(s);
-const saved = process.env.TZ;
 
 describe.each(['America/New_York', 'Europe/London'])('host zone %s', (host) => {
   beforeAll(() => {
-    process.env.TZ = host;
+    vi.stubEnv('TZ', host);
   });
   afterAll(() => {
-    if (saved === undefined) delete process.env.TZ;
-    else process.env.TZ = saved;
+    vi.unstubAllEnvs();
   });
 
   it('really runs in the host zone (its July offset is not UTC)', () => {

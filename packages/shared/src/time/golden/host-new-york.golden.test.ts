@@ -1,10 +1,10 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 
 // The goldens again, with the HOST zone (the phone's, the browser's) in New York: two DST changes a
 // year. The facade reads only the zone it is given, never the host's, so the digests pinned under
 // TZ=UTC must not move (addDaysIn once stepped with a host-local setDate: 23 / 25 h here). Node
 // applies a runtime TZ change; the first test proves it did, so a no-op host cannot pass silently.
-process.env.TZ = 'America/New_York';
+vi.stubEnv('TZ', 'America/New_York');
 await import('./zoned.golden.test.js');
 await import('./reminders.golden.test.js');
 
