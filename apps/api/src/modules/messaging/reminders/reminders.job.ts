@@ -101,7 +101,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const approved = wanted.length > 0 ? await this.queries.approved(wanted) : new Set<string>();
     const ctx: RoomContext = { auto: settings.meeting_link_auto, livekit, joinOk: approved.has('lesson_join_link'), origin: firstWebOrigin(env.WEB_ORIGIN) };
     const { minutesBefore, sameDay, dayBeforeAt, teacherMinutesBefore } = rules;
-    const plan = { minutesBefore, sameDay, dayBeforeAt, teacherReminders: rules.teacher, teacherMinutesBefore };
+    const plan = { minutesBefore, sameDay, dayBeforeAt, teacherReminders: rules.teacher, teacherMinutesBefore, origin: ctx.origin };
     const rows = planReminders({ ...plan, lessons: sentLinks(lessons, ctx), dayBefore: approved.has('lesson_reminder_24h'), now });
     const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win: joinWindowConfig(settings) });
     return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
