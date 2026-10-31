@@ -1,5 +1,5 @@
 import { useEffect, type ActionDispatch } from 'react';
-import type { PhaseEvent } from '@/classroom/room/model/room-phase';
+import { closedBy, type PhaseEvent } from '@/classroom/room/model/room-phase';
 import type { CamMicAnswer, RoomClient, RoomPlatform } from '@/classroom/room/model/room-types';
 
 interface LifecycleInput {
@@ -26,10 +26,17 @@ export function useRoomLifecycle({ client, platform, dispatch, onChecked }: Life
       live = false;
     };
   }, [platform, dispatch, onChecked]);
-  useEffect(
-    () => client.subscribe(() => dispatch({ type: 'status', status: client.snapshot().status })),
-    [client, dispatch],
-  );
+  useEffect(() => {
+    let was = client.snapshot().status;
+    return client.subscribe(() => {
+      const status = client.snapshot().status;
+      // Closed under us («إنهاء», the max-duration job's DeleteRoom, a removal): the call audio
+      // ends with the room. Only on the change, so a rejoin's events (still «ended») keep it.
+      if (status !== was && closedBy(status)) void platform.audio.stop();
+      was = status;
+      dispatch({ type: 'status', status });
+    });
+  }, [client, platform, dispatch]);
   useEffect(
     () => () => {
       client.close();

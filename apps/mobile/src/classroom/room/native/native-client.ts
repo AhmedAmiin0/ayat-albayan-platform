@@ -25,7 +25,10 @@ function roomLike(lk: Lk, room: Room): RoomLike<Participant> {
   };
 }
 
-/** Kicked and opened elsewhere get their own screens; any other disconnect is «ended». */
+/**
+ * Kicked and opened elsewhere get their own screens; any other disconnect is «ended», a room the
+ * server closed too (ROOM_DELETED: «إنهاء» or the max-duration job), with a way back in.
+ */
 function closing(lk: Lk, reason: number | undefined): RoomStatus {
   if (reason === lk.DisconnectReason.DUPLICATE_IDENTITY) return 'duplicate';
   return reason === lk.DisconnectReason.PARTICIPANT_REMOVED ? 'removed' : 'ended';

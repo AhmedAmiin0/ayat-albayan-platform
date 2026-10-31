@@ -43,6 +43,9 @@ const CLOSING: Partial<Record<RoomStatus, ClosedWhy>> = {
   duplicate: 'duplicate',
 };
 
+/** Why LiveKit closed the room, from its status; undefined while the room is open. */
+export const closedBy = (status: RoomStatus): ClosedWhy | undefined => CLOSING[status];
+
 type Step = RoomPhase['step'];
 
 interface Rule<E> {
@@ -70,7 +73,7 @@ const RULES: Rules = {
   status: {
     from: ['live'],
     to: (e) => {
-      const why = CLOSING[e.status];
+      const why = closedBy(e.status);
       return why ? { step: 'closed', why } : null;
     },
   },

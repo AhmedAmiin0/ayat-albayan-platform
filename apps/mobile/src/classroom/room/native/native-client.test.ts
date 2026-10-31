@@ -38,6 +38,8 @@ test('events rebuild the tiles and reach the listeners; reconnecting and back', 
 test.each([
   [2, 'duplicate'],
   [4, 'removed'],
+  // DeleteRoom: «إنهاء» or the max-duration job (meeting_max_minutes).
+  [5, 'ended'],
   [undefined, 'ended'],
 ] as const)('a disconnect (reason %s) closes as %s', (reason, status) => {
   const { client, emit } = setup();

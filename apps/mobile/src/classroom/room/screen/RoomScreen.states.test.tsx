@@ -54,8 +54,24 @@ test.each([
     expect(screen.getByTestId(`room-closed-${status}`)).toBeTruthy();
     expect(screen.getByText(line)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.classroom.rejoin }) !== null).toBe(again);
+    expect(p.audio.stop).toHaveBeenCalledTimes(1);
   },
 );
+
+test('the server closed the room (#476): «ادخل مرة أخرى» joins again, its audio stays on', async () => {
+  await live();
+  await act(async () => p.client.push({ status: 'ended' }));
+  // LiveKit's events while the new connect runs still carry the old «ended».
+  p.client.connect.mockImplementationOnce(async () => {
+    p.client.push({ micOn: true });
+    p.client.push({ status: 'connected' });
+  });
+  await press(t.classroom.rejoin);
+  await press(R.preview.join);
+  expect(await screen.findByTestId('room-grid')).toBeTruthy();
+  expect(p.audio.start).toHaveBeenCalledTimes(2);
+  expect(p.audio.stop).toHaveBeenCalledTimes(1);
+});
 
 test('a refused join reads the API code; «حاول مرة أخرى» goes back to the preview', async () => {
   fetchJoin.mockRejectedValueOnce(new ApiError(409, { code: 'join_closed' }));

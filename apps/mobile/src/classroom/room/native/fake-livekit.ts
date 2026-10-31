@@ -38,7 +38,7 @@ export function fakeLivekit() {
     Room: jest.fn(() => room),
     RoomEvent,
     Track: { Source: { Camera: 'camera', ScreenShare: 'screen_share' } },
-    DisconnectReason: { DUPLICATE_IDENTITY: 2, PARTICIPANT_REMOVED: 4 },
+    DisconnectReason: { DUPLICATE_IDENTITY: 2, PARTICIPANT_REMOVED: 4, ROOM_DELETED: 5 },
   };
   return { lk: lk as unknown as LiveKitNative['lk'], room, local, emit };
 }
