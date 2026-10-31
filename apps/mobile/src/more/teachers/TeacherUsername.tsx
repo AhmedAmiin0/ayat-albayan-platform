@@ -9,8 +9,8 @@ import { Field } from '@/core/ui/form/Field';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import { Note } from '../Note';
-import type { Teacher } from '../types';
+import { Note } from '@/core/ui/feedback/Note';
+import type { Teacher } from '@/more/types';
 
 /**
  * «اسم المستخدم» of the teacher's login (docs/30 §7), for teachers.write: LTR, lower-cased on blur and save,

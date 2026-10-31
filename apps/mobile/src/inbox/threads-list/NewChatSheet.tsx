@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { useTheme } from '@/theme';
@@ -11,9 +11,9 @@ import { Field } from '@/core/ui/form/Field';
 import { Screen } from '@/core/ui/layout/Screen';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { ErrorLine } from '../ErrorLine';
-import { ComposeIcon } from '../shared/chat-icons';
-import { threadHref } from '../thread/hooks/thread-cache';
+import { ErrorLine } from '@/inbox/ErrorLine';
+import { ComposeIcon } from '@/inbox/shared/chat-icons';
+import { threadHref } from '@/inbox/thread/hooks/thread-cache';
 
 /** The floating button's size; the chats list leaves this much room (plus 16pt) under its last row. */
 export const FAB = 56;

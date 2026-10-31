@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { assistantsErrorText } from '../../api/errors';
-import { useGenerateStatements } from '../../api/mutations';
+import { assistantsErrorText } from '@/assistants/api/errors';
+import { useGenerateStatements } from '@/assistants/api/mutations';
 
 interface GenerateBarProps {
   /** Who would be built: the chosen salesperson or all, minus the frozen ones (generateTargets). */

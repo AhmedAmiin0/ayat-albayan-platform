@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { PhoneText } from '@/core/ui/layout/PhoneText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

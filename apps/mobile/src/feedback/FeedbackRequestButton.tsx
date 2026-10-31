@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { askable, requestError } from './feedback-text';
 import { useSendFeedbackRequest } from './queries';

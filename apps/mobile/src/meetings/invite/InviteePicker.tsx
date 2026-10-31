@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InviteeChips } from './InviteeChips';
 import { InviteeSearch } from './InviteeSearch';

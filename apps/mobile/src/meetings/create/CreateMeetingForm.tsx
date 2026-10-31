@@ -4,13 +4,13 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId } from '@/core/lib/http/request-id';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { createBody } from './create-body';
-import { InviteePicker } from '../invite/InviteePicker';
-import type { DraftInvitee } from '../invite/invitee-draft';
+import { InviteePicker } from '@/meetings/invite/InviteePicker';
+import type { DraftInvitee } from '@/meetings/invite/invitee-draft';
 import { ScheduleFields } from './ScheduleFields';
 import { defaultSlot, type Slot } from './schedule-time';
 

@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { candidatesQuery } from '../shared/api';
-import { recordText } from '../shared/format';
+import { candidatesQuery } from '@/users/shared/api';
+import { recordText } from '@/users/shared/format';
 
 export interface LinkPickerProps {
   kind: LinkKind;

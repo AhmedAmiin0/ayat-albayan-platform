@@ -2,11 +2,11 @@ import { DESCRIPTION_MAX, type SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
-import { useDescriptionEditor } from '../hooks/use-description-editor';
+import { useDescriptionEditor } from '@/ops/values/hooks/use-description-editor';
 
 export interface DescriptionEditorProps {
   valueKey: SettingKey;
