@@ -36,6 +36,11 @@ export function addCalendarMonths(month: string, months: number): string {
   return ymd(addMonths(atUtcMidnight(`${month.slice(0, 7)}-01`), months));
 }
 
+/** The same day `months` later (negative: earlier), clamped to a shorter month's last day. */
+export function shiftCalendarMonths(date: string, months: number): string {
+  return ymd(addMonths(atUtcMidnight(date), months));
+}
+
 /** 0 = الأحد … 6 = السبت of a calendar date. */
 export function weekdayOfDate(date: string): number {
   return getDay(atUtcMidnight(date));

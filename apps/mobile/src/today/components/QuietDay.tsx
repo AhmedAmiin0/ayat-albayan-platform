@@ -1,4 +1,4 @@
-import { counted, RIYADH_TZ } from '@ab/shared';
+import { addDaysIn, counted, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -12,8 +12,6 @@ import { localDate, visibleLessons } from '../lib/timeline';
 import type { TodayLesson } from '../lib/today-lesson';
 import type { TodaySource } from '../lib/today-source';
 
-const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24 h away.
-
 /**
  * Nothing left today (docs/29 §6): a check in a lapis-wash circle, «انتهت حلقات اليوم», tomorrow's
  * count and first time once the tree's day query for tomorrow answers (no line while it loads or
@@ -23,10 +21,11 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
   const { color } = useTheme();
   const cycle = useClockCycle();
   const tz = useViewerTz();
-  const tomorrow = new Date(now.getTime() + DAY);
+  // academy day (docs/34 b): tomorrow on the Riyadh calendar (no daylight saving: 24 h on).
+  const tomorrow = addDaysIn(now, 1, RIYADH_TZ);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
-  // academy day (docs/34 b): the schedule's `date` param is a Riyadh day.
+  // The schedule's `date` param is that Riyadh day.
   const date = localDate(tomorrow, RIYADH_TZ);
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingVertical: 24 }}>

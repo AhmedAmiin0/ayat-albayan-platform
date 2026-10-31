@@ -1,4 +1,13 @@
-import { addDays, intlLocale, riyadhToday, weekdayOf, weekStart } from '@ab/shared';
+import {
+  addDays,
+  dateText,
+  RIYADH_TZ,
+  riyadhToday,
+  wallToUtc,
+  weekdayOf,
+  weekStart,
+  type DateFields,
+} from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 
@@ -11,12 +20,9 @@ import { locale } from '@/core/lib/i18n/locale';
  */
 export { addDays, riyadhToday, weekdayOf, weekStart };
 
-/**
- * Riyadh midnight of `date` as a UTC instant. ponytail: Riyadh keeps UTC+3 all year (no DST), so
- * the fixed offset is exact; a zone with DST would need utcOffsetMinutes.
- */
+/** Riyadh midnight of `date` as a UTC instant (wallToUtc; Riyadh keeps UTC+3 all year). */
 export function riyadhMidnight(date: string): string {
-  return new Date(`${date}T00:00:00+03:00`).toISOString();
+  return wallToUtc(date, 0, RIYADH_TZ).toISOString();
 }
 
 /** GET /lessons `from`/`to` for the week starting `start`: [Saturday 00:00, next Saturday 00:00). */
@@ -26,32 +32,24 @@ export function weekWindow(start: string): { from: string; to: string } {
 
 /** Noon of `date` in Riyadh: an instant safely inside that day (for useDayLessons). */
 export function riyadhNoon(date: string): Date {
-  return new Date(`${date}T12:00:00+03:00`);
+  return wallToUtc(date, 12 * 60, RIYADH_TZ);
 }
 
 // Labels in the UI language with Western digits (docs/07 §2). The date is a calendar day, so it is
-// formatted at UTC noon with timeZone UTC: the device's own zone never shifts it.
-const dayFormat = new Intl.DateTimeFormat(intlLocale(locale), {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  timeZone: 'UTC',
-});
-const shortFormat = new Intl.DateTimeFormat(intlLocale(locale), {
-  day: 'numeric',
-  month: 'long',
-  timeZone: 'UTC',
-});
-const atNoon = (date: string) => new Date(`${date}T12:00:00Z`);
+// formatted at UTC noon in UTC: the device's own zone never shifts it.
+const DAY: DateFields = { weekday: 'long', day: 'numeric', month: 'long' };
+const SHORT: DateFields = { day: 'numeric', month: 'long' };
+const calendarText = (date: string, fields: DateFields) =>
+  dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, fields);
 
 /** «السبت 3 أكتوبر». Intl puts «، » after the weekday; the app writes it with a space. */
 export function dayLabel(date: string): string {
-  return dayFormat.format(atNoon(date)).replace(/[،,]\s*/, ' ');
+  return calendarText(date, DAY).replace(/[،,]\s*/, ' ');
 }
 
 /** «3 أكتوبر – 9 أكتوبر» for the week starting `start`. */
 export function weekLabel(start: string): string {
   return t.calendar.range
-    .replace('{from}', shortFormat.format(atNoon(start)))
-    .replace('{to}', shortFormat.format(atNoon(addDays(start, 6))));
+    .replace('{from}', calendarText(start, SHORT))
+    .replace('{to}', calendarText(addDays(start, 6), SHORT));
 }

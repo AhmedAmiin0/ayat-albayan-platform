@@ -1,5 +1,5 @@
 import { viewerTz } from '@ab/client-core';
-import { intlLocale, type ClockCycle, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
+import { dateText, type ClockCycle, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { locale } from '@/core/lib/i18n/locale';
 
@@ -19,7 +19,7 @@ export const RECORDING_CHIP: Record<LessonRecordingView['status'], { tone: Tone;
 /** The start of a recording: date + time (12 or 24 h) in the app language, Western digits in the viewer's zone. */
 export function recordingTime(iso: string, cycle: ClockCycle, timeZone = viewerTz()): string {
   const at = new Date(iso);
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'short', timeZone }).format(at);
+  const day = dateText(at, { tz: timeZone, locale }, { day: 'numeric', month: 'short' });
   return dateWithClock(day, clockIn(at, timeZone, cycle));
 }
 

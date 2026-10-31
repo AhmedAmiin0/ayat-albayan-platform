@@ -1,3 +1,4 @@
+import { addCalendarMonths } from '@ab/shared';
 import type { AssistantCommissionView, AssistantStatementView, AssistantTermsRow, AssistantTermsView, PayoutStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
@@ -25,8 +26,7 @@ const qs = (params: Record<string, string>): string => {
 /** The web's cut: a `YYYY-MM` month as UTC instants [from, to). */
 const monthRange = (month: string): Record<string, string> => {
   if (!month) return {};
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  return { from: `${month}-01T00:00:00.000Z`, to: new Date(Date.UTC(y, m, 1)).toISOString() };
+  return { from: `${month}-01T00:00:00.000Z`, to: `${addCalendarMonths(month, 1)}T00:00:00.000Z` };
 };
 
 /** GET /assistant-pay/commissions?assistantId&status&from&to. */

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
+import { phoneTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { localDate } from '@/today/lib/timeline';
@@ -13,7 +14,6 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { answerLine } from './feedback-text';
 import type { FeedbackListRow } from './types';
 
-const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 const text = t.mobile.feedback;
 
 /**
@@ -25,7 +25,7 @@ export const FeedbackRow = memo(function FeedbackRow({ row }: { row: FeedbackLis
   const { color } = useTheme();
   const answer = answerLine(row);
   const who = [row.student.name, row.teacher?.name].filter(Boolean).join(' · ');
-  const when = localDate(new Date(row.submitted_at ?? row.requested_at), zone());
+  const when = localDate(new Date(row.submitted_at ?? row.requested_at), phoneTz());
   return (
     <View
       accessibilityLabel={who}

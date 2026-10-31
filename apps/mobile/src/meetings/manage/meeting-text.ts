@@ -1,5 +1,5 @@
 import { viewerTz } from '@ab/client-core';
-import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
+import { dateText, type ClockCycle, type MeetingView } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { webOrigin } from '@/classroom/links/web-origin';
@@ -14,7 +14,7 @@ export const meetingUrl = (id: string): string => `${webOrigin()}/meeting/${id}`
 /** «5 أكتوبر، 14:30» / «5 أكتوبر، 2:30 م» in the viewer's zone, Western digits. */
 export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): string {
   const at = new Date(iso);
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'short', timeZone }).format(at);
+  const day = dateText(at, { tz: timeZone, locale }, { day: 'numeric', month: 'short' });
   return dateWithClock(day, clockIn(at, timeZone, cycle));
 }
 

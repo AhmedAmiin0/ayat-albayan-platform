@@ -1,5 +1,5 @@
-import { CAIRO_TZ, intlLocale, RIYADH_TZ, type ClockCycle } from '@ab/shared';
-import { clockIn, hhmm, rangeOf } from '@/core/lib/clock';
+import { CAIRO_TZ, dateText, RIYADH_TZ, zonedFieldsIn, type ClockCycle } from '@ab/shared';
+import { clockIn, hhmm, phoneTz, rangeOf } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -54,12 +54,11 @@ export function upcomingTimeOff(list: readonly TimeOff[], now: Date): TimeOff[] 
 }
 
 // The UI language, Western digits (docs/07 §2: `nu-latn`). No formatRange: Hermes' Intl lacks it.
-const day = new Intl.DateTimeFormat(intlLocale(locale), {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-});
-const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
+const DAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+const atMidnight = (d: Date, tz: string) => {
+  const { hour, minute } = zonedFieldsIn(d, tz);
+  return hour === 0 && minute === 0;
+};
 
 /**
  * UTC instants → the span in the device's zone (like the web). Whole days read as days with the
@@ -68,12 +67,13 @@ const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
 export function formatTimeOff(off: Pick<TimeOff, 'starts_at' | 'ends_at'>, cycle: ClockCycle): string {
   const start = new Date(off.starts_at);
   const end = new Date(off.ends_at);
-  if (atMidnight(start) && atMidnight(end)) {
-    const first = day.format(start);
-    const last = day.format(new Date(end.getTime() - 60_000));
+  const tz = phoneTz();
+  const day = (d: Date) => dateText(d, { tz, locale }, DAY);
+  if (atMidnight(start, tz) && atMidnight(end, tz)) {
+    const first = day(start);
+    const last = day(new Date(end.getTime() - 60_000));
     return first === last ? first : `${first} – ${last}`;
   }
-  const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const dayTime = (d: Date) => `${day.format(d)} ${clockIn(d, deviceTz, cycle)}`;
+  const dayTime = (d: Date) => `${day(d)} ${clockIn(d, tz, cycle)}`;
   return `${dayTime(start)} – ${dayTime(end)}`;
 }
