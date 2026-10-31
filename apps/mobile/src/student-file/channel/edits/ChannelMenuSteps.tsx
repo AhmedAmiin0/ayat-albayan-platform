@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import type { ChannelRef } from '@/student-file/channel/channel-queries';
 import { type, useTheme } from '@/theme';
-import { channelChangeError, useChannelChange } from './channel-edit-queries';
+import { channelChangeError, useChannelChange } from './use-channel-change';
 import { ChannelEditForm } from './ChannelEditForm';
 
 interface ChannelMenuStepsProps {

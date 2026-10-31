@@ -8,7 +8,7 @@ import { ChannelPeopleQueries } from './channel-people.queries';
 import { toMessageView } from './channel.mapper';
 import { ChannelQueries, type ChannelMessageRow } from './channel.queries';
 
-export interface ChannelEditInput {
+interface ChannelEditInput {
   actor: ChannelActor;
   messageId: string;
   /** The admin's route (moderation): deletes any message, never edits. */

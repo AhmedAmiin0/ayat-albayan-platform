@@ -17294,9 +17294,28 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/controllers/channel.controllers.ts": {
+  "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
-      "count": 2
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
+    "ab/no-parent-imports": {
+      "count": 5
+    },
+    "max-len": {
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {

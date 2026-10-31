@@ -6,6 +6,7 @@ import { useNow } from '@/lib/time/use-now';
 import { withDays, type LogItem } from '@/features/messaging/inbox/messages/lib/day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
+import { HiddenBubble } from '@/features/messaging/inbox/messages/hide/HiddenBubble';
 import { CallEntry } from '@/features/messaging/inbox/calls/entries/CallEntry';
 import type { CallView } from '@ab/shared';
 import { WithThreadCalls } from '@/features/messaging/inbox/calls/entries/use-thread-calls';
@@ -125,6 +126,8 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
               <Day key={item.key} label={item.label} />
             ) : item.kind === 'call' ? (
               <CallEntry key={item.call.id} call={item.call} canCall={canCall} />
+            ) : item.message.hidden ? (
+              <HiddenBubble key={item.message.id} message={item.message} />
             ) : (
               <MessageBubble
                 key={item.message.id}

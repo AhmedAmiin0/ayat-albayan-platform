@@ -4921,7 +4921,7 @@
   },
   "src/inbox/messages/hooks/bubble-offers.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {
@@ -11066,7 +11066,7 @@
   },
   "src/student-file/channel/ChannelBubble.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/student-file/channel/ChannelComposer.tsx": {

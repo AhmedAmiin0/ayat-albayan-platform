@@ -80,7 +80,7 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
       ) : (
         <ol className="grid gap-2">
           {messages.map((m) => (
-            <ChannelBubble key={m.id} message={m} tz={tz} />
+            <ChannelBubble key={m.id} message={m} tz={tz} refs={refs} />
           ))}
         </ol>
       )}

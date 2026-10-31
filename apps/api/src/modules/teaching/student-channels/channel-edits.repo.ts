@@ -11,7 +11,7 @@ export const DELETED_BODY = '-';
 /**
  * One change: the message (already checked), who, when; `previous` goes to channel_message_edits.
  */
-export interface ChannelChange {
+interface ChannelChange {
   id: string;
   actor: string;
   at: string;

@@ -8,6 +8,12 @@ interface Props {
   onPick: (studentId: string) => void;
 }
 
+/** The last message's text; «تم حذف هذه الرسالة» once it was deleted for everyone. */
+const previewOf = (r: TeacherChannelRow): string => {
+  if (!r.last_message) return t.studentChannel.noMessageYet;
+  return r.last_message.deleted ? t.studentChannel.actions.deleted : r.last_message.body;
+};
+
 /** «رسائل الطلاب»: one row per current student, newest activity first, with my unread count. */
 export function TeacherChannelList({ rows, selected, onPick }: Props) {
   return (
@@ -28,8 +34,8 @@ export function TeacherChannelList({ rows, selected, onPick }: Props) {
                 </span>
               )}
             </span>
-            <span className="truncate text-xs text-ink-3" dir="auto">
-              {r.last_message?.body ?? t.studentChannel.noMessageYet}
+            <span className={cn('truncate text-xs text-ink-3', r.last_message?.deleted && 'italic')} dir="auto">
+              {previewOf(r)}
             </span>
           </button>
         </li>
