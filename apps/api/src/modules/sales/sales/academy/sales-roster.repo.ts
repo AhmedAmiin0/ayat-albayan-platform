@@ -100,7 +100,7 @@ export class SalesRosterRepo {
     return await this.paged('lessons', (page) => this.lessonPage(studentIds, { ...w, page }));
   }
 
-  /** Pages of PAGE rows until a short one; at MAX_PAGES it stops and warns (a count, never an id). */
+  /** Pages of PAGE rows until a short one; warns at MAX_PAGES (a count, never an id). */
   private async paged<T>(kind: string, read: (page: number) => Promise<T[]>): Promise<T[]> {
     const out: T[] = [];
     for (let page = 0; page < MAX_PAGES; page += 1) {
