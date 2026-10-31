@@ -7,7 +7,7 @@ import type { OpenCourseLesson } from './course-change.queries';
 
 export type MovedLesson = OpenCourseLesson & { rule_id: string | null };
 /** A lesson of the course, its rule and local day (a rule without subscription_id is bounded). */
-export interface CourseLesson extends CourseLessonFact {
+interface CourseLesson extends CourseLessonFact {
   id: string;
   rule_id: string | null;
   local_date: string | null;

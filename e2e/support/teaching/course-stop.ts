@@ -78,7 +78,7 @@ interface Stop {
 
 /** stop_course as the API calls it; a fresh clientRequestId unless given. */
 /** stop_course's answer (the fields the specs read). */
-export interface StopRow {
+interface StopRow {
   cancelled_lessons: string[];
   ended_rules: string[];
   student_status: string;

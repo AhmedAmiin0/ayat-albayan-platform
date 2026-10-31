@@ -18,7 +18,7 @@ export interface StopSub {
 }
 
 /** stop_course's input (migration 991). */
-export interface StopCall {
+interface StopCall {
   subscriptionId: string;
   studentId: string;
   requestId: string;

@@ -18,7 +18,7 @@ export const SALES = ROLE_SALES;
 export const NOW = new Date('2026-10-30T09:00:00Z');
 
 /** A paid, half-used package of STUDENT. */
-export const subRow = (over: Partial<StopSub> = {}): StopSub => ({
+const subRow = (over: Partial<StopSub> = {}): StopSub => ({
   id: SUB,
   student_id: STUDENT,
   status: 'active',
