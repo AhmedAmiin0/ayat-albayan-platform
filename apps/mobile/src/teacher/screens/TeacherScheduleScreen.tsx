@@ -9,13 +9,13 @@ import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
 import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useNow } from '@/core/lib/time/use-now';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { useMyAvailability, useMyLessons, useTeacherMe } from '../lib/queries';
+import { useMyAvailability, useMyLessons, useTeacherMe } from '@/teacher/lib/queries';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */

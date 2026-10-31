@@ -1,9 +1,9 @@
 import type { Attendance, Grade, PdfStatus, ReportStatus, TeacherReportSortKey, TeacherReportsQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { applySort, type SortSpec } from '../../../../common/list-sort';
-import { studentIdsMatching } from '../../../../common/student-ids';
-import { dbError, type PageQuery } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
+import { studentIdsMatching } from '@/common/student-ids';
+import { dbError, type PageQuery } from '@/common/http/http';
 
 export type TeacherReportRow = {
   id: string;

@@ -1,9 +1,9 @@
 import type { EARNING_SORT_KEYS, EarningsListQuery, TEACHER_PAYMENT_SORT_KEYS, TeacherPaymentListQuery } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '../../../../common/list-sort';
-import { dbError, type Page } from '../../../../common/http/http';
+import type { Db } from '@/common/db/db.module';
+import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { dbError, type Page } from '@/common/http/http';
 import { lessonNames } from './earnings.names';
-import type { EarningRow, PaymentRow, SessionRow } from '../earnings.queries';
+import type { EarningRow, PaymentRow, SessionRow } from '@/modules/finance/teacher-earnings/earnings.queries';
 
 // The two paged lists of a teacher's money (R-NFR-08): sessions and payments, sorted server-side.
 

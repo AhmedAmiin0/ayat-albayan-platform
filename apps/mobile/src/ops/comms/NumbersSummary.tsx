@@ -1,11 +1,11 @@
 import { counted } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { NumberRow } from '../numbers/NumberRow';
-import { useNumbers } from '../numbers/use-numbers';
+import { NumberRow } from '@/ops/numbers/NumberRow';
+import { useNumbers } from '@/ops/numbers/use-numbers';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** How many numbers the overview shows in full; the rest are counted (the screen stays one phone high). */

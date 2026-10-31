@@ -1,7 +1,7 @@
 import { DURATIONS, type Duration } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { readAll, readChunked } from '../../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import { readAll, readChunked } from '@/common/db/read-all';
 
 export type Window = { from: Date; to: Date };
 

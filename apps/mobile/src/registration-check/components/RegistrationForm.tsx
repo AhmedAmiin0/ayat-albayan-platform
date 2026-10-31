@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import type { CheckBy } from '../lib/registration-check';
+import type { CheckBy } from '@/registration-check/lib/registration-check';
 
 interface RegistrationFormProps {
   by: CheckBy;

@@ -1,6 +1,6 @@
 import type { AssistantTermsView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { CardTitle } from '@/sales-money/components/CardTitle';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';

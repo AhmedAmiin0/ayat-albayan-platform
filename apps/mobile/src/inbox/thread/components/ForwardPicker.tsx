@@ -2,18 +2,18 @@ import { FORWARD_MAX_TARGETS, type MessageView, type ThreadView } from '@ab/shar
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useChatActions } from '../hooks/chat-actions';
-import { ErrorLine } from '../../ErrorLine';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { ErrorLine } from '@/inbox/ErrorLine';
 import { ForwardRow } from './ForwardRow';
-import { chatName, forwardNotice, selectedLine } from '../hooks/forward-text';
-import { useForward, useForwardId } from '../hooks/use-forward';
-import { useThreadList } from '../../threads-list/use-thread-list';
+import { chatName, forwardNotice, selectedLine } from '@/inbox/thread/hooks/forward-text';
+import { useForward, useForwardId } from '@/inbox/thread/hooks/use-forward';
+import { useThreadList } from '@/inbox/threads-list/use-thread-list';
 
 const MAX = FORWARD_MAX_TARGETS;
 const keyOf = (th: ThreadView) => th.phone_e164;

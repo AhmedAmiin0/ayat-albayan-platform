@@ -31,7 +31,7 @@ describe('/sales money routes: self.sales_money, and only for her own students',
     expect(m.payments.insert).not.toHaveBeenCalled();
     expect(m.storage.signedUpload).not.toHaveBeenCalled();
     expect(m.storage.copy).not.toHaveBeenCalled();
-    expect(m.media.load).not.toHaveBeenCalled();
+    expect(m.mediaQueries.message).not.toHaveBeenCalled();
   };
 
   it('the admin and a teacher are 403 on every sales money route (they use the admin routes); nothing runs', async () => {

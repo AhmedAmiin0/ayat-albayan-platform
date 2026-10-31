@@ -5,6 +5,7 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { optionText } from '../../../platform/integrations/integrations-form';
+import { CrmTemplateCheck } from '@/features/messaging/templates/crm/CrmTemplateCheck';
 import { LineSyncResult } from './LineSyncResult';
 import { useLineSync } from './use-line-sync';
 import type { Notice } from '../use-template-actions';
@@ -34,12 +35,15 @@ function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'p
 }
 
 /** A configured number: its facts, then its last sync, or (crm, docs/19) that the CRM manages its templates. */
-function LineBody({ facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'facts' | 'phone'> & { shown: TemplateLineSync | null; crm: boolean }) {
+function LineBody({ line, facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'line' | 'facts' | 'phone'> & { shown: TemplateLineSync | null; crm: boolean }) {
   return (
     <>
       <NumberFacts facts={facts} phone={phone} />
       {crm ? (
-        <p className="text-xs text-ink-2">{t.templates.perNumber.crmManaged}</p>
+        <>
+          <p className="text-xs text-ink-2">{t.templates.perNumber.crmManaged}</p>
+          <CrmTemplateCheck line={line} />
+        </>
       ) : (
         <>
           <LastSync at={shown?.checked_at} />
@@ -90,7 +94,7 @@ export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLine
           </Button>
         )}
       </div>
-      {off ? <p className="text-xs text-ink-3">{p.notConfigured}</p> : <LineBody facts={facts} phone={phone} shown={shown} crm={crm} />}
+      {off ? <p className="text-xs text-ink-3">{p.notConfigured}</p> : <LineBody line={line} facts={facts} phone={phone} shown={shown} crm={crm} />}
     </section>
   );
 }

@@ -8,7 +8,7 @@ import {
   STUDENTS_MIN,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { DiscountField } from './DiscountField';

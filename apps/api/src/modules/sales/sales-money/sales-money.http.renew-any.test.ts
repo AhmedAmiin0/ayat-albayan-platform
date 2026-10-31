@@ -40,7 +40,7 @@ const refused = async (ctx: ReturnType<typeof suite>, routes: InjectArgs[]) => {
   expect(ctx.m.payments.insert).not.toHaveBeenCalled();
   expect(ctx.m.storage.signedUpload).not.toHaveBeenCalled();
   expect(ctx.m.storage.copy).not.toHaveBeenCalled();
-  expect(ctx.m.media.load).not.toHaveBeenCalled();
+  expect(ctx.m.mediaQueries.message).not.toHaveBeenCalled();
 };
 
 describe('without sales.renew_any (the system sales role): unchanged, the chat phone opens nothing', () => {
@@ -78,10 +78,10 @@ describe('with sales.renew_any: any student of the chat’s family', () => {
   });
 
   it('the receipts of the chat: only that student’s own family chat (its phone), as before', async () => {
-    ctx.m.mediaQueries.recent.mockResolvedValue([]);
+    ctx.m.mediaQueries.receipts.mockResolvedValue([]);
     const res = await ctx.call({ method: 'GET', url: `/sales/money/chat-receipts?studentId=${STUDENT_ID}&phone=%2B966551110000`, token: 'salesB' });
     expect(res.statusCode).toBe(200);
-    expect(ctx.m.mediaQueries.recent).toHaveBeenCalledWith(expect.objectContaining({ phone: FAMILY_PHONE }));
+    expect(ctx.m.mediaQueries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: FAMILY_PHONE }));
   });
 
   it('«إلغاء الباقة» is not widened: an un-owned student’s package stays 403', async () => {

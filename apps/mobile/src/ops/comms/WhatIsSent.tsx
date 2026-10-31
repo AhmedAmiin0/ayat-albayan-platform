@@ -1,15 +1,15 @@
 import type { NotificationAudience } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { InsetGroup } from '@/core/ui/surface/inset';
-import { useCatalogue } from '../notif-rules/hooks/use-catalogue';
-import { useSettings } from '../settings/use-settings';
+import { useCatalogue } from '@/ops/notif-rules/hooks/use-catalogue';
+import { useSettings } from '@/ops/settings/use-settings';
 import { sentCounts, type SentRow } from './sent-counts';
 
 const h = () => t.communicationsHub;

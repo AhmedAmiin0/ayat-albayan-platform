@@ -33,7 +33,7 @@ const row = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 
 describe('thread media routes (R-MSG-06): admin only', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), receipts: vi.fn(), setPath: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const chatClient = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(), signedDownload: vi.fn() };
@@ -64,7 +64,7 @@ describe('thread media routes (R-MSG-06): admin only', () => {
 
   it('lists the chat\'s images and PDFs (newest first, metadata only); other mimes are left out', async () => {
     const old = new Date(Date.now() - 29.5 * 86_400_000).toISOString();
-    queries.recent.mockResolvedValue([
+    queries.receipts.mockResolvedValue([
       row(),
       row({ id: M_OTHER, media_mime: 'audio/ogg' }),
       row({ id: 'b3333333-3333-4333-8333-333333333333', media_mime: 'application/pdf', created_at: old, body: null }),
@@ -75,14 +75,14 @@ describe('thread media routes (R-MSG-06): admin only', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toMatchObject({ message_id: M1, mime: 'image/jpeg', caption: 'الفاتورة', expired: false });
     expect(items[1]).toMatchObject({ mime: 'application/pdf', caption: null, expired: true });
-    expect(queries.recent).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, limit: 50 }));
+    expect(queries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, limit: 12 }));
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
   it('a teacher gets 403 on both routes, and nothing is read', async () => {
     expect((await call(`/threads/${URL_PHONE}/media`, 'teacher')).statusCode).toBe(403);
     expect((await call(`/threads/${URL_PHONE}/media/${M1}`, 'teacher')).statusCode).toBe(403);
-    expect(queries.recent).not.toHaveBeenCalled();
+    expect(queries.receipts).not.toHaveBeenCalled();
     expect(queries.message).not.toHaveBeenCalled();
   });
 

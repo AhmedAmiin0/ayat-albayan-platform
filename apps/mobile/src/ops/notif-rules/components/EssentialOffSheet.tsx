@@ -3,14 +3,14 @@ import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { shape, useTheme } from '@/theme';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useFocusOnOpen } from '../hooks/use-focus-on-open';
+import { useFocusOnOpen } from '@/ops/notif-rules/hooks/use-focus-on-open';
 
 interface EssentialOffSheetProps {
   /** The row's name («تأكيد الحجز وتغيير الموعد»). */

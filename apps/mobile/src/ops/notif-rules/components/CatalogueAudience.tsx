@@ -1,11 +1,11 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { audienceTabs, rowsOf, type AudienceTab } from '../lib/audience-tabs';
+import { audienceTabs, rowsOf, type AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
 import { CatalogueRow } from './CatalogueRow';
-import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
+import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 interface CatalogueAudienceProps {

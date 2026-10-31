@@ -1,19 +1,19 @@
 import type { TablesInsert } from '@ab/db';
 import { onMessagingLine, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { MESSAGE_SELECT, NOT_A_REACTION, type MessageRow, type ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
+import { DB, type Db } from '@/common/db/db.module';
+import { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { MESSAGE_SELECT, NOT_A_REACTION, type MessageRow, type ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import { knownNumber, type KnownNumber } from './known-number';
-import type { ThreadWindow } from '../send/send-number';
+import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 import { upcomingLessons, type LessonsOf } from './thread-lessons';
-import { familyTagsOf, threadPeople, type PeopleOf } from '../people/thread-people';
-import type { FamilyTag } from '../people/thread-people.mapper';
-import { applySort } from '../../../../common/list-sort';
+import { familyTagsOf, threadPeople, type PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
+import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
+import { applySort } from '@/common/db/list-sort';
 import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
-import { newestPerLine, type ReadMark } from '../reads/read-marks';
+import { newestPerLine, type ReadMark } from '@/modules/messaging/inbox/reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
 import { isUnreadBadge, unreadThreadCount } from './threads-unread.queries';
 

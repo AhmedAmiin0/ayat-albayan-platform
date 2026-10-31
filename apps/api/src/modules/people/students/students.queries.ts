@@ -1,8 +1,8 @@
 import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentStatus } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
-import type { Db } from '../../../common/db/db.module';
-import { dbError, pageRange, type ListQuery, type Page } from '../guardians/http';
-import { applySort } from '../../../common/list-sort';
+import type { Db } from '@/common/db/db.module';
+import { dbError, pageRange, type ListQuery, type Page } from '@/modules/people/guardians/http';
+import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
 import {
   studentNameOrCodeFilter,

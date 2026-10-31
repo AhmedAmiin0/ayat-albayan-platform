@@ -11,9 +11,13 @@ import type { SampleFile, TemplateRow } from './whatsapp.types';
  */
 const samples = (): Readonly<Record<string, string>> => ar.templates.reviewSamples;
 
-/** example.body_text[0]: one value per {{n}}, in order; an unknown name is its own sample. */
-export function bodyExamples(row: TemplateRow): string[] {
-  return paramNames(row.params).map((name) => samples()[name] ?? name);
+/**
+ * example.body_text[0]: one value per {{n}}, in order: the row's own sample (an admin-made
+ * template, migration 994), else by param name; an unknown name is its own sample.
+ */
+export function bodyExamples(row: Pick<TemplateRow, 'params' | 'samples'>): string[] {
+  const own = paramNames(row.samples);
+  return paramNames(row.params).map((name, i) => own[i] ?? samples()[name] ?? name);
 }
 
 const VAR = /\{\{(\d+)\}\}/g;
@@ -22,7 +26,7 @@ const VAR = /\{\{(\d+)\}\}/g;
  * Why Meta would reject this body, or null: a variable at the very start or end, two variables
  * side by side, numbering that skips ({{1}} {{3}}), or a variable without a sample value.
  */
-export function templateProblem(row: TemplateRow): string | null {
+export function templateProblem(row: Pick<TemplateRow, 'body_ar' | 'params'>): string | null {
   const body = row.body_ar.trim();
   const used = new Set([...body.matchAll(VAR)].map((m) => Number(m[1])));
   const count = Math.max(0, ...used);
