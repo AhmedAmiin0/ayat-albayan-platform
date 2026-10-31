@@ -12,7 +12,7 @@ import { hhmm } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { fill, packageLabel, riyadhDate, statusLabel } from '@/sales/lib/sales-text';
+import { fill, packageLabel, statusLabel, viewerDate } from '@/sales/lib/sales-text';
 
 // «كل الطلاب»'s extra lines (owner 2026-10-30: «Show all the students to the assistants with
 // their schedule and attendance», then their status and package), built by the shared
@@ -47,7 +47,7 @@ const H = t.sales.history;
 const packageWords: PackageWords = {
   size: packageLabel,
   status: statusLabel,
-  day: (iso) => ltr(riyadhDate(iso)),
+  day: (iso) => ltr(viewerDate(iso, RIYADH_TZ)),
   date: ltr,
   used: H.used,
   remaining: H.remaining,
