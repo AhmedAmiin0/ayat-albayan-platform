@@ -7,8 +7,8 @@ import { type LessonFacts, SalesStudentQueries } from './details/sales-student.q
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
  * and its history (SalesQueries.ownership: her leads' families and the students she brought). «تفاصيل
- * الطالب» opens any student (owner 2026-10-28) but marks `mine`; a report PDF stays hers: there any other
- * id reads exactly like an unknown one. Moving or cancelling a lesson (assertLesson) and «تأكيد الحلقة» are
+ * الطالب» opens any student (owner 2026-10-28) and reads it all, reports and subscriptions included
+ * (owner 2026-10-30): `mine` only marks hers for the money actions. Moving or cancelling a lesson (assertLesson) and «تأكيد الحلقة» are
  * open to ANY lesson (owner 2026-10-28).
  */
 @Injectable()
@@ -18,17 +18,10 @@ export class SalesStudentScope {
     private readonly queries: SalesStudentQueries,
   ) {}
 
-  /** Her ownership and whether this student is hers («تفاصيل الطالب»: subscriptions and reports only when it is). */
+  /** Her ownership and whether this student is hers (the money actions of «تفاصيل الطالب»). */
   async access(user: AuthUser, studentId: string): Promise<{ own: SalesOwnership; mine: boolean }> {
     const own = await this.sales.ownership(user.id);
     return { own, mine: own.studentIds.includes(studentId) };
-  }
-
-  /** 404 student_not_found unless the student is hers; her ownership otherwise («الجدول» marks `mine`). */
-  async assertStudent(user: AuthUser, studentId: string): Promise<SalesOwnership> {
-    const own = await this.sales.ownership(user.id);
-    if (!own.studentIds.includes(studentId)) throw notFound('student_not_found');
-    return own;
   }
 
   /**
