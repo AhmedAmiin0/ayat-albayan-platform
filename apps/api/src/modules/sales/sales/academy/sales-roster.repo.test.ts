@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { Logger } from '@nestjs/common';
+import { describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { SalesRosterRepo } from './sales-roster.repo';
 
@@ -17,7 +18,7 @@ describe('SalesRosterRepo (whitelisted, one read per kind for the page)', () => 
     expect(f.argsOf('schedule_rule_students', 'eq')).toEqual(['rule.status', 'active']);
   });
 
-  it('packages: every one, newest first, size / status / dates only (never a price)', async () => {
+  it('packages: every one, newest first, paged, size / status / dates only (never a price)', async () => {
     const f = fakeDb({ subscriptions: [{ data: [] }] });
     await new SalesRosterRepo(f.db).packages(IDS);
     const select = String(f.argsOf('subscriptions', 'select')?.[0]);
@@ -25,7 +26,8 @@ describe('SalesRosterRepo (whitelisted, one read per kind for the page)', () => 
     expect(select).not.toMatch(/price|currency|fx_|note/);
     expect(f.argsOf('subscriptions', 'in')).toEqual(['student_id', IDS]);
     const orders = f.calls.filter((c) => c.method === 'order').map((c) => c.args[0]);
-    expect(orders).toEqual(['starts_on', 'created_at']);
+    expect(orders).toEqual(['starts_on', 'created_at', 'id']);
+    expect(f.argsOf('subscriptions', 'range')).toEqual([0, 999]);
   });
 
   it('balances: used (lessons_used_before in), left and the end of the given packages', async () => {
@@ -49,6 +51,15 @@ describe('SalesRosterRepo (whitelisted, one read per kind for the page)', () => 
     expect(f.argsOf('lesson_students', 'lt')).toEqual(['lesson.starts_at', W.to.toISOString()]);
     const ranges = f.calls.filter((c) => c.method === 'range').map((c) => c.args);
     expect(ranges).toEqual([[0, 999], [1000, 1999]]);
+  });
+
+  it('lessons: stops at 10 pages and warns (a count, never an id) instead of undercounting silently', async () => {
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    const f = fakeDb({ lesson_students: Array.from({ length: 10 }, () => ({ data: rows(1000) })) });
+    expect(await new SalesRosterRepo(f.db).lessons(IDS, W)).toHaveLength(10_000);
+    expect(f.trips).toHaveLength(10);
+    expect(warn).toHaveBeenCalledWith('roster lessons: capped at 10000 rows, the rest not counted');
+    warn.mockRestore();
   });
 
   it('no student: no read at all', async () => {

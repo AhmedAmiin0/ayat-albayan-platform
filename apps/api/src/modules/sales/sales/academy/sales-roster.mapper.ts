@@ -20,12 +20,17 @@ export interface RosterFacts {
   package: SalesPackageSummary | null;
 }
 
-/** Each student's active package start (the latest when several), as a Riyadh-midnight instant. */
-export function packageStarts(rows: readonly RosterPackageRow[]): Map<string, number> {
+/**
+ * Each student's package in use, as a Riyadh-midnight instant: packages are used oldest first
+ * (renewal-due.ts) and a paid early renewal is active at once, so the EARLIEST active start that is
+ * not after now. A student whose only active package starts later has none (the 'recent' basis).
+ */
+export function packageStarts(rows: readonly RosterPackageRow[], now: Date): Map<string, number> {
   const out = new Map<string, number>();
   for (const row of rows.filter((r) => r.status === 'active')) {
     const at = Date.parse(zonedInstant(row.starts_on, '00:00', RIYADH_TZ));
-    out.set(row.student_id, Math.max(at, out.get(row.student_id) ?? -Infinity));
+    const earliest = Math.min(at, out.get(row.student_id) ?? Infinity);
+    if (at <= now.getTime()) out.set(row.student_id, earliest);
   }
   return out;
 }

@@ -80,6 +80,20 @@ describe('GET /sales/students/all: every student with schedule and attendance (o
     expect(t.roster.lessons).toHaveBeenCalledWith(['s1', 's2'], { from: new Date('2026-09-27T10:00:00.000Z'), to: NOW });
   });
 
+  it('an early renewal (dated today and in the future): attendance counts from the older package', async () => {
+    const renewal = (id: string, starts_on: string) => ({ ...pkg(), id, starts_on, created_at: '2026-10-26T10:00:00Z' });
+    t.roster.packages.mockResolvedValue([renewal('sub3', '2026-11-15'), renewal('sub2', '2026-10-27'), pkg()]);
+    const [s1] = (await t.get('/sales/students/all', 'salesB')).json().items;
+    expect(s1.attendance).toEqual({ attended: 1, held: 2, basis: 'subscription' });
+    expect(t.roster.lessons).toHaveBeenLastCalledWith(['s1', 's2'], { from: new Date('2026-09-27T10:00:00.000Z'), to: NOW });
+  });
+
+  it('only a future active package: the last 30 days (recent basis), never 0 of 0', async () => {
+    t.roster.packages.mockResolvedValue([{ ...pkg(), starts_on: '2026-11-15' }]);
+    const [s1] = (await t.get('/sales/students/all', 'salesB')).json().items;
+    expect(s1.attendance).toEqual({ attended: 1, held: 2, basis: 'recent' });
+  });
+
   it('never a price, payment, commission or link from the rows read (rule link, package price)', async () => {
     const res = await t.get('/sales/students/all', 'salesB');
     expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual([]);

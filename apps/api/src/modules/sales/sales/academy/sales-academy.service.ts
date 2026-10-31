@@ -57,7 +57,7 @@ export class SalesAcademyService {
       this.roster.rules(ids),
       this.roster.packages(ids),
     ]);
-    const starts = packageStarts(packages);
+    const starts = packageStarts(packages, now);
     const [lessons, summaries] = await Promise.all([
       this.roster.lessons(ids, { from: rosterFrom(starts, now), to: now }),
       packageSummaries(this.roster, packages),

@@ -1,6 +1,6 @@
 import type { Tables } from '@ab/db';
 import type { Attendance, LessonStatus } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales/schedule/weekly-slot';
@@ -36,9 +36,10 @@ const PACKAGE_SELECT =
 const BALANCE_SELECT = 'subscription_id, lessons_used, remaining, ended_at, projected_end_at' as const;
 const LESSON_SELECT = 'student_id, attendance, lesson:lessons!inner(starts_at, status)' as const;
 
-/** PostgREST answers at most 1000 rows (config.toml max_rows): lessons are read in such pages. */
+/** PostgREST answers at most 1000 rows (config.toml max_rows): lessons and packages are paged. */
 const PAGE = 1000;
 const MAX_PAGES = 10;
+const rangeOf = (page: number): [number, number] => [page * PAGE, page * PAGE + PAGE - 1];
 
 /**
  * «كل الطلاب»'s schedule, attendance and current package (owner 2026-10-30): one read per kind for
@@ -47,6 +48,8 @@ const MAX_PAGES = 10;
  */
 @Injectable()
 export class SalesRosterRepo {
+  private readonly log = new Logger(SalesRosterRepo.name);
+
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async rules(studentIds: readonly string[]): Promise<RosterRuleRow[]> {
@@ -60,17 +63,21 @@ export class SalesRosterRepo {
     return data;
   }
 
-  /** The students' packages, newest first (starts_on, created_at): never a price or currency. */
+  /** The students' packages, newest first (starts_on, created_at, id), paged: never a price. */
   async packages(studentIds: readonly string[]): Promise<RosterPackageRow[]> {
     if (studentIds.length === 0) return [];
-    const { data, error } = await this.db
-      .from('subscriptions')
-      .select(PACKAGE_SELECT)
-      .in('student_id', [...studentIds])
-      .order('starts_on', { ascending: false })
-      .order('created_at', { ascending: false });
-    if (error) throw dbError(error);
-    return data;
+    return await this.paged('packages', async (page) => {
+      const { data, error } = await this.db
+        .from('subscriptions')
+        .select(PACKAGE_SELECT)
+        .in('student_id', [...studentIds])
+        .order('starts_on', { ascending: false })
+        .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
+        .range(...rangeOf(page));
+      if (error) throw dbError(error);
+      return data;
+    });
   }
 
   /** The balances of the given packages (a cancelled one has no row). */
@@ -89,12 +96,19 @@ export class SalesRosterRepo {
     studentIds: readonly string[],
     w: { from: Date; to: Date },
   ): Promise<RosterLessonRow[]> {
-    const out: RosterLessonRow[] = [];
-    for (let page = 0; studentIds.length > 0 && page < MAX_PAGES; page += 1) {
-      const rows = await this.lessonPage(studentIds, { ...w, page });
+    if (studentIds.length === 0) return [];
+    return await this.paged('lessons', (page) => this.lessonPage(studentIds, { ...w, page }));
+  }
+
+  /** Pages of PAGE rows until a short one; at MAX_PAGES it stops and warns (a count, never an id). */
+  private async paged<T>(kind: string, read: (page: number) => Promise<T[]>): Promise<T[]> {
+    const out: T[] = [];
+    for (let page = 0; page < MAX_PAGES; page += 1) {
+      const rows = await read(page);
       out.push(...rows);
-      if (rows.length < PAGE) break;
+      if (rows.length < PAGE) return out;
     }
+    this.log.warn(`roster ${kind}: capped at ${MAX_PAGES * PAGE} rows, the rest not counted`);
     return out;
   }
 
@@ -110,7 +124,7 @@ export class SalesRosterRepo {
       .lt('lesson.starts_at', w.to.toISOString())
       .order('lesson_id')
       .order('student_id')
-      .range(w.page * PAGE, w.page * PAGE + PAGE - 1)
+      .range(...rangeOf(w.page))
       .overrideTypes<RosterLessonRow[], { merge: false }>();
     if (error) throw dbError(error);
     return data;
