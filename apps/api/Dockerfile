@@ -1,13 +1,15 @@
 # API image (docs/09-deployment.md). Build context = repo root:
 #   docker build -f apps/api/Dockerfile -t ayat-api .
-# Installs only the api workspace and its workspace deps (@ab/shared, @ab/db, @ab/config).
+# Installs only the api workspace and its workspace deps (@ab/shared, @ab/db, @ab/config), then builds
+# every workspace package the api depends on ("api^...", in dependency order) before the api itself, so a
+# new package cut out of @ab/shared (docs/32 lane K) needs no change here.
 FROM node:24.15.0-slim AS build
 ENV CI=true
 RUN corepack enable
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "api..." \
- && pnpm --filter @ab/shared build \
+ && pnpm --filter "api^..." build \
  && pnpm --filter api build
 
 FROM node:24.15.0-slim

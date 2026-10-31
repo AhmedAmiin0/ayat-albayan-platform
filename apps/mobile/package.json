@@ -11,7 +11,7 @@
     "typecheck": "tsgo --noEmit",
     "test": "jest",
     "bundle": "expo export --platform android --output-dir dist/bundle",
-    "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build"
+    "eas-build-post-install": "pnpm --dir ../.. --filter \"mobile^...\" build"
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
