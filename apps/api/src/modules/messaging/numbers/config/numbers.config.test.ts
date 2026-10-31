@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { numbersOverlay, setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { numbersOverlay, setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { config } from './numbers.config.fakes';
-import { numberRow } from '../numbers.fakes';
+import { numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 
 afterEach(() => setNumbersOverlay(null));
 

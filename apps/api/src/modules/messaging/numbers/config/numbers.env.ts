@@ -1,14 +1,14 @@
 import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
-import type { CallsNumber } from '../../../../common/integrations/calls-number';
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
+import type { CallsNumber } from '@/common/configuration/integrations/calls-number';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import {
   validOverlay,
   type Env,
   type KapsoLineEnv,
   type WhatsappEnv,
-} from '../../../../config/env/env';
-import { ROLE_KEYS } from '../lines/numbers.lines';
-import type { NumberRow } from '../numbers.queries';
+} from '@/config/env/env';
+import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
+import type { NumberRow } from '@/modules/messaging/numbers/numbers.queries';
 
 // One number's own client config (docs/23 phase 5, docs/23c decision 3): the row's ids and ITS Vault
 // secrets only. A number never borrows another number's token or a legacy WA_* key (PR #142 item 15).

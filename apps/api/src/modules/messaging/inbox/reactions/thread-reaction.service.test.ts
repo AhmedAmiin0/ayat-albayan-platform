@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setIntegrationOverlay } from '../../../../common/integrations/integration-overlay';
-import { PHONE, threadRow } from '../inbox.fakes';
+import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { NOW, REQ, TARGET_ID, reactionHarness, request, target } from './reaction.fakes';
 import { reactionKey } from './thread-reaction.service';
 

@@ -24,6 +24,11 @@ describe('sales money whitelists: explicit keys, never the admin view spread', (
     expect(s.due).toBe(99.5);
   });
 
+  it('an unused cancel owes nothing; a stopped package (migration 991) still owes', () => {
+    expect(toSalesSubscription(view({ status: 'cancelled', cancel_kind: 'unused' })).due).toBe(0);
+    expect(toSalesSubscription(view({ status: 'cancelled', cancel_kind: 'stopped' })).due).toBe(99.5);
+  });
+
   it('due never goes below zero (an overpaid package)', () => {
     expect(toSalesSubscription(view({ paid: 200 })).due).toBe(0);
   });

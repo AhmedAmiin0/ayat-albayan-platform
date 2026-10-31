@@ -6,6 +6,12 @@ import { generatedKey } from '../../scheduling/rules/rule-projection';
 import type { OpenCourseLesson } from './course-change.queries';
 
 export type MovedLesson = OpenCourseLesson & { rule_id: string | null };
+/** A lesson of the course, its rule and local day (a rule without subscription_id is bounded). */
+interface CourseLesson extends CourseLessonFact {
+  id: string;
+  rule_id: string | null;
+  local_date: string | null;
+}
 
 /** The lessons of a course «تغيير أيام الحلقات» reads (service role; ownership is checked by CourseChange). */
 @Injectable()
@@ -13,11 +19,16 @@ export class CourseLessonQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every lesson of these rules of the student, any time and status: what the course uses (with ids). */
-  async ofCourse(input: { ruleIds: readonly string[]; studentId: string }): Promise<(CourseLessonFact & { id: string })[]> {
+  async ofCourse(input: {
+    ruleIds: readonly string[];
+    studentId: string;
+  }): Promise<CourseLesson[]> {
     const rows = await readAll((from, to) =>
       this.db
         .from('lessons')
-        .select('id, status, instant, makeup_of_id, lesson_students!inner(student_id, chargeable)')
+        .select(
+          'id, rule_id, local_date, status, instant, makeup_of_id, lesson_students!inner(student_id, chargeable)',
+        )
         .in('rule_id', [...input.ruleIds])
         .eq('lesson_students.student_id', input.studentId)
         .order('starts_at')
@@ -26,6 +37,8 @@ export class CourseLessonQueries {
     );
     return rows.map((l) => ({
       id: l.id,
+      rule_id: l.rule_id,
+      local_date: l.local_date,
       status: l.status,
       chargeable: l.lesson_students.some((s) => s.chargeable),
       makeup: l.makeup_of_id !== null,

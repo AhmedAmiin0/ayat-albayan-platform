@@ -37,12 +37,27 @@ export type ChangeRule = {
     student_id: string;
     student: { meeting_link_override: string | null } | null;
   }[];
+  /** How course_rules_of (migration 991) attributes it; absent = linked by subscription_id. */
+  course?: CourseRuleRef;
 };
+
+/**
+ * course_rules_of: a rule of the course. linked = its subscription_id; else the student's rule inside
+ * the package's period, its lessons counting only in [from_on, until_on). clean = false: cannot be
+ * attributed (a group, or it runs into the next package).
+ */
+export interface CourseRuleRef {
+  rule_id: string;
+  linked: boolean;
+  clean: boolean;
+  from_on: string | null;
+  until_on: string | null;
+}
 
 export type OpenCourseLesson = { id: string; status: LessonStatus };
 
 /** An active rule of the student, for courseOverlaps (sales-course.rules.ts). */
-type OtherRule = { starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null };
+type OtherRule = { id: string; starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null };
 
 /** «تغيير أيام الحلقات»'s reads (service role; ownership is checked by CourseChange). */
 @Injectable()
@@ -61,28 +76,50 @@ export class CourseChangeQueries {
     return data;
   }
 
-  /** Every rule of the course (any status), the first one first. */
+  /**
+   * Every rule of the course (any status), the first one first: course_rules_of (migration 991), so
+   * a student's imported, handed-over or admin-booked rule (no subscription_id) counts too.
+   */
   async rules(subscriptionId: string): Promise<ChangeRule[]> {
+    const refs = await this.course(subscriptionId);
+    if (refs.length === 0) return [];
     const { data, error } = await this.db
       .from('schedule_rules')
       .select(
         'id, status, teacher_id, tz, byday, start_time_local, duration_min, starts_on, ends_on, first_rule_id, package, meeting_link, created_from_lead_id, schedule_rule_students(student_id, student:students(meeting_link_override))',
       )
-      .eq('subscription_id', subscriptionId)
+      .in('id', refs.map((r) => r.rule_id))
       .order('created_at');
+    if (error) throw dbError(error);
+    const by = new Map(refs.map((r) => [r.rule_id, r]));
+    return data.map((r) => ({ ...r, course: by.get(r.id) }));
+  }
+
+  /** course_rules_of: how each rule of the course is attributed. */
+  async course(subscriptionId: string): Promise<CourseRuleRef[]> {
+    const { data, error } = await this.db.rpc('course_rules_of', { p_subscription: subscriptionId });
     if (error) throw dbError(error);
     return data;
   }
 
-  /** The student's active rules of every other course (another or no subscription_id): course_exists. */
-  async others(sub: Pick<CourseSub, 'id' | 'student_id'>): Promise<OtherRule[]> {
+  /**
+   * The student's active rules of every other course (another or no subscription_id, not one of
+   * `own`: the course's own rules, course_rules_of): course_exists.
+   */
+  async others(
+    sub: Pick<CourseSub, 'id' | 'student_id'>,
+    own: readonly string[],
+  ): Promise<OtherRule[]> {
     const { data, error } = await this.db
       .from('schedule_rule_students')
-      .select('rule:schedule_rules!inner(starts_on, ends_on, package, status, subscription_id)')
+      .select('rule:schedule_rules!inner(id, starts_on, ends_on, package, status, subscription_id)')
       .eq('student_id', sub.student_id)
       .eq('rule.status', 'active');
     if (error) throw dbError(error);
-    return data.map(({ rule }) => rule).filter((r) => r.subscription_id !== sub.id);
+    const mine = new Set(own);
+    return data
+      .map(({ rule }) => rule)
+      .filter((r) => r.subscription_id !== sub.id && !mine.has(r.id));
   }
 
   /** Each student's name + guardian, for the queued confirmation (as LessonsQueries.contacts). */

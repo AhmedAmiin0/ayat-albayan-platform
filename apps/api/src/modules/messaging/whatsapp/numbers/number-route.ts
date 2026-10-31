@@ -6,9 +6,9 @@ import {
   type RoutableNumber,
   type WaLine,
 } from '@ab/shared';
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import type { DueMessage } from '../sender/sender.due';
-import type { TemplateRow } from '../whatsapp.types';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Module mode's per-row number pick (docs/23 phase 5, contract docs/23c decisions 3–5). Pure: the
 // sender loads a RoutePass once per pass and asks routeOf() for every due row. Legacy never gets here.

@@ -61,7 +61,7 @@ export class SubscriptionCancelQueries {
 
   /** Compare-and-set: only a package not cancelled yet; the DB guard re-checks money, lessons and commission. */
   async cancel(w: CancelWrite): Promise<CancelResult> {
-    const patch = { status: 'cancelled' as const, cancelled_at: w.now.toISOString(), cancelled_by: w.actorId, cancel_reason: w.reason };
+    const patch = { status: 'cancelled' as const, cancel_kind: 'unused', cancelled_at: w.now.toISOString(), cancelled_by: w.actorId, cancel_reason: w.reason };
     const { data, error } = await this.db
       .from('subscriptions')
       .update(patch)

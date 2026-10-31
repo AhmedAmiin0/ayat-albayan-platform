@@ -4,18 +4,19 @@ import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { CacheModule } from './common/cache/cache.module';
 import { ClientUsageModule } from './common/client-usage/client-usage.module';
-import { ConfigStoreModule } from './common/config-store/config-store.module';
-import { CustomConfigModule } from './common/custom-config/custom-config.module';
+import { ConfigStoreModule } from './common/configuration/config-store/config-store.module';
+import { CustomConfigModule } from './common/configuration/custom-config/custom-config.module';
 import { DbModule } from './common/db/db.module';
-import { IntegrationConfigModule } from './common/integrations/integration-config.module';
+import { IntegrationConfigModule } from './common/configuration/integrations/integration-config.module';
 import { LessonEventsModule } from './common/events/lesson-events';
-import { PublicConfigModule } from './common/public-config/public-config.module';
+import { PublicConfigModule } from './common/configuration/public-config/public-config.module';
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { StorageModule } from './common/storage/storage.service';
 import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
 import { CoursePauseModule } from './modules/teaching/course-pause';
+import { CourseStopModule } from './modules/teaching/course-stop';
 import { ScheduleNoticesModule } from './modules/teaching/schedule-notices';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
@@ -105,6 +106,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     ReceivablesModule,
     LessonsModule,
     CoursePauseModule,
+    CourseStopModule,
     ScheduleNoticesModule,
     ReportsModule,
     RolesModule,

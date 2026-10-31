@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../../common/push/push.service';
-import { setNumbersOverlay } from '../../../../../common/integrations/numbers-overlay';
-import { CHAT_OFF, CHAT_TWO, NUMBERS } from '../../../../messaging/inbox/send/send-number.fakes';
-import type { ThreadsQueries } from '../../../../messaging/inbox/threads/threads.queries';
-import type { MessageSender } from '../../../../messaging/whatsapp/sender/message.sender';
+import type { PushService } from '@/common/push/push.service';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { CHAT_OFF, CHAT_TWO, NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
+import type { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
+import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MeetingInviteSender } from './meeting-invite.sender';
 import { CLOSED_PHONE, OPEN_PHONE } from './meeting-invites.fakes';
 

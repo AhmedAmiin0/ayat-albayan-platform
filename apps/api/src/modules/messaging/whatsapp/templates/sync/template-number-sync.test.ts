@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { OverlayNumber } from '../../../../../common/integrations/numbers-overlay';
-import type { MetaLineEnv } from '../../../../../config/env/env';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { MetaLineEnv } from '@/config/env/env';
 import { syncNumber, type NumberSyncDeps } from './template-number-sync';
-import type { ApprovalRow, ApprovalWrite } from '../catalog/templates.queries';
-import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '../../whatsapp.fakes';
-import { WaError, type MetaTemplate } from '../../whatsapp.types';
+import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // POST /admin/numbers/:id/templates/sync (docs/23c decision 4): one number's WABA list → every number on that WABA.
 

@@ -1,11 +1,11 @@
 import { GOOGLE_SETTING_KEYS, GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, type GoogleSettingsInput, type GoogleSyncSettings } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { CACHE_KEYS } from '../../../common/cache/cache-keys';
-import { SharedCache } from '../../../common/cache/shared-cache';
-import { TtlCache } from '../../../common/cache/ttl-cache';
-import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../../../common/config-store/config-store.types';
-import { DB, type Db } from '../../../common/db/db.module';
-import { kickConfigReload } from '../../../config/role/worker-kick';
+import { CACHE_KEYS } from '@/common/cache/cache-keys';
+import { SharedCache } from '@/common/cache/shared-cache';
+import { TtlCache } from '@/common/cache/ttl-cache';
+import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
+import { DB, type Db } from '@/common/db/db.module';
+import { kickConfigReload } from '@/config/role/worker-kick';
 
 export const GOOGLE_DEFAULTS: GoogleSyncSettings = { enabled: false, mode: 'dry_run', window_days: GOOGLE_WINDOW_DAYS.default };
 

@@ -1334,9 +1334,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     },
@@ -10824,7 +10821,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1

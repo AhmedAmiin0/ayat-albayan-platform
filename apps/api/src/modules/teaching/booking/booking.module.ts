@@ -22,6 +22,9 @@ import { CourseChange } from './course-change/course-change.service';
 import { CourseChangeViews } from './course-change/course-change.view';
 import { CourseChangeDeps, CourseChangeWriter } from './course-change/course-change.writer';
 import { InstantController } from './instant/instant.controller';
+import { CourseTeacherController, CourseTimesController } from './profile/profile-course.controller';
+import { ProfileCourseRepo } from './profile/profile-course.repo';
+import { ProfileCourse } from './profile/profile-course.service';
 import { InstantQueries } from './instant/instant.queries';
 import { InstantLessonService } from './instant/instant.service';
 import { MakeupCandidates } from './makeup/makeup-candidates.service';
@@ -57,7 +60,7 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     SubscriptionsModule,
     ScheduleNoticesModule,
   ],
-  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, TrialDateController, SalesTrialDateController],
+  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
   providers: [
     BookingSettings,
     BookingQueries,
@@ -80,6 +83,8 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     CourseChangeViews,
     CourseChangeDeps,
     CourseChangeWriter,
+    ProfileCourse,
+    ProfileCourseRepo,
     BookingWriter,
     BookingFollowUps,
     TeacherAlert,

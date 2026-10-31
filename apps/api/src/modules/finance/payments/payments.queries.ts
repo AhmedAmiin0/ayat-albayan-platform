@@ -12,12 +12,12 @@ import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-quer
 export type { PaymentFilter } from './payments.list-query';
 
 export type PaymentRow = Tables<'payments'> & {
-  subscription: { student_id: string; currency: string; status: SubscriptionStatus; student: StudentRef | null } | null;
+  subscription: { student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null; student: StudentRef | null } | null;
 };
 export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
-export type PaymentSubscription = { id: string; student_id: string; currency: string; status: SubscriptionStatus };
+export type PaymentSubscription = { id: string; student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null };
 
-const SELECT = '*, subscription:subscriptions!inner(student_id, currency, status, student:students(id, code, name))';
+const SELECT = '*, subscription:subscriptions!inner(student_id, currency, status, cancel_kind, student:students(id, code, name))';
 
 /** All supabase access for `payments` (service role; admin-only routes). R-PAY-01. */
 @Injectable()
@@ -106,7 +106,7 @@ export class PaymentsQueries {
   async subscription(id: string): Promise<PaymentSubscription | null> {
     const { data, error } = await this.db
       .from('subscriptions')
-      .select('id, student_id, currency, status')
+      .select('id, student_id, currency, status, cancel_kind')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
