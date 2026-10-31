@@ -27,6 +27,7 @@ import { OverviewQueries } from './overview/overview.queries';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
 import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
 import { TimeEditQueries } from './time-edit/time-edit.queries';
+import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 
 const USERS: Record<string, AuthUser> = {
   admin: ADMIN,
@@ -61,6 +62,11 @@ function mocks() {
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
+    // ScheduleNotices' reads and queue (no DB here); a lesson read as null notifies nobody.
+    notices: {
+      lesson: vi.fn(), student: vi.fn(), lessons: vi.fn(), nextLesson: vi.fn(),
+      approved: vi.fn(), queue: vi.fn(),
+    },
   };
 }
 
@@ -88,6 +94,7 @@ export async function lessonsApp() {
     .overrideProvider(StudentTrialQueries).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .overrideProvider(StaffPhotos).useValue(m.photos)
+    .overrideProvider(ScheduleNoticesRepo).useValue(m.notices)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
@@ -114,6 +121,9 @@ export async function lessonsApp() {
     m.unpaid.studentIds.mockResolvedValue(new Set());
     m.teachers.loads.mockResolvedValue(new Map());
     for (const read of Object.values(m.overview)) read.mockResolvedValue([]);
+    m.notices.lesson.mockResolvedValue(null);
+    m.notices.approved.mockResolvedValue(true);
+    m.notices.queue.mockImplementation(async (rows: readonly unknown[]) => rows.length);
   };
   return { ...m, app, call, reset };
 }

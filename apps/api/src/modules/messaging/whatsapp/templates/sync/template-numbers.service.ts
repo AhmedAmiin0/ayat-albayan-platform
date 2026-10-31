@@ -1,12 +1,12 @@
 import type { TemplateNumberSetView, TemplateNumberSyncView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { AuditService } from '../../../../../common/audit/audit.service';
-import { overlayNumbers } from '../../../../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../../../../config/env/env';
-import { whatsappClient } from '../../client-factory';
+import { AuditService } from '@/common/audit/audit.service';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
+import type { WhatsappEnv } from '@/config/env/env';
+import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { setTemplateNumber, type NumberSetInput } from './template-number-set';
 import { syncNumber } from './template-number-sync';
-import { TemplatesQueries } from '../catalog/templates.queries';
+import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
 
 /**
  * Templates per number (docs/23 phase 5, docs/23c decision 9): a template's own number and one number's

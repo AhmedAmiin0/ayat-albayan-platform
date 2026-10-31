@@ -29,6 +29,7 @@ export {
   permissionsOf,
   useHolds,
   useIsAdmin,
+  useMeId,
   useMeReady,
   usePermissions,
   useSendsAllTemplates,

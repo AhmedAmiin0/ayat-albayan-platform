@@ -3175,6 +3175,10 @@
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
       "teacher_new_student": "Teacher: new student alert",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed",
       "trial_reschedule": "Reschedule the trial lesson",
       "free_trial_invite": "Free trial lesson invitation",
       "welcome_greeting": "Welcome message"
@@ -3437,6 +3441,7 @@
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
+      "wa_payment_hold": "The WhatsApp Business account has no valid payment method — the messages wait in the queue and go out automatically once the admin fixes billing in Meta",
       "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
       "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
       "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
@@ -3549,6 +3554,22 @@
     "commission_earned": {
       "title": "New commission",
       "body": "{amount} — {code} {student}"
+    },
+    "lesson_rescheduled": {
+      "title": "Lesson time changed",
+      "body": "{student}: from {from} to {when}"
+    },
+    "lesson_cancelled": {
+      "title": "Lesson cancelled",
+      "body": "{student}’s lesson on {when} was cancelled"
+    },
+    "course_paused": {
+      "title": "Lessons paused",
+      "body": "{student}’s lessons are paused from {when}"
+    },
+    "course_resumed": {
+      "title": "Lessons resumed",
+      "body": "{student}’s lessons resume; first lesson {when}"
     }
   },
   "bell": {
@@ -3773,7 +3794,11 @@
       "meeting_invite": "Meeting invitation",
       "google_sync_alert": "Google sync alert",
       "channel_message": "Student channel message",
-      "commission_earned": "New commission"
+      "commission_earned": "New commission",
+      "lesson_rescheduled": "Lesson time changed",
+      "lesson_cancelled": "Lesson cancelled",
+      "course_paused": "Lessons paused",
+      "course_resumed": "Lessons resumed"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3849,7 +3874,8 @@
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
-      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are."
+      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
+      "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3875,7 +3901,8 @@
     "invalidText": "Check this field",
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
     "commsSource": "Where the number setup comes from",
-    "reportFormV2": "New lesson report form"
+    "reportFormV2": "New lesson report form",
+    "presenceEnabled": "Show online status and last seen"
   },
   "language": {
     "label": "Language",
@@ -4457,7 +4484,18 @@
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
       "detailsHint": "Opens the student details",
-      "openStudent": "Open {name}'s student file"
+      "openStudent": "Open {name}'s student file",
+      "schedule": "Schedule",
+      "attendance": "Attendance",
+      "noSchedule": "No fixed schedule",
+      "attendedPackage": "Attended {n} of {of} in the current package",
+      "attendedRecent": "Attended {n} of {of} in the last 30 days",
+      "noHeldPackage": "No lessons held in the current package yet",
+      "noHeldRecent": "No lessons held in the last 30 days",
+      "groupSeparator": "; ",
+      "package": "Package",
+      "packageLine": "Package: {line}",
+      "noPackage": "No current package"
     },
     "live": {
       "title": "Lessons running now",
@@ -4476,6 +4514,7 @@
       "starts": "Starts: {date}",
       "renews": "Renews: {date}",
       "ended": "Ended: {date}",
+      "projectedEnd": "Expected end: {date}",
       "changes": "Status changes",
       "created": "Created as {to}",
       "changed": "From {from} to {to}",
@@ -4518,7 +4557,6 @@
         "showAll": "Show all ({n})",
         "showLess": "Show less"
       },
-      "notMine": "Not one of your students: subscriptions and reports are not shown here",
       "trial": {
         "title": "Trial lesson",
         "none": "No trial lesson",
@@ -6007,6 +6045,22 @@
       "commission_earned": {
         "name": "New assistant commission",
         "trigger": "When a student the assistant brought pays a package in full"
+      },
+      "lesson_rescheduled": {
+        "name": "Lesson time changed",
+        "trigger": "When an upcoming lesson moves to a new time, to the teacher and the guardian"
+      },
+      "lesson_cancelled": {
+        "name": "Lesson cancelled",
+        "trigger": "When the academy team cancels an upcoming lesson, to the teacher and the guardian"
+      },
+      "course_paused": {
+        "name": "Lessons paused",
+        "trigger": "When a student’s course is paused: one message to the teacher and the guardian"
+      },
+      "course_resumed": {
+        "name": "Lessons resumed",
+        "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
       }
     }
   },
@@ -7280,5 +7334,25 @@
       "avatar_not_staff": "Student and guardian accounts have no photo.",
       "generic": "Could not save the photo. Try again."
     }
+  },
+  "presence": {
+    "online": "Online now",
+    "lastSeen": "Last seen {when}",
+    "lastMessage": "Last message {when}",
+    "now": "just now",
+    "minutes": {
+      "one": "1 minute ago",
+      "two": "2 minutes ago",
+      "few": "{n} minutes ago",
+      "other": "{n} minutes ago"
+    },
+    "today": "today at {time}",
+    "yesterday": "yesterday",
+    "staffTitle": "Team status",
+    "staffOnline": "Online now: {n}",
+    "staffNever": "Not seen yet",
+    "staffEmpty": "No team members yet",
+    "off": "Online status is turned off in Values",
+    "loadError": "Could not load the team status"
   }
 }

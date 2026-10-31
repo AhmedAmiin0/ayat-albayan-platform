@@ -24,7 +24,7 @@ const USERS: Record<string, AuthUser> = {
   teacher: { id: 't1', email: null, role: 'teacher' },
   assistant: { id: 'as000000-0000-4000-8000-0000000000a5', email: null, role: 'assistant' },
 };
-const verify: TokenVerifier = async (token) => {
+export const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
   return user;
@@ -44,7 +44,7 @@ export function pauseMocks() {
     queries: {
       call: vi.fn(), studentExists: vi.fn(), pauses: vi.fn(), pause: vi.fn(), openPause: vi.fn(), due: vi.fn(), dueStarts: vi.fn(), previewCount: vi.fn(), lessons: vi.fn(), liftLegacyPause: vi.fn(),
     },
-    follow: { after: vi.fn(), liftedLegacy: vi.fn() },
+    follow: { after: vi.fn(), liftedLegacy: vi.fn(), paused: vi.fn(), resumed: vi.fn() },
   };
 }
 type PauseMocks = ReturnType<typeof pauseMocks>;

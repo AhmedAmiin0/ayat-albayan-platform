@@ -25,7 +25,7 @@ interface AttendanceLogRowProps {
   /** Odd rows are striped. */
   striped: boolean;
   cycle: ClockCycle;
-  /** Given only when the row's report may open (`mine` and a sent report). */
+  /** Given only when the row has a sent report (any student, owner 2026-10-30). */
   onOpen?: (row: AttendanceTableRow) => void;
 }
 

@@ -1,27 +1,24 @@
-import type { WaLine } from '@ab/shared';
 import {
-  Inject,
-  Injectable,
-  Logger,
-  Optional,
-  type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  Inject, Injectable, Logger, Optional, type OnApplicationBootstrap, type OnModuleDestroy,
 } from '@nestjs/common';
-import { overlayNumbers, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../../../config/env/env';
-import { MessageWorker, type SendOutcome } from './message.worker';
-import { routeOf } from '../numbers/number-route';
-import { NumberRoutes } from '../numbers/number-routes';
+import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { loadEnv } from '@/config/env/env';
+import { MessageWorker, type PassJob, type SendOutcome } from './message.worker';
+import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
+import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { lineOf } from './send-line';
-import { SendGate } from '../gate/send-gate';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderQueries } from './sender.queries';
 import { senderTiming } from './sender-timing';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
 const BATCH = 50;
 
 export type SendSummary = Record<SendOutcome, number>;
+
+/** One due row of a pass and the line (legacy) or number (module mode) a pause applies to. */
+interface PassItem { job: PassJob; pause: string | null }
 
 /**
  * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains `messages` where status = queued, due,
@@ -99,23 +96,11 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   /** Legacy (comms_source = legacy): today's pass, line by line. */
   private async linesPass(summary: SendSummary, now: Date): Promise<void> {
     const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
-    // A broken token fails every row of ITS line the same way; the other line keeps sending.
-    // ponytail: a paused line's other rows stay in the batch, so a dead chat token with a backlog of
-    // ~80+ queued chat texts (BATCH 50, one 15-min hold per pass) can still starve notifications
-    // until the token is fixed. Upgrade path: hold the rest of the paused line's rows (docs/12 §13.17).
-    const paused = new Set<WaLine>();
-    const chatOn = this.queries.chatConfigured;
-    for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
+    const rows = await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH });
+    await this.drain(summary, rows.map((row) => {
       const template = templates.get(row.template_key ?? '') ?? null;
-      const line = lineOf(row, template, chatOn);
-      if (paused.has(line)) continue;
-      // Both switches are read (one uncached read) before every row, so OFF stops a long pass at once (docs/09).
-      const gate = await this.gate.switches();
-      if (!gate.open) break;
-      const outcome = await this.worker.process({ row, template, now, autoOn: gate.automaticOn });
-      summary[outcome] += 1;
-      if (outcome === 'paused') paused.add(line);
-    }
+      return { job: { row, template, now }, pause: lineOf(row, template, this.queries.chatConfigured) };
+    }));
   }
 
   /**
@@ -127,16 +112,31 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     if (!this.routes) return;
     const { pass, templates: rows } = await this.routes.pass(input.numbers);
     const templates = new Map(rows.map((t) => [t.key, t]));
-    const paused = new Set<string>();
-    for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
+    const due = await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH });
+    await this.drain(summary, due.map((row) => {
       const template = templates.get(row.template_key ?? '') ?? null;
       const route = routeOf(pass, { row, template });
-      if (route && paused.has(route.numberId)) continue;
+      return { job: { row, template, now, route }, pause: route?.numberId ?? null };
+    }));
+  }
+
+  /**
+   * A broken token (or Meta's 131042) pauses ITS line (number) for the rest of the pass; the other
+   * keeps sending. A 131042-held line's later rows in the batch are deferred in one write.
+   */
+  private async drain(summary: SendSummary, items: readonly PassItem[]): Promise<void> {
+    const paused = new Set<string>();
+    for (const [i, { job, pause }] of items.entries()) {
+      if (pause !== null && paused.has(pause)) continue;
+      // Both switches are read (one uncached read) before every row, so OFF stops a long pass at once (docs/09).
       const gate = await this.gate.switches();
       if (!gate.open) break;
-      const outcome = await this.worker.process({ row, template, now, autoOn: gate.automaticOn, route });
+      const outcome = await this.worker.process({ ...job, autoOn: gate.automaticOn });
       summary[outcome] += 1;
-      if (route && outcome === 'paused') paused.add(route.numberId);
+      if (outcome !== 'paused' || pause === null) continue;
+      paused.add(pause);
+      const rest = items.slice(i + 1).filter((o) => o.pause === pause);
+      await this.worker.deferRest(job, rest.map((o) => o.job.row));
     }
   }
 

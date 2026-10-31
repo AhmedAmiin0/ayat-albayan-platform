@@ -44,7 +44,7 @@ function mocks() {
     teachers: { idByProfile: vi.fn() },
     mine: { page: vi.fn(), students: vi.fn() },
     settings: fakeSettings(),
-    events: { changed: vi.fn(), onChanged: vi.fn() },
+    events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
     pdf: { enqueue: vi.fn() },
     push: { notifyAdmins: vi.fn() },
   };

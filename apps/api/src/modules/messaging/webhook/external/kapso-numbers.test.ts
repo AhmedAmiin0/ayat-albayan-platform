@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import type { LineEnvs } from '../../../../config/env/env';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import type { LineEnvs } from '@/config/env/env';
 import { kapsoChatNumbers, kapsoNumberFor } from './kapso-numbers';
 import { KAPSO_NUMBER_ID, KAPSO_PHONE_ID, kapsoEnv, kapsoOverlay } from './external.fakes';
 

@@ -26,7 +26,8 @@ type EndRule = {
 
 /**
  * Cancel one occurrence, or this one and the rest of its rule (R-SCH-07). Returns the ids of
- * every cancelled lesson. No WhatsApp message: no approved cancellation template yet (TODO(R-MSG-01)).
+ * every cancelled lesson. One lesson: its teacher and family hear it (lesson_cancelled, owner
+ * 2026-10-30). Ending a series is a course end, not a lesson's cancellation: no notice.
  */
 @Injectable()
 export class LessonCancelService {
@@ -58,6 +59,7 @@ export class LessonCancelService {
         after: { status: change.to_status, by: body.by, reason: body.reason, chargeable: change.chargeable },
       },
       transition: { from: lesson.status, event },
+      notice: { kind: 'lesson_cancelled', lessonId: lesson.id, actorId: actor.id },
     });
     return [lesson.id];
   }
