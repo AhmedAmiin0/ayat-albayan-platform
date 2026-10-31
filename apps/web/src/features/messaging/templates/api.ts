@@ -1,6 +1,6 @@
 import type { CRM_TEMPLATE_STATUSES, TemplateCreateInput, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 

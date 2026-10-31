@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/people/students/api';
 import { t } from '@/lib/i18n/i18n';

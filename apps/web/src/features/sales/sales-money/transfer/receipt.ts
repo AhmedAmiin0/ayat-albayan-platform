@@ -1,6 +1,6 @@
 import { PAYMENT_ATTACHMENTS_MAX, type SalesChatReceipt } from '@ab/shared';
 import type { AttachmentItem } from '@/features/finance/payments/attachments/AttachmentItems';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 
 // The transfer's «المرفقات» (R-ASST-04, owner 2026-10-12: optional, old students have no receipt): up to

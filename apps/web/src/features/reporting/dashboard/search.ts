@@ -1,5 +1,5 @@
 import { addCalendarMonths, dateRangeQuery, riyadhToday } from '@ab/shared';
-import { addDays, weekStart } from '@/features/teaching/schedule/tz';
+import { addDays, weekStart } from '@/features/teaching/schedule';
 import type { DayRange } from './types';
 
 /** The admin's queue under the KPI strip. */

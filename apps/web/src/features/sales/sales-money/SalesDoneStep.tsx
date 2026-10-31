@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { studentLabel } from '@/features/finance/subscriptions/format';
+import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 /** `onBookCourse`: «احجز أيام الحلقات الآن» for the paid package's student (owner 2026-10-18). */

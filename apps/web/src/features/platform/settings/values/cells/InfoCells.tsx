@@ -1,5 +1,5 @@
 import type { SettingMeta } from '@ab/shared';
-import { formatDateTime } from '@/features/sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { useClock, type Clock } from '@/lib/clock';
 

@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { RequiredMark } from '@/components/ui/form/label';
-import { lessonErrorText } from '@/features/teaching/schedule/api';
+import { lessonErrorText } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { uploadInvoiceFile } from './api.invoice';

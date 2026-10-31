@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { courseEnd, dayPicks } from '../../draft/draft.days';
 import type { BookingDraft } from '../../draft/draft';
