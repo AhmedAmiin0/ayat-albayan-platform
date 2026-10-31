@@ -1,3 +1,4 @@
+import { setViewerPersonTz } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -18,8 +19,10 @@ const result = {
 };
 
 beforeEach(() => jest.clearAllMocks());
+afterEach(() => setViewerPersonTz('Asia/Riyadh'));
 
-test('a booked makeup opens the schedule on its Riyadh day, or closes', async () => {
+test('a booked makeup opens the schedule on its day for a Riyadh viewer, or closes', async () => {
+  setViewerPersonTz('Asia/Riyadh');
   const onDone = jest.fn();
   await renderWithQuery(<BookedPanel makeup result={result} teacherName="أبرار" tz="Africa/Cairo" onDone={onDone} />);
   await fireEvent.press(screen.getByRole('button', { name: t.booking.openSchedule }));
@@ -27,6 +30,14 @@ test('a booked makeup opens the schedule on its Riyadh day, or closes', async ()
   expect(mockReplace).toHaveBeenCalledWith({ pathname: '/schedule', params: { date: '2026-10-05' } });
   await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
   expect(onDone).toHaveBeenCalledTimes(1);
+});
+
+test('a Cairo viewer: the schedule opens on her day, where the lesson sits on her calendar', async () => {
+  setViewerPersonTz('Africa/Cairo');
+  await renderWithQuery(<BookedPanel makeup result={result} teacherName="أبرار" tz="Asia/Riyadh" onDone={jest.fn()} />);
+  await fireEvent.press(screen.getByRole('button', { name: t.booking.openSchedule }));
+  // 21:30 UTC is 23:30 on the 4th in Cairo (UTC+2), though the 5th in Riyadh
+  expect(mockReplace).toHaveBeenCalledWith({ pathname: '/schedule', params: { date: '2026-10-04' } });
 });
 
 test('without lessons.read the Schedule tab is hidden: no «افتح الجدول» button, only close', async () => {

@@ -1,4 +1,4 @@
-import { counted, RIYADH_TZ } from '@ab/shared';
+import { addDays, counted, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -26,8 +26,10 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
   const tomorrow = new Date(now.getTime() + DAY);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
-  // academy day (docs/34 b): the schedule's `date` param is a Riyadh day.
-  const date = localDate(tomorrow, RIYADH_TZ);
+  // The schedule's `date` param is tomorrow on the calendar it pages by: the admin's «الجدول» by
+  // viewer days (docs/34), the salesperson's «جدول الحلقات» by Riyadh days (docs/34 b). Calendar
+  // days, not now + 24 h: a day the viewer's clock changes is 23 or 25 h long.
+  const date = addDays(localDate(now, source.schedule === '/schedule' ? tz : RIYADH_TZ), 1);
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingVertical: 24 }}>
       <View style={{ width: 88, height: 88, borderRadius: 44, alignItems: 'center', justifyContent: 'center', backgroundColor: color.lapisWash }}>

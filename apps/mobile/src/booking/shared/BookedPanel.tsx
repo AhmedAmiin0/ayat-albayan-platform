@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
-import { riyadhToday } from '@/calendar/lib/week';
+import { viewerToday } from '@/calendar/lib/week';
 import { whenText } from './slots';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
@@ -76,8 +76,8 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
           {first && toSchedule ? (
             <Button
               label={t.booking.openSchedule}
-              // academy day (docs/34 b): the schedule's `date` param is a Riyadh day.
-              onPress={() => router.replace({ pathname: '/schedule', params: { date: riyadhToday(new Date(first.starts_at)) } })}
+              // The schedule's `date` param is a viewer day (docs/34): it pages by the viewer's calendar.
+              onPress={() => router.replace({ pathname: '/schedule', params: { date: viewerToday(new Date(first.starts_at), viewerZone) } })}
             />
           ) : null}
           <Button variant="secondary" label={t.common.close} onPress={onDone} />
