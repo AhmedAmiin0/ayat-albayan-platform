@@ -5,5 +5,5 @@ export type { ClockOptions } from './clock.js';
 export { clockOfParts, isolateClock } from './clock.js';
 export type { ClockCycle } from './clock-pref.js';
 export { CAIRO_TZ, RIYADH_TZ } from './zones.js';
-export { matchesQuery, normalizeArabic } from './arabic.js';
+export { normalizeArabic } from './arabic.js';
 export { counted, type PluralForm } from './plural.js';
