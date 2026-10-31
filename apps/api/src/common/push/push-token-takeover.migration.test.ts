@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 720 (review of #172, PR #175): no push-token takeover. No database runs in unit tests:
 // this pins its shape.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261025000720_push_token_takeover.sql'), 'utf8');
 const code = sql
   .split('\n')

@@ -10,7 +10,7 @@ import { SenderQueries } from './sender.queries';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
 const ON = rows({ messaging_enabled: true, auto_messages_enabled: true });
-const worker = { process: vi.fn(async () => 'sent' as const) };
+const worker = { process: vi.fn(async () => 'sent' as const), deferRest: vi.fn() };
 
 /** The real gate and queries on a counting fake db: `trips` = one entry per PostgREST round trip. */
 function sender(results: Parameters<typeof fakeDb>[0]) {

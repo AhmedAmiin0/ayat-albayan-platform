@@ -30,6 +30,8 @@ const rules = { snapshot: async () => ({ mode: 'legacy', rows: new Map(), settin
 function noticeMocks() {
   return {
     lesson: vi.fn(), student: vi.fn(async () => student), lessons: vi.fn(), nextLesson: vi.fn(),
+    // The rules the pause held: the resumed course's first lesson back is read on them only.
+    pauseRules: vi.fn(async () => ['R1']),
     approved: vi.fn(async () => true),
     queue: vi.fn(async (rows: readonly unknown[]) => rows.length),
   };

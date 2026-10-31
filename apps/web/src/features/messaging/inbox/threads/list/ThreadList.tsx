@@ -4,8 +4,9 @@ import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n/i18n';
-import { useInboxMode } from '../../shared/mode';
-import type { InboxSearch } from '../../shared/search';
+import { useNow } from '@/lib/time/use-now';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { ThreadFilterFields } from './ThreadFilterFields';
 import { ThreadRow } from './ThreadRow';
 import { emptyTitle } from './empty-title';
@@ -26,6 +27,8 @@ export interface ThreadListProps {
  */
 export function ThreadList({ search, threads, onFilter, total }: ThreadListProps) {
   const options = { search, mode: useInboxMode(), onFilter };
+  // One ticking clock for every row (not one timer per row): the times turn into dates at midnight.
+  const now = useNow();
   return (
     <>
       {/* compact: search, the icon «تصفية» and الكل/غير مقروءة on one row in the 300–400px list column. */}
@@ -60,7 +63,7 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
       ) : (
         <ul aria-label={t.inbox.title} className="border-t border-rule">
           {threads.map((th) => (
-            <ThreadRow key={th.phone_e164} thread={th} search={search} active={th.phone_e164 === search.phone} />
+            <ThreadRow key={th.phone_e164} thread={th} search={search} active={th.phone_e164 === search.phone} now={now} />
           ))}
         </ul>
       )}

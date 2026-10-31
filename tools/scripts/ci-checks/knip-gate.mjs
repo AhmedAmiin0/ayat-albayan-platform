@@ -1,7 +1,8 @@
 // Dead-code gate (docs/27 §4 Wave F): knip (knip.json) may not report an issue that is not in
 // refactor/guards/knip.json. The baseline lists what knip still reports on purpose (module barrels'
-// public API, names kept by e8; see docs/27 §5a e8). A fixed entry fails too until it leaves the
-// baseline (--write), so the same name cannot come back unnoticed.
+// public API, names kept by e8; see docs/27 §5a e8). A fixed entry passes: no PR edits the list for
+// it (so none conflict); after a green push to develop, ci's «baselines» job drops it (--write, the
+// list then only shrinks), so the same name cannot come back unnoticed.
 // Usage: knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs [--write]
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -38,9 +39,8 @@ function main(args) {
   const { added, fixed } = compare(now, baseline);
   console.log(`knip: ${now.length} issues, baseline ${baseline.length}, new ${added.length}, fixed ${fixed.length}`);
   for (const l of added) console.log(`  new: ${l}`);
-  for (const l of fixed) console.log(`  fixed: ${l}`);
-  if (fixed.length > 0) console.log('  fixed entries leave the baseline: pnpm guard:knip -- --write');
-  if (added.length + fixed.length > 0) process.exit(1);
+  for (const l of fixed) console.log(`  fixed: ${l} (develop drops it from the baseline)`);
+  if (added.length > 0) process.exit(1);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main(process.argv.slice(2));

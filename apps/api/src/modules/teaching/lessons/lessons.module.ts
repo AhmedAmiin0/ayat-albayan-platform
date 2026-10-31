@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SchedulingModule } from '../scheduling/scheduling.module';
 import { SubscriptionsModule } from '../../finance/subscriptions/subscriptions.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
+import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
 import { LessonAccess } from './store/lesson-access';
 import { LessonActionsController } from './status/lesson-actions.controller';
 import { LessonCancelService } from './status/lesson-cancel.service';
@@ -40,7 +41,7 @@ import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
  * «عدّل الوقت» (R-SCH-11): one lesson edited in place.
  */
 @Module({
-  imports: [SchedulingModule, SubscriptionsModule, TeachersModule],
+  imports: [SchedulingModule, SubscriptionsModule, TeachersModule, ScheduleNoticesModule],
   controllers: [
     LessonsController,
     LessonActionsController,

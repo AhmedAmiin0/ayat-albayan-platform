@@ -46,7 +46,7 @@ export class LessonTimeService {
     const overrideReason = clashes.length > 0 ? (body.override?.reason ?? null) : null;
     try {
       const change = changeOf({ row, plan, actor, messages, overrideReason });
-      await this.store.retime(change, movedNotice(row, actor));
+      await this.store.retime(change, movedNotice({ row, plan, actor }));
     } catch (e) {
       // Two identical requests at once: the loser finds the edit it asked for already in place.
       if (errorCode(e) === 'stale_time' && (await this.alreadyHolds(lessonId, body))) return NOTHING;
@@ -102,8 +102,18 @@ function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
   return { mode, now: new Date(), current, request, zones };
 }
 
-/** The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody). */
-function movedNotice(row: LessonRow, actor: AuthUser): ScheduleChange {
+interface NoticeInput {
+  row: LessonRow;
+  plan: TimeEditPlan;
+  actor: AuthUser;
+}
+
+/**
+ * The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody), only when
+ * the admin left «notify» on AND the start moved: a length-only edit or notify:false tells nobody.
+ */
+function movedNotice({ row, plan, actor }: NoticeInput): ScheduleChange | undefined {
+  if (!plan.notify || !plan.startChanged) return undefined;
   const fromStartsAt = row.starts_at;
   return { kind: 'lesson_rescheduled', lessonId: row.id, fromStartsAt, actorId: actor.id };
 }

@@ -48,6 +48,7 @@ export function lessonNotice(change: LessonChange, row: NoticeLessonRow): Notice
     ...(moved ? { from: new Date(change.fromStartsAt) } : {}),
     teachers: row.teacher ? [{ teacher: row.teacher, at }] : [],
     students: studentsOf(row),
+    familyWhatsApp: change.kind !== 'lesson_rescheduled' || change.familyNotice === true,
     actorId: change.actorId,
   };
 }
@@ -79,6 +80,7 @@ export function pausedNotice(change: Of<'course_paused'>, input: PausedInput): N
     at: new Date(first.starts_at),
     teachers: firstPerTeacher(ahead),
     students: [input.student],
+    familyWhatsApp: true,
     actorId: change.actorId,
   };
 }
@@ -95,6 +97,7 @@ export function resumedNotice(change: Of<'course_resumed'>, input: ResumedInput)
     at,
     teachers: next.teacher ? [{ teacher: next.teacher, at }] : [],
     students: [input.student],
+    familyWhatsApp: true,
     actorId: change.actorId,
   };
 }

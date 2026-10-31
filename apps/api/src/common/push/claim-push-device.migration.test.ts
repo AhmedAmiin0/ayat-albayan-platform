@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 730 (review of #177): the takeover check in one locked statement. No database runs in
 // unit tests: this pins its shape; e2e/tests/push-device-claim.sql.spec.ts runs it.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261025000730_claim_push_device.sql'), 'utf8');
 const code = sql
   .split('\n')

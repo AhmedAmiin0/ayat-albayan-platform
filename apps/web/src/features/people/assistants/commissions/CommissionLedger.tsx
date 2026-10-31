@@ -5,13 +5,12 @@ import { TableBox } from '@/components/data-table/TableBox';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { ASSISTANT_COMMISSION_STATUSES } from '@ab/shared';
+import { ASSISTANT_COMMISSION_STATUSES, sumByCurrency } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { commissionsQuery, type AssistantCommissionView, type AssistantRow } from '../api';
+import { commissionsQuery, type AssistantCommissionView, type AssistantRow } from '@/features/people/assistants/api';
 import { commissionColumns } from './commission-columns';
 import { CurrencyList } from './CurrencyList';
-import { FilterBar, type Filter } from '../students/FilterBar';
-import { sumByCurrency } from '../statements/totals';
+import { FilterBar, type Filter } from '@/features/people/assistants/students/FilterBar';
 import { VoidCommissionDialog } from './VoidCommissionDialog';
 
 type Props = {

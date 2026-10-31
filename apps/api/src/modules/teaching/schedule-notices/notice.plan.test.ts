@@ -16,6 +16,12 @@ describe('planNotice: both the teacher and the family (owner 2026-10-30)', () =>
     expect(messages.every((m) => m.lesson_id === 'L1' && m.expires_at === AT.toISOString())).toBe(true);
   });
 
+  it('familyWhatsApp false (the booking confirmation went): the teacher’s row only, bells kept', () => {
+    const plan = planNotice(notice({ familyWhatsApp: false }), NOW);
+    expect(plan.messages.map((m) => m.dedup_key)).toEqual(['lesson_cancelled:L1:t:T1']);
+    expect(plan.pushes.map((p) => p.profileIds[0])).toEqual(['pT1', 'pG1']);
+  });
+
   it('each one in their own zone: the teacher in Riyadh, the guardian in London', () => {
     const [toTeacher, toGuardian] = planNotice(notice(), NOW).messages;
     expect(toTeacher?.template_params['3']).toBe('الاثنين 2 نوفمبر، 11:00 ص');

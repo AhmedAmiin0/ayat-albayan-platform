@@ -33,7 +33,7 @@ interface MessageTo {
 }
 
 /** A change to a lesson already started (or a move from one) notifies nobody. */
-export function isUpcoming(notice: Notice, now: Date): boolean {
+export function isUpcoming(notice: Pick<Notice, 'at' | 'from'>, now: Date): boolean {
   const past = (d: Date) => d.getTime() <= now.getTime();
   return !past(notice.at) && !(notice.from && past(notice.from));
 }
@@ -110,14 +110,14 @@ function teacherParts(notice: Notice, now: Date, plan: NoticePlan): void {
   }
 }
 
-/** Each family: one WhatsApp to the guardian naming their students; their own bells. */
+/** Each family: one WhatsApp to the guardian naming their students (see familyWhatsApp); bells. */
 function familyParts(notice: Notice, now: Date, plan: NoticePlan): void {
   const at = notice.at;
   for (const { guardian, students } of families(notice.students)) {
     const names = namesOf(students);
     const template = noticeTemplate(notice, { name: guardian.name, tz: guardian.tz, names, at });
     const to = { phone: guardian.phone_e164, to: `g:${guardian.id}`, guardianId: guardian.id };
-    add(plan, { row: message(notice, { ...to, template }, now) });
+    if (notice.familyWhatsApp) add(plan, { row: message(notice, { ...to, template }, now) });
     // An adult student who is their own guardian shares the profile: one bell.
     const own = students.filter((s) => s.profile_id !== guardian.profile_id);
     for (const p of [guardian, ...own]) {
