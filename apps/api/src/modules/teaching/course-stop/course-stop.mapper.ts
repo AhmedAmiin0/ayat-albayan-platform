@@ -1,10 +1,26 @@
-import {
-  STUDENT_STATUSES,
-  type CourseStopped,
-  type CourseStopResult,
-  type StudentStatus,
-} from '@ab/shared';
+import { STUDENT_STATUSES, type CourseStopped, type CourseStopResult } from '@ab/shared';
+import { z } from 'zod';
 import type { StopSub } from './course-stop.repo';
+
+/** course_stop_plan (migration 991): what a stop would take now. */
+const planSchema = z.object({
+  rule_ids: z.array(z.string()),
+  lessons: z.array(z.object({ id: z.string(), status: z.string() })),
+  unattributed: z.boolean(),
+});
+export type StopPlan = z.infer<typeof planSchema>;
+export const stopPlan = (data: unknown): StopPlan => planSchema.parse(data);
+
+/** stop_course's answer (the first stop's audit `after` on a replay). */
+const rowSchema = z.object({
+  cancelled_lessons: z.array(z.string()),
+  ended_rules: z.array(z.string()),
+  student_status: z.enum(STUDENT_STATUSES),
+  stopped_at: z.string(),
+  replayed: z.boolean(),
+});
+export type StopRow = z.infer<typeof rowSchema>;
+export const stopRow = (data: unknown): StopRow => rowSchema.parse(data);
 
 /** Who stopped the package, when and why; null while it is not cancelled. */
 export function toStopped(sub: StopSub): CourseStopped | null {
@@ -12,20 +28,13 @@ export function toStopped(sub: StopSub): CourseStopped | null {
   return { at: sub.cancelled_at, by: sub.cancelled_by, reason: sub.cancel_reason };
 }
 
-const ids = (v: unknown): number => (Array.isArray(v) ? v.length : 0);
-const statusOf = (v: unknown): StudentStatus => STUDENT_STATUSES.find((s) => s === v) ?? 'churned';
-
-/** The answer of a stop, from its audit row's `after` (a replay answers the first stop). */
-export function toResult(input: {
-  sub: StopSub;
-  after: Record<string, unknown>;
-}): CourseStopResult {
-  const { sub, after } = input;
+/** The answer of a stop (a replay answers the first stop). */
+export function toResult(subscriptionId: string, row: StopRow): CourseStopResult {
   return {
-    subscriptionId: sub.id,
-    cancelledLessons: ids(after.cancelled_lessons),
-    endedRules: ids(after.ended_rules),
-    studentStatus: statusOf(after.student_status),
-    stoppedAt: sub.cancelled_at ?? new Date().toISOString(),
+    subscriptionId,
+    cancelledLessons: row.cancelled_lessons.length,
+    endedRules: row.ended_rules.length,
+    studentStatus: row.student_status,
+    stoppedAt: new Date(row.stopped_at).toISOString(),
   };
 }

@@ -87,13 +87,19 @@ export class CourseChange {
     return sub;
   }
 
-  /** The course's rules; 400 trial_not_course, 404 course_not_found, 409 course_finished (no active rule). */
+  /**
+   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409 course_finished
+   * (no active rule) / course_unattributed.
+   */
   private async load(sub: CourseSub): Promise<Loaded> {
     if (sub.package === 'trial') throw domainError(HttpStatus.BAD_REQUEST, 'trial_not_course');
     const all = await this.queries.rules(sub.id);
     if (all.length === 0) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
     const active = all.filter((r) => r.status === 'active');
     if (active.length === 0) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+    // A running rule without subscription_id it cannot own (a group, or one into the next package).
+    if (active.some((r) => r.course?.clean === false))
+      throw domainError(HttpStatus.CONFLICT, 'course_unattributed');
     return { sub, active, all };
   }
 

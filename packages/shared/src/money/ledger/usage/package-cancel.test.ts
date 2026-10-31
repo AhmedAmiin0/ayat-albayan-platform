@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cancelBlock, cancelOffered, currentPackage, livePackages, subscriptionCancelSchema } from './package-cancel.js';
+import { cancelBlock, cancelOffered, COUNTS_FOR_MONEY, countsForMoney, currentPackage, livePackages, subscriptionCancelSchema } from './package-cancel.js';
 
 describe('cancelBlock («إلغاء الباقة», owner 2026-10-28)', () => {
   it('a package with nothing paid and no lesson may be cancelled', () => {
@@ -56,5 +56,15 @@ describe('cancelOffered (the row action)', () => {
   it('a row with its balance: only while no lesson is used (FIFO, any rule)', () => {
     expect(cancelOffered({ status: 'unpaid', paid: 0, balance: { lessons_used: 0 } })).toBe(true);
     expect(cancelOffered({ status: 'unpaid', paid: 0, balance: { lessons_used: 2 } })).toBe(false);
+  });
+});
+
+describe('countsForMoney (migration 991): every package but an unused cancel', () => {
+  it('a stopped package keeps its money; an unused or kind-less cancel does not', () => {
+    expect(countsForMoney({ status: 'active' })).toBe(true);
+    expect(countsForMoney({ status: 'cancelled', cancel_kind: 'stopped' })).toBe(true);
+    expect(countsForMoney({ status: 'cancelled', cancel_kind: 'unused' })).toBe(false);
+    expect(countsForMoney({ status: 'cancelled', cancel_kind: null })).toBe(false);
+    expect(COUNTS_FOR_MONEY).toBe('status.neq.cancelled,cancel_kind.eq.stopped');
   });
 });

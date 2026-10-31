@@ -3981,6 +3981,7 @@ export type Database = {
           fx_rate: number | null;
           id: string;
           lessons_total: number;
+          lessons_used_at_stop: number | null;
           lessons_used_before: number;
           notes: string | null;
           package: Database['public']['Enums']['package_size'] | null;
@@ -3989,6 +3990,7 @@ export type Database = {
           renews_on: string | null;
           starts_on: string;
           status: Database['public']['Enums']['subscription_status'];
+          stop_request_id: string | null;
           student_id: string;
           updated_at: string;
         };
@@ -4006,6 +4008,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
@@ -4014,6 +4017,7 @@ export type Database = {
           renews_on?: string | null;
           starts_on: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_request_id?: string | null;
           student_id: string;
           updated_at?: string;
         };
@@ -4031,6 +4035,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total?: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
@@ -4039,6 +4044,7 @@ export type Database = {
           renews_on?: string | null;
           starts_on?: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_request_id?: string | null;
           student_id?: string;
           updated_at?: string;
         };
@@ -5280,6 +5286,17 @@ export type Database = {
       course_pause_set_until: { Args: { p: Json }; Returns: Json };
       course_pause_start: { Args: { p: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
+      course_rules_of: {
+        Args: { p_subscription: string };
+        Returns: {
+          rule_id: string;
+          linked: boolean;
+          clean: boolean;
+          from_on: string | null;
+          until_on: string | null;
+        }[];
+      };
+      course_stop_plan: { Args: { p_at: string; p_subscription: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       crm_media_copy_batch: {
@@ -5525,6 +5542,7 @@ export type Database = {
       student_first_paid_at: { Args: { p_student: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
       submit_report_content: { Args: { p: Json }; Returns: Json };
+      stop_course: { Args: { p: Json }; Returns: Json };
       subscription_full_at: { Args: { p_subscription: string }; Returns: string };
       sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {

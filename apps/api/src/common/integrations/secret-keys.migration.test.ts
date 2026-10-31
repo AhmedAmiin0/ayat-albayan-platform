@@ -2,11 +2,12 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The Vault allow-list in force: the LAST migration that (re)defines integration_secret_key_ok must
 // list exactly the shared secret keys. A new secret key needs a new migration re-creating it
 // (docs/25). No database in unit tests: the SQL is read as text.
-const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
+const dir = MIGRATIONS_DIR;
 const DEFINES = 'function public.integration_secret_key_ok(p_key text)';
 const files = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
 const defining = files.filter((f) => readFileSync(join(dir, f), 'utf8').includes(DEFINES));

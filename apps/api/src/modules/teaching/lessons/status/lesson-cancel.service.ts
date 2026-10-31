@@ -1,4 +1,4 @@
-import { isOpenLesson, stopEndsOn, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
+import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { badRequest, conflict } from '../../../../common/http/errors';
@@ -12,7 +12,6 @@ import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } fro
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
 interface CancelInput { lessonId: string; body: CancelBody; actor: AuthUser }
 interface RuleCancelInput { ruleId: string; body: RuleCancelRequest; actor: AuthUser }
-interface RuleStopInput { ruleId: string; at: Date; reason: string; actor: AuthUser }
 
 interface Cancel { by: CancelRequest['by']; reason: string | null }
 interface EndRule {
@@ -76,18 +75,6 @@ export class LessonCancelService {
     if (body.from && body.from < today) throw badRequest('date_in_past');
     const from = body.from ?? today;
     return this.endRule({ rule, from, cutoff: startOfLocalDay(from, rule.tz), body, actor });
-  }
-
-  /**
-   * «إلغاء الاشتراك» (owner 2026-10-30): the rule's open lessons from `at` are cancelled by the
-   * admin side and the rule ends on the cancel date in its zone (stopEndsOn: never later than now).
-   * Lessons that already started stay for their report (issue B2).
-   */
-  async stopRule({ ruleId, at, reason, actor }: RuleStopInput): Promise<string[]> {
-    const rule = await this.rules.rule(ruleId);
-    if (!rule) throw new NotFoundException();
-    const from = addDays(stopEndsOn(rule, at), 1);
-    return this.endRule({ rule, from, cutoff: at, body: { by: 'admin', reason }, actor });
   }
 
   /** Cancels the rule's open lessons from `cutoff` and ends it, in one transaction. */

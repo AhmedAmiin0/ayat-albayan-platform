@@ -2,10 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migration 985 (owner 2026-10-30): the three keys' seed and the stopped mode of 934's cancel
+// Migration 990 (owner 2026-10-30): the three keys' seed and the stopped mode of 934's cancel
 // guard.
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
-const sql = readFileSync(join(dir, '20261030000985_course_stop_permissions.sql'), 'utf8').replace(
+const sql = readFileSync(join(dir, '20261030000990_course_stop_permissions.sql'), 'utf8').replace(
   /--.*$/gm,
   '',
 );
@@ -14,7 +14,7 @@ const guard = sql.slice(
   sql.indexOf('end $$;'),
 );
 
-describe('migration 985', () => {
+describe('migration 990', () => {
   it('expand-only: one nullable checked column, no drop, idempotent', () => {
     expect(sql).toMatch(
       /add column if not exists cancel_kind text check \(cancel_kind in \('unused', 'stopped'\)\)/,

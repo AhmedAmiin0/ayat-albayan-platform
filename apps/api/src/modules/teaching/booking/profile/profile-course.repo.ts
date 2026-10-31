@@ -66,18 +66,24 @@ export class ProfileCourseRepo {
     return data;
   }
 
-  /** The course's open lessons from now on (its rules by subscription_id): «من تاريخ»'s default. */
-  async upcoming(subscriptionId: string): Promise<{ status: LessonStatus; starts_at: string }[]> {
+  /**
+   * The next open lesson of the course's rules (course_rules_of, migration 991: also a rule without
+   * subscription_id) from now on: «من تاريخ»'s default.
+   */
+  async upcoming(
+    ruleIds: readonly string[],
+  ): Promise<{ status: LessonStatus; starts_at: string }[]> {
+    if (ruleIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lessons')
-      .select('status, starts_at, rule:schedule_rules!lessons_rule_id_fkey!inner(subscription_id)')
-      .eq('rule.subscription_id', subscriptionId)
+      .select('status, starts_at')
+      .in('rule_id', [...ruleIds])
       .in('status', [...OPEN_LESSON_STATUSES])
       .gte('starts_at', new Date().toISOString())
       .order('starts_at')
       .limit(1);
     if (error) throw dbError(error);
-    return data.map((l) => ({ status: l.status, starts_at: l.starts_at }));
+    return data;
   }
 
   /**

@@ -1,8 +1,8 @@
 import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
-import { IntegrationConfigModule } from '../../../common/integrations/integration-config.module';
-import { NumbersModule } from '../numbers/numbers.module';
-import { bootGaps, lineProvider, loadEnv } from '../../../config/env/env';
+import { IntegrationConfigModule } from '@/common/integrations/integration-config.module';
+import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';
+import { bootGaps, lineProvider, loadEnv } from '@/config/env/env';
 import { CodeSend } from './direct/code-send';
 import { GateController } from './gate/gate.controller';
 import { GateSettings } from './gate/gate.settings';
@@ -23,6 +23,8 @@ import { MessageDispatch } from './sender/message.dispatch';
 import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
 import { MessageWorker } from './sender/message.worker';
+import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
+import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
 import { MessagesQueries } from './messages/messages.queries';
 import { MessagesService } from './messages/messages.service';
@@ -79,6 +81,8 @@ function lines(): WhatsappLines {
     NumberRoutes,
     MessageDispatch,
     CodeSend,
+    PaymentHoldRepo,
+    PaymentHolds,
     MessageWorker,
     MessageSender,
     MessagesQueries,

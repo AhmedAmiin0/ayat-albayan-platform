@@ -2,10 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defaultGrantsOf, isGrantable } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The migrations seed the system roles' grants by hand; this keeps them equal to the catalog
 // (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table.
-const MIGRATIONS = join(__dirname, '../../../../../../packages/db/supabase/migrations');
+const MIGRATIONS = MIGRATIONS_DIR;
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
 const LATER = [
@@ -27,7 +28,7 @@ const LATER = [
   '20261028000958_courses_pause_permission.sql',
   '20261029000970_sales_renew_any_permission.sql',
   '20261029000975_leads_link_family_permission.sql',
-  '20261030000985_course_stop_permissions.sql',
+  '20261030000990_course_stop_permissions.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -42,7 +43,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 958, 970, 975, 985)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 958, 970, 975, 990)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });

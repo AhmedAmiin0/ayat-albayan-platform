@@ -51,7 +51,7 @@
   },
   "src/money/assistant/kind.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/money/assistant/renewal.test.ts": {

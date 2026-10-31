@@ -761,7 +761,8 @@
       "no_change": "You have not changed any time yet; pick another day or time",
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
-      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more."
+      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -3433,6 +3434,7 @@
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
+      "wa_payment_hold": "The WhatsApp Business account has no valid payment method — the messages wait in the queue and go out automatically once the admin fixes billing in Meta",
       "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
       "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
       "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
@@ -7295,7 +7297,8 @@
       "starts_before_course": "The date is before the course starts",
       "starts_before_subscription": "The date is before the subscription starts",
       "teacher_inactive": "This teacher is inactive",
-      "teacher_not_found": "Teacher not found"
+      "teacher_not_found": "Teacher not found",
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first."
     }
   },
   "coursePause": {
