@@ -56,9 +56,9 @@ describe('toAttendanceTable', () => {
     expect([t.items[0]?.is_trial, t.mine]).toEqual([true, false]);
   });
 
-  it('not hers: the report reads as sent, its id never leaves', () => {
+  it('not hers: the report reads as sent and opens too (owner 2026-10-30)', () => {
     const t = toAttendanceTable({ month: '2026-10', lessons: octoberLessons(), reports: [{ id: 'rep-held', lesson_id: 'held' }], starts: [], mine: false }, NOW);
-    expect([t.items[0]?.report_sent, t.items[0]?.report_id]).toEqual([true, null]);
+    expect([t.items[0]?.report_sent, t.items[0]?.report_id, t.mine]).toEqual([true, 'rep-held', false]);
   });
 
   it('never a price, a link or notes', () => {
