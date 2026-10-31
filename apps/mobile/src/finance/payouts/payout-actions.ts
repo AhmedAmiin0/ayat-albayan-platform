@@ -1,4 +1,4 @@
-import type { PaymentMethod, PayoutView } from '@ab/shared';
+import { round2, type PaymentMethod, type PayoutView } from '@ab/shared';
 import { paidAtFor } from '@/payments/lib/paid-day';
 import type { Receipt } from '@/payments/receipt';
 
@@ -13,7 +13,7 @@ export function payoutActions(p: Pick<PayoutView, 'status' | 'has_receipt'>): Pa
 
 /** Shown beside «تأكيد الدفع»: the cash still due after per-session payments. The API recomputes it. */
 export const dueOf = (p: Pick<PayoutView, 'amount' | 'ledger_paid'>): number =>
-  Math.max(0, Math.round((p.amount - (p.ledger_paid ?? 0)) * 100) / 100);
+  Math.max(0, round2(p.amount - (p.ledger_paid ?? 0)));
 
 export interface PayDraft {
   method: PaymentMethod;
