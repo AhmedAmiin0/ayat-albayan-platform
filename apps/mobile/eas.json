@@ -19,6 +19,9 @@
         "buildType": "apk"
       },
       "environment": "preview",
+      "env": {
+        "ORG_GRADLE_PROJECT_reactNativeArchitectures": "arm64-v8a,armeabi-v7a"
+      },
       "node": "24.15.0",
       "pnpm": "11.25.0"
     },
@@ -32,6 +35,7 @@
       "env": {
         "EXPO_PUBLIC_FEATURE_STRIPE": "1",
         "APP_VARIANT": "stripetest",
+        "ORG_GRADLE_PROJECT_reactNativeArchitectures": "arm64-v8a,armeabi-v7a",
         "EXPO_PUBLIC_API_URL": "https://staging-api.ayatalbayan.com",
         "EXPO_PUBLIC_SUPABASE_URL": "https://gqkqbxxgqttfbbqoqedf.supabase.co",
         "EXPO_PUBLIC_WEB_ORIGIN": "https://staging-app.ayatalbayan.com"
@@ -48,6 +52,7 @@
       "environment": "development",
       "env": {
         "APP_VARIANT": "staging",
+        "ORG_GRADLE_PROJECT_reactNativeArchitectures": "arm64-v8a,armeabi-v7a",
         "EXPO_PUBLIC_API_URL": "https://staging-api.ayatalbayan.com",
         "EXPO_PUBLIC_SUPABASE_URL": "https://gqkqbxxgqttfbbqoqedf.supabase.co",
         "EXPO_PUBLIC_WEB_ORIGIN": "https://staging-app.ayatalbayan.com"

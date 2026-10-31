@@ -44,6 +44,7 @@ test('only the stripe-test profile sets the flag; an internal APK on its own cha
     env: {
       EXPO_PUBLIC_FEATURE_STRIPE: '1',
       APP_VARIANT: 'stripetest',
+      ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a,armeabi-v7a',
       EXPO_PUBLIC_API_URL: 'https://staging-api.ayatalbayan.com',
       EXPO_PUBLIC_SUPABASE_URL: 'https://gqkqbxxgqttfbbqoqedf.supabase.co',
       EXPO_PUBLIC_WEB_ORIGIN: 'https://staging-app.ayatalbayan.com',

@@ -37,7 +37,11 @@ test('the staging profile: its own channel, the EAS development environment, sta
     channel: 'staging',
     android: { buildType: 'apk' },
     environment: 'development',
-    env: { APP_VARIANT: 'staging', ...STAGING },
+    env: {
+      APP_VARIANT: 'staging',
+      ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a,armeabi-v7a',
+      ...STAGING,
+    },
     node: eas.build.preview.node,
     pnpm: eas.build.preview.pnpm,
   });
