@@ -3,7 +3,7 @@ import { ar } from '@/common/infra/i18n/server-text';
 import type { PushTarget } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { staffReachable, type StaffOnRecord } from '@/modules/messaging/reminders/plan/staff-reachable';
-import { teacherAlertCrm } from './teacher-alert.crm';
+import { teacherLessonCrm } from '@/modules/messaging/reminders';
 
 // R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell
 // (always) and on WhatsApp (teacher_new_student, only while settings.teacher_whatsapp_new_student
@@ -16,7 +16,7 @@ export interface AlertTeacher extends StaffOnRecord {
   profile_id: string | null;
   phone_e164: string | null;
   tz: string;
-  /** The CRM alert's {{1}} (teacher-alert.crm.ts). */
+  /** The CRM alert's {{1}} (teacherLessonCrm). */
   display_name_ar?: string | null;
 }
 
@@ -78,7 +78,7 @@ export function teacherAlerts(input: AlertInput): TeacherAlertPlan[] {
         }
       : null;
     const meta = teacherNewStudentMessage({ names, startsAt, tz: teacher.tz, kind: input.kind });
-    const crm = teacherAlertCrm({ teacher, lesson, students: input.students });
+    const crm = teacherLessonCrm({ teacher, lesson, students: input.students });
     // Only the lesson's teacher's number on record, and only while they are still on staff.
     const message = teacher.phone_e164 && staffReachable(teacher)
       ? queuedRow({

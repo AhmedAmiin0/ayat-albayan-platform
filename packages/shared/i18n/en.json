@@ -3363,6 +3363,8 @@
       "contact_name": "Ahmed"
     },
     "teacherLessonMinutes": "{n} minutes",
+    "teacherReminderCrm": "{when} · {students} · Lesson link: {join} · Lesson report: {report}",
+    "teacherReminderCrmStudent": "{name} ({code})",
     "teacherNewStudentKind": {
       "trial": "Trial",
       "subscription": "Subscription"
