@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { CHAT_OFF, CHAT_TWO, NUMBERS } from '../send/send-number.fakes';
-import { inboxApp } from '../test-app';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { CHAT_OFF, CHAT_TWO, NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // H3 in module mode (docs/23c decision 6): the reply leaves from the number the family wrote to.
 

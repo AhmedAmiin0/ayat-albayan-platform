@@ -1,4 +1,4 @@
-import { fromCents, toCents } from '../ledger/earnings/earnings.js';
+import { fromCents, toCents } from '../ledger/cents.js';
 import { localDay } from './first-paid.js';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:

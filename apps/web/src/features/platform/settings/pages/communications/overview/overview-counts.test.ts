@@ -12,10 +12,12 @@ describe('«ماذا يُرسل الآن» counts', () => {
     expect(rows.map((r) => r.label)).toEqual(NOTIFICATION_AUDIENCES.map((a) => t.notificationCatalogue.audience[a]));
   });
 
-  it('counts each automatic row once, by its own state; manual rows are left out', () => {
+  it('counts each automatic row once per audience it reaches, by its own state; manual rows are left out', () => {
     const entries = views(null);
     const rows = audienceCounts(entries);
-    const automatic = entries.filter((e) => !e.manual);
+    // A schedule change reaches the guardian and the teacher (also_to): it counts under both.
+    const reached = (e: (typeof entries)[number]) => [e, ...(e.also_to ?? []).map(() => e)];
+    const automatic = entries.filter((e) => !e.manual).flatMap(reached);
     expect(rows.reduce((n, r) => n + r.on + r.off, 0)).toBe(automatic.length);
     expect(rows.reduce((n, r) => n + r.on, 0)).toBe(automatic.filter((e) => e.state === 'on').length);
   });

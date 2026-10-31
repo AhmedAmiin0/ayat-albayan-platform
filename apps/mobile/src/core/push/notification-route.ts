@@ -49,6 +49,11 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   channel_message: () => '/',
   // «محفظتي» (owner 2026-10-29): salespeople only; never sent to an admin.
   commission_earned: () => '/',
+  // A schedule change (owner 2026-10-30): the student.
+  lesson_rescheduled: toStudent,
+  lesson_cancelled: toStudent,
+  course_paused: toStudent,
+  course_resumed: toStudent,
 };
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
@@ -103,6 +108,11 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   google_sync_alert: () => TEACHER_TODAY,
   channel_message: (data) => toTeacherChannel(data),
   commission_earned: () => TEACHER_TODAY,
+  // A schedule change (owner 2026-10-30): her schedule, where the lesson moved or went.
+  lesson_rescheduled: () => '/teacher/schedule',
+  lesson_cancelled: () => '/teacher/schedule',
+  course_paused: () => '/teacher/schedule',
+  course_resumed: () => '/teacher/schedule',
 };
 
 /** The teacher screen a tapped push opens; null for anything that is not one of our pushes. */

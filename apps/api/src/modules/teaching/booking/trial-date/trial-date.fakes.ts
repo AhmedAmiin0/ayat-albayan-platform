@@ -10,6 +10,7 @@ import type { TrialLessonRead } from './trial-date.history';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialDateQueries } from './trial-date.queries';
 import { TrialDateDeps, TrialDates } from './trial-date.service';
+import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 export const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 export const OTHER_TEACHER = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e22';
@@ -64,12 +65,16 @@ export function fakeTrialDates(o: TrialSetup = {}) {
     }),
   };
   const alert = fakeTeacherAlert();
-  const events = { changed: vi.fn(async () => undefined) };
+  const events = {
+    changed: vi.fn(async () => undefined),
+    scheduleChanged: vi.fn(async () => undefined),
+  };
   const policy = fakePolicy({ settings: ruleSettingsOf({}) });
+  const family = fakeFamilyMove();
   const service = new TrialDates(
     queries as unknown as TrialDateQueries,
     deps.planner,
-    new TrialDateDeps(policy, alert.after, events as unknown as LessonEvents),
+    new TrialDateDeps(policy, alert.after, events as unknown as LessonEvents, family.move),
   );
-  return { ...deps, trialQueries: queries, alert, events, service };
+  return { ...deps, trialQueries: queries, alert, events, service, family: family.gate };
 }

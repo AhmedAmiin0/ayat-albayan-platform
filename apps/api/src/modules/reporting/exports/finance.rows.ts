@@ -1,5 +1,5 @@
-import type { PaymentMethod, ReceivableRow } from '@ab/shared';
-import { ar } from '../../../common/i18n/server-text';
+import { round2, type PaymentMethod, type ReceivableRow } from '@ab/shared';
+import { ar } from '@/common/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
 // Finance CSV rows (owner, 2026-10-05): expenses, the teacher ledger, receivables. Money as numbers.
@@ -65,7 +65,7 @@ export function ledgerCsv(input: { sessions: readonly SessionIn[]; payments: rea
       s.minutes,
       Number(s.amount),
       Number(s.paid_amount),
-      Math.round((Number(s.amount) - Number(s.paid_amount)) * 100) / 100,
+      round2(Number(s.amount) - Number(s.paid_amount)),
       status[s.status] ?? s.status,
     ]),
     [],

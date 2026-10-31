@@ -1,9 +1,10 @@
+import { toCents } from '../../money/ledger/index.js';
 import type { PaymentLinkStatus } from './schemas.js';
 
 // Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the mobile app.
 
 /** SAR and USD have 2 decimals: 290.5 → 29050. */
-export const toMinorUnits = (amount: number): number => Math.round(amount * 100);
+export const toMinorUnits = toCents;
 export const fromMinorUnits = (minor: number): number => Math.round(minor) / 100;
 
 /** The lowest amount the admin's cap allows (null = no cap: anything above 0). */

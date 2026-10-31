@@ -1,9 +1,9 @@
 // Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a vi.fn().
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import type { KapsoLineEnv } from '../../../../config/env/env';
-import type { WebhookQueries } from '../webhook.queries';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { KapsoLineEnv } from '@/config/env/env';
+import type { WebhookQueries } from '@/modules/messaging/webhook/webhook.queries';
 import { ExternalStatus } from './external-status';
 import type { ExternalQueries } from './external.queries';
 import { ExternalStore } from './external.store';

@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
-import { TtlCache } from '../../../../common/cache/ttl-cache';
-import { SETTINGS_CACHE_MS } from '../../../../common/config-store/config-store.types';
+import { TtlCache } from '@/common/cache/ttl-cache';
+import { SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
 import { GoogleAccountQueries } from './google-account.queries';
-import { GoogleAlerts } from '../google-alerts';
-import { GOOGLE_CLIENT_FACTORY, type GoogleClient, type GoogleClientFactory } from '../google-client.port';
+import { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
+import { GOOGLE_CLIENT_FACTORY, type GoogleClient, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 
 /** How long the account status + refresh token are reused before Vault is asked again. */
 const CONNECTION_TTL_MS = 10 * 60_000;

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import type { OverlayNumber } from '../../../common/integrations/numbers-overlay';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { envelope, inboundValue, PHONE_NUMBER_ID, textPart } from './meta.fakes';
 import { sign, webhookApp } from './test-app';
 

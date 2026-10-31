@@ -6580,9 +6580,6 @@
     }
   },
   "src/inbox/thread/components/ChatHeader.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }

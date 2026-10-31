@@ -1,6 +1,6 @@
 import { WA_LINES, type ImportField, type IntegrationKey, type NumberSecretName, type WaLine } from '@ab/shared';
-import type { NumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { validOverlay } from '../../../../config/env/env';
+import type { NumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { validOverlay } from '@/config/env/env';
 
 // Each role's legacy line keys (docs/23a §A3), the bridge between a number record and today's config:
 // module mode fills exactly these keys from the role's default number; the import reads them.
