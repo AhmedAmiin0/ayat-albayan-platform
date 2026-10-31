@@ -43,7 +43,7 @@
   "@typescript-eslint/prefer-string-starts-ends-with": 5,
   "@typescript-eslint/require-await": 111,
   "@typescript-eslint/restrict-plus-operands": 3,
-  "@typescript-eslint/restrict-template-expressions": 60,
+  "@typescript-eslint/restrict-template-expressions": 57,
   "@typescript-eslint/return-await": 1,
   "@typescript-eslint/switch-exhaustiveness-check": 6,
   "@typescript-eslint/unbound-method": 15,
@@ -66,6 +66,6 @@
   "max-len": 14413,
   "max-lines-per-function": 268,
   "no-console": 2,
-  "no-restricted-properties": 28,
+  "no-restricted-properties": 6,
   "no-restricted-syntax": 239
 }

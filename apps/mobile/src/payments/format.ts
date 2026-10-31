@@ -1,5 +1,5 @@
 import { viewerTz } from '@ab/client-core';
-import { counted, formatAmount, intlLocale, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
+import { counted, dateText, formatAmount, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -23,22 +23,16 @@ export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_tot
   return sub.package ? t.enums.packageSize[sub.package] : counted(t.today.count, sub.lessons_total);
 }
 
-const dayIn = (timeZone: string) =>
-  new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone });
-const days = new Map<string, Intl.DateTimeFormat>();
-const calendarDay = dayIn('UTC');
+const DAY = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 
 /** «1 أكتوبر 2026»: the viewer's day of an instant (docs/34). */
 export function instantDay(iso: string): string {
-  const tz = viewerTz();
-  const format = days.get(tz) ?? dayIn(tz);
-  days.set(tz, format);
-  return format.format(new Date(iso));
+  return dateText(new Date(iso), { tz: viewerTz(), locale }, DAY);
 }
 
 /** «1 أكتوبر 2026» for a local date (YYYY-MM-DD, e.g. starts_on), whatever the phone's zone. */
 export function localDay(date: string): string {
-  return calendarDay.format(new Date(`${date}T12:00:00Z`));
+  return dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, DAY);
 }
 
 /** «8 حلقات في الشهر · من 24 سبتمبر 2026»: tells two packages of one student apart. */

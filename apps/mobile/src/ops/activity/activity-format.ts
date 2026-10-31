@@ -1,5 +1,5 @@
 import { viewerTz } from '@ab/client-core';
-import { intlLocale } from '@ab/shared';
+import { dateText } from '@ab/shared';
 import type { ActivityView, ClockCycle, StatusStyle } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -11,8 +11,8 @@ import { isolate } from '@/core/ui/primitives/Ltr';
 /** «03/10/2026، 16:30» / «… 4:30 م» on the viewer's clock. */
 export function formatAt(iso: string, cycle: ClockCycle): string {
   const tz = viewerTz();
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
-  return dateWithClock(day.format(new Date(iso)), clockIn(new Date(iso), tz, cycle));
+  const day = dateText(new Date(iso), { tz, locale }, { dateStyle: 'medium' });
+  return dateWithClock(day, clockIn(new Date(iso), tz, cycle));
 }
 
 const lookup = (dict: object, key: string): string | undefined =>

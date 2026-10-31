@@ -1516,9 +1516,6 @@
   "src/calendar/lib/week.ts": {
     "max-len": {
       "count": 1
-    },
-    "no-restricted-properties": {
-      "count": 2
     }
   },
   "src/calendar/lib/week.tz.test.ts": {
@@ -1790,9 +1787,6 @@
   "src/classroom/recordings/recording-format.ts": {
     "max-len": {
       "count": 3
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/classroom/recordings/recordings-api.ts": {
@@ -3245,9 +3239,6 @@
     },
     "max-len": {
       "count": 5
-    },
-    "no-restricted-properties": {
-      "count": 1
     },
     "no-restricted-syntax": {
       "count": 1
@@ -4851,9 +4842,6 @@
   "src/inbox/messages/days/day-label.ts": {
     "max-len": {
       "count": 7
-    },
-    "no-restricted-properties": {
-      "count": 2
     }
   },
   "src/inbox/messages/days/day-separators.test.ts": {
@@ -4930,9 +4918,6 @@
     },
     "max-len": {
       "count": 6
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/inbox/messages/hooks/quote-text.test.ts": {
@@ -7198,9 +7183,6 @@
     },
     "max-len": {
       "count": 2
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/meetings/invite/InviteResultRow.tsx": {
@@ -7256,9 +7238,6 @@
     },
     "max-len": {
       "count": 5
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/meetings/invite/invitee-draft.ts": {
@@ -7330,9 +7309,6 @@
     },
     "max-len": {
       "count": 5
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/meetings/manage/use-enter-meeting.ts": {
@@ -7494,11 +7470,6 @@
   },
   "src/money/receivables/receivables.test.ts": {
     "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/money/shared/months.ts": {
-    "no-restricted-properties": {
       "count": 1
     }
   },
@@ -7688,9 +7659,6 @@
   "src/more/schedule.ts": {
     "max-len": {
       "count": 1
-    },
-    "no-restricted-properties": {
-      "count": 2
     }
   },
   "src/more/screens/JobApplicantsScreen.test.tsx": {
@@ -7990,11 +7958,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/ops/activity/activity-format.ts": {
-    "no-restricted-properties": {
       "count": 1
     }
   },
@@ -8897,9 +8860,6 @@
   "src/payments/format.ts": {
     "max-len": {
       "count": 6
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/payments/hooks/queries.ts": {
@@ -10391,9 +10351,6 @@
     },
     "max-len": {
       "count": 3
-    },
-    "no-restricted-properties": {
-      "count": 2
     }
   },
   "src/sales/attendance/attendance-route.test.tsx": {
@@ -11069,9 +11026,6 @@
       "count": 5
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "no-restricted-properties": {
       "count": 1
     }
   },
@@ -11821,11 +11775,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/teacher/lib/payout-text.ts": {
-    "no-restricted-properties": {
       "count": 2
     }
   },
@@ -12611,13 +12560,7 @@
     }
   },
   "src/today/lib/timeline.ts": {
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 3
-    },
     "max-len": {
-      "count": 1
-    },
-    "no-restricted-properties": {
       "count": 1
     }
   },
@@ -12629,9 +12572,6 @@
   "src/today/lib/today-plan.ts": {
     "max-len": {
       "count": 6
-    },
-    "no-restricted-properties": {
-      "count": 1
     }
   },
   "src/today/lib/use-greeting.ts": {
