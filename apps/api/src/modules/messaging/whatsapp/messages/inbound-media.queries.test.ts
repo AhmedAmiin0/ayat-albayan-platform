@@ -35,7 +35,7 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
     expect(PLAYABLE_FILTER).not.toMatch(/image|pdf/);
   });
 
-  it('receipts: the pickers' filters run in the query, before its limit (stickers never push a PDF out)', async () => {
+  it('receipts: the picker filters run in the query, before its limit (stickers never push a PDF out)', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     await new InboundMediaQueries(db).receipts({ phone: '+966552147730', since: '2026-10-01T00:00:00.000Z', limit: 12 });
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
