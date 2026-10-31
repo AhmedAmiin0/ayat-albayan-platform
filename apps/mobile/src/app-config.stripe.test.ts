@@ -34,16 +34,20 @@ test.each(['development', 'preview', 'production'])('the %s profile never turns 
   expect(profile?.channel).not.toBe('stripe-test');
 });
 
-test('only the stripe-test profile sets the flag; an internal APK on its own channel, preview environment', () => {
+test('only the stripe-test profile sets the flag; an internal APK on its own channel, pointed at staging', () => {
   expect(profiles['stripe-test']).toEqual({
     distribution: 'internal',
     channel: 'stripe-test',
     android: { buildType: 'apk' },
-    environment: 'preview',
+    // Owner 2026-10-31: Stripe on STAGING only (docs/09): its hosts, its EAS environment.
+    environment: 'development',
     env: {
       EXPO_PUBLIC_FEATURE_STRIPE: '1',
       APP_VARIANT: 'stripetest',
       ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a,armeabi-v7a',
+      EXPO_PUBLIC_API_URL: 'https://staging-api.ayatalbayan.com',
+      EXPO_PUBLIC_SUPABASE_URL: 'https://gqkqbxxgqttfbbqoqedf.supabase.co',
+      EXPO_PUBLIC_WEB_ORIGIN: 'https://staging-app.ayatalbayan.com',
     },
     node: eas.build.preview.node,
     pnpm: eas.build.preview.pnpm,

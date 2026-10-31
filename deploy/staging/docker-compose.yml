@@ -1,6 +1,7 @@
-# Staging API on the Hostinger VPS (docs/09-deployment.md «Two API copies + one worker»). Lives in
-# /opt/ayat-albayan-staging. Only ayat-lb is published, on localhost: the host Caddy (not in this repo,
-# shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
+# PRODUCTION API (the live app; the «staging» names are legacy, owner 2026-10-31) on the Hostinger VPS
+# (docs/09-deployment.md «Production», «Two API copies + one worker»). Lives in /opt/ayat-albayan-staging; deployed
+# only by deploy-production.yml, by hand. The separate staging is deploy/stg. Only ayat-lb is published, on
+# localhost: the host Caddy (not in this repo, shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
 # Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
 # PDF sandbox + 64 MB LB + 96 MB Redis = 2336 MB ≈ 2.3 GB. After a deploy, measure (docker stats) the worker's RSS
@@ -34,13 +35,8 @@ x-app: &app
 x-shared-env: &shared-env
   # Shared cache (docs/09 «Shared cache»), on every app process. Redis down = the database, never an error.
   REDIS_URL: redis://ayat-redis:6379
-  # Owner, 2026-10-28: «I want a new seperate build with stripe and all the features continue normally
-  # on the current build». STAGING ONLY (never a production file): mounts the Stripe test module
-  # (docs/30). Every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع»; the normal
-  # web build and the normal app never show Stripe (build flags). To switch it off: delete these two
-  # lines and redeploy (docs/09). API_PUBLIC_URL is the host of the family's /pay/<token> pages.
-  FEATURE_STRIPE: test
-  API_PUBLIC_URL: https://api.ayatalbayan.com
+  # No FEATURE_STRIPE / API_PUBLIC_URL here (owner 2026-10-31): Stripe test links live on STAGING only
+  # (deploy/stg/docker-compose.yml, docs/30); production answers 404 on every Stripe route.
 
 x-api-env: &api-env
   <<: *shared-env

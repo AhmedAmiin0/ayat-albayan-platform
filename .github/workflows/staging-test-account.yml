@@ -1,10 +1,11 @@
 name: staging-test-account
 # Owner-run (2026-10-05: "create a test teacher and assign it to a test student"). Creates or
-# removes, on the STAGING database, a teacher login (role teacher) + its DEMO teacher row and a DEMO
-# guardian + student assigned to it: tools/scripts/seed/seed-test-account.mjs. Idempotent; `create`
-# again resets the password. The repo is public, so the log shows ids and counts only — never the
-# email, the password or a phone. Setup (develop environment): docs/09-deployment.md
-# «Test teacher on staging». Actions → staging-test-account → Run workflow.
+# removes, on the STAGING database (Supabase gqkqbxxgqttfbbqoqedf since the 2026-10-31 split; never
+# production), a teacher login (role teacher) + its DEMO teacher row and a DEMO guardian + student
+# assigned to it: tools/scripts/seed/seed-test-account.mjs (it refuses any other database). Idempotent;
+# `create` again resets the password. The repo is public, so the log shows ids and counts only — never
+# the email, the password or a phone. Setup (environment «staging», STG_* names only: repository
+# secrets hold production values): docs/09-deployment.md «Test teacher on staging».
 on:
   workflow_dispatch:
     inputs:
@@ -25,36 +26,33 @@ jobs:
   test-account:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: develop
+    environment: staging
     env:
-      PGHOST: ${{ vars.DB_POOLER_HOST || 'aws-1-eu-central-1.pooler.supabase.com' }}
-      PGPORT: '5432'
-      PGUSER: postgres.${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}
-      PGDATABASE: postgres
-      SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
+      SUPABASE_URL: https://gqkqbxxgqttfbbqoqedf.supabase.co
       ACTION: ${{ inputs.action }}
     steps:
-      - name: Check the develop environment (names only, never values)
+      - name: Check the staging environment (names only, never values)
         # Secrets only on the steps that need them (not on checkout / install).
         env:
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
-          TEST_TEACHER_EMAIL: ${{ vars.TEST_TEACHER_EMAIL || secrets.TEST_TEACHER_EMAIL }}
-          TEST_ACCOUNT_PASSWORD: ${{ secrets.TEST_ACCOUNT_PASSWORD }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.STG_DATABASE_URL }}
+          TEST_TEACHER_EMAIL: ${{ vars.STG_TEST_TEACHER_EMAIL }}
+          TEST_ACCOUNT_PASSWORD: ${{ secrets.STG_TEST_ACCOUNT_PASSWORD }}
         run: |
-          for v in TEST_ACCOUNT_PASSWORD TEST_TEACHER_EMAIL PGPASSWORD; do
+          for v in TEST_ACCOUNT_PASSWORD TEST_TEACHER_EMAIL; do
             if [ -n "${!v}" ]; then echo "::add-mask::${!v}"; fi
           done
           missing=0
-          test -n "$PGPASSWORD" || { echo "::error::add the secret SUPABASE_DB_PASSWORD to the develop environment"; missing=1; }
-          test -n "$TEST_TEACHER_EMAIL" || { echo "::error::add TEST_TEACHER_EMAIL (variable or secret) to the develop environment"; missing=1; }
+          test -n "$DATABASE_URL" || { echo "::error::add the secret STG_DATABASE_URL to the environment staging"; missing=1; }
+          test -n "$TEST_TEACHER_EMAIL" || { echo "::error::add the variable STG_TEST_TEACHER_EMAIL to the environment staging"; missing=1; }
           if [ "$ACTION" = create ]; then
-            test -n "$TEST_ACCOUNT_PASSWORD" || { echo "::error::add the secret TEST_ACCOUNT_PASSWORD (at least 10 characters) to the develop environment"; missing=1; }
+            test -n "$TEST_ACCOUNT_PASSWORD" || { echo "::error::add the secret STG_TEST_ACCOUNT_PASSWORD (at least 10 characters) to the environment staging"; missing=1; }
           fi
           exit $missing
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -63,12 +61,12 @@ jobs:
         run: pnpm turbo build --filter=@ab/shared
       - name: Run seed-test-account on staging
         env:
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
-          TEST_TEACHER_EMAIL: ${{ vars.TEST_TEACHER_EMAIL || secrets.TEST_TEACHER_EMAIL }}
-          TEST_ACCOUNT_PASSWORD: ${{ secrets.TEST_ACCOUNT_PASSWORD }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.STG_DATABASE_URL }}
+          TEST_TEACHER_EMAIL: ${{ vars.STG_TEST_TEACHER_EMAIL }}
+          TEST_ACCOUNT_PASSWORD: ${{ secrets.STG_TEST_ACCOUNT_PASSWORD }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STG_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "account via: Supabase Admin API"; else echo "account via: SQL (no SUPABASE_SERVICE_ROLE_KEY)"; fi
+          if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "account via: Supabase Admin API"; else echo "account via: SQL (no STG_SUPABASE_SERVICE_ROLE_KEY)"; fi
           flags="--allow-remote-staging"
           if [ "$ACTION" = remove ]; then flags="$flags --remove"; fi
           node tools/scripts/seed/seed-test-account.mjs $flags

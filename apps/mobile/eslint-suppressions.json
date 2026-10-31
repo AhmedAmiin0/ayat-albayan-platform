@@ -4,7 +4,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "app/(admin-chat)/inbox/student/[id].tsx": {

@@ -416,13 +416,24 @@ enabled = true
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
 
-# Hosted staging project (docs/09-deployment.md). `supabase config push --project-ref knxfwiimjcifwckhwbim`
-# merges these overrides over the local settings above.
-[remotes.staging]
+# Hosted projects (docs/09-deployment.md). `supabase config push --project-ref <ref>` merges the block whose
+# project_id matches over the local settings above.
+# PRODUCTION, the live app (the project was «staging» before the 2026-10-31 split). Never pushed by a workflow.
+[remotes.production]
 project_id = "knxfwiimjcifwckhwbim"
 
-[remotes.staging.auth]
+[remotes.production.auth]
 site_url = "https://app.ayatalbayan.com"
 additional_redirect_urls = ["https://app.ayatalbayan.com", "https://app.ayatalbayan.com/set-password", "https://app-staging.148-230-116-195.sslip.io", "https://app-staging.148-230-116-195.sslip.io/set-password", "ayatalbayan://"]
 # Accounts are created by admins (service role), never by public sign-up.
+enable_signup = false
+
+# STAGING (DEMO data): pushed by deploy-staging.yml (`config push --project-ref gqkqbxxgqttfbbqoqedf`), with the
+# local [auth.hook.custom_access_token] above, so staging logins carry their role.
+[remotes.stg]
+project_id = "gqkqbxxgqttfbbqoqedf"
+
+[remotes.stg.auth]
+site_url = "https://staging-app.ayatalbayan.com"
+additional_redirect_urls = ["https://staging-app.ayatalbayan.com", "https://staging-app.ayatalbayan.com/set-password", "ayatalbayan://"]
 enable_signup = false

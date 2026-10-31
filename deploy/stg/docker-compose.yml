@@ -1,0 +1,102 @@
+# STAGING on the shared Hostinger VPS (docs/09-deployment.md «Staging»), in /opt/ayat-albayan-stg. Light on purpose:
+# ONE API process (HTTP + every background job: APP_ROLE unset = all) and the PDF sandbox; no Redis, no load
+# balancer. The host Caddy proxies staging-api.ayatalbayan.com to 127.0.0.1:3120 (caddy-sites.sh). PRODUCTION is
+# deploy/staging (legacy name), project ayat-albayan-staging, image ayat-api:staging, port 3110: nothing here shares a
+# name, an image tag or a port with it, and nothing touches the CRM in /opt/wacrm. Roll it with roll.sh.
+# Memory: 896 MB API (384 MB Node heap + Chromium for report PDFs) + 128 MB PDF sandbox = 1024 MB.
+name: ayat-albayan-stg
+
+# Every container's log rotates here, not in the daemon (shared with the CRM and production).
+x-log: &log
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+services:
+  ayat-api:
+    build:
+      context: ./src
+      dockerfile: apps/api/Dockerfile
+    # Never pulled: a registry image of this name is not ours. Never production's ayat-api:staging tag.
+    image: ayat-api:stg
+    pull_policy: never
+    env_file: .env
+    # Pinned here (these win over .env): staging only ever reaches its own Supabase project and hosts.
+    environment:
+      SUPABASE_URL: https://gqkqbxxgqttfbbqoqedf.supabase.co
+      WEB_ORIGIN: https://staging-app.ayatalbayan.com
+      GOOGLE_REDIRECT_URI: https://staging-api.ayatalbayan.com/integrations/google/callback
+      # Stripe payment links, TEST build only (owner 2026-10-28, docs/30): mounted on staging, never production.
+      # Every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع». API_PUBLIC_URL hosts /pay/<token>.
+      FEATURE_STRIPE: test
+      API_PUBLIC_URL: https://staging-api.ayatalbayan.com
+      # Meta test / Kapso sandbox credentials must never rewrite the template registry.
+      WA_TEMPLATE_SYNC: "false"
+      NODE_OPTIONS: --max-old-space-size=384
+    ports:
+      - "127.0.0.1:3120:3000"
+    volumes:
+      - pdf-sock:/run/pdf:ro
+    restart: unless-stopped
+    logging: *log
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          # ponytail: 896M is the smallest worth trying with Chromium in the same process; raise it (and
+          # compose-stg.test.mjs) after `docker stats` during a report PDF if it runs short.
+          memory: 896M
+
+  # Chat PDF previews (docs/09 «PDF sandbox»): exactly production's hardening (compose-stg.test.mjs compares).
+  ayat-pdf:
+    image: ayat-api:stg
+    pull_policy: never
+    command: ["node", "dist/modules/messaging/inbox/files/pdf/pdf-sandbox.js"]
+    user: node
+    init: true
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=64
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs:
+      - /tmp:size=64m
+    volumes:
+      - pdf-sock:/run/pdf
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "2"
+    healthcheck:
+      test: ["CMD", "test", "-S", "/run/pdf/pdf.sock"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "1"
+          pids: 64
+
+volumes:
+  # The PDF sandbox's socket only: a 64 KB tmpfs, never the host disk.
+  pdf-sock:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=64k,uid=1000,gid=1000,mode=0700"

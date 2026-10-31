@@ -9,6 +9,7 @@
         "$TURBO_ROOT$/deploy/**",
         "$TURBO_ROOT$/docs/09-deployment.md",
         "$TURBO_ROOT$/packages/db/supabase/migrations/**",
+        "$TURBO_ROOT$/packages/db/supabase/config.toml",
         "$TURBO_ROOT$/apps/api/Dockerfile",
         "$TURBO_ROOT$/apps/api/src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts",
         "$TURBO_ROOT$/e2e/areas.json",

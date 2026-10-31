@@ -38,7 +38,7 @@ test('every workflow has top-level permissions of contents: read only', () => {
 test('only claude-tasks, the two release jobs and ci baselines may write contents (docs/09)', () => {
   const writes = (j) => j.permissions === 'write-all' || j.permissions?.contents === 'write';
   const writers = workflows.flatMap((w) => jobsOf(w).filter(([, j]) => writes(j)).map(([n]) => `${w.file}/${n}`));
-  const expected = ['ci.yml/baselines', 'claude-tasks.yml/claude', 'deploy-staging.yml/release', 'mobile.yml/release'];
+  const expected = ['ci.yml/baselines', 'claude-tasks.yml/claude', 'deploy-production.yml/release', 'mobile.yml/release'];
   assert.deepEqual(writers.sort(), expected);
 });
 
@@ -95,6 +95,7 @@ test('the flag guard also reads workflow-level env and env values (review C, S3)
 
 test('deploying, migrating and mobile workflows never run on pull_request from strangers', () => {
   const triggers = (f) => Object.keys(workflows.find((w) => w.file === f).doc.on).sort();
+  assert.deepEqual(triggers('deploy-production.yml'), ['workflow_dispatch']);
   assert.deepEqual(triggers('deploy-staging.yml'), ['workflow_dispatch', 'workflow_run']);
   assert.deepEqual(triggers('mobile.yml'), ['workflow_dispatch']);
   assert.deepEqual(triggers('db-migrate.yml'), ['pull_request', 'workflow_call', 'workflow_dispatch']);
@@ -121,7 +122,7 @@ test('db apply needs staging-db, mobile jobs need mobile, claude-tasks binds no 
   assert.equal(by('mobile.yml').build.environment, 'mobile');
   assert.equal(by('mobile.yml').ota.environment, 'mobile');
   for (const j of Object.values(by('claude-tasks.yml'))) assert.equal(j.environment, undefined);
-  assert.equal(by('deploy-staging.yml').migrate.uses, './.github/workflows/db-migrate.yml');
+  assert.equal(by('deploy-production.yml').migrate.uses, './.github/workflows/db-migrate.yml');
 });
 
 test('third-party actions are pinned to a full commit SHA', () => {
