@@ -24,15 +24,15 @@ describe('Kapso conversations (Platform API v1)', () => {
     expect(platformBase('http://127.0.0.1:4010/kapso')).toBe('http://127.0.0.1:4010/kapso/platform/v1');
   });
 
-  it('lists the phone\'s ended conversations on the line\'s number and PATCHes the newest to active', async () => {
+  it('lists the phone\'s conversations on the line\'s number and PATCHes the newest, when ended, to active', async () => {
     const { fetch, calls } = scripted(
-      { status: 200, body: { data: [{ id: 'c-old', last_active_at: '2026-10-01T00:00:00Z' }, { id: 'c-new', last_active_at: '2026-10-20T00:00:00Z' }] } },
+      { status: 200, body: { data: [{ id: 'c-old', status: 'ended', last_active_at: '2026-10-01T00:00:00Z' }, { id: 'c-new', status: 'ended', last_active_at: '2026-10-20T00:00:00Z' }] } },
       { status: 200, body: { data: { id: 'c-new', status: 'active' } } },
     );
     expect(await reopenKapsoConversation({ env: KAPSO_ENV, phone: PHONE, fetch })).toBe(true);
     const list = new URL(calls[0]?.url ?? '');
     expect(list.pathname).toBe('/kapso/platform/v1/whatsapp/conversations');
-    expect(Object.fromEntries(list.searchParams)).toEqual({ phone_number: '201000000001', phone_number_id: KAPSO_ENV.phoneNumberId, status: 'ended', limit: '5' });
+    expect(Object.fromEntries(list.searchParams)).toEqual({ phone_number: '201000000001', phone_number_id: KAPSO_ENV.phoneNumberId, limit: '5' });
     expect(calls[1]).toEqual({
       url: 'http://127.0.0.1:4010/kapso/platform/v1/whatsapp/conversations/c-new',
       method: 'PATCH',
@@ -42,7 +42,16 @@ describe('Kapso conversations (Platform API v1)', () => {
     expect(calls[0]?.key).toBe(KAPSO_ENV.apiKey);
   });
 
-  it('none ended: no PATCH', async () => {
+  it('newest already active: no PATCH and false; the older ended one stays ended (a second reopen is a no-op)', async () => {
+    const { fetch, calls } = scripted({
+      status: 200,
+      body: { data: [{ id: 'c-old', status: 'ended', last_active_at: '2026-10-01T00:00:00Z' }, { id: 'c-new', status: 'active', last_active_at: '2026-10-20T00:00:00Z' }] },
+    });
+    expect(await reopenKapsoConversation({ env: KAPSO_ENV, phone: PHONE, fetch })).toBe(false);
+    expect(calls).toHaveLength(1);
+  });
+
+  it('no conversation: no PATCH', async () => {
     const { fetch, calls } = scripted({ status: 200, body: { data: [] } });
     expect(await reopenKapsoConversation({ env: KAPSO_ENV, phone: PHONE, fetch })).toBe(false);
     expect(calls).toHaveLength(1);

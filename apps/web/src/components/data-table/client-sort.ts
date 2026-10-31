@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/shared';
+import { matchesQuery } from '@ab/shared';
 
 // Pure compare/match for client-side tables (DataTable `clientSort` / `clientFilter`).
 
@@ -23,7 +23,7 @@ export function matchesFilter(value: unknown, query: string, kind: FilterKind = 
   if (query === '') return true;
   const text = isEmpty(value) ? '' : String(value);
   if (kind === 'select') return text === query;
-  return normalizeArabic(text).includes(normalizeArabic(query));
+  return matchesQuery(text, query);
 }
 
 /** The header click cycle: none → asc → desc → none. */

@@ -1,14 +1,17 @@
-import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
 import type { SalesScope } from '../../../sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from '../teacher-threads/teacher-scope';
-import { pickSend, type ThreadWindow } from './send-number';
+import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
+import { sendLine, textLine } from './text-line';
 import { ThreadQuotes, type ReplyFields, type SendFrom } from '../threads/thread-quotes';
 import { missingParams, type ThreadRow } from '../threads/threads.mapper';
 import { ThreadsQueries } from '../threads/threads.queries';
+
+export { sendLine } from './text-line';
 
 export interface ThreadSend<T> {
   phone: string;
@@ -66,20 +69,6 @@ export async function replyOf(
 }
 
 /**
- * pickSend as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured. Legacy:
- * pickSendLine's { line? }; module mode (docs/23c decision 6): { number_id, line } from the reply windows,
- * which `windows` reads (module mode only).
- */
-export async function sendLine(
-  thread: ThreadRow | null,
-  at: { now: Date; windows: () => Promise<readonly ThreadWindow[]> },
-): Promise<{ line?: WaLine; number_id?: string }> {
-  const picked = await pickSend({ thread, now: at.now, windows: at.windows });
-  if (!('code' in picked)) return picked;
-  throw picked.code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);
-}
-
-/**
  * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher mode,
  * a teacher for their own families (owner decision 2026-10-02) — writes from the inbox.
  */
@@ -87,6 +76,8 @@ export async function sendLine(
 export class ThreadSendService {
   /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  /** Kapso's conversation record, for a text tried after the window (textLine). */
+  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
     private readonly queries: ThreadsQueries,
@@ -95,14 +86,19 @@ export class ThreadSendService {
   ) {}
 
   /**
-   * H3: free text inside a 24 h window only (WhatsApp rejects it after: 131047), from the chat line
-   * when its window is open, else from notifications (sendLine), decided before the enqueue.
+   * H3: free text from the chat line when its window is open, else from notifications; after
+   * every window, a staff member's own text is tried from a Kapso chat line (textLine). A forward
+   * (its picker skips a closed chat) and teacher mode (docs/19) keep 409 session_closed (sendLine).
    */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    const from = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
+    const at = { now, windows: () => this.queries.numberWindows(s.phone) };
+    const tries = !s.forwardedFrom && !s.scope;
+    const from = tries
+      ? await textLine(thread, { ...at, phone: s.phone, kapso: this.kapso })
+      : await sendLine(thread, at);
     const reply = await replyOf(this.quotes, s, from);
     return this.outbox.queue({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
   }

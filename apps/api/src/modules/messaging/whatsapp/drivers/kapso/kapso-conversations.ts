@@ -14,6 +14,7 @@ const listSchema = z.object({
   data: z.array(
     z.object({
       id: z.string().min(1),
+      status: z.string().nullish(),
       last_active_at: z.string().nullish(),
       updated_at: z.string().nullish(),
       created_at: z.string().nullish(),
@@ -51,8 +52,10 @@ interface KapsoReopen {
 }
 
 /**
- * The phone's newest `ended` conversation on this line's number, switched to `active`. false = none
- * ended. Throws on a Kapso failure (the caller logs it and goes on).
+ * The phone's newest conversation on this line's number, switched to `active` only when it is
+ * `ended`. false = none, or the newest is already active (an older ended one is never revived: two
+ * reopens in a row would otherwise wake one more old thread each time). Throws on a Kapso failure
+ * (the caller logs it and goes on).
  */
 export async function reopenKapsoConversation(input: KapsoReopen): Promise<boolean> {
   const fetch = input.fetch ?? globalThis.fetch;
@@ -60,13 +63,12 @@ export async function reopenKapsoConversation(input: KapsoReopen): Promise<boole
   const q = new URLSearchParams({
     phone_number: input.phone.replace(/\D/g, ''),
     phone_number_id: input.env.phoneNumberId,
-    status: 'ended',
     limit: '5',
   });
   const list = listSchema.safeParse(await call(fetch, { env: input.env, url: `${base}?${q}` }));
   if (!list.success) throw new Error('Kapso conversations: unexpected list body');
   const target = newest(list.data.data);
-  if (!target) return false;
+  if (target?.status !== 'ended') return false;
   const body = JSON.stringify({ whatsapp_conversation: { status: 'active' } });
   await call(fetch, { env: input.env, url: `${base}/${encodeURIComponent(target.id)}`, init: { method: 'PATCH', body } });
   return true;

@@ -27,6 +27,7 @@ describe('inbox barrel', () => {
     expect(inbox.InboxModeContext).toBe(InboxModeContext);
     expect(inbox.useInboxMode).toBe(useInboxMode);
     expect(inbox.inboxBase).toBe(inboxBase);
+    expect(inbox.showsPhone).toBe(showsPhone);
     expect(inbox.showsPhone('teacher')).toBe(false);
     expect(inbox.showsPhone('sales')).toBe(true);
   });
