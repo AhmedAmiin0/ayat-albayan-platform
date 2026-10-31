@@ -15,6 +15,7 @@ import { localDateIn, offsetMinutesIn, wallToUtc } from './zoned.js';
 // - an instant (Date) moved in a zone: its local day and wall clock decide (DST-safe).
 
 const MINUTE = 60_000;
+const DAY = 24 * 60 * MINUTE;
 
 /** A half-open UTC window [from, to). */
 export interface UtcRange {
@@ -76,11 +77,13 @@ export function monthRangeIn(month: string, zone: string): UtcRange {
 /**
  * `at` moved by `days` local days, the wall clock kept (24 h, or 23 / 25 h across a DST change in
  * `zone`): the same wall time on another day. Kept the legacy way (an offset correction of the
- * naive 24 h step) so the day-before reminder's instant stays byte-identical (goldens).
+ * naive 24 h step) so the day-before reminder's instant stays byte-identical (goldens). The step
+ * is plain ms, not date-fns addDays: on a Date that one moves the HOST's local day, so a phone or
+ * browser in a DST zone got 23 / 25 h that `zone`'s correction never undid (calendar.host-zone).
  */
 export function addDaysIn(at: Date | number, days: number, zone: string): Date {
   const instant = new Date(at).getTime();
-  const naive = addDays(instant, days).getTime();
+  const naive = instant + days * DAY;
   const shift = offsetMinutesIn(zone, instant) - offsetMinutesIn(zone, naive);
   return new Date(naive + shift * MINUTE);
 }

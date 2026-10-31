@@ -1,5 +1,5 @@
 import { viewerTz } from '@ab/client-core';
-import { intlLocale, type StatusStyle } from '@ab/shared';
+import { dateText, type StatusStyle } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { clockWithSeconds } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
@@ -13,8 +13,8 @@ const JOIN = locale === 'ar' ? '، ' : ', ';
 export function formatAt(iso: string, clock: Clock): string {
   const at = new Date(iso);
   const tz = viewerTz();
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
-  return `${day.format(at)}${JOIN}${clockWithSeconds(at, { ...clock, tz })}`;
+  const day = dateText(at, { tz, locale }, { dateStyle: 'medium' });
+  return `${day}${JOIN}${clockWithSeconds(at, { ...clock, tz })}`;
 }
 
 type Dict = Record<string, string | undefined>;

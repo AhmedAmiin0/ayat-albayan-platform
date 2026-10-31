@@ -10,8 +10,7 @@ import { locale } from '@/lib/i18n/locale';
 
 export function formatAt(iso: string, clock: Clock): string {
   const tz = viewerTz();
-  const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: tz });
-  return dateAndClock(day, new Date(iso), { ...clock, tz });
+  return dateAndClock(new Date(iso), { ...clock, tz }, { dateStyle: 'medium' });
 }
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });
