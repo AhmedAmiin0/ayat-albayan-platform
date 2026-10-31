@@ -1,9 +1,9 @@
 import type { JoinRole } from '@ab/shared';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { ClassroomQueries, type JoinLesson } from '../classroom.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { ClassroomQueries, type JoinLesson } from '@/modules/teaching/classroom/classroom.queries';
 
 type StaffRole = Exclude<JoinRole, 'guest'>;
 
@@ -18,7 +18,7 @@ type StaffRole = Exclude<JoinRole, 'guest'>;
 export class LessonRoleService {
   constructor(
     private readonly queries: ClassroomQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   /** 404 lesson_not_found, 403 when the login has no role in this lesson. */

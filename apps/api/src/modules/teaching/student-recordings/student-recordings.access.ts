@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ManageRule } from './student-recordings.mapper';
 import { StudentRecordingQueries } from './student-recordings.queries';
 
@@ -22,7 +22,7 @@ interface RecordingScope {
 export class StudentRecordingAccess {
   constructor(
     private readonly queries: StudentRecordingQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   /** 404 student_not_found, 403 when the login has no business with this student. */

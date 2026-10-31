@@ -1,9 +1,9 @@
 import { CHANNEL_GUARDIAN_ONLY, familyChats, type ChannelSenderRole } from '@ab/shared';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { forbidden, notFound } from '../../../common/http/errors';
-import { PortalScopes } from '../../people/portal';
-import { TeachersQueries } from '../../people/teachers';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden, notFound } from '@/common/http/errors';
+import { PortalScopes } from '@/modules/people/portal';
+import { TeachersRepo } from '@/modules/people/teachers';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import { ChannelQueries } from './channel.queries';
 
@@ -20,7 +20,7 @@ export type ChannelActor =
 @Injectable()
 export class AccessDeps {
   constructor(
-    readonly teachers: TeachersQueries,
+    readonly teachers: TeachersRepo,
     readonly portal: PortalScopes,
   ) {}
 }

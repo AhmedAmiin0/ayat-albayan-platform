@@ -1,8 +1,8 @@
 export {
-  AvailabilityQueries,
+  AvailabilityRepo,
   type AvailabilityRow,
   type TimeOff,
-} from './availability/availability.queries';
+} from './availability/availability.repo';
 export { AvailabilityQuery, type FreeSlotsQuery } from './availability/availability.query';
 export {
   allDayRows,
@@ -24,4 +24,4 @@ export {
 } from './availability/zoned-time';
 export { type MeetingFields, withMeeting } from './meeting-view';
 export { TeachersModule } from './teachers.module';
-export { type Teacher, type TeacherListRow, TeachersQueries } from './teachers.queries';
+export { type Teacher, type TeacherListRow, TeachersRepo } from './teachers.repo';

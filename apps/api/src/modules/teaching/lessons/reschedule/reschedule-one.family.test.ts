@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { RescheduleOneService } from './reschedule-one.service';
@@ -17,7 +17,7 @@ function setup(usable: boolean) {
   const heard = vi.fn(async (_c: ScheduleChange) => undefined);
   s.events.onScheduleChange(heard);
   const checker = { check: vi.fn().mockResolvedValue([]) } as unknown as ConflictChecker;
-  const service = new RescheduleOneService(s.store, {} as TeachersQueries, checker);
+  const service = new RescheduleOneService(s.store, {} as TeachersRepo, checker);
   const run = () => service.reschedule({ lessonId: LESSON_ID, body: { scope: 'one', startsAt: NEW_START }, actor: ADMIN });
   return { ...s, heard, run };
 }

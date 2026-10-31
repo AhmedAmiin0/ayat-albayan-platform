@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { ruleRow } from '../../scheduling/scheduling.fakes';
-import type { ScheduleQueries } from '../../scheduling/schedule.queries';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import type { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RulePlanner } from './rule-planner';
@@ -33,7 +33,7 @@ describe('reschedule — the new teacher decides the confirmation link', () => {
   it('one lesson, same platform teacher: plain confirmation, the row keeps its fixed link', async () => {
     const { store, writer, queries } = fakeStore(lessonRow());
     queries.meetingLinkAuto.mockImplementation(platformTeacher);
-    const service = new RescheduleOneService(store, teachers as unknown as TeachersQueries, checker as unknown as ConflictChecker);
+    const service = new RescheduleOneService(store, teachers as unknown as TeachersRepo, checker as unknown as ConflictChecker);
     await service.reschedule({ lessonId: LESSON_ID, body: { scope: 'one', startsAt: '2026-10-05T17:00:00+03:00' }, actor: ADMIN });
     expect(queries.meetingLinkAuto).toHaveBeenCalledWith({ teacherId: TEACHER_ID });
     expect(appliedChange(writer)?.messages[0]?.template_key).toBe('booking_confirmation_plain');
@@ -43,7 +43,7 @@ describe('reschedule — the new teacher decides the confirmation link', () => {
   it('one lesson moved from a platform teacher to a static substitute: the confirmation names the fixed link', async () => {
     const { store, writer, queries } = fakeStore(lessonRow());
     queries.meetingLinkAuto.mockImplementation(platformTeacher);
-    const service = new RescheduleOneService(store, teachers as unknown as TeachersQueries, checker as unknown as ConflictChecker);
+    const service = new RescheduleOneService(store, teachers as unknown as TeachersRepo, checker as unknown as ConflictChecker);
     const body = { scope: 'one' as const, startsAt: '2026-10-05T17:00:00+03:00', teacherId: OTHER_TEACHER_ID };
     await service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN });
     expect(queries.meetingLinkAuto).toHaveBeenCalledWith({ teacherId: OTHER_TEACHER_ID });
@@ -53,7 +53,7 @@ describe('reschedule — the new teacher decides the confirmation link', () => {
   it('the whole rule moved to a platform substitute: plain confirmation', async () => {
     const { store, writer, queries } = fakeStore(lessonRow());
     queries.meetingLinkAuto.mockImplementation(async ({ teacherId }) => teacherId === OTHER_TEACHER_ID);
-    const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, readerOf(LessonsSettings, { booking_horizon_weeks: 2 }));
+    const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersRepo, readerOf(LessonsSettings, { booking_horizon_weeks: 2 }));
     const service = new RescheduleRuleService(store, planner, checker as unknown as ConflictChecker);
     const newRule = { teacherId: OTHER_TEACHER_ID, byday: [1, 3], startTimeLocal: '18:30', tz: 'Asia/Riyadh', durationMin: 60 as const, startsOn: '2026-10-12' };
     await service.reschedule({ lessonId: LESSON_ID, body: { scope: 'rule', newRule }, actor: ADMIN });

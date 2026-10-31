@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
  * Who may touch which report (rule 9; the API is the only writer, migration 120): an admin any
@@ -9,7 +9,7 @@ import { TeachersQueries } from '../../people/teachers/teachers.queries';
  */
 @Injectable()
 export class ReportAccess {
-  constructor(private readonly teachers: TeachersQueries) {}
+  constructor(private readonly teachers: TeachersRepo) {}
 
   /** teachers.id of a signed-in teacher; 404 teacher_not_linked when no row has their profile. */
   async teacherId(user: AuthUser): Promise<string> {

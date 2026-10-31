@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AvailabilityQueries } from './availability.queries';
+import { AvailabilityRepo } from './availability.repo';
 import { freeSlots, type TimeRange } from './free-slots';
 import { DAY } from './zoned-time';
 
@@ -18,7 +18,7 @@ export type FreeSlotsQuery = {
  */
 @Injectable()
 export class AvailabilityQuery {
-  constructor(private readonly availability: AvailabilityQueries) {}
+  constructor(private readonly availability: AvailabilityRepo) {}
 
   async freeSlots(q: FreeSlotsQuery): Promise<TimeRange[]> {
     // Time-off or a lesson just outside [from, to] can still split a window that reaches into it,

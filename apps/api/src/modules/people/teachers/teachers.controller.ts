@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '@/common/http/http';
 import { withMeeting, type MeetingFields } from './meeting-view';
-import { TeachersQueries, withoutPath, type Teacher, type TeacherListRow } from './teachers.queries';
+import { TeachersRepo, withoutPath, type Teacher, type TeacherListRow } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
 
@@ -36,7 +36,7 @@ const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).op
 @Controller('teachers')
 export class TeachersController {
   constructor(
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     private readonly settings: TeachersSettings,
     private readonly usernames: TeacherUsernames,
   ) {}

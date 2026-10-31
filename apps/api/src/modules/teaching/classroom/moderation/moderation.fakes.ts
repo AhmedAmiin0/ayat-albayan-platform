@@ -1,17 +1,17 @@
 // Test fixtures for classroom moderation and recordings (not shipped; excluded from the build).
 import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import type { ClassroomConfig, RecordingConfig } from '../classroom.config';
-import type { ClassroomQueries } from '../classroom.queries';
-import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '../classroom.fakes';
-import { LessonRoleService } from '../join/lesson-role.service';
-import { signJwt } from '../livekit/livekit-token';
-import type { HttpPost } from '../livekit/livekit-api';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import type { ClassroomConfig, RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
+import type { ClassroomQueries } from '@/modules/teaching/classroom/classroom.queries';
+import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '@/modules/teaching/classroom/classroom.fakes';
+import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
+import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
+import type { HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
 import type { ModerationQueries, ParticipantRow } from './moderation.queries';
-import type { RecordingRow } from '../recordings/recording.queries';
-import type { RecordingStarter } from '../recordings/recording.starter';
-import { RoomAdmission } from '../join/room-admission';
+import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.queries';
+import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
+import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
 export const S3: NonNullable<RecordingConfig> = {
   endpoint: 'https://project.storage.example.test/storage/v1/s3',
@@ -95,7 +95,7 @@ interface JoinDeps {
 
 /** Real LessonRoleService over the mocked queries. */
 export const rolesOf = (d: JoinDeps): LessonRoleService =>
-  new LessonRoleService(d.q as unknown as ClassroomQueries, (d.teachers ?? teachersFake()) as unknown as TeachersQueries);
+  new LessonRoleService(d.q as unknown as ClassroomQueries, (d.teachers ?? teachersFake()) as unknown as TeachersRepo);
 
 /** Real RoomAdmission over the mocked moderation queries and recorder. */
 export const admissionOf = (d: JoinDeps): RoomAdmission =>

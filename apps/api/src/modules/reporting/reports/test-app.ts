@@ -12,7 +12,7 @@ import { PushService } from '@/common/push/push.service';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
-import { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ReportAttachmentsQueries } from './files/report-attachments.queries';
 import { ReportHistoryQueries } from './history/report-history.queries';
 import { ReportLessonQueries } from './report-lesson.queries';
@@ -61,7 +61,7 @@ export async function reportsApp() {
     .overrideProvider(TeacherReportsQueries).useValue(m.mine)
     .overrideProvider(ReportAttachmentsQueries).useValue(m.files)
     .overrideProvider(StorageService).useValue(m.storage)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(LessonEvents).useValue(m.events)
     .overrideProvider(ReportPdfQueue).useValue(m.pdf)
