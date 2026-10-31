@@ -3,7 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { SALES_MONEY_KEY } from '../sales-money/api';
+import { SALES_MONEY_KEY } from '@/features/sales/sales-money';
 
 // «ربط بطالب موجود» (owner 2026-10-29): POST /leads/:id/link-family { code } → { linked }, leads.link_family.
 

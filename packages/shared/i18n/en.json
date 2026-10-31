@@ -2640,6 +2640,7 @@
       "audio": "Voice message",
       "video": "Video",
       "document": "File",
+      "pdf": "PDF file",
       "sticker": "Sticker",
       "location": "Location",
       "other": "A message that can’t be shown here"
@@ -2698,7 +2699,8 @@
       "jump": "Go to the original message",
       "notLoaded": "The original message is older than the loaded ones. Load older messages and try again",
       "notFound": "The original message could not be found in this chat",
-      "swipeHint": "Swipe to reply, or long-press for message options"
+      "swipeHint": "Swipe to reply, or long-press for message options",
+      "unavailable": "Message unavailable"
     },
     "forward": {
       "action": "Forward",

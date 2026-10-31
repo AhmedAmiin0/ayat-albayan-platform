@@ -101,7 +101,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const content = m.hidden ? <HiddenBody message={m} /> : (
     <>
       {m.forwarded ? <AppText style={small}>{t.inbox.forward.forwarded}</AppText> : null}
-      {m.reply_to ? <QuoteBlock quote={m.reply_to} onJump={onJump} /> : null}
+      {m.reply_to ? <QuoteBlock quote={m.reply_to} phone={phone} onJump={onJump} /> : null}
       {m.template_key ? (
         <AppText style={small} {...(a11yOn === 'template' ? touch.a11y : {})}>
           {templateLine(m.template_key)}
