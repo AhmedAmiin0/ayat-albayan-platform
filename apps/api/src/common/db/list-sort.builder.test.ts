@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Db } from './db/db.module';
+import type { Db } from './db.module';
 import { applySort } from './list-sort';
 
 /** Compile-time: a real supabase-js select builder fits `applySort` and keeps its own type. */

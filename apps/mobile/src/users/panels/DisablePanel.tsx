@@ -3,12 +3,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/more/Section';
-import { disableUser, USERS_KEY } from '../shared/api';
-import { userErrorText } from '../shared/errors';
+import { disableUser, USERS_KEY } from '@/users/shared/api';
+import { userErrorText } from '@/users/shared/errors';
 import { PanelButtons } from './PanelButtons';
-import { TextField } from '../shared/TextField';
+import { TextField } from '@/users/shared/TextField';
 
 interface DisablePanelProps {
   user: UserDetail;

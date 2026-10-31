@@ -4,20 +4,20 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { ActionPanel } from '../panels/ActionPanel';
-import { updateUser, USERS_KEY } from '../shared/api';
+import { ActionPanel } from '@/users/panels/ActionPanel';
+import { updateUser, USERS_KEY } from '@/users/shared/api';
 import { editBody, editErrors, initialEditForm, type EditForm } from './edit-form';
-import { userErrorText } from '../shared/errors';
-import { backToUsers } from '../shared/nav';
-import { UserActions, type ActionMode } from '../panels/UserActions';
+import { userErrorText } from '@/users/shared/errors';
+import { backToUsers } from '@/users/shared/nav';
+import { UserActions, type ActionMode } from '@/users/panels/UserActions';
 import { UserEditFields } from './UserEditFields';
 import { UserPhoto } from './UserPhoto';
-import { UserSummary } from '../list/UserSummary';
-import type { FormErrors } from '../shared/validation';
+import { UserSummary } from '@/users/list/UserSummary';
+import type { FormErrors } from '@/users/shared/validation';
 
 export interface UserEditorProps {
   user: UserDetail;

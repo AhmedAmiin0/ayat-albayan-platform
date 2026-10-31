@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { View } from 'react-native';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { checkedLine, healthChip, numberSubtitle, stateChips } from './numbers-words';

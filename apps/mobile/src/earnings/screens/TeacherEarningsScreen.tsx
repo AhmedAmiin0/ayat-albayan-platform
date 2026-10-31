@@ -8,11 +8,11 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Note } from '@/more/Note';
-import { EarningsHeader, type Tab } from '../components/EarningsHeader';
-import { PaymentsList, SessionsList } from '../components/EarningsList';
-import { PayForm } from '../components/PayForm';
-import { useEarningsBalance, type SessionFilter } from '../hooks/queries';
+import { Note } from '@/core/ui/feedback/Note';
+import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
+import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
+import { PayForm } from '@/earnings/components/PayForm';
+import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';
 import { locale } from '@/core/lib/i18n/locale';
 
 /**

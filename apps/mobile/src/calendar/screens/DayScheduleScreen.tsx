@@ -6,7 +6,7 @@ import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { Notice } from '@/today/components/Notice';
 import { useNow } from '@/core/lib/time/use-now';
@@ -17,24 +17,24 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { headerLine } from '../agenda/agenda';
-import { AgendaItemRow } from '../agenda/AgendaItemRow';
-import { AgendaLessonRow } from '../agenda/AgendaLessonRow';
-import { LessonRowActions } from '../agenda/LessonRowActions';
-import { LessonDetailsSheet } from '../details/LessonDetailsSheet';
-import { useLessonDetails } from '../details/use-lesson-details';
+import { headerLine } from '@/calendar/agenda/agenda';
+import { AgendaItemRow } from '@/calendar/agenda/AgendaItemRow';
+import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
+import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
+import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
+import { useLessonDetails } from '@/calendar/details/use-lesson-details';
 import {
   dayCounts,
   itemKey,
   teacherAgendas,
   type ScheduleView,
   type TeacherFilter,
-} from '../overview/overview';
-import { ScheduleFilters } from '../overview/ScheduleFilters';
-import { SchedulePeriod } from '../overview/SchedulePeriod';
-import { TeacherHeader } from '../overview/TeacherHeader';
-import { useOverview } from '../overview/use-overview';
-import { viewerToday, weekStart, weekWindow } from '../lib/week';
+} from '@/calendar/overview/overview';
+import { ScheduleFilters } from '@/calendar/overview/ScheduleFilters';
+import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
+import { TeacherHeader } from '@/calendar/overview/TeacherHeader';
+import { useOverview } from '@/calendar/overview/use-overview';
+import { viewerToday, weekStart, weekWindow } from '@/calendar/lib/week';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;

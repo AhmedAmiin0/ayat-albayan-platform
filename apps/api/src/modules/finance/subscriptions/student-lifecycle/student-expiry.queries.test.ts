@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import { MAX_ROWS } from '../../../teaching/scheduling/read-all';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { MAX_ROWS } from '@/common/db/read-all';
 import { StudentExpiryQueries } from './student-expiry.queries';
 
 function setup(results: Record<string, FakeResult[]>) {

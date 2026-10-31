@@ -1,5 +1,6 @@
 import { backoffDelay } from '../core/async/retry.js';
 import { normalizePhone } from '../core/format/phone.js';
+import { WA_ERROR as E } from '../catalog/integrations/index.js';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
 
@@ -42,7 +43,18 @@ export function backoff(attempt: number): number {
  * missing 132001, bad parameters 132000/100, outside the 24 h window 131047, undeliverable
  * 131026, …) fails at once. null = no Meta code (network error, HTTP 5xx) → retry.
  */
-const RETRYABLE = new Set([1, 2, 4, 80007, 130429, 131000, 131016, 131048, 131056, 133004]);
+const RETRYABLE = new Set<number>([
+  E.apiUnknown,
+  E.apiService,
+  E.appRateLimit,
+  E.accountRateLimit,
+  E.throughputLimit,
+  E.somethingWentWrong,
+  E.serviceUnavailable,
+  E.spamRateLimit,
+  E.pairRateLimit,
+  E.serverUnavailable,
+]);
 
 export function isRetryableWaError(code: number | null | undefined): boolean {
   return code === null || code === undefined || RETRYABLE.has(code);
@@ -52,7 +64,7 @@ export function isRetryableWaError(code: number | null | undefined): boolean {
  * The access token expired or lost its permissions (190, 10, 200): every send fails the same way
  * until an admin fixes it in Business Manager, so the sender stops instead of failing each row.
  */
-const AUTH = new Set([10, 190, 200]);
+const AUTH = new Set<number>([E.permissionDenied, E.tokenExpired, E.permissionError]);
 
 export function isWaAuthError(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && AUTH.has(code);
@@ -63,7 +75,7 @@ export function isWaAuthError(code: number | null | undefined): boolean {
  * payment issue», no valid payment method on the WABA. Every send fails the same way until the
  * owner fixes billing in Meta, so the sender holds the row instead of failing it (docs/12 §3.3).
  */
-const PAYMENT_HOLD = new Set([131042]);
+const PAYMENT_HOLD = new Set<number>([E.paymentIssue]);
 
 export function isWaPaymentHold(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && PAYMENT_HOLD.has(code);
@@ -95,29 +107,20 @@ export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
  * allow-list (131030, Meta's or our own: add the number, then retry), network, http_*, auto_off, uncertain,
  * internal and unknown stay retryable.
  */
-const RETRY_POINTLESS = new Set([
-  '131026',
-  '131047',
+const RETRY_POINTLESS = new Set<string>([
+  String(E.undeliverable),
+  String(E.reEngagement),
   'expired',
   'stale',
   'handed_off',
   // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
   // (368), number not registered (131045, 133010), display name (131037).
-  '131042',
-  '131031',
-  '368',
-  '131045',
-  '133010',
-  '131037',
+  ...[E.paymentIssue, E.accountLocked, E.policyBlocked, E.certificateError].map(String),
+  ...[E.numberNotRegistered, E.displayNameNotApproved].map(String),
   // This row: outside the 24 h window (470), marketing turned off (131050), our own number
   // (131021), template values (132000, 132012), template disabled for good (132016), file type (131053).
-  '470',
-  '131050',
-  '131021',
-  '132000',
-  '132012',
-  '132016',
-  '131053',
+  ...[E.outsideWindow, E.marketingOptOut, E.sameSenderRecipient].map(String),
+  ...[E.paramCountMismatch, E.paramFormatMismatch, E.templateDisabled, E.mediaType].map(String),
 ]);
 
 export function canRetryCode(code: string | null | undefined): boolean {

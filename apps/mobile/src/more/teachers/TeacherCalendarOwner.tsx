@@ -6,8 +6,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Note } from '../Note';
-import { Section } from '../Section';
+import { Note } from '@/core/ui/feedback/Note';
+import { Section } from '@/more/Section';
 
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
 

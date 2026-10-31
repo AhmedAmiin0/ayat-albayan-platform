@@ -1,8 +1,8 @@
 import type { PaymentKind, PaymentMethod } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import type { Window } from '../dashboard/finance/finance.queries';
-import { readAll } from '../../teaching/scheduling/read-all';
+import { DB, type Db } from '@/common/db/db.module';
+import type { Window } from '@/modules/reporting/dashboard/finance/finance.queries';
+import { readAll } from '@/common/db/read-all';
 
 const STUDENT =
   'code, code_seq, name, status, program, age, tz, created_at, guardian:guardians(name, phone_e164, country, source), teacher:teachers(display_name_ar)';
