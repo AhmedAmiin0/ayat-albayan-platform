@@ -48,7 +48,7 @@ function mocks() {
   return {
     repo: { current: vi.fn(), subscription: vi.fn(), plan: vi.fn(), paid: vi.fn(), stop: vi.fn() },
     writes: { recorded: vi.fn() },
-    events: { changed: vi.fn(), onChanged: vi.fn() },
+    events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
   };
 }
 
