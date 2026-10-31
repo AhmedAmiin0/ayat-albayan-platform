@@ -10,7 +10,8 @@ const keysWhere = (pick: (e: (typeof SEED_ENTRIES)[number]) => boolean): string[
 /** docs/26b §2: the «القيم» groups of the 33 CONFIG keys of docs/26 §1 + docs/30 (counts 4·4·1·5·3·1·8·4·1·2). */
 const CONFIG_GROUPS: Record<string, string[]> = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],
-  classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_link_auto'],
+  classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
+    'meeting_link_auto'],
   reports: ['report_teacher_edit_hours', 'report_form_v2'],
   accounts: ['reporting_currency', 'renewal_alert_remaining', 'subscription_expiry_days', 'flag_future_lessons_when_unpaid', 'fx_fresh_hours'],
   payouts: ['payout_count_late', 'payout_count_no_show', 'payout_count_trials'],
@@ -37,9 +38,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 38 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + presence_enabled, docs/33) sit in their «القيم» group, scope config', () => {
+  it('the 40 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meeting_max_minutes, + presence_enabled, docs/33) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(39);
+    expect(config).toHaveLength(40);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

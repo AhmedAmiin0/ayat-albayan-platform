@@ -13,8 +13,8 @@ describe('searchHub (docs/26b §1: labels, descriptions, keys and module pages)'
     expect(searchHub('   ')).toEqual([]);
   });
 
-  it('every one of the 51 settings is found by its key and links somewhere under «القيم»', () => {
-    expect(SETTING_KEYS).toHaveLength(51);
+  it('every one of the 52 settings is found by its key and links somewhere under «القيم»', () => {
+    expect(SETTING_KEYS).toHaveLength(52);
     for (const key of SETTING_KEYS) {
       const hit = byId(key, `setting:${key}`);
       expect(hit?.href, key).toMatch(/^\/admin\/settings\/values\?group=/);
