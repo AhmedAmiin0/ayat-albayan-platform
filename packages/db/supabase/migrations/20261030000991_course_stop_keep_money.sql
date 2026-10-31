@@ -7,8 +7,11 @@
 --      lessons stay on the stopped package, never re-counted on the next one), subscription_full_at (its
 --      earned commission is never voided by settle_assistant_commission), subscription_commission_kind (it
 --      stays 'first' / 'renewal'; 'first' never moves to a later package), the unused-cancel guard's
---      has_commission. Payments of a stopped package stay writable (the family may still settle what it owes:
---      receivables list it); an unused-cancelled package's stay frozen.
+--      has_commission. A stopped package's FIFO capacity freezes at the stop (subscriptions.lessons_used_at_stop):
+--      it keeps the lessons it used and the next package's lessons never land on it; remaining still reads
+--      lessons_total - used (the unused lessons are forfeited, not carried over). Payments of a stopped package
+--      stay writable (the family may still settle what it owes: receivables list it); an unused-cancelled
+--      package's stay frozen.
 --   2. course_rules_of(subscription): the course's rules. schedule_rules.subscription_id is null for imported,
 --      calendar-handover and admin-booked rules (470), so a rule with no subscription_id is the course's when
 --      the student is on it and it runs inside the package's period [starts_on, the next package's starts_on).
@@ -26,7 +29,7 @@
 --   by a stop; imported rules ended; replay; group rule → course_unattributed; pause closed; no churn while
 --   another package runs).
 -- Rollback: re-run 934's views and functions, 990's guard, 480's change_course; drop course_stop_plan,
---   stop_course, course_rules_of; drop column subscriptions.stop_request_id. Idempotent.
+--   stop_course, course_rules_of; drop columns subscriptions.stop_request_id, lessons_used_at_stop. Idempotent.
 set local lock_timeout = '5s';
 
 alter table public.subscriptions add column if not exists stop_request_id uuid;
@@ -34,6 +37,9 @@ create unique index if not exists subscriptions_stop_request_idx on public.subsc
   where stop_request_id is not null;
 comment on column public.subscriptions.stop_request_id is
   'The clientRequestId of the «إلغاء الاشتراك» that stopped this package (written with the stamp; replay key).';
+alter table public.subscriptions add column if not exists lessons_used_at_stop int;
+comment on column public.subscriptions.lessons_used_at_stop is
+  'v_subscription_balance.lessons_used when «إلغاء الاشتراك» stopped this package (capped at lessons_total): its FIFO capacity from then on.';
 
 -- 1. Money readers: same bodies as 934, «not cancelled» → «not cancelled unless stopped».
 create or replace view public.v_package_lessons with (security_invoker = true) as
@@ -53,15 +59,19 @@ create or replace view public.v_package_lessons with (security_invoker = true) a
          where s.student_id = ls.student_id and (s.status <> 'cancelled' or s.cancel_kind = 'stopped'));
 
 create or replace view public.v_subscription_balance with (security_invoker = true) as
-  with subs as (
-    select s.id, s.student_id, s.lessons_total, s.lessons_used_before::int as before,
-           coalesce(sum(s.lessons_total - s.lessons_used_before)
-             over (w rows between unbounded preceding and 1 preceding), 0)::int as cap_from,
-           (sum(s.lessons_total - s.lessons_used_before)
-             over (w rows between unbounded preceding and current row))::int as cap_to,
-           lead(s.id) over w is null as is_last
+  with pkgs as (
+    -- A stopped package holds what it used at the stop (lessons_used_at_stop), never the next one's lessons.
+    select s.id, s.student_id, s.lessons_total, s.lessons_used_before, s.starts_on, s.created_at,
+           case when s.cancel_kind = 'stopped' then coalesce(s.lessons_used_at_stop, s.lessons_total)
+                else s.lessons_total end - s.lessons_used_before as cap
     from public.subscriptions s
     where s.status <> 'cancelled' or s.cancel_kind = 'stopped'
+  ), subs as (
+    select s.id, s.student_id, s.lessons_total, s.lessons_used_before::int as before,
+           coalesce(sum(s.cap) over (w rows between unbounded preceding and 1 preceding), 0)::int as cap_from,
+           (sum(s.cap) over (w rows between unbounded preceding and current row))::int as cap_to,
+           lead(s.id) over w is null as is_last
+    from pkgs s
     window w as (partition by s.student_id order by s.starts_on, s.created_at, s.id)
   ), usage as (
     select p.student_id, count(*)::int as used from public.v_package_lessons p group by p.student_id
@@ -281,6 +291,7 @@ declare
   v_from public.student_status;
   v_to public.student_status;
   v_after jsonb;
+  v_used int;
 begin
   if v_sub is null or v_request is null or v_actor is null or coalesce(v_reason, '') = '' then
     raise exception 'stop_course needs subscription_id, client_request_id, actor and reason' using errcode = '22023';
@@ -325,9 +336,12 @@ begin
       'after', jsonb_build_object('via', 'course_stop', 'days', 0, 'subscription_id', v_sub)));
   end if;
 
+  -- The FIFO capacity freezes at what it used (under the package lock; an overrun stays the next one's).
+  select least(b.lessons_used, s.lessons_total) into v_used
+    from public.v_subscription_balance b where b.subscription_id = v_sub;
   update public.subscriptions
      set status = 'cancelled', cancel_kind = 'stopped', cancelled_at = v_at, cancelled_by = v_actor,
-         cancel_reason = v_reason, stop_request_id = v_request
+         cancel_reason = v_reason, stop_request_id = v_request, lessons_used_at_stop = coalesce(v_used, lessons_used_before)
    where id = v_sub;
 
   -- «توقف» unless another package still runs (a later one, or an active one).

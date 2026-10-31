@@ -23,6 +23,15 @@ describe('migration 991', () => {
     expect(sql).not.toMatch(/status <> 'cancelled'\)/);
   });
 
+  it('B1: a stopped package keeps only what it used at the stop (the next package never fills it)', () => {
+    const view = until(sql.slice(sql.indexOf('view public.v_subscription_balance')), ';\n');
+    expect(view).toMatch(/when s\.cancel_kind = 'stopped' then coalesce\(s\.lessons_used_at_stop, s\.lessons_total\)/);
+    expect(view).toMatch(/sum\(s\.cap\) over \(w rows between unbounded preceding and 1 preceding\)/);
+    const stop = until(body('stop_course'), 'end $$;');
+    expect(stop).toMatch(/select least\(b\.lessons_used, s\.lessons_total\) into v_used/);
+    expect(stop).toMatch(/stop_request_id = v_request, lessons_used_at_stop = /);
+  });
+
   it('B3: the stamp writes stop_request_id in the same update; a replay reads it', () => {
     const stop = until(body('stop_course'), 'end $$;');
     expect(stop).toMatch(/cancel_reason = v_reason, stop_request_id = v_request/);

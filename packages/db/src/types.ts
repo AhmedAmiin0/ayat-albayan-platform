@@ -3981,6 +3981,7 @@ export type Database = {
           fx_rate: number | null;
           id: string;
           lessons_total: number;
+          lessons_used_at_stop: number | null;
           lessons_used_before: number;
           notes: string | null;
           package: Database['public']['Enums']['package_size'] | null;
@@ -4007,6 +4008,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
@@ -4033,6 +4035,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total?: number;
+          lessons_used_at_stop?: number | null;
           lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;

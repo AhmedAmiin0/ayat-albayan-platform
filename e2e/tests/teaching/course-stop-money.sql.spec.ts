@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack } from '../../support/core/rls';
 import { assistant, code, commissionOf, pay, subscription } from '../../support/sales/assistant';
-import { importedCourse, moneyOf, stop } from '../../support/teaching/course-stop';
+import { importedCourse, lesson, moneyOf, rule, stop, teacher } from '../../support/teaching/course-stop';
 
 // «إلغاء الاشتراك» keeps the money (PR #464 review B1, migration 991): a STOPPED package (status
 // cancelled, cancel_kind stopped) stays in every money reader, so nothing the money says changes.
@@ -45,7 +45,7 @@ test.describe('a stopped package keeps its money (991)', () => {
     });
   });
 
-  test('held lessons stay on the stopped package: the next package starts unused', async () => {
+  test('the stopped package keeps what it used at the stop; lessons held on the next one stay there', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'stop-bal', PERCENT);
       const c = await importedCourse(tx, { phone: '+966500000913' });
@@ -53,6 +53,13 @@ test.describe('a stopped package keeps its money (991)', () => {
       const next = await subscription(tx, c.student, { price: 300 });
       expect((await moneyOf(tx, c.sub)).balance).toBe('(3,5,f)');
       expect((await moneyOf(tx, next)).balance).toBe('(0,8,t)');
+      const t = await teacher(tx);
+      const r = await rule(tx, { teacher: t, students: [c.student], subscriptionId: next });
+      for (const d of [4, 5]) await lesson(tx, { rule: r, days: d });
+      await tx`update public.lessons set status = 'completed' where rule_id = ${r}`;
+      // A (8, 3 held, stopped) never takes B's 2 held lessons: its 5 unused lessons are forfeited.
+      expect((await moneyOf(tx, c.sub)).balance).toBe('(3,5,f)');
+      expect((await moneyOf(tx, next)).balance).toBe('(2,6,t)');
     });
   });
 

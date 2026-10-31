@@ -73,3 +73,17 @@ test('a cancelled package (owner 2026-10-28) is never payable nor the default, e
   expect(defaultPackage(balanceOf(cancelled, current))?.id).toBe(SUB_ID);
   expect(chosenPackage(balanceOf(cancelled, current), OLD_SUB_ID)?.id).toBe(SUB_ID);
 });
+
+test('a stopped package (migration 991) still owes: payable and the default', () => {
+  const stopped = subscription({
+    id: OLD_SUB_ID,
+    starts_on: '2026-08-27',
+    paid: 50,
+    status: 'cancelled',
+    cancel_kind: 'stopped',
+  });
+  const ids = (old: typeof stopped) => payablePackages(balanceOf(old, current)).map((p) => p.id);
+  expect(ids(stopped)).toEqual([OLD_SUB_ID, SUB_ID]);
+  expect(defaultPackage(balanceOf(stopped, current))?.id).toBe(OLD_SUB_ID);
+  expect(ids({ ...stopped, cancel_kind: 'unused' })).toEqual([SUB_ID]);
+});
