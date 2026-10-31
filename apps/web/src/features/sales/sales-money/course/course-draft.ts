@@ -1,8 +1,8 @@
 import { counted, courseLessonCount, courseOpensOn, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
-import { dateLabel } from '@/features/teaching/schedule/tz';
-import { studentLabel } from '@/features/finance/subscriptions/format';
+import { dateLabel } from '@/features/teaching/schedule';
+import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 // «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the booking wizard's draft for the course of a

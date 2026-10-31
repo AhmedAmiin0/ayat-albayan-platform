@@ -1,7 +1,7 @@
 import type { SalesFamilyStudent } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
-import { studentLabel } from '@/features/finance/subscriptions/format';
+import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 type Props = { students: SalesFamilyStudent[]; value: string; onChange: (id: string) => void };

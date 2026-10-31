@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { completeTask, MONEY_KEY, openTasksQuery } from '../api';
 import { taskText } from '../format';

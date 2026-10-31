@@ -7,7 +7,7 @@ import {
   type PackageSize,
   type Program,
 } from '@ab/shared';
-import { zonedParts } from '@/features/teaching/schedule/tz';
+import { zonedParts } from '@/features/teaching/schedule';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';

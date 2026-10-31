@@ -1,3 +1,4 @@
+import { quoteIcon } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -20,6 +21,7 @@ export function QuoteStrip() {
   const quote = quoteOf(reply);
   const sender = quoteSender(quote, threadName);
   const text = quoteText(quote);
+  const icon = quoteIcon(quote);
   const line = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) };
   return (
     <View
@@ -47,7 +49,7 @@ export function QuoteStrip() {
           </AppText>
         ) : null}
         <ContentText source={text} numberOfLines={1} style={{ ...line, flex: 1, fontFamily: type.ui[400], color: color.ink2 }}>
-          {text}
+          {icon ? `${icon} ${text}` : text}
         </ContentText>
       </View>
       <IconButton label={t.inbox.reply.cancel} onPress={() => setReply(null)}>

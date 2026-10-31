@@ -11,7 +11,7 @@ import {
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { REPORTS_KEY, submitReport } from '../api';
 import { useAutosave } from './use-autosave';
 

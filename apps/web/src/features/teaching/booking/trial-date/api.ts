@@ -1,6 +1,6 @@
 import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import type { BookingBody } from '../draft/contract';

@@ -7,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } from './api';
 import { AddCategory } from './AddCategory';
