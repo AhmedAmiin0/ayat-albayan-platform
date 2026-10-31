@@ -20,6 +20,7 @@ export {
 } from './messages/inbound-media.service';
 export {
   MESSAGE_SELECT,
+  NOT_A_REACTION,
   type MessageRow,
   type MessageViewInput,
   needsManualSend,

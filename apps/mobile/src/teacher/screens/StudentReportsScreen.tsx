@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
+import type { ReportSummaryView, TeacherMe } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useStudentHref } from '@/core/nav/tree-base';
@@ -56,7 +57,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const me = useTeacherMe(!admin);
   const adminName = useStudentName(id, admin);
-  const tz = me.data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const name = adminName ?? teacherStudentName(me.data, id);
   const list = usePagedList<ReportSummaryView>({ path: `/students/${id}/reports`, pageSize: 10 });
   const [error, setError] = useState(false);

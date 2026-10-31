@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { viewerTz } from '@/features/teaching/classroom/student-link/student-link';
 import { t } from '@/lib/i18n/i18n';
 import { CreatedMeeting } from '../internal/CreatedMeeting';
 import { MEETINGS_KEY } from '../internal/internal-api';
@@ -19,7 +19,7 @@ const L = t.meetingInvites;
 
 interface Props {
   onClose: () => void;
-  /** The viewer's zone; the browser's own by default. */
+  /** The viewer's zone; useViewerTz() by default. */
   tz?: string;
 }
 
@@ -27,7 +27,9 @@ interface Props {
  * «اجتماع مجدول» (R-MEET-01..03): a title, the date and time on the viewer's clock, the duration and
  * the invitees; then the link and one result per recipient («انسخ الرابط والدعوة» when the window is closed).
  */
-export function ScheduledMeetingDialog({ onClose, tz = viewerTz() }: Props) {
+export function ScheduledMeetingDialog({ onClose, tz: pinned }: Props) {
+  const viewer = useViewerTz();
+  const tz = pinned ?? viewer;
   const [title, setTitle] = useState('');
   const [schedule, setSchedule] = useState<ScheduleValue>(() => defaultSchedule(new Date(), tz));
   const [invitees, setInvitees] = useState<PickedInvitee[]>([]);

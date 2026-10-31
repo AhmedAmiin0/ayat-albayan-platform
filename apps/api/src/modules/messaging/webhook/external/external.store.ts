@@ -1,8 +1,8 @@
-import { ACCOUNT_CODE_TEMPLATE, waIdToE164, type NumberPurpose } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, isHiddenPayload, type NumberPurpose, waIdToE164 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { orderedAt } from '../inbound/webhook.inbound';
-import type { StatusEvent } from '../webhook.events';
-import { WebhookQueries } from '../webhook.queries';
+import { orderedAt } from '@/modules/messaging/webhook/inbound/webhook.inbound';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { WebhookQueries } from '@/modules/messaging/webhook/webhook.queries';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
 import { ExternalQueries } from './external.queries';
@@ -52,7 +52,9 @@ export class ExternalStore {
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
     if (!(await this.queries.insert(row))) return 'known';
-    if (row.template_key !== ACCOUNT_CODE_TEMPLATE) await this.answered(phone, at);
+    // An edit, revoke or reaction is no reply (a marker, migration 992): unread stays as it is.
+    const marker = isHiddenPayload(row.interactive_payload);
+    if (row.template_key !== ACCOUNT_CODE_TEMPLATE && !marker) await this.answered(phone, at);
     return 'stored';
   }
 

@@ -16,7 +16,8 @@ jest.mock('@/teacher', () => ({ openSigned: jest.fn(async () => undefined) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const w = t.sales.student.log;
-const openLabel = w.openReport.replace('{date}', dayDateOf('2026-10-27T15:00:00.000Z'));
+const openDay = dayDateOf('2026-10-27T15:00:00.000Z', 'Asia/Riyadh');
+const openLabel = w.openReport.replace('{date}', openDay);
 const inSales = (node: ReactElement) => renderWithQuery(<TreeBaseProvider value="/sales">{node}</TreeBaseProvider>);
 beforeEach(() => {
   mockApiFetch.mockReset();

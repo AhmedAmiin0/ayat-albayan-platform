@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
@@ -34,11 +34,12 @@ interface JoinClassroomButtonProps {
 export function JoinClassroomButton({ lesson, only }: JoinClassroomButtonProps) {
   const { win, busy, error, join } = useJoinClassroom(lesson);
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   if (!win) return null;
   const live = win.state === 'open';
   if ((only === 'open' && !live) || (only === 'waiting' && live)) return null;
-  const hint =
-    win.state === 'early' ? opensAtLine(win.opens_at, cycle) : win.state === 'closed' ? text.closedHint : null;
+  const early = win.state === 'early' ? opensAtLine(win.opens_at, cycle, tz) : null;
+  const hint = early ?? (win.state === 'closed' ? text.closedHint : null);
   return (
     <View testID="join-classroom" style={{ gap: 2, alignSelf: 'stretch' }}>
       <Button

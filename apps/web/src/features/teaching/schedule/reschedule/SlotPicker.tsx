@@ -10,7 +10,8 @@ import { t } from '@/lib/i18n/i18n';
 import { slotsQuery } from '../api';
 import { SlotGrid, type SlotGridProps } from '../grid/SlotGrid';
 import { bookableWindow, currentWeekStart } from './slots';
-import { addDays, dayMonthLabel, RIYADH_TZ, weekStart, zonedParts } from '../tz';
+import { addDays, dayMonthLabel, weekStart, zonedParts } from '../tz';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface SlotPickerProps {
   teacherId: string;
@@ -34,10 +35,11 @@ export interface SlotPickerProps {
 
 const cityOf = (tz: string) => tzCity(tz) ?? tz;
 
-/** The Riyadh week to open on: the picked slot's, else `near`'s, never before this week. */
-function openingWeek(anchor: string | undefined, first: string): string {
+/** The viewer's week to open on: the picked slot's, else `near`'s, never before this week. */
+function openingWeek(anchor: string | undefined, week0: { first: string; tz: string }): string {
+  const { first, tz } = week0;
   if (!anchor) return first;
-  const week = weekStart(zonedParts(new Date(anchor), RIYADH_TZ).date);
+  const week = weekStart(zonedParts(new Date(anchor), tz).date);
   return week > first ? week : first;
 }
 
@@ -45,17 +47,18 @@ function openingWeek(anchor: string | undefined, first: string): string {
 export function SlotPicker(props: SlotPickerProps) {
   const { teacherId, durationMin, studentIds, studentTz, value, also, onPick, near, excludeCourse, excludeLessonId } = props;
   const [now] = useState(() => new Date());
-  const first = currentWeekStart(now);
-  const [week, setWeek] = useState(() => openingWeek(value ?? near, first));
-  const range = bookableWindow(week, now);
+  const tz = useViewerTz();
+  const first = currentWeekStart(now, tz);
+  const [week, setWeek] = useState(() => openingWeek(value ?? near, { first, tz }));
+  const range = bookableWindow(week, now, tz);
   const slots = useQuery({
     ...slotsQuery({ teacherId, durationMin, studentIds, excludeCourse, excludeLessonId, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
     enabled: range !== null,
   });
   const legend =
-    studentTz === RIYADH_TZ
-      ? t.booking.tzNote.replace('{city}', cityOf(RIYADH_TZ))
-      : t.booking.slotLegend.replace('{city}', cityOf(studentTz));
+    studentTz === tz
+      ? t.schedule.zoneNote.replace('{city}', cityOf(tz))
+      : t.booking.slotLegendViewer.replace('{city}', cityOf(studentTz));
 
   return (
     <div className="grid gap-3">

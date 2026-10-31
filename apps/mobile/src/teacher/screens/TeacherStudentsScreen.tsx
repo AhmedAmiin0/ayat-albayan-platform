@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
+import type { TeacherStudentKind, TeacherStudentView } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -10,7 +11,6 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { useTeacherMe } from '../lib/queries';
 import { StudentRow } from '../components/StudentRow';
 import { useMyStudents } from '../lib/students-queries';
 
@@ -30,7 +30,7 @@ const keyOf = (s: TeacherStudentView) => s.id;
 export function TeacherStudentsScreen() {
   const [kind, setKind] = useState<TeacherStudentKind>('subscribed');
   const list = useMyStudents(kind);
-  const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const inset = useTabBarInset();
   const renderRow = useCallback(({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />, [tz]);
   const rows = useInsetRows(renderRow, list.data?.length ?? 0);

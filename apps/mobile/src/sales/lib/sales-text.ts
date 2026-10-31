@@ -1,6 +1,6 @@
 import {
   localizedName,
-  RIYADH_TZ,
+  wallParts,
   type ClockCycle,
   type SalesHistoryEntry,
   type SalesStudentView,
@@ -20,16 +20,15 @@ import type { SalesSubscription } from './sales-api';
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;
-const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH_TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
 
 /** «{a} … {b}» → the values, every placeholder named once. */
 export function fill(text: string, values: Record<string, string>): string {
   return Object.entries(values).reduce((out, [k, v]) => out.replace(`{${k}}`, v), text);
 }
 
-/** «2026-10-01»: the Riyadh calendar day of a UTC instant, Western digits. */
-export function riyadhDate(iso: string): string {
-  return DAY.format(new Date(iso));
+/** «2026-10-01»: the viewer's calendar day of a UTC instant, Western digits. */
+export function viewerDate(iso: string, tz: string): string {
+  return wallParts(iso, tz).date;
 }
 
 /** A subscription status in words; an unknown one (newer API) as sent; none as «—». */
@@ -70,10 +69,15 @@ export function teacherCounts(teacher: SalesTeacherView): string {
   return `${s.studentsCount.replace('{n}', String(teacher.students.length))} · ${s.lessonsToday.replace('{n}', String(teacher.lessons_today))}`;
 }
 
-/** «الحلقة القادمة: الاثنين 12 أكتوبر 18:00» (Riyadh), or «لا حلقة خلال الأيام الثمانية القادمة». */
-export function nextLessonLine(student: Pick<SalesTeacherStudent, 'next_lesson_at'>, cycle: ClockCycle): string {
+/** «الحلقة القادمة: الاثنين 12 أكتوبر 18:00» (viewer), or «لا حلقة خلال الأيام الثمانية القادمة». */
+export function nextLessonLine(
+  student: Pick<SalesTeacherStudent, 'next_lesson_at'>,
+  cycle: ClockCycle,
+  tz: string,
+): string {
   const s = t.sales.teachers;
-  return student.next_lesson_at ? `${s.nextLesson}: ${whenIn(new Date(student.next_lesson_at), RIYADH_TZ, cycle)}` : s.noNextLesson;
+  if (!student.next_lesson_at) return s.noNextLesson;
+  return `${s.nextLesson}: ${whenIn(new Date(student.next_lesson_at), tz, cycle)}`;
 }
 
 
@@ -96,11 +100,11 @@ interface HistoryLines {
 }
 
 /** The lines of one subscription in the history card: package and status, dates, lessons, events, payments with their amount (owner, 2026-10-11). */
-export function historyLines(entry: SalesHistoryEntry): HistoryLines {
+export function historyLines(entry: SalesHistoryEntry, tz: string): HistoryLines {
   const h = t.sales.history;
   const dates = [fill(h.starts, { date: ltr(entry.starts_on) })];
   if (entry.renews_on) dates.push(fill(h.renews, { date: ltr(entry.renews_on) }));
-  if (entry.ended_at) dates.push(fill(h.ended, { date: ltr(riyadhDate(entry.ended_at)) }));
+  if (entry.ended_at) dates.push(fill(h.ended, { date: ltr(viewerDate(entry.ended_at, tz)) }));
   const used = fill(h.used, { used: String(entry.lessons_used), total: String(entry.lessons_total) });
   return {
     heading: `${packageLabel(entry.package)} · ${statusLabel(entry.status)}`,
@@ -108,8 +112,8 @@ export function historyLines(entry: SalesHistoryEntry): HistoryLines {
     lessons: `${used} · ${fill(h.remaining, { n: String(entry.lessons_remaining) })}`,
     changes: entry.status_changes.map((c) => {
       const what = c.from ? fill(h.changed, { from: statusLabel(c.from), to: statusLabel(c.to) }) : fill(h.created, { to: statusLabel(c.to) });
-      return `${ltr(riyadhDate(c.at))} — ${what}`;
+      return `${ltr(viewerDate(c.at, tz))} — ${what}`;
     }),
-    payments: entry.payments.map((p) => `${ltr(riyadhDate(p.paid_at))} — ${t.enums.paymentKind[p.kind]} — ${money(p.amount, p.currency)}`),
+    payments: entry.payments.map((p) => `${ltr(viewerDate(p.paid_at, tz))} — ${t.enums.paymentKind[p.kind]} — ${money(p.amount, p.currency)}`),
   };
 }

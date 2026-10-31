@@ -26,7 +26,7 @@ import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thre
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
 import { useLastMessageLine } from '@/inbox/thread/hooks/use-last-message';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -43,10 +43,10 @@ const contactAvatar = (thread: ThreadView | null, phone: string) => (
 );
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
-  const { teacher, cycle } = who;
+function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle; tz: string }): string {
+  const { teacher, cycle, tz } = who;
   if (query.isError && query.data) {
-    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle));
+    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle, tz));
   }
   const thread = query.data?.pages[0]?.thread;
   return thread?.display_name && !teacher
@@ -70,6 +70,7 @@ function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; 
  */
 export function ThreadScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
@@ -92,7 +93,7 @@ export function ThreadScreen() {
       <Screen chat>
         <ChatHeader
           title={title}
-          subtitle={subtitleOf(phone, query, { teacher, cycle })}
+          subtitle={subtitleOf(phone, query, { teacher, cycle, tz })}
           status={lastMessage}
           onBack={back}
           avatar={contactAvatar(thread, phone)}

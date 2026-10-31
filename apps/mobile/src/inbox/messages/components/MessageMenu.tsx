@@ -12,6 +12,8 @@ import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-t
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { ReactionBar } from '../reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
+import { useHideRights } from '@/auth';
+import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -37,7 +39,10 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
   const { color } = useTheme();
   const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
-  const offers = m ? bubbleOffers(m, { enabled, teacher, react: reactable(m) }) : null;
+  const rights = useHideRights();
+  const offers = m
+    ? bubbleOffers(m, { enabled, teacher, react: reactable(m), ...rights })
+    : null;
   const reply = offers?.reply === true;
   const forward = offers?.forward === true;
   // After the menu has closed (iOS shows one modal at a time).
@@ -102,6 +107,9 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
             downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
           }}
         />
+      ) : null}
+      {m && offers ? (
+        <HideActions key={m.id} message={m} offers={offers} phone={phone} onClose={onClose} />
       ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </MenuSheet>

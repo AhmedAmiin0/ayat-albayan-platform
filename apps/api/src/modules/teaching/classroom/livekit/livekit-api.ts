@@ -85,6 +85,21 @@ export class LivekitApi {
   }
 
   /**
+   * Closes the room for everyone inside («إنهاء», the max-duration job). Already gone (not_found)
+   * counts as done: false. A running egress ends with the room.
+   */
+  async deleteRoom(room: string, now = new Date()): Promise<boolean> {
+    try {
+      const input = { method: 'livekit.RoomService/DeleteRoom', body: { room } };
+      await this.call({ ...input, grant: { roomCreate: true } }, now);
+      return true;
+    } catch (e) {
+      if (e instanceof LivekitError && e.code === 'not_found') return false;
+      throw e;
+    }
+  }
+
+  /**
    * Creates the room ahead of its first participant (an egress needs an existing room). Returns
    * the existing room when it is already there. Ten empty minutes before LiveKit closes it.
    */

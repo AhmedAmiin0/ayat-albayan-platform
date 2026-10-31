@@ -3,11 +3,11 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { useNow } from '@/core/lib/time/use-now';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { shape, type, useTheme } from '@/theme';
-import { riyadhTime, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
@@ -17,18 +17,19 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
   const { color } = useTheme();
   const { lesson, phase } = item;
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   return (
     <View style={{ gap: 4, paddingVertical: 8 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink, fontVariant: ['tabular-nums'] }}>
-          {riyadhTime(lesson.starts_at, cycle)}
+          {lessonClock(lesson.starts_at, tz, cycle)}
         </AppText>
         {phase === 'live' ? (
           <StatusChip tone="ok" glyph="fill" label={t.live.now} size="sm" />
         ) : (
           <AppText style={{ ...small, fontVariant: ['tabular-nums'] }}>
-            {t.live.startsAt.replace('{time}', riyadhTime(lesson.starts_at, cycle))}
+            {t.live.startsAt.replace('{time}', lessonClock(lesson.starts_at, tz, cycle))}
           </AppText>
         )}
       </View>

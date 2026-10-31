@@ -69,9 +69,12 @@ export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
   };
 }
 
+const emptyPage = () => ({ messages: [] as unknown[], after: undefined as string | undefined });
+
 export const fakeKapso = () => ({
   message: vi.fn().mockResolvedValue(kapsoText() as unknown),
-  outbound: vi.fn().mockResolvedValue({ messages: [] as unknown[], after: undefined as string | undefined }),
+  outbound: vi.fn().mockResolvedValue(emptyPage()),
+  inbound: vi.fn().mockResolvedValue(emptyPage()),
 });
 
 /** The real external services over the fakes; `queries` is fakeQueries() (identify, latestInSecond, numberIdFor). */

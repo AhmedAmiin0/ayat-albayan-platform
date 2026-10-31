@@ -1,8 +1,8 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { viewerTz } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { ChannelThread } from './ChannelThread';
 
 /**
@@ -10,6 +10,7 @@ import { ChannelThread } from './ChannelThread';
  * until asked for, then the thread read-only with its «للاطلاع فقط» note.
  */
 export function MonitorChannel({ studentId, audience }: { studentId: string; audience: Extract<ChannelAudience, 'admin' | 'sales'> }) {
+  const tz = useViewerTz();
   const [open, setOpen] = useState(false);
   return (
     <section className="mb-6 grid gap-3" aria-label={t.studentChannel.monitorTitle}>
@@ -19,7 +20,7 @@ export function MonitorChannel({ studentId, audience }: { studentId: string; aud
           {open ? t.studentChannel.hide : t.studentChannel.open}
         </Button>
       </div>
-      {open && <ChannelThread refs={{ audience, studentId }} tz={viewerTz()} />}
+      {open && <ChannelThread refs={{ audience, studentId }} tz={tz} />}
     </section>
   );
 }

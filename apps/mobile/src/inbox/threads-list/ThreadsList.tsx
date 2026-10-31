@@ -17,7 +17,7 @@ import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
 import { useThreadRow } from './ThreadRow';
 import { useChoiceRows, useThreadList } from './use-thread-list';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { useToday } from '@/core/lib/time/use-today';
 
 /**
@@ -34,6 +34,7 @@ const keyOf = (th: ThreadView) => th.phone_e164;
 
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const mode = useThreadMode();
   const base = useTreeBase();
   const [search, setSearch] = useState('');
@@ -42,7 +43,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const { rows, seeking } = useChoiceRows(list, choice === 'waiting');
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
-  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
+  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle, tz)) : undefined;
   const admin = mode.kind === 'admin';
   // One clock for the whole list (not a timer per row), new only at midnight.
   const renderItem = useThreadRow(mode, base, useToday());

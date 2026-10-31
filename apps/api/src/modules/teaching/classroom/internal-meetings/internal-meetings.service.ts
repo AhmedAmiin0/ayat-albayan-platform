@@ -41,7 +41,7 @@ export class InternalMeetingsService {
     if (!this.livekit.configured) return;
     const room = meetingRoomName(id);
     this.livekit
-      .call({ method: 'livekit.RoomService/DeleteRoom', body: { room }, grant: { roomCreate: true } }, now)
+      .deleteRoom(room, now)
       .catch((e: unknown) => this.log.warn(`delete room ${room}: ${String(e)}`));
   }
 

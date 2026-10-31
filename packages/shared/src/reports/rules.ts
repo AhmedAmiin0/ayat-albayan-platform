@@ -1,5 +1,5 @@
 import type { Attendance, Grade, LessonStatus } from '../enums/index.js';
-import type { StatusRouteEvent } from '../schedule/lessons/state-machine.js';
+import { isClosedLesson, type StatusRouteEvent } from '../schedule/lessons/state-machine.js';
 import type { UserRole } from '../catalog/permissions/roles.js';
 import { gradeStyle } from '../money/status-style/status-style.js';
 
@@ -46,8 +46,6 @@ export function gradeScore(grade: Grade | null): number | null {
   return grade === null ? null : gradeStyle[grade].pips;
 }
 
-const CLOSED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'];
-
 export type ReportBlock = 'lesson_cancelled' | 'not_started';
 
 /**
@@ -60,7 +58,7 @@ export function reportBlock(input: {
   lessonStartsAt: Date;
   now: Date;
 }): ReportBlock | null {
-  if (CLOSED.includes(input.lessonStatus)) return 'lesson_cancelled';
+  if (isClosedLesson(input.lessonStatus)) return 'lesson_cancelled';
   if (input.now.getTime() < input.lessonStartsAt.getTime()) return 'not_started';
   return null;
 }

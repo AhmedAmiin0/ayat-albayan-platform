@@ -1,5 +1,11 @@
-import { DELIVERY_STATUSES, MEDIA_TYPES, type DeliveryStatus } from '../webhook.events';
-import { field, get } from '../parse/webhook.parse';
+import type { Json } from '@ab/db';
+import { defaultMediaMime, echoPayload } from '@ab/shared';
+import {
+  DELIVERY_STATUSES,
+  MEDIA_TYPES,
+  type DeliveryStatus,
+} from '@/modules/messaging/webhook/webhook.events';
+import { field, get } from '@/modules/messaging/webhook/parse/webhook.parse';
 
 // A message the business sent outside the app, read out of Meta's message object: an
 // smb_message_echoes item, or an item of Kapso's message history (the same Meta shape plus a
@@ -25,6 +31,8 @@ export interface ExternalMessage {
   status: DeliveryStatus | null;
   /** Kapso's direction, when it carries one (history items); echoes have none (always outbound). */
   direction: string | null;
+  /** messages.interactive_payload (echoPayload): a marker, the ad's welcome, a media part. */
+  payload: Json | null;
 }
 
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
@@ -58,6 +66,13 @@ function statusOf(m: unknown): DeliveryStatus | null {
   return (DELIVERY_STATUSES as readonly (string | null)[]).includes(s) ? (s as DeliveryStatus) : null;
 }
 
+/** Meta's mime, else Kapso's media_data, else WhatsApp's default for the type. */
+function mimeOf(m: unknown, media: string | null): string | null {
+  if (!media) return null;
+  const kapso = field(m, 'kapso.media_data.content_type');
+  return first(field(m, `${media}.mime_type`), kapso, defaultMediaMime(media));
+}
+
 export function externalMessage(m: unknown): ExternalMessage | null {
   const f = (path: string) => field(m, path);
   const to = first(f('to'), f('kapso.phone_number'))?.replace(/^\+/, '') ?? null;
@@ -74,10 +89,11 @@ export function externalMessage(m: unknown): ExternalMessage | null {
     templateName: type === 'template' ? f('template.name') : null,
     templateParams: type === 'template' ? templateParams(get(m, 'template.components')) : null,
     mediaId: mf('id'),
-    mediaMime: first(mf('mime_type'), f('kapso.media_data.content_type')),
+    mediaMime: mimeOf(m, media),
     mediaName: first(mf('filename'), f('kapso.media_data.filename')),
     replyTo: f('context.id'),
     status: statusOf(m),
     direction: f('kapso.direction'),
+    payload: echoPayload(m) as Json | null,
   };
 }

@@ -20,8 +20,8 @@ test('a task without a student or balance keeps no placeholder', () => {
 test('a pending report line says the teacher and the Riyadh day', () => {
   const row = work.pending_reports.items[0];
   if (!row) throw new Error('fixture');
-  expect(pendingSubtitle(row, '24')).toContain('أبرار');
-  expect(pendingSubtitle(row, '24')).toContain('·');
+  expect(pendingSubtitle(row, '24', 'Asia/Riyadh')).toContain('أبرار');
+  expect(pendingSubtitle(row, '24', 'Asia/Riyadh')).toContain('·');
 });
 
 test('an unpaid line: the package, then what is owed rounded to whole units', () => {

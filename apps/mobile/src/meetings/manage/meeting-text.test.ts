@@ -12,9 +12,9 @@ test('the time is on the Riyadh clock with Western digits', () => {
 });
 
 test('a coded refusal reads in words; the rest is the generic line', () => {
-  expect(meetingError(new ApiError(410, { code: 'meeting_ended' }), '24')).toBe(t.classroom.error.meeting_ended);
-  expect(meetingError(new ApiError(404, { code: 'meeting_not_found' }), '24')).toBe(t.classroom.error.meeting_not_found);
-  expect(meetingError(new Error('x'), '24')).toBe(t.meetings.internal.actionError);
+  expect(meetingError(new ApiError(410, { code: 'meeting_ended' }), '24', 'Asia/Riyadh')).toBe(t.classroom.error.meeting_ended);
+  expect(meetingError(new ApiError(404, { code: 'meeting_not_found' }), '24', 'Asia/Riyadh')).toBe(t.classroom.error.meeting_not_found);
+  expect(meetingError(new Error('x'), '24', 'Asia/Riyadh')).toBe(t.meetings.internal.actionError);
 });
 
 test('recordings open in the tree that shows the meeting', () => {
@@ -40,10 +40,10 @@ test('a refused join reads in a meeting\u2019s words, before the classroom lines
   expect(early).toBe(R.notOpenAt.replace('{when}', meetingWhen('2026-10-05T11:30:00.000Z', 'Asia/Riyadh', '24')));
   expect(early).toMatch(/14:30/);
   expect(meetingError(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' }), '24', 'UTC')).toMatch(/11:30/);
-  expect(meetingError(new ApiError(403, { code: 'join_not_open_yet' }), '24')).toBe(R.notOpen);
-  expect(meetingError(new ApiError(410, { code: 'join_closed' }), '24')).toBe(R.closed);
-  expect(meetingError(new ApiError(403, { statusCode: 403, message: 'Forbidden' }), '24')).toBe(R.forbidden);
-  expect(meetingError(new ApiError(403, null), '24')).toBe(R.forbidden);
+  expect(meetingError(new ApiError(403, { code: 'join_not_open_yet' }), '24', 'Asia/Riyadh')).toBe(R.notOpen);
+  expect(meetingError(new ApiError(410, { code: 'join_closed' }), '24', 'Asia/Riyadh')).toBe(R.closed);
+  expect(meetingError(new ApiError(403, { statusCode: 403, message: 'Forbidden' }), '24', 'Asia/Riyadh')).toBe(R.forbidden);
+  expect(meetingError(new ApiError(403, null), '24', 'Asia/Riyadh')).toBe(R.forbidden);
   for (const line of [early, R.notOpen, R.closed, R.forbidden]) {
     expect(line).not.toContain('الحلقة');
     expect(line).not.toMatch(/\b15\b/);

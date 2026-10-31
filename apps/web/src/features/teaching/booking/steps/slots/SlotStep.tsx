@@ -1,26 +1,30 @@
-import { lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt, sameClockAt } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
-import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { pickPatch, type BookingDraft } from '../../draft/draft';
 import { SeriesCheck } from '../review/SeriesCheck';
 import { pickHint, SlotDays } from './SlotDays';
 import { type Clock, useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface SlotStepProps {
   draft: BookingDraft;
   onChange: (patch: Pick<BookingDraft, 'startsAt' | 'extra'>) => void;
 }
 
-/** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض» (+ the family's wall clock when it differs). */
-export function pickedText(startsAt: string, tz: string, clock: Clock): string {
+/**
+ * «الأحد 4 أكتوبر 17:00 بتوقيتك» in the viewer's zone `clock.tz` (useViewerTz()), + the family's
+ * wall clock `tz` when it differs then.
+ */
+export function pickedText(startsAt: string, tz: string, clock: Clock & { tz: string }): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenAt(at, { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`;
-  if (tz === RIYADH_TZ) return riyadh;
-  const local = t.schedule.inCity.replace('{time}', lessonWhenAt(at, { tz, ...clock })).replace('{city}', tzCity(tz) ?? tz);
-  return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
+  const viewer = clock.tz;
+  const mine = `${lessonWhenAt(at, clock)} ${t.schedule.viewerTime}`;
+  if (sameClockAt(at, { a: tz, b: viewer })) return mine;
+  const local = t.schedule.inCity.replace('{time}', lessonWhenAt(at, { ...clock, tz })).replace('{city}', tzCity(tz) ?? tz);
+  return `${mine}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /** A course's grid opens near its subscription's start: max(now, starts_on) (the picker never opens before this week). */
@@ -35,7 +39,7 @@ export function courseNear(startsOn: string, now: Date = new Date()): string {
  * first lesson. A trial or a makeup is one lesson: one slot, no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const teacher = draft.teacher;
   if (!teacher) return null;
   const pkg = draft.kind === 'package';

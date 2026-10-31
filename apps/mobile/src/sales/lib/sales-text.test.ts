@@ -7,7 +7,7 @@ import {
   guardianLine,
   historyLines,
   packageLabel,
-  riyadhDate,
+  viewerDate,
   startsLine,
   statusLabel,
   studentSubtitle,
@@ -17,14 +17,15 @@ import {
 } from './sales-text';
 
 const sep = t.common.listSeparator;
+const RIYADH = 'Asia/Riyadh';
 
 test('fill replaces every named placeholder', () => {
   expect(fill('{a} / {b}', { a: '1', b: '2' })).toBe('1 / 2');
 });
 
-test('riyadhDate is the Riyadh calendar day in Western digits', () => {
-  expect(riyadhDate('2026-09-30T22:30:00.000Z')).toBe('2026-10-01');
-  expect(riyadhDate('2026-09-30T20:59:00.000Z')).toBe('2026-09-30');
+test('viewerDate is the Riyadh calendar day in Western digits', () => {
+  expect(viewerDate('2026-09-30T22:30:00.000Z', RIYADH)).toBe('2026-10-01');
+  expect(viewerDate('2026-09-30T20:59:00.000Z', RIYADH)).toBe('2026-09-30');
 });
 
 test('status and package words; unknown values as sent, none as a dash', () => {
@@ -60,7 +61,7 @@ test('a student reads teacher · program (or «بلا معلم») and the guardi
 
 test('history lines: dates, lessons, status changes and payments with date, kind and amount', () => {
   const h = t.sales.history;
-  const lines = historyLines(entry());
+  const lines = historyLines(entry(), RIYADH);
   expect(lines.heading).toBe(`${t.enums.packageSize['8']} · ${t.enums.subscriptionStatus.active}`);
   expect(lines.dates).toEqual([h.starts.replace('{date}', ltr('2026-10-01')), h.renews.replace('{date}', ltr('2026-11-01'))]);
   expect(lines.lessons).toBe(`${fill(h.used, { used: '3', total: '8' })} · ${h.remaining.replace('{n}', '5')}`);
@@ -72,7 +73,7 @@ test('history lines: dates, lessons, status changes and payments with date, kind
 });
 
 test('an ended subscription adds its end day', () => {
-  const lines = historyLines(entry({ renews_on: null, ended_at: '2026-09-29T21:30:00.000Z' }));
+  const lines = historyLines(entry({ renews_on: null, ended_at: '2026-09-29T21:30:00.000Z' }), RIYADH);
   expect(lines.dates).toEqual([
     t.sales.history.starts.replace('{date}', ltr('2026-10-01')),
     t.sales.history.ended.replace('{date}', ltr('2026-09-30')),

@@ -7,6 +7,7 @@ import { GoogleBlock } from '../GoogleBlock';
 import { fill, formatAt } from '../google-format';
 import { useDriveActions } from './use-drive-actions';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const s = t.googleSync.drive;
 
@@ -26,7 +27,7 @@ function FoundLine({ label, found }: { label: string; found: GoogleFound | null 
 
 /** The confirmed root folder, when an admin confirmed one. */
 function ConfirmedDrive({ drive }: { drive: GoogleStatusView['drive'] }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   if (!drive.confirmed_at) return null;
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -39,7 +40,7 @@ function ConfirmedDrive({ drive }: { drive: GoogleStatusView['drive'] }) {
 
 /** What the last search found: the root folder and the summary sheet (or «غير موجود»). */
 function DriveFound({ found }: { found: GoogleStatusView['discovery'] }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   return (
     <>
       <p className="text-xs text-ink-3">{found ? fill(s.discovered, { at: formatAt(found.at, clock) }) : s.never}</p>

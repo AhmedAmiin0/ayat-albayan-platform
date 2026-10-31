@@ -1,5 +1,5 @@
 import type { Locale } from '../../i18n/locale.js';
-import { RIYADH_TZ } from '../../core/format/running-head.js';
+import { RIYADH_TZ } from '../../core/format/index.js';
 import { lessonWhenAt } from '../lesson/booking-confirmation.js';
 import type { ClockCycle } from '../../core/format/index.js';
 import { quickReplyIntent } from './quick-reply.js';
@@ -32,7 +32,8 @@ export interface ReplyNoteContext {
   now: Date;
   /** Staff moved this reply's lesson from its button (the app remembers it: the family lesson is gone from the list). */
   moved?: boolean;
-  clock?: { locale: Locale; cycle: ClockCycle };
+  /** The viewer's clock; `tz` = their zone (docs/34), the academy's when not given. */
+  clock?: { locale: Locale; cycle: ClockCycle; tz?: string };
 }
 
 type NoteInput = Pick<MessageView, 'direction' | 'body' | 'guardian_id' | 'lead_id'>;
@@ -40,7 +41,8 @@ type NoteInput = Pick<MessageView, 'direction' | 'body' | 'guardian_id' | 'lead_
 const DEFAULT_CLOCK = { locale: 'ar', cycle: '24' } as const;
 
 function whenOf({ lesson, clock = DEFAULT_CLOCK }: ReplyNoteContext): string | null {
-  return lesson ? lessonWhenAt(new Date(lesson.starts_at), { tz: RIYADH_TZ, ...clock }) : null;
+  if (!lesson) return null;
+  return lessonWhenAt(new Date(lesson.starts_at), { ...clock, tz: clock.tz ?? RIYADH_TZ });
 }
 
 function rescheduleNote(ctx: ReplyNoteContext, when: string | null): ReplyNote {

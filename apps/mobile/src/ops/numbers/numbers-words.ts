@@ -53,7 +53,8 @@ export function healthChip(view: Pick<NumberView, 'health'>): ChipWords | null {
     : { tone: 'bad', glyph: 'struck', label: n().health.failed };
 }
 
-/** «آخر فحص: …» in Riyadh time, or null. */
-export function checkedLine(view: Pick<NumberView, 'checked_at'>, cycle: ClockCycle): string | null {
-  return view.checked_at ? n().chips.checkedAt.replace('{{at}}', formatAt(view.checked_at, cycle)) : null;
+/** «آخر فحص: …» in the viewer's `tz`, or null. */
+export function checkedLine(view: Pick<NumberView, 'checked_at'>, cycle: ClockCycle, tz: string): string | null {
+  if (!view.checked_at) return null;
+  return n().chips.checkedAt.replace('{{at}}', formatAt(view.checked_at, cycle, tz));
 }

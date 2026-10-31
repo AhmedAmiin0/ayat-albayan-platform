@@ -1,10 +1,10 @@
 import { lessonWhenAt, type TrialDateRow } from '@ab/shared';
-import { dateLabel, RIYADH_TZ, zonedParts } from '@/features/teaching/schedule/tz';
+import { dateLabel, zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import type { Clock } from '@/lib/clock';
 
-// The texts of one «مواعيد الحلقة التجريبية» row. The viewer reads the academy's clock (Riyadh, as
-// pickedText and the calendar do); the family's own clock is added when their zone differs. Pure.
+// The texts of one «مواعيد الحلقة التجريبية» row. The viewer reads their own clock (docs/34, as
+// pickedText and the calendar do); the family's own clock is added when it differs. Pure.
 
 export interface RowTexts {
   when: string;
@@ -17,10 +17,11 @@ export interface RowTexts {
 export interface RowTextInput {
   row: TrialDateRow;
   familyTz: string;
-  viewerTz?: string | undefined;
+  /** The viewer's zone (useViewerTz()). */
+  viewerTz: string;
 }
 
-export function rowTexts({ row, familyTz, viewerTz = RIYADH_TZ }: RowTextInput, clock: Clock): RowTexts {
+export function rowTexts({ row, familyTz, viewerTz }: RowTextInput, clock: Clock): RowTexts {
   const at = new Date(row.starts_at);
   const familyAt = lessonWhenAt(at, { tz: familyTz, ...clock });
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
@@ -28,7 +29,7 @@ export function rowTexts({ row, familyTz, viewerTz = RIYADH_TZ }: RowTextInput, 
   const on = dateLabel(zonedParts(new Date(row.picked_at), viewerTz).date);
   return {
     // Every time says its zone (docs/07 principle 7).
-    when: viewerTz === RIYADH_TZ ? `${lessonWhenAt(at, { tz: viewerTz, ...clock })} ${t.schedule.riyadhTime}` : lessonWhenAt(at, { tz: viewerTz, ...clock }),
+    when: `${lessonWhenAt(at, { tz: viewerTz, ...clock })} ${t.schedule.viewerTime}`,
     family,
     picked: t.trialDate.pickedAt.replace('{name}', row.picked_by ?? t.trialDate.unknownPicker).replace('{when}', on),
   };

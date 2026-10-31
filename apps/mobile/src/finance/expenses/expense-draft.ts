@@ -40,6 +40,7 @@ export function expenseBody(draft: ExpenseDraft, receiptPath: string | null, now
     category: draft.category,
     amount: parseAmount(draft.amountText) ?? 0,
     currency: 'EGP',
+    // academy day (docs/34 b): an expense is booked on an academy day.
     paidOn: localDate(paidAtFor(now, draft.daysAgo), RIYADH_TZ),
     vendor: draft.vendor.trim() || null,
     method: draft.method,

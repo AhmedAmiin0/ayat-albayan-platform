@@ -7,7 +7,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { clockAt } from '../../../shared/format';
 import { CallArrowIcon } from '../screen/call-icons';
 import { callEntryText, callerName, callInk } from '../entries/call-text';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CallsLogRowProps {
   call: CallView;
@@ -18,6 +18,7 @@ interface CallsLogRowProps {
 /** One call of the log (WhatsApp's «المكالمات»): who, the direction arrow and its words, the time. */
 export function CallsLogRow({ call, showsPhone, onOpen }: CallsLogRowProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const kind = callEntryKind(call);
   const ink = callInk(kind, color);
@@ -31,7 +32,7 @@ export function CallsLogRow({ call, showsPhone, onOpen }: CallsLogRowProps) {
       trailing={
         <View>
           <AppText style={{ fontSize: type.size['2xs'], color: kind === 'missed' ? color.bad : color.ink3, fontVariant: ['tabular-nums'] }}>
-            {clockAt(Date.parse(call.started_at), cycle)}
+            {clockAt(Date.parse(call.started_at), cycle, tz)}
           </AppText>
         </View>
       }

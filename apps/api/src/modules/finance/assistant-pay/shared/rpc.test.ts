@@ -71,6 +71,8 @@ describe('TermsQueries.uncommissioned', () => {
     const settings = new AssistantPaySettings(fakeSettings());
     expect(await new TermsQueries(t.db, settings).uncommissioned('a')).toEqual(['x1', 'x2', 'y2', 'z1']);
     expect(t.argsOf('subscriptions', 'gt')).toEqual(['price', 0]); // a trial (price 0) never counts
+    // An unused cancel never counts; a stopped package keeps its commission (migration 991).
+    expect(t.argsOf('subscriptions', 'or')).toEqual(['status.neq.cancelled,cancel_kind.eq.stopped']);
     const none = fakeDb({ students: [{ data: [] }] });
     expect(await new TermsQueries(none.db, settings).uncommissioned('a')).toEqual([]);
     expect(none.calls.map((c) => c.table)).not.toContain('subscriptions');

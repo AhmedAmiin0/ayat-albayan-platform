@@ -82,7 +82,7 @@ test('reschedule from the sheet reads «تفاصيل الطالب» again: the m
   mockApiSend.mockResolvedValue({ id: 'n1', starts_at: SAT_17, status: 'scheduled' });
   await open(/2 أكتوبر 18:00$/);
   await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
-  await fireEvent.press(first(await screen.findAllByRole('radio', { name: /^17:00،/ })));
+  await fireEvent.press(first(await screen.findAllByRole('radio', { name: /^17:00/ })));
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/u1/reschedule', { startsAt: SAT_17 }));
   await fireEvent.press(await screen.findByRole('button', { name: t.reschedule.done }));

@@ -19,7 +19,7 @@ import { MoneyKpis } from './MoneyKpis';
  * teacher cost), plus what teachers are owed and what families still owe.
  */
 export function FinanceSummaryPage() {
-  const today = riyadhToday();
+  const today = riyadhToday(); // academy day (docs/34 b): the year's ?from&to are Riyadh days
   const [year, setYear] = useState(today.slice(0, 4));
   const summary = useQuery(summaryQuery(yearRange(year, today)));
   const years = Array.from({ length: 4 }, (_, i) => String(Number(today.slice(0, 4)) - i));

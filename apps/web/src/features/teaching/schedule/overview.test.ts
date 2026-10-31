@@ -17,6 +17,7 @@ import { locale } from '@/lib/i18n/locale';
 const C24 = { cycle: '24', locale } as const;
 
 const SUNDAY = '2026-10-04';
+const TZ = 'Asia/Riyadh';
 const BEFORE = new Date('2026-10-03T09:00:00.000Z'); // Saturday, the whole week ahead
 const LESSON = lesson({ id: 'a' }); // Sunday 17:00–17:45 Riyadh
 
@@ -39,7 +40,7 @@ describe('filterTeachers (program, gender, picked ids)', () => {
 
 describe('boardRows', () => {
   it('gives every teacher a row, lessons bucketed by Riyadh day', () => {
-    const rows = boardRows([T_ABRAR, T_NOUR], [LESSON]);
+    const rows = boardRows([T_ABRAR, T_NOUR], [LESSON], TZ);
     expect(rows.map((r) => r.teacher.id)).toEqual(['t-abrar', 't-nour']);
     expect(rows[0]?.days.get(SUNDAY)?.map((l) => l.id)).toEqual(['a']);
     expect(rows[1]?.days.size).toBe(0);
@@ -48,20 +49,30 @@ describe('boardRows', () => {
   it("takes the teacher's photo from the overview, lessons or not", () => {
     const shot = lesson({ id: 'p', teacher: { ...LESSON.teacher, id: 't-nour', avatar_url: 'https://x.test/old.png' } });
     const abrar = { ...T_ABRAR, avatar_url: 'https://x.test/a.png' };
-    expect(boardRows([abrar, T_NOUR], [shot]).map((r) => r.photo)).toEqual(['https://x.test/a.png', null]);
+    expect(boardRows([abrar, T_NOUR], [shot], TZ).map((r) => r.photo)).toEqual(['https://x.test/a.png', null]);
   });
 });
 
 describe('Riyadh-day spans', () => {
   it('cuts a span crossing midnight into each day, the first ending at 24:00', () => {
     const late = { starts_at: '2026-10-04T19:00:00.000Z', ends_at: '2026-10-04T23:00:00.000Z' }; // 22:00 → 02:00
-    expect(clipSpans([late], SUNDAY).map((s) => spanRange(s, SUNDAY))).toEqual([{ start: '22:00', end: '24:00' }]);
-    expect(clipSpans([late], '2026-10-05').map((s) => spanRange(s, '2026-10-05'))).toEqual([{ start: '00:00', end: '02:00' }]);
-    expect(clipSpans([late], '2026-10-06')).toEqual([]);
+    const cut = (day: string) =>
+      clipSpans([late], { day, tz: TZ }).map((s) => spanRange(s, day, TZ));
+    expect(cut(SUNDAY)).toEqual([{ start: '22:00', end: '24:00' }]);
+    expect(cut('2026-10-05')).toEqual([{ start: '00:00', end: '02:00' }]);
+    expect(clipSpans([late], { day: '2026-10-06', tz: TZ })).toEqual([]);
+  });
+
+  it('cuts to a day of the zone it is given (UTC)', () => {
+    const late = { starts_at: '2026-10-04T19:00:00.000Z', ends_at: '2026-10-04T23:00:00.000Z' };
+    const utc = clipSpans([late], { day: SUNDAY, tz: 'UTC' }).map((s) => spanRange(s, SUNDAY, 'UTC'));
+    expect(utc).toEqual([{ start: '19:00', end: '23:00' }]);
   });
 
   it('the day window is Riyadh midnight to midnight in UTC', () => {
-    expect(dayWindow(SUNDAY)).toEqual({ from: new Date('2026-10-03T21:00:00.000Z'), to: new Date('2026-10-04T21:00:00.000Z') });
+    const window = { from: new Date('2026-10-03T21:00:00.000Z'), to: new Date('2026-10-04T21:00:00.000Z') };
+    expect(dayWindow(SUNDAY, TZ)).toEqual(window);
+    expect(dayWindow(SUNDAY, 'UTC').from).toEqual(new Date('2026-10-04T00:00:00.000Z'));
   });
 
   it('words the free total and a gap', () => {
@@ -73,10 +84,10 @@ describe('Riyadh-day spans', () => {
 
 describe('teacherDay', () => {
   it('draws the windows, ticks the lesson and sums the free gaps', () => {
-    const day = teacherDay(T_ABRAR, { day: SUNDAY, lessons: [LESSON], now: BEFORE });
+    const day = teacherDay(T_ABRAR, { day: SUNDAY, lessons: [LESSON], now: BEFORE, tz: TZ });
     expect(day.windows).toEqual([{ start: '16:00', end: '20:00' }]);
     expect(day.ticks).toEqual([{ start: '17:00', end: '17:45' }]);
-    expect(day.gaps.map((g) => spanRange(g, SUNDAY))).toEqual([
+    expect(day.gaps.map((g) => spanRange(g, SUNDAY, TZ))).toEqual([
       { start: '16:00', end: '17:00' },
       { start: '17:45', end: '20:00' },
     ]);
@@ -86,18 +97,19 @@ describe('teacherDay', () => {
 
   it('keeps only what is left from now on, from the next quarter hour, 30 min or more', () => {
     const at1820 = new Date('2026-10-04T15:20:00.000Z'); // 18:20 Riyadh → from 18:30
-    const day = teacherDay(T_ABRAR, { day: SUNDAY, lessons: [], now: at1820 });
-    expect(day.gaps.map((g) => spanRange(g, SUNDAY))).toEqual([{ start: '18:30', end: '20:00' }]);
+    const day = teacherDay(T_ABRAR, { day: SUNDAY, lessons: [], now: at1820, tz: TZ });
+    expect(day.gaps.map((g) => spanRange(g, SUNDAY, TZ))).toEqual([{ start: '18:30', end: '20:00' }]);
     const at1935 = new Date('2026-10-04T16:35:00.000Z'); // 19:35 → from 19:45, 15 min left: dropped
-    expect(teacherDay(T_ABRAR, { day: SUNDAY, lessons: [], now: at1935 }).gaps).toEqual([]);
+    expect(teacherDay(T_ABRAR, { day: SUNDAY, lessons: [], now: at1935, tz: TZ }).gaps).toEqual([]);
   });
 
   it('a time off over the whole track is the day off; a part of it is only hatched', () => {
-    const monday = teacherDay(T_FATMA, { day: '2026-10-05', lessons: [], now: BEFORE });
+    const monday = teacherDay(T_FATMA, { day: '2026-10-05', lessons: [], now: BEFORE, tz: TZ });
     expect(monday.dayOff?.reason).toBe('سفر');
     expect(monday.off).toEqual([{ start: '00:00', end: '24:00' }]);
     const afternoon = { id: 'o2', reason: null, starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T15:00:00.000Z' };
-    const sunday = teacherDay({ ...T_ABRAR, time_off: [afternoon] }, { day: SUNDAY, lessons: [], now: BEFORE });
+    const input = { day: SUNDAY, lessons: [], now: BEFORE, tz: TZ };
+    const sunday = teacherDay({ ...T_ABRAR, time_off: [afternoon] }, input);
     expect(sunday.dayOff).toBeNull();
     expect(sunday.off).toEqual([{ start: '16:00', end: '18:00' }]);
   });

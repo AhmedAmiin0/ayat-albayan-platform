@@ -51,3 +51,9 @@ export interface CourseChangeView {
   student: { id: string; name: string; code: string; tz: string };
   course: BookedCourse;
 }
+
+/** GET /students/:id/course-teacher|course-times/change (owner 2026-10-30). */
+export interface ProfileCourseView extends CourseChangeView {
+  /** The course's next open lesson (local date, course zone; its instant); null = none. */
+  nextLesson: { startsOn: string; startsAt: string } | null;
+}

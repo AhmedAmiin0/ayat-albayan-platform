@@ -48,4 +48,13 @@ describe('KapsoHistory', () => {
     expect(res.after).toBeUndefined();
     expect((await reader({}).kapso.outbound(kapsoEnv(), { since: 'x' })).messages).toEqual([]);
   });
+
+  it('a page of the families\' messages asks direction=inbound, same paging', async () => {
+    const { fetch, kapso } = reader({ data: [kapsoText()], paging: { cursors: { after: 'c2' } } });
+    const res = await kapso.inbound(kapsoEnv(), { since: '2026-10-30T08:49:00.000Z' });
+    expect(res).toEqual({ messages: [kapsoText()], after: undefined });
+    const q = urlOf(fetch).searchParams;
+    expect(q.get('direction')).toBe('inbound');
+    expect(q.get('since')).toBe('2026-10-30T08:49:00.000Z');
+  });
 });

@@ -1,4 +1,4 @@
-import { chatDay, chatDayKey, type ClockCycle, dayParts, intlLocale } from '@ab/shared';
+import { chatDay, chatDayKey, type ClockCycle, dateText, dayParts } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
@@ -12,8 +12,9 @@ interface DayOptions {
   tz?: string;
 }
 
-const dayMonth = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', timeZone: 'UTC' });
-const dayMonthYear = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const DAY_MONTH = { day: 'numeric', month: 'long' } as const;
+const DAY_MONTH_YEAR = { ...DAY_MONTH, year: 'numeric' } as const;
+const pad = (n: number): string => String(n).padStart(2, '0');
 
 /** The separator's words for the day of `iso`. */
 export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
@@ -23,8 +24,8 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
   const weekdays: Record<string, string> = t.enums.weekday;
   if (day.kind === 'weekday') return weekdays[String(day.weekday)] ?? '';
   // The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone.
-  const at = new Date(Date.UTC(day.year ?? dayParts(now, tz).year, day.month - 1, day.day, 12));
-  return (day.year === null ? dayMonth : dayMonthYear).format(at);
+  const at = new Date(`${day.year ?? dayParts(now, tz).year}-${pad(day.month)}-${pad(day.day)}T12:00:00Z`);
+  return dateText(at, { tz: 'UTC', locale }, day.year === null ? DAY_MONTH : DAY_MONTH_YEAR);
 }
 
 /**

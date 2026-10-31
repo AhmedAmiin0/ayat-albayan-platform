@@ -46,7 +46,7 @@ describe('SubscriptionCancelQueries', () => {
     };
     const ok = await run({ data: { id: 's1' }, error: null });
     expect(ok.out).toEqual({ row: { id: 's1' } });
-    expect(ok.q.update).toHaveBeenCalledWith({ status: 'cancelled', cancelled_at: '2026-10-28T09:00:00.000Z', cancelled_by: 'a1', cancel_reason: null });
+    expect(ok.q.update).toHaveBeenCalledWith({ status: 'cancelled', cancel_kind: 'unused', cancelled_at: '2026-10-28T09:00:00.000Z', cancelled_by: 'a1', cancel_reason: null });
     expect(ok.q.neq).toHaveBeenCalledWith('status', 'cancelled');
     expect((await run({ data: null, error: null })).out).toEqual({ row: null, block: 'already_cancelled' });
     const guard = (message: string) => run({ data: null, error: { code: '23514', message } });

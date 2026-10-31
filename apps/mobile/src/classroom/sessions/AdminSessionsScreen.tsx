@@ -24,6 +24,7 @@ import { useNow } from '@/core/lib/time/use-now';
 export function AdminSessionsScreen() {
   const now = useNow();
   const win = useJoinWindow();
+  // academy day (docs/34 b): GET /lessons/day pages by Riyadh days.
   const today = riyadhToday(now);
   const [date, setDate] = useFollowingDay(today);
   const lessons = useDayLessons(riyadhNoon(date));

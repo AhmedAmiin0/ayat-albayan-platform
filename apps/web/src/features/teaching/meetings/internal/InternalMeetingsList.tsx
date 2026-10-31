@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { viewerTz } from '@/features/teaching/classroom/student-link/student-link';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { meetingsQuery } from './internal-api';
 import { MeetingRow } from '../rows/MeetingRow';
 
 const L = t.meetings.internal;
 
 interface Props {
-  /** The viewer's zone (times are shown on it); the browser's own by default. */
+  /** The viewer's zone (times are shown on it); useViewerTz() by default. */
   tz?: string;
   /** The heading; «الاجتماعات الداخلية» by default. */
   title?: string;
@@ -19,7 +19,9 @@ interface Props {
  * scheduled, each with its time, invitees, enter (inside the window) and the creator's actions.
  * Every meeting is recorded; the admin and the creator download the recordings.
  */
-export function InternalMeetingsList({ tz = viewerTz(), title = L.list }: Props) {
+export function InternalMeetingsList({ tz: pinned, title = L.list }: Props) {
+  const viewer = useViewerTz();
+  const tz = pinned ?? viewer;
   const meetings = useQuery(meetingsQuery);
   return (
     <section aria-label={title} className="mt-8">

@@ -63,6 +63,7 @@ export function usePastUsedBefore({ startsOn, quote, now, today }: PastStartInpu
   const [picked, setPicked] = useState(0);
   const canSet = useHolds('subscriptions.set_start_date');
   const lessonsTotal = quoteLessons(quote);
+  // academy day (docs/34 b): «used before» is cut at the academy's today.
   const past = canSet && startsOn < riyadhToday(now) && startsOn < today;
   const value = past ? usedBefore(picked, lessonsTotal) : 0;
   const field = past ? <UsedBeforeField value={value} lessonsTotal={lessonsTotal} onChange={setPicked} /> : null;

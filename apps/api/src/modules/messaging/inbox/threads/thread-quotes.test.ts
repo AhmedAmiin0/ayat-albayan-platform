@@ -33,6 +33,11 @@ describe('quoteOf', () => {
     expect(quoteOf(row({ sender: { full_name: 'سارة' } })).sender_name).toBeNull();
   });
 
+  it('a message deleted for everyone (migration 992) quotes nothing of itself', () => {
+    const gone = row({ body: 'سر', media_mime: 'image/jpeg', deleted_at: '2026-10-30T10:00:00Z' });
+    expect(quoteOf(gone)).toMatchObject({ body: null, media_mime: null });
+  });
+
   it('never quotes an old-CRM file\'s body (only its storage link, owner 2026-10-27): the media is named', () => {
     const link = 'https://files.crm.example/storage/v1/object/public/chat-media/account-test/inbound/1-image-1.webp';
     expect(quoteOf(row({ body: link, media_mime: 'image/webp' }))).toMatchObject({ body: null, media_mime: 'image/webp' });

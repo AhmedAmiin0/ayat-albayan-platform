@@ -16,6 +16,7 @@ import { StorageModule } from './common/storage/storage.service';
 import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
 import { CoursePauseModule } from './modules/teaching/course-pause';
+import { CourseStopModule } from './modules/teaching/course-stop';
 import { ScheduleNoticesModule } from './modules/teaching/schedule-notices';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
@@ -105,6 +106,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     ReceivablesModule,
     LessonsModule,
     CoursePauseModule,
+    CourseStopModule,
     ScheduleNoticesModule,
     ReportsModule,
     RolesModule,

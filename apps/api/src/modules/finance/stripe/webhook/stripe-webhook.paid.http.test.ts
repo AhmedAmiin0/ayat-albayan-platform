@@ -26,7 +26,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
   beforeEach(() => {
     resetMocks(m);
     stripeDefaults(s);
-    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid' });
+    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid', cancel_kind: null });
     m.subs.get.mockResolvedValue(subRow({ price: 120 })); // the link's package: nothing paid on it yet
     m.payments.insert.mockResolvedValue(paymentRow({ method: 'card', amount: 120, recorded_by: SALES_A.id }));
     m.payments.get.mockResolvedValue(paymentRow({ method: 'card', amount: 120, recorded_by: SALES_A.id }));
@@ -85,7 +85,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     await post({ ...sessionEvent('checkout.session.completed'), livemode: true });
     expect(m.payments.insert).not.toHaveBeenCalled();
     expect(s.events.done).toHaveBeenCalledWith('evt_1', 'live_refused');
-    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'cancelled' });
+    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'cancelled', cancel_kind: 'unused' });
     const res = await post(sessionEvent('checkout.session.completed', {}, 'evt_5'));
     expect(res.statusCode).toBe(200);
     expect(s.events.done).toHaveBeenCalledWith('evt_5', 'refused:subscription_cancelled');

@@ -4,9 +4,9 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { reportErrorText, reportFormQuery } from './api';
 import { reportHistoryHref } from './paths';
 import { ReportEntry } from './entry/ReportEntry';
@@ -33,6 +33,7 @@ function loadError(error: unknown): string {
  */
 export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProps) {
   const form = useQuery(reportFormQuery(lessonId));
+  const viewer = useViewerTz();
   const head = (
     <PageHead>
       <Cartouche>{t.reports.formTitle}</Cartouche>
@@ -43,7 +44,7 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
 
   const data = form.data;
   const entries = studentId ? data.entries.filter((e) => e.student.id === studentId) : data.entries;
-  const tz = role === 'admin' ? RIYADH_TZ : data.lesson.teacher.tz;
+  const tz = role === 'admin' ? viewer : data.lesson.teacher.tz;
   if (entries.length === 0) return <>{head}<FormAlert>{t.common.notFound}</FormAlert></>;
   return (
     <>

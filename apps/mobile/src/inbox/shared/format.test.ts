@@ -46,6 +46,6 @@ test('Western digits only', () => {
 });
 
 test('clockAt is a 24h HH:mm', () => {
-  expect(clockAt(NOW.getTime(), '24')).toMatch(/^\d{2}:\d{2}$/);
+  expect(clockAt(NOW.getTime(), '24', 'Asia/Riyadh')).toMatch(/^\d{2}:\d{2}$/);
 });
 

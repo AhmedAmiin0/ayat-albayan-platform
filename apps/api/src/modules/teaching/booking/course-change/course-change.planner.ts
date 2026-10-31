@@ -9,8 +9,25 @@ import { unmaterialised } from './course-change.projection';
 import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
 import { courseOverlaps } from '../sales/course/sales-course.rules';
 
-export type Loaded = { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] };
+export interface Loaded { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] }
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };
+
+/**
+ * A rule without subscription_id (course_rules_of, migration 991) spans packages: only its lessons
+ * inside this package's period [from_on, until_on) count for this course.
+ */
+function inPeriod<T extends { rule_id: string | null; local_date: string | null }>(
+  lessons: readonly T[],
+  rules: readonly ChangeRule[],
+): T[] {
+  const by = new Map(rules.map((r) => [r.id, r.course]));
+  return lessons.filter((l) => {
+    const c = l.rule_id ? by.get(l.rule_id) : undefined;
+    if (!c || c.linked) return true;
+    const day = l.local_date ?? '';
+    return (c.from_on === null || day >= c.from_on) && (c.until_on === null || day < c.until_on);
+  });
+}
 
 /** A lesson an old rule will still generate before the change point: booked, chargeable. */
 const PROJECTED: CourseLessonFact = { status: 'scheduled', chargeable: true, makeup: false, instant: false };
@@ -32,7 +49,11 @@ export class CourseChangePlanner {
    * no_change / days_count_mismatch / no_occurrences, 403 override_not_allowed, 409 custom_count_admin /
    * course_finished / course_exists (the new days overlap another weekly course of the student).
    */
-  async planned(req: CourseChangeRequest, role: ChangeRole, loaded: Loaded): Promise<Planned> {
+  async planned(
+    req: CourseChangeRequest & { teacherId?: string },
+    role: ChangeRole,
+    loaded: Loaded,
+  ): Promise<Planned> {
     const { sub, active, all } = loaded;
     const tz = active[0]?.tz ?? 'Asia/Riyadh';
     const now = new Date();
@@ -41,13 +62,15 @@ export class CourseChangePlanner {
     if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
     const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
     assertChange(req, { ...facts, before: [] }, now);
-    assertStart(req, { subStartsOn: sub.starts_on, rules: all });
+    const teacherChanged = req.teacherId !== undefined && req.teacherId !== active[0]?.teacher_id;
+    assertStart(req, { subStartsOn: sub.starts_on, rules: all, teacherChanged });
     const cutoff = new Date(Math.max(startOfLocalDay(req.startsOn, tz).getTime(), now.getTime()));
     const moved = await this.lessons.openFrom(all.map((r) => r.id), cutoff);
     const before = await this.used({ loaded, moved, req, now });
     const horizonWeeks = (await this.settings.read()).booking_horizon_weeks;
     const plan = planChange({ req, facts: { ...facts, before }, now, horizonWeeks });
-    if (courseOverlaps(await this.queries.others(sub), { from: req.startsOn, to: plan.endsOn })) {
+    const others = await this.queries.others(sub, all.map((r) => r.id));
+    if (courseOverlaps(others, { from: req.startsOn, to: plan.endsOn })) {
       throw domainError(HttpStatus.CONFLICT, 'course_exists');
     }
     return { ...loaded, plan, counted: facts.lessonsTotal - plan.remaining, moved };
@@ -61,7 +84,7 @@ export class CourseChangePlanner {
   private async used(input: { loaded: Loaded; moved: readonly MovedLesson[]; req: CourseChangeRequest; now: Date }): Promise<CourseLessonFact[]> {
     const { sub, active, all } = input.loaded;
     const movedIds = new Set(input.moved.map((m) => m.id));
-    const lessons = await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id });
+    const lessons = inPeriod(await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id }), all);
     const held = await this.lessons.held(active.map((r) => r.id));
     const projected = unmaterialised({ rules: active, held, now: input.now, startsOn: input.req.startsOn });
     return [...lessons.filter((l) => !movedIds.has(l.id)), ...Array.from({ length: projected }, () => PROJECTED)];

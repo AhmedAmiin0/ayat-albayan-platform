@@ -15,7 +15,7 @@ import type { WorkTab } from './dashboard-types';
 import { kpisOf } from './kpis';
 import { KpiTile } from './KpiTile';
 import { WorkPanel } from './WorkPanel';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
 
@@ -26,6 +26,7 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/more')
  */
 export function DashboardScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const range = weekRange(useNow());
   const summary = useSummary(range);
   const work = useWork();
@@ -33,7 +34,7 @@ export function DashboardScreen() {
   const refresh = () => void Promise.all([summary.refetch(), work.refetch()]);
   const stale = (summary.isError || work.isError) && summary.data !== undefined;
   const subtitle = stale
-    ? `${weekLabel(range.from)} · ${t.mobile.lastUpdated.replace('{time}', clockAt(summary.dataUpdatedAt, cycle))}`
+    ? `${weekLabel(range.from)} · ${t.mobile.lastUpdated.replace('{time}', clockAt(summary.dataUpdatedAt, cycle, tz))}`
     : weekLabel(range.from);
   return (
     <Screen>

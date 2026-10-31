@@ -5,7 +5,7 @@ import { currentDaysText, newDaysText, requestDays } from './change-text';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const at = (weekday: 0 | 1 | 3 | 6, time: string) => t.booking.dayAt.replace('{day}', t.enums.weekday[weekday]).replace('{time}', time);
 
