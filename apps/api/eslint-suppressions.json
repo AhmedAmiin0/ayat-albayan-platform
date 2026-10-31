@@ -5991,9 +5991,6 @@
   "src/modules/messaging/reminders/plan/reminders.plan.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/reminders/plan/reminders.plan.ts": {
@@ -6809,7 +6806,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 14
+      "count": 8
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-http.test.ts": {

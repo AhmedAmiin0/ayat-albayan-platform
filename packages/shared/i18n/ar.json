@@ -3362,6 +3362,8 @@
       "contact_name": "أحمد"
     },
     "teacherLessonMinutes": "{n} دقيقة",
+    "teacherReminderCrm": "{when} · {students} · رابط الحلقة: {join} · تقرير الحلقة: {report}",
+    "teacherReminderCrmStudent": "{name} ({code})",
     "teacherNewStudentKind": {
       "trial": "تجريبية",
       "subscription": "اشتراك"

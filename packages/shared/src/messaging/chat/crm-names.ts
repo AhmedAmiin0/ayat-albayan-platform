@@ -4,14 +4,15 @@ import { z } from 'zod';
 // Google Apps Script («نظام تسجيل الطلاب»): most share our meta_name, three flows use the CRM's own names.
 
 /**
- * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert and
- * same-day reminders go as the old script's teacher_lesson_v2 (the CRM's account has no
- * teacher_lesson_reminder_meet: Meta #132001 on 2026-10-31).
+ * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert
+ * goes as the old script's teacher_lesson_v2, both same-day teacher reminders as its
+ * teacher_lesson_reminder ({{1}} the teacher, {{2}} one line, no buttons; the CRM's account has
+ * no teacher_lesson_reminder_meet: Meta #132001 on 2026-10-31).
  */
 export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = {
   teacher_new_student: 'teacher_lesson_v2',
-  teacher_lesson_reminder: 'teacher_lesson_v2',
-  teacher_lesson_reminder_meet: 'teacher_lesson_v2',
+  teacher_lesson_reminder: 'teacher_lesson_reminder',
+  teacher_lesson_reminder_meet: 'teacher_lesson_reminder',
 };
 
 /** The old script's report templates: the PDF goes as a document, then one of these by the lesson's kind. */

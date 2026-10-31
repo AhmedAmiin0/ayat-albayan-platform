@@ -64,40 +64,60 @@ describe('teacher_new_student on a crm line = the CRM\'s teacher_lesson_v2', () 
     expect(JSON.stringify(body)).not.toContain('AB-0001');
   });
 
-  it('the teacher\'s same-day reminder (_meet) = teacher_lesson_v2: 5 body values, 2 URL buttons', () => {
-    const reminder = templateRow({
-      key: 'teacher_lesson_reminder_meet',
-      meta_name: 'teacher_lesson_reminder_meet',
-      body_ar: 'أستاذ {{1}}، عندك حلقة {{2}}',
-      params: ['teacher_name', 'lesson_slot'],
-      buttons: [{ type: 'url', url: 'https://meet.google.com/{{1}}' }],
+  it('a template the CRM shares with us keeps meta_name (booking_confirmation)', () => {
+    expect(crmTemplateBody({ to: TO, template: templateRow(), params: { '1': 'س', '2': 'ح', button: 'r' } })).toMatchObject({
+      template: { name: 'booking_confirmation', language: 'ar' },
     });
-    const metaOnly = { '1': 'أ. خالد', '2': '17:00 — سارة', button: 'abc-defg-hij' };
-    expect(crmTemplateBody({ to: TO, template: reminder, params: { ...metaOnly, crm } })).toEqual({
-      to: TO,
-      type: 'template',
-      template: {
-        name: 'teacher_lesson_v2',
-        language: 'ar',
-        params: { body: crm.body, buttonParams: { '0': 'classroom/l-1', '1': 'teacher/report/l-1' } },
-      },
-    });
-    // Queued before this change (no params.crm): meta_name and its own values, as before.
-    expect(crmTemplateBody({ to: TO, template: reminder, params: metaOnly })).toMatchObject({
+  });
+});
+
+const MEET = templateRow({
+  key: 'teacher_lesson_reminder_meet',
+  meta_name: 'teacher_lesson_reminder_meet',
+  body_ar: 'أستاذ {{1}}، لديك حلقة {{2}}',
+  params: ['teacher_name', 'lesson_slot'],
+  buttons: [{ type: 'url', url: 'https://meet.google.com/{{1}}' }],
+});
+const PLAIN = templateRow({ ...MEET, key: 'teacher_lesson_reminder', meta_name: 'teacher_lesson_reminder', buttons: [] });
+const LINE = 'الأحد 17:00 · سارة (AB-0001) · رابط الحلقة: https://meet.google.com/abc-defg-hij · تقرير الحلقة: https://app.example/teacher/report/l-1';
+const own = { body: ['أ. خالد', LINE], buttons: [] };
+const meetParams = { '1': 'أ. خالد', '2': '17:00 — سارة', button: 'abc-defg-hij' };
+const plainParams = { '1': 'أ. خالد', '2': '17:00 — سارة · رابط الحلقة: https://meet.jit.si/r-1' };
+
+describe('the teacher\'s same-day reminders on a crm line = the CRM\'s teacher_lesson_reminder', () => {
+  it('both keys: its name, [teacher, one line], no buttonParams (not even the Meet code)', () => {
+    for (const [template, meta] of [[MEET, meetParams], [PLAIN, plainParams]] as const) {
+      expect(crmTemplateBody({ to: TO, template, params: { ...meta, crm: own } })).toEqual({
+        to: TO,
+        type: 'template',
+        template: { name: 'teacher_lesson_reminder', language: 'ar', params: { body: own.body } },
+      });
+    }
+  });
+
+  it('queued without params.crm (a value missing): meta_name and the Meta values, as before', () => {
+    expect(crmTemplateBody({ to: TO, template: MEET, params: meetParams })).toMatchObject({
       template: {
         name: 'teacher_lesson_reminder_meet',
         params: { body: ['أ. خالد', '17:00 — سارة'], buttonParams: { '0': 'abc-defg-hij' } },
       },
     });
-    // The meta driver: meta_name, its two values and the Meet code, never the CRM's five.
-    const meta = templateMessage({ to: TO, template: reminder, params: { ...metaOnly, crm } });
-    expect(meta).toMatchObject({ template: { name: 'teacher_lesson_reminder_meet' } });
-    expect(JSON.stringify(meta)).not.toContain('AB-0001');
+    const plain = crmTemplateBody({ to: TO, template: PLAIN, params: plainParams });
+    expect(plain).toMatchObject({ template: { name: 'teacher_lesson_reminder', params: { body: ['أ. خالد', plainParams['2']] } } });
   });
 
-  it('a template the CRM shares with us keeps meta_name (booking_confirmation)', () => {
-    expect(crmTemplateBody({ to: TO, template: templateRow(), params: { '1': 'س', '2': 'ح', button: 'r' } })).toMatchObject({
-      template: { name: 'booking_confirmation', language: 'ar' },
+  it('an admin\'s crm_name = the Meta name of _meet (its copy on the CRM): the Meta values', () => {
+    const copy = templateRow({ ...MEET, crm_name: 'teacher_lesson_reminder_meet' });
+    const body = crmTemplateBody({ to: TO, template: copy, params: { ...meetParams, crm: own } });
+    expect(body).toMatchObject({
+      template: { name: 'teacher_lesson_reminder_meet', params: { body: ['أ. خالد', '17:00 — سارة'] } },
     });
+  });
+
+  it('the meta driver: meta_name, its two values and the Meet code, never the CRM line', () => {
+    const meta = templateMessage({ to: TO, template: MEET, params: { ...meetParams, crm: own } });
+    expect(meta).toMatchObject({ template: { name: 'teacher_lesson_reminder_meet' } });
+    expect(JSON.stringify(meta)).toContain('abc-defg-hij');
+    expect(JSON.stringify(meta)).not.toContain('AB-0001');
   });
 });

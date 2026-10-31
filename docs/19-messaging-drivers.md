@@ -140,17 +140,31 @@ Meta values, never the producer's CRM values.
 | Ours (`key`) | The CRM's template | Values |
 |---|---|---|
 | `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
-| `teacher_new_student`, `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the lesson's time in the teacher's tz (the alert: the first lesson), its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` |
+| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
+| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons |
 | `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
 
-The teacher alert's and the teacher reminder's CRM values are built by `teacherLessonCrm` (`reminders/plan/teacher-lesson.crm.ts`; the
-reminder read adds `students.code`) into `template_params.crm` beside the Meta values (the alert's {{1}}–{{3}}, the reminder's
-{{1}}–{{2}} and Meet code; the Meta path is unchanged). On the CRM a Meet lesson's «ادخل الحلقة» opens the platform's
-`classroom/<lesson id>`, not the Meet link (the button base is the web origin); a row without its `crm` part (queued before this change, or a value
-missing: no teacher name, a student without a name or code, no end time) goes as before, `meta_name` with the
-Meta values (`crmRowName`); an admin's crm_name is always sent as set. The CRM template's two URL buttons must be
-`<WEB_ORIGIN>/{{1}}` (we send the path after the origin; both pages need a login). The report kind is
-`template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+The teacher alert's CRM values are built by `teacherLessonCrm`, the teacher reminder's by `teacherReminderCrm`
+(both `reminders/plan/teacher-lesson.crm.ts`; the reminder read adds `students.code`), into `template_params.crm`
+beside the Meta values (the alert's {{1}}–{{3}}, the reminder's {{1}}–{{2}} and Meet code; the Meta path is
+unchanged). The reminder's line is one line for Meta (no newline, no tab, never 4 spaces in a row); its texts are
+`templates.teacherReminderCrm` / `teacherReminderCrmStudent` in ar.json; `<join>` is the lesson's own link as the
+reminders send it (Meet, the teacher's fixed link, our classroom when LiveKit runs it), else our classroom, and
+`<report>` the teacher's report form, both absolute (`<WEB_ORIGIN>/classroom/<id>`, `<WEB_ORIGIN>/teacher/report/<id>`,
+login required); an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
+name carries the CRM values even when it equals `meta_name` (`teacher_lesson_reminder`). A row without its `crm`
+part (queued before this change, or a value missing: no teacher name, a student without a name or code, no web
+origin, the alert's end time) goes as before, `meta_name` with the Meta values (`crmRowName`): a `_meet` row then
+asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's crm_name is always sent as set.
+
+**teacher_lesson_v2's real buttons (read from the old script, 2026-10-31).** «ادخل الحلقة» is
+`https://meet.google.com/{{1}}` and «تقرير الحلقة» is `https://vercelayat-r.vercel.app/r/{{1}}`, a redirector to the
+**old Google report form** (`/r/<a>/<b>/<c>` → the form, prefilled). They are not `<WEB_ORIGIN>/{{1}}` (an earlier
+note here said so, never verified). So `teacher_new_student`'s two suffixes on a crm line open a broken Meet URL
+(`meet.google.com/classroom/<id>`) and the old form: **owner decision pending** (send a Meet code and the old form's
+values, a new CRM template with platform buttons, or a crm_name to a template without buttons); not changed yet.
+
+The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
 fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
 twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
@@ -181,7 +195,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
-6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student, teacher_lesson_reminder and teacher_lesson_reminder_meet must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
+6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
 7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
 8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 

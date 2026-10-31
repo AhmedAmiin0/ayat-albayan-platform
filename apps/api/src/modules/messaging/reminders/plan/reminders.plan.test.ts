@@ -3,7 +3,7 @@ import { at, RIYADH_GUARDIAN, sampleLesson, STARTS_AT } from '../reminders.fakes
 import { planReminders, type ReminderPlanInput } from './reminders.plan';
 
 const plan = (over: Partial<ReminderPlanInput> = {}) =>
-  planReminders({ lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, now: at('2026-10-04T13:00:00Z'), ...over });
+  planReminders({ lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, origin: '', now: at('2026-10-04T13:00:00Z'), ...over });
 const keys = (rows: ReturnType<typeof plan>) => rows.map((r) => r.dedup_key);
 
 describe('planReminders: same-day window (R-MSG-02)', () => {
@@ -82,28 +82,6 @@ describe('planReminders: same-day window (R-MSG-02)', () => {
   it('confirmed lessons still get reminders', () => {
     expect(plan({ lessons: [sampleLesson({ status: 'confirmed' })] })).toHaveLength(3);
   });
-
-  it('the teacher row adds the CRM\'s teacher_lesson_v2 values (codes, duration) beside Meta\'s', () => {
-    const students = [
-      { id: 's-1', name: 'سهيلة', code: 'AB-0101', guardian: RIYADH_GUARDIAN },
-      { id: 's-3', name: 'ياسين', code: 'AB-0103', guardian: null },
-    ];
-    const lesson = sampleLesson({ students, meeting_link: 'https://meet.google.com/abc-defg-hij' });
-    const row = plan({ lessons: [lesson] }).find((r) => r.template_key === 'teacher_lesson_reminder_meet');
-    expect(row?.template_params).toEqual({
-      '1': 'هدى',
-      '2': '17:00 — سهيلة وياسين',
-      button: 'abc-defg-hij',
-      crm: {
-        body: ['هدى', 'سهيلة وياسين', 'AB-0101، AB-0103', expect.stringContaining('17:00'), '45 دقيقة'],
-        buttons: ['classroom/lesson-1', 'teacher/report/lesson-1'],
-      },
-    });
-  });
-
-  it('a student without a code: the teacher row keeps only the Meta values', () => {
-    expect(plan()[2]?.template_params).not.toHaveProperty('crm');
-  });
 });
 
 describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {
@@ -136,7 +114,7 @@ describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {
   it('across the Cairo fall-back (30 Oct 2026) the guardian gets it at 17:00 local, 25 h before', () => {
     const cairo = { id: 'g-cairo', phone_e164: '+201000000103', tz: 'Africa/Cairo' };
     const lesson = sampleLesson({ starts_at: '2026-10-30T15:00:00Z', students: [{ id: 's-3', name: 'ياسين', guardian: cairo }] });
-    const run = (now: string) => planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: true, now: at(now) });
+    const run = (now: string) => planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: true, origin: '', now: at(now) });
     expect(run('2026-10-29T13:59:00Z')).toEqual([]);
     const [row] = run('2026-10-29T14:00:00Z');
     expect(row).toMatchObject({ dedup_key: 'lesson_reminder_24h:lesson-1:g-cairo' });

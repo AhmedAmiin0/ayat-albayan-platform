@@ -13,7 +13,7 @@ import {
 import type { PushEvent } from '../../../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../queued-row';
 import { staffReachable, type StaffOnRecord } from './staff-reachable';
-import { teacherLessonCrm } from './teacher-lesson.crm';
+import { teacherReminderCrm } from './teacher-lesson.crm';
 
 // R-MSG-02 reminder planning (docs/12 §7). Pure: the job calls it every tick; the dedup keys
 // (docs/12 §2.2, one per lesson + recipient + type) make a repeated tick a no-op (rule 8).
@@ -50,6 +50,8 @@ export interface ReminderPlanInput {
   /** teacher_lesson_reminder on (R-NOT-03; default on) and its lead time (default minutesBefore). */
   teacherReminders?: boolean;
   teacherMinutesBefore?: number;
+  /** The web origin (firstWebOrigin): the teacher's CRM reminder links are absolute. */
+  origin: string;
   now: Date;
 }
 
@@ -101,8 +103,8 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
   const names = lesson.students.map((s) => s.name);
   const message = { names, startsAt, tz: teacher.tz, meetingLink: lesson.meeting_link };
   const meta = teacherReminderMessage({ ...message, teacherName: teacher.display_name_ar });
-  // The CRM's teacher_lesson_v2 values beside the Meta ones (docs/19); null: the Meta values only.
-  const crm = teacherLessonCrm({ teacher, lesson, students: lesson.students });
+  // The CRM's own teacher_lesson_reminder values beside Meta's (docs/19); null: Meta's only.
+  const crm = teacherReminderCrm({ teacher, lesson, origin: input.origin });
   const template: OutboundTemplate = crm ? { ...meta, params: { ...meta.params, crm } } : meta;
   const dedupKey = `teacher_lesson_reminder:${lesson.id}:${teacher.id}`;
   const to = { phone: teacher.phone_e164, lessonId: lesson.id, now: input.now, expiresAt: startsAt };
@@ -112,9 +114,8 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
 /**
  * Every reminder due at `now`: same-day to each guardian (wording and time in the guardian's tz)
  * and to the teacher (teacher's tz, own lead time; unless teacher_lesson_reminder is OFF), plus
- * the day-before one when enabled. Same-day ones expire at
- * the lesson start, the day-before one at the guardian's midnight before it, so a row the sender
- * could not send in time is never sent late.
+ * the day-before one when enabled. Same-day ones expire at the lesson start, the day-before one
+ * at the guardian's midnight before it: a row the sender could not send in time never goes late.
  */
 export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
   return input.lessons
