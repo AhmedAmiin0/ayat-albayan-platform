@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-/** How far below the fold a card counts as on screen: page 1 is asked just before it scrolls in. */
+/**
+ * The viewport's margin: page 1 is asked just before a card scrolls into the window. Inside the
+ * log's own scroller a card counts once it is actually in view (the log clips it).
+ */
 const AHEAD = '200px';
 
 const onScreen = (entries: IntersectionObserverEntry[]): boolean =>

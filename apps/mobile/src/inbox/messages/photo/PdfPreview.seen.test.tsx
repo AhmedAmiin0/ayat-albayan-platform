@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { SeenRowsContext, seenRows } from '@/inbox/messages/hooks/seen-rows';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
@@ -73,4 +74,10 @@ test.each([
   expect(screen.getAllByText(t.inbox.pdf.type)).toHaveLength(2);
   await act(async () => answer(pdfPage(1)));
   expect(await screen.findByText(pdfMetaLine(pdfPage(1), t.inbox.pdf))).toBeTruthy();
+});
+
+test('a caption that is only the name shows once, on the card (never the name twice)', async () => {
+  await renderWithQuery(<MessageBubble message={pdfDoc({ media_name: null, body: 'plan.pdf' })} phone={PHONE} />);
+  expect(await screen.findByTestId('pdf-thumb-d1')).toBeTruthy();
+  expect(screen.getAllByText('plan.pdf')).toHaveLength(1);
 });

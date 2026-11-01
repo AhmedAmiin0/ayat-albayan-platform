@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
-import { isPdfMime, pdfBubbleName, pdfMetaLine } from './chat-files.js';
+import { cleanFileName, isPdfMime, pdfBubbleName, pdfCaptionIsName, pdfMetaLine } from './chat-files.js';
 
 const KB = 1024;
 const MB = 1024 * KB;
@@ -58,5 +58,38 @@ describe('pdfBubbleName (owner 2026-11-01: a name like WhatsApp, never «File / 
   ])('%s: «ملف PDF» / «PDF document»', (_, body) => {
     expect(pdfBubbleName({ media_name: '  ', body }, untitled)).toBe(untitled);
     expect(pdfBubbleName({ body }, en.inbox.pdf.untitled)).toBe('PDF document');
+  });
+});
+
+describe('cleanFileName (a sender’s name, fit to show and to store)', () => {
+  it('drops control and bidi characters: no NUL, no «‮fdp.exe» spoof, no hidden RTL mark', () => {
+    expect(cleanFileName('plan\u202efdp.exe')).toBe('planfdp.exe');
+    expect(cleanFileName('a\u0000b\n.pdf\u200f')).toBe('ab.pdf');
+  });
+  it('cuts by code points: an emoji at the cut is whole or gone, never half', () => {
+    const cut = cleanFileName(`${'a'.repeat(199)}😀x`);
+    expect(Array.from(cut)).toHaveLength(200);
+    // A lone surrogate (half an emoji) makes encodeURIComponent throw, and Postgres refuse the row.
+    expect(() => encodeURIComponent(cut)).not.toThrow();
+  });
+  it('blank or missing: empty', () => {
+    expect([cleanFileName(null), cleanFileName(' \u200e ')]).toEqual(['', '']);
+  });
+});
+
+describe('pdfCaptionIsName (the card shows it: the bubble leaves the caption out)', () => {
+  const pdf = (body: string | null, media_name: string | null = null) =>
+    ({ media_mime: 'application/pdf', media_name, body });
+  it('a one-line caption that is the name, with a hidden RTL mark too', () => {
+    expect(pdfCaptionIsName(pdf('خطة الحفظ.pdf\u200f'))).toBe(true);
+    expect(pdfBubbleName(pdf('خطة الحفظ.pdf\u200f'), 'x')).toBe('خطة الحفظ.pdf');
+  });
+  it.each([
+    ['a file name of its own', pdf('plan.pdf', 'other.pdf')],
+    ['more lines', pdf('plan.pdf\nread it')],
+    ['not a name', pdf('read it')],
+    ['not a PDF', { media_mime: 'image/jpeg', media_name: null, body: 'plan.pdf' }],
+  ])('not when: %s', (_, m) => {
+    expect(pdfCaptionIsName(m)).toBe(false);
   });
 });

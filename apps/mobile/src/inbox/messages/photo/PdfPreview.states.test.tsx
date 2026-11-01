@@ -71,4 +71,6 @@ test('a 5xx or no network keeps the card with «تعذّر تحميل الصفح
   await fireEvent.press(screen.getByTestId('pdf-d1'));
   expect(await screen.findByTestId('pdf-thumb-d1')).toBeTruthy();
   expect(calls()).toBe(2);
+  // That tap only asked again: the viewer never opens by itself when the page comes back.
+  expect(screen.queryByTestId('pdf-viewer')).toBeNull();
 });

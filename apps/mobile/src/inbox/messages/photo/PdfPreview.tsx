@@ -70,9 +70,10 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
     resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
-  // A tap opens the viewer once page 1 answers (and asks again after a failure).
+  // On «تعذّر تحميل الصفحة» a tap only asks again (a viewer must never open by itself later);
+  // else it opens the viewer, at once or as page 1 answers.
   const show = () => {
-    setOpen(true);
+    setOpen(!failed);
     if (failed) void first.refetch();
   };
   return (

@@ -8,8 +8,9 @@ import {
   type ThreadFileUpload,
   type ThreadPdfPage,
 } from '@ab/shared';
+import { pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import { supabase } from '@/lib/http/supabase';
 
 // D2 (owner 2026-10-19 #2): staff send an image or PDF inside the 24 h window. The file goes to
@@ -50,10 +51,18 @@ export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: stri
  * is the bubble's thumb, asked once the card has been on screen (PdfCard, owner 2026-11-01). A 503
  * (one render at a time per API copy) is retried twice; anything else leaves today's «عرض ملف».
  */
+/** A query that has not failed: one that has keeps its answer (no ask on focus or reconnect). */
+const notFailed = (query: { state: { status: string } }): boolean => query.state.status !== 'error';
+
 export const threadPdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({
     queryKey: ['thread-pdf', phone, messageId, page],
     queryFn: () => apiFetch<ThreadPdfPage>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`),
     staleTime: 30 * 60_000,
-    retry: (failures, e) => failures < 2 && e instanceof ApiError && e.status === 503,
+    // A busy slot or failed render (503) is asked again; pdf_unavailable (no sandbox) and a 4xx
+    // not.
+    retry: (failures, e) => failures < 2 && pdfPageRetryable(e),
+    // A failed page stays failed on focus and reconnect: a card left on its fallback asks nothing.
+    refetchOnWindowFocus: notFailed,
+    refetchOnReconnect: notFailed,
   });

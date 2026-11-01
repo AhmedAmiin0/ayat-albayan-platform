@@ -9,7 +9,12 @@ describe('mediaFileName (messages.media_name: 1–200 characters once trimmed)',
     expect(mediaFileName(`${'a'.repeat(250)}.pdf`)).toHaveLength(200);
     expect(mediaFileName(`${'a'.repeat(199)} b`)).toBe('a'.repeat(199));
   });
-  it.each([null, undefined, '', '   '])('%j: null', (raw) => {
+  it('never half an emoji at the cut, nor a NUL or an RTL override (the insert would fail)', () => {
+    const cut = mediaFileName(`${'a'.repeat(199)}😀x`) ?? '';
+    expect(() => encodeURIComponent(cut)).not.toThrow();
+    expect(mediaFileName('plan\u0000\u202efdp.exe')).toBe('planfdp.exe');
+  });
+  it.each([null, undefined, '', '   ', '\u200f'])('%j: null', (raw) => {
     expect(mediaFileName(raw)).toBeNull();
   });
 });

@@ -96,18 +96,47 @@ export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStr
   return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
 }
 
+/** Control characters and the bidi marks and overrides a name may carry (U+200E, U+202E «‮»…). */
+const UNSEEN = /[\p{Cc}‎‏‪-‮⁦-⁩]/gu;
+
+/**
+ * A file name as a person gave it, fit to show and to store (messages.media_name: 1–200
+ * characters): no control or bidi characters (a spoofed «‮fdp.exe»), trimmed, at most `max` code
+ * points (never half an emoji); '' when nothing is left.
+ */
+export function cleanFileName(raw: string | null | undefined, max = 200): string {
+  const name = (raw ?? '').replace(UNSEEN, '').trim();
+  return Array.from(name).slice(0, max).join('').trim();
+}
+
 /** A caption line that reads as a PDF's file name («خطة الحفظ.pdf»): no path, ≤ 200 characters. */
 const PDF_FILE_NAME = /^[^/\\]{1,196}\.pdf$/i;
+
+interface Named {
+  media_name?: string | null;
+  body?: string | null;
+}
+
+/** The caption's first line when it reads as a PDF's file name, else ''. */
+const captionName = (m: Named): string => {
+  const line = cleanFileName((m.body ?? '').split('\n', 1)[0]);
+  return PDF_FILE_NAME.test(line) ? line : '';
+};
 
 /**
  * A PDF bubble's name, as WhatsApp's: the file's own name (media_name); else the caption's first
  * line when it reads as a file name (some senders put it there); else `untitled` («ملف PDF»).
  */
-export function pdfBubbleName(
-  m: { media_name?: string | null; body?: string | null },
-  untitled: string,
-): string {
-  const line = (m.body ?? '').split('\n', 1)[0]?.trim() ?? '';
-  const caption = PDF_FILE_NAME.test(line) ? line : '';
-  return [m.media_name?.trim() ?? '', caption].find((name) => name.length > 0) ?? untitled;
+export function pdfBubbleName(m: Named, untitled: string): string {
+  return [cleanFileName(m.media_name), captionName(m)].find((name) => name.length > 0) ?? untitled;
+}
+
+/**
+ * The caption is only the PDF's name, which its card already shows (pdfBubbleName): the bubble
+ * leaves it out, so the name never shows twice.
+ */
+export function pdfCaptionIsName(m: Named & { media_mime: string | null }): boolean {
+  const body = (m.body ?? '').trim();
+  const single = body.length > 0 && !body.includes('\n');
+  return isPdfMime(m.media_mime) && !cleanFileName(m.media_name) && single && captionName(m) !== '';
 }

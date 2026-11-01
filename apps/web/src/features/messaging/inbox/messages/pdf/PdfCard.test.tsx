@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { MessageMedia } from '@/features/messaging/inbox/messages/components/MessageMedia';
+import { Content } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
@@ -23,23 +24,50 @@ const serve = (page: () => Promise<unknown>) =>
   );
 const PAGE_1 = '/threads/%2B966501234567/messages/m-1/pdf/1';
 const pageCalls = () => apiFetch.mock.calls.filter(([p]) => p === PAGE_1).length;
+const viewLabel = t.inbox.viewMedia.replace('{kind}', t.inbox.media.document);
 const label = (name: string, meta: string) => `${t.inbox.pdf.open.replace('{name}', name)} · ${meta}`;
 
 describe('PdfCard', () => {
   afterEach(() => apiFetch.mockReset());
 
-  it('a family’s PDF shows the thumb, name and meta line with no click, in a link to the PDF in a new tab', async () => {
+  it('a family’s PDF shows the thumb, name and meta line with no click; nothing signs the file yet', async () => {
     serve(async () => PAGE);
     renderWithClient(<MessageMedia message={row({ direction: 'inbound' })} />);
     const meta = pdfMetaLine(PAGE, t.inbox.pdf);
     const card = await screen.findByRole('link', { name: label('خطة الحفظ.pdf', meta) });
-    expect(card.getAttribute('href')).toBe(PDF_URL);
     expect(card.getAttribute('target')).toBe('_blank');
     expect(card.getAttribute('rel')).toContain('noopener');
     expect(card.querySelector('img')?.getAttribute('src')).toBe(THUMB);
     expect(card.textContent).toContain(meta);
-    expect(screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) })).toBeNull();
-    expect(pageCalls()).toBe(1);
+    expect(screen.queryByRole('button', { name: viewLabel })).toBeNull();
+    expect(apiFetch.mock.calls.map(([p]) => p)).toEqual([PAGE_1]);
+  });
+
+  it('a click opens a tab at once and sends it to the PDF signed on that click (W6)', async () => {
+    serve(async () => PAGE);
+    const tab = { opener: {}, location: { assign: vi.fn() }, close: vi.fn() };
+    const open = vi.spyOn(window, 'open').mockReturnValue(tab as unknown as Window);
+    renderWithClient(<MessageMedia message={row()} />);
+    fireEvent.click(await screen.findByRole('link', { name: new RegExp(t.inbox.pdf.type) }));
+    expect(open).toHaveBeenCalledWith('', '_blank');
+    await waitFor(() => expect(tab.location.assign).toHaveBeenCalledWith(PDF_URL));
+    expect(tab.opener).toBeNull();
+    open.mockRestore();
+  });
+
+  it('a file that cannot be signed closes that tab and keeps the card (page 1 stays)', async () => {
+    apiFetch.mockImplementation(async (path: string) => {
+      if (path.endsWith('/pdf/1')) return PAGE;
+      throw new ApiError(502, { code: 'meta_error' });
+    });
+    const tab = { opener: {}, location: { assign: vi.fn() }, close: vi.fn() };
+    const open = vi.spyOn(window, 'open').mockReturnValue(tab as unknown as Window);
+    renderWithClient(<MessageMedia message={row()} />);
+    const card = await screen.findByRole('link', { name: label('خطة الحفظ.pdf', pdfMetaLine(PAGE, t.inbox.pdf)) });
+    fireEvent.click(card);
+    await waitFor(() => expect(tab.close).toHaveBeenCalled());
+    expect(card.querySelector('img')?.getAttribute('src')).toBe(THUMB);
+    open.mockRestore();
   });
 
   it('while page 1 is asked: the card at once (aria-busy, an empty strip, «PDF» as its meta line)', async () => {
@@ -71,13 +99,15 @@ describe('PdfCard', () => {
   it('a thumb that fails to load (its URL expired in a tab left open) is asked again, once', async () => {
     serve(async () => PAGE);
     renderWithClient(<MessageMedia message={row()} />);
-    const card = await screen.findByRole('link', { name: new RegExp(t.inbox.pdf.type) });
+    const card = await screen.findByRole('link', { name: label('خطة الحفظ.pdf', pdfMetaLine(PAGE, t.inbox.pdf)) });
     const img = () => card.querySelector('img') ?? card;
     fireEvent.error(img());
     await waitFor(() => expect(pageCalls()).toBe(2));
     fireEvent.error(img());
     await new Promise((r) => setTimeout(r, 20));
     expect(pageCalls()).toBe(2);
+    // Then the strip stays empty: never the browser's broken-image glyph.
+    expect(card.querySelector('img')).toBeNull();
   });
 
   it('«تنزيل» stays under the card', async () => {
@@ -92,10 +122,17 @@ describe('PdfCard', () => {
       throw new ApiError(422, { code: 'pdf_no_preview' });
     });
     renderWithClient(<MessageMedia message={row()} />);
-    fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
+    fireEvent.click(await screen.findByRole('button', { name: viewLabel }));
     const link = await screen.findByRole('link', { name: 'خطة الحفظ.pdf' });
     expect(link.getAttribute('href')).toBe(PDF_URL);
     expect(pageCalls()).toBe(1);
     expect(document.querySelector('img')).toBeNull();
+  });
+
+  it('a caption that is only the name shows once, on the card; any other caption stays under it', async () => {
+    serve(async () => PAGE);
+    renderWithClient(<Content message={row({ media_name: null, body: 'plan.pdf\u200f' })} />);
+    await screen.findByRole('link', { name: label('plan.pdf', pdfMetaLine(PAGE, t.inbox.pdf)) });
+    expect(screen.getAllByText(/plan\.pdf/)).toHaveLength(1);
   });
 });

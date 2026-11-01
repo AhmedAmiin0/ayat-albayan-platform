@@ -7,7 +7,7 @@ import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 // poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
-import { pdfPageCount, renderPdfPages } from './pdf-client';
+import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
 
 /** A page run that failed is refused for this long (per process) instead of taking the slot again. */
@@ -71,8 +71,13 @@ export class PdfPreviewService {
     return inSlot(async () => {
       const bytes = await this.read(file);
       const doc = { pages: bytes.byteLength > INVOICE_MAX_BYTES ? 0 : await pdfPageCount(bytes), bytes: bytes.byteLength };
-      if (doc.pages > 0) await this.upload(id, await renderPdfPages(bytes, { first: 1, last: 1 }));
-      await this.queries.setDoc(id, doc);
+      try {
+        const page1 = { first: 1, last: 1 };
+        if (doc.pages > 0) await this.upload(id, await renderPdfPages(bytes, page1));
+      } finally {
+        // Even when page 1 fails: pdfinfo's answer holds, so a later ask never runs it again.
+        await this.queries.setDoc(id, doc);
+      }
       return doc;
     });
   }
@@ -102,6 +107,8 @@ export class PdfPreviewService {
    */
   private async guard<T>(key: string, fn: () => Promise<T>): Promise<T> {
     if (this.failed.has(key)) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);
+    // No sandbox: 503 at once, before the slot and before reading up to 10 MB of PDF.
+    if (!(await sandboxReady())) throw waHttpError('pdf_unavailable', HttpStatus.SERVICE_UNAVAILABLE);
     try {
       return await fn();
     } catch (e) {

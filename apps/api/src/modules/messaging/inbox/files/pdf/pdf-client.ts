@@ -22,6 +22,15 @@ const UNREACHABLE = new Set(['ENOENT', 'ECONNREFUSED', 'EACCES', 'ENOTSOCK']);
 const pagesAnswer = z.object({ pages: z.number().int().min(0) });
 const renderAnswer = z.object({ images: z.array(z.object({ page: z.number().int(), jpg: z.string() })) });
 
+/**
+ * ayat-pdf is there to ask: a socket at its path. Only a socket, never a file or a link the sandbox
+ * could plant on the shared volume. Checked before a render takes the slot or reads the PDF.
+ */
+export async function sandboxReady(socket: string = PDF_SOCKET): Promise<boolean> {
+  const st = await lstat(socket).catch(() => null);
+  return st?.isSocket() ?? false;
+}
+
 /** pdf-render's pdfPageCount, in ayat-pdf: the page count, 0 = never previews. */
 export async function pdfPageCount(bytes: Uint8Array, opts: SandboxOpts = {}): Promise<number> {
   return parse(pagesAnswer, await call({ path: '/pages', bytes, opts })).pages;
@@ -44,9 +53,7 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
 /** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
 async function call(input: { path: string; bytes: Uint8Array; opts: SandboxOpts }): Promise<unknown> {
   const socketPath = input.opts.socket ?? PDF_SOCKET;
-  // Only a socket: never a file or a link the sandbox could plant on the shared volume.
-  const st = await lstat(socketPath).catch(() => null);
-  if (!st?.isSocket()) throw new PdfToolError('unavailable');
+  if (!(await sandboxReady(socketPath))) throw new PdfToolError('unavailable');
   const { status, body } = await post({ socketPath, path: input.path, bytes: input.bytes, timeoutMs: input.opts.timeoutMs ?? TIMEOUT_MS });
   if (status === 503) throw new PdfToolError('busy');
   if (status !== 200 || body === null) throw new PdfToolError('failed');

@@ -1,12 +1,10 @@
-/** messages.media_name's check: 1–200 characters once trimmed. */
-const MAX = 200;
+import { cleanFileName } from '@ab/shared';
 
 /**
- * A document's file name as WhatsApp (Meta or Kapso) sent it, fit for messages.media_name: trimmed,
- * at most 200 characters, null when there is none. The chat shows it on the PDF card, as WhatsApp
- * does.
+ * A document's file name as WhatsApp (Meta or Kapso) sent it, fit for messages.media_name (its
+ * check: 1–200 characters once trimmed): no control or bidi characters, at most 200 code points
+ * (never half an emoji, which Postgres would refuse with the whole row), null when none is left.
  */
 export function mediaFileName(raw: string | null | undefined): string | null {
-  const name = (raw ?? '').trim().slice(0, MAX).trim();
-  return name.length > 0 ? name : null;
+  return cleanFileName(raw) || null;
 }
