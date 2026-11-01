@@ -10,16 +10,34 @@
     }
   },
   "image.mjs": {
+    "max-depth": {
+      "count": 3
+    },
     "max-len": {
       "count": 6
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "png.mjs": {
+    "max-depth": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "resample.mjs": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
