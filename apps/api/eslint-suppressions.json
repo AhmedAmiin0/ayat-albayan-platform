@@ -2141,12 +2141,6 @@
     }
   },
   "src/modules/finance/payments/payments.dto.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -3929,7 +3923,7 @@
   },
   "src/modules/messaging/follow-ups/follow-ups.plan.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/follow-ups/follow-ups.repo.ts": {
@@ -9983,9 +9977,6 @@
     }
   },
   "src/modules/reporting/report-pdf/render/pdf-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -11227,9 +11218,6 @@
     }
   },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -11434,9 +11422,6 @@
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -11728,12 +11713,6 @@
     }
   },
   "src/modules/sales/sales/schedule/sales-schedule.mapper.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 8
     }
@@ -11837,10 +11816,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -12265,10 +12241,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -12410,10 +12383,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -12517,10 +12487,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 2
     },
     "max-len": {
       "count": 7
@@ -12576,10 +12543,7 @@
   },
   "src/modules/teaching/booking/plan/slots.service.ts": {
     "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 8
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -14471,10 +14435,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lessons/overview/overview.carry.test.ts": {
@@ -14951,10 +14912,7 @@
       "count": 4
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -15074,12 +15032,6 @@
   "src/modules/teaching/scheduling/occurrences/dst-probe.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/occurrences/horizon.job.test.ts": {
@@ -15097,9 +15049,6 @@
   },
   "src/modules/teaching/scheduling/occurrences/horizon.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -15142,12 +15091,6 @@
   "src/modules/teaching/scheduling/occurrences/occurrences.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 1
