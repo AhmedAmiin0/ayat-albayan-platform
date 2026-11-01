@@ -1,0 +1,22 @@
+{
+  "src/clock/clock-pref.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/clock/clock-range.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/zone/wall.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/zone/week.ts": {
+    "max-len": {
+      "count": 1
+    }
+  }
+}

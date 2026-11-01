@@ -2,8 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { reopenDedupKey } from '../../messaging/chat/thread-reopen.js';
 import { dayBeforeSendAt, localDayStart } from '../../messaging/lesson/timing.day-before.js';
 import { reminderDue } from '../../messaging/lesson/timing.js';
-import { zonedInstant } from '../../schedule/lessons/series/zoned.js';
-import { riyadhToday } from '../riyadh-day.js';
+import { riyadhToday, zonedInstant } from '@ab/time';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
 // A whole year per zone: seconds, not the default 5 s, on a busy CI runner.

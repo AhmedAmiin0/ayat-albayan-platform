@@ -1,4 +1,4 @@
-import { clockTime } from '../../time/index.js';
+import { clockTime } from '@ab/time';
 import { joinNames, lessonWhenText } from '../lesson/booking-confirmation.js';
 import { meetingLinkParts } from '../lesson/meeting-link.js';
 import { BODY_SLOTS, type BodySlot, type TemplateButton } from './templates.js';

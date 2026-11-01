@@ -10,7 +10,7 @@ import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '@/co
 import { loadEnv } from '@/config/env/env';
 import { callsNumberOf, overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from '@/modules/messaging/numbers/lines/numbers.lines';
-import { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
+import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { NumbersSecrets } from './numbers.secrets';
 import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
@@ -35,7 +35,7 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     private readonly settings: NumbersSettings,
-    private readonly queries: NumbersQueries,
+    private readonly queries: NumbersRepo,
     private readonly secrets: NumbersSecrets,
   ) {}
 
