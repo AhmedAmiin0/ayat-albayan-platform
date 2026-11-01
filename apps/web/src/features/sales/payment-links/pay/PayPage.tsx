@@ -7,6 +7,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { publicLinkQuery } from '@/features/sales/payment-links/api';
 import { PayDetails } from './PayDetails';
+import { PayTestNotice } from './PayTestNotice';
 import { payScreen, type PayReturn, type PayScreen } from './pay-screen';
 
 const P = t.paymentLinks.pay;
@@ -45,9 +46,7 @@ export function PayPage({ token, back }: Props) {
           <LanguageSwitch />
         </div>
         <Cartouche>{P.title}</Cartouche>
-        {query.data?.sandbox && (
-          <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{P.testNotice}</p>
-        )}
+        <PayTestNotice link={query.data} />
         {query.isPending && (
           <div role="status" aria-busy="true" className="h-40 animate-pulse rounded-lg bg-sunk">
             <span className="sr-only">{t.common.loading}</span>
