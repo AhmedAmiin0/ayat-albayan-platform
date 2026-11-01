@@ -19,7 +19,7 @@
   "apps/api/src/modules/finance/teacher-earnings/earnings.queries.ts types RecordResult",
   "apps/api/src/modules/finance/teacher-earnings/earnings.queries.ts types SessionFilter",
   "apps/api/src/modules/finance/teacher-earnings/summary/corrections.queries.ts types PayPayoutInput",
-  "apps/api/src/modules/messaging/chat-lists/chat-lists.queries.ts types ListClash",
+  "apps/api/src/modules/messaging/chat-lists/chat-lists.repo.ts types ListClash",
   "apps/api/src/modules/messaging/follow-ups/follow-ups.job.ts types FollowUpSummary",
   "apps/api/src/modules/messaging/follow-ups/follow-ups.settings.ts types FollowUpsSettingsValues",
   "apps/api/src/modules/messaging/inbox/hide/message-hide.repo.ts types HideChange",

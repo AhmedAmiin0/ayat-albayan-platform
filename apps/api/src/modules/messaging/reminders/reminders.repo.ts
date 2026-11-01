@@ -45,7 +45,7 @@ export async function queueMessages(db: Db, rows: readonly QueuedMessage[]): Pro
 
 /** Reads and idempotent writes of the reminder job (R-MSG-02, docs/12 §7). */
 @Injectable()
-export class RemindersQueries {
+export class RemindersRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** scheduled | confirmed lessons starting in (now, until], with teacher, students, guardians. */

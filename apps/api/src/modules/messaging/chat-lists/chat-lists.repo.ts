@@ -1,7 +1,7 @@
 import { type ChatList, type ChatListRef, isChatListAutoRule } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 /** What a write ran into: a taken name_key (23505) or the 30-list cap trigger (chat_lists_cap, 23514). */
 export type ListClash = 'taken' | 'limit';
@@ -35,7 +35,7 @@ const counted = (r: CountedRow): ChatList => ({
 
 /** chat_lists / chat_list_threads (migration 20261020000520), service role only (docs/22 §1). */
 @Injectable()
-export class ChatListsQueries {
+export class ChatListsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every list, oldest first, with its member count. */
