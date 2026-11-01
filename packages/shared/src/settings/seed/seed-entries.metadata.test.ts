@@ -19,7 +19,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   academy: ['academy_whatsapp_e164', 'academy_timezone', 'academy_contact', 'recording_consent_notice', 'feedback_rate_window_min',
     'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts'],
   messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'calls_permission_template', 'crm_media_host', 'crm_media_copy_all', 'presence_enabled'],
-  sales: ['sales_auto_assign', 'renewal_commission_percent'],
+  sales: ['sales_auto_assign', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 };
 /** docs/26 §1: the 8 notification keys (owned by «الإشعارات» from 23-P4) and the send-gate keys. */
@@ -38,9 +38,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 41 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33) sit in their «القيم» group, scope config', () => {
+  it('the 42 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(41);
+    expect(config).toHaveLength(42);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

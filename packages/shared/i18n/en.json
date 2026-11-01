@@ -1275,6 +1275,7 @@
       "commissionCurrency": "Commission currency",
       "commissionStartsOn": "Counts subscriptions paid from",
       "hint": "The full commission is earned once per student, when their first subscription is paid in full; each renewal paid in full then earns {n}% of it. Nothing is retroactive. Leave the salary empty to clear it.",
+      "hintRenewalOff": "The full commission is earned once per student, when their first subscription is paid in full. Renewal commission is paused: renewals earn no commission. Nothing is retroactive. Leave the salary empty to clear it.",
       "save": "Save terms",
       "saving": "Saving",
       "saved": "Terms saved"
@@ -1590,6 +1591,7 @@
       "commissionPercent": "{value}% of the subscription price",
       "commissionFixed": "{amount} per student",
       "commissionNote": "The full commission is earned once per student, when their first subscription is paid in full, and {n}% of it on each renewal paid in full, from {date}.",
+      "commissionNoteRenewalOff": "The full commission is earned once per student, when their first subscription is paid in full, from {date}. Renewal commission is paused.",
       "noCommission": "Your terms include no commission.",
       "thisMonth": "This month so far",
       "commissionsTotal": "Total commissions earned",
@@ -4758,6 +4760,8 @@
       "money": "Earnings and payments view"
     },
     "renewalCommission": {
+      "enabledLabel": "Renewal commission",
+      "enabledHint": "When off, assistants earn no new commission on subscription renewals; commissions already earned stay as they are, and a payment correction on the renewal does not take them away. A renewal paid in full while it is off never earns one later.",
       "label": "Renewal commission share",
       "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
     },
