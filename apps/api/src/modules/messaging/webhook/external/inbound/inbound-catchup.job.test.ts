@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { ExternalCatchUpJob, FLOOR } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { kapsoEnv, kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
-import type { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
+import type { ExternalRepo } from '@/modules/messaging/webhook/external/external.repo';
 import type { KapsoHistory } from '@/modules/messaging/webhook/external/kapso-history';
 import { catchUpRig, kapsoInbound, NOW, page } from './inbound.fakes';
 
@@ -86,7 +86,7 @@ describe('InboundCatchUpJob', () => {
 
   it('the outbound catch-up is unchanged: it never stores a family message', async () => {
     const x = catchUpRig();
-    const ext = x.ext as unknown as ExternalQueries;
+    const ext = x.ext as unknown as ExternalRepo;
     const out = new ExternalCatchUpJob(ext, x.external.store, x.kapso as unknown as KapsoHistory);
     x.kapso.outbound.mockResolvedValue(page([kapsoInbound()]));
     const [counts] = await out.runOnce(NOW);

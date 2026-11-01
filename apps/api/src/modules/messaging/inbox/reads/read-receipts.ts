@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { allowedRecipients, loadEnv, recipientAllowed } from '../../../../config/env/env';
-import { SendGate } from '../../whatsapp/gate/send-gate';
-import { WHATSAPP_LINES, type WhatsappLines } from '../../whatsapp/whatsapp.types';
+import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { WHATSAPP_LINES, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { ReadMark } from './read-marks';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** The stamp's outcome: whether a row was stamped, and the receipts going out in the background. */
 interface ReadOpen {
@@ -27,7 +27,7 @@ export class ReadReceipts {
   private readonly log = new Logger(ReadReceipts.name);
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly gate: SendGate,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
   ) {}

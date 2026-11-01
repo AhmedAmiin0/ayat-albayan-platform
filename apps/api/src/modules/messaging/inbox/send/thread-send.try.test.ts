@@ -3,7 +3,7 @@ import type { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files
 import { ThreadForwardService } from '@/modules/messaging/inbox/files/thread-forward.service';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
-import type { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { Outbox } from './outbox';
@@ -31,7 +31,7 @@ const queries = { thread: vi.fn(), numberWindows: vi.fn(), get: vi.fn() };
 const outbox = { queue: vi.fn() };
 const kapso = { reopen: vi.fn() };
 const service = () => {
-  const q = queries as unknown as ThreadsQueries;
+  const q = queries as unknown as ThreadsRepo;
   const s = new ThreadSendService(q, {} as TemplateRegistry, outbox as unknown as Outbox);
   Object.assign(s, { kapso });
   return s;
@@ -95,7 +95,7 @@ describe('ThreadSendService.text after the window', () => {
     chatOn('kapso');
     const src = { id: 'f1', direction: 'inbound' as const, body: 'نص', template_key: null };
     queries.get.mockResolvedValue(messageRow({ ...src, media_mime: null }));
-    const q = queries as unknown as ThreadsQueries;
+    const q = queries as unknown as ThreadsRepo;
     const forwards = new ThreadForwardService(q, service(), {} as ForwardFiles);
     const fwd = { messageId: 'f1', targets: [PHONE], clientRequestId: REQ };
     const f = { input: fwd, actorId: ACTOR, scope: null, sales: null };

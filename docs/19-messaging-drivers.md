@@ -262,6 +262,39 @@ not offered; the keys themselves are still entered on the web (CRM and Kapso key
 and tokens on «الأرقام» → «إعداد الخطوط السابق»). In module mode (`comms_source` = module) each number's own
 provider sends and `WA_PROVIDER` is not read, so the section shows only a note pointing to «الأرقام». JS-only.
 
+### Script relay: the old Apps Script sends through the platform (owner 2026-11-01)
+
+Owner: «i want it to send to platform and platform send to crm with crm engine», «no need to enter new key, old
+key is valid». The old Google Apps Script (not in this repo) sends its WhatsApp reminders, confirmations and
+reports by calling the CRM's public API at Script Property `CRM_URL` + `/api/v1/…`. The API exposes the same two
+routes, so the script reaches the CRM **through** the platform (`modules/messaging/whatsapp/relay/`):
+
+- `GET /script-relay/api/v1/me` → `200 {data:{account:{name}, key:{scopes:['messages:send']}}}`.
+- `POST /script-relay/api/v1/messages`, the script's body as it sends it today (`type` template / text /
+  document; unknown keys stripped, `to` → E.164) → `201 {data:{message_id, whatsapp_message_id}}`.
+
+**Auth = the same CRM key.** Public like `/webhooks/*` (no user JWT); the `Authorization: Bearer` must equal the
+notifications line's own `WACRM_API_KEY` (the key the crm driver already sends with), compared in constant time.
+No new key or secret. Wrong or missing key → 401; notifications line not on the crm driver → 503; invalid body →
+422; failures use the CRM's envelope `{error:{message, code}}`.
+
+**What happens.** One `messages` row (outbound, line notifications, the module-mode number stamped, no lead,
+guardian or staff, `created_by` null) is written first, with a readable body (template: `[name]` + its body
+values; document: caption, file name, link), so it shows in the family's or teacher's chat with its ticks (the
+`/webhooks/wacrm` status path matches its wamid). Then the body goes, unchanged in shape and with the CRM's own
+template name (no translation through our templates table), through the notifications line's crm driver
+(`CrmWhatsappClient.sendBody`: same allow-list, same call). Not gated by «الرسائل التلقائية»: the script decides.
+Idempotent (rule 8): `dedup_key` = `script-relay:` + sha256 of recipient, type, content and the 15-minute window,
+so the script's retries (it retries 429 / 5xx with no key) send once. A CRM 4xx refusal answers the same 4xx (the
+row is removed, nothing was sent, so a retry is a fresh send); a CRM 5xx or network error answers 502 and the
+row is kept as «uncertain» (a retry in the window gets the first row back, unsent); a 2xx without a wamid is
+201 and the row is «sent».
+
+**Cut-over (owner step).** In the Apps Script project → Project Settings → Script Properties, change `CRM_URL`
+only, to `<API origin>/script-relay` (production: `https://api.ayatalbayan.com/script-relay`, no trailing
+slash needed). `CRM_API_KEY` stays as it is (it must be the same key as `WACRM_API_KEY`). The notifications line
+must be on «نظام CRM». **Rollback:** set `CRM_URL` back to the CRM's own URL.
+
 ### Files imported from the old CRM: our own copy of all of them (owner 2026-10-27 «Fix it»)
 
 A family's photo or voice note imported from the old CRM is an inbound row with no Meta media id whose body is

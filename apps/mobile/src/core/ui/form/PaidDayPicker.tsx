@@ -4,8 +4,8 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { FormLabel } from '../FormLabel';
-import { paidDayLabel } from '../lib/paid-day';
+import { FormLabel } from './FormLabel';
+import { paidDayLabel } from '@/core/lib/money/paid-day';
 
 interface PaidDayPickerProps {
   /** Days back on the Riyadh calendar; 0 = today. */

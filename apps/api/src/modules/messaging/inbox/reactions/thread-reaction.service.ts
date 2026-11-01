@@ -1,14 +1,14 @@
 import type { ReactionResult, ThreadReaction } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { MessageViews, waHttpError } from '../../whatsapp';
-import { Outbox, type Sent } from '../send/outbox';
-import { visibleToSales, withoutLinks } from '../sales-threads/sales-threads';
-import { dedupKey, outboundBase, sendLine, type ThreadSend } from '../send/thread-send.service';
-import { assertCanSend } from '../teacher-threads/teacher-scope';
-import { sameNumber } from '../threads/thread-quotes';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { MessageViews, waHttpError } from '@/modules/messaging/whatsapp';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { visibleToSales, withoutLinks } from '@/modules/messaging/inbox/sales-threads/sales-threads';
+import { dedupKey, outboundBase, sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { assertCanSend } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { sameNumber } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { sendsOnCrm } from './reaction-line';
-import { assertReactable, reactionPayload, ReactionQueries } from './reaction.queries';
+import { assertReactable, reactionPayload, ReactionRepo } from './reaction.repo';
 
 /** PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message. */
 export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string };
@@ -30,8 +30,8 @@ export class ThreadReactionService {
   @Inject(MessageViews) private readonly views?: MessageViews;
 
   constructor(
-    private readonly reactions: ReactionQueries,
-    private readonly threads: ThreadsQueries,
+    private readonly reactions: ReactionRepo,
+    private readonly threads: ThreadsRepo,
     private readonly outbox: Outbox,
   ) {}
 

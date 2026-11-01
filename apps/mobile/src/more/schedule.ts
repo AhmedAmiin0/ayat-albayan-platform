@@ -3,7 +3,7 @@ import { clockIn, hhmm, phoneTz, rangeOf } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import type { AvailabilityRow, TimeOff } from './types';
+import type { AvailabilityRow, TimeOff } from '@/core/lib/staff/types';
 
 // Read-only teacher schedule helpers (R-TCH-02). Pure, so they are unit-tested.
 

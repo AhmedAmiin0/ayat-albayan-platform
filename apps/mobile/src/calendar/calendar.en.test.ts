@@ -1,4 +1,4 @@
-import type { AvailabilityRow } from '@/more/types';
+import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { lesson } from '@/today/testing/fixtures';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { availabilityLine, teacherClock } from './agenda/agenda';

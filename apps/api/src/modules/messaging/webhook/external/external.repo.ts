@@ -2,8 +2,8 @@ import type { TablesInsert } from '@ab/db';
 import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { SENDING } from '../../whatsapp/sender/send-plan';
+import { DB, type Db } from '@/common/db/db.module';
+import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 
 function check(error: PostgrestError | null): void {
   if (error) throw new Error(`db: ${error.message}`);
@@ -17,7 +17,7 @@ interface ExternalScope {
 
 /** Thin supabase-js access for messages sent outside the app (external/); the rules live in the services. */
 @Injectable()
-export class ExternalQueries {
+export class ExternalRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The wamids of this list we already hold (any direction). */

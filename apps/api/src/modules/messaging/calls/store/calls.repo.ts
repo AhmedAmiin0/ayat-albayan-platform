@@ -1,6 +1,6 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { CallMove, CallRow, CallSdp, NewCall } from './call-row';
 
 function check(error: { message: string } | null, what: string): asserts error is null {
@@ -22,7 +22,7 @@ function flat(row: Joined): CallRow {
 
 /** wa_calls and wa_call_sdp (service role; RLS keeps clients read-only, and away from the SDPs). UTC ISO times. */
 @Injectable()
-export class CallsQueries {
+export class CallsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The new row, or null when its unique key (request id / wacid) already exists. */

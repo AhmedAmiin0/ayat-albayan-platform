@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { ThreadsQueries } from './threads.queries';
+import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { ThreadsRepo } from './threads.repo';
 
 // A thread is ordered by each message's time, whatever its direction or how it got stored (owner
 // report 2026-10-26): created_at, then id, so a late-stored message lands where it was sent.
 
-const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsQueries(db, {} as PackagesService, {} as BalanceQueries);
+const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsRepo(db, {} as PackagesService, {} as BalanceQueries);
 
 describe('ThreadsQueries.messages order', () => {
   it('created_at newest first, id breaking a tie, then the page limit + 1', async () => {

@@ -2,10 +2,10 @@ import { ACCOUNT_CODE_TEMPLATE, isHiddenPayload, type NumberPurpose, waIdToE164 
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '@/modules/messaging/webhook/inbound/webhook.inbound';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { WebhookQueries } from '@/modules/messaging/webhook/webhook.queries';
+import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
-import { ExternalQueries } from './external.queries';
+import { ExternalRepo } from './external.repo';
 
 interface ExternalInput {
   /** Meta's message object (an echo, or an item of Kapso's history). */
@@ -37,8 +37,8 @@ function outboundOf(message: unknown): { msg: ExternalMessage; phone: string } |
 @Injectable()
 export class ExternalStore {
   constructor(
-    private readonly queries: ExternalQueries,
-    private readonly webhook: WebhookQueries,
+    private readonly queries: ExternalRepo,
+    private readonly webhook: WebhookRepo,
   ) {}
 
   async store({ message, from, event }: ExternalInput): Promise<ExternalOutcome> {

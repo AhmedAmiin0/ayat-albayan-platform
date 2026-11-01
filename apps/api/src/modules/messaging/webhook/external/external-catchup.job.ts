@@ -1,13 +1,13 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '../../reminders/ticker';
-import { field } from '../parse/webhook.parse';
+import { Ticker } from '@/modules/messaging/reminders/ticker';
+import { field } from '@/modules/messaging/webhook/parse/webhook.parse';
 import { KAPSO_HISTORY } from './external-status';
-import { ExternalQueries } from './external.queries';
+import { ExternalRepo } from './external.repo';
 import { ExternalStore, type ExternalOutcome } from './external.store';
 import { messageTime } from './external-message';
 import { KapsoHistory } from './kapso-history';
 import { kapsoChatNumbers, type KapsoNumber } from './kapso-numbers';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 export const EVERY_MS = 10 * 60_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -47,7 +47,7 @@ export class ExternalCatchUpJob implements OnApplicationBootstrap, OnModuleDestr
   private readonly ticker = new Ticker({ name: ExternalCatchUpJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS, run: () => this.runOnce() });
 
   constructor(
-    private readonly queries: ExternalQueries,
+    private readonly queries: ExternalRepo,
     private readonly store: ExternalStore,
     @Inject(KAPSO_HISTORY) private readonly kapso: KapsoHistory,
   ) {}

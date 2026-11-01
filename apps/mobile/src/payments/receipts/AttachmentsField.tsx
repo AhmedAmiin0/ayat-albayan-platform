@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { AttachmentRow } from './AttachmentRow';
 import { type Attachment, attachmentsFull, withAttachment, withoutAttachment } from './attachments';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PhotoButtons } from './PhotoButtons';
 
 export interface AttachmentsFieldProps {
