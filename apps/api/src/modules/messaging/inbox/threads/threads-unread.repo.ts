@@ -1,5 +1,5 @@
-import type { Db } from '../../../../common/db/db.module';
-import { phoneList } from '../../numbers';
+import type { Db } from '@/common/db/db.module';
+import { phoneList } from '@/modules/messaging/numbers';
 import type { ThreadListFilter } from './threads.list';
 
 /**

@@ -67,6 +67,7 @@ import { TranslationsModule } from './modules/platform/translations/translations
 import { WebhookModule } from './modules/messaging/webhook/webhook.module';
 import { OwnNumbersModule } from './modules/messaging/numbers';
 import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
+import { ScriptRelayModule } from './modules/messaging/whatsapp';
 
 @Module({
   imports: [
@@ -138,6 +139,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     StudentChannelsModule,
     MessagingJobsModule,
     WebhookModule,
+    ScriptRelayModule,
   ],
   controllers: [HealthController],
 })

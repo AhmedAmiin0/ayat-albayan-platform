@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { assertCanSend, assertPhone, TeacherScopes, type TeacherScope } from './teacher-scope';
-import type { TeacherThreadsQueries } from './teacher-threads.queries';
+import type { TeacherThreadsRepo } from './teacher-threads.repo';
 
 const GUARDIAN = '+966501234567';
 const OWN = '+201001234567';
@@ -11,7 +11,7 @@ const scope: TeacherScope = { teacherId: 'tch-1', teacherName: 'أبرار', pho
 
 function scopes(teacher: { id: string; display_name_ar: string; phone_e164: string | null } | null) {
   const queries = { teacher: vi.fn(async () => teacher), phones: vi.fn(async () => [GUARDIAN, OWN]) };
-  return { queries, scopes: new TeacherScopes(queries as unknown as TeacherThreadsQueries) };
+  return { queries, scopes: new TeacherScopes(queries as unknown as TeacherThreadsRepo) };
 }
 const failure = (fn: () => unknown): [number, unknown] | null => {
   try {

@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { crmLink } from '../../whatsapp/messages/crm-history/crm-history.fakes';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import type { Outbox } from '../send/outbox';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import { crmLink } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ForwardFiles } from './forward-files';
 
 // Owner 2026-10-27: a photo imported from the old CRM forwards like any family file (through
@@ -20,7 +20,7 @@ describe('ForwardFiles.copy — an old-CRM file', () => {
       loadChat: vi.fn().mockResolvedValue(row),
       cache: vi.fn().mockResolvedValue({ bucket: 'wa-media', path: 'm-crm-1.webp', mime: 'image/webp' }),
     };
-    const files = new ForwardFiles({} as ThreadsQueries, {} as Outbox, storage as unknown as StorageService);
+    const files = new ForwardFiles({} as ThreadsRepo, {} as Outbox, storage as unknown as StorageService);
     Object.assign(files, { inbound });
     const file = await files.copy(row, { actorId: 'a0000000-0000-4000-8000-000000000001', requestId: 'r1' });
     expect(inbound.loadChat).toHaveBeenCalledWith('m-crm-1');

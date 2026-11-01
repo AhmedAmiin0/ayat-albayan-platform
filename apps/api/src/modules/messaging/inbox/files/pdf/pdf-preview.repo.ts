@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 /** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
 export type PdfDoc = { pages: number; bytes: number };
@@ -10,7 +10,7 @@ export type PdfDoc = { pages: number; bytes: number };
  * the preview, never /file, the picker or a forward.
  */
 @Injectable()
-export class PdfPreviewQueries {
+export class PdfPreviewRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** null = not probed yet. */

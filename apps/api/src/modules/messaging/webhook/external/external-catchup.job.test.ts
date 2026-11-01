@@ -4,7 +4,7 @@ import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-o
 import { fakeQueries } from '@/modules/messaging/webhook/webhook.fakes';
 import { catchUpSince, ExternalCatchUpJob, FLOOR, LOOKBACK_MS, MAX_PAGES } from './external-catchup.job';
 import { externalServices, KAPSO_NUMBER_ID, kapsoOverlay, kapsoText, SENT_AT, SENT_TS } from './external.fakes';
-import type { ExternalQueries } from './external.queries';
+import type { ExternalRepo } from './external.repo';
 import type { KapsoHistory } from './kapso-history';
 
 const NOW = new Date('2026-10-26T12:00:00Z');
@@ -12,7 +12,7 @@ const NOW = new Date('2026-10-26T12:00:00Z');
 function job() {
   const queries = fakeQueries();
   const x = externalServices(queries);
-  const j = new ExternalCatchUpJob(x.ext as unknown as ExternalQueries, x.store, x.kapso as unknown as KapsoHistory);
+  const j = new ExternalCatchUpJob(x.ext as unknown as ExternalRepo, x.store, x.kapso as unknown as KapsoHistory);
   return { ...x, queries, job: j };
 }
 const page = (messages: unknown[], after?: string) => ({ messages, after });
