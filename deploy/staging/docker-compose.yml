@@ -35,8 +35,8 @@ x-shared-env: &shared-env
   # Shared cache (docs/09 «Shared cache»), on every app process. Redis down = the database, never an error.
   REDIS_URL: redis://ayat-redis:6379
   # Owner, 2026-11-01: «i want to go live with strip payments now». This stack is PRODUCTION
-  # (api.ayatalbayan.com). FEATURE_STRIPE=live mounts the Stripe module (docs/30) and accepts a live
-  # key (test = sandbox keys only). «التكاملات» lists the Stripe group (the keys, the switch). Nothing
+  # (api.ayatalbayan.com). FEATURE_STRIPE=live mounts the Stripe module (docs/30) and takes live keys
+  # only (test = sandbox keys only). «التكاملات» lists the Stripe group (the keys, the switch). Nothing
   # takes real money until an admin saves a live key and the live webhook secret there and turns on
   # «خدمة الدفع الإلكتروني» (STRIPE_ENABLED): until then every Stripe route but the signed webhook is
   # 404 and GET /stripe/feature says off. To switch Stripe off: delete these two lines and redeploy

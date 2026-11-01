@@ -12,8 +12,9 @@ import { blankIsUnset } from './env.blank';
 
 /**
  * The owner's rule (2026-10-28, go live 2026-11-01): the server env FEATURE_STRIPE, never a DB
- * value. `test`: sandbox keys only. `live`: live keys too (a sandbox key still works, a dry run).
- * Anything else (unset): no Stripe at all, no route mounted and no Stripe key in «التكاملات».
+ * value. `test`: sandbox keys only. `live`: live keys only (a sandbox key would put test
+ * payments on real students). Anything else (unset): no Stripe at all, no route mounted and no
+ * Stripe key in «التكاملات».
  */
 const stripeMode = (env: NodeJS.ProcessEnv): 'test' | 'live' | undefined =>
   z.enum(['test', 'live']).safeParse(env.FEATURE_STRIPE).data;
@@ -26,13 +27,14 @@ export const stripeLiveAllowed = (env: NodeJS.ProcessEnv = process.env): boolean
   stripeMode(env) === 'live';
 
 /**
- * The server's check of STRIPE_API_KEY: the shared format, and a live key only with
- * FEATURE_STRIPE=live (read when a value is checked, like integrationKeyAvailable). Else
- * 'stripe_live_key_refused': one in env fails the boot, one saved by hand in Vault is dropped
- * from the overlay (a warning naming the key), one sent to PUT .../secrets/STRIPE_API_KEY is 400.
+ * The server's check of STRIPE_API_KEY: the shared format, and the key's mode is the server's (a
+ * live key only with FEATURE_STRIPE=live, a sandbox key only without; read when a value is checked,
+ * like integrationKeyAvailable). Else 'stripe_live_key_refused': one in env fails the boot, one
+ * saved in Vault is dropped from the overlay (a warning naming the key), one sent to
+ * PUT .../secrets/STRIPE_API_KEY is 400.
  */
 export const stripeServerKey = stripeApiKey.refine(
-  (key) => !stripeKeyLive(key) || stripeLiveAllowed(),
+  (key) => stripeKeyLive(key) === stripeLiveAllowed(),
   'stripe_live_key_refused',
 );
 
@@ -64,5 +66,5 @@ export const integrationKeyAvailable = (
 export const stripeReady = (env: Env): boolean =>
   env.STRIPE_ENABLED && env.STRIPE_API_KEY !== undefined && env.STRIPE_WEBHOOK_SECRET !== undefined;
 
-/** The saved key is a live one: only live events are processed, the pay pages say no «test». */
+/** The saved key is live (= FEATURE_STRIPE=live, once a key is saved): no «test» on the pages. */
 export const stripeKeyIsLive = (env: Env): boolean => stripeKeyLive(env.STRIPE_API_KEY ?? '');

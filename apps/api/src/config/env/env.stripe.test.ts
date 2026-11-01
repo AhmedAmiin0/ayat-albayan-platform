@@ -44,13 +44,13 @@ describe('env: Stripe (docs/30, FEATURE_STRIPE test or live)', () => {
     expect(loadEnv({ ...BASE, ...KEYS }).STRIPE_API_KEY).toBe('rk_test_51Abc');
   });
 
-  it('FEATURE_STRIPE=live: a live key (env or database) is taken, a sandbox key too; a malformed one still is not', () => {
+  it('FEATURE_STRIPE=live: a live key (env or database) is taken; a sandbox or malformed one is not (no test money on real students)', () => {
     vi.stubEnv('FEATURE_STRIPE', 'live');
     const env = loadEnv({ ...BASE, STRIPE_API_KEY: 'sk_live_51Abc' });
     expect([env.STRIPE_API_KEY, stripeKeyIsLive(env)]).toEqual(['sk_live_51Abc', true]);
     expect(overlayOf({ STRIPE_API_KEY: 'rk_live_51Abc' })).toEqual({ kept: ['STRIPE_API_KEY'], bad: [] });
-    const sandbox = loadEnv({ ...BASE, ...KEYS });
-    expect([sandbox.STRIPE_API_KEY, stripeKeyIsLive(sandbox)]).toEqual(['rk_test_51Abc', false]);
+    expect(() => loadEnv({ ...BASE, ...KEYS })).toThrow();
+    expect(overlayOf({ STRIPE_API_KEY: 'rk_test_51Abc', STRIPE_WEBHOOK_SECRET: 'whsec_ok' })).toEqual({ kept: ['STRIPE_WEBHOOK_SECRET'], bad: ['STRIPE_API_KEY'] });
     expect(() => loadEnv({ ...BASE, STRIPE_API_KEY: 'pk_live_51Abc' })).toThrow();
     expect(overlayOf({ STRIPE_API_KEY: 'pk_live_51Abc' }).bad).toEqual(['STRIPE_API_KEY']);
   });

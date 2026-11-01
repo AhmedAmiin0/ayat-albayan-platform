@@ -5687,7 +5687,7 @@
       },
       "STRIPE_API_KEY": {
         "label": "Stripe restricted key",
-        "hint": "A Stripe restricted or secret key (rk_… or sk_…). A live key (rk_live_…) is accepted only when the server runs in live mode; a sandbox key (rk_test_…) always. Kept in the vault, never shown."
+        "hint": "A Stripe restricted or secret key (rk_… or sk_…) of the server's mode: a live key (rk_live_…) only when the server runs in live mode, a sandbox key (rk_test_…) only in test mode. Kept in the vault, never shown."
       },
       "STRIPE_WEBHOOK_SECRET": {
         "label": "Webhook signing secret",

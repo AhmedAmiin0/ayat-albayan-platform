@@ -57,8 +57,8 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
   });
 
   it('an open session is reused; a lost race expires its own session and follows the winner', async () => {
-    s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_old' }));
-    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_old', status: 'open', url: 'https://checkout.stripe.com/old' });
+    s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_test_old' }));
+    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_test_old', status: 'open', url: 'https://checkout.stripe.com/old' });
     expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe('https://checkout.stripe.com/old');
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
     s.links.byToken.mockResolvedValue(linkRow());
