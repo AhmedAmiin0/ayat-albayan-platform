@@ -1,10 +1,9 @@
-import { counted, type BookingResult } from '@ab/shared';
+import { type BookingResult, counted, weekStart, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { weekStart, zonedParts } from '@/features/teaching/schedule';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n/i18n';
@@ -33,7 +32,7 @@ export interface BookedPanelProps {
 /** The first lesson and its week in the viewer's zone `viewer`, as the calendar («افتح الجدول»). */
 function firstLesson(result: BookingResult, viewer: string) {
   const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-  return { first, week: first ? weekStart(zonedParts(new Date(first.starts_at), viewer).date) : undefined };
+  return { first, week: first ? weekStart(zonedPartsIn(new Date(first.starts_at), viewer).date) : undefined };
 }
 
 /**

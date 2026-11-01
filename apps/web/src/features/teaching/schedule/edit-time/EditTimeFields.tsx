@@ -1,4 +1,4 @@
-import { clockOf, clockTime, DURATIONS } from '@ab/shared';
+import { clockOf, clockTime, DURATIONS, wallInstant, weekdayOf } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { RadioChips } from '@/components/ui/form/radio-chips';
@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
-import { dateLabel, dayMonthLabel, weekdayOf, zonedToUtc } from '@/features/teaching/schedule/tz';
+import { dateLabel, dayMonthLabel } from '@/features/teaching/schedule/tz';
 import { ClockOptions } from '@/lib/clock-options';
 import { clockDir } from '@/lib/clock-text';
 import { type Clock, useClock } from '@/lib/clock';
@@ -51,7 +51,7 @@ interface HintInput {
 /** «= 17:00 بتوقيتك» when the picked teacher-clock time reads differently on the viewer's clock, else nothing. */
 function viewerHint(p: HintInput, clock: Clock): string | undefined {
   if (p.tz === p.viewer) return undefined;
-  const at = zonedToUtc(p.date, p.time, p.tz);
+  const at = wallInstant(p.date, p.time, p.tz);
   // Compared as 24 h keys; shown in the viewer's cycle.
   if (clockTime(at, p.viewer) === p.time) return undefined;
   return t.lessons.timeEdit.viewerEquiv.replace('{time}', clockOf(at, { ...clock, tz: p.viewer }));

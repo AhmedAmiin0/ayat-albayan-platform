@@ -1,3 +1,4 @@
+import { weekDates, weekdayOf } from '@ab/shared';
 import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { useNarrow } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
@@ -9,7 +10,7 @@ import { boardRows, hoursText, teacherDay } from '@/features/teaching/schedule/o
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { WeekAgenda } from './WeekAgenda';
-import { dayMonthLabel, weekDays, weekdayOf } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule/tz';
 import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface WeekGridProps {
@@ -49,7 +50,7 @@ function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeach
  * top (docs/07 §5), today tinted. It scrolls sideways inside the page under ~900px.
  */
 export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Date() }: WeekGridProps) {
-  const days = weekDays(week);
+  const days = weekDates(week);
   const rows = rowsOf(lessons, teachers, useViewerTz());
   if (useNarrow()) return <WeekAgenda days={days} today={today} rows={rows} onOpen={onOpen} />;
   return (
