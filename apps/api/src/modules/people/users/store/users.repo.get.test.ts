@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
-import { fakeDb } from '../../guardians/fake-db';
+import type { Db } from '@/common/db/db.module';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { mapListRow } from './users.rows';
-import { UsersQueries } from './users.queries';
+import { UsersRepo } from './users.repo';
 
 // Family accounts (docs/30 §2): a family login's synthetic email is never shown; the username is.
 
@@ -21,12 +21,12 @@ function withAuth(email: string) {
 
 describe('UsersQueries.get — email and username', () => {
   it('hides a synthetic family email and returns the username', async () => {
-    const out = await new UsersQueries(withAuth('g-1@family.invalid')).get('u1');
+    const out = await new UsersRepo(withAuth('g-1@family.invalid')).get('u1');
     expect(out).toMatchObject({ email: null, username: 'ustadh.omar' });
   });
 
   it('keeps a real email', async () => {
-    expect(await new UsersQueries(withAuth('omar@example.com')).get('u1')).toMatchObject({ email: 'omar@example.com' });
+    expect(await new UsersRepo(withAuth('omar@example.com')).get('u1')).toMatchObject({ email: 'omar@example.com' });
   });
 });
 

@@ -1,12 +1,12 @@
 import type { PortalFileUrl, PortalReports } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { BUCKETS, SIGNED_URL_SECONDS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { PortalScopes } from '../scope/portal-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { recordingByLesson, toPortalReport } from './portal-reports.mapper';
-import { PortalReportsQueries } from './portal-reports.queries';
+import { PortalReportsRepo } from './portal-reports.repo';
 
 interface FileCall {
   user: AuthUser;
@@ -22,7 +22,7 @@ interface FileCall {
 export class PortalReportsService {
   constructor(
     private readonly scopes: PortalScopes,
-    private readonly queries: PortalReportsQueries,
+    private readonly queries: PortalReportsRepo,
     private readonly storage: StorageService,
   ) {}
 

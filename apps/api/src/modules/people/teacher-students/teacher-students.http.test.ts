@@ -6,7 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '@/common/auth/verify-token';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ADMIN, GUARDIAN, OTHER, OTHER_ID, student, TEACHER, TEACHER_ID, lesson } from './teacher-students.fakes';
-import { TeacherStudentsQueries } from './teacher-students.queries';
+import { TeacherStudentsRepo } from './teacher-students.repo';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -26,7 +26,7 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(TeachersRepo).useValue(teachers)
-      .overrideProvider(TeacherStudentsQueries).useValue(q)
+      .overrideProvider(TeacherStudentsRepo).useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

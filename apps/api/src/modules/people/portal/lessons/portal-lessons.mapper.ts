@@ -7,7 +7,7 @@ import {
   type PortalLesson,
   type PortalWayIn,
 } from '@ab/shared';
-import type { PortalLessonRow } from './portal-lessons.queries';
+import type { PortalLessonRow } from './portal-lessons.repo';
 
 interface WayContext {
   /** settings.meeting_link_auto: the academy default for a teacher whose meeting_mode is null. */
