@@ -1,14 +1,18 @@
+import { z } from 'zod';
 import type { Enums } from '@ab/db';
 import { normalizeArabic } from '@ab/core';
 import { weekdayDayMonth } from '../../time/index.js';
 import { joinNames } from './booking-confirmation.js';
 import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply.js';
 import type { OutboundTemplate } from '../templates/templates.js';
+import { lenientString, parseOrNull } from '../payload/index.js';
 
 // «تقييم الحلقة» by WhatsApp buttons (migration 195): the lesson_rating template's three quick
 // replies. A tap is an inbound message, so it reopens the 24 h window (docs/12 §3.5).
 
-export const LESSON_RATINGS = ['excellent', 'good', 'needs_work'] as const satisfies readonly Enums<'feedback_quick_rating'>[];
+export const LESSON_RATINGS = ['excellent', 'good', 'needs_work'] as const satisfies readonly Enums<
+  'feedback_quick_rating'
+>[];
 export type LessonRating = (typeof LESSON_RATINGS)[number];
 
 export const RATING_TEMPLATE = 'lesson_rating';
@@ -35,19 +39,28 @@ export function ratingOfIntent(intent: QuickReplyIntent | null): LessonRating | 
 export function ratingOfText(text: string | null | undefined): LessonRating | null {
   if (!text) return null;
   const typed = normalizeArabic(text).replace(/[^\p{L}\p{N} ]/gu, '').trim();
-  return LESSON_RATINGS.find((r) => normalizeArabic(RATING_BUTTON_TEXTS[r]).replace(/[^\p{L}\p{N} ]/gu, '') === typed) ?? null;
+  const plain = (r: LessonRating): string =>
+    normalizeArabic(RATING_BUTTON_TEXTS[r]).replace(/[^\p{L}\p{N} ]/gu, '');
+  return LESSON_RATINGS.find((r) => plain(r) === typed) ?? null;
 }
 
-/** The rating of a stored inbound row's interactive_payload ({ type: 'button', button: { payload, text } }). */
-export function ratingOfInteractive(payload: unknown): LessonRating | null {
-  if (payload === null || typeof payload !== 'object') return null;
-  const button = (payload as { button?: unknown }).button;
-  if (button === null || typeof button !== 'object') return null;
-  const { payload: key, text } = button as { payload?: unknown; text?: unknown };
-  const head = typeof key === 'string' ? key.split(':', 1)[0] : null;
-  const fromKey = LESSON_RATINGS.find((r) => INTENT[r] === head) ?? null;
-  return fromKey ?? (typeof text === 'string' ? ratingOfText(text) : null);
-}
+/** A button's rate_* payload key («rate_good:<lesson>») → the rating. */
+const ratingOfKey = (key: string | undefined): LessonRating | null =>
+  LESSON_RATINGS.find((r) => INTENT[r] === key?.split(':', 1)[0]) ?? null;
+
+/** A stored button's rating: its rate_* payload key first, else its exact text. */
+const ratedButtonSchema = z
+  .looseObject({
+    button: z.looseObject({ payload: lenientString, text: lenientString }),
+  })
+  .transform(({ button }) => ratingOfKey(button.payload) ?? ratingOfText(button.text));
+
+/**
+ * The rating of a stored inbound row's interactive_payload ({ type: 'button', button: { payload,
+ * text } }).
+ */
+export const ratingOfInteractive = (payload: unknown): LessonRating | null =>
+  parseOrNull(ratedButtonSchema, payload);
 
 /** {{2}}: «الأحد 4 أكتوبر», the lesson's day in the guardian's tz (Western digits). */
 export function lessonDateText(startsAt: Date, tz: string): string {
@@ -63,7 +76,10 @@ export interface RatingMessageInput {
   tz: string;
 }
 
-/** lesson_rating for one guardian: names, the day, and one «rate_<value>:<lesson>» payload per button. */
+/**
+ * lesson_rating for one guardian: names, the day, and one «rate_<value>:<lesson>» payload per
+ * button.
+ */
 export function lessonRatingMessage(input: RatingMessageInput): OutboundTemplate {
   return {
     key: RATING_TEMPLATE,

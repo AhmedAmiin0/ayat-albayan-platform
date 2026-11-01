@@ -272,17 +272,6 @@
       "count": 5
     }
   },
-  "src/messaging/chat/unavailable.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 7
-    },
-    "ab/no-shape-checks": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
   "src/messaging/chat/views.ts": {
     "max-len": {
       "count": 11
@@ -296,14 +285,6 @@
   "src/messaging/lesson/rating.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/messaging/lesson/rating.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/messaging/lesson/timing.day-before.test.ts": {
@@ -323,21 +304,6 @@
   },
   "src/messaging/lesson/trial-chat.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/messaging/markers/chat-markers.ts": {
-    "ab/no-shape-checks": {
-      "count": 3
-    }
-  },
-  "src/messaging/markers/echo-payload.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
-  "src/messaging/markers/marker-notes.ts": {
-    "ab/no-shape-checks": {
       "count": 1
     }
   },
@@ -371,28 +337,6 @@
     },
     "max-len": {
       "count": 7
-    }
-  },
-  "src/messaging/reactions/reactions.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 8
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
-  "src/messaging/replies/button-reply.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 5
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/messaging/replies/quick-reply.ts": {
