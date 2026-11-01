@@ -30,7 +30,7 @@ Parallel builders, one worktree each:
 - **B2 `teachers`**: migration, module, availability + time-off, `freeSlots` query, unit tests on slot math across DST-free Riyadh + Cairo tz. Web: teacher list, availability grid.
 - **B3 `leads+job_applicants`**: migration, module, status machine, unit tests on transitions. Web: inbox list (no messaging yet).
 - **B4 `shared`**: enums, zod schemas, i18n ar.json (all labels from the current forms/sheets), `api-client` generator script.
-Verifier: runs tests, checks file-length/param lint, checks each builder covered its requirement IDs (R-STU-*, R-TCH-01/02, R-LEAD-01/04).
+Verifier: checks tests and the file-length/param lint in the PR's CI or a cloud session (never on the owner's PC), checks each builder covered its requirement IDs (R-STU-*, R-TCH-01/02, R-LEAD-01/04).
 
 ### Phase 2 — Scheduling engine (workflow: 3 builders + verifier)
 - **B1 `schedule_rules + OccurrenceGenerator`**: idempotent upsert over horizon, unit tests: no duplicates on re-run (issue B1), byday math, tz conversion Riyadh↔UTC, horizon extension.

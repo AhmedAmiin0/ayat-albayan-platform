@@ -156,7 +156,7 @@ Owner rule (2026-10-28): «dont make stripe available for the normal production 
 3. The media ports must be open in the VPS firewall: **UDP 7882**, **TCP 7881**, TURN **UDP 3478** (`ufw status`; Hostinger panel firewall too). With them closed the call connects but no video, audio or shared screen arrives.
 4. While someone joins, `docker logs -f <livekit container>` shows `participant joined` and, for a shared board or screen, `mediaTrack published`. A track that stays `pending track` means no media reaches the server (ports in 3).
 
-Check against a real LiveKit, in a GitHub Actions runner (no ci.yml job does it yet), never on the owner's PC: `docker run -d --name lk -p 7880:7880 -p 7881:7881 -p 7882:7882/udp livekit/livekit-server --dev --bind 0.0.0.0`, then `LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret pnpm --filter e2e run e2e --project=desktop tests/classroom-live.spec.ts tests/classroom-live-phone.spec.ts` (skipped without `LIVEKIT_URL`).
+Check against a real LiveKit in a GitHub Actions runner, never on the owner's PC. No workflow does it yet: it needs one modelled on ci.yml's e2e job (`pnpm i --frozen-lockfile`, local Supabase, `pnpm turbo build --filter=e2e^...`, `pnpm env:local`, the browser install), then `docker run -d --name lk -p 7880:7880 -p 7881:7881 -p 7882:7882/udp livekit/livekit-server --dev --bind 0.0.0.0`, then `LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret pnpm --filter e2e run e2e --project=desktop classroom-live.spec.ts classroom-live-phone.spec.ts` (file names alone: Playwright matches them as path patterns inside `e2e/tests/teaching/`; skipped without `LIVEKIT_URL`).
 
 ## Test teacher on staging (owner, 2026-10-05)
 

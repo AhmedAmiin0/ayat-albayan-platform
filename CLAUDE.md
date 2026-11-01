@@ -33,9 +33,9 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 - Every agent prompt repeats rules 1–4 and lists the requirement IDs it must satisfy.
 - Project skills live in `.claude/skills/` (see its README): every design review loads `heuristic-evaluation`, `design-qa-checklist` and `critique-brand-consistency`; every migration, SQL or RLS change loads `supabase-postgres-best-practices`.
 - Before finishing any phase: the PR's GitHub Actions CI is green (lint, typecheck, test, e2e), watched with `gh pr checks <n> --watch` (failures: `gh run view <run> --log-failed`); write `PHASE_SUMMARY.md`.
-- Tests, lint, typecheck, builds, installs (`pnpm i`), Supabase, docker, expo and dev servers never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI.
+- Tests, lint, typecheck, builds, installs (`pnpm i`), Supabase, docker, expo and dev servers never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI. Where the data import runs is still open (see Commands).
 
-## Commands (never on the owner's PC; a cloud session runs only pnpm i and lint/typecheck/test, the rest needs CI's Docker/Supabase or the target's credentials)
+## Commands (never on the owner's PC; a cloud session runs only pnpm i and lint/typecheck/test, the rest needs CI's Docker/Supabase or the target's credentials; `pnpm migrate:*` follows `tools/migrate/RUNBOOK.md` until the owner decides)
 ```
 pnpm i
 pnpm supabase start            # local stack (packages/db)
