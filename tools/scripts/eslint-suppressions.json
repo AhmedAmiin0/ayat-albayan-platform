@@ -5,6 +5,9 @@
     }
   },
   "calendar/calendar-ics.mjs": {
+    "ab/no-if-chains": {
+      "count": 6
+    },
     "complexity": {
       "count": 1
     },
@@ -13,6 +16,9 @@
     }
   },
   "calendar/calendar-slots.mjs": {
+    "ab/no-if-chains": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     },
@@ -22,6 +28,16 @@
   },
   "calendar/calendar.fixture.mjs": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "chat-markers/chat-markers-backfill.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "chat-markers/markers-plan.mjs": {
+    "ab/no-shape-checks": {
       "count": 1
     }
   },
@@ -41,6 +57,9 @@
     }
   },
   "ci-checks/e2e-areas/areas.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -89,6 +108,9 @@
     }
   },
   "ci-checks/e2e-areas/i18n.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -99,11 +121,20 @@
     }
   },
   "ci-checks/e2e-areas/plan.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
   },
   "ci-checks/e2e-areas/select.mjs": {
+    "ab/no-if-chains": {
+      "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -115,6 +146,9 @@
     }
   },
   "ci-checks/e2e-shards.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-depth": {
       "count": 1
     },
@@ -123,11 +157,32 @@
     }
   },
   "ci-checks/folder-cap.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 6
     }
   },
+  "ci-checks/jscpd-gate.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "ci-checks/knip-gate.mjs": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
+  "ci-checks/lint/lint-gate.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
   "ci-checks/lint/queries-gate.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -143,11 +198,17 @@
     }
   },
   "ci-checks/move-module/knip.ts": {
+    "ab/no-if-chains": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "ci-checks/move-module/map.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-depth": {
       "count": 1
     },
@@ -156,6 +217,9 @@
     }
   },
   "ci-checks/move-module/renames.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 8
     }
@@ -201,6 +265,9 @@
     "@typescript-eslint/no-dynamic-delete": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 8
+    },
     "complexity": {
       "count": 1
     },
@@ -214,6 +281,9 @@
     }
   },
   "ci-checks/owned-keys-check.mjs": {
+    "ab/no-if-chains": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -250,6 +320,9 @@
     }
   },
   "ci-checks/pure-move-tokens.mjs": {
+    "ab/no-if-chains": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -258,6 +331,9 @@
     }
   },
   "ci-checks/pure-move/baselines.mjs": {
+    "ab/no-shape-checks": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -271,16 +347,25 @@
     }
   },
   "ci-checks/pure-move/configs.mjs": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 7
     }
   },
   "ci-checks/pure-move/identifiers.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
   },
   "ci-checks/pure-move/move-e2e.mjs": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
@@ -335,6 +420,14 @@
     },
     "max-len": {
       "count": 8
+    },
+    "no-restricted-globals": {
+      "count": 1
+    }
+  },
+  "env/write-local-env.mjs": {
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "seed/clear-demo.fk.test.mjs": {
@@ -355,6 +448,9 @@
   "seed/seed-test-account.auth.mjs": {
     "max-len": {
       "count": 1
+    },
+    "no-restricted-globals": {
+      "count": 1
     }
   },
   "seed/seed-test-account.data.mjs": {
@@ -364,6 +460,11 @@
   },
   "seed/seed-test-account.mjs": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "seed/seed-test-account.plan.mjs": {
+    "ab/no-shape-checks": {
       "count": 1
     }
   }

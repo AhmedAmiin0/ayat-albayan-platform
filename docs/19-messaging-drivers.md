@@ -273,10 +273,14 @@ routes, so the script reaches the CRM **through** the platform (`modules/messagi
 - `POST /script-relay/api/v1/messages`, the script's body as it sends it today (`type` template / text /
   document; unknown keys stripped, `to` → E.164) → `201 {data:{message_id, whatsapp_message_id}}`.
 
-**Auth = the same CRM key.** Public like `/webhooks/*` (no user JWT); the `Authorization: Bearer` must equal the
-notifications line's own `WACRM_API_KEY` (the key the crm driver already sends with), compared in constant time.
-No new key or secret. Wrong or missing key → 401; notifications line not on the crm driver → 503; invalid body →
-422; failures use the CRM's envelope `{error:{message, code}}`.
+**Auth = the script's own CRM key.** Public like `/webhooks/*` (no user JWT). The CRM holds two keys on one
+account (11-01: «Apps Script - Booking messages», the script's, and «apis», the platform's `WACRM_API_KEY`), so
+the `Authorization: Bearer` is accepted when it is the notifications line's own key (constant time, no call) or
+when the CRM itself answers `GET /me` for it with the same `account.id` as the line's key and the
+`messages:send` scope (`relay.keys.ts`; an accepted key is remembered as its sha256 for 10 minutes). The send
+always goes with the line's key. No new key or secret. Wrong or missing key → 401; the CRM unreachable during
+the check → 502; notifications line not on the crm driver → 503; invalid body → 422; failures use the CRM's
+envelope `{error:{message, code}}`.
 
 **What happens.** One `messages` row (outbound, line notifications, the module-mode number stamped, no lead,
 guardian or staff, `created_by` null) is written first, with a readable body (template: `[name]` + its body
@@ -292,8 +296,8 @@ row is kept as «uncertain» (a retry in the window gets the first row back, uns
 
 **Cut-over (owner step).** In the Apps Script project → Project Settings → Script Properties, change `CRM_URL`
 only, to `<API origin>/script-relay` (production: `https://api.ayatalbayan.com/script-relay`, no trailing
-slash needed). `CRM_API_KEY` stays as it is (it must be the same key as `WACRM_API_KEY`). The notifications line
-must be on «نظام CRM». **Rollback:** set `CRM_URL` back to the CRM's own URL.
+slash needed). `CRM_API_KEY` stays as it is (any key of the CRM account with `messages:send`). The notifications
+line must be on «نظام CRM». **Rollback:** set `CRM_URL` back to the CRM's own URL (`https://crm.ayatalbayan.com`).
 
 ### Files imported from the old CRM: our own copy of all of them (owner 2026-10-27 «Fix it»)
 

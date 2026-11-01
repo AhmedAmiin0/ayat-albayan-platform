@@ -1,7 +1,7 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { ruleOf, timingOf } from '../../../common/rules/rule-of';
-import { Ticker } from '../reminders/ticker';
+import { ruleOf, timingOf } from '@/common/rules/rule-of';
+import { Ticker } from '@/modules/messaging/reminders/ticker';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import { FollowUpsReads } from './follow-ups.deps';
 import {
@@ -13,8 +13,8 @@ import {
   sameInstant,
   type FollowUpLeadRow,
 } from './follow-ups.plan';
-import { FollowUpsQueries } from './follow-ups.queries';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { FollowUpsRepo } from './follow-ups.repo';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
@@ -57,7 +57,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   });
 
   constructor(
-    private readonly queries: FollowUpsQueries,
+    private readonly queries: FollowUpsRepo,
     private readonly slots: FollowUpSlots,
     private readonly reads: FollowUpsReads,
   ) {}

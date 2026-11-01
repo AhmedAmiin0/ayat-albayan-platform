@@ -1,16 +1,16 @@
 import { joinWindowConfig, type TemplateKey } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { livekitEnv, loadEnv } from '../../../config/env/env';
-import { firstWebOrigin } from '../../teaching/classroom/classroom.config';
+import { livekitEnv, loadEnv } from '@/config/env/env';
+import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';
 import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './plan/reminders.links';
 import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './plan/reminders.plan';
-import { RemindersQueries } from './reminders.queries';
+import { RemindersRepo } from './reminders.repo';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { Ticker } from './ticker';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
@@ -45,7 +45,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
   });
 
   constructor(
-    private readonly queries: RemindersQueries,
+    private readonly queries: RemindersRepo,
     private readonly settings: RemindersSettings,
     private readonly deps: RemindersDeps,
   ) {}

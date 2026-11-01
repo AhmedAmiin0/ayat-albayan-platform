@@ -11,7 +11,7 @@ import {
 } from '../pricing/catalog.js';
 import { optionalText } from '@ab/core';
 import { instant, localDate } from '../../schedule/schemas/scheduling.js';
-import { calendarDaysBetween } from '../../time/index.js';
+import { calendarDaysBetween } from '@ab/time';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
 // a subscription is priced by the API from the catalog (docs/08), the same quote as /pricing.

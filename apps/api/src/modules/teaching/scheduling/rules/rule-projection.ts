@@ -1,6 +1,6 @@
-import type { BusyLesson, StudentBusyLesson } from '../conflicts/conflicts';
-import { localDateOf } from '../occurrences/horizon';
-import { ruleOccurrences, type RuleTiming, type UtcWindow } from '../occurrences/occurrences';
+import type { BusyLesson, StudentBusyLesson } from '@/modules/teaching/scheduling/conflicts/conflicts';
+import { localDateOf } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { ruleOccurrences, type RuleTiming, type UtcWindow } from '@/modules/teaching/scheduling/occurrences/occurrences';
 
 /** An active rule with its students (what projection needs from schedule_rules). */
 export type ProjectedRule = RuleTiming & {
@@ -33,21 +33,34 @@ export const generatedKey = (ruleId: string, localDate: string): string => `${ru
  * exactly like the generator skips it. `id` is the rule's id: there is no lesson row yet.
  */
 export function projectRules(input: ProjectionInput): Projected {
-  const wanted = new Set(input.studentIds);
   const window = {
     from: new Date(Math.max(input.span.from.getTime() - LOOKBACK_MS, input.now.getTime())),
     to: input.span.to,
   };
-  const out: Projected = { teacher: [], students: [] };
-  for (const rule of input.rules) {
-    for (const o of ruleOccurrences(rule, window)) {
-      if (input.generated.has(generatedKey(rule.id, localDateOf(o.starts_at, rule.tz)))) continue;
-      const busy: BusyLesson = { id: rule.id, ...o };
-      if (rule.teacher_id === input.teacherId) out.teacher.push(busy);
-      for (const s of rule.student_ids) {
-        if (wanted.has(s)) out.students.push({ ...busy, student_id: s });
-      }
-    }
-  }
-  return out;
+  const pending = input.rules.flatMap((rule) => pendingOf(rule, { input, window }));
+  const wanted = new Set(input.studentIds);
+  const teacher = pending.filter((p) => p.rule.teacher_id === input.teacherId).map((p) => p.busy);
+  const students = pending.flatMap(({ rule, busy }) =>
+    rule.student_ids.filter((s) => wanted.has(s)).map((s) => ({ ...busy, student_id: s })),
+  );
+  return { teacher, students };
+}
+
+interface Pending {
+  rule: ProjectedRule;
+  busy: BusyLesson;
+}
+
+interface PendingCtx {
+  input: ProjectionInput;
+  window: UtcWindow;
+}
+
+/** The rule's occurrences in the window that no generated row holds yet, in time order. */
+function pendingOf(rule: ProjectedRule, ctx: PendingCtx): Pending[] {
+  const held = (o: { starts_at: Date }): boolean =>
+    ctx.input.generated.has(generatedKey(rule.id, localDateOf(o.starts_at, rule.tz)));
+  return ruleOccurrences(rule, ctx.window)
+    .filter((o) => !held(o))
+    .map((o) => ({ rule, busy: { id: rule.id, ...o } }));
 }

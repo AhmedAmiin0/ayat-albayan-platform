@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, HttpCode, Param, Put } from '@nestjs/common';
+import { Controller, Delete, HttpCode, Param, Put } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { MeService } from './me.service';
 import { pushTokenBody, pushTokenSchema } from './push/push-tokens';
 
@@ -20,9 +22,17 @@ export class MeController {
    */
   @Put()
   @HttpCode(200)
-  add(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ deviceKey: string }> {
-    const { token, deviceKey } = parseOrThrow(pushTokenBody, body);
-    return this.me.addPushToken({ userId: user.id, token, deviceKey, sessionId: user.sessionId ?? null });
+  add(
+    @ZodBody(pushTokenBody) body: z.output<typeof pushTokenBody>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ deviceKey: string }> {
+    const { token, deviceKey } = body;
+    return this.me.addPushToken({
+      userId: user.id,
+      token,
+      deviceKey,
+      sessionId: user.sessionId ?? null,
+    });
   }
 
   /** The client sends the token URL-encoded (the brackets); 204 even when it was not stored. */

@@ -1,12 +1,12 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { whenText } from '@/booking/shared/slots';
+import { whenText } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { studentNames } from '@/today/lib/lesson-text';
+import { studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { MoveFields } from './MoveFields';
 import { useReschedule } from './queries';

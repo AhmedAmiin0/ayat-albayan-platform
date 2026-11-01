@@ -1,10 +1,10 @@
 import { vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { NumbersConfig } from './numbers.config';
-import { numberRow } from '../numbers.fakes';
-import type { NumbersQueries } from '../numbers.queries';
+import { numberRow } from '@/modules/messaging/numbers/numbers.fakes';
+import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import type { NumbersSecrets } from './numbers.secrets';
-import { NumbersSettings } from '../numbers.settings';
+import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 // Test-only (excluded from the build): a NumbersConfig over a stored source and fake rows (`defaults` =
 // each role's default enabled number, `all` = every wa_numbers row; no calls number unless a test
@@ -15,7 +15,7 @@ export function config(source: 'legacy' | 'module', defaults = vi.fn(async () =>
     defaults,
     all,
     callsDefault: vi.fn(async () => null),
-  } as unknown as NumbersQueries;
+  } as unknown as NumbersRepo;
   const secrets = { read: vi.fn(async () => ({ access_token: 'token-fake' })) } as unknown as NumbersSecrets;
   return new NumbersConfig(readerOf(NumbersSettings, { comms_source: source }), queries, secrets);
 }

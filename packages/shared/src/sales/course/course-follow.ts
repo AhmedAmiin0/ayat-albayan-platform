@@ -1,6 +1,6 @@
 import type { Duration } from '../../enums/index.js';
 import type { DayTime } from '../../schedule/lessons/series/day-times.js';
-import { addLocalDays, weekdayOfDate, zonedInstant } from '../../schedule/lessons/series/zoned.js';
+import { addLocalDays, weekdayOfDate, zonedInstant } from '@ab/time';
 
 // A booked course of the assistant (owner 2026-10-18): its weekdays and times, so a renewal can
 // continue on them («تابِع بنفس الأيام») and a running course can change them («تغيير أيام الحلقات»).

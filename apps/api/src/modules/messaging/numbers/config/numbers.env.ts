@@ -8,7 +8,7 @@ import {
   type WhatsappEnv,
 } from '@/config/env/env';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
-import type { NumberRow } from '@/modules/messaging/numbers/numbers.queries';
+import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
 // One number's own client config (docs/23 phase 5, docs/23c decision 3): the row's ids and ITS Vault
 // secrets only. A number never borrows another number's token or a legacy WA_* key (PR #142 item 15).
