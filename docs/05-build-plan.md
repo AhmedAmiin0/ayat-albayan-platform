@@ -5,7 +5,7 @@ The owner asked for: **use workflows (multi-agent) to build faster, Playwright f
 ## 0. Ground rules for the executing agent
 
 1. Read `CLAUDE.md`, `docs/03-requirements.md`, `docs/04-architecture.md` before writing code.
-2. Use the **Workflow** tool for every phase that has ≥ 3 independent work items (the user opted in: "use workflows to make it faster"). Pattern: `parallel()` builders per module → `pipeline()` into a reviewer/verifier agent per module → one integrator agent that gets the full test suite green in CI. Keep ≤ 10 agents per workflow run.
+2. Use the **Workflow** tool for every phase that has ≥ 3 independent work items (the user opted in: "use workflows to make it faster"). Pattern: `parallel()` builders per module → `pipeline()` into a reviewer/verifier agent per module → one integrator agent that gets the PR's CI green (lint, typecheck, unit tests and only the e2e specs the change reaches, desktop project only) and then the full e2e suite (all specs, both projects): the push run on develop after the merge, or `gh workflow run ci.yml --ref <branch>` before it (a manual run takes the full path in job «changes»: 8 shards plus «single line», no `--project` filter). Keep ≤ 10 agents per workflow run.
 3. Every agent prompt must repeat the two hard constraints: **≤150 lines per file, ≤3 params per function**, and "write unit tests in the same PR".
 4. Agents work in **git worktrees** (one branch per module) and merge through the integrator; never two agents on the same file.
 5. Each phase: builders → verifier (checks lint/typecheck/tests in CI or a cloud session, reads the diff against requirements IDs) → fix loop (max 2) → merge.
@@ -84,14 +84,16 @@ const verified = await parallel(built.map((b, i) => () =>
     { label: `verify:${MODULES[i].key}`, phase: 'Verify', isolation: 'worktree', schema: VERDICT_SCHEMA })))
 
 const result = await agent(`Merge all module branches into one integration branch, resolve conflicts, open its PR
-into develop and watch its GitHub Actions CI (lint typecheck test e2e) with gh pr checks --watch until green,
-fix integration issues, merge, write PHASE_SUMMARY.md with residual TODOs.`,
+into develop and watch its GitHub Actions CI with gh pr checks --watch until green (lint, typecheck, unit tests and
+the e2e specs the change reaches, desktop only). For the full suite (all specs, both projects) run
+gh workflow run ci.yml --ref <branch> and watch it with gh run watch, or watch the push run on develop after the
+merge. Fix integration issues, merge, write PHASE_SUMMARY.md with residual TODOs.`,
   { label: 'integrate', phase: 'Integrate' })
 return { verified, result }
 ```
 
 ## 3. Definition of done (per phase)
-- The PR's GitHub Actions CI is green: `pnpm turbo lint typecheck test`, from Phase 2 `pnpm turbo e2e` (a cloud session may run lint, typecheck and unit tests first; never the owner's PC).
+- The PR's GitHub Actions CI is green: `pnpm turbo lint typecheck test`, from Phase 2 `pnpm turbo e2e` (a cloud session may run lint, typecheck and unit tests first; never the owner's PC). A PR runs only the e2e specs its change reaches, desktop only; the full suite runs on the push to develop or with `gh workflow run ci.yml --ref <branch>`.
 - No file > 150 lines, no function > 3 params (lint enforces; CI fails otherwise).
 - Every requirement ID listed for the phase appears in a test name or a code comment `// R-XXX-nn`.
 - `PHASE_SUMMARY.md` lists what was built, tests added (count), residual TODOs/questions for the owner.

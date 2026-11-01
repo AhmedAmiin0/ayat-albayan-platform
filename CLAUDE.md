@@ -35,15 +35,15 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 - Before finishing any phase: the PR's GitHub Actions CI is green (lint, typecheck, test, e2e), watched with `gh pr checks <n> --watch` (failures: `gh run view <run> --log-failed`); write `PHASE_SUMMARY.md`.
 - Tests, lint, typecheck, builds, installs (`pnpm i`), Supabase, docker, expo and dev servers never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI. Where the data import runs is still open (see Commands).
 
-## Commands (never on the owner's PC; a cloud session runs only pnpm i and lint/typecheck/test, the rest needs CI's Docker/Supabase or the target's credentials; `pnpm migrate:*` follows `tools/migrate/RUNBOOK.md` until the owner decides)
+## Commands (never on the owner's PC; where each one runs is on its line)
 ```
-pnpm i
-pnpm supabase start            # local stack (packages/db)
-pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010
-pnpm turbo lint typecheck test
-pnpm turbo e2e                 # playwright (apps/web against seeded db)
-pnpm --filter mobile start     # expo
-pnpm migrate:dry && pnpm migrate:apply   # tools/migrate
+pnpm i                         # CI or a cloud session
+pnpm supabase start            # local stack (packages/db): CI only (ci.yml e2e job)
+pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010: no remote place to run (the e2e job starts its servers through Playwright webServer)
+pnpm turbo lint typecheck test # CI or a cloud session, with the ^build builds they depend on
+pnpm turbo e2e                 # playwright (apps/web against seeded db): CI only (ci.yml e2e job)
+pnpm --filter mobile start     # expo: no remote place to run; mobile is verified by CI «test mobile»/«bundle mobile» and mobile.yml
+pnpm migrate:dry && pnpm migrate:apply   # tools/migrate: follows tools/migrate/RUNBOOK.md until the owner decides
 ```
 
 ## Domain vocabulary
