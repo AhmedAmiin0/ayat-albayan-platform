@@ -9,7 +9,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { ThreadMessagesRepo, ThreadReadsRepo } from '@/modules/messaging/inbox/threads/store';
+import { ThreadMessagesRepo, ThreadReadsRepo } from '@/modules/messaging/inbox';
 import { CallsSettings } from './calls.settings';
 import { FakeCallsRepo, fakeApi, FAMILY } from './calls.fakes';
 import { CALLS_API } from './kapso/calls-api';

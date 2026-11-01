@@ -2,7 +2,7 @@
 import type { PushService } from '@/common/push/push.service';
 import type { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import { meetingQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';

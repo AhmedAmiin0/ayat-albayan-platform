@@ -18,4 +18,4 @@ export {
 } from './teacher-threads/teacher-scope';
 export { phoneParam } from './threads/phone-param';
 export { type ThreadListFilter, ThreadsRepo } from './threads/threads.repo';
-export { ThreadMessagesRepo } from './threads/store';
+export { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
