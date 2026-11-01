@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { cityOf } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { DayChips } from './DayChips';

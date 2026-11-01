@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { CATEGORIES, EXPENSE } from '../shared/fixtures';
+import { CATEGORIES, EXPENSE } from '@/finance/shared/fixtures';
 import { ExpensesScreen } from './ExpensesScreen';
 
 const mockApiFetch = jest.fn();
@@ -13,7 +13,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 const mockPicked = { uri: 'file://slip.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(4), size: 4 };
-jest.mock('@/payments/ReceiptPicker', () => {
+jest.mock('@/core/ui/form/ReceiptPicker', () => {
   const { Pressable } = jest.requireActual('react-native');
   return { ReceiptPicker: ({ onChange }: { onChange: (r: unknown) => void }) => <Pressable accessibilityRole="button" accessibilityLabel="pick-receipt" onPress={() => onChange(mockPicked)} /> };
 });

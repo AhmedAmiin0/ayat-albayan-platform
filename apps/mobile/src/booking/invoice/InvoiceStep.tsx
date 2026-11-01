@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChatMediaSheet } from './ChatMediaSheet';
 import type { InvoiceDraft } from '@/booking/shared/contract';

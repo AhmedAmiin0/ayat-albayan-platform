@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
-import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
+import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ShortfallNote } from '@/payments';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';

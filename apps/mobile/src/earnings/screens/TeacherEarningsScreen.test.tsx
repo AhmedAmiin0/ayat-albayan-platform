@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { BALANCE, page, PAYMENT, SESSIONS } from '../testing/fixtures';
+import { BALANCE, page, PAYMENT, SESSIONS } from '@/earnings/testing/fixtures';
 import { TeacherEarningsScreen } from './TeacherEarningsScreen';
 
 const mockApiFetch = jest.fn();
@@ -12,7 +12,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...a: unknown[]) => mockApiSend(...a),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() }, useLocalSearchParams: () => ({ id: 't1' }) }));
-jest.mock('@/payments/ReceiptPicker', () => ({ ReceiptPicker: () => null }));
+jest.mock('@/core/ui/form/ReceiptPicker', () => ({ ReceiptPicker: () => null }));
 
 beforeEach(() => {
   jest.clearAllMocks();

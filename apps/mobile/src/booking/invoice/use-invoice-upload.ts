@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { isOffline } from '@/payments/lib/payment-errors';
+import { isOffline } from '@/core/lib/money/payment-errors';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';
 import type { InvoiceDraft } from '@/booking/shared/contract';
 import { uploadInvoice } from './invoice-upload';

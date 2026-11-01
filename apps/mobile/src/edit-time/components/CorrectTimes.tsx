@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import { dayLabel } from '@/calendar/lib/week';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { SlotButton } from '@/teaching/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';
 import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { correctStarts } from '../lib/edit-time-body';
+import { correctStarts } from '@/edit-time/lib/edit-time-body';
 
 interface CorrectTimesProps {
   lesson: LessonView;

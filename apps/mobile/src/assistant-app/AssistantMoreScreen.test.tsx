@@ -4,11 +4,11 @@ import { PROFILE_KEY } from '@/account/hooks/queries';
 import { t } from '@/core/lib/i18n/i18n';
 import { profileFixture } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { signOutDevice } from '@/more/sign-out';
+import { signOutDevice } from '@/core/lib/session/sign-out';
 import { AssistantMoreScreen } from './AssistantMoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const seeded = () => {
   const client = createTestQueryClient();

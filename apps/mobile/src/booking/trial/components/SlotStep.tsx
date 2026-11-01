@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { SlotButton } from '@/teaching/reschedule/SlotButton';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { type, useTheme } from '@/theme';
 import { MultiFooter } from './MultiFooter';
-import { useSlots } from '../../shared/queries';
-import { freeSlotDays, slotWindow, windowStart } from '../../shared/slots';
+import { useSlots } from '@/booking/shared/queries';
+import { freeSlotDays, slotWindow, windowStart } from '@/booking/shared/slots';
 
 /** A weekly package: one slot per weekday of the family's zone, each with its own time. */
 export interface SlotMulti {
