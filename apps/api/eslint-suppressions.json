@@ -8158,14 +8158,6 @@
       "count": 2
     }
   },
-  "src/modules/people/roles/roles.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/modules/people/sign-in/accounts/auth-gate.supabase.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
@@ -8795,17 +8787,9 @@
       "count": 5
     }
   },
-  "src/modules/people/users/store/users.repo.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/people/users/store/users.repo.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/people/users/store/users.store.ts": {
