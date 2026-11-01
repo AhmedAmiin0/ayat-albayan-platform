@@ -1406,7 +1406,7 @@
   },
   "src/sales/payment-link/schemas.test.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/payment-link/schemas.ts": {

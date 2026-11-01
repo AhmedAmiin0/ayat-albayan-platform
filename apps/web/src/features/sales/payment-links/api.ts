@@ -3,17 +3,16 @@ import type {
   PaymentLinkQuoteView,
   PaymentLinkView,
   PublicPaymentLink,
-  StripeAdminSettings,
   StripeFeature,
-  StripeSettingsPatch,
   SubscriptionPricing,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 
-// «رابط دفع» (docs/30, TEST BUILD ONLY): /stripe/feature, /sales/payment-links, /pay/:token and
-// /admin/stripe/settings. Each read is asked only behind stripeBuild(); a 404 means the server has no Stripe.
+// «رابط دفع» (docs/30, TEST BUILD ONLY): /stripe/feature, /sales/payment-links and /pay/:token (the
+// switch and the keys are integration keys, «التكاملات»). Each read is asked only behind
+// stripeBuild(); a 404 means the server has no Stripe.
 
 /** Her links and their quotes. */
 export const PAYMENT_LINKS_KEY = ['sales', 'payment-links'] as const;
@@ -49,12 +48,3 @@ export const publicLinkQuery = (token: string) =>
 
 /** «ادفع الآن» is a browser navigation (303 to Stripe Checkout, or back to the page), never a fetch. */
 export const checkoutUrl = (token: string): string => `${env.apiUrl}/pay/${encodeURIComponent(token)}/checkout`;
-
-/** GET /admin/stripe/settings: 200 whenever the server has the feature env, 404 otherwise. */
-export const stripeSettingsQuery = queryOptions({
-  queryKey: ['admin', 'stripe', 'settings'],
-  queryFn: () => apiFetch<StripeAdminSettings>('/admin/stripe/settings'),
-  retry: false,
-});
-
-export const patchStripeSettings = (body: StripeSettingsPatch) => apiSend<StripeAdminSettings>('PATCH', '/admin/stripe/settings', body);

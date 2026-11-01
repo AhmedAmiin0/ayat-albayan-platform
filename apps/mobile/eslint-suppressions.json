@@ -7794,11 +7794,6 @@
       "count": 3
     }
   },
-  "src/ops/comms/use-line-drivers.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/ops/dashboard/DashboardScreen.en.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
@@ -8189,42 +8184,6 @@
   "src/ops/settings/catalogue-words.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/ops/settings/stripe/SecretInput.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/ops/settings/stripe/StripeSettings.gate.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/ops/settings/stripe/StripeSettingsForm.tsx": {
-    "max-len": {
-      "count": 6
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/ops/settings/stripe/StripeSettingsRow.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/ops/settings/stripe/StripeSettingsScreen.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/ops/settings/stripe/stripe-settings-api.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/ops/shared/fixtures.ts": {

@@ -96,6 +96,22 @@ describe('/settings/integrations («التكاملات»)', () => {
     expect(q.setSecret).not.toHaveBeenCalled();
   });
 
+  it('a Stripe key must be a sandbox key: a live one is 400 and never stored, echoed or audited', async () => {
+    const url = '/settings/integrations/secrets/STRIPE_API_KEY';
+    for (const value of ['sk_live_51LiveAbc', 'rk_live_51LiveAbc', 'pk_test_51LiveAbc']) {
+      const res = await call({ method: 'PUT', url, payload: { value } });
+      expect([res.statusCode, res.json().issues[0].message]).toEqual([400, 'stripe_live_key_refused']);
+      expect(res.body).not.toContain('LiveAbc');
+    }
+    expect(q.setSecret).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+    expect((await call({ method: 'PUT', url, payload: { value: ' rk_test_51Abc ' } })).statusCode).toBe(200);
+    expect(q.setSecret).toHaveBeenCalledWith({ key: 'STRIPE_API_KEY', value: 'rk_test_51Abc' });
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'secret_set:STRIPE_API_KEY', after: { keys: ['STRIPE_API_KEY'] } }));
+    const hook = await call({ method: 'PUT', url: '/settings/integrations/secrets/STRIPE_WEBHOOK_SECRET', payload: { value: 'abc' } });
+    expect(hook.statusCode).toBe(400);
+  });
+
   it('DELETE a secret clears it (env applies again) and audits the key', async () => {
     const res = await call({ method: 'DELETE', url: '/settings/integrations/secrets/LIVEKIT_API_SECRET' });
     expect(res.statusCode).toBe(200);

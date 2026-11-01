@@ -16,7 +16,6 @@ const real = new Stripe('sk_test_offline', { apiVersion: '2026-09-30.endive' });
 
 export function stripeMocks() {
   return {
-    settings: { read: vi.fn(), write: vi.fn(), secret: vi.fn(), setSecret: vi.fn(), clearSecret: vi.fn(), secretDates: vi.fn() },
     links: {
       insert: vi.fn(), byRequest: vi.fn(), get: vi.fn(), byToken: vi.fn(), byPaymentIntent: vi.fn(), list: vi.fn(),
       forStudent: vi.fn(), cancel: vi.fn(), setSession: vi.fn(), setProcessing: vi.fn(), markPaid: vi.fn(), student: vi.fn(), attribute: vi.fn(),
@@ -52,15 +51,17 @@ export function linkRow(patch: Partial<LinkRow> = {}): LinkRow {
   };
 }
 
-/** Gate ON (DB switch on, sandbox keys saved), the link open, no event seen yet. */
+/** Gate ON («الدفع الإلكتروني» on, sandbox keys saved, no cap), the link open, no event seen yet. */
 export function stripeDefaults(s: StripeMocks): void {
-  for (const group of [s.settings, s.links, s.events, s.limit, s.push, s.teachers, s.stripe.checkout.sessions, s.stripe.refunds])
+  for (const group of [s.links, s.events, s.limit, s.push, s.teachers, s.stripe.checkout.sessions, s.stripe.refunds])
     for (const fn of Object.values(group)) fn.mockReset();
   s.teachers.ensureActive.mockResolvedValue(undefined);
   s.teachers.assign.mockResolvedValue(true);
-  s.settings.read.mockResolvedValue({ stripe_enabled: true, max_discount_pct: null });
-  s.settings.secret.mockImplementation(async (name: string) => (name === 'api_key' ? 'rk_test_abc123' : WHSEC));
-  s.settings.secretDates.mockResolvedValue(new Map());
+  // The integration keys, read per call through loadEnv() (no DB overlay under vitest).
+  vi.stubEnv('STRIPE_ENABLED', 'true');
+  vi.stubEnv('STRIPE_API_KEY', 'rk_test_abc123');
+  vi.stubEnv('STRIPE_WEBHOOK_SECRET', WHSEC);
+  vi.stubEnv('STRIPE_MAX_DISCOUNT_PCT', '');
   s.links.byRequest.mockResolvedValue(null);
   s.links.get.mockResolvedValue(linkRow());
   s.links.byToken.mockResolvedValue(linkRow());

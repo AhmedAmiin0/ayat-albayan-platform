@@ -19,18 +19,6 @@ export function linkAmountProblem(input: { amount: number; reference: number; ma
   return min !== null && input.amount + 1e-9 < min ? 'discount_too_large' : null;
 }
 
-/** The test build accepts Stripe TEST keys only: a restricted or secret key of a sandbox. */
-export const isStripeTestKey = (key: string): boolean => /^(rk|sk)_test_[A-Za-z0-9]+$/.test(key.trim());
-export const isStripeLiveKey = (key: string): boolean => /^(rk|sk|pk)_live_/.test(key.trim());
-export const isWebhookSecret = (s: string): boolean => /^whsec_[A-Za-z0-9+/=]+$/.test(s.trim());
-
-/** «rk_test_••••abcd»: never more than the prefix and the last 4. */
-export function maskSecret(value: string): string {
-  const v = value.trim();
-  const prefix = /^[a-z]+_(test_)?/.exec(v)?.[0] ?? '';
-  return `${prefix}••••${v.length > prefix.length + 8 ? v.slice(-4) : ''}`;
-}
-
 /** What a stored status means now: an open link past its expiry is expired. */
 export function effectiveLinkStatus(link: { status: PaymentLinkStatus; expires_at: string }, now: Date): PaymentLinkStatus {
   return link.status === 'open' && Date.parse(link.expires_at) <= now.getTime() ? 'expired' : link.status;

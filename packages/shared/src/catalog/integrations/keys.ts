@@ -4,7 +4,7 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'stripe'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -31,6 +31,7 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WEB_PUSH_SUBJECT',
   'FX_API_URL',
   'GOOGLE_CLIENT_ID',
+  'STRIPE_ENABLED', 'STRIPE_MAX_DISCOUNT_PCT',
 ] as const;
 
 /** Never returned, logged or audited: only their names and whether they are set. */
@@ -50,6 +51,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
   'CALLS_TURN_SECRET',
+  'STRIPE_API_KEY', 'STRIPE_WEBHOOK_SECRET',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -108,6 +110,9 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   // Google sync (docs/24): the owner's OAuth client; the refresh token never appears here (its own Vault entry).
   GOOGLE_CLIENT_ID: 'google',
   GOOGLE_CLIENT_SECRET: 'google',
+  // Stripe (docs/30, TEST BUILD ONLY): the API lists these with FEATURE_STRIPE=test only.
+  STRIPE_ENABLED: 'stripe', STRIPE_API_KEY: 'stripe',
+  STRIPE_WEBHOOK_SECRET: 'stripe', STRIPE_MAX_DISCOUNT_PCT: 'stripe',
 };
 
 const SECRET_SET: ReadonlySet<string> = new Set(INTEGRATION_SECRET_KEYS);
@@ -116,7 +121,6 @@ const PLAIN_SET: ReadonlySet<string> = new Set(INTEGRATION_PLAIN_KEYS);
 export const isIntegrationSecretKey = (k: string): k is IntegrationSecretKey => SECRET_SET.has(k);
 export const isIntegrationPlainKey = (k: string): k is IntegrationPlainKey => PLAIN_SET.has(k);
 export const isIntegrationKey = (k: string): k is IntegrationKey => SECRET_SET.has(k) || PLAIN_SET.has(k);
-
 /** Every key in form order: group by group, as GROUP_OF lists them. */
 export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (Object.keys(GROUP_OF) as IntegrationKey[])
   .map((key) => ({ key, group: GROUP_OF[key], secret: SECRET_SET.has(key), i18n: `integrations.keys.${key}` as const }))
@@ -132,6 +136,7 @@ export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly str
   WA_CHAT_PROVIDER: WA_PROVIDERS,
   // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
   WA_TEMPLATE_SYNC: ['true', 'false'],
+  STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.
 };
 
 /** The allowed values of an enum key, or null for a free-text key. */

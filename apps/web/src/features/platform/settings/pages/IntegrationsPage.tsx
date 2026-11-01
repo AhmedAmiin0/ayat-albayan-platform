@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { INTEGRATIONS_PAGE_GROUPS } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { StripeSettingsSection } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 import { ModuleHead } from './ModuleHead';
 
@@ -13,8 +12,8 @@ const h = t.communicationsHub;
  * /admin/settings/integrations «التكاملات» (docs/26b §3): the services that are not messaging
  * (LiveKit, Expo, Web Push, exchange rates, Google's OAuth client). The WhatsApp, Kapso and safety
  * groups moved to «التواصل» (docs/23 phase 6), which the line on top links to. Google's sync has its
- * own page; an OAuth return here is sent there by the route. In the Stripe test build only, «الدفع
- * الإلكتروني (اختبار)» follows (docs/30), sharing the page's one toast.
+ * own page; an OAuth return here is sent there by the route. On a server with FEATURE_STRIPE=test the
+ * Stripe group («الدفع الإلكتروني») is one of the groups (docs/30): its switch, keys and cap.
  */
 export function IntegrationsPage() {
   const [note, setNote] = useState<string | null>(null);
@@ -35,7 +34,6 @@ export function IntegrationsPage() {
       <div className="[&>section>h2]:sr-only">
         <IntegrationsPanel query="" onSaved={setNote} groups={INTEGRATIONS_PAGE_GROUPS} />
       </div>
-      <StripeSettingsSection onSaved={setNote} />
       {note && <Toast message={note} onDismiss={() => setNote(null)} />}
     </>
   );

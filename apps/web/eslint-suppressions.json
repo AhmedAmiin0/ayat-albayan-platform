@@ -9178,7 +9178,7 @@
   },
   "src/features/sales/payment-links/api.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/sales/payment-links/errors.ts": {
@@ -9222,67 +9222,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/features/sales/payment-links/settings/SecretField.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/features/sales/payment-links/settings/StripeSettingsForm.test.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/sales/payment-links/settings/StripeSettingsForm.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/sales/payment-links/settings/StripeSettingsSection.test.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/sales/payment-links/settings/StripeSettingsSection.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/sales/payment-links/settings/WebhookUrlField.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/features/sales/payment-links/settings/settings-patch.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/sales/payment-links/settings/settings-patch.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/features/sales/payment-links/stripe-build.ts": {

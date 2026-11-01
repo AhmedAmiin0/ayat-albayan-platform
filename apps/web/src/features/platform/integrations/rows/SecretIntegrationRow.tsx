@@ -1,4 +1,4 @@
-import { isIntegrationSecretKey, type IntegrationConfigItem } from '@ab/shared';
+import { integrationSecretCheck, isIntegrationSecretKey, type IntegrationConfigItem } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
@@ -17,7 +17,8 @@ const s = t.integrations;
 
 /**
  * A secret (token, app secret, API key): never prefilled, never shown. A status chip, a password
- * field with «حفظ القيمة», and «مسح» (after a confirm) when it is saved in settings.
+ * field with «حفظ القيمة», and «مسح» (after a confirm) when it is saved in settings. A key with a
+ * format of its own (a Stripe key: sandbox only) is checked before it leaves, as the API checks it.
  */
 export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfigItem; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();
@@ -46,10 +47,13 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
   });
   if (!isIntegrationSecretKey(item.key)) return null;
   const key = item.key;
+  const typed = value.trim();
+  const invalid = typed !== '' && !integrationSecretCheck(key).safeParse(typed).success;
   return (
     <SettingRow
       label={words.label}
       hint={words.hint}
+      error={invalid ? s.invalid : undefined}
       extra={
         <>
           <SecretStatusChip item={item} />
@@ -70,7 +74,7 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
-          <Button type="button" size="sm" disabled={value.trim() === '' || save.isPending} onClick={() => save.mutate({ key, value: value.trim() })}>
+          <Button type="button" size="sm" disabled={typed === '' || invalid || save.isPending} onClick={() => save.mutate({ key, value: typed })}>
             {s.saveSecret}
           </Button>
           {item.source === 'db' && (

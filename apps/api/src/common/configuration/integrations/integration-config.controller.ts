@@ -1,4 +1,10 @@
-import { INTEGRATION_SECRET_KEYS, integrationSecretSchema, integrationValuesSchema, type IntegrationConfigItem } from '@ab/shared';
+import {
+  INTEGRATION_SECRET_KEYS,
+  integrationSecretCheck,
+  integrationSecretSchema,
+  integrationValuesSchema,
+  type IntegrationConfigItem,
+} from '@ab/shared';
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -42,12 +48,13 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
+  /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused. */
   @Put('secrets/:key')
   @Permissions('settings.write')
   async putSecret(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
     const key = parseOrThrow(secretKey, rawKey);
     const { value } = parseOrThrow(integrationSecretSchema, body);
-    await this.config.setSecret({ key, value });
+    await this.config.setSecret({ key, value: parseOrThrow(integrationSecretCheck(key), value) });
     await this.record(user, { action: `secret_set:${key}`, keys: [key] });
     return this.config.items();
   }

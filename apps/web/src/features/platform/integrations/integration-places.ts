@@ -20,8 +20,16 @@ export const SAFETY_GROUPS: readonly IntegrationGroup[] = [...SAFETY_GUARD_GROUP
 /** «التواصل» › «الأرقام» › «إعداد الخطوط السابق»: the two legacy WhatsApp lines. */
 export const LEGACY_LINE_GROUPS: readonly IntegrationGroup[] = ['wa_notifications', 'wa_chat'];
 
-/** «التكاملات»: everything that is not messaging. */
-export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = ['calls', 'livekit', 'expo', 'web_push', 'fx', 'google'];
+/** «التكاملات»: everything that is not messaging (Stripe: listed in the test build only). */
+export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = [
+  'calls',
+  'livekit',
+  'expo',
+  'web_push',
+  'fx',
+  'google',
+  'stripe',
+];
 
 /** Does the search match a key of these groups (label, hint or name)? Static: no fetch. */
 export const groupsMatch =
