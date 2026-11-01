@@ -5,6 +5,9 @@
     }
   },
   "public/sw.js": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -90,6 +93,9 @@
     "@typescript-eslint/no-base-to-string": {
       "count": 3
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -146,6 +152,9 @@
     }
   },
   "src/components/settings/search/setting-text.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -320,6 +329,9 @@
   },
   "src/components/shell/nav/use-nav-counts.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -660,6 +672,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 9
+    },
     "max-len": {
       "count": 4
     }
@@ -733,6 +748,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -855,6 +873,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 6
     },
     "max-len": {
       "count": 7
@@ -1077,6 +1098,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 9
+    },
     "max-len": {
       "count": 1
     }
@@ -1207,6 +1231,11 @@
       "count": 1
     }
   },
+  "src/features/finance/pricing/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    }
+  },
   "src/features/finance/pricing/calculator/CalcSteps.tsx": {
     "max-len": {
       "count": 1
@@ -1280,6 +1309,9 @@
   "src/features/finance/subscriptions/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 8
     },
     "max-len": {
       "count": 2
@@ -1406,6 +1438,9 @@
     }
   },
   "src/features/finance/subscriptions/create/pricing-form.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1416,6 +1451,9 @@
     }
   },
   "src/features/finance/subscriptions/format.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 7
     }
@@ -1525,6 +1563,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 7
     },
     "max-len": {
       "count": 5
@@ -1751,11 +1792,17 @@
     }
   },
   "src/features/messaging/inbox/api/api.files.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/messaging/inbox/api/api.forward.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -1763,6 +1810,9 @@
   "src/features/messaging/inbox/api/api.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 15
     },
     "max-len": {
       "count": 13
@@ -1795,6 +1845,9 @@
     }
   },
   "src/features/messaging/inbox/api/thread-delta.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -2053,6 +2106,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -2075,6 +2131,9 @@
     }
   },
   "src/features/messaging/inbox/lead/link-family.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -2184,6 +2243,9 @@
     }
   },
   "src/features/messaging/inbox/lists/lib/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -2389,6 +2451,11 @@
       "count": 1
     }
   },
+  "src/features/messaging/inbox/messages/hide/use-hide.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/messages/lib/bubble-offers.ts": {
     "max-len": {
       "count": 1
@@ -2448,6 +2515,12 @@
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -2477,6 +2550,9 @@
   },
   "src/features/messaging/inbox/messages/reply-actions/RescheduleLessonDrawer.tsx": {
     "ab/forbidden-imports": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "max-len": {
@@ -2719,6 +2795,9 @@
     }
   },
   "src/features/messaging/inbox/saved-replies/lib/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 3
     }
@@ -3018,11 +3097,20 @@
     }
   },
   "src/features/messaging/messaging/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/messaging/messaging/gate-api.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
@@ -3094,6 +3182,9 @@
     }
   },
   "src/features/messaging/notification-catalogue/catalogue-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3217,6 +3308,9 @@
     }
   },
   "src/features/messaging/notification-rules/rule-drafts.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -3228,13 +3322,27 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/features/messaging/notification-rules/rule-timing.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
+    }
+  },
+  "src/features/messaging/notification-rules/rules-api.ts": {
+    "ab/no-shape-checks": {
+      "count": 3
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
     }
   },
   "src/features/messaging/notification-rules/rules-context.ts": {
@@ -3303,6 +3411,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 5
+    },
     "max-len": {
       "count": 5
     },
@@ -3360,6 +3471,11 @@
   "src/features/messaging/notifications/NotificationPanel.test.tsx": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/messaging/notifications/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
     }
   },
   "src/features/messaging/notifications/format.ts": {
@@ -3422,9 +3538,15 @@
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 3
     }
   },
   "src/features/messaging/notifications/web-push/web-push.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -3469,6 +3591,9 @@
   "src/features/messaging/numbers/card/NumberTemplateSync.tsx": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/no-if-chains": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -3533,6 +3658,11 @@
       "count": 1
     }
   },
+  "src/features/messaging/numbers/form/number-errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
   "src/features/messaging/numbers/form/number-form.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -3567,6 +3697,9 @@
     }
   },
   "src/features/messaging/numbers/numbers-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 10
+    },
     "max-len": {
       "count": 3
     }
@@ -3647,6 +3780,9 @@
   "src/features/messaging/templates/api.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 11
     },
     "max-len": {
       "count": 10
@@ -3850,12 +3986,20 @@
       "count": 2
     }
   },
+  "src/features/people/account/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    }
+  },
   "src/features/people/account/avatar-file.ts": {
     "max-len": {
       "count": 1
     }
   },
   "src/features/people/account/errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -3942,6 +4086,9 @@
   "src/features/people/assistants/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 5
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 11
     },
     "max-len": {
       "count": 10
@@ -4198,6 +4345,9 @@
   "src/features/people/assistants/terms/TermsEditor.tsx": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
     }
   },
   "src/features/people/assistants/terms/TermsFields.tsx": {
@@ -4311,6 +4461,12 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 5
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -4392,6 +4548,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -4431,6 +4590,9 @@
     }
   },
   "src/features/people/portal/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 3
     }
@@ -4490,6 +4652,9 @@
     }
   },
   "src/features/people/roles/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 1
     }
@@ -4517,7 +4682,15 @@
       "count": 1
     }
   },
+  "src/features/people/staff-photo/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    }
+  },
   "src/features/people/staff-photo/photo-error.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -4530,6 +4703,9 @@
   "src/features/people/students/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 7
     },
     "max-len": {
       "count": 1
@@ -4886,6 +5062,9 @@
     }
   },
   "src/features/people/students/recordings/recordings-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -4917,6 +5096,9 @@
   "src/features/people/teachers/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 4
     },
     "max-len": {
       "count": 3
@@ -4957,6 +5139,9 @@
       "count": 1
     },
     "ab/forbidden-imports": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "max-len": {
@@ -5095,6 +5280,9 @@
     },
     "ab/forbidden-imports": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -5273,6 +5461,9 @@
     }
   },
   "src/features/people/users/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 9
+    },
     "max-len": {
       "count": 1
     }
@@ -5396,7 +5587,15 @@
       "count": 2
     }
   },
+  "src/features/platform/custom-config/custom-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    }
+  },
   "src/features/platform/custom-config/custom-form.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -5508,11 +5707,17 @@
     }
   },
   "src/features/platform/google-sync/google-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 16
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/platform/google-sync/google-format.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -5644,7 +5849,15 @@
       "count": 3
     }
   },
+  "src/features/platform/integrations/integrations-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 4
+    }
+  },
   "src/features/platform/integrations/integrations-form.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -5679,6 +5892,11 @@
     },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/platform/presence/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
     }
   },
   "src/features/platform/settings/SaveBar.tsx": {
@@ -5730,6 +5948,9 @@
   "src/features/platform/settings/hub/hub-status.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
     },
     "max-len": {
       "count": 6
@@ -5947,6 +6168,9 @@
     }
   },
   "src/features/platform/settings/pages/page-search.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 8
     }
@@ -5984,6 +6208,9 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "complexity": {
       "count": 1
     },
@@ -6016,6 +6243,9 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -6026,6 +6256,9 @@
     }
   },
   "src/features/platform/settings/registry-form/settings-scope.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -6056,6 +6289,11 @@
   },
   "src/features/platform/settings/sections/SectionFields.tsx": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/settings-meta-api.ts": {
+    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -6218,6 +6456,9 @@
     }
   },
   "src/features/platform/settings/values/description/description.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -6286,11 +6527,17 @@
     }
   },
   "src/features/platform/settings/values/hooks/entry-save-result.ts": {
+    "ab/no-shape-checks": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/features/platform/settings/values/hooks/save-result.ts": {
+    "ab/no-shape-checks": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -6366,6 +6613,9 @@
   },
   "src/features/platform/settings/values/lib/value-format.ts": {
     "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
       "count": 1
     },
     "complexity": {
@@ -6480,6 +6730,9 @@
     }
   },
   "src/features/platform/settings/values/values-search.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -6498,6 +6751,9 @@
   "src/features/platform/translations/TranslationEditor.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 5
     },
     "max-len": {
       "count": 4
@@ -6540,6 +6796,11 @@
       "count": 2
     }
   },
+  "src/features/platform/translations/translations.api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    }
+  },
   "src/features/reporting/activity/ActivityPage.test.tsx": {
     "max-len": {
       "count": 1
@@ -6551,7 +6812,15 @@
     }
   },
   "src/features/reporting/activity/activity-format.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/activity/activity.api.ts": {
+    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -6581,6 +6850,11 @@
   "src/features/reporting/dashboard/PeriodSection.tsx": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
     }
   },
   "src/features/reporting/dashboard/charts.test.tsx": {
@@ -6745,6 +7019,14 @@
       "count": 1
     }
   },
+  "src/features/reporting/exports/api.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "no-restricted-globals": {
+      "count": 1
+    }
+  },
   "src/features/reporting/reports/ReportFormPage.invalid.test.tsx": {
     "max-len": {
       "count": 1
@@ -6769,6 +7051,9 @@
     }
   },
   "src/features/reporting/reports/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 12
+    },
     "max-len": {
       "count": 3
     }
@@ -6895,6 +7180,9 @@
     }
   },
   "src/features/reporting/reports/entry-v2/use-report-entry-v2.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -6963,6 +7251,9 @@
   },
   "src/features/reporting/reports/entry/use-autosave.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
       "count": 1
     },
     "max-len": {
@@ -7093,6 +7384,11 @@
       "count": 1
     }
   },
+  "src/features/sales/leads/leads.api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    }
+  },
   "src/features/sales/leads/list/AssignUnassignedButton.tsx": {
     "ab/module-boundaries": {
       "count": 1
@@ -7169,6 +7465,9 @@
     }
   },
   "src/features/sales/payment-links/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 2
     }
@@ -7179,6 +7478,9 @@
     }
   },
   "src/features/sales/payment-links/link-text.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -7306,6 +7608,9 @@
   "src/features/sales/sales-money/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 10
     },
     "max-len": {
       "count": 8
@@ -7538,6 +7843,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -7689,6 +7997,9 @@
     }
   },
   "src/features/sales/sales/academy-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 5
+    },
     "max-len": {
       "count": 2
     }
@@ -7699,6 +8010,9 @@
     }
   },
   "src/features/sales/sales/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 8
+    },
     "max-len": {
       "count": 2
     }
@@ -7823,6 +8137,9 @@
     "ab/forbidden-imports": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -7863,6 +8180,9 @@
   },
   "src/features/sales/sales/schedule/SalesConfirmLesson.tsx": {
     "ab/forbidden-imports": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "max-len": {
@@ -8102,6 +8422,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -8195,6 +8518,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 9
     },
+    "ab/no-untyped-api-calls": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
@@ -8252,6 +8578,9 @@
     }
   },
   "src/features/teaching/booking/course-change/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -8405,6 +8734,9 @@
     }
   },
   "src/features/teaching/booking/invoice/api.invoice.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 3
     }
@@ -8655,6 +8987,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -8727,13 +9062,36 @@
     }
   },
   "src/features/teaching/classroom/api/api.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 9
+    },
     "max-len": {
       "count": 4
+    },
+    "no-restricted-globals": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/api/meetings-api.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
+    "no-restricted-globals": {
+      "count": 1
     }
   },
   "src/features/teaching/classroom/api/moderation-api.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 2
     },
     "max-len": {
       "count": 6
@@ -8786,6 +9144,9 @@
   "src/features/teaching/classroom/board/model/messages.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 3
     },
     "complexity": {
       "count": 2
@@ -8920,6 +9281,9 @@
     }
   },
   "src/features/teaching/classroom/join/staff-link.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -9041,12 +9405,20 @@
       "count": 1
     }
   },
+  "src/features/teaching/classroom/room/livekit/connect-failure.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
   "src/features/teaching/classroom/room/livekit/errors.test.ts": {
     "max-len": {
       "count": 1
     }
   },
   "src/features/teaching/classroom/room/livekit/errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -9138,6 +9510,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-if-chains": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -9171,6 +9546,9 @@
     }
   },
   "src/features/teaching/classroom/share/share-messages.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -9237,6 +9615,11 @@
       "count": 1
     }
   },
+  "src/features/teaching/course-actions/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    }
+  },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
     "max-len": {
       "count": 2
@@ -9286,6 +9669,9 @@
     }
   },
   "src/features/teaching/course-pause/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 6
+    },
     "max-len": {
       "count": 5
     }
@@ -9331,8 +9717,17 @@
     "@typescript-eslint/dot-notation": {
       "count": 6
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
+    },
+    "no-restricted-globals": {
+      "count": 1
     }
   },
   "src/features/teaching/feedback/feedback-columns.tsx": {
@@ -9490,8 +9885,17 @@
     }
   },
   "src/features/teaching/meetings/internal/internal-api.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 4
+    },
+    "no-restricted-globals": {
+      "count": 1
     }
   },
   "src/features/teaching/meetings/invitees/InviteResultRow.tsx": {
@@ -9549,6 +9953,9 @@
     }
   },
   "src/features/teaching/meetings/invitees/meeting-invites-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 5
+    },
     "max-len": {
       "count": 5
     }
@@ -9645,6 +10052,9 @@
   "src/features/teaching/schedule/api.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 11
     },
     "max-len": {
       "count": 5
@@ -10105,7 +10515,18 @@
     }
   },
   "src/features/teaching/student-channel/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 5
+    },
     "max-len": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/student-channel/edit/edit-api.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
       "count": 2
     }
   },
@@ -10126,6 +10547,11 @@
   },
   "src/features/teaching/teacher-students/TeacherStudents.tsx": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/teacher-students/api.ts": {
+    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -10171,6 +10597,9 @@
   "src/features/teaching/teacher/api.ts": {
     "ab/module-boundaries": {
       "count": 3
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 5
     },
     "max-len": {
       "count": 1
@@ -10284,6 +10713,11 @@
       "count": 1
     }
   },
+  "src/lib/dom/mount-refs.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
   "src/lib/http/api.test.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
@@ -10325,13 +10759,22 @@
     }
   },
   "src/lib/i18n/i18n-overrides.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
+      "count": 1
+    },
+    "no-restricted-globals": {
       "count": 1
     }
   },
   "src/lib/i18n/locale-strings.ts": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -10386,6 +10829,9 @@
     }
   },
   "src/lib/settings/config-entries-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -10396,6 +10842,9 @@
     }
   },
   "src/lib/settings/public-config.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -10403,6 +10852,11 @@
   "src/lib/settings/query-keys.ts": {
     "max-len": {
       "count": 3
+    }
+  },
+  "src/lib/settings/settings-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
     }
   },
   "src/lib/settings/use-setting-switch.test.tsx": {

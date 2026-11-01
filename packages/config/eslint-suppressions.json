@@ -15,6 +15,9 @@
     }
   },
   "eslint.js": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 9
     }
