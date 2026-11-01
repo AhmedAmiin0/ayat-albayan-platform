@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { normalizeArabic } from '../../core/format/arabic.js';
-import { E164_RE, normalizePhone } from '../../core/format/phone.js';
+import { E164_RE, normalizeArabic, normalizePhone } from '@ab/core';
 
 // Chat lists «القوائم» (owner 2026-10-20, docs/22): academy-wide names that only ORGANISE chats, like
 // WhatsApp Business lists. Nothing is ever sent because of a list.

@@ -1,4 +1,4 @@
-import { asciiDigits } from './digits.js';
+import { asciiDigits } from '../text/index.js';
 
 // Phone normalisation to E.164 (rule 7, R-STU-02).
 

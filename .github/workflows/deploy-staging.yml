@@ -72,7 +72,7 @@ jobs:
   #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/env/deploy-baseline.mjs)
   #    AND nothing under packages/db/supabase/migrations/ changed since. FAIL SAFE: an unknown or unfound
   #    baseline, an API or git error, or an empty output all leave the gated migrate job ON.
-  #  - ota: true only when apps/mobile or packages/shared (the JS the app bundles) changed since the last green
+  #  - ota: true only when apps/mobile or packages/ (the JS the app bundles) changed since the last green
   #    preview OTA (else since the last deploy) AND native-changes.mjs finds no native change since the last
   #    APK (repository variable OTA_BASELINE_SHA, default c140b4cc). Anything unclear = no OTA.
   plan:
@@ -122,7 +122,7 @@ jobs:
           NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
         run: |
           ota=false
-          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages/shared \
+          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages ':(exclude)packages/db/supabase' \
             ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
           elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
@@ -192,7 +192,7 @@ jobs:
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
-          pnpm --filter @ab/db --filter @ab/shared --filter @ab/client-core build >/dev/null
+          pnpm --filter "web^..." build >/dev/null
           pnpm --filter web build
 
       - name: SSH key

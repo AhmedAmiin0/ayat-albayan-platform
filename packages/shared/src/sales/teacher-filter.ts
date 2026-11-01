@@ -1,4 +1,4 @@
-import { matchesQuery } from '../core/format/arabic.js';
+import { matchesQuery } from '@ab/core';
 import type { Gender, Program } from '../enums/index.js';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';

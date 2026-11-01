@@ -1,7 +1,7 @@
 // Running head (docs/07 §1.7, §7): Gregorian + Hijri date and the Riyadh / Cairo clocks.
 // Western digits everywhere (one numeral system), Hijri via Umm al-Qura. DB stays UTC.
 import { CAIRO_TZ, RIYADH_TZ, type ClockCycle } from '../core/format/index.js';
-import type { Locale } from '../i18n/index.js';
+import type { Locale } from '@ab/core';
 import { clockOf, dateTextParts } from './format.js';
 import { hhmmIn } from './zoned.js';
 

@@ -1,5 +1,5 @@
 import type { PaymentMethod, PayoutStatus } from '../../enums/index.js';
-import { fromCents, toCents } from '../ledger/index.js';
+import { fromCents, toCents } from '@ab/core';
 import type { AssistantCommissionStatus } from './commission.js';
 import type { AssistantCommissionKind } from './kind.js';
 import { monthOf } from './statement.js';

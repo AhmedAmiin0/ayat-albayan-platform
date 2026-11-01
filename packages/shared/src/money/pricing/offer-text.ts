@@ -1,7 +1,7 @@
 // The calculator's «انسخ العرض للعميل» WhatsApp text (docs/08 §3), one line per item; the greeting
 // and the package share the first line, as on the site.
 // Labels come from ar.json: pass `ar.pricing` as `t`.
-import { counted, type PluralForm } from '../../core/format/plural.js';
+import { counted, type PluralForm } from '@ab/core';
 import type { PackageId } from './catalog.js';
 import type { CurrencyIso } from './currency.js';
 import type { Quote } from './quote.js';
