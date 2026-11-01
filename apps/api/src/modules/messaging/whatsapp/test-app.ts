@@ -12,9 +12,9 @@ import { StorageService } from '../../../common/storage/storage.service';
 import { LineHealthStore } from './lines/line-health.store';
 import { LinesCheck } from './lines/lines.check';
 import { MessageSender } from './sender/message.sender';
-import { MessagesQueries } from './messages/messages.queries';
+import { MessagesRepo } from './messages/messages.repo';
 import { SendGate } from './gate/send-gate';
-import { TemplatesQueries, type ApprovalRow } from './templates/catalog/templates.queries';
+import { TemplatesRepo, type ApprovalRow } from './templates/catalog/templates.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -62,8 +62,8 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(TemplatesQueries).useValue(templates)
-    .overrideProvider(MessagesQueries).useValue(m.messages)
+    .overrideProvider(TemplatesRepo).useValue(templates)
+    .overrideProvider(MessagesRepo).useValue(m.messages)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(LinesCheck).useValue(m.lines)

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { meQuery } from '@/features/people/auth/me';
 import { sendGateQuery } from '@/features/messaging/messaging/api';
 import { t } from '@/lib/i18n/i18n';
-import { useReadsMessaging } from '../lib/allowed-templates';
+import { useReadsMessaging } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
-import type { PrefillContext } from '../lib/template-params';
-import { useTextOnReply } from '../lib/use-reply-target';
-import { reopenNote, useThreadReopen } from '../lib/use-thread-reopen';
+import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
+import { useTextOnReply } from '@/features/messaging/inbox/composer/lib/use-reply-target';
+import { reopenNote, useThreadReopen } from '@/features/messaging/inbox/composer/lib/use-thread-reopen';
 
 /**
  * Reply box (R-LEAD-02). Inside the 24 h window: a plain message, or a template. After it: the

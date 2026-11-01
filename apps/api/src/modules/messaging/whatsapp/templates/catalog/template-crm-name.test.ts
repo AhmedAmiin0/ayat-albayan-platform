@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { CrmWhatsappClient } from '../../drivers/crm/crm.client';
-import { CRM_ENV } from '../../drivers/crm/crm.fakes';
+import type { AuditService } from '@/common/audit/audit.service';
+import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
+import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
+import type { TemplatesRepo } from './templates.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM name / language of a template, by hand, audited, only on a crm line.
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn() };
 const audit = { record: vi.fn() };
 const lines = { notifications: new CrmWhatsappClient(CRM_ENV), chat: new CrmWhatsappClient(null) };
-const registry = () => new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
+const registry = () => new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
 const rejected = (p: Promise<unknown>) => p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
 
 beforeEach(() => {

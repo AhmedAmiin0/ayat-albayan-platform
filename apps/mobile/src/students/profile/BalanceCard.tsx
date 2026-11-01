@@ -6,7 +6,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
-import { packageName, paidLine, usedOf } from '@/payments/format';
+import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 import { RecentPayments } from '@/payments/components/RecentPayments';
@@ -14,7 +14,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { SectionLabel } from '../list/SectionLabel';
+import { SectionLabel } from '@/students/list/SectionLabel';
 
 /**
  * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when

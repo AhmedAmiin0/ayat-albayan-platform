@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { CodesGate } from '../login/CodesGate';
-import { LinkRow } from '../login/LinkRow';
-import { PasswordForm } from '../login/PasswordForm';
-import { StatusNote } from '../login/StatusNote';
-import { ResetFlow } from '../reset/ResetFlow';
+import { CodesGate } from '@/features/people/auth/login/CodesGate';
+import { LinkRow } from '@/features/people/auth/login/LinkRow';
+import { PasswordForm } from '@/features/people/auth/login/PasswordForm';
+import { StatusNote } from '@/features/people/auth/login/StatusNote';
+import { ResetFlow } from '@/features/people/auth/reset/ResetFlow';
 import { PhoneSignIn } from './PhoneSignIn';
 
 const F = t.familyAuth;

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/form/input';
 import { PhonePreview } from '@/components/ui/form/phone-preview';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '../api';
+import type { Teacher } from '@/features/people/teachers/api';
 import type { SetField, TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 

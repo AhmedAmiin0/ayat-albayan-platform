@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
-import { completeTask, MONEY_KEY, openTasksQuery } from '../api';
-import { taskText } from '../format';
+import { completeTask, MONEY_KEY, openTasksQuery } from '@/features/finance/subscriptions/api';
+import { taskText } from '@/features/finance/subscriptions/format';
 
 /**
  * R-SUB-02 admin tasks: «باقة سهيلة قربت تخلص» / «… خلصت ومحتاجة تجديد». Each is work

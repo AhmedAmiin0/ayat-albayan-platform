@@ -4,7 +4,7 @@ import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
+import type { SenderRepo } from './sender.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23 phase 3: messages.number_id is stamped at claim in module mode only; legacy claims are unchanged.
@@ -14,7 +14,7 @@ const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const NOW = new Date('2026-10-02T08:00:00Z');
 
 function run() {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, { notifyAdmins: vi.fn() } as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, { notifyAdmins: vi.fn() } as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true });
 }

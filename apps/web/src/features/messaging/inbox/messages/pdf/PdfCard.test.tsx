@@ -3,9 +3,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { MessageMedia } from '../components/MessageMedia';
-import { message } from '../../testing/inbox-fixture';
-import { renderWithClient } from '../../testing/test-utils';
+import { MessageMedia } from '@/features/messaging/inbox/messages/components/MessageMedia';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

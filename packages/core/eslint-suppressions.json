@@ -1,0 +1,69 @@
+{
+  "src/async/result.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/async/result.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/async/retry.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/locale/locale.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/phone/phone.reject.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/phone/phone.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/schemas/common.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    }
+  },
+  "src/schemas/list-sort.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/text/arabic.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/text/highlight-diff.ts": {
+    "@typescript-eslint/no-misused-spread": {
+      "count": 3
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/text/text-dir.ts": {
+    "max-len": {
+      "count": 5
+    }
+  }
+}

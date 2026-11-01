@@ -1,7 +1,7 @@
 import type { BookingResult } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { chatPhone, mediaPhone, subscribeTarget } from './booked';
-import { emptyDraft } from '../../draft/draft';
+import { emptyDraft } from '@/features/teaching/booking/draft/draft';
 
 const RESULT: BookingResult = { rule_id: 'r-1', invoice_id: null, student_ids: ['s-new'], guardian_ids: ['g-1'], lessons: [], message_ids: [] };
 const LEAD = {

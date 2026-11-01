@@ -1,7 +1,7 @@
 import { formatAmount, type ClockCycle, type TeacherEarningView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { ltr } from '@/core/ui/primitives/Ltr';
 
 /** «145 ج.م»: teacher money is EGP. */

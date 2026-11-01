@@ -1,8 +1,8 @@
 import { canMute, canMuteAll, type JoinRole, type MuteSource } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { classroomErrorText } from '../room/livekit/errors';
-import type { TileView } from '../room/components/room-types';
+import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
+import type { TileView } from '@/features/teaching/classroom/room/components/room-types';
 import type { MuteCall } from './mute-api';
 
 export interface MuteToast {

@@ -6,8 +6,8 @@ import { useClock, type Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { threadMediaQuery, threadMediaUrl } from './api.invoice';
-import type { ThreadMediaItem } from '../draft/contract';
-import type { InvoiceDraft } from '../draft/draft';
+import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
+import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceThumb } from './InvoiceThumb';
 import { canShow, isImage } from './invoice-file';
 

@@ -4,10 +4,10 @@ import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitch
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { numberErrorText } from '../form/number-errors';
-import { deleteNumber, updateNumber } from '../numbers-api';
-import { NumberFormDialog } from '../form/NumberFormDialog';
-import { useNumbersMutation } from '../use-numbers-mutation';
+import { numberErrorText } from '@/features/messaging/numbers/form/number-errors';
+import { deleteNumber, updateNumber } from '@/features/messaging/numbers/numbers-api';
+import { NumberFormDialog } from '@/features/messaging/numbers/form/NumberFormDialog';
+import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 
 const a = t.numbers.actions;
 

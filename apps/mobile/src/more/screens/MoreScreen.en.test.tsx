@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { MoreScreen } from './MoreScreen';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

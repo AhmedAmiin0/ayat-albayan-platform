@@ -3,11 +3,11 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { getDraft } from '../lib/draft-store';
+import { getDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { FileComposer } from './FileComposer';
-import { message, PHONE } from '../../testing/inbox-fixture';
-import { lastOwnSend } from '../lib/own-send';
-import { clearTabMemories } from '../../shared/tab-memory';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { lastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
+import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
 import { TextComposer } from './TextComposer';
 
 const apiSend = vi.hoisted(() => vi.fn());

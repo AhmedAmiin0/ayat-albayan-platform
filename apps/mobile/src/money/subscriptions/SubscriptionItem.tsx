@@ -7,7 +7,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { CancelPackage } from '@/payments';
 import { t } from '@/core/lib/i18n/i18n';
-import { money, packageName, paidLine } from '@/payments/format';
+import { money, packageName, paidLine } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

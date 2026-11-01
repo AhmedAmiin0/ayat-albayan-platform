@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromCents, toCents } from '../ledger/cents.js';
+import { fromCents, toCents } from '@ab/core';
 import { commissionAction, computeCommission } from './commission.js';
 
 const pct = (value: number, base: number, baseCurrency = 'SAR') =>

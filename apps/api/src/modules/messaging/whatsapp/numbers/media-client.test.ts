@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setCallsNumber } from '@/common/configuration/integrations/calls-number';
 import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
-import type { MediaNumber } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import type { MediaNumber } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import type { WhatsappClient, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { mediaSource } from './media-client';
 

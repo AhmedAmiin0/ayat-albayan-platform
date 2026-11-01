@@ -1,10 +1,10 @@
 import { RECEIPT_MAX_BYTES } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { pickReceipt, type Receipt } from './receipt';
+import { pickReceipt, type Receipt } from '@/core/lib/receipts/receipt';
 import { ReceiptPicker } from './ReceiptPicker';
 
-jest.mock('./receipt', () => ({ pickReceipt: jest.fn() }));
+jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
 const pick = jest.mocked(pickReceipt);
 const m = t.payments.mobile;
 const photo = (size: number): Receipt => ({

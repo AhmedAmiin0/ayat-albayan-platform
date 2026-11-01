@@ -7,7 +7,7 @@ import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { MessageDispatch, type SendVia } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
-import { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
+import { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** The line every sign-in / password code leaves from (docs/30 §4). */
@@ -29,7 +29,7 @@ export class CodeSend {
 
   constructor(
     private readonly gate: SendGate,
-    private readonly queries: SenderQueries,
+    private readonly queries: SenderRepo,
     private readonly dispatch: MessageDispatch,
   ) {}
 

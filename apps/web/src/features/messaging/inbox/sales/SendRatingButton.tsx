@@ -6,9 +6,9 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { errorCode } from '@/features/teaching/schedule';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { sendRating } from '../api/api';
-import { useInboxMode } from '../shared/mode';
-import { sendStart, settleOwnSend } from '../composer/lib/send-start';
+import { sendRating } from '@/features/messaging/inbox/api/api';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 
 const r = t.inbox.rating;
 const ERRORS: Record<string, string | undefined> = {

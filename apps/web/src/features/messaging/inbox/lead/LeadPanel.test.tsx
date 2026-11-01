@@ -3,15 +3,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../api/api';
-import { lead, PHONE } from '../testing/inbox-fixture';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
+import { lead, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { LeadPanel } from './LeadPanel';
-import { renderWithClient, routeFetch } from '../testing/test-utils';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 function renderPanel(row: InboxLead = lead()) {
   routeFetch(apiFetch, [

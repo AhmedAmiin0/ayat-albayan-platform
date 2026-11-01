@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { meQuery, type Me } from '@/features/people/auth/me';
 import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
-import { meetingRow } from '../meeting-fixture';
+import { meetingRow } from '@/features/teaching/meetings/meeting-fixture';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));

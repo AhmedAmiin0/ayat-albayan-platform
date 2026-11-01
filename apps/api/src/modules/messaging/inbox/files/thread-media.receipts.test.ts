@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
-import type { InboundMedia, InboundMediaQueries, MediaMessage } from '@/modules/messaging/whatsapp';
+import type { InboundMedia, InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from './thread-media.service';
 
 // The chat pickers' files (owner 2026-10-31: «I get the stickers and I am not able to attach the
@@ -31,7 +31,7 @@ const queries = { receipts: vi.fn(), message: vi.fn(), setPath: vi.fn() };
 const media = { cache: vi.fn() };
 const storage = { signedDownload: vi.fn() };
 const service = new ThreadMediaService(
-  queries as unknown as InboundMediaQueries,
+  queries as unknown as InboundMediaRepo,
   media as unknown as InboundMedia,
   storage as unknown as StorageService,
 );

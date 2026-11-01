@@ -4,8 +4,8 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
 import { t } from '@/lib/i18n/i18n';
-import { sendErrorCodeText } from '../../composer/lib/send-error';
-import type { Staged } from '../lib/staged-store';
+import { sendErrorCodeText } from '@/features/messaging/inbox/composer/lib/send-error';
+import type { Staged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 
 const S = t.savedReplies;
 

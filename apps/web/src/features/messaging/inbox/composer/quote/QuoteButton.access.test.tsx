@@ -2,10 +2,10 @@ import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { t } from '@/lib/i18n/i18n';
-import { ComposerPhone } from '../components/ComposerPhone';
-import { template, thread } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
-import { renderWithClient } from '../../testing/test-utils';
+import { ComposerPhone } from '@/features/messaging/inbox/composer/components/ComposerPhone';
+import { template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

@@ -1,5 +1,5 @@
 import { RIYADH_TZ, type ClockCycle } from '../core/format/index.js';
-import type { Locale } from '../i18n/locale.js';
+import type { Locale } from '@ab/core';
 import { clockOf, dateText } from './format.js';
 import { localDateIn, weekdayIn } from './zoned.js';
 

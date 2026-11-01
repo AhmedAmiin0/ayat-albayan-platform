@@ -7,7 +7,7 @@ import {
   type PaymentMethod,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { currencyName, localDay, instantDay, money } from '@/payments/format';
+import { currencyName, localDay, instantDay, money } from '@/core/lib/money/format';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 

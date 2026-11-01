@@ -3,9 +3,9 @@ import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
-import { sendText } from '../../api/api';
-import { sendErrorCode } from '../lib/send-error';
-import { sendStart, settleOwnSend } from '../lib/send-start';
+import { sendText } from '@/features/messaging/inbox/api/api';
+import { sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-error';
+import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
 export function initialSelection(phone: string): Selection {

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, type MutationFunction } from '@tanstack/react-query';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '../notification-catalogue/catalogue-api';
+import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
 import { useNumbersNote } from './numbers-note';
 
 export interface NumbersMutationOptions<T> {

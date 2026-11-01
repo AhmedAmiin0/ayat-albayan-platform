@@ -5,7 +5,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { t } from '@/lib/i18n/i18n';
-import type { AssistantStatementView } from '../api';
+import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { StatementActions, type StatementAction, type StatementCan } from './StatementActions';
 import { StatementTotals } from './StatementTotals';
 

@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { kpisOf, type Kpi } from './kpis';
-import type { WorkTab } from '../search';
-import type { DashboardData } from '../types';
+import type { WorkTab } from '@/features/reporting/dashboard/search';
+import type { DashboardData } from '@/features/reporting/dashboard/types';
 
 export interface KpiStripProps {
   /** undefined while loading: the tiles show a dash, never a made-up number. */

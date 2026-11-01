@@ -2,10 +2,10 @@ import { cleanup, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { forgetReopens } from '../../composer/lib/use-thread-reopen';
-import { detail, message, PHONE, template, thread } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
-import { InboxPage } from '../list/InboxPage';
+import { forgetReopens } from '@/features/messaging/inbox/composer/lib/use-thread-reopen';
+import { detail, message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { InboxPage } from '@/features/messaging/inbox/threads/list/InboxPage';
 import { ThreadPane } from './ThreadPane';
 
 // «إعادة فتح المحادثة» (owner 2026-10-26): an explicit open of a closed chat asks the server once per
@@ -14,7 +14,7 @@ import { ThreadPane } from './ThreadPane';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const REOPEN = '/threads/%2B966501234567/reopen';
 const reopens = () => apiSend.mock.calls.filter((c) => c[1] === REOPEN).length;

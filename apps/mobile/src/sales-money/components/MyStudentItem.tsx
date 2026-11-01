@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { PhoneText } from '@/core/ui/layout/PhoneText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from '../fixtures';
+import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from '@/payments/fixtures';
 import { checkDraft, chosenPackage, defaultPackage, emptyDraft, payablePackages, withMethod } from './payment-form';
-import type { Receipt } from '../receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 const now = new Date('2026-10-01T13:20:00Z');
 const paidOld = subscription({ id: OLD_SUB_ID, starts_on: '2026-08-27', paid: 145, status: 'expired' });

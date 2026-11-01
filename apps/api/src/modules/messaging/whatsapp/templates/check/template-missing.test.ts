@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { crmErrorFrom } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
 import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
-import type { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { absentOnCrm, TemplateMissing } from './template-missing';
@@ -25,7 +25,7 @@ const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-31T08:00:00Z');
 const marker = () =>
-  new TemplateMissing(queries as unknown as TemplatesQueries, audit as unknown as AuditService);
+  new TemplateMissing(queries as unknown as TemplatesRepo, audit as unknown as AuditService);
 const send = (over: object = {}) => ({ key: 'teacher_new_student', line: 'notifications' as const, error: absent, now: NOW, ...over });
 
 beforeEach(() => {

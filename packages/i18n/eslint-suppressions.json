@@ -1,0 +1,12 @@
+{
+  "src/arabic-literals.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schemas.ts": {
+    "max-len": {
+      "count": 1
+    }
+  }
+}

@@ -8,7 +8,7 @@ import { ageError, phoneError } from '@/features/people/students/create/create-s
 import { AgeField, GenderField } from '@/features/people/students/profile/FactFields';
 import { ContactIsSelfField } from '@/features/people/students';
 import { t } from '@/lib/i18n/i18n';
-import type { NewStudentDraft } from '../../draft/draft';
+import type { NewStudentDraft } from '@/features/teaching/booking/draft/draft';
 
 export interface LeadStudentStepProps {
   value: NewStudentDraft;

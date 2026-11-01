@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '../../core/format/plural.js';
+import { counted, type PluralForm } from '@ab/core';
 
 // «اخترت 1 من 2 — بقي يوم واحد» / «اخترت 3 أيام، احذف يومًا واحدًا» while the course's days are
 // picked (owner 2026-10-18: the plan's days a week exactly). The forms are ar.json booking.*.

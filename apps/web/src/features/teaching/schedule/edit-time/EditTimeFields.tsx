@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
-import { dateLabel, dayMonthLabel, weekdayOf, zonedToUtc } from '../tz';
+import { dateLabel, dayMonthLabel, weekdayOf, zonedToUtc } from '@/features/teaching/schedule/tz';
 import { ClockOptions } from '@/lib/clock-options';
 import { clockDir } from '@/lib/clock-text';
 import { type Clock, useClock } from '@/lib/clock';

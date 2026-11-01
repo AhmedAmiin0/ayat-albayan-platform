@@ -1,7 +1,7 @@
 import type { BookingKind } from './contract';
 import { days } from './draft.days';
 import type { BookingDraft, StepKey } from './draft';
-import { isNewStudent, newStudentReady } from '../steps/who/new-student';
+import { isNewStudent, newStudentReady } from '@/features/teaching/booking/steps/who/new-student';
 
 // Which steps the booking wizard walks, and when «التالي» may leave each. Pure.
 

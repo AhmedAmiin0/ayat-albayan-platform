@@ -5,16 +5,16 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
-import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from '../api';
-import { ConflictNotice } from '../reschedule/ConflictNotice';
+import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { changeOf, editBody, moveDays, startsAtOf, timesFor, validLength, willNotify } from './edit-time';
 import { lengthText, lockedText, payoutLock } from './edit-time-text';
 import { timeEditMode, type TimeEditResult } from './edit-time.contract';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone, needsFollowUp, savedMessage } from './EditTimeDone';
 import { EditTimeFields, type FieldState } from './EditTimeFields';
-import { durationMin } from '../lesson/lessons';
-import { zonedParts } from '../tz';
+import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
+import { zonedParts } from '@/features/teaching/schedule/tz';
 
 export interface EditTimeFormProps {
   lesson: LessonView;

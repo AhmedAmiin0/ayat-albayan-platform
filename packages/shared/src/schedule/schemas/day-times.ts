@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { bookingKindOf, type BookingKind } from './booking-extras.js';
-import { timeOfDay } from '../../core/schemas/index.js';
+import { timeOfDay } from '@ab/core';
 
 // Per-weekday times of a package booking (owner 2026-10-18). Kept apart from scheduling.ts (file
 // size); scheduling.ts adds `dayTimes` to the booking body and refines it here.

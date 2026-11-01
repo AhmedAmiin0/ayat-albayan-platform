@@ -2,12 +2,12 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { t } from '@/lib/i18n/i18n';
-import { PasswordInput } from '../PasswordInput';
-import { codeOf } from '../code/code-boxes';
-import { CodeStep } from '../code/CodeStep';
-import { RequestStep } from '../code/RequestStep';
-import { useCodeFlow } from '../code/use-code-flow';
-import { authApi } from '../login/auth-api';
+import { PasswordInput } from '@/features/people/auth/PasswordInput';
+import { codeOf } from '@/features/people/auth/code/code-boxes';
+import { CodeStep } from '@/features/people/auth/code/CodeStep';
+import { RequestStep } from '@/features/people/auth/code/RequestStep';
+import { useCodeFlow } from '@/features/people/auth/code/use-code-flow';
+import { authApi } from '@/features/people/auth/login/auth-api';
 import { newPasswordProblem } from './reset-checks';
 
 const F = t.familyAuth;

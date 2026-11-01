@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { entry, student, subscription, teacher } from '../testing/fixtures';
+import { entry, student, subscription, teacher } from '@/sales/testing/fixtures';
 import {
   fill,
   guardianLine,

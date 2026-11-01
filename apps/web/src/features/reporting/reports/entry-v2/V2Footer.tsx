@@ -1,8 +1,8 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { FooterAlerts } from '../entry/FooterAlerts';
-import { SaveStatus } from '../history/ReportStatusLine';
+import { FooterAlerts } from '@/features/reporting/reports/entry/FooterAlerts';
+import { SaveStatus } from '@/features/reporting/reports/history/ReportStatusLine';
 import type { ReportEntryV2State } from './use-report-entry-v2';
 
 function sendLabel(s: ReportEntryV2State): string {

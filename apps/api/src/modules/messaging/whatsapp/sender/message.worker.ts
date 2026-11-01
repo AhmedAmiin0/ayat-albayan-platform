@@ -9,7 +9,7 @@ import { authSubject, claimRow, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type Fa
 import type { FailurePlan } from './send-plan';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
-import { SenderQueries, type DueMessage } from './sender.queries';
+import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -31,7 +31,7 @@ export class MessageWorker {
   @Optional() @Inject(TemplateMissing) missing?: TemplateMissing;
 
   constructor(
-    private readonly queries: SenderQueries,
+    private readonly queries: SenderRepo,
     private readonly dispatch: MessageDispatch,
     private readonly push: PushService,
     /** The 131042 line hold; absent (unit tests) = no line hold, the row hold still applies. */

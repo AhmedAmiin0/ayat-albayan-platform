@@ -1,7 +1,7 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { SaveStatus } from '../history/ReportStatusLine';
+import { SaveStatus } from '@/features/reporting/reports/history/ReportStatusLine';
 import { FooterAlerts } from './FooterAlerts';
 import type { ReportEntryState } from './use-report-entry';
 

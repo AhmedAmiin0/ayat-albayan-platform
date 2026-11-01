@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '../testing/fixtures';
+import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
 // sales.renew_any (owner 2026-10-29, docs/16 row 38): a child of the chat's family that is not hers (mine: false).

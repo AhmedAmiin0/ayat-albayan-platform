@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { useNow } from '@/lib/time/use-now';
-import { joinHint } from '../room/livekit/window-hint';
+import { joinHint } from '@/features/teaching/classroom/room/livekit/window-hint';
 import { useClock } from '@/lib/clock';
 
 export interface JoinableLesson {

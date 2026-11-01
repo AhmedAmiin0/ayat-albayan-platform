@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMedia } from '../../whatsapp/messages/inbound-media.service';
-import type { MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
-import type { MessageRow } from '../../whatsapp/messages/message.mapper';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { ADMIN, inboxApp } from '../test-app';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import type { MessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { ADMIN, inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const SRC = 'a0000000-0000-4000-8000-0000000000f2';

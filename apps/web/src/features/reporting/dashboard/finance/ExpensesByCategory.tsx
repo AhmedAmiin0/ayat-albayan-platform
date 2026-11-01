@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n/i18n';
-import { Bar } from '../shared/Bar';
-import { amount } from '../shared/format';
+import { Bar } from '@/features/reporting/dashboard/shared/Bar';
+import { amount } from '@/features/reporting/dashboard/shared/format';
 
 const seeded = t.enums.expenseCategory as Record<string, string>;
 

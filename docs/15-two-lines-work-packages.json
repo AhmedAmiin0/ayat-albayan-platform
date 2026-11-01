@@ -102,7 +102,7 @@
     "apps/api/src/modules/messaging/whatsapp/sender/message.dispatch.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/message.worker.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/message.sender.ts",
-    "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.ts",
+    "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/sender.due.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/send-line.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/send-line.test.ts",
@@ -113,8 +113,8 @@
     "apps/api/src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/message.worker.line.test.ts",
     "apps/api/src/modules/messaging/whatsapp/sender/message.sender.lines.test.ts",
-    "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.test.ts",
-    "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.allowed.test.ts",
+    "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.test.ts",
+    "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.allowed.test.ts",
     "apps/api/src/modules/messaging/whatsapp/meta-callers.guard.test.ts"
    ],
    "tasks": [
@@ -209,7 +209,7 @@
     "apps/api/src/modules/messaging/inbox/threads/threads.sales.http.test.ts",
     "apps/api/src/modules/messaging/inbox/test-app.ts",
     "apps/api/src/modules/messaging/inbox/files/thread-media.http.test.ts",
-    "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.queries.ts",
+    "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.repo.ts",
     "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts",
     "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.test.ts",
     "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.lines.test.ts",

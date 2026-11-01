@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { timeOfDay } from '../../core/schemas/index.js';
+import { timeOfDay } from '@ab/core';
 import { dayTimesSchema, refineDayTimes } from './day-times.js';
 import { bydaySchema, instant, localDate, overrideSchema } from './scheduling.js';
 

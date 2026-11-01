@@ -21,7 +21,7 @@ import { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { SalesQueries } from '@/modules/sales/sales/sales.queries';
 import { SalesFamilyQueries } from '@/modules/sales/sales-money/reads/sales-family.queries';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
-import { InboundMediaQueries } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { AdminTasksQueries } from './alerts/admin-tasks.queries';
 import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
@@ -87,7 +87,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(SalesFamilyQueries).useValue(m.family)
     .overrideProvider(InboundMedia).useValue(m.media)
-    .overrideProvider(InboundMediaQueries).useValue(m.mediaQueries);
+    .overrideProvider(InboundMediaRepo).useValue(m.mediaQueries);
   const mod = await more(builder).compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true }); // as main.ts
   await app.init();

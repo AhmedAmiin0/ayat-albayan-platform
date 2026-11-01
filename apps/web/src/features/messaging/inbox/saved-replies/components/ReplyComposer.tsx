@@ -1,18 +1,18 @@
 import { resolveSavedReply, type SavedReply, type ThreadView } from '@ab/shared';
 import { useId, useSyncExternalStore, type ReactNode } from 'react';
-import { getDraft, setDraft, subscribeDrafts } from '../../composer/lib/draft-store';
-import type { PrefillContext } from '../../composer/lib/template-params';
-import { TextComposer } from '../../composer/components/TextComposer';
-import { fillComposer, slashQuery } from '../lib/filter';
+import { getDraft, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
+import { TextComposer } from '@/features/messaging/inbox/composer/components/TextComposer';
+import { fillComposer, slashQuery } from '@/features/messaging/inbox/saved-replies/lib/filter';
 import { RepliesPanel } from './RepliesPanel';
 import { optionId } from './ReplyOptions';
 import { SavedRepliesButton } from './SavedRepliesButton';
 import { StagedChip } from './StagedChip';
-import { getStaged, setStaged, subscribeStaged } from '../lib/staged-store';
-import { useReplyDialogs } from '../hooks/use-reply-dialogs';
-import { useReplyValues } from '../hooks/use-reply-values';
-import { useRepliesPicker } from '../hooks/use-replies-picker';
-import { useStagedSend } from '../hooks/use-staged-send';
+import { getStaged, setStaged, subscribeStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
+import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs';
+import { useReplyValues } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-values';
+import { useRepliesPicker } from '@/features/messaging/inbox/saved-replies/hooks/use-replies-picker';
+import { useStagedSend } from '@/features/messaging/inbox/saved-replies/hooks/use-staged-send';
 
 export interface ReplyComposerProps {
   thread: ThreadView;

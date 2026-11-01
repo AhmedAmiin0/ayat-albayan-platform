@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from '../testing/test-utils';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { LinkFamilyDialog } from './LinkFamilyDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());

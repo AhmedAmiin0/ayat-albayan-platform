@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message, PHONE } from '../../testing/inbox-fixture';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
 
 // jsdom has no layout: give every box a 1000px tall content in a 400px window, and a real scrollTop.

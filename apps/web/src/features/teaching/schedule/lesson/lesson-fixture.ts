@@ -1,5 +1,5 @@
 import { allowedLessonEvents, type LessonStatus, type LessonView } from '@ab/shared';
-import type { EditableLesson, TimeEditInfo, TimeEditMode } from '../edit-time/edit-time.contract';
+import type { EditableLesson, TimeEditInfo, TimeEditMode } from '@/features/teaching/schedule/edit-time/edit-time.contract';
 
 // Test data only (imported by *.test.tsx): LessonView rows shaped like GET /lessons responses.
 

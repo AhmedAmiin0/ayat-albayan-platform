@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, voidCommission, type AssistantCommissionView } from '../api';
-import { errorText } from '../status';
+import { ASSISTANTS_KEY, voidCommission, type AssistantCommissionView } from '@/features/people/assistants/api';
+import { errorText } from '@/features/people/assistants/status';
 
 type Props = { commission: AssistantCommissionView; onClose: () => void };
 

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import type { ColumnFilterDef } from '../data-table/data-table-features';
+import type { ColumnFilterDef } from '@/components/data-table/data-table-features';
 import { ControlField, filterByLabel } from './ControlField';
 
 const base = { id: 'x', key: 'x', label: 'الحالة', value: '' };

@@ -3,15 +3,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { detail, PHONE } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
-import { renderWithClient } from '../../testing/test-utils';
+import { detail, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const RESULT = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }], message_ids: ['m1'] };
 const SLOTS = { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [{ starts_at: SLOT, ends_at: SLOT, conflicts: [] }] };

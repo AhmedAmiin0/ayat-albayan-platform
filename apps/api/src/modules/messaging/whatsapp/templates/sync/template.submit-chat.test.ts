@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { lineEnvs, loadEnv } from '../../../../../config/env/env';
-import { KAPSO_ENV, kapsoFetch } from '../../drivers/kapso/kapso.fakes';
-import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '../catalog/seed-templates.fakes';
-import { TemplateRegistry } from '../catalog/template.registry';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import { whatsappClient } from '../../client-factory';
-import { scriptedFetch } from '../../whatsapp.fakes';
-import { type WhatsappLines } from '../../whatsapp.types';
+import type { AuditService } from '@/common/audit/audit.service';
+import { lineEnvs, loadEnv } from '@/config/env/env';
+import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
+import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-18: a template is submitted to its OWN line's WABA, chat rows included, under that
 // line's driver: Meta directly, or Kapso (a rejected one edited through hsm_id; no sample upload).
@@ -15,7 +15,7 @@ import { type WhatsappLines } from '../../whatsapp.types';
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
 const mock = () => ({ configured: vi.fn(() => true), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() });
-const registry = (lines: object) => new TemplateRegistry(queries as unknown as TemplatesQueries, lines as WhatsappLines, audit as unknown as AuditService);
+const registry = (lines: object) => new TemplateRegistry(queries as unknown as TemplatesRepo, lines as WhatsappLines, audit as unknown as AuditService);
 const failure = (p: Promise<unknown>) => p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
 /** The chat line on Meta with its own ids (and whatever else `over` sets). */
 function stubChat(over: Record<string, string>): void {

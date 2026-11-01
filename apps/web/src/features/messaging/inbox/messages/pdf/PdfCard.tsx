@@ -2,8 +2,8 @@ import { type MessageView, pdfMetaLine } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useRef } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import type { ThreadFile } from '../../api/api';
-import { threadPdfPageQuery } from '../../api/api.files';
+import type { ThreadFile } from '@/features/messaging/inbox/api/api';
+import { threadPdfPageQuery } from '@/features/messaging/inbox/api/api.files';
 
 interface PdfCardProps {
   message: MessageView;

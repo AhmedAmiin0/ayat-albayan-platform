@@ -2,12 +2,12 @@ import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
-import { ReceiptPicker } from '../ReceiptPicker';
+import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { AttachmentRow } from './AttachmentRow';
 import type { Attachment } from './attachments';
 import { PhotoButtons } from './PhotoButtons';
 
-jest.mock('../receipt', () => ({ pickReceipt: jest.fn() }));
+jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
 const m = t.payments.mobile;
 
 test('docs/07 «الأزرار»: the receipt picker and the photo buttons are one ButtonRow of two cells', async () => {

@@ -1,7 +1,7 @@
 import { useId, type ChangeEvent, type Ref } from 'react';
 import { buttonVariants } from '@/components/ui/form/button';
 import { cn } from '@/lib/utils';
-import { AVATAR_ACCEPT } from '../avatar-file';
+import { AVATAR_ACCEPT } from '@/features/people/account/avatar-file';
 
 export interface PhotoPickProps {
   /** The button's text («اختيار صورة», «تغيير الصورة»). */

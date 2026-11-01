@@ -11,10 +11,10 @@ import { CrmMediaSettings } from './messages/crm-history/crm-media.settings';
 import { CrmMediaCopier } from './messages/crm-copy/crm-media-copier';
 import { CrmMediaCopyDone } from './messages/crm-copy/crm-media-copy.done';
 import { CrmMediaCopyJob } from './messages/crm-copy/crm-media-copy.job';
-import { CrmMediaCopyQueries } from './messages/crm-copy/crm-media-copy.queries';
+import { CrmMediaCopyRepo } from './messages/crm-copy/crm-media-copy.repo';
 import { CrmMediaCopySettings } from './messages/crm-copy/crm-media-copy.settings';
 import { InboundMedia } from './messages/inbound-media.service';
-import { InboundMediaQueries } from './messages/inbound-media.queries';
+import { InboundMediaRepo } from './messages/inbound-media.repo';
 import { LiveWhatsappClient } from './live-client';
 import { LineHealthStore } from './lines/line-health.store';
 import { LinesCheck } from './lines/lines.check';
@@ -26,12 +26,12 @@ import { MessageWorker } from './sender/message.worker';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
-import { MessagesQueries } from './messages/messages.queries';
+import { MessagesRepo } from './messages/messages.repo';
 import { MessagesService } from './messages/messages.service';
 import { SendGate } from './gate/send-gate';
 import { NumberRoutes } from './numbers/number-routes';
-import { RouteQueries } from './numbers/route.queries';
-import { SenderQueries } from './sender/sender.queries';
+import { RouteRepo } from './numbers/route.repo';
+import { SenderRepo } from './sender/sender.repo';
 import { TemplateCreator } from './templates/create/template-create';
 import { TemplateMissing } from './templates/check/template-missing';
 import { TemplateNumbersController } from './templates/sync/template-numbers.controller';
@@ -39,7 +39,7 @@ import { TemplateNumbers } from './templates/sync/template-numbers.service';
 import { TemplateStarters } from './templates/catalog/template-starters';
 import { TemplateRegistry } from './templates/catalog/template.registry';
 import { TemplatesController } from './templates/catalog/templates.controller';
-import { TemplatesQueries } from './templates/catalog/templates.queries';
+import { TemplatesRepo } from './templates/catalog/templates.repo';
 import { WaMediaRetentionJob } from './messages/wa-media.retention.job';
 import { WhatsappSettings } from './whatsapp.settings';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
@@ -71,7 +71,7 @@ function lines(): WhatsappLines {
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
     LinesCheck,
     LineHealthStore,
-    TemplatesQueries,
+    TemplatesRepo,
     TemplateRegistry,
     TemplateStarters,
     TemplateNumbers,
@@ -80,8 +80,8 @@ function lines(): WhatsappLines {
     WhatsappSettings,
     GateSettings,
     SendGate,
-    SenderQueries,
-    RouteQueries,
+    SenderRepo,
+    RouteRepo,
     NumberRoutes,
     MessageDispatch,
     CodeSend,
@@ -89,21 +89,21 @@ function lines(): WhatsappLines {
     PaymentHolds,
     MessageWorker,
     MessageSender,
-    MessagesQueries,
+    MessagesRepo,
     MessageViews,
     MessagesService,
-    InboundMediaQueries,
+    InboundMediaRepo,
     CrmMediaSettings,
     CrmHistoryMedia,
     CrmMediaCopySettings,
-    CrmMediaCopyQueries,
+    CrmMediaCopyRepo,
     CrmMediaCopier,
     CrmMediaCopyDone,
     CrmMediaCopyJob,
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaQueries, LineHealthStore],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

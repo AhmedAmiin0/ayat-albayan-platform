@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { deleteReply, refreshReplies, replyErrorText } from '../lib/api';
+import { deleteReply, refreshReplies, replyErrorText } from '@/features/messaging/inbox/saved-replies/lib/api';
 
 const S = t.savedReplies;
 

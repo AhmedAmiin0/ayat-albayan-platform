@@ -1,7 +1,7 @@
 import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
 import { supabase } from '@/core/lib/http/supabase';
-import type { Receipt } from '@/payments/receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 /** The API signed the upload but Storage did not take the file. */
 export class InvoiceUploadError extends Error {}

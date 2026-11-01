@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
-import type { DayPick } from '../../draft/draft.days';
+import type { DayPick } from '@/features/teaching/booking/draft/draft.days';
 import { type Clock, useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { clockOfHhmm } from '@ab/shared';

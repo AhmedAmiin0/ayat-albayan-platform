@@ -7,7 +7,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Pager } from '@/components/ui/layout/pager';
 import { useBellSignal } from '@/features/messaging/notifications';
 import { t } from '@/lib/i18n/i18n';
-import { MY_COMMISSIONS_PAGE_SIZE, MY_MONEY_KEY, myCommissionsQuery, myEarningsQuery } from '../api';
+import { MY_COMMISSIONS_PAGE_SIZE, MY_MONEY_KEY, myCommissionsQuery, myEarningsQuery } from '@/features/sales/sales/api';
 import { CommissionEntry } from './CommissionEntry';
 import { WalletCard } from './WalletCard';
 

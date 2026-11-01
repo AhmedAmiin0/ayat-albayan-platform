@@ -1,10 +1,10 @@
 import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
 import { baseMime, InboundMedia, mediaExpired } from './inbound-media.service';
-import { WaError, type WhatsappLines } from '../whatsapp.types';
+import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const NOW = new Date('2026-10-03T10:00:00Z');
 const day = (n: number) => new Date(NOW.getTime() - n * 86_400_000).toISOString();
@@ -27,7 +27,7 @@ function setup(row: MediaMessage | null) {
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
   const lines = { notifications: client, chat: client };
   const media = new InboundMedia(
-    queries as unknown as InboundMediaQueries,
+    queries as unknown as InboundMediaRepo,
     lines as unknown as WhatsappLines,
     storage as unknown as StorageService,
   );

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingDialog } from './InternalMeetingDialog';
-import { ScheduledMeetingDialog } from '../scheduled/ScheduledMeetingDialog';
+import { ScheduledMeetingDialog } from '@/features/teaching/meetings/scheduled/ScheduledMeetingDialog';
 
 /**
  * «اجتماع داخلي» (now) and «اجتماع مجدول» (a time and invitees) on their own (teacher, assistant and
