@@ -18,11 +18,3 @@ test('docs/07 «الأزرار»: «تم» the one filled button, alone; the two
   const done = StyleSheet.flatten(screen.getByRole('button', { name: t.salesMoney.done }).props.style);
   expect(done).toMatchObject({ backgroundColor: palette.light.lapisFill });
 });
-
-test('a child not hers (courseDays off): «مدفوعاتي» alone, no «احجز أيام الحلقات الآن»', async () => {
-  await render(<TransferDone payment={salesPayment('active')} onDone={jest.fn()} courseDays={false} />);
-  const row = screen.getByTestId('transfer-done-actions');
-  expect(within(row).getAllByTestId('button-row-cell')).toHaveLength(1);
-  expect(within(row).getByText(t.salesMoney.openMyPayments)).toBeTruthy();
-  expect(screen.queryByText(t.booking.bookCourseDays)).toBeNull();
-});

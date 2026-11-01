@@ -1,12 +1,12 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { TeachersModule } from '../teachers.module';
-import { TeachersQueries } from '../teachers.queries';
-import { AvailabilityQueries } from './availability.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { AvailabilityRepo } from './availability.repo';
 
 const OWN = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const OTHER = '7a2d3c9f-1e1b-4d9f-8b62-3b7c1a7e0f22';
@@ -43,9 +43,9 @@ describe('AvailabilityController (R-TCH-02)', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule, TeachersModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
-      .overrideProvider(TeachersQueries)
+      .overrideProvider(TeachersRepo)
       .useValue(teachers)
-      .overrideProvider(AvailabilityQueries)
+      .overrideProvider(AvailabilityRepo)
       .useValue(availability)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

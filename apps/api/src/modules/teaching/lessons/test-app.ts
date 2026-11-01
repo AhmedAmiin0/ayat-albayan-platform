@@ -4,23 +4,23 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
-import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
-import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
-import { fakePolicy } from '../../messaging/notification-rules/policy/policy.fakes';
-import { ConflictChecker } from '../scheduling/conflicts/conflict-checker';
-import { LessonWriter } from '../scheduling/occurrences/lesson-writer';
-import { ruleRow } from '../scheduling/scheduling.fakes';
-import { ScheduleQueries } from '../scheduling/schedule.queries';
-import { AlertsQueries } from '../../finance/subscriptions/alerts/alerts.queries';
-import { StudentTrialQueries } from '../../finance/subscriptions/trial/student-trial.queries';
-import { UnpaidFlags } from '../../finance/subscriptions/alerts/unpaid-flags.service';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsService } from '@/common/settings/settings.service';
+import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import { AlertsQueries } from '@/modules/finance/subscriptions/alerts/alerts.queries';
+import { StudentTrialQueries } from '@/modules/finance/subscriptions/trial/student-trial.queries';
+import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { LessonProposalQueries } from './proposals/lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
 import { OverviewQueries } from './overview/overview.queries';
@@ -77,7 +77,7 @@ export async function lessonsApp() {
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(LessonsQueries).useValue(m.lessons)
     .overrideProvider(LessonWriter).useValue(m.writer)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(ScheduleQueries).useValue(m.rules)

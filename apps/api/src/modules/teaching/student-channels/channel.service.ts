@@ -1,13 +1,13 @@
 import { CHANNEL_NOT_OPEN, type ChannelMessageView, type ChannelPage, type ChannelUnread, type TeacherChannelRow } from '@ab/shared';
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { conflict, notFound } from '../../../common/http/errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict, notFound } from '@/common/http/errors';
 import type { ChannelActor } from './channel-access';
 import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import { toMessageView, toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
 import { ChannelQueries } from './channel.queries';
-import { TeachersQueries } from '../../people/teachers';
+import { TeachersRepo } from '@/modules/people/teachers';
 
 /** A participant's write on a closed channel (before the subscription or the teacher's assignment). */
 const closed = (actor: ChannelActor): boolean => actor.mode === 'participant' && !actor.open;
@@ -70,7 +70,7 @@ export class ChannelService {
 @Injectable()
 export class TeacherChannelList {
   constructor(
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     private readonly queries: ChannelQueries,
     private readonly people: ChannelPeopleQueries,
   ) {}

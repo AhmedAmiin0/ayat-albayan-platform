@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AvailabilityQueries } from '../../../people/teachers/availability/availability.queries';
+import type { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import type { BusyQueries } from './busy.queries';
 import { ConflictChecker } from './conflict-checker';
-import type { RuleProjectionQueries } from '../rules/rule-projection.queries';
+import type { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
 
 const busy = { teacherLessons: vi.fn(), studentLessons: vi.fn() };
 const availability = { bookableSlots: vi.fn(), listTimeOff: vi.fn() };
 const projection = { busy: vi.fn() };
 const checker = new ConflictChecker(
   busy as unknown as BusyQueries,
-  availability as unknown as AvailabilityQueries,
+  availability as unknown as AvailabilityRepo,
   projection as unknown as RuleProjectionQueries,
 );
 // Sunday 2026-10-04 17:00–17:45 Riyadh.

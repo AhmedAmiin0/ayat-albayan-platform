@@ -66,11 +66,12 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   };
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
-  // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money only, the rest stays hers.
+  // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money and «أيام الحلقات»
+  // (owner 2026-11-01); the rest stays hers.
   const own = students.filter((s) => s.mine !== false);
   // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
   const choices: Record<Choice, { title: string; list: SalesFamilyStudent[]; open: (s: SalesFamilyStudent) => void }> = {
-    course: { title: t.booking.courseDays, list: own.filter(hasCourse), open: (s) => setCourse(s.id) },
+    course: { title: t.booking.courseDays, list: students.filter(hasCourse), open: (s) => setCourse(s.id) },
     trial: { title: t.trialDate.action, list: own.filter((s) => canPickTrialDate(s.status)), open: (s) => setTrialFor({ id: s.id, name: s.name, code: s.code }) },
   };
   const chosen = choosing ? choices[choosing] : null;
