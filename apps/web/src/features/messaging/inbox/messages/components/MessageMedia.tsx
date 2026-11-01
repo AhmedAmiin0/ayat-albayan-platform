@@ -11,6 +11,7 @@ import { DownloadButton } from './DownloadButton';
 import { MediaPlayer } from './MediaPlayer';
 import { PdfCard } from '@/features/messaging/inbox/messages/pdf/PdfCard';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { StickerMedia, stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 
 /** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
@@ -86,13 +87,16 @@ function fileErrorText(error: unknown): string {
 /**
  * The file in a bubble (R-MSG-05, W6), theirs or one we sent (D2). An image or PDF opens on demand:
  * «عرض صورة» fetches a signed URL of our copy, then a thumbnail (full size in a new tab) or a named
- * link; a voice note or video «تشغيل رسالة صوتية» plays in the bubble (D1). Other files (stickers,
- * locations…) keep their label. Teacher mode gets the label only: the API refuses them the file
- * (403 media_forbidden).
+ * link; a voice note or video «تشغيل رسالة صوتية» plays in the bubble (D1); a sticker or a GIF
+ * shows itself at once (StickerMedia, owner 2026-11-01). Other files (locations…) keep their
+ * label. Teacher mode gets the label only: the API refuses them the file (403 media_forbidden).
  */
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
   const teacher = useInboxMode() === 'teacher';
+  // A sticker or a GIF shows itself at once (owner 2026-11-01).
+  const own = stickerOrGif(m, teacher);
+  if (own) return <StickerMedia message={m} kind={own} />;
   if (m.media_url) {
     return (
       <a href={m.media_url} target="_blank" rel="noopener noreferrer" className={LINK}>

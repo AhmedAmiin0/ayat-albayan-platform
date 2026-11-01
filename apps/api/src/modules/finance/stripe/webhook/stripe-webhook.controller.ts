@@ -9,7 +9,7 @@ interface RawRequest {
 }
 
 /**
- * Public: authenticated by Stripe's signature (StripeWebhookService). Not mounted without FEATURE_STRIPE=test.
+ * Public: authenticated by Stripe's signature (StripeWebhookService). Not mounted without FEATURE_STRIPE (test or live).
  * NOT behind the DB switch: a session opened (or an async payment started) before the admin turned Stripe off
  * must still be recorded, as must its refunds.
  */

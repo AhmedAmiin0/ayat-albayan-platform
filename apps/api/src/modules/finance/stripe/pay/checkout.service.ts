@@ -33,12 +33,21 @@ export class CheckoutService {
     const stripe = await this.clients.client().catch(() => null);
     if (!stripe) return page; // keys missing or refused: the family sees the platform page, never a JSON error
     if (await this.packages.blocked(link.subscription_id)) return this.close({ stripe, link, now, page });
-    if (link.stripe_session_id) {
-      const current = await stripe.checkout.sessions.retrieve(link.stripe_session_id);
+    const own = this.ownSession(link.stripe_session_id);
+    if (own) {
+      const current = await stripe.checkout.sessions.retrieve(own);
       if (current.status === 'open' && current.url) return current.url;
       if (current.status === 'complete') return page; // paid or pending: the webhook decides
     }
     return this.fresh({ stripe, link, now, page });
+  }
+
+  /**
+   * The link's session if this key's mode made it: a cs_test_ one under a live key (a link sent
+   * before go live) or back is none, so the payer gets a new session, never a Stripe 404.
+   */
+  private ownSession(id: string | null): string | null {
+    return id?.startsWith(this.clients.liveMode() ? 'cs_live_' : 'cs_test_') ? id : null;
   }
 
   /** The package needs no payment any more: the link reads as cancelled from now on, its session cannot be paid. */

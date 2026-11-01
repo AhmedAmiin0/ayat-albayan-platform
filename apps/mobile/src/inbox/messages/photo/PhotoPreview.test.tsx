@@ -34,13 +34,16 @@ test('a photo shows its thumbnail as the bubble renders, in the fixed 220 box, w
   expect(screen.getByText('الواجب')).toBeTruthy();
 });
 
-test('a sticker uses the small uncut box, no border', async () => {
+test('a sticker: uncut at 150, no border, no «تنزيل», no bubble around it (owner 2026-11-01)', async () => {
   serve(async () => signed());
   await show(photo({ media_mime: 'image/webp' }));
   expect((await screen.findByTestId('photo-image-p1')).props.resizeMode).toBe('contain');
   const box = StyleSheet.flatten(screen.getByTestId('photo-p1').props.style);
-  expect(box).toMatchObject({ width: 120, height: 120 });
+  expect(box).toMatchObject({ width: 150, height: 150 });
   expect(box.borderWidth).toBeUndefined();
+  expect(screen.queryByText(t.inbox.download.action)).toBeNull();
+  const bubble = StyleSheet.flatten(screen.getByTestId('bubble-p1').props.style);
+  expect(bubble).toMatchObject({ borderWidth: 0, backgroundColor: 'transparent' });
 });
 
 test.each([

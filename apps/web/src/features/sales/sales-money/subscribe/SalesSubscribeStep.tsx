@@ -48,7 +48,7 @@ const METHODS: { value: Method; label: string }[] = [
  * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
  * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
  * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
- * «طريقة الدفع» (owner 2026-10-29) only where both exist (the Stripe test build with the API's switch on, her own
+ * «طريقة الدفع» (owner 2026-10-29) only where both exist (a Stripe build with the API's switch on, her own
  * child): «تحويل بنكي» saves the package as above, «دفع إلكتروني» makes a payment link from the same fields.
  */
 export function SalesSubscribeStep({ students, phone = '', picked, renew = false, onClose, onSaved, onLinked }: Props) {

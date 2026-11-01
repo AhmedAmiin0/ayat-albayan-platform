@@ -39,13 +39,13 @@ async function show(lastInbound: string, permissions?: string[]) {
 
 const shown = (names: string[]) => names.filter((n) => n !== '?');
 
-test('open window with pricing.read: [emoji] [text] [price tag] [paperclip] [camera] [round], left → right; nothing else', async () => {
+test('open window with pricing.read: [emoji] [text] [price tag] [paperclip] [round], left → right; nothing else', async () => {
   await show(ago(5));
   expect(leftToRight(screen.getByTestId('open-row'), false)).toEqual(['composer-pill', 'round-action']);
-  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([c.emoji, c.placeholder, 'quote-button', c.attach, c.camera]);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([c.emoji, c.placeholder, 'quote-button', c.attach]);
 });
 
-test('open window without pricing.read: [emoji] [text] [paperclip] [round]; typing hides the camera and shows «Send»', async () => {
+test('open window without pricing.read: [emoji] [text] [paperclip] [round]; no camera; typing shows «Send»', async () => {
   await show(ago(5), ['inbox.read', 'inbox.send']);
   await fireEvent.changeText(screen.getByLabelText(c.placeholder), 'Hello');
   expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([c.emoji, c.placeholder, c.attach]);
