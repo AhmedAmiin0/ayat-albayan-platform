@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { RECEIPT_FILTERS, receiptMime, receiptName } from './receipt-candidates';
 
 type Row = Pick<MediaMessage, 'media_mime' | 'media_name' | 'interactive_payload'>;

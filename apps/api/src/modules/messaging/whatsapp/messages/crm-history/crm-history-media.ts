@@ -1,7 +1,7 @@
 import { baseMime, chatFileMaxBytes } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { waHttpError } from '../../templates/catalog/template.mapper';
-import type { MediaMessage } from '../inbound-media.queries';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { allowedCrmUrl } from './crm-history-url';
 import { fetchCrmMedia } from './crm-media.fetch';
 import { CrmMediaSettings } from './crm-media.settings';

@@ -1,13 +1,13 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries, type MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../../whatsapp/whatsapp.types';
-import { TeacherThreadsQueries } from '../teacher-threads/teacher-threads.queries';
-import { ADMIN, SALES, TEACHER } from '../test-app';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { TeacherThreadsQueries } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.queries';
+import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 // docs/21 D1/D2: W6 serves voice notes, videos and files staff sent; the admin picker does not.
 
@@ -37,7 +37,7 @@ describe('W6 bubble files: audio, video and sent files (docs/21 §4)', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaQueries).useValue(queries)
+      .overrideProvider(InboundMediaRepo).useValue(queries)
       .overrideProvider(TeacherThreadsQueries).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })

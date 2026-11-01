@@ -6,7 +6,7 @@ import type { WhatsappEnv } from '@/config/env/env';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { setTemplateNumber, type NumberSetInput } from './template-number-set';
 import { syncNumber } from './template-number-sync';
-import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 
 /**
  * Templates per number (docs/23 phase 5, docs/23c decision 9): a template's own number and one number's
@@ -18,7 +18,7 @@ export class TemplateNumbers {
   private readonly log = new Logger(TemplateNumbers.name);
 
   constructor(
-    private readonly queries: TemplatesQueries,
+    private readonly queries: TemplatesRepo,
     private readonly audit: AuditService,
   ) {}
 

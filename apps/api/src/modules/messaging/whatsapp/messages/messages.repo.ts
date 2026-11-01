@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
 import { stampDelivered } from './delivered';
-import { HANDED_OFF, SENDING } from '../sender/send-plan';
+import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
@@ -12,7 +12,7 @@ const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
  * M2/M3 also skip a row the sender claimed between the admin's read and this write.
  */
 @Injectable()
-export class MessagesQueries {
+export class MessagesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(id: string): Promise<ThreadMessageRow | null> {

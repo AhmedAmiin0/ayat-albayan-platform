@@ -1,11 +1,11 @@
 import type { MessageView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MessageSender } from '../sender/message.sender';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MessageViews } from './message.views';
 import { needsManualSend, type MessageRow } from './message.mapper';
-import { MessagesQueries } from './messages.queries';
-import { AUTO_OFF } from '../sender/send-stale';
-import { waHttpError } from '../templates/catalog/template.mapper';
+import { MessagesRepo } from './messages.repo';
+import { AUTO_OFF } from '@/modules/messaging/whatsapp/sender/send-stale';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 
 export interface MessageChange {
   before: MessageRow;
@@ -16,7 +16,7 @@ export interface MessageChange {
 @Injectable()
 export class MessagesService {
   constructor(
-    private readonly queries: MessagesQueries,
+    private readonly queries: MessagesRepo,
     private readonly views: MessageViews,
     private readonly sender: MessageSender,
   ) {}

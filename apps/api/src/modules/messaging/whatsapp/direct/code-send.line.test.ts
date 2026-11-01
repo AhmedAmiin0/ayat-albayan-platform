@@ -3,7 +3,7 @@ import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/in
 import type { WhatsappEnv } from '@/config/env/env';
 import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dispatch';
-import type { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
+import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 import { messagingNumbers, routable } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
@@ -23,7 +23,7 @@ const routes = {
   })),
 };
 const make = () => {
-  const s = new CodeSend(gate as unknown as SendGate, queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch);
+  const s = new CodeSend(gate as unknown as SendGate, queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch);
   Object.assign(s, { routes: routes as unknown as NumberRoutes });
   return s;
 };

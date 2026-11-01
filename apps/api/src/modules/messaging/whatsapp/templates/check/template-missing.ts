@@ -2,7 +2,7 @@ import { crmTemplateName, type WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «تحقق من القالب» (owner 2026-10-31). The CRM's public API cannot list its templates (docs/19), so
@@ -45,7 +45,7 @@ export class TemplateMissing {
   private readonly log = new Logger(TemplateMissing.name);
 
   constructor(
-    private readonly queries: TemplatesQueries,
+    private readonly queries: TemplatesRepo,
     private readonly audit: AuditService,
   ) {}
 

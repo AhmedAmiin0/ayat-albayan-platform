@@ -1,16 +1,16 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../common/settings/settings.service';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { CRM_HOST, crmResponse, crmRow, stubFetch } from '../../whatsapp/messages/crm-history/crm-history.fakes';
-import { InboundMediaQueries } from '../../whatsapp/messages/inbound-media.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../../whatsapp/whatsapp.types';
-import { TeacherThreadsQueries } from '../teacher-threads/teacher-threads.queries';
-import { ADMIN, SALES, TEACHER } from '../test-app';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { CRM_HOST, crmResponse, crmRow, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
+import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { TeacherThreadsQueries } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.queries';
+import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 // Owner 2026-10-27: a photo imported from the old CRM opens in the bubble (web and mobile): fetched
 // once from the configured CRM storage host, cached in wa-media, then signed like any inbound file.
@@ -35,7 +35,7 @@ describe('W6 file of a message imported from the old CRM', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaQueries).useValue(queries)
+      .overrideProvider(InboundMediaRepo).useValue(queries)
       .overrideProvider(TeacherThreadsQueries).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })

@@ -1,6 +1,6 @@
 import { PLAYABLE_MIMES, type NumberPurpose } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
@@ -44,7 +44,7 @@ export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.
 
 /** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
 @Injectable()
-export class InboundMediaQueries {
+export class InboundMediaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async message(id: string): Promise<MediaMessage | null> {

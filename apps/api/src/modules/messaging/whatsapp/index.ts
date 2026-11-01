@@ -4,10 +4,10 @@ export { SendGate } from './gate/send-gate';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
 export {
   type CachedMedia,
-  InboundMediaQueries,
+  InboundMediaRepo,
   type MediaMessage,
   PLAYABLE_FILTER,
-} from './messages/inbound-media.queries';
+} from './messages/inbound-media.repo';
 export {
   baseMime,
   CRM_NO_MEDIA,
@@ -82,6 +82,6 @@ export {
   type ApprovalRow,
   type ApprovalWrite,
   type NumberRef,
-  TemplatesQueries,
-} from './templates/catalog/templates.queries';
+  TemplatesRepo,
+} from './templates/catalog/templates.repo';
 export { WhatsappModule } from './whatsapp.module';

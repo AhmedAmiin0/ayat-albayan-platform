@@ -1,10 +1,10 @@
 import { INVOICE_MAX_BYTES, PLAYABLE_MAX_BYTES, isChatViewMime } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
 import { InboundMedia, servable } from './inbound-media.service';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-19 #1: the chat bubble (W6) serves voice notes and videos up to 16 MB; the default
 // gate (booking «من الشات», sales receipt copy) stays images / PDFs.
@@ -27,7 +27,7 @@ function setup(row: MediaMessage, size = 3) {
   const client = { getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array(size), mime: 'x' }) };
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
-  const media = new InboundMedia(queries as unknown as InboundMediaQueries, lines, storage as unknown as StorageService);
+  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
   return { media, storage, queries };
 }
 const code = async (p: Promise<unknown>) => {

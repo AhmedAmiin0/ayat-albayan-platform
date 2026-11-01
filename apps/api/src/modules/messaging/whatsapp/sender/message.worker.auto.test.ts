@@ -1,13 +1,13 @@
 import { TEMPLATE_KEYS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { SENDING } from './send-plan';
 import { AUTOMATIC_KEYS, isAutomatic } from './send-stale';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // The automatic-messages hold (settings.auto_messages_enabled, migration 162, docs/09 cut-over).
 
@@ -23,7 +23,7 @@ const reminder = (over: Parameters<typeof dueMessage>[0] = {}) =>
   dueMessage({ template_key: 'lesson_reminder', dedup_key: 'lesson_reminder:l1:g1', ...over });
 
 function worker() {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w;
 }

@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@nestjs/common';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { RulesReader } from '@/modules/messaging/notification-rules/store/rules.reader';
 import { messagingNumbers, routable, ruleNumbers, type RoutePass } from './number-route';
-import { RouteQueries } from './route.queries';
+import { RouteRepo } from './route.repo';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
@@ -15,7 +15,7 @@ import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 @Injectable()
 export class NumberRoutes {
   constructor(
-    private readonly queries: RouteQueries,
+    private readonly queries: RouteRepo,
     @Optional() private readonly rules?: RulesReader,
   ) {}
 

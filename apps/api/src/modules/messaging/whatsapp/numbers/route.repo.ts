@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { Approvals } from './number-route';
-import { templateRows, type TemplateRow } from '../whatsapp.types';
+import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** Template keys are snake_case registry keys; anything else is never put into a filter. */
 const KEY = /^[a-z0-9_]{1,64}$/;
@@ -11,7 +11,7 @@ const KEY = /^[a-z0-9_]{1,64}$/;
  * under legacy (comms_source = legacy, staging) neither is ever read.
  */
 @Injectable()
-export class RouteQueries {
+export class RouteRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every message_template_numbers row as key → number → status (decision 4). */

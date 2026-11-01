@@ -1,20 +1,20 @@
 import { onMessagingLine, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import type { StaffAtSend } from '../../reminders/plan/staff-reachable';
-import { allowedRecipients, lineEnvs, loadEnv } from '../../../../config/env/env';
-import { stampDelivered } from '../messages/delivered';
+import { DB, type Db } from '@/common/db/db.module';
+import type { StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
+import { allowedRecipients, lineEnvs, loadEnv } from '@/config/env/env';
+import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
-import { templateRows, type TemplateRow } from '../whatsapp.types';
+import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { DueMessage } from './sender.due';
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
 @Injectable()
-export class SenderQueries {
+export class SenderRepo {
   /** WA_ALLOWED_RECIPIENTS, read per call (docs/12 §13.5a): rows to other phones are never read. */
   get allowed(): readonly string[] | null {
     return allowedRecipients(loadEnv());

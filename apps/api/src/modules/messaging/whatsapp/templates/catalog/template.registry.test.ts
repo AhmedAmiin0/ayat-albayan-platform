@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { byDriver } from '../../drivers/meta/graph';
-import { KAPSO_ENV } from '../../drivers/kapso/kapso.fakes';
-import { toMetaTemplate } from '../../drivers/meta/meta-shapes';
+import type { AuditService } from '@/common/audit/audit.service';
+import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { toMetaTemplate } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
 import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
+import type { TemplatesRepo } from './templates.repo';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
-import { RECORDED, templateRow } from '../../whatsapp.fakes';
-import { WaError, type WhatsappLines } from '../../whatsapp.types';
+import { RECORDED, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
@@ -19,7 +19,7 @@ const RENEWAL = RENEWAL_DUE_SEED;
 const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
 
 const registry = () =>
-  new TemplateRegistry(queries as unknown as TemplatesQueries, { notifications: client, chat: chatClient } as unknown as WhatsappLines, audit as unknown as AuditService);
+  new TemplateRegistry(queries as unknown as TemplatesRepo, { notifications: client, chat: chatClient } as unknown as WhatsappLines, audit as unknown as AuditService);
 const status = (p: Promise<unknown>) => p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
 
 describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {

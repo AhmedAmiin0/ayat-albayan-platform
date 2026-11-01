@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
-import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.types';
+import type { TemplatesRepo } from './templates.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
@@ -20,7 +20,7 @@ let chat = client();
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-12T08:00:00Z');
 const registry = () =>
-  new TemplateRegistry(queries as unknown as TemplatesQueries, { notifications, chat } as unknown as WhatsappLines, audit as unknown as AuditService);
+  new TemplateRegistry(queries as unknown as TemplatesRepo, { notifications, chat } as unknown as WhatsappLines, audit as unknown as AuditService);
 
 const meta = (name: string, over: Partial<MetaTemplate> = {}): MetaTemplate => ({
   id: `id-${name}`, name, language: 'ar', status: 'APPROVED', category: 'MARKETING', quality: 'GREEN',

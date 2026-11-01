@@ -7,17 +7,17 @@ import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
-import { SalesQueries } from '../../sales/sales/sales.queries';
-import { MessageSender } from '../whatsapp/sender/message.sender';
-import { SendGate } from '../whatsapp/gate/send-gate';
-import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates/catalog/templates.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ChatListsQueries } from '@/modules/messaging/chat-lists/chat-lists.queries';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries';
@@ -90,7 +90,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(ChatListsQueries).useValue(m.lists)
-    .overrideProvider(TemplatesQueries).useValue(templates)
+    .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(SendGate).useValue(m.gate)
