@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
-import { addDays, riyadhNoon, riyadhToday } from '@/calendar/lib/week';
+import { addDays, riyadhNoon, riyadhToday } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useJoinWindow } from '@/core/lib/query/public-config';

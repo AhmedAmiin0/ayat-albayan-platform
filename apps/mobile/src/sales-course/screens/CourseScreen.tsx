@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import type { CourseBlock } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { bookFailure, isCodedRefusal } from '@/booking/shared/booking-errors';
+import { bookFailure, isCodedRefusal } from '@/booking';
 import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

@@ -1,9 +1,8 @@
 import { continueFits, courseOpensOn, prefillDays, type BookedCourse, type PrefilledPick, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { bookFailure } from '@/booking/shared/booking-errors';
+import { bookFailure, dayStartUtc } from '@/booking';
 import { SlotStep } from '@/booking/trial/components/SlotStep';
-import { dayStartUtc } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
