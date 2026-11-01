@@ -1,13 +1,33 @@
 import {
-  numberCreateSchema, numberSecretNameSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema,
-  type ImportResult, type NumberView, type OwnTrafficView,
+  numberCreateSchema,
+  numberSecretNameSchema,
+  numberSecretSchema,
+  numbersImportSchema,
+  numberUpdateSchema,
+  type ImportResult,
+  type NumberCreate,
+  type NumberUpdate,
+  type NumberView,
+  type OwnTrafficView,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { NumbersImport } from './import/numbers.import';
 import { NumbersService } from './numbers.service';
 import { OwnNumbers } from './own/own-numbers';
@@ -46,22 +66,32 @@ export class NumbersController {
   @Post()
   @HttpCode(201)
   @Permissions('numbers.manage')
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<NumberView> {
-    return this.numbers.create(parseOrThrow(numberCreateSchema, body), user.id);
+  create(
+    @ZodBody(numberCreateSchema) body: NumberCreate,
+    @CurrentUser() user: AuthUser,
+  ): Promise<NumberView> {
+    return this.numbers.create(body, user.id);
   }
 
   /** Dry run: per role, today's values and their source, never a secret. Apply: idempotent. */
   @Post('import')
   @HttpCode(200)
   @Permissions('numbers.manage')
-  import(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ImportResult> {
-    return this.importer.run(parseOrThrow(numbersImportSchema, body).dryRun, user.id);
+  import(
+    @ZodBody(numbersImportSchema) body: z.output<typeof numbersImportSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ImportResult> {
+    return this.importer.run(body.dryRun, user.id);
   }
 
   @Patch(':id')
   @Permissions('numbers.manage')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<NumberView> {
-    return this.numbers.update(id, parseOrThrow(numberUpdateSchema, body), user.id);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(numberUpdateSchema) body: NumberUpdate,
+    @CurrentUser() user: AuthUser,
+  ): Promise<NumberView> {
+    return this.numbers.update(id, body, user.id);
   }
 
   @Delete(':id')
@@ -73,8 +103,15 @@ export class NumbersController {
 
   @Put(':id/secrets/:name')
   @Permissions('numbers.manage')
-  setSecret(@Param() params: unknown, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<NumberView> {
-    const target = { ...parseOrThrow(SECRET_PARAMS, params), value: parseOrThrow(numberSecretSchema, body).value };
+  setSecret(
+    @Param() params: unknown,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<NumberView> {
+    const target = {
+      ...parseOrThrow(SECRET_PARAMS, params),
+      value: parseOrThrow(numberSecretSchema, body).value,
+    };
     return this.numbers.setSecret(target, user.id);
   }
 

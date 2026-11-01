@@ -1,27 +1,21 @@
 import {
-  restrictedMay,
-  sendsAllTemplates,
-  templateCreateSchema,
-  templateHealthSchema,
-  templateCrmNameSchema,
-  templateCrmStatusSchema,
-  templateLineSchema,
-  templateNumberSchema,
-  templateStarterSchema,
-  type TemplateHealthView,
-  type TemplateLineView,
-  type TemplateMoveView,
-  type TemplateNumberSetView,
-  type TemplateView,
+  restrictedMay, sendsAllTemplates, templateCreateSchema, templateHealthSchema,
+  templateCrmNameSchema, templateCrmStatusSchema, templateLineSchema, templateNumberSchema,
+  templateStarterSchema, type TemplateHealthView, type TemplateLineView, type TemplateMoveView,
+  type TemplateNumberSetView, type TemplateView,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { TemplateCreator } from '@/modules/messaging/whatsapp/templates/create/template-create';
 import { TemplateManagerGuard } from './template-manager.guard';
-import { TemplateNumbers } from '../sync/template-numbers.service';
+import { TemplateNumbers } from '@/modules/messaging/whatsapp/templates/sync/template-numbers.service';
 import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 
@@ -51,14 +45,14 @@ export class TemplatesController {
     return sendsAllTemplates(user) ? all : all.filter(restrictedMay);
   }
 
-  /**
-   * «قالب جديد» (owner 2026-10-31): a new row on one line, not submitted (its «إرسال إلى ميتا»
-   * is the separate submit below); 409 invalid_template / template_exists; audited.
-   */
+  /** «قالب جديد» (owner 2026-10-31): an unsubmitted row; 409 invalid_template / template_exists. */
   @Post()
   @UseGuards(TemplateManagerGuard)
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
-    return this.creator.create(parseOrThrow(templateCreateSchema, body), user.id);
+  create(
+    @ZodBody(templateCreateSchema) body: z.output<typeof templateCreateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
+    return this.creator.create(body, user.id);
   }
 
   /** Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last sync. */
@@ -94,8 +88,11 @@ export class TemplatesController {
   @Patch(':key/line')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  setLine(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateMoveView> {
-    const input = parseOrThrow(templateLineSchema, body);
+  setLine(
+    @Param('key') key: string,
+    @ZodBody(templateLineSchema) input: z.output<typeof templateLineSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateMoveView> {
     return this.registry.moveLine({ key, line: input.line }, user.id);
   }
 
@@ -106,8 +103,11 @@ export class TemplatesController {
   @Put(':key/number')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  setNumber(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateNumberSetView> {
-    const input = parseOrThrow(templateNumberSchema, body);
+  setNumber(
+    @Param('key') key: string,
+    @ZodBody(templateNumberSchema) input: z.output<typeof templateNumberSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateNumberSetView> {
     return this.numbers.setNumber({ key, number_id: input.number_id }, user.id);
   }
 
@@ -115,8 +115,11 @@ export class TemplatesController {
   @Put(':key/crm-status')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  setCrmStatus(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
-    const input = parseOrThrow(templateCrmStatusSchema, body);
+  setCrmStatus(
+    @Param('key') key: string,
+    @ZodBody(templateCrmStatusSchema) input: z.output<typeof templateCrmStatusSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
     return this.registry.setCrmStatus({ key, status: input.status }, user.id);
   }
 
@@ -124,8 +127,11 @@ export class TemplatesController {
   @Put(':key/crm-name')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  setCrmName(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
-    const input = parseOrThrow(templateCrmNameSchema, body);
+  setCrmName(
+    @Param('key') key: string,
+    @ZodBody(templateCrmNameSchema) input: z.output<typeof templateCrmNameSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
     return this.registry.setCrmName({ key, ...input }, user.id);
   }
 
@@ -133,8 +139,11 @@ export class TemplatesController {
   @Patch(':key/starter')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  setStarter(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
-    const input = parseOrThrow(templateStarterSchema, body);
+  setStarter(
+    @Param('key') key: string,
+    @ZodBody(templateStarterSchema) input: z.output<typeof templateStarterSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
     return this.starters.set(key, input.sales_starter, user.id);
   }
 }

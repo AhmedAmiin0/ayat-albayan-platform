@@ -37,6 +37,11 @@ describe('an assistant without saved_replies.manage', () => {
     expect(list.json<{ id: string }[]>().map((r) => r.id)).not.toContain(HERS);
   });
 
+  it('PATCH with a malformed :id is 404 before the body is parsed', async () => {
+    const res = await t.call({ method: 'PATCH', url: '/saved-replies/nope', body: { title: 7 } });
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
+  });
+
   it('even the admin cannot reach an assistant\'s personal reply', async () => {
     const res = await t.call({ method: 'PATCH', url: `/saved-replies/${HERS}`, body: { title: 'ج' } });
     expect(res.statusCode).toBe(404);
@@ -45,6 +50,11 @@ describe('an assistant without saved_replies.manage', () => {
   it('a teacher granted the permission still gets 403 on every route', async () => {
     const res = await t.call({ method: 'POST', url: '/saved-replies', token: 'teacher', body: { scope: 'mine', title: 'ع', body: 'ب' } });
     expect(res.statusCode).toBe(403);
+  });
+
+  it('answers 403 saved_replies_forbidden before the body is parsed (an invalid body is not a 400)', async () => {
+    const res = await t.call({ method: 'POST', url: `/saved-replies/${SHARED}/move`, token: 'teacher', body: {} });
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([403, 'saved_replies_forbidden']);
   });
 });
 

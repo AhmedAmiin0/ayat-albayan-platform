@@ -1,9 +1,10 @@
 import { commsSourceSchema, type CommsSourceView, type ParityView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { CommunicationsService } from './communications.service';
 
 /**
@@ -26,7 +27,10 @@ export class CommunicationsController {
   @Post('source')
   @HttpCode(200)
   @Permissions('numbers.manage')
-  setSource(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CommsSourceView> {
-    return this.comms.setSource(parseOrThrow(commsSourceSchema, body).source, user.id);
+  setSource(
+    @ZodBody(commsSourceSchema) body: z.output<typeof commsSourceSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CommsSourceView> {
+    return this.comms.setSource(body.source, user.id);
   }
 }
