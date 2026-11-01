@@ -5538,6 +5538,22 @@
     "saved": "Integrations saved",
     "secretStored": "Secret saved",
     "secretCleared": "Secret cleared",
+    "crmWebhook": {
+      "button": "Link CRM delivery ticks automatically",
+      "hint": "Creates the delivery-status webhook in the CRM with the notifications line's key and stores its secret here, unseen by anyone.",
+      "pending": "Linking…",
+      "done": "CRM delivery ticks linked",
+      "errors": {
+        "crm_line_required": "The notifications line does not send through the CRM, or its CRM address or key is missing.",
+        "public_url_required": "The public API address (API_PUBLIC_URL) is not set or does not start with https.",
+        "crm_key_refused": "The CRM refused the notifications line's key.",
+        "crm_scope_missing": "The CRM key lacks the webhooks:manage scope.",
+        "crm_failed": "Could not reach the CRM. Try again.",
+        "crm_bad_answer": "The CRM gave an unexpected answer, so nothing was saved.",
+        "secret_store_failed": "The secret could not be saved, so the webhook was removed from the CRM. Try again.",
+        "unknown": "Linking failed. Try again."
+      }
+    },
     "invalid": "Not a valid value for this field",
     "options": {
       "meta": "Meta direct",
@@ -5637,7 +5653,7 @@
       },
       "WACRM_WEBHOOK_SECRET": {
         "label": "CRM webhook signing secret",
-        "hint": "In the CRM, add a webhook to the API origin followed by /webhooks/wacrm for the event message.status_updated, then paste its secret here so delivery ticks arrive."
+        "hint": "Set by the «Link CRM delivery ticks automatically» button below: it registers the API origin followed by /webhooks/wacrm in the CRM for the event message.status_updated and stores its secret here so delivery ticks arrive."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",

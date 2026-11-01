@@ -38,4 +38,12 @@ describe('verifyWacrmSignature', () => {
     expect(check(`t=${T},v1=${v1(T, '  ')}`, { secret: '  ' })).toBe('bad');
     expect(verifyWacrmSignature({ rawBody: undefined, header: `t=${T},v1=${v1(T)}`, secret: SECRET, now: NOW })).toBe('bad');
   });
+
+  it('a secret the CRM made (whsec_…) is the HMAC key as a whole string, never decoded', () => {
+    const made = `whsec_${'FAKEfakeFAKEfake'.repeat(3)}`;
+    const decoded = Buffer.from(made.slice('whsec_'.length), 'base64url');
+    const byDecoded = createHmac('sha256', decoded).update(`${T}.${raw.toString()}`).digest('hex');
+    expect(check(`t=${T},v1=${v1(T, made)}`, { secret: made })).toBe('ok');
+    expect(check(`t=${T},v1=${byDecoded}`, { secret: made })).toBe('bad');
+  });
 });
