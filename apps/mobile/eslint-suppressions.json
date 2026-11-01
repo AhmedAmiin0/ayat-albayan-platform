@@ -358,6 +358,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 7
     }
@@ -3989,63 +3992,12 @@
     }
   },
   "src/inbox/composer/emoji/GifTab.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 10
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     }
   },
-  "src/inbox/composer/emoji/StickerCell.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/emoji/StickerTab.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
-    },
-    "@typescript-eslint/restrict-plus-operands": {
-      "count": 2
-    }
-  },
   "src/inbox/composer/emoji/emoji-list.ts": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/inbox/composer/emoji/panel-api.ts": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-return": {
       "count": 2
     }
   },
@@ -4748,9 +4700,6 @@
     }
   },
   "src/inbox/messages/components/MessageFile.tsx": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
     "ab/no-parent-imports": {
       "count": 10
     },
@@ -4931,11 +4880,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/sticker/StickerFavourite.tsx": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/components/swipe-reply.helpers.tsx": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 1
@@ -5056,9 +5000,6 @@
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -5428,7 +5369,7 @@
   },
   "src/inbox/messages/photo/media-problem.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
