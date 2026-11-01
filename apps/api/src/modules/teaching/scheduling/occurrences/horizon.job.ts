@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { addDays } from './horizon';
 import { OccurrenceGenerator } from './occurrence-generator';
-import { ScheduleQueries } from '../schedule.queries';
-import { SchedulingSettings } from '../scheduling.settings';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -54,20 +54,28 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
       summary.ended = await this.rules.endExpired(today);
       for (const { id } of await this.rules.activeRuleIds(today)) {
         summary.rules += 1;
-        try {
-          const rule = await this.rules.rule(id);
-          if (rule?.status !== 'active') continue;
-          const { lessons } = await this.generator.topUp(rule, { weeks, actorId: null, now });
-          summary.inserted += lessons.length;
-        } catch (e) {
-          summary.failed += 1;
-          this.log.warn(`horizon refresh failed for rule ${id}: ${String(e)}`);
-        }
+        const inserted = await this.refresh(id, { weeks, now });
+        summary.inserted += inserted ?? 0;
+        summary.failed += Number(inserted === null);
       }
     } catch (e) {
       this.log.error(`horizon refresh aborted: ${String(e)}`);
     }
     this.log.log(`horizon refresh: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  /** One rule topped up: lessons inserted (0 once it is not active), null when it failed. */
+  private async refresh(id: string, o: { weeks: number; now: Date }): Promise<number | null> {
+    try {
+      const rule = await this.rules.rule(id);
+      if (rule?.status !== 'active') return 0;
+      const options = { weeks: o.weeks, actorId: null, now: o.now };
+      const { lessons } = await this.generator.topUp(rule, options);
+      return lessons.length;
+    } catch (e) {
+      this.log.warn(`horizon refresh failed for rule ${id}: ${String(e)}`);
+      return null;
+    }
   }
 }

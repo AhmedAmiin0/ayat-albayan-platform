@@ -3,14 +3,17 @@ import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy }
 import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryQueries } from './student-expiry.queries';
 import { StudentStatusQueries } from './student-status.queries';
-import { SubscriptionsSettings } from '../subscriptions.settings';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 10 * 60_000;
 
 type ExpirySummary = { students: number; expired: number; failed: number };
+type Outcome = 'expired' | 'kept' | 'failed';
+
+const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * Transition 6 (owner 2026-10-15, docs/11 §7, R-STU-05): a student still «بانتظار التجديد»
@@ -51,17 +54,24 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
       const days = (await this.settings.read()).subscription_expiry_days;
       for (const id of await this.queries.pendingRenewal()) {
         summary.students += 1;
-        try {
-          if (await this.expire(id, { now, days })) summary.expired += 1;
-        } catch (e) {
-          summary.failed += 1;
-          this.log.error(`expiry of student ${id} failed: ${e instanceof Error ? e.message : String(e)}`);
-        }
+        const outcome = await this.expireLogged(id, { now, days });
+        summary.expired += Number(outcome === 'expired');
+        summary.failed += Number(outcome === 'failed');
       }
     } catch (e) {
       this.log.error(`student expiry aborted: ${String(e)}`);
     }
     return summary;
+  }
+
+  /** One student's pass; a failure is logged and counted, never thrown. */
+  private async expireLogged(studentId: string, o: { now: Date; days: number }): Promise<Outcome> {
+    try {
+      return (await this.expire(studentId, o)) ? 'expired' : 'kept';
+    } catch (e) {
+      this.log.error(`expiry of student ${studentId} failed: ${errorText(e)}`);
+      return 'failed';
+    }
   }
 
   private async expire(studentId: string, o: { now: Date; days: number }): Promise<boolean> {
