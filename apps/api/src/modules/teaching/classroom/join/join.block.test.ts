@@ -1,20 +1,20 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ClassroomQueries } from '../classroom.queries';
-import { ADMIN, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries, TEACHER } from '../classroom.fakes';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
+import { ADMIN, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
-import { admissionOf, moderation, recorder, rolesOf } from '../moderation/moderation.fakes';
+import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { ClassroomSettings } from '../classroom.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
 let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder() });
 const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user, lessonId: LESSON_ID }, OPEN);
 const guestJoin = () =>
-  new GuestJoinService(q as unknown as ClassroomQueries, new PublicJoinLimit(), admissionOf(deps())).join(
+  new GuestJoinService(q as unknown as ClassroomRepo, new PublicJoinLimit(), admissionOf(deps())).join(
     { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },
     OPEN,
   );

@@ -1,16 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, TEACHER } from '../classroom.fakes';
+import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID, meetingQueries } from './internal-meetings.fakes';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
-import type { InternalMeetingsQueries } from './internal-meetings.queries';
-import { LivekitApi } from '../livekit/livekit-api';
-import { http } from '../moderation/moderation.fakes';
+import type { InternalMeetingsRepo } from './internal-meetings.repo';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
 let post: ReturnType<typeof http>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new InternalMeetingKickService(mq as unknown as InternalMeetingsQueries, new LivekitApi(config, post));
+  new InternalMeetingKickService(mq as unknown as InternalMeetingsRepo, new LivekitApi(config, post));
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const GUEST = 'guest-0123456789ab';
 

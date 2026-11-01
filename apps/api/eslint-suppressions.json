@@ -12963,16 +12963,8 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/assistants/assistants.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/teaching/classroom/assistants/assistants.service.test.ts": {
@@ -12982,17 +12974,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 6
     }
   },
   "src/modules/teaching/classroom/assistants/assistants.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -13017,9 +13003,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -13027,9 +13010,6 @@
   "src/modules/teaching/classroom/classroom.module.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 6
@@ -13043,12 +13023,9 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/classroom.queries.ts": {
+  "src/modules/teaching/classroom/classroom.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 2
@@ -13084,9 +13061,6 @@
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -13097,9 +13071,6 @@
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    },
     "max-len": {
       "count": 6
     }
@@ -13111,17 +13082,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 5
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -13133,25 +13098,16 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 6
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.providers.ts": {
-    "ab/no-parent-imports": {
-      "count": 12
-    },
     "max-len": {
       "count": 3
     }
   },
-  "src/modules/teaching/classroom/internal-meetings/internal-meetings.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/teaching/classroom/internal-meetings/internal-meetings.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -13163,17 +13119,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 5
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 5
     }
@@ -13198,9 +13148,6 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -13212,17 +13159,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/guest-join.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -13266,9 +13207,6 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -13277,16 +13215,8 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/classroom/join/join-link.staff.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/teaching/classroom/join/join-link.token.ts": {
@@ -13297,9 +13227,6 @@
   "src/modules/teaching/classroom/join/join.block.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 3
@@ -13328,9 +13255,6 @@
     }
   },
   "src/modules/teaching/classroom/join/room-admission.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 4
     }
@@ -13366,9 +13290,6 @@
     }
   },
   "src/modules/teaching/classroom/join/room-join.trial.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
@@ -13388,17 +13309,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -13488,27 +13403,16 @@
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/classroom/livekit/livekit-webhook.size.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.test.ts": {
@@ -13542,9 +13446,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.flow.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 12
     }
@@ -13592,17 +13493,9 @@
       "count": 9
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.ts": {
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.repo.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 5
@@ -13615,41 +13508,29 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 6
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.test.ts": {
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.test.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.ts": {
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 6
@@ -13674,9 +13555,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -13721,9 +13599,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 10
     }
@@ -13751,17 +13626,11 @@
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-create.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 6
     }
   },
-  "src/modules/teaching/classroom/meetings/schedule/meeting-list.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/teaching/classroom/meetings/schedule/meeting-list.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -13772,9 +13641,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-list.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -13845,17 +13711,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
   },
   "src/modules/teaching/classroom/moderation/kick.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 2
     }
@@ -13878,15 +13738,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/moderation/moderation.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/classroom/moderation/moderation.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/teaching/classroom/moderation/moderation.repo.ts": {
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -13919,9 +13771,6 @@
     }
   },
   "src/modules/teaching/classroom/moderation/mute.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 4
     }
@@ -13943,70 +13792,41 @@
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/teaching/classroom/recordings/recording-list.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recording-list.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recording.lifecycle.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recording.lifecycle.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/recordings/recording.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/recordings/recording.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/teaching/classroom/recordings/recording.repo.ts": {
     "max-len": {
       "count": 2
     }
   },
   "src/modules/teaching/classroom/recordings/recording.starter.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recording.starter.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -14034,17 +13854,11 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.admin.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -14055,17 +13869,11 @@
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/student-link/student-link.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
+  "src/modules/teaching/classroom/student-link/student-link.repo.ts": {
     "max-len": {
       "count": 7
     }
@@ -14074,9 +13882,6 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -14084,9 +13889,6 @@
   "src/modules/teaching/classroom/student-link/student-link.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "max-len": {
       "count": 11
@@ -15574,9 +15376,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -15678,9 +15477,6 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -15692,9 +15488,6 @@
   },
   "src/modules/teaching/student-recordings/student-recordings.mapper.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {

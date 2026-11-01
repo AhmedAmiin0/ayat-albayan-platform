@@ -4,7 +4,7 @@ import { PushService } from '@/common/push/push.service';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
-import type { StoredInvitee } from './meeting-invitees.queries';
+import type { StoredInvitee } from './meeting-invitees.repo';
 import { whenText } from './meeting-invite.text';
 
 /** What one delivery did; written on the invitee row by the caller. */

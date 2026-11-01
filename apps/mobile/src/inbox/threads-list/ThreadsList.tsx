@@ -11,7 +11,7 @@ import { SearchField } from '@/core/ui/form/SearchField';
 import { clockAt } from '@/inbox/shared/format';
 import { InboxHeaderActions } from './InboxHeaderActions';
 import { FAB, NewChatSheet } from './NewChatSheet';
-import { type ChatChoice, ChatListChips } from '@/inbox/lists/ChatListChips';
+import { type ChatChoice, ChatListChips } from '@/inbox/lists/components/ChatListChips';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
