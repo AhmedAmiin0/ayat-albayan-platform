@@ -34,9 +34,9 @@ export const iceUrls = z
   .refine((raw) => raw.split(',').every((u) => /^(stun|turns?):[A-Za-z0-9.-]+(:\d{1,5})?(\?transport=(udp|tcp))?$/.test(u.trim())), 'ice_url');
 
 /**
- * Stripe (docs/30, with FEATURE_STRIPE test or live): a restricted or secret key, sandbox or live
- * (rk_ / sk_ + test_ / live_). A malformed one (a publishable pk_ key, junk) keeps the old code. Whether
- * a live key is accepted is the server's call (FEATURE_STRIPE=live, apps/api env.stripe.ts).
+ * Stripe (docs/30, with FEATURE_STRIPE test or live): a restricted or secret key, sandbox or
+ * live (rk_ / sk_ + test_ / live_). A malformed one (a publishable pk_ key, junk) keeps the old
+ * code. Whether a live key is accepted is the server's call (FEATURE_STRIPE=live, env.stripe.ts).
  */
 export const stripeApiKey = z.string().regex(/^(rk|sk)_(test|live)_[A-Za-z0-9]+$/, 'stripe_live_key_refused');
 /** A live-mode key (rk_live_ / sk_live_): it moves real money. */

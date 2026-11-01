@@ -10,9 +10,9 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 
-// «رابط دفع» (docs/30, with FEATURE_STRIPE (test or live)): /stripe/feature, /sales/payment-links and /pay/:token (the
-// switch and the keys are integration keys, «التكاملات»). Each read is asked only behind
-// stripeBuild(); a 404 means the server has no Stripe.
+// «رابط دفع» (docs/30, with FEATURE_STRIPE test or live): /stripe/feature, /sales/payment-links
+// and /pay/:token (the switch and the keys are integration keys, «التكاملات»). Each read is
+// asked only behind stripeBuild(); a 404 means the server has no Stripe.
 
 /** Her links and their quotes. */
 export const PAYMENT_LINKS_KEY = ['sales', 'payment-links'] as const;

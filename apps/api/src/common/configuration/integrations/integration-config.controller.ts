@@ -26,9 +26,12 @@ const valuesBody = integrationValuesSchema.superRefine(({ values }, ctx) => {
     if (!integrationKeyAvailable(key)) ctx.addIssue({ code: 'custom', path: ['values', key], message: 'unknown_key' });
   }
 });
-/** The server's own check where it is stricter than the shared one (a live Stripe key: FEATURE_STRIPE=live only). */
-const SERVER_SECRET_CHECKS: Partial<Record<IntegrationSecretKey, z.ZodType<string>>> = { STRIPE_API_KEY: stripeServerKey };
-const secretCheck = (key: IntegrationSecretKey): z.ZodType<string> => SERVER_SECRET_CHECKS[key] ?? integrationSecretCheck(key);
+/** Where the server is stricter than the shared check (a live Stripe key: live mode only). */
+const SERVER_SECRET_CHECKS: Partial<Record<IntegrationSecretKey, z.ZodType<string>>> = {
+  STRIPE_API_KEY: stripeServerKey,
+};
+const secretCheck = (key: IntegrationSecretKey): z.ZodType<string> =>
+  SERVER_SECRET_CHECKS[key] ?? integrationSecretCheck(key);
 
 /**
  * «التكاملات» on /admin/settings (owner, 2026-10-12): the integration keys an admin may keep in the
@@ -60,7 +63,7 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  /** A key's own format is checked too: a live Stripe key without FEATURE_STRIPE=live is 400 stripe_live_key_refused. */
+  /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test). */
   @Put('secrets/:key')
   @Permissions('settings.write')
   async putSecret(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {

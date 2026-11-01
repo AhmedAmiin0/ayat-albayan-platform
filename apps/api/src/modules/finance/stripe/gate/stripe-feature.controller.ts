@@ -7,8 +7,9 @@ import { stripeReady } from '@/config/env/env.stripe';
 
 /**
  * GET /stripe/feature (no login): whether the apps show the online-payment buttons, i.e.
- * «الدفع الإلكتروني» is on AND both keys are saved. Mounted only with FEATURE_STRIPE (test or live), so a
- * normal build answers 404 and its clients (which also need their own build flag) show nothing.
+ * «الدفع الإلكتروني» is on AND both keys are saved. Mounted only with FEATURE_STRIPE (test or
+ * live), so a server without it answers 404 and its clients (which also need their own build
+ * flag) show nothing.
  */
 @ApiTags('stripe')
 @Public()

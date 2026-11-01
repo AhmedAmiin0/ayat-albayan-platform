@@ -11,8 +11,8 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // «الدفع الإلكتروني» (docs/30): the form refuses a malformed Stripe key before anything leaves
-// (integrationSecretCheck); a sandbox or live key is sent (the API alone decides whether it runs with
-// FEATURE_STRIPE=live), and a save asks GET /stripe/feature again.
+// (integrationSecretCheck); a sandbox or live key is sent (the API alone decides whether it
+// runs with FEATURE_STRIPE=live), and a save asks GET /stripe/feature again.
 const s = t.integrations;
 const FEATURE = { queryKey: stripeFeatureQuery.queryKey };
 

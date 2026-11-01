@@ -7515,9 +7515,6 @@
   "src/features/sales/payment-links/stripe-build.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/sales/payment-links/use-stripe-feature.test.tsx": {

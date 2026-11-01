@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { stripeApp } from '../testing/stripe-app.fakes';
-import { stripeDefaults, TOKEN, type StripeMocks } from '../testing/stripe-mocks.fakes';
+import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
+import { stripeDefaults, TOKEN, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'live';
@@ -11,8 +11,8 @@ vi.hoisted(() => {
 const HTML = 'text/html,application/xhtml+xml,*/*;q=0.8';
 const NOTICE = 'صفحة دفع تجريبية';
 
-// Go live (owner 2026-11-01, docs/30): with a live key the family's pages take real cards, so they never say
-// «صفحة دفع تجريبية»; a sandbox key under FEATURE_STRIPE=live (a dry run) still does.
+// Go live (owner 2026-11-01, docs/30): with a live key the family's pages take real cards, so
+// they never say «صفحة دفع تجريبية»; a sandbox key under FEATURE_STRIPE=live (a dry run) does.
 describe('the family pages under FEATURE_STRIPE=live', () => {
   let app: NestFastifyApplication;
   let s: StripeMocks;

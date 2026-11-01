@@ -21,8 +21,8 @@ const notConfigured = () =>
 /**
  * A Stripe client from the keys in «التكاملات» (STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET: Vault or
  * env, read per call through the integration overlay like every integration key). The env schema
- * takes a live key only with FEATURE_STRIPE=live (stripeServerKey); no key → 503 stripe_not_configured.
- * Keys are never logged.
+ * takes a live key only with FEATURE_STRIPE=live (stripeServerKey); no key → 503
+ * stripe_not_configured. Keys are never logged.
  */
 @Injectable()
 export class StripeClients {

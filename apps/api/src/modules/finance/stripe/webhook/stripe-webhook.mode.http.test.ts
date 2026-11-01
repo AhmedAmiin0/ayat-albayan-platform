@@ -1,13 +1,13 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { paymentRow, STUDENT_ID, SUB_ID, subRow } from '../../subscriptions/money/money.fakes';
-import { resetMocks, SALES_A, type Mocks } from '../../subscriptions/test-app';
-import { stripeApp } from '../testing/stripe-app.fakes';
-import { sessionEvent } from '../testing/stripe-events.fakes';
-import { signed, stripeDefaults, type StripeMocks } from '../testing/stripe-mocks.fakes';
+import { paymentRow, STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
+import { sessionEvent } from '@/modules/finance/stripe/testing/stripe-events.fakes';
+import { signed, stripeDefaults, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
-// Go live (owner 2026-11-01, docs/30): the server runs with FEATURE_STRIPE=live. An event is dispatched only
-// when its mode is the saved key's (a live key ↔ a live event, a sandbox key ↔ a sandbox event).
+// Go live (owner 2026-11-01, docs/30): the server runs with FEATURE_STRIPE=live. An event is
+// dispatched only when its mode is the saved key's (live key ↔ live event, sandbox ↔ sandbox).
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'live';
 });

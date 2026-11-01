@@ -22,10 +22,10 @@ export const fromApp = (cookie: string | undefined): AppPlatform | null =>
   appPlatform(/(?:^|;\s*)ab_pay_app=([a-z]+)(?:;|$)/.exec(cookie ?? '')?.[1]);
 
 /**
- * The app's /pay-done screen for this link. Android: an intent: URL naming the app with the pay-link buttons
- * (`live` = FEATURE_STRIPE=live: the normal app; else the Stripe test app. Both share the «ayatalbayan»
- * scheme, so a bare scheme link could ask which one),
- * whose fallback is this same page WITHOUT the automatic try (?auto=0): a blocked or missing app never loops.
+ * The app's /pay-done screen for this link. Android: an intent: URL naming the app with the
+ * pay-link buttons (`live` = FEATURE_STRIPE=live: the normal app; else the Stripe test app. Both
+ * share the «ayatalbayan» scheme, so a bare scheme link could ask which one), whose fallback is
+ * this same page WITHOUT the automatic try (?auto=0): a blocked or missing app never loops.
  * iOS: the bare scheme.
  */
 export function appReturnUrl(r: { token: string; kind: 'done' | 'cancelled'; payOrigin: string; android: boolean; live: boolean }): string {

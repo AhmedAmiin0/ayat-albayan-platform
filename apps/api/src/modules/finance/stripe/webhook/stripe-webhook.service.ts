@@ -18,10 +18,11 @@ export class WebhookHandlers {
 type WebhookPost = { rawBody: Buffer | undefined; signature: string | undefined };
 
 /**
- * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked on the raw
- * bytes Stripe sent (400 bad_signature, nothing stored); an event whose mode is not the saved key's (a live
- * event with a sandbox key, or a sandbox event with a live key) is recorded as mode_mismatch and not
- * dispatched; each event is handled once (stripe_events, by event.id), every step idempotent on its own.
+ * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked
+ * on the raw bytes Stripe sent (400 bad_signature, nothing stored). An event whose mode is not
+ * the saved key's (a live event with a sandbox key, or a sandbox event with a live key) is
+ * recorded as mode_mismatch and not dispatched. Each event is handled once (stripe_events, by
+ * event.id), every step idempotent on its own.
  */
 @Injectable()
 export class StripeWebhookService {

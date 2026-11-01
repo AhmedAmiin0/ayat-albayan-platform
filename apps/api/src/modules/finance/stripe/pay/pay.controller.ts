@@ -3,7 +3,7 @@ import { Controller, Get, Header, Ip, Param, Redirect, Req, Res, UseGuards } fro
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../../../common/auth/decorators';
 import { notFound } from '../../../../common/http/errors';
-import { stripeLiveAllowed } from '../../../../config/env/env.stripe';
+import { stripeLiveAllowed } from '@/config/env/env.stripe';
 import { StripeEnabledGuard } from '../gate/stripe-gate';
 import { apiPublicOrigin } from '../links/link-views';
 import { toPublicLink } from '../links/payment-links.mapper';

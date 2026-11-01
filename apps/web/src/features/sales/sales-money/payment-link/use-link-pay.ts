@@ -25,8 +25,8 @@ function amountProblem(text: string, q: PaymentLinkQuoteView): string | null {
 }
 
 /**
- * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, with FEATURE_STRIPE (test or live)): POST
- * /sales/payment-links/quote (debounced) for the reference, the agreed amount (the calculator price until she
+ * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, FEATURE_STRIPE test or live):
+ * POST /sales/payment-links/quote (debounced) for the reference, the agreed amount (the calculator price until she
  * types one; a new package or child resets it), then the link with the step's own fields. One clientRequestId
  * per form. The API makes the unpaid package with the link (never POST /sales/subscriptions too).
  */
