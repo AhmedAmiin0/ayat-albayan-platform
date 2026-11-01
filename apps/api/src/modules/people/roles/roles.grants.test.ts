@@ -100,4 +100,14 @@ describe('RoleGrants', () => {
     };
     expect(codeOf(() => RoleGrants.assigned(input))).toBe('permission_not_held');
   });
+
+  it('not_staff wins over permission_not_held in assigned', () => {
+    const input = {
+      state: state(),
+      role: role('sys-guardian'),
+      profileId: 'admin1',
+      actorId: 'sales1',
+    };
+    expect(codeOf(() => RoleGrants.assigned(input))).toBe('not_staff');
+  });
 });
