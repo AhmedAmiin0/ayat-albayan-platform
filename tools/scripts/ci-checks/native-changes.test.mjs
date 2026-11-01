@@ -31,10 +31,11 @@ test('images in an assets sub-folder are imported from JS and ship by OTA', () =
   assert.deepEqual(nativeChanges(snap(base), snap(base), { files }), ['apps/mobile/assets/splash-icon.png changed']);
 });
 
-test('pure-JS packages (google fonts, tanstack, supabase-js, workspace) are not native', () => {
+test('pure-JS packages (google fonts, tanstack, supabase-js, zod, workspace) are not native', () => {
   const before = snap(base, { '@expo-google-fonts/amiri': '^0.4.1', '@tanstack/react-query': '5.1', '@ab/shared': 'workspace:*' });
   const after = snap(base, { '@expo-google-fonts/noto-sans-arabic': '^0.4.3', '@tanstack/react-query': '5.2', '@supabase/supabase-js': '2' });
   assert.deepEqual(nativeChanges(before, after), []);
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { zod: '^4.6.5' })), []);
   assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { 'expo-camera': '1' })), ['dependency expo-camera: (none) -> 1']);
 });
 
