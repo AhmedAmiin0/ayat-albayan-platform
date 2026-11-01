@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { Db } from '../../../common/db/db.module';
-import { ChatListsQueries } from './chat-lists.queries';
+import type { Db } from '@/common/db/db.module';
+import { ChatListsRepo } from './chat-lists.repo';
 
 type Result = { data?: unknown; error?: { code: string; message: string } | null; count?: number };
 
@@ -20,7 +20,7 @@ function fake(result: Result) {
     },
   );
   const db = { from: (table: string) => (calls.push(['from', table]), builder) };
-  return { q: new ChatListsQueries(db as unknown as Db), calls };
+  return { q: new ChatListsRepo(db as unknown as Db), calls };
 }
 
 const ROW = { id: 'l1', name: 'بانتظار الدفع' };

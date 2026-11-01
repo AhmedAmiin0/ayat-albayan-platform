@@ -7,8 +7,8 @@ import {
   type WaLine,
 } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { LineHealthStore } from '../whatsapp/lines/line-health.store';
+import { DB, type Db } from '@/common/db/db.module';
+import { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
 
 type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
 export type Reach = NonNullable<NotificationsOverview['reach']>;
@@ -22,8 +22,8 @@ export const CATALOGUE_TEMPLATE_KEYS: readonly string[] = [...new Set(NOTIFICATI
 
 /** What the catalogue reads: message_templates (approval and number per key) and the kept line checks. */
 @Injectable()
-export class RulesQueries {
-  private readonly log = new Logger(RulesQueries.name);
+export class RulesRepo {
+  private readonly log = new Logger(RulesRepo.name);
 
   constructor(
     @Inject(DB) private readonly db: Db,

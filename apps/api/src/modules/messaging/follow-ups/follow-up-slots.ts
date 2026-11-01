@@ -1,7 +1,7 @@
 import { DEFAULT_DURATION, type RuleTiming } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AvailabilityQuery } from '../../people/teachers/availability/availability.query';
-import { FollowUpsQueries } from './follow-ups.queries';
+import { AvailabilityQuery } from '@/modules/people/teachers/availability/availability.query';
+import { FollowUpsRepo } from './follow-ups.repo';
 
 const HOUR = 60 * 60_000;
 
@@ -18,7 +18,7 @@ export type SlotWindow = Pick<RuleTiming<'follow_up_slots'>, 'slots_from_hours' 
 @Injectable()
 export class FollowUpSlots {
   constructor(
-    private readonly queries: FollowUpsQueries,
+    private readonly queries: FollowUpsRepo,
     private readonly availability: AvailabilityQuery,
   ) {}
 

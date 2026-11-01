@@ -1,7 +1,7 @@
 import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ChatListsQueries } from '@/modules/messaging/chat-lists/chat-lists.queries';
+import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { Page } from '@/common/http/http';
 import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
@@ -26,7 +26,7 @@ export class ThreadReads {
   @Inject(SalesThreadsService) private readonly sales?: SalesThreadsService;
   @Inject(SalesScopes) private readonly salesScopes?: SalesScopes;
   /** «القوائم» (docs/22): the list filter and the open chat's lists (admin and sales only). */
-  @Inject(ChatListsQueries) private readonly chatLists?: ChatListsQueries;
+  @Inject(ChatListsRepo) private readonly chatLists?: ChatListsRepo;
   /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
   /** The open chat's delta refresh (owner 2026-10-27). */
