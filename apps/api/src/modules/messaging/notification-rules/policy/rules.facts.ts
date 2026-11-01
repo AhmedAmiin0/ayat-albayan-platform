@@ -1,8 +1,8 @@
 import type { CatalogueInputs, LineHealthView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SendGate } from '../../whatsapp/gate/send-gate';
-import { NotificationRulesSettings } from '../notification-rules.settings';
-import { RulesQueries, type Reach } from '../rules.queries';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { NotificationRulesSettings } from '@/modules/messaging/notification-rules/notification-rules.settings';
+import { RulesRepo, type Reach } from '@/modules/messaging/notification-rules/rules.repo';
 
 interface CatalogueFacts {
   inputs: Omit<CatalogueInputs, 'rules'>;
@@ -17,7 +17,7 @@ export class RulesFacts {
   constructor(
     private readonly settings: NotificationRulesSettings,
     private readonly gate: SendGate,
-    private readonly queries: RulesQueries,
+    private readonly queries: RulesRepo,
   ) {}
 
   async read(opts: { reach: boolean }): Promise<CatalogueFacts> {

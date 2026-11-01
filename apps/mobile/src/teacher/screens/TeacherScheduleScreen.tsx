@@ -6,7 +6,7 @@ import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
 import { useLessonDetails } from '@/calendar/details/use-lesson-details';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
-import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
+import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';

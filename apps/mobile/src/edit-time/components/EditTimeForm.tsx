@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import { ConflictNotice } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

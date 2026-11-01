@@ -94,16 +94,6 @@
       "count": 8
     }
   },
-  "src/core/format/clock-pref.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/format/clock-range.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/enums/feedback.ts": {
     "max-len": {
       "count": 1
@@ -1369,7 +1359,7 @@
   },
   "src/sales/course/course-follow.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 8
@@ -1710,11 +1700,6 @@
     "ab/no-shape-checks": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/series/zoned.ts": {
     "max-len": {
       "count": 1
     }
@@ -2116,11 +2101,6 @@
   "src/testing/testing.test.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/time/week.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/time/zoned.ts": {

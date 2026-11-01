@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
-import { durationLabel, studentNames } from '@/today/lib/lesson-text';
+import { durationLabel, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { ReportAction } from '@/teacher/lib/day';
