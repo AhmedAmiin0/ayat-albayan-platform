@@ -1,15 +1,42 @@
 import type { AvatarUpload, SignedUpload, StaffPhotoView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AuditService } from '../../audit/audit.service';
-import { DB, type Db } from '../../db/db.module';
-import { badRequest, notFound } from '../../http/errors';
-import { dbError } from '../../http/http';
-import { avatarPath, teacherAvatarPath } from '../storage.paths';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { AuditService } from '@/common/audit/audit.service';
+import { DB, type Db } from '@/common/db/db.module';
+import { badRequest, notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
+import { avatarPath, teacherAvatarPath } from '@/common/storage/storage.paths';
 import { AvatarWriter, type AvatarSlot } from './avatar-writer';
 import { profileSlot, teacherSlot } from './photo-slots';
 import { NOT_STAFF } from './staff-photos';
 
 type Who = { kind: 'teacher' | 'user'; id: string };
+
+interface Found<T> {
+  data: T | null;
+  error: PostgrestError | null;
+}
+
+/** The row of a single read: a database error throws, a missing row is a 404 `code`. */
+function orNotFound<T>({ data, error }: Found<T>, code: string): NonNullable<T> {
+  if (error) throw dbError(error);
+  if (!data) throw notFound(code);
+  return data;
+}
+
+const OWNER = {
+  teacher: async (db, id) => {
+    const found = await db.from('teachers').select('profile_id').eq('id', id).maybeSingle();
+    const { profile_id } = orNotFound(found, 'teacher_not_found');
+    return profile_id ? { kind: 'user', id: profile_id } : { kind: 'teacher', id };
+  },
+  user: async (db, id) => {
+    const found = await db.from('profiles').select('role').eq('id', id).maybeSingle();
+    const { role } = orNotFound(found, 'user_not_found');
+    if (NOT_STAFF.has(role)) throw badRequest('avatar_not_staff');
+    return { kind: 'user', id };
+  },
+} satisfies Record<Who['kind'], (db: Db, id: string) => Promise<Who>>;
 
 /**
  * An admin's photo of a staff member (owner 2026-10-28), through the same AvatarWriter as «حسابي»:
@@ -62,18 +89,8 @@ export class StaffPhotoAdmin {
   }
 
   /** Where the photo lives: a teacher's login when it has one, else the record; a user must be staff. */
-  private async owner(who: Who): Promise<Who> {
-    if (who.kind === 'teacher') {
-      const { data, error } = await this.db.from('teachers').select('profile_id').eq('id', who.id).maybeSingle();
-      if (error) throw dbError(error);
-      if (!data) throw notFound('teacher_not_found');
-      return data.profile_id ? { kind: 'user', id: data.profile_id } : who;
-    }
-    const { data, error } = await this.db.from('profiles').select('role').eq('id', who.id).maybeSingle();
-    if (error) throw dbError(error);
-    if (!data) throw notFound('user_not_found');
-    if (NOT_STAFF.has(data.role)) throw badRequest('avatar_not_staff');
-    return who;
+  private owner(who: Who): Promise<Who> {
+    return OWNER[who.kind](this.db, who.id);
   }
 
   private record(who: Who, entry: { actorId: string; action: string; before: Record<string, string | null>; after: string | null }) {

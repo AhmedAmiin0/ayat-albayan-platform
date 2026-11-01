@@ -1,9 +1,8 @@
-import { timeGroups, type BookingRequest, type TimeGroup } from '@ab/shared';
+import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import type { Occurrence } from '../../scheduling/occurrences/occurrences';
-import { addDays, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { DAY, localDay } from '../../../people/teachers/availability/zoned-time';
-import { domainError } from '../booking.errors';
+import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { addDays, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
 
 export type SeriesRule = PlanRule & Pick<BookingRequest, 'dayTimes'>;
@@ -30,14 +29,14 @@ function groupsOf(rule: SeriesRule): TimeGroup[] {
 /** The plan cut at endsOn: timing.ends_on = endsOn, later occurrences dropped. */
 function capped(plan: Plan, endsOn: string): Plan {
   const { tz } = plan.timing;
-  const occurrences = plan.occurrences.filter((o) => isoDay(localDay(o.starts_at.getTime(), tz)) <= endsOn);
+  const occurrences = plan.occurrences.filter((o) => isoDay(dayInZone(o.starts_at.getTime(), tz)) <= endsOn);
   return { timing: { ...plan.timing, ends_on: endsOn }, occurrences };
 }
 
 /** Weeks from now to the start of the day after endsOn (in the family's tz), at least the horizon. */
 function courseWeeks(input: SeriesInput, endsOn: string): number {
   const end = startOfLocalDay(addDays(endsOn, 1), input.rule.tz).getTime();
-  return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY));
+  return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY_MS));
 }
 
 const overlaps = (a: Occurrence, b: Occurrence) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;

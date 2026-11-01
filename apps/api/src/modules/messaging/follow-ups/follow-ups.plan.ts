@@ -1,17 +1,16 @@
 import type { Json } from '@ab/db';
 import { ar } from '@/common/infra/i18n/server-text';
 import {
+  dayInZone,
   followUpCycle,
   followUpKey,
+  type FollowUpLead,
   followUpSlotsMessage,
   leadQualificationSchema,
-  RIYADH_TZ,
-  type FollowUpLead,
   type MessageStatus,
+  RIYADH_TZ,
 } from '@ab/shared';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { localDay } from '@/modules/people/teachers/availability/zoned-time';
-
 // R-LEAD-05 follow-up planning (docs/12 §7). Pure.
 
 /** One `leads` row as the follow-up job reads it. */
@@ -55,8 +54,8 @@ export function pickTwoSlots(starts: readonly Date[], tz: string): [Date, Date] 
   const times = [...new Set(starts.map((d) => d.getTime()))].sort((a, b) => a - b);
   const [first, next] = times;
   if (first === undefined || next === undefined) return null;
-  const day = localDay(first, tz);
-  const second = times.find((t) => localDay(t, tz) !== day) ?? next;
+  const day = dayInZone(first, tz);
+  const second = times.find((t) => dayInZone(t, tz) !== day) ?? next;
   return [new Date(first), new Date(second)];
 }
 
