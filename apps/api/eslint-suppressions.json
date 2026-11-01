@@ -8407,11 +8407,6 @@
       "count": 2
     }
   },
-  "src/modules/people/sign-in/flows/sign-in.kit.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/people/sign-in/flows/targets.ts": {
     "ab/no-parent-imports": {
       "count": 2

@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { CodeIssuer, type CodeTarget } from '@/modules/people/sign-in/codes/code-issuer';
 import { SignInLimits } from '@/modules/people/sign-in/codes/code-limits';
@@ -13,7 +19,7 @@ export const codesUnavailable = () =>
     HttpStatus.SERVICE_UNAVAILABLE,
   );
 
-/** One sign-in / password event in audit_log (entity `auth`). Never a code, a hash or a password. */
+/** One sign-in / password event in audit_log (entity `auth`): never a code, hash or password. */
 export interface AuthEvent {
   userId: string;
   action: 'code_sign_in' | 'password_set' | 'password_reset';

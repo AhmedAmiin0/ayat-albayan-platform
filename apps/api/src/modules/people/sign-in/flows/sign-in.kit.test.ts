@@ -6,11 +6,17 @@ describe('SignInKit', () => {
     const w = signInWorld();
     await w.kit.record({ userId: 'u1', action: 'password_reset', via: 'staff' });
     expect(w.audit.entries).toEqual([
-      { actorId: 'u1', entity: 'auth', entityId: 'u1', action: 'password_reset', after: { via: 'staff' } },
+      {
+        actorId: 'u1',
+        entity: 'auth',
+        entityId: 'u1',
+        action: 'password_reset',
+        after: { via: 'staff' },
+      },
     ]);
   });
 
-  it('later runs after the answer; idle waits for it; a failure is logged, not thrown', async () => {
+  it('later runs after the answer; idle waits for it; a failure is logged only', async () => {
     const w = signInWorld();
     const done: string[] = [];
     w.kit.later(async () => {
