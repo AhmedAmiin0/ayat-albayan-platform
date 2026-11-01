@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { StickerSender } from './sticker-send.service';
-import type { StickersService } from './stickers.service';
+import type { StickerRepo } from './sticker.repo';
+import { StickersService } from './stickers.service';
 
 // A sticker from the panel (owner 2026-11-01): the window first, then the copy and the queue.
 const NOW = new Date('2026-10-02T09:00:00Z');
@@ -14,9 +14,9 @@ const file = { path: `out/${ACTOR}/${REQ}/fwd-${SOURCE}.webp`, mime: 'image/webp
 
 const threads = { thread: vi.fn(), numberWindows: vi.fn(async () => []), get: vi.fn() };
 const files = { copy: vi.fn(), send: vi.fn() };
-const stickers = { sticker: vi.fn() };
-const sender = new StickerSender(
-  stickers as unknown as StickersService,
+const repo = { messages: vi.fn() };
+const sender = new StickersService(
+  repo as unknown as StickerRepo,
   threads as unknown as ThreadsRepo,
   files as unknown as ForwardFiles,
 );
@@ -24,14 +24,14 @@ const input = { messageId: SOURCE, clientRequestId: REQ };
 const send = () => sender.send({ phone: PHONE, input, actorId: ACTOR }, NOW);
 const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
 
-describe('StickerSender.send', () => {
+describe('StickersService.send', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.stubEnv('WA_CHAT_PHONE_NUMBER_ID', '');
     threads.thread.mockResolvedValue(threadRow());
     threads.numberWindows.mockResolvedValue([]);
     threads.get.mockResolvedValue({ id: SOURCE });
-    stickers.sticker.mockResolvedValue({ id: SOURCE });
+    repo.messages.mockResolvedValue([{ id: SOURCE }]);
     files.copy.mockResolvedValue(file);
     files.send.mockResolvedValue({ view: { id: 'new' }, replayed: false });
   });
@@ -51,9 +51,9 @@ describe('StickerSender.send', () => {
     expect(files.copy).not.toHaveBeenCalled();
   });
 
-  it('a message that is no sticker is refused before any copy', async () => {
-    stickers.sticker.mockRejectedValue(new Error('message_not_found'));
-    await expect(send()).rejects.toThrow('message_not_found');
+  it('a message that is no sticker is 404 before any copy', async () => {
+    repo.messages.mockResolvedValue([]);
+    expect(code(await send().catch((e: unknown) => e))).toBe('message_not_found');
     expect(files.copy).not.toHaveBeenCalled();
   });
 });

@@ -23,7 +23,8 @@ function service(held: StickerRow[] = [sticker]) {
     save: vi.fn(async () => undefined),
     drop: vi.fn(async () => undefined),
   };
-  return { repo, stickers: new StickersService(repo as unknown as StickerRepo) };
+  const none = {} as never;
+  return { repo, stickers: new StickersService(repo as unknown as StickerRepo, none, none) };
 }
 
 describe('StickersService', () => {
