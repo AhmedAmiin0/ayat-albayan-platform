@@ -18,6 +18,9 @@ interface CrmClientOpts {
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 
+/** The runtime fetch for CRM calls: this file's one global use (H-1). */
+export const crmFetch: FetchLike = fetch;
+
 /** POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept. */
 const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 
@@ -40,7 +43,7 @@ export class CrmWhatsappClient implements WhatsappClient {
   private readonly allowed: readonly string[] | null;
 
   constructor(env: CrmLineEnv | null, opts: CrmClientOpts = {}) {
-    this.conn = env ? { env, fetch: opts.fetch ?? fetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
+    this.conn = env ? { env, fetch: opts.fetch ?? crmFetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
     this.allowed = opts.allowed ?? null;
   }
 

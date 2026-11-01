@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import type { QueuedMessage } from '../../../messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '../../../messaging/reminders/reminders.queries';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
+import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
+import { dbError } from '@/common/http/http';
 import type { AlertLesson } from './teacher-alert.plan';
 
 /** Reads and the idempotent queue write of the teacher's new-student alert (R-NOT-03). */

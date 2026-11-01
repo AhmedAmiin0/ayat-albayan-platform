@@ -1,6 +1,6 @@
 import { counted, courseLessonCount, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import { whenText } from '@/booking/shared/slots';
+import { whenText } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/core/lib/money/format';
 import { AppText } from '@/core/ui/primitives/AppText';

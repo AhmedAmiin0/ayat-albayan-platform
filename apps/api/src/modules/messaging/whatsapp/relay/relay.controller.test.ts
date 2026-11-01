@@ -4,12 +4,15 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { RelayController } from './relay.controller';
-import { fakeLine, fakeRepo, KEY, templateBody } from './relay.fakes';
+import { crmMe, fakeLine, fakeRepo, KEY, templateBody } from './relay.fakes';
 import { RelayLine } from './relay.line';
 import { RelayRepo } from './relay.repo';
 import { RelayService } from './relay.service';
 
 // HTTP: the script's own calls (CRM_URL + /api/v1/…) against the relay, all fakes, no network.
+
+const CRM = 'http://127.0.0.1:4010/crm/api/v1';
+const ME_URL = `${CRM}/me`;
 
 let app: NestFastifyApplication | undefined;
 afterEach(async () => {
@@ -68,7 +71,8 @@ describe('script relay HTTP', () => {
   });
 
   it('401 {error} for a wrong or missing key; nothing stored or sent', async () => {
-    const r = await relayApp({});
+    const refused = crmFailure(401, 'unauthorized');
+    const r = await relayApp({ fetch: scriptedFetch(refused, refused) });
     for (const auth of ['Bearer wrong', null]) {
       const res = await r.post(templateBody(), auth);
       expect(res.statusCode).toBe(401);
@@ -78,7 +82,16 @@ describe('script relay HTTP', () => {
     }
     expect((await r.me('Bearer wrong')).statusCode).toBe(401);
     expect(r.repo.rows).toEqual([]);
-    expect(r.f.requests).toEqual([]);
+    // Only the key checks (GET /me with the wrong key), no send; a missing key asks nothing.
+    expect(r.f.requests.map((q) => q.url)).toEqual([ME_URL, ME_URL]);
+  });
+
+  it("the script's own CRM key (same account, messages:send): 201, sent with the line's key", async () => {
+    const r = await relayApp({ fetch: scriptedFetch(crmMe(), crmMe(), CRM_SENT) });
+    const res = await r.post(templateBody(), 'Bearer script-key');
+    expect(res.statusCode).toBe(201);
+    expect(r.f.requests.map((q) => q.url)).toEqual([ME_URL, ME_URL, `${CRM}/messages`]);
+    expect(r.f.requests[2]?.init.headers).toMatchObject({ authorization: KEY });
   });
 
   it('503 while the notifications line is not on the crm driver', async () => {

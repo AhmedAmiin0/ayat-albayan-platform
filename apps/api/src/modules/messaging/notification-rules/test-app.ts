@@ -13,7 +13,7 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SETTINGS_CACHE_MS, SettingsService } from '@/common/settings/settings.service';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { RulesQueries } from './rules.queries';
+import { RulesRepo } from './rules.repo';
 import { RulesTable, type RuleRowWrite } from './store/rules.table';
 
 export const ADMIN_ID = 'a0000000-0000-4000-8000-000000000001';
@@ -86,7 +86,7 @@ export async function rulesApp(initial: Partial<AcademySettings> = {}) {
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(SETTINGS_CACHE_MS).useValue(0)
     .overrideProvider(SendGate).useValue(m.gate)
-    .overrideProvider(RulesQueries).useValue(m.queries)
+    .overrideProvider(RulesRepo).useValue(m.queries)
     .overrideProvider(RulesTable).useValue(table.fake)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ActivityWriter).useValue(m.activity)

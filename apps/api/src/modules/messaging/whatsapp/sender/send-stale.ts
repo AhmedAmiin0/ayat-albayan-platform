@@ -8,8 +8,8 @@ import {
   type LessonStatus,
   type TemplateKey,
 } from '@ab/shared';
-import { REMINDER_KEYS } from '../../reminders/reminders.queries';
-import { isStaffAlert, staffStale, type StaffAtSend } from '../../reminders/plan/staff-reachable';
+import { REMINDER_KEYS } from '@/modules/messaging/reminders/reminders.repo';
+import { isStaffAlert, staffStale, type StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
 // closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to send.

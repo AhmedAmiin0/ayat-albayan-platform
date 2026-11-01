@@ -1,13 +1,13 @@
 import type { LessonView, SlotView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { freeSlotDays, whenText } from '@/booking/shared/slots';
+import { freeSlotDays, whenText } from '@/booking';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
-import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/lib/week';
+import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { type, useTheme } from '@/theme';
-import { localDate } from '@/today/lib/timeline';
+import { localDate } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';

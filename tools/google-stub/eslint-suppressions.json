@@ -11,6 +11,9 @@
     "@typescript-eslint/require-await": {
       "count": 2
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -43,6 +46,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -50,6 +56,9 @@
   "src/stub.test.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 9
     }
   },
   "src/stub.ts": {

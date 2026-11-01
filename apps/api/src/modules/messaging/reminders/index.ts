@@ -31,7 +31,7 @@ export {
   approvedTemplates,
   queueMessages,
   REMINDER_KEYS,
-  RemindersQueries,
-} from './reminders.queries';
+  RemindersRepo,
+} from './reminders.repo';
 export { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 export { Ticker, type TickerOptions } from './ticker';

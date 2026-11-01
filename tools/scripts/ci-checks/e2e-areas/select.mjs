@@ -24,14 +24,14 @@ const UNIT =
   /\.test\.(ts|tsx|mjs)$|\/__snapshots__\/|^apps\/web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)(eslint-suppressions\.json|eslint\.config\.(js|mjs)|\.env\.example)$|^refactor\/|^knip\.json$/;
 /** Code followed through the import graph. */
 const GRAPHED =
-  /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|shared|client-core)\/src\/)/;
+  /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|shared|client-core)\/src\/)/;
 const ROUTES = 'apps/web/src/routes/';
 const SPEC = /^e2e\/tests\/(?:[^/]+\/)*[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
 const REGISTRY = /^apps\/web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
 /** Code between a changed file and a page or module: followed further, never decides by itself. */
 const PASS =
-  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
+  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|time|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
 /** The area whose page lists every UI string: runs on any key change. */
 const EVERY_KEY_AREA = 'translations';
 

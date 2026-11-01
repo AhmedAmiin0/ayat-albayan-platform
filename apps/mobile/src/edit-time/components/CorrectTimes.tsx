@@ -1,12 +1,12 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { dayLabel } from '@/calendar/lib/week';
+import { dayLabel } from '@/calendar';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { SlotButton } from '@/teaching/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';
-import { localDate } from '@/today/lib/timeline';
+import { localDate } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { correctStarts } from '@/edit-time/lib/edit-time-body';
 
