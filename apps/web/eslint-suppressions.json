@@ -2743,6 +2743,14 @@
       "count": 4
     }
   },
+  "src/features/messaging/inbox/messages/sticker/StickerMedia.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    }
+  },
   "src/features/messaging/inbox/messages/template/TappedLabel.tsx": {
     "max-len": {
       "count": 1
