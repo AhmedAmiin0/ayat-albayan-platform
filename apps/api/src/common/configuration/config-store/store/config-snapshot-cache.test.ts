@@ -52,4 +52,18 @@ describe('SnapshotCache (docs/26 §2c)', () => {
     await expect(cache.read(1)).resolves.toMatchObject({ rev: 1 });
     expect(src.snapshot).toHaveBeenCalledTimes(2);
   });
+
+  it('a late failure does not drop the entry that replaced it', async () => {
+    const { src } = source();
+    let fail: (e: Error) => void = () => undefined;
+    src.snapshot.mockImplementationOnce(() => new Promise((_, reject) => (fail = reject)));
+    const cache = new SnapshotCache(src, 30_000);
+    const first = cache.read(0);
+    cache.drop();
+    await cache.read(1);
+    fail(new Error('late'));
+    await expect(first).rejects.toThrow('late');
+    await cache.read(2);
+    expect(src.snapshot).toHaveBeenCalledTimes(2);
+  });
 });
