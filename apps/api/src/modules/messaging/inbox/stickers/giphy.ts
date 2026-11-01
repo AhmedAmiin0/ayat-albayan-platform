@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import type { Http } from '@/common/infra/http/http.types';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp';
 
 // GIPHY for the chat's GIF panel (owner 2026-11-01), through the api's one HTTP client (docs/36
 // H-1). The key goes in the query only (never logged: whereOf keeps the path); G-rated GIFs only,
