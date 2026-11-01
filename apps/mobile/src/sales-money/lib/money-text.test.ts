@@ -43,3 +43,10 @@ test('the commission note names the renewal share (owner 2026-10-26)', () => {
   expect(commissionNote('2026-10-01', 50)).toContain('50%');
   expect(commissionNote('2026-10-01', 50)).not.toContain('{');
 });
+
+test('share 0 («عمولة التجديد» off, owner 2026-11-01): the note says renewal commission is paused, no «0%»', () => {
+  const note = commissionNote('2026-10-01', 0);
+  expect(note.startsWith(p.commissionNoteRenewalOff.split('{date}')[0] ?? '-')).toBe(true);
+  expect(note).not.toContain('%');
+  expect(note).not.toContain('{');
+});

@@ -12,7 +12,11 @@ export interface AssistantTermsView {
   assistant_id: string;
   commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
-  /** settings.renewal_commission_percent now: the share of the commission earned on each renewal (owner 2026-10-26). */
+  /**
+   * The share of the commission earned on each renewal now (owner 2026-10-26):
+   * settings.renewal_commission_percent, 0 while «عمولة التجديد» is off (renewalShareNow,
+   * owner 2026-11-01); the screens then say it is paused.
+   */
   renewal_share_percent: number;
 }
 

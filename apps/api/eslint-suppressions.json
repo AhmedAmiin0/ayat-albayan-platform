@@ -12430,7 +12430,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/sales/sales/schedule/sales-schedule.service.ts": {
