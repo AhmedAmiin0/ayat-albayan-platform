@@ -1,8 +1,8 @@
 import { isOpenLesson, joinWindow, type RoomOpenResult } from '@ab/shared';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { ClassroomQueries } from '../classroom.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict, notFound } from '@/common/http/errors';
+import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { LessonRoleService } from './lesson-role.service';
 
 /**
@@ -16,7 +16,7 @@ import { LessonRoleService } from './lesson-role.service';
 export class RoomOpenService {
   constructor(
     private readonly roles: LessonRoleService,
-    private readonly queries: ClassroomQueries,
+    private readonly queries: ClassroomRepo,
   ) {}
 
   async open(input: { user: AuthUser; lessonId: string }, now = new Date()): Promise<RoomOpenResult> {

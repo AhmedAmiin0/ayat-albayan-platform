@@ -10,7 +10,7 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
 import { BalanceQueries } from '@/modules/finance/subscriptions';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
-import { StudentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.queries';
+import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { ChatNumber } from './home/chat-number';
 import type { PortalLessonRow } from './lessons/portal-lessons.repo';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
@@ -83,7 +83,7 @@ export async function portalApp() {
     .overrideProvider(PortalReportsRepo).useValue(reports)
     .overrideProvider(PortalPackageRepo).useValue(packages)
     .overrideProvider(BalanceQueries).useValue(balances)
-    .overrideProvider(StudentLinkQueries).useValue(classroom)
+    .overrideProvider(StudentLinkRepo).useValue(classroom)
     .overrideProvider(RoomAdmission).useValue(admission)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)

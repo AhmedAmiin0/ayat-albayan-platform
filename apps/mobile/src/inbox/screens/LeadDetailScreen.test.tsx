@@ -4,9 +4,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { cachedList, huda, unnamed } from '../shared/fixtures';
+import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
-import { answer, hudaProfile } from '../qualification/fixtures';
+import { answer, hudaProfile } from '@/inbox/qualification/lib/fixtures';
 
 // GET /leads?q=phone (the fresh row under the facts) and /settings; huda answers for any phone.
 const mockApiFetch = jest.fn();
