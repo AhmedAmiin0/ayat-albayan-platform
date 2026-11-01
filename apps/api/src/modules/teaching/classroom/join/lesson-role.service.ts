@@ -3,7 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { ClassroomQueries, type JoinLesson } from '@/modules/teaching/classroom/classroom.queries';
+import { ClassroomRepo, type JoinLesson } from '@/modules/teaching/classroom/classroom.repo';
 
 type StaffRole = Exclude<JoinRole, 'guest'>;
 
@@ -17,7 +17,7 @@ type StaffRole = Exclude<JoinRole, 'guest'>;
 @Injectable()
 export class LessonRoleService {
   constructor(
-    private readonly queries: ClassroomQueries,
+    private readonly queries: ClassroomRepo,
     private readonly teachers: TeachersRepo,
   ) {}
 

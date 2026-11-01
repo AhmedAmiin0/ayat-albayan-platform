@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { livekitEnv, loadEnv } from '../../../config/env/env';
-import { recordingEnv } from '../../../config/env/env.recording';
-import { InboxModule } from '../../messaging/inbox/inbox.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
+import { livekitEnv, loadEnv } from '@/config/env/env';
+import { recordingEnv } from '@/config/env/env.recording';
+import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
 import { AssistantsController } from './assistants/assistants.controller';
-import { AssistantLessonsQueries } from './assistants/assistants.lessons';
-import { AssistantsQueries } from './assistants/assistants.queries';
+import { AssistantLessonsRepo } from './assistants/assistants.lessons';
+import { AssistantsRepo } from './assistants/assistants.repo';
 import { AssistantsService } from './assistants/assistants.service';
 import {
   CLASSROOM_CONFIG,
@@ -17,7 +17,7 @@ import {
 } from './classroom.config';
 import { ClassroomController, JoinLinkStaffController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
-import { ClassroomQueries } from './classroom.queries';
+import { ClassroomRepo } from './classroom.repo';
 import { ClassroomSettings } from './classroom.settings';
 import { GuestJoinService } from './join/guest-join.service';
 import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings/internal-meetings.providers';
@@ -31,7 +31,7 @@ import { LIVEKIT_HTTP, LivekitApi, type HttpPost } from './livekit/livekit-api';
 import { LivekitWebhookController } from './livekit/livekit-webhook.controller';
 import { LivekitWebhookService } from './livekit/livekit-webhook.service';
 import { ModerationController } from './moderation/moderation.controller';
-import { ModerationQueries } from './moderation/moderation.queries';
+import { ModerationRepo } from './moderation/moderation.repo';
 import { MuteLimit } from './moderation/mute-limit';
 import { LessonMuteController, MeetingMuteController } from './moderation/mute.controller';
 import { MeetingMuteService, MuteService } from './moderation/mute.service';
@@ -39,7 +39,7 @@ import { MAX_DURATION_PROVIDERS } from './max-duration/max-duration.providers';
 import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recordings/recording-list.service';
 import { MeetingRecordingsController, RecordingStatusController } from './recordings/recordings.controller';
 import { RecordingLifecycle } from './recordings/recording.lifecycle';
-import { RecordingQueries } from './recordings/recording.queries';
+import { RecordingRepo } from './recordings/recording.repo';
 import { RecordingStarter } from './recordings/recording.starter';
 import { RoomAdmission } from './join/room-admission';
 import { RoomJoinService } from './join/room-join.service';
@@ -49,7 +49,7 @@ import { LessonShareController, MeetingShareController } from './moderation/shar
 import { MeetingShareGrantService, ShareGrantService } from './moderation/share-grant.service';
 import { StudentLinkAdminService } from './student-link/student-link.admin.service';
 import { StudentLinkAdminController, StudentLinkPublicController } from './student-link/student-link.controller';
-import { StudentLinkQueries } from './student-link/student-link.queries';
+import { StudentLinkRepo } from './student-link/student-link.repo';
 import { StudentLinkService } from './student-link/student-link.service';
 
 /**
@@ -90,12 +90,12 @@ import { StudentLinkService } from './student-link/student-link.service';
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
     { provide: MuteLimit, useFactory: () => new MuteLimit() },
     ClassroomSettings,
-    ClassroomQueries,
-    AssistantsQueries,
-    AssistantLessonsQueries,
+    ClassroomRepo,
+    AssistantsRepo,
+    AssistantLessonsRepo,
     RoomJoinService,
     RoomOpenService,
-    StudentLinkQueries,
+    StudentLinkRepo,
     StudentLinkService,
     StudentLinkAdminService,
     GuestJoinService,
@@ -108,8 +108,8 @@ import { StudentLinkService } from './student-link/student-link.service';
     JoinLinkCopyService,
     AssistantsService,
     LessonRoleService,
-    ModerationQueries,
-    RecordingQueries,
+    ModerationRepo,
+    RecordingRepo,
     LivekitApi,
     RecordingStarter,
     RecordingLifecycle,
@@ -124,6 +124,6 @@ import { StudentLinkService } from './student-link/student-link.service';
   ],
   // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
   // family portal (modules/people/portal) admits its own student like the student's link does.
-  exports: [RecordingViews, RecordingQueries, StudentLinkService],
+  exports: [RecordingViews, RecordingRepo, StudentLinkService],
 })
 export class ClassroomModule {}

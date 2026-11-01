@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RECORDING_CONFIG, type RecordingConfig } from '../classroom.config';
-import { egressIdOf, egressRequest, recordingPath } from '../livekit/egress-request';
-import { LivekitApi } from '../livekit/livekit-api';
-import { RecordingQueries } from './recording.queries';
+import { RECORDING_CONFIG, type RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
+import { egressIdOf, egressRequest, recordingPath } from '@/modules/teaching/classroom/livekit/egress-request';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { RecordingRepo } from './recording.repo';
 import { roomNameOf, type RoomTarget } from './recording-target';
 
 type StartOutcome = 'off' | 'running' | 'started' | 'failed';
@@ -18,7 +18,7 @@ export class RecordingStarter {
   private readonly log = new Logger(RecordingStarter.name);
 
   constructor(
-    private readonly queries: RecordingQueries,
+    private readonly queries: RecordingRepo,
     private readonly livekit: LivekitApi,
     @Inject(RECORDING_CONFIG) private readonly s3: RecordingConfig,
   ) {}

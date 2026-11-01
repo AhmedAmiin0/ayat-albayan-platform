@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { LivekitApi } from '../livekit/livekit-api';
-import { peopleIn } from '../livekit/livekit-webhook.room';
-import { RecordingQueries } from './recording.queries';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
 import { targetOfRoom } from './recording-target';
 
@@ -17,7 +17,7 @@ export class RecordingLifecycle {
 
   constructor(
     private readonly livekit: LivekitApi,
-    private readonly queries: RecordingQueries,
+    private readonly queries: RecordingRepo,
     private readonly starter: RecordingStarter,
   ) {}
 

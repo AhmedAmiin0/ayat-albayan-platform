@@ -1,7 +1,7 @@
 import { lessonWhenText } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { cityOf, fill } from '@/modules/reporting/report-pdf/render/pdf-text';
-import { INVITE_DEDUP_PREFIX } from './meeting-invitees.queries';
+import { INVITE_DEDUP_PREFIX } from './meeting-invitees.repo';
 
 // R-MEET-02: the invitation's words (ar.json meetingInvites.message, read per call so the admins'
 // overrides apply) and its dedup keys (rule 8). Pure.

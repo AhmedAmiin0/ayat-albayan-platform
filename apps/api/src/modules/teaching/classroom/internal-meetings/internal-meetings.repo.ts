@@ -1,9 +1,9 @@
 import type { Tables } from '@ab/db';
 import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { ClassroomSettings } from '../classroom.settings';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
+import { dbError } from '@/common/http/http';
 
 export type MeetingRow = Pick<
   Tables<'meetings'>,
@@ -23,7 +23,7 @@ export interface NewMeeting {
 
 /** Reads and writes of «اجتماع داخلي» (service role; the services guard, migrations 193, 410). */
 @Injectable()
-export class InternalMeetingsQueries {
+export class InternalMeetingsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: ClassroomSettings,

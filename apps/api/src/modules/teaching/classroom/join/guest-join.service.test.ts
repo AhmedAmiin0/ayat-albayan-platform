@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ClassroomQueries } from '../classroom.queries';
-import { admissionOf, moderation, recorder } from '../moderation/moderation.fakes';
-import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries } from '../classroom.fakes';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
+import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries } from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
 import { hashLinkToken } from './join-link.token';
@@ -11,7 +11,7 @@ let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
 const service = (config: typeof CONFIG | null = CONFIG, limit = new PublicJoinLimit()) =>
-  new GuestJoinService(q as unknown as ClassroomQueries, limit, admissionOf({ q, mod, rec, config }));
+  new GuestJoinService(q as unknown as ClassroomRepo, limit, admissionOf({ q, mod, rec, config }));
 const join = (over: { linkToken?: string; body?: unknown; now?: Date; svc?: GuestJoinService } = {}) =>
   (over.svc ?? service()).join({ linkToken: over.linkToken ?? LINK_TOKEN, ip: '9.9.9.9', body: over.body !== undefined ? over.body : { name: 'سهيلة' } }, over.now ?? OPEN);
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;

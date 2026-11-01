@@ -1,11 +1,11 @@
 import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
 import { BadGatewayException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { notConfigured } from '../join/join-gate';
-import { LessonRoleService } from '../join/lesson-role.service';
-import { LivekitApi, LivekitError } from '../livekit/livekit-api';
-import { ModerationQueries, principalOf } from './moderation.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
+import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
+import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { ModerationRepo, principalOf } from './moderation.repo';
 
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
@@ -25,7 +25,7 @@ interface KickInput {
 export class KickService {
   constructor(
     private readonly roles: LessonRoleService,
-    private readonly moderation: ModerationQueries,
+    private readonly moderation: ModerationRepo,
     private readonly livekit: LivekitApi,
   ) {}
 

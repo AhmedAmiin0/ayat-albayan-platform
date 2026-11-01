@@ -1,14 +1,14 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AssistantLessonsQueries } from './assistants.lessons';
-import type { AssistantsQueries } from './assistants.queries';
+import type { AssistantLessonsRepo } from './assistants.lessons';
+import type { AssistantsRepo } from './assistants.repo';
 import { AssistantsService } from './assistants.service';
-import { ADMIN, ASSISTANT, LESSON_ID, STUDENT_ID } from '../classroom.fakes';
+import { ADMIN, ASSISTANT, LESSON_ID, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
 
 const A = { profile_id: ASSISTANT.id, full_name: 'نور' };
-let q: Record<keyof AssistantsQueries, ReturnType<typeof vi.fn>>;
+let q: Record<keyof AssistantsRepo, ReturnType<typeof vi.fn>>;
 let lessons: { between: ReturnType<typeof vi.fn> };
-const svc = () => new AssistantsService(q as unknown as AssistantsQueries, lessons as unknown as AssistantLessonsQueries);
+const svc = () => new AssistantsService(q as unknown as AssistantsRepo, lessons as unknown as AssistantLessonsRepo);
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
