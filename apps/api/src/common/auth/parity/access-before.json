@@ -76,6 +76,7 @@
   "ConfigEntriesController.list": ["admin"],
   "ConfigEntriesController.update": ["admin"],
   "ConfigParityController.get": ["admin"],
+  "CrmWebhookController.register": ["admin"],
   "CustomConfigController.list": ["admin"],
   "CustomConfigController.put": ["admin"],
   "CustomConfigController.remove": ["admin"],
