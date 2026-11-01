@@ -1,5 +1,5 @@
-// refactor/lanes-v2/<L>.md are cloud-routine prompts: each carries its own lane's block and claim, never a copy of
-// another lane's (hzf0 shipped H, Z and F with lane R's block).
+// refactor/lanes-v2/<L>.md are cloud-routine prompts: each carries its own lane's block and claim,
+// never a copy of another lane's (hzf0 shipped H, Z and F with lane R's block).
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
