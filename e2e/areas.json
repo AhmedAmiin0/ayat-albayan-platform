@@ -506,6 +506,7 @@
     "finance/assistant-commission.sql.spec.ts",
     "sales/assistant-course-subscription.sql.spec.ts",
     "finance/assistant-renewal-commission.sql.spec.ts",
+    "finance/assistant-renewal-commission-toggle.sql.spec.ts",
     "sales/assistant-reopen.sql.spec.ts",
     "sales/assistant-scope.sql.spec.ts",
     "finance/assistant-statements.sql.spec.ts",

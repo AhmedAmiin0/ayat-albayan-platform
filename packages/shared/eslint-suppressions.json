@@ -107,7 +107,7 @@
   },
   "src/money/assistant/views.ts": {
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/money/assistant/wallet.test.ts": {
