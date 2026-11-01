@@ -3,12 +3,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { codeOf } from '../code/code-boxes';
-import { CodeStep } from '../code/CodeStep';
-import { RequestStep } from '../code/RequestStep';
-import { useCodeFlow } from '../code/use-code-flow';
-import { authApi } from '../login/auth-api';
-import { signInWithCode } from '../sign-in';
+import { codeOf } from '@/features/people/auth/code/code-boxes';
+import { CodeStep } from '@/features/people/auth/code/CodeStep';
+import { RequestStep } from '@/features/people/auth/code/RequestStep';
+import { useCodeFlow } from '@/features/people/auth/code/use-code-flow';
+import { authApi } from '@/features/people/auth/login/auth-api';
+import { signInWithCode } from '@/features/people/auth/sign-in';
 
 const F = t.familyAuth;
 

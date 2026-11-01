@@ -8,11 +8,11 @@ import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/people/students/api';
 import { t } from '@/lib/i18n/i18n';
-import { createBooking } from '../../api';
+import { createBooking } from '@/features/teaching/booking/api';
 import { CourseCheckNotice } from './CourseCheckNotice';
-import { toBookingRequest, type BookingDraft } from '../../draft/draft';
+import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { DuplicateNotice } from './DuplicateNotice';
-import { useBookingMode } from '../../mode';
+import { useBookingMode } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from './ReviewSummary';
 import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 

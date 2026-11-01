@@ -6,16 +6,16 @@ import { ClassroomActions } from '@/features/teaching/classroom/join/ClassroomAc
 import { FeedbackRequestButton } from '@/features/teaching/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks';
 import { t } from '@/lib/i18n/i18n';
-import { CancelForm } from '../reschedule/CancelForm';
-import { Drawer } from '../Drawer';
-import { EditTimeForm } from '../edit-time/EditTimeForm';
+import { CancelForm } from '@/features/teaching/schedule/reschedule/CancelForm';
+import { Drawer } from '@/features/teaching/schedule/Drawer';
+import { EditTimeForm } from '@/features/teaching/schedule/edit-time/EditTimeForm';
 import { LessonActions } from './LessonActions';
 import { LessonDetails } from './LessonDetails';
 import { LessonInvoice } from './LessonInvoice';
 import { studentNames } from './lessons';
-import { MakeupAction } from '../reschedule/MakeupAction';
-import { ProposalBox } from '../reschedule/ProposalBox';
-import { RescheduleForm } from '../reschedule/RescheduleForm';
+import { MakeupAction } from '@/features/teaching/schedule/reschedule/MakeupAction';
+import { ProposalBox } from '@/features/teaching/schedule/reschedule/ProposalBox';
+import { RescheduleForm } from '@/features/teaching/schedule/reschedule/RescheduleForm';
 
 export interface LessonDrawerProps {
   lesson: LessonView;

@@ -1,7 +1,7 @@
 import { clockOf } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { Window } from '../api';
-import { weekStart, weekWindow, zonedParts } from '../tz';
+import type { Window } from '@/features/teaching/schedule/api';
+import { weekStart, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import type { Clock } from '@/lib/clock';
 
 // Slot grid helpers (R-SCH-06): weeks run السبت → الجمعة in the viewer's zone (docs/34), the grid's

@@ -3,7 +3,7 @@ import type { RefObject } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
-import { useChatActions } from '../../shared/chat-actions';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { quoteSender, quoteText } from '@/features/messaging/inbox/messages/lib/quote';
 
 /**

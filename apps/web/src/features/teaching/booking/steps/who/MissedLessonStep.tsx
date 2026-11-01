@@ -7,10 +7,10 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { makeupCandidatesQuery } from '../../invoice/api.invoice';
-import type { MakeupCandidate } from '../../draft/contract';
-import type { BookingDraft } from '../../draft/draft';
-import { pickedText } from '../slots/SlotStep';
+import { makeupCandidatesQuery } from '@/features/teaching/booking/invoice/api.invoice';
+import type { MakeupCandidate } from '@/features/teaching/booking/draft/contract';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

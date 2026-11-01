@@ -3,13 +3,13 @@ import { Avatar } from '@/components/ui/display/avatar';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { AccountSection } from './AccountSection';
-import { removeAvatar, uploadAvatar } from '../api';
+import { removeAvatar, uploadAvatar } from '@/features/people/account/api';
 import { AvatarActions } from './AvatarActions';
-import { avatarFileProblem, avatarSeed } from '../avatar-file';
-import { accountMessage } from '../errors';
+import { avatarFileProblem, avatarSeed } from '@/features/people/account/avatar-file';
+import { accountMessage } from '@/features/people/account/errors';
 import type { SectionProps } from './section-props';
-import { useAccountSave } from '../use-account-save';
-import { usePickedFile } from '../use-picked-file';
+import { useAccountSave } from '@/features/people/account/use-account-save';
+import { usePickedFile } from '@/features/people/account/use-picked-file';
 
 const A = t.account.avatar;
 

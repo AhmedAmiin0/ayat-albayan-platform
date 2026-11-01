@@ -2,7 +2,7 @@ import { studentStatusStyle } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import type { StudentRef } from '../types';
+import type { StudentRef } from '@/features/people/students/types';
 
 /** «طلاب تانيين على نفس رقم ولي الأمر»: the guardian's other students, so the admin decides at a glance. */
 export function SiblingsStrip({ siblings }: { siblings: StudentRef[] }) {

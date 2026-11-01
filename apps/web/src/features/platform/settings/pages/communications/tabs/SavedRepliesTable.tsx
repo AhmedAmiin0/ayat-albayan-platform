@@ -7,7 +7,7 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/messaging/inbox/saved-replies/lib/api';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { CELL, TH } from '../overview/overview-table';
+import { CELL, TH } from '@/features/platform/settings/pages/communications/overview/overview-table';
 
 const S = t.savedReplies;
 

@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/form/button';
 import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { threadFileQuery, type ThreadFile } from '../../api/api';
-import { mediaKind } from '../../format';
+import { threadFileQuery, type ThreadFile } from '@/features/messaging/inbox/api/api';
+import { mediaKind } from '@/features/messaging/inbox/format';
 import { DownloadButton } from './DownloadButton';
 import { MediaPlayer } from './MediaPlayer';
-import { PdfCard } from '../pdf/PdfCard';
-import { useInboxMode } from '../../shared/mode';
+import { PdfCard } from '@/features/messaging/inbox/messages/pdf/PdfCard';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 
 /** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';

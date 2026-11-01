@@ -34,3 +34,17 @@ test('the pattern catches the old hand-kept lists', () => {
   assert.match('pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build', NAMED_PACKAGE_BUILD);
   assert.doesNotMatch('pnpm --filter "web^..." build', NAMED_PACKAGE_BUILD);
 });
+
+test('staging web deploy and the mobile OTA workflow build <app>^...', () => {
+  const deploy = read('.github/workflows/deploy-staging.yml');
+  assert.match(deploy, /pnpm --filter "web\^\.\.\." build/);
+  assert.doesNotMatch(deploy, NAMED_PACKAGE_BUILD);
+  const mobile = read('.github/workflows/mobile.yml');
+  assert.match(mobile, /pnpm --filter "mobile\^\.\.\." build/);
+  assert.doesNotMatch(mobile, NAMED_PACKAGE_BUILD);
+});
+
+test('the automatic OTA follows every package the app bundles, not packages/shared alone', () => {
+  const deploy = read('.github/workflows/deploy-staging.yml');
+  assert.match(deploy, /git diff --name-only "\$BASE" HEAD -- apps\/mobile packages /);
+});

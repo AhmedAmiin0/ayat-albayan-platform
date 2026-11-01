@@ -1,11 +1,11 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { PHONE } from '../../testing/inbox-fixture';
-import { InboxModeContext } from '../../shared/mode';
-import { NewChatForm } from '../list/NewChatForm';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
+import { NewChatForm } from '@/features/messaging/inbox/threads/list/NewChatForm';
 import { NewThread } from './NewThread';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));

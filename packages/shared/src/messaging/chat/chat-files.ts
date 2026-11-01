@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '../../core/format/index.js';
+import { counted, type PluralForm } from '@ab/core';
 import type { SignedDownload } from '../../reports/index.js';
 import { baseMime } from '../../schemas/chat-media.js';
 

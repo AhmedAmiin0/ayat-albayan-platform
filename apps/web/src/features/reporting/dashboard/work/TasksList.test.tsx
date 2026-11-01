@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { WORK } from '../dashboard-fixture';
+import { WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { TasksList } from './TasksList';
 import { taskText } from './work-text';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 function renderList(items = WORK.tasks.items) {
   const qc = new QueryClient({ defaultOptions: { mutations: { retry: false } } });

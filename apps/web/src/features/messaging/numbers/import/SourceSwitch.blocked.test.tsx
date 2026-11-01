@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { PARITY_DIFF } from '../numbers.fixture';
-import { renderPanel } from '../numbers-test-kit';
+import { PARITY_DIFF } from '@/features/messaging/numbers/numbers.fixture';
+import { renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

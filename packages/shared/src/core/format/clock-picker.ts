@@ -1,6 +1,6 @@
 // Time pickers in 12 h: the screen shows 1–12 with ص / م (AM / PM), the form still holds 0–23 and
 // saves «HH:MM» 24 h. Pure, so pickers on web and mobile share it.
-import type { Locale } from '../../i18n/index.js';
+import type { Locale } from '@ab/core';
 import { meridiemLabel } from './clock.js';
 import type { ClockCycle } from './clock-pref.js';
 

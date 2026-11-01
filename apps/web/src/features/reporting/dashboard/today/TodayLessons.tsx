@@ -7,7 +7,7 @@ import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
-import { sectionTitle } from '../shared/Bar';
+import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { isLiveNow, todaysLessons } from './today';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';

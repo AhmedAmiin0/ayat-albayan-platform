@@ -13,8 +13,8 @@ import {
 } from './data-table-features';
 import { DataTableHead } from './DataTableHead';
 import { filterControls } from './filter-controls';
-import { DataTableToolbar } from '../table-toolbar/DataTableToolbar';
-import type { TableToolbarOptions } from '../table-toolbar/types';
+import { DataTableToolbar } from '@/components/table-toolbar/DataTableToolbar';
+import type { TableToolbarOptions } from '@/components/table-toolbar/types';
 import { tableBoxClass } from './TableBox';
 
 export * from './data-table-features';

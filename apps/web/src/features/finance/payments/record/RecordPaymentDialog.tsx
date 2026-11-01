@@ -10,10 +10,10 @@ import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } fr
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import { AttachmentsField } from '../attachments/AttachmentsField';
+import { AttachmentsField } from '@/features/finance/payments/attachments/AttachmentsField';
 import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
-import { ReceiptField, receiptProblem } from '../attachments/ReceiptField';
+import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { ShortfallNote } from './ShortfallNote';
 import { SubscriptionPicker } from './SubscriptionPicker';
 import { useRecordPayment } from './use-record-payment';

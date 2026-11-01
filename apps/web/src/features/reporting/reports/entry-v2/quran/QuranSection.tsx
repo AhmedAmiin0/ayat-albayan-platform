@@ -1,9 +1,9 @@
 import { SEGMENT_KINDS, TAJWEED_TOPICS, withSegment, type MemoryView, type SurahRange } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import type { ReportEntryV2State } from '../use-report-entry-v2';
-import { ToggleChips } from '../ToggleChips';
-import { CARD, CARD_TITLE, OPTIONAL } from '../v2-classes';
+import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
+import { ToggleChips } from '@/features/reporting/reports/entry-v2/ToggleChips';
+import { CARD, CARD_TITLE, OPTIONAL } from '@/features/reporting/reports/entry-v2/v2-classes';
 import { pickTarget, type PickTarget } from './picker-state';
 import { SegmentCard } from './SegmentCard';
 import { SurahPicker } from './SurahPicker';

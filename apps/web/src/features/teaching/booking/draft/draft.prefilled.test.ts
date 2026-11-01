@@ -1,6 +1,6 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { ABRAR } from '../wizard-fixture';
+import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 import { courseEnd, pickedRule, withPicks } from './draft.days';
 import { emptyDraft, toBookingRequest, type BookingDraft } from './draft';
 

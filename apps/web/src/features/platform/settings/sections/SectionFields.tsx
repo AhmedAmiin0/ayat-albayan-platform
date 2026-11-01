@@ -1,9 +1,9 @@
 import { settingSection, type SettingsSectionId } from '@ab/shared';
 import { matchesSetting } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
-import { RegistryField } from '../registry-form/RegistryField';
-import { FORM_KEYS } from '../registry-form/settings-form';
-import type { SettingsFormState } from '../registry-form/use-settings-form';
+import { RegistryField } from '@/features/platform/settings/registry-form/RegistryField';
+import { FORM_KEYS } from '@/features/platform/settings/registry-form/settings-form';
+import type { SettingsFormState } from '@/features/platform/settings/registry-form/use-settings-form';
 
 /** The registry's form fields of one section, in page order (SETTINGS_LAYOUT; nothing when it has none). */
 export function SectionFields({ id, state }: { id: SettingsSectionId; state: SettingsFormState }) {

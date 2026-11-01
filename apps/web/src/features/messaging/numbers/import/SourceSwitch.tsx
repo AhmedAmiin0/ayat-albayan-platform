@@ -6,10 +6,10 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { numberErrorText } from '../form/number-errors';
-import { setCommsSource } from '../numbers-api';
+import { numberErrorText } from '@/features/messaging/numbers/form/number-errors';
+import { setCommsSource } from '@/features/messaging/numbers/numbers-api';
 import { SourceButtons } from './SourceButtons';
-import { useNumbersMutation } from '../use-numbers-mutation';
+import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 
 const s = t.numbers.source;
 

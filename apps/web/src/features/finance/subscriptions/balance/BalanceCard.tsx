@@ -7,12 +7,12 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { Toast } from '@/components/ui/overlay/toast';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { t } from '@/lib/i18n/i18n';
-import { cancelSubscription, studentBalanceQuery } from '../api';
-import { CancelPackageDialog } from '../cancel/CancelPackageDialog';
+import { cancelSubscription, studentBalanceQuery } from '@/features/finance/subscriptions/api';
+import { CancelPackageDialog } from '@/features/finance/subscriptions/cancel/CancelPackageDialog';
 import { BalanceDetails } from './BalanceDetails';
-import { CreateSubscriptionDialog } from '../create/CreateSubscriptionDialog';
-import { packageName, unpaidFlagged } from '../format';
-import type { PickedStudent } from '../create/StudentPicker';
+import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
+import { packageName, unpaidFlagged } from '@/features/finance/subscriptions/format';
+import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 
 /**
  * The student's packages (S6, R-SUB-01/03) on the profile: the package line (packageProgress),

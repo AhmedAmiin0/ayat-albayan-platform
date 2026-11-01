@@ -2,7 +2,7 @@ import { clockOf, lessonWhenAt, pdfStatusStyle, reportStatusStyle, type ReportVi
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import type { SaveState } from '../entry/use-autosave';
+import type { SaveState } from '@/features/reporting/reports/entry/use-autosave';
 import { useClock } from '@/lib/clock';
 
 /** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft (R-REP-02). */

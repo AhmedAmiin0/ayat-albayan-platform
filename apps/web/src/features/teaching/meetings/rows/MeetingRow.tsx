@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { copyText, endMeeting, MEETINGS_KEY, newMeetingLink } from '../internal/internal-api';
+import { copyText, endMeeting, MEETINGS_KEY, newMeetingLink } from '@/features/teaching/meetings/internal/internal-api';
 import { MeetingLinkBox } from './MeetingLinkBox';
 import { MeetingManageButtons } from './MeetingManageButtons';
 import { MeetingRowDialogs, type RowDialog } from './MeetingRowDialogs';

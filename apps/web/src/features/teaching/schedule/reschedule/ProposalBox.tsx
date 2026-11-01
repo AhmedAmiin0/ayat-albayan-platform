@@ -6,7 +6,7 @@ import { ButtonRow } from '@/components/ui/layout/button-row';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
-import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from '../api';
+import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from '@/features/teaching/schedule/api';
 import { ConflictNotice } from './ConflictNotice';
 import { useClock } from '@/lib/clock';
 

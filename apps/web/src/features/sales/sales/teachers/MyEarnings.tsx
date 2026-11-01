@@ -4,10 +4,10 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
-import { myEarningsQuery } from '../api';
-import { CurrencyTotalsList } from '../money/CurrencyTotalsList';
+import { myEarningsQuery } from '@/features/sales/sales/api';
+import { CurrencyTotalsList } from '@/features/sales/sales/money/CurrencyTotalsList';
 import { EarningsTerms } from './EarningsTerms';
-import { StatementCard } from '../money/StatementCard';
+import { StatementCard } from '@/features/sales/sales/money/StatementCard';
 
 const p = t.assistantPortal.earnings;
 

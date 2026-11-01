@@ -5,9 +5,9 @@ import { useDebounced } from '@/features/finance/pricing/use-debounced';
 import { FxNote } from '@/features/finance/pricing/calculator/FxNote';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
 import { t } from '@/lib/i18n/i18n';
-import { Amount } from '../balance/Amount';
-import { MONEY_KEY, quoteSubscription } from '../api';
-import { apiErrorText } from '../format';
+import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { MONEY_KEY, quoteSubscription } from '@/features/finance/subscriptions/api';
+import { apiErrorText } from '@/features/finance/subscriptions/format';
 
 type Props = { studentId: string; pricing: SubscriptionPricing };
 

@@ -4,7 +4,7 @@ import { useId } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
-import { createList, listErrorText, refreshLists } from '../lib/api';
+import { createList, listErrorText, refreshLists } from '@/features/messaging/inbox/lists/lib/api';
 import { ListNameForm } from './ListNameForm';
 
 export interface CreateListDialogProps {

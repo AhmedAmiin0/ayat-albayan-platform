@@ -2,7 +2,7 @@ import { ATTENDANCES, PROGRAMS, type ReportFormEntry, type ReportFormResponse } 
 import { useRef } from 'react';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n/i18n';
-import { useFocusInvalid } from '../entry/use-focus-invalid';
+import { useFocusInvalid } from '@/features/reporting/reports/entry/use-focus-invalid';
 import { AbsentCard } from './AbsentCard';
 import { AfterLesson } from './after/AfterLesson';
 import { ArabicSection } from './programs/ArabicSection';

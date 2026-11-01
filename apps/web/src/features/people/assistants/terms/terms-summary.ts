@@ -2,7 +2,7 @@ import { formatAmount } from '@ab/shared';
 import { formatDate } from '@/features/sales/leads';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import type { AssistantTermsView } from '../api';
+import type { AssistantTermsView } from '@/features/people/assistants/api';
 
 /** A plain day (YYYY-MM-DD) shown as a date: noon UTC, so no zone moves it to another day. */
 export const dayText = (day: string): string => formatDate(`${day}T12:00:00Z`);

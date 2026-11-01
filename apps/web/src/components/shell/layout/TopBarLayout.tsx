@@ -7,10 +7,10 @@ import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
 import { meQuery } from '@/features/people/auth/me';
 import { NotificationBell } from '@/features/messaging/notifications/NotificationBell';
 import { cn } from '@/lib/utils';
-import { AccountChip } from '../account/AccountChip';
-import { LanguageSwitch } from '../account/LanguageSwitch';
-import { LogoutButton } from '../account/LogoutButton';
-import { MenuBar } from '../header/MenuBar';
+import { AccountChip } from '@/components/shell/account/AccountChip';
+import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
+import { LogoutButton } from '@/components/shell/account/LogoutButton';
+import { MenuBar } from '@/components/shell/header/MenuBar';
 
 export type SectionHome = '/admin' | '/teacher' | '/sales' | '/assistant' | '/portal';
 

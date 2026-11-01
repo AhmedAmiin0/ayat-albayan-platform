@@ -1,7 +1,7 @@
 import type { ConfigEntryConflict, SettingKey } from '@ab/shared';
 import { formatAge } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
-import { valueText } from '../lib/value-format';
+import { valueText } from '@/features/platform/settings/values/lib/value-format';
 
 const c = t.settingsValues.conflict;
 

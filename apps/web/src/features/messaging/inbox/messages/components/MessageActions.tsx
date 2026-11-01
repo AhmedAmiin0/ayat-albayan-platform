@@ -4,8 +4,8 @@ import type { MouseEvent } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { handOffMessage, markSentManually, retryMessage } from '../../api/api';
-import { canRetry, canSendByHand, isHandedOff } from '../lib/message-notes';
+import { handOffMessage, markSentManually, retryMessage } from '@/features/messaging/inbox/api/api';
+import { canRetry, canSendByHand, isHandedOff } from '@/features/messaging/inbox/messages/lib/message-notes';
 
 /**
  * A send that didn't go out (R-MSG-03/05): «جرّب تاني» puts a failed row back in the queue (M1);

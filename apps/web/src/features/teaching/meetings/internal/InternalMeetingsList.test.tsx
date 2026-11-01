@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
-import { meetingRow as row } from '../meeting-fixture';
+import { meetingRow as row } from '@/features/teaching/meetings/meeting-fixture';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));

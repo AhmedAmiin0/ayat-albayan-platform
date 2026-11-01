@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { BookingWizard } from '../../BookingWizard';
-import type { BookingDraft, PickedStudent } from '../../draft/draft';
-import type { BookHint } from '../../hint';
-import { BookingModeContext, ChatReturnContext, type BookingMode } from '../../mode';
-import { trialHistoryQuery } from '../api';
+import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
+import type { BookingDraft, PickedStudent } from '@/features/teaching/booking/draft/draft';
+import type { BookHint } from '@/features/teaching/booking/hint';
+import { BookingModeContext, ChatReturnContext, type BookingMode } from '@/features/teaching/booking/mode';
+import { trialHistoryQuery } from '@/features/teaching/booking/trial-date/api';
 import { trialDateDraft, trialHint, type TrialStudentFacts } from './draft';
-import { TrialHistoryBody, TrialHistoryTitle } from '../history/TrialHistoryBody';
+import { TrialHistoryBody, TrialHistoryTitle } from '@/features/teaching/booking/trial-date/history/TrialHistoryBody';
 
 export interface TrialDateDialogProps {
   student: PickedStudent;

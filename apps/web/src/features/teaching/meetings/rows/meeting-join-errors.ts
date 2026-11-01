@@ -2,7 +2,7 @@ import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/roo
 import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { whenText } from '../scheduled/meeting-when';
+import { whenText } from '@/features/teaching/meetings/scheduled/meeting-when';
 import type { Clock } from '@/lib/clock';
 
 const R = t.meetings.internal.refusal;

@@ -6,8 +6,8 @@ import { conflictsOf, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { useBookingMode } from '../mode';
-import { pickedText } from '../steps/slots/SlotStep';
+import { useBookingMode } from '@/features/teaching/booking/mode';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import {
   changeCourse,
   courseChangeCheckQuery,

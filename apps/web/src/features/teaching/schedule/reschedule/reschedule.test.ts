@@ -1,6 +1,6 @@
 import { rescheduleRequestSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { lesson, SUHAILA } from '../lesson/lesson-fixture';
+import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { familyTz, rescheduleBody, seriesDays } from './reschedule';
 
 const TEACHER_ID = '6f1c2a3e-1b2c-4d5e-8f90-123456789abc';

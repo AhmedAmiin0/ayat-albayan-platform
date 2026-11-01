@@ -8,12 +8,12 @@ import { weekStart, zonedParts } from '@/features/teaching/schedule';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n/i18n';
-import { invoicesQuery } from '../../invoice/api.invoice';
-import type { BookingKind } from '../../draft/contract';
-import type { PickedStudent } from '../../draft/draft';
-import { InvoiceButton } from '../../invoice/InvoiceDialog';
-import { useBookingMode, useChatReturn } from '../../mode';
-import { pickedText } from '../slots/SlotStep';
+import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
+import type { BookingKind } from '@/features/teaching/booking/draft/contract';
+import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
+import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
+import { useBookingMode, useChatReturn } from '@/features/teaching/booking/mode';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

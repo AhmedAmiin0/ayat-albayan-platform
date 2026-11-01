@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
-import { WEEKLY } from '../money-fixture';
+import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.set_start_date'] }));

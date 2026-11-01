@@ -2,8 +2,8 @@ import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { LessonAction } from './LessonAction';
-import { lesson } from '../portal.fixtures';
-import { renderPortal } from '../portal.render';
+import { lesson } from '@/features/people/portal/portal.fixtures';
+import { renderPortal } from '@/features/people/portal/portal.render';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));

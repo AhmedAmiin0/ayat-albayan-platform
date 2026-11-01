@@ -1,6 +1,6 @@
 import type { MuteSource } from '@ab/shared';
 import { RoomEvent, type Room } from 'livekit-client';
-import type { ModeratedEvent } from '../components/room-types';
+import type { ModeratedEvent } from '@/features/teaching/classroom/room/components/room-types';
 
 interface PubLike {
   source?: string | undefined;

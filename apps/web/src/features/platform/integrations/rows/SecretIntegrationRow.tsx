@@ -9,9 +9,9 @@ import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { DeveloperKey } from './DeveloperKey';
-import { sendGateQuery } from '../../../messaging/messaging/api';
-import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from '../integrations-api';
-import { integrationText } from '../integrations-form';
+import { sendGateQuery } from '@/features/messaging/messaging/api';
+import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from '@/features/platform/integrations/integrations-api';
+import { integrationText } from '@/features/platform/integrations/integrations-form';
 import { SecretStatusChip } from './SecretStatusChip';
 
 const s = t.integrations;

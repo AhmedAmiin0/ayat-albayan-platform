@@ -5,7 +5,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { useRuleDrafts, type RuleDrafts } from '@/features/messaging/notification-rules/rule-drafts';
 import { RulesSection } from '@/features/messaging/notification-rules/RulesSection';
 import { t } from '@/lib/i18n/i18n';
-import type { CommunicationsTab } from '../page-search';
+import type { CommunicationsTab } from '@/features/platform/settings/pages/page-search';
 import { NumbersTab } from './tabs/NumbersTab';
 import { OverviewTab } from './overview/OverviewTab';
 import { SafetyTab } from './tabs/SafetyTab';

@@ -1,4 +1,4 @@
-import { clickToChatLink } from '../../core/format/index.js';
+import { clickToChatLink } from '@ab/core';
 import type { SettingDef } from '../defs.js';
 
 const h = 'settings.hints';

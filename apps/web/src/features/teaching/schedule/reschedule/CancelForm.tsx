@@ -7,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
-import { cancelLesson, lessonErrorText, LESSONS_KEY } from '../api';
+import { cancelLesson, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 
 export interface CancelFormProps {

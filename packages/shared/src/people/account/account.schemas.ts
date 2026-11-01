@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { phoneE164 } from '../../core/schemas/common.js';
+import { phoneE164 } from '@ab/core';
 import { PASSWORD_MAX } from '../users/validation.js';
 
 // «حسابي» (R-ACC-01..05, owner 2026-10-06): what a signed-in user may change on their OWN login.

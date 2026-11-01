@@ -1,4 +1,4 @@
-import { toCents } from '../ledger/cents.js';
+import { toCents } from '@ab/core';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
 import { commissionKindOf } from './kind.js';
 import { subscriptionAlreadyStarted, type StartFact } from './started.js';

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from '../api';
-import { errorText } from '../status';
+import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from '@/features/people/assistants/api';
+import { errorText } from '@/features/people/assistants/status';
 import { TermsFields } from './TermsFields';
 import { formOf, startMins, toInput, type TermsErrors, type TermsForm } from './terms-form';
 

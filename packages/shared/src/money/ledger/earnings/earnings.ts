@@ -1,4 +1,4 @@
-import { fromCents, toCents } from '../cents.js';
+import { fromCents, toCents } from '@ab/core';
 
 // Per-session teacher earnings (migrations 176-179). Money is compared in piasters (integers):
 // numeric(12,2) comes back from the API as a JS number and 0.1 + 0.2 must not break a balance.

@@ -9,10 +9,10 @@ import { RequiredLegend } from '@/components/ui/form/label';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { publicProblem, submitFeedback, type PublicProblem } from '../api';
+import { publicProblem, submitFeedback, type PublicProblem } from '@/features/teaching/feedback/api';
 import { RatingScale } from './RatingScale';
 import { KindLine } from './KindLine';
-import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend, type Rating } from '../types';
+import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend, type Rating } from '@/features/teaching/feedback/types';
 
 const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({ value: r, label: t.enums.feedbackRecommend[r] }));
 const PROBLEM_TEXT: Record<PublicProblem, string> = {

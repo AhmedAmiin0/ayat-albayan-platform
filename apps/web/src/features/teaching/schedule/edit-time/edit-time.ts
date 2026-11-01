@@ -1,6 +1,6 @@
 import { lessonDuration } from '@ab/shared';
 import type { LessonTimeEdit, TimeEditMode } from './edit-time.contract';
-import { addDays, zonedParts, zonedToUtc } from '../tz';
+import { addDays, zonedParts, zonedToUtc } from '@/features/teaching/schedule/tz';
 
 // «عدّل الوقت» form logic (R-SCH-11): picked days and times, never typed. Pure, unit-tested.
 

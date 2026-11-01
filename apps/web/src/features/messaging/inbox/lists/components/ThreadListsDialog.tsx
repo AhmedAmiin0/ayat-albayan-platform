@@ -6,10 +6,10 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import { chatListsQuery } from '../lib/api';
+import { chatListsQuery } from '@/features/messaging/inbox/lists/lib/api';
 import { AutoListChip } from './AutoListNote';
 import { CreateListDialog } from './CreateListDialog';
-import { useMembership } from '../lib/use-membership';
+import { useMembership } from '@/features/messaging/inbox/lists/lib/use-membership';
 
 const L = t.inbox.lists;
 
