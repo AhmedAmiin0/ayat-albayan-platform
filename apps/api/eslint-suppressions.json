@@ -1036,9 +1036,6 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 4
     }
@@ -8763,7 +8760,7 @@
   },
   "src/modules/people/users/store/users.links.repo.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/people/users/store/users.repo.ts": {
@@ -8843,9 +8840,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 11
