@@ -43,9 +43,12 @@ export const salaryText = (s: AssistantTermsView['salary']): string => (s ? mone
 /** «ابتداءً من 1 أكتوبر 2026» under a term, or null when it is not set. */
 export const sinceText = (day: string | undefined): string | null => (day ? t.assistants.startsOn.replace('{date}', localDay(day)) : null);
 
-/** «تُحسب العمولة كاملة … ولك 50% منها عن كل تجديد … اعتبارًا من …» (owner 2026-10-26: renewals earn a share). */
+/**
+ * «تُحسب العمولة كاملة … ولك 50% منها عن كل تجديد … اعتبارًا من …» (owner 2026-10-26: renewals earn a share);
+ * share 0 (owner 2026-11-01: «عمولة التجديد» off): «… عمولة التجديد موقوفة حاليًا».
+ */
 export const commissionNote = (startsOn: string, renewalShare: number | undefined): string =>
-  p.commissionNote.replace('{n}', String(renewalShare ?? '')).replace('{date}', localDay(startsOn));
+  (renewalShare ? p.commissionNote : p.commissionNoteRenewalOff).replace('{n}', String(renewalShare ?? '')).replace('{date}', localDay(startsOn));
 
 /** One line of a statement: «الراتب», «عمولة يوسف», «عمولة تجديد يوسف», «تسوية: سبب». */
 export function lineText(l: AssistantStatementLineView): string {
