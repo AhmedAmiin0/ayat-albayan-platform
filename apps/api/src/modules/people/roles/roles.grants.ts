@@ -14,7 +14,7 @@ import type { Regrant } from './roles.reset';
 import type { ProfileRecord, RoleRecord } from './roles.store';
 
 /** A base role and custom role id written to profiles (null = the system role of `role`). */
-export interface RoleChoice {
+interface RoleChoice {
   role: RoleRecord['base_role'];
   role_id: string | null;
 }
