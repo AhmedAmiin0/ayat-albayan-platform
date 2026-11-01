@@ -2,7 +2,7 @@ import { calendarDaysBetween } from '../../../time/index.js';
 // Receivables («مستحق على الطلاب», owner 2026-10-05): who still owes on a package, how much and
 // for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
 
-import { round2, toCents } from '../cents.js';
+import { round2, toCents } from '@ab/core';
 
 export const AGING_BUCKETS = ['0_30', '31_60', '61_90', '90_plus'] as const;
 export type AgingBucket = (typeof AGING_BUCKETS)[number];

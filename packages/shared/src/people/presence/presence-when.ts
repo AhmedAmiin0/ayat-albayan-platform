@@ -1,5 +1,5 @@
-import { counted, isolateClock, type ClockCycle, type PluralForm } from '../../core/format/index.js';
-import type { Locale } from '../../i18n/index.js';
+import { counted, type Locale, type PluralForm } from '@ab/core';
+import { isolateClock, type ClockCycle } from '../../core/format/index.js';
 import { chatDay, clockOf, dateText, dayParts, type DateFields } from '../../time/index.js';
 
 // «آخر ظهور …» / «آخر رسالة …» (docs/33 §4): how long ago, on the viewer's clock and zone. The

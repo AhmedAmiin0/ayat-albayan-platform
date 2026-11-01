@@ -1,5 +1,4 @@
 export * from '../schedule/schemas/index.js';
-export * from '../core/schemas/index.js';
 export * from '../people/schemas/index.js';
 export * from '../people/schemas/index.js';
 export * from '../schedule/schemas/index.js';
@@ -9,7 +8,6 @@ export * from '../schedule/schemas/index.js';
 export * from '../schedule/schemas/index.js';
 export * from '../people/schemas/index.js';
 export * from '../people/schemas/index.js';
-export * from '../core/schemas/index.js';
 export * from '../people/schemas/index.js';
 export * from './activity.js';
 export * from '../schedule/schemas/index.js';
