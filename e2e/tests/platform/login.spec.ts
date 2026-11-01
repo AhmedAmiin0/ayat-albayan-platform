@@ -13,13 +13,13 @@ test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
   test('admin logs in and lands on the dashboard', async ({ page }) => {
     await loginViaUi(page, 'admin');
     await expect(page).toHaveURL(/\/admin$/);
-    await expect(page.getByRole('heading', { name: ar.admin.dashboardTitle })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: ar.admin.dashboardTitle })).toBeVisible();
   });
 
   test('teacher lands on own home', async ({ page }) => {
     await loginViaUi(page, 'teacher');
     await expect(page).toHaveURL(/\/teacher$/);
-    await expect(page.getByRole('heading', { name: ar.teacher.dashboardTitle })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: ar.teacher.dashboardTitle })).toBeVisible();
   });
 
   test('wrong password shows the Arabic error', async ({ page }) => {
@@ -38,7 +38,7 @@ test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
   test('saved session opens admin directly; teacher is bounced', async ({ asRole }) => {
     const admin = await asRole('admin');
     await admin.goto('/admin');
-    await expect(admin.getByRole('heading', { name: ar.admin.dashboardTitle })).toBeVisible();
+    await expect(admin.getByRole('heading', { level: 1, name: ar.admin.dashboardTitle })).toBeVisible();
     const teacher = await asRole('teacher');
     await teacher.goto('/admin');
     await expect(teacher).toHaveURL(/\/login$/);

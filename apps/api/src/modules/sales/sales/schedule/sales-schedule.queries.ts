@@ -30,6 +30,9 @@ export interface UpcomingRow {
   lesson_students: { student_id: string }[];
 }
 
+/** No lesson lasts this long: the start bound of day() (keeps lessons_time_idx in use). */
+const LONGEST_LESSON_MS = 24 * 60 * 60 * 1000;
+
 interface DayRange {
   from: Date;
   to: Date;
@@ -44,12 +47,17 @@ interface DayRange {
 export class SalesScheduleQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Lessons starting inside [from, to), by start; a moved-away lesson (`rescheduled`) is left out. */
+  /**
+   * Lessons overlapping [from, to), by start; a moved-away lesson (`rescheduled`) is left out.
+   * Overlapping, not starting inside: a lesson running across midnight is on both days (it is
+   * «في حلقة الآن» at 00:03).
+   */
   async day(range: DayRange): Promise<SalesScheduleRow[]> {
     let query = this.db
       .from('lessons')
       .select(SALES_SCHEDULE_SELECT)
-      .gte('starts_at', range.from.toISOString())
+      .gte('starts_at', new Date(range.from.getTime() - LONGEST_LESSON_MS).toISOString())
+      .gt('ends_at', range.from.toISOString())
       .lt('starts_at', range.to.toISOString())
       .neq('status', 'rescheduled');
     if (range.teacherId) query = query.eq('teacher_id', range.teacherId);
