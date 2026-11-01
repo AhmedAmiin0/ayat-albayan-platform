@@ -1,12 +1,11 @@
-import { SCHEDULE_DAYS, SCHEDULE_LIMIT, type SalesStudentLesson, type SalesStudentSchedule } from '@ab/shared';
-import { DAY } from '../../../people/teachers';
-import { type SalesScheduleRow, toScheduleLesson, toWeeklySlot, type WeeklyRuleRow, withMine } from '../../sales';
+import { DAY_MS, type SalesStudentLesson, type SalesStudentSchedule, SCHEDULE_DAYS, SCHEDULE_LIMIT } from '@ab/shared';
+import { type SalesScheduleRow, toScheduleLesson, toWeeklySlot, type WeeklyRuleRow, withMine } from '@/modules/sales/sales';
 
 // Whitelists: a rule's link or subscription and a lesson's link never reach sales (migration 187).
 
 /** «الحلقات القادمة»: from now, SCHEDULE_DAYS ahead, at most SCHEDULE_LIMIT lessons. */
 export function scheduleWindow(now: Date): { from: Date; to: Date; limit: number } {
-  return { from: now, to: new Date(now.getTime() + SCHEDULE_DAYS * DAY), limit: SCHEDULE_LIMIT };
+  return { from: now, to: new Date(now.getTime() + SCHEDULE_DAYS * DAY_MS), limit: SCHEDULE_LIMIT };
 }
 
 /** The sales schedule's lesson (trial / makeup badges, `mine` on her students) without the way in. */

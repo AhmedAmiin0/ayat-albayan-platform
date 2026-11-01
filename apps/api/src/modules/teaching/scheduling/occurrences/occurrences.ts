@@ -1,11 +1,4 @@
-import {
-  DAY,
-  localDay,
-  MINUTE,
-  toMinutes,
-  weekdayOf,
-  zonedToUtc,
-} from '../../../people/teachers/availability/zoned-time';
+import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
 
 /** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
 export type RuleTiming = {
@@ -32,19 +25,20 @@ const localDate = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
  * calendar day than its local one is still found at the window edges.
  */
 export function ruleOccurrences(rule: RuleTiming, window: UtcWindow): Occurrence[] {
-  const startMin = toMinutes(rule.start_time_local);
+  const startMin = minutesOfHhmm(rule.start_time_local);
   const days = new Set(rule.byday);
   const from = window.from.getTime();
   const to = window.to.getTime();
-  const first = Math.max(localDay(from, rule.tz) - DAY, localDate(rule.starts_on));
-  const scanEnd = localDay(to, rule.tz) + DAY;
+  const first = Math.max(dayInZone(from, rule.tz) - DAY_MS, localDate(rule.starts_on));
+  const scanEnd = dayInZone(to, rule.tz) + DAY_MS;
   const last = rule.ends_on === null ? scanEnd : Math.min(scanEnd, localDate(rule.ends_on));
   const out: Occurrence[] = [];
-  for (let day = first; day <= last; day += DAY) {
-    if (!days.has(weekdayOf(day))) continue;
-    const start = zonedToUtc(day, startMin, rule.tz);
+  for (let day = first; day <= last; day += DAY_MS) {
+    if (!days.has(weekdayOfDay(day))) continue;
+    const start = dayWallToUtc(day, startMin, rule.tz);
     if (start < from || start >= to) continue;
-    out.push({ starts_at: new Date(start), ends_at: new Date(start + rule.duration_min * MINUTE) });
+    const ends = start + rule.duration_min * MINUTE_MS;
+    out.push({ starts_at: new Date(start), ends_at: new Date(ends) });
   }
   return out;
 }

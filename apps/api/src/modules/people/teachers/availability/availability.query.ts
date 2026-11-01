@@ -1,8 +1,7 @@
+import { DAY_MS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from './availability.repo';
 import { freeSlots, type TimeRange } from './free-slots';
-import { DAY } from './zoned-time';
-
 export type FreeSlotsQuery = {
   teacherId: string;
   from: Date;
@@ -23,7 +22,7 @@ export class AvailabilityQuery {
   async freeSlots(q: FreeSlotsQuery): Promise<TimeRange[]> {
     // Time-off or a lesson just outside [from, to] can still split a window that reaches into it,
     // which shifts where slots start; load a 2-day margin so results don't depend on the window.
-    const margin = { from: new Date(q.from.getTime() - 2 * DAY), to: new Date(q.to.getTime() + 2 * DAY) };
+    const margin = { from: new Date(q.from.getTime() - 2 * DAY_MS), to: new Date(q.to.getTime() + 2 * DAY_MS) };
     const [availability, timeOff, lessons] = await Promise.all([
       this.availability.listSlots(q.teacherId),
       this.availability.listTimeOff(q.teacherId, margin),

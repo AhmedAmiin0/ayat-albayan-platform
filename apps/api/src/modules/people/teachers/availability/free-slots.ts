@@ -1,6 +1,5 @@
+import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
 import { mergeIntervals, subtractIntervals, type Interval } from './intervals';
-import { DAY, localDay, MINUTE, toMinutes, weekdayOf, zonedToUtc } from './zoned-time';
-
 /** One weekly availability row, wall-clock in its own `tz` (teacher_availability). R-TCH-02. */
 export type WeeklyRow = { weekday: number; start_time: string; end_time: string; tz: string };
 export type TimeRange = { start: Date; end: Date };
@@ -33,16 +32,17 @@ export function allDayRows(tz: string): WeeklyRow[] {
 
 /** Every occurrence of `row` whose local day is within `range` ±1 day (covers ±14h offsets). */
 export function expandRow(row: WeeklyRow, range: Interval): Interval[] {
-  const startMin = toMinutes(row.start_time);
-  const rawEnd = toMinutes(row.end_time);
+  const startMin = minutesOfHhmm(row.start_time);
+  const rawEnd = minutesOfHhmm(row.end_time);
   // 22:00–23:59 + next day 00:00–02:00 must merge into one window across midnight.
   const endMin = rawEnd === LAST_MINUTE ? 24 * 60 : rawEnd;
-  const firstDay = localDay(range.start, row.tz) - DAY;
-  const lastDay = localDay(range.end, row.tz) + DAY;
+  const firstDay = dayInZone(range.start, row.tz) - DAY_MS;
+  const lastDay = dayInZone(range.end, row.tz) + DAY_MS;
   const out: Interval[] = [];
-  const offset = (row.weekday - weekdayOf(firstDay) + 7) % 7;
-  for (let day = firstDay + offset * DAY; day <= lastDay; day += 7 * DAY) {
-    out.push({ start: zonedToUtc(day, startMin, row.tz), end: zonedToUtc(day, endMin, row.tz) });
+  const offset = (row.weekday - weekdayOfDay(firstDay) + 7) % 7;
+  for (let day = firstDay + offset * DAY_MS; day <= lastDay; day += 7 * DAY_MS) {
+    const start = dayWallToUtc(day, startMin, row.tz);
+    out.push({ start, end: dayWallToUtc(day, endMin, row.tz) });
   }
   return out;
 }
@@ -59,10 +59,10 @@ export function freeSlots(input: FreeSlotsInput): TimeRange[] {
   const range = toInterval({ start: input.from, end: input.to });
   const windows = mergeIntervals(input.availability.flatMap((row) => expandRow(row, range)));
   const blocked = [...input.timeOff, ...input.busy].map(toInterval);
-  const duration = input.durationMin * MINUTE;
+  const duration = input.durationMin * MINUTE_MS;
   const slots: TimeRange[] = [];
   for (const free of subtractIntervals(windows, blocked)) {
-    for (let t = free.start; t + duration <= free.end; t += stepMin * MINUTE) {
+    for (let t = free.start; t + duration <= free.end; t += stepMin * MINUTE_MS) {
       if (t >= range.start && t + duration <= range.end) {
         slots.push({ start: new Date(t), end: new Date(t + duration) });
       }
