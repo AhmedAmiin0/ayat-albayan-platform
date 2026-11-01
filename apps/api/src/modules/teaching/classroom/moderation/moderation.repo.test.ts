@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import { ModerationQueries, principalColumns, principalOf } from './moderation.queries';
-import { RecordingQueries } from '../recordings/recording.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { ModerationRepo, principalColumns, principalOf } from './moderation.repo';
+import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 const setup = (results: Record<string, FakeResult[]>) => {
   const f = fakeDb(results);
   const audit = { record: vi.fn().mockResolvedValue(undefined) };
-  return { ...f, audit, q: new ModerationQueries(f.db, audit as unknown as AuditService) };
+  return { ...f, audit, q: new ModerationRepo(f.db, audit as unknown as AuditService) };
 };
 const target = { identity: 'guest-0123456789ab', role: 'guest', name: 'سهيلة' };
 
@@ -66,7 +66,7 @@ describe('ModerationQueries', () => {
 describe('RecordingQueries', () => {
   it('claim returns the new id, or null when a recording is already running (unique index)', async () => {
     const f = fakeDb({ lesson_recordings: [{ data: { id: 'R1' } }, { error: { code: '23505', message: 'dup' } }] });
-    const q = new RecordingQueries(f.db);
+    const q = new RecordingRepo(f.db);
     const input = { target: { kind: 'lesson' as const, id: 'L' }, filePath: 'lessons/L/x.mp3', startedAt: '2026-10-05T16:00:00.000Z' };
     expect(await q.claim(input)).toBe('R1');
     expect(await q.claim(input)).toBeNull();
@@ -74,7 +74,7 @@ describe('RecordingQueries', () => {
 
   it('finishByEgress only touches a running row of that egress (replays are no-ops)', async () => {
     const f = fakeDb({ lesson_recordings: [{}] });
-    await new RecordingQueries(f.db).finishByEgress('EG', { status: 'done', endedAt: 't' });
+    await new RecordingRepo(f.db).finishByEgress('EG', { status: 'done', endedAt: 't' });
     expect(f.argsOf('lesson_recordings', 'update')?.[0]).toEqual({ status: 'done', ended_at: 't', error: null });
     const eqs = f.calls.filter((c) => c.method === 'eq').map((c) => c.args);
     expect(eqs).toEqual([['egress_id', 'EG'], ['status', 'recording']]);

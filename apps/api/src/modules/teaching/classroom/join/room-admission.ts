@@ -1,12 +1,12 @@
 import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import type { LivekitEnv } from '../../../../config/env/env';
-import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '../classroom.config';
+import type { LivekitEnv } from '@/config/env/env';
+import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '@/modules/teaching/classroom/classroom.config';
 import { notConfigured } from './join-gate';
-import { mintToken, newIdentity } from '../livekit/livekit-token';
-import { ModerationQueries, principalColumns, type Principal } from '../moderation/moderation.queries';
-import { RecordingStarter } from '../recordings/recording.starter';
-import { lessonTarget, type RoomTarget } from '../recordings/recording-target';
+import { mintToken, newIdentity } from '@/modules/teaching/classroom/livekit/livekit-token';
+import { ModerationRepo, principalColumns, type Principal } from '@/modules/teaching/classroom/moderation/moderation.repo';
+import { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
+import { lessonTarget, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 
 interface Admission {
   lessonId: string;
@@ -31,7 +31,7 @@ export class RoomAdmission {
 
   constructor(
     @Inject(CLASSROOM_CONFIG) private readonly source: ClassroomConfigSource,
-    private readonly moderation: ModerationQueries,
+    private readonly moderation: ModerationRepo,
     private readonly recorder: RecordingStarter,
   ) {}
 

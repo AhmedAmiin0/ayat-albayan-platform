@@ -8,16 +8,16 @@ import {
   mayInvitePhones,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { notFound } from '../../../../../common/http/errors';
-import { parseOrThrow } from '../../../../../common/http/http';
-import { InternalMeetingsService } from '../../internal-meetings/internal-meetings.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
 import { MeetingInviteFlow } from './meeting-invite.flow';
 import { visibleView } from './meeting-invite.policy';
 import { inviteSubject, resendDedupKey } from './meeting-invite.text';
-import { MeetingInviteeQueries } from './meeting-invitee.queries';
+import { MeetingInviteeRepo } from './meeting-invitee.repo';
 import { MeetingInviteeResolver } from './meeting-invitee.resolver';
-import { MeetingInviteesQueries } from './meeting-invitees.queries';
+import { MeetingInviteesRepo } from './meeting-invitees.repo';
 import { toInviteeView } from './meeting-invites.mapper';
 
 /** What MeetingInvitesService reads (one injectable, so constructors stay at ≤ 3 params). */
@@ -25,8 +25,8 @@ import { toInviteeView } from './meeting-invites.mapper';
 export class MeetingInvitesDeps {
   constructor(
     readonly resolver: MeetingInviteeResolver,
-    readonly picks: MeetingInviteeQueries,
-    readonly invitees: MeetingInviteesQueries,
+    readonly picks: MeetingInviteeRepo,
+    readonly invitees: MeetingInviteesRepo,
   ) {}
 }
 

@@ -91,7 +91,7 @@
   "apps/api/src/modules/teaching/classroom/classroom.settings.ts types ClassroomSettingsValues",
   "apps/api/src/modules/teaching/classroom/join/join-link.token.ts types LinkCheck",
   "apps/api/src/modules/teaching/classroom/livekit/livekit-webhook.controller.ts exports LIVEKIT_WEBHOOK_TYPE",
-  "apps/api/src/modules/teaching/classroom/recordings/recording.queries.ts types FinishInput",
+  "apps/api/src/modules/teaching/classroom/recordings/recording.repo.ts types FinishInput",
   "apps/api/src/modules/teaching/classroom/test-app.ts types Call",
   "apps/api/src/modules/teaching/feedback/feedback.fakes.ts exports OTHER_TEACHER_ID",
   "apps/api/src/modules/teaching/feedback/feedback.settings.ts types FeedbackSettingsValues",

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { ClassroomQueries } from '../classroom.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { hashLinkToken, looksLikeLinkToken } from './join-link.token';
 import { LessonRoleService } from './lesson-role.service';
 
@@ -13,7 +13,7 @@ import { LessonRoleService } from './lesson-role.service';
 @Injectable()
 export class JoinLinkStaffService {
   constructor(
-    private readonly queries: ClassroomQueries,
+    private readonly queries: ClassroomRepo,
     private readonly roles: LessonRoleService,
   ) {}
 

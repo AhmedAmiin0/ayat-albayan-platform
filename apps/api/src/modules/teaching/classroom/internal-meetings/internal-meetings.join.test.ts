@@ -1,17 +1,17 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, CONFIG, decode, GUARDIAN, OTHER_TEACHER, queries, TEACHER } from '../classroom.fakes';
+import { ADMIN, ASSISTANT, CONFIG, decode, GUARDIAN, OTHER_TEACHER, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID, MEETING_TOKEN, meetingQueries, meetingRow, NOW } from './internal-meetings.fakes';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
-import type { InternalMeetingsQueries } from './internal-meetings.queries';
+import type { InternalMeetingsRepo } from './internal-meetings.repo';
 import { hashMeetingToken } from './internal-meetings.token';
-import { PublicJoinLimit } from '../join/join-limit';
-import { admissionOf } from '../moderation/moderation.fakes';
+import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
+import { admissionOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
 let cq: ReturnType<typeof queries>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new InternalMeetingJoinService(mq as unknown as InternalMeetingsQueries, new PublicJoinLimit(), admissionOf({ q: cq, config }));
+  new InternalMeetingJoinService(mq as unknown as InternalMeetingsRepo, new PublicJoinLimit(), admissionOf({ q: cq, config }));
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const guest = (svc = service(), token = MEETING_TOKEN) => svc.guest({ token, ip: '9.9.9.9', body: { name: 'ضيف' } }, NOW);
 
