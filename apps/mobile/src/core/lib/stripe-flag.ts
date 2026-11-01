@@ -6,6 +6,9 @@ import { Platform } from 'react-native';
 // Here in core (sales-subscribe/payment-link/flag.ts re-exports it) because the chats open pay links too.
 export const STRIPE_FEATURE = process.env.EXPO_PUBLIC_FEATURE_STRIPE === '1';
 
+/** GET /stripe/feature's query key: use-stripe.ts reads it, an «التكاملات» save invalidates it. */
+export const STRIPE_FEATURE_KEY = ['stripe', 'feature'] as const;
+
 /** The platform's pay page, https://<host>/pay/<token>, with nothing after the token. */
 const PAY_PAGE = /^https?:\/\/[^/?#]+\/pay\/[A-Za-z0-9_-]{32,64}$/;
 

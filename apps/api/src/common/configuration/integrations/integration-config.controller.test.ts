@@ -96,6 +96,37 @@ describe('/settings/integrations («التكاملات»)', () => {
     expect(q.setSecret).not.toHaveBeenCalled();
   });
 
+  it('a Stripe key must be a sandbox key: a live one is 400 and never stored, echoed or audited', async () => {
+    vi.stubEnv('FEATURE_STRIPE', 'test');
+    const url = '/settings/integrations/secrets/STRIPE_API_KEY';
+    for (const value of ['sk_live_51LiveAbc', 'rk_live_51LiveAbc', 'pk_test_51LiveAbc']) {
+      const res = await call({ method: 'PUT', url, payload: { value } });
+      expect([res.statusCode, res.json().issues[0].message]).toEqual([400, 'stripe_live_key_refused']);
+      expect(res.body).not.toContain('LiveAbc');
+    }
+    expect(q.setSecret).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+    expect((await call({ method: 'PUT', url, payload: { value: ' rk_test_51Abc ' } })).statusCode).toBe(200);
+    expect(q.setSecret).toHaveBeenCalledWith({ key: 'STRIPE_API_KEY', value: 'rk_test_51Abc' });
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'secret_set:STRIPE_API_KEY', after: { keys: ['STRIPE_API_KEY'] } }));
+    const hook = await call({ method: 'PUT', url: '/settings/integrations/secrets/STRIPE_WEBHOOK_SECRET', payload: { value: 'abc' } });
+    expect(hook.statusCode).toBe(400);
+  });
+
+  it('without FEATURE_STRIPE no Stripe key is listed, stored or cleared: 400, nothing written', async () => {
+    vi.stubEnv('FEATURE_STRIPE', '');
+    const url = '/settings/integrations/secrets/STRIPE_API_KEY';
+    expect((await call({ method: 'PUT', url, payload: { value: 'rk_test_51Abc' } })).statusCode).toBe(400);
+    expect((await call({ method: 'DELETE', url })).statusCode).toBe(400);
+    const put = await call({ method: 'PUT', payload: { values: { STRIPE_ENABLED: 'true' } } });
+    expect([put.statusCode, put.body.includes('values.STRIPE_ENABLED')]).toEqual([400, true]);
+    const listed = (await call({ method: 'GET' })).json<{ group: string }[]>();
+    expect(listed.filter((i) => i.group === 'stripe')).toEqual([]);
+    for (const fn of [q.setSecret, q.clearSecret, q.writePlain, audit.record]) {
+      expect(fn).not.toHaveBeenCalled();
+    }
+  });
+
   it('DELETE a secret clears it (env applies again) and audits the key', async () => {
     const res = await call({ method: 'DELETE', url: '/settings/integrations/secrets/LIVEKIT_API_SECRET' });
     expect(res.statusCode).toBe(200);

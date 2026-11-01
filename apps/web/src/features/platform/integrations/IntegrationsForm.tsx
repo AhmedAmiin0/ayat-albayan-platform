@@ -5,6 +5,7 @@ import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitch
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
+import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { sendGateQuery } from '../../messaging/messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
@@ -33,6 +34,8 @@ export function IntegrationsForm({ items, query, onNote }: FormProps) {
       onNote(s.saved);
       // The chip and the gate note read GET /messages/gate (configured? allow-list?): ask again.
       void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey });
+      // «الدفع الإلكتروني» shows or hides the chat's payment buttons now, not after 5 minutes.
+      void queryClient.invalidateQueries({ queryKey: stripeFeatureQuery.queryKey });
     },
   });
   const changes = changesOf(items, draft);

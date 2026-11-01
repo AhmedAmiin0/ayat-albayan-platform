@@ -41,7 +41,7 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
   });
 
   it('the admin cap: 10 % → below 130.5 is 400 discount_too_large, nothing created', async () => {
-    s.settings.read.mockResolvedValue({ stripe_enabled: true, max_discount_pct: 10 });
+    vi.stubEnv('STRIPE_MAX_DISCOUNT_PCT', '10');
     const res = await call({ method: 'POST', url: '/sales/payment-links', token: 'salesA', body: { ...BODY, amount: 130 } });
     expect([res.statusCode, res.json().code, res.json().min]).toEqual([400, 'discount_too_large', 130.5]);
     expect(m.subs.insert).not.toHaveBeenCalled();
@@ -65,7 +65,7 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
   });
 
   it('quote: the calculator price and the cap’s minimum', async () => {
-    s.settings.read.mockResolvedValue({ stripe_enabled: true, max_discount_pct: 20 });
+    vi.stubEnv('STRIPE_MAX_DISCOUNT_PCT', '20');
     const res = await call({ method: 'POST', url: '/sales/payment-links/quote', token: 'salesA', body: { studentId: STUDENT_ID, pricing: { tier: 'weekly' } } });
     expect(res.json()).toMatchObject({ quote: { afterDiscount: 145, currency: 'SAR' }, max_discount_pct: 20, min_amount: 116 });
   });

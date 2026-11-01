@@ -44,10 +44,10 @@ describe('migration 740: wa_calls', () => {
     expect(sql).toContain('MANUAL ROLLBACK');
   });
 
-  it('holds the latest integration_secret_key_ok: every shared secret key, the TURN secret included', () => {
+  it('integration_secret_key_ok lists the shared secret keys of its day (Stripe came later), TURN included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('STRIPE_')).sort());
     expect(listed).toContain('CALLS_TURN_SECRET');
   });
 });

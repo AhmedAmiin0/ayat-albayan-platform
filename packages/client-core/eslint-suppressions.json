@@ -62,19 +62,6 @@
       "count": 2
     }
   },
-  "src/finance/payments/stripe-settings.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/stripe-settings.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
   "src/finance/payments/upload-once.ts": {
     "@typescript-eslint/no-unnecessary-type-parameters": {
       "count": 1

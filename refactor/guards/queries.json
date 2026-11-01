@@ -10,7 +10,6 @@
   "apps/api/src/modules/finance/payments/payments.queries.ts",
   "apps/api/src/modules/finance/payouts/payouts.queries.ts",
   "apps/api/src/modules/finance/receivables/receivables.queries.ts",
-  "apps/api/src/modules/finance/stripe/gate/stripe-settings.queries.ts",
   "apps/api/src/modules/finance/stripe/links/payment-links.queries.ts",
   "apps/api/src/modules/finance/stripe/webhook/stripe-events.queries.ts",
   "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.queries.ts",

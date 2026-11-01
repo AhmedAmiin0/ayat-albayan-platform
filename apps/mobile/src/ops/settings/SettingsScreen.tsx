@@ -11,7 +11,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
-import { StripeSettingsRow } from './stripe/StripeSettingsRow';
+import { StripeSwitchRow } from './stripe/StripeSwitchRow';
 import { useSettings } from './use-settings';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
@@ -89,7 +89,7 @@ export function SettingsScreen() {
             onPress={() => router.push(SETTINGS_HREF.google)}
           />
         ) : null}
-        <StripeSettingsRow />
+        <StripeSwitchRow />
         <ListRow
           title={t.mobileValues.integrations}
           trailing={<Note>{t.mobileValues.integrationsNote}</Note>}

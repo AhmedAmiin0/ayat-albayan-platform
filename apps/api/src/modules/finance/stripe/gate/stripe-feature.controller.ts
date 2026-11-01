@@ -1,22 +1,22 @@
 import type { StripeFeature } from '@ab/shared';
 import { Controller, Get, Header } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
-import { StripeSettingsQueries } from './stripe-settings.queries';
+import { Public } from '@/common/auth/decorators';
+import { loadEnv } from '@/config/env/env';
+import { stripeReady } from '@/config/env/env.stripe';
 
 /**
- * GET /stripe/feature (no login): whether the payment links are on. Mounted only with FEATURE_STRIPE=test, so
- * a normal build answers 404 and its clients (which also need their own build flag) show nothing.
+ * GET /stripe/feature (no login): whether the apps show the online-payment buttons, i.e.
+ * «الدفع الإلكتروني» is on AND both keys are saved. Mounted only with FEATURE_STRIPE=test, so a
+ * normal build answers 404 and its clients (which also need their own build flag) show nothing.
  */
 @ApiTags('stripe')
 @Public()
 @Controller('stripe/feature')
 export class StripeFeatureController {
-  constructor(private readonly settings: StripeSettingsQueries) {}
-
   @Get()
   @Header('Cache-Control', 'no-store')
-  async get(): Promise<StripeFeature> {
-    return { stripe: (await this.settings.read()).stripe_enabled };
+  get(): StripeFeature {
+    return { stripe: stripeReady(loadEnv()) };
   }
 }

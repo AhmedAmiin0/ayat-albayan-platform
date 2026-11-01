@@ -41,19 +41,8 @@ export const paymentLinkCreateSchema = z.strictObject({
 /** GET /sales/payment-links?status=: her links, newest first. */
 export const paymentLinkListSchema = z.object({ status: z.enum(PAYMENT_LINK_STATUSES).optional() });
 
-const secretInput = z.string().trim().min(1).max(512);
-
-/** PATCH /admin/stripe/settings: a key / secret is write-only; null clears it. */
-export const stripeSettingsPatchSchema = z.strictObject({
-  enabled: z.boolean().optional(),
-  maxDiscountPct: z.number().min(0).max(100).nullable().optional(),
-  apiKey: secretInput.nullable().optional(),
-  webhookSecret: secretInput.nullable().optional(),
-});
-
 export type PaymentLinkQuote = z.output<typeof paymentLinkQuoteSchema>;
 export type PaymentLinkCreate = z.output<typeof paymentLinkCreateSchema>;
-export type StripeSettingsPatch = z.output<typeof stripeSettingsPatchSchema>;
 
 /** What PaymentsService records: a form's payment, or one only the platform writes (method 'card'). */
 export type PaymentWrite = Omit<PaymentCreate, 'method'> & { method: PaymentMethod };

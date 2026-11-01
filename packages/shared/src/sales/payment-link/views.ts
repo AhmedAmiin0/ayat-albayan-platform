@@ -47,20 +47,3 @@ export interface PublicPaymentLink {
 export interface StripeFeature {
   stripe: boolean;
 }
-
-/** A write-only secret: whether it is set, never its value (masked: a prefix and the last 4). */
-export interface StripeSecretState {
-  set: boolean;
-  masked: string | null;
-  updated_at: string | null;
-}
-
-/** GET /admin/stripe/settings: «الدفع الإلكتروني (اختبار)». */
-export interface StripeAdminSettings {
-  enabled: boolean;
-  max_discount_pct: number | null;
-  api_key: StripeSecretState;
-  webhook_secret: StripeSecretState;
-  /** What the owner pastes into the Stripe sandbox's webhook endpoint. */
-  webhook_url: string;
-}

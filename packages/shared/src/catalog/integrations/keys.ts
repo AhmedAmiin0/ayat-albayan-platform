@@ -3,8 +3,10 @@
 // integration_config table, secret ones in Supabase Vault. A non-empty DB value wins over the
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
+import { GROUP_OF } from './keys.groups.js';
+
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'stripe'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -31,6 +33,8 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WEB_PUSH_SUBJECT',
   'FX_API_URL',
   'GOOGLE_CLIENT_ID',
+  'STRIPE_ENABLED',
+  'STRIPE_MAX_DISCOUNT_PCT',
 ] as const;
 
 /** Never returned, logged or audited: only their names and whether they are set. */
@@ -50,6 +54,8 @@ export const INTEGRATION_SECRET_KEYS = [
   'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
   'CALLS_TURN_SECRET',
+  'STRIPE_API_KEY',
+  'STRIPE_WEBHOOK_SECRET',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -63,52 +69,6 @@ export interface IntegrationKeyDef {
   /** ar.json / en.json: `${i18n}.label` and `${i18n}.hint`. */
   i18n: `integrations.keys.${IntegrationKey}`;
 }
-
-/** Each key's group, in the form's order inside the group. */
-const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
-  WA_PROVIDER: 'wa_notifications',
-  WA_API_BASE: 'wa_notifications',
-  WA_API_VERSION: 'wa_notifications',
-  WA_PHONE_NUMBER_ID: 'wa_notifications',
-  WA_WABA_ID: 'wa_notifications',
-  WA_APP_ID: 'wa_notifications',
-  WA_ACCESS_TOKEN: 'wa_notifications',
-  WA_APP_SECRET: 'wa_notifications',
-  WA_VERIFY_TOKEN: 'wa_notifications',
-  WA_CHAT_PROVIDER: 'wa_chat',
-  WA_CHAT_PHONE_NUMBER_ID: 'wa_chat',
-  WA_CHAT_WABA_ID: 'wa_chat',
-  WA_CHAT_APP_ID: 'wa_chat',
-  WA_CHAT_ACCESS_TOKEN: 'wa_chat',
-  WA_CHAT_APP_SECRET: 'wa_chat',
-  KAPSO_API_BASE: 'kapso',
-  KAPSO_API_VERSION: 'kapso',
-  KAPSO_API_KEY: 'kapso',
-  KAPSO_WEBHOOK_SECRET: 'kapso',
-  // The academy's self-hosted WA CRM (docs/19 «crm driver»): its public REST API, not a Meta proxy.
-  WACRM_API_BASE: 'wacrm',
-  WACRM_API_KEY: 'wacrm',
-  WACRM_WEBHOOK_SECRET: 'wacrm',
-  WA_ALLOWED_RECIPIENTS: 'wa_safety',
-  WA_TEMPLATE_SYNC: 'wa_safety',
-  // WhatsApp voice calls (docs/28): the staff device is the WebRTC peer; STUN (default a public one) and an optional TURN
-  // whose shared secret (TURN REST, coturn use-auth-secret) mints short-lived per-user credentials.
-  CALLS_STUN_URLS: 'calls',
-  CALLS_TURN_URLS: 'calls',
-  CALLS_TURN_SECRET: 'calls',
-  LIVEKIT_URL: 'livekit',
-  LIVEKIT_API_KEY: 'livekit',
-  LIVEKIT_API_SECRET: 'livekit',
-  EXPO_API_BASE: 'expo',
-  EXPO_ACCESS_TOKEN: 'expo',
-  WEB_PUSH_VAPID_PUBLIC_KEY: 'web_push',
-  WEB_PUSH_VAPID_PRIVATE_KEY: 'web_push',
-  WEB_PUSH_SUBJECT: 'web_push',
-  FX_API_URL: 'fx',
-  // Google sync (docs/24): the owner's OAuth client; the refresh token never appears here (its own Vault entry).
-  GOOGLE_CLIENT_ID: 'google',
-  GOOGLE_CLIENT_SECRET: 'google',
-};
 
 const SECRET_SET: ReadonlySet<string> = new Set(INTEGRATION_SECRET_KEYS);
 const PLAIN_SET: ReadonlySet<string> = new Set(INTEGRATION_PLAIN_KEYS);
@@ -132,6 +92,7 @@ export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly str
   WA_CHAT_PROVIDER: WA_PROVIDERS,
   // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
   WA_TEMPLATE_SYNC: ['true', 'false'],
+  STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.
 };
 
 /** The allowed values of an enum key, or null for a free-text key. */

@@ -2,11 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   effectiveLinkStatus,
   fromMinorUnits,
-  isStripeLiveKey,
-  isStripeTestKey,
-  isWebhookSecret,
   linkAmountProblem,
-  maskSecret,
   minLinkAmount,
   paymentLinkUrl,
   toMinorUnits,
@@ -27,23 +23,6 @@ describe('payment link rules (docs/30)', () => {
     expect(linkAmountProblem({ amount: 261, reference: 290, maxDiscountPct: 10 })).toBeNull();
     expect(linkAmountProblem({ amount: 260.99, reference: 290, maxDiscountPct: 10 })).toBe('discount_too_large');
     expect(linkAmountProblem({ amount: 400, reference: 290, maxDiscountPct: 0 })).toBeNull();
-  });
-
-  it('only sandbox keys pass; a live key is recognised', () => {
-    expect(isStripeTestKey('rk_test_51Abc')).toBe(true);
-    expect(isStripeTestKey('sk_test_51Abc')).toBe(true);
-    expect(isStripeTestKey('rk_live_51Abc')).toBe(false);
-    expect(isStripeTestKey('pk_test_51Abc')).toBe(false);
-    expect(isStripeLiveKey('sk_live_x')).toBe(true);
-    expect(isStripeLiveKey('rk_test_x')).toBe(false);
-    expect(isWebhookSecret('whsec_abc123')).toBe(true);
-    expect(isWebhookSecret('abc')).toBe(false);
-  });
-
-  it('masking keeps the prefix and the last 4 only', () => {
-    expect(maskSecret('rk_test_51AbcdefghijWXYZ')).toBe('rk_test_••••WXYZ');
-    expect(maskSecret('whsec_0123456789abcd')).toBe('whsec_••••abcd');
-    expect(maskSecret('rk_test_abc')).toBe('rk_test_••••');
   });
 
   it('an open link past expires_at reads expired; other statuses stay', () => {

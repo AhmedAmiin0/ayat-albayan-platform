@@ -11,6 +11,8 @@ import type { LineMode } from './whatsapp/env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 import { CALLS_SHAPE } from './env.calls';
 import { LOGIN_CODE_SHAPE } from './env.login-code';
+import { LIVEKIT_SHAPE } from './env.livekit';
+import { STRIPE_SHAPE } from './env.stripe';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
@@ -79,11 +81,8 @@ const schema = z.object({
   /** HMAC key of the «رأيك يهمّنا» links (>= 32 chars, Vault). Unset = 503 not_configured, every public link refused. */
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
   ...LOGIN_CODE_SHAPE,
-  /** Self-hosted LiveKit (tools/livekit/README.md): all three or none; unset = join routes answer 503
-   * classroom_not_configured. The API mints plain HS256 join tokens (no SDK); values never committed. */
-  LIVEKIT_URL: z.preprocess(blankIsUnset, z.url().optional()),
-  LIVEKIT_API_KEY: optionalSecret,
-  LIVEKIT_API_SECRET: optionalSecret,
+  ...LIVEKIT_SHAPE,
+  ...STRIPE_SHAPE,
   /** The outbound sender's tick in ms (default 30 s); e2e sets ~1 s, production leaves it unset. */
   MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
   /**
