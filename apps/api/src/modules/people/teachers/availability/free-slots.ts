@@ -1,4 +1,11 @@
-import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
+import {
+  DAY_MS,
+  dayInZone,
+  dayWallToUtc,
+  MINUTE_MS,
+  minutesOfHhmm,
+  weekdayOfDay,
+} from '@ab/shared';
 import { mergeIntervals, subtractIntervals, type Interval } from './intervals';
 /** One weekly availability row, wall-clock in its own `tz` (teacher_availability). R-TCH-02. */
 export type WeeklyRow = { weekday: number; start_time: string; end_time: string; tz: string };

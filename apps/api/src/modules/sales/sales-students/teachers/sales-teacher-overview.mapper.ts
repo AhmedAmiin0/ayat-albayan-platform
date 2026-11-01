@@ -1,4 +1,12 @@
-import { DAY_MS, RIYADH_TZ, type SalesOverviewStudent, type SalesTeacherOverview, type SalesTeacherSlot, teacherLessonTotals, wallParts } from '@ab/shared';
+import {
+  DAY_MS,
+  RIYADH_TZ,
+  type SalesOverviewStudent,
+  type SalesTeacherOverview,
+  type SalesTeacherSlot,
+  teacherLessonTotals,
+  wallParts,
+} from '@ab/shared';
 import { nextStarts } from '@/modules/sales/sales';
 import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.queries';
 

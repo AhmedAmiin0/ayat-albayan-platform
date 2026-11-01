@@ -1,4 +1,10 @@
-import { DAY_MS, type SalesStudentLesson, type SalesStudentSchedule, SCHEDULE_DAYS, SCHEDULE_LIMIT } from '@ab/shared';
+import {
+  DAY_MS,
+  type SalesStudentLesson,
+  type SalesStudentSchedule,
+  SCHEDULE_DAYS,
+  SCHEDULE_LIMIT,
+} from '@ab/shared';
 import { type SalesScheduleRow, toScheduleLesson, toWeeklySlot, type WeeklyRuleRow, withMine } from '@/modules/sales/sales';
 
 // Whitelists: a rule's link or subscription and a lesson's link never reach sales (migration 187).

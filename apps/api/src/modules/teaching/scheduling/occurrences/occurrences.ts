@@ -1,4 +1,11 @@
-import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
+import {
+  DAY_MS,
+  dayInZone,
+  dayWallToUtc,
+  MINUTE_MS,
+  minutesOfHhmm,
+  weekdayOfDay,
+} from '@ab/shared';
 
 /** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
 export type RuleTiming = {

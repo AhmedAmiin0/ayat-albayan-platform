@@ -1,4 +1,14 @@
-import { DAY_MS, dayInZone, dayWallToUtc, isCancelledLesson, isOpenLesson, meetingModeOf, RIYADH_TZ, type SalesScheduleLesson, usesPlatform } from '@ab/shared';
+import {
+  DAY_MS,
+  dayInZone,
+  dayWallToUtc,
+  isCancelledLesson,
+  isOpenLesson,
+  meetingModeOf,
+  RIYADH_TZ,
+  type SalesScheduleLesson,
+  usesPlatform,
+} from '@ab/shared';
 import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 
 // Whitelists, not omit-lists: a column added to lessons later never reaches sales.
