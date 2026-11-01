@@ -11,7 +11,7 @@ interface PayMethodPillsProps {
 
 /**
  * «طريقة الدفع» (owner 2026-10-29): «تحويل بنكي» (the package now, then its transfer) or «دفع إلكتروني» (a
- * Stripe link for the same package). Shown only where both exist: the Stripe test build with the API's switch on.
+ * Stripe link for the same package). Shown only where both exist: a Stripe build with the API's switch on.
  */
 export function PayMethodPills({ value, onChange }: PayMethodPillsProps) {
   const items = [

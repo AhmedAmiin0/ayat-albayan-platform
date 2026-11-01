@@ -1,5 +1,7 @@
 import { type PublicPaymentLink } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
+import { loadEnv } from '@/config/env/env';
+import { stripeKeyIsLive } from '@/config/env/env.stripe';
 import { PAY_CSS } from './pay-css';
 
 /** Every value that reaches the page goes through this (text and attribute safe). */
@@ -12,6 +14,10 @@ const fill = (text: string, values: Record<string, string>): string =>
 
 const money = (amount: number): string => (Number.isInteger(amount) ? String(amount) : amount.toFixed(2));
 
+/** «صفحة دفع تجريبية»: only while the saved key is a sandbox one; a live key's pages take real cards. */
+const testNote = (): string =>
+  stripeKeyIsLive(loadEnv()) ? '' : `<p class="note">${escapeHtml(ar.paymentLinks.pay.testNotice)}</p>`;
+
 /** One page: Arabic, RTL, no script; `body` and `head` are already escaped HTML. */
 function shell(title: string, body: string, head = ''): string {
   const P = ar.paymentLinks.pay;
@@ -19,7 +25,7 @@ function shell(title: string, body: string, head = ''): string {
     '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">' +
     `<meta name="robots" content="noindex"><title>${escapeHtml(title)}</title>${head}<style>${PAY_CSS}</style></head>` +
-    `<body><main><h1>${escapeHtml(P.title)}</h1>${body}<p class="note">${escapeHtml(P.testNotice)}</p></main></body></html>`
+    `<body><main><h1>${escapeHtml(P.title)}</h1>${body}${testNote()}</main></body></html>`
   );
 }
 
@@ -56,7 +62,7 @@ export function payPageHtml(view: PublicPaymentLink, token: string): string {
 
 /**
  * Stripe's success / cancel URLs: text only (the verified webhook alone records the payment). `app` is the
- * deep link back into the test app when the app opened the link (pay-return.ts), else null: the page as
+ * deep link back into the app when the app opened the link (pay-return.ts), else null: the page as
  * before. With it, «العودة إلى التطبيق»; the done page also tries it at once (a meta refresh, no script)
  * unless `auto` is off (the app's own fallback). The cancelled page never leaves by itself: a retry stays here.
  */

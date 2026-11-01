@@ -30,7 +30,7 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
   ],
-  // The Stripe test build's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
+  // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],
 })
 export class SalesMoneyModule {}
