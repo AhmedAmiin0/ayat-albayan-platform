@@ -68,6 +68,11 @@ describe('sales schedule mappers', () => {
     expect(facts.size).toBe(2);
   });
 
+  it('teacherDayFacts: a lesson started at Riyadh 23:58 is live at 00:03 (day() reads lessons overlapping the day)', () => {
+    const row = scheduleRow({ starts_at: '2026-10-11T20:58:00.000Z', ends_at: '2026-10-11T21:43:00.000Z' });
+    expect(teacherDayFacts([row], new Date('2026-10-11T21:03:00.000Z')).get('tc1')).toEqual({ lessons_today: 1, live_now: true });
+  });
+
   it('nextLessons keeps each student’s first start (rows come by start)', () => {
     const next = nextLessons([
       { starts_at: '2026-10-12T10:00:00.000Z', lesson_students: [{ student_id: 'a' }] },

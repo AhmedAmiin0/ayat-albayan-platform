@@ -1,13 +1,13 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { StorageService } from '../../../common/storage/storage.service';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { StorageService } from '@/common/storage/storage.service';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { RecordingAdminQueries } from './recording-admin.queries';
 import { ADMIN, ASSISTANT, GUARDIAN, joinRow, OTHER_TEACHER, recording, REC_ID, SALES, STUDENT, studentQueries, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
 import { StudentRecordingQueries } from './student-recordings.queries';
@@ -36,7 +36,7 @@ describe('student recordings routes', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
-      .overrideProvider(TeachersQueries).useValue(teachersFake())
+      .overrideProvider(TeachersRepo).useValue(teachersFake())
       .overrideProvider(StudentRecordingQueries).useValue(sq)
       .overrideProvider(RecordingAdminQueries).useValue(admin)
       .overrideProvider(StorageService).useValue(storage)

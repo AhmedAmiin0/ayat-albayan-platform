@@ -52,7 +52,7 @@ export interface SalesPaymentView {
 /** GET /sales/money/family: her students of this chat's family (all of them with sales.renew_any), each with its packages owed. */
 export interface SalesFamilyStudent extends SalesStudentRef {
   status: StudentStatus;
-  /** false: not hers, listed through sales.renew_any (subscribe / renew / transfer only). Absent from old APIs = hers. */
+  /** false: not hers, listed through sales.renew_any (subscribe / renew / transfer / course days). Absent from old APIs = hers. */
   mine?: boolean;
   open: SalesMoneySubscriptionView[];
   /** «جدّد الاشتراك» is her primary action: the package ended, or an active one is down to the renewal alert. */

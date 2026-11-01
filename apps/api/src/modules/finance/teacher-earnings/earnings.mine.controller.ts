@@ -8,11 +8,11 @@ import {
 } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
-import { parseOrThrow, type Page } from '../../../common/http/http';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow, type Page } from '@/common/http/http';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { EarningsService } from './earnings.service';
 
 /**
@@ -26,7 +26,7 @@ import { EarningsService } from './earnings.service';
 export class TeacherMyEarningsController {
   constructor(
     private readonly earnings: EarningsService,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   @Get()

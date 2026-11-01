@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
 import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import type { BusyLesson } from '../../../teaching/scheduling/conflicts/conflicts';
-import { dbError } from '../../../../common/http/http';
-import { TeachersSettings } from '../teachers.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import type { BusyLesson } from '@/modules/teaching/scheduling/conflicts/conflicts';
+import { dbError } from '@/common/http/http';
+import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
 import { allDayRows, type WeeklyRow } from './free-slots';
 
 export type AvailabilityRow = AvailabilitySlot & { id: string };
@@ -16,7 +16,7 @@ const hhmm = (time: string) => time.slice(0, 5);
 
 /** Supabase access for teacher_availability + teacher_time_off. R-TCH-02. */
 @Injectable()
-export class AvailabilityQueries {
+export class AvailabilityRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: TeachersSettings,

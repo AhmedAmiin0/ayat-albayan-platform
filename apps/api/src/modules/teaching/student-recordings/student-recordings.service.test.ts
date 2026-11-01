@@ -1,10 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { RecordingViews } from '../classroom/recordings/recording-list.service';
+import type { RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { StudentRecordingsService } from './student-recordings.service';
 import type { StudentRecordingQueries } from './student-recordings.queries';
-import type { TeachersQueries } from '../../people/teachers/teachers.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ADMIN, ASSISTANT, GUARDIAN, joinRow, SIBLING, STUDENT, studentQueries, teachersFake, TEACHER, TEACHER_ID } from './student-recordings.fakes';
 
 let q: ReturnType<typeof studentQueries>;
@@ -12,7 +12,7 @@ const views = { urlOf: vi.fn() };
 const query = { page: 1, pageSize: 10 };
 const service = () =>
   new StudentRecordingsService(
-    new StudentRecordingAccess(q as unknown as StudentRecordingQueries, teachersFake() as unknown as TeachersQueries),
+    new StudentRecordingAccess(q as unknown as StudentRecordingQueries, teachersFake() as unknown as TeachersRepo),
     q as unknown as StudentRecordingQueries,
     views as unknown as RecordingViews,
   );

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { fakeDb } from '../../guardians/fake-db';
-import { TeachersSettings } from '../teachers.settings';
-import { AvailabilityQueries } from './availability.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
+import { AvailabilityRepo } from './availability.repo';
 import { allDayRows } from './free-slots';
 
 const ROW = { id: 'a1', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Africa/Cairo' };
 const setup = (on: boolean) => {
   const f = fakeDb({ teacher_availability: [{ data: [ROW] }] });
-  const q = new AvailabilityQueries(f.db, readerOf(TeachersSettings, { teachers_always_available: on }));
+  const q = new AvailabilityRepo(f.db, readerOf(TeachersSettings, { teachers_always_available: on }));
   const touched = () => f.calls.filter((c) => c.table === 'teacher_availability');
   return { q, touched };
 };

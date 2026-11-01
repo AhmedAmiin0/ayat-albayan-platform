@@ -1,8 +1,8 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { StudentAccess } from './student-access';
 
 const ADMIN: AuthUser = { id: 'a1', email: null, role: 'admin' };
@@ -12,7 +12,7 @@ const GUARDIAN: AuthUser = { id: 'g1', email: null, role: 'guardian' };
 function access(results: Record<string, FakeResult[]>, teacherId: string | null = 't1') {
   const { db } = fakeDb(results);
   const teachers = { idByProfile: vi.fn(async () => teacherId) };
-  return new StudentAccess(db, teachers as unknown as TeachersQueries);
+  return new StudentAccess(db, teachers as unknown as TeachersRepo);
 }
 const student = (teacherId: string | null) => ({ students: [{ data: { id: 's1', teacher_id: teacherId } }] });
 

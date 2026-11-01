@@ -1,10 +1,10 @@
 import type { JoinLinkUrl } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { CLASSROOM_WEB_ORIGIN } from '../classroom.config';
-import { ClassroomQueries } from '../classroom.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.config';
+import { ClassroomQueries } from '@/modules/teaching/classroom/classroom.queries';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
 /**
@@ -17,7 +17,7 @@ import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 export class JoinLinkCopyService {
   constructor(
     private readonly queries: ClassroomQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     @Inject(CLASSROOM_WEB_ORIGIN) private readonly origin: string,
   ) {}
 

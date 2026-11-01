@@ -67,7 +67,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   const [tried, setTried] = useState(false);
   const base = useTreeBase();
   const pricing = pricingOf(form);
-  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; the link and «أيام الحلقات» stay hers.
+  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; the payment link stays hers.
   const bind = chatBinding(students, { studentId, phone });
   const quote = useSalesQuote(studentId, pricing, bind);
   const lessonsTotal = quoteLessons(quote.data);
@@ -88,15 +88,9 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
     else save.mutate(
       { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
       {
+        // Its weekly days next, then the transfer; a child not hers too (owner 2026-11-01).
         onSuccess: (sub) =>
-          router.replace(
-            inTree(
-              base,
-              bind.phone
-                ? { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId: sub.id } }
-                : { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } },
-            ),
-          ),
+          router.replace(inTree(base, { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } })),
       },
     );
   };
