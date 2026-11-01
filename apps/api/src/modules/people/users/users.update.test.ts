@@ -17,7 +17,7 @@ describe('PATCH /users/:id', () => {
   });
 
   it('changes the email through the Auth Admin API, refusing one that belongs to another login', async () => {
-    const { updater, users, auth } = setupUsers(admins());
+    const { updater, auth } = setupUsers(admins());
     auth.users.set('sales1', { email: 'sales1@example.com', banned: false });
     auth.users.set('other', { email: 'taken@example.com', banned: false });
     expect(await codeOf(updater.update('sales1', { email: 'taken@example.com' }, ADMIN_ACTOR))).toBe('email_taken');
@@ -46,7 +46,7 @@ describe('PATCH /users/:id', () => {
   });
 
   it('refuses editing a user whose permissions exceed the actor\'s (403 permission_not_held)', async () => {
-    const { updater, users } = setupUsers(admins());
+    const { updater } = setupUsers(admins());
     const limited: Actor = { id: 'admin1', permissions: ['users.write', 'classroom.join'] };
     expect(await codeOf(updater.update('admin2', { full_name: 'محاولة' }, limited))).toBe('permission_not_held');
     expect(await codeOf(updater.update('sales1', { role: 'assistant' }, limited))).toBe('permission_not_held');
@@ -60,7 +60,7 @@ describe('PATCH /users/:id', () => {
   });
 
   it('is all or nothing: a taken phone changes neither the email, the name nor the teacher record (409 phone_taken)', async () => {
-    const { updater, users, store, auth } = setupUsers(admins(), [teacherLink]);
+    const { updater, store, auth } = setupUsers(admins(), [teacherLink]);
     store.rows = store.rows.map((r) => (r.id === 'sales1' ? { ...r, phone_e164: '+966501234567' } : r));
     auth.users.set('t1', { email: 't1@example.com', banned: false });
     const wanted = { email: 'fresh@example.com', full_name: 'اسم جديد', phone_e164: '+966501234567' };
