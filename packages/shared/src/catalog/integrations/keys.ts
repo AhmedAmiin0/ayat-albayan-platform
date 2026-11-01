@@ -6,7 +6,7 @@
 import { GROUP_OF } from './keys.groups.js';
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'stripe'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'stripe'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -54,6 +54,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
   'CALLS_TURN_SECRET',
+  'GIPHY_API_KEY',
   'STRIPE_API_KEY',
   'STRIPE_WEBHOOK_SECRET',
 ] as const;

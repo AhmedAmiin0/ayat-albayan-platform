@@ -16,9 +16,9 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 ## Hard code rules (CI fails otherwise)
 1. **Max 150 lines per file** (`max-lines`, blank lines & comments count) of **≤ 100 characters** (`max-len`; long strings and URLs may run on), functions ≤ 50 lines (`max-lines-per-function`, tests exempt). Split: `x.service.ts` / `x.repo.ts` (class `XRepo`: the only place that injects `DB`) / `x.mapper.ts` / one component per file / tests split by scenario. **No new `*queries.ts` file or `class XQueries`** (`pnpm guard:queries`; the old ones are listed in `refactor/guards/queries.json` until lane R renames them, docs/32 D2). Components call the API through hooks, never `apiFetch`/`apiSend` in a `.tsx`.
 2. **Max 3 parameters per function, 4 per constructor** (`ab/max-params`, docs/32 D1; method signatures count). Use a typed options object for the 4th+.
-3. Strict TypeScript, no `any`, no non-null assertions in app code. Type-aware lint at `--max-warnings 0`, React 19 idioms (mobile), no `useMemo`/`useCallback`/`memo` where the React Compiler builds (web, mobile), effects only in named hooks: `docs/31a-strict-types-lint.md`. Old violations sit in `eslint-suppressions.json`, whose totals may only shrink (`pnpm guard:lint`); fixing one makes lint fail until it is pruned: `pnpm lint:prune` then `pnpm guard:lint -- --write` (a red CI lint job prints the diff to commit).
+3. Strict TypeScript, no `any`, no non-null assertions in app code. Type-aware lint at `--max-warnings 0`, React 19 idioms (mobile), no `useMemo`/`useCallback`/`memo` where the React Compiler builds (web, mobile), effects only in named hooks: `docs/31a-strict-types-lint.md`. Old violations sit in `eslint-suppressions.json`, whose totals may only shrink (`pnpm guard:lint`); fixing one makes lint fail until it is pruned: commit the `eslint-suppressions.json` diff the red CI lint job prints («Suppressions to prune»), or run `pnpm lint:prune` in a cloud session, never on the owner's PC.
 4. Every PR/commit adds unit tests next to the code (`*.test.ts`). Pure logic (phone/arabic normalisation, occurrence generation, conflict check, state machines, balances, reminder timing) must be unit-tested ≥ 80 %.
-5. Playwright e2e for the six journeys in `docs/03-requirements.md §5`; run against local Supabase + WhatsApp stub (`tools/wa-stub`).
+5. Playwright e2e for the six journeys in `docs/03-requirements.md §5`; run in CI against the Supabase stack the runner starts (ci.yml «Start local Supabase») + WhatsApp stub (`tools/wa-stub`).
 6. All times UTC in DB; tz on every person; never free-text times.
 7. Phone numbers E.164 only; `students.code` (`AB-nnnn`) is generated, never typed.
 8. Idempotent jobs (dedup keys); idempotent occurrence generation (`unique(rule_id, starts_at)`).
@@ -32,17 +32,18 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 - Use the **Workflow** tool for every phase with ≥ 3 independent modules (owner opted in). Builders in worktrees → verifiers → integrator (see `docs/05-build-plan.md §2`). ≤ 10 agents per run.
 - Every agent prompt repeats rules 1–4 and lists the requirement IDs it must satisfy.
 - Project skills live in `.claude/skills/` (see its README): every design review loads `heuristic-evaluation`, `design-qa-checklist` and `critique-brand-consistency`; every migration, SQL or RLS change loads `supabase-postgres-best-practices`.
-- Before finishing any phase: `pnpm turbo lint typecheck test` (+ `e2e` from Phase 2) green; write `PHASE_SUMMARY.md`.
+- Before finishing any phase: the PR's GitHub Actions CI is green (lint, typecheck, test, e2e), watched with `gh pr checks <n> --watch` (failures: `gh run view <run> --log-failed`); write `PHASE_SUMMARY.md`.
+- Tests, lint, typecheck, builds, installs (`pnpm i`), Supabase, docker, expo and dev servers never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI. Where the data import runs is still open (see Commands).
 
-## Commands
+## Commands (never on the owner's PC; where each one runs is on its line)
 ```
-pnpm i
-pnpm supabase start            # local stack (packages/db)
-pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010
-pnpm turbo lint typecheck test
-pnpm turbo e2e                 # playwright (apps/web against seeded db)
-pnpm --filter mobile start     # expo
-pnpm migrate:dry && pnpm migrate:apply   # tools/migrate
+pnpm i                         # CI or a cloud session
+pnpm supabase start            # local stack (packages/db): CI only (ci.yml e2e job)
+pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010: no remote place to run (the e2e job starts its servers through Playwright webServer)
+pnpm turbo lint typecheck test # CI or a cloud session, with the ^build builds they depend on
+pnpm turbo e2e                 # playwright (apps/web against seeded db): CI only (ci.yml e2e job)
+pnpm --filter mobile start     # expo: no remote place to run; mobile is verified by CI «test mobile»/«bundle mobile» and mobile.yml
+pnpm migrate:dry && pnpm migrate:apply   # tools/migrate: follows tools/migrate/RUNBOOK.md until the owner decides
 ```
 
 ## Domain vocabulary

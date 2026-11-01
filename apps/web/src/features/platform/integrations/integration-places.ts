@@ -28,6 +28,7 @@ export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = [
   'web_push',
   'fx',
   'google',
+  'giphy',
   'stripe',
 ];
 

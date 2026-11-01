@@ -789,11 +789,8 @@
     }
   },
   "src/auth/verify-role.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/booking/invoice/ChatMediaSheet.test.tsx": {
@@ -2086,7 +2083,7 @@
   },
   "src/core/lib/stripe-flag.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/core/lib/time/use-following-day.ts": {
@@ -3569,7 +3566,7 @@
   },
   "src/inbox/composer/AttachFile.tsx": {
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -3618,7 +3615,7 @@
   },
   "src/inbox/composer/ComposerInput.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/composer/ReopenNote.test.tsx": {
@@ -3755,11 +3752,6 @@
       "count": 5
     },
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/emoji/EmojiSheet.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -5293,7 +5285,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/inbox/messages/text/use-hold-press.test.ts": {
@@ -9184,7 +9176,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-subscribe/payment-link/flag.ts": {
@@ -9240,9 +9232,6 @@
   "src/sales-subscribe/payment-link/list/PaymentLinksRow.tsx": {
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/sales-subscribe/payment-link/list/PaymentLinksScreen.test.tsx": {
@@ -9409,7 +9398,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/sales-subscribe/screens/SalesSubscribeScreen.used.test.tsx": {

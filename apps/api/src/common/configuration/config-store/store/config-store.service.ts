@@ -3,21 +3,15 @@ import { kickConfigReload } from '@/config/role/worker-kick';
 import { configDef, seedEntryOf } from './config-defs';
 import { decodeAll, decodeValue } from './config-decode';
 import { ConfigStoreRepo } from './config-store.repo';
+import { SnapshotCache } from './config-snapshot-cache';
 import {
   DEFAULT_TTL_MS,
   OVERRIDES_REFRESH,
-  REVISION_CHECK_MS,
   SETTINGS_CACHE_MS,
   type ConfigChange,
   type ConfigSnapshot,
   type OverridesRefresh,
 } from '@/common/configuration/config-store/config-store.types';
-
-interface CacheEntry {
-  at: number;
-  checkedAt: number;
-  value: Promise<ConfigSnapshot>;
-}
 
 interface DescribeInput {
   key: string;
@@ -26,10 +20,9 @@ interface DescribeInput {
 }
 
 /**
- * The settings store (docs/26 §2c, §2e): every row cached as ONE promise for SETTINGS_CACHE_MS; once
- * the cache is older than REVISION_CHECK_MS a single query reads settings_revision.rev and, when it
- * differs, the rows are read again, so raw SQL writes are seen within 2 s. Own writes invalidate at
- * once; a failed read is never cached. Values are decoded key by key from the code registry.
+ * The settings store (docs/26 §2c, §2e): reads go through SnapshotCache (rows cached for
+ * SETTINGS_CACHE_MS, revision-checked after REVISION_CHECK_MS, so raw SQL writes are seen within
+ * 2 s); own writes invalidate at once. Values are decoded key by key from the code registry.
  * The send gate never reads this cache (§5).
  */
 @Injectable()
@@ -37,20 +30,19 @@ export class ConfigStore {
   private readonly log = new Logger(ConfigStore.name);
   private readonly loggedMalformed = new Set<string>();
   private readonly listeners: ((remote: boolean) => void)[] = [];
-  private cache: CacheEntry | null = null;
+  private readonly cache: SnapshotCache;
 
   constructor(
     private readonly queries: ConfigStoreRepo,
-    @Inject(SETTINGS_CACHE_MS) private readonly ttlMs: number = DEFAULT_TTL_MS,
+    @Inject(SETTINGS_CACHE_MS) ttlMs: number = DEFAULT_TTL_MS,
     @Optional() @Inject(OVERRIDES_REFRESH) private readonly refreshOverrides?: OverridesRefresh,
-  ) {}
+  ) {
+    this.cache = new SnapshotCache(queries, ttlMs);
+  }
 
   /** The cached rows (revision-checked); rejects on a read failure. */
   snapshot(now = Date.now()): Promise<ConfigSnapshot> {
-    const c = this.cache;
-    if (!c || now - c.at >= this.ttlMs) return this.remember({ at: now, checkedAt: now, value: this.queries.snapshot() });
-    if (now - c.checkedAt < REVISION_CHECK_MS) return c.value;
-    return this.remember({ at: c.at, checkedAt: now, value: this.recheck(c.value) });
+    return this.cache.read(now);
   }
 
   /** Uncached rows + revision (parity, version reads before a write). */
@@ -72,7 +64,9 @@ export class ConfigStore {
     return d.value;
   }
 
-  /** One config_set call (JSON null stored, never deleted); ConfigConflictError on a stale version. */
+  /**
+   * One config_set call (JSON null stored, never deleted); ConfigConflictError on a stale version.
+   */
   async set(changes: readonly ConfigChange[], actorId: string): Promise<void> {
     try {
       await this.queries.set(changes, actorId);
@@ -81,17 +75,17 @@ export class ConfigStore {
     }
   }
 
-  /** config_describe with the entry's hint key; null restores the seeded text (and drops the ar override). */
+  /**
+   * config_describe with the entry's hint key; null restores the seeded text (and drops the ar
+   * override).
+   */
   async describe(input: DescribeInput): Promise<void> {
     const hintKey = seedEntryOf(input.key)?.hintKey ?? null;
     try {
       await this.queries.describe({ ...input, hintKey });
     } finally {
       this.invalidate();
-      // The overrides reload never fails the save (TranslationsService also reloads every 5 min).
-      if (hintKey && this.refreshOverrides) await this.refreshOverrides().catch(() => undefined);
-      // The other copies' translations (and the worker's) reload too: the hint is an ar override.
-      if (hintKey) kickConfigReload();
+      if (hintKey) await this.reloadTranslations();
     }
   }
 
@@ -119,22 +113,15 @@ export class ConfigStore {
   }
 
   private drop(remote: boolean): void {
-    this.cache = null;
+    this.cache.drop();
     for (const l of this.listeners) l(remote);
   }
 
-  private remember(entry: CacheEntry): Promise<ConfigSnapshot> {
-    this.cache = entry;
-    // A failed read is not cached: the next call asks the database again.
-    entry.value.catch(() => {
-      if (this.cache === entry) this.cache = null;
-    });
-    return entry.value;
-  }
-
-  private async recheck(prev: Promise<ConfigSnapshot>): Promise<ConfigSnapshot> {
-    const [snap, rev] = await Promise.all([prev, this.queries.revision()]);
-    return rev !== snap.rev ? this.queries.snapshot() : snap;
+  /** The hint is an ar override: this copy's overrides, the other copies' and the worker's too. */
+  private async reloadTranslations(): Promise<void> {
+    // The overrides reload never fails the save (TranslationsService also reloads every 5 min).
+    await this.refreshOverrides?.().catch(() => undefined);
+    kickConfigReload();
   }
 
   private malformed(key: string): void {

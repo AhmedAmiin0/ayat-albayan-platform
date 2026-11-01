@@ -1,10 +1,11 @@
 import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../../../config/env/env';
-import { graphJson, type FetchLike, type GraphConn } from '../drivers/meta/graph';
+import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
+import { graphJson, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { crmConn, crmLineCheck } from './lines.check.crm';
-import { parsed, phoneNumberSchema, subscribedAppsSchema } from '../drivers/meta/meta-shapes';
-import { WaError } from '../whatsapp.types';
+import { driverOf, type LineDriver } from './lines.check.driver';
+import { parsed, phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 type Phone = Pick<
   LineCheckView,
@@ -31,7 +32,7 @@ interface LineInput {
   appId: string | null;
   checkedAt: string;
   /** The line's driver, the NAMES of what it still lacks, a duplicate chat id, whether Kapso can deliver inbound (docs/19). */
-  driver: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone' | 'kapso_webhook_secret' | 'crm_webhook_secret'>;
+  driver: LineDriver;
 }
 
 /** A rejected call becomes an errors[] entry; it never hides the other call or line. */
@@ -41,7 +42,10 @@ async function attempt<T>(step: Step, call: () => Promise<T>): Promise<Outcome<T
   } catch (e) {
     const code = e instanceof WaError ? e.info.code : null;
     const tag = e instanceof WaError && e.info.credential ? { credential: e.info.credential } : {};
-    return { ok: false, error: { step, code, message: e instanceof Error ? e.message : String(e), ...tag } };
+    return {
+      ok: false,
+      error: { step, code, message: e instanceof Error ? e.message : String(e), ...tag },
+    };
   }
 }
 
@@ -83,18 +87,14 @@ export class LinesCheck {
     const env = loadEnv();
     const envs = lineEnvs(env);
     const checkedAt = new Date().toISOString();
-    const appIds: Record<WaLine, string | undefined> = { notifications: env.WA_APP_ID, chat: env.WA_CHAT_APP_ID };
+    const appIds: Record<WaLine, string | undefined> = {
+      notifications: env.WA_APP_ID,
+      chat: env.WA_CHAT_APP_ID,
+    };
     return Promise.all(
       WA_LINES.map((line) => {
-        const provider = lineProvider(env, line);
-        const base = { provider, gaps: lineGaps(env, line), duplicate_chat_phone: duplicatePhone(env, line) };
-        const driver: LineInput['driver'] =
-          provider === 'kapso'
-            ? { ...base, kapso_webhook_secret: env.KAPSO_WEBHOOK_SECRET !== undefined }
-            : provider === 'crm'
-              ? { ...base, crm_webhook_secret: env.WACRM_WEBHOOK_SECRET !== undefined }
-              : base;
-        const appId = provider === 'meta' ? (appIds[line] ?? null) : null;
+        const driver = driverOf(env, line);
+        const appId = driver.provider === 'meta' ? (appIds[line] ?? null) : null;
         return this.one({ line, env: envs[line], appId, checkedAt, driver });
       }),
     );
@@ -104,7 +104,8 @@ export class LinesCheck {
     const { line, env, checkedAt } = input;
     if (!env) return { ...unconfigured(line, checkedAt), ...input.driver };
     // A crm line: GET /me only (docs/19); the number is the CRM's, so no Graph call at all.
-    if (env.provider === 'crm') return crmLineCheck({ line, conn: crmConn(env, this), checkedAt, driver: input.driver });
+    if (env.provider === 'crm')
+      return crmLineCheck({ line, conn: crmConn(env, this), checkedAt, driver: input.driver });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
     // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
     // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).

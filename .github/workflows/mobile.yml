@@ -151,6 +151,9 @@ jobs:
           EAS_BRANCH: ${{ inputs.branch }}
           PROFILE: ${{ inputs.profile || 'preview' }}
           COMMIT: ${{ github.sha }}
+          # Stripe go live (owner 2026-11-01, docs/30): the normal app's OTA has the pay-link buttons too, like
+          # eas.json `preview`. They show only when GET /stripe/feature says so (the API's switch and keys).
+          EXPO_PUBLIC_FEATURE_STRIPE: "1"
         run: |
           if [ "$PROFILE" = stripe-test ]; then
             # The eas.json stripe-test env (Stripe UI on, the test app's config) and its own channel / environment.

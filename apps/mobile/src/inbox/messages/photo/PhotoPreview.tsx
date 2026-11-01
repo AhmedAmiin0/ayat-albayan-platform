@@ -101,7 +101,7 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
           />
         ) : null}
       </Pressable>
-      <DownloadLink message={m} phone={phone} />
+      {box.download ? <DownloadLink message={m} phone={phone} /> : null}
       {open && uri ? (
         <PhotoViewer uri={uri} label={m.body ? `${kind} · ${m.body}` : kind} message={m} phone={phone} onClose={() => setOpen(false)} />
       ) : null}

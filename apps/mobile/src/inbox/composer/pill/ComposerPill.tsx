@@ -30,9 +30,10 @@ export interface PillProps {
 
 /**
  * The pill's contents in reading order. Staff, as WhatsApp (owner 2026-10-29: «some typing options are
- * missing»): [emoji][text][«عرض سعر»][paperclip][camera, only while the box is empty]; template and
- * quick replies stay tiles in the paperclip's sheet. Teacher: [emoji][text][قالب] (no files).
- * An emoji goes in at the caret through onText (the «/» check runs too).
+ * missing»): [emoji][text][«عرض سعر»][paperclip]; owner 2026-11-01: no camera in the bar (its tile
+ * stays in the paperclip's sheet, as template and quick replies). Teacher: [emoji][text][قالب].
+ * An emoji goes in at the caret through onText (the «/» check runs too). Staff's emoji panel also
+ * has «GIF» and «ملصقات» (owner 2026-11-01): a pick is sent at once.
  */
 export function PillContents(p: PillProps) {
   const { color } = useTheme();
@@ -49,7 +50,8 @@ export function PillContents(p: PillProps) {
     input.current?.focus();
   };
   const box = <ComposerInput value={p.text} onChange={p.onText} onBlur={p.onLeave} inputRef={input} onSelection={(s) => (sel.current = s)} />;
-  const sheet = <EmojiSheet visible={emoji} onPick={pick} onClose={close} />;
+  const media = p.staff ? { phone: p.phone, onError: p.onFileError } : undefined;
+  const sheet = <EmojiSheet visible={emoji} onPick={pick} onClose={close} media={media} />;
   const smile = (
     <IconButton label={t.inbox.composer.emoji} onPress={() => setEmoji(true)} compact>
       <EmojiIcon color={color.ink3} />
@@ -67,7 +69,6 @@ export function PillContents(p: PillProps) {
           onTemplate={p.onTemplate}
           onReplies={p.onReplies}
           onEmoji={() => setEmoji(true)}
-          camera={p.text.length === 0}
         />
         {sheet}
       </>

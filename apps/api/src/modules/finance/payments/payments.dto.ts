@@ -1,7 +1,15 @@
-import { listSortShape, localDate, PAYMENT_KINDS, PAYMENT_METHODS, PAYMENT_SORT_KEYS, SETTING_DEFAULTS } from '@ab/shared';
+import {
+  DAY_MS,
+  dayWallToUtc,
+  listSortShape,
+  localDate,
+  PAYMENT_KINDS,
+  PAYMENT_METHODS,
+  PAYMENT_SORT_KEYS,
+  SETTING_DEFAULTS,
+} from '@ab/shared';
 import { z } from 'zod';
-import { pageQuerySchema } from '../../../common/http/http';
-import { DAY, zonedToUtc } from '../../people/teachers/availability/zoned-time';
+import { pageQuerySchema } from '@/common/http/http';
 import type { PaymentFilter } from './payments.queries';
 
 /** Ranges are local days in the academy's zone (settings.academy_timezone), inclusive (docs/11 §3). */
@@ -26,7 +34,7 @@ export function utcWindow(
   tz: string = DEFAULT_TZ,
 ): { from?: string; to?: string } {
   const at = (day: string, plusDays: number) =>
-    new Date(zonedToUtc(Date.parse(day) + plusDays * DAY, 0, tz)).toISOString();
+    new Date(dayWallToUtc(Date.parse(day) + plusDays * DAY_MS, 0, tz)).toISOString();
   return {
     ...(q.from ? { from: at(q.from, 0) } : {}),
     ...(q.to ? { to: at(q.to, 1) } : {}),

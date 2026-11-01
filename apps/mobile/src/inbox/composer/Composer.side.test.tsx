@@ -34,11 +34,10 @@ async function show(lastInbound: string, permissions?: string[]) {
 
 const shown = (names: string[]) => names.filter((n) => n !== '?');
 
-test('open window with pricing.read: [round] [camera] [paperclip] [price tag] [text] [emoji], left → right; nothing else', async () => {
+test('open window with pricing.read: [round] [paperclip] [price tag] [text] [emoji], left → right; nothing else', async () => {
   await show(ago(5));
   expect(leftToRight(screen.getByTestId('open-row'), true)).toEqual(['round-action', 'composer-pill']);
   expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([
-    t.inbox.composer.camera,
     t.inbox.composer.attach,
     'quote-button',
     t.inbox.composer.placeholder,
@@ -46,10 +45,9 @@ test('open window with pricing.read: [round] [camera] [paperclip] [price tag] [t
   ]);
 });
 
-test('open window without pricing.read: [round] [camera] [paperclip] [text] [emoji]', async () => {
+test('open window without pricing.read: [round] [paperclip] [text] [emoji]', async () => {
   await show(ago(5), ['inbox.read', 'inbox.send']);
   expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([
-    t.inbox.composer.camera,
     t.inbox.composer.attach,
     t.inbox.composer.placeholder,
     t.inbox.composer.emoji,
