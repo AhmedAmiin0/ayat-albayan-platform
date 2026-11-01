@@ -10,6 +10,7 @@ import {
 import { readCalls, readPermissionReplies } from './webhook.calls';
 import { receiving, where, type ReceiveOptions, type Receiving } from '../lines/webhook.lines';
 import { ECHO_FIELD, readEchoes } from './webhook.echoes';
+import { mediaFileName } from './file-name';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
 // are read by their Meta path («interactive.button_reply.id»). Lenient: an item we can't read is
@@ -60,6 +61,8 @@ export function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null 
   const f = (path: string) => field(m, path);
   const media = (MEDIA_TYPES as readonly string[]).includes(type) ? type : null;
   const mf = (key: string) => (media ? f(`${media}.${key}`) : null);
+  // A document's name (Meta's document.filename, Kapso's media_data): the chat's PDF card shows it.
+  const fileName = media === 'document' ? mediaFileName(first(mf('filename'), f('kapso.media_data.filename'))) : null;
   return {
     waMessageId: id,
     from,
@@ -71,6 +74,7 @@ export function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null 
     replyTo: f('context.id'),
     mediaId: mf('id'),
     mediaMime: mf('mime_type'),
+    ...(fileName ? { mediaName: fileName } : {}),
     payload: payloadOf(m, type),
     ...where(ctx.at),
   };

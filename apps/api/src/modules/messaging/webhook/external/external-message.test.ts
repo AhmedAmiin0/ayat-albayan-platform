@@ -38,6 +38,13 @@ describe('externalMessage', () => {
     expect(m).toMatchObject({ body: 'التقرير', mediaId: 'media-9', mediaMime: 'application/pdf', mediaName: 'report.pdf' });
   });
 
+  it('a file name fits messages.media_name (trimmed, ≤ 200 characters; blank = none), or the insert would fail', () => {
+    const named = (filename: string) =>
+      externalMessage(kapsoText({ type: 'document', text: undefined, document: { id: 'media-9', filename } }))?.mediaName;
+    expect(named(`  ${'a'.repeat(300)}.pdf`)).toHaveLength(200);
+    expect(named('   ')).toBeNull();
+  });
+
   it('falls back to kapso.phone_number for the recipient and accepts an ISO timestamp', () => {
     const m = externalMessage(kapsoText({ to: undefined, timestamp: SENT_AT.toISOString(), kapso: { phone_number: '+966501234567' } }));
     expect(m).toMatchObject({ to: '966501234567', at: SENT_AT, status: null, direction: null });

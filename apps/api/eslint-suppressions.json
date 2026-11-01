@@ -4069,7 +4069,7 @@
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
     "max-len": {
-      "count": 20
+      "count": 9
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-render.spawn.test.ts": {

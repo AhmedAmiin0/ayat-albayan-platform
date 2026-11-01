@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MessageFile } from '../components/MessageFile';
 import { PHONE } from '../../shared/thread-fixtures';
-import { pdfDoc, pdfPage, pdfPath, staffPdf } from './photo-test-kit';
+import { pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -14,12 +14,13 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// The PDF card's states (review 2026-10-30): no render before a tap on a PDF staff did not send, a
-// spinner until the image itself loads, the page's own shape, and a retry that keeps the card.
+// The PDF card's states (review 2026-10-30): every PDF shows page 1 as WhatsApp (owner 2026-11-01),
+// a spinner until the image itself loads, the page's own shape, and a retry that keeps the card.
 const serve = (first: () => Promise<unknown>) =>
   mockApiFetch.mockImplementation(async (path: string) => (path === pdfPath(1) ? first() : pdfPage(Number(path.split('/').pop()))));
 const calls = () => mockApiFetch.mock.calls.filter(([p]) => p === pdfPath(1)).length;
-const show = (row: MessageView = staffPdf()) => renderWithQuery(<MessageFile message={row} phone={PHONE} />);
+const show = (row: MessageView = pdfDoc()) =>
+  renderWithQuery(<MessageFile message={row} phone={PHONE} />);
 const thumb = () => screen.getByTestId('pdf-thumb-d1');
 /** The thumb's image has loaded, at this size. */
 const load = (source: { width: number; height: number }) => fireEvent(thumb(), 'load', { nativeEvent: { source } });
@@ -27,16 +28,14 @@ const load = (source: { width: number; height: number }) => fireEvent(thumb(), '
 beforeEach(() => mockApiFetch.mockReset());
 
 test.each([
-  ['a family’s PDF', pdfDoc()],
   ['an echo (sent from the phone, no staff behind it)', pdfDoc({ direction: 'outbound', sender_name: null })],
-  ['a forward (it may be a family’s file)', staffPdf({ forwarded: true })],
-])('%s asks nothing on render: a large «PDF» and «اضغط لمعاينة الملف»; a tap asks page 1 and opens the viewer', async (_, row) => {
+  ['a forward (it may be a family’s file)', pdfDoc({ direction: 'outbound', sender_name: 'Amal', forwarded: true })],
+  ['one staff sent', pdfDoc({ direction: 'outbound', sender_name: 'Amal' })],
+])('%s shows page 1 with no tap; a tap opens the viewer and asks nothing more', async (_, row) => {
   serve(async () => pdfPage(1));
   await show(row);
-  expect(screen.getByText(t.inbox.pdf.tapToPreview)).toBeTruthy();
-  expect(screen.getAllByText(t.inbox.pdf.type)).toHaveLength(2);
-  expect(screen.getByTestId('pdf-d1').props.accessibilityHint).toBe(t.inbox.pdf.tapToPreview);
-  expect(calls()).toBe(0);
+  expect(await screen.findByTestId('pdf-thumb-d1')).toBeTruthy();
+  expect(screen.getByTestId('pdf-d1').props.accessibilityHint).toBeUndefined();
   await fireEvent.press(screen.getByTestId('pdf-d1'));
   expect(await screen.findByTestId('pdf-viewer')).toBeTruthy();
   expect(calls()).toBe(1);

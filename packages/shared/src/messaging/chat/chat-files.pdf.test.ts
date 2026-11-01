@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
-import { isPdfMime, pdfMetaLine } from './chat-files.js';
+import { isPdfMime, pdfBubbleName, pdfMetaLine } from './chat-files.js';
 
 const KB = 1024;
 const MB = 1024 * KB;
@@ -38,5 +38,25 @@ describe('pdfMetaLine (owner 2026-10-29: «N pages · PDF · size» like WhatsAp
   it('English reads the same parts', () => {
     expect(pdfMetaLine({ pages: 2, bytes: 340 * KB }, en.inbox.pdf)).toBe(line('2 pages', 'PDF', '340 KB'));
     expect(pdfMetaLine({ pages: 1, bytes: 5 * MB }, en.inbox.pdf)).toBe(line('1 page', 'PDF', '5.0 MB'));
+  });
+});
+
+describe('pdfBubbleName (owner 2026-11-01: a name like WhatsApp, never «File / File»)', () => {
+  const untitled = ar.inbox.pdf.untitled;
+  it('the file name first, trimmed', () => {
+    expect(pdfBubbleName({ media_name: ' خطة الحفظ.pdf ', body: 'other.pdf' }, untitled)).toBe('خطة الحفظ.pdf');
+  });
+  it('no file name: the caption’s first line when it reads as a PDF’s name', () => {
+    expect(pdfBubbleName({ media_name: null, body: ' report 3.PDF \nthe rest' }, untitled)).toBe('report 3.PDF');
+  });
+  it.each([
+    ['no caption', null],
+    ['a sentence', 'please see the plan'],
+    ['a path', 'a/b.pdf'],
+    ['the name on a later line', 'hello\nplan.pdf'],
+    ['only the extension', '.pdf'],
+  ])('%s: «ملف PDF» / «PDF document»', (_, body) => {
+    expect(pdfBubbleName({ media_name: '  ', body }, untitled)).toBe(untitled);
+    expect(pdfBubbleName({ body }, en.inbox.pdf.untitled)).toBe('PDF document');
   });
 });

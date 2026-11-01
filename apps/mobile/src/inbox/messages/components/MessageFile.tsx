@@ -83,8 +83,8 @@ interface MessageFileProps {
 /**
  * A bubble's photo, PDF, voice note or video (owner 2026-10-19 #1, W6), ours or theirs. A photo shows
  * its thumbnail as the bubble renders (PhotoPreview, owner 2026-10-26: supersedes W6's «signed only on
- * the tap» for photos), and so does a PDF staff sent its first page (PdfPreview, owner 2026-10-29; any
- * other PDF shows it after a tap); HEIC keeps
+ * the tap» for photos), and so does every PDF its first page once on screen (PdfPreview, owner
+ * 2026-10-29 / 2026-11-01, rendered in the ayat-pdf sandbox); HEIC keeps
  * «عرض صورة» (Android does not decode it reliably), which opens it in the phone's viewer; a voice note
  * and a video look as on WhatsApp (owner 2026-10-27: VoiceNote, VideoTile); «تنزيل» under each saves it
  * (DownloadLink). A teacher gets the label only: the API refuses the file (403 media_forbidden; a photo

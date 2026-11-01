@@ -46,9 +46,9 @@ export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: stri
   apiSend<MessageView>('POST', `${threadPath(phone)}/file`, body);
 
 /**
- * A chat PDF's page as a signed JPEG with the PDF's page count and size (owner 2026-10-29); page 1 is
- * the bubble's thumb. Asked once «عرض ملف» opened the file, as threadFileQuery. A 503 (one render at a
- * time per API copy) is retried twice; anything else leaves today's named link.
+ * A chat PDF's page as a signed JPEG with the PDF's page count and size (owner 2026-10-29); page 1
+ * is the bubble's thumb, asked once the card has been on screen (PdfCard, owner 2026-11-01). A 503
+ * (one render at a time per API copy) is retried twice; anything else leaves today's «عرض ملف».
  */
 export const threadPdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({

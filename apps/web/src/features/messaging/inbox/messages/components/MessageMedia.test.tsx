@@ -41,7 +41,7 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   it('a PDF with no preview becomes a named link, not an image', async () => {
     servePdf();
     renderAt(row({ media_mime: 'application/pdf' }));
-    fireEvent.click(view(t.inbox.media.document));
+    fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
     const link = await screen.findByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.document) });
     expect(link.getAttribute('href')).toBe(SIGNED);
     expect(screen.queryByRole('img')).toBeNull();
@@ -79,8 +79,8 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   it('an outbound PDF we sent opens too, its link named by media_name', async () => {
     servePdf();
     renderAt(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'جدول الحلقات.pdf' }));
-    expect(apiFetch).not.toHaveBeenCalled();
-    fireEvent.click(view(t.inbox.media.document));
+    // Page 1 is asked as the card shows (PdfCard); with no preview, today's «عرض ملف» stays.
+    fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
     const link = await screen.findByRole('link', { name: 'جدول الحلقات.pdf' });
     expect(link.getAttribute('href')).toBe(SIGNED);
     // #120: a 200-char name with no break point wraps inside the bubble at 390px.

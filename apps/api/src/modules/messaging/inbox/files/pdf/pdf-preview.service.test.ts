@@ -48,6 +48,24 @@ describe('PdfPreviewService.page (owner 2026-10-29: a PDF bubble like WhatsApp)'
     expect(count).not.toHaveBeenCalled();
   });
 
+  it('page 1 asked again while its first render runs (two screens, a scroll back): one pdfinfo, one render', async () => {
+    const t = setup();
+    t.objects.set('m1.pdf', PDF_BYTES);
+    let finish: () => void = () => undefined;
+    render.mockImplementationOnce(async (_bytes, range) => {
+      await new Promise<void>((r) => (finish = r));
+      return jpgs(range);
+    });
+    const a = t.service.page(ask(1));
+    await vi.waitFor(() => expect(render).toHaveBeenCalledTimes(1));
+    const b = t.service.page(ask(1));
+    finish();
+    const [ra, rb] = await Promise.all([a, b]);
+    expect([ra.url, rb.url]).toEqual(['https://signed/pdf/m1/1.jpg', 'https://signed/pdf/m1/1.jpg']);
+    const runs = [count, render, t.storage.upload].map((f) => f.mock.calls.length);
+    expect(runs).toEqual([1, 1, 1]);
+  });
+
   it('no preview (encrypted, broken) is 422 pdf_no_preview; a page past min(pages, 30) is 400', async () => {
     const t = setup();
     t.docs.set('m1', { pages: 0, bytes: 99 });

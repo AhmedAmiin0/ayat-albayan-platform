@@ -95,3 +95,19 @@ function fileSizeText(bytes: number, s: PdfMetaStrings): string {
 export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStrings): string {
   return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
 }
+
+/** A caption line that reads as a PDF's file name («خطة الحفظ.pdf»): no path, ≤ 200 characters. */
+const PDF_FILE_NAME = /^[^/\\]{1,196}\.pdf$/i;
+
+/**
+ * A PDF bubble's name, as WhatsApp's: the file's own name (media_name); else the caption's first
+ * line when it reads as a file name (some senders put it there); else `untitled` («ملف PDF»).
+ */
+export function pdfBubbleName(
+  m: { media_name?: string | null; body?: string | null },
+  untitled: string,
+): string {
+  const line = (m.body ?? '').split('\n', 1)[0]?.trim() ?? '';
+  const caption = PDF_FILE_NAME.test(line) ? line : '';
+  return [m.media_name?.trim() ?? '', caption].find((name) => name.length > 0) ?? untitled;
+}

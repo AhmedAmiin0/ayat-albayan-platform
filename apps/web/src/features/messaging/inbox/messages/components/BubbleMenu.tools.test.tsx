@@ -24,11 +24,14 @@ function openMenu(m: typeof TEXT) {
   );
   fireEvent.click(screen.getByRole('button', { name: t.inbox.reply.menu }));
 }
-const menuLabels = () => {
-  const menu = screen.getByRole('button', { name: t.inbox.forward.action }).parentElement;
-  if (!menu) throw new Error('no menu');
-  return within(menu).getAllByRole('button').map((b) => b.textContent);
+const menu = () => {
+  const box = screen.getByRole('button', { name: t.inbox.forward.action }).parentElement;
+  if (!box) throw new Error('no menu');
+  return within(box);
 };
+const menuLabels = () => menu().getAllByRole('button').map((b) => b.textContent);
+/** The menu's «تنزيل» (the PDF card under the bubble has its own). */
+const menuDownload = () => menu().getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') });
 
 beforeEach(() => {
   writeText.mockReset().mockResolvedValue(undefined);
@@ -57,7 +60,7 @@ describe('the bubble menu’s «نسخ» and «تنزيل» (owner 2026-10-26)',
     apiFetch.mockResolvedValue({ url: 'https://storage.test/a.pdf?token=x&download=x', expires_at: '', mime: 'application/pdf' });
     openMenu(PDF);
     expect(menuLabels()).toEqual([t.inbox.reply.action, t.inbox.forward.action, t.inbox.download.action]);
-    fireEvent.click(screen.getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') }));
+    fireEvent.click(menuDownload());
     expect(apiFetch).toHaveBeenCalledWith(`/threads/${encodeURIComponent(PHONE)}/messages/m1/file?download=1`);
     await waitFor(() => expect(click).toHaveBeenCalledOnce());
     click.mockRestore();
@@ -66,7 +69,7 @@ describe('the bubble menu’s «نسخ» and «تنزيل» (owner 2026-10-26)',
   it('a 403 on download keeps today’s «غير مسموح» text', async () => {
     apiFetch.mockRejectedValue(new ApiError(403, { code: 'media_forbidden' }));
     openMenu(PDF);
-    fireEvent.click(screen.getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') }));
+    fireEvent.click(menuDownload());
     expect(await screen.findByText(t.inbox.mediaNotAllowed)).toBeTruthy();
   });
 });
