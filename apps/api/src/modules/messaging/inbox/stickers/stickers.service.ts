@@ -5,6 +5,7 @@ import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { favouriteItems, recentItems } from './sticker-rows';
 import { StickerRepo, type StickerRow } from './sticker.repo';
 
@@ -29,6 +30,7 @@ export class StickersService {
     private readonly repo: StickerRepo,
     private readonly threads: ThreadsRepo,
     private readonly files: ForwardFiles,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   async list(profileId: string, now = new Date()): Promise<StickerList> {
@@ -61,7 +63,7 @@ export class StickersService {
     const windows = () => this.threads.numberWindows(s.phone);
     await sendLine(await this.threads.thread(s.phone), { now, windows });
     await this.sticker(s.input.messageId);
-    const source = await this.threads.get(s.input.messageId);
+    const source = await this.messages.get(s.input.messageId);
     if (!source) throw notFound();
     const { clientRequestId } = s.input;
     const file = await this.files.copy(source, { actorId: s.actorId, requestId: clientRequestId });

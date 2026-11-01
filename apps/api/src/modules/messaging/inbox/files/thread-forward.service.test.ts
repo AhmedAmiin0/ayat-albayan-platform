@@ -7,7 +7,7 @@ import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { allReplayed, forwardAudit, freshResults } from './thread-forward.controller';
 import { skipOf, ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
 import type { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
-import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
 const SRC = 'a0000000-0000-4000-8000-0000000000f1';
 const A = '+966500000001';
@@ -17,7 +17,7 @@ const src = messageRow({ id: SRC, direction: 'inbound', body: 'نص', template_k
 const sent = (status: Sent['view']['status'], id: string): Sent => ({ view: { id, status } as Sent['view'], replayed: false });
 
 function service(text: (phone: string) => Promise<Sent>) {
-  const queries = { get: vi.fn(async () => src) } as unknown as ThreadsRepo;
+  const queries = { get: vi.fn(async () => src) } as unknown as ThreadMessagesRepo;
   const sends = { text: vi.fn(async (s: { phone: string }) => text(s.phone)) } as unknown as ThreadSendService;
   return new ThreadForwardService(queries, sends, {} as ForwardFiles);
 }

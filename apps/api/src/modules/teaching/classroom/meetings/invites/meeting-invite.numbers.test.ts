@@ -3,6 +3,7 @@ import type { PushService } from '@/common/push/push.service';
 import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { CHAT_OFF, CHAT_TWO, NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MeetingInviteSender } from './meeting-invite.sender';
 import { CLOSED_PHONE, OPEN_PHONE } from './meeting-invites.fakes';
@@ -17,7 +18,12 @@ const OLD = '2026-01-01T00:00:00Z';
 function setup(windows: () => Promise<unknown>) {
   const thread = { phone_e164: OPEN_PHONE, lead_id: null, guardian_id: 'g1', last_chat_inbound_at: null, last_notifications_inbound_at: OLD };
   const threads = { thread: vi.fn().mockResolvedValue(thread), enqueue: vi.fn().mockResolvedValue({ id: 'm1' }), numberWindows: vi.fn(windows) };
-  const sender = new MeetingInviteSender({} as PushService, threads as unknown as ThreadsRepo, { kick: vi.fn() } as unknown as MessageSender);
+  const sender = new MeetingInviteSender(
+    {} as PushService,
+    threads as unknown as ThreadsRepo,
+    { kick: vi.fn() } as unknown as MessageSender,
+    threads as unknown as ThreadMessagesRepo,
+  );
   const send = (phone = OPEN_PHONE) =>
     sender.chat({ phone, body: 'دعوة', dedupKey: 'k', actorId: 'a', teacherId: null, expiresAt: FRESH, now: NOW });
   return { threads, send };

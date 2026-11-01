@@ -4,6 +4,7 @@ import { ThreadForwardService } from '@/modules/messaging/inbox/files/thread-for
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { Outbox } from './outbox';
@@ -95,7 +96,7 @@ describe('ThreadSendService.text after the window', () => {
     chatOn('kapso');
     const src = { id: 'f1', direction: 'inbound' as const, body: 'نص', template_key: null };
     queries.get.mockResolvedValue(messageRow({ ...src, media_mime: null }));
-    const q = queries as unknown as ThreadsRepo;
+    const q = queries as unknown as ThreadMessagesRepo;
     const forwards = new ThreadForwardService(q, service(), {} as ForwardFiles);
     const fwd = { messageId: 'f1', targets: [PHONE], clientRequestId: REQ };
     const f = { input: fwd, actorId: ACTOR, scope: null, sales: null };

@@ -4,7 +4,7 @@ import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { ReadMark } from './read-marks';
 import { ReadReceipts } from './read-receipts';
-import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadReadsRepo } from '@/modules/messaging/inbox/threads/store';
 
 const PHONE = '+966501234567';
 const NOW = new Date('2026-10-10T08:00:00Z');
@@ -17,7 +17,7 @@ function setup(marks: ReadMark[], open = true) {
   const notifications = client();
   const chat = client();
   const receipts = new ReadReceipts(
-    queries as unknown as ThreadsRepo,
+    queries as unknown as ThreadReadsRepo,
     gate as unknown as SendGate,
     { notifications, chat } as unknown as WhatsappLines,
   );

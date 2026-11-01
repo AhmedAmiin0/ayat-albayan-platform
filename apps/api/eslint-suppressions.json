@@ -4398,7 +4398,7 @@
   },
   "src/modules/messaging/inbox/reactions/reaction.fakes.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/reactions/reaction.repo.ts": {
@@ -4460,7 +4460,7 @@
   },
   "src/modules/messaging/inbox/reads/thread-page.ts": {
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/reads/thread-reads.ts": {
@@ -4955,7 +4955,7 @@
   },
   "src/modules/messaging/inbox/threads/threads.parallel.test.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/inbox/threads/threads.read.http.test.ts": {
@@ -4976,13 +4976,13 @@
   },
   "src/modules/messaging/inbox/threads/threads.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
-      "count": 12
+      "count": 6
     }
   },
   "src/modules/messaging/inbox/threads/threads.sales.http.test.ts": {
@@ -13452,7 +13452,7 @@
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.numbers.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.policy.test.ts": {
@@ -13476,7 +13476,7 @@
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.sender.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1

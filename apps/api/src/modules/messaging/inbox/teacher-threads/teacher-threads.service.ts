@@ -8,6 +8,7 @@ import { TeacherThreadsRepo } from './teacher-threads.repo';
 import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { teacherListFilter } from '@/modules/messaging/inbox/threads/threads.list';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
 
 const NO_READS: ReadonlyMap<string, number> = new Map();
@@ -24,6 +25,7 @@ export class TeacherThreadsService {
     private readonly queries: ThreadsRepo,
     private readonly teacher: TeacherThreadsRepo,
     private readonly views: MessageViews,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   async list(f: ThreadListFilter, scope: TeacherScope, now = new Date()): Promise<Page<ThreadView>> {
@@ -45,7 +47,8 @@ export class TeacherThreadsService {
     assertPhone(scope, q.phone);
     const first = !q.before;
     if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
-    const [row, rows] = await Promise.all([this.queries.thread(q.phone), this.queries.messages(q)]);
+    const page = Promise.all([this.queries.thread(q.phone), this.messages.messages(q)]);
+    const [row, rows] = await page;
     const thread = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
     const [people, messages, lessons] = await Promise.all([
       first ? this.people(row, scope) : NO_ONE,

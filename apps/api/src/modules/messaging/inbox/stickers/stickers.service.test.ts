@@ -24,7 +24,7 @@ function service(held: StickerRow[] = [sticker]) {
     drop: vi.fn(async () => undefined),
   };
   const none = {} as never;
-  return { repo, stickers: new StickersService(repo as unknown as StickerRepo, none, none) };
+  return { repo, stickers: new StickersService(repo as unknown as StickerRepo, none, none, none) };
 }
 
 describe('StickersService', () => {
