@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { lineEnvs, loadEnv, type WhatsappEnv } from '../../../../config/env/env';
-import type { FetchLike } from '../../whatsapp/drivers/meta/graph';
-import { reopenKapsoConversation } from '../../whatsapp/drivers/kapso/kapso-conversations';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
+import { reopenKapsoConversation } from '@/modules/messaging/whatsapp/drivers/kapso/kapso-conversations';
 
 /** The family's number as a log may show it: its last 4 digits only. */
 export const last4 = (phone: string): string => `…${phone.replace(/\D/g, '').slice(-4)}`;
@@ -17,38 +17,30 @@ interface KapsoReopenInput {
   timeoutMs?: number;
 }
 
+const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
+
 /**
- * Kapso's record of this phone's chat, back to `active` (owner 2026-10-26), only while the chat line
- * runs on the kapso driver (legacy: its WA_CHAT_* line; module mode: the default chat number, which
- * loadEnv lays over the same keys). Never throws and never takes longer than `timeoutMs`: past it the
- * calls are aborted and it answers false, whatever the fetch does. A failure is logged (no key, no
- * body, the phone's last 4 digits) and answers false, so the reopen template still goes.
+ * Kapso's record of this phone's chat, back to `active` (owner 2026-10-26), only while the chat
+ * line runs on the kapso driver (legacy: its WA_CHAT_* line; module mode: the default chat number,
+ * which loadEnv lays over the same keys). Never throws and never takes longer than `timeoutMs`
+ * (the http core's deadline, shared by both calls: past it the call is aborted, whatever the fetch
+ * does). A failure is logged (no key, no body, the phone's last 4 digits) and answers false, so
+ * the reopen template still goes.
  */
 export async function kapsoReopen(input: KapsoReopenInput, log: Logger): Promise<boolean> {
-  const abort = new AbortController();
-  let timer: NodeJS.Timeout | undefined;
-  const deadline = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => {
-      abort.abort();
-      reject(new Error(`timed out after ${input.timeoutMs ?? KAPSO_REOPEN_MS} ms`));
-    }, input.timeoutMs ?? KAPSO_REOPEN_MS);
-  });
   try {
-    return await Promise.race([attempt(input, abort.signal), deadline]);
+    return await attempt(input);
   } catch (e) {
-    log.warn(`Kapso conversation reopen failed for ${last4(input.phone)}: ${e instanceof Error ? e.message : String(e)}`);
+    log.warn(`Kapso conversation reopen failed for ${last4(input.phone)}: ${messageOf(e)}`);
     return false;
-  } finally {
-    clearTimeout(timer);
   }
 }
 
-async function attempt(input: KapsoReopenInput, signal: AbortSignal): Promise<boolean> {
+async function attempt(input: KapsoReopenInput): Promise<boolean> {
   const env = envOf(input);
   if (env?.provider !== 'kapso') return false;
-  const base = input.fetch ?? globalThis.fetch;
-  const fetch: FetchLike = (url, init) => base(url, { ...init, signal: init.signal ? AbortSignal.any([init.signal, signal]) : signal });
-  return reopenKapsoConversation({ env, phone: input.phone, fetch });
+  const timeoutMs = input.timeoutMs ?? KAPSO_REOPEN_MS;
+  return reopenKapsoConversation({ env, phone: input.phone, fetch: input.fetch, timeoutMs });
 }
 
 /** Its error never reaches the log (a schema dump of the env): the line read failed, that is all. */
