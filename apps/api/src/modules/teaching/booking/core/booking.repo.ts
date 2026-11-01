@@ -1,11 +1,11 @@
 import type { Json } from '@ab/db';
 import type { BookingResult, Gender, LeadStatus, LessonStatus, PackageSize, Program, StudentStatus } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { gateConfirmations } from '../../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
-import { domainError } from '../booking.errors';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { gateConfirmations } from '@/common/rules/confirmations';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { dbError } from '@/common/http/http';
 import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
 
@@ -39,7 +39,7 @@ const STUDENT_COLUMNS = `id, name, program, teacher_gender_pref, meeting_link_ov
 
 /** Every DB touch of the booking wizard (service role; the controller is admin-only). */
 @Injectable()
-export class BookingQueries {
+export class BookingRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly policy: NotificationPolicy,

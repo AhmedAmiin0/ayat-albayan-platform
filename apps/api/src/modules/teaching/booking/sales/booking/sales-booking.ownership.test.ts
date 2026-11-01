@@ -1,18 +1,18 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { readerOf } from '../../../../../common/settings/settings.fakes';
-import { NO_OWNERSHIP, type SalesOwnership } from '../../../../sales/sales/sales-ownership';
-import type { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { errorCode } from '../../../../../common/http/errors';
-import type { BookingService } from '../../core/booking.service';
-import { BookingSettings } from '../../booking.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { NO_OWNERSHIP, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import type { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { errorCode } from '@/common/http/errors';
+import type { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
+import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
-import type { SalesCourse } from '../course/sales-course.service';
+import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
 
 // settings.sales_auto_assign OFF (owner 2026-10-12): /sales/booking checks no ownership (own = null);
 // the four trial-only rules still hold. ON keeps today's rules (sales-booking.scope.test.ts).
@@ -74,7 +74,7 @@ describe('assertBookingScope with own = null (sales_auto_assign OFF)', () => {
 
 const scopeWith = (on: boolean) => {
   const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateQueries) };
+  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateRepo) };
 };
 
 describe('SalesBookingScope.of: the switch decides', () => {
@@ -93,7 +93,7 @@ describe('SalesBookingScope.of: the switch decides', () => {
   it('a failed settings read fails the call (no silent OFF)', async () => {
     const settings = readerOf(BookingSettings);
     vi.spyOn(settings, 'read').mockRejectedValue(new Error('settings down'));
-    const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesQueries, settings, {} as unknown as TrialDateQueries);
+    const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesQueries, settings, {} as unknown as TrialDateRepo);
     await expect(scope.of(USER)).rejects.toThrow('settings down');
   });
 });
