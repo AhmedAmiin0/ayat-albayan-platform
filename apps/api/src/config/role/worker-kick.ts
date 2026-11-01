@@ -1,6 +1,8 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { Logger } from '@nestjs/common';
-import { loadEnv } from '../env/env';
+import { createHttp } from '@/common/infra/http/http';
+import type { HttpFailure } from '@/common/infra/http/failure';
+import { loadEnv } from '@/config/env/env';
 import { appRole, peerUrls, workerUrl } from './app-role';
 
 /** The longest a request waits for the worker's pass (the inbox «send now» awaits one sender pass). */
@@ -24,15 +26,26 @@ export function validInternalToken(given: string | undefined): boolean {
 /** The peer route: an API copy's own config reload (jobs.controller), served on API copies too. */
 export const PEER_RELOAD_PATH = '/internal/jobs/config-reload/here';
 
+const failed = (f: HttpFailure): Error => new Error(`${f.where}: ${f.kind}`);
+const ok = (status: number): boolean => status >= 200 && status < 300;
+
+/** The internal route's client: the token per call, 30 s, redirects followed (fetch's default). */
+const internalHttp = (url: string) =>
+  createHttp({
+    name: 'internal',
+    base: () => url,
+    headers: () => Promise.resolve({ [INTERNAL_HEADER]: internalToken() }),
+    timeoutMs: KICK_TIMEOUT_MS,
+    redirect: 'follow',
+    errorBody: 'omit',
+    errors: { default: failed },
+  });
+
 /** One authenticated POST to an internal route. Never throws: a refused or slow target is only logged. */
 async function postInternal(url: string, what: string): Promise<void> {
   try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { [INTERNAL_HEADER]: internalToken() },
-      signal: AbortSignal.timeout(KICK_TIMEOUT_MS),
-    });
-    if (!res.ok) log.warn(`${what}: answered ${res.status}, left for its next poll`);
+    const status = await internalHttp(url).status({ path: '', method: 'POST' });
+    if (!ok(status)) log.warn(`${what}: answered ${status}, left for its next poll`);
   } catch (e) {
     log.warn(`${what}: failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`);
   }
