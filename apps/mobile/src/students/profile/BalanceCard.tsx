@@ -14,7 +14,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { SectionLabel } from '@/students/list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /**
  * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when

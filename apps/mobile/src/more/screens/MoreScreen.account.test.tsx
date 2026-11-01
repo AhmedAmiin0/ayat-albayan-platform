@@ -9,7 +9,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MoreScreen } from './MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('../sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const seeded = (profile = profileFixture) => {
   const client = createTestQueryClient();

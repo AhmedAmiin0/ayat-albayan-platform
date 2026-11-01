@@ -4,9 +4,9 @@ import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { gridTz, slotRange } from '@/more/schedule';
-import type { AvailabilityRow } from '@/more/types';
+import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
-import { addDays, weekdayOf } from '../lib/week';
+import { addDays, weekdayOf } from '@/calendar/lib/week';
 
 // What the agenda lays out (R-SCH-01, R-TCH-02): lessons by the viewer's day or by teacher, the
 // teacher's own clock beside the viewer's, a day's availability. Closed lessons (cancelled,

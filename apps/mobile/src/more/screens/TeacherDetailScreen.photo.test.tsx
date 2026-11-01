@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { TeacherDetailScreen } from './TeacherDetailScreen';
-import type { Teacher } from '../types';
+import type { Teacher } from '@/core/lib/staff/types';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { currencyName } from '@/core/lib/money/format';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 
 interface AmountFieldProps {
   /** Raw text; parseAmount reads it (Arabic digits and «٫» too). */

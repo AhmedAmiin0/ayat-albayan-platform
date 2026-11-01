@@ -12,7 +12,7 @@ import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
-import { SectionLabel } from '../list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /** DELETE /guardians/:id/phones/:phone (204): only the second number; then the file, the families and the chats refetch. */
 function useRemoveSecondPhone(guardianId: string) {

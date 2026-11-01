@@ -1,11 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { CodeSend } from '../../../messaging/whatsapp';
-import { CODE_STORE, type CodePurpose, type CodeStore, type Subject } from '../sign-in.ports';
-import { SignInSettings } from '../sign-in.settings';
+import { CodeSend } from '@/modules/messaging/whatsapp';
+import {
+  CODE_STORE,
+  type CodePurpose,
+  type CodeStore,
+  type Subject,
+} from '@/modules/people/sign-in/sign-in.ports';
+import { SignInSettings } from '@/modules/people/sign-in/sign-in.settings';
 import { expiryOf, hashCode, newCode, sameHash } from './code-crypto';
 import { GLOBAL_FAILED_PER_HOUR, phoneMayCheck, phoneMaySend, SignInLimits } from './code-limits';
 
-/** A code to issue: the phone is always one ON FILE for the subject, never a number the caller typed. */
+/**
+ * A code to issue: the phone is always one ON FILE for the subject, never a number the caller
+ * typed.
+ */
 export interface CodeTarget {
   purpose: CodePurpose;
   subject: Subject;
@@ -19,40 +27,52 @@ export interface CodeTarget {
 @Injectable()
 export class CodeIssuer {
   private readonly log = new Logger(CodeIssuer.name);
-  /** One issue at a time per phone on this instance, so parallel requests cannot pass the count together. */
-  private readonly queues = new Map<string, Promise<boolean>>();
   /**
-   * The per-phone send buckets shared by every API copy (docs/09), taken only once this issuer would send
-   * (a refused issue spends none). Property-injected (the constructor is at the 3-parameter limit) and
-   * required in the app: Nest fails the boot without it; unit tests without it count login_codes only.
+   * One issue at a time per phone on this instance, so parallel requests cannot pass the count
+   * together.
    */
-  @Inject(SignInLimits) private readonly limits?: SignInLimits;
-
+  private readonly queues = new Map<string, Promise<boolean>>();
   constructor(
     @Inject(CODE_STORE) private readonly store: CodeStore,
     private readonly send: CodeSend,
     private readonly settings: SignInSettings,
+    /**
+     * The per-phone send buckets shared by every API copy (docs/09), taken only once this issuer
+     * would send (a refused issue spends none).
+     */
+    private readonly limits: SignInLimits,
   ) {}
 
   /** Codes can go out now: the flag, the pepper, the approved template and the open send gate. */
   async available(): Promise<boolean> {
-    if (!this.settings.config.pepper || !(await this.settings.read()).family_login_enabled) return false;
+    if (!this.settings.config.pepper || !(await this.settings.read()).family_login_enabled)
+      return false;
     return this.send.available();
   }
 
-  /** false = not sent (unavailable, or the phone is over its limits). Never throws for a send failure. */
+  /**
+   * false = not sent (unavailable, or the phone is over its limits). Never throws for a send
+   * failure.
+   */
   issue(target: CodeTarget): Promise<boolean> {
     const before = this.queues.get(target.phone) ?? Promise.resolve(true);
     const next = before.catch(() => false).then(() => this.issueNow(target, new Date()));
     this.queues.set(target.phone, next);
-    void next.finally(() => this.queues.get(target.phone) === next && this.queues.delete(target.phone)).catch(() => undefined);
+    void next
+      .finally(() => this.queues.get(target.phone) === next && this.queues.delete(target.phone))
+      .catch(() => undefined);
     return next;
   }
 
   private async issueNow(target: CodeTarget, now: Date): Promise<boolean> {
     const pepper = this.settings.config.pepper;
-    if (!pepper || !(await this.calm(now)) || !phoneMaySend(await this.store.phoneStats(target.phone, now))) return false;
-    if (this.limits && !(await this.limits.maySend(target.phone, now.getTime()))) return false;
+    if (
+      !pepper ||
+      !(await this.calm(now)) ||
+      !phoneMaySend(await this.store.phoneStats(target.phone, now))
+    )
+      return false;
+    if (!(await this.limits.maySend(target.phone, now.getTime()))) return false;
     const values = await this.settings.read();
     const code = newCode();
     const id = await this.store.insert({
@@ -64,7 +84,10 @@ export class CodeIssuer {
       expiresAt: expiryOf(now, values.login_code_ttl_minutes),
     });
     const result = await this.send.send({ phone: target.phone, code });
-    await this.store.delivered(id, result.status === 'sent' ? null : result.status === 'failed' ? result.error : 'unavailable');
+    await this.store.delivered(
+      id,
+      result.status === 'sent' ? null : result.status === 'failed' ? result.error : 'unavailable',
+    );
     if (result.status !== 'sent') this.log.warn(`login code ${id} not sent: ${result.status}`);
     return result.status === 'sent';
   }
@@ -73,16 +96,35 @@ export class CodeIssuer {
    * true once for the newest live code of the subject (purposes given): each try is counted in SQL
    * before the constant-time compare, and a match is spent by compare-and-set (no replay, no race).
    */
-  async check(input: { subject: Subject; purposes: readonly CodePurpose[]; code: string }, now = new Date()): Promise<boolean> {
+  async check(
+    input: { subject: Subject; purposes: readonly CodePurpose[]; code: string },
+    now = new Date(),
+  ): Promise<boolean> {
     const pepper = this.settings.config.pepper;
     const row = pepper ? await this.store.latest(input.subject, input.purposes) : null;
-    if (!pepper || !row || !(await this.calm(now)) || !phoneMayCheck(await this.store.phoneStats(row.phone, now))) return false;
+    if (
+      !pepper ||
+      !row ||
+      !(await this.calm(now)) ||
+      !phoneMayCheck(await this.store.phoneStats(row.phone, now))
+    )
+      return false;
     const stored = await this.store.take(row.id);
-    if (!stored || !sameHash(stored, hashCode(pepper, { purpose: row.purpose, subject: input.subject, code: input.code }))) return false;
+    if (
+      !stored ||
+      !sameHash(
+        stored,
+        hashCode(pepper, { purpose: row.purpose, subject: input.subject, code: input.code }),
+      )
+    )
+      return false;
     return this.store.spend(row.id);
   }
 
-  /** false while the site-wide breaker is tripped (logged: the admin should know someone is guessing). */
+  /**
+   * false while the site-wide breaker is tripped (logged: the admin should know someone is
+   * guessing).
+   */
   private async calm(now: Date): Promise<boolean> {
     if ((await this.store.failedLastHour(now)) < GLOBAL_FAILED_PER_HOUR) return true;
     this.log.warn('login codes paused: too many wrong codes in the last hour');

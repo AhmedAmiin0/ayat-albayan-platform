@@ -9,7 +9,7 @@ import {
   upcomingTimeOff,
   weekdayName,
 } from './schedule';
-import type { AvailabilityRow } from './types';
+import type { AvailabilityRow } from '@/core/lib/staff/types';
 
 const slot = (id: string, weekday: number, start_time: string): AvailabilityRow => ({
   id,
