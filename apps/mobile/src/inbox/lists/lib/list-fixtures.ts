@@ -1,5 +1,5 @@
 import type { ChatList } from '@ab/shared';
-import { thread } from '../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 // Test data for the chat lists «القوائم» (docs/22): an assistant who holds inbox.lists, two lists.
 

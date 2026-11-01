@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { huda } from '../shared/fixtures';
+import { huda } from '@/inbox/shared/fixtures';
 import { followUpLines } from './follow-up-text';
 import type { LeadProfile } from './queries';
 

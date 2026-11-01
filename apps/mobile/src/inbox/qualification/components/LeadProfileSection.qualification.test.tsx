@@ -2,9 +2,9 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { cachedList, huda } from '../shared/fixtures';
-import { findCachedLead } from '../leads/detail/use-cached-lead';
-import { answer, hudaProfile, QUALIFICATION } from './fixtures';
+import { cachedList, huda } from '@/inbox/shared/fixtures';
+import { findCachedLead } from '@/inbox/leads/detail/use-cached-lead';
+import { answer, hudaProfile, QUALIFICATION } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 
 const mockApiFetch = jest.fn();

@@ -1,9 +1,9 @@
 import type { ChatList } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { listErrorText } from './list-errors';
+import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
-import { useCreateList } from './use-chat-lists';
+import { useCreateList } from '@/inbox/lists/lib/use-chat-lists';
 
 interface CreateListSheetProps {
   open: boolean;

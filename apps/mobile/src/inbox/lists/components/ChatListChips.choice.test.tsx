@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ThreadsList } from '../threads-list/ThreadsList';
-import { answer, PAID, withLists } from './list-fixtures';
+import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
+import { answer, PAID, withLists } from '@/inbox/lists/lib/list-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

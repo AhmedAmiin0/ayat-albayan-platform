@@ -7,7 +7,7 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { FamilyFields } from './FamilyFields';
 import { CLEAR } from './PreferenceFields';
-import type { QualErrors, QualForm, TextField } from './qualification-form';
+import type { QualErrors, QualForm, TextField } from '@/inbox/qualification/lib/qualification-form';
 import { QualText } from './QualText';
 
 export interface QualFieldsProps {

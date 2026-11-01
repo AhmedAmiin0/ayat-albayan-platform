@@ -5,10 +5,10 @@ import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { AutoListNote } from './AutoListNote';
-import { listErrorText } from './list-errors';
+import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
-import { useDeleteList, useRenameList } from './use-chat-lists';
+import { useDeleteList, useRenameList } from '@/inbox/lists/lib/use-chat-lists';
 
 interface EditListSheetProps {
   /** The list being edited; null keeps the sheet closed. */

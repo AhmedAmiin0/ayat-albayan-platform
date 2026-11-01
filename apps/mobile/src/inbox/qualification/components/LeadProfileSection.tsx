@@ -5,7 +5,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import type { Lead } from '@/inbox/shared/types';
 import { FollowUpCard } from './FollowUpCard';
 import { QualificationForm } from './QualificationForm';
-import { readIsOffline, useFreshLead, type LeadProfile } from './queries';
+import { readIsOffline, useFreshLead, type LeadProfile } from '@/inbox/qualification/lib/queries';
 
 /**
  * The lead's follow-up and qualification on the lead screen (R-LEAD-03/05, mobile parity with the

@@ -1229,9 +1229,6 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -4253,44 +4250,32 @@
       "count": 2
     }
   },
-  "src/inbox/lists/AutoListNote.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/inbox/lists/components/AutoListNote.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/AutoListNote.tsx": {
+  "src/inbox/lists/components/AutoListNote.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/lists/ChatListChips.access.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/inbox/lists/components/ChatListChips.access.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/ChatListChips.choice.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/inbox/lists/components/ChatListChips.choice.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/ChatListChips.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/inbox/lists/components/ChatListChips.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/ChatListChips.tsx": {
+  "src/inbox/lists/components/ChatListChips.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -4304,23 +4289,17 @@
       "count": 1
     }
   },
-  "src/inbox/lists/CreateListSheet.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/inbox/lists/components/CreateListSheet.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/EditListSheet.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/inbox/lists/components/EditListSheet.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/ListCheckRow.tsx": {
+  "src/inbox/lists/components/ListCheckRow.tsx": {
     "max-len": {
       "count": 3
     },
@@ -4328,30 +4307,22 @@
       "count": 1
     }
   },
-  "src/inbox/lists/ListChip.tsx": {
+  "src/inbox/lists/components/ListChip.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/ThreadListsSheet.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/inbox/lists/components/ThreadListsSheet.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/ThreadListsSheet.tsx": {
+  "src/inbox/lists/components/ThreadListsSheet.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/list-fixtures.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/lists/use-chat-lists.ts": {
+  "src/inbox/lists/lib/use-chat-lists.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
     },
@@ -4359,18 +4330,12 @@
       "count": 3
     }
   },
-  "src/inbox/lists/use-list-membership.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/inbox/lists/lib/use-list-membership.test.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "src/inbox/lists/use-list-membership.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/inbox/lists/lib/use-list-membership.ts": {
     "max-len": {
       "count": 4
     }
@@ -5336,7 +5301,7 @@
       "count": 4
     }
   },
-  "src/inbox/qualification/DayChips.tsx": {
+  "src/inbox/qualification/components/DayChips.tsx": {
     "max-len": {
       "count": 1
     },
@@ -5344,80 +5309,52 @@
       "count": 1
     }
   },
-  "src/inbox/qualification/FamilyFields.tsx": {
+  "src/inbox/qualification/components/FamilyFields.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/qualification/FollowUpCard.tsx": {
+  "src/inbox/qualification/components/FollowUpCard.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/qualification/LeadProfileSection.family.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/qualification/LeadProfileSection.followup.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/inbox/qualification/LeadProfileSection.offline.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/inbox/qualification/components/LeadProfileSection.offline.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/qualification/LeadProfileSection.qualification.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/inbox/qualification/LeadProfileSection.tsx": {
+  "src/inbox/qualification/components/LeadProfileSection.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/qualification/PreferenceFields.tsx": {
+  "src/inbox/qualification/components/PreferenceFields.tsx": {
     "max-lines-per-function": {
       "count": 1
     }
   },
-  "src/inbox/qualification/QualificationForm.tsx": {
+  "src/inbox/qualification/components/QualificationForm.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     }
   },
-  "src/inbox/qualification/fixtures.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/qualification/follow-up-text.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/qualification/follow-up-text.ts": {
+  "src/inbox/qualification/lib/follow-up-text.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/qualification/qualification-form.test.ts": {
+  "src/inbox/qualification/lib/qualification-form.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/qualification/qualification-form.ts": {
+  "src/inbox/qualification/lib/qualification-form.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/qualification/queries.ts": {
+  "src/inbox/qualification/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
     }
@@ -5746,15 +5683,7 @@
       "count": 3
     }
   },
-  "src/inbox/screens/LeadDetailScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/inbox/screens/LeadDetailScreen.tsx": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 2
     },
@@ -6437,32 +6366,18 @@
     }
   },
   "src/inbox/thread/components/ThreadHeaderActions.link.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/inbox/thread/components/ThreadHeaderActions.register.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/inbox/thread/components/ThreadHeaderActions.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
     }
   },
   "src/inbox/thread/components/ThreadHeaderActions.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "max-len": {
       "count": 11
@@ -6512,9 +6427,6 @@
     }
   },
   "src/inbox/thread/hooks/inbox-sync.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -6687,9 +6599,6 @@
     }
   },
   "src/inbox/threads-list/LeadChips.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -6837,9 +6746,6 @@
     }
   },
   "src/inbox/threads-list/chat-filter.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 5
     },
