@@ -40,10 +40,14 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await expect.poll(async () => (await inboundRows(phone)).map((r) => r.media_mime)).toEqual(['image/png', 'application/pdf']);
     const [image, document] = await inboundRows(phone);
     expect([image?.body, document?.body]).toEqual([photo, file]);
+    // The document keeps the name WhatsApp sent with it (owner 2026-11-01: the PDF card shows it).
+    expect([image?.media_name, document?.media_name]).toEqual([null, 'receipt.pdf']);
 
     const admin = await asRole('admin');
     const log = await openThread(admin, name);
-    // W6: each file is a «عرض …» button; nothing is fetched until it is clicked.
+    // W6: the photo is a «عرض …» button; nothing is fetched until it is clicked. The PDF card asks
+    // its page 1 by itself (owner 2026-11-01); CI has no PDF sandbox (503 pdf_unavailable, not
+    // retried), so the card falls back to today's «عرض ملف».
     const viewPhoto = bubble(log, photo).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.image) });
     const viewFile = bubble(log, file).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.document) });
     await expect(viewPhoto).toBeVisible();
@@ -53,12 +57,13 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await expect(bubble(log, photo).getByRole('img')).toHaveCount(0);
     await expect(bubble(log, file).getByRole('button')).toHaveCount(1);
 
-    // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a link for the PDF.
+    // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a link
+    // for the PDF, named by its file name.
     await viewPhoto.click();
     const thumb = bubble(log, photo).getByRole('img', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image) });
     await expect.poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), { timeout: 30_000 }).toBeGreaterThan(0);
     await viewFile.click();
-    const pdf = bubble(log, file).getByRole('link', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.document) });
+    const pdf = bubble(log, file).getByRole('link', { name: 'receipt.pdf' });
     await expect(pdf).toHaveAttribute('target', '_blank', { timeout: 30_000 });
     await expect(bubble(log, file).getByText(ar.inbox.mediaExpired)).toHaveCount(0);
 
