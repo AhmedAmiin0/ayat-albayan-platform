@@ -258,6 +258,8 @@
   "RatingController.send": ["admin"],
   "ReceivablesController.list": ["admin"],
   "RecordingStatusController.status": ["admin","assistant","sales","teacher"],
+  "RelayController.me": "public",
+  "RelayController.send": "public",
   "ReportAttachmentsController.register": ["admin","teacher"],
   "ReportAttachmentsController.remove": ["admin","teacher"],
   "ReportAttachmentsController.uploadUrl": ["admin","teacher"],
