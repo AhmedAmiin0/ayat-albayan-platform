@@ -86,8 +86,8 @@ const verified = await parallel(built.map((b, i) => () =>
 const result = await agent(`Merge all module branches into one integration branch, resolve conflicts, open its PR
 into develop and watch its GitHub Actions CI with gh pr checks --watch until green (lint, typecheck, unit tests and
 the e2e specs the change reaches, desktop only). For the full suite (all specs, both projects) run
-gh workflow run ci.yml --ref <branch> and watch it with gh run watch, or watch the push run on develop after the
-merge. Fix integration issues, merge, write PHASE_SUMMARY.md with residual TODOs.`,
+gh workflow run ci.yml --ref <branch>, then gh run watch <id> (id from gh run list --workflow=ci.yml --branch <branch>
+-L1), or watch the push run on develop after the merge. Fix integration issues, merge, write PHASE_SUMMARY.md with residual TODOs.`,
   { label: 'integrate', phase: 'Integrate' })
 return { verified, result }
 ```
