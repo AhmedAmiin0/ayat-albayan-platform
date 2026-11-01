@@ -12376,11 +12376,8 @@
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeDone.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "no-restricted-syntax": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeFields.tsx": {
@@ -12764,9 +12761,6 @@
     }
   },
   "src/features/teaching/schedule/reschedule/ConflictNotice.tsx": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
@@ -12774,9 +12768,6 @@
       "count": 2
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -13038,16 +13029,10 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },

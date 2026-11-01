@@ -1,6 +1,6 @@
 import type { Conflict } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { ConflictNotice, conflictText } from './ConflictNotice';
 import { locale } from '@/lib/i18n/locale';
@@ -11,6 +11,8 @@ const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 const busy = (startsAt: string): Conflict => ({ kind: 'teacher_busy', startsAt, endsAt: startsAt });
 
 describe('ConflictNotice (R-SCH-04, issue B3)', () => {
+  afterEach(() => Reflect.deleteProperty(Element.prototype, 'scrollIntoView'));
+
   it('words each conflict kind in Arabic with the Riyadh time', () => {
     const text = conflictText({ kind: 'student_busy', startsAt: '2026-10-04T14:00:00Z', endsAt: '2026-10-04T14:45:00Z' }, C24);
     expect(text.startsWith(t.booking.conflict.student_busy.split('(')[0] ?? '')).toBe(true);
@@ -39,6 +41,18 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
     expect(screen.getByRole('alert').textContent).toBe(t.booking.conflictTitle);
     expect(screen.getAllByRole('listitem')).toHaveLength(5);
     expect(screen.getByText(t.booking.conflictMore.replace('{n}', '2'))).toBeTruthy();
+  });
+
+  it('scrolls itself into view once as it appears, not again on a re-render', () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    const notice = (n: number) => (
+      <ConflictNotice conflicts={[busy(`2026-10-0${n}T14:00:00Z`)]} onChangeSlot={vi.fn()} onOverride={vi.fn()} />
+    );
+    const { rerender } = render(notice(4));
+    rerender(notice(5));
+    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(scroll).toHaveBeenCalledWith({ block: 'nearest', behavior: 'smooth' });
   });
 
   it('book-anyway needs a reason, then passes it on', () => {
