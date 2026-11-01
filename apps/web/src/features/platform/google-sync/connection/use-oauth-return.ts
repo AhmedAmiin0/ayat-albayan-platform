@@ -1,6 +1,6 @@
 import { useRouter, type AnyRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { oauthReturnNote } from '../google-format';
+import { oauthReturnNote } from '@/features/platform/google-sync/google-format';
 
 export type OauthNote = NonNullable<ReturnType<typeof oauthReturnNote>>;
 

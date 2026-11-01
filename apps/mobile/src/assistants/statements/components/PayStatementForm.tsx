@@ -5,7 +5,7 @@ import type { PayDraft } from '@/finance/payouts/payout-actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';

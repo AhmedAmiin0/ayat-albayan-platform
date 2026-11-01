@@ -1,5 +1,5 @@
 import { apiSend } from '@/core/lib/http/api';
-import { SUB_ID } from './fixtures';
+import { SUB_ID } from '@/payments/fixtures';
 import type { Receipt } from './receipt';
 import { ReceiptUploadError, uploadReceipt } from './upload-receipt';
 

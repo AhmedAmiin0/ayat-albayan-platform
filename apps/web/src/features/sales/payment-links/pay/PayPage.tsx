@@ -5,7 +5,7 @@ import { Logo } from '@/components/ui/display/mark';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { publicLinkQuery } from '../api';
+import { publicLinkQuery } from '@/features/sales/payment-links/api';
 import { PayDetails } from './PayDetails';
 import { payScreen, type PayReturn, type PayScreen } from './pay-screen';
 

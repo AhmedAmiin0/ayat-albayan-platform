@@ -8,14 +8,14 @@ import { Select } from '@/components/ui/form/select';
 import { meQuery } from '@/features/people/auth/me';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from '../lib/allowed-templates';
-import { sendTemplate } from '../../api/api';
-import { LessonPicker } from '../../lead/LessonPicker';
-import { useInboxMode } from '../../shared/mode';
+import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import { sendTemplate } from '@/features/messaging/inbox/api/api';
+import { LessonPicker } from '@/features/messaging/inbox/lead/LessonPicker';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { TemplateParamFields } from './TemplateParamFields';
-import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from '../lib/template-params';
-import { sendErrorText } from '../lib/send-error';
-import { sendStart, settleOwnSend } from '../lib/send-start';
+import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
+import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 

@@ -7,7 +7,7 @@ import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from './FormLabel';
-import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
+import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';
 
 interface ReceiptPickerProps {
   receipt: Receipt | null;

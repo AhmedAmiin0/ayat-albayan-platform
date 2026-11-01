@@ -8,9 +8,9 @@ import { Select } from '@/components/ui/form/select';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, assistantsQuery, broughtByQuery, setBroughtBy } from '../api';
+import { ASSISTANTS_KEY, assistantsQuery, broughtByQuery, setBroughtBy } from '@/features/people/assistants/api';
 import { broughtAtOf } from './brought-at';
-import { errorText } from '../status';
+import { errorText } from '@/features/people/assistants/status';
 import { formatDate } from '@/features/sales/leads';
 
 const B = t.assistants.brought;

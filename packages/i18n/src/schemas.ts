@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LOCALES } from './locale.js';
+import { LOCALES } from '@ab/core';
 
 // /i18n endpoints: the public overrides map and the admin «الترجمات» editor.
 

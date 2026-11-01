@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
 import { t } from '@/lib/i18n/i18n';
-import { candidatesQuery } from '../api';
+import { candidatesQuery } from '@/features/people/users/api';
 
 const L = t.users.link;
 

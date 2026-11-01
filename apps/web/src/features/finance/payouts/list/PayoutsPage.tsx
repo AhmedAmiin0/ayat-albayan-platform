@@ -21,11 +21,11 @@ import {
   payoutReceiptUrl,
   payoutsQuery,
   type PayoutGenerateResult,
-} from '../api';
+} from '@/features/finance/payouts/api';
 import { MissingRates } from './MissingRates';
-import { MonthSelect } from '../shared/MonthSelect';
+import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
 import { payoutColumns } from './payout-columns';
-import { PayoutDialogs, type PayoutDialog } from '../pay/PayoutDialogs';
+import { PayoutDialogs, type PayoutDialog } from '@/features/finance/payouts/pay/PayoutDialogs';
 import { TeacherDuesSummary } from './TeacherDuesSummary';
 
 type Props = { month: string; onMonth: (month: string) => void };

@@ -2,8 +2,8 @@ import type { TrialDateResult } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import { useChatReturn } from '../../mode';
-import { pickedText } from '../../steps/slots/SlotStep';
+import { useChatReturn } from '@/features/teaching/booking/mode';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

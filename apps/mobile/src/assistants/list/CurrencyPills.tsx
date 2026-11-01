@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { currencyName } from '@/payments/format';
+import { currencyName } from '@/core/lib/money/format';
 import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { TERM_CURRENCIES } from '@/assistants/terms/terms-form';

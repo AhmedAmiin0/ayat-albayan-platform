@@ -37,7 +37,8 @@ const easCore = (text, profile) => {
 // @shopify/flash-list v2 is a JS-only recycler on the New Architecture: its package ships dist/*.js and
 // src/*.ts, no android/, ios/, podspec or config plugin (checked on 2.0.2, the SDK 57 version). Only
 // major 2 counts: 1.x shipped a native AutoLayoutView, and a later major may add native code again.
-const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/];
+// zod (docs/36 g5): plain JS, no android/, ios/ or config plugin (checked on 4.6.5).
+const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/, /^zod$/];
 const JS_ONLY_AT = { '@shopify/flash-list': /^\D*2\./ };
 const jsOnly = (name, version) =>
   String(version).startsWith('workspace:') ||

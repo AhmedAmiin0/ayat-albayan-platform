@@ -1,5 +1,5 @@
 import type { Enums } from '@ab/db';
-import { normalizeArabic } from '../../core/format/arabic.js';
+import { normalizeArabic } from '@ab/core';
 import { weekdayDayMonth } from '../../time/index.js';
 import { joinNames } from './booking-confirmation.js';
 import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply.js';

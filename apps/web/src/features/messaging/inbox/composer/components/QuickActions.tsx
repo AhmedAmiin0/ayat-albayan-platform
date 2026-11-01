@@ -7,9 +7,9 @@ import { usePermissions } from '@/features/people/auth';
 import { reclassifyLead } from '@/features/sales/leads/leads.api';
 import { ReclassifyConfirm } from '@/features/sales/leads/list/ReclassifyConfirm';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../../api/api';
-import { LeadStatusChange } from '../../lead/LeadStatusChange';
-import { LinkFamilyDialog } from '../../lead/LinkFamilyDialog';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
+import { LeadStatusChange } from '@/features/messaging/inbox/lead/LeadStatusChange';
+import { LinkFamilyDialog } from '@/features/messaging/inbox/lead/LinkFamilyDialog';
 
 export interface QuickActionsProps {
   lead: InboxLead;

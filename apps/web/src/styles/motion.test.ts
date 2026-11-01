@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import motion from './motion.css?raw';
-import index from '../index.css?raw';
+import index from '@/index.css?raw';
 
 // Owner, 2026-10-05: fast (120–220 ms), ease-out, and nothing moves under reduced motion.
 describe('motion.css', () => {

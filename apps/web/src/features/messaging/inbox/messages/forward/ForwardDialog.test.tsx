@@ -2,10 +2,10 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { ChatActionsProvider } from '../../shared/ChatActionsProvider';
-import { message, PHONE, thread } from '../../testing/inbox-fixture';
-import { MessageLog } from '../components/MessageLog';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
+import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

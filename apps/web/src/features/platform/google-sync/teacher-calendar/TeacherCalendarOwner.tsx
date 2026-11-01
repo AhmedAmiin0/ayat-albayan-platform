@@ -7,8 +7,8 @@ import { meQuery } from '@/features/people/auth';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { t } from '@/lib/i18n/i18n';
-import { putTeacherCalendarOwner, teacherCalendarQuery } from '../google-api';
-import { fill, formatAt } from '../google-format';
+import { putTeacherCalendarOwner, teacherCalendarQuery } from '@/features/platform/google-sync/google-api';
+import { fill, formatAt } from '@/features/platform/google-sync/google-format';
 
 /**
  * «تقويم المعلم» on the admin teacher page (docs/24 «نقل تقويم معلم إلى المنصة»): who builds this

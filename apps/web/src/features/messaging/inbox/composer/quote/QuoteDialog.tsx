@@ -6,9 +6,9 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { CalcSteps } from '@/features/finance/pricing';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { fillComposer } from '../../saved-replies/lib/filter';
-import { getDraft, setDraft } from '../lib/draft-store';
-import { sendErrorText } from '../lib/send-error';
+import { fillComposer } from '@/features/messaging/inbox/saved-replies/lib/filter';
+import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { QuoteActions } from './QuoteActions';
 import { useQuoteOffer, useQuoteSend } from './use-quote-offer';
 

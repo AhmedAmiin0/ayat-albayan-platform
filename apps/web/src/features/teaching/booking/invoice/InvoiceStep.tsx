@@ -1,4 +1,4 @@
-import type { BookingDraft } from '../draft/draft';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceField } from './InvoiceField';
 
 export interface InvoiceStepProps {

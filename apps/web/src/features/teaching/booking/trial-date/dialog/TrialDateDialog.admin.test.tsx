@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { ABRAR, next, SLOT, STUDENT_ID } from '../../wizard-fixture';
+import { ABRAR, next, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 import { TrialDateDialog } from './TrialDateDialog';
-import { history, routeTrialFetch, routeTrialSend, sentTo, UPCOMING_ID } from '../trial-fixture';
+import { history, routeTrialFetch, routeTrialSend, sentTo, UPCOMING_ID } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

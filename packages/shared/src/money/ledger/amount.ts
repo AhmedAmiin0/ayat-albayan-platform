@@ -1,4 +1,4 @@
-import { asciiDigits } from '../../core/format/index.js';
+import { asciiDigits } from '@ab/core';
 import { moneyAmount } from './schemas.js';
 
 /**

@@ -5,7 +5,7 @@ import { usePresenceSelf } from '@/features/platform/presence';
 import { RouteFade } from './RouteFade';
 import { AdminLayout } from './AdminLayout';
 import { FixedTopBarLayout } from './FixedTopBarLayout';
-import { titleFor, type NavTitleItem } from '../nav/nav-title';
+import { titleFor, type NavTitleItem } from '@/components/shell/nav/nav-title';
 import { TopBarLayout, type SectionHome } from './TopBarLayout';
 
 export interface AppShellProps {

@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { createUser, roleOptionsQuery, USERS_KEY } from '../api';
+import { createUser, roleOptionsQuery, USERS_KEY } from '@/features/people/users/api';
 import { initialCreateForm, type CreateForm, type Prefill } from './create-form';
 import { CreateUserFields } from './CreateUserFields';
 import { CredentialResult } from './CredentialResult';
-import { userErrorText } from '../errors';
-import { createBody, createErrors, type FormErrors } from '../validation';
+import { userErrorText } from '@/features/people/users/errors';
+import { createBody, createErrors, type FormErrors } from '@/features/people/users/validation';
 
 const C = t.users.create;
 

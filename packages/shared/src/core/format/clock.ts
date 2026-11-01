@@ -1,7 +1,7 @@
 // The one display formatter for clock times (clock-pref.ts). Built on h23 parts plus our own
 // ص / م (AM / PM) suffix, so every engine (Hermes included) prints the same; digits stay Western.
 // The clock of an instant (clockOf) reads its zone through the date-fns facade (time/format.ts).
-import type { Locale } from '../../i18n/index.js';
+import type { Locale } from '@ab/core';
 import type { ClockCycle } from './clock-pref.js';
 
 export interface ClockOptions {

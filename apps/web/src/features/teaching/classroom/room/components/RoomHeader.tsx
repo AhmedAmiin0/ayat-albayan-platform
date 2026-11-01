@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n/i18n';
-import { RecIndicator } from '../../recordings/RecIndicator';
+import { RecIndicator } from '@/features/teaching/classroom/recordings/RecIndicator';
 import type { RoomSnapshot } from './room-types';
 
 /** One line above the call: joining / reconnecting, how many are in, and «جارٍ التسجيل». */

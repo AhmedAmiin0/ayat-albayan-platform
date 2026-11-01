@@ -14,7 +14,7 @@ describe('linkFamilyErrorText', () => {
 
   it('a 403, a bad body, an unknown code or a network failure is the generic line', () => {
     expect(linkFamilyErrorText(new ApiError(403, { message: 'Forbidden' }))).toBe(t.common.error);
-    expect(linkFamilyErrorText(new ApiError(400, { code: 'validation', issues: [] }))).toBe(t.common.error);
+    expect(linkFamilyErrorText(new ApiError(400, { message: 'validation_failed', issues: [] }))).toBe(t.common.error);
     expect(linkFamilyErrorText(new ApiError(409, { code: 'toString' }))).toBe(t.common.error);
     expect(linkFamilyErrorText(new ApiError(500, 'oops'))).toBe(t.common.error);
     expect(linkFamilyErrorText(new TypeError('Network request failed'))).toBe(t.common.error);

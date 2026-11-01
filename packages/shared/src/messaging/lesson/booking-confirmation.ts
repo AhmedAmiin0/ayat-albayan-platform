@@ -1,4 +1,4 @@
-import { intlLocale, type Locale } from '../../i18n/locale.js';
+import { intlLocale, type Locale } from '@ab/core';
 import type { ClockOptions } from '../../core/format/index.js';
 import { clockOf, weekdayDayMonth } from '../../time/index.js';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';

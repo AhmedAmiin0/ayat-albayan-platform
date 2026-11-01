@@ -28,6 +28,14 @@ test('a shared file runs every page that imports it by name, through the barrel'
   assert.deepEqual(pick('packages/shared/src/phone.ts').specs, ['chat.spec.ts']);
 });
 
+test('a file of a package cut from shared runs its pages through the @ab/shared facade', () => {
+  assert.deepEqual(pick('packages/core/src/digits.ts'), {
+    full: false,
+    reason: '1 spec file(s) from the changed areas',
+    specs: ['payments.spec.ts'],
+  });
+});
+
 test('a file the shell reaches runs everything', () => {
   const r = pick(`${W}/messaging/inbox/Badge.tsx`);
   assert.equal(r.full, true);

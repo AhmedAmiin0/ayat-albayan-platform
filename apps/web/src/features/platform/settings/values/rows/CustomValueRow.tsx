@@ -2,10 +2,10 @@ import type { CustomConfigView } from '@ab/shared';
 import { useId } from 'react';
 import { formatDateTime } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
-import { DefaultCell } from '../cells/InfoCells';
-import { keyItem } from '../cells/key-item';
-import { NameCell } from '../cells/NameCell';
-import { RowMenu } from '../sheet/RowMenu';
+import { DefaultCell } from '@/features/platform/settings/values/cells/InfoCells';
+import { keyItem } from '@/features/platform/settings/values/cells/key-item';
+import { NameCell } from '@/features/platform/settings/values/cells/NameCell';
+import { RowMenu } from '@/features/platform/settings/values/sheet/RowMenu';
 import { cellClass, headClass, rowClass } from './row-classes';
 import { useClock } from '@/lib/clock';
 

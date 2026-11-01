@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { conflictBy, conflictText } from './conflict-text';
-import { valueText } from '../lib/value-format';
+import { valueText } from '@/features/platform/settings/values/lib/value-format';
 
 const c = t.settingsValues.conflict;
 const conflict = { code: 'conflict' as const, key: 'fx_fresh_hours', current: 6, version: 3, updatedAt: '2026-10-23T09:58:00Z', updatedByName: 'سارة' };

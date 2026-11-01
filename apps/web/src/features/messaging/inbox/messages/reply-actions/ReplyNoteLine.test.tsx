@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message } from '../../testing/inbox-fixture';
-import { routeFetch } from '../../testing/test-utils';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const apiFetch = vi.hoisted(() => vi.fn());

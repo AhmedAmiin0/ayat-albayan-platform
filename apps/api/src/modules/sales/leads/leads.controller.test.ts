@@ -27,7 +27,9 @@ describe('LeadsController HTTP (R-LEAD-01, R-LEAD-04)', () => {
   });
 
   it('GET /leads with an unknown status is 400, not 500', async () => {
-    expect((await h.call({ method: 'GET', url: '/leads?status=bogus' })).statusCode).toBe(400);
+    const res = await h.call({ method: 'GET', url: '/leads?status=bogus' });
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [expect.objectContaining({ path: 'status' })] });
   });
 
   it('PATCH status: invalid body 400, forbidden move 409 invalid_transition', async () => {

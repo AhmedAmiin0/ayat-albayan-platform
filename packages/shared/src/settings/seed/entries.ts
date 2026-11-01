@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { asciiDigits } from '../../core/format/index.js';
+import { asciiDigits } from '@ab/core';
 import type { SettingConfirm, SettingGroup } from '../groups.js';
 import type { SettingOwner } from '../ownership.js';
 import type { SettingDef } from '../defs.js';

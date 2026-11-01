@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { BookingModeContext } from '../mode';
+import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { ApiError } from '@/lib/http/api';
 import { CHANGE_VIEW, changeBodies, CHECK, COURSE, MON, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { currentDaysText, newDaysText } from './change-text';

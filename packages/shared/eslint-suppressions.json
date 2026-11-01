@@ -1,7 +1,7 @@
 {
   "src/people/account/account.schemas.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -21,9 +21,6 @@
     }
   },
   "src/money/assistant/commission.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -42,9 +39,6 @@
     }
   },
   "src/money/assistant/first-paid.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 13
     }
@@ -93,9 +87,6 @@
     }
   },
   "src/money/assistant/statement.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 8
     }
@@ -192,26 +183,6 @@
       "count": 2
     }
   },
-  "src/core/async/result.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/async/result.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    }
-  },
-  "src/core/async/retry.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/format/arabic.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/format/clock-pref.ts": {
     "max-len": {
       "count": 2
@@ -220,51 +191,6 @@
   "src/core/format/clock-range.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/core/format/highlight-diff.ts": {
-    "@typescript-eslint/no-misused-spread": {
-      "count": 3
-    },
-    "@typescript-eslint/prefer-optional-chain": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/format/phone.reject.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/format/phone.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/format/text-dir.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/core/schemas/common.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "no-restricted-properties": {
-      "count": 1
-    }
-  },
-  "src/core/schemas/list-sort.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/explicit-module-boundary-types": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/settings/custom-config/index.ts": {
@@ -343,11 +269,6 @@
       "count": 4
     }
   },
-  "src/i18n/arabic-literals.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/i18n/forms-wording.test.ts": {
     "max-len": {
       "count": 1
@@ -357,16 +278,6 @@
     "@typescript-eslint/no-base-to-string": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/i18n/locale.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/i18n/schemas.ts": {
     "max-len": {
       "count": 1
     }
@@ -409,11 +320,6 @@
       "count": 4
     }
   },
-  "src/catalog/integrations/recipients.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/schedule/lessons/chargeable.ts": {
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
@@ -441,9 +347,6 @@
     }
   },
   "src/schedule/lessons/pick-progress.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -474,9 +377,6 @@
     }
   },
   "src/schedule/lessons/teacher-name.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -500,9 +400,6 @@
     }
   },
   "src/messaging/calls/call-schemas.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -529,9 +426,6 @@
     }
   },
   "src/messaging/chat/chat-lists.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 6
     }
@@ -609,9 +503,6 @@
     }
   },
   "src/messaging/lesson/booking-confirmation.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -622,9 +513,6 @@
     }
   },
   "src/messaging/lesson/rating.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -666,9 +554,6 @@
     }
   },
   "src/messaging/replies/quick-reply.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -683,7 +568,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 3
@@ -710,9 +595,6 @@
     }
   },
   "src/messaging/replies/reply-note.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -738,9 +620,6 @@
     }
   },
   "src/messaging/replies/saved-reply-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -823,9 +702,6 @@
     }
   },
   "src/messaging/wa.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -869,9 +745,6 @@
     }
   },
   "src/money/ledger/earnings/earnings-schemas.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -898,7 +771,7 @@
   },
   "src/money/ledger/expense-schemas.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/money/ledger/schemas.test.ts": {
@@ -908,7 +781,7 @@
   },
   "src/money/ledger/schemas.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 8
@@ -923,9 +796,6 @@
     }
   },
   "src/money/ledger/usage/package-progress.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -1105,7 +975,7 @@
   },
   "src/notifications/web-path.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/numbers/routing.test.ts": {
@@ -1157,11 +1027,6 @@
   },
   "src/money/pricing/currency.ts": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/money/pricing/offer-text.ts": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -1242,9 +1107,6 @@
     }
   },
   "src/reports/teacher-list.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -1388,7 +1250,7 @@
   },
   "src/sales/money.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 21
@@ -1441,9 +1303,6 @@
     }
   },
   "src/sales/registration.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 5
     }
@@ -1495,7 +1354,7 @@
   },
   "src/sales/teacher-filter.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 6
@@ -1838,19 +1697,11 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/settings/validation/shape.ts": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/settings/validation/validate.test.ts": {
@@ -1859,9 +1710,6 @@
     }
   },
   "src/settings/validation/validate.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -1971,11 +1819,6 @@
       "count": 8
     }
   },
-  "src/time/riyadh-day.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/time/week.ts": {
     "max-len": {
       "count": 1
@@ -1996,7 +1839,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
     "complexity": {
       "count": 1

@@ -1,4 +1,4 @@
-import { asciiDigits } from './digits.js';
+import { asciiDigits } from '../text/index.js';
 
 // Phone normalisation to E.164 (rule 7, R-STU-02).
 
@@ -114,7 +114,7 @@ export function formatPhone(e164: string): string {
 
 /**
  * R-MSG-03 fallback: «https://wa.me/966598917071?text=…» with the text prefilled. No URL /
- * URLSearchParams: @ab/shared also runs on Hermes. wa.me wants the number without the +.
+ * URLSearchParams: @ab/core also runs on Hermes. wa.me wants the number without the +.
  */
 export function clickToChatLink(phoneE164: string, text?: string): string {
   const base = `https://wa.me/${phoneE164.replace(/\D/g, '')}`;

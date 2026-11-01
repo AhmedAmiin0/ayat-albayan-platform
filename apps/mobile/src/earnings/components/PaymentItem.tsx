@@ -2,10 +2,10 @@ import { memo } from 'react';
 import type { TeacherPaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { egp } from '../lib/format';
+import { egp } from '@/earnings/lib/format';
 import { useViewerTz } from '@/core/lib/clock';
 
 /** One payment made to the teacher: amount, method, day, and how many lessons it covered. */

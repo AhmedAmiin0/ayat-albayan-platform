@@ -3,8 +3,8 @@ import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { financeNotes, rateLines } from './finance-notes';
-import { amount, currencyLabel } from '../shared/format';
-import type { DashboardData } from '../types';
+import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
+import type { DashboardData } from '@/features/reporting/dashboard/types';
 
 /** The period's four money totals (Plex, not the KPI Amiri: these are data) and the FX notes. */
 export function FinanceTotals({ finance }: { finance: DashboardData['finance'] }) {

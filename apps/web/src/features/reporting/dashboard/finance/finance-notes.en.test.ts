@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { describe, expect, it, vi } from 'vitest';
 import { financeNotes } from './finance-notes';
-import type { DashboardData } from '../types';
+import type { DashboardData } from '@/features/reporting/dashboard/types';
 
 // The UI in English: lists join with en.json's «, » (the Arabic default is covered next door).
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

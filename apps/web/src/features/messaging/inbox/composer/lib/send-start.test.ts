@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { clearAllDrafts, getDraft, setDraft } from './draft-store';
-import { PHONE } from '../../testing/inbox-fixture';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearOwnSends, lastOwnSend } from './own-send';
 import { sendStart, settleOwnSend } from './send-start';
 

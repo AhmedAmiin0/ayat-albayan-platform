@@ -1,6 +1,6 @@
 import { SETTING_FIELD_OF, settingDef } from '@ab/shared';
-import { flag } from '../../registry-form/settings-form';
-import { useValues } from '../values-context';
+import { flag } from '@/features/platform/settings/registry-form/settings-form';
+import { useValues } from '@/features/platform/settings/values/values-context';
 import { ChoiceEditor } from './ChoiceEditor';
 import type { EditorProps } from './editor-props';
 import { NumberEditor } from './NumberEditor';

@@ -4,8 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { FormLabel } from '../FormLabel';
-import { packageFrom, paidOf } from '../format';
+import { FormLabel } from '@/payments/FormLabel';
+import { packageFrom, paidOf } from '@/core/lib/money/format';
 
 interface PackagePickerProps {
   /** payablePackages: more than one only when an older package is still owed money. */

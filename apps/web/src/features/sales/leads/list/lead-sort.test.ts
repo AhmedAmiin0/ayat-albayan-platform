@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { leadSortChoices, leadSortFromValue, leadSortValue, parseLeadSort } from './lead-sort';
-import { parseLeadSearch } from '../types';
+import { parseLeadSearch } from '@/features/sales/leads/types';
 
 const A = '11111111-1111-4111-8111-111111111111';
 

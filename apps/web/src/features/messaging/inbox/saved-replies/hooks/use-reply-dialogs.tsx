@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { DeleteReplyDialog } from '../components/DeleteReplyDialog';
-import { ReplyEditorDialog } from '../components/ReplyEditorDialog';
+import { DeleteReplyDialog } from '@/features/messaging/inbox/saved-replies/components/DeleteReplyDialog';
+import { ReplyEditorDialog } from '@/features/messaging/inbox/saved-replies/components/ReplyEditorDialog';
 
 type Open = { kind: 'edit'; reply: SavedReply | null } | { kind: 'delete'; reply: SavedReply } | null;
 

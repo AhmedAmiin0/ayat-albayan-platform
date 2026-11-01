@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { E164_RE } from '../../core/format/phone.js';
+import { E164_RE } from '@ab/core';
 import { baseMime } from '../../schemas/chat-media.js';
 import { isPdfMime } from '../chat/chat-files.js';
 import type { MessageDirection } from '../../enums/messaging.js';

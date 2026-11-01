@@ -2,9 +2,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { ComposerPhone } from './ComposerPhone';
-import { thread } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../shared/mode';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

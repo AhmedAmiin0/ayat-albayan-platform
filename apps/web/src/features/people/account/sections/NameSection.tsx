@@ -4,11 +4,11 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { nameErrors } from '../account-validation';
+import { nameErrors } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
-import { updateProfile } from '../api';
-import { SaveButton } from '../SaveButton';
-import { useAccountSave } from '../use-account-save';
+import { updateProfile } from '@/features/people/account/api';
+import { SaveButton } from '@/features/people/account/SaveButton';
+import { useAccountSave } from '@/features/people/account/use-account-save';
 import type { SectionProps } from './section-props';
 
 const N = t.account.name;

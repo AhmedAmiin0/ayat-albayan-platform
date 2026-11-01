@@ -1,4 +1,4 @@
-import { fromCents, toCents } from '../ledger/cents.js';
+import { fromCents, toCents } from '@ab/core';
 import { localDay } from './first-paid.js';
 import { addCalendarDays, addCalendarMonths } from '../../time/index.js';
 

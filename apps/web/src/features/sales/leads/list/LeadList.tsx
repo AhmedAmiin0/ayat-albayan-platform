@@ -2,7 +2,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { leadGridClass, LeadListItem } from './LeadListItem';
-import type { LeadRow } from '../types';
+import type { LeadRow } from '@/features/sales/leads/types';
 
 export interface LeadListProps {
   leads: LeadRow[];

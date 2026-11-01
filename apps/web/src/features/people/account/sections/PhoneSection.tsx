@@ -4,13 +4,13 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { phoneErrors, phoneValue } from '../account-validation';
+import { phoneErrors, phoneValue } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
-import { updateProfile } from '../api';
+import { updateProfile } from '@/features/people/account/api';
 import { PasswordField } from './PasswordField';
-import { SaveButton } from '../SaveButton';
+import { SaveButton } from '@/features/people/account/SaveButton';
 import type { SectionProps } from './section-props';
-import { useAccountSave } from '../use-account-save';
+import { useAccountSave } from '@/features/people/account/use-account-save';
 
 const P = t.account.phone;
 

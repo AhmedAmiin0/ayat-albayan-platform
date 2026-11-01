@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, assistantsQuery, setBroughtBy } from '../api';
+import { ASSISTANTS_KEY, assistantsQuery, setBroughtBy } from '@/features/people/assistants/api';
 import { broughtAtOf } from './brought-at';
-import { errorText } from '../status';
+import { errorText } from '@/features/people/assistants/status';
 import type { StudentPick } from './use-student-pick';
 
 const B = t.assistants.brought;

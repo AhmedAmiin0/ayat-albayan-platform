@@ -1,8 +1,8 @@
 import type { ChatListRef } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { t } from '@/lib/i18n/i18n';
-import { inboxBase, useInboxMode } from '../../shared/mode';
-import type { InboxSearch } from '../../shared/search';
+import { inboxBase, useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
 export interface ThreadListChipsProps {
   phone: string;

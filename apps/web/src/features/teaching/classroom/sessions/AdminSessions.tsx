@@ -14,7 +14,7 @@ import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { useJoinWindow } from '@/lib/settings/public-config';
-import { adminDayQuery, dayAround } from '../api/api';
+import { adminDayQuery, dayAround } from '@/features/teaching/classroom/api/api';
 import { SessionCard } from './SessionCard';
 import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
 import { useNow } from '@/lib/time/use-now';

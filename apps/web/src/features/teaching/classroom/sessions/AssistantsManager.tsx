@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
-import { assignAssistant, assistantsQuery, removeAssistant, studentAssistantsQuery } from '../api/api';
+import { assignAssistant, assistantsQuery, removeAssistant, studentAssistantsQuery } from '@/features/teaching/classroom/api/api';
 
 /** Admin, student profile: the assistants allowed into this student's lessons. */
 export function AssistantsManager({ studentId }: { studentId: string }) {
