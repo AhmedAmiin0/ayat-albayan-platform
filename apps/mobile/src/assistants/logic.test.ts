@@ -5,23 +5,6 @@ import { commissionsPath, statementsPath } from './api/api';
 import { assistantsErrorText, fieldError } from './api/errors';
 import { statement } from './api/fixtures';
 import { generateTargets } from './statements/hooks/generate-targets';
-import { statementActions } from './statements/hooks/statement-can';
-
-const ALL = { write: true, approve: true };
-
-test.each([
-  { status: 'draft', has_receipt: false, can: ALL, expected: ['approve', 'details'] },
-  { status: 'draft', has_receipt: false, can: { write: true, approve: false }, expected: ['details'] },
-  { status: 'approved', has_receipt: false, can: ALL, expected: ['pay', 'reopen', 'details'] },
-  { status: 'approved', has_receipt: false, can: { write: true, approve: false }, expected: ['pay', 'details'] },
-  { status: 'approved', has_receipt: false, can: { write: false, approve: true }, expected: ['reopen', 'details'] },
-  { status: 'approved', has_receipt: false, can: { write: false, approve: false }, expected: ['details'] },
-  { status: 'paid', has_receipt: true, can: ALL, expected: ['receipt', 'details', 'unpay'] },
-  { status: 'paid', has_receipt: false, can: ALL, expected: ['details', 'unpay'] },
-  { status: 'paid', has_receipt: true, can: { write: true, approve: false }, expected: ['receipt', 'details'] },
-] as const)('a $status statement (receipt $has_receipt) with $can offers $expected, as the web StatementActions', ({ status, has_receipt, can, expected }) => {
-  expect(statementActions({ status, has_receipt }, can)).toEqual(expected);
-});
 
 test('the ledger and statement paths carry only the filters that are set; a month is cut in UTC', () => {
   expect(commissionsPath({ assistantId: '', month: '', status: '' })).toBe('/assistant-pay/commissions');

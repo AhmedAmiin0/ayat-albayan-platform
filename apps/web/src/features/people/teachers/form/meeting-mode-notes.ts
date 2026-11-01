@@ -19,6 +19,20 @@ export interface NotesInput {
   settled: boolean;
 }
 
+/**
+ * lesson_join_link's status → its note on a platform lesson. Meta held an approved template
+ * (paused, disabled): there is nothing to submit, so not the «send it to Meta» note.
+ */
+const JOIN_NOTE = {
+  approved: null,
+  pending: 'templatePending',
+  paused: 'templatePaused',
+  disabled: 'templatePaused',
+  not_submitted: 'templateNotApproved',
+  rejected: 'templateNotApproved',
+  missing: 'templateNotApproved',
+} as const satisfies Record<TemplateStatus, MeetingModeNote | null>;
+
 /** lesson_join_link's row status in GET /messaging/templates; null when the row is not there. */
 export function joinStatus(templates: readonly { key: string; status: TemplateStatus }[] | undefined): TemplateStatus | null {
   return templates?.find((x) => x.key === JOIN_TEMPLATE)?.status ?? null;
@@ -43,11 +57,19 @@ export function livekitConfigured(items: readonly Pick<IntegrationConfigItem, 'k
  */
 export function meetingModeNotes({ platform, link, join, livekit, settled }: NotesInput): MeetingModeNote[] {
   if (platform === null) return [];
-  if (!platform) return settled && link.trim() === '' && !(join === 'approved' && livekit === true) ? ['noLink'] : [];
-  const notes: MeetingModeNote[] = livekit === false ? ['livekitUnset'] : [];
-  if (join === 'pending') notes.push('templatePending');
-  // Meta held an approved template: there is nothing to submit, so not the «send it to Meta» note.
-  else if (join === 'paused' || join === 'disabled') notes.push('templatePaused');
-  else if (join !== null && join !== 'approved') notes.push('templateNotApproved');
-  return notes;
+  return platform ? platformNotes(join, livekit) : fixedLinkNotes({ link, join, livekit, settled });
+}
+
+/** A platform lesson: the LiveKit note first, then lesson_join_link's own (none without a row). */
+function platformNotes(join: TemplateStatus | null, livekit: boolean | null): MeetingModeNote[] {
+  const server: MeetingModeNote[] = livekit === false ? ['livekitUnset'] : [];
+  const template = join === null ? null : JOIN_NOTE[join];
+  return template ? [...server, template] : server;
+}
+
+/** A fixed-link teacher with no link: our room reaches families only once both hold. */
+function fixedLinkNotes(input: Omit<NotesInput, 'platform'>): MeetingModeNote[] {
+  const roomReady = input.join === 'approved' && input.livekit === true;
+  const missing = input.settled && input.link.trim() === '' && !roomReady;
+  return missing ? ['noLink'] : [];
 }
