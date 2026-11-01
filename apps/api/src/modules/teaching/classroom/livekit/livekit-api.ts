@@ -73,7 +73,8 @@ export class LivekitApi {
     const authorization = `Bearer ${mintServerToken(config, input.grant, now)}`;
     const path = `twirp/${input.method}`;
     const http = twirpHttp(config.url, this.transport);
-    return http.json({ path, method: 'POST', json: input.body, headers: { authorization }, schema });
+    const headers = { authorization };
+    return http.json({ path, method: 'POST', json: input.body, headers, schema });
   }
 
   /** Disconnects one participant now. Already gone (not_found) counts as done. */
