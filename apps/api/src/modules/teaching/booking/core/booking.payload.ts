@@ -1,5 +1,5 @@
 import { bookingKindOf, registrationStatus, type BookingKind, type BookingRequest, type Conflict, type LeadStatus, type PackageSize } from '@ab/shared';
-import type { Occurrence } from '../../scheduling/occurrences/occurrences';
+import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
 import {
   leadTarget,
   lessonRows,
@@ -10,8 +10,8 @@ import {
 import { courseAudit, courseTie, type CourseLabel } from './booking.course-label';
 import { confirmationDrafts } from './booking.messages';
 import type { Resolved } from './booking.parties';
-import type { Plan } from '../plan/booking.plan';
-import type { BookingTeacher } from './booking.queries';
+import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
+import type { BookingTeacher } from './booking.repo';
 
 export type { CourseLabel } from './booking.course-label';
 

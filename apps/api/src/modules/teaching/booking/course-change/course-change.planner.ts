@@ -1,13 +1,13 @@
 import { DURATIONS, courseDaysPerWeek, courseLessonCount, wallParts, type CourseChangeRequest, type CourseLessonFact } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { domainError } from '../booking.errors';
-import { BookingSettings } from '../booking.settings';
-import { CourseLessonQueries, type MovedLesson } from './course-change.lessons';
+import { startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import { CourseLessonRepo, type MovedLesson } from './course-change.lessons';
 import { assertChange, assertStart, planChange, type ChangePlan, type ChangeRole } from './course-change.plan';
 import { unmaterialised } from './course-change.projection';
-import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
-import { courseOverlaps } from '../sales/course/sales-course.rules';
+import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
+import { courseOverlaps } from '@/modules/teaching/booking/sales/course/sales-course.rules';
 
 export interface Loaded { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] }
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };
@@ -39,8 +39,8 @@ const PROJECTED: CourseLessonFact = { status: 'scheduled', chargeable: true, mak
 @Injectable()
 export class CourseChangePlanner {
   constructor(
-    private readonly lessons: CourseLessonQueries,
-    private readonly queries: CourseChangeQueries,
+    private readonly lessons: CourseLessonRepo,
+    private readonly queries: CourseChangeRepo,
     readonly settings: BookingSettings,
   ) {}
 

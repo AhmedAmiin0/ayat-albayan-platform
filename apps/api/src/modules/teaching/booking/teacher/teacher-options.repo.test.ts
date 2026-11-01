@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { BookingSettings } from '../booking.settings';
-import { TeacherOptionsQueries } from './teacher-options.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import { TeacherOptionsRepo } from './teacher-options.repo';
 
 const setup = (on: boolean) => {
   const f = fakeDb({ teacher_availability: [{ data: [{ teacher_id: 'A' }, { teacher_id: 'A' }] }] });
-  return { ...f, q: new TeacherOptionsQueries(f.db, readerOf(BookingSettings, { teachers_always_available: on })) };
+  return { ...f, q: new TeacherOptionsRepo(f.db, readerOf(BookingSettings, { teachers_always_available: on })) };
 };
 
 describe('TeacherOptionsQueries.withAvailability (R-SCH-06)', () => {
