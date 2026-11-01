@@ -17,10 +17,10 @@ const threads = { thread: vi.fn(), numberWindows: vi.fn() };
 const outbox = { queue: vi.fn() };
 const storage = { upload: vi.fn() };
 const transport = vi.fn();
-const gifs = (key: string | undefined = 'k1') => {
+const gifs = (key: string | null = 'k1') => {
   const repo = threads as unknown as ThreadsRepo;
   const s = new GifService(repo, outbox as unknown as Outbox, storage as unknown as StorageService);
-  Object.assign(s, { fetch: transport, key: () => key });
+  Object.assign(s, { fetch: transport, key: () => key ?? undefined });
   return s;
 };
 const send = (s = gifs()) => s.send({ phone: PHONE, input: { gifId: 'x9', clientRequestId: REQ }, actorId: ACTOR }, NOW);
@@ -41,7 +41,7 @@ describe('GifService', () => {
 
   it('without a GIPHY key the list says so and asks nothing', async () => {
     const none = { configured: false, items: [] };
-    await expect(gifs(undefined).list(undefined)).resolves.toEqual(none);
+    await expect(gifs(null).list(undefined)).resolves.toEqual(none);
     expect(transport).not.toHaveBeenCalled();
   });
 
@@ -68,7 +68,7 @@ describe('GifService', () => {
   });
 
   it('no key: 503 giphy_not_configured, nothing stored', async () => {
-    expect(status(await send(gifs(undefined)).catch((e: unknown) => e))).toBe(503);
+    expect(status(await send(gifs(null)).catch((e: unknown) => e))).toBe(503);
     expect(storage.upload).not.toHaveBeenCalled();
   });
 });
