@@ -6,7 +6,7 @@ const FROM = new Date('2026-10-10T21:00:00.000Z');
 const TO = new Date('2026-10-11T21:00:00.000Z');
 
 describe('SalesScheduleQueries (whitelisted selects)', () => {
-  it('day: lessons starting in the range, moved-away ones left out, by start; the link but no reason or money column', async () => {
+  it('day: lessons overlapping the range, moved-away ones left out, by start; the link but no reason or money column', async () => {
     const f = fakeDb({ lessons: [{ data: [] }] });
     await new SalesScheduleQueries(f.db).day({ from: FROM, to: TO });
     const select = String(f.argsOf('lessons', 'select')?.[0]);
@@ -15,8 +15,10 @@ describe('SalesScheduleQueries (whitelisted selects)', () => {
     expect(select).toContain('teachers(id, display_name_ar, display_name_en, tz, meeting_mode)');
     expect(select).not.toContain('*');
     expect(select.replace(/meeting_link|meeting_mode/g, '')).not.toMatch(/meeting|link|reason|note|attendance|price|amount|chargeable|phone|rate/);
-    expect(f.argsOf('lessons', 'gte')).toEqual(['starts_at', FROM.toISOString()]);
+    // A lesson running across midnight is in (it ends after `from`); the start bound is a day back.
+    expect(f.argsOf('lessons', 'gt')).toEqual(['ends_at', FROM.toISOString()]);
     expect(f.argsOf('lessons', 'lt')).toEqual(['starts_at', TO.toISOString()]);
+    expect(f.argsOf('lessons', 'gte')).toEqual(['starts_at', '2026-10-09T21:00:00.000Z']);
     expect(f.argsOf('lessons', 'neq')).toEqual(['status', 'rescheduled']);
     expect(f.argsOf('lessons', 'eq')).toBeUndefined();
   });
