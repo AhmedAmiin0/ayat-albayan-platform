@@ -32,6 +32,8 @@ describe('step 2 for a child listed through sales.renew_any', () => {
     expect(dialog.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.salesMoney.saveTransfer }));
     await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payments', expect.objectContaining({ subscriptionId: OPEN_SUB.id, phone: PHONE })));
+    // Done: «احجز أيام الحلقات الآن» for it too (owner 2026-11-01, docs/16 row 38).
+    expect(await screen.findByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
   });
 
   it('hers: the body has no phone (unchanged) and «إلغاء الباقة» stays', async () => {

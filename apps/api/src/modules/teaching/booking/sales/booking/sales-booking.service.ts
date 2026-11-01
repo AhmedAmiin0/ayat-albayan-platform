@@ -8,7 +8,7 @@ import type { SlotsQuery, TeacherOptionsQuery } from '../../booking.dto';
 import { BookingService } from '../../core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from '../course/sales-course.service';
-import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership } from './sales-booking.scope';
+import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership, type CourseGrant } from './sales-booking.scope';
 import { SlotsService } from '../../plan/slots.service';
 import { TeacherOptionsService } from '../../teacher/teacher-options.service';
 
@@ -17,7 +17,7 @@ import { TeacherOptionsService } from '../../teacher/teacher-options.service';
  * transaction as the admin's, with the assistant as the actor, so the new student's created_by is her and
  * the students trigger (migration 270) records brought_by / brought_at. Scope: sales-booking.scope.ts; for a
  * trial the ownership part only while settings.sales_auto_assign is ON (sales-booking.ownership.ts). A course
- * (kind 'package', self.sales_money, owner 2026-10-18) is always her own student's and passes SalesCourse: it
+ * (kind 'package', self.sales_money, owner 2026-10-18) is her own student's (ANY with sales.renew_any) and passes SalesCourse: it
  * is booked with no invoice and ends on its N-th lesson; the rules' created_by is her.
  */
 @Injectable()
@@ -57,7 +57,7 @@ export class SalesBookingService {
 
   private async ownership(req: BookingRequest, user: AuthUser): Promise<BookingOwnership> {
     const own = await this.scope.forRequest(req, user);
-    assertBookingScope(req, own, can(user, 'self.sales_money'));
+    assertBookingScope(req, own, courseGrant(user));
     return own;
   }
 
@@ -72,6 +72,12 @@ export class SalesBookingService {
       throw e instanceof Error ? scopeDuplicates(e, own) : e;
     }
   }
+}
+
+/** self.sales_money: a course of hers; with sales.renew_any of ANY student (docs/16 row 38). */
+function courseGrant(user: AuthUser): CourseGrant {
+  if (!can(user, 'self.sales_money')) return false;
+  return can(user, 'sales.renew_any') ? 'any' : true;
 }
 
 /** The wizard's two reads for an assistant: the same teachers and slots as the admin's, naming only her own students (any while auto-assign is OFF). */
@@ -95,13 +101,20 @@ export class SalesBookingOptions {
    * her own students' course lessons: those students must be hers whatever the switch. `lessonId` (her
    * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's they are,
    * since she may move ANY lesson (owner 2026-10-28, docs/16 row 37); a read of free slots, nothing booked.
+   * sales.renew_any: ANY student's grid (its course wizard, «تغيير أيام الحلقات»; docs/16 row 38).
    */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
     const ids = q.studentIds ?? [];
-    if (ids.length && !(await this.moving(q, user))) assertOwnStudents(ids, await this.scope.of(user));
-    if (q.excludeCourse) assertOwnStudents(ids, await this.scope.owned(user));
+    if (!can(user, 'sales.renew_any')) await this.assertOwnGrid(q, user);
     const keep = !!q.excludeLessonId && ids.length > 0 && (await this.scope.ownLesson(q.excludeLessonId, ids));
     return this.slotsService.slots({ ...q, excludeLessonId: keep ? q.excludeLessonId : undefined });
+  }
+
+  /** Hers (any while auto-assign is OFF, or the lesson she moves); a course's always hers. */
+  private async assertOwnGrid(q: SlotsQuery, user: AuthUser): Promise<void> {
+    const ids = q.studentIds ?? [];
+    if (ids.length && !(await this.moving(q, user))) assertOwnStudents(ids, await this.scope.of(user));
+    if (q.excludeCourse) assertOwnStudents(ids, await this.scope.owned(user));
   }
 
   private async moving(q: SlotsQuery, user: AuthUser): Promise<boolean> {
