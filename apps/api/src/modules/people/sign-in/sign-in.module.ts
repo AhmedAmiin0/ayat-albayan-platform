@@ -10,7 +10,8 @@ import { LIMIT_STORE } from './codes/limit-store';
 import { DbLimitStore } from './codes/limit-store.db';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
-import { AccountKit, SignInKit } from './flows/sign-in.kit';
+import { SignInAccounts } from './flows/sign-in.accounts';
+import { SignInKit } from './flows/sign-in.kit';
 import { PasswordTargets } from './flows/targets';
 import { SignInController } from './sign-in.controller';
 import { AUTH_GATE, CODE_STORE, SIGN_IN_CONFIG, SUBJECT_STORE, type SignInConfig } from './sign-in.ports';
@@ -28,7 +29,7 @@ import { SignInSettings } from './sign-in.settings';
     PasswordService,
     PasswordTargets,
     SignInKit,
-    AccountKit,
+    SignInAccounts,
     CodeIssuer,
     SignInLimits,
     Provisioner,

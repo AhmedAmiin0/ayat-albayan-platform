@@ -8334,14 +8334,6 @@
       "count": 1
     }
   },
-  "src/modules/people/sign-in/codes/code-issuer.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 13
-    }
-  },
   "src/modules/people/sign-in/codes/code-limits.test.ts": {
     "max-len": {
       "count": 4
@@ -8392,11 +8384,6 @@
       "count": 1
     }
   },
-  "src/modules/people/sign-in/flows/family-code.service.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/modules/people/sign-in/flows/family-code.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -8420,20 +8407,9 @@
       "count": 2
     }
   },
-  "src/modules/people/sign-in/flows/password.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/modules/people/sign-in/flows/sign-in.kit.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/sign-in/flows/targets.ts": {
@@ -8497,11 +8473,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/people/sign-in/sign-in.world.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/people/students/lead-link.test.ts": {
