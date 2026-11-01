@@ -16,7 +16,6 @@ describe('Stripe gate OFF (no FEATURE_STRIPE): every Stripe route is 404', () =>
 
   it.each([
     ['GET', '/stripe/feature', 'admin'],
-    ['GET', '/admin/stripe/settings', 'admin'],
     ['POST', '/sales/payment-links', 'salesA'],
     ['POST', '/sales/payment-links/quote', 'salesA'],
     ['GET', '/sales/payment-links', 'salesA'],

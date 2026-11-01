@@ -33,7 +33,7 @@ describe('«التكاملات» page', () => {
     routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
     renderWithClient(<IntegrationsPage />);
     await screen.findByRole('button', { name: s.saveValues });
-    for (const g of ['livekit', 'expo', 'web_push', 'fx', 'google'] as const) expect(screen.getByRole('group', { name: s.groups[g] })).toBeTruthy();
+    for (const g of ['livekit', 'expo', 'web_push', 'fx', 'google', 'stripe'] as const) expect(screen.getByRole('group', { name: s.groups[g] })).toBeTruthy();
     for (const g of ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety'] as const) expect(screen.queryByRole('group', { name: s.groups[g] })).toBeNull();
     expect(screen.getByText(t.communicationsHub.movedToComms)).toBeTruthy();
     const link = screen.getByRole('link', { name: t.communicationsHub.movedToCommsLink });

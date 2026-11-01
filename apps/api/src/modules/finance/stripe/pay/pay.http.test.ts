@@ -91,10 +91,8 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });
 
-  it('a live key in Vault is refused, as is a missing key: back to the API’s page, never a session', async () => {
-    s.settings.secret.mockResolvedValue('rk_live_abc');
-    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
-    s.settings.secret.mockResolvedValue(null);
+  it('no key saved in «التكاملات»: back to the API’s page, never a session (a live key never loads)', async () => {
+    vi.stubEnv('STRIPE_API_KEY', '');
     expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });

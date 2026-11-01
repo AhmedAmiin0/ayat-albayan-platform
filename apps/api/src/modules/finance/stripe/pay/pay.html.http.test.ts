@@ -87,8 +87,8 @@ describe('the family pages: GET /pay/:token (HTML), /done and /cancelled', () =>
     expect((await open(`/pay/${TOKEN}/done`)).statusCode).toBe(404);
   });
 
-  it('the DB switch off: every family page is 404, nothing looked up', async () => {
-    s.settings.read.mockResolvedValue({ stripe_enabled: false, max_discount_pct: null });
+  it('«الدفع الإلكتروني» off: every family page is 404, nothing looked up', async () => {
+    vi.stubEnv('STRIPE_ENABLED', 'false');
     for (const url of [`/pay/${TOKEN}`, `/pay/${TOKEN}/done`, `/pay/${TOKEN}/cancelled`, `/pay/${TOKEN}/checkout`]) {
       expect((await open(url)).statusCode).toBe(404);
     }

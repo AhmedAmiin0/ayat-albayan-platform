@@ -5495,7 +5495,8 @@
       "expo": "Mobile push (Expo)",
       "web_push": "Browser notifications (Web Push)",
       "fx": "Exchange rates",
-      "google": "Google (Calendar, Drive and Sheets)"
+      "google": "Google (Calendar, Drive and Sheets)",
+      "stripe": "Online payments (Stripe, test build)"
     },
     "source": {
       "db": "From settings",
@@ -5679,6 +5680,22 @@
       "CALLS_TURN_SECRET": {
         "label": "TURN shared secret",
         "hint": "Optional: coturn's ⁦use-auth-secret⁩ secret. Kept in the vault and never shown; the platform mints six-hour credentials per staff member from it."
+      },
+      "STRIPE_ENABLED": {
+        "label": "Online payments",
+        "hint": "On: assistants see «payment link» and «online payment»; it works only once both keys below are saved. Off: every online-payment button disappears and the pay pages close."
+      },
+      "STRIPE_API_KEY": {
+        "label": "Stripe restricted key",
+        "hint": "From a Stripe sandbox only (rk_test_… or sk_test_…); a live key is refused. Kept in the vault, never shown."
+      },
+      "STRIPE_WEBHOOK_SECRET": {
+        "label": "Webhook signing secret",
+        "hint": "Starts with whsec_. In Stripe, add a webhook endpoint at <API address>/webhooks/stripe, then paste its secret here. Kept in the vault, never shown."
+      },
+      "STRIPE_MAX_DISCOUNT_PCT": {
+        "label": "Maximum discount on payment links (%)",
+        "hint": "The lowest amount allowed is the calculator price minus this percentage. Leave empty for no limit."
       }
     },
     "developer": "For developers",
@@ -7406,23 +7423,11 @@
       "disputeBody": "Needs review in the Stripe dashboard"
     },
     "settings": {
-      "section": "Online payment (test)",
-      "hint": "This section exists in the test build only and accepts Stripe test keys only.",
-      "enabled": "Enable payment links",
-      "apiKey": "Restricted key (rk_test_…)",
-      "webhookSecret": "Webhook signing secret (whsec_…)",
-      "maxDiscount": "Maximum discount (%)",
-      "maxDiscountHint": "Leave empty for no limit.",
-      "webhookUrl": "Webhook URL to add in Stripe",
-      "set": "Saved: {masked}",
-      "notSet": "Not saved",
-      "save": "Save",
-      "clear": "Remove",
-      "saved": "Settings saved",
-      "liveRefused": "The test build accepts Stripe test keys only (rk_test_ or sk_test_).",
-      "invalidSecret": "The webhook secret starts with whsec_.",
-      "copyUrl": "Copy the URL",
-      "urlCopied": "URL copied"
+      "enabled": "Online payments",
+      "hint": "Test build only. On: assistants see payment links. Off: every online-payment button disappears.",
+      "ready": "Online payments are working.",
+      "missing": "Online payments will not work until you save: {keys}. Keys are saved in «Integrations» on the web.",
+      "failed": "Could not save the change. Try again."
     }
   },
   "courseActions": {

@@ -1,18 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { StripeTestModule } from '../stripe.module';
-import { stripeFeatureOn } from './stripe-gate';
+import { StripeTestModule } from '@/modules/finance/stripe/stripe.module';
 
-describe('the env half of the Stripe gate', () => {
-  it('only FEATURE_STRIPE=test turns it on', () => {
-    expect(stripeFeatureOn({})).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: '1' })).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: 'live' })).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: 'test' })).toBe(true);
-  });
-
+describe('the env half of the Stripe gate (stripeFeatureOn: env.stripe.test.ts)', () => {
   it('off: an empty module (no controller, no provider, no import); on: every route', () => {
     expect(StripeTestModule.register({})).toEqual({ module: StripeTestModule });
     const on = StripeTestModule.register({ FEATURE_STRIPE: 'test' });
-    expect(on.controllers?.length).toBe(5);
+    expect(on.controllers?.length).toBe(4);
   });
 });

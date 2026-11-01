@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -10,10 +10,11 @@ import { lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
 import { zonedParts, zonedToUtc } from '@/features/teaching/schedule';
 import { timeOptions } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
-import { proposeLesson } from '../api';
+import { proposeLesson } from '@/features/teaching/teacher/api';
 import { ClockOptions } from '@/lib/clock-options';
 import { clockDir } from '@/lib/clock-text';
 import { useClock } from '@/lib/clock';
+import { focusOnMount } from '@/lib/dom/mount-refs';
 
 export interface ProposeFormProps {
   lesson: LessonView;
@@ -36,8 +37,6 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
   const [date, setDate] = useState(start.date);
   const [time, setTime] = useState(start.time);
   const [note, setNote] = useState('');
-  const title = useRef<HTMLHeadingElement>(null);
-  useEffect(() => title.current?.focus(), []);
   const send = useMutation({
     mutationFn: () =>
       proposeLesson({
@@ -61,7 +60,7 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
         send.mutate();
       }}
     >
-      {!bare && <h4 ref={title} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
+      {!bare && <h4 ref={focusOnMount} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label={t.teacherDash.propose.date}>
           {(p) => <Input {...p} type="date" dir="ltr" min={today} value={date} onChange={(e) => setDate(e.target.value)} />}

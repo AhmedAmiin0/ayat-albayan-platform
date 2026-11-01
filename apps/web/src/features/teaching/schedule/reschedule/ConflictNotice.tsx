@@ -1,5 +1,5 @@
 import { clockOf, type Conflict, lessonWhenAt, sameClockAt } from '@ab/shared';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
@@ -9,6 +9,7 @@ import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import { type Clock, useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
+import { revealOnMount } from '@/lib/dom/mount-refs';
 
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */
 const SHOWN = 5;
@@ -64,11 +65,6 @@ export function ConflictNotice(p: ConflictNoticeProps) {
   const { conflicts, teacherTz, onChangeSlot, onOverride, busy = false, studentNames = {} } = p;
   const labels = p.labels ?? { override: t.booking.override, reason: t.booking.overrideReason };
   const titleId = useId();
-  const box = useRef<HTMLElement>(null);
-  // The clash appears under a tall slot grid (drawer, phones): bring it into view.
-  useEffect(() => {
-    box.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
-  }, []);
   const [reason, setReason] = useState(p.initialReason ?? '');
   const [missing, setMissing] = useState(false);
   const more = conflicts.length - SHOWN;
@@ -79,7 +75,7 @@ export function ConflictNotice(p: ConflictNoticeProps) {
 
   return (
     <section
-      ref={box}
+      ref={revealOnMount}
       aria-labelledby={titleId}
       className="grid gap-3 rounded-md bg-danger-soft px-4 py-3.5 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]"
     >

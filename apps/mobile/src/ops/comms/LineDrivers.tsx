@@ -6,9 +6,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
 import { useSettings } from '@/ops/settings/use-settings';
-import { driverName } from './line-driver';
+import { driverName, driverValues } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';
-import { useIntegrations, useSaveDriver } from './use-line-drivers';
+import { useIntegrations, useSaveIntegrationValues } from './use-line-drivers';
 
 /**
  * «مزوّد الإرسال لكل خط» on the overview (docs/19, owner 2026-10-25: «switch between crm and other
@@ -19,7 +19,7 @@ import { useIntegrations, useSaveDriver } from './use-line-drivers';
 export function LineDrivers() {
   const h = t.communicationsHub;
   const query = useIntegrations();
-  const save = useSaveDriver();
+  const save = useSaveIntegrationValues();
   const canWrite = usePermissions()('settings.write');
   const [said, setSaid] = useState<string | null>(null);
   const moduleMode = useSettings().data?.comms_source === 'module';
@@ -35,7 +35,7 @@ export function LineDrivers() {
   const onSave = (line: WaLine, provider: WaProvider) => {
     setSaid(null);
     save.mutate(
-      { line, provider },
+      driverValues(line, provider),
       {
         onSuccess: () => setSaid(h.driverSaved.replace('{line}', t.enums.waLine[line]).replace('{driver}', driverName(provider))),
         onError: () => setSaid(h.driverFailed),

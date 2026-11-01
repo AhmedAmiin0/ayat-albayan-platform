@@ -13,7 +13,8 @@
         "$TURBO_ROOT$/apps/api/src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts",
         "$TURBO_ROOT$/e2e/areas.json",
         "$TURBO_ROOT$/e2e/shard-durations.json",
-        "$TURBO_ROOT$/e2e/tests/**"
+        "$TURBO_ROOT$/e2e/tests/**",
+        "$TURBO_ROOT$/refactor/lanes-v2/**"
       ]
     }
   }

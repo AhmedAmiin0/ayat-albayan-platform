@@ -1217,7 +1217,7 @@
   },
   "src/config/env/env.ts": {
     "max-len": {
-      "count": 14
+      "count": 12
     }
   },
   "src/config/env/env.web-push.test.ts": {
@@ -2453,71 +2453,8 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/admin/stripe-admin.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/modules/finance/stripe/admin/stripe-admin.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/stripe/admin/stripe-admin.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-clients.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-feature.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-gate.db.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/finance/stripe/gate/stripe-gate.off.http.test.ts": {
     "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-gate.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-gate.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/finance/stripe/gate/stripe-settings.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -2540,12 +2477,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 19
+      "count": 17
     }
   },
   "src/modules/finance/stripe/links/link-deps.ts": {
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -2724,14 +2661,11 @@
   "src/modules/finance/stripe/stripe.module.ts": {
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-len": {
-      "count": 8
     }
   },
   "src/modules/finance/stripe/testing/stripe-app.fakes.ts": {
     "ab/no-parent-imports": {
-      "count": 8
+      "count": 7
     },
     "max-len": {
       "count": 1

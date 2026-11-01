@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { isIntegrationPlainKey, WA_PROVIDERS, type IntegrationPlainKey } from './keys.js';
+import {
+  isIntegrationPlainKey,
+  WA_PROVIDERS,
+  type IntegrationPlainKey,
+  type IntegrationSecretKey,
+} from './keys.js';
 import { parseAllowedRecipients } from './recipients.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
@@ -28,6 +33,16 @@ export const iceUrls = z
   .max(1000)
   .refine((raw) => raw.split(',').every((u) => /^(stun|turns?):[A-Za-z0-9.-]+(:\d{1,5})?(\?transport=(udp|tcp))?$/.test(u.trim())), 'ice_url');
 
+/**
+ * Stripe (docs/30, TEST BUILD ONLY): a sandbox restricted or secret key. Anything else, a live key
+ * (rk_live_ / sk_live_) above all, is refused: this build never takes real money.
+ */
+export const stripeApiKey = z.string().regex(/^(rk|sk)_test_[A-Za-z0-9]+$/, 'stripe_live_key_refused');
+/** The signing secret of the Stripe webhook endpoint (/webhooks/stripe on the API host). */
+export const stripeWebhookSecret = z.string().regex(/^whsec_[A-Za-z0-9+/=]+$/, 'invalid_value');
+/** The admin's cap on a payment link's discount below the calculator price, in %. */
+export const stripeMaxDiscountPct = z.coerce.number().min(0).max(100);
+
 const version = z.string().regex(/^v\d+\.\d+$/);
 const provider = z.enum(WA_PROVIDERS);
 
@@ -55,7 +70,17 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WEB_PUSH_SUBJECT: vapidSubject,
   FX_API_URL: url,
   GOOGLE_CLIENT_ID: googleClientId,
+  // The select's two values only (INTEGRATION_ENUMS): no «1» or «on» the screens would not show.
+  STRIPE_ENABLED: z.enum(['false', 'true']),
+  STRIPE_MAX_DISCOUNT_PCT: stripeMaxDiscountPct,
 };
+
+/**
+ * A switch key's value read the way the server's env schema reads it (z.stringbool: «true», «1»,
+ * «on», …): a value set in env or by hand still shows truthfully. Unset or anything else = off.
+ */
+export const integrationBool = (value: string | null | undefined): boolean =>
+  z.stringbool().safeParse(value?.trim() ?? '').data === true;
 
 /** Is `value` (trimmed) acceptable for this plain key? */
 export function integrationValueValid(key: IntegrationPlainKey, value: string): boolean {
@@ -88,3 +113,13 @@ export type IntegrationValuesInput = z.input<typeof integrationValuesSchema>;
 /** PUT /settings/integrations/secrets/:key. */
 export const integrationSecretSchema = z.object({ value: z.string().trim().min(1).max(INTEGRATION_VALUE_MAX) });
 export type IntegrationSecretInput = z.infer<typeof integrationSecretSchema>;
+
+/** Secrets with a format of their own; any other secret is free text. */
+const SECRET_CHECKS: Partial<Record<IntegrationSecretKey, z.ZodType<string>>> = {
+  STRIPE_API_KEY: stripeApiKey,
+  STRIPE_WEBHOOK_SECRET: stripeWebhookSecret,
+};
+
+/** The check of a secret's value (already trimmed by integrationSecretSchema). */
+export const integrationSecretCheck = (key: IntegrationSecretKey): z.ZodType<string> =>
+  SECRET_CHECKS[key] ?? z.string();
