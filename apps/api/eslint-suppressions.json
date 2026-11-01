@@ -6847,12 +6847,6 @@
     }
   },
   "src/modules/messaging/whatsapp/direct/auth-template.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -7498,9 +7492,6 @@
     }
   },
   "src/modules/messaging/whatsapp/messages/receipts/receipt-candidates.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     }

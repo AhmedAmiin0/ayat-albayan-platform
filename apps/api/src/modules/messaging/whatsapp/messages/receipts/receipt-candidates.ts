@@ -1,4 +1,5 @@
-import { baseMime } from '@ab/shared';
+import { z } from 'zod';
+import { baseMime, lenientLabel, parseOrNull } from '@ab/shared';
 import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 
 // The files the chat pickers offer (the booking's «من الشات», the sales «اختر صورة الإيصال من
@@ -16,12 +17,16 @@ const PDF_NAME = /\.pdf$/i;
 
 type PickRow = Pick<MediaMessage, 'media_mime' | 'media_name' | 'interactive_payload'>;
 
-const isRecord = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v : null);
-const payloadType = (p: unknown): string | null => (isRecord(p) ? text(p.type) : null);
+const text = (v: string | null | undefined): string | null => (v?.trim() ? v : null);
+
+/** The stored payload's type and a document's file name, when they are non-blank strings. */
+const pickPayload = z.looseObject({
+  type: lenientLabel,
+  document: z.looseObject({ filename: lenientLabel }).catch({}),
+});
+const payloadType = (p: unknown): string | null => parseOrNull(pickPayload, p)?.type ?? null;
 const docName = (p: unknown): string | null =>
-  isRecord(p) && isRecord(p.document) ? text(p.document.filename) : null;
+  parseOrNull(pickPayload, p)?.document.filename ?? null;
 
 /** The file's name: ours (media_name, an imported document's) or the one Meta sent with it. */
 export const receiptName = (row: PickRow): string | null =>
