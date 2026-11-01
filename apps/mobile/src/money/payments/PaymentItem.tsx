@@ -2,13 +2,13 @@ import { memo } from 'react';
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay, money } from '@/payments/format';
+import { instantDay, money } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Ltr } from '@/core/ui/primitives/Ltr';
-import { AttachmentsViewer } from '../attachments/AttachmentsViewer';
-import { hasAttachments } from '../attachments/receipt-file';
-import { ReceiptViewer } from '../attachments/ReceiptViewer';
+import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
+import { hasAttachments } from '@/money/attachments/receipt-file';
+import { ReceiptViewer } from '@/money/attachments/ReceiptViewer';
 import { useViewerTz } from '@/core/lib/clock';
 
 /**

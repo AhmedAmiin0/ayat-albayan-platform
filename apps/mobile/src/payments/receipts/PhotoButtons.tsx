@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { pickReceipt, type Receipt, type ReceiptSource } from '@/payments/receipt';
+import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';
 
 interface PhotoButtonsProps {
   camera: string;

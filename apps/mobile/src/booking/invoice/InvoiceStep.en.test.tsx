@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { InvoiceStep } from './InvoiceStep';
 
-jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
+jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('./invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

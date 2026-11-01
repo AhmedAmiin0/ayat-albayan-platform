@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
-import { partPaidLine } from '@/payments/format';
-import { entry } from '../testing/fixtures';
+import { partPaidLine } from '@/core/lib/money/format';
+import { entry } from '@/sales/testing/fixtures';
 import { HistoryEntryCard } from './HistoryEntryCard';
 
 // «تفاصيل الطالب» (owner 2026-10-28): part_paid comes only to a self.sales_money viewer, only when part-paid.

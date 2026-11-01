@@ -1,8 +1,8 @@
 import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
 import { supabase } from '@/core/lib/http/supabase';
-import type { Receipt } from '@/payments/receipt';
-import { ReceiptUploadError } from '@/payments/upload-receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
 /**
  * POST /expenses/receipt-upload-url, then the signed upload into the private `receipts` bucket

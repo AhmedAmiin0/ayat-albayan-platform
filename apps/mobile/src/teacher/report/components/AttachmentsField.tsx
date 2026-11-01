@@ -6,7 +6,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
-import { pickReceipt, type Receipt } from '@/payments/receipt';
+import { pickReceipt, type Receipt } from '@/core/lib/receipts/receipt';
 import { openIcon } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { openSigned, reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
