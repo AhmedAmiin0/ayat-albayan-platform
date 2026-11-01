@@ -4521,11 +4521,6 @@
       "count": 2
     }
   },
-  "src/inbox/lists/ThreadListsSheet.tsx": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/inbox/lists/components/AutoListNote.test.tsx": {
     "max-len": {
       "count": 1
@@ -4594,6 +4589,9 @@
     }
   },
   "src/inbox/lists/components/ThreadListsSheet.tsx": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -4607,23 +4605,19 @@
     }
   },
   "src/inbox/lists/lib/use-list-membership.test.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
   },
   "src/inbox/lists/lib/use-list-membership.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/inbox/lists/use-list-membership.test.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/inbox/lists/use-list-membership.ts": {
-    "complexity": {
-      "count": 1
     }
   },
   "src/inbox/messages/components/DeliveryTicks.test.tsx": {
@@ -5643,14 +5637,6 @@
       "count": 4
     }
   },
-  "src/inbox/qualification/FollowUpCard.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/inbox/qualification/components/DayChips.tsx": {
     "max-len": {
       "count": 1
@@ -5665,8 +5651,14 @@
     }
   },
   "src/inbox/qualification/components/FollowUpCard.tsx": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "src/inbox/qualification/components/LeadProfileSection.offline.test.tsx": {
@@ -5689,17 +5681,15 @@
       "count": 1
     }
   },
-  "src/inbox/qualification/follow-up-text.ts": {
+  "src/inbox/qualification/lib/follow-up-text.ts": {
     "complexity": {
       "count": 1
     },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/inbox/qualification/lib/follow-up-text.ts": {
     "max-len": {
       "count": 2
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "src/inbox/qualification/lib/qualification-form.test.ts": {

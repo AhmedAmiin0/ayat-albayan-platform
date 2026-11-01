@@ -13929,13 +13929,11 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/classroom.queries.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/classroom.repo.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -14447,14 +14445,12 @@
       "count": 9
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/meetings/invites/meeting-invitee.repo.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
     },
     "max-len": {
       "count": 5
