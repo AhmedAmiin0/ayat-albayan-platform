@@ -13,7 +13,7 @@ import { z } from 'zod';
 import type { PushEvent } from '@/common/push/push.service';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
-import type { Contact } from '@/modules/messaging/webhook/webhook.queries';
+import type { Contact } from '@/modules/messaging/webhook/webhook.repo';
 
 // Pure parts of storing an inbound message (R-MSG-04, R-LEAD-01) and the admin push (R-MOB-01).
 

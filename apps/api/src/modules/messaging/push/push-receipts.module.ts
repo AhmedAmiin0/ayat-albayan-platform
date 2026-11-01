@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { PushReceiptsJob } from './push-receipts.job';
-import { PushReceiptsQueries } from './push-receipts.queries';
+import { PushReceiptsRepo } from './push-receipts.repo';
 import { expoReceiptsTransport, RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';
 
 /**
@@ -10,7 +10,7 @@ import { expoReceiptsTransport, RECEIPTS_TRANSPORT, type ReceiptsTransport } fro
  */
 @Module({
   providers: [
-    PushReceiptsQueries,
+    PushReceiptsRepo,
     PushReceiptsJob,
     {
       provide: RECEIPTS_TRANSPORT,

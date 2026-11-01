@@ -1,10 +1,10 @@
 import { RATING_TEMPLATE, type QuickReplyIntent } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { LessonStatusService } from '../../../teaching/lessons/status/lesson-status.service';
-import type { InboundEvent } from '../webhook.events';
+import { AuditService } from '@/common/audit/audit.service';
+import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
+import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { payloadLesson } from './webhook.inbound';
-import { WebhookQueries, type Contact } from '../webhook.queries';
+import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/webhook.repo';
 
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 const WHATSAPP_ACTOR = 'system:whatsapp';
@@ -25,7 +25,7 @@ export class QuickReplies {
   private readonly log = new Logger(QuickReplies.name);
 
   constructor(
-    private readonly queries: WebhookQueries,
+    private readonly queries: WebhookRepo,
     private readonly lessons: LessonStatusService,
     private readonly audit: AuditService,
   ) {}

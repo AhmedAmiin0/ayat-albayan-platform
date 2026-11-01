@@ -13,7 +13,7 @@ export interface TicketRow {
 
 /** push_notifications ↔ Expo receipts (R-MOB-01). ticket_ids = the tickets not checked yet. */
 @Injectable()
-export class PushReceiptsQueries {
+export class PushReceiptsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Rows sent in [from, to] that still have tickets to check. */

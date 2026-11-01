@@ -1,8 +1,8 @@
 import type { Database } from '@ab/db';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../common/db/db.module';
-import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
+import { DB, type Db } from '@/common/db/db.module';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { REPLY_COLUMNS, type SavedReplyRow } from './saved-replies.mapper';
 
 export type ReplyInsert = Database['public']['Tables']['saved_replies']['Insert'];
@@ -20,7 +20,7 @@ function checkWrite(error: PostgrestError | null, what: string): void {
 
 /** saved_replies (migration 20261025000670) through the service role; the service decides who may. */
 @Injectable()
-export class SavedRepliesQueries {
+export class SavedRepliesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The shared list (owner null) and this person's own; unordered (inListOrder sorts). */

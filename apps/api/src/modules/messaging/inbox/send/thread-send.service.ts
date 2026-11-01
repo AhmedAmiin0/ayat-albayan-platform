@@ -1,15 +1,15 @@
 import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import type { SalesScope } from '../../../sales/sales/sales-scope';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
-import { assertCanSend, type TeacherScope } from '../teacher-threads/teacher-scope';
+import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { sendLine, textLine } from './text-line';
-import { ThreadQuotes, type ReplyFields, type SendFrom } from '../threads/thread-quotes';
-import { missingParams, type ThreadRow } from '../threads/threads.mapper';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 export { sendLine } from './text-line';
 
@@ -80,7 +80,7 @@ export class ThreadSendService {
   @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly templates: TemplateRegistry,
     private readonly outbox: Outbox,
   ) {}

@@ -1,14 +1,14 @@
 import type { ForwardResult, ForwardSkip, ThreadForward } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import type { SalesScope } from '../../../sales/sales/sales-scope';
-import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
+import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { ForwardFiles, type ForwardFile } from './forward-files';
-import type { Sent } from '../send/outbox';
-import { visibleToSales } from '../sales-threads/sales-threads';
-import type { TeacherScope } from '../teacher-threads/teacher-scope';
-import { ThreadSendService } from '../send/thread-send.service';
-import { ThreadsQueries } from '../threads/threads.queries';
+import type { Sent } from '@/modules/messaging/inbox/send/outbox';
+import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
+import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 interface ForwardInput {
   input: ThreadForward;
@@ -62,7 +62,7 @@ export class ThreadForwardService {
   private readonly log = new Logger(ThreadForwardService.name);
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly sends: ThreadSendService,
     private readonly files: ForwardFiles,
   ) {}
