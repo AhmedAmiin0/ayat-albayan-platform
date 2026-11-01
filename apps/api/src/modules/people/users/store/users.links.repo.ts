@@ -1,6 +1,6 @@
 import type { LinkCandidate, LinkedRecord, LinkKind } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import type { Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import type { LinkTarget } from './users.store';
 
 // The teachers / students / guardians rows a login links to. One small block per table: the

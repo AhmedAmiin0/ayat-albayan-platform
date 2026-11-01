@@ -13,13 +13,13 @@ import {
 } from '@nestjs/common';
 import { studentColumnQueryShape, studentListFiltersSchema } from '@ab/shared';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { DB, type Db } from '../../../common/db/db.module';
-import { blankToNull, listQuerySchema, parse } from '../guardians/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { DB, type Db } from '@/common/db/db.module';
+import { blankToNull, listQuerySchema, parse } from '@/modules/people/guardians/http';
 import { MergeService } from './merge.service';
 import { mergeRequestSchema, studentCreateRequestSchema, studentPatchSchema } from './students.dto';
-import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.queries';
+import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.repo';
 import { StudentsService } from './students.service';
 
 const Uuid = new ParseUUIDPipe();

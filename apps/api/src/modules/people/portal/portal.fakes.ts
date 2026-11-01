@@ -2,21 +2,21 @@
 import type { PortalStudent } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { bootWith } from '../../../common/auth/auth.fakes';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { StorageService } from '../../../common/storage/storage.service';
-import { BalanceQueries } from '../../finance/subscriptions';
-import { RoomAdmission } from '../../teaching/classroom/join/room-admission';
-import { StudentLinkQueries } from '../../teaching/classroom/student-link/student-link.queries';
+import { AppModule } from '@/app.module';
+import { bootWith } from '@/common/auth/auth.fakes';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { BalanceQueries } from '@/modules/finance/subscriptions';
+import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
+import { StudentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.queries';
 import { ChatNumber } from './home/chat-number';
-import type { PortalLessonRow } from './lessons/portal-lessons.queries';
-import { PortalLessonsQueries } from './lessons/portal-lessons.queries';
-import { PortalPackageQueries } from './package/portal-package.queries';
-import { PortalReportsQueries } from './reports/portal-reports.queries';
-import { PortalScopeQueries } from './scope/portal-scope.queries';
+import type { PortalLessonRow } from './lessons/portal-lessons.repo';
+import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
+import { PortalPackageRepo } from './package/portal-package.repo';
+import { PortalReportsRepo } from './reports/portal-reports.repo';
+import { PortalScopeRepo } from './scope/portal-scope.repo';
 
 export const S1 = '51000000-0000-4000-8000-000000000001';
 export const S2 = '51000000-0000-4000-8000-000000000002';
@@ -78,10 +78,10 @@ export async function portalApp() {
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
   const builder = Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PortalScopeQueries).useValue(scope)
-    .overrideProvider(PortalLessonsQueries).useValue(lessons)
-    .overrideProvider(PortalReportsQueries).useValue(reports)
-    .overrideProvider(PortalPackageQueries).useValue(packages)
+    .overrideProvider(PortalScopeRepo).useValue(scope)
+    .overrideProvider(PortalLessonsRepo).useValue(lessons)
+    .overrideProvider(PortalReportsRepo).useValue(reports)
+    .overrideProvider(PortalPackageRepo).useValue(packages)
     .overrideProvider(BalanceQueries).useValue(balances)
     .overrideProvider(StudentLinkQueries).useValue(classroom)
     .overrideProvider(RoomAdmission).useValue(admission)

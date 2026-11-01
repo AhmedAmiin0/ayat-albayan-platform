@@ -1,11 +1,11 @@
 import type { PortalStudent } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** The portal's one scope read (service role): portal_students_of (migration 790). */
 @Injectable()
-export class PortalScopeQueries {
+export class PortalScopeRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

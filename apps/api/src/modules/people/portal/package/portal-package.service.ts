@@ -1,9 +1,9 @@
 import { studentRemaining, type PortalPackageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { BalanceQueries } from '../../../finance/subscriptions';
-import { PortalScopes } from '../scope/portal-scope';
-import { PortalPackageQueries } from './portal-package.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { BalanceQueries } from '@/modules/finance/subscriptions';
+import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
+import { PortalPackageRepo } from './portal-package.repo';
 
 /**
  * «الباقة» (docs/31): the current package (the newest, as alerts and the admin's balance read it), the
@@ -14,7 +14,7 @@ import { PortalPackageQueries } from './portal-package.queries';
 export class PortalPackageService {
   constructor(
     private readonly scopes: PortalScopes,
-    private readonly queries: PortalPackageQueries,
+    private readonly queries: PortalPackageRepo,
     private readonly balances: BalanceQueries,
   ) {}
 

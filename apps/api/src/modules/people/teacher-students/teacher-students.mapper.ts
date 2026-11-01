@@ -1,5 +1,5 @@
 import type { TeacherStudentView } from '@ab/shared';
-import type { TeacherLessonRow, TeacherStudentRow } from './teacher-students.queries';
+import type { TeacherLessonRow, TeacherStudentRow } from './teacher-students.repo';
 
 const UPCOMING = new Set(['scheduled', 'confirmed']);
 
