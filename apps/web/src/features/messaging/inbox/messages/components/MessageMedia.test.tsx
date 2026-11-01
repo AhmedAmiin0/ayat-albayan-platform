@@ -87,7 +87,7 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
     expect(link.className).toContain('[overflow-wrap:anywhere]');
   });
 
-  it('a sticker keeps its label and never fetches', () => {
+  it('an image type no bubble draws keeps its label and never fetches', () => {
     renderAt(row({ media_mime: 'image/webp+sticker' }));
     expect(screen.queryByRole('button')).toBeNull();
     expect(screen.getByText(`· ${t.inbox.mediaNotDownloaded}`)).toBeTruthy();

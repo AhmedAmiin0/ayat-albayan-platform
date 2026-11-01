@@ -35,9 +35,10 @@ export const NOTE_WORDS: NoteWords = {
   unsupported: t.inbox.unsupportedEcho,
 };
 
-/** WhatsApp media by MIME: image / audio / video, PDFs and other files are documents. */
+/** WhatsApp media by MIME: image / audio / video, a WebP sticker; PDFs and the rest documents. */
 export function mediaKind(mime: string | null): MediaKind {
   if (!mime) return 'other';
+  if (mime === 'image/webp') return 'sticker';
   const top = mime.split('/')[0];
   if (top === 'image' || top === 'audio' || top === 'video') return top;
   return 'document';

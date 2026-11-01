@@ -49,6 +49,8 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   // own Vault entry).
   GOOGLE_CLIENT_ID: 'google',
   GOOGLE_CLIENT_SECRET: 'google',
+  // The chat's GIF panel (owner 2026-11-01); unset = the panel asks an admin for the key.
+  GIPHY_API_KEY: 'giphy',
   // Stripe (docs/30): the API lists these only with FEATURE_STRIPE (test or live).
   STRIPE_ENABLED: 'stripe',
   STRIPE_API_KEY: 'stripe',

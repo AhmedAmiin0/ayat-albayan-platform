@@ -8,7 +8,7 @@ import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixture
 import { type ThreadMode, ThreadModeProvider } from '../../thread/hooks/thread-mode';
 import { clearComposerDrafts } from '../draft-store';
 
-// The pill: the emoji and camera in the bar as WhatsApp (owner 2026-10-29) and as tiles of the paperclip's sheet, and the teacher's own pill.
+// The pill: the emoji in the bar as WhatsApp (owner 2026-10-29; no camera since 2026-11-01), the paperclip's sheet's tiles, and the teacher's own pill.
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -76,20 +76,13 @@ test('the camera tile sends a photo taken now', async () => {
   expect(mockApiSend.mock.calls[0]?.[2]).toMatchObject({ mime: 'image/jpeg' });
 });
 
-test('staff bar as WhatsApp: the emoji opens its sheet; the camera beside the paperclip sends a photo and hides while typing', async () => {
-  mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: 'out/u/r/y.jpg', token: 't', signed_url: 'u' }).mockResolvedValueOnce({ id: 'p2' });
-  jest.mocked(ImagePicker.launchCameraAsync).mockResolvedValue({
-    canceled: false,
-    assets: [{ uri: 'file:///d.jpg', width: 1, height: 1, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
-  } as never);
+test('staff bar: the emoji opens its panel; no camera beside the paperclip (owner 2026-11-01)', async () => {
   await show();
+  expect(screen.queryByRole('button', { name: t.inbox.composer.camera })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.emoji }));
   expect(screen.getByTestId('emoji-sheet')).toBeTruthy();
   await fireEvent.press(within(screen.getByTestId('emoji-sheet')).getByRole('button', { name: t.inbox.composer.emojiDone }));
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.camera }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
-  await fireEvent.changeText(box(), 'مرحبا');
-  expect(screen.queryByRole('button', { name: t.inbox.composer.camera })).toBeNull();
+  expect(screen.queryByTestId('emoji-sheet')).toBeNull();
 });
 
 test('teacher: [emoji][text][قالب]; no paperclip, camera or microphone; «أرسل» waits for text', async () => {
