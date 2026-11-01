@@ -1,14 +1,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { Outbox } from '../../messaging/inbox/send/outbox';
-import { TemplateRegistry } from '../../messaging/whatsapp/templates/catalog/template.registry';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { guardian, heldLesson, LESSON_ID, PHONE } from './rating.fakes';
-import { RatingQueries } from './rating.queries';
+import { RatingRepo } from './rating.repo';
 
 // POST /threads/:phone/rating «إرسال تقييم الحلقة»: real controller, guard and service; DB mocked.
 
@@ -33,7 +33,7 @@ describe('POST /threads/:phone/rating', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(RatingQueries).useValue(m.queries)
+      .overrideProvider(RatingRepo).useValue(m.queries)
       .overrideProvider(TemplateRegistry).useValue(m.templates)
       .overrideProvider(Outbox).useValue(m.outbox)
       .overrideProvider(AuditService).useValue(m.audit)

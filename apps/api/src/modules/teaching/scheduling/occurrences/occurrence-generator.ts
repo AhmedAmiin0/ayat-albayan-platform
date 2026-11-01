@@ -1,12 +1,12 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { ConflictChecker } from '../conflicts/conflict-checker';
+import { AuditService } from '@/common/audit/audit.service';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { horizonWindow } from './horizon';
 import { LessonWriter, type GeneratedLesson } from './lesson-writer';
-import { resolveMeetingLink } from '../meeting-link';
+import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
 import { ruleOccurrences } from './occurrences';
-import { ruleStudents, type RuleWithLinks } from '../schedule.queries';
+import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 
 type TopUpOptions = {
   /** Weeks ahead of now (settings.booking_horizon_weeks, resolved by the caller). */

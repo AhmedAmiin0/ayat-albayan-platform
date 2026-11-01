@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { addDays } from './horizon';
 import { OccurrenceGenerator } from './occurrence-generator';
-import { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -30,7 +30,7 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly rules: ScheduleQueries,
+    private readonly rules: ScheduleRepo,
     private readonly generator: OccurrenceGenerator,
     private readonly settings: SchedulingSettings,
   ) {}

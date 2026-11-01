@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
-import type { BusyQueries } from './busy.queries';
+import type { BusyRepo } from './busy.repo';
 import { ConflictChecker } from './conflict-checker';
-import type { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
+import type { RuleProjectionRepo } from '@/modules/teaching/scheduling/rules/rule-projection.repo';
 
 const busy = { teacherLessons: vi.fn(), studentLessons: vi.fn() };
 const availability = { bookableSlots: vi.fn(), listTimeOff: vi.fn() };
 const projection = { busy: vi.fn() };
 const checker = new ConflictChecker(
-  busy as unknown as BusyQueries,
+  busy as unknown as BusyRepo,
   availability as unknown as AvailabilityRepo,
-  projection as unknown as RuleProjectionQueries,
+  projection as unknown as RuleProjectionRepo,
 );
 // Sunday 2026-10-04 17:00–17:45 Riyadh.
 const SLOT = { starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };

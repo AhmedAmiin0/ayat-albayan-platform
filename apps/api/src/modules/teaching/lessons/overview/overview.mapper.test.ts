@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { toLessonView } from '../lessons.mapper';
-import { lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from '../lessons.fakes';
+import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
+import { lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { toOverview, type OverviewParts } from './overview.mapper';
-import type { OverviewTeacherRow } from './overview.queries';
+import type { OverviewTeacherRow } from './overview.repo';
 
 // The Riyadh day Sunday 2026-10-04; the fake lesson is 14:00Z–14:45Z with أبرار.
 const window = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-04T21:00:00Z') };

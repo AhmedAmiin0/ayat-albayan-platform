@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { CoursePauseJob } from './course-pause.job';
-import type { CoursePauseQueries } from './course-pause.queries';
+import type { CoursePauseRepo } from './course-pause.repo';
 import type { CoursePauseService } from './course-pause.service';
 
 function job() {
   const queries = { due: vi.fn(async () => ['p1', 'p2', 'p3']), dueStarts: vi.fn(async (): Promise<string[]> => []) };
   const pauses = { beginPause: vi.fn(async () => undefined), resumePause: vi.fn(async (id: string) => { if (id === 'p2') throw new Error('boom'); return {}; }) };
-  return { queries, pauses, job: new CoursePauseJob(queries as unknown as CoursePauseQueries, pauses as unknown as CoursePauseService) };
+  return { queries, pauses, job: new CoursePauseJob(queries as unknown as CoursePauseRepo, pauses as unknown as CoursePauseService) };
 }
 
 describe('CoursePauseJob (automatic «استئناف» on the day after until)', () => {

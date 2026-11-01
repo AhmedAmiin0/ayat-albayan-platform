@@ -2,11 +2,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import type { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import { LessonStore } from './lesson-store';
-import type { LessonsQueries } from '@/modules/teaching/lessons/lessons.queries';
+import type { LessonsRepo } from '@/modules/teaching/lessons/lessons.repo';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 const storeOf = (writer: object, events: LessonEvents) =>
-  new LessonStore({} as LessonsQueries, writer as LessonWriter, events, fakeFamilyMove().move);
+  new LessonStore({} as LessonsRepo, writer as LessonWriter, events, fakeFamilyMove().move);
 
 describe('LessonStore.commit — the audit row rides in the same transaction (R-NFR-03)', () => {
   it('passes the audit inside the change set; there is no separate audit write to fail', async () => {

@@ -9,7 +9,7 @@ const occupying = [...OCCUPYING_LESSON_STATUSES];
 
 /** Occupying lessons overlapping a span, the input of findConflicts (R-SCH-04, issue B3). */
 @Injectable()
-export class BusyQueries {
+export class BusyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async teacherLessons(teacherId: string, span: UtcWindow): Promise<BusyLesson[]> {

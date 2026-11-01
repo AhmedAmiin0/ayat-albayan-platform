@@ -1,8 +1,8 @@
 // Test fixtures for the scheduling tests (not shipped; excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
-import type { Db } from '../../../common/db/db.module';
-import type { RuleWithLinks } from './schedule.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { Db } from '@/common/db/db.module';
+import type { RuleWithLinks } from './schedule.repo';
 
 export const RULE_ID = '00000000-0000-4000-8000-0000000000a1';
 export const TEACHER_ID = '00000000-0000-4000-8000-0000000000b1';

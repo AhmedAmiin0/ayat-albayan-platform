@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
-import { badRequest, conflict, notFound } from '../../../common/http/errors';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { rpcOutSchema, type PauseRow, type RpcOut } from './course-pause.mapper';
 
 type RpcName = 'course_pause_start' | 'course_pause_begin' | 'course_pause_set_until' | 'course_pause_resume';
@@ -29,7 +29,7 @@ export function pauseRpcError(error: PostgrestError): Error {
 
 /** course_pauses reads and the three RPCs (service role; the routes check courses.pause). docs/11 §7b. */
 @Injectable()
-export class CoursePauseQueries {
+export class CoursePauseRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async call(fn: RpcName, p: Record<string, unknown>): Promise<RpcOut> {

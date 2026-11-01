@@ -18,7 +18,7 @@ export type RuleWithLinks = Tables<'schedule_rules'> & {
 
 /** Reads of schedule_rules (service role — callers enforce roles). R-SCH-02. */
 @Injectable()
-export class ScheduleQueries {
+export class ScheduleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async rule(id: string): Promise<RuleWithLinks | null> {

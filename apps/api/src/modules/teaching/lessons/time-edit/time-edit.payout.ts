@@ -1,10 +1,10 @@
 import { payoutStatuses, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import type { LessonRow } from '../store/lesson-row';
-import { LessonsSettings } from '../lessons.settings';
+import { conflict } from '@/common/http/errors';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { isPayoutLocked, payoutScope, type TimeEditPlan } from './time-edit.plan';
-import { TimeEditQueries } from './time-edit.queries';
+import { TimeEditRepo } from './time-edit.repo';
 
 /**
  * The payout side of «عدّل الوقت» (E3, R-PAY-02): an approved or paid month is frozen, so an edit
@@ -15,7 +15,7 @@ import { TimeEditQueries } from './time-edit.queries';
 export class TimeEditPayout {
   constructor(
     private readonly settings: LessonsSettings,
-    private readonly queries: TimeEditQueries,
+    private readonly queries: TimeEditRepo,
   ) {}
 
   /** 409 `payout_locked { month, status }`, else `draft_stale` for a corrected lesson in a draft month. */

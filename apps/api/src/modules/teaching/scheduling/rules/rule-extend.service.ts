@@ -1,9 +1,9 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import { OccurrenceGenerator } from '../occurrences/occurrence-generator';
-import { ScheduleQueries } from '../schedule.queries';
-import { SchedulingSettings } from '../scheduling.settings';
+import { conflict } from '@/common/http/errors';
+import { OccurrenceGenerator } from '@/modules/teaching/scheduling/occurrences/occurrence-generator';
+import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
+import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
 
 type ExtendInput = { ruleId: string; weeks?: number; actorId: string };
 /** POST /schedule-rules/:id/extend 200 (docs/10 route 11). */
@@ -16,7 +16,7 @@ export type ExtendResult = { rule_id: string; until: string; inserted: number; c
 @Injectable()
 export class RuleExtendService {
   constructor(
-    private readonly rules: ScheduleQueries,
+    private readonly rules: ScheduleRepo,
     private readonly generator: OccurrenceGenerator,
     private readonly settings: SchedulingSettings,
   ) {}

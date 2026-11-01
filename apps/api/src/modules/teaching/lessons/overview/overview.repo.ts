@@ -1,11 +1,11 @@
 import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { StaffPhotos } from '../../../../common/storage/avatars/staff-photos';
-import { allDayRows } from '../../../people/teachers/availability/free-slots';
-import { dbError } from '../../../../common/http/http';
-import type { LessonWindow } from '../lessons.queries';
-import { LessonsSettings } from '../lessons.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { allDayRows } from '@/modules/people/teachers/availability/free-slots';
+import { dbError } from '@/common/http/http';
+import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 export type OverviewTeacherRow = {
   id: string;
@@ -30,7 +30,7 @@ export type OverviewTimeOffRow = { id: string; teacher_id: string; starts_at: st
  * Service role; the controller is admin only.
  */
 @Injectable()
-export class OverviewQueries {
+export class OverviewRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: LessonsSettings,

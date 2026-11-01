@@ -1,10 +1,10 @@
 import type { WeeklyRule } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
-import type { NewLesson, NewRule } from '../../scheduling/change-set';
-import { horizonWindow, localDateOf } from '../../scheduling/occurrences/horizon';
-import { resolveMeetingLink } from '../../scheduling/meeting-link';
-import { ruleOccurrences, type Occurrence } from '../../scheduling/occurrences/occurrences';
-import { ruleStudents, type RuleWithLinks } from '../../scheduling/schedule.queries';
+import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
+import { horizonWindow, localDateOf } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
+import { ruleOccurrences, type Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 
 export type RulePlanInput = {
   old: RuleWithLinks;

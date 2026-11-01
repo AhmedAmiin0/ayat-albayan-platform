@@ -16,17 +16,17 @@ import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
-import { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { AlertsQueries } from '@/modules/finance/subscriptions/alerts/alerts.queries';
 import { StudentTrialQueries } from '@/modules/finance/subscriptions/trial/student-trial.queries';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { LessonProposalQueries } from './proposals/lesson-proposals.queries';
-import { LessonsQueries } from './lessons.queries';
-import { OverviewQueries } from './overview/overview.queries';
+import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
+import { LessonsRepo } from './lessons.repo';
+import { OverviewRepo } from './overview/overview.repo';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
-import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
-import { TimeEditQueries } from './time-edit/time-edit.queries';
+import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
+import { TimeEditRepo } from './time-edit/time-edit.repo';
 import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 
 const USERS: Record<string, AuthUser> = {
@@ -75,17 +75,17 @@ export async function lessonsApp() {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(LessonsQueries).useValue(m.lessons)
+    .overrideProvider(LessonsRepo).useValue(m.lessons)
     .overrideProvider(LessonWriter).useValue(m.writer)
     .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(SettingsService).useValue(m.settings)
-    .overrideProvider(ScheduleQueries).useValue(m.rules)
+    .overrideProvider(ScheduleRepo).useValue(m.rules)
     .overrideProvider(ConflictChecker).useValue(m.checker)
-    .overrideProvider(TeacherMeQueries).useValue(m.me)
-    .overrideProvider(OverviewQueries).useValue(m.overview)
-    .overrideProvider(TimeEditQueries).useValue(m.time)
-    .overrideProvider(LessonProposalQueries).useValue(m.proposals)
+    .overrideProvider(TeacherMeRepo).useValue(m.me)
+    .overrideProvider(OverviewRepo).useValue(m.overview)
+    .overrideProvider(TimeEditRepo).useValue(m.time)
+    .overrideProvider(LessonProposalRepo).useValue(m.proposals)
     // The rules (legacy, no rows): no DB here.
     .overrideProvider(NotificationPolicy).useValue(fakePolicy())
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).

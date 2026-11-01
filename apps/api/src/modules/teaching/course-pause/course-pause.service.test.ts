@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { PAUSE, pauseMocks, resetPauseMocks, rpcOut, STUDENT } from './course-pause.fakes';
-import type { CoursePauseQueries } from './course-pause.queries';
+import type { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
 
 function service() {
   const m = pauseMocks();
   resetPauseMocks(m);
-  const svc = new CoursePauseService(m.queries as unknown as CoursePauseQueries, m.follow as unknown as CoursePauseFollowUps);
+  const svc = new CoursePauseService(m.queries as unknown as CoursePauseRepo, m.follow as unknown as CoursePauseFollowUps);
   return { m, svc };
 }
 

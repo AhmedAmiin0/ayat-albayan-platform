@@ -1,10 +1,10 @@
 import { lessonRatingMessage, RATING_TEMPLATE } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { Outbox, type Sent } from '../../messaging/inbox/send/outbox';
-import { waHttpError } from '../../messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplateRegistry } from '../../messaging/whatsapp/templates/catalog/template.registry';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { ratingFamilies } from './rating.plan';
-import { RatingQueries } from './rating.queries';
+import { RatingRepo } from './rating.repo';
 
 interface RatingSend {
   phone: string;
@@ -22,7 +22,7 @@ interface RatingSend {
 @Injectable()
 export class RatingSendService {
   constructor(
-    private readonly queries: RatingQueries,
+    private readonly queries: RatingRepo,
     private readonly templates: TemplateRegistry,
     private readonly outbox: Outbox,
   ) {}

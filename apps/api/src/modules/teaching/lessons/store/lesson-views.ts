@@ -1,13 +1,13 @@
 import type { LessonView } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import type { Role } from '../../../../common/auth/verify-token';
-import { StaffPhotos } from '../../../../common/storage/avatars/staff-photos';
-import { UnpaidFlags } from '../../../finance/subscriptions/alerts/unpaid-flags.service';
-import type { Page, PageQuery } from '../../../../common/http/http';
+import type { Role } from '@/common/auth/verify-token';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
+import type { Page, PageQuery } from '@/common/http/http';
 import type { LessonRow } from './lesson-row';
-import { toLessonView } from '../lessons.mapper';
-import { LessonsQueries, type LessonWindow } from '../lessons.queries';
-import { markUnpaid, upcomingStudentIds } from '../status/unpaid-mark';
+import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
+import { LessonsRepo, type LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
+import { markUnpaid, upcomingStudentIds } from '@/modules/teaching/lessons/status/unpaid-mark';
 
 const withPhoto = (view: LessonView, photos: ReadonlyMap<string, string>): LessonView =>
   photos.size ? { ...view, teacher: { ...view.teacher, avatar_url: photos.get(view.teacher.id) ?? null } } : view;
@@ -23,7 +23,7 @@ export class LessonViews {
   private readonly log = new Logger(LessonViews.name);
 
   constructor(
-    private readonly lessons: LessonsQueries,
+    private readonly lessons: LessonsRepo,
     private readonly unpaid: UnpaidFlags,
     private readonly photos: StaffPhotos,
   ) {}

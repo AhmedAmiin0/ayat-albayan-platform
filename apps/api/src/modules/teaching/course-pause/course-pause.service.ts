@@ -11,11 +11,11 @@ import {
   type CoursePauseUntil,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '../../../common/http/errors';
-import { startOfLocalDay } from '../scheduling';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { startOfLocalDay } from '@/modules/teaching/scheduling';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { toPauseView, type RpcOut } from './course-pause.mapper';
-import { CoursePauseQueries } from './course-pause.queries';
+import { CoursePauseRepo } from './course-pause.repo';
 
 type Actor = { id: string };
 type StartInput = { studentId: string; body: CoursePauseStart; actor: Actor };
@@ -42,7 +42,7 @@ const riyadhStart = (date: string): Date => startOfLocalDay(date, RIYADH_TZ);
 @Injectable()
 export class CoursePauseService {
   constructor(
-    private readonly queries: CoursePauseQueries,
+    private readonly queries: CoursePauseRepo,
     private readonly follow: CoursePauseFollowUps,
   ) {}
 

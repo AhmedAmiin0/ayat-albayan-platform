@@ -16,7 +16,7 @@ type Decision = { status: 'approved' | 'rejected'; decided_by: string; new_lesso
 
 /** lesson_proposals (migration 110, R-SCH-08). The table itself is the trail: who, when, outcome. */
 @Injectable()
-export class LessonProposalQueries {
+export class LessonProposalRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** 409 proposal_pending when the lesson already has one waiting (one pending per lesson). */

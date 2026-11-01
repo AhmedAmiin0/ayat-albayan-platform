@@ -19,7 +19,7 @@ const RULE_COLUMNS =
 
 /** Loads the active rules of a teacher and of some students, and projects them (rule-projection). */
 @Injectable()
-export class RuleProjectionQueries {
+export class RuleProjectionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async busy(q: ProjectionQuery, now = new Date()): Promise<Projected> {

@@ -15,7 +15,7 @@ import { NotificationPolicy, type RulesReader } from '@/modules/messaging/notifi
 import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 import { pauseMocks, resetPauseMocks, verify } from './course-pause.fakes';
 import { CoursePauseLessonsBack } from './course-pause.lessons-back';
-import { CoursePauseQueries } from './course-pause.queries';
+import { CoursePauseRepo } from './course-pause.repo';
 
 const guardian = { id: 'G1', name: 'أم سهيلة', phone_e164: '+447700900001', tz: 'Europe/London', profile_id: 'pG1' };
 export const TEACHER = {
@@ -43,7 +43,7 @@ export async function pauseNoticesApp() {
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CoursePauseQueries).useValue(m.queries)
+    .overrideProvider(CoursePauseRepo).useValue(m.queries)
     .overrideProvider(CoursePauseLessonsBack).useValue({ bookBack: async () => 0 })
     .overrideProvider(SubscriptionAlertsService).useValue({ evaluateStudents: async () => 0 })
     .overrideProvider(AuditService).useValue({ record: async () => undefined })

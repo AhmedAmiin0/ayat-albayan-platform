@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { HorizonJob } from './horizon.job';
 import type { OccurrenceGenerator } from './occurrence-generator';
-import { ruleRow } from '../scheduling.fakes';
-import { SchedulingSettings } from '../scheduling.settings';
-import type { ScheduleQueries } from '../schedule.queries';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
+import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 
 const rules = { activeRuleIds: vi.fn(), rule: vi.fn(), endExpired: vi.fn() };
 const generator = { topUp: vi.fn() };
@@ -12,7 +12,7 @@ const NOW = new Date('2026-10-02T03:00:00Z');
 
 function job() {
   return new HorizonJob(
-    rules as unknown as ScheduleQueries,
+    rules as unknown as ScheduleRepo,
     generator as unknown as OccurrenceGenerator,
     readerOf(SchedulingSettings, { booking_horizon_weeks: 5 }),
   );

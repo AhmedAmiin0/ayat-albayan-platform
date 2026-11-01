@@ -2,9 +2,9 @@ import type { ScheduleOverview } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
-import type { LessonWindow } from '@/modules/teaching/lessons/lessons.queries';
+import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { toOverview } from './overview.mapper';
-import { OverviewQueries } from './overview.queries';
+import { OverviewRepo } from './overview.repo';
 
 /**
  * GET /lessons/overview (R-SCH-09, R-NFR-08): one round trip of six independent reads — teachers,
@@ -14,7 +14,7 @@ import { OverviewQueries } from './overview.queries';
 @Injectable()
 export class OverviewService {
   constructor(
-    private readonly queries: OverviewQueries,
+    private readonly queries: OverviewRepo,
     private readonly teachers: TeachersRepo,
     private readonly views: LessonViews,
   ) {}

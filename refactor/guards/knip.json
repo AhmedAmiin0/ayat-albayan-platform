@@ -113,7 +113,7 @@
   "apps/api/src/modules/teaching/scheduling/occurrences/horizon.ts types HorizonInput",
   "apps/api/src/modules/teaching/scheduling/occurrences/lesson-writer.ts types GenerateInput",
   "apps/api/src/modules/teaching/scheduling/occurrences/lesson-writer.ts types OccurrenceRow",
-  "apps/api/src/modules/teaching/scheduling/rules/rule-projection.queries.ts types ProjectionQuery",
+  "apps/api/src/modules/teaching/scheduling/rules/rule-projection.repo.ts types ProjectionQuery",
   "apps/api/src/modules/teaching/scheduling/rules/rule-projection.ts types ProjectionInput",
   "apps/mobile/src/account/index.ts types AccountScreenProps",
   "apps/mobile/src/account/screens/AccountScreen.tsx types AccountScreenProps",
