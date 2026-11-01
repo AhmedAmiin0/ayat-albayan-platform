@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../guardians/fake-db';
-import { candidates, link, linkTarget, linkedOf, phoneTaken } from './users.links.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { candidates, link, linkTarget, linkedOf, phoneTaken } from './users.links.repo';
 
 describe('link queries', () => {
   it('finds a student by name or AB code, only without a login, with wildcards neutralised', async () => {

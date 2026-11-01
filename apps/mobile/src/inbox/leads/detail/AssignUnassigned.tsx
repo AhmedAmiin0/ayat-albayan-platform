@@ -8,7 +8,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '../../ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 /**
  * «عيّن العملاء الذين بلا مسؤول» (admin, leads.assign): POST /leads/assign-unassigned spreads every

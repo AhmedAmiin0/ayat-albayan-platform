@@ -8,8 +8,8 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { ErrorLine } from '../../ErrorLine';
-import type { Lead } from '../../shared/types';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import type { Lead } from '@/inbox/shared/types';
 import { useSalesPeople } from './use-sales-people';
 
 const NONE = '';

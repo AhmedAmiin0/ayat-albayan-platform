@@ -1,7 +1,7 @@
 import type { Gender, LeadSource } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';

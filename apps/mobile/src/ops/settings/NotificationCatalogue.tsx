@@ -1,7 +1,7 @@
 import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { numberLine } from './catalogue-words';

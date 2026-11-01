@@ -1,7 +1,7 @@
 import { PAYMENT_METHODS, earningIdsOf, payCeiling, type PaymentMethod, type TeacherEarningView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
 import { FormLabel } from '@/payments/FormLabel';

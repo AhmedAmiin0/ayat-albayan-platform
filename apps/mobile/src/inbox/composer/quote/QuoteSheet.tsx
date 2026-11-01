@@ -6,10 +6,10 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { PricingSteps } from '@/finance';
-import { ErrorLine } from '../../ErrorLine';
-import { ClosedNote } from '../../thread/components/ClosedNote';
-import { ReplySheetFrame } from '../../saved-replies/quick-list/ReplySheetFrame';
-import { appendComposerText } from '../draft-store';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
+import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
+import { appendComposerText } from '@/inbox/composer/draft-store';
 import { QuoteActions } from './QuoteActions';
 import { useQuoteSend, useQuoteSheet } from './use-quote-sheet';
 

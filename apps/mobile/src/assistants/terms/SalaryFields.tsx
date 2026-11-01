@@ -1,10 +1,10 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { Field } from '@/core/ui/form/Field';
-import { CurrencyPills } from '../list/CurrencyPills';
-import { fieldError } from '../api/errors';
+import { CurrencyPills } from '@/assistants/list/CurrencyPills';
+import { fieldError } from '@/assistants/api/errors';
 import { StartDayPicker } from './StartDayPicker';
 import type { TermsErrors, TermsForm } from './terms-form';
 

@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { conflict } from '../../../../common/http/errors';
-import { isStaff, type GuardianRec, type NewProfile, type ProfileRec, type StudentRec, type SubjectStore } from '../sign-in.ports';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { conflict } from '@/common/http/errors';
+import { isStaff, type GuardianRec, type NewProfile, type ProfileRec, type StudentRec, type SubjectStore } from '@/modules/people/sign-in/sign-in.ports';
 
 const PROFILE = 'id, role, disabled_at, phone_e164';
 
@@ -21,7 +21,7 @@ const toProfile = (r: ProfileRow): ProfileRec => ({ id: r.id, role: r.role, disa
 
 /** SubjectStore on the service-role client: who a phone, a student code or a username names. */
 @Injectable()
-export class SubjectsQueries implements SubjectStore {
+export class SubjectsRepo implements SubjectStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async guardianByPhone(phone: string): Promise<GuardianRec | null> {

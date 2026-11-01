@@ -1,6 +1,6 @@
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 interface ReviewNoticesProps {
   /** The check's clashes, one line each (booking.conflict.<kind>). */

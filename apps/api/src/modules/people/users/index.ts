@@ -5,6 +5,6 @@ export {
   linkTarget,
   phoneTaken,
   syncTeacher,
-} from './store/users.links.queries';
+} from './store/users.links.repo';
 export { guardedError, phoneAware } from './users.errors';
 export { UsersModule } from './users.module';

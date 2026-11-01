@@ -2,8 +2,8 @@ import type { MessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '../../ErrorLine';
-import { useMessageAction } from '../../thread/hooks/use-thread';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
 /**
  * Under a row the admin handed to their own WhatsApp (R-MSG-03; retry and «أرسلها بنفسك» are in

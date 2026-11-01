@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
-import { RolesModule } from '../roles/roles.module';
+import { loadEnv } from '@/config/env/env';
+import { RolesModule } from '@/modules/people/roles/roles.module';
 import { UserAccess } from './users.access';
 import { SupabaseAuthAdmin } from './auth/users.auth.supabase';
 import { StaffPhotoController } from './photo/staff-photo.controller';
@@ -8,7 +8,7 @@ import { UsersController } from './users.controller';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { UserEffects, UserPorts } from './users.ports';
-import { UsersQueries } from './store/users.queries';
+import { UsersRepo } from './store/users.repo';
 import { UsersService } from './users.service';
 import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
@@ -23,7 +23,7 @@ import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/
     UserAccess,
     UserPorts,
     UserEffects,
-    { provide: USER_STORE, useClass: UsersQueries },
+    { provide: USER_STORE, useClass: UsersRepo },
     { provide: AUTH_ADMIN, useClass: SupabaseAuthAdmin },
     {
       provide: USERS_CONFIG,

@@ -1,9 +1,9 @@
 import type { UserRole } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { phoneAware } from '../../users/users.errors';
-import { phoneTaken } from '../../users/store/users.links.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { phoneAware } from '@/modules/people/users/users.errors';
+import { phoneTaken } from '@/modules/people/users/store/users.links.repo';
 import { selfWritable, type AccountRow, type AccountStore, type SelfPatch } from './account.ports';
 
 interface RoleName {
@@ -14,7 +14,7 @@ interface RoleName {
 
 /** AccountStore on the service-role client: the caller's own profile row, whitelisted writes only. */
 @Injectable()
-export class AccountQueries implements AccountStore {
+export class AccountRepo implements AccountStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(id: string): Promise<AccountRow | null> {

@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { ErrorLine } from '../ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { FamilyFields } from './FamilyFields';
 import { CLEAR } from './PreferenceFields';
 import type { QualErrors, QualForm, TextField } from './qualification-form';

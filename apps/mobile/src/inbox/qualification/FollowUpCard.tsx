@@ -7,7 +7,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 import { followUpLines } from './follow-up-text';
 import { Heading } from './Heading';

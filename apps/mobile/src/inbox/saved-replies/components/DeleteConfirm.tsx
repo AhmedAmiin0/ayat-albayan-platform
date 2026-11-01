@@ -2,9 +2,9 @@ import type { SavedReply } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '../../ErrorLine';
-import { useDeleteReply } from '../hooks/api';
-import { replyError } from '../lib/reply-error';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { useDeleteReply } from '@/inbox/saved-replies/hooks/api';
+import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 
 /** «حذف الرد …؟» under its row: the reply and its file go for good; sent messages stay. */
 export function DeleteConfirm({ reply, onDone }: { reply: SavedReply; onDone: () => void }) {

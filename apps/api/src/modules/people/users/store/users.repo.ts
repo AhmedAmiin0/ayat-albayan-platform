@@ -1,9 +1,9 @@
 import { isFamilyEmail, type LinkKind, type UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { guardedError, phoneAware } from '../users.errors';
-import * as links from './users.links.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { guardedError, phoneAware } from '@/modules/people/users/users.errors';
+import * as links from './users.links.repo';
 import { mapListRow } from './users.rows';
 import type { NewProfile, NewTeacher, ProfilePatch, RefRow, StaffProfile, UserRow, UserStore } from './users.store';
 
@@ -24,7 +24,7 @@ const listArgs = (q: UsersListQuery, lim: number, off: number) => ({
 
 /** UserStore on the service-role client (migrations 20261006000281-288). */
 @Injectable()
-export class UsersQueries implements UserStore {
+export class UsersRepo implements UserStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(query: UsersListQuery): Promise<{ rows: UserRow[]; total: number }> {

@@ -1,7 +1,7 @@
 import type { PackageSize, SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** A package without price, currency, fx, quote or notes. */
 interface PortalPackageRow {
@@ -16,7 +16,7 @@ interface PortalPackageRow {
 
 /** «الباقة» reads (service role). The balance comes from BalanceQueries (v_subscription_balance). */
 @Injectable()
-export class PortalPackageQueries {
+export class PortalPackageRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The student's packages in FIFO order (as SubscriptionsQueries.forStudent): the last is the current one; never a cancelled one. */

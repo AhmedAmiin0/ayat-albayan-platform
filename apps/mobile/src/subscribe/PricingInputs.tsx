@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { DiscountField } from '@/finance/pricing/DiscountField';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { Stepper } from '@/finance/pricing/Stepper';

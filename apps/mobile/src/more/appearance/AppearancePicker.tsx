@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { AppearancePref } from './appearance';
-import { Section } from '../Section';
+import { Section } from '@/core/ui/surface/Section';
 import { useAppearancePref } from './useAppearancePref';
 
 const appearancePills = (): readonly FilterPill<AppearancePref>[] => [

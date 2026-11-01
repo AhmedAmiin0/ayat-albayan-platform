@@ -6,11 +6,11 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '../../ErrorLine';
-import { type ChatFileSource, pickChatFile } from '../../composer/send-file';
-import { uploadReplyFile } from '../hooks/api';
-import { replyError } from '../lib/reply-error';
-import { SavedReplyChip } from '../components/SavedReplyChip';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { type ChatFileSource, pickChatFile } from '@/inbox/composer/send-file';
+import { uploadReplyFile } from '@/inbox/saved-replies/hooks/api';
+import { replyError } from '@/inbox/saved-replies/lib/reply-error';
+import { SavedReplyChip } from '@/inbox/saved-replies/components/SavedReplyChip';
 
 /** The editor's file: kept as it was (no path), a new upload (path), or none. */
 export type EditorFile = { name: string; path?: string } | null;

@@ -1,7 +1,7 @@
 import type { AcademySettings } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { InsetGroup } from '@/core/ui/surface/inset';
 

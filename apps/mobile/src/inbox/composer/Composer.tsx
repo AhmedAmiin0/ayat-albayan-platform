@@ -2,22 +2,22 @@ import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/share
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
-import { ClosedRow } from '../threads-list/ClosedRow';
+import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
-import { ErrorLine } from '../ErrorLine';
-import { GateNote } from '../thread/components/GateNote';
-import { OpenRow } from '../threads-list/OpenRow';
-import { QuoteStrip } from '../messages/components/QuoteStrip';
-import { SavedReplyChip } from '../saved-replies/components/SavedReplyChip';
-import { SavedReplyPicker } from '../saved-replies/components/SavedReplyPicker';
-import { SlashSuggestions } from '../saved-replies/quick-list/SlashSuggestions';
-import { useSavedReplyDraft } from '../saved-replies/hooks/use-saved-reply';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { GateNote } from '@/inbox/thread/components/GateNote';
+import { OpenRow } from '@/inbox/threads-list/OpenRow';
+import { QuoteStrip } from '@/inbox/messages/components/QuoteStrip';
+import { SavedReplyChip } from '@/inbox/saved-replies/components/SavedReplyChip';
+import { SavedReplyPicker } from '@/inbox/saved-replies/components/SavedReplyPicker';
+import { SlashSuggestions } from '@/inbox/saved-replies/quick-list/SlashSuggestions';
+import { useSavedReplyDraft } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
-import { useThreadMode } from '../thread/hooks/thread-mode';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { errorLines, useComposerSend } from './use-composer-send';
 
 /**

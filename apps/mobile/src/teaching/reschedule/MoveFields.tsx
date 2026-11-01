@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ruleFromSlot } from '@/booking/shared/slots';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { DayChips } from '@/inbox/qualification/DayChips';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
