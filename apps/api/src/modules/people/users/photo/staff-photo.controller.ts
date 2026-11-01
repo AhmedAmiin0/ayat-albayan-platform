@@ -1,12 +1,12 @@
 import { avatarSetSchema, avatarUploadSchema, type SignedUpload, type StaffPhotoView } from '@ab/shared';
 import { Body, Controller, Delete, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { StaffPhotoAdmin } from '../../../../common/storage/avatars/staff-photo-admin';
-import { UserPorts } from '../users.ports';
-import { assertMayTouch } from '../users.rules';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { StaffPhotoAdmin } from '@/common/storage/avatars/staff-photo-admin';
+import { UserAccess } from '@/modules/people/users/users.access';
+import { assertMayTouch } from '@/modules/people/users/users.rules';
 
 const uuid = new ParseUUIDPipe();
 type Kind = 'teacher' | 'user';
@@ -24,7 +24,7 @@ type Kind = 'teacher' | 'user';
 export class StaffPhotoController {
   constructor(
     private readonly photos: StaffPhotoAdmin,
-    private readonly ports: UserPorts,
+    private readonly access: UserAccess,
   ) {}
 
   @Post('teachers/:id/avatar/upload-url')
@@ -73,7 +73,7 @@ export class StaffPhotoController {
   }
 
   private async mayTouch(id: string, user: AuthUser): Promise<void> {
-    const { state, target } = await this.ports.access.target(id);
+    const { state, target } = await this.access.target(id);
     assertMayTouch({ id: user.id, permissions: user.permissions ?? [] }, state, target);
   }
 }

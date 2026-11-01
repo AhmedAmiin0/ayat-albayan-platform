@@ -13,12 +13,13 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, Header, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { UsersService, type Actor } from './users.service';
+import { UsersUpdateService } from './update/users.update.service';
 
 const actorOf = (user: AuthUser): Actor => ({ id: user.id, permissions: user.permissions ?? [] });
 const uuid = new ParseUUIDPipe();
@@ -34,6 +35,7 @@ const uuid = new ParseUUIDPipe();
 export class UsersController {
   constructor(
     private readonly users: UsersService,
+    private readonly updater: UsersUpdateService,
     private readonly creator: UsersCreateService,
     private readonly lifecycle: UsersLifecycleService,
   ) {}
@@ -76,7 +78,7 @@ export class UsersController {
   @Patch(':id')
   @Permissions('users.write')
   update(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserDetail> {
-    return this.users.update(id, parseOrThrow(userUpdateSchema, body), actorOf(user));
+    return this.updater.update(id, parseOrThrow(userUpdateSchema, body), actorOf(user));
   }
 
   /** 409 cannot_disable_self / last_admin. Also bans the login and revokes its sessions. */
