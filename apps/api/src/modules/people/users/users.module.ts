@@ -7,13 +7,13 @@ import { StaffPhotoController } from './photo/staff-photo.controller';
 import { UsersController } from './users.controller';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
-import { UsersRepo } from './store/users.repo';
+import { USER_STORE_PROVIDERS } from './store/users.store.provider';
 import { UsersService } from './users.service';
 import { UserJournal } from './audit/users.journal';
 import { UserLogins } from './auth/users.logins';
 import { UserProfileWriter } from './update/users.profile-writer';
 import { UsersUpdateService } from './update/users.update.service';
-import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/users.store';
+import { AUTH_ADMIN, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
 /** «المستخدمون» (owner, 2026-10-06). PermissionCache comes from AuthModule, AuditService from AuditModule. */
 @Module({
@@ -28,13 +28,16 @@ import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/
     UserProfileWriter,
     UserLogins,
     UserJournal,
-    { provide: USER_STORE, useClass: UsersRepo },
+    ...USER_STORE_PROVIDERS,
     { provide: AUTH_ADMIN, useClass: SupabaseAuthAdmin },
     {
       provide: USERS_CONFIG,
       useFactory: (): UsersConfig => {
         const env = loadEnv();
-        return { passwordMinLength: env.AUTH_PASSWORD_MIN_LENGTH, setPasswordUrl: `${env.WEB_ORIGIN.replace(/\/+$/, '')}/set-password` };
+        return {
+          passwordMinLength: env.AUTH_PASSWORD_MIN_LENGTH,
+          setPasswordUrl: `${env.WEB_ORIGIN.replace(/\/+$/, '')}/set-password`,
+        };
       },
     },
   ],
