@@ -1094,14 +1094,8 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 10
-    },
-    "no-restricted-globals": {
-      "count": 1
     }
   },
   "src/common/storage/storage.signed-many.test.ts": {
@@ -5619,15 +5613,6 @@
   "src/modules/messaging/push/receipts.transport.ts": {
     "@typescript-eslint/require-await": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "ab/no-unchecked-json": {
-      "count": 1
-    },
-    "no-restricted-globals": {
-      "count": 1
     }
   },
   "src/modules/messaging/reminders/chain-db.fake.ts": {
@@ -9077,17 +9062,8 @@
     }
   },
   "src/modules/platform/google-sync/http/google-http.oauth.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "ab/no-unchecked-json": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
-    },
-    "no-restricted-globals": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/http/google-http.sheets.ts": {
