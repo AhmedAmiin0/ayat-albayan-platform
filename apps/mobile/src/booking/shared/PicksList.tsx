@@ -1,7 +1,7 @@
 import { wallParts } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { SectionLabel } from '@/students/list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
