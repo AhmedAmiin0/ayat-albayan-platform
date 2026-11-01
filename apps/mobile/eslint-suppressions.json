@@ -4027,11 +4027,6 @@
       "count": 2
     }
   },
-  "src/inbox/composer/voice/voice-machine.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/voice/voice-support.test.ts": {
     "@typescript-eslint/no-empty-function": {
       "count": 3

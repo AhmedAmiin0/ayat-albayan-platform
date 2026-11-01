@@ -4683,11 +4683,8 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.test.ts": {
@@ -5523,11 +5520,8 @@
     }
   },
   "src/modules/messaging/numbers/numbers.service.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/numbers/numbers.settings.test.ts": {

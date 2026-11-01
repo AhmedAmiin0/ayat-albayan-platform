@@ -41,27 +41,29 @@ export type VoiceEvent =
 export const IDLE: VoiceState = { kind: 'idle' };
 
 const live = (s: VoiceState): boolean => s.kind === 'holding' || s.kind === 'locked';
+const sendable = (s: VoiceState): boolean => live(s) || s.kind === 'stopped' || s.kind === 'failed';
+
+type Next<K extends VoiceEvent['type']> = (
+  s: VoiceState,
+  e: Extract<VoiceEvent, { type: K }>,
+) => VoiceState;
+
+/** One transition per event (D5: a table); one that does not apply leaves the state as it is. */
+const NEXT: { [K in VoiceEvent['type']]: Next<K> } = {
+  arm: (s) => (s.kind === 'idle' ? { kind: 'arming' } : s),
+  reset: (s) => (s.kind === 'sending' ? s : IDLE),
+  recording: (s, e) => (s.kind === 'arming' ? { kind: e.locked ? 'locked' : 'holding' } : s),
+  lock: (s) => (s.kind === 'holding' ? { kind: 'locked' } : s),
+  keep: (s, e) => (live(s) ? { kind: 'stopped', take: e.take } : s),
+  send: (s, e) => (sendable(s) ? { kind: 'sending', take: e.take } : s),
+  sent: (s) => (s.kind === 'sending' ? IDLE : s),
+  fail: (s) => (s.kind === 'sending' ? { kind: 'failed', take: s.take } : s),
+};
 
 /** The next state; an event that does not apply leaves the state as it is. */
 export function voiceReducer(s: VoiceState, e: VoiceEvent): VoiceState {
-  switch (e.type) {
-    case 'arm':
-      return s.kind === 'idle' ? { kind: 'arming' } : s;
-    case 'reset':
-      return s.kind === 'sending' ? s : IDLE;
-    case 'recording':
-      return s.kind === 'arming' ? { kind: e.locked ? 'locked' : 'holding' } : s;
-    case 'lock':
-      return s.kind === 'holding' ? { kind: 'locked' } : s;
-    case 'keep':
-      return live(s) ? { kind: 'stopped', take: e.take } : s;
-    case 'send':
-      return live(s) || s.kind === 'stopped' || s.kind === 'failed' ? { kind: 'sending', take: e.take } : s;
-    case 'sent':
-      return s.kind === 'sending' ? IDLE : s;
-    case 'fail':
-      return s.kind === 'sending' ? { kind: 'failed', take: s.take } : s;
-  }
+  const next = NEXT[e.type] as Next<VoiceEvent['type']>;
+  return next(s, e);
 }
 
 /** The microphone is open. */

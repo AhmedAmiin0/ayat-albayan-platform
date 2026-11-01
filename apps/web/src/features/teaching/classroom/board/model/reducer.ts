@@ -1,5 +1,4 @@
-import type { JoinRole } from '@ab/shared';
-import type { BoardMessage } from './messages';
+import type { BoardKind, BoardMessage, JoinRole } from '@ab/shared';
 import { canAllowStudents, canDraw, canManageBoard, type BoardState, type Stroke } from './model';
 
 /** A message and who sent it (the local person for their own actions). Roles come from the token. */
@@ -33,13 +32,19 @@ function undo(state: BoardState, own: { id: string; by: string }): BoardState {
   return strokes.length === state.strokes.length ? state : { ...state, strokes };
 }
 
+type Of<K extends BoardKind> = Extract<BoardMessage, { t: K }>;
+type Apply<K extends BoardKind> = (
+  state: BoardState,
+  input: { msg: Of<K>; from: BoardInput['from'] },
+) => BoardState;
+
 /** Strokes from anyone in the room; the flags only from the staff. */
-function sync(state: BoardState, { msg, from }: BoardInput): BoardState {
-  if (msg.t !== 'sync' || from.role === null) return state;
+const sync: Apply<'sync'> = (state, { msg, from }) => {
+  if (from.role === null) return state;
   const merged = merge(state, msg.strokes);
   if (!canManageBoard(from.role)) return merged;
   return { ...merged, studentsCanDraw: msg.studentsCanDraw, open: msg.open, allowed: msg.allowed };
-}
+};
 
 /** «سماح» adds one guest to the drawers, «إيقاف كتابة» takes them out (staff only). */
 function allowOne(state: BoardState, { who, allow }: { who: string; allow: boolean }): BoardState {
@@ -47,30 +52,29 @@ function allowOne(state: BoardState, { who, allow }: { who: string; allow: boole
   return { ...state, allowed: allow ? [...others, who] : others };
 }
 
+/** One rule per message kind (D5: a transition table); a refused message leaves the board as is. */
+const APPLY: { [K in BoardKind]: Apply<K> } = {
+  draw: (state, { msg, from }) =>
+    msg.stroke.by === from.identity && canDraw(from, state) ? draw(state, msg.stroke) : state,
+  undo: (state, { msg, from }) => undo(state, { id: msg.id, by: from.identity }),
+  clear: (state, { from }) => (canManageBoard(from.role) ? { ...state, strokes: [] } : state),
+  perm: (state, { msg, from }) =>
+    canAllowStudents(from.role) ? { ...state, studentsCanDraw: msg.studentsCanDraw } : state,
+  open: (state, { msg, from }) =>
+    canManageBoard(from.role) ? { ...state, open: msg.open } : state,
+  allow: (state, { msg, from }) => (canManageBoard(from.role) ? allowOne(state, msg) : state),
+  'sync-request': (state) => state,
+  sync,
+};
+
 /**
  * The board after one message. Permissions are checked here, on receive, not only when sending:
  * a stroke must be the sender's own and the sender must be allowed to draw; clear / open belong to
  * the staff, «السماح للطلاب بالكتابة» to the teacher or admin; anything else leaves the board as is.
  */
-export function boardReducer(state: BoardState, { msg, from }: BoardInput): BoardState {
-  switch (msg.t) {
-    case 'draw':
-      return msg.stroke.by === from.identity && canDraw(from, state) ? draw(state, msg.stroke) : state;
-    case 'undo':
-      return undo(state, { id: msg.id, by: from.identity });
-    case 'clear':
-      return canManageBoard(from.role) ? { ...state, strokes: [] } : state;
-    case 'perm':
-      return canAllowStudents(from.role) ? { ...state, studentsCanDraw: msg.studentsCanDraw } : state;
-    case 'open':
-      return canManageBoard(from.role) ? { ...state, open: msg.open } : state;
-    case 'allow':
-      return canManageBoard(from.role) ? allowOne(state, msg) : state;
-    case 'sync':
-      return sync(state, { msg, from });
-    default:
-      return state;
-  }
+export function boardReducer(state: BoardState, input: BoardInput): BoardState {
+  const apply = APPLY[input.msg.t] as Apply<BoardKind>;
+  return apply(state, input);
 }
 
 /** Answer a late joiner's sync-request? Anyone holding strokes; the staff also for the flags alone. */

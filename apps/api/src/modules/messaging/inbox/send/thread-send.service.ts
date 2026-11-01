@@ -1,9 +1,10 @@
-import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import type { ThreadTemplate, ThreadText } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
+import { blockedTemplate, templateRefusal } from './template-guards';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { sendLine, textLine } from './text-line';
@@ -32,6 +33,10 @@ export interface ThreadSend<T> {
   dedup?: string;
 }
 
+/** The teacher's dedup space, or the admin's. */
+const scopeOf = (scope: TeacherScope | null | undefined): string =>
+  scope ? `teacher:${scope.teacherId}` : 'admin';
+
 /**
  * Rule 8: every inbox send carries the client's request id, so a retried POST (lost answer, double
  * tap) returns the first row instead of messaging the family twice. 400 without one. The key is scoped to who sends
@@ -41,7 +46,7 @@ export interface ThreadSend<T> {
 export function dedupKey<T>(s: ThreadSend<T>): string {
   if (s.dedup) return s.dedup;
   if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
-  const who = s.sales ? `sales:${s.sales.salesId}` : s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
+  const who = s.sales ? `sales:${s.sales.salesId}` : scopeOf(s.scope);
   return `${who}:${s.phone}:${s.input.clientRequestId}`;
 }
 
@@ -112,18 +117,12 @@ export class ThreadSendService {
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
-    // Its link is signed per lesson and student by «ابعت طلب الرأي» (FeedbackModule); a hand-made button is a dead link.
-    if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
-    // Likewise «ابعت لينك الحلقة» (ClassroomModule) mints the one-lesson token.
-    if (s.input.key === 'lesson_join_link') throw waHttpError('use_join_link', 400);
-    // «إرسال تقييم الحلقة» picks the lesson and its date itself (rule 6) and sets the button payloads.
-    if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
-    // The sign-in code (docs/30) is only ever sent by the API itself, never typed by hand.
-    if (s.input.key === ACCOUNT_CODE_TEMPLATE) throw waHttpError('template_not_allowed', 403);
+    const blocked = blockedTemplate(s.input.key);
+    if (blocked) throw blocked;
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
-    if (s.restricted && !restrictedMay(template)) throw waHttpError('template_not_allowed', 403);
-    if (template.header_format === 'document') throw waHttpError('needs_document', 400);
+    const refused = templateRefusal(template, { restricted: s.restricted === true });
+    if (refused) throw refused;
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });
     const thread = await this.queries.thread(s.phone);

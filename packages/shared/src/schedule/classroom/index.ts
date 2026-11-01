@@ -8,3 +8,4 @@ export * from './internal-meetings.js';
 export * from './meeting-invites.js';
 export * from './student-recordings.js';
 export * from './meeting-mode.js';
+export * from './board.js';
