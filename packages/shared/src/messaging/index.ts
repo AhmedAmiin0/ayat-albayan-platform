@@ -31,6 +31,7 @@ export * from './chat/thread-people.js';
 export * from './lesson/timing.js';
 export * from './lesson/trial-chat.js';
 export * from './chat/unavailable.js';
+export * from './stickers/stickers.js';
 export * from './markers/chat-markers.js';
 export * from './markers/marker-notes.js';
 export * from './markers/echo-payload.js';
