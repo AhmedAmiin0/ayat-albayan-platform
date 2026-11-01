@@ -28,8 +28,8 @@ export function toLinkView(row: LinkRow, ctx: { payOrigin: string; now: Date }):
 }
 
 /**
- * The public page: the first name, the amount and the package; nothing else about the family. `sandbox`:
- * the saved key is not a live one (the page says it is a test page).
+ * The public page: the first name, the amount and the package; nothing else about the family.
+ * `sandbox`: the saved key is not a live one (the page says it is a test page).
  */
 export function toPublicLink(row: LinkRow, now: Date): PublicPaymentLink {
   const status = effectiveLinkStatus({ status: statusOf(row), expires_at: row.expires_at }, now);

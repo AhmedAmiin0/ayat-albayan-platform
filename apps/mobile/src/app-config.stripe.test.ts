@@ -76,7 +76,7 @@ test('the default config is app.json’s (plus the FCM file)', () => {
   expect(normal.android?.package).toBe(app.expo.android.package);
   expect(normal.ios?.bundleIdentifier).toBe(app.expo.ios.bundleIdentifier);
   expect(configFor('preview').android?.package).toBe(app.expo.android.package);
-  // FEATURE_STRIPE=live: the API's pay page names this package to bring the payer back into the normal app.
+  // FEATURE_STRIPE=live: the API's pay page names this package (back into the normal app).
   expect(normal.android?.package).toBe(STRIPE_APP_PACKAGE);
 });
 

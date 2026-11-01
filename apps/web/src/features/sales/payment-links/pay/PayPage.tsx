@@ -27,10 +27,11 @@ type Props = { token: string; back: PayReturn };
 const loadErrorText = (e: unknown): string => (e instanceof ApiError && e.status === 404 ? P.notFound : t.common.error);
 
 /**
- * /pay/:token (docs/30, with FEATURE_STRIPE (test or live); no login): the family's payment page. GET
- * /pay/:token gives the first name, the amount and the lessons; «ادفع الآن» goes to Stripe Checkout through
- * the API, which brings the payer back here with `?done=1` or `?cancelled=1`. A wrong token is «هذا الرابط
- * غير صحيح». The test notice shows only while the API's key is a sandbox one (`sandbox`).
+ * /pay/:token (docs/30, with FEATURE_STRIPE test or live; no login): the family's payment page.
+ * GET /pay/:token gives the first name, the amount and the lessons; «ادفع الآن» goes to Stripe
+ * Checkout through the API, which brings the payer back here with `?done=1` or `?cancelled=1`.
+ * A wrong token is «هذا الرابط غير صحيح». The test notice shows only while the API's key is a
+ * sandbox one (`sandbox`).
  */
 export function PayPage({ token, back }: Props) {
   const query = useQuery(publicLinkQuery(token));
@@ -44,7 +45,9 @@ export function PayPage({ token, back }: Props) {
           <LanguageSwitch />
         </div>
         <Cartouche>{P.title}</Cartouche>
-        {query.data?.sandbox && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{P.testNotice}</p>}
+        {query.data?.sandbox && (
+          <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{P.testNotice}</p>
+        )}
         {query.isPending && (
           <div role="status" aria-busy="true" className="h-40 animate-pulse rounded-lg bg-sunk">
             <span className="sr-only">{t.common.loading}</span>
