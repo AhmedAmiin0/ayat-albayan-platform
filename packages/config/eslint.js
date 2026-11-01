@@ -10,6 +10,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { boundariesPlugin, TESTS } from './eslint-boundaries.js';
 import { dateRestrictions } from './eslint-dates.js';
+import { flowBlocks, flowRules } from './eslint-flow.js';
 import { syntaxBlocks } from './eslint-syntax.js';
 
 // Oxlint runs the rules of the root .oxlintrc.json first (`pnpm lint:ox`, a CI step before ESLint); ESLint turns
@@ -45,8 +46,6 @@ export const hardRules = {
   'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
   '@typescript-eslint/no-explicit-any': 'error',
   '@typescript-eslint/no-non-null-assertion': 'error',
-  complexity: ['error', 10],
-  'max-depth': ['error', 3],
   'no-console': 'error',
   eqeqeq: ['error', 'always', { null: 'ignore' }],
   // Nest @Module() classes are empty by design.
@@ -114,8 +113,9 @@ export function config(root, ...extra) {
         // *.mts: vitest configs that no tsconfig includes.
         parserOptions: { projectService: { allowDefaultProject: ['*.mts'] }, tsconfigRootDir: root },
       },
-      rules: { ...hardRules, ...typedRules },
+      rules: { ...hardRules, ...flowRules, ...typedRules },
     },
+    ...flowBlocks,
     { rules: { 'no-restricted-properties': ['error', ...dateRestrictions] } },
     ...syntaxBlocks(TESTS),
     { files: TESTS, rules: testRules },

@@ -32,8 +32,8 @@ Every new rule lands with a one-time baseline (`eslint --suppress-rule`), and it
 | Z-4 | zod in every client workspace | g5 | — | 2 of 5 workspaces → 5 of 5 |
 | Z-5 | Own-API responses parsed | selectors `CallExpression[callee.name=/^api(Fetch\|Send)$/][typeArguments]` and `CallExpression[callee.property.name=/^api(Fetch\|Send)$/][typeArguments]` (the generic overload, bare or `client.`) | — | web 332 + mobile 240 @e214 → 0 (z14 per domain, §3.3) |
 | F-1 | No else-if chains of 3+ | selector `IfStatement[alternate.type='IfStatement'][alternate.alternate.type='IfStatement']` | — | 20 functions → 0 |
-| F-2 | No nested ternary, lonely `if` or `else` after `return` | `no-nested-ternary`, `no-lonely-if`, `no-else-return` in ESLint (Oxlint has no bulk suppressions) | — | g7 measures |
-| F-3 | Depth and complexity | `max-depth` 3 → 2; `complexity` 10 → 8 everywhere, 6 for non-React `**/*.ts` (D4); keep `variant: 'classic'` | — | depth > 2: 43 fns · cx > 8: 557 · cx > 6: 1,237 (@62a3 AST scan, tools/scripts not included) |
+| F-2 | No nested ternary, lonely `if` or `else` after `return` | `no-nested-ternary`, `no-lonely-if`, `no-else-return` in ESLint (Oxlint has no bulk suppressions) | — | **As built (g7, `packages/config/eslint-flow.js`):** baselined `no-nested-ternary` 0 → 329 (mobile 194, web 80, api 27, …); `no-lonely-if` and `no-else-return` 0 (on, nothing to suppress) |
+| F-3 | Depth and complexity | `max-depth` 3 → 2; `complexity` 10 → 8 everywhere, 6 for non-React `**/*.ts` (D4); keep `variant: 'classic'` | — | depth > 2: 43 fns · cx > 8: 557 · cx > 6: 1,237 (@62a3 AST scan, tools/scripts not included). **As built (g7):** suppressions `max-depth` 14 → 134, `complexity` 235 → 1,133 (api 420, web 253, mobile 206, migrate 67, shared 58, tools/scripts 40, …); `pnpm guard:lint` grants a lowered limit its one-time baseline (`tightenedRule`) |
 | F-4 | A map keyed by a union stays exhaustive | checklist: `satisfies Record<Union, …>` or a mapped type `{ [K in U]: (x: Extract<…, K>) => … }`; never `Record<string, …>` for a union key; external keys are looked up with `Object.hasOwn` | — | — |
 
 Review checklist (each H/Z/F PR body ticks these):
