@@ -8,6 +8,8 @@
 - `folder-cap/<app>.json` — the folders allowed over the cap today (api, web, mobile; packages and tools for lane D).
   One file per app, so the parallel lanes never edit the same file. Each move PR removes the folders it fixes.
 
+Run these in a cloud session (they need `pnpm i`), never on the owner's PC:
+
 ```
 node tools/scripts/ci-checks/move-module.ts refactor/moves/<id>.json   # apply one map (run twice = no diff)
 node tools/scripts/ci-checks/move-module.ts --replay                   # an open feature branch follows every committed move
@@ -17,14 +19,18 @@ pnpm imports:absolute -- <workspace|paths…> [--write]                  # `../`
 ```
 
 Every move PR writes `@/` imports in the app files it creates or edits (docs/32 R12): move-module.ts already does for the
-paths it rewrites; run `imports:absolute` on the rest, then `pnpm lint:prune`.
+paths it rewrites; run `imports:absolute` on the rest, then commit the pruned `eslint-suppressions.json` the red CI
+lint job prints («Suppressions to prune») or run `pnpm lint:prune`. The commands in this file need `pnpm i`: run them
+in a cloud session, never on the owner's PC (owner, 2026-11-01).
 
 - `guards/` — lists that may only shrink: `knip.json` (`pnpm guard:knip`) and `queries.json` (`pnpm guard:queries`).
   A new entry fails; a fixed one passes and ci's `baselines` job drops it after a green push to `develop`, so a PR
   never edits them for a fix (move-module still rewrites the paths of moved files). The counts store nothing: on a PR,
   jscpd (`pnpm guard:dup`), folder cycles (`pnpm guard:cycles`) and the per-rule lint totals (`pnpm guard:lint`, summed
   over every package's `eslint-suppressions.json`, docs/31a §5) fail only above the base branch's own measure. After a
-  PR that fixes violations: `eslint . --prune-suppressions` in the package, nothing else.
+  PR that fixes violations: commit the `eslint-suppressions.json` diff the red CI lint job prints («Suppressions to
+  prune»), or run `eslint . --prune-suppressions` in the package in a cloud session (never on the owner's PC); nothing
+  else.
 
 A move PR may also update a guard's path list in a test (for example the Meta callers whitelist): the pure-move
 check accepts a string or anchored regex literal that changes exactly by a rename of the same diff.

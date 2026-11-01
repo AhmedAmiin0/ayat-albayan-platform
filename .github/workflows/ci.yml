@@ -151,7 +151,8 @@ jobs:
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
       # ESLint fails on a suppression that no longer occurs (a fixed long line, a split function). On a red lint
-      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` locally, docs/31a §5).
+      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` in a cloud session,
+      # never on the owner's PC; docs/31a §5).
       - name: Suppressions to prune (commit this diff)
         if: failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'
         env:
