@@ -2,11 +2,11 @@ import { lessonWhenText } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { huda } from '../shared/fixtures';
-import { deviceTimeZone } from '../messages/hooks/message-text';
-import { answer, hudaProfile } from './fixtures';
+import { huda } from '@/inbox/shared/fixtures';
+import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
+import { answer, hudaProfile } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
-import type { LeadProfile } from './queries';
+import type { LeadProfile } from '@/inbox/qualification/lib/queries';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

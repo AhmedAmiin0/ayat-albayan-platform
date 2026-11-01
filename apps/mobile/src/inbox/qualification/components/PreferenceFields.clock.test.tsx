@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react-n
 import { setClockPref } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { PreferenceFields } from './PreferenceFields';
-import { qualForm } from './qualification-form';
+import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 
 jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 afterEach(() => setClockPref('auto'));

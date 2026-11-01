@@ -1,5 +1,5 @@
-import { detail } from '../shared/thread-fixtures';
-import type { ThreadCache } from '../thread/hooks/thread-cache';
+import { detail } from '@/inbox/shared/thread-fixtures';
+import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { undoChange, withMembership } from './use-list-membership';
 
 const paid = { id: 'l-1', name: 'بانتظار الدفع' };

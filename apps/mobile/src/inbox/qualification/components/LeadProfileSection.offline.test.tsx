@@ -3,9 +3,9 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { huda } from '../shared/fixtures';
-import { deviceTimeZone } from '../messages/hooks/message-text';
-import { answer, hudaProfile, noNetwork } from './fixtures';
+import { huda } from '@/inbox/shared/fixtures';
+import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
+import { answer, hudaProfile, noNetwork } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 
 const mockApiFetch = jest.fn();

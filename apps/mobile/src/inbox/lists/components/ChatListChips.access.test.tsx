@@ -2,10 +2,10 @@ import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { thread } from '../shared/thread-fixtures';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
-import { ThreadsList } from '../threads-list/ThreadsList';
-import { answer, PAID, withLists, withoutLists } from './list-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
+import { answer, PAID, withLists, withoutLists } from '@/inbox/lists/lib/list-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
