@@ -7,7 +7,7 @@ import { NumbersController } from './numbers.controller';
 import { NumbersEffects } from './numbers.effects';
 import { NumbersHealth } from './lines/numbers.health';
 import { NumbersImport } from './import/numbers.import';
-import { NumbersQueries } from './numbers.queries';
+import { NumbersRepo } from './numbers.repo';
 import { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersService } from './numbers.service';
 import { NumbersSettings } from './numbers.settings';
@@ -20,7 +20,7 @@ import { NumbersSettings } from './numbers.settings';
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],
-  providers: [NumbersSettings, NumbersQueries, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsDeps, CommunicationsService, NumbersHealth],
+  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsDeps, CommunicationsService, NumbersHealth],
   exports: [NumbersConfig, NumbersHealth],
 })
 export class NumbersModule {}

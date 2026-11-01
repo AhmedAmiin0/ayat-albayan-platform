@@ -1,15 +1,15 @@
 import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import type { PushService } from '../../../common/push/push.service';
-import { ruleSettingsOf } from '../../../common/rules/rule-settings.fakes';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/policy.fakes';
+import type { PushService } from '@/common/push/push.service';
+import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';
 import { RemindersJob } from './reminders.job';
 import type { RoomCandidate } from './plan/reminders.links';
 import type { ReminderLesson } from './plan/reminders.plan';
-import type { RemindersQueries } from './reminders.queries';
+import type { RemindersRepo } from './reminders.repo';
 import { RemindersSettings } from './reminders.settings';
 
 // Invented sample data for the reminder tests: no real student, teacher or guardian.
@@ -66,7 +66,7 @@ export function fakeJob(opts: JobOpts = {}) {
   const settings = readerOf(RemindersSettings, { auto_messages_enabled: true, ...opts.settings });
   const push = { notifyAdmins: vi.fn(async () => undefined) };
   const job = new RemindersJob(
-    queries as unknown as RemindersQueries,
+    queries as unknown as RemindersRepo,
     settings,
     new RemindersDeps(push as unknown as PushService, fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) })),
   );

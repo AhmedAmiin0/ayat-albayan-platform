@@ -1,6 +1,9 @@
 import { OAuth2Client } from 'google-auth-library';
-import type { GoogleEnv } from '../../../../config/env/env';
-import type { GoogleOAuth } from '../google-client.port';
+import { z } from 'zod';
+import type { HttpFailure } from '@/common/infra/http/failure';
+import { createHttp } from '@/common/infra/http/http';
+import type { GoogleEnv } from '@/config/env/env';
+import type { GoogleOAuth } from '@/modules/platform/google-sync/google-client.port';
 import { toGoogleError } from './google-http';
 
 export function oauthClient(env: GoogleEnv): OAuth2Client {
@@ -11,6 +14,16 @@ export function oauthClient(env: GoogleEnv): OAuth2Client {
     endpoints: { oauth2AuthBaseUrl: env.endpoints.auth, oauth2TokenUrl: env.endpoints.token, oauth2RevokeUrl: env.endpoints.revoke },
   });
 }
+
+/** Any string, as before (`z.email()` would turn odd strings into null). */
+const userinfoSchema = z.looseObject({ email: z.string() });
+
+/** A non-2xx or another shape: no email (null, as before); a network error or timeout throws. */
+class NoEmail extends Error {}
+const USERINFO_TIMEOUT_MS = 15_000;
+const answered = (f: HttpFailure): boolean => f.kind === 'status' || f.kind === 'shape';
+const noEmailOr = (f: HttpFailure): Error =>
+  answered(f) ? new NoEmail() : new Error(`google userinfo: ${f.kind}`);
 
 /** The consent URL (offline, consent prompt), the code exchange, the account's email, the revoke. */
 export class GoogleOAuthApi implements GoogleOAuth {
@@ -36,10 +49,21 @@ export class GoogleOAuthApi implements GoogleOAuth {
   }
 
   async email(accessToken: string): Promise<string | null> {
-    const res = await fetch(this.env.endpoints.userinfo, { headers: { authorization: `Bearer ${accessToken}` }, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { email?: unknown };
-    return typeof body.email === 'string' ? body.email : null;
+    const http = createHttp({
+      name: 'google userinfo',
+      base: () => this.env.endpoints.userinfo,
+      headers: () => Promise.resolve({ authorization: `Bearer ${accessToken}` }),
+      timeoutMs: USERINFO_TIMEOUT_MS,
+      redirect: 'follow',
+      errorBody: 'omit',
+      errors: { default: noEmailOr },
+    });
+    try {
+      return (await http.json({ path: '', schema: userinfoSchema })).email;
+    } catch (e) {
+      if (e instanceof NoEmail) return null;
+      throw e;
+    }
   }
 
   async revoke(refreshToken: string): Promise<void> {

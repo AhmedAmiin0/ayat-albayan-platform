@@ -1,5 +1,5 @@
 import { courseDaysPerWeek } from './course/course.js';
-import { addCalendarDays } from '../time/index.js';
+import { addCalendarDays } from '@ab/time';
 
 // The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
 // enforces it, web and mobile use it to show the same error before posting.

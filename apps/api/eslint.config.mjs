@@ -1,4 +1,4 @@
-import { boundaries, config, forbiddenImports, noParentImports } from '@ab/config/eslint';
+import { boundaries, config, forbiddenImports, noParentImports, syntaxExempt } from '@ab/config/eslint';
 
 export default config(
   import.meta.dirname,
@@ -10,6 +10,8 @@ export default config(
   // Owner 2026-10-30, docs/32 R12: `@/…`, never `../` (existing ones: eslint-suppressions.json; the
   // sweep is `pnpm imports:absolute -- api --write`).
   noParentImports({ root: import.meta.dirname, files: ['src/**/*.ts'] }),
+  // docs/36 H-1: the one outbound HTTP client of the api is the only place that calls fetch.
+  syntaxExempt({ files: ['src/common/infra/http/**'], http: true }),
   // Modules read settings through their own typed reader (<module>.settings.ts), never the
   // store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
   {
