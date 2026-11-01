@@ -2,12 +2,10 @@ import { z } from 'zod';
 import { parseOrNull } from '../payload/index.js';
 
 // A family's tap on a template button (owner 2026-10-28): WhatsApp shows it as their message with
-// the
-// tapped label, quoting our template. The webhook keeps Meta's part as
-// messages.interactive_payload:
-// `{ type: 'button', button: { text, payload } }` (a template quick reply) or
-// `{ type: 'interactive', interactive: { type: 'button_reply' | 'list_reply', …: { id, title } }
-// }`.
+// the tapped label, quoting our template. The webhook keeps Meta's part as
+// messages.interactive_payload: `{ type: 'button', button: { text, payload } }` (a template quick
+// reply) or `{ type: 'interactive', interactive: { type: 'button_reply' | 'list_reply', …: { id,
+// title } } }`.
 
 const label = z.string().refine((s) => s.trim() !== '');
 const titled = z.looseObject({ title: label });
@@ -29,7 +27,7 @@ const interactiveReply = z
   .transform((p) => p.interactive);
 
 /** The tapped label of a stored payload: a quick reply, a reply button or a list row. */
-export const tappedButtonSchema = z.union([quickReply, interactiveReply]);
+const tappedButtonSchema = z.union([quickReply, interactiveReply]);
 
 /**
  * The label the family tapped (a quick reply, a reply button or a list row); null for anything

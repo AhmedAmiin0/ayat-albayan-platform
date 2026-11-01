@@ -5,8 +5,7 @@ import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../pay
 
 // WhatsApp message reactions (owner 2026-10-27: «hold a message to react»). WhatsApp is 1:1: one
 // reaction from the contact (theirs) and one from the academy (ours) per message. Pure: the API,
-// the
-// web and the app share it.
+// the web and the app share it.
 
 /** The quick row above a held bubble, in WhatsApp's order. */
 export const REACTION_EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🙏'] as const;
@@ -56,8 +55,8 @@ export interface ReactionResult {
 export const NO_REACTIONS: MessageReactions = { theirs: null, ours: null, ours_by: null };
 
 /**
- * The reaction part of a Meta message ({type:'reaction', reaction:{message_id, emoji}}); emoji null
- * = removed.
+ * The reaction part of a Meta message ({type:'reaction', reaction:{message_id, emoji}});
+ * emoji null = removed.
  */
 export interface ReactionRef {
   messageId: string;

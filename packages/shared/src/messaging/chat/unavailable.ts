@@ -39,11 +39,9 @@ const reactionEmojiSchema = payloadOfType('reaction')
 
 /**
  * An inbound WhatsApp reaction kept as its own row (`{ type: 'reaction', reaction: { emoji,
- * message_id } }`):
- * «تفاعل: 👍» instead of «رسالة لا يمكن عرضها هنا» (owner 2026-10-27), «أُزيل التفاعل» when the
- * emoji is
- * empty (WhatsApp's removal); null for anything else. Until the reactions work shows it on the
- * bubble itself.
+ * message_id } }`): «تفاعل: 👍» instead of «رسالة لا يمكن عرضها هنا» (owner 2026-10-27), «أُزيل
+ * التفاعل» when the emoji is empty (WhatsApp's removal); null for anything else. Until the
+ * reactions work shows it on the bubble itself.
  */
 export function reactionText(
   payload: unknown,
