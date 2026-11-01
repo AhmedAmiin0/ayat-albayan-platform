@@ -34,7 +34,7 @@ class SentOnlyPipe<S extends z.ZodType<object>> implements PipeTransform<
   }
 }
 
-export interface ZodBodyOptions {
+interface ZodBodyOptions {
   /** Keep only the keys the client sent (see `sentOnly`). */
   sentOnly?: boolean;
   /** A request with no JSON body (or `null`) is parsed as `{}` (was `body ?? {}`). */
