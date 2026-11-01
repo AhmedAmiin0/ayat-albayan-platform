@@ -15,10 +15,12 @@ export interface CrmTemplateParams {
   buttonParams?: Record<string, string>;
 }
 
-export type CrmBody =
+/** `name`: the contact's display name for the CRM (only the script relay sends one). */
+export type CrmBody = (
   | { to: string; type: 'text'; text: string }
   | { to: string; type: 'template'; template: { name: string; language: string; params: CrmTemplateParams } }
-  | { to: string; type: 'image' | 'document'; media_url: string; filename?: string; text?: string };
+  | { to: string; type: 'image' | 'document'; media_url: string; filename?: string; text?: string }
+) & { name?: string };
 
 /** The old script's name for this key (CRM_DEFAULT_NAMES), not one an admin set. */
 const byDefault = (t: TemplateSend['template']): boolean =>

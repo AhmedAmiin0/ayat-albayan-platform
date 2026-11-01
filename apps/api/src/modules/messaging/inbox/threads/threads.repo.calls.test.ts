@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import type { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { ThreadsQueries } from './threads.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { ThreadsRepo } from './threads.repo';
 
 // A family's message to the calls number (docs/28 §10) lands in their thread but never becomes a
 // reply window (module mode) and never gets a read receipt (the calls number sends nothing).
 
 const PHONE = '+201001234567';
 const queries = (db: ReturnType<typeof fakeDb>['db']) =>
-  new ThreadsQueries(db, {} as PackagesService, {} as BalanceQueries);
+  new ThreadsRepo(db, {} as PackagesService, {} as BalanceQueries);
 
 describe('ThreadsQueries and the calls number', () => {
   it('numberWindows: a calls window is dropped; chat and unstamped history stay', async () => {

@@ -200,7 +200,7 @@
     "apps/api/src/modules/messaging/inbox/reads/read-receipts.test.ts",
     "apps/api/src/modules/messaging/inbox/reads/read-marks.ts",
     "apps/api/src/modules/messaging/inbox/reads/read-marks.test.ts",
-    "apps/api/src/modules/messaging/inbox/threads/threads.queries.ts",
+    "apps/api/src/modules/messaging/inbox/threads/threads.repo.ts",
     "apps/api/src/modules/messaging/inbox/threads/threads.mapper.ts",
     "apps/api/src/modules/messaging/inbox/threads/threads.mapper.test.ts",
     "apps/api/src/modules/messaging/inbox/send/thread-send.service.ts",

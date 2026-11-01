@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../../people/guardians/fake-db';
-import { PdfPreviewQueries } from './pdf-preview.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { PdfPreviewRepo } from './pdf-preview.repo';
 
 const M = 'messages';
 
@@ -9,7 +9,7 @@ describe('PdfPreviewQueries (migration 20261030000982)', () => {
     const { db, argsOf } = fakeDb({
       [M]: [{ data: { media_pages: null, media_bytes: null } }, { data: { media_pages: 0, media_bytes: 512 } }, { data: null }],
     });
-    const q = new PdfPreviewQueries(db);
+    const q = new PdfPreviewRepo(db);
     await expect(q.doc('m1')).resolves.toBeNull();
     await expect(q.doc('m1')).resolves.toEqual({ pages: 0, bytes: 512 });
     await expect(q.doc('m1')).resolves.toBeNull();
@@ -19,7 +19,7 @@ describe('PdfPreviewQueries (migration 20261030000982)', () => {
 
   it('setDoc writes only where nothing is stored yet (the first writer wins)', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: null }] });
-    await new PdfPreviewQueries(db).setDoc('m1', { pages: 12, bytes: 1_234 });
+    await new PdfPreviewRepo(db).setDoc('m1', { pages: 12, bytes: 1_234 });
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
     expect(of('update')).toEqual([[{ media_pages: 12, media_bytes: 1_234 }]]);
     expect([of('eq'), of('is')]).toEqual([[['id', 'm1']], [['media_pages', null]]]);
@@ -27,6 +27,6 @@ describe('PdfPreviewQueries (migration 20261030000982)', () => {
 
   it('a DB error throws', async () => {
     const { db } = fakeDb({ [M]: [{ error: { message: 'denied' } }] });
-    await expect(new PdfPreviewQueries(db).doc('m1')).rejects.toThrow('denied');
+    await expect(new PdfPreviewRepo(db).doc('m1')).rejects.toThrow('denied');
   });
 });

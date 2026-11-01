@@ -1,13 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { ForwardFiles } from './forward-files';
-import type { Sent } from '../send/outbox';
+import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { allReplayed, forwardAudit, freshResults } from './thread-forward.controller';
 import { skipOf, ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
-import type { ThreadSendService } from '../send/thread-send.service';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 const SRC = 'a0000000-0000-4000-8000-0000000000f1';
 const A = '+966500000001';
@@ -17,7 +17,7 @@ const src = messageRow({ id: SRC, direction: 'inbound', body: 'نص', template_k
 const sent = (status: Sent['view']['status'], id: string): Sent => ({ view: { id, status } as Sent['view'], replayed: false });
 
 function service(text: (phone: string) => Promise<Sent>) {
-  const queries = { get: vi.fn(async () => src) } as unknown as ThreadsQueries;
+  const queries = { get: vi.fn(async () => src) } as unknown as ThreadsRepo;
   const sends = { text: vi.fn(async (s: { phone: string }) => text(s.phone)) } as unknown as ThreadSendService;
   return new ThreadForwardService(queries, sends, {} as ForwardFiles);
 }

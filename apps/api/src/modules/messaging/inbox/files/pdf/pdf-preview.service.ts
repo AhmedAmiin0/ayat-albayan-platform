@@ -1,11 +1,11 @@
 import { INVOICE_MAX_BYTES, isPdfMime, PDF_PREVIEW_PAGES, type ThreadPdfPage } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { BUCKETS, pdfPagePath } from '../../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../../common/storage/storage.service';
-import { type InboundFile, waHttpError } from '../../../whatsapp';
-import { ThreadMediaService } from '../thread-media.service';
+import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { type InboundFile, waHttpError } from '@/modules/messaging/whatsapp';
+import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
-import { PdfPreviewQueries, type PdfDoc } from './pdf-preview.queries';
+import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 // poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
 import { pdfPageCount, renderPdfPages } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
@@ -38,7 +38,7 @@ export class PdfPreviewService {
   constructor(
     private readonly media: ThreadMediaService,
     private readonly storage: StorageService,
-    private readonly queries: PdfPreviewQueries,
+    private readonly queries: PdfPreviewRepo,
   ) {}
 
   async page(input: { phone: string; messageId: string; page: number }): Promise<ThreadPdfPage> {

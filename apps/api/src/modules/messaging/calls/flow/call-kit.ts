@@ -1,9 +1,9 @@
 import { nextCall, type CallEvent, type CallStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { ThreadsQueries } from '../../inbox/threads/threads.queries';
-import { CALLS_API, type CallsApi } from '../kapso/calls-api';
-import { callState, type CallMove, type CallRow } from '../store/call-row';
-import { CallsQueries } from '../store/calls.queries';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { CALLS_API, type CallsApi } from '@/modules/messaging/calls/kapso/calls-api';
+import { callState, type CallMove, type CallRow } from '@/modules/messaging/calls/store/call-row';
+import { CallsRepo } from '@/modules/messaging/calls/store/calls.repo';
 
 /** Concurrent webhook items on one call: each re-read judges the event again, a few times at most. */
 const MAX_ATTEMPTS = 4;
@@ -18,9 +18,9 @@ type MoveExtra = Pick<CallMove['patch'], 'accepted_by' | 'error_code'>;
 @Injectable()
 export class CallsKit {
   constructor(
-    readonly queries: CallsQueries,
+    readonly queries: CallsRepo,
     @Inject(CALLS_API) readonly api: CallsApi,
-    readonly threads: ThreadsQueries,
+    readonly threads: ThreadsRepo,
   ) {}
 
   /**

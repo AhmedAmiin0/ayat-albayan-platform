@@ -1,15 +1,15 @@
 // Test-only fakes for the calls module (excluded from the build): an in-memory wa_calls store with the
 // same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit around them.
 import { vi } from 'vitest';
-import { forbidden, notFound } from '../../../common/http/errors';
-import type { KapsoLineEnv } from '../../../config/env/env';
+import { forbidden, notFound } from '@/common/http/errors';
+import type { KapsoLineEnv } from '@/config/env/env';
 import type { CallActor } from './access/call-access';
 import type { CallsGate } from './access/calls-gate';
 import { CallsKit } from './flow/call-kit';
 import type { CallingLine } from './kapso/calling-line';
 import type { CallsApi } from './kapso/calls-api';
 import type { CallMove, CallRow, NewCall } from './store/call-row';
-import type { CallsQueries } from './store/calls.queries';
+import type { CallsRepo } from './store/calls.repo';
 
 export const LINE: CallingLine = {
   env: { provider: 'kapso', base: 'http://stub.test/kapso', version: 'v24.0', phoneNumberId: 'chat-pn', wabaId: 'w1', apiKey: 'k' } as KapsoLineEnv,
@@ -30,7 +30,7 @@ let seq = 0;
 const uuid = () => `00000000-0000-4000-8000-${String(++seq).padStart(12, '0')}`;
 
 /** In-memory wa_calls: unique (created_by, client_request_id) and wa_call_id, CAS on the status. */
-export class FakeCallsQueries {
+export class FakeCallsRepo {
   readonly rows = new Map<string, CallRow>();
   readonly order: string[] = [];
 
@@ -126,9 +126,9 @@ export function fakeGate(input: { on?: boolean; refuse?: string } = {}): CallsGa
 }
 
 export function fakeKit(input: { api?: CallsApi; thread?: Parameters<typeof fakeThreads>[0] } = {}) {
-  const queries = new FakeCallsQueries();
+  const queries = new FakeCallsRepo();
   const api = (input.api ?? fakeApi()) as ReturnType<typeof fakeApi>;
   const threads = fakeThreads(input.thread);
-  const kit = new CallsKit(queries as unknown as CallsQueries, api, threads as never);
+  const kit = new CallsKit(queries as unknown as CallsRepo, api, threads as never);
   return { kit, queries, api, threads };
 }
