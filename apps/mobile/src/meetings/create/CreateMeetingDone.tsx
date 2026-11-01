@@ -1,13 +1,13 @@
 import type { MeetingCreateResult } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import { InviteResults } from '../invite/InviteResults';
-import { MeetingLinkShare } from '../manage/MeetingLinkShare';
-import { useEnterMeeting } from '../manage/use-enter-meeting';
+import { InviteResults } from '@/meetings/invite/InviteResults';
+import { MeetingLinkShare } from '@/meetings/manage/MeetingLinkShare';
+import { useEnterMeeting } from '@/meetings/manage/use-enter-meeting';
 
 const L = t.meetings.internal;
 

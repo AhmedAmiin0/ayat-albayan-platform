@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '../../ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 /**
  * R-LEAD-04 on mobile: «نقل لطلبات التوظيف» → inline confirm → POST /leads/:id/reclassify.

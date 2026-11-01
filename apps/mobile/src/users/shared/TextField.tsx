@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Field, type FieldProps } from '@/core/ui/form/Field';
 
 interface TextFieldProps extends FieldProps {

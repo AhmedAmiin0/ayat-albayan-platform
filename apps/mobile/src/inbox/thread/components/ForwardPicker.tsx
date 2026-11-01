@@ -9,7 +9,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ForwardRow } from './ForwardRow';
 import { chatName, forwardNotice, selectedLine } from '@/inbox/thread/hooks/forward-text';
 import { useForward, useForwardId } from '@/inbox/thread/hooks/use-forward';

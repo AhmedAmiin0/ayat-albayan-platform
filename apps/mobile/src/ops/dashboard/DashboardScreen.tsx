@@ -4,7 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
 import { weekLabel } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';

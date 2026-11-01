@@ -1,14 +1,14 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import type { BookFailure } from '../../shared/booking-errors';
-import { ConflictNotice } from '../../shared/ConflictNotice';
-import type { StudentChoice, TrialDraft } from '../lib/draft';
+import type { BookFailure } from '@/booking/shared/booking-errors';
+import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';
 import { DuplicateNotice } from './DuplicateNotice';
-import { packageDaysNote } from '../lib/package-choice';
+import { packageDaysNote } from '@/booking/trial/lib/package-choice';
 
 interface FailureNoticeProps {
   failure: BookFailure;

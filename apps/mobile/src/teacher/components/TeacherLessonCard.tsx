@@ -1,7 +1,7 @@
 import { clockTime, lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn, useClockCycle } from '@/core/lib/clock';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { LiveBadge } from '@/live/LiveBadge';
@@ -9,7 +9,7 @@ import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import type { ReportAction } from '../lib/day';
+import type { ReportAction } from '@/teacher/lib/day';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { TeacherLessonActions } from './TeacherLessonActions';
 

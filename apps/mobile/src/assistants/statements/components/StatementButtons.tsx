@@ -1,12 +1,12 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import { openStatementReceipt } from '../hooks/receipt-link';
-import { statementActions, type StatementAction, type StatementCan } from '../hooks/statement-can';
+import { openStatementReceipt } from '@/assistants/statements/hooks/receipt-link';
+import { statementActions, type StatementAction, type StatementCan } from '@/assistants/statements/hooks/statement-can';
 
 interface StatementButtonsProps {
   statement: AssistantStatementView;

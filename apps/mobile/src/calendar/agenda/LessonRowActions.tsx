@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { useJoinOpen } from '@/classroom';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelLesson } from '@/today/components/CancelLesson';
 import { studentNames } from '@/today/lib/lesson-text';

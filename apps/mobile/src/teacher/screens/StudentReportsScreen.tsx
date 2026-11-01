@@ -4,7 +4,7 @@ import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useStudentHref } from '@/core/nav/tree-base';
 
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
@@ -15,10 +15,10 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
-import { useTeacherMe } from '../lib/queries';
-import { openSigned } from '../report/hooks/api';
-import { ReportHistoryRow, reportFormHref } from '../components/ReportRows';
-import { TrialChatNote } from '../components/TrialChatNote';
+import { useTeacherMe } from '@/teacher/lib/queries';
+import { openSigned } from '@/teacher/report/hooks/api';
+import { ReportHistoryRow, reportFormHref } from '@/teacher/components/ReportRows';
+import { TrialChatNote } from '@/teacher/components/TrialChatNote';
 
 const teacherStudent = (me: TeacherMe | undefined, id: string) => me?.students.find((s) => s.id === id);
 const teacherStudentName = (me: TeacherMe | undefined, id: string): string => teacherStudent(me, id)?.name ?? t.reports.history;

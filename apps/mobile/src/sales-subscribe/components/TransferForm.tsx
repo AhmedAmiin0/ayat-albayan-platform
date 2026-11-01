@@ -1,7 +1,7 @@
 import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
@@ -10,9 +10,9 @@ import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { SalesReceiptField } from './SalesReceiptField';
-import { salesErrorText } from '../lib/sales-errors';
-import { checkTransfer, draftFor, type TransferDraft } from '../lib/transfer-form';
-import { useSalesPayment } from '../hooks/use-sales-payment';
+import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
+import { checkTransfer, draftFor, type TransferDraft } from '@/sales-subscribe/lib/transfer-form';
+import { useSalesPayment } from '@/sales-subscribe/hooks/use-sales-payment';
 
 interface TransferFormProps {
   sub: SalesMoneySubscriptionView;

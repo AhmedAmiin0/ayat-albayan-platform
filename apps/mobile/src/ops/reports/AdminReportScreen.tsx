@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

@@ -1,21 +1,21 @@
 import { PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { AmountField } from './AmountField';
-import { AttachmentsField } from '../receipts/AttachmentsField';
-import { FormLabel } from '../FormLabel';
+import { AttachmentsField } from '@/payments/receipts/AttachmentsField';
+import { FormLabel } from '@/payments/FormLabel';
 import { PackagePicker } from './PackagePicker';
 import { PaidDayPicker } from './PaidDayPicker';
 import { ShortfallNote } from './ShortfallNote';
-import { paymentErrorText } from '../lib/payment-errors';
-import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from '../lib/payment-form';
-import { ReceiptPicker } from '../ReceiptPicker';
-import { useRecordPayment } from '../hooks/use-record-payment';
+import { paymentErrorText } from '@/payments/lib/payment-errors';
+import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from '@/payments/lib/payment-form';
+import { ReceiptPicker } from '@/payments/ReceiptPicker';
+import { useRecordPayment } from '@/payments/hooks/use-record-payment';
 
 // '' = no method picked yet: the receipt says which one, so none is preselected.
 const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({

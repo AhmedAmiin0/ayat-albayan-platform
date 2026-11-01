@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
-import { ErrorLine } from '../ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 export interface ListNameFormProps {
   /** «إنشاء» or «حفظ». */

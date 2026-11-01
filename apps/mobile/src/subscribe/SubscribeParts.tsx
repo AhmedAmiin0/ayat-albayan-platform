@@ -3,7 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import type { StudentRef } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

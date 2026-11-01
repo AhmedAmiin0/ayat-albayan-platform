@@ -1,13 +1,13 @@
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
-import { CardTitle } from '../components/CardTitle';
-import { CurrencyTotalsBlock } from '../components/CurrencyTotalsBlock';
-import { EarningsTermsCard } from '../components/EarningsTermsCard';
-import { LoadState } from '../components/LoadState';
-import { MoneyCard } from '../components/MoneyCard';
-import { useMyEarnings } from '../lib/my-api';
-import { MyStatementCard } from '../components/MyStatementCard';
+import { Section } from '@/core/ui/surface/Section';
+import { CardTitle } from '@/sales-money/components/CardTitle';
+import { CurrencyTotalsBlock } from '@/sales-money/components/CurrencyTotalsBlock';
+import { EarningsTermsCard } from '@/sales-money/components/EarningsTermsCard';
+import { LoadState } from '@/sales-money/components/LoadState';
+import { MoneyCard } from '@/sales-money/components/MoneyCard';
+import { useMyEarnings } from '@/sales-money/lib/my-api';
+import { MyStatementCard } from '@/sales-money/components/MyStatementCard';
 
 const p = t.assistantPortal.earnings;
 

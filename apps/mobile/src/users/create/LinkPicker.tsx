@@ -2,7 +2,7 @@ import type { LinkCandidate, LinkKind } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/payments/FormLabel';
