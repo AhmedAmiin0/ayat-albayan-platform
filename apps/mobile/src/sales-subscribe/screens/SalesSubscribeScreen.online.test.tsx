@@ -51,9 +51,13 @@ async function createLink(amount?: string, client = createTestQueryClient()) {
   await renderWithQuery(<SalesSubscribeScreen />, client);
   await fireEvent.press(await screen.findByRole('radio', { name: t.salesMoney.payOnline }));
   expect(await screen.findByText(referenceLine(180, 'SAR'))).toBeTruthy();
-  const field = screen.getByLabelText(new RegExp(pl.agreedAmount.split(' (')[0] ?? ''));
-  expect(field.props.value).toBe('180');
-  if (amount) await fireEvent.changeText(field, amount);
+  // «مبلغ مخصص» on only to type one (owner 2026-11-01): off, the link carries the calculator price.
+  if (amount) {
+    await fireEvent.press(screen.getByRole('checkbox', { name: pl.customAmount }));
+    const field = screen.getByLabelText(new RegExp(pl.agreedAmount.split(' (')[0] ?? ''));
+    expect(field.props.value).toBe('180');
+    await fireEvent.changeText(field, amount);
+  }
   await fireEvent.press(await screen.findByRole('button', { name: pl.create, disabled: false }));
 }
 

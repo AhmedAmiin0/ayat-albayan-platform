@@ -45,10 +45,12 @@ test('her own child: two methods, «تحويل بنكي» first and picked; savi
   expect(mockReplace).toHaveBeenCalledWith(expect.objectContaining({ pathname: expect.stringContaining('/inbox/sales-course') }));
 });
 
-test('«دفع إلكتروني»: the amount to transfer gives way to the reference and the agreed amount; the button makes the link', async () => {
+test('«دفع إلكتروني»: the amount to transfer gives way to the reference and «مبلغ مخصص»; the button makes the link', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByText(m.price)).toBeTruthy();
+  expect(screen.queryByRole('checkbox', { name: t.paymentLinks.customAmount })).toBeNull();
   await fireEvent.press(await screen.findByRole('radio', { name: m.payOnline }));
+  await fireEvent.press(await screen.findByRole('checkbox', { name: t.paymentLinks.customAmount }));
   expect(await screen.findByLabelText(new RegExp(t.paymentLinks.agreedAmount.split(' (')[0] ?? ''))).toBeTruthy();
   expect(screen.queryByText(m.price)).toBeNull();
   expect(screen.getByRole('button', { name: t.paymentLinks.create })).toBeTruthy();
