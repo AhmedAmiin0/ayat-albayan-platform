@@ -1,7 +1,7 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import type { ChatChoice } from '../lists/ChatListChips';
-import { ListChip } from '../lists/ListChip';
+import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
+import { ListChip } from '@/inbox/lists/components/ListChip';
 
 /** The stages she works (review 2026-10-29 #2); «مشترك» is a family by then, «مفقود» is not chased here. */
 const WORKED_STAGES: readonly LeadStatus[] = LEAD_STATUSES.filter((s) => s !== 'converted' && s !== 'lost');

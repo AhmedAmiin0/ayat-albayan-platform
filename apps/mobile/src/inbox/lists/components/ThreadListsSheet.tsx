@@ -4,12 +4,12 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { listErrorText } from './list-errors';
+import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListCheckRow } from './ListCheckRow';
 import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
-import { listsOf, useChatLists, useCreateList } from './use-chat-lists';
-import { useListMembership } from './use-list-membership';
+import { listsOf, useChatLists, useCreateList } from '@/inbox/lists/lib/use-chat-lists';
+import { useListMembership } from '@/inbox/lists/lib/use-list-membership';
 
 interface ThreadListsSheetProps {
   phone: string;

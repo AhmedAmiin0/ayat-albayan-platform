@@ -7,7 +7,7 @@ import { FormLabel } from '@/core/ui/form/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { DayChips } from './DayChips';
-import { timeOptions } from './qualification-form';
+import { timeOptions } from '@/inbox/qualification/lib/qualification-form';
 import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';
 import { hhmm, useClockCycle } from '@/core/lib/clock';
