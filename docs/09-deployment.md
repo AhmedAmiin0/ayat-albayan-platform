@@ -156,7 +156,7 @@ Owner rule (2026-10-28): «dont make stripe available for the normal production 
 3. The media ports must be open in the VPS firewall: **UDP 7882**, **TCP 7881**, TURN **UDP 3478** (`ufw status`; Hostinger panel firewall too). With them closed the call connects but no video, audio or shared screen arrives.
 4. While someone joins, `docker logs -f <livekit container>` shows `participant joined` and, for a shared board or screen, `mediaTrack published`. A track that stays `pending track` means no media reaches the server (ports in 3).
 
-Local check against a real LiveKit: `docker run -d --name lk -p 7880:7880 -p 7881:7881 -p 7882:7882/udp livekit/livekit-server --dev --bind 0.0.0.0`, then `LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret pnpm --filter e2e run e2e --project=desktop tests/classroom-live.spec.ts tests/classroom-live-phone.spec.ts` (skipped without `LIVEKIT_URL`).
+Check against a real LiveKit, in a GitHub Actions runner (no ci.yml job does it yet), never on the owner's PC: `docker run -d --name lk -p 7880:7880 -p 7881:7881 -p 7882:7882/udp livekit/livekit-server --dev --bind 0.0.0.0`, then `LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret pnpm --filter e2e run e2e --project=desktop tests/classroom-live.spec.ts tests/classroom-live-phone.spec.ts` (skipped without `LIVEKIT_URL`).
 
 ## Test teacher on staging (owner, 2026-10-05)
 
@@ -167,7 +167,7 @@ A sign-in account with role teacher («معلم تجريبي», English name `Te
 3. Sign in at **https://app.ayatalbayan.com** with that email and password: the teacher pages open and «طالب تجريبي» is under «طلابي».
 4. To remove: run the workflow with action **remove** (the student, the guardian, the teacher row and the login). `pnpm clear:demo --apply --allow-remote-staging` also removes the rows but leaves the login. Lessons or reports created for the test student make either refuse (nothing is deleted); delete those first.
 
-Locally: `TEST_TEACHER_EMAIL=… TEST_ACCOUNT_PASSWORD=… pnpm seed:test-account` (`--remove` to delete), against the local Supabase from `pnpm env:local`.
+Against a local Supabase (a CI runner's, never on the owner's PC): `TEST_TEACHER_EMAIL=… TEST_ACCOUNT_PASSWORD=… pnpm seed:test-account` (`--remove` to delete), with the env from `pnpm env:local`.
 
 ## Not on staging yet
 
@@ -320,7 +320,7 @@ Owner request 2026-10-12: «try not to use .env and make most of the config in t
 # On the VPS, in /opt/ayat-albayan-staging (the container reads .env through compose):
 docker compose exec ayat-worker node dist/scripts/config-import-env.js            # keeps values already in the DB
 docker compose exec ayat-worker node dist/scripts/config-import-env.js --overwrite # replaces them
-# Locally: pnpm --filter api build && pnpm --filter api config:import-env
+# Without Docker (CI or a cloud session, never on the owner's PC): pnpm --filter api build && pnpm --filter api config:import-env
 ```
 
 It copies the **current non-empty** env values of the keys above into the table / Vault with the service role and prints only `KEY: imported` or `KEY: skipped (…)`, never a value. A value the env schema would refuse is skipped. After the import, check «التكاملات» (each field says «من الإعدادات» / «من الخادم»), then the moved keys may be removed from `.env` at your pace.

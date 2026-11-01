@@ -18,7 +18,7 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 2. **Max 3 parameters per function, 4 per constructor** (`ab/max-params`, docs/32 D1; method signatures count). Use a typed options object for the 4th+.
 3. Strict TypeScript, no `any`, no non-null assertions in app code. Type-aware lint at `--max-warnings 0`, React 19 idioms (mobile), no `useMemo`/`useCallback`/`memo` where the React Compiler builds (web, mobile), effects only in named hooks: `docs/31a-strict-types-lint.md`. Old violations sit in `eslint-suppressions.json`, whose totals may only shrink (`pnpm guard:lint`); fixing one makes lint fail until it is pruned: `pnpm lint:prune` then `pnpm guard:lint -- --write` (a red CI lint job prints the diff to commit).
 4. Every PR/commit adds unit tests next to the code (`*.test.ts`). Pure logic (phone/arabic normalisation, occurrence generation, conflict check, state machines, balances, reminder timing) must be unit-tested ≥ 80 %.
-5. Playwright e2e for the six journeys in `docs/03-requirements.md §5`; run against local Supabase + WhatsApp stub (`tools/wa-stub`).
+5. Playwright e2e for the six journeys in `docs/03-requirements.md §5`; run in CI against the Supabase stack the runner starts (ci.yml «Start local Supabase») + WhatsApp stub (`tools/wa-stub`).
 6. All times UTC in DB; tz on every person; never free-text times.
 7. Phone numbers E.164 only; `students.code` (`AB-nnnn`) is generated, never typed.
 8. Idempotent jobs (dedup keys); idempotent occurrence generation (`unique(rule_id, starts_at)`).
@@ -32,9 +32,10 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 - Use the **Workflow** tool for every phase with ≥ 3 independent modules (owner opted in). Builders in worktrees → verifiers → integrator (see `docs/05-build-plan.md §2`). ≤ 10 agents per run.
 - Every agent prompt repeats rules 1–4 and lists the requirement IDs it must satisfy.
 - Project skills live in `.claude/skills/` (see its README): every design review loads `heuristic-evaluation`, `design-qa-checklist` and `critique-brand-consistency`; every migration, SQL or RLS change loads `supabase-postgres-best-practices`.
-- Before finishing any phase: `pnpm turbo lint typecheck test` (+ `e2e` from Phase 2) green; write `PHASE_SUMMARY.md`.
+- Before finishing any phase: the PR's GitHub Actions CI is green (lint, typecheck, test, e2e), watched with `gh pr checks <n> --watch` (failures: `gh run view <run> --log-failed`); write `PHASE_SUMMARY.md`.
+- Tests, builds, Supabase and docker never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI.
 
-## Commands
+## Commands (CI and cloud sessions only, never on the owner's PC)
 ```
 pnpm i
 pnpm supabase start            # local stack (packages/db)
