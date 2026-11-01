@@ -13,9 +13,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { pageQueryShape, parseOr400 } from '../leads/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { pageQueryShape } from '@/modules/sales/leads/http';
 import { APPLICANT_STATUSES } from './applicant-state-machine';
 import { JobApplicantsService } from './job-applicants.service';
 
@@ -44,7 +45,7 @@ export class JobApplicantsController {
   @Get()
   @Permissions('applicants.read')
   list(@Query() query: unknown) {
-    return this.applicants.list(parseOr400(listQuery, query));
+    return this.applicants.list(parseOrThrow(listQuery, query));
   }
 
   @Get(':id')
@@ -55,12 +56,12 @@ export class JobApplicantsController {
 
   @Post()
   create(@Body() body: unknown, @CurrentUser() user: AuthUser) {
-    return this.applicants.create(parseOr400(createBody, body), user.id);
+    return this.applicants.create(parseOrThrow(createBody, body), user.id);
   }
 
   @Patch(':id')
   update(@Param('id', uuid) id: string, @Body() body: unknown) {
-    return this.applicants.update(id, parseOr400(updateBody, body));
+    return this.applicants.update(id, parseOrThrow(updateBody, body));
   }
 
   @Patch(':id/status')
@@ -69,7 +70,7 @@ export class JobApplicantsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ) {
-    const { status } = parseOr400(statusBody, body);
+    const { status } = parseOrThrow(statusBody, body);
     return this.applicants.changeStatus({ id, to: status, actorId: user.id });
   }
 
