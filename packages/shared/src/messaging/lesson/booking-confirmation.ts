@@ -1,6 +1,5 @@
 import { intlLocale, type Locale } from '@ab/core';
-import type { ClockOptions } from '../../core/format/index.js';
-import { clockOf, weekdayDayMonth } from '../../time/index.js';
+import { clockOf, type ClockOptions, weekdayDayMonth } from '@ab/time';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with

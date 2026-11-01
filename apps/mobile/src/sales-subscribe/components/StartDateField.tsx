@@ -1,7 +1,7 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
-import { dayLabel } from '@/booking/shared/slots';
+import { dayLabel } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';

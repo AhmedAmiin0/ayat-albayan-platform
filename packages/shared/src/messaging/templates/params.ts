@@ -1,4 +1,4 @@
-import { clockTime } from '../../time/index.js';
+import { clockTime } from '@ab/time';
 import { joinNames, lessonWhenText } from '../lesson/booking-confirmation.js';
 import { quickReplyPayload } from '../replies/quick-reply.js';
 import {

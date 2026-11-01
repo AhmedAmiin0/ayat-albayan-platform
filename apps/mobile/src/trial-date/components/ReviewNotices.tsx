@@ -1,5 +1,4 @@
-import type { BookFailure } from '@/booking/shared/booking-errors';
-import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import { type BookFailure, ConflictNotice } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 interface ReviewNoticesProps {

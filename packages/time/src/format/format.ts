@@ -1,6 +1,6 @@
-import { clockOfParts, type ClockOptions } from '../core/format/index.js';
+import { clockOfParts, type ClockOptions } from '../clock/index.js';
 import { intlLocale, type Locale } from '@ab/core';
-import { zonedFieldsIn } from './zoned.js';
+import { zonedFieldsIn } from '../zone/index.js';
 
 // The date-fns facade, part 3 (docs/34 §7): words for dates and clocks. The arithmetic is
 // date-fns (zoned.ts, calendar.ts); month and weekday names come from Intl in the UI language

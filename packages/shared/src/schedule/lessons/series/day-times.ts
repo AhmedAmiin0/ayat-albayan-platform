@@ -5,7 +5,7 @@ import {
   localDateIn,
   weekdayIn,
   weekdayOfDate,
-} from '../../../time/index.js';
+} from '@ab/time';
 
 // A weekly package where each picked weekday has its own time (owner 2026-10-18: «اختر موعدًا لكل
 // يوم»). The DB keeps ONE schedule_rules row per distinct time (days sharing a time stay one rule,
