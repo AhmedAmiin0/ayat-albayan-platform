@@ -1,11 +1,11 @@
 import { bookingKindOf, type BookingRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
-import { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { BookingSettings } from '../../booking.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import type { BookingOwnership } from './sales-booking.scope';
-import { TrialDateQueries } from '../../trial-date/trial-date.queries';
+import { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 
 /**
  * The ownership /sales/booking checks (owner 2026-10-12: «if auto assign is turned off dont validate over it
@@ -18,7 +18,7 @@ export class SalesBookingScope {
   constructor(
     private readonly sales: SalesQueries,
     private readonly settings: BookingSettings,
-    private readonly lessons: TrialDateQueries,
+    private readonly lessons: TrialDateRepo,
   ) {}
 
   async of(user: AuthUser): Promise<BookingOwnership> {

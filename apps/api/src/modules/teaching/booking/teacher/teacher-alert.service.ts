@@ -5,11 +5,11 @@ import {
   type BookingResult,
 } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { PushService } from '../../../../common/push/push.service';
-import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
-import { MessageSender } from '../../../messaging/whatsapp/sender/message.sender';
+import { PushService } from '@/common/push/push.service';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { teacherAlerts } from './teacher-alert.plan';
-import { TeacherAlertQueries } from './teacher-alert.queries';
+import { TeacherAlertRepo } from './teacher-alert.repo';
 
 /** The shared services TeacherAlert talks to (one injectable, so constructors stay at ≤ 3 params). */
 @Injectable()
@@ -43,7 +43,7 @@ export class TeacherAlert {
   private readonly log = new Logger(TeacherAlert.name);
 
   constructor(
-    private readonly queries: TeacherAlertQueries,
+    private readonly queries: TeacherAlertRepo,
     private readonly deps: TeacherAlertDeps,
   ) {}
 

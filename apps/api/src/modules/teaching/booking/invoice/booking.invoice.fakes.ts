@@ -2,11 +2,11 @@
 import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { InboundMedia } from '../../../messaging/whatsapp/messages/inbound-media.service';
-import { bookingRequest } from '../booking.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { bookingRequest } from '@/modules/teaching/booking/booking.fakes';
 import { BookingInvoices } from './booking.invoice';
-import type { BookingQueries } from '../core/booking.queries';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 
 export const REQ = 'c1111111-1111-4111-8111-111111111111';
 export const MSG = 'd1111111-1111-4111-8111-111111111111';
@@ -33,7 +33,7 @@ export function setup() {
   const invoices = new BookingInvoices(
     storage as unknown as StorageService,
     media as unknown as InboundMedia,
-    queries as unknown as BookingQueries,
+    queries as unknown as BookingRepo,
   );
   return { invoices, storage, media, queries };
 }

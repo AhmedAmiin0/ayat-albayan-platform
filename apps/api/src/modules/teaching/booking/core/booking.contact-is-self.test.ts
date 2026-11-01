@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeQueries, leadRequest } from '@/modules/teaching/booking/booking.fakes';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { BookingParties } from './booking.parties';
-import type { BookingQueries } from './booking.queries';
+import type { BookingRepo } from './booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
@@ -17,7 +17,7 @@ const sql = readFileSync(migrationPath(`${MIGRATION}.sql`), 'utf8')
 function parties() {
   const queries = fakeQueries();
   queries.guardianByPhone.mockResolvedValue(null);
-  return new BookingParties(queries as unknown as BookingQueries, readerOf(BookingSettings));
+  return new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings));
 }
 
 describe('booking: new student contact_is_self', () => {

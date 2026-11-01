@@ -14,8 +14,8 @@ import {
   SUB,
   SUB_ID,
 } from '@/modules/teaching/booking/course-change/course-change.fakes';
-import { CourseLessonQueries } from '@/modules/teaching/booking/course-change/course-change.lessons';
-import { CourseChangeQueries } from '@/modules/teaching/booking/course-change/course-change.queries';
+import { CourseLessonRepo } from '@/modules/teaching/booking/course-change/course-change.lessons';
+import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
 import { CourseChangeViews } from '@/modules/teaching/booking/course-change/course-change.view';
 import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
@@ -91,9 +91,9 @@ export async function profileApp() {
     .useValue(fakeSettings({ sales_auto_assign: false }))
     .overrideProvider(ConflictChecker)
     .useValue(m.checker)
-    .overrideProvider(CourseChangeQueries)
+    .overrideProvider(CourseChangeRepo)
     .useValue(m.queries)
-    .overrideProvider(CourseLessonQueries)
+    .overrideProvider(CourseLessonRepo)
     .useValue(m.lessons)
     .overrideProvider(CourseChangeWriter)
     .useValue(m.writer)

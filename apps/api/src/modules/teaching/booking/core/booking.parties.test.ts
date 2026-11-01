@@ -1,16 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeQueries, IDS, leadRequest } from '../booking.fakes';
-import { readerOf } from '../../../../common/settings/settings.fakes';
+import { fakeQueries, IDS, leadRequest } from '@/modules/teaching/booking/booking.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { BookingParties } from './booking.parties';
-import type { BookingQueries } from './booking.queries';
-import { BookingSettings } from '../booking.settings';
+import type { BookingRepo } from './booking.repo';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 const SUHAILA = { id: IDS.s1, code: 'AB-0001', name: 'سهيلة', status: 'active' as const };
 function setup() {
   const queries = fakeQueries();
   queries.guardianByPhone.mockResolvedValue({ id: IDS.g1, tz: 'Asia/Riyadh', students: [SUHAILA] });
-  return { queries, parties: new BookingParties(queries as unknown as BookingQueries, readerOf(BookingSettings)) };
+  return { queries, parties: new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings)) };
 }
 const lead = (name: string, over: Record<string, unknown> = {}) =>
   leadRequest({ newStudent: { name, tz: 'Asia/Riyadh' }, ...over });

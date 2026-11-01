@@ -6,7 +6,7 @@ import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occur
 import { freeSlots } from '@/modules/people/teachers/availability/free-slots';
 import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
-import { BookingQueries } from '@/modules/teaching/booking/core/booking.queries';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';
 
@@ -36,7 +36,7 @@ export function slotViews(candidates: readonly Occurrence[], conflicts: readonly
 @Injectable()
 export class SlotsService {
   constructor(
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
     private readonly context: ConflictContext,
     private readonly settings: BookingSettings,
   ) {}

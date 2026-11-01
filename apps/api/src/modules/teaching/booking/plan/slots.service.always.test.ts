@@ -1,11 +1,11 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { allDayRows } from '../../../people/teachers/availability/free-slots';
-import type { SlotsQuery } from '../booking.dto';
-import { fakeContext, IDS } from '../booking.fakes';
-import type { BookingQueries } from '../core/booking.queries';
-import { BookingSettings } from '../booking.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { allDayRows } from '@/modules/people/teachers/availability/free-slots';
+import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ALWAYS_STEP_MIN, SlotsService } from './slots.service';
 
 // settings.teachers_always_available on: AvailabilityQueries.bookableSlots answers every day
@@ -21,7 +21,7 @@ function setup() {
   const deps = fakeContext();
   deps.availability.bookableSlots.mockResolvedValue(allDayRows(RIYADH_TZ));
   const settings = readerOf(BookingSettings, { teachers_always_available: true });
-  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingQueries, deps.context, settings) };
+  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings) };
 }
 const byStart = (slots: { starts_at: string; conflicts: { kind: string }[] }[]) =>
   Object.fromEntries(slots.map((s) => [s.starts_at, s.conflicts.map((c) => c.kind)]));
