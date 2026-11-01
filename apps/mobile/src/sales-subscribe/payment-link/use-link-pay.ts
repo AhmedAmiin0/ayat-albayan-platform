@@ -17,7 +17,7 @@ interface LinkPayInput {
 }
 
 /**
- * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, test build only): the calculator price as
+ * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, with FEATURE_STRIPE (test or live)): the calculator price as
  * the reference (POST /sales/payment-links/quote), the agreed amount (the reference until she types one; a
  * new package or child resets it; > 0, not below the admin's minimum), then POST /sales/payment-links with
  * the form's own student, package, start day and teacher. The API makes the unpaid package with the link.

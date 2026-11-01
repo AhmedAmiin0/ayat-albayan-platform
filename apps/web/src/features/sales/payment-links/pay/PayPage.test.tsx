@@ -10,7 +10,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const P = t.paymentLinks.pay;
-const LINK: PublicPaymentLink = { status: 'open', first_name: 'أم سهيلة', amount: 261, currency: 'SAR', package: '8', lessons: 8 };
+const LINK: PublicPaymentLink = { status: 'open', first_name: 'أم سهيلة', amount: 261, currency: 'SAR', package: '8', lessons: 8, sandbox: true };
 
 const show = (link: Partial<PublicPaymentLink>, back = {}) => {
   apiFetch.mockResolvedValue({ ...LINK, ...link });
@@ -35,6 +35,12 @@ describe('/pay/:token «الدفع» (public, no login)', () => {
     show({}, { done: true });
     expect(await screen.findByText(P.thanks)).toBeTruthy();
     expect(screen.queryByRole('link', { name: P.button })).toBeNull();
+  });
+
+  it('a live key (sandbox false): no test notice, the page and its button as usual', async () => {
+    show({ sandbox: false });
+    expect(await screen.findByRole('link', { name: P.button })).toBeTruthy();
+    expect(screen.queryByText(P.testNotice)).toBeNull();
   });
 
   it('?cancelled=1 keeps «ادفع الآن»', async () => {

@@ -19,7 +19,8 @@ const s = t.integrations;
 /**
  * A secret (token, app secret, API key): never prefilled, never shown. A status chip, a password
  * field with «حفظ القيمة», and «مسح» (after a confirm) when it is saved in settings. A key with a
- * format of its own (a Stripe key: sandbox only) is checked before it leaves, as the API checks it.
+ * format of its own (a Stripe key: rk_ / sk_, sandbox or live) is checked before it leaves; the API also
+ * refuses a live key unless it runs with FEATURE_STRIPE=live.
  */
 export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfigItem; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();

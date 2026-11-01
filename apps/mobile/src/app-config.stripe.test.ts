@@ -1,12 +1,13 @@
-import { STRIPE_TEST_APP_PACKAGE } from '@ab/shared';
+import { STRIPE_APP_PACKAGE, STRIPE_TEST_APP_PACKAGE } from '@ab/shared';
 import type { ExpoConfig } from 'expo/config';
 import app from '../app.json';
 import eas from '../eas.json';
 import appConfig from '../app.config';
 
-// Owner 2026-10-28 (docs/30): Stripe exists ONLY in the test build. EXPO_PUBLIC_FEATURE_STRIPE is inlined at
-// bundle time, so a profile that sets it ships the Stripe UI; only `stripe-test` may. Its APP_VARIANT makes a
-// separate app (own package, own name) installable beside the normal one, on its own update channel.
+// Owner 2026-10-28, go live 2026-11-01 (docs/30): EXPO_PUBLIC_FEATURE_STRIPE is inlined at bundle time, so a
+// profile that sets it ships the Stripe UI (still gated by GET /stripe/feature): the normal APK (`preview`) and
+// `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app (own package, own name) installable beside
+// the normal one, on its own update channel.
 
 type Profile = { channel?: string; environment?: string; distribution?: string; env?: Record<string, string>; android?: { buildType?: string } };
 const profiles: Record<string, Profile> = eas.build;
@@ -26,15 +27,21 @@ const configFor = (variant: string | undefined): ExpoConfig => {
   }
 };
 
-test.each(['development', 'preview', 'production'])('the %s profile never turns Stripe on nor builds the test variant', (name) => {
+test.each(['development', 'preview', 'production'])('the %s profile never builds the test variant nor uses its channel', (name) => {
   const profile = profiles[name];
   expect(profile).toBeDefined();
-  expect(profile?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
   expect(profile?.env?.APP_VARIANT).not.toBe('stripetest');
   expect(profile?.channel).not.toBe('stripe-test');
 });
 
-test('only the stripe-test profile sets the flag; an internal APK on its own channel, preview environment', () => {
+test('the normal APK (preview) has the Stripe UI flag, its own channel and the normal app; development and production do not', () => {
+  expect(profiles.preview?.env).toEqual({ EXPO_PUBLIC_FEATURE_STRIPE: '1', ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a' });
+  expect(profiles.preview?.channel).toBe('preview');
+  expect(profiles.development?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
+  expect(profiles.production?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
+});
+
+test('the stripe-test profile: the flag and its variant; an internal APK on its own channel, preview environment', () => {
   expect(profiles['stripe-test']).toEqual({
     distribution: 'internal',
     channel: 'stripe-test',
@@ -49,7 +56,7 @@ test('only the stripe-test profile sets the flag; an internal APK on its own cha
     pnpm: eas.build.preview.pnpm,
   });
   const flagged = Object.entries(profiles).filter(([, p]) => p.env?.EXPO_PUBLIC_FEATURE_STRIPE !== undefined);
-  expect(flagged.map(([name]) => name)).toEqual(['stripe-test']);
+  expect(flagged.map(([name]) => name)).toEqual(['preview', 'stripe-test']);
 });
 
 test('APP_VARIANT=stripetest: the .stripetest ids and the test name; nothing else changes', () => {
@@ -69,6 +76,8 @@ test('the default config is app.json’s (plus the FCM file)', () => {
   expect(normal.android?.package).toBe(app.expo.android.package);
   expect(normal.ios?.bundleIdentifier).toBe(app.expo.ios.bundleIdentifier);
   expect(configFor('preview').android?.package).toBe(app.expo.android.package);
+  // FEATURE_STRIPE=live: the API's pay page names this package to bring the payer back into the normal app.
+  expect(normal.android?.package).toBe(STRIPE_APP_PACKAGE);
 });
 
 const FCM_FILE = (): string => process.env.GOOGLE_SERVICES_JSON ?? './google-services.json';

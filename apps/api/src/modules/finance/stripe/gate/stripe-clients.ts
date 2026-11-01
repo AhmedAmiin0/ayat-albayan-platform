@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { loadEnv } from '@/config/env/env';
+import { stripeKeyIsLive } from '@/config/env/env.stripe';
 
 /** The API version this integration is written and tested against (stripe-node 23.x). */
 const STRIPE_API_VERSION = '2026-09-30.endive';
@@ -20,7 +21,7 @@ const notConfigured = () =>
 /**
  * A Stripe client from the keys in «التكاملات» (STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET: Vault or
  * env, read per call through the integration overlay like every integration key). The env schema
- * takes sandbox keys only, so a live key never gets here; no key → 503 stripe_not_configured.
+ * takes a live key only with FEATURE_STRIPE=live (stripeServerKey); no key → 503 stripe_not_configured.
  * Keys are never logged.
  */
 @Injectable()
@@ -34,6 +35,11 @@ export class StripeClients {
     if (!key) return Promise.reject(notConfigured());
     this.cached = this.cached?.key === key ? this.cached : { key, api: this.factory(key) };
     return Promise.resolve(this.cached.api);
+  }
+
+  /** The saved key is a live one (the webhook processes only events of the key's own mode). */
+  liveMode(): boolean {
+    return stripeKeyIsLive(loadEnv());
   }
 
   webhookSecret(): Promise<string> {

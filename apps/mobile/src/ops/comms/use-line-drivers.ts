@@ -8,7 +8,7 @@ const PATH = '/settings/integrations';
 
 /**
  * GET /settings/integrations (settings.read): key names, set flags, plain values (never a
- * secret's). `enabled` false asks nothing (the Stripe row outside the test app).
+ * secret's). `enabled` false asks nothing (the Stripe row outside a Stripe build).
  */
 export function useIntegrations(enabled = true) {
   return useQuery({

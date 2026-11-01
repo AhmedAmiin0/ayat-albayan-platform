@@ -10,8 +10,9 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «الدفع الإلكتروني» (docs/30): the form refuses a live or malformed Stripe key before anything
-// leaves, as the API does (integrationSecretCheck), and a save asks GET /stripe/feature again.
+// «الدفع الإلكتروني» (docs/30): the form refuses a malformed Stripe key before anything leaves
+// (integrationSecretCheck); a sandbox or live key is sent (the API alone decides whether it runs with
+// FEATURE_STRIPE=live), and a save asks GET /stripe/feature again.
 const s = t.integrations;
 const FEATURE = { queryKey: stripeFeatureQuery.queryKey };
 
@@ -38,7 +39,8 @@ afterEach(() => {
 
 describe('«التكاملات» › Stripe', () => {
   it.each([
-    ['STRIPE_API_KEY', 'rk_live_51Abc'],
+    ['STRIPE_API_KEY', 'pk_live_51Abc'],
+    ['STRIPE_API_KEY', 'rk_live_'],
     ['STRIPE_WEBHOOK_SECRET', 'abc123'],
   ] as const)('%s «%s» is refused before anything leaves', async (key, value) => {
     await renderPanel();
@@ -49,14 +51,14 @@ describe('«التكاملات» › Stripe', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
-  it('a sandbox key is sent trimmed, and the payment buttons are asked again', async () => {
+  it.each(['rk_test_51Abc', 'sk_live_51Abc'])('the key %s is sent trimmed, and the payment buttons are asked again', async (key) => {
     const spy = await renderPanel();
     apiSend.mockResolvedValue(integrationItems());
-    const { row, save } = typeSecret('STRIPE_API_KEY', ' rk_test_51Abc ');
+    const { row, save } = typeSecret('STRIPE_API_KEY', ` ${key} `);
     expect(within(row).queryByText(s.invalid)).toBeNull();
     fireEvent.click(save);
     const url = '/settings/integrations/secrets/STRIPE_API_KEY';
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', url, { value: 'rk_test_51Abc' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', url, { value: key }));
     await waitFor(() => expect(spy).toHaveBeenCalledWith(FEATURE));
   });
 

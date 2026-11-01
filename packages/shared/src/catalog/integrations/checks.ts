@@ -34,10 +34,13 @@ export const iceUrls = z
   .refine((raw) => raw.split(',').every((u) => /^(stun|turns?):[A-Za-z0-9.-]+(:\d{1,5})?(\?transport=(udp|tcp))?$/.test(u.trim())), 'ice_url');
 
 /**
- * Stripe (docs/30, TEST BUILD ONLY): a sandbox restricted or secret key. Anything else, a live key
- * (rk_live_ / sk_live_) above all, is refused: this build never takes real money.
+ * Stripe (docs/30, with FEATURE_STRIPE test or live): a restricted or secret key, sandbox or live
+ * (rk_ / sk_ + test_ / live_). A malformed one (a publishable pk_ key, junk) keeps the old code. Whether
+ * a live key is accepted is the server's call (FEATURE_STRIPE=live, apps/api env.stripe.ts).
  */
-export const stripeApiKey = z.string().regex(/^(rk|sk)_test_[A-Za-z0-9]+$/, 'stripe_live_key_refused');
+export const stripeApiKey = z.string().regex(/^(rk|sk)_(test|live)_[A-Za-z0-9]+$/, 'stripe_live_key_refused');
+/** A live-mode key (rk_live_ / sk_live_): it moves real money. */
+export const stripeKeyLive = (key: string): boolean => /^(rk|sk)_live_/.test(key);
 /** The signing secret of the Stripe webhook endpoint (/webhooks/stripe on the API host). */
 export const stripeWebhookSecret = z.string().regex(/^whsec_[A-Za-z0-9+/=]+$/, 'invalid_value');
 /** The admin's cap on a payment link's discount below the calculator price, in %. */

@@ -5,6 +5,7 @@ import {
   integrationValuesSchema,
   type IntegrationConfigItem,
   type IntegrationPlainKey,
+  type IntegrationSecretKey,
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -13,7 +14,7 @@ import { parseOrThrow } from '@/common/http/http';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { integrationKeyAvailable } from '@/config/env/env.stripe';
+import { integrationKeyAvailable, stripeServerKey } from '@/config/env/env.stripe';
 import { IntegrationConfigService } from './integration-config.service';
 
 /** audit_log.entity_id of the integration config (one entity; the key names go in action / after). */
@@ -25,6 +26,9 @@ const valuesBody = integrationValuesSchema.superRefine(({ values }, ctx) => {
     if (!integrationKeyAvailable(key)) ctx.addIssue({ code: 'custom', path: ['values', key], message: 'unknown_key' });
   }
 });
+/** The server's own check where it is stricter than the shared one (a live Stripe key: FEATURE_STRIPE=live only). */
+const SERVER_SECRET_CHECKS: Partial<Record<IntegrationSecretKey, z.ZodType<string>>> = { STRIPE_API_KEY: stripeServerKey };
+const secretCheck = (key: IntegrationSecretKey): z.ZodType<string> => SERVER_SECRET_CHECKS[key] ?? integrationSecretCheck(key);
 
 /**
  * «التكاملات» on /admin/settings (owner, 2026-10-12): the integration keys an admin may keep in the
@@ -56,13 +60,13 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused. */
+  /** A key's own format is checked too: a live Stripe key without FEATURE_STRIPE=live is 400 stripe_live_key_refused. */
   @Put('secrets/:key')
   @Permissions('settings.write')
   async putSecret(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
     const key = parseOrThrow(secretKey, rawKey);
     const { value } = parseOrThrow(integrationSecretSchema, body);
-    await this.config.setSecret({ key, value: parseOrThrow(integrationSecretCheck(key), value) });
+    await this.config.setSecret({ key, value: parseOrThrow(secretCheck(key), value) });
     await this.record(user, { action: `secret_set:${key}`, keys: [key] });
     return this.config.items();
   }

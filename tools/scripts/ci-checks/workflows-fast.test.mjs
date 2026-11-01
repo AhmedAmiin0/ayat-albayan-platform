@@ -113,7 +113,7 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
   assert.match(side, /EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest/);
   assert.match(side, /--channel stripe-test --environment preview/);
-  assert.doesNotMatch(normal, /STRIPE|APP_VARIANT|channel/);
+  assert.deepEqual([/APP_VARIANT|channel/.test(normal), step('ota', 'EAS update').env.EXPO_PUBLIC_FEATURE_STRIPE], [false, '1']);
   assert.match(normal, /update --branch "\$EAS_BRANCH" --environment "\$EAS_BRANCH"/);
   assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
 });

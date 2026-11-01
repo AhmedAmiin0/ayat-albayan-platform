@@ -96,7 +96,7 @@ describe('/settings/integrations («التكاملات»)', () => {
     expect(q.setSecret).not.toHaveBeenCalled();
   });
 
-  it('a Stripe key must be a sandbox key: a live one is 400 and never stored, echoed or audited', async () => {
+  it('FEATURE_STRIPE=test: a live Stripe key is 400 and never stored, echoed or audited; live: it is stored', async () => {
     vi.stubEnv('FEATURE_STRIPE', 'test');
     const url = '/settings/integrations/secrets/STRIPE_API_KEY';
     for (const value of ['sk_live_51LiveAbc', 'rk_live_51LiveAbc', 'pk_test_51LiveAbc']) {
@@ -111,6 +111,12 @@ describe('/settings/integrations («التكاملات»)', () => {
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'secret_set:STRIPE_API_KEY', after: { keys: ['STRIPE_API_KEY'] } }));
     const hook = await call({ method: 'PUT', url: '/settings/integrations/secrets/STRIPE_WEBHOOK_SECRET', payload: { value: 'abc' } });
     expect(hook.statusCode).toBe(400);
+    vi.stubEnv('FEATURE_STRIPE', 'live');
+    const live = await call({ method: 'PUT', url, payload: { value: 'sk_live_51LiveAbc' } });
+    expect([live.statusCode, live.body.includes('LiveAbc')]).toEqual([200, false]);
+    expect(q.setSecret).toHaveBeenLastCalledWith({ key: 'STRIPE_API_KEY', value: 'sk_live_51LiveAbc' });
+    const junk = await call({ method: 'PUT', url, payload: { value: 'pk_live_51LiveAbc' } });
+    expect([junk.statusCode, junk.json().issues[0].message]).toEqual([400, 'stripe_live_key_refused']);
   });
 
   it('without FEATURE_STRIPE no Stripe key is listed, stored or cleared: 400, nothing written', async () => {

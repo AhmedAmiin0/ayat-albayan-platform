@@ -1,16 +1,24 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadEnv, validOverlay } from './env';
-import { stripeFeatureOn, stripeReady } from './env.stripe';
+import { stripeFeatureOn, stripeKeyIsLive, stripeLiveAllowed, stripeReady } from './env.stripe';
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 const KEYS = { STRIPE_API_KEY: 'rk_test_51Abc', STRIPE_WEBHOOK_SECRET: 'whsec_abc123' };
+/** The keys validOverlay keeps from a DB overlay with a live key, and the keys it drops. */
+const overlayOf = (raw: Record<string, string>) => {
+  const bad: string[] = [];
+  return { kept: Object.keys(validOverlay(raw, (k) => bad.push(k))), bad };
+};
 
-describe('env: Stripe (docs/30, test build only)', () => {
-  it('only FEATURE_STRIPE=test turns the module on; never a DB value', () => {
-    expect(stripeFeatureOn({})).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: '1' })).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: 'live' })).toBe(false);
-    expect(stripeFeatureOn({ FEATURE_STRIPE: 'test' })).toBe(true);
+afterEach(() => vi.unstubAllEnvs());
+
+describe('env: Stripe (docs/30, FEATURE_STRIPE test or live)', () => {
+  it('FEATURE_STRIPE=test or live turns the module on; only live allows live keys; never a DB value', () => {
+    for (const off of [{}, { FEATURE_STRIPE: '1' }, { FEATURE_STRIPE: 'LIVE' }, { FEATURE_STRIPE: '' }]) {
+      expect([stripeFeatureOn(off), stripeLiveAllowed(off)]).toEqual([false, false]);
+    }
+    expect([stripeFeatureOn({ FEATURE_STRIPE: 'test' }), stripeLiveAllowed({ FEATURE_STRIPE: 'test' })]).toEqual([true, false]);
+    expect([stripeFeatureOn({ FEATURE_STRIPE: 'live' }), stripeLiveAllowed({ FEATURE_STRIPE: 'live' })]).toEqual([true, true]);
   });
 
   it('«الدفع الإلكتروني» is off by default; the cap is unset = no cap', () => {
@@ -28,11 +36,26 @@ describe('env: Stripe (docs/30, test build only)', () => {
     expect(stripeReady(loadEnv({ ...BASE, STRIPE_ENABLED: 'true', STRIPE_WEBHOOK_SECRET: 'whsec_x' }))).toBe(false);
   });
 
-  it('a live key in env fails the boot; one saved in the database is dropped by name only', () => {
+  it.each(['test', ''])('FEATURE_STRIPE=%o: a live key in env fails the boot; one in the database is dropped by name only', (mode) => {
+    vi.stubEnv('FEATURE_STRIPE', mode);
     expect(() => loadEnv({ ...BASE, STRIPE_API_KEY: 'sk_live_51Abc' })).toThrow();
-    const bad: string[] = [];
-    const overlay = validOverlay({ STRIPE_API_KEY: 'rk_live_51Abc', STRIPE_WEBHOOK_SECRET: 'whsec_ok', STRIPE_ENABLED: 'true' }, (k) => bad.push(k));
-    expect(overlay).toEqual({ STRIPE_WEBHOOK_SECRET: 'whsec_ok', STRIPE_ENABLED: 'true' });
-    expect(bad).toEqual(['STRIPE_API_KEY']);
+    const live = overlayOf({ STRIPE_API_KEY: 'rk_live_51Abc', STRIPE_WEBHOOK_SECRET: 'whsec_ok', STRIPE_ENABLED: 'true' });
+    expect(live).toEqual({ kept: ['STRIPE_WEBHOOK_SECRET', 'STRIPE_ENABLED'], bad: ['STRIPE_API_KEY'] });
+    expect(loadEnv({ ...BASE, ...KEYS }).STRIPE_API_KEY).toBe('rk_test_51Abc');
+  });
+
+  it('FEATURE_STRIPE=live: a live key (env or database) is taken, a sandbox key too; a malformed one still is not', () => {
+    vi.stubEnv('FEATURE_STRIPE', 'live');
+    const env = loadEnv({ ...BASE, STRIPE_API_KEY: 'sk_live_51Abc' });
+    expect([env.STRIPE_API_KEY, stripeKeyIsLive(env)]).toEqual(['sk_live_51Abc', true]);
+    expect(overlayOf({ STRIPE_API_KEY: 'rk_live_51Abc' })).toEqual({ kept: ['STRIPE_API_KEY'], bad: [] });
+    const sandbox = loadEnv({ ...BASE, ...KEYS });
+    expect([sandbox.STRIPE_API_KEY, stripeKeyIsLive(sandbox)]).toEqual(['rk_test_51Abc', false]);
+    expect(() => loadEnv({ ...BASE, STRIPE_API_KEY: 'pk_live_51Abc' })).toThrow();
+    expect(overlayOf({ STRIPE_API_KEY: 'pk_live_51Abc' }).bad).toEqual(['STRIPE_API_KEY']);
+  });
+
+  it('no key saved is not live', () => {
+    expect(stripeKeyIsLive(loadEnv(BASE))).toBe(false);
   });
 });

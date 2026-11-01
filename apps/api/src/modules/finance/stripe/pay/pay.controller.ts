@@ -3,6 +3,7 @@ import { Controller, Get, Header, Ip, Param, Redirect, Req, Res, UseGuards } fro
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../../../common/auth/decorators';
 import { notFound } from '../../../../common/http/errors';
+import { stripeLiveAllowed } from '../../../../config/env/env.stripe';
 import { StripeEnabledGuard } from '../gate/stripe-gate';
 import { apiPublicOrigin } from '../links/link-views';
 import { toPublicLink } from '../links/payment-links.mapper';
@@ -17,7 +18,7 @@ import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from '.
  * The family's payment pages, served by the API (no login, no web build; docs/30): GET /pay/:token is a small
  * Arabic page (the first name, the package, the amount; no other personal data) whose «ادفع الآن» opens
  * GET /pay/:token/checkout (303 to Stripe Checkout); Stripe comes back to /done or /cancelled (text only;
- * a link the test app opened also gets «العودة إلى التطبيق», pay-return.ts).
+ * a link the app opened also gets «العودة إلى التطبيق», pay-return.ts).
  * The web PayPage still reads GET /pay/:token as JSON (Accept: application/json). Rate-limited; 404 while
  * Stripe is off.
  */
@@ -74,7 +75,8 @@ export class PayController {
     await this.limit.check(r.req.ip, token);
     if (!isLinkToken(token) || !(await this.links.byToken(token))) return html(r.res, { status: 404, body: notFoundPageHtml() });
     const os = fromApp(r.req.headers.cookie);
-    const app = os ? appReturnUrl({ token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android' }) : null;
+    const back = { token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android', live: stripeLiveAllowed() };
+    const app = os ? appReturnUrl(back) : null;
     const auto = r.req.query?.auto !== '0';
     return html(r.res, { status: 200, body: resultPageHtml({ kind: r.kind, token, app, auto }) });
   }

@@ -43,7 +43,7 @@ const pl = t.paymentLinks;
  * The child, the admin's calculator inputs, the API's price, the first day (only with subscriptions.set_start_date),
  * «المعلم/ة» (the trial's unless she picks another; teacherId). «طريقة الدفع» (owner 2026-10-29) where both exist:
  * «تحويل بنكي» saves the package (on to its weekly days, then the transfer; the screen is replaced), «دفع إلكتروني»
- * (the Stripe test build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
+ * (a Stripe build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
  */
 export function SalesSubscribeForm({ phone, students, studentId, onPick, renew = false, onDone }: SalesSubscribeFormProps) {
   const child = students.find((s) => s.id === studentId);

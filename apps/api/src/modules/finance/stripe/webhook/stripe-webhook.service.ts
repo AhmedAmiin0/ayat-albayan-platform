@@ -19,8 +19,9 @@ type WebhookPost = { rawBody: Buffer | undefined; signature: string | undefined 
 
 /**
  * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked on the raw
- * bytes Stripe sent (400 bad_signature, nothing stored); a live-mode event is refused (the test build);
- * each event is handled once (stripe_events, by event.id), every step idempotent on its own.
+ * bytes Stripe sent (400 bad_signature, nothing stored); an event whose mode is not the saved key's (a live
+ * event with a sandbox key, or a sandbox event with a live key) is recorded as mode_mismatch and not
+ * dispatched; each event is handled once (stripe_events, by event.id), every step idempotent on its own.
  */
 @Injectable()
 export class StripeWebhookService {
@@ -35,7 +36,7 @@ export class StripeWebhookService {
   async handle(post: WebhookPost): Promise<{ received: true }> {
     const event = await this.verify(post);
     if (await this.events.begin(event)) return { received: true }; // a duplicate delivery
-    const result = event.livemode ? 'live_refused' : await this.dispatch(event);
+    const result = event.livemode === this.clients.liveMode() ? await this.dispatch(event) : 'mode_mismatch';
     await this.events.done(event.id, result);
     this.log.log(`stripe ${event.type} ${event.id}: ${result}`);
     return { received: true };

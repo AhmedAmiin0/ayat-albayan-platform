@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
 
-// «رابط دفع» (docs/30, test build only): the calculator price, the link, her links and their cancel.
+// «رابط دفع» (docs/30, with FEATURE_STRIPE (test or live)): the calculator price, the link, her links and their cancel.
 
 const LINKS = ['sales', 'payment-links'] as const;
 
