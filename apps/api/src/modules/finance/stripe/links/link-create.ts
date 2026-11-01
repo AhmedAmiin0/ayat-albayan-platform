@@ -75,8 +75,8 @@ export class LinkCreate {
   }
 
   /**
-   * «المعلم/ة» writes students.teacher_id and opens the teacher-student chat: her own student only, as the bank
-   * path (SalesMoneyScope; no chat phone, so a sales.renew_any child is refused too). The link alone stays any student.
+   * «المعلم/ة» writes students.teacher_id and opens the teacher-student chat: her own student only
+   * (SalesMoneyScope.assertOwns; unlike the bank path, sales.renew_any never widens a link). The link alone stays any student.
    */
   private async mayAssign(input: PaymentLinkCreate, user: AuthUser): Promise<void> {
     if (input.teacherId && user.role !== 'admin') await this.extra.sales.scope.assertOwns(user, input.studentId);

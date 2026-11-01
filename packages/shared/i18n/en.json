@@ -5425,7 +5425,7 @@
       "subscriptions.stop": "Cancels the subscription's upcoming lessons, ends its schedule and marks the student churned. Payments, past lessons, reports and teacher pay stay as they are.",
       "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
       "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
-      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
+      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, and «Renew» and «Record transfer» in «Student details», for any student, even one that is not theirs or belongs to another assistant (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
     "page": {

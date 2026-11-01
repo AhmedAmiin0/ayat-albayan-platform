@@ -2543,7 +2543,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 20
+      "count": 19
     }
   },
   "src/modules/finance/stripe/links/link-deps.ts": {
@@ -11691,9 +11691,6 @@
   "src/modules/sales/sales-money/sales-money.http.renew-any.test.ts": {
     "ab/no-parent-imports": {
       "count": 4
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/sales/sales-money/sales-money.http.renewal.test.ts": {
@@ -11780,7 +11777,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/sales/sales-money/sales-money.service.ts": {
