@@ -10,6 +10,12 @@ import type { RelayIds, RelayRowInput } from './relay.repo';
 export const TO = '+966500000001';
 export const KEY = `Bearer ${CRM_ENV.apiKey}`;
 
+/** The CRM's GET /me 200 for a key of `account` (its shape, as tools/wa-stub serves it). */
+export const crmMe = (account = 'acct-1', scopes = ['messages:send']) => ({
+  status: 200,
+  body: { data: { account: { id: account, name: 'Academy' }, key: { id: 'key-1', scopes } } },
+});
+
 /** The line with the REAL crm driver over scripted CRM answers. */
 export function fakeLine(input: {
   fetch: ReturnType<typeof scriptedFetch>;
@@ -20,7 +26,7 @@ export function fakeLine(input: {
     timeoutMs: 1_000,
     allowed: input.allowed ?? null,
   });
-  const now: RelayLineNow = { env: CRM_ENV, client, numberId: undefined };
+  const now: RelayLineNow = { env: CRM_ENV, client, numberId: undefined, fetch: input.fetch.fetch };
   return { current: (): RelayLineNow | null => now };
 }
 

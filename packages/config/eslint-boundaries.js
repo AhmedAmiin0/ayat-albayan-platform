@@ -7,6 +7,7 @@ import { dirname, relative, resolve } from 'node:path';
 import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
 import { noParentImportsRule } from './eslint-parent-imports.js';
+import { syntaxRules } from './eslint-syntax.js';
 
 const INDEX = /^\/index(\.[cm]?[jt]sx?)?$/;
 
@@ -79,6 +80,7 @@ export const boundariesPlugin = {
     'max-params': maxParamsRule,
     'forbidden-imports': forbiddenImportsRule,
     'no-parent-imports': noParentImportsRule,
+    ...syntaxRules,
   },
 };
 

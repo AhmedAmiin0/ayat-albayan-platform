@@ -1,4 +1,9 @@
 {
+  "src/async/errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
   "src/async/result.test.ts": {
     "max-len": {
       "count": 1
