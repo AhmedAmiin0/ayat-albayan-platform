@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
-import { MESSAGE_STATUSES, PUSH_KINDS, TEMPLATE_STATUSES } from '../../enums/index.js';
+import { MESSAGE_STATUSES, PUSH_KINDS, TEMPLATE_STATUSES } from '@ab/catalog';
 import { RESTRICTED_TEMPLATE_DEFAULTS } from './restricted-templates.js';
 import { messageStatusStyle, templateStatusStyle } from '../chat/status-style.js';
 import { TEMPLATE_KEYS } from './templates.js';

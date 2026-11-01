@@ -1,4 +1,4 @@
-import type { Attendance, Grade, Program } from '../../enums/index.js';
+import type { Attendance, Grade, Program } from '@ab/catalog';
 import type { ReportView } from '../views.js';
 import { emptyContent, MAX_SEGMENTS, type ReportContent, type ReportSegment, type SegmentKind } from './content.js';
 import { suggestOverall } from './rules.js';

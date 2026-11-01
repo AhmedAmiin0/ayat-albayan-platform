@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PROGRAMS, TEACHER_STATUSES } from '../../enums/index.js';
+import { PROGRAMS, TEACHER_STATUSES } from '@ab/catalog';
 import { listSortShape } from '@ab/core';
 
 // Sort keys + column filters of the people lists (R-NFR-08): the API allowlists them, the web

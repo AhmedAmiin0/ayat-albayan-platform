@@ -1,5 +1,4 @@
-import type { WaLine } from '../../enums/messaging.js';
-import type { WaProvider } from '../../catalog/integrations/keys.js';
+import type { WaLine, WaProvider } from '@ab/catalog';
 import type { TemplateView } from './template-views.js';
 
 // The template registry per number (owner 2026-10-18: «more controls over templates and which number

@@ -1,4 +1,4 @@
-import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
+import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import { isCancelledLesson } from '../../schedule/lessons/index.js';
 import { isNotSubscribed } from './status-flow.js';
 

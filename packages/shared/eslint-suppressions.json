@@ -1,144 +1,7 @@
 {
-  "src/catalog/integrations/checks.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/integrations/driver-keys.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
+  "src/catalog/catalog.sales-options.test.ts": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/catalog/integrations/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/catalog/integrations/keys.kapso.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/catalog/integrations/keys.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/integrations/keys.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/catalog/permissions/catalog.data.ts": {
-    "max-len": {
-      "count": 25
-    }
-  },
-  "src/catalog/permissions/catalog.sales-options.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/permissions/catalog.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/permissions/roles.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/catalog/theme/avatar-tones.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/theme/avatar-tones.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/theme/theme.brand.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/theme/theme.contrast.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/theme/theme.glass.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/catalog/theme/theme.ts": {
-    "@typescript-eslint/explicit-module-boundary-types": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/enums/feedback.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/finance.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/messaging.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/google/enums.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/google/errors.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/google/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/google/schemas.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/google/schemas.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/google/settings-keys.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/google/views.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/i18n/forms-wording.test.ts": {
@@ -217,9 +80,6 @@
     }
   },
   "src/messaging/chat/line-views.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 9
     }
@@ -303,17 +163,11 @@
     }
   },
   "src/messaging/numbers/routing.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 10
     }
   },
   "src/messaging/numbers/schemas.ts": {
-    "ab/module-boundaries": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -322,9 +176,6 @@
     }
   },
   "src/messaging/numbers/views.ts": {
-    "ab/module-boundaries": {
-      "count": 4
-    },
     "max-len": {
       "count": 7
     }
@@ -344,7 +195,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -361,11 +212,6 @@
   "src/messaging/replies/reply-line.test.ts": {
     "max-len": {
       "count": 4
-    }
-  },
-  "src/messaging/replies/reply-line.ts": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/messaging/replies/reply-note.test.ts": {
@@ -413,7 +259,7 @@
   },
   "src/messaging/schemas.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 10
@@ -440,9 +286,6 @@
     }
   },
   "src/messaging/templates/restricted-templates.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -458,9 +301,6 @@
     }
   },
   "src/messaging/templates/template-sync-views.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 5
     }
@@ -852,11 +692,6 @@
       "count": 1
     }
   },
-  "src/notifications/kind-permissions.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/notifications/rules.effective.test.ts": {
     "max-len": {
       "count": 2
@@ -904,11 +739,6 @@
       "count": 2
     }
   },
-  "src/notifications/web-path.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/people/account/account.schemas.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -918,9 +748,6 @@
     }
   },
   "src/people/account/account.views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -998,9 +825,6 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -1009,17 +833,11 @@
     }
   },
   "src/people/users/users.views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/people/users/validation.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -1061,7 +879,7 @@
   },
   "src/reports/rules.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -1371,9 +1189,6 @@
     }
   },
   "src/schedule/classroom/join-window.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 6
     }
@@ -1439,7 +1254,7 @@
   },
   "src/schedule/lessons/makeup-offer.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -1503,9 +1318,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -1549,11 +1361,6 @@
       "count": 2
     }
   },
-  "src/schemas/activity.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/schemas/chat-media.ts": {
     "max-len": {
       "count": 1
@@ -1567,135 +1374,9 @@
       "count": 5
     }
   },
-  "src/settings/boundaries.test.ts": {
-    "@typescript-eslint/no-unnecessary-template-expression": {
-      "count": 1
-    }
-  },
-  "src/settings/config-describe.migration.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/custom-config/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/settings/custom-config/public-config.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/custom-config/public.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/custom-config/schema.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/settings/defs.ts": {
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/settings/domains/activity.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/feedback.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/finance/finance.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/finance/payouts.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/messaging.ts": {
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/settings/domains/notifications.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/notifications.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/settings/domains/sales.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/domains/teaching/classroom.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/settings/domains/teaching/recordings.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/teaching/reports.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/teaching/scheduling.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/domains/uploads.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/settings/exports.test.ts": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/settings/gate.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/google-defs.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/settings/groups.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 2
     }
   },
   "src/settings/layout.test.ts": {
@@ -1703,153 +1384,14 @@
       "count": 4
     }
   },
-  "src/settings/layout.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/ownership.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/settings/public.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/read-settings.messaging.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/settings/read-settings.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/registry.nullable.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/settings/registry.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/settings/registry.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/settings/seed-entries.sql-keys.test.ts": {
+  "src/settings/seed-payload.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/settings/seed/entries.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/settings/seed/entries.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/settings/seed/seed-entries.metadata.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/settings/seed/seed-entries.test.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/settings/seed/seed-entries.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/settings/seed/seed-payload.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/seed/seed-payload.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/settings/seed/sql-readers.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/settings/sql-defaults.migration.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/validation/patch.test.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/settings/validation/patch.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/settings/validation/schema.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/validation/schema.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/validation/validate.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/validation/validate.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/settings/value-groups.registry.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/testing/assistants.ts": {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STUDENT_STATUSES, type StudentStatus } from '../../enums/index.js';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 import {
   ACTIVATING_STATUSES,
   isActivating,

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ATTENDANCES, GRADES, PROGRAMS, type Program } from '../../enums/index.js';
+import { ATTENDANCES, GRADES, PROGRAMS, type Program } from '@ab/catalog';
 import { attended } from '../rules.js';
 import { ARABIC_SKILLS, ISLAMIC_RATES, reportContentSchema, type ReportContent } from './content.js';
 

@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 
 const HOUR = 3_600_000;
 

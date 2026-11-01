@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STUDENT_STATUSES } from '../../enums/index.js';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { familyChatViaSales } from './trial-chat.js';
 
 describe('familyChatViaSales (not subscribed yet: no direct teacher chat)', () => {

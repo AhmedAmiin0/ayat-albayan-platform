@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '../enums/index.js';
+import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import type { TeacherStudentCounts } from '../people/students/student-lists.js';
 import type { SalesPackageSummary } from './student/student-package.js';
 import type { RosterAttendance, RosterSlot } from './student/student-roster.js';

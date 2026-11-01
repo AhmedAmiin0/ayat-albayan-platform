@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STUDENT_STATUSES } from '../../enums/index.js';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { channelOpen, familyChats } from './channel.js';
 
 // Owner 2026-10-29: the chat opens once the student subscribed AND the assistant assigned the teacher;

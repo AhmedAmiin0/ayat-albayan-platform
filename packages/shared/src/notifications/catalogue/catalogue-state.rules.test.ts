@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateStatus, WaLine } from '@ab/catalog';
 import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
-import { SETTING_DEFAULTS, type AcademySettings } from '../../settings/index.js';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { catalogueViews, entryView, type CatalogueInputs } from './catalogue-state.js';
 import { NOTIFICATION_CATALOGUE, notificationEntry, type NotificationKey } from './catalogue.js';
 import { resolveRule } from '../rules.effective.js';

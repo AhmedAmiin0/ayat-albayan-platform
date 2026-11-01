@@ -1,5 +1,5 @@
 import { matchesQuery } from '@ab/core';
-import type { Gender, Program } from '../enums/index.js';
+import type { Gender, Program } from '@ab/catalog';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';
 import { isOpenLesson } from '../schedule/lessons/state-machine.js';

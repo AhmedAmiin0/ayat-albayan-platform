@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LESSON_STATUSES } from '../../enums/index.js';
+import { LESSON_STATUSES } from '@ab/catalog';
 import { canTransitionLesson } from './state-machine.js';
 
 // Expected matrix written out by hand (not read from LESSON_TRANSITIONS), R-SCH-03 / R-SCH-07.

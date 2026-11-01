@@ -16,3 +16,5 @@ export * from './seed/seed-entries.js';
 export * from './seed/seed-payload.js';
 export * from './seed/entries.js';
 export * from './value-groups.js';
+export * from './custom-config/index.js';
+export * from './custom-config/public-config.js';

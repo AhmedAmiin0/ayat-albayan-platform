@@ -1,4 +1,4 @@
-import type { Attendance, Grade, Program } from '../enums/index.js';
+import type { Attendance, Grade, Program } from '@ab/catalog';
 import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
 import { REPORT_REQUIRED_TEXT, reportSubmitSchema, type ReportDraft } from './schema.js';
 import type { ReportView } from './views.js';

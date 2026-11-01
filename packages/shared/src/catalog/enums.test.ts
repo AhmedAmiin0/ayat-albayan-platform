@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
-import * as E from './index.js';
+import * as E from '@ab/catalog';
 
 const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['leadStatus', E.LEAD_STATUSES],

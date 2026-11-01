@@ -427,6 +427,34 @@ importers:
         specifier: workspace:*
         version: link:../apps/web
 
+  packages/catalog:
+    dependencies:
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../core
+      '@ab/db':
+        specifier: workspace:*
+        version: link:../db
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@ab/config':
+        specifier: workspace:*
+        version: link:../config
+      '@typescript/native-preview':
+        specifier: 7.0.0-dev.20260707.2
+        version: 7.0.0-dev.20260707.2
+      eslint:
+        specifier: ^10.0.0
+        version: 10.11.0(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1(@noble/hashes@1.8.0))(vite@8.3.2(@types/node@24.19.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/client-core:
     dependencies:
       '@ab/shared':
@@ -539,8 +567,42 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1(@noble/hashes@1.8.0))(vite@8.3.2(@types/node@24.19.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/settings:
+    dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../catalog
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../core
+      '@ab/db':
+        specifier: workspace:*
+        version: link:../db
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@ab/config':
+        specifier: workspace:*
+        version: link:../config
+      '@typescript/native-preview':
+        specifier: 7.0.0-dev.20260707.2
+        version: 7.0.0-dev.20260707.2
+      eslint:
+        specifier: ^10.0.0
+        version: 10.11.0(jiti@2.7.0)(supports-color@8.1.1)
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1(@noble/hashes@1.8.0))(vite@8.3.2(@types/node@24.19.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
   packages/shared:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@ab/core':
         specifier: workspace:*
         version: link:../core
@@ -550,6 +612,9 @@ importers:
       '@ab/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../settings
       '@ab/time':
         specifier: workspace:*
         version: link:../time

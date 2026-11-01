@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LessonStatus } from '../../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 import { consumesPackage, subscriptionBalances, type PackageLesson } from './usage.js';
 
 // R-SCH-10, migration 172: a makeup replaces a miss the package already charged, so it never

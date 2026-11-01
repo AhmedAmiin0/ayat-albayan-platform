@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { WA_ERROR } from '../../catalog/integrations/index.js';
+import { WA_ERROR } from '@ab/catalog';
 import { isPayloadOfType, parseOrNull, payloadOfType } from '../payload/index.js';
 
 /**

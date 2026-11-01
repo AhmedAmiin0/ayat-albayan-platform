@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
+import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
 import { isCancelledLesson } from '../../schedule/lessons/index.js';

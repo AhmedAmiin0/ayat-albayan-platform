@@ -1,4 +1,4 @@
-import type { Duration } from '../../enums/index.js';
+import type { Duration } from '@ab/catalog';
 import type { DayTime } from '../../schedule/lessons/series/day-times.js';
 import { addLocalDays, weekdayOfDate, zonedInstant } from '@ab/time';
 

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
-import { PUSH_KINDS } from '../../enums/index.js';
+import { PUSH_KINDS } from '@ab/catalog';
 import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
-import { SETTING_DEFAULTS } from '../../settings/index.js';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { NOTIFICATION_CATALOGUE, NOTIFICATION_KEYS, notificationEntry } from './catalogue.js';
 
 // Catalogue drift (docs/23 §4): a producer added without a catalogue row would be ungoverned.

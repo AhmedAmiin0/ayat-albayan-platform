@@ -1,5 +1,5 @@
 import { backoffDelay, normalizePhone } from '@ab/core';
-import { WA_ERROR as E } from '../catalog/integrations/index.js';
+import { WA_ERROR as E } from '@ab/catalog';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
 

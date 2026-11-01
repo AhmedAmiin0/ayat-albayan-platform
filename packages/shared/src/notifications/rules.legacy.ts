@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '../settings/index.js';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 import type { NotificationKey } from './catalogue/catalogue.js';
 import type { AnyRuleTiming, EffectiveRule } from './rules.types.js';
 

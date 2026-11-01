@@ -1,4 +1,4 @@
-import type { StudentStatus } from '../../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 import { parseStatusList } from '../schemas/student-filters.js';
 import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow.js';
 

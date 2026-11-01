@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { WA_LINES } from '../../enums/index.js';
+import { WA_LINES } from '@ab/catalog';
 import { TEMPLATE_KEY_PATTERN } from '../schemas.js';
 import { BODY_SLOTS } from './templates.js';
 

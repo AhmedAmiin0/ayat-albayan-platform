@@ -1,4 +1,4 @@
-import type { UserRole } from '../../catalog/permissions/index.js';
+import type { UserRole } from '@ab/catalog';
 
 // The API's presence answers (docs/33): ids, a role and a time, never a phone or email.
 

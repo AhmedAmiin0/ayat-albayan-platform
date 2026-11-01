@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { USER_ROLES, type UserRole } from '../../catalog/permissions/roles.js';
+import { USER_ROLES, type UserRole } from '@ab/catalog';
 import { maySeePresence } from './presence-rules.js';
 
 /** Every viewer → the targets it may see when linked (docs/33 §2). */

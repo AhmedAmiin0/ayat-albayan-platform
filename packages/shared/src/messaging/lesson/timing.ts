@@ -1,4 +1,4 @@
-import type { LeadStatus } from '../../enums/index.js';
+import type { LeadStatus } from '@ab/catalog';
 import { dayBeforeSendAt, localDate } from './timing.day-before.js';
 import { addCalendarDays } from '@ab/time';
 

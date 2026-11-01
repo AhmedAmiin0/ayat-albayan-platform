@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 import type { Conflict } from '../../schedule/lessons/conflicts.js';
 import { CONSUMING_LESSON_STATUSES } from '../../money/ledger/usage/usage.js';
 import type { BookedCourse } from './course-follow.js';

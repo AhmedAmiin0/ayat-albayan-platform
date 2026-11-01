@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GRADES } from '../../enums/index.js';
+import { GRADES } from '@ab/catalog';
 import { isAyah, SURAH_COUNT } from '../quran/quran.js';
 
 // The v2 lesson report's structured content (owner 2026-10-26, docs/design/report-form): stored

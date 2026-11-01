@@ -1,4 +1,4 @@
-import { GENDERS, type Gender } from '../enums/index.js';
+import { GENDERS, type Gender } from '@ab/catalog';
 import { leadQualificationPatchSchema, type LeadQualificationPatch } from '../messaging/schemas.js';
 import { FILLED_BY, GROUP_KINDS, type FilledBy, type GroupKind } from '../people/schemas/leads.js';
 

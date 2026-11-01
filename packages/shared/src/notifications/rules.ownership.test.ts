@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY } from '../settings/index.js';
+import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY } from '@ab/settings';
 import { RULE_SETTING_KEYS } from './rules.legacy.js';
 
 // docs/23b decision 1: the 8 keys move to «الإشعارات» in the registry AND in OWNED_SETTING_KEYS.

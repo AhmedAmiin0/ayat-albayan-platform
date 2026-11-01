@@ -33,7 +33,7 @@ JobApplicant (separate from Lead)
 MessageTemplate (Meta template name + variables + Arabic body)
 ```
 
-Key enums (store in `packages/shared/src/enums`):
+Key enums (store in `packages/catalog/src/enums`):
 - `LeadStatus`: `new` · `contacted` · `interested_no_slot` · `trial_booked` · `trial_done` · `converted` · `no_reply` · `lost`
 - `LeadSource`: `facebook_ad` · `instagram_ad` · `whatsapp_direct` · `referral` · `other`
 - `LessonStatus`: `scheduled` · `confirmed` · `completed` · `late` · `excused` · `no_show` · `cancelled_by_teacher` · `cancelled_by_admin` · `rescheduled`

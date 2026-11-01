@@ -1,4 +1,4 @@
-import type { WaLine } from '../../enums/messaging.js';
+import type { WaLine } from '@ab/catalog';
 import { sessionWindowOpen } from '../wa.js';
 
 export interface ReplyLineInput {
