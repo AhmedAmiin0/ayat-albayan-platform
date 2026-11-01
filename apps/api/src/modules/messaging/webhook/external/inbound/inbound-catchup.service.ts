@@ -1,6 +1,6 @@
 import { waIdToE164 } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
+import { ExternalRepo } from '@/modules/messaging/webhook/external/external.repo';
 import type { KapsoNumber } from '@/modules/messaging/webhook/external/kapso-numbers';
 import { InboundService } from '@/modules/messaging/webhook/inbound/webhook.inbound.service';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
@@ -47,7 +47,7 @@ export class InboundCatchUp {
   constructor(
     private readonly repo: InboundCatchUpRepo,
     private readonly listing: InboundListing,
-    private readonly ext: ExternalQueries,
+    private readonly ext: ExternalRepo,
     private readonly inbound: InboundService,
   ) {}
 

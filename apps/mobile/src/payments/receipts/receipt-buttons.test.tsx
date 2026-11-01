@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
-import { ReceiptPicker } from '@/payments/ReceiptPicker';
+import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { AttachmentRow } from './AttachmentRow';
 import type { Attachment } from './attachments';
 import { PhotoButtons } from './PhotoButtons';

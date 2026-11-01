@@ -6,7 +6,7 @@ import { MoreScreen } from '@/more/screens/MoreScreen';
 import { SalesSection } from '@/sales/components/SalesSection';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const only = (...keys: string[]) => (p: string) => keys.includes(p);
 const row = (name: string) => screen.queryByRole('button', { name });

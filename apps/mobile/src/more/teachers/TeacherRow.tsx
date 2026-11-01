@@ -9,7 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { TeacherCountLinks } from './TeacherCountLinks';
-import type { TeacherListItem } from '../types';
+import type { TeacherListItem } from '@/core/lib/staff/types';
 
 /**
  * One teacher in «المعلمين»: the name and status open the teacher's file (on «مشترك»); the two counts

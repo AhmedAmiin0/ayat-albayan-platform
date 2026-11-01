@@ -6,7 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { TeacherThreadsQueries } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.queries';
+import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 const PHONE = '+966552147730';
@@ -43,7 +43,7 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(TeacherThreadsQueries).useValue(teachers)
+      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
       .overrideProvider(StorageService).useValue(storage)

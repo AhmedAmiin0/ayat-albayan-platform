@@ -5,7 +5,7 @@ import { freeSlotDays, whenText } from '@/booking/shared/slots';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { type, useTheme } from '@/theme';
 import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';

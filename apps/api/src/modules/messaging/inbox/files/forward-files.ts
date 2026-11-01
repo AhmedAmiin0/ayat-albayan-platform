@@ -1,14 +1,14 @@
 import { baseMime, isChatViewMime } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, forwardOutPath } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { isCrmHistoryRow } from '../../whatsapp';
-import { InboundMedia } from '../../whatsapp/messages/inbound-media.service';
-import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import { Outbox, type Sent } from '../send/outbox';
-import { dedupKey, outboundBase, sendLine, type ThreadSend } from '../send/thread-send.service';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { BUCKETS, forwardOutPath } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { dedupKey, outboundBase, sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** Our copy of a forwarded file in wa-media/out/… (the sender signs it again on every try). */
 export interface ForwardFile {
@@ -44,7 +44,7 @@ export class ForwardFiles {
   @Inject(InboundMedia) private readonly inbound?: InboundMedia;
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly outbox: Outbox,
     private readonly storage: StorageService,
   ) {}

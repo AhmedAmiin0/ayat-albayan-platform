@@ -10,7 +10,7 @@ import {
 } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { isOffline } from '@/payments/lib/payment-errors';
+import { isOffline } from '@/core/lib/money/payment-errors';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { dayLabel } from '@/booking/shared/slots';
 import { localDate } from '@/today/lib/timeline';

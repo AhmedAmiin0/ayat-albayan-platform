@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import type { AvailabilityRow } from '@/more/types';
+import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { lesson } from '@/today/testing/fixtures';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
