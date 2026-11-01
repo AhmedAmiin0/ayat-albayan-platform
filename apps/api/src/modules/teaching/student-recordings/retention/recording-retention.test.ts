@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { RecordingAdminQueries } from '../recording-admin.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { RecordingAdminRepo } from '@/modules/teaching/student-recordings/recording-admin.repo';
 import { RecordingEraser } from './recording-eraser';
 import { RecordingMaintenanceJob } from './recording-maintenance.job';
 import { RecordingRetention, RETENTION_KEY } from './recording-retention';
-import type { RecordingRetentionQueries } from './recording-retention.queries';
-import { RecordingSettings } from '../recordings.settings';
+import type { RecordingRetentionRepo } from './recording-retention.repo';
+import { RecordingSettings } from '@/modules/teaching/student-recordings/recordings.settings';
 
 const NOW = new Date('2026-10-05T12:00:00.000Z');
 const settings = readerOf(RecordingSettings);
@@ -21,8 +21,8 @@ const audit = { record: vi.fn() };
 const retention = () =>
   new RecordingRetention(
     settings,
-    q as unknown as RecordingRetentionQueries,
-    new RecordingEraser(admin as unknown as RecordingAdminQueries, storage as unknown as StorageService, audit as unknown as AuditService),
+    q as unknown as RecordingRetentionRepo,
+    new RecordingEraser(admin as unknown as RecordingAdminRepo, storage as unknown as StorageService, audit as unknown as AuditService),
   );
 const OLD = [{ id: 'R1', file_path: 'lessons/L/1.mp4' }, { id: 'R2', file_path: 'lessons/L/2.mp4' }];
 

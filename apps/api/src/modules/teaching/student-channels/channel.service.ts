@@ -4,9 +4,9 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import type { ChannelActor } from './channel-access';
 import { ChannelNotify } from './channel-notify';
-import { ChannelPeopleQueries } from './channel-people.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
 import { toMessageView, toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
-import { ChannelQueries } from './channel.queries';
+import { ChannelRepo } from './channel.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
 
 /** A participant's write on a closed channel (before the subscription or the teacher's assignment). */
@@ -18,8 +18,8 @@ export class ChannelService {
   private readonly log = new Logger(ChannelService.name);
 
   constructor(
-    private readonly queries: ChannelQueries,
-    private readonly people: ChannelPeopleQueries,
+    private readonly queries: ChannelRepo,
+    private readonly people: ChannelPeopleRepo,
     private readonly notify: ChannelNotify,
   ) {}
 
@@ -71,8 +71,8 @@ export class ChannelService {
 export class TeacherChannelList {
   constructor(
     private readonly teachers: TeachersRepo,
-    private readonly queries: ChannelQueries,
-    private readonly people: ChannelPeopleQueries,
+    private readonly queries: ChannelRepo,
+    private readonly people: ChannelPeopleRepo,
   ) {}
 
   async list(user: AuthUser): Promise<TeacherChannelRow[]> {

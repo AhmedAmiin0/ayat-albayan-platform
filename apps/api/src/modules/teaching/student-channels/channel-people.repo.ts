@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
-import { ownershipOf } from '../../sales/sales';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { ownershipOf } from '@/modules/sales/sales';
 
 export interface ChannelStudent {
   id: string;
@@ -11,7 +11,7 @@ export interface ChannelStudent {
 
 /** The names a thread shows and the profiles a push goes to: names only, never a phone or email. */
 @Injectable()
-export class ChannelPeopleQueries {
+export class ChannelPeopleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async students(ids: readonly string[]): Promise<ChannelStudent[]> {

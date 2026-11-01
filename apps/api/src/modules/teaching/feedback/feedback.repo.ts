@@ -1,8 +1,8 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { Attendance, FeedbackKind, LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 export type FeedbackRow = Tables<'lesson_feedback'>;
 
@@ -30,7 +30,7 @@ export interface PublicContext {
 
 /** lesson_feedback reads and writes for the request and the public form (service role; callers guard). */
 @Injectable()
-export class FeedbackQueries {
+export class FeedbackRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** null when the lesson does not exist or the student is not on it. */

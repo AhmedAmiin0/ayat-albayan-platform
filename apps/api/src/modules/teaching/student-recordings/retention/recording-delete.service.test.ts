@@ -1,11 +1,11 @@
 import { ConflictException, ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { RecordingAdminQueries, RecordingWithTeacher } from '../recording-admin.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { RecordingAdminRepo, RecordingWithTeacher } from '@/modules/teaching/student-recordings/recording-admin.repo';
 import { RecordingDeleteService } from './recording-delete.service';
 import { RecordingEraser } from './recording-eraser';
-import { ADMIN, recording, REC_ID, TEACHER, TEACHER_ID } from '../student-recordings.fakes';
+import { ADMIN, recording, REC_ID, TEACHER, TEACHER_ID } from '@/modules/teaching/student-recordings/student-recordings.fakes';
 
 const NOW = new Date('2026-10-06T08:00:00.000Z');
 const row = (over: Partial<RecordingWithTeacher> = {}): RecordingWithTeacher => ({ ...recording(), lessons: { teacher_id: TEACHER_ID }, ...over });
@@ -14,8 +14,8 @@ const storage = { remove: vi.fn() };
 const audit = { record: vi.fn() };
 const service = () =>
   new RecordingDeleteService(
-    q as unknown as RecordingAdminQueries,
-    new RecordingEraser(q as unknown as RecordingAdminQueries, storage as unknown as StorageService, audit as unknown as AuditService),
+    q as unknown as RecordingAdminRepo,
+    new RecordingEraser(q as unknown as RecordingAdminRepo, storage as unknown as StorageService, audit as unknown as AuditService),
   );
 
 beforeEach(() => {

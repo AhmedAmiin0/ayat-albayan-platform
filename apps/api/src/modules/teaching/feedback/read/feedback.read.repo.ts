@@ -6,7 +6,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
 import { studentIdsMatching } from '@/common/student-ids';
 import { dbError, type PageQuery } from '@/common/http/http';
-import type { FeedbackRow } from '@/modules/teaching/feedback/feedback.queries';
+import type { FeedbackRow } from '@/modules/teaching/feedback/feedback.repo';
 
 /**
  * Every column but the link hash and the guardian: those never leave the API. The teacher's name
@@ -47,7 +47,7 @@ function rows(res: { data: FeedbackListRow[] | null; count: number | null; error
 
 /** GET /feedback, /feedback/summary and /teachers/me/feedback reads (service role; services scope by role). */
 @Injectable()
-export class FeedbackReadQueries {
+export class FeedbackReadRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

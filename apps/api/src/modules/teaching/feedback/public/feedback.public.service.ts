@@ -1,10 +1,10 @@
 import { feedbackSubmitSchema, type FeedbackFormView } from '@ab/shared';
 import { GoneException, Inject, Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { FEEDBACK_CONFIG, type FeedbackConfig } from '../feedback.config';
-import { answerOf, toFormView } from '../feedback.mapper';
-import { FeedbackQueries, type PublicContext } from '../feedback.queries';
+import { conflict, notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
+import { answerOf, toFormView } from '@/modules/teaching/feedback/feedback.mapper';
+import { FeedbackRepo, type PublicContext } from '@/modules/teaching/feedback/feedback.repo';
 import { PublicFeedbackLimit } from './feedback.rate-limit';
 import { hashToken, verifyToken, type TokenPayload } from './feedback.token';
 
@@ -21,7 +21,7 @@ const invalid = () => notFound('feedback_not_found');
 @Injectable()
 export class FeedbackPublicService {
   constructor(
-    private readonly queries: FeedbackQueries,
+    private readonly queries: FeedbackRepo,
     private readonly limit: PublicFeedbackLimit,
     @Inject(FEEDBACK_CONFIG) private readonly config: FeedbackConfig,
   ) {}

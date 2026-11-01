@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { feedbackRow, LESSON_ID, NOW, STUDENT_ID } from './feedback.fakes';
-import { FeedbackQueries } from './feedback.queries';
+import { FeedbackRepo } from './feedback.repo';
 
 const T = 'lesson_feedback';
 const row = feedbackRow();
@@ -13,7 +13,7 @@ const insert = {
 describe('FeedbackQueries — an answer is written once and never reset', () => {
   it('answer: only an unanswered row matches (submitted_at is null), so a second submit finds nothing', async () => {
     const { db, calls, argsOf } = fakeDb({ [T]: [{ data: feedbackRow() }, { data: null }] });
-    const q = new FeedbackQueries(db);
+    const q = new FeedbackRepo(db);
     const patch = { rating: 5, recommend: 'yes', note: null, contact_phone: '+966501234567', submitted_at: NOW.toISOString() } as const;
     await expect(q.answer('r1', patch)).resolves.toMatchObject({ lesson_id: LESSON_ID });
     expect(argsOf(T, 'update')).toEqual([patch]);
@@ -25,7 +25,7 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
     const { db, calls } = fakeDb({
       [T]: [{ data: feedbackRow() }, { error: { code: '23505', message: 'dup' } }, { data: feedbackRow() }, { error: { code: '23505', message: 'dup' } }, { data: null }],
     });
-    const q = new FeedbackQueries(db);
+    const q = new FeedbackRepo(db);
     await expect(q.issue(insert)).resolves.toBeTruthy();
     expect(calls.map((c) => c.method)).toEqual(['insert', 'select', 'single']);
     calls.length = 0;
@@ -40,7 +40,7 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
 
   it('issue: any other database error surfaces', async () => {
     const { db } = fakeDb({ [T]: [{ error: { code: '23503', message: 'fk' } }] });
-    await expect(new FeedbackQueries(db).issue(insert)).rejects.toThrow();
+    await expect(new FeedbackRepo(db).issue(insert)).rejects.toThrow();
   });
 
   describe('requestContext', () => {
@@ -55,14 +55,14 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
 
     it('the free-trial rule makes it a trial; a package, or no rule, a subscription', async () => {
       const kind = async (pkg: string | null) =>
-        (await new FeedbackQueries(fakeDb(tables(pkg)).db).requestContext(LESSON_ID, STUDENT_ID))?.kind;
+        (await new FeedbackRepo(fakeDb(tables(pkg)).db).requestContext(LESSON_ID, STUDENT_ID))?.kind;
       expect(await kind('trial')).toBe('trial');
       expect(await kind('8')).toBe('subscription');
       expect(await kind(null)).toBe('subscription');
     });
 
     it('maps the teacher, the student and the guardian phone', async () => {
-      const ctx = await new FeedbackQueries(fakeDb(tables('8')).db).requestContext(LESSON_ID, STUDENT_ID);
+      const ctx = await new FeedbackRepo(fakeDb(tables('8')).db).requestContext(LESSON_ID, STUDENT_ID);
       expect(ctx).toEqual({
         lessonStatus: 'completed',
         attendance: 'on_time',
@@ -74,9 +74,9 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
     });
 
     it('null for a student who is not on the lesson, and for an unknown lesson', async () => {
-      expect(await new FeedbackQueries(fakeDb(tables('8', false)).db).requestContext(LESSON_ID, STUDENT_ID)).toBeNull();
+      expect(await new FeedbackRepo(fakeDb(tables('8', false)).db).requestContext(LESSON_ID, STUDENT_ID)).toBeNull();
       const none = fakeDb({ lessons: [{ data: null }] });
-      expect(await new FeedbackQueries(none.db).requestContext(LESSON_ID, STUDENT_ID)).toBeNull();
+      expect(await new FeedbackRepo(none.db).requestContext(LESSON_ID, STUDENT_ID)).toBeNull();
     });
   });
 });

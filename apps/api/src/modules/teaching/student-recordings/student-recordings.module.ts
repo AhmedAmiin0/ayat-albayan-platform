@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ClassroomModule } from '../classroom/classroom.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
-import { RecordingAdminQueries } from './recording-admin.queries';
+import { ClassroomModule } from '@/modules/teaching/classroom/classroom.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { RecordingAdminRepo } from './recording-admin.repo';
 import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingEraser } from './retention/recording-eraser';
 import { RecordingMaintenanceJob } from './retention/recording-maintenance.job';
 import { RecordingRetention } from './retention/recording-retention';
 import { RecordingVisibilityService } from './recording-visibility.service';
-import { RecordingRetentionQueries } from './retention/recording-retention.queries';
+import { RecordingRetentionRepo } from './retention/recording-retention.repo';
 import { RecordingSettings } from './recordings.settings';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { StudentRecordingsController } from './student-recordings.controller';
-import { StudentRecordingQueries } from './student-recordings.queries';
+import { StudentRecordingRepo } from './student-recordings.repo';
 import { StudentRecordingsService } from './student-recordings.service';
 
 /**
@@ -23,14 +23,14 @@ import { StudentRecordingsService } from './student-recordings.service';
   imports: [ClassroomModule, TeachersModule],
   controllers: [StudentRecordingsController],
   providers: [
-    StudentRecordingQueries,
+    StudentRecordingRepo,
     StudentRecordingAccess,
     StudentRecordingsService,
-    RecordingAdminQueries,
+    RecordingAdminRepo,
     RecordingEraser,
     RecordingVisibilityService,
     RecordingDeleteService,
-    RecordingRetentionQueries,
+    RecordingRetentionRepo,
     RecordingRetention,
     RecordingSettings,
     RecordingMaintenanceJob,

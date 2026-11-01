@@ -1,17 +1,17 @@
 import { type StudentRecordingsPage, type StudentRecordingsQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { RecordingViews } from '../classroom/recordings/recording-list.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { canManage, studentRecordingView, type ManageRule, type RecordingJoinRow } from './student-recordings.mapper';
-import { StudentRecordingQueries } from './student-recordings.queries';
+import { StudentRecordingRepo } from './student-recordings.repo';
 
 /** GET /students/:id/recordings: the file of one student, newest first, 1-hour signed links. */
 @Injectable()
 export class StudentRecordingsService {
   constructor(
     private readonly access: StudentRecordingAccess,
-    private readonly queries: StudentRecordingQueries,
+    private readonly queries: StudentRecordingRepo,
     private readonly views: RecordingViews,
   ) {}
 

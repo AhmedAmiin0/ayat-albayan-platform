@@ -4,8 +4,8 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 import { PortalScopes } from '@/modules/people/portal';
 import { TeachersRepo } from '@/modules/people/teachers';
-import { ChannelPeopleQueries } from './channel-people.queries';
-import { ChannelQueries } from './channel.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
+import { ChannelRepo } from './channel.repo';
 
 /**
  * Who is in a channel and how: a participant writes and has read marks; a monitor only reads. `open`:
@@ -35,8 +35,8 @@ export class AccessDeps {
 @Injectable()
 export class ChannelAccess {
   constructor(
-    private readonly queries: ChannelQueries,
-    private readonly people: ChannelPeopleQueries,
+    private readonly queries: ChannelRepo,
+    private readonly people: ChannelPeopleRepo,
     private readonly deps: AccessDeps,
   ) {}
 

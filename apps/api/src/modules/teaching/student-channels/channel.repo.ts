@@ -27,7 +27,7 @@ export const COLUMNS = 'id, body, sender_profile_id, sender_role, created_at, ed
 
 /** Student channel reads and writes (migration 800; service role, ChannelAccess decides who may ask). */
 @Injectable()
-export class ChannelQueries {
+export class ChannelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The student's channel id; opened here only if the trigger never ran for it (a read first, then an idempotent insert). */

@@ -1,9 +1,9 @@
 import type { Json } from '@ab/db';
 import { Injectable, Logger } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { BUCKETS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { RecordingAdminQueries } from '../recording-admin.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { RecordingAdminRepo } from '@/modules/teaching/student-recordings/recording-admin.repo';
 
 interface EraseInput {
   id: string;
@@ -25,7 +25,7 @@ export class RecordingEraser {
   private readonly log = new Logger(RecordingEraser.name);
 
   constructor(
-    private readonly queries: RecordingAdminQueries,
+    private readonly queries: RecordingAdminRepo,
     private readonly storage: StorageService,
     private readonly audit: AuditService,
   ) {}

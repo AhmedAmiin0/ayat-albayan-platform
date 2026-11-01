@@ -1,11 +1,11 @@
 import { feedbackEligible, type FeedbackRequest, type FeedbackRequestResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { waHttpError } from '../../../messaging/whatsapp/templates/catalog/template.mapper';
-import { FEEDBACK_CONFIG, type FeedbackConfig } from '../feedback.config';
-import { FeedbackQueries, type FeedbackRow, type RequestContext } from '../feedback.queries';
+import { conflict, notFound } from '@/common/http/errors';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
+import { FeedbackRepo, type FeedbackRow, type RequestContext } from '@/modules/teaching/feedback/feedback.repo';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
-import { expiryOf, hashToken, signToken } from '../public/feedback.token';
+import { expiryOf, hashToken, signToken } from '@/modules/teaching/feedback/public/feedback.token';
 
 type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
 type Link = { row: FeedbackRow; token: string; exp: number };
@@ -19,7 +19,7 @@ type Link = { row: FeedbackRow; token: string; exp: number };
 @Injectable()
 export class FeedbackRequestService {
   constructor(
-    private readonly queries: FeedbackQueries,
+    private readonly queries: FeedbackRepo,
     private readonly sender: FeedbackSender,
     @Inject(FEEDBACK_CONFIG) private readonly config: FeedbackConfig,
   ) {}

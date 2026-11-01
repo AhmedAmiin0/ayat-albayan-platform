@@ -2,7 +2,7 @@ import { ConflictException, ForbiddenException, NotFoundException } from '@nestj
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import type { RecordingAdminQueries, RecordingWithTeacher } from './recording-admin.queries';
+import type { RecordingAdminRepo, RecordingWithTeacher } from './recording-admin.repo';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { ADMIN, ASSISTANT, OTHER_TEACHER, recording, REC_ID, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
 
@@ -10,7 +10,7 @@ const row = (over: Partial<RecordingWithTeacher> = {}): RecordingWithTeacher => 
 const q = { byId: vi.fn(), setVisible: vi.fn(), attendeeCount: vi.fn() };
 const audit = { record: vi.fn() };
 const service = () =>
-  new RecordingVisibilityService(q as unknown as RecordingAdminQueries, teachersFake() as unknown as TeachersRepo, audit as unknown as AuditService);
+  new RecordingVisibilityService(q as unknown as RecordingAdminRepo, teachersFake() as unknown as TeachersRepo, audit as unknown as AuditService);
 
 beforeEach(() => {
   vi.resetAllMocks();

@@ -1,14 +1,14 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { RecordingAdminQueries } from '../recording-admin.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict, notFound } from '@/common/http/errors';
+import { RecordingAdminRepo } from '@/modules/teaching/student-recordings/recording-admin.repo';
 import { RecordingEraser } from './recording-eraser';
 
 /** DELETE /recordings/:id (admin): the file goes, the row stays as `deleted`. Idempotent. */
 @Injectable()
 export class RecordingDeleteService {
   constructor(
-    private readonly queries: RecordingAdminQueries,
+    private readonly queries: RecordingAdminRepo,
     private readonly eraser: RecordingEraser,
   ) {}
 

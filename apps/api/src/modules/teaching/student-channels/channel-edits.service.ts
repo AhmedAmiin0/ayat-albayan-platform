@@ -4,9 +4,9 @@ import { AuditService } from '@/common/audit/audit.service';
 import { conflict, forbidden, notFound } from '@/common/http/errors';
 import type { ChannelActor } from './channel-access';
 import { ChannelEditsRepo } from './channel-edits.repo';
-import { ChannelPeopleQueries } from './channel-people.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
 import { toMessageView } from './channel.mapper';
-import { ChannelQueries, type ChannelMessageRow } from './channel.queries';
+import { ChannelRepo, type ChannelMessageRow } from './channel.repo';
 
 interface ChannelEditInput {
   actor: ChannelActor;
@@ -29,9 +29,9 @@ type Op = 'edit' | 'delete';
 @Injectable()
 export class ChannelEdits {
   constructor(
-    private readonly queries: ChannelQueries,
+    private readonly queries: ChannelRepo,
     private readonly repo: ChannelEditsRepo,
-    private readonly people: ChannelPeopleQueries,
+    private readonly people: ChannelPeopleRepo,
     private readonly audit: AuditService,
   ) {}
 

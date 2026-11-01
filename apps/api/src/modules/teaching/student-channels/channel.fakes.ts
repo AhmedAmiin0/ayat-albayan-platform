@@ -12,9 +12,9 @@ import { AuditService } from '@/common/audit/audit.service';
 import { ChannelEditsRepo } from './channel-edits.repo';
 import { PresenceRepo, PresenceSettings } from '@/modules/people/presence';
 import { fakePresence } from '@/modules/people/presence/presence.fakes';
-import { ChannelPeopleQueries } from './channel-people.queries';
-import type { ChannelMessageRow, ChannelSummaryRow } from './channel.queries';
-import { ChannelQueries } from './channel.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
+import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
+import { ChannelRepo } from './channel.repo';
 
 export const ST = '52000000-0000-4000-8000-000000000001';
 /** Another family's child. */
@@ -116,7 +116,7 @@ export async function channelApp() {
     notifySales: vi.fn(),
   };
   const overrides: [unknown, unknown][] = [
-    [ChannelQueries, queries], [ChannelPeopleQueries, people], [PortalScopeRepo, scope],
+    [ChannelRepo, queries], [ChannelPeopleRepo, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
   ];

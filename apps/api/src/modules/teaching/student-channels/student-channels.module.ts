@@ -7,8 +7,8 @@ import { CHANNEL_CONTROLLERS } from './controllers/channel.controllers';
 import { ChannelEditsRepo } from './channel-edits.repo';
 import { ChannelEdits } from './channel-edits.service';
 import { ChannelNotify } from './channel-notify';
-import { ChannelPeopleQueries } from './channel-people.queries';
-import { ChannelQueries } from './channel.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
+import { ChannelRepo } from './channel.repo';
 import { ChannelService, TeacherChannelList } from './channel.service';
 
 /**
@@ -19,6 +19,6 @@ import { ChannelService, TeacherChannelList } from './channel.service';
 @Module({
   imports: [PortalModule, PresenceModule, TeachersModule],
   controllers: CHANNEL_CONTROLLERS,
-  providers: [ChannelQueries, ChannelPeopleQueries, AccessDeps, ChannelAccess, ChannelNotify, ChannelService, TeacherChannelList, ChannelEditsRepo, ChannelEdits],
+  providers: [ChannelRepo, ChannelPeopleRepo, AccessDeps, ChannelAccess, ChannelNotify, ChannelService, TeacherChannelList, ChannelEditsRepo, ChannelEdits],
 })
 export class StudentChannelsModule {}

@@ -10,13 +10,13 @@ import { notFound } from '@/common/http/errors';
 import type { Page, PageQuery } from '@/common/http/http';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { peopleOf, toRowView, toSummary, toTeacherRowView, type People } from '@/modules/teaching/feedback/feedback.mapper';
-import { FeedbackReadQueries, type FeedbackListRow } from './feedback.read.queries';
+import { FeedbackReadRepo, type FeedbackListRow } from './feedback.read.repo';
 
 /** The lists behind «رأيك يهمّنا»: the admin sees everything, a teacher only their own rows (rule 9). */
 @Injectable()
 export class FeedbackReadService {
   constructor(
-    private readonly queries: FeedbackReadQueries,
+    private readonly queries: FeedbackReadRepo,
     private readonly teachers: TeachersRepo,
   ) {}
 

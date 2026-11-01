@@ -1,0 +1,89 @@
+{
+  "id": "r10",
+  "seq": 223,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teaching/feedback/feedback.queries.ts",
+      "to": "apps/api/src/modules/teaching/feedback/feedback.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/feedback/read/feedback.read.queries.ts",
+      "to": "apps/api/src/modules/teaching/feedback/read/feedback.read.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.queries.ts",
+      "to": "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/student-recordings/student-recordings.queries.ts",
+      "to": "apps/api/src/modules/teaching/student-recordings/student-recordings.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/student-recordings/recording-admin.queries.ts",
+      "to": "apps/api/src/modules/teaching/student-recordings/recording-admin.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/student-channels/channel.queries.ts",
+      "to": "apps/api/src/modules/teaching/student-channels/channel.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/student-channels/channel-people.queries.ts",
+      "to": "apps/api/src/modules/teaching/student-channels/channel-people.repo.ts"
+    }
+  ],
+  "renames": {
+    "FeedbackQueries": "FeedbackRepo",
+    "FeedbackReadQueries": "FeedbackReadRepo",
+    "RecordingRetentionQueries": "RecordingRetentionRepo",
+    "StudentRecordingQueries": "StudentRecordingRepo",
+    "RecordingAdminQueries": "RecordingAdminRepo",
+    "ChannelQueries": "ChannelRepo",
+    "ChannelPeopleQueries": "ChannelPeopleRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/teaching/feedback/feedback.queries.test.ts",
+      "apps/api/src/modules/teaching/feedback/feedback.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/feedback/feedback.queries.ts",
+      "apps/api/src/modules/teaching/feedback/feedback.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/feedback/read/feedback.read.queries.test.ts",
+      "apps/api/src/modules/teaching/feedback/read/feedback.read.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/feedback/read/feedback.read.queries.ts",
+      "apps/api/src/modules/teaching/feedback/read/feedback.read.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-channels/channel-people.queries.ts",
+      "apps/api/src/modules/teaching/student-channels/channel-people.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-channels/channel.queries.ts",
+      "apps/api/src/modules/teaching/student-channels/channel.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-recordings/recording-admin.queries.ts",
+      "apps/api/src/modules/teaching/student-recordings/recording-admin.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.queries.test.ts",
+      "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.queries.ts",
+      "apps/api/src/modules/teaching/student-recordings/retention/recording-retention.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-recordings/student-recordings.queries.test.ts",
+      "apps/api/src/modules/teaching/student-recordings/student-recordings.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/student-recordings/student-recordings.queries.ts",
+      "apps/api/src/modules/teaching/student-recordings/student-recordings.repo.ts"
+    ]
+  ]
+}

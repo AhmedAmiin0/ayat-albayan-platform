@@ -96,7 +96,7 @@
   "apps/api/src/modules/teaching/feedback/feedback.fakes.ts exports OTHER_TEACHER_ID",
   "apps/api/src/modules/teaching/feedback/feedback.settings.ts types FeedbackSettingsValues",
   "apps/api/src/modules/teaching/feedback/public/feedback.rate-limit.ts types LimitCall",
-  "apps/api/src/modules/teaching/feedback/read/feedback.read.queries.ts types FeedbackPage",
+  "apps/api/src/modules/teaching/feedback/read/feedback.read.repo.ts types FeedbackPage",
   "apps/api/src/modules/teaching/feedback/test-app.ts types Call",
   "apps/api/src/modules/teaching/lesson-rating/lesson-rating.settings.ts types LessonRatingSettingsValues",
   "apps/api/src/modules/teaching/lessons/reschedule/rule-plan.ts types LessonsPlanInput",

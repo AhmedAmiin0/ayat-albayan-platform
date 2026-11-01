@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { COLUMNS, type ChannelMessageRow } from './channel.queries';
+import { COLUMNS, type ChannelMessageRow } from './channel.repo';
 
 /**
  * A deleted message's body: the check stays 1..2000 and the API never serves it (migration 993).

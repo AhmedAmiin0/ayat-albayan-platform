@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { listRow, LESSON_ID, TEACHER_ID } from '../feedback.fakes';
-import { FeedbackReadQueries } from './feedback.read.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { listRow, LESSON_ID, TEACHER_ID } from '@/modules/teaching/feedback/feedback.fakes';
+import { FeedbackReadRepo } from './feedback.read.repo';
 
 const T = 'lesson_feedback';
 const PAGE = { page: 3, pageSize: 10 };
@@ -9,7 +9,7 @@ const PAGE = { page: 3, pageSize: 10 };
 describe('FeedbackReadQueries', () => {
   it('page: filters by teacher, lesson, kind and rating; `to` is inclusive (the next UTC midnight); newest first, windowed', async () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [listRow()], count: 31 }] });
-    const res = await new FeedbackReadQueries(db).page({
+    const res = await new FeedbackReadRepo(db).page({
       filter: { teacher: TEACHER_ID, lesson: LESSON_ID, kind: 'trial', rating: 4, from: '2026-10-01', to: '2026-10-31' },
       page: PAGE,
     });
@@ -24,7 +24,7 @@ describe('FeedbackReadQueries', () => {
 
   it('page: the select never names the link hash or the guardian', async () => {
     const { db, argsOf } = fakeDb({ [T]: [{ data: [], count: 0 }] });
-    await new FeedbackReadQueries(db).page({ filter: {}, page: PAGE });
+    await new FeedbackReadRepo(db).page({ filter: {}, page: PAGE });
     const columns = String(argsOf(T, 'select')?.[0]);
     expect(columns).not.toContain('token_hash');
     expect(columns).not.toContain('guardian_id');
@@ -32,7 +32,7 @@ describe('FeedbackReadQueries', () => {
 
   it('mine: the teacher id comes from the caller, never a filter', async () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [listRow()], count: 1 }] });
-    await new FeedbackReadQueries(db).mine(TEACHER_ID, { filter: { teacher: 'someone-else' }, page: { page: 1, pageSize: 25 } });
+    await new FeedbackReadRepo(db).mine(TEACHER_ID, { filter: { teacher: 'someone-else' }, page: { page: 1, pageSize: 25 } });
     expect(calls.find((c) => c.method === 'eq')?.args).toEqual(['teacher_id', TEACHER_ID]);
   });
 
@@ -49,20 +49,20 @@ describe('FeedbackReadQueries', () => {
         },
       ],
     });
-    expect(await new FeedbackReadQueries(db).averages()).toEqual([
+    expect(await new FeedbackReadRepo(db).averages()).toEqual([
       { teacher_id: 't1', avg_rating: 4.5, n: 2, recommend_yes_pct: 100 },
     ]);
   });
 
   it('averages(teacherId) asks for that teacher only', async () => {
     const { db, calls } = fakeDb({ v_teacher_feedback_avg: [{ data: [] }] });
-    await new FeedbackReadQueries(db).averages(TEACHER_ID);
+    await new FeedbackReadRepo(db).averages(TEACHER_ID);
     expect(calls.find((c) => c.method === 'eq')?.args).toEqual(['teacher_id', TEACHER_ID]);
   });
 
   it('students / teachers: no ids, no query; duplicates asked once', async () => {
     const { db, argsOf } = fakeDb({ students: [{ data: [] }] });
-    const q = new FeedbackReadQueries(db);
+    const q = new FeedbackReadRepo(db);
     expect(await q.students([])).toEqual([]);
     expect(await q.teachers([])).toEqual([]);
     await q.students(['a', 'a', 'b']);

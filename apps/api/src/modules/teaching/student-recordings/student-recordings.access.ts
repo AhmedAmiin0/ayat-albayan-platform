@@ -3,7 +3,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ManageRule } from './student-recordings.mapper';
-import { StudentRecordingQueries } from './student-recordings.queries';
+import { StudentRecordingRepo } from './student-recordings.repo';
 
 /** Which of a student's lessons a login may see recordings of: `onlyTeacherId` null = all of them. */
 interface RecordingScope {
@@ -21,7 +21,7 @@ interface RecordingScope {
 @Injectable()
 export class StudentRecordingAccess {
   constructor(
-    private readonly queries: StudentRecordingQueries,
+    private readonly queries: StudentRecordingRepo,
     private readonly teachers: TeachersRepo,
   ) {}
 
