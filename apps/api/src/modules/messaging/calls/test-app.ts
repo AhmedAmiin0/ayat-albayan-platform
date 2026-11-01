@@ -7,12 +7,12 @@ import { AppModule } from '../../../app.module';
 import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { TeacherThreadsQueries } from '../inbox/teacher-threads/teacher-threads.queries';
-import { ThreadsQueries } from '../inbox/threads/threads.queries';
+import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { CallsSettings } from './calls.settings';
-import { FakeCallsQueries, fakeApi, FAMILY } from './calls.fakes';
+import { FakeCallsRepo, fakeApi, FAMILY } from './calls.fakes';
 import { CALLS_API } from './kapso/calls-api';
-import { CallsQueries } from './store/calls.queries';
+import { CallsRepo } from './store/calls.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -28,7 +28,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 export async function callsApp(input: { on: boolean }) {
-  const queries = new FakeCallsQueries();
+  const queries = new FakeCallsRepo();
   const api = fakeApi();
   const settings = { read: vi.fn(async () => ({ whatsapp_calls_enabled: input.on })) };
   const threads = { thread: vi.fn(async () => ({ guardian_id: 'g1', lead_id: null })), numberWindows: vi.fn(async () => []) };
@@ -38,11 +38,11 @@ export async function callsApp(input: { on: boolean }) {
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CallsQueries).useValue(queries)
+    .overrideProvider(CallsRepo).useValue(queries)
     .overrideProvider(CALLS_API).useValue(api)
     .overrideProvider(CallsSettings).useValue(settings)
-    .overrideProvider(ThreadsQueries).useValue(threads)
-    .overrideProvider(TeacherThreadsQueries).useValue(teacher)
+    .overrideProvider(ThreadsRepo).useValue(threads)
+    .overrideProvider(TeacherThreadsRepo).useValue(teacher)
     .overrideProvider(AuditService).useValue({ record: vi.fn() })
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

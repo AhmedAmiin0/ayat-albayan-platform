@@ -1,13 +1,13 @@
 // Test fixtures for message reactions (test-only, excluded from the build by the *.fakes.ts pattern).
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
-import type { MessageViews } from '../../whatsapp/messages/message.views';
-import { toMessageView, type ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import type { Outbox } from '../send/outbox';
-import type { ThreadsQueries } from '../threads/threads.queries';
-import type { ReactionQueries, ReactionTarget } from './reaction.queries';
+import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { toMessageView, type ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ReactionRepo, ReactionTarget } from './reaction.repo';
 import { ThreadReactionService, type ReactionRequest } from './thread-reaction.service';
 
 export const TARGET_ID = '7a1c5b8e-6a52-4c3e-9a3a-1d2b3c4d5e6f';
@@ -64,7 +64,7 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
       return { view, replayed };
     }),
   };
-  const service = new ThreadReactionService(reactions as unknown as ReactionQueries, threads as unknown as ThreadsQueries, outbox as unknown as Outbox);
+  const service = new ThreadReactionService(reactions as unknown as ReactionRepo, threads as unknown as ThreadsRepo, outbox as unknown as Outbox);
   const views = { view: async (r: ThreadMessageRow) => toMessageView({ row: r, template: null }) };
   Object.assign(service, { views: views as unknown as MessageViews });
   return { service, reactions, threads, outbox, jobs, row };

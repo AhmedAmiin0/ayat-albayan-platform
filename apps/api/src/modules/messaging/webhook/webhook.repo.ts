@@ -1,9 +1,9 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../common/db/db.module';
-import { familyOfPhone } from '../../../common/db/family-of-phone';
-import { guardianOwnerIds } from '../../sales/sales/sales-ownership';
+import { DB, type Db } from '@/common/db/db.module';
+import { familyOfPhone } from '@/common/db/family-of-phone';
+import { guardianOwnerIds } from '@/modules/sales/sales/sales-ownership';
 import { refillUnsupported } from './inbound/inbound-refill';
 import { WebhookSettings } from './webhook.settings';
 import type { Contact, OutboundRow, ReplyWindow, StatusMove } from './webhook.types';
@@ -16,7 +16,7 @@ function check(error: PostgrestError | null): void {
 
 /** Thin supabase-js access for the WhatsApp webhook; the rules live in the services. */
 @Injectable()
-export class WebhookQueries {
+export class WebhookRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: WebhookSettings,

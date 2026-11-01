@@ -20,11 +20,11 @@ import { TemplatesRepo, type ApprovalRow } from '../whatsapp/templates/catalog/t
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
-import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries';
-import { ThreadsQueries } from './threads/threads.queries';
+import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
+import { ThreadsRepo } from './threads/threads.repo';
 import { KapsoReopener } from './reopen/kapso-reopener';
-import { ReopenQueries } from './reopen/reopen.queries';
-import { DeltaQueries } from './delta/delta.queries';
+import { ReopenRepo } from './reopen/reopen.repo';
+import { DeltaRepo } from './delta/delta.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
@@ -86,8 +86,8 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(ThreadsQueries).useValue(m.queries)
-    .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
+    .overrideProvider(ThreadsRepo).useValue(m.queries)
+    .overrideProvider(TeacherThreadsRepo).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(ChatListsQueries).useValue(m.lists)
     .overrideProvider(TemplatesRepo).useValue(templates)
@@ -96,10 +96,10 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(ReopenQueries).useValue(m.reopens)
+    .overrideProvider(ReopenRepo).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
     .overrideProvider(MessageHideRepo).useValue(m.hides)
-    .overrideProvider(DeltaQueries).useValue(m.delta)
+    .overrideProvider(DeltaRepo).useValue(m.delta)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

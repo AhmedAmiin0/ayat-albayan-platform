@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { TeacherMeQueries } from '../../../teaching/lessons/teacher-me/teacher-me.queries';
-import { dbError } from '../../../../common/http/http';
-import type { PeopleStudentRow } from '../people/thread-people.mapper';
+import { DB, type Db } from '@/common/db/db.module';
+import { TeacherMeQueries } from '@/modules/teaching/lessons/teacher-me/teacher-me.queries';
+import { dbError } from '@/common/http/http';
+import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
 interface ScopeTeacher {
   id: string;
@@ -15,7 +15,7 @@ interface ScopeTeacher {
  * not executable by `authenticated`; TeacherScopes and the services guard every call.
  */
 @Injectable()
-export class TeacherThreadsQueries {
+export class TeacherThreadsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly me: TeacherMeQueries,

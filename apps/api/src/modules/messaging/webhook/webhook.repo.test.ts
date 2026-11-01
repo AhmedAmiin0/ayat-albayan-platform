@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { callsOf, chainDb } from '../reminders/chain-db.fake';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import { WebhookQueries } from './webhook.queries';
+import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { WebhookRepo } from './webhook.repo';
 import { WebhookSettings } from './webhook.settings';
 
 const SINCE = new Date('2026-10-01T13:00:00Z');
@@ -10,13 +10,13 @@ const UNTIL = new Date('2026-10-03T13:00:00.999Z');
 describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => {
   it('the reply window comes from settings.quick_reply_window_hours (48 h by default)', async () => {
     const { db } = chainDb();
-    expect(await new WebhookQueries(db, readerOf(WebhookSettings)).replyWindowMs()).toBe(48 * 3_600_000);
-    expect(await new WebhookQueries(db, readerOf(WebhookSettings, { quick_reply_window_hours: 6 })).replyWindowMs()).toBe(6 * 3_600_000);
+    expect(await new WebhookRepo(db, readerOf(WebhookSettings)).replyWindowMs()).toBe(48 * 3_600_000);
+    expect(await new WebhookRepo(db, readerOf(WebhookSettings, { quick_reply_window_hours: 6 })).replyWindowMs()).toBe(6 * 3_600_000);
   });
 
   it('the 48 h fallback reads only messages that went out to this phone, with an open lesson', async () => {
     const { db, log } = chainDb({ messages: [{ data: [{ lesson_id: 'l1' }] }] });
-    await expect(new WebhookQueries(db, readerOf(WebhookSettings)).recentLessonOutbound({ phone: '+966501234567', since: SINCE, until: UNTIL })).resolves.toBe('l1');
+    await expect(new WebhookRepo(db, readerOf(WebhookSettings)).recentLessonOutbound({ phone: '+966501234567', since: SINCE, until: UNTIL })).resolves.toBe('l1');
     expect(callsOf(log, 'messages')).toEqual(
       expect.arrayContaining([
         ['eq', ['direction', 'outbound']],
@@ -31,7 +31,7 @@ describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => 
 
   it('nothing found → null; a payload lesson counts only for the guardian’s own child', async () => {
     const { db, log } = chainDb({ messages: [{ data: [] }], lesson_students: [{ data: [] }] });
-    const q = new WebhookQueries(db, readerOf(WebhookSettings));
+    const q = new WebhookRepo(db, readerOf(WebhookSettings));
     await expect(q.recentLessonOutbound({ phone: '+966501234567', since: SINCE, until: UNTIL })).resolves.toBeNull();
     await expect(q.guardianLesson({ lessonId: 'l1', guardianId: 'g1' })).resolves.toBe(false);
     expect(callsOf(log, 'lesson_students')).toEqual(
@@ -44,7 +44,7 @@ describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => 
 
   it('deleteInbound removes only the inbound row of that wamid', async () => {
     const { db, log } = chainDb();
-    await new WebhookQueries(db, readerOf(WebhookSettings)).deleteInbound('wamid.IN1');
+    await new WebhookRepo(db, readerOf(WebhookSettings)).deleteInbound('wamid.IN1');
     expect(callsOf(log, 'messages')).toEqual([
       ['delete', []],
       ['eq', ['wa_message_id', 'wamid.IN1']],
@@ -61,7 +61,7 @@ describe('WebhookQueries.identify: a family’s second number is that family (ow
       teachers: [{ data: null }],
       leads: [{ data: { id: 'l1', name: 'صباح', follow_up_stage: 0 } }],
     });
-    const who = await new WebhookQueries(db, readerOf(WebhookSettings)).identify('+966552220000');
+    const who = await new WebhookRepo(db, readerOf(WebhookSettings)).identify('+966552220000');
     expect(who).toEqual({ guardian: { id: 'g1', name: 'أم سهيلة' }, teacher: null, lead: { id: 'l1', name: 'صباح', follow_up_stage: 0 } });
     expect(callsOf(log, 'guardian_phones')).toEqual(expect.arrayContaining([['eq', ['phone_e164', '+966552220000']]]));
     expect(log.some((l) => l.table === 'guardians')).toBe(false);
@@ -69,6 +69,6 @@ describe('WebhookQueries.identify: a family’s second number is that family (ow
 
   it('nobody → guardian null', async () => {
     const { db } = chainDb({ guardian_phones: [{ data: null }], teachers: [{ data: null }], leads: [{ data: null }] });
-    expect((await new WebhookQueries(db, readerOf(WebhookSettings)).identify('+966559990000')).guardian).toBeNull();
+    expect((await new WebhookRepo(db, readerOf(WebhookSettings)).identify('+966559990000')).guardian).toBeNull();
   });
 });
