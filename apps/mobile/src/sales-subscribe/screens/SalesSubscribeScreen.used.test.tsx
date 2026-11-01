@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
+import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with «بدأ الاشتراك سابقًا», − / + from 0 to one lesson left per course day.

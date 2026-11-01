@@ -406,7 +406,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 ### Mobile (JS-only, OTA): images only
 
 15. **`apps/mobile/src/inbox/composer/send-file.ts`** (new)
-    - It reuses `pickReceipt` from `apps/mobile/src/payments/receipt.ts` (JPEG, quality 0.6, no EXIF; `expo-image-picker` is already in the APK).
+    - It reuses `pickReceipt` from `apps/mobile/src/core/lib/receipts/receipt.ts` (JPEG, quality 0.6, no EXIF; `expo-image-picker` is already in the APK).
     - Then `POST file-upload-url` and `uploadToSignedUrl`, following the `apps/mobile/src/assistants/statements/hooks/upload-receipt.ts` pattern.
     - Then `POST /file` with no caption. The `clientRequestId` comes from the same helper the mobile text send uses.
 16. **`apps/mobile/src/inbox/AttachImage.tsx`** (new): an IconButton in the open-window row of `Composer.tsx` (106 lines; the button lives in its own file). It is hidden in teacher mode and when the window is closed.

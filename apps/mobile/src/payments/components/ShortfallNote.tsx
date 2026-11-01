@@ -1,6 +1,6 @@
 import { parseAmount } from '@ab/shared';
 import { Note } from '@/more';
-import { shortfallLine } from '../format';
+import { shortfallLine } from '@/core/lib/money/format';
 
 interface ShortfallNoteProps {
   /** The amount as typed (parseAmount reads it). */

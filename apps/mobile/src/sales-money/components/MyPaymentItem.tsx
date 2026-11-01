@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
 import { hasAttachments } from '@/money/attachments/receipt-file';
-import { instantDay, money } from '@/payments/format';
+import { instantDay, money } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { isolate, Ltr } from '@/core/ui/primitives/Ltr';

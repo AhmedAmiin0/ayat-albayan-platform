@@ -1,7 +1,7 @@
 import type { CourseChangeResult } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';

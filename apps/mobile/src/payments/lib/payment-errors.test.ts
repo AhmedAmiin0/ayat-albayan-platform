@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline, paymentErrorText } from './payment-errors';
-import { ReceiptUploadError } from '../upload-receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
 const e = t.payments.error;
 

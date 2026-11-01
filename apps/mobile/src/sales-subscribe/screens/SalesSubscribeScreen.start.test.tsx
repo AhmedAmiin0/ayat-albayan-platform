@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay, money } from '@/payments/format';
+import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
+import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();

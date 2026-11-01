@@ -3,7 +3,7 @@ import type { AdminTaskView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { taskText } from './tasks';

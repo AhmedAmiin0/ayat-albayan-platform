@@ -1,7 +1,7 @@
 import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
-import type { Receipt } from '@/payments/receipt';
-import { ReceiptUploadError } from '@/payments/upload-receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 import { supabase } from '@/core/lib/http/supabase';
 
 /**

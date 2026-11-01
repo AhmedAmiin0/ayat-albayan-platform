@@ -6,8 +6,8 @@ import {
   type SubscriptionView,
 } from '@ab/shared';
 import type { Page } from '@/core/lib/query/paging';
-import type { Attachment } from '../receipts/attachments';
-import type { Receipt } from '../receipt';
+import type { Attachment } from '@/payments/receipts/attachments';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 /** One payment as the form hands it to the mutation. */
 export interface PaymentInput {

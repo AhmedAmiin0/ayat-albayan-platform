@@ -10,7 +10,7 @@ import {
 import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import type { SalesSubscription } from './sales-api';
 

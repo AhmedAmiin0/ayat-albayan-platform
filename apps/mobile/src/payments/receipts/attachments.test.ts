@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-native';
 import { type Attachment, attachmentsFull, useAttachmentPaths, withAttachment, withoutAttachment } from './attachments';
-import type { Receipt } from '../receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 const photo = (n: number): Attachment => ({
   kind: 'file',
