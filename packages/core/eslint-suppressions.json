@@ -15,6 +15,9 @@
     }
   },
   "src/async/retry.ts": {
+    "max-depth": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -30,6 +33,9 @@
     }
   },
   "src/phone/phone.ts": {
+    "complexity": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -60,6 +66,9 @@
       "count": 3
     },
     "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {

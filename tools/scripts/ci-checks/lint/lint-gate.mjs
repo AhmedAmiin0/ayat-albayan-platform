@@ -28,11 +28,14 @@ export function totals(files) {
 
 /**
  * On a PR: one line per rule whose total is above the base branch's; equal or below passes (a rule
- * the base lacks counts from 0, unless `isNew(rule)`: its one-time baseline, docs/32 §1).
+ * the base lacks counts from 0, unless `isNew(rule)`; a rule whose limit the PR lowers,
+ * `isTightened(rule)`: their one-time baseline, docs/32 §1).
  */
-export function aboveBase(now, base, isNew = () => false) {
+export function aboveBase(now, base, baseline = {}) {
+  const { isNew = never, isTightened = never } = baseline;
   return Object.keys(now)
     .filter((rule) => now[rule] > (base[rule] ?? 0))
+    .filter((rule) => !isTightened(rule))
     .filter((rule) => Object.hasOwn(base, rule) || !isNew(rule))
     .map((rule) => `above the base branch: ${rule} ${base[rule] ?? 0} -> ${now[rule]} (fix the new violations)`);
 }
@@ -58,6 +61,23 @@ export function gone(dir, byFile, exists) {
     .map((key) => `gone: ${dir}/${key} (eslint . --prune-suppressions)`);
 }
 
+// The numbers in each `rule: [ … ]` entry of a config source (`complexity: ['error', { max: 8 }]`).
+const limits = (text, rule) => {
+  const key = `(?:'${rule}'|"${rule}"|(?<![\\w/-])${rule})`;
+  const entries = text.matchAll(new RegExp(`${key}\\s*:\\s*\\[([^\\]]*)\\]`, 'g'));
+  return [...entries].flatMap((m) => [...m[1].matchAll(/\b\d+\b/g)].map(Number));
+};
+
+/**
+ * A rule whose numeric limit this PR lowers (docs/36 D4: complexity 10 -> 8/6, max-depth 3 -> 2):
+ * every limit the head's config sources give it is below every one the base's give it (a later
+ * 8/6 -> 7/5 step does not qualify: 7 is not below 6; that one needs a reviewed baseline).
+ */
+export const tightenedRule = (configs) => (rule) => {
+  const [head, base] = [limits(configs.head, rule), limits(configs.base, rule)];
+  return head.length > 0 && base.length > 0 && Math.max(...head) < Math.min(...base);
+};
+
 const bare = (rule) => rule.replace(/^(eslint|typescript|@typescript-eslint)\//, '');
 
 /**
@@ -81,6 +101,8 @@ function configTexts(args) {
   return { base: readFileSync(args[at + 1], 'utf8'), head: readFileSync(args[at + 2], 'utf8') };
 }
 
+const never = () => false;
+const baselines = (configs) => ({ isNew: newRule(configs), isTightened: tightenedRule(configs) });
 const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
@@ -98,7 +120,7 @@ function main(args) {
   const base = dir ? totals(suppressions(dir).files) : null;
   const exists = (path) => existsSync(join(root, path));
   const diff = [
-    ...(base ? aboveBase(now, base, newRule(configTexts(args))) : []),
+    ...(base ? aboveBase(now, base, baselines(configTexts(args))) : []),
     ...paths.flatMap((p, i) => gone(dirname(p), files[i], exists)),
     ...oxlintSuppressed(read(join(root, '.oxlintrc.json')), now),
   ];
