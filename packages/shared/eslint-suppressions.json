@@ -195,7 +195,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/messaging/chat/chat-lists.ts": {
