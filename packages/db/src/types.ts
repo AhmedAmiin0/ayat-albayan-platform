@@ -3745,6 +3745,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      sticker_favourites: {
+        Row: {
+          created_at: string;
+          message_id: string;
+          profile_id: string;
+          sticker_key: string;
+        };
+        Insert: {
+          created_at?: string;
+          message_id: string;
+          profile_id: string;
+          sticker_key: string;
+        };
+        Update: {
+          created_at?: string;
+          message_id?: string;
+          profile_id?: string;
+          sticker_key?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'sticker_favourites_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'sticker_favourites_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       student_assistants: {
         Row: {
           created_at: string;

@@ -38,6 +38,7 @@ import { ThreadReactionService } from './reactions/thread-reaction.service';
 import { DeltaRepo } from './delta/delta.repo';
 import { ThreadDeltaService } from './delta/thread-delta.service';
 import { MessageHideController, MessageHideRepo, MessageHideService } from './hide';
+import { GifService, GifsController, StickerRepo, StickerSender, StickersController, StickersService } from './stickers';
 
 /**
  * The WhatsApp inbox routes H1–H4 (docs/12 §4). The webhook lives in WebhookModule and the lead
@@ -55,10 +56,11 @@ import { MessageHideController, MessageHideRepo, MessageHideService } from './hi
  * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
  * «حذف من المنصة» (owner 2026-10-30): MessageHideController (staff only; nothing goes to WhatsApp).
  * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
+ * Stickers and GIFs (owner 2026-11-01): StickersController, GifsController (GIPHY).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, GifsController],
   providers: [
     ThreadsRepo,
     ThreadsService,
@@ -89,6 +91,10 @@ import { MessageHideController, MessageHideRepo, MessageHideService } from './hi
     ThreadDeltaService,
     MessageHideRepo,
     MessageHideService,
+    StickerRepo,
+    StickersService,
+    StickerSender,
+    GifService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

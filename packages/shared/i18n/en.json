@@ -2645,7 +2645,8 @@
       "pdf": "PDF file",
       "sticker": "Sticker",
       "location": "Location",
-      "other": "A message that can’t be shown here"
+      "other": "A message that can’t be shown here",
+      "gif": "GIF"
     },
     "unsupported": "The content of this message did not reach us from WhatsApp — ask the sender to send it again",
     "unavailable": "The content of this message did not reach us from WhatsApp. This sometimes happens with the first message from a new number; the message shows in the WhatsApp Business app on the academy phone.",
@@ -2816,7 +2817,21 @@
         "micBlocked": "Allow microphone access in Settings to record a voice message",
         "failed": "The voice message was not sent. Try again.",
         "locked": "Still recording. Tap Send when you are done."
-      }
+      },
+      "tabs": {
+        "emoji": "Emoji",
+        "gif": "GIF",
+        "stickers": "Stickers"
+      },
+      "gifSearch": "Search GIFs",
+      "gifNoKey": "The GIF tab is not on yet: an admin adds the GIPHY key in Integrations.",
+      "gifEmpty": "No results",
+      "gifSend": "Send GIF: {title}",
+      "gifPowered": "Powered by GIPHY",
+      "stickerFavourites": "Favourites",
+      "stickerRecent": "Recent",
+      "stickersEmpty": "No stickers yet. Stickers sent or received in any chat show here.",
+      "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "tryAfterWindow": "The last message was more than 24 hours ago: we will reopen the conversation when you send",
@@ -2842,7 +2857,9 @@
       "file_upload": "The file could not be uploaded. Try again",
       "files_forbidden": "You cannot send files",
       "media_handoff": "Files cannot be handed off to WhatsApp; retry here",
-      "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again"
+      "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again",
+      "giphy_failed": "Couldn’t reach GIPHY. Try again.",
+      "giphy_not_configured": "No GIPHY key in Integrations yet"
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"
@@ -3056,6 +3073,10 @@
       "unhide": "Show",
       "failed": "Could not complete the action, please try again.",
       "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
+    },
+    "sticker": {
+      "favourite": "Add to favourites",
+      "unfavourite": "Remove from favourites"
     }
   },
   "mobileFinance": {
@@ -5496,6 +5517,7 @@
       "web_push": "Browser notifications (Web Push)",
       "fx": "Exchange rates",
       "google": "Google (Calendar, Drive and Sheets)",
+      "giphy": "Chat GIFs (GIPHY)",
       "stripe": "Online payments (Stripe, test build)"
     },
     "source": {
@@ -5696,6 +5718,10 @@
       "STRIPE_MAX_DISCOUNT_PCT": {
         "label": "Maximum discount on payment links (%)",
         "hint": "The lowest amount allowed is the calculator price minus this percentage. Leave empty for no limit."
+      },
+      "GIPHY_API_KEY": {
+        "label": "GIPHY API key",
+        "hint": "Turns on the GIF tab of the chat’s emoji panel. Create it at developers.giphy.com; it is secret and kept in the vault."
       }
     },
     "developer": "For developers",

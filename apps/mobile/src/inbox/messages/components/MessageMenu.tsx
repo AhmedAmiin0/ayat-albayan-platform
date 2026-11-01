@@ -14,6 +14,7 @@ import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { useHideRights } from '@/auth';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
+import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -108,6 +109,7 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
           }}
         />
       ) : null}
+      {m ? <StickerFavourite message={m} onClose={onClose} /> : null}
       {m && offers ? (
         <HideActions key={m.id} message={m} offers={offers} phone={phone} onClose={onClose} />
       ) : null}
