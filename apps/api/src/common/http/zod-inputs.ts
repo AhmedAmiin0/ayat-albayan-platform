@@ -12,7 +12,7 @@ import { parseOrThrow, sentOnly } from './http';
  */
 const afterOtherParams = (): Promise<void> => new Promise((resolve) => setImmediate(resolve));
 
-class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, z.output<S>> {
+class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, Promise<z.output<S>>> {
   constructor(private readonly schema: S) {}
 
   async transform(value: unknown): Promise<z.output<S>> {
@@ -24,7 +24,7 @@ class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, z.output<S>
 /** PATCH bodies: shared `*UpdateSchema` defaults would reset fields the client never sent. */
 class SentOnlyPipe<S extends z.ZodType<object>> implements PipeTransform<
   unknown,
-  Partial<z.output<S>>
+  Promise<Partial<z.output<S>>>
 > {
   constructor(private readonly schema: S) {}
 
