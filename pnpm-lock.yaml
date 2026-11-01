@@ -569,9 +569,6 @@ importers:
 
   packages/settings:
     dependencies:
-      '@ab/catalog':
-        specifier: workspace:*
-        version: link:../catalog
       '@ab/core':
         specifier: workspace:*
         version: link:../core
@@ -582,6 +579,9 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
     devDependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@ab/config':
         specifier: workspace:*
         version: link:../config
