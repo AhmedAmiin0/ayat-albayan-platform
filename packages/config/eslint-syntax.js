@@ -47,7 +47,7 @@ export const syntaxRules = Object.fromEntries(
 );
 
 /** Every group as an error, plus H-1's `fetch` global. */
-export const syntaxErrors = {
+const syntaxErrors = {
   'no-restricted-globals': ['error', { name: 'fetch', message: H1 }],
   ...Object.fromEntries(
     Object.entries(SYNTAX).map(([name, list]) => [name, ['error', ...list]]),
