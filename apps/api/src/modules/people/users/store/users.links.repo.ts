@@ -1,4 +1,5 @@
 import type { LinkCandidate, LinkedRecord, LinkKind } from '@ab/shared';
+import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import type { LinkTarget } from './users.store';
@@ -9,6 +10,12 @@ import type { LinkTarget } from './users.store';
 const LIMIT = 20;
 /** PostgREST `or(...)` filter syntax breaks on these. */
 const safe = (q: string): string => q.replace(/[,()%_*\\]/g, ' ').trim();
+
+const LINK_TABLE = {
+  teacher: 'teachers',
+  student: 'students',
+  guardian: 'guardians',
+} as const satisfies Record<LinkKind, string>;
 
 export async function linkTarget(db: Db, kind: LinkKind, id: string): Promise<LinkTarget | null> {
   if (kind === 'teacher') {
@@ -24,8 +31,7 @@ export async function linkTarget(db: Db, kind: LinkKind, id: string): Promise<Li
 
 /** Sets profile_id only while it is null; false = somebody linked it first. */
 export async function link(db: Db, ctx: { kind: LinkKind; id: string; profileId: string }): Promise<boolean> {
-  const table = ctx.kind === 'teacher' ? 'teachers' : ctx.kind === 'student' ? 'students' : 'guardians';
-  const { data, error } = await db.from(table).update({ profile_id: ctx.profileId }).eq('id', ctx.id).is('profile_id', null).select('id');
+  const { data, error } = await db.from(LINK_TABLE[ctx.kind]).update({ profile_id: ctx.profileId }).eq('id', ctx.id).is('profile_id', null).select('id');
   if (error) throw dbError(error);
   return data.length > 0;
 }
@@ -65,23 +71,46 @@ export async function linkedOf(db: Db, profileId: string): Promise<LinkedRecord 
   return null;
 }
 
-/** Records without a login, matched by name (students also by AB-nnnn). */
-export async function candidates(db: Db, kind: LinkKind, q: string | undefined): Promise<LinkCandidate[]> {
-  const term = safe(q ?? '');
-  if (kind === 'teacher') {
-    const query = db.from('teachers').select('id, display_name_ar').is('profile_id', null).order('display_name_ar').limit(LIMIT);
-    const { data, error } = await (term ? query.ilike('display_name_ar', `%${term}%`) : query);
-    if (error) throw dbError(error);
-    return data.map((r) => ({ kind, id: r.id, name: r.display_name_ar, code: null }));
-  }
-  if (kind === 'student') {
-    const query = db.from('students').select('id, name, code').is('profile_id', null).order('name').limit(LIMIT);
-    const { data, error } = await (term ? query.or(`name.ilike.%${term}%,code.ilike.%${term}%`) : query);
-    if (error) throw dbError(error);
-    return data.map((r) => ({ kind, id: r.id, name: r.name, code: r.code }));
-  }
-  const query = db.from('guardians').select('id, name').is('profile_id', null).order('name').limit(LIMIT);
-  const { data, error } = await (term ? query.or(`name.ilike.%${term}%,phone_e164.ilike.%${term}%`) : query);
+interface Found<T> {
+  data: T[] | null;
+  error: PostgrestError | null;
+}
+
+/** The rows of a read; a database error throws. */
+function rowsOf<T>({ data, error }: Found<T>): T[] {
   if (error) throw dbError(error);
-  return data.map((r) => ({ kind, id: r.id, name: r.name, code: null }));
+  return data ?? [];
+}
+
+/** Per kind: records without a login, by name (students also by code, guardians by phone). */
+const LINK_SOURCES = {
+  teacher: async (db, term) => {
+    const query = db.from('teachers').select('id, display_name_ar').is('profile_id', null)
+      .order('display_name_ar').limit(LIMIT);
+    const rows = rowsOf(await (term ? query.ilike('display_name_ar', `%${term}%`) : query));
+    return rows.map((r) => ({ kind: 'teacher', id: r.id, name: r.display_name_ar, code: null }));
+  },
+  student: async (db, term) => {
+    const query = db.from('students').select('id, name, code').is('profile_id', null)
+      .order('name').limit(LIMIT);
+    const search = `name.ilike.%${term}%,code.ilike.%${term}%`;
+    const rows = rowsOf(await (term ? query.or(search) : query));
+    return rows.map((r) => ({ kind: 'student', id: r.id, name: r.name, code: r.code }));
+  },
+  guardian: async (db, term) => {
+    const query = db.from('guardians').select('id, name').is('profile_id', null)
+      .order('name').limit(LIMIT);
+    const search = `name.ilike.%${term}%,phone_e164.ilike.%${term}%`;
+    const rows = rowsOf(await (term ? query.or(search) : query));
+    return rows.map((r) => ({ kind: 'guardian', id: r.id, name: r.name, code: null }));
+  },
+} satisfies Record<LinkKind, (db: Db, term: string) => Promise<LinkCandidate[]>>;
+
+/** Records without a login, matched by name (students also by AB-nnnn). */
+export function candidates(
+  db: Db,
+  kind: LinkKind,
+  q: string | undefined,
+): Promise<LinkCandidate[]> {
+  return LINK_SOURCES[kind](db, safe(q ?? ''));
 }

@@ -2,9 +2,9 @@ import type { Gender, Program, StudentStatus, TrialDateResult } from '@ab/shared
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import type { Json } from '@ab/db';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { domainError } from '../booking.errors';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialLessonRead } from './trial-date.history';
 
@@ -41,7 +41,7 @@ function toTrialDateResult(data: unknown): TrialDateResult {
 
 /** The reads and the one write of «موعد تجريبي جديد» (migration 20261025000660). */
 @Injectable()
-export class TrialDateQueries {
+export class TrialDateRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async student(id: string): Promise<TrialStudent | null> {

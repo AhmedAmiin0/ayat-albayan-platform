@@ -2,7 +2,7 @@ import { tz, tzOffset } from '@date-fns/tz';
 import { format, getDay } from 'date-fns';
 
 // The date-fns facade, part 1 (docs/34 §7): zoned wall clock ↔ UTC instant (rule 6). Apps import
-// date helpers only through @ab/shared; date-fns and @date-fns/tz stay inside src/time.
+// date helpers only through @ab/shared; date-fns and @date-fns/tz stay inside @ab/time.
 
 const MINUTE = 60_000;
 const contexts = new Map<string, ReturnType<typeof tz>>();
@@ -35,7 +35,7 @@ export function wallToUtc(date: string, minutes: number, zone: string): Date {
 }
 
 /** "HH:MM" or "HH:MM:SS" (Postgres `time`) → minutes after midnight; "24:00" is 1440. */
-function minutesOfHhmm(hhmm: string): number {
+export function minutesOfHhmm(hhmm: string): number {
   const [h = 0, m = 0] = hhmm.split(':').map(Number);
   return h * 60 + m;
 }

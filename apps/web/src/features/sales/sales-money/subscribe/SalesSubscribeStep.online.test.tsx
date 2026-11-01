@@ -42,6 +42,9 @@ async function online(students: SalesFamilyStudent[] = [student({ teacher_id: TR
   return dialog;
 }
 
+/** «مبلغ مخصص» on: the amount box appears. */
+const customOn = () => fireEvent.click(screen.getByRole('button', { name: P.customAmount }));
+
 async function create() {
   const button = screen.getByRole<HTMLButtonElement>('button', { name: P.create });
   await vi.waitFor(() => expect(button.disabled).toBe(false));
@@ -57,6 +60,7 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
 
   it('the calculator price is the reference; the agreed amount starts from it; the lowest allowed is said', async () => {
     await online();
+    customOn();
     expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payment-links/quote', expect.objectContaining({ studentId: student().id }));
     expect(screen.getByText(P.minAmount.replace('{amount}', String(LINK_QUOTE.min_amount)).replace('{currency}', 'ر.س'))).toBeTruthy();
     expect(amountBox().value).toBe(String(SALES_QUOTE.afterDiscount));
@@ -65,6 +69,7 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
 
   it('refuses an amount below the cap or not above 0, before anything is created', async () => {
     await online();
+    customOn();
     fireEvent.change(amountBox(), { target: { value: String(Number(LINK_QUOTE.min_amount) - 1) } });
     await create();
     expect(screen.getByText(P.error.discount_too_large)).toBeTruthy();
@@ -75,6 +80,7 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
 
   it('makes the link from the step’s own fields (no package POST, no phone), then shows it to send', async () => {
     await online();
+    customOn();
     fireEvent.change(amountBox(), { target: { value: '270' } });
     await create();
     const made = within(await screen.findByRole('dialog', { name: P.title }));

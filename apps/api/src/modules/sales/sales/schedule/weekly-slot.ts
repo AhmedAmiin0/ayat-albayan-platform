@@ -1,7 +1,6 @@
+import { DAY_MS, dayInZone, dayWallToUtc, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
 import type { Tables } from '@ab/db';
 import type { SalesWeeklySlot } from '@ab/shared';
-import { DAY, localDay, toMinutes, weekdayOf, zonedToUtc } from '@/modules/people/teachers';
-
 // One weekly rule as sales read it («الجدول» of «تفاصيل الطالب», «كل الطلاب»'s row): never its
 // link, subscription or creator (migration 187).
 
@@ -25,15 +24,15 @@ type RuleClock = Pick<WeeklyRuleRow, 'byday' | 'start_time_local' | 'tz' | 'star
  * wall clock.
  */
 export function nextStarts(rule: RuleClock, now: Date): string[] {
-  const from = Math.max(localDay(now.getTime(), rule.tz), utcDay(rule.starts_on));
+  const from = Math.max(dayInZone(now.getTime(), rule.tz), utcDay(rule.starts_on));
   const last = rule.ends_on ? utcDay(rule.ends_on) : Infinity;
-  const minutes = toMinutes(rule.start_time_local);
+  const minutes = minutesOfHhmm(rule.start_time_local);
   const seen = new Set<number>();
   const out: number[] = [];
-  for (let day = from; day <= from + 7 * DAY && day <= last; day += DAY) {
-    const weekday = weekdayOf(day);
+  for (let day = from; day <= from + 7 * DAY_MS && day <= last; day += DAY_MS) {
+    const weekday = weekdayOfDay(day);
     if (!rule.byday.includes(weekday) || seen.has(weekday)) continue;
-    const at = zonedToUtc(day, minutes, rule.tz);
+    const at = dayWallToUtc(day, minutes, rule.tz);
     if (at <= now.getTime()) continue;
     seen.add(weekday);
     out.push(at);

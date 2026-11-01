@@ -1,0 +1,94 @@
+{
+  "id": "r8",
+  "seq": 221,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teaching/booking/sales/course/sales-course.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/sales/course/sales-course.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/teacher/teacher-alert.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/teacher/teacher-alert.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/teacher/teacher-options.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/teacher/teacher-options.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/core/booking.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/core/booking.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/instant/instant.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/instant/instant.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/course-change/course-change.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/course-change/course-change.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/trial-date/trial-date.queries.ts",
+      "to": "apps/api/src/modules/teaching/booking/trial-date/trial-date.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/booking/core/booking.queries.makeup.test.ts",
+      "to": "apps/api/src/modules/teaching/booking/core/booking.repo.makeup.test.ts"
+    }
+  ],
+  "renames": {
+    "SalesCourseQueries": "SalesCourseRepo",
+    "TeacherAlertQueries": "TeacherAlertRepo",
+    "TeacherOptionsQueries": "TeacherOptionsRepo",
+    "BookingQueries": "BookingRepo",
+    "InstantQueries": "InstantRepo",
+    "CourseChangeQueries": "CourseChangeRepo",
+    "CourseLessonQueries": "CourseLessonRepo",
+    "TrialDateQueries": "TrialDateRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/teaching/booking/core/booking.queries.makeup.test.ts",
+      "apps/api/src/modules/teaching/booking/core/booking.repo.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/core/booking.queries.ts",
+      "apps/api/src/modules/teaching/booking/core/booking.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/course-change/course-change.queries.test.ts",
+      "apps/api/src/modules/teaching/booking/course-change/course-change.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/course-change/course-change.queries.ts",
+      "apps/api/src/modules/teaching/booking/course-change/course-change.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/instant/instant.queries.ts",
+      "apps/api/src/modules/teaching/booking/instant/instant.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/sales/course/sales-course.queries.test.ts",
+      "apps/api/src/modules/teaching/booking/sales/course/sales-course.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/sales/course/sales-course.queries.ts",
+      "apps/api/src/modules/teaching/booking/sales/course/sales-course.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/teacher/teacher-alert.queries.ts",
+      "apps/api/src/modules/teaching/booking/teacher/teacher-alert.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/teacher/teacher-options.queries.test.ts",
+      "apps/api/src/modules/teaching/booking/teacher/teacher-options.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/teacher/teacher-options.queries.ts",
+      "apps/api/src/modules/teaching/booking/teacher/teacher-options.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/booking/trial-date/trial-date.queries.ts",
+      "apps/api/src/modules/teaching/booking/trial-date/trial-date.repo.ts"
+    ]
+  ]
+}

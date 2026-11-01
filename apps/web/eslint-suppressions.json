@@ -7747,11 +7747,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales-money/payment-link/OnlinePayFields.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales-money/payment-link/link.fixture.ts": {
     "max-len": {
       "count": 2
@@ -7760,9 +7755,6 @@
   "src/features/sales/sales-money/payment-link/use-link-pay.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "max-len": {
-      "count": 6
     }
   },
   "src/features/sales/sales-money/subscribe/ChildPicker.tsx": {
@@ -7822,7 +7814,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 17
+      "count": 16
     },
     "max-lines-per-function": {
       "count": 1

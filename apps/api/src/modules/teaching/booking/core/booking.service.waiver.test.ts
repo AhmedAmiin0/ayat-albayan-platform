@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, NOW } from '../booking.fakes';
-import type { BookingInvoices } from '../invoice/booking.invoice';
-import { code, SCOPE, setup as invoiceSetup } from '../invoice/booking.invoice.fakes';
-import type { BookingQueries } from './booking.queries';
+import { bookingRequest, fakePlanner, NOW } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
+import { code, SCOPE, setup as invoiceSetup } from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
+import type { BookingRepo } from './booking.repo';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
+import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
 // The invoice waiver is a server-side option only (the assistant's course, owner 2026-10-18 decision 2):
 // the request body has no way to ask for it, so the admin's POST /booking still needs an invoice.
@@ -18,8 +18,8 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { invoices } = invoiceSetup();
   const resolve = vi.spyOn(invoices, 'resolve');
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices as BookingInvoices, fakeTeacherAlert().after);
-  return { ...deps, resolve, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries) };
+  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices as BookingInvoices, fakeTeacherAlert().after);
+  return { ...deps, resolve, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
 }
 
 describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {

@@ -13,15 +13,6 @@ export {
   type WeeklyRow,
 } from './availability/free-slots';
 export { type Interval, mergeIntervals, subtractIntervals } from './availability/intervals';
-export {
-  DAY,
-  localDay,
-  MINUTE,
-  offsetMs,
-  toMinutes,
-  weekdayOf,
-  zonedToUtc,
-} from './availability/zoned-time';
 export { type MeetingFields, withMeeting } from './meeting-view';
 export { TeachersModule } from './teachers.module';
 export { type Teacher, type TeacherListRow, TeachersRepo } from './teachers.repo';

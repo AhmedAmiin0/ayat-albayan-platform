@@ -6,16 +6,16 @@ import {
   type CourseChangeResult,
 } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { domainError } from '../booking.errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { addedLessons, type CourseTold } from './notices/course-change.notice-plan';
 import { changePayload } from './course-change.payload';
 import type { ChangeRole } from './course-change.plan';
 import type { Loaded, Planned } from './course-change.planner';
-import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
+import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
 import { CourseChangeDeps } from './course-change.writer';
-import { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
-import { assertOwnStudents } from '../sales/booking/sales-booking.scope';
+import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
+import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
@@ -33,7 +33,7 @@ export type CourseMove = CourseChangeRequest & { teacherId?: string };
 @Injectable()
 export class CourseChange {
   constructor(
-    private readonly queries: CourseChangeQueries,
+    private readonly queries: CourseChangeRepo,
     private readonly scope: SalesBookingScope,
     private readonly deps: CourseChangeDeps,
   ) {}

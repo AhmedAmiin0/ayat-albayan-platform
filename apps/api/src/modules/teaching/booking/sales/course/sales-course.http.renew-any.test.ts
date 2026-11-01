@@ -10,7 +10,7 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { SalesQueries } from '@/modules/sales/sales/sales.queries';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
-import { SalesCourseQueries } from './sales-course.queries';
+import { SalesCourseRepo } from './sales-course.repo';
 
 // «أيام الحلقات» with sales.renew_any (owner 2026-11-01, docs/16 row 38): the course of ANY
 // student, another assistant's (S1, salesA's) or nobody's (S2). sales_auto_assign ON: the slot
@@ -71,7 +71,7 @@ describe('/sales/booking course routes with sales.renew_any', () => {
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: true }))
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
-      .overrideProvider(SalesCourseQueries).useValue(queries)
+      .overrideProvider(SalesCourseRepo).useValue(queries)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

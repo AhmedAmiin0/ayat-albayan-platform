@@ -10,8 +10,8 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { SalesQueries } from '@/modules/sales/sales/sales.queries';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { BODY, CLASH, RULE_A, RULE_B, S1, SUB, SUB_ID } from './course-change.fakes';
-import { CourseLessonQueries } from './course-change.lessons';
-import { CourseChangeQueries } from './course-change.queries';
+import { CourseLessonRepo } from './course-change.lessons';
+import { CourseChangeRepo } from './course-change.repo';
 import { CourseChangeWriter } from './course-change.writer';
 
 // «تغيير أيام الحلقات» with sales.renew_any (owner 2026-11-01, docs/16 row 38): ANY student's
@@ -58,8 +58,8 @@ describe('POST /sales/booking/course/change[/check] with sales.renew_any', () =>
       .overrideProvider(SalesQueries).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: true }))
       .overrideProvider(ConflictChecker).useValue(checker)
-      .overrideProvider(CourseChangeQueries).useValue(queries)
-      .overrideProvider(CourseLessonQueries).useValue(lessons)
+      .overrideProvider(CourseChangeRepo).useValue(queries)
+      .overrideProvider(CourseLessonRepo).useValue(lessons)
       .overrideProvider(CourseChangeWriter).useValue(writer)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

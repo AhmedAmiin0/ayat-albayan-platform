@@ -7,7 +7,7 @@ import type { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/
 import type { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import { BookingParties } from './core/booking.parties';
 import { BookingPlanner } from './plan/booking.planner';
-import type { BookingQueries, BookingStudent } from './core/booking.queries';
+import type { BookingRepo, BookingStudent } from './core/booking.repo';
 import { BookingSettings } from './booking.settings';
 import { ConflictContext } from './plan/conflict-context';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
@@ -103,7 +103,7 @@ export function fakePlanner(over: Partial<AcademySettings> = {}) {
   );
   const settings = fakeSettings(over);
   const planner = new BookingPlanner(
-    new BookingParties(queries as unknown as BookingQueries, readerOf(BookingSettings)),
+    new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings)),
     checker,
     new BookingSettings(settings),
   );
