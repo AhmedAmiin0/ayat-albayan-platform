@@ -7,7 +7,8 @@ import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo'
 import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '@/modules/teaching/classroom/classroom.fakes';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
-import type { HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import type { ModerationRepo, ParticipantRow } from './moderation.repo';
 import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
@@ -74,11 +75,9 @@ export function recordingQueries() {
 
 export const recorder = () => ({ startFor: vi.fn().mockResolvedValue('started'), configured: true });
 
-/** A stub HttpPost answering `status` with `body` (JSON), recording every call. */
+/** A stub LiveKit transport answering `status` with `body` (JSON), recording every call. */
 export function http(answer: { status?: number; body?: object } = {}) {
-  const status = answer.status ?? 200;
-  const fn = vi.fn<HttpPost>(async () => ({ ok: status < 300, status, text: async () => JSON.stringify(answer.body ?? {}) }));
-  return fn;
+  return vi.fn<FetchLike>(async () => twirpAnswer(answer.status ?? 200, answer.body));
 }
 
 const teachersFake = () => ({

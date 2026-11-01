@@ -13013,9 +13013,6 @@
     },
     "max-len": {
       "count": 6
-    },
-    "no-restricted-globals": {
-      "count": 1
     }
   },
   "src/modules/teaching/classroom/classroom.public.controller.ts": {
@@ -13333,11 +13330,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/classroom/livekit/livekit-api.mute.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/livekit/livekit-api.mute.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -13346,23 +13338,9 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/livekit/livekit-api.test.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/classroom/livekit/livekit-api.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-token.server.test.ts": {
@@ -13727,7 +13705,7 @@
   },
   "src/modules/teaching/classroom/moderation/moderation.fakes.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/classroom/moderation/moderation.http.test.ts": {
@@ -13763,9 +13741,6 @@
     }
   },
   "src/modules/teaching/classroom/moderation/mute.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
@@ -13784,11 +13759,6 @@
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/modules/teaching/classroom/moderation/share-grant.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.service.ts": {

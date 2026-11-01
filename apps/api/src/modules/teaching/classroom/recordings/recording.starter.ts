@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RECORDING_CONFIG, type RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
 import { egressIdOf, egressRequest, recordingPath } from '@/modules/teaching/classroom/livekit/egress-request';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { egressAnswer } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { RecordingRepo } from './recording.repo';
 import { roomNameOf, type RoomTarget } from './recording-target';
 
@@ -48,11 +49,14 @@ export class RecordingStarter {
       if (!this.s3) return 'off';
       // An egress needs the room to exist; the joining staff member has not connected yet.
       await this.livekit.createRoom(room);
-      const info = await this.livekit.call({
-        method: 'livekit.Egress/StartRoomCompositeEgress',
-        body: egressRequest({ room, filepath: input.filePath, s3: this.s3 }),
-        grant: { roomRecord: true },
-      });
+      const info = await this.livekit.call(
+        {
+          method: 'livekit.Egress/StartRoomCompositeEgress',
+          body: egressRequest({ room, filepath: input.filePath, s3: this.s3 }),
+          grant: { roomRecord: true },
+        },
+        egressAnswer,
+      );
       const egressId = egressIdOf(info);
       if (!egressId) throw new Error('no egress id in the answer');
       await this.queries.attachEgress(input.id, egressId);
