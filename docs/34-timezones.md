@@ -192,7 +192,7 @@ test that fakes `Date`'s local getters, cannot move a date. Apps import date hel
   so the day-before reminder fires at the same instant. These are not TZDate's own rules (New York
   02:30 on 2026-03-08 would differ).
 - **Goldens** (regression tests, fixed values). `packages/shared/src/time/golden/*.golden.test.ts`
-  and `apps/api/…/zoned-time.golden.test.ts` / `occurrences.golden.test.ts` cover 2025-12-24 to
+  (`day-epoch` pins the api's former zoned-time) and `occurrences.golden.test.ts` cover 2025-12-24 to
   2027-01-07 in Cairo, Riyadh, Dubai, Kuwait, Qatar, London and New York. Before the swap they ran
   the old and new code side by side. Their digests were taken from the old code and now pin
   occurrence generation, the day-before reminder (send instant, expiry, «due»), the reopen dedup

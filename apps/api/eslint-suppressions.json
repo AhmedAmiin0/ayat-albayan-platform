@@ -304,11 +304,6 @@
       "count": 3
     }
   },
-  "src/common/configuration/config-store/store/config-store.service.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/common/configuration/custom-config/custom-config.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -1035,9 +1030,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 4
@@ -2141,12 +2133,6 @@
     }
   },
   "src/modules/finance/payments/payments.dto.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -2549,7 +2535,7 @@
   },
   "src/modules/finance/stripe/links/link-views.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/stripe/links/payment-links.controller.ts": {
@@ -2662,7 +2648,7 @@
   },
   "src/modules/finance/stripe/pay/pay-return.ts": {
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/modules/finance/stripe/pay/pay.app-return.http.test.ts": {
@@ -2783,7 +2769,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/finance/stripe/webhook/webhook-deps.ts": {
@@ -3929,7 +3915,7 @@
   },
   "src/modules/messaging/follow-ups/follow-ups.plan.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/follow-ups/follow-ups.repo.ts": {
@@ -4481,16 +4467,10 @@
   },
   "src/modules/messaging/inbox/reopen/kapso-reopener.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-global-fetch": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reopen/reopen-params.test.ts": {
@@ -5966,12 +5946,6 @@
     },
     "ab/no-global-fetch": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/modules/messaging/webhook/external/kapso-numbers.ts": {
@@ -6405,12 +6379,6 @@
     }
   },
   "src/modules/messaging/whatsapp/direct/auth-template.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -6530,23 +6498,6 @@
   "src/modules/messaging/whatsapp/drivers/kapso/kapso-conversations.test.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts": {
-    "@typescript-eslint/prefer-string-starts-ends-with": {
-      "count": 1
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "ab/no-global-fetch": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/drivers/kapso/kapso.fakes.ts": {
@@ -6741,11 +6692,8 @@
     }
   },
   "src/modules/messaging/whatsapp/lines/lines.check.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
-      "count": 6
+      "count": 3
     },
     "no-restricted-globals": {
       "count": 1
@@ -7017,11 +6965,6 @@
   },
   "src/modules/messaging/whatsapp/messages/messages.service.ts": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/receipts/receipt-candidates.ts": {
-    "ab/no-shape-checks": {
       "count": 2
     }
   },
@@ -8769,7 +8712,7 @@
   },
   "src/modules/people/users/store/users.links.repo.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/people/users/store/users.repo.ts": {
@@ -8849,9 +8792,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 11
@@ -9983,9 +9923,6 @@
     }
   },
   "src/modules/reporting/report-pdf/render/pdf-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -11227,9 +11164,6 @@
     }
   },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -11434,9 +11368,6 @@
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -11728,12 +11659,6 @@
     }
   },
   "src/modules/sales/sales/schedule/sales-schedule.mapper.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 8
     }
@@ -11837,10 +11762,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -12265,10 +12187,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -12410,10 +12329,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -12517,10 +12433,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 2
     },
     "max-len": {
       "count": 7
@@ -12576,10 +12489,7 @@
   },
   "src/modules/teaching/booking/plan/slots.service.ts": {
     "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 8
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -14471,10 +14381,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lessons/overview/overview.carry.test.ts": {
@@ -14951,10 +14858,7 @@
       "count": 4
     },
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -15074,12 +14978,6 @@
   "src/modules/teaching/scheduling/occurrences/dst-probe.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/occurrences/horizon.job.test.ts": {
@@ -15097,9 +14995,6 @@
   },
   "src/modules/teaching/scheduling/occurrences/horizon.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -15142,12 +15037,6 @@
   "src/modules/teaching/scheduling/occurrences/occurrences.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 1

@@ -39,7 +39,7 @@ export interface SalesFamilyActions {
  * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed. No
  * child is named on any action (owner 2026-10-29): ONE «أيام الحلقات» (hasCourse) and ONE «موعد تجريبي جديد»
  * (canPickTrialDate, with the trial dates' history in its dialog), with several children ChildChoiceDialog
- * picks one first. The payment method (a Stripe link in the test build) is chosen inside «اشتراك جديد».
+ * picks one first. The payment method (a Stripe link in a Stripe build) is chosen inside «اشتراك جديد».
  * «تحقق من التسجيل» (students.check_registration) always goes in the menu; «ربط بطالب موجود» (leads.link_family) on a
  * lead chat with no family (canLinkFamily), its done text a toast here. `compact` (phones):
  * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open

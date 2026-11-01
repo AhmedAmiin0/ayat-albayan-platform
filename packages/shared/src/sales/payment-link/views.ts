@@ -41,6 +41,8 @@ export interface PublicPaymentLink {
   currency: string;
   package: PackageSize | null;
   lessons: number;
+  /** The server's Stripe key is a sandbox one: the page says it is a test (live: no notice). */
+  sandbox: boolean;
 }
 
 /** GET /stripe/feature: 404 = the build has no Stripe at all. */
