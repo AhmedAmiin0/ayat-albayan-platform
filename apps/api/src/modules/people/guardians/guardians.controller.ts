@@ -1,6 +1,5 @@
 import { guardianCreateSchema, guardianUpdateSchema, phoneE164 } from '@ab/shared';
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -9,14 +8,19 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { GuardianPhonesService } from './guardian-phones.service';
 import { GuardiansService } from './guardians.service';
-import { blankToNull, listQuerySchema, parse } from './http';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { blanksToNull, listQuerySchema, type ListQuery } from './http';
+
+const createBody = blanksToNull(guardianCreateSchema);
+const updateBody = blanksToNull(guardianUpdateSchema);
 
 /** Admin-only guardians CRUD (R-STU-02, R-STU-04). */
 @ApiTags('guardians')
@@ -31,8 +35,8 @@ export class GuardiansController {
 
   @Get()
   @Permissions('guardians.read')
-  list(@Query() query: unknown) {
-    return this.guardians.list(parse(listQuerySchema, query));
+  list(@ZodQuery(listQuerySchema) query: ListQuery) {
+    return this.guardians.list(query);
   }
 
   @Get(':id')
@@ -42,13 +46,16 @@ export class GuardiansController {
   }
 
   @Post()
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser) {
-    return this.guardians.create(parse(guardianCreateSchema, blankToNull(body)), user.id);
+  create(@ZodBody(createBody) body: z.output<typeof createBody>, @CurrentUser() user: AuthUser) {
+    return this.guardians.create(body, user.id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown) {
-    return this.guardians.update(id, parse(guardianUpdateSchema, blankToNull(body)));
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(updateBody) body: z.output<typeof updateBody>,
+  ) {
+    return this.guardians.update(id, body);
   }
 
   @Delete(':id')
@@ -60,7 +67,15 @@ export class GuardiansController {
   /** The family's second number (owner 2026-10-29), `phone` URL-encoded (%2B…); 404 phone_not_found. */
   @Delete(':id/phones/:phone')
   @HttpCode(204)
-  removePhone(@Param('id', ParseUUIDPipe) id: string, @Param('phone') phone: string, @CurrentUser() user: AuthUser) {
-    return this.phones.removeSecond({ guardianId: id, phone: parse(phoneE164, phone), actorId: user.id });
+  removePhone(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('phone') phone: string,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.phones.removeSecond({
+      guardianId: id,
+      phone: parseOrThrow(phoneE164, phone),
+      actorId: user.id,
+    });
   }
 }

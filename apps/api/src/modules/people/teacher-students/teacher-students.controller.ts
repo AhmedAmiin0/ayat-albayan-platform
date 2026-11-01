@@ -1,9 +1,10 @@
 import { teacherStudentsQuerySchema, type TeacherStudentView } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodQuery } from '@/common/http/zod-inputs';
 import { TeacherStudentsService } from './teacher-students.service';
 
 /**
@@ -18,7 +19,10 @@ export class TeacherStudentsController {
   constructor(private readonly students: TeacherStudentsService) {}
 
   @Get()
-  mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<TeacherStudentView[]> {
-    return this.students.mine(user, parseOrThrow(teacherStudentsQuerySchema, query).kind);
+  mine(
+    @ZodQuery(teacherStudentsQuerySchema) query: z.output<typeof teacherStudentsQuerySchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TeacherStudentView[]> {
+    return this.students.mine(user, query.kind);
   }
 }
