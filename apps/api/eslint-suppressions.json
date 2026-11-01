@@ -701,16 +701,7 @@
     }
   },
   "src/common/push/push.module.ts": {
-    "@typescript-eslint/require-await": {
-      "count": 1
-    },
-    "ab/no-unchecked-json": {
-      "count": 1
-    },
     "max-len": {
-      "count": 3
-    },
-    "no-restricted-globals": {
       "count": 1
     }
   },

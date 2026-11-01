@@ -1,11 +1,12 @@
 import type { PushKind } from '@ab/shared';
+import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
 
 // Expo push API shapes and the pure parts of sending (R-MOB-01).
 
 /** Under EXPO_API_BASE («https://exp.host»). */
-export const EXPO_PUSH_PATH = '/--/api/v2/push/send';
+export const EXPO_PUSH_PATH = '--/api/v2/push/send';
 /** = apps/mobile/src/push/registerPush.ts ANDROID_CHANNEL, created before permission is asked. */
 const ANDROID_CHANNEL = 'default';
 
@@ -33,10 +34,21 @@ export function expoMessages(tokens: readonly string[], text: PushText, data: Re
   return tokens.map((to) => ({ to, ...text, data, sound: 'default', channelId: ANDROID_CHANNEL }));
 }
 
-/** One Expo push ticket (response `data[i]` for message i). */
-export type ExpoTicket =
-  | { status: 'ok'; id: string }
-  | { status: 'error'; message: string; details?: { error?: string } };
+/** One Expo push ticket (response `data[i]` for message i), discriminated on `status`. */
+const ticketSchema = z.discriminatedUnion('status', [
+  z.looseObject({ status: z.literal('ok'), id: z.string() }),
+  z.looseObject({
+    status: z.literal('error'),
+    message: z.string(),
+    details: z.looseObject({ error: z.string().optional() }).optional(),
+  }),
+]);
+export type ExpoTicket = z.infer<typeof ticketSchema>;
+
+/** A push/send answer: `{ data: ExpoTicket[] }`, read as the tickets. */
+export const ticketsSchema = z
+  .looseObject({ data: z.array(ticketSchema) })
+  .transform((b) => b.data);
 
 interface TicketOutcome {
   ticketIds: string[];
