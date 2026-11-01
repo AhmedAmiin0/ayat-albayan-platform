@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '../reminders/ticker';
+import { Ticker } from '@/modules/messaging/reminders/ticker';
 import { readReceipts, type ExpoReceipt } from './push-receipts';
-import { PushReceiptsQueries, type TicketRow } from './push-receipts.queries';
+import { PushReceiptsRepo, type TicketRow } from './push-receipts.repo';
 import { RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const MINUTE = 60_000;
 const EVERY_MS = 15 * MINUTE;
@@ -33,7 +33,7 @@ export class PushReceiptsJob implements OnApplicationBootstrap, OnModuleDestroy 
   });
 
   constructor(
-    private readonly queries: PushReceiptsQueries,
+    private readonly queries: PushReceiptsRepo,
     @Inject(RECEIPTS_TRANSPORT) private readonly transport: ReceiptsTransport,
   ) {}
 

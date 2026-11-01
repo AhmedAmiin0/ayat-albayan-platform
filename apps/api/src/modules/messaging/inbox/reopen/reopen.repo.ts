@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { ReopenSettings } from './reopen.settings';
 
 /** The reopen's reads: the configured template and the dedupe (the per-day dedup_key is the write side's). */
 @Injectable()
-export class ReopenQueries {
+export class ReopenRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: ReopenSettings,

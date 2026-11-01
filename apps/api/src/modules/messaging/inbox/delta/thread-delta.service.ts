@@ -1,13 +1,13 @@
 import { DELTA_OVERLAP_MS, PENDING_WINDOW_MS, type MessageView, type ThreadDelta, type ThreadDeltaWindow, type ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { MessageViews, type ThreadMessageRow } from '../../whatsapp';
-import { ReadReceipts } from '../reads/read-receipts';
-import { visibleToSales, withoutLinks } from '../sales-threads/sales-threads';
-import { assertPhone, type TeacherScope } from '../teacher-threads/teacher-scope';
-import { TeacherThreadsQueries } from '../teacher-threads/teacher-threads.queries';
-import { toThreadView } from '../threads/threads.mapper';
-import { ThreadsQueries } from '../threads/threads.queries';
-import { DeltaQueries } from './delta.queries';
+import { MessageViews, type ThreadMessageRow } from '@/modules/messaging/whatsapp';
+import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
+import { visibleToSales, withoutLinks } from '@/modules/messaging/inbox/sales-threads/sales-threads';
+import { assertPhone, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
+import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { DeltaRepo } from './delta.repo';
 
 /** GET /threads/:phone?after=: `after` = created_at of the newest row the client holds. */
 export interface ThreadDeltaQuery {
@@ -48,11 +48,11 @@ const readNow = (views: MessageView[], at: Date): MessageView[] =>
 export class ThreadDeltaService {
   /** Property-injected (the constructor is at the 3-parameter limit). */
   @Inject(ReadReceipts) private readonly receipts?: ReadReceipts;
-  @Inject(TeacherThreadsQueries) private readonly teacher?: TeacherThreadsQueries;
+  @Inject(TeacherThreadsRepo) private readonly teacher?: TeacherThreadsRepo;
 
   constructor(
-    private readonly queries: ThreadsQueries,
-    private readonly delta: DeltaQueries,
+    private readonly queries: ThreadsRepo,
+    private readonly delta: DeltaRepo,
     private readonly views: MessageViews,
   ) {}
 

@@ -1,9 +1,9 @@
 import type { Json } from '@ab/db';
 import { isReactionPayload, reactionTooOld } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { notFound } from '../../../../common/http/errors';
-import { SENDING, waHttpError } from '../../whatsapp';
+import { DB, type Db } from '@/common/db/db.module';
+import { notFound } from '@/common/http/errors';
+import { SENDING, waHttpError } from '@/modules/messaging/whatsapp';
 
 /** The message a reaction targets, as the guard and the payload read it. */
 export interface ReactionTarget {
@@ -49,7 +49,7 @@ const TARGET_SELECT = 'id, wa_message_id, created_at, line, number_id, interacti
 
 /** The reaction endpoint's reads and its one optimistic write (service role; the guards run first). */
 @Injectable()
-export class ReactionQueries {
+export class ReactionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The message, in THIS chat only (a reaction never crosses phones). */

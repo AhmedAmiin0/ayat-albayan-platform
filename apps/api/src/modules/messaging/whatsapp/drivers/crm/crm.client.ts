@@ -69,6 +69,14 @@ export class CrmWhatsappClient implements WhatsappClient {
     return this.send(input.to, () => crmMediaBody(input));
   }
 
+  /**
+   * A body already in the CRM's shape (docs/19 «script relay»): the same allow-list, call and
+   * wamid parse as every other send of this line.
+   */
+  sendBody(body: CrmBody): Promise<WaSent> {
+    return this.send(body.to, () => body);
+  }
+
   /** The CRM owns the conversation (and its read receipts): nothing to do. */
   async markRead(): Promise<void> {
     this.connection();

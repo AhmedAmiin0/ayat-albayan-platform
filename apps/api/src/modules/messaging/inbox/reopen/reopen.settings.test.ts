@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { Db } from '../../../../common/db/db.module';
-import { ReopenQueries } from './reopen.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { Db } from '@/common/db/db.module';
+import { ReopenRepo } from './reopen.repo';
 import { ReopenSettings } from './reopen.settings';
 
 describe('ReopenSettings', () => {
@@ -14,7 +14,7 @@ describe('ReopenSettings', () => {
   });
 
   it('ReopenQueries.templateKey answers the configured key', async () => {
-    const queries = new ReopenQueries({} as Db, readerOf(ReopenSettings, { chat_reopen_template: 'reopen_x' }));
+    const queries = new ReopenRepo({} as Db, readerOf(ReopenSettings, { chat_reopen_template: 'reopen_x' }));
     expect(await queries.templateKey()).toBe('reopen_x');
   });
 });

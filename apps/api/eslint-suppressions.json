@@ -3481,18 +3481,12 @@
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 10
     }
   },
   "src/modules/messaging/calls/calls.module.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -3556,9 +3550,6 @@
   "src/modules/messaging/calls/flow/call-kit.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 3
@@ -3743,12 +3734,9 @@
       "count": 1
     }
   },
-  "src/modules/messaging/calls/store/calls.queries.ts": {
+  "src/modules/messaging/calls/store/calls.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 6
@@ -3756,7 +3744,7 @@
   },
   "src/modules/messaging/calls/test-app.ts": {
     "ab/no-parent-imports": {
-      "count": 6
+      "count": 4
     },
     "max-len": {
       "count": 3
@@ -3926,7 +3914,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/delta/delta.queries.ts": {
+  "src/modules/messaging/inbox/delta/delta.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
     },
@@ -3946,9 +3934,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 12
     }
@@ -3962,9 +3947,6 @@
     }
   },
   "src/modules/messaging/inbox/files/forward-files.crm.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -3972,9 +3954,6 @@
   "src/modules/messaging/inbox/files/forward-files.ts": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 9
     },
     "max-len": {
       "count": 10
@@ -4008,9 +3987,6 @@
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -4020,22 +3996,16 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-preview.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/messaging/inbox/files/pdf/pdf-preview.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-preview.queries.ts": {
+  "src/modules/messaging/inbox/files/pdf/pdf-preview.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "@typescript-eslint/prefer-optional-chain": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -4048,9 +4018,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 20
     }
@@ -4133,9 +4100,6 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 4
     }
@@ -4144,9 +4108,6 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 10
     }
@@ -4154,9 +4115,6 @@
   "src/modules/messaging/inbox/files/thread-file-send.voice.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -4238,9 +4196,6 @@
     }
   },
   "src/modules/messaging/inbox/files/thread-forward.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -4257,9 +4212,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 8
     },
     "max-len": {
       "count": 12
@@ -4320,9 +4272,6 @@
   },
   "src/modules/messaging/inbox/inbox.module.ts": {
     "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
       "count": 4
     },
     "max-len": {
@@ -4392,19 +4341,13 @@
     }
   },
   "src/modules/messaging/inbox/reactions/reaction.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 5
     }
   },
-  "src/modules/messaging/inbox/reactions/reaction.queries.ts": {
+  "src/modules/messaging/inbox/reactions/reaction.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 9
@@ -4419,9 +4362,6 @@
     }
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -4437,9 +4377,6 @@
     }
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 11
     }
@@ -4453,9 +4390,6 @@
     }
   },
   "src/modules/messaging/inbox/reads/read-receipts.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -4464,17 +4398,11 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/inbox/reads/thread-page.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 6
     }
@@ -4482,9 +4410,6 @@
   "src/modules/messaging/inbox/reads/thread-reads.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 14
     },
     "max-len": {
       "count": 7
@@ -4532,24 +4457,13 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 8
     }
   },
-  "src/modules/messaging/inbox/reopen/reopen.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/messaging/inbox/reopen/reopen.repo.ts": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen.settings.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/messaging/inbox/reopen/reopen.settings.ts": {
@@ -4596,9 +4510,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 6
     }
@@ -4614,9 +4525,6 @@
   "src/modules/messaging/inbox/sales-threads/sales-threads.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 7
     },
     "max-len": {
       "count": 5
@@ -4639,9 +4547,6 @@
     }
   },
   "src/modules/messaging/inbox/send/outbox.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -4708,9 +4613,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "complexity": {
       "count": 1
     },
@@ -4719,9 +4621,6 @@
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -4730,19 +4629,13 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/teacher-threads/teacher-threads.queries.ts": {
+  "src/modules/messaging/inbox/teacher-threads/teacher-threads.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 2
@@ -4751,9 +4644,6 @@
   "src/modules/messaging/inbox/teacher-threads/teacher-threads.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "max-len": {
       "count": 4
@@ -4878,18 +4768,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads-unread.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/messaging/inbox/threads/threads-unread.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads-unread.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/messaging/inbox/threads/threads-unread.repo.ts": {
     "max-len": {
       "count": 4
     }
@@ -4930,11 +4814,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/threads/threads.list.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/messaging/inbox/threads/threads.list.ts": {
@@ -4994,11 +4873,6 @@
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/threads/threads.order.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/inbox/threads/threads.own.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
@@ -5008,35 +4882,13 @@
     }
   },
   "src/modules/messaging/inbox/threads/threads.own.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.parallel.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 6
-    }
-  },
-  "src/modules/messaging/inbox/threads/threads.queries.calls.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/inbox/threads/threads.queries.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 12
     }
   },
   "src/modules/messaging/inbox/threads/threads.read.http.test.ts": {
@@ -5055,6 +4907,17 @@
       "count": 1
     }
   },
+  "src/modules/messaging/inbox/threads/threads.repo.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 12
+    }
+  },
   "src/modules/messaging/inbox/threads/threads.sales.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 4
@@ -5071,9 +4934,6 @@
   "src/modules/messaging/inbox/threads/threads.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 6
     },
     "max-len": {
       "count": 8
@@ -5693,27 +5553,16 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
   },
   "src/modules/messaging/push/push-receipts.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/push/push-receipts.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/push/push-receipts.queries.ts": {
+  "src/modules/messaging/push/push-receipts.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -5929,9 +5778,6 @@
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
@@ -5983,29 +5829,20 @@
       "count": 1
     }
   },
-  "src/modules/messaging/saved-replies/saved-replies.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/messaging/saved-replies/saved-replies.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/saved-replies/saved-replies.queries.ts": {
+  "src/modules/messaging/saved-replies/saved-replies.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 7
     }
@@ -6034,9 +5871,6 @@
   "src/modules/messaging/webhook/external/external-catchup.job.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 5
@@ -6071,12 +5905,9 @@
       "count": 4
     }
   },
-  "src/modules/messaging/webhook/external/external.queries.ts": {
+  "src/modules/messaging/webhook/external/external.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 4
@@ -6117,9 +5948,6 @@
     }
   },
   "src/modules/messaging/webhook/inbound/inbound-refill.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
@@ -6220,9 +6048,6 @@
   "src/modules/messaging/webhook/inbound/webhook.quick-reply.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 6
@@ -6430,9 +6255,6 @@
     }
   },
   "src/modules/messaging/webhook/webhook.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 2
     }
@@ -6459,9 +6281,6 @@
     "ab/module-boundaries": {
       "count": 4
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -6471,28 +6290,22 @@
       "count": 2
     }
   },
-  "src/modules/messaging/webhook/webhook.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/webhook/webhook.queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/modules/messaging/webhook/webhook.rating.test.ts": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/webhook.repo.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/webhook.repo.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
     }
   },
   "src/modules/messaging/webhook/webhook.service.reload.test.ts": {
@@ -13626,9 +13439,6 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 6
     }
@@ -13713,9 +13523,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 2
     }
@@ -13886,9 +13693,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-services.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 18
-    },
     "max-len": {
       "count": 3
     }

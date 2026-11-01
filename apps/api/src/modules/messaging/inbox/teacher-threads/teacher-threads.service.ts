@@ -1,14 +1,14 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { Page } from '../../../../common/http/http';
-import { MessageViews } from '../../whatsapp/messages/message.views';
+import type { Page } from '@/common/http/http';
+import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { assertPhone, type TeacherScope } from './teacher-scope';
 import { forTeacher, teacherPeople } from './teacher-threads';
-import { TeacherThreadsQueries } from './teacher-threads.queries';
-import { toThreadView, type ThreadRow } from '../threads/threads.mapper';
-import { teacherListFilter } from '../threads/threads.list';
-import { ThreadsQueries, type ThreadListFilter } from '../threads/threads.queries';
-import type { ThreadPageQuery } from '../threads/threads.service';
+import { TeacherThreadsRepo } from './teacher-threads.repo';
+import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { teacherListFilter } from '@/modules/messaging/inbox/threads/threads.list';
+import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
 
 const NO_READS: ReadonlyMap<string, number> = new Map();
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
@@ -21,8 +21,8 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 @Injectable()
 export class TeacherThreadsService {
   constructor(
-    private readonly queries: ThreadsQueries,
-    private readonly teacher: TeacherThreadsQueries,
+    private readonly queries: ThreadsRepo,
+    private readonly teacher: TeacherThreadsRepo,
     private readonly views: MessageViews,
   ) {}
 

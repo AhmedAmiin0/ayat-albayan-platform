@@ -3,7 +3,7 @@ import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-o
 import { fakeQueries } from '@/modules/messaging/webhook/webhook.fakes';
 import { ExternalCatchUpJob } from './external-catchup.job';
 import { externalServices, kapsoOverlay, kapsoText } from './external.fakes';
-import type { ExternalQueries } from './external.queries';
+import type { ExternalRepo } from './external.repo';
 import {
   AD_WELCOME_WITH_TEXT,
   AUDIO_ITEM,
@@ -28,7 +28,7 @@ function job() {
   const queries = fakeQueries();
   const x = externalServices(queries);
   const j = new ExternalCatchUpJob(
-    x.ext as unknown as ExternalQueries,
+    x.ext as unknown as ExternalRepo,
     x.store,
     x.kapso as unknown as KapsoHistory,
   );
