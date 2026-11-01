@@ -7,7 +7,7 @@ import type { AlertLesson } from './teacher-alert.plan';
 
 /** Reads and the idempotent queue write of the teacher's new-student alert (R-NOT-03). */
 @Injectable()
-export class TeacherAlertQueries {
+export class TeacherAlertRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async lessons(ids: readonly string[]): Promise<AlertLesson[]> {

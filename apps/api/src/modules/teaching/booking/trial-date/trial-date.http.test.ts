@@ -1,14 +1,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../common/settings/settings.service';
-import { SalesQueries } from '../../../sales/sales/sales.queries';
-import { SlotsService } from '../plan/slots.service';
-import { TrialDateQueries } from './trial-date.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
+import { TrialDateRepo } from './trial-date.repo';
 import { TrialDates } from './trial-date.service';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';
@@ -48,7 +48,7 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
       .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON: her own families only
       .overrideProvider(TrialDates).useValue(dates)
       .overrideProvider(SlotsService).useValue(slots)
-      .overrideProvider(TrialDateQueries).useValue(lessons)
+      .overrideProvider(TrialDateRepo).useValue(lessons)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

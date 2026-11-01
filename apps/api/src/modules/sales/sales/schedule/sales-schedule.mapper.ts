@@ -1,5 +1,14 @@
-import { isCancelledLesson, isOpenLesson, meetingModeOf, RIYADH_TZ, usesPlatform, type SalesScheduleLesson } from '@ab/shared';
-import { DAY, localDay, zonedToUtc } from '../../../people/teachers/availability/zoned-time';
+import {
+  DAY_MS,
+  dayInZone,
+  dayWallToUtc,
+  isCancelledLesson,
+  isOpenLesson,
+  meetingModeOf,
+  RIYADH_TZ,
+  type SalesScheduleLesson,
+  usesPlatform,
+} from '@ab/shared';
 import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 
 // Whitelists, not omit-lists: a column added to lessons later never reaches sales.
@@ -9,18 +18,18 @@ export const UPCOMING_DAYS = 8;
 
 /** Today's Riyadh calendar day, "YYYY-MM-DD". */
 export function riyadhToday(now: Date): string {
-  return new Date(localDay(now.getTime(), RIYADH_TZ)).toISOString().slice(0, 10);
+  return new Date(dayInZone(now.getTime(), RIYADH_TZ)).toISOString().slice(0, 10);
 }
 
 /** The UTC instants bounding a Riyadh day "YYYY-MM-DD": [00:00, 24:00). */
 export function riyadhDayRange(date: string): { from: Date; to: Date } {
   const day = Date.parse(`${date}T00:00:00Z`);
-  return { from: new Date(zonedToUtc(day, 0, RIYADH_TZ)), to: new Date(zonedToUtc(day, 1440, RIYADH_TZ)) };
+  return { from: new Date(dayWallToUtc(day, 0, RIYADH_TZ)), to: new Date(dayWallToUtc(day, 1440, RIYADH_TZ)) };
 }
 
 /** From now to UPCOMING_DAYS ahead. */
 export function upcomingRange(now: Date): { from: Date; to: Date } {
-  return { from: now, to: new Date(now.getTime() + UPCOMING_DAYS * DAY) };
+  return { from: now, to: new Date(now.getTime() + UPCOMING_DAYS * DAY_MS) };
 }
 
 /** The way in: the trimmed link (blank → null) and whether the teacher holds it in our classroom. */

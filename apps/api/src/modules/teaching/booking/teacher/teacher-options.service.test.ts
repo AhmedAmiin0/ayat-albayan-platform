@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeQueries, IDS, STUDENTS } from '@/modules/teaching/booking/booking.fakes';
-import type { BookingQueries } from '@/modules/teaching/booking/core/booking.queries';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import type { TeacherOptionsQueries } from './teacher-options.queries';
+import type { TeacherOptionsRepo } from './teacher-options.repo';
 import { TeacherOptionsService } from './teacher-options.service';
 
 const ABRAR = {
@@ -25,8 +25,8 @@ function setup() {
   const teachers = { loads: vi.fn().mockResolvedValue(new Map([[IDS.teacher, 7]])) };
   const queries = fakeQueries();
   const service = new TeacherOptionsService(
-    options as unknown as TeacherOptionsQueries,
-    queries as unknown as BookingQueries,
+    options as unknown as TeacherOptionsRepo,
+    queries as unknown as BookingRepo,
     teachers as unknown as TeachersRepo,
   );
   return { options, queries, service, teachers };

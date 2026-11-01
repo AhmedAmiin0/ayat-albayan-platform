@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { SlotsQuery } from '../booking.dto';
-import { fakeContext, IDS } from '../booking.fakes';
-import type { BookingQueries } from '../core/booking.queries';
-import { BookingSettings } from '../booking.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { SlotsService } from './slots.service';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the course's own lessons move, so the grid shows their time free.
@@ -21,7 +21,7 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
 describe('SlotsService — excludeCourse', () => {
   it('the course’s lessons are not busy, teacher or student side; other lessons still are', async () => {
     const deps = fakeContext();
-    const service = new SlotsService(deps.queries as unknown as BookingQueries, deps.context, readerOf(BookingSettings, { teachers_always_available: false }));
+    const service = new SlotsService(deps.queries as unknown as BookingRepo, deps.context, readerOf(BookingSettings, { teachers_always_available: false }));
     const at = (h: number) => ({ starts_at: new Date(`2026-10-04T${h}:00:00Z`), ends_at: new Date(`2026-10-04T${h}:45:00Z`) });
     deps.availability.listBusyLessons.mockResolvedValue([{ id: 'COURSE', ...at(14) }]);
     deps.busy.studentLessons.mockResolvedValue([

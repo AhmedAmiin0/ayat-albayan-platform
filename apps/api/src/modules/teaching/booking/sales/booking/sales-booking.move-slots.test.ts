@@ -1,15 +1,15 @@
 import type { Permission } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { errorCode } from '../../../../../common/http/errors';
-import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
-import type { SlotsQuery } from '../../booking.dto';
-import type { SlotsService } from '../../plan/slots.service';
-import type { TeacherOptionsService } from '../../teacher/teacher-options.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { errorCode } from '@/common/http/errors';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
+import type { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { SalesQueries } from '../../../../sales/sales/sales.queries';
-import type { BookingSettings } from '../../booking.settings';
-import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
+import type { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import type { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { SalesBookingOptions } from './sales-booking.service';
 
 // Owner 2026-10-28 (docs/16 row 37): she may move ANY lesson, so the slot grid of «تغيير الموعد»
@@ -69,7 +69,7 @@ describe('GET /sales/booking/slots for «تغيير الموعد» of any lesson
 
 describe('SalesBookingScope.isLessonOf', () => {
   const scopeOver = (students: string[]) =>
-    new SalesBookingScope({} as SalesQueries, {} as BookingSettings, { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateQueries);
+    new SalesBookingScope({} as SalesQueries, {} as BookingSettings, { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateRepo);
   it('true only for exactly the lesson\'s students (any order); never for a lesson with none', async () => {
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER, MINE])).toBe(true);
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER])).toBe(false);
