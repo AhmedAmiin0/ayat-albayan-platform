@@ -19,3 +19,7 @@ export const putIntegrationSecret = (input: { key: IntegrationSecretKey; value: 
 
 export const clearIntegrationSecret = (key: IntegrationSecretKey) =>
   apiSend<IntegrationConfigItem[]>('DELETE', `/settings/integrations/secrets/${key}`);
+
+/** POST /settings/integrations/crm-webhook: the CRM's delivery-ticks webhook (never its secret). */
+export const registerCrmWebhook = (): Promise<unknown> =>
+  apiFetch('/settings/integrations/crm-webhook', { method: 'POST' });

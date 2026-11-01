@@ -1,6 +1,10 @@
 export { CodeSend } from './direct/code-send';
 export { isCrmHistoryRow, looksCrmHistory } from './messages/crm-history/crm-history-url';
+export { crmFetch } from './drivers/crm/crm.client';
+export { type CrmConn, crmJson } from './drivers/crm/crm-http';
+export type { FetchLike } from './drivers/meta/graph';
 export { SendGate } from './gate/send-gate';
+export { WaError } from './whatsapp.types';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
 export {
   type CachedMedia,
