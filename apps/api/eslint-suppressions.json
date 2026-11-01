@@ -8267,14 +8267,6 @@
       "count": 2
     }
   },
-  "src/modules/people/roles/roles.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/modules/people/sign-in/accounts/auth-gate.supabase.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
