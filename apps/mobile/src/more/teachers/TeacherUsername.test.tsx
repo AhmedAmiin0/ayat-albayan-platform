@@ -3,7 +3,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import type { Teacher } from '../types';
+import type { Teacher } from '@/core/lib/staff/types';
 import { TeacherUsername } from './TeacherUsername';
 
 // «اسم المستخدم» of the teacher's login (docs/30 §7).

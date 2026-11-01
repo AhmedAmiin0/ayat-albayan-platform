@@ -7,7 +7,7 @@ import { InsetGroup } from '@/core/ui/surface/inset';
 import { Note } from '@/core/ui/feedback/Note';
 import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
 import { Section } from '@/core/ui/surface/Section';
-import type { AvailabilityRow, Teacher } from '@/more/types';
+import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { WeekdayRow } from './WeekdayRow';
 
 /** «المواعيد المتاحة», read-only: the weekly grid by day in one inset card, in the zone it was saved in. R-TCH-02. */

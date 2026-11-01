@@ -5,8 +5,8 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { TeacherRow } from '../teachers/TeacherRow';
-import type { TeacherListItem } from '../types';
+import { TeacherRow } from '@/more/teachers/TeacherRow';
+import type { TeacherListItem } from '@/core/lib/staff/types';
 
 const keyOf = (teacher: TeacherListItem) => teacher.id;
 const renderRow = ({ item }: { item: TeacherListItem }) => <TeacherRow teacher={item} />;

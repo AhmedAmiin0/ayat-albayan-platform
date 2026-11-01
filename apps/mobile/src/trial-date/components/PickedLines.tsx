@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { SummaryList } from '@/booking/trial/components/ConfirmStep';
 import { t } from '@/core/lib/i18n/i18n';
-import { SectionLabel } from '@/students/list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import type { TrialDateDraft } from '../lib/trial-date-body';
-import { whenLines } from '../lib/trial-date-text';
+import type { TrialDateDraft } from '@/trial-date/lib/trial-date-body';
+import { whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The review's picks: the new time (the viewer's clock, the family's under it when it differs), the teacher. */

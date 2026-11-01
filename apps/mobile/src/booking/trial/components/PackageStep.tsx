@@ -1,12 +1,12 @@
 import type { PackageSize } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import type { TrialDraft } from '../lib/draft';
+import type { TrialDraft } from '@/booking/trial/lib/draft';
 import { DurationPills } from './DurationPills';
-import { PAID_SIZES } from '../lib/package-choice';
+import { PAID_SIZES } from '@/booking/trial/lib/package-choice';
 
 type Choice = Pick<TrialDraft, 'pkg' | 'durationMin'>;
 
