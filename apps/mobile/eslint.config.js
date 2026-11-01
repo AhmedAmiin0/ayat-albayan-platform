@@ -1,4 +1,4 @@
-import { boundaries, domainModuleRegex, forbiddenImports, noParentImports, reactConfig, reactRestrictions, routeImportGroup } from '@ab/config/eslint';
+import { boundaries, domainModuleRegex, forbiddenImports, noParentImports, reactConfig, reactRestrictions, routeImportGroup, syntaxExempt } from '@ab/config/eslint';
 
 // docs/32 g1: the domains already regrouped into `src/<domain>/<module>` (two-level modules). Each c-row move
 // adds its domain here in the same PR that moves ALL of src/<domain>/ into src/<domain>/<module>/ (a listed domain
@@ -41,6 +41,18 @@ export default reactConfig(
       ],
     },
   },
+  // docs/36 «Stays exempt»: the reach wrapper, the connectivity probe and the local file:// reads call
+  // fetch (H-1); the query cache patcher reads its own cached pages (Z-2).
+  syntaxExempt({
+    files: [
+      'src/core/lib/http/api.ts',
+      'src/core/lib/connectivity/probe.ts',
+      'src/inbox/composer/send-file.ts',
+      'src/inbox/composer/voice/send-voice.ts',
+    ],
+    http: true,
+  }),
+  syntaxExempt({ files: ['src/core/lib/query/paging.ts'], shapes: true }),
   // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch / apiSend
   // (existing ones: eslint-suppressions.json).
   forbiddenImports({

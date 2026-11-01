@@ -94,6 +94,9 @@
     "@typescript-eslint/no-base-to-string": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -104,6 +107,9 @@
     }
   },
   "src/stub.calls.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     },
@@ -112,6 +118,9 @@
     }
   },
   "src/stub.crm.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -123,16 +132,30 @@
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/stub.kapso.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/stub.lines.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 2
+    }
+  },
   "src/stub.media.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -140,6 +163,9 @@
   "src/stub.templates.lines.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -149,6 +175,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-unchecked-json": {
+      "count": 5
+    },
     "max-len": {
       "count": 3
     }
@@ -157,8 +186,16 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/stub.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 7
     }
   },
   "src/stub.ts": {
@@ -167,6 +204,9 @@
     }
   },
   "src/stub.uploads.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -175,6 +215,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-unchecked-json": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
@@ -182,6 +225,9 @@
   "src/stub.webhook.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -201,6 +247,9 @@
   "src/test-server.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 2
     },
     "max-len": {
       "count": 1
