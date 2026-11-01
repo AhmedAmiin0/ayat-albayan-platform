@@ -37,14 +37,8 @@ const response = z
 
 /** FX_API_URL may hold the key: the message names the status or the kind only, never the URL. */
 const FX_ERRORS = {
-  '4xx': (f: HttpFailure) => new Error(`fx: HTTP ${statusOf(f)}`),
-  '5xx': (f: HttpFailure) => new Error(`fx: HTTP ${statusOf(f)}`),
-  default: (f: HttpFailure) => new Error(`fx: ${f.kind}`),
+  default: (f: HttpFailure) => new Error(`fx: ${f.kind === 'status' ? `HTTP ${f.status}` : f.kind}`),
 };
-
-function statusOf(f: HttpFailure): number | string {
-  return f.kind === 'status' ? f.status : f.kind;
-}
 
 /** ExchangeRate-API (docs/08 §4). FX_API_URL must point at a SAR-based "latest" endpoint. */
 export class OpenErApiFetcher implements FxFetcher {

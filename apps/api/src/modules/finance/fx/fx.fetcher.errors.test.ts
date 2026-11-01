@@ -16,11 +16,13 @@ async function messageOf(): Promise<string> {
 }
 
 describe('OpenErApiFetcher failures (h1)', () => {
-  it('an HTTP error keeps today\'s message', async () => {
+  it("an HTTP error keeps today's message", async () => {
     answer({}, 503);
     expect(await messageOf()).toBe('fx: HTTP 503');
     answer({}, 403);
     expect(await messageOf()).toBe('fx: HTTP 403');
+    answer({}, 302);
+    expect(await messageOf()).toBe('fx: HTTP 302');
   });
 
   it('no rates map at all is a shape failure', async () => {

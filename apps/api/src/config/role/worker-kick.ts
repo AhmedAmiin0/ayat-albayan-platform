@@ -29,12 +29,12 @@ export const PEER_RELOAD_PATH = '/internal/jobs/config-reload/here';
 const failed = (f: HttpFailure): Error => new Error(`${f.where}: ${f.kind}`);
 const ok = (status: number): boolean => status >= 200 && status < 300;
 
-/** The internal route's client: the token per call, 30 s, redirects followed (fetch's default). */
+/** The internal route's client: 30 s, redirects followed (fetch's default). */
 const internalHttp = (url: string) =>
   createHttp({
     name: 'internal',
     base: () => url,
-    headers: () => Promise.resolve({ [INTERNAL_HEADER]: internalToken() }),
+    headers: () => Promise.resolve({}),
     timeoutMs: KICK_TIMEOUT_MS,
     redirect: 'follow',
     errorBody: 'omit',
@@ -44,7 +44,9 @@ const internalHttp = (url: string) =>
 /** One authenticated POST to an internal route. Never throws: a refused or slow target is only logged. */
 async function postInternal(url: string, what: string): Promise<void> {
   try {
-    const status = await internalHttp(url).status({ path: '', method: 'POST' });
+    // The token first: an env read that fails is logged with its own message, as before.
+    const headers = { [INTERNAL_HEADER]: internalToken() };
+    const status = await internalHttp(url).status({ path: '', method: 'POST', headers });
     if (!ok(status)) log.warn(`${what}: answered ${status}, left for its next poll`);
   } catch (e) {
     log.warn(`${what}: failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`);
