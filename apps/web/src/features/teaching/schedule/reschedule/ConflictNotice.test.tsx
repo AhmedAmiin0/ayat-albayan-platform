@@ -41,6 +41,19 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
     expect(screen.getByText(t.booking.conflictMore.replace('{n}', '2'))).toBeTruthy();
   });
 
+  it('scrolls itself into view once as it appears, not again on a re-render', () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    const notice = (n: number) => (
+      <ConflictNotice conflicts={[busy(`2026-10-0${n}T14:00:00Z`)]} onChangeSlot={vi.fn()} onOverride={vi.fn()} />
+    );
+    const { rerender } = render(notice(4));
+    rerender(notice(5));
+    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(scroll).toHaveBeenCalledWith({ block: 'nearest', behavior: 'smooth' });
+    Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+  });
+
   it('book-anyway needs a reason, then passes it on', () => {
     const onOverride = vi.fn();
     render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={vi.fn()} onOverride={onOverride} />);
