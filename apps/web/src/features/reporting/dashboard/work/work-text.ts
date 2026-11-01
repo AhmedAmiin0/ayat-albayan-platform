@@ -1,6 +1,6 @@
 import { counted, packageProgress } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { TaskRow, UnpaidRow } from '../types';
+import type { TaskRow, UnpaidRow } from '@/features/reporting/dashboard/types';
 
 /** «باقة سهيلة قربت تخلص: فاضل حلقتين» (dashboard.task.<kind>, R-SUB-02 wording). */
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {

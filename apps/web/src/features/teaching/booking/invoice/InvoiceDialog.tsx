@@ -7,7 +7,7 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { useClock, type Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { invoiceDownload } from './api.invoice';
-import type { InvoiceView } from '../draft/contract';
+import type { InvoiceView } from '@/features/teaching/booking/draft/contract';
 import { canShow } from './invoice-file';
 
 /** «الفاتورة · <student> · <date>»: the title names whose invoice and when it was saved. */

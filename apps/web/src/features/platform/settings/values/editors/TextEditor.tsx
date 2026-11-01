@@ -1,9 +1,9 @@
 import { normalizePhone, SETTING_FIELD_OF, settingDef } from '@ab/shared';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { str } from '../../registry-form/settings-form';
-import { boundsText } from '../lib/value-format';
-import { useValues } from '../values-context';
+import { str } from '@/features/platform/settings/registry-form/settings-form';
+import { boundsText } from '@/features/platform/settings/values/lib/value-format';
+import { useValues } from '@/features/platform/settings/values/values-context';
 import { denseClass, describedBy, type EditorProps } from './editor-props';
 
 /** Free text, or an E.164 phone (`type=tel`, LTR) with the form it will be saved in (rule 7). */

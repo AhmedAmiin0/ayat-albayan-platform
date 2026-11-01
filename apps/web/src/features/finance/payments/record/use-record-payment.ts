@@ -2,8 +2,8 @@ import { parseAmount, type PaymentKind } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MONEY_KEY, type SubscriptionView } from '@/features/finance/subscriptions/api';
-import { paidAtFor, recordPayment, uploadReceipt } from '../api';
-import { useUploadOnce } from '../attachments/attachments';
+import { paidAtFor, recordPayment, uploadReceipt } from '@/features/finance/payments/api';
+import { useUploadOnce } from '@/features/finance/payments/attachments/attachments';
 import type { PaymentForm } from './PaymentFields';
 
 export type SaveInput = {

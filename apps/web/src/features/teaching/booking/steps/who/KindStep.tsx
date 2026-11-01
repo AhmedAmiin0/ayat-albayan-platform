@@ -1,8 +1,8 @@
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n/i18n';
-import { BOOKING_KINDS } from '../../draft/contract';
-import type { BookingDraft } from '../../draft/draft';
-import { kindPatch } from '../../draft/draft.kind';
+import { BOOKING_KINDS } from '@/features/teaching/booking/draft/contract';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { kindPatch } from '@/features/teaching/booking/draft/draft.kind';
 
 export interface KindStepProps {
   draft: Pick<BookingDraft, 'kind' | 'students'>;

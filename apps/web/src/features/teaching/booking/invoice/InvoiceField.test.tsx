@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import type { InvoiceDraft } from '../draft/draft';
+import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceField } from './InvoiceField';
 import { invoiceProblem } from './invoice-file';
 

@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { tile } from '../room/livekit/fake-client';
+import { tile } from '@/features/teaching/classroom/room/livekit/fake-client';
 import { useKick, type KickOptions } from './use-kick';
 
 const guest = tile({ key: 'g1', name: 'سهيلة', role: 'guest' });

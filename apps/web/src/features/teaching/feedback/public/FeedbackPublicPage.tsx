@@ -6,7 +6,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Logo } from '@/components/ui/display/mark';
 import { t } from '@/lib/i18n/i18n';
-import { publicFeedbackQuery, publicProblem, type PublicProblem } from '../api';
+import { publicFeedbackQuery, publicProblem, type PublicProblem } from '@/features/teaching/feedback/api';
 import { FeedbackForm } from './FeedbackForm';
 import { ThankYou } from './ThankYou';
 

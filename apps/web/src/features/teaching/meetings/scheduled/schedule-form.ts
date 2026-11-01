@@ -7,7 +7,7 @@ import {
   type CreateMeeting,
 } from '@ab/shared';
 import { zonedParts, zonedToUtc } from '@/features/teaching/schedule';
-import type { PickedInvitee } from '../invitees/invitee-list';
+import type { PickedInvitee } from '@/features/teaching/meetings/invitees/invitee-list';
 
 // «اجتماع مجدول» (R-MEET-01): a date + a 15-minute time select on the viewer's own clock (rule 6:
 // never free text), turned into a UTC ISO startsAt with zonedToUtc. Pure, unit-tested.

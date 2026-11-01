@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { ConfirmDialog } from '@/features/finance/payments';
 import { cancelPaymentLink, PAYMENT_LINKS_KEY, paymentLinkErrorText, paymentLinksQuery, useStripeFeature } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
-import { PortalList } from '../../students/PortalList';
+import { PortalList } from '@/features/sales/sales/students/PortalList';
 import { linkColumns } from './link-columns';
 
 const P = t.paymentLinks;

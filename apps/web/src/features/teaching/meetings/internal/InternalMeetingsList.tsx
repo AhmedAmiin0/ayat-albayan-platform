@@ -3,7 +3,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { meetingsQuery } from './internal-api';
-import { MeetingRow } from '../rows/MeetingRow';
+import { MeetingRow } from '@/features/teaching/meetings/rows/MeetingRow';
 
 const L = t.meetings.internal;
 

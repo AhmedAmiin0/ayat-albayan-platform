@@ -10,7 +10,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { salesTeachersQuery } from '../academy-api';
+import { salesTeachersQuery } from '@/features/sales/sales/academy-api';
 import { TeacherDetail } from './TeacherDetail';
 import { TeacherFilters } from './TeacherFilters';
 import { TeacherListItem } from './TeacherListItem';

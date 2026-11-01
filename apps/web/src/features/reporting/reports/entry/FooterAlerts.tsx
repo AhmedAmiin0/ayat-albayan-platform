@@ -1,8 +1,8 @@
 import type { ReportFormResponse, ReportView } from '@ab/shared';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { reportErrorText } from '../api';
-import { SubmittedNote } from '../history/ReportStatusLine';
+import { reportErrorText } from '@/features/reporting/reports/api';
+import { SubmittedNote } from '@/features/reporting/reports/history/ReportStatusLine';
 
 const ERRORS: Record<string, string> = t.reports.error;
 

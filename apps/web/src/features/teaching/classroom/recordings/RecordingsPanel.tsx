@@ -6,7 +6,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { t } from '@/lib/i18n/i18n';
-import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '../api/moderation-api';
+import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '@/features/teaching/classroom/api/moderation-api';
 import { RECORDING_TONE, recordingTime } from './recording-format';
 import { useClock } from '@/lib/clock';
 

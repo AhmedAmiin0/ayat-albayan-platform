@@ -5,8 +5,8 @@ import { Select } from '@/components/ui/form/select';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import type { EditForm } from './edit-form';
-import { RolePicker } from '../create/RolePicker';
-import type { FormErrors } from '../validation';
+import { RolePicker } from '@/features/people/users/create/RolePicker';
+import type { FormErrors } from '@/features/people/users/validation';
 
 const F = t.users.form;
 

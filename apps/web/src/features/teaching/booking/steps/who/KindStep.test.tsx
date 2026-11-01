@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { emptyDraft } from '../../draft/draft';
+import { emptyDraft } from '@/features/teaching/booking/draft/draft';
 import { KindStep } from './KindStep';
 
 const STUDENT = { id: 's-1', name: 'سهيلة', code: 'AB-0183' };

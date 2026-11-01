@@ -1,9 +1,9 @@
 import { ISLAMIC_DOMAINS, ISLAMIC_RATES, islamicContentSchema, type IslamicContent, type ReportContent } from '@ab/shared';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n/i18n';
-import { GradeChips } from '../GradeChips';
-import type { ReportEntryV2State } from '../use-report-entry-v2';
-import { CARD } from '../v2-classes';
+import { GradeChips } from '@/features/reporting/reports/entry-v2/GradeChips';
+import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
+import { CARD } from '@/features/reporting/reports/entry-v2/v2-classes';
 import { TopicField } from './TopicField';
 
 const islamicOf = (c: ReportContent): IslamicContent => c.islamic ?? islamicContentSchema.parse({});

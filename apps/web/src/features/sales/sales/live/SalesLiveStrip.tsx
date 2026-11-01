@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { t } from '@/lib/i18n/i18n';
-import { salesLiveQuery } from '../academy-api';
+import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /**
  * The short block on the sales landing (the chats): «حلقات جارية الآن: N» with a link to /sales/live.

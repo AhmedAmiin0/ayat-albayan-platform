@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { canEditDescription } from './description';
 import { rowDescription, settingTarget } from './row-description';
 import { useDescribeRights } from './use-describe-rights';
-import { useValues } from '../values-context';
+import { useValues } from '@/features/platform/settings/values/values-context';
 
 
 /**

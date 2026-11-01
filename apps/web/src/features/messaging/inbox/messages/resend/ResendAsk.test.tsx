@@ -3,9 +3,9 @@ import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { ChatActionsProvider } from '../../shared/ChatActionsProvider';
-import { message, PHONE, thread } from '../../testing/inbox-fixture';
-import { renderWithClient } from '../../testing/test-utils';
+import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
+import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ResendAsk } from './ResendAsk';
 
 const apiSend = vi.hoisted(() => vi.fn());

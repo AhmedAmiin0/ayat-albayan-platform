@@ -2,8 +2,8 @@ import { emptyContent, type MemoryView, type ReportContent, type ReportView, typ
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
-import { formResponse, reportView } from '../report-fixture';
-import { ReportFormPage } from '../ReportFormPage';
+import { formResponse, reportView } from '@/features/reporting/reports/report-fixture';
+import { ReportFormPage } from '@/features/reporting/reports/ReportFormPage';
 
 // Test-only helpers for the new form (form_version 2): one Quran student with a 4-lesson package.
 

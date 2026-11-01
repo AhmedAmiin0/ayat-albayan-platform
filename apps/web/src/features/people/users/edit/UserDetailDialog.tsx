@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { roleOptionsQuery, userQuery } from '../api';
+import { roleOptionsQuery, userQuery } from '@/features/people/users/api';
 import { UserEditor } from './UserEditor';
 
 export interface UserDetailDialogProps {

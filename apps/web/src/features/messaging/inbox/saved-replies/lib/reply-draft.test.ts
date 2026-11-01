@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PRICES } from './fixture';
-import { insertAt } from '../components/PlaceholderChips';
+import { insertAt } from '@/features/messaging/inbox/saved-replies/components/PlaceholderChips';
 import { createBody, draftOf, fileName, updateBody } from './reply-draft';
 
 const NEW = { kind: 'new' as const, path: 'saved/u/x.png', attachment: { name: 'x.png', mime: 'image/png' as const, size: 9 } };

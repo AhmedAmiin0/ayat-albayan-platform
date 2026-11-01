@@ -4,9 +4,9 @@ import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n/i18n';
-import { paramFields, toParamsInput, urlButton, type ParamValues } from '../lib/template-params';
-import { TemplateButtons } from '../../messages/template/TemplateButtons';
-import { TemplateFrame } from '../../messages/template/TemplateFrame';
+import { paramFields, toParamsInput, urlButton, type ParamValues } from '@/features/messaging/inbox/composer/lib/template-params';
+import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
+import { TemplateFrame } from '@/features/messaging/inbox/messages/template/TemplateFrame';
 
 export interface TemplateParamFieldsProps {
   template: TemplateView;

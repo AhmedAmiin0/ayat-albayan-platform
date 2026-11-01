@@ -1,7 +1,7 @@
 import type { Room } from 'livekit-client';
 import { describe, expect, it, vi } from 'vitest';
 import { listenData, sendData } from './livekit-data';
-import type { DataPacketIn } from '../components/room-types';
+import type { DataPacketIn } from '@/features/teaching/classroom/room/components/room-types';
 
 vi.mock('livekit-client', () => ({ RoomEvent: { DataReceived: 'dataReceived' } }));
 

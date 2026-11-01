@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { MEETINGS_KEY } from '../internal/internal-api';
-import { cancelMeeting, meetingErrorText } from '../invitees/meeting-invites-api';
+import { MEETINGS_KEY } from '@/features/teaching/meetings/internal/internal-api';
+import { cancelMeeting, meetingErrorText } from '@/features/teaching/meetings/invitees/meeting-invites-api';
 
 const L = t.meetingInvites.list;
 

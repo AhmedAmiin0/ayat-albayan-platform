@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
-import { lesson } from '../lesson/lesson-fixture';
+import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));

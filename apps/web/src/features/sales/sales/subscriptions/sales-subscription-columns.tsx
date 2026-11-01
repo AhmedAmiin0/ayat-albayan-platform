@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import type { SalesSubscription } from '../api';
+import type { SalesSubscription } from '@/features/sales/sales/api';
 
 const col = createColumnHelper<DataTableFeatures, SalesSubscription>();
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;

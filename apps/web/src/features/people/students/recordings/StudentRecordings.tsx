@@ -12,7 +12,7 @@ import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { RecordingFiltersBar, type TeacherChoice } from './RecordingFiltersBar';
 import { studentRecordingsQuery, type RecordingFilters } from './recordings-api';
 import { StudentRecordingRow } from './StudentRecordingRow';
-import { teacherOptionsQuery } from '../api';
+import { teacherOptionsQuery } from '@/features/people/students/api';
 
 const R = t.studentRecordings;
 

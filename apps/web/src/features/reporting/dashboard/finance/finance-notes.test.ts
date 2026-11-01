@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { financeNotes, rateLines } from './finance-notes';
-import type { DashboardData } from '../types';
+import type { DashboardData } from '@/features/reporting/dashboard/types';
 
 const finance = (over: Partial<DashboardData['finance']> = {}): DashboardData['finance'] => ({
   currency: 'SAR',

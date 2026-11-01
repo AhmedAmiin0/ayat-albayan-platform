@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { joinMeeting } from '@/features/teaching/meetings/internal/internal-api';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { fakeClient } from '../room/livekit/fake-client';
+import { fakeClient } from '@/features/teaching/classroom/room/livekit/fake-client';
 import { StaffClassroomPage } from './StaffClassroomPage';
 
 const apiSend = vi.hoisted(() => vi.fn());

@@ -1,6 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { approvalWord, channelWords } from '../rule-text';
+import { approvalWord, channelWords } from '@/features/messaging/notification-rules/rule-text';
 
 const r = t.notificationRules;
 const c = t.notificationCatalogue;

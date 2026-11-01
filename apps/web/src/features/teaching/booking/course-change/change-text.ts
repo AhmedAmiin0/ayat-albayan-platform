@@ -1,6 +1,6 @@
 import { inWeekOrder, type CourseChangeRequest, type DayTime } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { dayAtText } from '../steps/slots/DayTimesList';
+import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
 import type { Clock } from '@/lib/clock';
 
 /** The viewer's cycle, language and zone (useViewerTz()). */

@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { enableUser, signOutUser, USERS_KEY } from '../api';
-import { userErrorText } from '../errors';
+import { enableUser, signOutUser, USERS_KEY } from '@/features/people/users/api';
+import { userErrorText } from '@/features/people/users/errors';
 
 const A = t.users.actions;
 

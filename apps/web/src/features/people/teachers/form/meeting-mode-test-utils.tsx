@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { useState } from 'react';
 import type { Mock } from 'vitest';
 import { publicConfigQuery } from '@/lib/settings/public-config';
-import type { Teacher } from '../api';
+import type { Teacher } from '@/features/people/teachers/api';
 import { emptyTeacherForm, type SetField, type TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 

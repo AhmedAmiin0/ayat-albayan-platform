@@ -1,6 +1,6 @@
 import type { UserReference } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { tableLabel } from '../errors';
+import { tableLabel } from '@/features/people/users/errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */
 export function HistoryReferences({ references }: { references: readonly UserReference[] }) {

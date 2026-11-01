@@ -1,9 +1,9 @@
 import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { StudentBalanceView, SubscriptionView } from '../api';
-import { moneyText, packageName, studentProgress } from '../format';
-import { partPaidText } from '../payment-lines';
+import type { StudentBalanceView, SubscriptionView } from '@/features/finance/subscriptions/api';
+import { moneyText, packageName, studentProgress } from '@/features/finance/subscriptions/format';
+import { partPaidText } from '@/features/finance/subscriptions/payment-lines';
 
 /** «الباقة خلصت يوم …» once used up, else «متوقع تخلص يوم …» from the booked lessons (R-SUB-03). */
 export function endLine(s: SubscriptionView): string {

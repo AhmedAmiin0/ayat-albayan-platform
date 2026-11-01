@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
-import { FATMA, lesson } from '../lesson/lesson-fixture';
-import { overview } from '../overview-fixture';
-import type { ScheduleSearch } from '../filters/search';
+import { FATMA, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { overview } from '@/features/teaching/schedule/overview-fixture';
+import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());

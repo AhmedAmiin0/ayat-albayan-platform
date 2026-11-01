@@ -1,10 +1,10 @@
 import { counted } from '@ab/shared';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { courseEnd, dayPicks } from '../../draft/draft.days';
-import type { BookingDraft } from '../../draft/draft';
-import { dayAtText } from '../slots/DayTimesList';
-import { PACKAGE_NOTE_CLASS, packageDaysNote } from '../package/package-days';
+import { courseEnd, dayPicks } from '@/features/teaching/booking/draft/draft.days';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
+import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

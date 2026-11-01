@@ -7,10 +7,10 @@ import { Icon } from '@/components/ui/display/icon';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { t } from '@/lib/i18n/i18n';
-import { slotsQuery } from '../api';
-import { SlotGrid, type SlotGridProps } from '../grid/SlotGrid';
+import { slotsQuery } from '@/features/teaching/schedule/api';
+import { SlotGrid, type SlotGridProps } from '@/features/teaching/schedule/grid/SlotGrid';
 import { bookableWindow, currentWeekStart } from './slots';
-import { addDays, dayMonthLabel, weekStart, zonedParts } from '../tz';
+import { addDays, dayMonthLabel, weekStart, zonedParts } from '@/features/teaching/schedule/tz';
 import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface SlotPickerProps {

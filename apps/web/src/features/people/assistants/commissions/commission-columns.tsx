@@ -8,8 +8,8 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
-import type { AssistantCommissionView } from '../api';
-import { commissionStatusStyle } from '../status';
+import type { AssistantCommissionView } from '@/features/people/assistants/api';
+import { commissionStatusStyle } from '@/features/people/assistants/status';
 
 const col = createColumnHelper<DataTableFeatures, AssistantCommissionView>();
 const L = t.assistants.ledger;
