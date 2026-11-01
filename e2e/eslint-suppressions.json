@@ -67,6 +67,11 @@
       "count": 3
     }
   },
+  "support/core/wa-stub.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
   "support/durations-reporter.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -124,6 +129,9 @@
     }
   },
   "support/finance/exports-csv.ts": {
+    "ab/no-if-chains": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     }
@@ -140,6 +148,9 @@
   },
   "support/finance/money-extra.ts": {
     "@typescript-eslint/no-misused-spread": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
       "count": 1
     },
     "max-len": {
@@ -176,11 +187,17 @@
     }
   },
   "support/messaging/inbox.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "support/messaging/kapso.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -196,11 +213,17 @@
     }
   },
   "support/messaging/restricted-templates.ts": {
+    "ab/no-unchecked-json": {
+      "count": 2
+    },
     "max-len": {
       "count": 6
     }
   },
   "support/messaging/template-registry.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -232,6 +255,9 @@
   },
   "support/people/student-statuses.ts": {
     "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
       "count": 1
     },
     "max-len": {
@@ -277,6 +303,9 @@
     }
   },
   "support/reporting/teacher-extra.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -478,6 +507,9 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -616,6 +648,11 @@
       "count": 5
     }
   },
+  "tests/messaging/notification-bell.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
   "tests/messaging/numbers-routing.sql.spec.ts": {
     "max-len": {
       "count": 1
@@ -710,6 +747,11 @@
       "count": 1
     }
   },
+  "tests/people/account.api.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
   "tests/people/assistants-admin.spec.ts": {
     "max-len": {
       "count": 6
@@ -727,6 +769,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
+    "ab/no-unchecked-json": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -737,6 +782,9 @@
     }
   },
   "tests/people/phone-search.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -861,6 +909,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 7
     },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -967,6 +1018,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 6
     },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1000,6 +1054,9 @@
     }
   },
   "tests/reporting/report-admin.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -1131,6 +1188,9 @@
     }
   },
   "tests/sales/sales-meetings.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -1180,6 +1240,9 @@
   },
   "tests/teaching/booking-makeup-invoice.spec.ts": {
     "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
       "count": 1
     },
     "max-len": {
@@ -1232,6 +1295,11 @@
       "count": 1
     }
   },
+  "tests/teaching/meeting-link-auto.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
   "tests/teaching/meeting-recordings-rls.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
@@ -1273,6 +1341,9 @@
     }
   },
   "tests/teaching/schedule-stale.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }

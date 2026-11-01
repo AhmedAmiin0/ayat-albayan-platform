@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { allowedRecipients, lineEnvs, loadEnv, type CrmLineEnv } from '@/config/env/env';
 import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
+import type { FetchLike } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 
 // The notifications line as the relay needs it, read per call like LiveWhatsappClient (an admin's
 // change in «التكاملات» applies to the next request): its CRM env (the key the script's Bearer must
@@ -12,6 +13,8 @@ export interface RelayLineNow {
   client: Pick<CrmWhatsappClient, 'sendBody'>;
   /** messages.number_id in module mode (activeNumberId); undefined under legacy. */
   numberId: string | undefined;
+  /** For the key check's GET /me (relay.keys.ts). */
+  fetch: FetchLike;
 }
 
 @Injectable()
@@ -22,6 +25,6 @@ export class RelayLine {
     const line = lineEnvs(env).notifications;
     if (line?.provider !== 'crm') return null;
     const client = new CrmWhatsappClient(line, { allowed: allowedRecipients(env) });
-    return { env: line, client, numberId: activeNumberId('notifications') };
+    return { env: line, client, numberId: activeNumberId('notifications'), fetch };
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { keyMatches } from './relay.auth';
 import { relayDedupKey } from './relay.dedup';
 import { relayError, relayFailure, sentWithoutId } from './relay.errors';
+import { RelayKeys } from './relay.keys';
 import { relayCrmBody, relayReadable } from './relay.kinds';
 import { RelayLine, type RelayLineNow } from './relay.line';
 import { RelayRepo, type RelayIds } from './relay.repo';
@@ -31,16 +31,21 @@ const BAD_KEY = { status: 401, code: 'unauthorized', message: 'invalid or missin
 
 @Injectable()
 export class RelayService {
+  private readonly keys = new RelayKeys();
+
   constructor(
     private readonly line: RelayLine,
     private readonly repo: RelayRepo,
   ) {}
 
-  /** The notifications line when the header carries its CRM key; 503 / 401 otherwise. */
-  authorize(header: string | undefined): RelayLineNow {
+  /** The line when the Bearer is a key of its CRM account (relay.keys.ts); else 503 / 401 / 502. */
+  async authorize(header: string | undefined): Promise<RelayLineNow> {
     const line = this.line.current();
     if (!line) throw relayError(NOT_CRM);
-    if (!keyMatches(header, line.env.apiKey)) throw relayError(BAD_KEY);
+    const ok = await this.keys.accepts(header, line).catch((e: unknown) => {
+      throw relayError(relayFailure(e));
+    });
+    if (!ok) throw relayError(BAD_KEY);
     return line;
   }
 
