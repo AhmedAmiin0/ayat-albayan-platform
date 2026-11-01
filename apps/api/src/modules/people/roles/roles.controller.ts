@@ -7,11 +7,21 @@ import {
   type RoleView,
   type StaffUserView,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { RolesService } from './roles.service';
 
 /** «الأدوار والصلاحيات»: roles, their grants and the catalog. All behind roles.manage. */
@@ -40,14 +50,21 @@ export class RolesController {
   }
 
   @Post('roles')
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<RoleView> {
-    return this.roles.create(parseOrThrow(roleCreateSchema, body), user.id);
+  create(
+    @ZodBody(roleCreateSchema) body: z.output<typeof roleCreateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<RoleView> {
+    return this.roles.create(body, user.id);
   }
 
   /** 400 admin_role_fixed, 403 permission_not_held (adding a grant the actor lacks), 409 last_admin / self_lockout. */
   @Patch('roles/:id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<RoleView> {
-    return this.roles.update(id, { ...parseOrThrow(roleUpdateSchema, body), actorId: user.id });
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(roleUpdateSchema) body: z.output<typeof roleUpdateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<RoleView> {
+    return this.roles.update(id, { ...body, actorId: user.id });
   }
 
   /** «استعادة الافتراضي» (system teacher / sales / assistant): 400 admin_role_fixed / not_system_role, 403, 409 as update. */
@@ -75,8 +92,12 @@ export class StaffUsersController {
 
   /** Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held, 409 last_admin / self_lockout. */
   @Patch(':id/role')
-  assign(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<StaffUserView> {
-    const { role_id } = parseOrThrow(roleAssignSchema, body);
+  assign(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(roleAssignSchema) body: z.output<typeof roleAssignSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StaffUserView> {
+    const { role_id } = body;
     return this.roles.assign({ userId: id, roleId: role_id, actorId: user.id });
   }
 }

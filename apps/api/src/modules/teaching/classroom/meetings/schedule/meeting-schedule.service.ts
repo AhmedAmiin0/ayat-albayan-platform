@@ -4,12 +4,12 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
 import { parseOrThrow } from '@/common/http/http';
 import { meetingEnded } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.join.service';
-import { InternalMeetingsQueries, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import { InternalMeetingsRepo, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
 import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.sender';
 import { cancelDedupKey, cancellationText, inviteeWhen, inviteSubject } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.text';
 import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
-import { MeetingInviteesQueries, type StoredInvitee } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.queries';
+import { MeetingInviteesRepo, type StoredInvitee } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
 import { rescheduleTimes } from './meeting-schedule.rules';
 
 const HOUR_MS = 3_600_000;
@@ -26,7 +26,7 @@ const mayTell = (i: StoredInvitee, delivered: ReadonlySet<string>): boolean =>
 @Injectable()
 export class MeetingScheduleDeps {
   constructor(
-    readonly invitees: MeetingInviteesQueries,
+    readonly invitees: MeetingInviteesRepo,
     readonly sender: MeetingInviteSender,
     readonly resolver: MeetingInviteeResolver,
   ) {}
@@ -49,7 +49,7 @@ export const sameInstant = (a: string | null, b: string | null): boolean => a !=
 export class MeetingScheduleService {
   constructor(
     private readonly meetings: InternalMeetingsService,
-    private readonly queries: InternalMeetingsQueries,
+    private readonly queries: InternalMeetingsRepo,
     private readonly deps: MeetingScheduleDeps,
   ) {}
 

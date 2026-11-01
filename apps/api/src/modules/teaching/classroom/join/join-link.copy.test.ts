@@ -1,7 +1,7 @@
 import { ForbiddenException, HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import type { ClassroomQueries } from '@/modules/teaching/classroom/classroom.queries';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { ADMIN, ASSISTANT, GUARDIAN, LESSON_ID, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import { JoinLinkCopyService } from './join-link.copy.service';
 import { hashLinkToken } from './join-link.token';
@@ -9,7 +9,7 @@ import { hashLinkToken } from './join-link.token';
 let q: ReturnType<typeof queries>;
 let teachers: { idByProfile: ReturnType<typeof vi.fn> };
 const url = (user = ADMIN) =>
-  new JoinLinkCopyService(q as unknown as ClassroomQueries, teachers as unknown as TeachersRepo, 'https://app.example.test').url({ lessonId: LESSON_ID, user });
+  new JoinLinkCopyService(q as unknown as ClassroomRepo, teachers as unknown as TeachersRepo, 'https://app.example.test').url({ lessonId: LESSON_ID, user });
 
 beforeEach(() => {
   q = queries();

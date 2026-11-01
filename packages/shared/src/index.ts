@@ -1,7 +1,7 @@
-// The facade the apps import (docs/32 D4): @ab/core and @ab/i18n are their own packages since k3a.
+// The facade the apps import (docs/32 D4): @ab/core, @ab/i18n (k3a), @ab/time (k3b) are packages.
 export * from '@ab/core';
 export * from '@ab/i18n';
-export * from './time/chat-day.js';
+export * from '@ab/time';
 export * from './enums/index.js';
 export * from './schedule/classroom/index.js';
 export * from './schedule/lessons/index.js';
@@ -12,10 +12,6 @@ export * from './money/pricing/index.js';
 export * from './reports/index.js';
 export * from './catalog/permissions/roles.js';
 export * from './catalog/permissions/index.js';
-export * from './time/running-head.js';
-export * from './core/format/clock-pref.js';
-export * from './core/format/clock.js';
-export * from './core/format/clock-picker.js';
 export * from './schemas/index.js';
 export * from './settings/index.js';
 export * from './settings/custom-config/index.js';
@@ -26,13 +22,6 @@ export * from './people/students/student-lists.js';
 export * from './people/students/index.js';
 export * from './catalog/theme/theme.js';
 export * from './catalog/theme/avatar-tones.js';
-export * from './time/time-zone.js';
-export * from './time/week.js';
-export * from './time/riyadh-day.js';
-export * from './time/viewer-zone.js';
-export * from './time/zoned.js';
-export * from './time/calendar.js';
-export * from './time/format.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { callsNumber, setCallsNumber } from '@/common/configuration/integrations/calls-number';
 import { numbersOverlay, setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { numberRow } from '@/modules/messaging/numbers/numbers.fakes';
-import type { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
+import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { config } from './numbers.config.fakes';
 
 const CALLS = numberRow({
@@ -19,7 +19,7 @@ function withCalls(source: 'legacy' | 'module', calls: ReturnType<typeof numberR
     vi.fn(async () => [numberRow()]),
     vi.fn(async () => [numberRow(), ...(calls ? [calls] : [])]),
   );
-  const queries = (c as unknown as { queries: NumbersQueries }).queries;
+  const queries = (c as unknown as { queries: NumbersRepo }).queries;
   vi.mocked(queries.callsDefault).mockResolvedValue(calls);
   return c;
 }
@@ -75,7 +75,7 @@ describe('NumbersConfig: the dedicated calls number (docs/28 §10)', () => {
     const kept = { id: 'kept', phoneNumberId: 'x', env: null };
     setCallsNumber(kept);
     const c = withCalls('module', null);
-    const queries = (c as unknown as { queries: NumbersQueries }).queries;
+    const queries = (c as unknown as { queries: NumbersRepo }).queries;
     vi.mocked(queries.callsDefault).mockRejectedValueOnce(
       new Error('invalid input value for enum wa_line'),
     );

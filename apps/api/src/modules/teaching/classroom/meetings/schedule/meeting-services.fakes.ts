@@ -5,19 +5,19 @@ import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import { meetingQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
-import type { InternalMeetingsQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { MeetingCreateDeps, MeetingCreateService } from './meeting-create.service';
 import { MeetingInviteFlow } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
 import { MeetingInvitePolicies } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
 import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.sender';
-import type { MeetingInviteeQueries } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.queries';
+import type { MeetingInviteeRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.repo';
 import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
-import type { MeetingInviteesQueries } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.queries';
+import type { MeetingInviteesRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
 import { meetingInviteMocks } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { MeetingInvitesDeps, MeetingInvitesService } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.service';
-import type { MeetingListQueries } from './meeting-list.queries';
+import type { MeetingListRepo } from './meeting-list.repo';
 import { MeetingListService } from './meeting-list.service';
 import { MeetingScheduleDeps, MeetingScheduleService } from './meeting-schedule.service';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
@@ -29,9 +29,9 @@ export function meetingServices() {
   const mq = meetingQueries();
   const m = meetingInviteMocks();
   const post = http();
-  const queries = mq as unknown as InternalMeetingsQueries;
-  const invitees = m.invitees as unknown as MeetingInviteesQueries;
-  const picks = m.picks as unknown as MeetingInviteeQueries;
+  const queries = mq as unknown as InternalMeetingsRepo;
+  const invitees = m.invitees as unknown as MeetingInviteesRepo;
+  const picks = m.picks as unknown as MeetingInviteeRepo;
   const sender = new MeetingInviteSender(
     m.push as unknown as PushService,
     m.threads as unknown as ThreadsRepo,
@@ -46,7 +46,7 @@ export function meetingServices() {
     post,
     meetings,
     create: new MeetingCreateService(queries, new MeetingCreateDeps(resolver, flow, invitees)),
-    list: new MeetingListService(queries, m.lists as unknown as MeetingListQueries),
+    list: new MeetingListService(queries, m.lists as unknown as MeetingListRepo),
     schedule: new MeetingScheduleService(meetings, queries, new MeetingScheduleDeps(invitees, sender, resolver)),
     invites: new MeetingInvitesService(meetings, flow, new MeetingInvitesDeps(resolver, picks, invitees)),
   };

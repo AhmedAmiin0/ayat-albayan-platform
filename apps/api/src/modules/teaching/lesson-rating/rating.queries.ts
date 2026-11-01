@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.queries';
+import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { readAll } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 import type { RatingGuardian, RatingLesson } from './rating.plan';

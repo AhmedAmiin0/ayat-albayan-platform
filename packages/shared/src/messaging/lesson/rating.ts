@@ -1,6 +1,6 @@
 import type { Enums } from '@ab/db';
 import { normalizeArabic } from '@ab/core';
-import { weekdayDayMonth } from '../../time/index.js';
+import { weekdayDayMonth } from '@ab/time';
 import { joinNames } from './booking-confirmation.js';
 import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply.js';
 import type { OutboundTemplate } from '../templates/templates.js';

@@ -1,6 +1,5 @@
 import { teacherColumnQueryShape, teacherCreateSchema, teacherUpdateSchema } from '@ab/shared';
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -10,24 +9,28 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '@/common/http/http';
+import { orNotFound, pageQuerySchema, type Page } from '@/common/http/http';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { withMeeting, type MeetingFields } from './meeting-view';
 import { TeachersRepo, withoutPath, type Teacher, type TeacherListRow } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
 
 /** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
-type TeacherView = Omit<Teacher, 'meeting_mode' | 'avatar_path'> & MeetingFields & { username: string | null; avatar_url: string | null };
+type TeacherView = Omit<Teacher, 'meeting_mode' | 'avatar_path'> &
+  MeetingFields & { username: string | null; avatar_url: string | null };
 type TeacherListView = Omit<TeacherListRow, 'meeting_mode'> & MeetingFields;
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
-const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).optional(), ...teacherColumnQueryShape });
+const listQuery = pageQuerySchema.extend({
+  search: z.string().trim().max(100).optional(),
+  ...teacherColumnQueryShape,
+});
 
 /** Admin-only teacher CRUD (R-TCH-01); meeting_mode is written only here (teachers.write: admin). */
 @ApiTags('teachers')
@@ -43,8 +46,10 @@ export class TeachersController {
 
   @Get()
   @Permissions('teachers.read')
-  async list(@Query() query: unknown): Promise<Page<TeacherListView>> {
-    const page = await this.teachers.list(parseOrThrow(listQuery, query));
+  async list(
+    @ZodQuery(listQuery) query: z.output<typeof listQuery>,
+  ): Promise<Page<TeacherListView>> {
+    const page = await this.teachers.list(query);
     const auto = await this.academyAuto();
     return { ...page, items: page.items.map((row) => withMeeting(row, auto)) };
   }
@@ -56,15 +61,25 @@ export class TeachersController {
   }
 
   @Post()
-  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TeacherView> {
-    const row = parseOrThrow(teacherCreateSchema, body);
+  async create(
+    @ZodBody(teacherCreateSchema) row: z.output<typeof teacherCreateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TeacherView> {
     return this.view(await this.teachers.insert({ ...row, created_by: user.id }));
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown): Promise<TeacherView> {
-    const { username, ...patch } = sentOnly(parseOrThrow(teacherUpdateSchema, body), body);
-    if (username !== undefined) await this.usernames.set(orNotFound(await this.teachers.get(id)).profile_id, username ?? null);
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(teacherUpdateSchema, { sentOnly: true })
+    body: Partial<z.output<typeof teacherUpdateSchema>>,
+  ): Promise<TeacherView> {
+    const { username, ...patch } = body;
+    if (username !== undefined)
+      await this.usernames.set(
+        orNotFound(await this.teachers.get(id)).profile_id,
+        username ?? null,
+      );
     const row = Object.keys(patch).length
       ? await this.teachers.update(id, patch)
       : await this.teachers.get(id);
@@ -84,7 +99,11 @@ export class TeachersController {
 
   /** One teacher: its meeting fields, its login's username (docs/30) and its photo. */
   private async view(row: Teacher): Promise<TeacherView> {
-    const [auto, username, avatar_url] = await Promise.all([this.academyAuto(), this.usernames.of(row.profile_id), this.teachers.photo(row.id)]);
+    const [auto, username, avatar_url] = await Promise.all([
+      this.academyAuto(),
+      this.usernames.of(row.profile_id),
+      this.teachers.photo(row.id),
+    ]);
     return { ...withMeeting(withoutPath(row), auto), username, avatar_url };
   }
 }

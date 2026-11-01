@@ -6,12 +6,12 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useTheme } from '@/theme';
-import { registerHref } from '../../leads/sales/register-href';
-import { ThreadListsSheet } from '../../lists/ThreadListsSheet';
-import { copyText } from '../../messages/copy-download/chat-tools';
-import { MoreIcon } from '../../shared/chat-icons';
-import { useBubbleChatActions } from '../hooks/chat-actions';
-import type { ThreadCache } from '../hooks/thread-cache';
+import { registerHref } from '@/inbox/leads/sales/register-href';
+import { ThreadListsSheet } from '@/inbox/lists/components/ThreadListsSheet';
+import { copyText } from '@/inbox/messages/copy-download/chat-tools';
+import { MoreIcon } from '@/inbox/shared/chat-icons';
+import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
+import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { type ThreadMenuItem, ThreadMenu } from './ThreadMenu';
 
 interface ThreadHeaderActionsProps {

@@ -11,7 +11,7 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { NumbersConfig } from './config/numbers.config';
 import type { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersEffects } from './numbers.effects';
-import type { NumbersQueries } from './numbers.queries';
+import type { NumbersRepo } from './numbers.repo';
 import { NumbersSettings } from './numbers.settings';
 import type { OwnNumbers } from './own/own-numbers';
 
@@ -25,7 +25,7 @@ function copy(redis: ReturnType<typeof fakeRedis>, source: () => string) {
   const svc = new SettingsService(db, 30_000, store);
   (svc as unknown as { shared: SharedCache }).shared = cache;
   const bridge = new ConfigCacheBridge(store, cache);
-  const config = new NumbersConfig(new NumbersSettings(svc), {} as NumbersQueries, {} as NumbersSecrets);
+  const config = new NumbersConfig(new NumbersSettings(svc), {} as NumbersRepo, {} as NumbersSecrets);
   const seen: string[] = [];
   vi.spyOn(config, 'reload').mockImplementation(async () => (seen.push(await config.source()), true));
   const audit = {} as AuditService;

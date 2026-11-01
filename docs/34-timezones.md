@@ -171,16 +171,18 @@ name). Messages (c) are composed by the API; the app sends none with a time.
 
 Owner, 2026-10-30: «You can use date-fns instead of handling date». `date-fns` 4, `@date-fns/tz`
 and `@date-fns/utc` (pure JS, so mobile still ships by OTA:
-`tools/scripts/ci-checks/native-changes.mjs`) are dependencies of `packages/shared` only.
+`tools/scripts/ci-checks/native-changes.mjs`) are dependencies of `packages/time` (`@ab/time`, cut from
+`packages/shared` in docs/32 k3b) only.
 Calendar dates are computed on `UTCDate` (UTC getters and setters), so the device's zone, or a
 test that fakes `Date`'s local getters, cannot move a date. Apps import date helpers through `@ab/shared`, never
-`date-fns` directly. The facade is in `packages/shared/src/time/`:
+`date-fns` directly. The facade is `packages/time/src/` (`zone/`, `format/`,
+`clock/`; apps still reach it through the `@ab/shared` re-export):
 
 | file | what |
 |---|---|
-| `zoned.ts` | wall clock ↔ UTC: `wallToUtc(date, minutes, tz)`, `wallInstant(date, 'HH:MM', tz)`, `offsetMinutesIn`, `localDateIn` / `localMonthIn` / `hhmmIn` / `zonedFieldsIn`, `weekdayIn` |
-| `calendar.ts` | calendar dates (`addCalendarDays`, `addCalendarMonths`, `weekdayOfDate`, `weekStartOfDate`, `calendarDaysBetween`), and instants in a zone: `startOfDayIn` / `endOfDayIn`, `startOfWeekIn`, `addDaysIn` / `addWeeksIn` (the wall clock is kept across DST), `dayRangeIn` (`?from&to`), `monthRangeIn` (payroll month) |
-| `format.ts` | words: `dateText` / `dateTextParts` (Intl names in the UI language, `-u-nu-latn` ASCII digits), `weekdayDayMonth` «الأحد 4 أكتوبر», `clockOf` / `clockIn` in the 12/24 h cycle (`useClock` / `useClockCycle` stay its source), `engineTimeZone` |
+| `zone/zoned.ts` | wall clock ↔ UTC: `wallToUtc(date, minutes, tz)`, `wallInstant(date, 'HH:MM', tz)`, `offsetMinutesIn`, `localDateIn` / `localMonthIn` / `hhmmIn` / `zonedFieldsIn`, `weekdayIn` |
+| `zone/calendar.ts` | calendar dates (`addCalendarDays`, `addCalendarMonths`, `weekdayOfDate`, `weekStartOfDate`, `calendarDaysBetween`), and instants in a zone: `startOfDayIn` / `endOfDayIn`, `startOfWeekIn`, `addDaysIn` / `addWeeksIn` (the wall clock is kept across DST), `dayRangeIn` (`?from&to`), `monthRangeIn` (payroll month) |
+| `format/format.ts` | words: `dateText` / `dateTextParts` (Intl names in the UI language, `-u-nu-latn` ASCII digits), `weekdayDayMonth` «الأحد 4 أكتوبر», `clockOf` / `clockIn` in the 12/24 h cycle (`useClock` / `useClockCycle` stay its source), `engineTimeZone` |
 | `running-head.ts`, `chat-day.ts`, `riyadh-day.ts`, `week.ts`, `time-zone.ts`, `viewer-zone.ts` | built on the three files above |
 
 - **Arithmetic** uses date-fns with `{ in: tz(zone) }`. **Wording** uses Intl in MSA (date-fns' `ar`
@@ -200,11 +202,11 @@ test that fakes `Date`'s local getters, cannot move a date. Apps import date hel
   constants. Only calendar math moves to the facade.
 - **Ratchet.** `packages/config/eslint-dates.js` (`no-restricted-properties`) bans
   `Intl.DateTimeFormat`, `toLocaleDateString`, `toLocaleTimeString` and `getTimezoneOffset`
-  outside `packages/shared/src/time` and tests. The uses that predate it sit in
+  outside `packages/time` and tests. The uses that predate it sit in
   `eslint-suppressions.json` (`refactor/guards/lint.json` total). After B1: 61, of which web 33
   and mobile 22 are lanes B2 and B3, and api and client-core are 0. Justified leftovers:
-  `packages/shared` `core/schemas/common.ts` `isTimeZone`, which checks that an id is a zone
-  (`core` may not import `time`: `guard:cycles`); `e2e/support` (3), which keeps its own Intl
+  `packages/shared` `@ab/core` `schemas/common.ts` `isTimeZone`, which checks that an id is a zone
+  (`@ab/time` depends on `@ab/core`, not the reverse); `e2e/support` (3), which keeps its own Intl
   oracle so the e2e checks do not reuse the code they test; `tools/migrate/src/time.ts`, the
   one-shot Sheets import (docs/06), left as it is; and `tools/scripts/calendar`, a standalone
   script with no `@ab/shared`.

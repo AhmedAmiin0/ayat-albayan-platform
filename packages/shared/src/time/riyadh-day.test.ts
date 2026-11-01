@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
-import { riyadhToday, zonedWhenText } from './riyadh-day.js';
+import { riyadhToday, zonedWhenText } from '@ab/time';
 
 describe('riyadhToday (docs/11 §3)', () => {
   it('is the Riyadh day: 21:00 UTC is already tomorrow there', () => {

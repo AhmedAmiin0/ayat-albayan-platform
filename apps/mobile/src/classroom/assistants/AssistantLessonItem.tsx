@@ -2,7 +2,7 @@ import type { AssistantLessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { lessonClock } from '@/today/lib/lesson-text';
+import { lessonClock } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import type { JoinableLesson } from '../links/JoinClassroomButton';
