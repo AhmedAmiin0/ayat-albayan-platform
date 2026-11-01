@@ -265,7 +265,7 @@ Each package: ≤ ≈ 40 code files, ≤ 12 per folder, tests next to the code, 
 |---|---|---|---|---|---|
 | `@ab/core` | L0 | shared `async/`; `schemas/common` + `list-sort` (zod primitives); `text/` (westernDigits, normalizeArabic, arabicNameSimilar, matchesQuery, plural, text-dir, highlight-diff); `money/minor` (toCents, round2, sumByCurrency, twoDecimals); phone (normalizePhone, E164_RE, formatPhone, clickToChatLink); `i18n/locale` | zod | everything, incl. migrate and wa-stub | 24 |
 | `@ab/time` | L0 | `time-zone/`, `format/clock*`, running-head, chat-day, `lessons/series/zoned` + the merged api/web/migrate engines: dayInZone, zonedToUtc, utcOffset, addDays, weekStart, weekWindow, dayWindow, monthRange, yearRange, riyadhToday | core | api, web, mobile, client-core, migrate | 16 |
-| `@ab/i18n` | L0 | `ar.json` + `en.json` (711 KB), strings, placeholders, localized-name, schemas; `./testing` (arabic-literals scanner) | core | api, web, mobile (128 JSON imports) | 8 + 2 JSON |
+| `@ab/i18n` | L0 | strings, placeholders, localized-name, schemas; as built in k3a the JSON bundles and `./testing` stay in `@ab/shared` (row k3a) | core | api, web, mobile (128 JSON imports) | 8 |
 | `@ab/catalog` | L1 | enums, permissions, integrations, google, StatusStyle, theme, `WA_ERROR` | core, `@ab/db` (types) | all + wa-stub | 25 |
 | `@ab/settings` | L1 | settings (37), custom-config (5); `./seed` | core, catalog | api, web, mobile, migrate | 40 |
 | `@ab/money` | L2 | money, pricing (+ pricingCountryOfPhone), assistant (`./assistant`), commission status style | core, time, catalog | api, web, mobile | 40 |
