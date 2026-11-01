@@ -1,6 +1,10 @@
-import type { KapsoLineEnv } from '../../../../config/env/env';
-import { graphJson, type FetchLike, type GraphConn } from '../../whatsapp/drivers/meta/graph';
-import { get } from '../parse/webhook.parse';
+import type { KapsoLineEnv } from '@/config/env/env';
+import {
+  graphJson,
+  type FetchLike,
+  type GraphConn,
+} from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { historyPageSchema, messageSchema, type KapsoMessage } from './kapso-history.schema';
 
 // Kapso's message history (its Meta proxy, docs/19): read-only, with the line's project key
 // (X-API-Key, graph.ts authHeaders). GET /{phone_number_id}/messages/{wamid} for one message and
@@ -30,7 +34,9 @@ interface PageQuery {
 
 type Directed = PageQuery & { direction: 'outbound' | 'inbound' };
 
-const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
+/** A cursor counts only on a full page (Kapso sends one on the last page too). */
+const nextOf = (after: string | undefined, count: number): string | undefined =>
+  count >= PAGE_LIMIT && after ? after : undefined;
 
 export class KapsoHistory {
   constructor(private readonly fetch: FetchLike = (url, init) => globalThis.fetch(url, init)) {}
@@ -40,12 +46,11 @@ export class KapsoHistory {
   }
 
   /** One message by its wamid; null when Kapso has none. Throws WaError on an HTTP error. */
-  async message(env: KapsoLineEnv, waMessageId: string): Promise<unknown> {
+  async message(env: KapsoLineEnv, waMessageId: string): Promise<KapsoMessage> {
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages/${encodeURIComponent(waMessageId)}`;
-    const body = await graphJson(this.conn(env), { path: `${path}?${new URLSearchParams({ fields: KAPSO_FIELDS })}` });
-    const data = get(body, 'data');
-    const m = data !== undefined && !Array.isArray(data) ? data : body;
-    return m !== null && typeof m === 'object' ? m : null;
+    const query = new URLSearchParams({ fields: KAPSO_FIELDS });
+    const body = await graphJson(this.conn(env), { path: `${path}?${query}` });
+    return messageSchema.parse(body);
   }
 
   /**
@@ -68,10 +73,7 @@ export class KapsoHistory {
     const params = new URLSearchParams({ direction, since, limit, fields });
     if (q.after) params.set('after', q.after);
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages?${params}`;
-    const body = await graphJson(this.conn(env), { path });
-    const messages = list(get(body, 'data'));
-    const cursor = get(body, 'paging.cursors.after');
-    const full = messages.length >= PAGE_LIMIT;
-    return { messages, after: typeof cursor === 'string' && cursor && full ? cursor : undefined };
+    const page = historyPageSchema.parse(await graphJson(this.conn(env), { path }));
+    return { messages: page.data, after: nextOf(page.paging?.cursors.after, page.data.length) };
   }
 }
