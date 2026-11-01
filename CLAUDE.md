@@ -24,6 +24,8 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 8. Idempotent jobs (dedup keys); idempotent occurrence generation (`unique(rule_id, starts_at)`).
 9. RLS on every table + guards in Nest. Secrets only via env/Vault.
 10. Arabic UI strings in `packages/shared/i18n/ar.json`, written in clear Modern Standard Arabic (owner, 2026-10-03: no Egyptian dialect); keep the domain vocabulary below.
+11. Few `if` conditions (owner, 2026-11-01): prefer lookup tables / `Record<Key, Handler>` maps and per-kind strategies over if/else or switch chains, named predicates over inline boolean logic; at most one early-return guard where possible, never nested ifs (`max-depth` 3, `complexity` 10 in packages/config/eslint.js).
+12. Validate with **zod** (owner, 2026-11-01: «use zod»): every API body/query/param, env and DB config value, webhook payload, external API response and form is parsed with a zod schema (shared ones in `packages/shared`), and types come from `z.infer`; no hand-written `typeof`/`in`/shape checks or manual type guards for data that crosses a boundary.
 11. **Imports only through a module's `index.ts`** (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`), **written absolute** in apps: `@/…` (→ `src/…`), never `../` (`ab/no-parent-imports`; `./` siblings stay; `pnpm imports:absolute -- <files> --write`; owner 2026-10-30, docs/32 R12); ≤ 12 code files and ≤ 12 sub-folders per folder; no new duplicate (jscpd) or unused code (knip). Baselines only shrink: `eslint-suppressions.json`, `refactor/folder-cap/`, `refactor/guards/` (docs/04 §8). Shared web + mobile logic lives in `packages/client-core`.
 
 ## How to execute (speed)
