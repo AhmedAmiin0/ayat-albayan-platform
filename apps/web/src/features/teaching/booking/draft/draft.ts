@@ -1,13 +1,13 @@
 import {
   ACADEMY_TZ,
-  courseBodyPackage,
   type BookingTeacherOption,
+  courseBodyPackage,
   type Duration,
   type Gender,
   type PackageSize,
   type Program,
+  zonedPartsIn,
 } from '@ab/shared';
-import { zonedParts } from '@/features/teaching/schedule';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';
@@ -94,7 +94,7 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
 
 /** The rule fields a picked first slot fixes, in the family's zone. */
 export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; startTimeLocal: string; weekday: number } {
-  const p = zonedParts(new Date(startsAt), tz);
+  const p = zonedPartsIn(new Date(startsAt), tz);
   return { startsOn: p.date, startTimeLocal: p.time, weekday: p.weekday };
 }
 

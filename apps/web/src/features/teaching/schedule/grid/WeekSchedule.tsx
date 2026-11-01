@@ -1,3 +1,4 @@
+import { weekWindowIn, zonedPartsIn } from '@ab/shared';
 import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -26,7 +27,6 @@ import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
 import { SyncScheduleButton } from '@/features/teaching/schedule/SyncScheduleButton';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
-import { weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import { WeekGrid } from './WeekGrid';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 
@@ -44,10 +44,10 @@ export interface WeekScheduleProps {
 export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const now = useNow();
   const tz = useViewerTz();
-  const today = zonedParts(now, tz).date;
+  const today = zonedPartsIn(now, tz).date;
   const day = search.view === 'day' ? (search.day ?? today) : null;
   const week = search.week ?? currentWeekStart(now, tz);
-  const overview = useQuery(overviewQuery(day ? dayWindow(day, tz) : weekWindow(week, tz)));
+  const overview = useQuery(overviewQuery(day ? dayWindow(day, tz) : weekWindowIn(week, tz)));
   const proposals = useQuery(proposalsQuery);
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);

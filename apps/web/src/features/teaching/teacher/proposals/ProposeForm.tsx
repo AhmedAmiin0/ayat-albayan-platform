@@ -1,3 +1,4 @@
+import { wallInstant, zonedPartsIn } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -7,7 +8,6 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
-import { zonedParts, zonedToUtc } from '@/features/teaching/schedule';
 import { timeOptions } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import { proposeLesson } from '@/features/teaching/teacher/api';
@@ -33,7 +33,7 @@ export interface ProposeFormProps {
 export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
   const clock = useClock();
-  const start = zonedParts(new Date(lesson.starts_at), tz);
+  const start = zonedPartsIn(new Date(lesson.starts_at), tz);
   const [date, setDate] = useState(start.date);
   const [time, setTime] = useState(start.time);
   const [note, setNote] = useState('');
@@ -41,14 +41,14 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
     mutationFn: () =>
       proposeLesson({
         id: lesson.id,
-        body: { startsAt: zonedToUtc(date, time, tz).toISOString(), ...(note.trim() ? { note: note.trim() } : {}) },
+        body: { startsAt: wallInstant(date, time, tz).toISOString(), ...(note.trim() ? { note: note.trim() } : {}) },
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(t.teacherDash.propose.sent);
     },
   });
-  const today = zonedParts(new Date(), tz).date;
+  const today = zonedPartsIn(new Date(), tz).date;
 
   return (
     <form

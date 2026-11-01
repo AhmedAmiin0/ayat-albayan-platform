@@ -1,5 +1,5 @@
-import { lessonWhenAt, type TrialDateRow } from '@ab/shared';
-import { dateLabel, zonedParts } from '@/features/teaching/schedule';
+import { lessonWhenAt, type TrialDateRow, zonedPartsIn } from '@ab/shared';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import type { Clock } from '@/lib/clock';
 
@@ -26,7 +26,7 @@ export function rowTexts({ row, familyTz, viewerTz }: RowTextInput, clock: Clock
   const familyAt = lessonWhenAt(at, { tz: familyTz, ...clock });
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
   const family = familyAt === lessonWhenAt(at, { tz: viewerTz, ...clock }) ? null : t.trialDate.familyTime.replace('{time}', familyAt);
-  const on = dateLabel(zonedParts(new Date(row.picked_at), viewerTz).date);
+  const on = dateLabel(zonedPartsIn(new Date(row.picked_at), viewerTz).date);
   return {
     // Every time says its zone (docs/07 principle 7).
     when: `${lessonWhenAt(at, { tz: viewerTz, ...clock })} ${t.schedule.viewerTime}`,

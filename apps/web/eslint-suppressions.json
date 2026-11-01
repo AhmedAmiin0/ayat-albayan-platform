@@ -10450,11 +10450,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/schedule/tz.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/student-channel/ChannelThread.live.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2

@@ -1,7 +1,5 @@
-import { lessonDuration } from '@ab/shared';
+import { addDays, lessonDuration, wallInstant, zonedPartsIn } from '@ab/shared';
 import type { LessonTimeEdit, TimeEditMode } from './edit-time.contract';
-import { addDays, zonedParts, zonedToUtc } from '@/features/teaching/schedule/tz';
-
 // «عدّل الوقت» form logic (R-SCH-11): picked days and times, never typed. Pure, unit-tested.
 
 const STEP = 15;
@@ -16,7 +14,7 @@ export function timeOptions15(current?: string): string[] {
 
 /** Move mode's day chips: today and the next six days on the teacher's calendar. */
 export function moveDays(now: Date, tz: string): string[] {
-  const today = zonedParts(now, tz).date;
+  const today = zonedPartsIn(now, tz).date;
   return Array.from({ length: 7 }, (_, i) => addDays(today, i));
 }
 
@@ -28,7 +26,7 @@ export interface TimeChoice {
   tz: string;
 }
 
-const startOf = (c: TimeChoice) => zonedToUtc(c.date, c.time, c.tz);
+const startOf = (c: TimeChoice) => wallInstant(c.date, c.time, c.tz);
 const endOf = (c: TimeChoice) => new Date(startOf(c).getTime() + c.durationMin * MIN);
 
 /** The instant picked, UTC ISO (what the API stores). */
@@ -50,7 +48,7 @@ export function timesFor(mode: TimeEditMode, c: TimeChoice, rule: DayRule): stri
     const at = { ...c, time };
     if (mode === 'move') return startOf(at) > rule.now;
     const start = startOf(at);
-    const sameDay = (rule.sameDay ?? []).every((z) => zonedParts(start, z.tz).date === z.date);
+    const sameDay = (rule.sameDay ?? []).every((z) => zonedPartsIn(start, z.tz).date === z.date);
     return endOf(at) <= rule.now && sameDay;
   };
   return timeOptions15(c.time).filter((time) => time === c.time || ok(time));

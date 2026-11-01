@@ -6,3 +6,4 @@ export * from './week.js';
 export * from './time-zone.js';
 export * from './wall.js';
 export * from './day-epoch.js';
+export * from './week-zoned.js';

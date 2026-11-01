@@ -1,4 +1,5 @@
-import { dayMonthLabel, zonedParts } from '@/features/teaching/schedule';
+import { zonedPartsIn } from '@ab/shared';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { gradeOfScore, type SeriesKey } from './chart';
 
@@ -12,4 +13,4 @@ export function gradeWord(score: number | null): string {
 }
 
 /** «4 أكتوبر» in the viewer's zone. */
-export const shortDate = (at: string, tz: string): string => dayMonthLabel(zonedParts(new Date(at), tz).date);
+export const shortDate = (at: string, tz: string): string => dayMonthLabel(zonedPartsIn(new Date(at), tz).date);
