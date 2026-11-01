@@ -36,13 +36,15 @@ interface ProfileInput {
   errors?: ErrorTable<TestError>;
   timeoutMs?: number;
   errorBody?: HttpProfile<TestError>['errorBody'];
+  headers?: HttpProfile<TestError>['headers'];
+  base?: string;
 }
 
 export function profileOf(input: ProfileInput): HttpProfile<TestError> {
   return {
     name: 'test',
-    base: () => 'https://peer.invalid/v1',
-    headers: () => Promise.resolve({ 'x-api-key': 'profile-key' }),
+    base: () => input.base ?? 'https://peer.invalid/v1',
+    headers: input.headers ?? (() => Promise.resolve({ 'x-api-key': 'profile-key' })),
     timeoutMs: input.timeoutMs ?? 1_000,
     redirect: 'error',
     errorBody: input.errorBody ?? 'omit',
@@ -79,6 +81,16 @@ export function brokenBody(): Response {
     start(controller) {
       controller.enqueue(new Uint8Array([1, 2]));
       controller.error(new Error('socket hang up'));
+    },
+  });
+  return new Response(stream, { status: 200 });
+}
+
+/** A 2xx whose body never ends (one chunk, then silence). */
+export function stalledBody(): Response {
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new Uint8Array([1]));
     },
   });
   return new Response(stream, { status: 200 });

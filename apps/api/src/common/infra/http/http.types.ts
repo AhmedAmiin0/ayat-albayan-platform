@@ -8,7 +8,7 @@ export interface HttpProfile<E extends Error> {
   /** The only service name in messages and logs. */
   name: string;
   base: () => string;
-  /** {} for a no-credential profile. Read before the deadline starts; its errors pass unchanged. */
+  /** {} for a no-credential profile. Inside the deadline; a failure is network, reached false. */
   headers: () => Promise<Record<string, string>>;
   timeoutMs: number;
   /** Required, today's value per integration: 'manual', 'follow' or 'error'. */

@@ -48,18 +48,24 @@ async function statusFailure<E extends Error>(
 
 type OnResponse<T> = (res: Response, where: string) => Promise<T>;
 
-function call<E extends Error, T>(profile: HttpProfile<E>, req: HttpRequest, read: OnResponse<T>) {
+/** headers() and the URL run inside the deadline too: a hung token refresh still ends on time. */
+async function call<E extends Error, T>(
+  profile: HttpProfile<E>,
+  req: HttpRequest,
+  read: OnResponse<T>,
+): Promise<T> {
   const where = whereOf(profile.name, req);
   const ms = req.timeoutMs ?? profile.timeoutMs;
   const run = { ms, caller: req.signal, errors: profile.errors, where };
-  return profile.headers().then((headers) =>
-    withDeadline(run, async (signal: AbortSignal, phase: Phase) => {
-      const send = profile.fetch ?? fetch;
-      const res = await send(urlOf(profile.base(), req), initOf({ profile, req, headers }, signal));
-      phase.headers = true;
-      return read(res, where);
-    }),
-  );
+  return withDeadline(run, async (signal: AbortSignal, phase: Phase) => {
+    const headers = await profile.headers();
+    const url = urlOf(profile.base(), req);
+    const send = profile.fetch ?? fetch;
+    phase.sent = true;
+    const res = await send(url, initOf({ profile, req, headers }, signal));
+    phase.headers = true;
+    return read(res, where);
+  });
 }
 
 /** A non-2xx goes to the table (through Failed); a 2xx is the reader's. */

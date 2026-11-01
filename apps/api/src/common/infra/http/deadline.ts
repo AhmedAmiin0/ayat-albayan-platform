@@ -5,6 +5,8 @@ import { Failed, mayHaveReached, Passthrough, type HttpFailure } from './failure
 // ignores its signal still ends on time (today's guarantee in kapso-reopener.ts).
 
 export interface Phase {
+  /** Set when the transport is called: a failure before that (headers(), the URL) never left. */
+  sent: boolean;
   /** Set once the response headers arrived: a failure after that has reached the peer. */
   headers: boolean;
 }
@@ -44,7 +46,7 @@ const classified: Rule = (c) =>
 const RULES: readonly Rule[] = [callerAbort, callersOwn, timedOut, classified];
 
 function network<E extends Error>(ctx: Ctx<E>): E {
-  const reached = ctx.phase.headers || mayHaveReached(ctx.error);
+  const reached = ctx.phase.headers || (ctx.phase.sent && mayHaveReached(ctx.error));
   return tableError(ctx, { kind: 'network', reached, where: ctx.run.where });
 }
 
@@ -66,7 +68,7 @@ export async function withDeadline<T, E extends Error>(
   run.caller?.throwIfAborted();
   const deadline = new AbortController();
   const signal = run.caller ? AbortSignal.any([run.caller, deadline.signal]) : deadline.signal;
-  const phase: Phase = { headers: false };
+  const phase: Phase = { sent: false, headers: false };
   const ended = new AbortController();
   const timer = setTimeout(() => {
     deadline.abort(new Error(`${run.where} timed out`));

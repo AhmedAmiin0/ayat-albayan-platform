@@ -24,12 +24,13 @@ export async function readCapped(
   max: number,
   tooLarge: () => Error,
 ): Promise<Uint8Array> {
-  const reader = body?.getReader();
+  if (!body) return new Uint8Array();
+  const reader = body.getReader();
   const chunks: Uint8Array[] = [];
   let total = 0;
-  for (let next = await reader?.read(); next && !next.done; next = await reader?.read()) {
+  for (let next = await reader.read(); !next.done; next = await reader.read()) {
     total += next.value.byteLength;
-    if (total > max && reader) {
+    if (total > max) {
       await cancel(reader);
       throw new Passthrough(tooLarge());
     }

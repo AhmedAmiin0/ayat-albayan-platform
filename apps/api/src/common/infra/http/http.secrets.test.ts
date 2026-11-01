@@ -19,9 +19,15 @@ const transports: [string, FetchLike][] = [
   ['timeout', hanging],
 ];
 
+const headers = () => Promise.resolve({ 'x-api-key': SECRET });
+const errorBodies = [['omit', 'omit'] as const, ['a schema', z.looseObject({})] as const];
+const cases = errorBodies.flatMap(([body, errorBody]) =>
+  transports.map(([name, fetch]) => [`${name}, errorBody ${body}`, { fetch, errorBody }] as const),
+);
+
 describe('no secret in a failure', () => {
-  it.each(transports)('%s', async (_name, fetch) => {
-    const http = createHttp(profileOf({ fetch, timeoutMs: 20 }));
+  it.each(cases)('%s', async (_name, { fetch, errorBody }) => {
+    const http = createHttp(profileOf({ fetch, timeoutMs: 20, headers, errorBody }));
     const error: unknown = await http
       .json({
         path: `https://peer.invalid/a?token=${SECRET}`,
