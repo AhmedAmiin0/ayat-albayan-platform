@@ -13,10 +13,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { pageQueryShape } from '@/modules/sales/leads/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { APPLICANT_STATUSES } from './applicant-state-machine';
 import { JobApplicantsService } from './job-applicants.service';
 
