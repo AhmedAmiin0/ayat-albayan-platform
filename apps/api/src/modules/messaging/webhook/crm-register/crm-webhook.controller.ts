@@ -2,17 +2,16 @@ import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { INTEGRATIONS_ENTITY_ID } from '@/common/configuration/integrations/integration-config.service';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { CrmWebhookResult } from './crm-webhook.schemas';
 import { CrmWebhookRegistrar } from './crm-webhook.service';
 
-/** audit_log.entity_id of the integration config, as the «التكاملات» secret writes use it. */
-const INTEGRATIONS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
-
 /**
- * «ربط علامات التسليم من CRM تلقائيًا» in «التكاملات» (docs/19 «crm driver»): same permission as
- * PUT /settings/integrations/secrets/:key. Registers the CRM's delivery-ticks webhook and stores
- * its secret; the answer and the audit row hold the endpoint id and key name, never the secret.
+ * «ربط علامات التسليم من نظام CRM تلقائيًا» in «التكاملات» (docs/19 «crm driver»): same
+ * permission as PUT /settings/integrations/secrets/:key. Registers the CRM's delivery-ticks
+ * webhook and stores its secret; the answer and the audit row hold the endpoint id and key name,
+ * never the secret.
  */
 @ApiTags('settings')
 @ApiBearerAuth()

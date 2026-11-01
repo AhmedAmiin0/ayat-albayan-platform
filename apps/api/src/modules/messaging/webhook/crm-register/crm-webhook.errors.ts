@@ -13,7 +13,9 @@ import { WaError } from '@/modules/messaging/whatsapp';
 export const CRM_WEBHOOK_ERRORS = {
   /** The notifications line does not send through the CRM (or lacks its base / key). */
   crm_line_required: () => new ConflictException({ message: 'crm_line_required' }),
-  /** API_PUBLIC_URL is unset or not https: the CRM would have nowhere to deliver. */
+  /** WACRM_API_BASE is not https: the key (webhooks:manage) would travel in clear. */
+  crm_base_insecure: () => new ConflictException({ message: 'crm_base_insecure' }),
+  /** API_PUBLIC_URL is unset, not https or has a path: the CRM would have nowhere to deliver. */
   public_url_required: () => new ConflictException({ message: 'public_url_required' }),
   /** 401: the CRM refused the notifications line's key. */
   crm_key_refused: () => new BadGatewayException({ message: 'crm_key_refused' }),

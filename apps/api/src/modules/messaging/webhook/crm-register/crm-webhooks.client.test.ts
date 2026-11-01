@@ -4,11 +4,15 @@ import { receiverUrl } from './crm-webhooks.client';
 // docs/19 «crm driver»: where the CRM delivers the ticks, from API_PUBLIC_URL. Built with URL.
 
 describe('receiverUrl', () => {
-  it('<origin>/webhooks/wacrm, whatever path or trailing slash the origin carries', () => {
+  it('<origin>/webhooks/wacrm, with or without a trailing slash', () => {
     const want = 'https://api.test.example/webhooks/wacrm';
     expect(receiverUrl('https://api.test.example')).toBe(want);
     expect(receiverUrl(' https://api.test.example/ ')).toBe(want);
-    expect(receiverUrl('https://api.test.example/v1?x=1#y')).toBe(want);
+  });
+
+  it('null for an origin with a path (the receiver would not be where the CRM is told)', () => {
+    expect(receiverUrl('https://api.test.example/v1')).toBeNull();
+    expect(receiverUrl('https://api.test.example/v1/')).toBeNull();
   });
 
   it('null unless https on a domain (the CRM refuses http and private targets)', () => {

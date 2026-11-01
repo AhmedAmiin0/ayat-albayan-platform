@@ -1,4 +1,5 @@
-import { vi } from 'vitest';
+import { HttpException } from '@nestjs/common';
+import { expect, vi } from 'vitest';
 import type { CrmLineEnv, WhatsappEnv } from '@/config/env/env';
 import type { FetchLike } from '@/modules/messaging/whatsapp';
 import { CrmWebhookRegistrar, type CrmWebhookSource } from './crm-webhook.service';
@@ -15,6 +16,14 @@ const PUBLIC_URL = 'https://api.test.example';
 export const TARGET = 'https://api.test.example/webhooks/wacrm';
 /** What the CRM shows once at creation; must never leave the registrar except into setSecret. */
 export const FAKE_SECRET = `whsec_${'FAKEfakeFAKEfake'.repeat(3)}`;
+
+/** wacrm's endpoint ids are uuids (invented here). */
+export const IDS = {
+  created: '11111111-1111-4111-8111-111111111111',
+  old1: '22222222-2222-4222-8222-222222222222',
+  old2: '33333333-3333-4333-8333-333333333333',
+  other: '44444444-4444-4444-8444-444444444444',
+} as const;
 
 interface Answer {
   status: number;
@@ -38,7 +47,7 @@ export const endpoint = (id: string, url = TARGET) => ({
 
 const DEFAULTS: Record<string, Answer> = {
   'GET webhooks': { status: 200, body: { data: [] } },
-  'POST webhooks': { status: 201, body: { data: { ...endpoint('new-1'), secret: FAKE_SECRET } } },
+  'POST webhooks': { status: 201, body: { data: { ...endpoint(IDS.created), secret: FAKE_SECRET } } },
 };
 
 /** `${method} ${path}` → answer (DELETE answers 200 by default). Records every call. */
@@ -73,4 +82,18 @@ export function registrarKit(o: KitOpts = {}) {
   };
   const registrar = new CrmWebhookRegistrar({ setSecret }, source);
   return { crm, setSecret, source, registrar };
+}
+
+/** The CRM's failure envelope. */
+export const failure = (status: number, code: string) => ({
+  status,
+  body: { error: { code, message: code } },
+});
+
+/** The HttpException a call ends with: its status and everything it would print. */
+export async function refusal(run: () => Promise<unknown>) {
+  const e = await run().then(() => null, (x: unknown) => x);
+  expect(e).toBeInstanceOf(HttpException);
+  const http = e instanceof HttpException ? e : new HttpException('none', 0);
+  return { status: http.getStatus(), body: JSON.stringify(http.getResponse()) + http.message };
 }

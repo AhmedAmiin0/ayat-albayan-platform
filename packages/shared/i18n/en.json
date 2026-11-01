@@ -5545,6 +5545,7 @@
       "done": "CRM delivery ticks linked",
       "errors": {
         "crm_line_required": "The notifications line does not send through the CRM, or its CRM address or key is missing.",
+        "crm_base_insecure": "The CRM address (WACRM_API_BASE) does not start with https, so the key is not sent to it.",
         "public_url_required": "The public API address (API_PUBLIC_URL) is not set or does not start with https.",
         "crm_key_refused": "The CRM refused the notifications line's key.",
         "crm_scope_missing": "The CRM key lacks the webhooks:manage scope.",

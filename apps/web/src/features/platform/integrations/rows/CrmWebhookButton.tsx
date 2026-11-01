@@ -13,7 +13,7 @@ export function CrmWebhookButton({ onNote }: { onNote: (message: string) => void
   const link = useCrmWebhook();
   return (
     <div className="grid gap-1 py-2">
-      <div className="flex flex-wrap items-center gap-2">
+      <div>
         <Button
           type="button"
           size="sm"
@@ -23,7 +23,6 @@ export function CrmWebhookButton({ onNote }: { onNote: (message: string) => void
         >
           {link.isPending ? s.pending : s.button}
         </Button>
-        {link.isSuccess && <p role="status" className="text-xs text-ink-2">{s.done}</p>}
       </div>
       <p className="text-xs text-ink-3">{s.hint}</p>
       {link.isError && <FormAlert>{crmWebhookProblem(link.error)}</FormAlert>}

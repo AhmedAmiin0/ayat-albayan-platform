@@ -1,4 +1,4 @@
-import { crmJson, type CrmConn } from '@/modules/messaging/whatsapp';
+import { crmJson, type CrmConn, WaError } from '@/modules/messaging/whatsapp';
 import { CRM_WEBHOOK_ERRORS } from './crm-webhook.errors';
 import {
   CRM_TICK_EVENTS,
@@ -15,7 +15,7 @@ import {
 // WaError). A body that does not parse is crm_bad_answer, never a ZodError: no CRM body (a secret)
 // is ever echoed.
 
-/** <API_PUBLIC_URL's origin>/webhooks/wacrm, built with URL; null unless the origin is https. */
+/** <API_PUBLIC_URL>/webhooks/wacrm, built with URL; null unless an https origin with no path. */
 export function receiverUrl(publicUrl: string | undefined): string | null {
   const origin = publicOriginSchema.safeParse(publicUrl ?? '');
   if (!origin.success) return null;
@@ -29,9 +29,15 @@ export async function listEndpoints(conn: CrmConn): Promise<CrmEndpoint[]> {
   return parsed.data;
 }
 
-/** DELETE {base}/webhooks/{id}. */
+/** Already gone (deleted in the CRM, or by an earlier press): what DELETE wanted anyway. */
+const alreadyGone = (e: unknown): boolean => e instanceof WaError && e.info.status === 404;
+
+/** DELETE {base}/webhooks/{id}; a 404 counts as done. */
 export async function deleteEndpoint(conn: CrmConn, id: string): Promise<void> {
-  await crmJson(conn, { path: `webhooks/${encodeURIComponent(id)}`, method: 'DELETE' });
+  const path = `webhooks/${encodeURIComponent(id)}`;
+  await crmJson(conn, { path, method: 'DELETE' }).catch((e: unknown) => {
+    if (!alreadyGone(e)) throw e;
+  });
 }
 
 /**

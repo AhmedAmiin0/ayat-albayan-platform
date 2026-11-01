@@ -5,7 +5,7 @@ import { IS_PUBLIC, PERMISSION } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { AuditService } from '@/common/audit/audit.service';
 import { CrmWebhookController } from './crm-webhook.controller';
-import { FAKE_SECRET, registrarKit, TARGET } from './crm-webhook.fakes';
+import { FAKE_SECRET, IDS, registrarKit, TARGET } from './crm-webhook.fakes';
 
 // «التكاملات» › the CRM's delivery-ticks webhook: admin-only, like the secrets PUT. No network.
 
@@ -35,7 +35,7 @@ describe('CrmWebhookController', () => {
     const kit = controllerKit();
     const res = await kit.controller.register(ADMIN);
     expect(res).toEqual({
-      data: { id: 'new-1', url: TARGET, events: ['message.status_updated'], replaced: 0 },
+      data: { id: IDS.created, url: TARGET, events: ['message.status_updated'], replaced: 0 },
     });
     expect(JSON.stringify(res)).not.toContain(FAKE_SECRET);
   });

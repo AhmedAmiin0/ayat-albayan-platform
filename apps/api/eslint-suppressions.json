@@ -346,7 +346,7 @@
   },
   "src/common/configuration/integrations/integration-config.controller.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/common/configuration/integrations/integration-config.fakes.ts": {

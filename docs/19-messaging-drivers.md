@@ -174,19 +174,36 @@ envelope `{id, event, occurred_at, account_id, data:{whatsapp_message_id, conver
 
 **Delivery ticks: one click in «التكاملات»** (owner 2026-11-01). wacrm `98b5bd2` has no UI for outgoing
 webhooks (its public API only), and it shows an endpoint's signing secret once, at creation. So under
-«نظام CRM» an admin presses «ربط علامات التسليم من CRM تلقائيًا» → `POST /settings/integrations/crm-webhook`
-(settings.write, like the secrets PUT). With the notifications line's own CRM key (needs scope
-`webhooks:manage` besides `messages:send`) the API lists the CRM's webhooks, **deletes** every endpoint already
-aimed at `<API_PUBLIC_URL origin>/webhooks/wacrm` (wacrm has `DELETE /webhooks/{id}`; their secrets are unknown
-here), creates one for `message.status_updated` only and stores the returned secret as `WACRM_WEBHOOK_SECRET`
-through the «التكاملات» write path (Vault, overlay reload, worker kick; audited as
-`secret_set:WACRM_WEBHOOK_SECRET` with the endpoint id). The answer is `{data:{id, url, events, replaced}}`:
-the secret never reaches a response, log, error, audit row or the page. Refusals, by code (the page words
-them): 409 `crm_line_required` (notifications line not on crm, or base / key missing), 409
-`public_url_required` (`API_PUBLIC_URL` unset or not https on a domain), 502 `crm_key_refused` (401),
-`crm_scope_missing` (403: the key lacks `webhooks:manage`), `crm_failed`, `crm_bad_answer` (a 201 without a
-`whsec_` secret: the endpoint it made is deleted), 500 `secret_store_failed` (the new endpoint is deleted, best
-effort). Code: `apps/api/src/modules/messaging/webhook/crm-register/`.
+«نظام CRM» an admin presses «ربط علامات التسليم من نظام CRM تلقائيًا» →
+`POST /settings/integrations/crm-webhook` (settings.write, like the secrets PUT). With the notifications line's
+own CRM key (needs scope `webhooks:manage` besides `messages:send`) the API:
+1. lists the CRM's webhooks (ids must be uuids, else nothing is done);
+2. creates one endpoint for `message.status_updated` at `<API_PUBLIC_URL>/webhooks/wacrm`;
+3. stores the returned secret (`whsec_` + base64url) as `WACRM_WEBHOOK_SECRET` through the «التكاملات» write
+   path (Vault, overlay reload, worker kick; audited as `secret_set:WACRM_WEBHOOK_SECRET` with the endpoint id);
+4. only then deletes the older endpoints aimed at the same url (they sign with secrets we no longer hold), best
+   effort: a 404 counts as deleted, a failure is logged by id and never fails the request.
+
+A failed create or store leaves the older endpoints as they were. The answer is `{data:{id, url, events,
+replaced}}`: the secret never reaches a response, log, error, audit row or the page. Refusals, by code (the page
+words them): 409 `crm_line_required` (notifications line not on crm, or base / key missing), 409
+`crm_base_insecure` (`WACRM_API_BASE` not https: the key is never sent in clear), 409 `public_url_required`
+(`API_PUBLIC_URL` unset, not https on a domain, or with a path: it must be the bare origin), 502
+`crm_key_refused` (401), `crm_scope_missing` (403: the key lacks `webhooks:manage`), `crm_failed`,
+`crm_bad_answer` (a 201 without a valid secret: the endpoint it made is deleted), 500 `secret_store_failed`
+(the new endpoint is deleted, best effort). **On `secret_store_failed` press again**: the store path cannot tell
+a failed Vault write from a failed reload, so the endpoint goes in both cases and a second press links cleanly.
+
+Before pressing, and after:
+- **The CRM must reach the API at a public address** (`api.<domain>`): wacrm's SSRF guard refuses private,
+  loopback, link-local or CGNAT targets at delivery, and auto-disables an endpoint after 15 consecutive failed
+  deliveries (press again once the address is fixed).
+- **Least privilege**: after linking, remove `webhooks:manage` from the CRM key (keep `messages:send`); add it
+  again only to re-link.
+- Removing `API_PUBLIC_URL` also disables this button (`public_url_required`); the endpoint already in the CRM
+  keeps delivering until it is deleted there.
+
+Code: `apps/api/src/modules/messaging/webhook/crm-register/`.
 
 **Lines check.** A crm line makes one call, `GET /me`: ok, key refused (`errors[0].credential = 'crm'`), or
 `crm_send_scope: false` (no `messages:send`); plus `crm_webhook_secret` (set or not, never the value). Never
@@ -258,7 +275,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 
 1. In the CRM: Settings → API keys → New key with scope **`messages:send`**; copy it (shown once).
 2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
-3. Give that key the scope **`webhooks:manage`** too, then press «ربط علامات التسليم من CRM تلقائيًا» under «نظام CRM» (after step 4: it needs the notifications line on crm). It registers the delivery-ticks webhook and stores its secret as `WACRM_WEBHOOK_SECRET` («Delivery ticks: one click» above).
+3. Give that key the scope **`webhooks:manage`** too, then press «ربط علامات التسليم من نظام CRM تلقائيًا» under «نظام CRM» (after step 4: it needs the notifications line on crm). It registers the delivery-ticks webhook and stores its secret as `WACRM_WEBHOOK_SECRET` («Delivery ticks: one click» above). Then remove `webhooks:manage` from the key again.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
 6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.

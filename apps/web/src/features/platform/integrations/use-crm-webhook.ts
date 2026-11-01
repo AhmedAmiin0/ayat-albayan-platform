@@ -9,6 +9,7 @@ const s = t.integrations.crmWebhook;
 /** The refusals of POST /settings/integrations/crm-webhook, as codes (api crm-webhook.errors). */
 const CODES = [
   'crm_line_required',
+  'crm_base_insecure',
   'public_url_required',
   'crm_key_refused',
   'crm_scope_missing',
@@ -34,7 +35,7 @@ export function crmWebhookProblem(e: unknown): string {
 }
 
 /**
- * «ربط علامات التسليم من CRM تلقائيًا»: registers the CRM's delivery-ticks webhook; the secret
+ * «ربط علامات التسليم من نظام CRM تلقائيًا»: registers the CRM's delivery-ticks webhook; the secret
  * stays on the server. After it, «التكاملات» is read again (WACRM_WEBHOOK_SECRET now saved).
  */
 export function useCrmWebhook() {
