@@ -10,7 +10,7 @@ import { studentNames, studentTimes } from '@/features/teaching/schedule/lesson/
 import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
-import { TeacherProposal } from '../proposals/TeacherProposal';
+import { TeacherProposal } from '@/features/teaching/teacher/proposals/TeacherProposal';
 import { useClock } from '@/lib/clock';
 import { clockDir } from '@/lib/clock-text';
 

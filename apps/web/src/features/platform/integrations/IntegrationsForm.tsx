@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { stripeFeatureQuery } from '@/features/sales/payment-links';
-import { sendGateQuery } from '../../messaging/messaging/api';
+import { sendGateQuery } from '@/features/messaging/messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
 import { IntegrationGroup } from './rows/IntegrationGroup';

@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ReceiptUploadError } from '@/payments/upload-receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 import { earningsErrorText } from './earnings-errors';
 
 test('the API code maps to the earnings wording', () => {

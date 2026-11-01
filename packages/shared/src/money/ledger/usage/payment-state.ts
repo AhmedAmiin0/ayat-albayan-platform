@@ -1,4 +1,4 @@
-import { fromCents, round2, toCents } from '../cents.js';
+import { fromCents, round2, toCents } from '@ab/core';
 
 // What a package has been paid, as the lists show it (owner, 2026-10-05). Derived, never stored:
 // the stored subscription_status keeps its meaning (a part-paid package is still 'unpaid').

@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { BalanceCard } from './BalanceCard';
-import { balanceOf, WEEKLY } from '../money-fixture';
+import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

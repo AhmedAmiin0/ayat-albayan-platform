@@ -7,7 +7,7 @@ import { ButtonRow } from '@/components/ui/layout/button-row';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
-import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '../api';
+import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '@/features/teaching/schedule/api';
 
 export interface LessonActionsProps {
   lesson: LessonView;

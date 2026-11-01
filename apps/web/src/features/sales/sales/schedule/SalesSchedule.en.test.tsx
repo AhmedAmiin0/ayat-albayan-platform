@@ -1,10 +1,10 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { pupil, scheduleLesson, teacher } from '../academy.fixtures';
-import { renderWithQuery } from '../academy.test-utils';
+import { pupil, scheduleLesson, teacher } from '@/features/sales/sales/academy.fixtures';
+import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesSchedule } from './SalesSchedule';
-import { SalesTeachers } from '../teachers/SalesTeachers';
+import { SalesTeachers } from '@/features/sales/sales/teachers/SalesTeachers';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));

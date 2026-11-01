@@ -19,7 +19,7 @@ import { useFollowingDay } from '@/lib/time/use-following-day';
 import { useNow } from '@/lib/time/use-now';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
-import { myLessonsQuery, teacherMeQuery } from '../api';
+import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 /**

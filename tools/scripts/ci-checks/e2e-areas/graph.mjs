@@ -1,4 +1,4 @@
-// The import graph of the code e2e runs (web, api, shared, client-core, e2e), for the PR spec selection.
+// The import graph of the code e2e runs (web, api, the packages, e2e), for the PR spec selection.
 // Edges are name-precise through barrels: `import { a } from '@ab/shared'` points at the file that
 // declares `a`, not at the whole barrel (every module is imported through its index.ts, so a file-level
 // graph would make every file reach almost every page). A name the parser cannot place points at the
@@ -10,6 +10,8 @@ import { ownExports, parseImports } from './parse.mjs';
 export const ROOTS = [
   'apps/web/src',
   'apps/api/src',
+  'packages/core/src',
+  'packages/i18n/src',
   'packages/shared/src',
   'packages/client-core/src',
   'e2e',
@@ -18,6 +20,8 @@ const CODE = /\.(ts|tsx|mjs)$/;
 const UNIT =
   /\.test\.(ts|tsx|mjs)$|(^|\/)(node_modules|dist|__snapshots__|playwright-report|test-results)\//;
 const ALIAS = {
+  '@ab/core': 'packages/core/src/index.ts',
+  '@ab/i18n': 'packages/i18n/src/index.ts',
   '@ab/shared': 'packages/shared/src/index.ts',
   '@ab/shared/testing': 'packages/shared/src/testing/index.ts',
   '@ab/client-core': 'packages/client-core/src/index.ts',

@@ -1,4 +1,4 @@
-import type { Locale } from '../../i18n/locale.js';
+import type { Locale } from '@ab/core';
 import { RIYADH_TZ } from '../../core/format/index.js';
 import { lessonWhenAt } from '../lesson/booking-confirmation.js';
 import type { ClockCycle } from '../../core/format/index.js';

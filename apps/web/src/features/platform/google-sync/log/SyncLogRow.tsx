@@ -5,8 +5,8 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { retryGoogleItem } from '../google-api';
-import { errorText, fill, formatAt, RETRYABLE, skipLabel, stateStyle } from '../google-format';
+import { retryGoogleItem } from '@/features/platform/google-sync/google-api';
+import { errorText, fill, formatAt, RETRYABLE, skipLabel, stateStyle } from '@/features/platform/google-sync/google-format';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

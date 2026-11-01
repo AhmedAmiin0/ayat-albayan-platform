@@ -3,13 +3,13 @@ import { useNarrow } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { LessonChipList } from '../lesson/LessonChip';
-import { teacherRows } from '../lesson/lessons';
-import { boardRows, hoursText, teacherDay } from '../overview';
+import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
+import { teacherRows } from '@/features/teaching/schedule/lesson/lessons';
+import { boardRows, hoursText, teacherDay } from '@/features/teaching/schedule/overview';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { WeekAgenda } from './WeekAgenda';
-import { dayMonthLabel, weekDays, weekdayOf } from '../tz';
+import { dayMonthLabel, weekDays, weekdayOf } from '@/features/teaching/schedule/tz';
 import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface WeekGridProps {

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import type { InvoiceDraft } from '../draft/draft';
+import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceThumb } from './InvoiceThumb';
 import { canShow } from './invoice-file';
 

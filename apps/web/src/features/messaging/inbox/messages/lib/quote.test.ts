@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message, PHONE } from '../../testing/inbox-fixture';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { quoteOf, quoteSender, quoteText } from './quote';
 
 const chat = { name: 'أم سهيلة', phone: PHONE };

@@ -4,7 +4,7 @@ import { template as templateView } from '@/features/messaging/inbox/testing/inb
 import { t } from '@/lib/i18n/i18n';
 import { CrmNameButton } from './CrmNameButton';
 import { CrmNameDialog } from './CrmNameDialog';
-import { templateName } from '../template-cells';
+import { templateName } from '@/features/messaging/templates/template-cells';
 
 // docs/19 «crm driver»: the template's name / language in the CRM, by hand (crm lines only).
 

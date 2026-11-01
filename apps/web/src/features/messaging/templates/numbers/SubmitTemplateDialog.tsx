@@ -4,7 +4,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { SubmitTarget } from './SubmitTarget';
-import { templateName } from '../template-cells';
+import { templateName } from '@/features/messaging/templates/template-cells';
 
 const PARAM_NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 

@@ -6,7 +6,7 @@ import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
-import { zoneLabel } from '../reschedule/slots';
+import { zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { clockDir } from '@/lib/clock-text';

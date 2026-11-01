@@ -4,8 +4,8 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { Select } from '@/components/ui/form/select';
 import { ClockOptions } from '@/lib/clock-options';
 import { t } from '@/lib/i18n/i18n';
-import { RuleCheck } from '../table/RuleCheck';
-import type { TimingDraft } from '../rule-timing';
+import { RuleCheck } from '@/features/messaging/notification-rules/table/RuleCheck';
+import type { TimingDraft } from '@/features/messaging/notification-rules/rule-timing';
 import { CountInput } from './CountInput';
 import { FollowUpEditor } from './FollowUpEditor';
 

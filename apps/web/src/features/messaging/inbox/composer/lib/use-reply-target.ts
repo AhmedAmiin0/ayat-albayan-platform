@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from 'react';
-import { useChatActions } from '../../shared/chat-actions';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 
 /**
  * The composer's side of «رد»: the id its next send answers (undefined when none), and the focus on

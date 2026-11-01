@@ -4,12 +4,12 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
-import { bookingCheckQuery } from '../../api';
+import { bookingCheckQuery } from '@/features/teaching/booking/api';
 import { takenTexts } from './course-taken';
-import type { BookingBody } from '../../draft/contract';
-import { days, toBookingRequest, type BookingDraft } from '../../draft/draft';
-import { useBookingMode } from '../../mode';
-import { trialDateCheckQuery } from '../../trial-date/api';
+import type { BookingBody } from '@/features/teaching/booking/draft/contract';
+import { days, toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { useBookingMode } from '@/features/teaching/booking/mode';
+import { trialDateCheckQuery } from '@/features/teaching/booking/trial-date/api';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

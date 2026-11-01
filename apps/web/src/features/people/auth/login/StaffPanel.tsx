@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { ResetFlow } from '../reset/ResetFlow';
+import { ResetFlow } from '@/features/people/auth/reset/ResetFlow';
 import { CodesGate } from './CodesGate';
 import { LinkRow } from './LinkRow';
 import { PasswordForm } from './PasswordForm';

@@ -1,7 +1,7 @@
 import { CLASSROOM_ERRORS } from '@ab/shared';
 import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import type { MediaDevice } from '../components/room-types';
+import type { MediaDevice } from '@/features/teaching/classroom/room/components/room-types';
 
 const KNOWN: ReadonlySet<string> = new Set<string>([...CLASSROOM_ERRORS, 'forbidden', 'duplicate']);
 const TEXT: Readonly<Record<string, string>> = t.classroom.error;

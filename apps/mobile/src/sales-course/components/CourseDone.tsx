@@ -2,13 +2,13 @@ import { counted, courseLessonCount, type BookingRequest, type BookingResult, ty
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
-import { courseEnd } from '../lib/course-body';
+import { courseEnd } from '@/sales-course/lib/course-body';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseDoneProps {

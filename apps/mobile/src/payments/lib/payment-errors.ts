@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ReceiptUploadError } from '../upload-receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
 const messages: Record<string, string | undefined> = t.payments.error;
 

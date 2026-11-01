@@ -2,7 +2,7 @@ import type { SavedReply } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { Marked } from '../panel/Marked';
+import { Marked } from '@/features/messaging/inbox/saved-replies/panel/Marked';
 import { RowActions } from './MineActions';
 
 export interface ReplyOptionsProps {

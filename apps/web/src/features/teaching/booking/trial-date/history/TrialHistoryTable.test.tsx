@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { TrialHistoryTable } from './TrialHistoryTable';
-import { history, row } from '../trial-fixture';
+import { history, row } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 const OUTCOMES = ['upcoming', 'moved', 'absent', 'attended', 'cancelled', 'awaiting'] as const;
 const six = OUTCOMES.map((outcome, i) => row({ lesson_id: `l${i}`, outcome }));

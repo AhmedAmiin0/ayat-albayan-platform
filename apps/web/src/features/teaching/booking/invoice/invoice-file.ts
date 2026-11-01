@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES } from '../draft/contract';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES } from '@/features/teaching/booking/draft/contract';
 
 export type InvoiceProblem = 'invoice_type' | 'invoice_too_large';
 

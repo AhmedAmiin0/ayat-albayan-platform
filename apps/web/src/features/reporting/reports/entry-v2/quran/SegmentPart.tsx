@@ -3,7 +3,7 @@ import type { Grade, ReportSegment } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
-import { GradeChips } from '../GradeChips';
+import { GradeChips } from '@/features/reporting/reports/entry-v2/GradeChips';
 
 export interface SegmentPartProps {
   /** Unique radio group name. */

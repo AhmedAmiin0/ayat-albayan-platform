@@ -4,7 +4,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { BookingModeContext, type BookingMode } from '../mode';
+import { BookingModeContext, type BookingMode } from '@/features/teaching/booking/mode';
 import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { CourseChangeForm } from './CourseChangeForm';
 import { locale } from '@/lib/i18n/locale';

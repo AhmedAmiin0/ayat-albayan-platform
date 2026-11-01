@@ -1,12 +1,12 @@
 import * as ImagePicker from 'expo-image-picker';
-import { ensureCameraPermission } from './receipts/camera-permission';
+import { ensureCameraPermission } from './camera-permission';
 import { pickReceipt, toReceipt } from './receipt';
 
 jest.mock('expo-image-picker', () => ({
   launchCameraAsync: jest.fn(),
   launchImageLibraryAsync: jest.fn(),
 }));
-jest.mock('./receipts/camera-permission', () => ({ ensureCameraPermission: jest.fn() }));
+jest.mock('./camera-permission', () => ({ ensureCameraPermission: jest.fn() }));
 
 const camera = jest.mocked(ImagePicker.launchCameraAsync);
 const library = jest.mocked(ImagePicker.launchImageLibraryAsync);

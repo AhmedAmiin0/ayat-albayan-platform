@@ -3,8 +3,8 @@ import { useId } from 'react';
 import { Select } from '@/components/ui/form/select';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { fill } from '../google-format';
-import { NO_CALENDAR } from '../google-input';
+import { fill } from '@/features/platform/google-sync/google-format';
+import { NO_CALENDAR } from '@/features/platform/google-sync/google-input';
 
 const s = t.googleSync.teachers;
 

@@ -14,7 +14,7 @@ import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { supabase } from '@/core/lib/http/supabase';
-import type { Receipt } from '@/payments/receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 // The web form's report routes (docs/11 §4 R1–R12), same bodies: the API checks that the report
 // is the signed-in teacher's own and that its edit window is open.

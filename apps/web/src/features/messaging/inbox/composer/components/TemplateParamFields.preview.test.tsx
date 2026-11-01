@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { template } from '../../testing/inbox-fixture';
+import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { TemplateParamFields } from './TemplateParamFields';
 
 function preview(patch: Parameters<typeof template>[0], values = {}) {

@@ -1,8 +1,8 @@
 import type { AcademySettings, SettingKey } from '@ab/shared';
 import { useCallback, useState } from 'react';
-import { isDirty } from '../../registry-form/settings-dirty';
-import type { SettingsForm } from '../../registry-form/settings-form';
-import { rowForm } from '../../registry-form/row-form';
+import { isDirty } from '@/features/platform/settings/registry-form/settings-dirty';
+import type { SettingsForm } from '@/features/platform/settings/registry-form/settings-form';
+import { rowForm } from '@/features/platform/settings/registry-form/row-form';
 
 export interface ValueDrafts {
   /** The row's fields: the local edit if there is one, else the stored value's. */

@@ -1,9 +1,9 @@
 import { t } from '@/lib/i18n/i18n';
-import { MyEarnings } from '../teachers/MyEarnings';
+import { MyEarnings } from '@/features/sales/sales/teachers/MyEarnings';
 import { MyPayments } from './MyPayments';
 import { MyWallet } from './MyWallet';
 import { PaymentLinksSection } from './links/PaymentLinksSection';
-import { ViewHead } from '../ViewHead';
+import { ViewHead } from '@/features/sales/sales/ViewHead';
 
 /** 'earnings' = «العمولات» (the default, /sales/earnings); 'statements' = «الكشوف»; 'payments' = «مدفوعاتي». */
 export type MoneyView = 'earnings' | 'statements' | 'payments';

@@ -4,8 +4,8 @@ import { cleanup, screen, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { t } from '@/lib/i18n/i18n';
-import { thread } from '../../testing/inbox-fixture';
-import { renderWithClient } from '../../testing/test-utils';
+import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { QuoteDialog } from './QuoteDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());

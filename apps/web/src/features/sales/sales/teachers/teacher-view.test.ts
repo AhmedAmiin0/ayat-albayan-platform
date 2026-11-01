@@ -1,6 +1,6 @@
 import { PROGRAMS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { teacher } from '../academy.fixtures';
+import { teacher } from '@/features/sales/sales/academy.fixtures';
 import { filterTeachers, isFiltered, NO_FILTER, programsOf, viewerWhen } from './teacher-view';
 
 const LIST = [

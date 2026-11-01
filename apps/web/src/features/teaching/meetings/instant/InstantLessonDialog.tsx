@@ -14,7 +14,7 @@ import { conflictsOf } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { DEFAULT_DURATION, draftProblem, instantBody, type InstantDraft } from './instant-form';
-import { MeetingStudentPicker } from '../MeetingStudentPicker';
+import { MeetingStudentPicker } from '@/features/teaching/meetings/MeetingStudentPicker';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

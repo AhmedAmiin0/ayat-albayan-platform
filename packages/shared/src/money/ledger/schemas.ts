@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { hasTwoDecimals } from './cents.js';
+import { hasTwoDecimals } from '@ab/core';
 import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '../../enums/index.js';
 import {
   CUSTOM_COUNT_MAX,
@@ -9,7 +9,7 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
-import { optionalText } from '../../core/schemas/common.js';
+import { optionalText } from '@ab/core';
 import { instant, localDate } from '../../schedule/schemas/scheduling.js';
 import { calendarDaysBetween } from '../../time/index.js';
 

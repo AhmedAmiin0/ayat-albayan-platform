@@ -9,11 +9,11 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { useNow } from '@/lib/time/use-now';
 import { zonedParts } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { salesScheduleQuery, salesTeachersQuery } from '../academy-api';
+import { salesScheduleQuery, salesTeachersQuery } from '@/features/sales/sales/academy-api';
 import { SalesDayBoard } from './SalesDayBoard';
 import { SalesDayNav } from './SalesDayNav';
 import type { SalesScheduleSearch } from './schedule-search';
-import { TeacherSelect } from '../teachers/TeacherSelect';
+import { TeacherSelect } from '@/features/sales/sales/teachers/TeacherSelect';
 
 export interface SalesScheduleProps {
   search: SalesScheduleSearch;

@@ -3,7 +3,7 @@ import type { Clock } from '@/lib/clock';
 import { clockRange } from '@ab/shared';
 import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../api/api';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { qualForm } from './qualification/qualification-form';
 
 // The short aside of a lead thread: what is known about the student at a glance, and the same

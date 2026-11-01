@@ -1,6 +1,6 @@
 import { isCurrentStudent } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { StudentListItem } from '../types';
+import type { StudentListItem } from '@/features/people/students/types';
 
 /**
  * The one hamish (marginal) note of a students row, docs/07 §6. Only what the Phase 1 list API can

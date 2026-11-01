@@ -1,7 +1,7 @@
 import { RIYADH_TZ, amountProblem, parseAmount, type ExpenseCreate } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { paidAtFor } from '@/payments/lib/paid-day';
-import type { Receipt } from '@/payments/receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 import { localDate } from '@/today/lib/timeline';
 
 /** What the admin entered in «مصروف جديد». The tracker is in EGP (web: the default currency). */

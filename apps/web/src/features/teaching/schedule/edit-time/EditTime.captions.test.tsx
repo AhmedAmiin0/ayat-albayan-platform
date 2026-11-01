@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { SCHEDULED } from './edit-time-fixture';
-import { lesson } from '../lesson/lesson-fixture';
-import { LessonDrawer } from '../lesson/LessonDrawer';
-import { LessonTags } from '../lesson/LessonTags';
+import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
+import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
 
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
 

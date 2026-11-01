@@ -6,10 +6,10 @@ import { useDismiss } from '@/components/ui/overlay/use-dismiss';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { BubbleMenu } from './BubbleMenu';
-import { useChatActions } from '../../shared/chat-actions';
-import { useInboxMode } from '../../shared/mode';
-import { bubbleOffers, offersAny, type BubbleOffers } from '../lib/bubble-offers';
-import { useBubbleTools } from '../lib/use-bubble-tools';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { bubbleOffers, offersAny, type BubbleOffers } from '@/features/messaging/inbox/messages/lib/bubble-offers';
+import { useBubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
 import { HideConfirm } from '@/features/messaging/inbox/messages/hide/HideConfirm';
 import { useHideRights } from '@/features/messaging/inbox/messages/hide/use-hide-rights';
 

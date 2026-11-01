@@ -7,8 +7,8 @@ import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { AttachmentsDialog } from './AttachmentsDialog';
-import { PaymentsPage } from '../PaymentsPage';
-import type { PaymentsUrlSearch } from '../search';
+import { PaymentsPage } from '@/features/finance/payments/PaymentsPage';
+import type { PaymentsUrlSearch } from '@/features/finance/payments/search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));

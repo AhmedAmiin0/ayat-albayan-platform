@@ -3,7 +3,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import { attachmentsQuery } from '../api';
+import { attachmentsQuery } from '@/features/finance/payments/api';
 import { attachmentLabels } from './attachments';
 
 type Props = {

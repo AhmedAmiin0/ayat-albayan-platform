@@ -1,6 +1,6 @@
 import { SESSION_WINDOW_MS } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxMode } from '../../shared/mode';
+import type { InboxMode } from '@/features/messaging/inbox/shared/mode';
 
 // WhatsApp's 24 h customer-service window in words (docs/12 §3.5): open with the time left, or
 // closed — then only a template, or the lesson rating, can be sent (and a tap reopens it). The

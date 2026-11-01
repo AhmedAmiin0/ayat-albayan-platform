@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
-import { sendFile } from '../../api/api.files';
-import { sendErrorCode } from '../../composer/lib/send-error';
-import { sendStart, settleOwnSend } from '../../composer/lib/send-start';
-import { stageReply } from '../lib/api';
-import { getStaged, setStaged, type Staged } from '../lib/staged-store';
+import { sendFile } from '@/features/messaging/inbox/api/api.files';
+import { sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-error';
+import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { stageReply } from '@/features/messaging/inbox/saved-replies/lib/api';
+import { getStaged, setStaged, type Staged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 
 /**
  * The staged attachment after its text: POST /saved-replies/:id/stage copies it as the sender's chat

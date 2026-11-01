@@ -2,8 +2,8 @@ import type { LessonView } from '@ab/shared';
 import { isMakeup } from '@/features/teaching/booking/draft/contract';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import { wasText } from '../edit-time/edit-time-text';
-import { timeEditInfo } from '../edit-time/edit-time.contract';
+import { wasText } from '@/features/teaching/schedule/edit-time/edit-time-text';
+import { timeEditInfo } from '@/features/teaching/schedule/edit-time/edit-time.contract';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 

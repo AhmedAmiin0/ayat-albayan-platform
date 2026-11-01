@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { subscription } from './fixtures';
+import { subscription } from '@/payments/fixtures';
 import { instantDay, localDay, money, packageFrom, packageName, paidOf, usedOf } from './format';
 
 const SAR = t.pricing.currencies.SAR;

@@ -7,7 +7,7 @@ import { CreateStudentDialog } from './CreateStudentDialog';
 // «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1) on «إضافة طالب».
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
 const C = t.familyAuth.contactIsSelf;
 
 function fillAndSubmit(self: boolean) {

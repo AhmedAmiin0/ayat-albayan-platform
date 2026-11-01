@@ -3,13 +3,13 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { noAvailability } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { daysText } from '../lib/course-days';
-import { fakeCourseApi, isDisabled, pressEnabled } from '../testing/course-test-utils';
-import { CourseScreen } from '../screens/CourseScreen';
-import { bookedCourse, courseView } from '../testing/fixtures';
+import { daysText } from '@/sales-course/lib/course-days';
+import { fakeCourseApi, isDisabled, pressEnabled } from '@/sales-course/testing/course-test-utils';
+import { CourseScreen } from '@/sales-course/screens/CourseScreen';
+import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 

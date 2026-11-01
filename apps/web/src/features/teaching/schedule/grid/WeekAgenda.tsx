@@ -3,8 +3,8 @@ import { Avatar } from '@/components/ui/display/avatar';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { LessonChipList } from '../lesson/LessonChip';
-import { dayMonthLabel, weekdayOf } from '../tz';
+import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
+import { dayMonthLabel, weekdayOf } from '@/features/teaching/schedule/tz';
 
 interface AgendaRow {
   id: string;

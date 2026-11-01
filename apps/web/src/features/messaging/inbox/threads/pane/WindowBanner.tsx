@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { useEffect, useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { useInboxMode } from '../../shared/mode';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { windowText } from './window-state';
 
 const MINUTE = 60_000;

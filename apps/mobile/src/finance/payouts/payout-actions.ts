@@ -1,6 +1,6 @@
 import { round2, type PaymentMethod, type PayoutView } from '@ab/shared';
 import { paidAtFor } from '@/payments/lib/paid-day';
-import type { Receipt } from '@/payments/receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { T_ABRAR, T_FATMA, T_NOUR } from '../overview-fixture';
+import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { CLEAR_SCHEDULE_FILTERS, scheduleChips } from './schedule-filters';
 import type { ScheduleSearch } from './search';
 

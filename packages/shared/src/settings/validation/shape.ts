@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { E164_RE } from '../../core/format/phone.js';
+import { E164_RE } from '@ab/core';
 import type { ShapeField } from '../defs.js';
 
 const FORMATS = {

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
-import { partPaidLine } from '@/payments/format';
-import { dueText } from '../lib/package-text';
-import { openSub } from '../testing/fixtures';
+import { partPaidLine } from '@/core/lib/money/format';
+import { dueText } from '@/sales-subscribe/lib/package-text';
+import { openSub } from '@/sales-subscribe/testing/fixtures';
 import { OpenPackagePicker } from './OpenPackagePicker';
 
 // Owner 2026-10-28: her owed package of 81 with 80 received says what was paid, not only what is due.

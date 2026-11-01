@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { parseManualLink } from '../google-input';
+import { parseManualLink } from '@/features/platform/google-sync/google-input';
 
 const s = t.googleSync.students;
 

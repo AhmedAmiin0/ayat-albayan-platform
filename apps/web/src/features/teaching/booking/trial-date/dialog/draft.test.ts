@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { stepsOf } from '../../draft/draft';
+import { stepsOf } from '@/features/teaching/booking/draft/draft';
 import { trialDateDraft, trialHint, upcomingRow } from './draft';
-import { history, row, UPCOMING_ID } from '../trial-fixture';
+import { history, row, UPCOMING_ID } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 const student = { id: 's1', name: 'سهيلة', code: 'AB-0183' };
 

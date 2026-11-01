@@ -1,14 +1,14 @@
 import type { LineHealthView, NotificationEntryView, NotificationRuleView } from '@ab/shared';
 import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n/i18n';
-import { ChannelsPart } from '../cells/ChannelsPart';
-import { NamePart } from '../cells/NamePart';
-import { NumberPart } from '../cells/NumberPart';
-import { StatePart } from '../cells/StatePart';
+import { ChannelsPart } from '@/features/messaging/notification-rules/cells/ChannelsPart';
+import { NamePart } from '@/features/messaging/notification-rules/cells/NamePart';
+import { NumberPart } from '@/features/messaging/notification-rules/cells/NumberPart';
+import { StatePart } from '@/features/messaging/notification-rules/cells/StatePart';
 import { RuleRowActions } from './RuleRowActions';
-import { useRules } from '../rules-context';
-import { RuleSwitch } from '../switch/RuleSwitch';
-import { TimingPart } from '../timing/TimingPart';
+import { useRules } from '@/features/messaging/notification-rules/rules-context';
+import { RuleSwitch } from '@/features/messaging/notification-rules/switch/RuleSwitch';
+import { TimingPart } from '@/features/messaging/notification-rules/timing/TimingPart';
 import { useRuleRow, type RuleRowState } from './use-rule-row';
 
 export const RULE_COLUMNS = 5;

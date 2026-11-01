@@ -1,6 +1,6 @@
 import { ACADEMY_TZ, DURATIONS, shiftByday, type LessonView, type RescheduleRequest } from '@ab/shared';
 import { ruleFromSlot } from '@/features/teaching/booking/draft/draft';
-import { durationMin } from '../lesson/lessons';
+import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
 import type { Scope } from './ScopeRadios';
 
 export interface RescheduleInput {

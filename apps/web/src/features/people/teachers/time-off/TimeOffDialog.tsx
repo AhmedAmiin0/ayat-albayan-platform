@@ -7,7 +7,7 @@ import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { timeOffQuery } from '../api';
+import { timeOffQuery } from '@/features/people/teachers/api';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { emptyTimeOffDraft, toTimeOffBody, type TimeOffDraft } from './time-off';
 

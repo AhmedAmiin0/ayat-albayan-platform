@@ -1,8 +1,8 @@
 import type { MuteSource } from '@ab/shared';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
-import { RoomIcon } from '../room/components/room-icons';
-import type { TileView } from '../room/components/room-types';
+import { RoomIcon } from '@/features/teaching/classroom/room/components/room-icons';
+import type { TileView } from '@/features/teaching/classroom/room/components/room-types';
 import type { MuteController } from './use-mute';
 
 const M = t.classroom.mute;

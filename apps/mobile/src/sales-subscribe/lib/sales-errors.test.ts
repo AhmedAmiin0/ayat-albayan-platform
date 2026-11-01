@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ReceiptUploadError } from '@/payments/upload-receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 import { salesErrorText } from './sales-errors';
 
 test('the API codes in her words', () => {
