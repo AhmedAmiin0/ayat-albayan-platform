@@ -3,12 +3,12 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
-import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
-import type { PermissionResolver } from '@/common/auth/permissions';
-import type { AuthUser } from '@/common/auth/verify-token';
-import { StorageService } from '@/common/storage/storage.service';
+import { AppModule } from '../../../app.module';
+import { AuditService } from '../../../common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
+import type { PermissionResolver } from '../../../common/auth/permissions';
+import type { AuthUser } from '../../../common/auth/verify-token';
+import { StorageService } from '../../../common/storage/storage.service';
 import { LineHealthStore } from './lines/line-health.store';
 import { LinesCheck } from './lines/lines.check';
 import { MessageSender } from './sender/message.sender';

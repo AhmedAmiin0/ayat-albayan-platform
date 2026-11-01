@@ -4856,6 +4856,9 @@
     }
   },
   "src/modules/messaging/inbox/test-app.ts": {
+    "ab/no-parent-imports": {
+      "count": 11
+    },
     "max-len": {
       "count": 7
     }
@@ -7860,6 +7863,9 @@
     }
   },
   "src/modules/messaging/whatsapp/test-app.ts": {
+    "ab/no-parent-imports": {
+      "count": 6
+    },
     "max-len": {
       "count": 8
     }
