@@ -4,7 +4,7 @@ import { approvedOn, routeOf } from './number-route';
 import { N1, overlayNum, routePass } from './number-route.fakes';
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { syncNumber, type NumberSyncDeps } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
-import type { ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import type { ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 

@@ -5,7 +5,7 @@ import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.
 import { CRM_ENV, CRM_SENT } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { syncNumber } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
 import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
+import type { TemplatesRepo } from './templates.repo';
 import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: a crm line's templates live in the CRM. No sync call, no row touched, no submit;
@@ -16,7 +16,7 @@ const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-25T08:00:00Z');
 const f = scriptedFetch(CRM_SENT);
 const lines = { notifications: new CrmWhatsappClient(CRM_ENV, { fetch: f.fetch }), chat: new CrmWhatsappClient(null) };
-const registry = () => new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
+const registry = () => new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
 const crmStatus = () => ({ set: (input: Parameters<TemplateRegistry['setCrmStatus']>[0], actor: string) => registry().setCrmStatus(input, actor) });
 const rejected = (p: Promise<unknown>) =>
   p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
@@ -77,7 +77,7 @@ describe('templates on a crm line', () => {
   it('a crm number in module mode: its sync answers crm_managed and writes no approval', async () => {
     const n = { id: 'n1', waba_id: null, env: CRM_ENV } as unknown as OverlayNumber;
     const clientOf = vi.fn();
-    const res = await syncNumber({ queries: queries as unknown as TemplatesQueries, numbers: () => [n], clientOf, log: { warn: vi.fn() } }, 'n1', NOW);
+    const res = await syncNumber({ queries: queries as unknown as TemplatesRepo, numbers: () => [n], clientOf, log: { warn: vi.fn() } }, 'n1', NOW);
     expect(res).toMatchObject({ ok: false, error: 'crm_managed', number_id: 'n1' });
     expect(clientOf).not.toHaveBeenCalled();
     expect(queries.upsertApprovals).not.toHaveBeenCalled();

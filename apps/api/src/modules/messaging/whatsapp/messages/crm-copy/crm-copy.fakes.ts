@@ -1,19 +1,19 @@
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import type { SettingsService } from '../../../../../common/settings/settings.service';
-import type { StorageService } from '../../../../../common/storage/storage.service';
-import type { WhatsappLines } from '../../whatsapp.types';
-import { CrmHistoryMedia } from '../crm-history/crm-history-media';
-import { CRM_HOST, crmLink, crmRow } from '../crm-history/crm-history.fakes';
-import { CRM_MEDIA_PREFIX } from '../crm-history/crm-history-url';
-import { CrmMediaSettings } from '../crm-history/crm-media.settings';
-import type { InboundMediaQueries, MediaMessage } from '../inbound-media.queries';
-import { InboundMedia } from '../inbound-media.service';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { SettingsService } from '@/common/settings/settings.service';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { CrmHistoryMedia } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-media';
+import { CRM_HOST, crmLink, crmRow } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
+import { CRM_MEDIA_PREFIX } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
+import { CrmMediaSettings } from '@/modules/messaging/whatsapp/messages/crm-history/crm-media.settings';
+import type { InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
 import { CrmMediaCopier } from './crm-media-copier';
 import { CrmMediaCopyDone } from './crm-media-copy.done';
 import { CrmMediaCopyJob } from './crm-media-copy.job';
-import type { CrmMediaCopyQueries } from './crm-media-copy.queries';
+import type { CrmMediaCopyRepo } from './crm-media-copy.repo';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 
 /** Tests only: `n` imported CRM voice notes (no media id, no copy, the body only the link). */
@@ -85,10 +85,10 @@ export function copyWorld(seed: MediaMessage[], values: Partial<AcademySettings>
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
   const settings = liveStore({ crm_media_copy_all: true, crm_media_host: CRM_HOST, ...values });
-  const media = new InboundMedia(inbound as unknown as InboundMediaQueries, lines, storage as unknown as StorageService);
+  const media = new InboundMedia(inbound as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
   Object.assign(media, { crm: new CrmHistoryMedia(new CrmMediaSettings(settings.store)) });
   const queries = fakeCopyQueries(rows, failures);
-  const copyQueries = queries as unknown as CrmMediaCopyQueries;
+  const copyQueries = queries as unknown as CrmMediaCopyRepo;
   const audit = { record: vi.fn().mockResolvedValue(undefined) };
   const copySettings = new CrmMediaCopySettings(settings.store);
   const copier = new CrmMediaCopier(media, copyQueries);

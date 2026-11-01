@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { CachedMedia, InboundMediaQueries } from './inbound-media.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { CachedMedia, InboundMediaRepo } from './inbound-media.repo';
 import { BATCH, MAX_BATCHES, WaMediaRetentionJob } from './wa-media.retention.job';
 
 const NOW = new Date('2026-10-19T03:00:00Z');
@@ -17,7 +17,7 @@ function setup(...pages: CachedMedia[][]) {
     clearPaths: vi.fn().mockResolvedValue(undefined),
   };
   const storage = { removeMany: vi.fn().mockResolvedValue(undefined) };
-  const job = new WaMediaRetentionJob(queries as unknown as InboundMediaQueries, storage as unknown as StorageService);
+  const job = new WaMediaRetentionJob(queries as unknown as InboundMediaRepo, storage as unknown as StorageService);
   return { job, queries, storage, echoPages };
 }
 

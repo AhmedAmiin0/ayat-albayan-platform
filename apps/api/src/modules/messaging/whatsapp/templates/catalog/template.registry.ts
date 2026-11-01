@@ -1,16 +1,16 @@
 import { WA_LINES, type TemplateCrmNameInput, type TemplateHealthView, type TemplateLineSync, type TemplateLineView, type TemplateMoveView, type TemplateView, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { AuditService } from '../../../../../common/audit/audit.service';
+import { AuditService } from '@/common/audit/audit.service';
 import { setCrmName } from './template-crm-name';
 import { setCrmStatus, type CrmTemplateStatus } from './template-crm-status';
 import { lineFacts, requireLine, requireSync, syncOn } from './template-env';
-import { syncLine } from '../sync/template-line-sync';
-import { moveTemplate } from '../sync/template-move';
-import { submitTemplate } from '../sync/template-submit';
+import { syncLine } from '@/modules/messaging/whatsapp/templates/sync/template-line-sync';
+import { moveTemplate } from '@/modules/messaging/whatsapp/templates/sync/template-move';
+import { submitTemplate } from '@/modules/messaging/whatsapp/templates/sync/template-submit';
 import { CRM_MANAGED, toTemplateView, withNumbers } from './template.mapper';
-import { TemplatesQueries } from './templates.queries';
-import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from '../../whatsapp.types';
-import { BackgroundJob } from '../../../../../config/role/background-job';
+import { TemplatesRepo } from './templates.repo';
+import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { BackgroundJob } from '@/config/role/background-job';
 
 /** Soon after boot, not at once: the e2e stub may still be starting. */
 const BOOT_CHECK_MS = 5_000;
@@ -34,7 +34,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   private timer: NodeJS.Timeout | null = null;
 
   constructor(
-    private readonly queries: TemplatesQueries,
+    private readonly queries: TemplatesRepo,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
     private readonly audit: AuditService,
   ) {}

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { TemplateRegistry } from '../catalog/template.registry';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
-import type { MetaTemplate, TemplateRow, WhatsappLines } from '../../whatsapp.types';
+import type { AuditService } from '@/common/audit/audit.service';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { MetaTemplate, TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «نقل إلى الرقم الآخر» (owner 2026-10-18): the row moves, its old WABA's state is dropped, and the new
 // line is synced at once, so the status follows the target WABA.
@@ -26,7 +26,7 @@ const synced = new Map<string, unknown>();
 const client = () => ({ configured: vi.fn(() => true), getTemplates: vi.fn(async (): Promise<MetaTemplate[]> => []) });
 let lines = { notifications: client(), chat: client() };
 const audit = { record: vi.fn() };
-const registry = () => new TemplateRegistry(queries as unknown as TemplatesQueries, lines as unknown as WhatsappLines, audit as unknown as AuditService);
+const registry = () => new TemplateRegistry(queries as unknown as TemplatesRepo, lines as unknown as WhatsappLines, audit as unknown as AuditService);
 const approvedOnMeta = (name: string): MetaTemplate => ({
   id: `chat-${name}`, name, language: 'ar', status: 'APPROVED', category: 'UTILITY', quality: 'GREEN', components: [], rejectedReason: null,
 });

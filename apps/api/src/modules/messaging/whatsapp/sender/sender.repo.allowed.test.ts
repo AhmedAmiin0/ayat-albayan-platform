@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { DUE_COLUMNS } from './sender.due';
-import { SenderQueries } from './sender.queries';
+import { SenderRepo } from './sender.repo';
 
 // WA_ALLOWED_RECIPIENTS in SQL (docs/12 §13.5a) and the line stamp at claim (§13.2).
 
@@ -16,7 +16,7 @@ describe('SenderQueries — allow-list and line', () => {
   it('with an allow-list, due() and holdAutomatic() read only the listed phones', async () => {
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+20 100 123 4567, 966551234567');
     const { db, calls } = fakeDb({ [M]: [{ data: [] }, { data: [] }] });
-    const q = new SenderQueries(db);
+    const q = new SenderRepo(db);
     await q.due({ keys: [], now: NOW, limit: 50 });
     expect(phoneFilter(calls)).toEqual([['phone_e164', ['+201001234567', '+966551234567']]]);
     await q.holdAutomatic();
@@ -26,7 +26,7 @@ describe('SenderQueries — allow-list and line', () => {
 
   it('the list is read per call (integration config may change): a change after construction applies', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
-    const q = new SenderQueries(db);
+    const q = new SenderRepo(db);
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
     await q.due({ keys: [], now: NOW, limit: 50 });
     expect(phoneFilter(calls)).toEqual([['phone_e164', ['+201001234567']]]);
@@ -34,7 +34,7 @@ describe('SenderQueries — allow-list and line', () => {
 
   it('without an allow-list neither query filters by phone', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }, { data: [] }] });
-    const q = new SenderQueries(db);
+    const q = new SenderRepo(db);
     await q.due({ keys: ['booking_confirmation'], now: NOW, limit: 50 });
     await q.holdAutomatic();
     expect(phoneFilter(calls)).toEqual([]);
@@ -43,7 +43,7 @@ describe('SenderQueries — allow-list and line', () => {
 
   it('claim stamps `line` only when given', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [{ id: 'm1' }] }, { data: [{ id: 'm1' }] }] });
-    const q = new SenderQueries(db);
+    const q = new SenderRepo(db);
     await q.claim({ id: 'm1', attempts: 0, now: NOW });
     await q.claim({ id: 'm1', attempts: 0, now: NOW, line: 'chat' });
     const updates = calls.filter((c) => c.method === 'update').map((c) => c.args[0]);
@@ -56,7 +56,7 @@ describe('SenderQueries — allow-list and line', () => {
   it('due() selects the line column', async () => {
     expect(DUE_COLUMNS.split(', ')).toContain('line');
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
-    await new SenderQueries(db).due({ keys: [], now: NOW, limit: 1 });
+    await new SenderRepo(db).due({ keys: [], now: NOW, limit: 1 });
     expect(calls.find((c) => c.method === 'select')?.args[0]).toBe(DUE_COLUMNS);
   });
 });

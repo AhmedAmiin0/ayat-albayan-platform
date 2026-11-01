@@ -8,7 +8,7 @@ import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { lineOf } from './send-line';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { SenderQueries } from './sender.queries';
+import { SenderRepo } from './sender.repo';
 import { senderTiming } from './sender-timing';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -39,7 +39,7 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   constructor(
     private readonly gate: SendGate,
-    private readonly queries: SenderQueries,
+    private readonly queries: SenderRepo,
     private readonly worker: MessageWorker,
   ) {}
 

@@ -2,7 +2,7 @@ import { templateCreateSchema } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
-import type { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { submitPayload } from '@/modules/messaging/whatsapp/messages/wa-components';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -32,7 +32,7 @@ const saved = (row: object): TemplateRow => ({ ...templateRow(), ...row });
 const queries = { create: vi.fn() };
 const audit = { record: vi.fn() };
 const creator = () =>
-  new TemplateCreator(queries as unknown as TemplatesQueries, audit as unknown as AuditService);
+  new TemplateCreator(queries as unknown as TemplatesRepo, audit as unknown as AuditService);
 /** [status, body] of the HttpException a call rejects with (anything else is rethrown). */
 const rejected = (p: Promise<unknown>) =>
   p.then(

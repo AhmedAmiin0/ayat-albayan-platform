@@ -20,7 +20,7 @@ type MaybeRow = TemplateRow | null;
 
 /** message_templates (R-MSG-01): the API is its only writer (sync and import, create, submit, starter flag). */
 @Injectable()
-export class TemplatesQueries {
+export class TemplatesRepo {
   /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
   private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
 

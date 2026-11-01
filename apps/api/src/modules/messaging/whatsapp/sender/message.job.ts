@@ -4,7 +4,7 @@ import type { MessageDispatch, SendVia } from './message.dispatch';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { lineOf } from './send-line';
 import type { DueMessage } from './sender.due';
-import type { SenderQueries } from './sender.queries';
+import type { SenderRepo } from './sender.repo';
 import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The worker's job, outcomes and fixed pieces (split from message.worker.ts for the line limit).
@@ -73,7 +73,7 @@ export function sendingAt(job: PassJob, multi: boolean): { line: WaLine; via: Se
 
 interface ClaimDeps {
   dispatch: MessageDispatch;
-  queries: SenderQueries;
+  queries: SenderRepo;
 }
 
 interface ClaimInput {

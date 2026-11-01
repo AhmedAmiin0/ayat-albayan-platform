@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 /**
  * The totals of a finished copy (its one audit row). `remaining`: CRM file links on ANY host still
@@ -11,7 +11,7 @@ const count = (v: unknown): number => (typeof v === 'number' ? v : 0);
 
 /** CrmMediaCopyJob's three statements (migrations 891 and 920; service role). */
 @Injectable()
-export class CrmMediaCopyQueries {
+export class CrmMediaCopyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { dueMessage } from './sender.fakes';
-import { SenderQueries } from './sender.queries';
+import { SenderRepo } from './sender.repo';
 
 // The calls number never sends a regular message (docs/28 §10): the queue never reads one of its
 // rows.
@@ -14,7 +14,7 @@ describe('SenderQueries.due and the calls number', () => {
       typeof dueMessage
     >;
     const { db, calls: recorded } = fakeDb({ messages: [{ data: [calls, dueMessage()] }] });
-    const due = await new SenderQueries(db).due({ keys: [], now: NOW, limit: 50 });
+    const due = await new SenderRepo(db).due({ keys: [], now: NOW, limit: 50 });
     expect(due.map((r) => r.id)).toEqual([dueMessage().id]);
     expect(recorded.filter((c) => c.method === 'or').map((c) => c.args[0])).toContain(
       'line.is.null,line.neq.calls',

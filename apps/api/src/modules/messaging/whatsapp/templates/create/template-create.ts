@@ -8,7 +8,7 @@ import {
   toTemplateView,
   waHttpError,
 } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -49,7 +49,7 @@ export function createdRow(input: TemplateCreateInput): CreatedRow {
 @Injectable()
 export class TemplateCreator {
   constructor(
-    private readonly queries: TemplatesQueries,
+    private readonly queries: TemplatesRepo,
     private readonly audit: AuditService,
   ) {}
 

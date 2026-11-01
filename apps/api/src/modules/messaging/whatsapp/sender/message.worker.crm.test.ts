@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
-import { crmErrorFrom } from '../drivers/crm/crm-http';
-import { crmFailure } from '../drivers/crm/crm.fakes';
+import type { PushService } from '@/common/push/push.service';
+import { crmErrorFrom } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
+import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { CRM_AUTH, CRM_RATE_LIMITED } from './send-plan';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver» in the worker: a 429 waits (line paused this pass) without the token alarm.
 
@@ -19,7 +19,7 @@ const answer = (status: number, code: string, retryAfter: string | null = null) 
   crmErrorFrom({ status, text: JSON.stringify(crmFailure(status, code).body), retryAfter });
 
 function worker() {
-  return new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  return new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
 }
 
 describe('MessageWorker — crm failures', () => {

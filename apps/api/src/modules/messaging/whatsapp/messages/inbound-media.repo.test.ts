@@ -1,7 +1,7 @@
 import { PLAYABLE_MIMES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { InboundMediaQueries, PLAYABLE_FILTER } from './inbound-media.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { InboundMediaRepo, PLAYABLE_FILTER } from './inbound-media.repo';
 import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 
 const M = 'messages';
@@ -13,7 +13,7 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
       { id: 'm2', media_path: null, media_mime: 'video/mp4', media_id: 'wamid-2' },
     ];
     const { db, calls } = fakeDb({ [M]: [{ data: rows }] });
-    const out = await new InboundMediaQueries(db).cachedBefore({ before: '2026-09-19T00:00:00.000Z', limit: 100 });
+    const out = await new InboundMediaRepo(db).cachedBefore({ before: '2026-09-19T00:00:00.000Z', limit: 100 });
     expect(out).toEqual([rows[0]]);
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
     expect(of('eq')).toEqual([['direction', 'inbound']]);
@@ -37,7 +37,7 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
 
   it('receipts: the picker filters run in the query, before its limit (stickers never push a PDF out)', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
-    await new InboundMediaQueries(db).receipts({ phone: '+966552147730', since: '2026-10-01T00:00:00.000Z', limit: 12 });
+    await new InboundMediaRepo(db).receipts({ phone: '+966552147730', since: '2026-10-01T00:00:00.000Z', limit: 12 });
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
     expect(of('eq')).toEqual([['phone_e164', '+966552147730'], ['direction', 'inbound']]);
     expect(of('is')).toEqual([['hidden_at', null]]);
@@ -53,12 +53,12 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
 
   it('a read error throws', async () => {
     const { db } = fakeDb({ [M]: [{ error: { message: 'denied' } }] });
-    await expect(new InboundMediaQueries(db).cachedBefore({ before: 'x', limit: 1 })).rejects.toThrow('denied');
+    await expect(new InboundMediaRepo(db).cachedBefore({ before: 'x', limit: 1 })).rejects.toThrow('denied');
   });
 
   it('clearPaths: media_path null for those ids, inbound only; no ids = no query', async () => {
     const { db, calls, argsOf } = fakeDb({ [M]: [{ data: null }] });
-    const q = new InboundMediaQueries(db);
+    const q = new InboundMediaRepo(db);
     await q.clearPaths(['m1', 'm2']);
     expect(argsOf(M, 'update')).toEqual([{ media_path: null }]);
     expect(argsOf(M, 'in')).toEqual(['id', ['m1', 'm2']]);
@@ -71,7 +71,7 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
 
   it('echoes: outbound with a media id and a cached copy, never a file staff sent (out/…)', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }, { data: null }] });
-    const q = new InboundMediaQueries(db);
+    const q = new InboundMediaRepo(db);
     await q.cachedBefore({ before: '2026-09-19T00:00:00.000Z', limit: 100, echoes: true });
     await q.clearPaths(['m1'], true);
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);

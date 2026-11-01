@@ -16,7 +16,7 @@ import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
 import { SalesQueries } from '../../sales/sales/sales.queries';
 import { MessageSender } from '../whatsapp/sender/message.sender';
 import { SendGate } from '../whatsapp/gate/send-gate';
-import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates/catalog/templates.queries';
+import { TemplatesRepo, type ApprovalRow } from '../whatsapp/templates/catalog/templates.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
@@ -90,7 +90,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(ChatListsQueries).useValue(m.lists)
-    .overrideProvider(TemplatesQueries).useValue(templates)
+    .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(SendGate).useValue(m.gate)

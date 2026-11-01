@@ -4,7 +4,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import { documentLink } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import { needsManualSend, toMessageView, type ThreadMessageRow } from './message.mapper';
 import { renderable } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplatesQueries } from '@/modules/messaging/whatsapp/templates/catalog/templates.queries';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { templateButtons, templateDisplay, templateParams } from './wa-json';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { withHidden } from './hidden/hidden-view';
@@ -18,7 +18,7 @@ import { withHidden } from './hidden/hidden-view';
 @Injectable()
 export class MessageViews {
   constructor(
-    private readonly templates: TemplatesQueries,
+    private readonly templates: TemplatesRepo,
     private readonly storage: StorageService,
   ) {}
 

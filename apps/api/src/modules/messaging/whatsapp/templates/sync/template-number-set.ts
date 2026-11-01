@@ -1,16 +1,16 @@
 import type { TemplateNumberSetView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '../catalog/template.mapper';
-import type { ApprovalRow, NumberRef, TemplatesQueries } from '../catalog/templates.queries';
-import type { TemplateRow } from '../../whatsapp.types';
+import type { AuditService } from '@/common/audit/audit.service';
+import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { ApprovalRow, NumberRef, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «الرقم» of one template (docs/23 phase 5, docs/23c decisions 3, 4, 9): message_templates.number_id,
 // the step after the catalogue row's number in routeTemplate's order. null = the role's default number.
 // Never blocked by approval: the answer only warns when the chosen number has not approved it yet.
 
 export interface NumberSetDeps {
-  queries: Pick<TemplatesQueries, 'get' | 'update' | 'approvals' | 'numberRef'>;
+  queries: Pick<TemplatesRepo, 'get' | 'update' | 'approvals' | 'numberRef'>;
   audit: Pick<AuditService, 'record'>;
 }
 
