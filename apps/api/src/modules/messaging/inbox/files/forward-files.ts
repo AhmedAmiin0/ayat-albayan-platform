@@ -1,4 +1,5 @@
-import { baseMime, isChatViewMime } from '@ab/shared';
+import type { Json } from '@ab/db';
+import { baseMime, isChatViewMime, isStickerMessage, stickerPayloadOf } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, forwardOutPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -16,7 +17,13 @@ export interface ForwardFile {
   mime: string;
   name: string;
   caption: string | null;
+  /** The copy's interactive_payload: a sticker keeps its sha256 (owner 2026-11-01). */
+  payload?: Json;
 }
+
+/** A sticker's copy keeps its sha256, so the panel lists it once (owner 2026-11-01). */
+const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
+  isStickerMessage(row) ? { payload: stickerPayloadOf(row.interactive_payload) } : {};
 
 const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
 
@@ -55,7 +62,7 @@ export class ForwardFiles {
     const mime = baseMime(from.mime);
     const path = forwardOutPath({ ...at, messageId: row.id, mime });
     await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to: { bucket: BUCKETS.waMedia, path } });
-    return { path, mime, name: fileName(row, path), caption: caption(row) };
+    return { path, mime, name: fileName(row, path), caption: caption(row), ...stickerOf(row) };
   }
 
   /** One target: 409 session_closed / 503 line_not_configured as a file sent from the chat. */
@@ -70,6 +77,7 @@ export class ForwardFiles {
       media_path: file.path,
       media_mime: file.mime,
       media_name: file.name,
+      ...(file.payload === undefined ? {} : { interactive_payload: file.payload }),
       ...line,
     });
   }

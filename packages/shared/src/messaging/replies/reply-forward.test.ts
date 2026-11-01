@@ -78,9 +78,9 @@ describe('quoteLine / mediaKindOf / waSendKind', () => {
     expect(mediaKindOf(null)).toBeNull();
   });
 
-  it('sends JPEG/PNG as image, voice and video as themselves, anything else as a document', () => {
+  it('sends JPEG/PNG as image, a WebP as a sticker, voice and video as themselves, else a document', () => {
     expect(waSendKind('image/png')).toBe('image');
-    expect(waSendKind('image/webp')).toBe('document');
+    expect(waSendKind('image/webp')).toBe('sticker');
     expect(waSendKind('audio/ogg; codecs=opus')).toBe('audio');
     expect(waSendKind('video/mp4')).toBe('video');
     expect(waSendKind('application/pdf')).toBe('document');

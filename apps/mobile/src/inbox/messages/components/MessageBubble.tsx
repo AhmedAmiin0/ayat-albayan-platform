@@ -8,7 +8,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { holdTop, useBubbleActions } from '../hooks/bubble-actions';
 import { ReactionPill } from '../reactions/ReactionPill';
 import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
-import { bubbleSide } from '../hooks/bubble-side';
+import { bubbleSide, stickerBubble } from '../hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
 import { FailReason, MessageMeta, useSmall } from './MessageMeta';
@@ -69,7 +69,8 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   // «تفاعل» (owner 2026-10-27): the row floats over the held bubble; the pill names who reacted.
   const hold = (e?: GestureResponderEvent) => touch.openMenu(holdTop(e));
   const { openReactors, openFailed } = useBubbleChatActions();
-  const admin = useThreadMode().kind === 'admin';
+  const mode = useThreadMode().kind;
+  const admin = mode === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
   const small = useSmall();
@@ -97,6 +98,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
     borderWidth: 1,
     borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
     backgroundColor: ours ? color.lapisWash : color.raised,
+    ...stickerBubble(m, mode === 'teacher'),
   };
   const content = m.hidden ? <HiddenBody message={m} /> : (
     <>

@@ -10,6 +10,7 @@ const C24 = { cycle: '24', locale } as const;
 describe('inbox display text (docs/07 §9)', () => {
   it.each([
     ['image/jpeg', 'image'],
+    ['image/webp', 'sticker'],
     ['audio/ogg; codecs=opus', 'audio'],
     ['video/mp4', 'video'],
     ['application/pdf', 'document'],

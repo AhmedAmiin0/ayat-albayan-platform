@@ -10,10 +10,10 @@ test('410 expired, 403 forbidden, 409 crm_no_media the CRM, anything else failed
   expect(mediaProblem(new Error('offline'))).toBe('failed');
 });
 
-test('a served photo previews in the 220 box, a sticker in the small uncut one', () => {
-  expect(photoBox('image/jpeg')).toEqual({ size: 220, resizeMode: 'cover', border: true });
-  expect(photoBox('image/png')).toEqual({ size: 220, resizeMode: 'cover', border: true });
-  expect(photoBox('image/webp')).toEqual({ size: 120, resizeMode: 'contain', border: false });
+test('a served photo previews in the 220 box, a sticker uncut at 150 with no «تنزيل» (owner 2026-11-01)', () => {
+  expect(photoBox('image/jpeg')).toEqual({ size: 220, resizeMode: 'cover', border: true, download: true });
+  expect(photoBox('image/png')).toEqual({ size: 220, resizeMode: 'cover', border: true, download: true });
+  expect(photoBox('image/webp')).toEqual({ size: 150, resizeMode: 'contain', border: false, download: false });
 });
 
 test('HEIC, PDFs, voice notes, videos and unserved images are not previewed', () => {

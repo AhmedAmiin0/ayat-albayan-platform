@@ -82,6 +82,7 @@ const schema = z.object({
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
   ...LOGIN_CODE_SHAPE,
   ...LIVEKIT_SHAPE,
+  GIPHY_API_KEY: optionalSecret,
   ...STRIPE_SHAPE,
   /** The outbound sender's tick in ms (default 30 s); e2e sets ~1 s, production leaves it unset. */
   MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
