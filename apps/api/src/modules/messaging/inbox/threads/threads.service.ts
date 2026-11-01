@@ -4,6 +4,7 @@ import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { asRead, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
 import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsRepo, type ThreadListFilter } from './threads.repo';
@@ -17,6 +18,7 @@ export class ThreadsService {
     private readonly queries: ThreadsRepo,
     private readonly views: MessageViews,
     private readonly receipts: ReadReceipts,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
@@ -35,7 +37,7 @@ export class ThreadsService {
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = !q.before;
-    const at = await pageRows(this.queries, q);
+    const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse();
     const [people, lessons, messages, tag, read] = await Promise.all([
       first ? this.queries.people(at.who) : NO_PEOPLE,

@@ -129,6 +129,7 @@ export function fakeKit(input: { api?: CallsApi; thread?: Parameters<typeof fake
   const queries = new FakeCallsRepo();
   const api = (input.api ?? fakeApi()) as ReturnType<typeof fakeApi>;
   const threads = fakeThreads(input.thread);
-  const kit = new CallsKit(queries as unknown as CallsRepo, api, threads as never);
+  const repo = queries as unknown as CallsRepo;
+  const kit = new CallsKit(repo, api, threads as never, threads as never);
   return { kit, queries, api, threads };
 }

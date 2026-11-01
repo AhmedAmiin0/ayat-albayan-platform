@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
-import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { Outbox, SETTLE_POLL_MS, SETTLE_POLLS } from './outbox';
 
 const ROW = { phone_e164: '+966500000001', body: 'أهلًا', dedup_key: 'admin:+966500000001:req-1' };
@@ -11,7 +11,7 @@ function setup(status: 'queued' | 'sent', replayed = false) {
   const queries = { enqueue: vi.fn(async () => ({ ...messageRow({ id: 'm1', status }), replayed })), get: vi.fn(async () => null) };
   const sender = { kick: vi.fn(() => new Promise<void>(() => undefined)) }; // a pass that never ends (WhatsApp hangs)
   const views = { view: vi.fn(async (r: { id: string; status: string }) => ({ id: r.id, status: r.status })) };
-  const outbox = new Outbox(queries as unknown as ThreadsRepo, sender as unknown as MessageSender, views as unknown as MessageViews);
+  const outbox = new Outbox(queries as unknown as ThreadMessagesRepo, sender as unknown as MessageSender, views as unknown as MessageViews);
   return { outbox, queries, sender };
 }
 

@@ -4,6 +4,7 @@ import type { ReadReceipts } from './read-receipts';
 import type { KnownNumber } from '@/modules/messaging/inbox/threads/known-number';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
 /** GET /threads/:phone's page: `before` = created_at of the oldest loaded message (the page before it). */
 export interface ThreadPageQuery {
@@ -12,21 +13,29 @@ export interface ThreadPageQuery {
   limit: number;
 }
 
+/** Where a page comes from: the thread row and who a phone is, and the phone's messages. */
+interface PageRepos {
+  threads: Pick<ThreadsRepo, 'thread' | 'known'>;
+  messages: Pick<ThreadMessagesRepo, 'messages'>;
+}
+
 interface PageRows {
   found: ThreadRow | null;
   /** The thread row, else (first page of a number with no message yet) who the number is. */
   who: ThreadRow | KnownNumber | null;
-  /** Newest first, `limit + 1` rows (ThreadsQueries.messages). */
+  /** Newest first, `limit + 1` rows (ThreadMessagesRepo.messages). */
   rows: ThreadMessageRow[];
 }
 
 /**
- * Stage 1 of an open chat (admin and sales): the thread row and the page side by side. A number with no
- * message yet (a booked family, «محادثة جديدة»): who it is, so the first template can name its lesson.
+ * Stage 1 of an open chat (admin and sales): the thread row and the page side by side. A number
+ * with no message yet (a booked family, «محادثة جديدة»): who it is, so the first template can name
+ * its lesson.
  */
-export async function pageRows(queries: ThreadsRepo, q: ThreadPageQuery): Promise<PageRows> {
-  const [found, rows] = await Promise.all([queries.thread(q.phone), queries.messages(q)]);
-  const who = found ?? (q.before ? null : await queries.known(q.phone));
+export async function pageRows(repos: PageRepos, q: ThreadPageQuery): Promise<PageRows> {
+  const { threads, messages } = repos;
+  const [found, rows] = await Promise.all([threads.thread(q.phone), messages.messages(q)]);
+  const who = found ?? (q.before ? null : await threads.known(q.phone));
   return { found, who, rows };
 }
 

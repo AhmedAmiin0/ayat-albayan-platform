@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { StickerRepo } from './sticker.repo';
 import { StickersService } from './stickers.service';
 
@@ -19,6 +20,7 @@ const sender = new StickersService(
   repo as unknown as StickerRepo,
   threads as unknown as ThreadsRepo,
   files as unknown as ForwardFiles,
+  threads as unknown as ThreadMessagesRepo,
 );
 const input = { messageId: SOURCE, clientRequestId: REQ };
 const send = () => sender.send({ phone: PHONE, input, actorId: ACTOR }, NOW);
