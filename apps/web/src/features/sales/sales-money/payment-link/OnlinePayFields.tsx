@@ -6,15 +6,20 @@ import { t } from '@/lib/i18n/i18n';
 import { LinkQuote } from './LinkQuote';
 import type { LinkPay } from './use-link-pay';
 
-/** «دفع إلكتروني»: the calculator price as the reference, then the agreed amount (the reference by default). */
+/**
+ * «دفع إلكتروني»: the calculator price after the pill (the link's amount); with «مبلغ مخصص» on,
+ * the amount box (the price by default) and the admin's lowest amount.
+ */
 export function OnlinePayFields({ pay }: { pay: LinkPay }) {
   const q = pay.quote.data;
+  const error = pay.quote.error;
+  const currency = q ? currencySymbol(q.quote.currency) : '';
   return (
     <>
-      <LinkQuote quote={q} fetching={pay.quote.isFetching} error={pay.quote.error} />
-      {q && (
+      <LinkQuote quote={q} fetching={pay.quote.isFetching} error={error} custom={pay.custom} />
+      {q && pay.custom && (
         <Field
-          label={fillText(t.paymentLinks.agreedAmount, { currency: currencySymbol(q.quote.currency) })}
+          label={fillText(t.paymentLinks.agreedAmount, { currency })}
           {...(pay.amountError ? { error: pay.amountError } : {})}
         >
           {(p) => (

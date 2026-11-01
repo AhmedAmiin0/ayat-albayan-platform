@@ -5,6 +5,7 @@ import {
   PRICING_DURATIONS,
   SITE_COUNTRIES,
 } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
@@ -18,13 +19,15 @@ type Props = {
   set: (patch: Partial<PricingForm>) => void;
   /** Only these discounts as pills (sales: the site's 0/5/10/15 %); omitted = a free 0–100 number. */
   discounts?: readonly number[];
+  /** Beside the pills (sales «دفع إلكتروني»: «مبلغ مخصص»). */
+  discountExtra?: ReactNode;
 };
 
 const discountLabel = (d: number) =>
   t.pricing.discounts[`${d}` as keyof typeof t.pricing.discounts] ?? `${d}%`;
 
 /** Package, count, duration, discount and country: the calculator's inputs, never a price. */
-export function PricingFields({ form, set, discounts }: Props) {
+export function PricingFields({ form, set, discounts, discountExtra }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label={t.subscriptions.package}>
@@ -80,12 +83,15 @@ export function PricingFields({ form, set, discounts }: Props) {
       {discounts ? (
         <div className="grid gap-1.5">
           <span className="text-sm font-medium text-ink">{t.subscriptions.discount}</span>
-          <SegmentedControl
-            label={t.subscriptions.discount}
-            options={discounts.map((d) => ({ value: String(d), label: discountLabel(d) }))}
-            value={String(form.discount)}
-            onChange={(v) => set({ discount: Number(v) })}
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <SegmentedControl
+              label={t.subscriptions.discount}
+              options={discounts.map((d) => ({ value: String(d), label: discountLabel(d) }))}
+              value={String(form.discount)}
+              onChange={(v) => set({ discount: Number(v) })}
+            />
+            {discountExtra}
+          </div>
         </div>
       ) : (
         <Field label={t.subscriptions.discount}>

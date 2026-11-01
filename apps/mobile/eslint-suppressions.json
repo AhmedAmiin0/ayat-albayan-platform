@@ -8999,7 +8999,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     },
     "max-lines-per-function": {
       "count": 1
@@ -9248,11 +9248,8 @@
     }
   },
   "src/sales-subscribe/payment-link/use-link-pay.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 7
+      "count": 1
     }
   },
   "src/sales-subscribe/payment-link/use-stripe.ts": {

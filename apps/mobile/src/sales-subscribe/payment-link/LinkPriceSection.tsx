@@ -9,8 +9,14 @@ import { planText } from '@/subscribe';
 import { type, useTheme } from '@/theme';
 import { linkErrorText, minLine, referenceLine } from './link-text';
 
+interface LinkPriceSectionProps {
+  quote: UseQueryResult<PaymentLinkQuoteView>;
+  /** «مبلغ مخصص» on: the admin's lowest amount is said too. */
+  custom: boolean;
+}
+
 /** The calculator price (POST /sales/payment-links/quote) as the reference, and the admin's lowest amount. */
-export function LinkPriceSection({ quote }: { quote: UseQueryResult<PaymentLinkQuoteView> }) {
+export function LinkPriceSection({ quote, custom }: LinkPriceSectionProps) {
   const { color } = useTheme();
   if (quote.isError) return <ErrorState message={linkErrorText(quote.error)} onRetry={() => void quote.refetch()} />;
   if (!quote.data) return <Note>{t.common.loading}</Note>;
@@ -25,7 +31,7 @@ export function LinkPriceSection({ quote }: { quote: UseQueryResult<PaymentLinkQ
         {referenceLine(q.afterDiscount, q.currency)}
       </AppText>
       <AppText style={small}>{planText(q)}</AppText>
-      {min !== null ? <AppText style={small}>{minLine(min, q.currency)}</AppText> : null}
+      {custom && min !== null ? <AppText style={small}>{minLine(min, q.currency)}</AppText> : null}
     </View>
   );
 }

@@ -7369,6 +7369,7 @@
     },
     "referencePrice": "سعر الحاسبة: {amount} {currency}",
     "agreedAmount": "المبلغ المتفق عليه ({currency})",
+    "customAmount": "مبلغ مخصص",
     "minAmount": "أقل مبلغ مسموح به: {amount} {currency}",
     "create": "إنشاء الرابط",
     "creating": "جارٍ إنشاء الرابط…",
