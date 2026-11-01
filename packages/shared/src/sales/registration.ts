@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { normalizeArabic, phoneE164 } from '@ab/core';
-import type { StudentStatus } from '../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 
 // «التحقق من التسجيل» (owner 2026-10-12, docs/16 row 23): is this family / child already a student? By the
 // guardian's phone (E.164) or by an Arabic-normalised name or a code. Whitelisted answer: name, code, status

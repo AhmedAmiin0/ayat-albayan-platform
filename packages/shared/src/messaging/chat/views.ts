@@ -1,4 +1,4 @@
-import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '../../enums/index.js';
+import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '@ab/catalog';
 import type { ChatListRef } from './chat-lists.js';
 import type { ReplyQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';

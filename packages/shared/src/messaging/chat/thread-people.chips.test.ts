@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LeadStatus, SubscriptionStatus } from '../../enums/index.js';
+import type { LeadStatus, SubscriptionStatus } from '@ab/catalog';
 import { familyUnpaid, packageChip, subscribeKind, threadBadge, type BadgeStudent } from './thread-people.js';
 
 const kid = (status: SubscriptionStatus, lessons_remaining: number): BadgeStudent => ({

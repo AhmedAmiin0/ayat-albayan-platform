@@ -1,0 +1,134 @@
+{
+  "src/enums/feedback.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/finance.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/messaging.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/google/enums.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/google/errors.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/google/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/google/schemas.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/google/schemas.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/google/views.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/integrations/checks.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/integrations/driver-keys.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/integrations/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/integrations/keys.kapso.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/integrations/keys.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/integrations/keys.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/permissions/catalog.data.ts": {
+    "max-len": {
+      "count": 25
+    }
+  },
+  "src/permissions/catalog.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/permissions/roles.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/theme/avatar-tones.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/theme/avatar-tones.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/theme/theme.brand.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/theme/theme.contrast.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/theme/theme.glass.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/theme/theme.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  }
+}

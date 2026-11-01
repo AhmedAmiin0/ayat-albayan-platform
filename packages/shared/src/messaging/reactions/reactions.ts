@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { MessageStatus } from '../../enums/index.js';
+import type { MessageStatus } from '@ab/catalog';
 import type { MessageView } from '../chat/views.js';
 import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../payload/index.js';
 

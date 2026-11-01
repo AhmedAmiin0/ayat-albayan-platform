@@ -1,4 +1,4 @@
-import type { Duration } from '../../../enums/index.js';
+import type { Duration } from '@ab/catalog';
 import { earningStatus, type EarningStatus } from './earnings.js';
 import { lessonCountsForPay, teacherRateFor } from './pay-rule.js';
 

@@ -1,4 +1,4 @@
-import type { StudentStatus } from '../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '../money/pricing/index.js';
 import { isPackageEnded } from '../people/students/index.js';
 

@@ -1,4 +1,4 @@
-import type { UserRole } from '../../catalog/permissions/roles.js';
+import type { UserRole } from '@ab/catalog';
 
 /** The held role as the account page names it (the custom role's names, else the system role's). */
 export interface AccountRole {

@@ -1,6 +1,5 @@
-import { PUSH_KINDS, type PushKind } from '../enums/index.js';
+import { HOME_BY_ROLE, PUSH_KINDS, type PushKind, type UserRole } from '@ab/catalog';
 import { E164_RE } from '@ab/core';
-import { HOME_BY_ROLE, type UserRole } from '../catalog/permissions/roles.js';
 
 // Where a bell row opens on the web (R-NOT-01). `data` is PushService's { kind, ...event.data }:
 // untrusted JSON, so every field is checked (E.164 phone, uuid ids) and anything else falls back

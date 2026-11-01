@@ -5,7 +5,7 @@ import {
   PROGRAMS,
   STUDENT_STATUSES,
   TEACHER_STATUSES,
-} from '../../enums/index.js';
+} from '@ab/catalog';
 import { TEACHER_MEETING_MODES } from '../../schedule/classroom/meeting-mode.js';
 import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
 import { username } from '../users/index.js';

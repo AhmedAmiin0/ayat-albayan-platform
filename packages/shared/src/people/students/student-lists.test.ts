@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { StudentStatus } from '../../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 import { countByKind, CURRENT_STUDENT_STATUSES, isCurrentStudent, kindOfStatusParam, safeHttpUrl, splitByStatus, statusesOfKind, statusParamOfKind, STUDENT_LIST_KINDS } from './student-lists.js';
 
 const list = [

@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 
 // «الجدول» and «الحضور» of one teacher for the salesperson (owner 2026-10-28, docs/16 row 36b):
 // GET /sales/teachers/:id/overview. Whitelist: never a meeting link, a rate, a payout or a balance.

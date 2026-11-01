@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { MessageStatus } from '../../enums/index.js';
+import type { MessageStatus } from '@ab/catalog';
 
 /** POST /public/join/:linkToken: the name the student or guardian types (shown to the others). */
 export const guestJoinSchema = z.object({

@@ -7,7 +7,7 @@ import type {
   PaymentMethod,
   PayoutStatus,
   SubscriptionStatus,
-} from '../../enums/index.js';
+} from '@ab/catalog';
 import type { QuoteResponse } from '../pricing/quote.js';
 import type { PayoutLine } from './earnings/payout.js';
 

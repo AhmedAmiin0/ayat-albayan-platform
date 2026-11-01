@@ -1,6 +1,6 @@
-import type { PushKind } from '../../enums/index.js';
+import type { PushKind } from '@ab/catalog';
 import type { TemplateKey } from '../../messaging/templates/templates.js';
-import type { SettingKey } from '../../settings/index.js';
+import type { SettingKey } from '@ab/settings';
 import type { CatalogueSettings } from './catalogue-settings.js';
 
 // The notification catalogue (docs/23 §2b): what the academy sends, to whom, through which channel,

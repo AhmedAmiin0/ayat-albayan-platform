@@ -1,4 +1,4 @@
-import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '../../enums/index.js';
+import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '@ab/catalog';
 import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';

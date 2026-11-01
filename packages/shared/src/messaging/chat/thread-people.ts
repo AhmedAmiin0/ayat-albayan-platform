@@ -1,4 +1,4 @@
-import type { LeadStatus, PackageSize, StudentStatus, SubscriptionStatus } from '../../enums/index.js';
+import type { LeadStatus, PackageSize, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 
 // GET /threads/:phone `people` (R-SUB-01, R-LEAD-02): who the chat is with and whether the family
 // is subscribed, so the admin can renew or subscribe from the chat.

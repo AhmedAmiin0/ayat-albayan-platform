@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SubscriptionStatus } from '../../enums/index.js';
+import type { SubscriptionStatus } from '@ab/catalog';
 import {
   ALERT_TASK_KIND,
   alertDedupKey,

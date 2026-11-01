@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import * as E from '../../enums/index.js';
+import * as E from '@ab/catalog';
 import * as S from './status-style.js';
 
 // docs/07 §6: every value of the 12 state enums has a tone and a glyph (grade: pips).

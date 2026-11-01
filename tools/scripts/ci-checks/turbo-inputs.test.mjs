@@ -49,7 +49,7 @@ test('every package whose code names the migrations hashes them into its test ta
         readFileSync(f, 'utf8').includes('supabase/migrations'),
       ),
   );
-  assert.ok(readers.includes('apps/api') && readers.includes('packages/shared'), readers.join());
+  assert.ok(readers.includes('apps/api') && readers.includes('packages/settings'), readers.join());
   for (const pkg of readers) assert.ok(testInputs(pkg).includes(MIGRATIONS), pkg);
 });
 

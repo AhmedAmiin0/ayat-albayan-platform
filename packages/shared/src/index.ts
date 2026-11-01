@@ -1,8 +1,10 @@
-// The facade the apps import (docs/32 D4): @ab/core, @ab/i18n (k3a), @ab/time (k3b) are packages.
+// The facade the apps import (docs/32 D4): @ab/core, @ab/i18n (k3a), @ab/time (k3b), @ab/catalog
+// and @ab/settings (k4) are packages.
 export * from '@ab/core';
 export * from '@ab/i18n';
 export * from '@ab/time';
-export * from './enums/index.js';
+export * from '@ab/catalog';
+export * from '@ab/settings';
 export * from './schedule/classroom/index.js';
 export * from './schedule/lessons/index.js';
 export * from './messaging/index.js';
@@ -10,18 +12,11 @@ export * from './money/assistant/index.js';
 export * from './money/ledger/index.js';
 export * from './money/pricing/index.js';
 export * from './reports/index.js';
-export * from './catalog/permissions/roles.js';
-export * from './catalog/permissions/index.js';
 export * from './schemas/index.js';
-export * from './settings/index.js';
-export * from './settings/custom-config/index.js';
-export * from './settings/custom-config/public-config.js';
 export * from './money/status-style/status-style.js';
 export * from './money/status-style/commission-status-style.js';
 export * from './people/students/student-lists.js';
 export * from './people/students/index.js';
-export * from './catalog/theme/theme.js';
-export * from './catalog/theme/avatar-tones.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';
@@ -45,8 +40,6 @@ export * from './sales/course/course.js';
 export * from './sales/course/course-follow.js';
 export * from './sales/course/course-change.js';
 export * from './sales/course/course-picks.js';
-export * from './catalog/integrations/index.js';
-export * from './google/index.js';
 export * from './people/users/index.js';
 export * from './people/account/index.js';
 export * from './people/presence/index.js';

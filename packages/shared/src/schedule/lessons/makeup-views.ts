@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 import type { BookingKind } from '../schemas/booking-extras.js';
 
 // Makeup and invoice API shapes (R-SCH-10, R-PAY-03, R-MSG-06). Snake_case like every row;

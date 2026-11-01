@@ -1,4 +1,4 @@
-import type { PaymentMethod } from '../../../enums/index.js';
+import type { PaymentMethod } from '@ab/catalog';
 import type { EarningsBalance, EarningStatus } from './earnings.js';
 
 // Per-session teacher earnings responses (docs/11 §10). snake_case, EGP, instants ISO UTC.

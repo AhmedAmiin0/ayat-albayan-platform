@@ -1,4 +1,4 @@
-import type { StudentStatus } from '../../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 
 // Student statuses (owner 2026-10-15, docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic
 // transitions. The API applies them compare-and-set on the expected from-status and audits each move;
