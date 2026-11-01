@@ -48,7 +48,7 @@
   "apps/api/src/modules/people/me/push/push-tokens.ts exports deviceKeySchema",
   "apps/api/src/modules/people/roles/roles.logic.ts types ManagerProblem",
   "apps/api/src/modules/people/students/duplicate-detector.ts types DuplicateCandidate",
-  "apps/api/src/modules/people/students/students.queries.ts types TeacherOption",
+  "apps/api/src/modules/people/students/students.repo.ts types TeacherOption",
   "apps/api/src/modules/people/users/audit/users.audit.ts exports snapshot",
   "apps/api/src/modules/platform/google-sync/http/backoff.ts types ErrorClass",
   "apps/api/src/modules/platform/google-sync/map/google-map.queries.ts types TeacherRow",
