@@ -56,6 +56,14 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
     expect(code(() => assertBookingScope(course(), null, true))).toBe('not_your_student');
   });
 
+  it("grant 'any' (sales.renew_any, docs/16 row 38): any one student, the other rules still hold", () => {
+    expect(code(() => assertBookingScope(course({ studentIds: [S2] }), OWN, 'any'))).toBeNull();
+    expect(code(() => assertBookingScope(course(), null, 'any'))).toBeNull();
+    expect(code(() => assertBookingScope(course({ studentIds: [S1, S2] }), OWN, 'any'))).toBe('course_one_student');
+    expect(code(() => assertBookingScope(course({ override: { reason: 'سبب' } }), OWN, 'any'))).toBe('override_not_allowed');
+    expect(code(() => assertBookingScope(course({ invoice: { source: 'upload', path: 'x/a.pdf' } }), OWN, 'any'))).toBe('invoice_not_allowed');
+  });
+
   it('override, meeting link and invoice stay 403 on a course', () => {
     expect(code(() => assertBookingScope(course({ override: { reason: 'سبب' } }), OWN, true))).toBe('override_not_allowed');
     expect(code(() => assertBookingScope(course({ meetingLink: 'https://meet.example/x' }), OWN, true))).toBe('meeting_link_not_allowed');

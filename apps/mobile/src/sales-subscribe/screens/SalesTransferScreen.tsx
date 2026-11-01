@@ -36,8 +36,6 @@ export function SalesTransferScreen() {
   const sub = chosenOpen(open, picked);
   // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
   const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
-  // After the transfer of a child not hers: no «احجز أيام الحلقات الآن» (her own children only).
-  const ownChild = (id: string) => family.data?.students.find((s) => s.id === id)?.mine !== false;
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   return (
@@ -55,7 +53,7 @@ export function SalesTransferScreen() {
           trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
         />
         {done ? (
-          <TransferDone payment={done} onDone={back} courseDays={ownChild(done.student.id)} />
+          <TransferDone payment={done} onDone={back} />
         ) : family.isError ? (
           <ErrorState onRetry={() => void family.refetch()} />
         ) : !family.data ? null : open.length === 0 ? (
