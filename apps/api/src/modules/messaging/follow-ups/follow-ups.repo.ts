@@ -3,7 +3,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.queries';
+import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { readAll } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
@@ -26,7 +26,7 @@ export interface AdvanceInput {
 
 /** Reads and idempotent writes of the follow-up job (R-LEAD-05, docs/12 §7). */
 @Injectable()
-export class FollowUpsQueries {
+export class FollowUpsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     /** The academy's own numbers: their old lead never gets a follow-up (owner 2026-10-27). */

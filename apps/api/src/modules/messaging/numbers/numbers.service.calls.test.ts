@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { NumbersEffects } from './numbers.effects';
 import { numberRow } from './numbers.fakes';
-import type { NumbersQueries } from './numbers.queries';
+import type { NumbersRepo } from './numbers.repo';
 import type { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersService } from './numbers.service';
 
@@ -17,7 +17,7 @@ function setup(row = numberRow()) {
   const secrets = { status: vi.fn(async () => new Map()) };
   const effects = { after: vi.fn(async () => undefined) };
   const svc = new NumbersService(
-    queries as unknown as NumbersQueries,
+    queries as unknown as NumbersRepo,
     secrets as unknown as NumbersSecrets,
     effects as unknown as NumbersEffects,
   );

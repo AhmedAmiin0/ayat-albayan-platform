@@ -1,13 +1,13 @@
 import { vi } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/policy.fakes';
-import type { QueuedMessage } from '../reminders/queued-row';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { FollowUpSlots } from './follow-up-slots';
 import { FollowUpsReads } from './follow-ups.deps';
 import { sampleLead } from './follow-ups.fakes';
 import { FollowUpsJob } from './follow-ups.job';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
-import type { AdvanceInput, FollowUpsQueries } from './follow-ups.queries';
+import type { AdvanceInput, FollowUpsRepo } from './follow-ups.repo';
 import { FollowUpsSettings } from './follow-ups.settings';
 
 /** Sun 4 Oct 17:00, Sun 17:45, Mon 5 Oct 18:00 Riyadh. */
@@ -50,7 +50,7 @@ export function setup(opts: JobSetup = {}) {
   const slots = { freeStarts: vi.fn(async () => opts.free ?? FREE) };
   const settings = readerOf(FollowUpsSettings, { auto_messages_enabled: opts.auto ?? true });
   const job = new FollowUpsJob(
-    queries as unknown as FollowUpsQueries,
+    queries as unknown as FollowUpsRepo,
     slots as unknown as FollowUpSlots,
     new FollowUpsReads(settings, fakePolicy(opts.rules)),
   );

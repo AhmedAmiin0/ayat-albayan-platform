@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TeachersModule } from '../../people/teachers/teachers.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
 import { FollowUpSlots } from './follow-up-slots';
 import { FollowUpsReads } from './follow-ups.deps';
 import { FollowUpsJob } from './follow-ups.job';
-import { FollowUpsQueries } from './follow-ups.queries';
+import { FollowUpsRepo } from './follow-ups.repo';
 import { FollowUpsSettings } from './follow-ups.settings';
 
 /**
@@ -12,7 +12,7 @@ import { FollowUpsSettings } from './follow-ups.settings';
  */
 @Module({
   imports: [TeachersModule],
-  providers: [FollowUpsQueries, FollowUpsSettings, FollowUpsReads, FollowUpSlots, FollowUpsJob],
+  providers: [FollowUpsRepo, FollowUpsSettings, FollowUpsReads, FollowUpSlots, FollowUpsJob],
   exports: [FollowUpsJob],
 })
 export class FollowUpsModule {}
