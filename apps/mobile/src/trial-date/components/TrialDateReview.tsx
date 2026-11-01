@@ -1,6 +1,6 @@
 import type { TrialHistory } from '@ab/shared';
 import { View } from 'react-native';
-import { conflictLine, type BookFailure } from '@/booking/shared/booking-errors';
+import { conflictLine, type BookFailure } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

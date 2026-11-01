@@ -1,7 +1,7 @@
 import { GROUP_KINDS, tzChoices, type GroupKind } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { cityOf } from '@/booking/shared/slots';
+import { cityOf } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

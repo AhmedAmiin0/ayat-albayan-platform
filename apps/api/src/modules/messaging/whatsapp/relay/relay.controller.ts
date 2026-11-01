@@ -35,8 +35,8 @@ export class RelayController {
   constructor(private readonly relay: RelayService) {}
 
   @Get('me')
-  me(@Headers('authorization') auth?: string): { data: typeof ME } {
-    this.relay.authorize(auth);
+  async me(@Headers('authorization') auth?: string): Promise<{ data: typeof ME }> {
+    await this.relay.authorize(auth);
     return { data: ME };
   }
 
@@ -46,7 +46,7 @@ export class RelayController {
     @Body() body: unknown,
     @Headers('authorization') auth?: string,
   ): Promise<{ data: RelaySent }> {
-    const line = this.relay.authorize(auth);
+    const line = await this.relay.authorize(auth);
     const parsed = relayRequestSchema.safeParse(body);
     if (!parsed.success) throw invalid(parsed.error.issues);
     return { data: await this.relay.send(line, parsed.data) };

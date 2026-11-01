@@ -1,23 +1,547 @@
 {
-  "src/people/account/account.schemas.ts": {
+  "src/catalog/integrations/checks.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/catalog/integrations/driver-keys.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/catalog/integrations/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/catalog/integrations/keys.kapso.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/catalog/integrations/keys.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/catalog/integrations/keys.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/catalog/permissions/catalog.data.ts": {
+    "max-len": {
+      "count": 25
+    }
+  },
+  "src/catalog/permissions/catalog.sales-options.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/catalog/permissions/catalog.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/catalog/permissions/roles.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/catalog/theme/avatar-tones.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/catalog/theme/avatar-tones.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/catalog/theme/theme.brand.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/catalog/theme/theme.contrast.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/catalog/theme/theme.glass.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/catalog/theme/theme.ts": {
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/enums/feedback.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/finance.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/messaging.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/google/enums.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/google/errors.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/google/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/google/schemas.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/google/schemas.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/google/settings-keys.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/google/views.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/i18n/forms-wording.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/i18n/i18n-parity.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
       "count": 1
     },
     "max-len": {
       "count": 1
     }
   },
-  "src/people/account/account.views.ts": {
+  "src/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/messaging/calls/call-entry.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/calls/call-machine.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/messaging/calls/call-schemas.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/calls/call-types.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/messaging/channel/channel-open.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/chat-files.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/messaging/chat/chat-lists.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/messaging/chat/crm-names.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/crm-names.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 11
+    }
+  },
+  "src/messaging/chat/line-views.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/messaging/chat/linkify.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/chat/sender.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/thread-people.chips.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/thread-people.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "max-len": {
       "count": 2
     }
   },
-  "src/people/account/avatar-initials.ts": {
+  "src/messaging/chat/thread-reopen.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/messaging/chat/ticks.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/messaging/chat/unavailable.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 7
+    },
+    "ab/no-shape-checks": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/messaging/chat/views.ts": {
+    "max-len": {
+      "count": 11
+    }
+  },
+  "src/messaging/lesson/booking-confirmation.ts": {
     "max-len": {
       "count": 3
+    }
+  },
+  "src/messaging/lesson/rating.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/lesson/rating.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/lesson/timing.day-before.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/lesson/timing.day-before.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/lesson/timing.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/lesson/trial-chat.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/markers/chat-markers.ts": {
+    "ab/no-shape-checks": {
+      "count": 3
+    }
+  },
+  "src/messaging/markers/echo-payload.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
+  "src/messaging/markers/marker-notes.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/messaging/numbers/routing.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/numbers/routing.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/messaging/numbers/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/numbers/views.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/messaging/reactions/reactions.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 8
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/messaging/replies/button-reply.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 5
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/messaging/replies/quick-reply.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/replies/reply-forward.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/replies/reply-forward.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/replies/reply-lesson.ts": {
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/messaging/replies/reply-line.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/messaging/replies/reply-line.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/reply-note.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/reply-note.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/messaging/replies/reply-number.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/messaging/replies/reply-slots.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/replies/saved-replies.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/saved-replies.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/replies/saved-reply-text.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/messaging/schemas.files.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 10
+    }
+  },
+  "src/messaging/templates/i18n.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/templates/manages-templates.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/messaging/templates/params.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/messaging/templates/prefill.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/templates/restricted-templates.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/messaging/templates/template-block.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/messaging/templates/template-number.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/messaging/templates/template-sync-views.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/messaging/templates/template-views.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/messaging/templates/templates.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/messaging/thread-delta.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/messaging/wa.ts": {
+    "max-len": {
+      "count": 4
     }
   },
   "src/money/assistant/commission.ts": {
@@ -112,598 +636,6 @@
   "src/money/assistant/wallet.ts": {
     "max-len": {
       "count": 18
-    }
-  },
-  "src/schedule/classroom/internal-meetings.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/schedule/classroom/join-window.config.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/classroom/join-window.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/schedule/classroom/meeting-invites.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/schedule/classroom/meeting-mode.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/schedule/classroom/meetings.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/schedule/classroom/moderation.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/schedule/classroom/room.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/schedule/classroom/schemas.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/schedule/classroom/student-lesson.test.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/schedule/classroom/student-lesson.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/classroom/student-recordings.ts": {
-    "@typescript-eslint/no-deprecated": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/format/clock-pref.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/format/clock-range.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/settings/custom-config/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/settings/custom-config/public-config.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/custom-config/public.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/settings/custom-config/schema.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/enums/feedback.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/finance.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/enums/messaging.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/google/enums.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/google/errors.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/google/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/google/schemas.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/google/schemas.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/google/settings-keys.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/google/views.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/i18n/forms-wording.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/i18n/i18n-parity.test.ts": {
-    "@typescript-eslint/no-base-to-string": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/catalog/integrations/checks.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/integrations/driver-keys.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/integrations/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/catalog/integrations/keys.kapso.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/catalog/integrations/keys.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/integrations/keys.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/schedule/lessons/chargeable.ts": {
-    "@typescript-eslint/switch-exhaustiveness-check": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/makeup-offer.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/schedule/lessons/makeup-views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/schedule/lessons/overview.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/schedule/lessons/pick-progress.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/series/day-times.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/schedule/lessons/series/day-times.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/series/time-edit.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/series/zoned.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/state-machine.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/schedule/lessons/teacher-name.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 13
-    }
-  },
-  "src/messaging/calls/call-entry.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/calls/call-machine.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/messaging/calls/call-schemas.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/calls/call-types.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/messaging/channel/channel-open.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/chat/chat-files.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/messaging/chat/chat-lists.ts": {
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/messaging/chat/crm-names.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/chat/crm-names.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 11
-    }
-  },
-  "src/messaging/chat/line-views.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/messaging/chat/linkify.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/chat/sender.ts": {
-    "@typescript-eslint/no-deprecated": {
-      "count": 1
-    }
-  },
-  "src/messaging/chat/status-style.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/messaging/chat/thread-people.chips.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/chat/thread-people.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/chat/thread-reopen.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/messaging/chat/ticks.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/messaging/chat/unavailable.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 7
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/messaging/chat/views.ts": {
-    "max-len": {
-      "count": 11
-    }
-  },
-  "src/messaging/lesson/booking-confirmation.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/lesson/rating.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/lesson/rating.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/lesson/timing.day-before.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/lesson/timing.day-before.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/lesson/timing.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/lesson/trial-chat.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/messaging/reactions/reactions.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 8
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
-  "src/messaging/replies/button-reply.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/messaging/replies/quick-reply.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/replies/reply-forward.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/replies/reply-forward.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/replies/reply-lesson.ts": {
-    "max-len": {
-      "count": 10
-    }
-  },
-  "src/messaging/replies/reply-line.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/messaging/replies/reply-line.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/messaging/replies/reply-note.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/replies/reply-note.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/messaging/replies/reply-number.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/messaging/replies/reply-slots.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/replies/saved-replies.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/replies/saved-replies.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/replies/saved-reply-text.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/messaging/schemas.files.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/schemas.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
-  "src/messaging/templates/i18n.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/templates/manages-templates.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/templates/params.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/messaging/templates/prefill.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/templates/restricted-templates.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/messaging/templates/template-block.ts": {
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/messaging/templates/template-number.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/messaging/templates/template-sync-views.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/messaging/templates/template-views.ts": {
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/messaging/templates/templates.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/thread-delta.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/messaging/wa.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/money/ledger/alerts.test.ts": {
@@ -856,6 +788,58 @@
       "count": 3
     }
   },
+  "src/money/pricing/currency.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/money/pricing/price.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/money/pricing/quote.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/money/pricing/renewal.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/money/pricing/renewal.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/money/status-style/commission-status-style.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/money/status-style/commission-status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/money/status-style/status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
   "src/notifications/catalogue/catalogue-settings.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
@@ -883,6 +867,9 @@
   "src/notifications/catalogue/catalogue-state.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -978,79 +965,119 @@
       "count": 1
     }
   },
-  "src/messaging/numbers/routing.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/numbers/routing.ts": {
+  "src/people/account/account.schemas.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 1
     }
   },
-  "src/messaging/numbers/schemas.ts": {
+  "src/people/account/account.views.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/people/account/avatar-initials.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/messaging/numbers/views.ts": {
+  "src/people/schemas/contact-is-self.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/people/schemas/people.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
       "count": 4
+    }
+  },
+  "src/people/schemas/teacher-students.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/people/students/course-pause.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
     },
+    "max-len": {
+      "count": 17
+    }
+  },
+  "src/people/students/portal.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "src/catalog/permissions/catalog.data.ts": {
+  "src/people/students/status-flow.ts": {
     "max-len": {
-      "count": 25
+      "count": 16
     }
   },
-  "src/catalog/permissions/catalog.sales-options.test.ts": {
+  "src/people/students/student-lists.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
-  "src/catalog/permissions/catalog.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
+  "src/people/students/student-lists.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/people/students/trial-dates.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/people/users/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/people/users/sign-in.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/people/users/users.schemas.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 3
     }
   },
-  "src/money/pricing/currency.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/money/pricing/price.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/money/pricing/quote.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/money/pricing/renewal.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/money/pricing/renewal.ts": {
+  "src/people/users/users.views.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/people/users/validation.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
     }
   },
   "src/reports/form-values.test.ts": {
@@ -1160,6 +1187,9 @@
     }
   },
   "src/reports/v2/suggest.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -1200,7 +1230,7 @@
   },
   "src/sales/course/course-follow.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 8
@@ -1298,6 +1328,9 @@
     "ab/module-boundaries": {
       "count": 2
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 11
     }
@@ -1383,22 +1416,143 @@
       "count": 2
     }
   },
-  "src/schemas/activity.ts": {
-    "ab/module-boundaries": {
-      "count": 1
+  "src/schedule/classroom/internal-meetings.ts": {
+    "max-len": {
+      "count": 7
     }
   },
-  "src/schemas/chat-media.ts": {
+  "src/schedule/classroom/join-window.config.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/schemas/feedback.ts": {
+  "src/schedule/classroom/join-window.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
+      "count": 6
+    }
+  },
+  "src/schedule/classroom/meeting-invites.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/schedule/classroom/meeting-mode.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/classroom/meetings.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schedule/classroom/moderation.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/schedule/classroom/room.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/schedule/classroom/schemas.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/classroom/student-lesson.test.ts": {
+    "max-len": {
       "count": 5
+    }
+  },
+  "src/schedule/classroom/student-lesson.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schedule/classroom/student-recordings.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/lessons/chargeable.ts": {
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    }
+  },
+  "src/schedule/lessons/makeup-offer.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/schedule/lessons/makeup-views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/schedule/lessons/overview.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/lessons/pick-progress.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schedule/lessons/series/day-times.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/lessons/series/day-times.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schedule/lessons/series/time-edit.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schedule/lessons/state-machine.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/schedule/lessons/teacher-name.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schedule/lessons/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 13
     }
   },
   "src/schedule/schemas/booking-extras.ts": {
@@ -1451,22 +1605,22 @@
       "count": 2
     }
   },
-  "src/people/schemas/contact-is-self.test.ts": {
-    "max-len": {
-      "count": 2
+  "src/schemas/activity.ts": {
+    "ab/module-boundaries": {
+      "count": 1
     }
   },
-  "src/people/schemas/people.ts": {
+  "src/schemas/chat-media.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/schemas/feedback.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
-      "count": 4
-    }
-  },
-  "src/people/schemas/teacher-students.ts": {
-    "max-len": {
-      "count": 2
+      "count": 5
     }
   },
   "src/settings/boundaries.test.ts": {
@@ -1477,6 +1631,32 @@
   "src/settings/config-describe.migration.test.ts": {
     "max-len": {
       "count": 2
+    }
+  },
+  "src/settings/custom-config/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/settings/custom-config/public-config.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/settings/custom-config/public.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/settings/custom-config/schema.ts": {
+    "ab/module-boundaries": {
+      "count": 1
     }
   },
   "src/settings/defs.ts": {
@@ -1618,6 +1798,9 @@
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -1658,6 +1841,9 @@
     }
   },
   "src/settings/seed/seed-payload.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -1710,6 +1896,9 @@
     }
   },
   "src/settings/validation/validate.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -1717,63 +1906,6 @@
   "src/settings/value-groups.registry.test.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/money/status-style/commission-status-style.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/money/status-style/commission-status-style.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/money/status-style/status-style.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/people/students/course-pause.ts": {
-    "@typescript-eslint/no-deprecated": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 17
-    }
-  },
-  "src/people/students/portal.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/people/students/status-flow.ts": {
-    "max-len": {
-      "count": 16
-    }
-  },
-  "src/people/students/student-lists.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/people/students/student-lists.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/people/students/trial-dates.ts": {
-    "max-len": {
-      "count": 9
     }
   },
   "src/testing/assistants.ts": {
@@ -1784,84 +1916,6 @@
   "src/testing/testing.test.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/catalog/theme/avatar-tones.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/theme/avatar-tones.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/theme/theme.brand.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/catalog/theme/theme.contrast.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/catalog/theme/theme.glass.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/catalog/theme/theme.ts": {
-    "@typescript-eslint/explicit-module-boundary-types": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/time/week.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/people/users/index.ts": {
-    "@typescript-eslint/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/people/users/sign-in.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/people/users/users.schemas.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/people/users/users.views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/people/users/validation.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   }
 }

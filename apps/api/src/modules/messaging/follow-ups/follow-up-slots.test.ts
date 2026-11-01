@@ -1,8 +1,8 @@
 import { DEFAULT_DURATION, SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AvailabilityQuery, FreeSlotsQuery } from '../../people/teachers/availability/availability.query';
+import type { AvailabilityQuery, FreeSlotsQuery } from '@/modules/people/teachers/availability/availability.query';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
-import type { FollowUpsQueries } from './follow-ups.queries';
+import type { FollowUpsRepo } from './follow-ups.repo';
 
 /** The registry defaults (12 h → 7 days), what the follow_up_slots rule says with no row. */
 const DEFAULT_WINDOW: SlotWindow = {
@@ -21,7 +21,7 @@ function setup() {
     (byTeacher[q.teacherId] ?? []).map((s) => ({ start: new Date(s), end: new Date(Date.parse(s) + 45 * 60_000) })),
   );
   const slots = new FollowUpSlots(
-    queries as unknown as FollowUpsQueries,
+    queries as unknown as FollowUpsRepo,
     { freeSlots } as unknown as AvailabilityQuery,
   );
   return { slots, freeSlots };

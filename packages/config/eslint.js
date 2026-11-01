@@ -10,6 +10,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { boundariesPlugin, TESTS } from './eslint-boundaries.js';
 import { dateRestrictions } from './eslint-dates.js';
+import { syntaxBlocks } from './eslint-syntax.js';
 
 // Oxlint runs the rules of the root .oxlintrc.json first (`pnpm lint:ox`, a CI step before ESLint); ESLint turns
 // them off and keeps the type-aware, custom and react-hooks rules. Oxlint has no bulk suppressions, so only a rule
@@ -19,6 +20,7 @@ const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.
 export { boundaries, forbiddenImports, noParentImports, TESTS } from './eslint-boundaries.js';
 export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
+export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
 
 export const hardRules = {
   'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
@@ -115,6 +117,7 @@ export function config(root, ...extra) {
       rules: { ...hardRules, ...typedRules },
     },
     { rules: { 'no-restricted-properties': ['error', ...dateRestrictions] } },
+    ...syntaxBlocks(TESTS),
     { files: TESTS, rules: testRules },
     { files: [...TESTS, 'src/time/**'], rules: { 'no-restricted-properties': 'off' } },
     ...extra,
