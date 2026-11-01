@@ -7975,11 +7975,6 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/people/me/account/account.password.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
