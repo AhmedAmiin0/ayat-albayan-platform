@@ -1,12 +1,12 @@
 import {
+  DAY_MS,
   RIYADH_TZ,
-  teacherLessonTotals,
-  wallParts,
   type SalesOverviewStudent,
   type SalesTeacherOverview,
   type SalesTeacherSlot,
+  teacherLessonTotals,
+  wallParts,
 } from '@ab/shared';
-import { DAY } from '../../../people/teachers';
 import { nextStarts } from '@/modules/sales/sales';
 import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.queries';
 
@@ -14,7 +14,7 @@ import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.
 const OVERVIEW_DAYS = 30;
 const LATEST = 20;
 
-export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: new Date(now.getTime() - OVERVIEW_DAYS * DAY), to: now });
+export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: new Date(now.getTime() - OVERVIEW_DAYS * DAY_MS), to: now });
 
 const namesOf = (rows: TeacherLessonRow['lesson_students']): SalesOverviewStudent[] =>
   rows.flatMap((r) => (r.student ? [{ name: r.student.name, code: r.student.code ?? '' }] : []));
