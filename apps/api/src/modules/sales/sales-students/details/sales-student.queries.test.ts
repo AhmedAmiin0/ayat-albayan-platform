@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { TrialDateQueries } from '../../../teaching/booking';
+import type { Db } from '@/common/db/db.module';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { TrialDateRepo } from '@/modules/teaching/booking';
 import { SalesStudentQueries } from './sales-student.queries';
 
 const FROM = new Date('2026-10-27T10:00:00.000Z');
 const TO = new Date('2026-11-10T10:00:00.000Z');
-const queriesOf = (db: Db) => new SalesStudentQueries(db, new TrialDateQueries(db));
+const queriesOf = (db: Db) => new SalesStudentQueries(db, new TrialDateRepo(db));
 const SECRET = /meeting|link|subscription|price|amount/;
 
 describe('SalesStudentQueries «الجدول» (whitelisted selects)', () => {

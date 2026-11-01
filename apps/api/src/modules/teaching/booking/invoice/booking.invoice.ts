@@ -14,13 +14,13 @@ import {
   invoicePath,
   isPathOf,
   uploadName,
-} from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { baseMime, InboundMedia } from '../../../messaging/whatsapp/messages/inbound-media.service';
-import { domainError } from '../booking.errors';
+} from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { baseMime, InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
-import type { InvoiceRow } from '../core/booking.mapper';
-import { BookingQueries } from '../core/booking.queries';
+import type { InvoiceRow } from '@/modules/teaching/booking/core/booking.mapper';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 
 const bad = (code: string) => domainError(HttpStatus.BAD_REQUEST, code);
 type Kind = InvoiceRow['kind'];
@@ -43,7 +43,7 @@ export class BookingInvoices {
   constructor(
     private readonly storage: StorageService,
     private readonly media: InboundMedia,
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
   ) {}
 
   /** POST /booking/invoice-upload-url: a signed PUT for invoices/{clientRequestId}/{uuid}.{ext}; 400 invoice_too_large over maxBytes. */

@@ -2,7 +2,7 @@ import { courseChangeCheckSchema } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { BODY, RULE_A, SALES, setup } from './course-change.fakes';
-import type { ChangeRule, CourseRuleRef } from './course-change.queries';
+import type { ChangeRule, CourseRuleRef } from './course-change.repo';
 
 // PR #464 review B2 (migration 991): a course whose rule has no subscription_id (imported, calendar
 // handover, admin booking) is found through course_rules_of. Its lessons count only inside the

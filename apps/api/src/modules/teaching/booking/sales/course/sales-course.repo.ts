@@ -1,9 +1,9 @@
 import { DURATIONS, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import { notFound } from '../../../../../common/http/errors';
-import { dbError } from '../../../../../common/http/http';
-import type { CourseRuleRow } from '../../core/course-read';
+import { DB, type Db } from '@/common/db/db.module';
+import { notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
 import type { CourseRule } from './sales-course.rules';
 
 type SubscriptionRow = Omit<CourseSubscription, 'duration'> & { duration: number };
@@ -35,7 +35,7 @@ const pickRule = (r: Omit<CourseRuleRow, 'subscription_id' | 'sub'>): Omit<Cours
 
 /** The reads of the assistant's course (service role; ownership is checked before). */
 @Injectable()
-export class SalesCourseQueries {
+export class SalesCourseRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** What the wizard shows of the student (no guardian, no notes); 404 student_not_found. */

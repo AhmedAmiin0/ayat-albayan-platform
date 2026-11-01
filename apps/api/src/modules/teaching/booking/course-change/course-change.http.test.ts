@@ -1,17 +1,17 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../common/settings/settings.service';
-import { SalesQueries } from '../../../sales/sales/sales.queries';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { BODY, CLASH, RULE_A, RULE_B, S1, SUB, SUB_ID } from './course-change.fakes';
-import { CourseLessonQueries } from './course-change.lessons';
-import { CourseChangeQueries } from './course-change.queries';
+import { CourseLessonRepo } from './course-change.lessons';
+import { CourseChangeRepo } from './course-change.repo';
 import { CourseChangeWriter } from './course-change.writer';
 
 // «تغيير أيام الحلقات» over HTTP (owner 2026-10-18): the routes, their permissions and codes.
@@ -49,8 +49,8 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
       .overrideProvider(SalesQueries).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
       .overrideProvider(ConflictChecker).useValue(checker)
-      .overrideProvider(CourseChangeQueries).useValue(queries)
-      .overrideProvider(CourseLessonQueries).useValue(lessons)
+      .overrideProvider(CourseChangeRepo).useValue(queries)
+      .overrideProvider(CourseLessonRepo).useValue(lessons)
       .overrideProvider(CourseChangeWriter).useValue(writer)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

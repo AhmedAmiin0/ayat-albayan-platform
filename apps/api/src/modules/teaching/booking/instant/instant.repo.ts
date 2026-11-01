@@ -1,13 +1,13 @@
 import type { Json } from '@ab/db';
 import type { BookingResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { toBookingResult, type BookingPayload } from '../core/booking.mapper';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { toBookingResult, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 
 /** The write of POST /lessons/instant: create_booking + the instant flags, in one transaction (migration 190). */
 @Injectable()
-export class InstantQueries {
+export class InstantRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async create(payload: BookingPayload, actorId: string): Promise<BookingResult> {

@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import type { BookingQueries } from '../core/booking.queries';
-import type { InstantQueries } from './instant.queries';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import type { InstantRepo } from './instant.repo';
 import { InstantLessonService } from './instant.service';
 
 const T = '00000000-0000-4000-8000-0000000000b1';
@@ -25,7 +25,7 @@ let booking: { teacher: ReturnType<typeof vi.fn>; students: ReturnType<typeof vi
 let writes: { create: ReturnType<typeof vi.fn> };
 let checker: { check: ReturnType<typeof vi.fn> };
 const service = () =>
-  new InstantLessonService(booking as unknown as BookingQueries, writes as unknown as InstantQueries, checker as unknown as ConflictChecker);
+  new InstantLessonService(booking as unknown as BookingRepo, writes as unknown as InstantRepo, checker as unknown as ConflictChecker);
 const req = (over: object = {}) => ({ studentIds: [S1], teacherId: T, durationMin: 30 as const, ...over });
 const create = (over: object = {}) => service().create({ req: req(over), actorId: 'A1' }, NOW);
 const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
