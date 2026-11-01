@@ -7,9 +7,9 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { AvailabilityQueries } from './availability/availability.queries';
+import { AvailabilityRepo } from './availability/availability.repo';
 import { TeachersModule } from './teachers.module';
-import { TeachersQueries } from './teachers.queries';
+import { TeachersRepo } from './teachers.repo';
 
 // teachers.meeting_mode (migration 490, owner 2026-10-19): only the admin sets it (teachers.write);
 // every read returns the raw mode and what it resolves to under the academy default (ON here).
@@ -38,8 +38,8 @@ describe('TeachersController — meeting_mode', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule, TeachersModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(TeachersQueries).useValue(teachers)
-      .overrideProvider(AvailabilityQueries).useValue({})
+      .overrideProvider(TeachersRepo).useValue(teachers)
+      .overrideProvider(AvailabilityRepo).useValue({})
       .overrideProvider(SettingsService).useValue(fakeSettings({ meeting_link_auto: true }))
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

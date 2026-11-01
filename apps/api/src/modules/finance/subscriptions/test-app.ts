@@ -2,27 +2,27 @@
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { StorageService } from '../../../common/storage/storage.service';
-import { ExpensesQueries } from '../expenses/expenses.queries';
-import { FxService } from '../fx/fx.service';
-import { InvoicesQueries } from '../invoices/invoices.queries';
-import { PaymentAttachmentsQueries } from '../payments/attachments/payment-attachments.queries';
-import { PaymentsQueries } from '../payments/payments.queries';
-import { PayoutsQueries } from '../payouts/payouts.queries';
-import { CorrectionsQueries } from '../teacher-earnings/summary/corrections.queries';
-import { EarningsQueries } from '../teacher-earnings/earnings.queries';
-import { PricingService } from '../pricing/pricing.service';
-import { SalesQueries } from '../../sales/sales/sales.queries';
-import { SalesFamilyQueries } from '../../sales/sales-money/reads/sales-family.queries';
-import { InboundMedia } from '../../messaging/whatsapp/messages/inbound-media.service';
-import { InboundMediaQueries } from '../../messaging/whatsapp/messages/inbound-media.queries';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { ExpensesQueries } from '@/modules/finance/expenses/expenses.queries';
+import { FxService } from '@/modules/finance/fx/fx.service';
+import { InvoicesQueries } from '@/modules/finance/invoices/invoices.queries';
+import { PaymentAttachmentsQueries } from '@/modules/finance/payments/attachments/payment-attachments.queries';
+import { PaymentsQueries } from '@/modules/finance/payments/payments.queries';
+import { PayoutsQueries } from '@/modules/finance/payouts/payouts.queries';
+import { CorrectionsQueries } from '@/modules/finance/teacher-earnings/summary/corrections.queries';
+import { EarningsQueries } from '@/modules/finance/teacher-earnings/earnings.queries';
+import { PricingService } from '@/modules/finance/pricing/pricing.service';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { SalesFamilyQueries } from '@/modules/sales/sales-money/reads/sales-family.queries';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { InboundMediaQueries } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { AdminTasksQueries } from './alerts/admin-tasks.queries';
 import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
 import { AlertsQueries } from './alerts/alerts.queries';
@@ -78,7 +78,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(ExpensesQueries).useValue(m.expenses)
     .overrideProvider(FxService).useValue(m.fx)
     .overrideProvider(InvoicesQueries).useValue(m.invoices)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(StudentAccess).useValue(m.access)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(SettingsService).useValue(m.settings)

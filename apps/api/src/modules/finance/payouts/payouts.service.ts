@@ -1,8 +1,8 @@
 import { canTransitionPayout, monthStart, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import { conflict, notFound } from '../../../common/http/errors';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { conflict, notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { toPayoutView } from './payouts.mapper';
 import { approveBlock, monthWindow } from './payouts.plan';
 import { PayoutsQueries, type PayoutRow } from './payouts.queries';
@@ -12,7 +12,7 @@ import { PayoutsQueries, type PayoutRow } from './payouts.queries';
 export class PayoutsService {
   constructor(
     private readonly payouts: PayoutsQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     private readonly audit: AuditService,
   ) {}
 
