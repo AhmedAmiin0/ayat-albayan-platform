@@ -122,8 +122,8 @@ jobs:
           NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
         run: |
           ota=false
-          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages ':(exclude)packages/db/supabase' \
-            ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
+          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
+            ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
           elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
           elif [ -z "$(js)" ]; then echo "no mobile JS change since ${BASE:0:7}: no OTA"
