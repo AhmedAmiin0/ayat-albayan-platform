@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } from '../sign-in.ports';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } from '@/modules/people/sign-in/sign-in.ports';
 
 const DAY_MS = 24 * 3600_000;
 const QUARTER_MS = 15 * 60_000;
@@ -10,7 +10,7 @@ const asPurpose = (p: string): CodePurpose => PURPOSES.find((x) => x === p) ?? '
 
 /** CodeStore on the service-role client (migration 771: login_codes, login_code_take / _spend). */
 @Injectable()
-export class CodesQueries implements CodeStore {
+export class CodesRepo implements CodeStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Also drops codes older than a week (spent or dead: nothing reads them after a day). */

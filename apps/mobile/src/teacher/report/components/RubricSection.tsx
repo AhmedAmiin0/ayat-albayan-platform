@@ -1,10 +1,10 @@
 import { GRADES, REPORT_RUBRICS } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { FormLabel } from '@/payments/FormLabel';
 import { ChoiceChips } from './ChoiceChips';
-import type { ReportEntryState } from '../hooks/use-report-entry';
+import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
 
 const grades = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
 

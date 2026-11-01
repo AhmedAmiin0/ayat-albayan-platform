@@ -1,7 +1,7 @@
 import type { Program, StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** The only student columns a teacher gets: no phone, guardian or money (R-TCH-03). */
 export type TeacherStudentRow = {
@@ -23,7 +23,7 @@ const COLUMNS = 'id, code, name, status, program, level, age' as const;
 
 /** GET /teachers/me/students reads. Service role: the service scopes by teachers.id (rule 9). */
 @Injectable()
-export class TeacherStudentsQueries {
+export class TeacherStudentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Students whose teacher_id is mine and whose status is one of `statuses`. */

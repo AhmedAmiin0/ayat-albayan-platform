@@ -1,11 +1,11 @@
 import type { AssistantView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { usePermissions } from '@/auth/use-permissions';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { assignAssistant, removeAssistant, useAllAssistants, useStudentAssistants } from './assistants-api';

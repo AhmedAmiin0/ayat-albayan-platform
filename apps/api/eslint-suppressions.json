@@ -8330,17 +8330,9 @@
       "count": 3
     }
   },
-  "src/modules/people/me/account/account.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/me/account/account.queries.ts": {
+  "src/modules/people/me/account/account.repo.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "complexity": {
       "count": 1
@@ -8373,11 +8365,6 @@
       "count": 3
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/me/me.module.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -8453,34 +8440,22 @@
       "count": 3
     }
   },
-  "src/modules/people/portal/lessons/portal-lessons.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/people/portal/lessons/portal-lessons.repo.ts": {
     "max-len": {
       "count": 5
     }
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 6
     }
   },
-  "src/modules/people/portal/package/portal-package.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/people/portal/package/portal-package.repo.ts": {
     "max-len": {
       "count": 2
     }
   },
   "src/modules/people/portal/package/portal-package.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -8507,9 +8482,6 @@
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 4
     }
@@ -8519,19 +8491,9 @@
       "count": 2
     }
   },
-  "src/modules/people/portal/portal.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/people/portal/portal.privacy.http.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/people/portal/portal.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/people/portal/portal.scope.http.test.ts": {
@@ -8552,34 +8514,22 @@
       "count": 2
     }
   },
-  "src/modules/people/portal/reports/portal-reports.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/people/portal/reports/portal-reports.repo.ts": {
     "max-len": {
       "count": 4
     }
   },
   "src/modules/people/portal/reports/portal-reports.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 6
     }
   },
-  "src/modules/people/portal/scope/portal-scope.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/people/portal/scope/portal-scope.repo.ts": {
     "max-len": {
       "count": 2
     }
   },
   "src/modules/people/portal/scope/portal-scope.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8615,10 +8565,7 @@
       "count": 7
     }
   },
-  "src/modules/people/roles/roles.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/people/roles/roles.repo.ts": {
     "max-len": {
       "count": 1
     }
@@ -8681,15 +8628,7 @@
       "count": 5
     }
   },
-  "src/modules/people/sign-in/accounts/subjects.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/sign-in/accounts/subjects.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
+  "src/modules/people/sign-in/accounts/subjects.repo.ts": {
     "max-len": {
       "count": 5
     }
@@ -8728,17 +8667,9 @@
       "count": 10
     }
   },
-  "src/modules/people/sign-in/codes/codes.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/sign-in/codes/codes.queries.ts": {
+  "src/modules/people/sign-in/codes/codes.repo.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/people/sign-in/codes/limit-store.db.test.ts": {
@@ -8855,9 +8786,6 @@
     }
   },
   "src/modules/people/sign-in/sign-in.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -8947,9 +8875,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -8986,15 +8911,12 @@
       "count": 1
     }
   },
-  "src/modules/people/students/students.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/people/students/students.repo.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/modules/people/students/students.queries.ts": {
+  "src/modules/people/students/students.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -9059,11 +8981,6 @@
       "count": 1
     }
   },
-  "src/modules/people/students/students.sort.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/people/students/students.sort.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -9078,9 +8995,6 @@
     }
   },
   "src/modules/people/teacher-students/teacher-students.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -9098,21 +9012,10 @@
   "src/modules/people/teacher-students/teacher-students.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
-  "src/modules/people/teacher-students/teacher-students.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/teacher-students/teacher-students.queries.ts": {
+  "src/modules/people/teacher-students/teacher-students.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -9394,38 +9297,19 @@
       "count": 4
     }
   },
-  "src/modules/people/users/store/users.links.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/users/store/users.links.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/people/users/store/users.links.repo.ts": {
     "max-len": {
       "count": 5
     }
   },
-  "src/modules/people/users/store/users.queries.get.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/people/users/store/users.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/people/users/store/users.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/people/users/store/users.queries.ts": {
+  "src/modules/people/users/store/users.repo.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 4
@@ -9523,9 +9407,6 @@
   "src/modules/people/users/users.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 1

@@ -6,7 +6,7 @@ import { AppModule } from '@/app.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PushService } from '@/common/push/push.service';
-import { PortalScopeQueries } from '@/modules/people/portal/scope/portal-scope.queries';
+import { PortalScopeRepo } from '@/modules/people/portal/scope/portal-scope.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
 import { AuditService } from '@/common/audit/audit.service';
 import { ChannelEditsRepo } from './channel-edits.repo';
@@ -116,7 +116,7 @@ export async function channelApp() {
     notifySales: vi.fn(),
   };
   const overrides: [unknown, unknown][] = [
-    [ChannelQueries, queries], [ChannelPeopleQueries, people], [PortalScopeQueries, scope],
+    [ChannelQueries, queries], [ChannelPeopleQueries, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
   ];

@@ -1,13 +1,13 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { lessonClock, studentNames } from '../lib/lesson-text';
-import type { Hero } from '../lib/today-plan';
+import { lessonClock, studentNames } from '@/today/lib/lesson-text';
+import type { Hero } from '@/today/lib/today-plan';
 import { HeroActions } from './HeroActions';
 import { heroLead, heroSubtitle } from './hero-text';
 

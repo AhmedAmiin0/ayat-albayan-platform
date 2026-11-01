@@ -1,8 +1,8 @@
 import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { PortalSettings, type PortalSettingsValues } from '../portal.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { PortalSettings, type PortalSettingsValues } from '@/modules/people/portal/portal.settings';
 
 /** A lesson row as the portal reads it (whitelisted select; mapped again before it leaves). */
 export interface PortalLessonRow {
@@ -25,7 +25,7 @@ const LESSON = 'id, starts_at, ends_at, status, room_opened_at, meeting_link, te
 
 /** «الحلقات القادمة» reads (service role; PortalScopes already decided the student is the caller's). */
 @Injectable()
-export class PortalLessonsQueries {
+export class PortalLessonsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: PortalSettings,

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from './roles.store';
 
 /**
@@ -8,7 +8,7 @@ import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from '.
  * 20261005000220; migration 225 keeps clients off profiles.role / role_id too).
  */
 @Injectable()
-export class RolesQueries implements RoleStore {
+export class RolesRepo implements RoleStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async roles(): Promise<RoleRecord[]> {

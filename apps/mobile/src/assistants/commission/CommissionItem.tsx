@@ -1,14 +1,14 @@
 import type { AssistantCommissionView } from '@ab/shared';
 import { useState } from 'react';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';
 import { Button } from '@/core/ui/primitives/Button';
-import { assistantsErrorText } from '../api/errors';
+import { assistantsErrorText } from '@/assistants/api/errors';
 import { CommissionFacts } from './CommissionFacts';
-import { useVoidCommission } from '../api/mutations';
-import { ReasonConfirm } from '../statements/components/ReasonConfirm';
+import { useVoidCommission } from '@/assistants/api/mutations';
+import { ReasonConfirm } from '@/assistants/statements/components/ReasonConfirm';
 
 interface CommissionItemProps {
   commission: AssistantCommissionView;

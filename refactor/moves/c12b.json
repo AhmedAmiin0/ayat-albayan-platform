@@ -1,0 +1,24 @@
+{
+  "id": "c12b",
+  "seq": 215,
+  "moves": [
+    {
+      "from": "apps/mobile/src/more/Section.tsx",
+      "to": "apps/mobile/src/core/ui/surface/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ErrorLine.tsx",
+      "to": "apps/mobile/src/core/ui/feedback/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/ErrorLine.tsx",
+      "apps/mobile/src/core/ui/feedback/ErrorLine.tsx"
+    ],
+    [
+      "apps/mobile/src/more/Section.tsx",
+      "apps/mobile/src/core/ui/surface/Section.tsx"
+    ]
+  ]
+}

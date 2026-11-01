@@ -7,7 +7,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { InsetGroup } from '@/core/ui/surface/inset';
 import { Note } from '@/core/ui/feedback/Note';
 import { upcomingTimeOff } from '@/more/schedule';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { TimeOffRow } from './TimeOffRow';
 import type { TimeOff } from '@/more/types';
 

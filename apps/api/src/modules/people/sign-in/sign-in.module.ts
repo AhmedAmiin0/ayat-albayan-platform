@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { SupabaseAuthGate } from './accounts/auth-gate.supabase';
 import { Provisioner } from './accounts/provision';
-import { SubjectsQueries } from './accounts/subjects.queries';
+import { SubjectsRepo } from './accounts/subjects.repo';
 import { CodeIssuer } from './codes/code-issuer';
 import { SignInLimits } from './codes/code-limits';
-import { CodesQueries } from './codes/codes.queries';
+import { CodesRepo } from './codes/codes.repo';
 import { LIMIT_STORE } from './codes/limit-store';
 import { DbLimitStore } from './codes/limit-store.db';
 import { FamilyCodeService } from './flows/family-code.service';
@@ -33,9 +33,9 @@ import { SignInSettings } from './sign-in.settings';
     SignInLimits,
     Provisioner,
     SignInSettings,
-    { provide: CODE_STORE, useClass: CodesQueries },
+    { provide: CODE_STORE, useClass: CodesRepo },
     { provide: LIMIT_STORE, useClass: DbLimitStore },
-    { provide: SUBJECT_STORE, useClass: SubjectsQueries },
+    { provide: SUBJECT_STORE, useClass: SubjectsRepo },
     { provide: AUTH_GATE, useClass: SupabaseAuthGate },
     {
       provide: SIGN_IN_CONFIG,

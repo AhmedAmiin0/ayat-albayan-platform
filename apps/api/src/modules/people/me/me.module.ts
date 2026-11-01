@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { SupabaseAccountAuth } from './account/account.auth';
 import { AccountAvatarService } from './account/account.avatar.service';
 import { AccountController } from './account/account.controller';
 import { ACCOUNT_AUTH, ACCOUNT_CONFIG, ACCOUNT_STORE, type AccountConfig } from './account/account.ports';
 import { AccountPorts } from './account/account.ports.provider';
-import { AccountQueries } from './account/account.queries';
+import { AccountRepo } from './account/account.repo';
 import { AccountService } from './account/account.service';
 import { MeController } from './me.controller';
 import { MeService } from './me.service';
@@ -18,7 +18,7 @@ import { MeService } from './me.service';
     AccountService,
     AccountAvatarService,
     AccountPorts,
-    { provide: ACCOUNT_STORE, useClass: AccountQueries },
+    { provide: ACCOUNT_STORE, useClass: AccountRepo },
     { provide: ACCOUNT_AUTH, useClass: SupabaseAccountAuth },
     {
       provide: ACCOUNT_CONFIG,

@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { ErrorLine } from '../ErrorLine';
-import type { Lead } from '../shared/types';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import type { Lead } from '@/inbox/shared/types';
 import { FollowUpCard } from './FollowUpCard';
 import { QualificationForm } from './QualificationForm';
 import { readIsOffline, useFreshLead, type LeadProfile } from './queries';

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** A sent report (whitelisted select: never the teacher's form fields or notes). */
 export interface PortalReportRow {
@@ -25,7 +25,7 @@ const LIMIT = 60;
  * the report_ready message gone (sent_at): the same PDFs the family received on WhatsApp.
  */
 @Injectable()
-export class PortalReportsQueries {
+export class PortalReportsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async sent(studentId: string): Promise<PortalReportRow[]> {

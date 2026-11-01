@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/more/Section';
+import { Section } from '@/core/ui/surface/Section';
 import { useSettings } from '@/ops/settings/use-settings';
 import { driverName } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';

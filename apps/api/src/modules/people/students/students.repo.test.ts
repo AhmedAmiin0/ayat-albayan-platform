@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
-import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.repo';
 
 const ROW = {
   id: 's1',

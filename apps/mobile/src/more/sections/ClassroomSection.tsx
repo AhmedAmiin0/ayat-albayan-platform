@@ -2,7 +2,7 @@ import type { Permission } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
-import { Section } from '../Section';
+import { Section } from '@/core/ui/surface/Section';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**

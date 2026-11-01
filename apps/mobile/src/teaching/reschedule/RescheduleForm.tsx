@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
