@@ -2,10 +2,31 @@
 // took the notification. DeviceNotRegistered there means the app is gone from that device.
 // Pure parts; the job does the I/O.
 
+import { z } from 'zod';
+
+/** A receipt Expo sent in a shape we do not know: an error naming no token (nothing is pruned). */
+const UNREADABLE = { status: 'error', message: 'unreadable receipt' } as const;
+
 /** One receipt of POST /--/api/v2/push/getReceipts (`data[ticketId]`). */
-export type ExpoReceipt =
-  | { status: 'ok' }
-  | { status: 'error'; message?: string; details?: { error?: string; expoPushToken?: string } };
+const receiptSchema = z
+  .discriminatedUnion('status', [
+    z.looseObject({ status: z.literal('ok') }),
+    z.looseObject({
+      status: z.literal('error'),
+      message: z.string().optional(),
+      details: z
+        .looseObject({ error: z.string().optional(), expoPushToken: z.string().optional() })
+        .optional(),
+    }),
+  ])
+  .catch(UNREADABLE);
+
+export type ExpoReceipt = z.infer<typeof receiptSchema>;
+
+/** getReceipts' body: receipts by ticket id; ids without a receipt yet are absent. */
+export const receiptsSchema = z
+  .looseObject({ data: z.record(z.string(), receiptSchema).optional() })
+  .transform((body) => body.data ?? {});
 
 /** Unanchored version of me/push-tokens.ts pushTokenSchema. */
 const TOKEN = /Expo(?:nent)?PushToken\[[\w-]+\]/;

@@ -14,7 +14,7 @@ import { toUserDetail, toUserView } from './users.mapper';
 import { assertMayList, canAssign, type Actor } from './users.rules';
 import { USER_STORE, type UserRow, type UserStore } from './store/users.store';
 
-export type { Actor } from './users.rules';
+export { actorOf, type Actor } from './users.rules';
 
 /**
  * «المستخدمون»: the directory and the pickers. PATCH /users/:id, creation and the lifecycle live in
