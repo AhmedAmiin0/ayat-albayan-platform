@@ -9,7 +9,7 @@ import { dirname, join, posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 /** The roots whose top folders must stay acyclic (production code only). */
-export const ROOTS = ['packages/core/src', 'packages/shared/src'];
+export const ROOTS = ['packages/core/src', 'packages/time/src', 'packages/shared/src'];
 const CODE = /\.[cm]?[jt]sx?$/;
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
 const SPEC = /(?:\bfrom\s*|\bimport\s*\(\s*|^\s*import\s+)(['"])(\.{1,2}\/[^'"\n]*)\1/gm;

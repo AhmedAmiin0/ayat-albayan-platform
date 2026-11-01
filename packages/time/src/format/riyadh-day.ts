@@ -1,7 +1,7 @@
-import { RIYADH_TZ, type ClockCycle } from '../core/format/index.js';
+import { RIYADH_TZ, type ClockCycle } from '../clock/index.js';
 import type { Locale } from '@ab/core';
 import { clockOf, dateText } from './format.js';
-import { localDateIn, weekdayIn } from './zoned.js';
+import { localDateIn, weekdayIn } from '../zone/index.js';
 
 // The academy's own calendar (docs/11 §3): Riyadh days and times of UTC instants, Western digits
 // (the date-fns facade: zoned.ts, format.ts).

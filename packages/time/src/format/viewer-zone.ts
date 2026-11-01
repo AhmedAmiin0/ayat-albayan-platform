@@ -1,4 +1,4 @@
-import { RIYADH_TZ, type ClockOptions } from '../core/format/index.js';
+import { RIYADH_TZ, type ClockOptions } from '../clock/index.js';
 import { clockOf, engineTimeZone } from './format.js';
 import { isTimeZone } from '@ab/core';
 

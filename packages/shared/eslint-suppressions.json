@@ -183,16 +183,6 @@
       "count": 2
     }
   },
-  "src/core/format/clock-pref.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/format/clock-range.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/settings/custom-config/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
       "count": 1
@@ -362,11 +352,6 @@
     }
   },
   "src/schedule/lessons/series/time-edit.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/schedule/lessons/series/zoned.ts": {
     "max-len": {
       "count": 1
     }
@@ -1817,11 +1802,6 @@
     },
     "max-len": {
       "count": 8
-    }
-  },
-  "src/time/week.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/people/users/index.ts": {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { clockOfHhmm, clockOfParts } from './clock.js';
-import { clockOf } from '../../time/format.js';
+import { clockOf } from '../format/index.js';
 
 const UTC = 'UTC';
 
