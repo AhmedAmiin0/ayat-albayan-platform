@@ -1,4 +1,10 @@
-import { stripeApiKey, stripeMaxDiscountPct, stripeWebhookSecret } from '@ab/shared';
+import {
+  integrationDef,
+  stripeApiKey,
+  stripeMaxDiscountPct,
+  stripeWebhookSecret,
+  type IntegrationKey,
+} from '@ab/shared';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset } from './env.blank';
@@ -24,6 +30,15 @@ export const STRIPE_SHAPE = {
  */
 export const stripeFeatureOn = (env: NodeJS.ProcessEnv = process.env): boolean =>
   env.FEATURE_STRIPE === 'test';
+
+/**
+ * A key this server offers in «التكاملات»: the Stripe group only with FEATURE_STRIPE=test. The
+ * list and every write go through it, so no Stripe key is listed, stored or cleared elsewhere.
+ */
+export const integrationKeyAvailable = (
+  key: IntegrationKey,
+  env: NodeJS.ProcessEnv = process.env,
+): boolean => integrationDef(key).group !== 'stripe' || stripeFeatureOn(env);
 
 /** The links can work: the switch on and both keys saved (GET /stripe/feature: the buttons). */
 export const stripeReady = (env: Env): boolean =>

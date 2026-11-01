@@ -4,6 +4,7 @@ import {
   integrationSecretSchema,
   integrationValuesSchema,
   type IntegrationConfigItem,
+  type IntegrationPlainKey,
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -12,11 +13,18 @@ import { parseOrThrow } from '@/common/http/http';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { integrationKeyAvailable } from '@/config/env/env.stripe';
 import { IntegrationConfigService } from './integration-config.service';
 
 /** audit_log.entity_id of the integration config (one entity; the key names go in action / after). */
 const INTEGRATIONS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
-const secretKey = z.enum(INTEGRATION_SECRET_KEYS);
+// A key this server does not offer (a Stripe one without FEATURE_STRIPE) is an unknown key: 400.
+const secretKey = z.enum(INTEGRATION_SECRET_KEYS).refine((k) => integrationKeyAvailable(k), 'unknown_key');
+const valuesBody = integrationValuesSchema.superRefine(({ values }, ctx) => {
+  for (const key of Object.keys(values) as IntegrationPlainKey[]) {
+    if (!integrationKeyAvailable(key)) ctx.addIssue({ code: 'custom', path: ['values', key], message: 'unknown_key' });
+  }
+});
 
 /**
  * «التكاملات» on /admin/settings (owner, 2026-10-12): the integration keys an admin may keep in the
@@ -42,7 +50,7 @@ export class IntegrationConfigController {
   @Put()
   @Permissions('settings.write')
   async put(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
-    const { values } = parseOrThrow(integrationValuesSchema, body);
+    const { values } = parseOrThrow(valuesBody, body);
     await this.config.writeValues(values, user.id);
     await this.record(user, { action: 'update', keys: Object.keys(values) });
     return this.config.items();

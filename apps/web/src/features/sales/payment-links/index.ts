@@ -4,6 +4,7 @@ export {
   PAYMENT_LINKS_KEY,
   paymentLinksQuery,
   quotePaymentLink,
+  stripeFeatureQuery,
 } from './api';
 export { paymentLinkErrorText } from './errors';
 export { fillText, linkMessage, moneySlots } from './link-text';

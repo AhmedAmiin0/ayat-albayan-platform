@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem, IntegrationSecretKey } from '@ab/shared';
+import { integrationBool, type IntegrationConfigItem, type IntegrationSecretKey } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { fill } from '@/sales';
 
@@ -18,7 +18,7 @@ export function stripeSwitch(items: readonly IntegrationConfigItem[]): StripeSwi
   const item = items.find((i) => i.key === 'STRIPE_ENABLED');
   if (!item) return null;
   const set = new Set(items.filter((i) => i.set).map((i) => i.key));
-  return { on: item.value === 'true', missing: KEYS.filter((k) => !set.has(k)) };
+  return { on: integrationBool(item.value), missing: KEYS.filter((k) => !set.has(k)) };
 }
 
 /** The line under the switch: what off means, working, or the keys it lacks (labels only). */

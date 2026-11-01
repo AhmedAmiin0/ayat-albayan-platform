@@ -7,6 +7,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
+import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { DeveloperKey } from './DeveloperKey';
 import { sendGateQuery } from '../../../messaging/messaging/api';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from '../integrations-api';
@@ -29,6 +30,8 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
     if (Array.isArray(data)) queryClient.setQueryData(integrationsQuery.queryKey, data);
     else void queryClient.invalidateQueries({ queryKey: integrationsQuery.queryKey });
     void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey }); // a token decides «configured»
+    // A Stripe key decides whether online payment is ready (GET /stripe/feature).
+    void queryClient.invalidateQueries({ queryKey: stripeFeatureQuery.queryKey });
     onNote(message);
   };
   const save = useMutation({

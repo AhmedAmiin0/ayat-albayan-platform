@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { integrationSecretCheck, integrationValuesSchema, integrationValueValid } from './checks.js';
+import {
+  integrationBool,
+  integrationSecretCheck,
+  integrationValuesSchema,
+  integrationValueValid,
+} from './checks.js';
 import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from './keys.js';
 
 // Stripe in «التكاملات» (owner 2026-11-01, docs/30): one switch, two Vault secrets, the cap.
@@ -19,6 +24,12 @@ describe('the stripe group', () => {
     expect(integrationEnum('STRIPE_ENABLED')).toEqual(['false', 'true']);
     expect(integrationValueValid('STRIPE_ENABLED', 'true')).toBe(true);
     expect(integrationValueValid('STRIPE_ENABLED', 'yes please')).toBe(false);
+    for (const loose of ['1', 'on', 'yes', 'TRUE']) expect(integrationValueValid('STRIPE_ENABLED', loose)).toBe(false);
+  });
+
+  it('a switch value set in env or by hand reads as the server reads it', () => {
+    for (const on of ['true', '1', 'on', ' TRUE ']) expect(integrationBool(on)).toBe(true);
+    for (const off of ['false', '0', 'nope', '', null, undefined]) expect(integrationBool(off)).toBe(false);
   });
 
   it('the cap is a percentage', () => {

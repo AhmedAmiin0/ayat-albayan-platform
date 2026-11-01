@@ -70,9 +70,17 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WEB_PUSH_SUBJECT: vapidSubject,
   FX_API_URL: url,
   GOOGLE_CLIENT_ID: googleClientId,
-  STRIPE_ENABLED: z.stringbool(),
+  // The select's two values only (INTEGRATION_ENUMS): no «1» or «on» the screens would not show.
+  STRIPE_ENABLED: z.enum(['false', 'true']),
   STRIPE_MAX_DISCOUNT_PCT: stripeMaxDiscountPct,
 };
+
+/**
+ * A switch key's value read the way the server's env schema reads it (z.stringbool: «true», «1»,
+ * «on», …): a value set in env or by hand still shows truthfully. Unset or anything else = off.
+ */
+export const integrationBool = (value: string | null | undefined): boolean =>
+  z.stringbool().safeParse(value?.trim() ?? '').data === true;
 
 /** Is `value` (trimmed) acceptable for this plain key? */
 export function integrationValueValid(key: IntegrationPlainKey, value: string): boolean {

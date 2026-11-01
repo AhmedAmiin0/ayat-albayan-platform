@@ -62,11 +62,15 @@ test('a server without Stripe (no Stripe key listed): nothing', async () => {
 
 test('the test app, an admin: the switch (off by default) saves STRIPE_ENABLED and says what is missing', async () => {
   mockFlag.on = true;
-  await renderWithQuery(<StripeSwitchRow />, as('admin'));
+  const client = as('admin');
+  const invalidate = jest.spyOn(client, 'invalidateQueries');
+  await renderWithQuery(<StripeSwitchRow />, client);
   const toggle = await screen.findByLabelText(S.enabled);
   expect(screen.getByText(S.hint)).toBeTruthy();
   await fireEvent(toggle, 'valueChange', true);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { STRIPE_ENABLED: 'true' } }));
+  // The chat's «دفع إلكتروني» / «رابط دفع» follow the switch at once.
+  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['stripe', 'feature'] }));
   const missing = new RegExp(t.integrations.keys.STRIPE_WEBHOOK_SECRET.label);
   expect(await screen.findByText(missing)).toBeTruthy();
 });

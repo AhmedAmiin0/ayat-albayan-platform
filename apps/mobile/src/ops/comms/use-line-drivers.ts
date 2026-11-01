@@ -27,6 +27,10 @@ export function useSaveIntegrationValues() {
   return useMutation({
     mutationFn: (body: { values: Record<string, string> }) =>
       apiSend<IntegrationConfigItem[]>('PUT', PATH, body),
-    onSuccess: (items) => qc.setQueryData(pathKey(PATH), items),
+    onSuccess: (items) => {
+      qc.setQueryData(pathKey(PATH), items);
+      // «الدفع الإلكتروني» shows or hides the payment buttons now, not after use-stripe.ts's 5 min.
+      void qc.invalidateQueries({ queryKey: ['stripe', 'feature'] });
+    },
   });
 }

@@ -26,6 +26,11 @@ test('off by default; on lists the keys it still lacks by their labels, never a 
   expect(ready && switchNote(ready)).toBe(S.ready);
 });
 
+test('reads the switch as the server does: «1» set in env is on', () => {
+  expect(stripeSwitch([item('STRIPE_ENABLED', { value: '1', source: 'env', set: true })])?.on).toBe(true);
+  expect(stripeSwitch([item('STRIPE_ENABLED', { value: 'false', set: true })])?.on).toBe(false);
+});
+
 test('the save sends the switch alone, as the web «التكاملات» does', () => {
   expect(switchValues(true)).toEqual({ values: { STRIPE_ENABLED: 'true' } });
   expect(switchValues(false)).toEqual({ values: { STRIPE_ENABLED: 'false' } });

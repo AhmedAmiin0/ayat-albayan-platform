@@ -1,5 +1,5 @@
 import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/shared';
-import { stripeFeatureOn } from '@/config/env/env.stripe';
+import { integrationKeyAvailable } from '@/config/env/env.stripe';
 import type { PlainRow, SecretStatus } from './integration-config.repo';
 
 interface ViewInput {
@@ -17,7 +17,7 @@ const nonBlank = (v: string | undefined): string | null => (v !== undefined && v
  * is listed only where the module exists (FEATURE_STRIPE=test, docs/30): elsewhere it is not there.
  */
 export function integrationItems({ plain, secrets, env }: ViewInput): IntegrationConfigItem[] {
-  const keys = INTEGRATION_KEYS.filter((d) => d.group !== 'stripe' || stripeFeatureOn(env));
+  const keys = INTEGRATION_KEYS.filter((d) => integrationKeyAvailable(d.key, env));
   return keys.map(({ key, group, secret }) => {
     const plainRow = secret ? undefined : plain.find((p) => p.key === key && nonBlank(p.value) !== null);
     const row = secret ? secrets.find((s) => s.key === key) : plainRow;
