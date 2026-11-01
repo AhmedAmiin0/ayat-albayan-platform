@@ -7833,11 +7833,8 @@
     }
   },
   "src/modules/people/guardians/guardians.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/guardians/guardians.mapper.ts": {
@@ -7893,16 +7890,6 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/people/me/account/account.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/people/me/account/account.password.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
@@ -7944,14 +7931,6 @@
     },
     "ab/no-parent-imports": {
       "count": 5
-    }
-  },
-  "src/modules/people/me/me.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/people/me/me.service.takeover.test.ts": {
@@ -8121,9 +8100,6 @@
     }
   },
   "src/modules/people/roles/roles.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -8314,11 +8290,8 @@
     }
   },
   "src/modules/people/sign-in/sign-in.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/sign-in/sign-in.fakes.accounts.ts": {
@@ -8428,7 +8401,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/students/students.dto.ts": {
@@ -8541,11 +8514,6 @@
       "count": 2
     }
   },
-  "src/modules/people/teacher-students/teacher-students.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/people/teacher-students/teacher-students.fakes.ts": {
     "max-len": {
       "count": 2
@@ -8586,11 +8554,6 @@
     "@typescript-eslint/dot-notation": {
       "count": 3
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/teachers/availability/availability.controller.ts": {
     "max-len": {
       "count": 1
     }
@@ -8676,7 +8639,7 @@
   },
   "src/modules/people/teachers/teachers.controller.ts": {
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/people/teachers/teachers.counts.test.ts": {
@@ -8808,7 +8771,7 @@
   },
   "src/modules/people/users/photo/staff-photo.controller.ts": {
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/people/users/photo/staff-photo.http.test.ts": {
@@ -8874,7 +8837,7 @@
   },
   "src/modules/people/users/users.controller.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/people/users/users.errors.test.ts": {
@@ -8941,7 +8904,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/people/users/users.service.ts": {
