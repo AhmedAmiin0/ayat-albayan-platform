@@ -17,11 +17,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
 import { RolesService } from './roles.service';
 
 /** «الأدوار والصلاحيات»: roles, their grants and the catalog. All behind roles.manage. */
