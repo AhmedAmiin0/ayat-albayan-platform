@@ -1,4 +1,4 @@
-import { conflictLine } from '@/booking/shared/booking-errors';
+import { conflictLine } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { DetailsFact, DetailsGroup, DetailsLine } from './DetailsGroup';
