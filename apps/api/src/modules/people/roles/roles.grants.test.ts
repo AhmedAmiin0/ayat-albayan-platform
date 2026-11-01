@@ -1,3 +1,4 @@
+import { GRANTABLE_PERMISSIONS } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
@@ -37,7 +38,7 @@ describe('RoleGrants', () => {
   });
 
   it('assertHolds: the admin holds everything; a teacher is refused 403 permission_not_held', () => {
-    const wanted = role('admin').permissions;
+    const wanted = [...GRANTABLE_PERMISSIONS];
     expect(codeOf(() => grants.assertHolds(state(), 'owner', wanted))).toBeUndefined();
     expect(codeOf(() => grants.assertHolds(state(), 't1', wanted))).toEqual({
       status: 403,
