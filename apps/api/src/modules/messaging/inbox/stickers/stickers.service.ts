@@ -3,7 +3,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { waHttpError } from '@/modules/messaging/whatsapp';
 import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
-import { sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { chatLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { favouriteItems, recentItems } from './sticker-rows';
 import { StickerRepo, type StickerRow } from './sticker.repo';
@@ -20,8 +20,9 @@ const notFound = () => waHttpError('message_not_found', HttpStatus.NOT_FOUND);
  * received or sent in any chat (any chat's WebP: stickers are no family secret, and no template,
  * sales' only wall, is ever one). A sticker sent from it is one the chats already hold, copied as
  * stored (WhatsApp's 512×512 WebP) to out/… and queued as this staff member's message; the sender
- * sends it as WhatsApp's `sticker` (waSendKind). The 24 h window and the line are checked first,
- * as for a file (409 session_closed / 503 line_not_configured), so a closed chat copies nothing.
+ * sends it as WhatsApp's `sticker` (waSendKind). The line is picked first, as for a text (chatLine:
+ * tried after the window on a Kapso chat line; else 409 session_closed / 503), so a refused chat
+ * copies nothing.
  */
 @Injectable()
 export class StickersService {
@@ -56,10 +57,11 @@ export class StickersService {
     await this.repo.drop({ profile_id: input.profileId, sticker_key: stickerKey(row) });
   }
 
-  /** POST /threads/:phone/sticker: the window first, then the copy and the queue. */
+  /** POST /threads/:phone/sticker: the line (ForwardFiles.send reopens Kapso), copy, queue. */
   async send(s: ThreadSend<ThreadStickerSend>, now = new Date()): Promise<Sent> {
     const windows = () => this.threads.numberWindows(s.phone);
-    await sendLine(await this.threads.thread(s.phone), { now, windows });
+    const at = { now, windows, phone: s.phone, kapso: undefined, teacher: !!s.scope };
+    await chatLine(await this.threads.thread(s.phone), at);
     await this.sticker(s.input.messageId);
     const source = await this.threads.get(s.input.messageId);
     if (!source) throw notFound();

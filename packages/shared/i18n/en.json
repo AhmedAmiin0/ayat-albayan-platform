@@ -7376,7 +7376,6 @@
     "sendInChat": "Send in the chat",
     "copy": "Copy",
     "copied": "Link copied",
-    "templateNeeded": "The family's last message is over 24 hours old: send an approved template first, then the link.",
     "message": "Hello, here is the payment link for {student}'s package ({lessons} lessons): {amount} {currency}\n{url}",
     "list": "Payment links",
     "empty": "No payment links.",

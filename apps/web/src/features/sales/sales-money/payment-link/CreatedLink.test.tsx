@@ -19,9 +19,9 @@ const MESSAGE = P.message
   .replace('{url}', 'https://app.example.com/pay/tok_1');
 
 /** The link made (SalesMoneyFlow's last step after «دفع إلكتروني»). */
-async function created({ session_open = true } = {}) {
+async function created({ canSend = true } = {}) {
   const onClose = vi.fn();
-  renderWithClient(<CreatedLink link={CREATED} thread={{ phone_e164: PHONE, session_open }} onClose={onClose} />);
+  renderWithClient(<CreatedLink link={CREATED} phone={PHONE} canSend={canSend} onClose={onClose} />);
   await screen.findByRole('button', { name: P.sendInChat });
   return onClose;
 }
@@ -41,9 +41,9 @@ describe('«رابط دفع»: the link made', () => {
     expect(apiSend.mock.calls.filter(([, path]) => String(path).startsWith('/threads'))).toHaveLength(0);
   });
 
-  it('after the 24 h window: «يلزم قالب» instead, only «نسخ» works', async () => {
-    await created({ session_open: false });
-    expect(await screen.findByText(P.templateNeeded)).toBeTruthy();
+  it('only where no text can go (useMaySend false): the closed note, only «نسخ» works', async () => {
+    await created({ canSend: false });
+    expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
     expect((screen.getByRole('button', { name: P.sendInChat }) as HTMLButtonElement).disabled).toBe(true);
     expect(getDraft(PHONE).text).toBe('');
   });

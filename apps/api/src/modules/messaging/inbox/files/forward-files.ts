@@ -8,7 +8,8 @@ import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-medi
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
-import { dedupKey, outboundBase, sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { chatLine, dedupKey, outboundBase, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** Our copy of a forwarded file in wa-media/out/… (the sender signs it again on every try). */
@@ -49,6 +50,8 @@ const caption = (row: ThreadMessageRow): string | null => {
 export class ForwardFiles {
   /** Property-injected (the constructor is at the 3-parameter limit). */
   @Inject(InboundMedia) private readonly inbound?: InboundMedia;
+  /** Kapso's conversation record, for a copy tried after the window as a text is (chatLine). */
+  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -65,11 +68,12 @@ export class ForwardFiles {
     return { path, mime, name: fileName(row, path), caption: caption(row), ...stickerOf(row) };
   }
 
-  /** One target: 409 session_closed / 503 line_not_configured as a file sent from the chat. */
+  /** One target, on a text's line (chatLine: 409 session_closed / 503 line_not_configured). */
   async send(s: ThreadSend<{ clientRequestId: string }>, file: ForwardFile, now = new Date()): Promise<Sent> {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    const line = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
+    const windows = () => this.queries.numberWindows(s.phone);
+    const line = await chatLine(thread, { now, windows, phone: s.phone, kapso: this.kapso, teacher: !!s.scope });
     return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,

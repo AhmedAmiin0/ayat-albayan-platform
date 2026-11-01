@@ -1,12 +1,14 @@
 import { memo } from 'react';
+import { staffMaySend } from '@ab/client-core';
 import type { ThreadView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { CheckIcon } from '../../shared/chat-icons';
-import { chatName } from '../hooks/forward-text';
+import { CheckIcon } from '@/inbox/shared/chat-icons';
+import { chatName } from '@/inbox/thread/hooks/forward-text';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 
 interface ForwardRowProps {
   thread: ThreadView;
@@ -17,13 +19,16 @@ interface ForwardRowProps {
 }
 
 /**
- * One chat in the forward picker, a 56pt checkbox row. Outside its 24 h window it says so but stays
- * selectable: the server decides, and answers «skipped» with the reason.
+ * One chat in the forward picker, a 56pt checkbox row. Where a text cannot go (the text rule,
+ * owner 2026-11-01) it says so but stays selectable: the server decides, and answers «skipped»
+ * with the reason.
  */
 export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardRowProps) {
   const { color } = useTheme();
   const name = chatName(th);
-  const closed = !th.session_open;
+  const staff = useThreadMode().kind !== 'teacher';
+  const chat = { open: th.session_open, tryAfterWindow: th.try_after_window };
+  const closed = !staffMaySend(chat, staff);
   return (
     <Pressable
       accessibilityRole="checkbox"

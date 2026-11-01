@@ -18,6 +18,7 @@ import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { useChatAccess } from '@/features/messaging/inbox/shared/use-chat-access';
+import { useTriesAfterWindow } from '@/features/messaging/inbox/shared/may-send';
 import { useClock, type Clock } from '@/lib/clock';
 
 export type ComposerMode = 'text' | 'template';
@@ -75,16 +76,17 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  * log: the notices in one line, then a one-line growing message box with the template toggle
  * before it and a round «أرسل» after it. Outside the 24 h window: templates only. Teacher and sales
  * with no template allowed get no toggle, and after the window one line on what they can do.
- * Staff (not teachers) also get a paperclip inside the window (D2): a picked file swaps the box for
- * FileComposer. The File lives here only (never in the draft store), for this chat only.
- * Staff also get «الردود السريعة» (ReplyComposer); after the window its button shows locked.
+ * Staff (not teachers) also get a paperclip wherever a text goes (D2; after the window too on a
+ * Kapso chat line, owner 2026-11-01): a picked file swaps the box for FileComposer. The File lives
+ * here only (never in the draft store), for this chat only. Staff also get «الردود السريعة»
+ * (ReplyComposer) wherever a text goes; where none can, its button shows locked.
  * «عرض سعر» (owner 2026-10-26, staff with pricing.read) sits beside them at every window (copy still works).
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const inbox = useInboxMode();
-  // Owner 2026-10-31: on a Kapso chat line staff still try free text after the window (no files).
-  const trying = !open && thread.try_after_window === true && inbox !== 'teacher';
+  // Owner 2026-10-31 / 2026-11-01: on a Kapso chat line staff try every send after the window.
+  const trying = useTriesAfterWindow(thread);
   const typing = open || trying;
   const noneAllowed = useNoneAllowed(teacher);
   const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock(), trying });
@@ -104,10 +106,10 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Icon name="template" className="size-5" />
     </IconButton>
   );
-  // «الردود السريعة» after the window: shown locked with why (session messages only).
-  const locked = !open && replies && <SavedRepliesButton locked />;
+  // «الردود السريعة» where no text can go: shown locked with why (session messages only).
+  const locked = !typing && replies && <SavedRepliesButton locked />;
   const quote = access.quote && <QuoteButton thread={thread} onFilled={() => onMode('text')} />;
-  const attach = open && files && (
+  const attach = typing && files && (
     <AttachButton
       onPick={(next) => {
         setProblem(null);
@@ -128,7 +130,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : file ? (
         <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />
-      ) : replies && open ? (
+      ) : replies ? (
         <ReplyComposer thread={thread} context={context} leading={<>{toggle}{attach}{quote}</>} />
       ) : (
         <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}{quote}</>} />

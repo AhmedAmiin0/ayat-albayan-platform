@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { fillComposer } from '@/features/messaging/inbox/saved-replies/lib/filter';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { useMaySend } from '@/features/messaging/inbox/shared/may-send';
 import { QuoteActions } from './QuoteActions';
 import { useQuoteOffer, useQuoteSend } from './use-quote-offer';
 
@@ -22,7 +23,8 @@ export interface QuoteDialogProps {
 /**
  * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
  * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
- * it. After the 24 h window only copy works (inbox.sessionClosed says why). Works for a lead with no
+ * it. Sending follows the text rule (useMaySend); where a text cannot go only copy works
+ * (inbox.sessionClosed says why). Works for a lead with no
  * student; nothing is created.
  */
 export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
@@ -30,6 +32,7 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   const offer = useQuoteOffer(phone);
   const sender = useQuoteSend(phone, onClose);
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
+  const may = useMaySend(thread);
   const text = offer.text;
   const ready = text !== null && !offer.stale;
   const edit = () => {
@@ -49,7 +52,7 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   };
   const actions = (
     <QuoteActions
-      open={thread.session_open}
+      open={may}
       ready={ready}
       sending={sender.pending}
       onSend={() => text && sender.send(text)}
@@ -73,7 +76,7 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
             </p>
           )}
         </section>
-        {!thread.session_open && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{t.inbox.sessionClosed}</p>}
+        {!may && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{t.inbox.sessionClosed}</p>}
         {sender.error && <FormAlert>{sendErrorText(sender.error)}</FormAlert>}
       </div>
       {copied && (

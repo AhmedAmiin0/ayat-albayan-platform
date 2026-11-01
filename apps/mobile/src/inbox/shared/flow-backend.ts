@@ -115,7 +115,8 @@ export function inboxBackend() {
       const { messageId, targets } = body as ThreadForward;
       const source = Object.values(log).flat().find((m) => m.id === messageId);
       const results = targets.map((phone): ForwardResult => {
-        if (!byPhone(phone)?.session_open) return { phone, sent: false, reason: 'session_closed' };
+        const to = byPhone(phone);
+        if (!to?.session_open && !to?.try_after_window) return { phone, sent: false, reason: 'session_closed' };
         const copy = record(phone, message({ id: `fwd-${phone}`, body: source?.body ?? null, forwarded: true }));
         return { phone, sent: true, message_id: copy.id };
       });

@@ -33,7 +33,7 @@ async function online(students: SalesFamilyStudent[] = [student({ teacher_id: TR
     ['/sales/subscriptions/teachers', [{ id: TRIAL, name: 'أبرار' }]],
   ]);
   answer(apiSend);
-  renderWithClient(<SalesMoneyFlow start="subscribe" students={students} phone={PHONE} sessionOpen onClose={vi.fn()} />);
+  renderWithClient(<SalesMoneyFlow start="subscribe" students={students} phone={PHONE} canSend onClose={vi.fn()} />);
   const dialog = within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
   const method = within(await dialog.findByRole('group', { name: t.payments.method }));
   expect(method.getByRole('button', { name: t.enums.paymentMethod.bank, pressed: true })).toBeTruthy();
