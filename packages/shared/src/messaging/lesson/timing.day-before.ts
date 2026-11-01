@@ -1,4 +1,4 @@
-import { addCalendarDays, addDaysIn, localDateIn, startOfDayIn, wallInstant } from '../../time/index.js';
+import { addCalendarDays, addDaysIn, localDateIn, startOfDayIn, wallInstant } from '@ab/time';
 
 // The day-before reminder's send instant and expiry (docs/12 §7, docs/23b §8). Pure; the zone math
 // is the date-fns facade (goldens: time/golden/reminders.golden.test.ts pin every instant).

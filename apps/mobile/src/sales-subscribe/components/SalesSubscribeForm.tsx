@@ -8,7 +8,7 @@ import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { quoteLessons, renewalForm } from '@/subscribe';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
-import { localDate } from '@/today/lib/timeline';
+import { localDate } from '@/today';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChildPills } from './ChildPills';
 import { PayMethodPills, type PayMethod } from './PayMethodPills';

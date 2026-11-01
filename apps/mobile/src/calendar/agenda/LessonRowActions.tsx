@@ -7,7 +7,7 @@ import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelLesson } from '@/today/components/CancelLesson';
-import { studentNames } from '@/today/lib/lesson-text';
+import { studentNames } from '@/today';
 import type { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';

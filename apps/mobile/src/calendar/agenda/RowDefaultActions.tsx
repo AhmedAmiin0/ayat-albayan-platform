@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { editMode } from '@/edit-time/lib/types';
 import { t } from '@/core/lib/i18n/i18n';
-import { studentNames } from '@/today/lib/lesson-text';
+import { studentNames } from '@/today';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { canReschedule } from './can-reschedule';
