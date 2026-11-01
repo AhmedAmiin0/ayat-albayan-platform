@@ -12,8 +12,8 @@ const h = t.communicationsHub;
  * /admin/settings/integrations «التكاملات» (docs/26b §3): the services that are not messaging
  * (LiveKit, Expo, Web Push, exchange rates, Google's OAuth client). The WhatsApp, Kapso and safety
  * groups moved to «التواصل» (docs/23 phase 6), which the line on top links to. Google's sync has its
- * own page; an OAuth return here is sent there by the route. On a server with FEATURE_STRIPE=test the
- * Stripe group («الدفع الإلكتروني») is one of the groups (docs/30): its switch, keys and cap.
+ * own page; an OAuth return here is sent there by the route. With FEATURE_STRIPE=test the
+ * Stripe group («الدفع الإلكتروني», docs/30) is one of the groups: its switch, keys and cap.
  */
 export function IntegrationsPage() {
   const [note, setNote] = useState<string | null>(null);
