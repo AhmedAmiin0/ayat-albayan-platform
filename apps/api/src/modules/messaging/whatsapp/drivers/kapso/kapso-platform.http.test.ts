@@ -33,6 +33,13 @@ describe('the Kapso Platform profile', () => {
     );
   });
 
+  it('a PATCH answered with no JSON is still a failure (as with res.json())', async () => {
+    const fetch = vi
+      .fn<FetchLike>(async () => new Response('<html>ok</html>', { status: 200 }))
+      .mockResolvedValueOnce(reply(ENDED));
+    expect(await messageOf(fetch)).toBe('Kapso conversations: unexpected list body');
+  });
+
   it('a dropped connection: the call named, never the URL', async () => {
     const down = async (): Promise<Response> => Promise.reject(new TypeError('fetch failed'));
     expect(await messageOf(down)).toBe('kapso conversations GET / failed');

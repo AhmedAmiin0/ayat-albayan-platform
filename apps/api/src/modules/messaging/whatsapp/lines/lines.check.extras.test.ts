@@ -29,4 +29,11 @@ describe('driverOf', () => {
     expect(driver).toMatchObject({ kapso_webhook_secret: true });
     expect(JSON.stringify(driver)).not.toContain('fake-kapso-webhook-secret');
   });
+
+  it('a crm line: whether WACRM_WEBHOOK_SECRET is set', () => {
+    stubEnvs({ ...TWO_LINES_ENV, WA_CHAT_PROVIDER: 'crm', WACRM_WEBHOOK_SECRET: 'fake-hook' });
+    const driver = driverOf(loadEnv(), 'chat');
+    expect(driver).toMatchObject({ provider: 'crm', crm_webhook_secret: true });
+    expect(driver).not.toHaveProperty('kapso_webhook_secret');
+  });
 });

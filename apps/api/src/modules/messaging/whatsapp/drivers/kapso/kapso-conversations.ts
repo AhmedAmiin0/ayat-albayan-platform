@@ -42,6 +42,9 @@ interface KapsoReopen {
   timeoutMs?: number;
 }
 
+/** Any JSON answer, as before (`res.json()`): a non-JSON 2xx (the core's null) is a failure. */
+const answerSchema = z.unknown().refine((body) => body !== null);
+
 /** What is left of the shared budget, for the next call. */
 const leftOf = (until: number): number => Math.max(0, until - Date.now());
 
@@ -66,7 +69,7 @@ export async function reopenKapsoConversation(input: KapsoReopen): Promise<boole
     path: encodeURIComponent(target.id),
     method: 'PATCH',
     json: { whatsapp_conversation: { status: 'active' } },
-    schema: z.unknown(),
+    schema: answerSchema,
     timeoutMs: leftOf(until),
   });
   return true;
