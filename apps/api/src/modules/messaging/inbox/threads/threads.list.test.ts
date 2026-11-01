@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { teacherListFilter, threadListQuery } from './threads.list';
-import { ThreadsQueries } from './threads.queries';
+import { ThreadsRepo } from './threads.repo';
 
 const V = 'v_threads';
 const queriesOn = (db: ReturnType<typeof fakeDb>['db']) =>
-  new ThreadsQueries(db, {} as PackagesService, {} as BalanceQueries);
+  new ThreadsRepo(db, {} as PackagesService, {} as BalanceQueries);
 
 describe('GET /threads list query (R-NFR-08)', () => {
   it('accepts sort, dir and a lead status next to the old params', () => {

@@ -1,0 +1,150 @@
+{
+  "id": "r5",
+  "seq": 217,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/messaging/calls/store/calls.queries.ts",
+      "to": "apps/api/src/modules/messaging/calls/store/calls.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/delta/delta.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/delta/delta.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/reactions/reaction.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/reactions/reaction.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/reopen/reopen.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/reopen/reopen.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/teacher-threads/teacher-threads.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/teacher-threads/teacher-threads.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/threads/threads-unread.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/threads/threads-unread.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/threads/threads.queries.ts",
+      "to": "apps/api/src/modules/messaging/inbox/threads/threads.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/inbox/threads/threads.queries.calls.test.ts",
+      "to": "apps/api/src/modules/messaging/inbox/threads/threads.repo.calls.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/push/push-receipts.queries.ts",
+      "to": "apps/api/src/modules/messaging/push/push-receipts.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/saved-replies/saved-replies.queries.ts",
+      "to": "apps/api/src/modules/messaging/saved-replies/saved-replies.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/webhook/external/external.queries.ts",
+      "to": "apps/api/src/modules/messaging/webhook/external/external.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/webhook/webhook.queries.ts",
+      "to": "apps/api/src/modules/messaging/webhook/webhook.repo.ts"
+    }
+  ],
+  "renames": {
+    "CallsQueries": "CallsRepo",
+    "DeltaQueries": "DeltaRepo",
+    "PdfPreviewQueries": "PdfPreviewRepo",
+    "ReactionQueries": "ReactionRepo",
+    "ReopenQueries": "ReopenRepo",
+    "TeacherThreadsQueries": "TeacherThreadsRepo",
+    "ThreadsQueries": "ThreadsRepo",
+    "PushReceiptsQueries": "PushReceiptsRepo",
+    "SavedRepliesQueries": "SavedRepliesRepo",
+    "ExternalQueries": "ExternalRepo",
+    "WebhookQueries": "WebhookRepo",
+    "FakeCallsQueries": "FakeCallsRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/messaging/calls/store/calls.queries.ts",
+      "apps/api/src/modules/messaging/calls/store/calls.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/delta/delta.queries.test.ts",
+      "apps/api/src/modules/messaging/inbox/delta/delta.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/delta/delta.queries.ts",
+      "apps/api/src/modules/messaging/inbox/delta/delta.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.queries.test.ts",
+      "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.queries.ts",
+      "apps/api/src/modules/messaging/inbox/files/pdf/pdf-preview.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/reactions/reaction.queries.ts",
+      "apps/api/src/modules/messaging/inbox/reactions/reaction.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/reopen/reopen.queries.ts",
+      "apps/api/src/modules/messaging/inbox/reopen/reopen.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/teacher-threads/teacher-threads.queries.ts",
+      "apps/api/src/modules/messaging/inbox/teacher-threads/teacher-threads.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/threads/threads-unread.queries.test.ts",
+      "apps/api/src/modules/messaging/inbox/threads/threads-unread.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/threads/threads-unread.queries.ts",
+      "apps/api/src/modules/messaging/inbox/threads/threads-unread.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/threads/threads.queries.calls.test.ts",
+      "apps/api/src/modules/messaging/inbox/threads/threads.repo.calls.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/inbox/threads/threads.queries.ts",
+      "apps/api/src/modules/messaging/inbox/threads/threads.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/push/push-receipts.queries.test.ts",
+      "apps/api/src/modules/messaging/push/push-receipts.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/push/push-receipts.queries.ts",
+      "apps/api/src/modules/messaging/push/push-receipts.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/saved-replies/saved-replies.queries.test.ts",
+      "apps/api/src/modules/messaging/saved-replies/saved-replies.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/saved-replies/saved-replies.queries.ts",
+      "apps/api/src/modules/messaging/saved-replies/saved-replies.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/webhook/external/external.queries.ts",
+      "apps/api/src/modules/messaging/webhook/external/external.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/webhook/webhook.queries.test.ts",
+      "apps/api/src/modules/messaging/webhook/webhook.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/webhook/webhook.queries.ts",
+      "apps/api/src/modules/messaging/webhook/webhook.repo.ts"
+    ]
+  ]
+}

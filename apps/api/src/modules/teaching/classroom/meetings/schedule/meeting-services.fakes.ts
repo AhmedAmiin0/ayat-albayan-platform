@@ -1,26 +1,26 @@
 // Real meeting services over mocked queries (unit tests only; not shipped: *.fakes.ts).
-import type { PushService } from '../../../../../common/push/push.service';
-import type { TeacherScopes } from '../../../../messaging/inbox/teacher-threads/teacher-scope';
-import type { ThreadsQueries } from '../../../../messaging/inbox/threads/threads.queries';
-import type { MessageSender } from '../../../../messaging/whatsapp/sender/message.sender';
-import { CONFIG } from '../../classroom.fakes';
-import { meetingQueries } from '../../internal-meetings/internal-meetings.fakes';
-import type { InternalMeetingsQueries } from '../../internal-meetings/internal-meetings.queries';
-import { InternalMeetingsService } from '../../internal-meetings/internal-meetings.service';
-import { LivekitApi } from '../../livekit/livekit-api';
+import type { PushService } from '@/common/push/push.service';
+import type { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
+import { meetingQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import type { InternalMeetingsQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { MeetingCreateDeps, MeetingCreateService } from './meeting-create.service';
-import { MeetingInviteFlow } from '../invites/meeting-invite.flow';
-import { MeetingInvitePolicies } from '../invites/meeting-invite.policy';
-import { MeetingInviteSender } from '../invites/meeting-invite.sender';
-import type { MeetingInviteeQueries } from '../invites/meeting-invitee.queries';
-import { MeetingInviteeResolver } from '../invites/meeting-invitee.resolver';
-import type { MeetingInviteesQueries } from '../invites/meeting-invitees.queries';
-import { meetingInviteMocks } from '../invites/meeting-invites.fakes';
-import { MeetingInvitesDeps, MeetingInvitesService } from '../invites/meeting-invites.service';
+import { MeetingInviteFlow } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
+import { MeetingInvitePolicies } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
+import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.sender';
+import type { MeetingInviteeQueries } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.queries';
+import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
+import type { MeetingInviteesQueries } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.queries';
+import { meetingInviteMocks } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
+import { MeetingInvitesDeps, MeetingInvitesService } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.service';
 import type { MeetingListQueries } from './meeting-list.queries';
 import { MeetingListService } from './meeting-list.service';
 import { MeetingScheduleDeps, MeetingScheduleService } from './meeting-schedule.service';
-import { http } from '../../moderation/moderation.fakes';
+import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 export const ORIGIN = 'https://app.example.test';
 
@@ -34,7 +34,7 @@ export function meetingServices() {
   const picks = m.picks as unknown as MeetingInviteeQueries;
   const sender = new MeetingInviteSender(
     m.push as unknown as PushService,
-    m.threads as unknown as ThreadsQueries,
+    m.threads as unknown as ThreadsRepo,
     m.sender as unknown as MessageSender,
   );
   const flow = new MeetingInviteFlow(invitees, sender, ORIGIN);

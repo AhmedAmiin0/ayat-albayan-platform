@@ -1,19 +1,19 @@
 import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { ChatListsQueries } from '../../chat-lists/chat-lists.queries';
-import { OwnNumbers } from '../../numbers';
-import type { Page } from '../../../../common/http/http';
-import { SalesScopes, type SalesScope } from '../../../sales/sales/sales-scope';
-import { listFilter, withLists } from '../threads/chat-list-filter';
-import { SalesThreadsService } from '../sales-threads/sales-threads.service';
-import { ThreadDeltaService, type DeltaCaller, type ThreadDeltaQuery } from '../delta/thread-delta.service';
-import { TeacherScopes, type TeacherScope } from '../teacher-threads/teacher-scope';
-import { TeacherThreadsService } from '../teacher-threads/teacher-threads.service';
-import { ThreadQuotes } from '../threads/thread-quotes';
-import { ThreadsQueries, type ThreadListFilter } from '../threads/threads.queries';
-import { threadReactable } from '../reactions/reaction-line';
-import { ThreadsService, type ThreadPageQuery } from '../threads/threads.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ChatListsQueries } from '@/modules/messaging/chat-lists/chat-lists.queries';
+import { OwnNumbers } from '@/modules/messaging/numbers';
+import type { Page } from '@/common/http/http';
+import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
+import { listFilter, withLists } from '@/modules/messaging/inbox/threads/chat-list-filter';
+import { SalesThreadsService } from '@/modules/messaging/inbox/sales-threads/sales-threads.service';
+import { ThreadDeltaService, type DeltaCaller, type ThreadDeltaQuery } from '@/modules/messaging/inbox/delta/thread-delta.service';
+import { TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { TeacherThreadsService } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.service';
+import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
+import { threadReactable } from '@/modules/messaging/inbox/reactions/reaction-line';
+import { ThreadsService, type ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
 
 /**
  * H1/H2 for whoever is signed in: the admin's inbox (ThreadsService), a salesperson's (every chat,
@@ -34,7 +34,7 @@ export class ThreadReads {
   /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
   /** «تفاعل»: the first page's `reactable` (the chat's send line, migration 900). */
-  @Optional() @Inject(ThreadsQueries) private readonly rows?: ThreadsQueries;
+  @Optional() @Inject(ThreadsRepo) private readonly rows?: ThreadsRepo;
 
   constructor(
     private readonly admin: ThreadsService,

@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import type { MessageViews } from '../../whatsapp/messages/message.views';
-import type { ReadReceipts } from '../reads/read-receipts';
-import { threadRow } from '../inbox.fakes';
-import { NO_PEOPLE } from '../test-app';
-import type { ThreadsQueries } from './threads.queries';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import type { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { NO_PEOPLE } from '@/modules/messaging/inbox/test-app';
+import type { ThreadsRepo } from './threads.repo';
 import { ThreadsService } from './threads.service';
 
 /** Every read takes one 60 ms round trip (the edge logs: 30–90 ms each); elapsed / 60 = sequential rounds. */
@@ -24,7 +24,7 @@ function service() {
   };
   const views = { view: vi.fn((m: { id: string }) => new Promise((done) => setTimeout(() => done({ id: m.id }), RTT))) };
   const receipts = { open: slow({ stamped: false, receipts: Promise.resolve() }) };
-  const svc = new ThreadsService(queries as unknown as ThreadsQueries, views as unknown as MessageViews, receipts as unknown as ReadReceipts);
+  const svc = new ThreadsService(queries as unknown as ThreadsRepo, views as unknown as MessageViews, receipts as unknown as ReadReceipts);
   return { svc, queries };
 }
 

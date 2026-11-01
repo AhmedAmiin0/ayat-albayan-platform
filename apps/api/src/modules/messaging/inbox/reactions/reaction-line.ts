@@ -2,7 +2,7 @@ import type { WaLine } from '@ab/shared';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { lineProvider, loadEnv } from '@/config/env/env';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
-import type { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number. */
 type ReactFrom = { line?: WaLine; number_id?: string };
@@ -21,7 +21,7 @@ export function sendsOnCrm(from: ReactFrom): boolean {
  * The thread page's `reactable` flag: its 24 h window is open and the line it answers from is not the CRM's.
  * Never throws (a failed windows read reads as not reactable): the apps only hide the row.
  */
-export async function threadReactable(queries: ThreadsQueries, phone: string, now: Date): Promise<boolean> {
+export async function threadReactable(queries: ThreadsRepo, phone: string, now: Date): Promise<boolean> {
   const thread = await queries.thread(phone).catch(() => null);
   if (!thread) return false;
   const picked = await pickSend({ thread, now, windows: () => queries.numberWindows(phone) }).catch(() => null);

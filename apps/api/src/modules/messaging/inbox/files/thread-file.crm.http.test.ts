@@ -9,7 +9,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import { CRM_HOST, crmResponse, crmRow, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
 import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { TeacherThreadsQueries } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.queries';
+import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 // Owner 2026-10-27: a photo imported from the old CRM opens in the bubble (web and mobile): fetched
@@ -36,7 +36,7 @@ describe('W6 file of a message imported from the old CRM', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(TeacherThreadsQueries).useValue(teachers)
+      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
       .overrideProvider(StorageService).useValue(storage)

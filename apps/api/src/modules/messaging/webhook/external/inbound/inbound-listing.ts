@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { KAPSO_HISTORY } from '@/modules/messaging/webhook/external/external-status';
-import { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
+import { ExternalRepo } from '@/modules/messaging/webhook/external/external.repo';
 import type { KapsoHistory } from '@/modules/messaging/webhook/external/kapso-history';
 import type { KapsoNumber } from '@/modules/messaging/webhook/external/kapso-numbers';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
@@ -41,7 +41,7 @@ interface Listing {
 @Injectable()
 export class InboundListing {
   constructor(
-    private readonly ext: ExternalQueries,
+    private readonly ext: ExternalRepo,
     @Inject(KAPSO_HISTORY) private readonly kapso: KapsoHistory,
   ) {}
 

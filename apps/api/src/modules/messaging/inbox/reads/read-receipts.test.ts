@@ -1,10 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { SendGate } from '../../whatsapp/gate/send-gate';
-import type { WhatsappLines } from '../../whatsapp/whatsapp.types';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { ReadMark } from './read-marks';
 import { ReadReceipts } from './read-receipts';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 const PHONE = '+966501234567';
 const NOW = new Date('2026-10-10T08:00:00Z');
@@ -17,7 +17,7 @@ function setup(marks: ReadMark[], open = true) {
   const notifications = client();
   const chat = client();
   const receipts = new ReadReceipts(
-    queries as unknown as ThreadsQueries,
+    queries as unknown as ThreadsRepo,
     gate as unknown as SendGate,
     { notifications, chat } as unknown as WhatsappLines,
   );

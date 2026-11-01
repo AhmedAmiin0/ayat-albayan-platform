@@ -15,7 +15,7 @@ import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.lis
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '@/modules/messaging/inbox/reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
-import { isUnreadBadge, unreadThreadCount } from './threads-unread.queries';
+import { isUnreadBadge, unreadThreadCount } from './threads-unread.repo';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -25,7 +25,7 @@ function check(error: { message: string } | null, what: string): asserts error i
 
 /** H1–H4 (docs/12 §4): v_threads (service role only) and the messages of one phone. */
 @Injectable()
-export class ThreadsQueries {
+export class ThreadsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly packages: PackagesService,

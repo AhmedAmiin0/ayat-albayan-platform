@@ -6,7 +6,7 @@ import {
   fakeExternalQueries,
   fakeKapso,
 } from '@/modules/messaging/webhook/external/external.fakes';
-import type { ExternalQueries } from '@/modules/messaging/webhook/external/external.queries';
+import type { ExternalRepo } from '@/modules/messaging/webhook/external/external.repo';
 import type { KapsoHistory } from '@/modules/messaging/webhook/external/kapso-history';
 import { services } from '@/modules/messaging/webhook/webhook.fakes';
 import { InboundCatchUpJob } from './inbound-catchup.job';
@@ -47,7 +47,7 @@ export function catchUpRig() {
     newestInbound: vi.fn().mockResolvedValue(null as Date | null),
     lastExternalReply: vi.fn().mockResolvedValue(null as Date | null),
   };
-  const queries = ext as unknown as ExternalQueries;
+  const queries = ext as unknown as ExternalRepo;
   const listing = new InboundListing(queries, kapso as unknown as KapsoHistory);
   const store = repo as unknown as InboundCatchUpRepo;
   const catchUp = new InboundCatchUp(store, listing, queries, s.inbound);

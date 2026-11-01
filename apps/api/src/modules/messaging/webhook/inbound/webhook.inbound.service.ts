@@ -5,7 +5,7 @@ import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
 import { InboundStore, type Sender } from './webhook.inbound.store';
-import type { Contact } from '@/modules/messaging/webhook/webhook.queries';
+import type { Contact } from '@/modules/messaging/webhook/webhook.repo';
 import { QuickReplies } from './webhook.quick-reply';
 import { InboundReactions } from './webhook.reaction';
 

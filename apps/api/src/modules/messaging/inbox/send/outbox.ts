@@ -5,7 +5,7 @@ import { sleep } from '@/common/infra/cache/sleep';
 import { appRole } from '@/config/role/app-role';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
-import { ThreadsQueries } from '@/modules/messaging/inbox/threads/threads.queries';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** The row as the clients see it; `replayed` = a repeated request id, nothing new was queued. */
 export type Sent = { view: MessageView; replayed: boolean };
@@ -31,7 +31,7 @@ export const SETTLE_POLLS = 10;
 @Injectable()
 export class Outbox {
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly sender: MessageSender,
     private readonly views: MessageViews,
   ) {}
@@ -57,7 +57,7 @@ export class Outbox {
   }
 
   /** The row after the pass; on an API copy, read again (bounded) while the worker has not moved it yet. */
-  private async settled(id: string): Promise<Awaited<ReturnType<ThreadsQueries['get']>>> {
+  private async settled(id: string): Promise<Awaited<ReturnType<ThreadsRepo['get']>>> {
     let row = await this.queries.get(id);
     for (let i = 0; i < SETTLE_POLLS && row?.status === 'queued' && appRole() === 'api'; i += 1) {
       await sleep(SETTLE_POLL_MS);

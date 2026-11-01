@@ -1,9 +1,9 @@
 import type { MessageView, ThreadView } from '@ab/shared';
-import type { ThreadMessageRow } from '../../whatsapp';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import type { ReadReceipts } from './read-receipts';
-import type { KnownNumber } from '../threads/known-number';
-import type { ThreadRow } from '../threads/threads.mapper';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { KnownNumber } from '@/modules/messaging/inbox/threads/known-number';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** GET /threads/:phone's page: `before` = created_at of the oldest loaded message (the page before it). */
 export interface ThreadPageQuery {
@@ -24,7 +24,7 @@ interface PageRows {
  * Stage 1 of an open chat (admin and sales): the thread row and the page side by side. A number with no
  * message yet (a booked family, «محادثة جديدة»): who it is, so the first template can name its lesson.
  */
-export async function pageRows(queries: ThreadsQueries, q: ThreadPageQuery): Promise<PageRows> {
+export async function pageRows(queries: ThreadsRepo, q: ThreadPageQuery): Promise<PageRows> {
   const [found, rows] = await Promise.all([queries.thread(q.phone), queries.messages(q)]);
   const who = found ?? (q.before ? null : await queries.known(q.phone));
   return { found, who, rows };

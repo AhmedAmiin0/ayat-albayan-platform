@@ -1,9 +1,9 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { PushService } from '../../../../../common/push/push.service';
-import { pickSend } from '../../../../messaging/inbox/send/send-number';
-import { ThreadsQueries } from '../../../../messaging/inbox/threads/threads.queries';
-import { MessageSender } from '../../../../messaging/whatsapp/sender/message.sender';
+import { PushService } from '@/common/push/push.service';
+import { pickSend } from '@/modules/messaging/inbox/send/send-number';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import type { StoredInvitee } from './meeting-invitees.queries';
 import { whenText } from './meeting-invite.text';
 
@@ -50,7 +50,7 @@ export class MeetingInviteSender {
 
   constructor(
     private readonly push: PushService,
-    private readonly threads: ThreadsQueries,
+    private readonly threads: ThreadsRepo,
     private readonly sender: MessageSender,
   ) {}
 
