@@ -1,8 +1,8 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { huda } from '../shared/fixtures';
-import { answer, hudaProfile, QUALIFICATION } from './fixtures';
+import { huda } from '@/inbox/shared/fixtures';
+import { answer, hudaProfile, QUALIFICATION } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 
 const mockApiFetch = jest.fn();

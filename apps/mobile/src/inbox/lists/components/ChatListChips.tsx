@@ -8,7 +8,7 @@ import { AutoListNote } from './AutoListNote';
 import { CreateListSheet } from './CreateListSheet';
 import { EditListSheet } from './EditListSheet';
 import { ListChip } from './ListChip';
-import { listsOf, useChatLists } from './use-chat-lists';
+import { listsOf, useChatLists } from '@/inbox/lists/lib/use-chat-lists';
 
 /**
  * The row's one choice (single, as WhatsApp): every chat, the unread ones, those waiting for her reply,

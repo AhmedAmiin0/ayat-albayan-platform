@@ -9,9 +9,9 @@ import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
-import { followUpLines } from './follow-up-text';
+import { followUpLines } from '@/inbox/qualification/lib/follow-up-text';
 import { Heading } from './Heading';
-import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from './queries';
+import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from '@/inbox/qualification/lib/queries';
 import { useClockCycle } from '@/core/lib/clock';
 
 const f = t.followUps;

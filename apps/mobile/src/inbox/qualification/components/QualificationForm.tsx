@@ -7,9 +7,9 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';
-import { qualForm, qualPatch, type QualErrors, type QualForm } from './qualification-form';
+import { qualForm, qualPatch, type QualErrors, type QualForm } from '@/inbox/qualification/lib/qualification-form';
 import { QualificationFields } from './QualificationFields';
-import { saveErrorText, useLeadPatch, type LeadProfile } from './queries';
+import { saveErrorText, useLeadPatch, type LeadProfile } from '@/inbox/qualification/lib/queries';
 
 export interface QualificationFormProps {
   lead: LeadProfile;

@@ -98,7 +98,7 @@
   "apps/mobile/src/edit-time/lib/queries.ts",
   "apps/mobile/src/feedback/queries.ts",
   "apps/mobile/src/finance/shared/queries.ts",
-  "apps/mobile/src/inbox/qualification/queries.ts",
+  "apps/mobile/src/inbox/qualification/lib/queries.ts",
   "apps/mobile/src/money/shared/queries.ts",
   "apps/mobile/src/ops/dashboard/dashboard-queries.ts",
   "apps/mobile/src/payments/hooks/queries.ts",

@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { WEEK_ORDER } from './qualification-form';
+import { WEEK_ORDER } from '@/inbox/qualification/lib/qualification-form';
 
 const weekday: Record<string, string> = t.enums.weekday;
 

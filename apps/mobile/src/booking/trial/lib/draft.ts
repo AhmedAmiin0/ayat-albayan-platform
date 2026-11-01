@@ -11,9 +11,9 @@ import {
   type PhoneCountry,
   type Program,
 } from '@ab/shared';
-import { qualForm } from '@/inbox/qualification/qualification-form';
+import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 import type { Lead } from '@/inbox/shared/types';
-import type { BookingKind, InvoiceDraft } from '../../shared/contract';
+import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from './package-choice';
 
 // «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):

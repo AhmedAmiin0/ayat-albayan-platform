@@ -8,13 +8,13 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { LeadFacts } from '../leads/detail/LeadFacts';
-import { LeadReclassify } from '../leads/detail/LeadReclassify';
-import { LeadAssign } from '../leads/detail/LeadAssign';
-import { LeadStatusChanger } from '../leads/detail/LeadStatusChanger';
-import { LeadProfileSection } from '../qualification/LeadProfileSection';
-import { threadHref } from '../thread/hooks/thread-cache';
-import { useCachedLead } from '../leads/detail/use-cached-lead';
+import { LeadFacts } from '@/inbox/leads/detail/LeadFacts';
+import { LeadReclassify } from '@/inbox/leads/detail/LeadReclassify';
+import { LeadAssign } from '@/inbox/leads/detail/LeadAssign';
+import { LeadStatusChanger } from '@/inbox/leads/detail/LeadStatusChanger';
+import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfileSection';
+import { threadHref } from '@/inbox/thread/hooks/thread-cache';
+import { useCachedLead } from '@/inbox/leads/detail/use-cached-lead';
 
 /**
  * One lead (R-MOB-02): facts, status changer, the WhatsApp thread (reply and templates in the app),
