@@ -112,7 +112,7 @@ On every run: the web app is built on the runner before anything on the server c
 
 Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
-Mobile preview APK: `cd apps/mobile && npx eas-cli build --platform android --profile preview` (EAS keeps the Android keystore). Install link: the build page on expo.dev.
+Mobile preview APK: Actions → mobile → Run workflow on `develop` with action `build-android-apk` (`gh workflow run mobile.yml --ref develop -f action=build-android-apk`); never `npx eas-cli` / `eas build` on the owner's PC (EAS keeps the Android keystore). Install link: the EAS build page, linked from the run and the `mobile-v…` release notes.
 
 Demo data: `DATABASE_URL=<staging session pooler, aws-1-eu-central-1> node tools/scripts/seed/seed-demo.mjs --allow-remote-staging` (all rows marked DEMO; production is always refused).
 
@@ -123,7 +123,7 @@ Teachers 24/7 (owner 2026-10-12): migration 320 seeds `settings.teachers_always_
 Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on staging, never an API copy) by `playwright-core` (pinned to `1.63.0`, browser build chromium-1243, the same one the e2e suite installs). `chromium.launch()` takes no executable path: playwright-core finds the browser through `PLAYWRIGHT_BROWSERS_PATH`.
 
 - **API image** (`apps/api/Dockerfile`): the runtime stage sets `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright` and runs `playwright-core/cli.js install --with-deps --only-shell chromium` (headless shell + system libraries), plus `fonts-hosny-amiri` as a fallback font. The PDF embeds its own Amiri and IBM Plex Sans Arabic, so the container needs no other fonts.
-- **Local dev / e2e**: leave `PLAYWRIGHT_BROWSERS_PATH` unset; playwright-core uses the default cache (`%LOCALAPPDATA%\ms-playwright` on Windows, `~/.cache/ms-playwright` on Linux) that `pnpm --filter e2e exec playwright install chromium` fills.
+- **e2e (CI runner)**: leave `PLAYWRIGHT_BROWSERS_PATH` unset; playwright-core uses the default cache (`~/.cache/ms-playwright` on the Linux runner), filled by ci.yml's «Install the browser (only on a cache miss)» step (`pnpm --filter e2e exec playwright install chromium`). Never on the owner's PC.
 - **Bumping playwright-core**: bump `apps/api` and `e2e` together, rebuild the image. A browser mismatch shows as `pdf_status = 'failed'` with "Executable doesn't exist" in `lesson_reports.pdf_error`; the admin retry (R12) re-queues it once fixed.
 - The logo is read at runtime from `apps/web/public/brand/mark.png`, so the image keeps the whole repo (`COPY . .`); don't move that file without updating `report-pdf/pdf-assets.ts`.
 
@@ -167,7 +167,7 @@ A sign-in account with role teacher («معلم تجريبي», English name `Te
 3. Sign in at **https://app.ayatalbayan.com** with that email and password: the teacher pages open and «طالب تجريبي» is under «طلابي».
 4. To remove: run the workflow with action **remove** (the student, the guardian, the teacher row and the login). `pnpm clear:demo --apply --allow-remote-staging` also removes the rows but leaves the login. Lessons or reports created for the test student make either refuse (nothing is deleted); delete those first.
 
-Against a local Supabase (a CI runner's, never on the owner's PC): `TEST_TEACHER_EMAIL=… TEST_ACCOUNT_PASSWORD=… pnpm seed:test-account` (`--remove` to delete), with the env from `pnpm env:local`.
+Against a CI runner's local Supabase (no ci.yml job does it yet, and staging-test-account.yml above covers staging; never on the owner's PC): `TEST_TEACHER_EMAIL=… TEST_ACCOUNT_PASSWORD=… pnpm seed:test-account` (`--remove` to delete), with the env from `pnpm env:local`.
 
 ## Not on staging yet
 
@@ -320,7 +320,7 @@ Owner request 2026-10-12: «try not to use .env and make most of the config in t
 # On the VPS, in /opt/ayat-albayan-staging (the container reads .env through compose):
 docker compose exec ayat-worker node dist/scripts/config-import-env.js            # keeps values already in the DB
 docker compose exec ayat-worker node dist/scripts/config-import-env.js --overwrite # replaces them
-# Without Docker (CI or a cloud session, never on the owner's PC): pnpm --filter api build && pnpm --filter api config:import-env
+# No workflow runs it; it needs the target's SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY and the env values, so use the VPS lines above (never the owner's PC or a cloud session, which has no secrets).
 ```
 
 It copies the **current non-empty** env values of the keys above into the table / Vault with the service role and prints only `KEY: imported` or `KEY: skipped (…)`, never a value. A value the env schema would refuse is skipped. After the import, check «التكاملات» (each field says «من الإعدادات» / «من الخادم»), then the moved keys may be removed from `.env` at your pace.

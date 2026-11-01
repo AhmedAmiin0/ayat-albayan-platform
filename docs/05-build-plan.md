@@ -83,9 +83,9 @@ const verified = await parallel(built.map((b, i) => () =>
   check every requirement id (${MODULES[i].requirementIds.join(', ')}) is implemented and tested; fix small issues; report residuals.`,
     { label: `verify:${MODULES[i].key}`, phase: 'Verify', isolation: 'worktree', schema: VERDICT_SCHEMA })))
 
-const result = await agent(`Merge all module branches into develop, resolve conflicts, open the PR and watch its
-GitHub Actions CI (lint typecheck test e2e) with gh pr checks --watch until green, fix integration issues,
-write PHASE_SUMMARY.md with residual TODOs.`,
+const result = await agent(`Merge all module branches into one integration branch, resolve conflicts, open its PR
+into develop and watch its GitHub Actions CI (lint typecheck test e2e) with gh pr checks --watch until green,
+fix integration issues, merge, write PHASE_SUMMARY.md with residual TODOs.`,
   { label: 'integrate', phase: 'Integrate' })
 return { verified, result }
 ```
