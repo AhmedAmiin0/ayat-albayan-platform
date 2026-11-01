@@ -97,7 +97,7 @@ test('the link made: the family refetches (its unpaid package); «إرسال ف�
 test('no text can go in this chat (chatMaySend no): the box’s closed note, the box untouched', async () => {
   mockWindow.open = false;
   await createLink();
-  await fireEvent.press(await screen.findByRole('button', { name: pl.sendInChat }));
+  await fireEvent.press(await screen.findByRole('button', { name: pl.sendInChat, disabled: true }));
   expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
   expect(mockSetText).not.toHaveBeenCalled();
   expect(mockBack).not.toHaveBeenCalled();

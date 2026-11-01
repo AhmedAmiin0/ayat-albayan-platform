@@ -39,13 +39,10 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const tz = useViewerTz();
   const { color } = useTheme();
   const client = useQueryClient();
-  const [closed, setClosed] = useState(false);
+  // Read at render, as the web dialog: the button is off (with the box's note) where no text goes.
+  const closed = !chatMaySend(client, phone, new Date());
   const [copy, setCopy] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const send = () => {
-    if (!chatMaySend(client, phone, new Date())) {
-      setClosed(true);
-      return;
-    }
     // After a reply she had half-written (drafts outlive the chat), never over it.
     appendComposerText(phone, linkMessage(link));
     onSent();
@@ -65,7 +62,7 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
         {ltr(link.url)}
       </AppText>
       {closed ? <ErrorLine message={t.inbox.sessionClosed} /> : null}
-      <Button label={pl.sendInChat} onPress={send} />
+      <Button label={pl.sendInChat} onPress={send} disabled={closed} />
       <Button variant="secondary" label={pl.copy} onPress={() => void copyOrShare(link.url).then(setCopy)} />
       <Button variant="secondary" label={t.studentLists.openLink} onPress={open} />
       {copy === 'copied' ? <Note>{pl.copied}</Note> : null}

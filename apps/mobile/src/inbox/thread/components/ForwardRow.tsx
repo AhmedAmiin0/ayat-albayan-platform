@@ -9,6 +9,7 @@ import { Avatar } from '@/core/ui/primitives/Avatar';
 import { CheckIcon } from '@/inbox/shared/chat-icons';
 import { chatName } from '@/inbox/thread/hooks/forward-text';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { sendState } from '@/inbox/thread/hooks/chat-window';
 
 interface ForwardRowProps {
   thread: ThreadView;
@@ -27,8 +28,8 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
   const { color } = useTheme();
   const name = chatName(th);
   const staff = useThreadMode().kind !== 'teacher';
-  const chat = { open: th.session_open, tryAfterWindow: th.try_after_window };
-  const closed = !staffMaySend(chat, staff);
+  // The device clock, as the composer and «رد» (sendState).
+  const closed = !staffMaySend(sendState(th, new Date()), staff);
   return (
     <Pressable
       accessibilityRole="checkbox"
