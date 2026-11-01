@@ -45,13 +45,14 @@ export function ExpensesPage({ month, onMonth }: Props) {
   const columns = useMemo(() => {
     const name = (key: string) => categoryLabel(categories.data, key);
     const labels = [...new Set(rows.map((e) => name(e.category)))].map((l) => ({ value: l, label: l }));
-    const act = (e: ExpenseView, action: ExpenseAction) => {
-      if (action === 'edit') setEditing(e);
-      else if (action === 'delete') setRemoving(e);
-      else if (action === 'confirm') confirmDraftOf(e.id);
-      else openReceipt(e.id);
-    };
-    return expenseColumns({ label: name, categories: labels, onAction: act });
+    const act = {
+      edit: (e) => setEditing(e),
+      delete: (e) => setRemoving(e),
+      confirm: (e) => confirmDraftOf(e.id),
+      receipt: (e) => openReceipt(e.id),
+    } satisfies Record<ExpenseAction, (e: ExpenseView) => void>;
+    const onAction = (e: ExpenseView, action: ExpenseAction) => act[action](e);
+    return expenseColumns({ label: name, categories: labels, onAction });
   }, [rows, categories.data, confirmDraftOf, openReceipt]);
 
   return (

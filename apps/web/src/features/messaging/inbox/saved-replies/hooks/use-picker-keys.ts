@@ -8,19 +8,40 @@ export interface PickerKeys {
   onKey: (e: KeyboardEvent<HTMLElement>) => boolean;
 }
 
+interface Picker {
+  count: number;
+  active: number;
+  setActive: (index: number) => void;
+  onPick: (index: number) => void;
+  onClose: () => void;
+}
+
+/** The highlight moved `by` rows, wrapping; 0 on an empty list. */
+const step = (p: Picker, by: number): void =>
+  p.setActive(p.count ? (p.active + by + p.count) % p.count : 0);
+
+type PickerKey = 'Escape' | 'ArrowDown' | 'ArrowUp' | 'Enter';
+
+const KEYS = {
+  Escape: (p: Picker) => p.onClose(),
+  ArrowDown: (p: Picker) => step(p, 1),
+  ArrowUp: (p: Picker) => step(p, -1),
+  // Always taken, even with nothing to pick (no match, still loading): the «/…» text never sends.
+  Enter: (p: Picker) => (p.count ? p.onPick(p.active) : undefined),
+} satisfies Record<PickerKey, (p: Picker) => void>;
+
+/** A key the picker takes: one of KEYS, but Shift+Enter stays the composer's new line. */
+const isPickerKey = (e: KeyboardEvent<HTMLElement>, key: string): key is PickerKey =>
+  Object.hasOwn(KEYS, key) && !(key === 'Enter' && e.shiftKey);
+
 /** The picker's keyboard, shared by its search box and the composer while «/» has it open. */
 export function usePickerKeys(input: { count: number; onPick: (index: number) => void; onClose: () => void }): PickerKeys {
   const [raw, setActive] = useState(0);
   const active = input.count ? Math.min(raw, input.count - 1) : 0;
   const onKey = (e: KeyboardEvent<HTMLElement>): boolean => {
-    if (e.key === 'Escape') input.onClose();
-    else if (e.key === 'ArrowDown') setActive(input.count ? (active + 1) % input.count : 0);
-    else if (e.key === 'ArrowUp') setActive(input.count ? (active - 1 + input.count) % input.count : 0);
-    // Always taken, even with nothing to pick (no match, still loading): the «/…» text never sends.
-    else if (e.key === 'Enter' && !e.shiftKey) {
-      if (input.count) input.onPick(active);
-    }
-    else return false;
+    const { key } = e;
+    if (!isPickerKey(e, key)) return false;
+    KEYS[key]({ ...input, active, setActive });
     e.preventDefault();
     return true;
   };

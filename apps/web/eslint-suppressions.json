@@ -4034,7 +4034,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/assistants/statements/StatementDialogs.tsx": {
@@ -5146,9 +5146,6 @@
     }
   },
   "src/features/people/teachers/form/meeting-mode-notes.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
