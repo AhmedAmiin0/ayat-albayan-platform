@@ -34,7 +34,7 @@
   "apps/api/src/modules/messaging/reminders/ticker.ts types TickerOptions",
   "apps/api/src/modules/messaging/webhook/parse/webhook.parse.ts types ParseOptions",
   "apps/api/src/modules/messaging/webhook/parse/webhook.signature.ts types SignedRequest",
-  "apps/api/src/modules/messaging/webhook/webhook.queries.ts types StatusMove",
+  "apps/api/src/modules/messaging/webhook/webhook.repo.ts types StatusMove",
   "apps/api/src/modules/messaging/webhook/webhook.settings.ts types WebhookSettingsValues",
   "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts exports CRM_NO_MEDIA",
   "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts exports MEDIA_FETCH_DAYS",

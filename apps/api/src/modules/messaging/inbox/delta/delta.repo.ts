@@ -17,7 +17,7 @@ function check(error: { message: string } | null, what: string): asserts error i
 
 /** The delta refresh's two reads (thread-delta.service.ts), both on messages_phone_idx. */
 @Injectable()
-export class DeltaQueries {
+export class DeltaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The chat's rows created after `after`, newest first, `limit + 1` so the caller sees a gap. */

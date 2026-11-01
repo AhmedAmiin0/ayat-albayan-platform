@@ -1,20 +1,20 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { Page } from '../../../../common/http/http';
-import { MessageViews } from '../../whatsapp/messages/message.views';
-import { ReadReceipts } from '../reads/read-receipts';
-import { familyTag, type FamilyTag } from '../people/thread-people.mapper';
-import { asRead, pageRows, stampRead, type ThreadPageQuery } from '../reads/thread-page';
+import type { Page } from '@/common/http/http';
+import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
+import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
+import { asRead, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
 import { toThreadView, type ThreadRow } from './threads.mapper';
-import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
+import { ThreadsRepo, type ThreadListFilter } from './threads.repo';
 
-export type { ThreadPageQuery } from '../reads/thread-page';
+export type { ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
 
 /** H1/H2 (docs/12 §4, R-LEAD-02, R-MSG-05): the WhatsApp inbox over v_threads and messages. */
 @Injectable()
 export class ThreadsService {
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly views: MessageViews,
     private readonly receipts: ReadReceipts,
   ) {}
