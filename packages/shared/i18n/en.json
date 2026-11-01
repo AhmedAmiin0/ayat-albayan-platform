@@ -5518,7 +5518,7 @@
       "fx": "Exchange rates",
       "google": "Google (Calendar, Drive and Sheets)",
       "giphy": "Chat GIFs (GIPHY)",
-      "stripe": "Online payments (Stripe, test build)"
+      "stripe": "Online payments (Stripe)"
     },
     "source": {
       "db": "From settings",
@@ -5709,7 +5709,7 @@
       },
       "STRIPE_API_KEY": {
         "label": "Stripe restricted key",
-        "hint": "From a Stripe sandbox only (rk_test_… or sk_test_…); a live key is refused. Kept in the vault, never shown."
+        "hint": "A Stripe restricted or secret key (rk_… or sk_…) of the server's mode: a live key (rk_live_…) only when the server runs in live mode, a sandbox key (rk_test_…) only in test mode. Kept in the vault, never shown."
       },
       "STRIPE_WEBHOOK_SECRET": {
         "label": "Webhook signing secret",
@@ -7450,7 +7450,7 @@
     },
     "settings": {
       "enabled": "Online payments",
-      "hint": "Test build only. On: assistants see payment links. Off: every online-payment button disappears.",
+      "hint": "On: assistants see payment links. Off: every online-payment button disappears.",
       "ready": "Online payments are working.",
       "missing": "Online payments will not work until you save: {keys}. Keys are saved in «Integrations» on the web.",
       "failed": "Could not save the change. Try again."

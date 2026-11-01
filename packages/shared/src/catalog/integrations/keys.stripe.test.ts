@@ -4,6 +4,7 @@ import {
   integrationSecretCheck,
   integrationValuesSchema,
   integrationValueValid,
+  stripeKeyLive,
 } from './checks.js';
 import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from './keys.js';
 
@@ -40,12 +41,18 @@ describe('the stripe group', () => {
     expect(integrationValuesSchema.safeParse({ values: { STRIPE_MAX_DISCOUNT_PCT: '-1' } }).success).toBe(false);
   });
 
-  it('takes sandbox keys only: a live key, a publishable key or junk is refused', () => {
-    expect(issue('STRIPE_API_KEY', 'rk_test_51AbcXYZ')).toBeNull();
-    expect(issue('STRIPE_API_KEY', 'sk_test_51AbcXYZ')).toBeNull();
-    for (const live of ['rk_live_51AbcXYZ', 'sk_live_51AbcXYZ', 'pk_test_51AbcXYZ', 'rk_test_', 'nope']) {
-      expect(issue('STRIPE_API_KEY', live)).toBe('stripe_live_key_refused');
+  it('takes a restricted or secret key, sandbox or live; a publishable key or junk keeps the old code', () => {
+    for (const ok of ['rk_test_51AbcXYZ', 'sk_test_51AbcXYZ', 'rk_live_51AbcXYZ', 'sk_live_51AbcXYZ']) {
+      expect(issue('STRIPE_API_KEY', ok)).toBeNull();
     }
+    for (const bad of ['pk_test_51AbcXYZ', 'pk_live_51AbcXYZ', 'rk_test_', 'rk_live_', 'rk_prod_51Abc', 'nope']) {
+      expect(issue('STRIPE_API_KEY', bad)).toBe('stripe_live_key_refused');
+    }
+  });
+
+  it('stripeKeyLive: only an rk_live_ / sk_live_ key is live', () => {
+    for (const live of ['rk_live_51Abc', 'sk_live_51Abc']) expect(stripeKeyLive(live)).toBe(true);
+    for (const not of ['rk_test_51Abc', 'sk_test_51Abc', 'pk_live_51Abc', 'xrk_live_51Abc', '']) expect(stripeKeyLive(not)).toBe(false);
   });
 
   it('the webhook secret starts with whsec_; other secrets stay free text', () => {

@@ -2687,7 +2687,7 @@
   },
   "src/modules/finance/stripe/links/link-views.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/stripe/links/payment-links.controller.ts": {
@@ -2800,7 +2800,7 @@
   },
   "src/modules/finance/stripe/pay/pay-return.ts": {
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/modules/finance/stripe/pay/pay.app-return.http.test.ts": {
@@ -2930,7 +2930,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/finance/stripe/webhook/webhook-deps.ts": {

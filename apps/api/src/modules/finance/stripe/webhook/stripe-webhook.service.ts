@@ -1,7 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
+import { ar } from '@/common/infra/i18n/server-text';
 import { badRequest } from '../../../../common/http/errors';
 import { StripeClients } from '../gate/stripe-clients';
+import { LinkAlerts } from './link-alerts';
 import { LinkFulfilment } from './link-fulfilment';
 import { LinkRefunds } from './link-refunds';
 import { StripeEventsQueries } from './stripe-events.queries';
@@ -12,15 +14,19 @@ export class WebhookHandlers {
   constructor(
     readonly fulfil: LinkFulfilment,
     readonly refunds: LinkRefunds,
+    readonly alerts: LinkAlerts,
   ) {}
 }
 
 type WebhookPost = { rawBody: Buffer | undefined; signature: string | undefined };
 
 /**
- * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked on the raw
- * bytes Stripe sent (400 bad_signature, nothing stored); a live-mode event is refused (the test build);
- * each event is handled once (stripe_events, by event.id), every step idempotent on its own.
+ * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked
+ * on the raw bytes Stripe sent (400 bad_signature, nothing stored). The saved key's mode is the
+ * server's (stripeServerKey): a sandbox event under a live key is test money, recorded as
+ * mode_mismatch and closed; a live event on a server not in live mode (FEATURE_STRIPE back to
+ * test) is real money, never closed: 503 so Stripe retries, and the admins get a bell. Each event
+ * is handled once (stripe_events, by event.id), every step idempotent on its own.
  */
 @Injectable()
 export class StripeWebhookService {
@@ -35,7 +41,7 @@ export class StripeWebhookService {
   async handle(post: WebhookPost): Promise<{ received: true }> {
     const event = await this.verify(post);
     if (await this.events.begin(event)) return { received: true }; // a duplicate delivery
-    const result = event.livemode ? 'live_refused' : await this.dispatch(event);
+    const result = await this.route(event);
     await this.events.done(event.id, result);
     this.log.log(`stripe ${event.type} ${event.id}: ${result}`);
     return { received: true };
@@ -49,6 +55,22 @@ export class StripeWebhookService {
     } catch {
       throw badRequest('bad_signature');
     }
+  }
+
+  private async route(event: Stripe.Event): Promise<string> {
+    if (event.livemode === this.clients.liveMode()) return this.dispatch(event);
+    if (!event.livemode) return 'mode_mismatch';
+    return this.liveRefused(event);
+  }
+
+  /** Real money the server cannot take now: left open (processed_at null) for Stripe's retries. */
+  private async liveRefused(event: Stripe.Event): Promise<never> {
+    const text = `${event.type} ${event.id}`;
+    const title = ar.paymentLinks.bell.refusedTitle;
+    await this.handlers.alerts.admins({ subject: `stripe_mode_mismatch:${event.id}`, title, text, link: null });
+    this.log.warn(`stripe live ${event.type} ${event.id}: FEATURE_STRIPE is not live, 503`);
+    const code = 'stripe_live_not_enabled';
+    throw new HttpException({ code, message: code }, HttpStatus.SERVICE_UNAVAILABLE);
   }
 
   private async dispatch(event: Stripe.Event): Promise<string> {

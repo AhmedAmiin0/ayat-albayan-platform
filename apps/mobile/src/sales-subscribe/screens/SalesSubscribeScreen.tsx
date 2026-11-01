@@ -28,7 +28,7 @@ function childOf(students: readonly SalesFamilyStudent[], ids: { picked: string 
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
  * the salesperson, for one of HER students only (GET /sales/money/family), the child picked here (owner
  * 2026-10-29: no names on the chat's pills). Priced and saved through the sales endpoints; then the
- * package's weekly days and its transfer, or a payment link (the Stripe test build). A preselected child
+ * package's weekly days and its transfer, or a payment link (a Stripe build). A preselected child
  * also offers «أيام الحلقات» straight away (a package already sold, its days not booked yet).
  */
 export function SalesSubscribeScreen() {
