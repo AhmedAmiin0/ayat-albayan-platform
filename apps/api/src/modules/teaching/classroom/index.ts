@@ -32,6 +32,6 @@ export {
 } from './recordings/recording-list.service';
 export {
   type FinishInput,
-  RecordingQueries,
+  RecordingRepo,
   type RecordingRow,
-} from './recordings/recording.queries';
+} from './recordings/recording.repo';

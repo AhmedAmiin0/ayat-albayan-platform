@@ -1,18 +1,18 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, CONFIG, OTHER_TEACHER, TEACHER } from '../classroom.fakes';
+import { ADMIN, CONFIG, OTHER_TEACHER, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID, meetingQueries, meetingRow, NOW, scheduledRow } from './internal-meetings.fakes';
-import type { InternalMeetingsQueries } from './internal-meetings.queries';
+import type { InternalMeetingsRepo } from './internal-meetings.repo';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
-import { LivekitApi } from '../livekit/livekit-api';
-import { http } from '../moderation/moderation.fakes';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 const ORIGIN = 'https://app.example.test';
 let mq: ReturnType<typeof meetingQueries>;
 let post: ReturnType<typeof http>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new InternalMeetingsService(mq as unknown as InternalMeetingsQueries, new LivekitApi(config, post), ORIGIN);
+  new InternalMeetingsService(mq as unknown as InternalMeetingsRepo, new LivekitApi(config, post), ORIGIN);
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const tokenOf = (url: string) => url.slice(`${ORIGIN}/m/`.length);
 

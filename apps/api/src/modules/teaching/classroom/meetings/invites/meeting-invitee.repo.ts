@@ -1,10 +1,10 @@
 import { NOT_SUBSCRIBED_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import { familyOfPhone } from '../../../../../common/db/family-of-phone';
-import { orSafe } from '../../../../people/guardians/http';
-import { studentNameOrCodeFilter } from '../../../../people/students/students.mapper';
-import { dbError } from '../../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { familyOfPhone } from '@/common/db/family-of-phone';
+import { orSafe } from '@/modules/people/guardians/http';
+import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
+import { dbError } from '@/common/http/http';
 
 /** Who may be invited as staff (base roles; never a guardian or a student login). */
 const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
@@ -38,7 +38,7 @@ const STUDENT_COLUMNS = 'id, name, code, guardian:guardians(id, name, phone_e164
 
 /** Reads behind the invitee picker and the invitee resolution (service role; the services guard). */
 @Injectable()
-export class MeetingInviteeQueries {
+export class MeetingInviteeRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Enabled staff profiles, by id (resolution) or by name (picker). */

@@ -1,8 +1,8 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import { dbError } from '../../../../../common/http/http';
-import { MEETING_COLUMNS, type MeetingRow } from '../../internal-meetings/internal-meetings.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { MEETING_COLUMNS, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 
 const LIST_LIMIT = 20;
 
@@ -17,7 +17,7 @@ interface MyInviteRow {
  * scheduled ones, and the ones the caller is invited to (migration 411). Service role.
  */
 @Injectable()
-export class MeetingListQueries {
+export class MeetingListRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The newest 20: everyone's for an admin (`createdBy` null), else the caller's own. */

@@ -1,7 +1,7 @@
 import type { AssistantView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 export interface LessonRef {
   lesson_id: string;
@@ -10,7 +10,7 @@ export interface LessonRef {
 
 /** student_assistants and the assistant profiles (service role; the services guard). */
 @Injectable()
-export class AssistantsQueries {
+export class AssistantsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every login with role = assistant, for the admin's picker. */

@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
 import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { ClassroomSettings } from '../classroom.settings';
-import { dbError } from '../../../../common/http/http';
-import { hashLinkToken, linkExpiry, newLinkToken } from '../join/join-link.token';
+import { DB, type Db } from '@/common/db/db.module';
+import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
+import { dbError } from '@/common/http/http';
+import { hashLinkToken, linkExpiry, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 
 type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;
 export type StudentLesson = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
@@ -19,7 +19,7 @@ const AHEAD = 20;
 
 /** Reads and writes of the student's long-lived link (migration 191; service role, the services guard). */
 @Injectable()
-export class StudentLinkQueries {
+export class StudentLinkRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: ClassroomSettings,

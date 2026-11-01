@@ -1,10 +1,10 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from './classroom.settings';
-import { isSalesLesson } from '../../sales/sales/schedule/sales-lessons';
-import { dbError } from '../../../common/http/http';
+import { isSalesLesson } from '@/modules/sales/sales/schedule/sales-lessons';
+import { dbError } from '@/common/http/http';
 
 export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at'>;
 const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at';
@@ -18,7 +18,7 @@ interface SendContext {
 
 /** Reads and writes of the classroom routes (service role; the services guard). */
 @Injectable()
-export class ClassroomQueries {
+export class ClassroomRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: ClassroomSettings,
