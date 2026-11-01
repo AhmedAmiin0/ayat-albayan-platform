@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { RecordingQueries } from '@/modules/teaching/classroom/recordings/recording.queries';
+import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import { roomNameOf, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 import { liveRooms, type LiveRoom } from './max-duration.rule';
 
@@ -13,7 +13,7 @@ import { liveRooms, type LiveRoom } from './max-duration.rule';
 export class RoomCloser {
   constructor(
     private readonly livekit: LivekitApi,
-    private readonly recordings: RecordingQueries,
+    private readonly recordings: RecordingRepo,
   ) {}
 
   /** LIVEKIT_* are set (else the job only ends meetings in the database). */

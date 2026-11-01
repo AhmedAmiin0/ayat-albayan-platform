@@ -1,0 +1,26 @@
+import { View } from 'react-native';
+import { Field, type FieldProps } from '@/core/ui/form/Field';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import type { TextField } from '@/inbox/qualification/lib/qualification-form';
+import type { QualFieldsProps } from './QualificationFields';
+
+type QualTextProps = QualFieldsProps & {
+  field: TextField;
+  label: string;
+} & Omit<FieldProps, 'label' | 'value' | 'onChangeText'>;
+
+/** One typed qualification answer with its error under it. */
+export function QualText({ form, errors, onChange, field, label, ...input }: QualTextProps) {
+  const error = errors[field];
+  return (
+    <View style={{ gap: 4 }}>
+      <Field
+        label={label}
+        value={form[field]}
+        onChangeText={(v) => onChange({ [field]: v })}
+        {...input}
+      />
+      {error ? <ErrorLine message={error} /> : null}
+    </View>
+  );
+}

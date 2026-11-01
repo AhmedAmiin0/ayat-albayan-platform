@@ -1,13 +1,13 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { BUCKETS, SIGNED_URL_SECONDS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { notFound } from '../../../../common/http/errors';
-import { InternalMeetingsQueries } from '../internal-meetings/internal-meetings.queries';
-import { canManageMeeting } from '../internal-meetings/internal-meetings.token';
-import { LessonRoleService } from '../join/lesson-role.service';
-import { RecordingQueries, type RecordingRow } from './recording.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { notFound } from '@/common/http/errors';
+import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
+import { RecordingRepo, type RecordingRow } from './recording.repo';
 import { lessonTarget, meetingTarget, type RoomTarget } from './recording-target';
 
 const STATUSES = ['recording', 'done', 'failed'] as const;
@@ -24,7 +24,7 @@ export function recordingView(row: RecordingRow, url: string | null): LessonReco
 @Injectable()
 export class RecordingViews {
   constructor(
-    private readonly queries: RecordingQueries,
+    private readonly queries: RecordingRepo,
     private readonly storage: StorageService,
   ) {}
 
@@ -59,7 +59,7 @@ export class RecordingListService {
 @Injectable()
 export class MeetingRecordingListService {
   constructor(
-    private readonly meetings: InternalMeetingsQueries,
+    private readonly meetings: InternalMeetingsRepo,
     private readonly views: RecordingViews,
   ) {}
 

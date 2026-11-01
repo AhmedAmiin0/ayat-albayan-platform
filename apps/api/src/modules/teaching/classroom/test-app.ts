@@ -9,21 +9,21 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
-import { AssistantLessonsQueries } from './assistants/assistants.lessons';
-import { AssistantsQueries } from './assistants/assistants.queries';
+import { AssistantLessonsRepo } from './assistants/assistants.lessons';
+import { AssistantsRepo } from './assistants/assistants.repo';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './classroom.config';
 import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, SALES, TEACHER, TEACHER_ID } from './classroom.fakes';
-import { ClassroomQueries } from './classroom.queries';
+import { ClassroomRepo } from './classroom.repo';
 import { meetingQueries } from './internal-meetings/internal-meetings.fakes';
 import { meetingInviteMocks, overrideMeetingInvites, resetMeetingInvites } from './meetings/invites/meeting-invites.fakes';
-import { InternalMeetingsQueries } from './internal-meetings/internal-meetings.queries';
+import { InternalMeetingsRepo } from './internal-meetings/internal-meetings.repo';
 import { LIVEKIT_HTTP } from './livekit/livekit-api';
 import { registerLivekitWebhookParser } from './livekit/livekit-webhook.controller';
 import { http, moderation, recordingQueries, S3 } from './moderation/moderation.fakes';
-import { ModerationQueries } from './moderation/moderation.queries';
-import { RecordingQueries } from './recordings/recording.queries';
+import { ModerationRepo } from './moderation/moderation.repo';
+import { RecordingRepo } from './recordings/recording.repo';
 import { studentLinkQueries } from './student-link/student-link.fakes';
-import { StudentLinkQueries } from './student-link/student-link.queries';
+import { StudentLinkRepo } from './student-link/student-link.repo';
 import { StorageService } from '@/common/storage/storage.service';
 import { AuditService } from '@/common/audit/audit.service';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -68,22 +68,22 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
   };
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(ClassroomQueries).useValue(m.queries)
-    .overrideProvider(AssistantsQueries).useValue(m.assistants)
-    .overrideProvider(AssistantLessonsQueries).useValue(m.assistantLessons)
+    .overrideProvider(ClassroomRepo).useValue(m.queries)
+    .overrideProvider(AssistantsRepo).useValue(m.assistants)
+    .overrideProvider(AssistantLessonsRepo).useValue(m.assistantLessons)
     .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(CLASSROOM_CONFIG).useValue(config)
     .overrideProvider(CLASSROOM_WEB_ORIGIN).useValue('https://app.example.test')
-    .overrideProvider(ModerationQueries).useValue(m.moderation)
-    .overrideProvider(RecordingQueries).useValue(m.recordings)
+    .overrideProvider(ModerationRepo).useValue(m.moderation)
+    .overrideProvider(RecordingRepo).useValue(m.recordings)
     .overrideProvider(LIVEKIT_HTTP).useValue((...a: Parameters<typeof m.http>) => m.http(...a))
     .overrideProvider(RECORDING_CONFIG).useValue(S3)
     .overrideProvider(StorageService).useValue(m.storage)
-    .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
+    .overrideProvider(StudentLinkRepo).useValue(m.studentLinks)
     .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(InternalMeetingsQueries).useValue(m.meetings)
+    .overrideProvider(InternalMeetingsRepo).useValue(m.meetings)
     .overrideProvider(SettingsService).useValue(fakeSettings());
   const mod = await overrideMeetingInvites(builder, m.invites).compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });

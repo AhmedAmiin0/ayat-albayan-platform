@@ -11,17 +11,27 @@ import {
   type UserRoleOption,
   type UserWithCredential,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, Header, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
-import { UsersService, type Actor } from './users.service';
+import { actorOf, UsersService } from './users.service';
 import { UsersUpdateService } from './update/users.update.service';
 
-const actorOf = (user: AuthUser): Actor => ({ id: user.id, permissions: user.permissions ?? [] });
 const uuid = new ParseUUIDPipe();
 
 /**
@@ -42,8 +52,8 @@ export class UsersController {
 
   @Get()
   @Permissions('users.read')
-  list(@Query() query: unknown): Promise<UserPage> {
-    return this.users.list(parseOrThrow(usersListQuery, query));
+  list(@ZodQuery(usersListQuery) query: z.output<typeof usersListQuery>): Promise<UserPage> {
+    return this.users.list(query);
   }
 
   /** System and custom roles; `assignable` = the caller holds every grant of the role. */
@@ -56,8 +66,11 @@ export class UsersController {
   /** Teachers / students / guardians without a login, for the "link to" pickers (teachers.write / students.write / guardians.write of the kind). */
   @Get('link-candidates')
   @Permissions('users.write')
-  candidates(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<LinkCandidate[]> {
-    return this.users.candidates(parseOrThrow(linkCandidatesQuery, query), actorOf(user));
+  candidates(
+    @ZodQuery(linkCandidatesQuery) query: z.output<typeof linkCandidatesQuery>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LinkCandidate[]> {
+    return this.users.candidates(query, actorOf(user));
   }
 
   @Get(':id')
@@ -70,23 +83,34 @@ export class UsersController {
   @Post()
   @Permissions('users.write')
   @Header('Cache-Control', 'no-store')
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserWithCredential> {
-    return this.creator.create(parseOrThrow(userCreateSchema, body), actorOf(user));
+  create(
+    @ZodBody(userCreateSchema) body: z.output<typeof userCreateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<UserWithCredential> {
+    return this.creator.create(body, actorOf(user));
   }
 
   /** 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken. */
   @Patch(':id')
   @Permissions('users.write')
-  update(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserDetail> {
-    return this.updater.update(id, parseOrThrow(userUpdateSchema, body), actorOf(user));
+  update(
+    @Param('id', uuid) id: string,
+    @ZodBody(userUpdateSchema) body: z.output<typeof userUpdateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<UserDetail> {
+    return this.updater.update(id, body, actorOf(user));
   }
 
   /** 409 cannot_disable_self / last_admin. Also bans the login and revokes its sessions. */
   @Post(':id/disable')
   @HttpCode(200)
   @Permissions('users.write')
-  disable(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserDetail> {
-    return this.lifecycle.disable(id, parseOrThrow(userDisableSchema, body ?? {}), actorOf(user));
+  disable(
+    @Param('id', uuid) id: string,
+    @ZodBody(userDisableSchema, { orEmpty: true }) body: z.output<typeof userDisableSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<UserDetail> {
+    return this.lifecycle.disable(id, body, actorOf(user));
   }
 
   /** 409 self_lockout (nobody re-enables themselves). */
@@ -101,8 +125,12 @@ export class UsersController {
   @HttpCode(200)
   @Permissions('users.write')
   @Header('Cache-Control', 'no-store')
-  resetPassword(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserWithCredential> {
-    return this.lifecycle.resetPassword(id, parseOrThrow(passwordResetSchema, body ?? {}), actorOf(user));
+  resetPassword(
+    @Param('id', uuid) id: string,
+    @ZodBody(passwordResetSchema, { orEmpty: true }) body: z.output<typeof passwordResetSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<UserWithCredential> {
+    return this.lifecycle.resetPassword(id, body, actorOf(user));
   }
 
   @Post(':id/sign-out')

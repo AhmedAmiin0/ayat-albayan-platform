@@ -3,13 +3,13 @@ import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ClassroomConfig, RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
-import type { ClassroomQueries } from '@/modules/teaching/classroom/classroom.queries';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '@/modules/teaching/classroom/classroom.fakes';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
 import type { HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
-import type { ModerationQueries, ParticipantRow } from './moderation.queries';
-import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.queries';
+import type { ModerationRepo, ParticipantRow } from './moderation.repo';
+import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
@@ -95,13 +95,13 @@ interface JoinDeps {
 
 /** Real LessonRoleService over the mocked queries. */
 export const rolesOf = (d: JoinDeps): LessonRoleService =>
-  new LessonRoleService(d.q as unknown as ClassroomQueries, (d.teachers ?? teachersFake()) as unknown as TeachersRepo);
+  new LessonRoleService(d.q as unknown as ClassroomRepo, (d.teachers ?? teachersFake()) as unknown as TeachersRepo);
 
 /** Real RoomAdmission over the mocked moderation queries and recorder. */
 export const admissionOf = (d: JoinDeps): RoomAdmission =>
   new RoomAdmission(
     d.config === undefined ? CONFIG : d.config,
-    (d.mod ?? moderation()) as unknown as ModerationQueries,
+    (d.mod ?? moderation()) as unknown as ModerationRepo,
     (d.rec ?? recorder()) as unknown as RecordingStarter,
   );
 

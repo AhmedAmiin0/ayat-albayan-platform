@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
-import { InternalMeetingsQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { AUTO_END_REASON } from './max-duration.rule';
 
 const sameInstant = (a: string | null | undefined, b: Date): boolean =>
@@ -14,7 +14,7 @@ const sameInstant = (a: string | null | undefined, b: Date): boolean =>
 @Injectable()
 export class MeetingAutoEnd {
   constructor(
-    private readonly queries: InternalMeetingsQueries,
+    private readonly queries: InternalMeetingsRepo,
     private readonly audit: AuditService,
   ) {}
 

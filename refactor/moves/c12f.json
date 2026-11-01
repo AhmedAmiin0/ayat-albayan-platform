@@ -1,0 +1,280 @@
+{
+  "id": "c12f",
+  "seq": 220,
+  "moves": [
+    {
+      "from": "apps/mobile/src/inbox/lists/AutoListNote.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ChatListChips.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/CreateListSheet.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/EditListSheet.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ListCheckRow.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ListChip.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ListNameForm.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ListSheet.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/ThreadListsSheet.*",
+      "to": "apps/mobile/src/inbox/lists/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/list-errors.*",
+      "to": "apps/mobile/src/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/list-fixtures.*",
+      "to": "apps/mobile/src/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/use-chat-lists.*",
+      "to": "apps/mobile/src/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lists/use-list-membership.*",
+      "to": "apps/mobile/src/inbox/lists/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/DayChips.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/FamilyFields.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/FollowUpCard.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/Heading.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/LeadProfileSection.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/PreferenceFields.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/QualText.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/QualificationFields.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/QualificationForm.*",
+      "to": "apps/mobile/src/inbox/qualification/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/fixtures.*",
+      "to": "apps/mobile/src/inbox/qualification/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/follow-up-text.*",
+      "to": "apps/mobile/src/inbox/qualification/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/qualification-form.*",
+      "to": "apps/mobile/src/inbox/qualification/lib/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/qualification/queries.*",
+      "to": "apps/mobile/src/inbox/qualification/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/lists/AutoListNote.test.tsx",
+      "apps/mobile/src/inbox/lists/components/AutoListNote.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/AutoListNote.tsx",
+      "apps/mobile/src/inbox/lists/components/AutoListNote.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ChatListChips.access.test.tsx",
+      "apps/mobile/src/inbox/lists/components/ChatListChips.access.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ChatListChips.choice.test.tsx",
+      "apps/mobile/src/inbox/lists/components/ChatListChips.choice.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ChatListChips.test.tsx",
+      "apps/mobile/src/inbox/lists/components/ChatListChips.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ChatListChips.tsx",
+      "apps/mobile/src/inbox/lists/components/ChatListChips.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/CreateListSheet.test.tsx",
+      "apps/mobile/src/inbox/lists/components/CreateListSheet.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/CreateListSheet.tsx",
+      "apps/mobile/src/inbox/lists/components/CreateListSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/EditListSheet.test.tsx",
+      "apps/mobile/src/inbox/lists/components/EditListSheet.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/EditListSheet.tsx",
+      "apps/mobile/src/inbox/lists/components/EditListSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/list-errors.test.ts",
+      "apps/mobile/src/inbox/lists/lib/list-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/list-errors.ts",
+      "apps/mobile/src/inbox/lists/lib/list-errors.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/list-fixtures.ts",
+      "apps/mobile/src/inbox/lists/lib/list-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ListCheckRow.tsx",
+      "apps/mobile/src/inbox/lists/components/ListCheckRow.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ListChip.tsx",
+      "apps/mobile/src/inbox/lists/components/ListChip.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ListNameForm.tsx",
+      "apps/mobile/src/inbox/lists/components/ListNameForm.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ListSheet.tsx",
+      "apps/mobile/src/inbox/lists/components/ListSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ThreadListsSheet.test.tsx",
+      "apps/mobile/src/inbox/lists/components/ThreadListsSheet.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/ThreadListsSheet.tsx",
+      "apps/mobile/src/inbox/lists/components/ThreadListsSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/use-chat-lists.ts",
+      "apps/mobile/src/inbox/lists/lib/use-chat-lists.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/use-list-membership.test.ts",
+      "apps/mobile/src/inbox/lists/lib/use-list-membership.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lists/use-list-membership.ts",
+      "apps/mobile/src/inbox/lists/lib/use-list-membership.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/DayChips.tsx",
+      "apps/mobile/src/inbox/qualification/components/DayChips.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/FamilyFields.tsx",
+      "apps/mobile/src/inbox/qualification/components/FamilyFields.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/fixtures.ts",
+      "apps/mobile/src/inbox/qualification/lib/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/follow-up-text.test.ts",
+      "apps/mobile/src/inbox/qualification/lib/follow-up-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/follow-up-text.ts",
+      "apps/mobile/src/inbox/qualification/lib/follow-up-text.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/FollowUpCard.tsx",
+      "apps/mobile/src/inbox/qualification/components/FollowUpCard.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/Heading.tsx",
+      "apps/mobile/src/inbox/qualification/components/Heading.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/LeadProfileSection.family.test.tsx",
+      "apps/mobile/src/inbox/qualification/components/LeadProfileSection.family.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/LeadProfileSection.followup.test.tsx",
+      "apps/mobile/src/inbox/qualification/components/LeadProfileSection.followup.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/LeadProfileSection.offline.test.tsx",
+      "apps/mobile/src/inbox/qualification/components/LeadProfileSection.offline.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/LeadProfileSection.qualification.test.tsx",
+      "apps/mobile/src/inbox/qualification/components/LeadProfileSection.qualification.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/LeadProfileSection.tsx",
+      "apps/mobile/src/inbox/qualification/components/LeadProfileSection.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/PreferenceFields.clock.test.tsx",
+      "apps/mobile/src/inbox/qualification/components/PreferenceFields.clock.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/PreferenceFields.tsx",
+      "apps/mobile/src/inbox/qualification/components/PreferenceFields.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/qualification-form.test.ts",
+      "apps/mobile/src/inbox/qualification/lib/qualification-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/qualification-form.ts",
+      "apps/mobile/src/inbox/qualification/lib/qualification-form.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/QualificationFields.tsx",
+      "apps/mobile/src/inbox/qualification/components/QualificationFields.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/QualificationForm.tsx",
+      "apps/mobile/src/inbox/qualification/components/QualificationForm.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/QualText.tsx",
+      "apps/mobile/src/inbox/qualification/components/QualText.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/qualification/queries.ts",
+      "apps/mobile/src/inbox/qualification/lib/queries.ts"
+    ]
+  ]
+}

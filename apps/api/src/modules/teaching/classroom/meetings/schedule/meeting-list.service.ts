@@ -1,9 +1,9 @@
 import type { MeetingView, MyMeetingInvite } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { InternalMeetingsQueries } from '../../internal-meetings/internal-meetings.queries';
-import { MeetingListQueries } from './meeting-list.queries';
-import { orderMeetings, toMeetingView } from '../invites/meeting-invites.mapper';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { MeetingListRepo } from './meeting-list.repo';
+import { orderMeetings, toMeetingView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
 
 const DAY_MS = 86_400_000;
 
@@ -15,8 +15,8 @@ const DAY_MS = 86_400_000;
 @Injectable()
 export class MeetingListService {
   constructor(
-    private readonly queries: InternalMeetingsQueries,
-    private readonly lists: MeetingListQueries,
+    private readonly queries: InternalMeetingsRepo,
+    private readonly lists: MeetingListRepo,
   ) {}
 
   async list(user: AuthUser, now = new Date()): Promise<MeetingView[]> {

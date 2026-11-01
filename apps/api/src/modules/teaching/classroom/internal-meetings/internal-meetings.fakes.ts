@@ -1,8 +1,8 @@
 // Test fixtures for «اجتماع داخلي» (not shipped; excluded from the build by *.fakes.ts).
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { vi } from 'vitest';
-import { TEACHER } from '../classroom.fakes';
-import type { MeetingRow, NewMeeting } from './internal-meetings.queries';
+import { TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import type { MeetingRow, NewMeeting } from './internal-meetings.repo';
 
 export const MEETING_ID = '00000000-0000-4000-8000-0000000000e1';
 /** 43 base64url characters, like newMeetingToken. */

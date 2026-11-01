@@ -1,4 +1,4 @@
-import type { NumberRow } from './numbers.queries';
+import type { NumberRow } from './numbers.repo';
 
 // Test-only (excluded from the build): a wa_numbers row with obvious fake ids.
 

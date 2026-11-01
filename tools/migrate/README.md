@@ -116,6 +116,7 @@ against the target and drops (with a review row) any code a target student alrea
 
 ## Tests
 
-`pnpm turbo lint typecheck test --filter=@ab/migrate`. Pure logic (keys, values, rows, resolve,
-diff, apply with a fake DB, SQL builders, config guard, CLI args) is unit-tested beside the code.
+`pnpm turbo lint typecheck test --filter=@ab/migrate`, in CI or a cloud session (never on the
+owner's PC). Pure logic (keys, values, rows, resolve, diff, apply with a fake DB, SQL builders,
+config guard, CLI args) is unit-tested beside the code.
 Every test runs with an invented teacher directory (`src/test-setup.ts`, via `vitest.config.mts`).
