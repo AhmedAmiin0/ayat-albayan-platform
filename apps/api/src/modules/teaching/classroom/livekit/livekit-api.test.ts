@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { CONFIG, decode } from '../classroom.fakes';
+import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi, LivekitError, twirpBase } from './livekit-api';
-import { http } from '../moderation/moderation.fakes';
+import { egressAnswer, ignoredAnswer } from './livekit-twirp';
+import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import { sentBody, sentHeader, twirpAnswer } from './livekit.fakes';
 
 const api = (h = http(), config: typeof CONFIG | null = CONFIG) => new LivekitApi(config, h);
 const sent = (h: ReturnType<typeof http>, i = 0) => {
-  const [url, init] = h.mock.calls[i] ?? ['', { method: 'POST' as const, headers: {} as Record<string, string>, body: '{}' }];
-  const auth = init.headers.authorization ?? '';
-  return { url, body: JSON.parse(init.body) as unknown, claims: decode(auth.replace('Bearer ', '')), init };
+  const [url, init] = h.mock.calls[i] ?? [''];
+  const auth = sentHeader(init, 'authorization');
+  return { url, body: sentBody(init), claims: decode(auth.replace('Bearer ', '')), init };
 };
 
 describe('twirpBase', () => {
@@ -25,7 +27,7 @@ describe('LivekitApi.removeParticipant', () => {
     const s = sent(h);
     expect(s.url).toBe('https://livekit.example.test/twirp/livekit.RoomService/RemoveParticipant');
     expect(s.body).toEqual({ room: 'lesson-1', identity: 'guest-0123456789ab' });
-    expect(s.init.headers['content-type']).toBe('application/json');
+    expect(sentHeader(s.init, 'content-type')).toBe('application/json');
     expect(s.claims.validSignature).toBe(true);
     expect(s.claims.video).toEqual({ roomAdmin: true, room: 'lesson-1' });
   });
@@ -44,20 +46,20 @@ describe('LivekitApi.removeParticipant', () => {
 describe('LivekitApi.call', () => {
   it('returns the JSON answer', async () => {
     const h = http({ body: { egress_id: 'EG_1' } });
-    expect(await api(h).call({ method: 'livekit.Egress/StartRoomCompositeEgress', body: {}, grant: { roomRecord: true } })).toEqual({ egress_id: 'EG_1' });
+    expect(await api(h).call({ method: 'livekit.Egress/StartRoomCompositeEgress', body: {}, grant: { roomRecord: true } }, egressAnswer)).toEqual({ egress_id: 'EG_1' });
   });
 
   it('a non-JSON error body still throws (code unknown)', async () => {
     const h = http({ status: 502 });
-    h.mockResolvedValueOnce({ ok: false, status: 502, text: async () => '<html>' });
-    await expect(api(h).call({ method: 'x', body: {}, grant: {} })).rejects.toMatchObject({ status: 502, code: 'unknown' });
+    h.mockResolvedValueOnce(twirpAnswer(502, '<html>'));
+    await expect(api(h).call({ method: 'x', body: {}, grant: {} }, ignoredAnswer)).rejects.toMatchObject({ status: 502, code: 'unknown' });
   });
 
   it('not configured: throws without any request', async () => {
     const h = http();
     const a = api(h, null);
     expect(a.configured).toBe(false);
-    await expect(a.call({ method: 'x', body: {}, grant: {} })).rejects.toMatchObject({ code: 'not_configured' });
+    await expect(a.call({ method: 'x', body: {}, grant: {} }, ignoredAnswer)).rejects.toMatchObject({ code: 'not_configured' });
     expect(h).not.toHaveBeenCalled();
   });
 });

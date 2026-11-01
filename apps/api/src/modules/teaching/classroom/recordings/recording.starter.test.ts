@@ -3,6 +3,7 @@ import type { RecordingConfig } from '@/modules/teaching/classroom/classroom.con
 import { CONFIG, LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { http, recordingQueries, S3 } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import type { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
 import { lessonTarget, meetingTarget } from './recording-target';
@@ -31,14 +32,14 @@ describe('starting a lesson recording', () => {
       'https://livekit.example.test/twirp/livekit.RoomService/CreateRoom',
       'https://livekit.example.test/twirp/livekit.Egress/StartRoomCompositeEgress',
     ]);
-    const body = JSON.parse(h.mock.calls[1]?.[1].body ?? '{}');
+    const body = sentBody(h.mock.calls[1]?.[1]);
     expect(body).toMatchObject({ room_name: `lesson-${LESSON_ID}`, audio_only: true, file_outputs: [{ file_type: 'MP3', filepath: path }] });
     expect(q.attachEgress).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', 'EG_new');
   });
 
   it('an internal meeting records the same way, into meetings/<id>/', async () => {
     expect(await starter().startFor(meetingTarget(LESSON_ID), OPEN)).toBe('started');
-    const body = JSON.parse(h.mock.calls[1]?.[1].body ?? '{}');
+    const body = sentBody(h.mock.calls[1]?.[1]);
     expect(body).toMatchObject({ room_name: `meeting-${LESSON_ID}`, file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3` }] });
     expect(starter().configured).toBe(true);
     expect(starter({ s3: null }).configured).toBe(false);
@@ -58,8 +59,8 @@ describe('starting a lesson recording', () => {
   });
 
   it('LiveKit refusing marks the claim failed with the reason (never throws)', async () => {
-    h.mockResolvedValueOnce({ ok: true, status: 200, text: async () => '{}' });
-    h.mockResolvedValueOnce({ ok: false, status: 503, text: async () => JSON.stringify({ code: 'unavailable' }) });
+    h.mockResolvedValueOnce(twirpAnswer(200));
+    h.mockResolvedValueOnce(twirpAnswer(503, { code: 'unavailable' }));
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
     expect(q.finish).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', expect.objectContaining({ status: 'failed', error: 'livekit 503 unavailable' }));
     expect(q.attachEgress).not.toHaveBeenCalled();

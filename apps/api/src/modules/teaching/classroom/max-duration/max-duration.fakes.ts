@@ -3,7 +3,9 @@ import { vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
-import { LivekitApi, type HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { MaxDurationRepo, OverdueMeeting } from './max-duration.repo';
 import type { MaxDurationSettings } from './max-duration.settings';
@@ -28,10 +30,9 @@ function fakeLivekit(rooms: FakeRoom[]) {
   const deleted: string[] = [];
   const stopped: string[] = [];
   const failOn = new Set<string>();
-  const answer = (status: number, body: object) =>
-    Promise.resolve({ ok: status < 300, status, text: async () => JSON.stringify(body) });
-  const http = vi.fn<HttpPost>((url, init) => {
-    const body = JSON.parse(init.body) as { room?: string; egress_id?: string };
+  const answer = (status: number, body: object) => Promise.resolve(twirpAnswer(status, body));
+  const http = vi.fn<FetchLike>((url, init) => {
+    const body = sentBody(init) as { room?: string; egress_id?: string };
     if (url.endsWith('/ListRooms')) {
       const list = [...live.values()].map((r) => ({
         name: r.name,

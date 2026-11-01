@@ -1,5 +1,6 @@
 import type { MuteSource } from '@ab/shared';
 import type { LivekitApi } from './livekit-api';
+import { ignoredAnswer, participantAnswer } from './livekit-twirp';
 
 /** LiveKit's TrackSource as protojson names it, and as its number (CAMERA = 1, MICROPHONE = 2). */
 const SOURCE: Record<MuteSource, { name: string; num: number }> = {
@@ -31,10 +32,12 @@ export function trackSidOf(participant: Obj, source: MuteSource): string | null 
  */
 export async function muteTrack(api: LivekitApi, input: MuteTrackInput): Promise<'muted' | 'none'> {
   const grant = { roomAdmin: true, room: input.room };
-  const participant = await api.call({ method: 'livekit.RoomService/GetParticipant', body: { room: input.room, identity: input.identity }, grant });
+  const who = { room: input.room, identity: input.identity };
+  const getParticipant = { method: 'livekit.RoomService/GetParticipant', body: who, grant };
+  const participant = await api.call(getParticipant, participantAnswer);
   const sid = trackSidOf(participant, input.source);
   if (sid === null) return 'none';
   const body = { room: input.room, identity: input.identity, track_sid: sid, muted: true };
-  await api.call({ method: 'livekit.RoomService/MutePublishedTrack', body, grant });
+  await api.call({ method: 'livekit.RoomService/MutePublishedTrack', body, grant }, ignoredAnswer);
   return 'muted';
 }
