@@ -8,7 +8,7 @@ import {
 import { t } from '@/core/lib/i18n/i18n';
 import { type Attachment, withAttachment } from '@/payments/receipts/attachments';
 import type { PaymentInput } from './optimistic';
-import { paidAtFor } from './paid-day';
+import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 
 /** What the admin has entered so far. Nothing is prefilled that the receipt should say. */

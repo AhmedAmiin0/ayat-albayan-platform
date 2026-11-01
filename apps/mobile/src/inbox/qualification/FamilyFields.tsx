@@ -1,7 +1,7 @@
 import { FILLED_BY, type FilledBy } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { CLEAR } from './PreferenceFields';
 import type { QualFieldsProps } from './QualificationFields';

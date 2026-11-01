@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { JobApplicantsScreen } from './JobApplicantsScreen';
-import type { JobApplicant } from '../types';
+import type { JobApplicant } from '@/core/lib/staff/types';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

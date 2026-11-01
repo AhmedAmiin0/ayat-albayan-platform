@@ -3,8 +3,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { profileFacts } from './profile-facts';
-import { SectionLabel } from '../list/SectionLabel';
-import type { StudentProfile } from '../shared/types';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
+import type { StudentProfile } from '@/students/shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Program, level…, tz, teacher, then the effective meeting link, which opens in the browser/app. */

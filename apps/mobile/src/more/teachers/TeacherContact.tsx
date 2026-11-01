@@ -5,7 +5,7 @@ import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { Section } from '@/core/ui/surface/Section';
-import type { Teacher } from '@/more/types';
+import type { Teacher } from '@/core/lib/staff/types';
 import { locale } from '@/core/lib/i18n/locale';
 
 /** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */
