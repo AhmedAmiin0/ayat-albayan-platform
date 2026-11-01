@@ -1051,9 +1051,6 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 10
     }
@@ -5745,9 +5742,6 @@
   "src/modules/messaging/push/receipts.transport.ts": {
     "@typescript-eslint/require-await": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/messaging/reminders/chain-db.fake.ts": {
@@ -9257,9 +9251,6 @@
     }
   },
   "src/modules/platform/google-sync/http/google-http.oauth.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
