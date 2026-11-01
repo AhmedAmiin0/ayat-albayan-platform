@@ -14,6 +14,7 @@ import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes';
 import { useClock } from '@/lib/clock';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
+import { stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {
@@ -40,7 +41,10 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
   const outbound = m.direction === 'outbound';
   const clock = useClock();
   const notes = outboundNotes(m, { waitingTemplate, now, clock });
-  const admin = useInboxMode() === 'admin';
+  const mode = useInboxMode();
+  const admin = mode === 'admin';
+  // A sticker has no bubble around it, as WhatsApp (owner 2026-11-01); its time and ticks stay.
+  const bare = stickerOrGif(m, mode === 'teacher') === 'sticker';
   const [menu, setMenu] = useState(false);
   const acts = useHasBubbleActions(m);
   const actions = <BubbleActions message={m} menu={menu} onMenu={setMenu} />;
@@ -78,6 +82,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           outbound
             ? 'bg-sunk max-shell:rounded-tr-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'
             : 'border border-rule bg-raised max-shell:rounded-tl-sm',
+          bare && 'border-0 bg-transparent px-0 max-shell:border-0 max-shell:bg-transparent',
           m.status === 'failed' && 'shadow-[inset_0_0_0_1px_var(--color-act)]',
         )}
       >

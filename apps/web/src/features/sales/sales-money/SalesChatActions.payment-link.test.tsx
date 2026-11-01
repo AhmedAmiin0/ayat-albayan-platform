@@ -41,7 +41,7 @@ async function subscribe() {
   return within(await screen.findByRole('dialog', { name: t.salesMoney.newSubscription }));
 }
 
-describe('the payment method inside «اشتراك جديد» (docs/30, the online one in the TEST BUILD ONLY)', () => {
+describe('the payment method inside «اشتراك جديد» (docs/30, the online one with FEATURE_STRIPE (test or live))', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();

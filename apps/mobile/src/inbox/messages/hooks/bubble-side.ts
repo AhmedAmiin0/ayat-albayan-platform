@@ -1,3 +1,6 @@
+import { isStickerMessage, type MessageView } from '@ab/shared';
+import type { ViewStyle } from 'react-native';
+
 // Which side a bubble sits on, as WhatsApp (owner 2026-10-27 «fully support rtl and ltr like
 // whatsapp»): ours at the inline-END, the family's at the START. The language in effect sets the
 // direction, so an Arabic phone shows ours on the left and an English phone on the right; RN mirrors
@@ -13,3 +16,14 @@ interface BubbleSide {
 export function bubbleSide(ours: boolean): BubbleSide {
   return { align: ours ? 'flex-end' : 'flex-start', outer: ours ? 'end' : 'start' };
 }
+
+const BARE: ViewStyle = { borderWidth: 0, backgroundColor: 'transparent', paddingHorizontal: 0 };
+
+/**
+ * A sticker has no bubble around it, as WhatsApp (owner 2026-11-01): its time, ticks and
+ * reactions stay. A teacher, whom the API refuses the file, keeps the bubble and its label.
+ */
+export const stickerBubble = (
+  m: Pick<MessageView, 'media_mime' | 'interactive_payload'>,
+  teacher: boolean,
+): ViewStyle => (!teacher && isStickerMessage(m) ? BARE : {});

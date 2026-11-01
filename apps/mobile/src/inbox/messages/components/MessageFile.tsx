@@ -1,4 +1,4 @@
-import { baseMime, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
+import { baseMime, isGifMessage, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -15,6 +15,7 @@ import { MediaNote, problemText } from '../photo/MediaNote';
 import { mediaProblem, type MediaProblem, photoBox } from '../photo/media-problem';
 import { PdfPreview } from '../photo/PdfPreview';
 import { PhotoPreview } from '../photo/PhotoPreview';
+import { GifBubble } from '@/inbox/messages/media/gif/GifBubble';
 
 type State = { step: 'idle' | 'loading' } | { step: 'problem'; problem: MediaProblem };
 
@@ -95,6 +96,9 @@ export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps
   if (teacher) return <MediaNote text={`${kind} · ${t.inbox.mediaNotAllowed}`} />;
   const box = photoBox(m.media_mime);
   if (box) return <PhotoPreview message={m} phone={phone} box={box} kind={kind} onLongPress={onLongPress} />;
+  // A GIF (owner 2026-11-01) plays inline, muted and looping, before any other video.
+  const gif = isGifMessage(m) ? t.inbox.media.gif : null;
+  if (gif) return <GifBubble message={m} phone={phone} kind={gif} onLongPress={onLongPress} />;
   const playable = isPlayableMime(m.media_mime);
   if (playable && baseMime(m.media_mime).startsWith('audio/')) return <VoiceNote message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
   if (playable) return <VideoTile message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
