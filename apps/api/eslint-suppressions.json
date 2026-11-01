@@ -4425,13 +4425,10 @@
   },
   "src/modules/messaging/inbox/reopen/kapso-reopener.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reopen/reopen-params.test.ts": {
@@ -5937,9 +5934,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/messaging/webhook/external/kapso-numbers.ts": {
@@ -6482,20 +6476,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts": {
-    "@typescript-eslint/prefer-string-starts-ends-with": {
-      "count": 1
-    },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/modules/messaging/whatsapp/drivers/kapso/kapso.fakes.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -6685,11 +6665,8 @@
     }
   },
   "src/modules/messaging/whatsapp/lines/lines.check.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/lines/lines.controller.ts": {

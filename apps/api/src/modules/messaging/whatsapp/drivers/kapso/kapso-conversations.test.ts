@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { KAPSO_ENV } from './kapso.fakes';
-import { newest, platformBase, reopenKapsoConversation } from './kapso-conversations';
+import { newest, reopenKapsoConversation } from './kapso-conversations';
+import { platformBase } from './kapso-platform.http';
 
 // Fakes only: a scripted fetch, never Kapso.
 
