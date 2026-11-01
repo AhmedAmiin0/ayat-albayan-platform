@@ -1,5 +1,8 @@
 {
   "src/cache.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -85,6 +88,11 @@
       "count": 2
     }
   },
+  "src/hash.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
   "src/keys.ts": {
     "max-len": {
       "count": 3
@@ -150,6 +158,9 @@
     }
   },
   "src/map/messages/messages.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -176,6 +187,11 @@
   "src/map/money/money.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    }
+  },
+  "src/map/money/subscriptions.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/map/people/collect.heart.ts": {
@@ -235,6 +251,9 @@
   "src/map/people/status/bookings.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/map/people/status/downgrade.ts": {
@@ -321,6 +340,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 8
     },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -364,6 +386,9 @@
   "src/map/schedule/bookings.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/map/schedule/heart.rules.test.ts": {
@@ -387,11 +412,19 @@
   "src/map/schedule/one-offs.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 3
     }
   },
   "src/map/schedule/rules.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
+    }
+  },
+  "src/map/schedule/rules.ts": {
+    "ab/no-shape-checks": {
+      "count": 4
     }
   },
   "src/map/teachers/teachers.ts": {
@@ -408,6 +441,9 @@
   "src/map/templates/buttons.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/map/templates/templates.test.ts": {
@@ -551,6 +587,9 @@
   "src/sources/crm/rows.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/sources/extract-crm.ts": {
@@ -559,6 +598,11 @@
     },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/sources/extract-sheets.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
     }
   },
   "src/sources/headers/headers.hub.ts": {
@@ -613,6 +657,9 @@
     }
   },
   "src/sources/values.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }

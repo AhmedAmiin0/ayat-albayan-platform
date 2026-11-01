@@ -8,5 +8,10 @@
     "max-len": {
       "count": 1
     }
+  },
+  "src/strings.ts": {
+    "ab/no-shape-checks": {
+      "count": 4
+    }
   }
 }

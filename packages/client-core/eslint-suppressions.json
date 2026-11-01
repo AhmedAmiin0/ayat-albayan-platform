@@ -5,16 +5,28 @@
     }
   },
   "src/core/auth/permissions.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
   },
   "src/core/auth/sign-in.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
   },
   "src/core/errors/chat-list-errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -33,11 +45,17 @@
     }
   },
   "src/core/http/api-client.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/core/http/api-error.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -121,6 +139,9 @@
     }
   },
   "src/messaging/calls/call-words.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 4
     }
@@ -133,6 +154,9 @@
   "src/messaging/calls/calls-api.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 9
     },
     "max-len": {
       "count": 6
@@ -167,6 +191,9 @@
     }
   },
   "src/messaging/inbox/inbox-live.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 8
     }
@@ -283,9 +310,15 @@
   "src/people/users/errors.ts": {
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
     }
   },
   "src/people/users/teacher-username.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
@@ -298,7 +331,15 @@
       "count": 6
     }
   },
+  "src/teaching/booking/course-actions.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
   "src/teaching/booking/course-pause.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
     "max-len": {
       "count": 5
     }
@@ -319,6 +360,9 @@
     }
   },
   "src/teaching/reports/errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -334,6 +378,9 @@
     }
   },
   "src/teaching/reports/v2-text.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
