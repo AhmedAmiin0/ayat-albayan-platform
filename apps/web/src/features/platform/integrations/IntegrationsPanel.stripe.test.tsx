@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 import { integrationItems } from './integrations.fixture';
 import { IntegrationsPanel } from './IntegrationsPanel';
@@ -12,7 +13,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 // «الدفع الإلكتروني» (docs/30): the form refuses a live or malformed Stripe key before anything
 // leaves, as the API does (integrationSecretCheck), and a save asks GET /stripe/feature again.
 const s = t.integrations;
-const FEATURE = { queryKey: ['stripe', 'feature'] };
+const FEATURE = { queryKey: stripeFeatureQuery.queryKey };
 
 async function renderPanel() {
   routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);

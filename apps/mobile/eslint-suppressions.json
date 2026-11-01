@@ -9621,9 +9621,6 @@
   "src/sales-subscribe/payment-link/use-stripe.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/sales-subscribe/receipts/ChatReceiptList.tsx": {

@@ -2,6 +2,7 @@ import type { IntegrationConfigItem } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
 
 const PATH = '/settings/integrations';
 
@@ -30,7 +31,7 @@ export function useSaveIntegrationValues() {
     onSuccess: (items) => {
       qc.setQueryData(pathKey(PATH), items);
       // «الدفع الإلكتروني» shows or hides the payment buttons now, not after use-stripe.ts's 5 min.
-      void qc.invalidateQueries({ queryKey: ['stripe', 'feature'] });
+      void qc.invalidateQueries({ queryKey: STRIPE_FEATURE_KEY });
     },
   });
 }

@@ -1,6 +1,7 @@
 import type { IntegrationConfigItem } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { StripeSwitchRow } from './StripeSwitchRow';
@@ -70,7 +71,7 @@ test('the test app, an admin: the switch (off by default) saves STRIPE_ENABLED a
   await fireEvent(toggle, 'valueChange', true);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { STRIPE_ENABLED: 'true' } }));
   // The chat's «دفع إلكتروني» / «رابط دفع» follow the switch at once.
-  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['stripe', 'feature'] }));
+  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: STRIPE_FEATURE_KEY }));
   const missing = new RegExp(t.integrations.keys.STRIPE_WEBHOOK_SECRET.label);
   expect(await screen.findByText(missing)).toBeTruthy();
 });
