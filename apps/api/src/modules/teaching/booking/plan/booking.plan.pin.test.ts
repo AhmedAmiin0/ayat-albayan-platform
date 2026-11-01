@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { planBooking, type PlanRule } from './booking.plan';
 
 // Cairo falls back at the end of Thu 29 Oct 2026: 23:00–23:59 happens twice, first at UTC+3
-// (23:30 = 20:30Z) then at UTC+2 (23:30 = 21:30Z). zonedToUtc resolves to the later one.
+// (23:30 = 20:30Z) then at UTC+2 (23:30 = 21:30Z). dayWallToUtc resolves to the later one.
 const now = new Date('2026-10-20T08:00:00Z');
 const rule: PlanRule = {
   byday: [4],

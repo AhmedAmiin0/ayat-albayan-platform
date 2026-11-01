@@ -1,7 +1,8 @@
-import { isLinkedRole, type Permission, type UserRole } from '@ab/shared';
-import { grantsOf, heldRole, isSystemAdmin, permissionsOf, roleView, type RoleState } from '../roles/roles.logic';
-import type { RoleRecord } from '../roles/roles.store';
-import { forbidden } from '../../../common/http/errors';
+import { isLinkedRole, USER_ROLES, type Permission, type UserRole } from '@ab/shared';
+import { z } from 'zod';
+import { grantsOf, heldRole, isSystemAdmin, permissionsOf, roleView, type RoleState } from '@/modules/people/roles/roles.logic';
+import type { RoleRecord } from '@/modules/people/roles/roles.store';
+import { forbidden } from '@/common/http/errors';
 import type { ProfilePatch, StaffProfile } from './store/users.store';
 
 // Pure rules of «المستخدمون»: who may touch whom, and that the academy always keeps an active admin.
@@ -67,35 +68,61 @@ export const replaced = (state: UserState, next: StaffProfile): UserState => ({
 export const disabledCopy = (p: StaffProfile): StaffProfile => ({ ...p, disabled_at: p.disabled_at ?? 'now' });
 
 type RoleChoice = { role: UserRole; role_id: string | null };
+type Roles = readonly RoleRecord[];
+type Chosen = { choice: RoleChoice; record: RoleRecord } | 'unknown_role' | 'role_mismatch' | null;
+
+const chosen = (record: RoleRecord): Chosen => ({
+  choice: { role: record.base_role, role_id: record.is_system ? null : record.id },
+  record,
+});
+
+/** A custom role fixes the base role: a different `role` beside it is a mismatch. */
+function byId(roles: Roles, ask: { role_id: string; role?: UserRole | undefined }): Chosen {
+  const record = roles.find((r) => r.id === ask.role_id);
+  if (!record) return 'unknown_role';
+  return ask.role !== undefined && ask.role !== record.base_role ? 'role_mismatch' : chosen(record);
+}
+
+/** A bare base role means that role's system role (role_id null). */
+function byBase(roles: Roles, role: UserRole): Chosen {
+  const record = roles.find((r) => r.is_system && r.base_role === role);
+  return record ? { choice: { role, role_id: null }, record } : 'unknown_role';
+}
+
+/** What a request names, first match wins: a role_id, else a base role, else nothing. */
+const roleRequest = z.union([
+  z.object({ role_id: z.string().min(1), role: z.enum(USER_ROLES).optional() })
+    .transform((ask) => (roles: Roles) => byId(roles, ask)),
+  z.object({ role: z.enum(USER_ROLES) }).transform(({ role }) => (roles: Roles) => byBase(roles, role)),
+  z.object({}).transform(() => (): Chosen => null),
+]);
 
 /**
  * The (base role, role_id) a request names: a custom role fixes the base role; a bare base role
  * means that role's system role (role_id null). null = the request does not name a role.
  */
 export function chooseRole(
-  roles: readonly RoleRecord[],
+  roles: Roles,
   input: { role?: UserRole | undefined; role_id?: string | null | undefined },
-): { choice: RoleChoice; record: RoleRecord } | 'unknown_role' | 'role_mismatch' | null {
-  if (input.role_id) {
-    const record = roles.find((r) => r.id === input.role_id);
-    if (!record) return 'unknown_role';
-    if (input.role && input.role !== record.base_role) return 'role_mismatch';
-    return { choice: { role: record.base_role, role_id: record.is_system ? null : record.id }, record };
-  }
-  if (!input.role) return null;
-  const record = roles.find((r) => r.is_system && r.base_role === input.role);
-  return record ? { choice: { role: input.role, role_id: null }, record } : 'unknown_role';
+): Chosen {
+  return roleRequest.parse(input)(roles);
+}
+
+const PROFILE_KEYS = ['full_name', 'phone_e164', 'locale', 'tz'] as const satisfies readonly (keyof ProfilePatch)[];
+type ProfileKey = (typeof PROFILE_KEYS)[number];
+
+/** The `keys` of `input` that were sent: undefined = not sent, null is a value. */
+export function sentOnly<T extends object, K extends keyof T>(
+  input: T,
+  keys: readonly K[],
+): { [P in K]?: Exclude<T[P], undefined> } {
+  const sent = keys.filter((k) => input[k] !== undefined).map((k) => [k, input[k]]);
+  return Object.fromEntries(sent) as { [P in K]?: Exclude<T[P], undefined> };
 }
 
 /** The profile columns a PATCH names (only what was sent). */
-export function profilePatch(input: { full_name?: string | undefined; phone_e164?: string | null | undefined; locale?: string | undefined; tz?: string | undefined }): ProfilePatch {
-  const patch: ProfilePatch = {};
-  if (input.full_name !== undefined) patch.full_name = input.full_name;
-  if (input.phone_e164 !== undefined) patch.phone_e164 = input.phone_e164;
-  if (input.locale !== undefined) patch.locale = input.locale;
-  if (input.tz !== undefined) patch.tz = input.tz;
-  return patch;
-}
+export const profilePatch = (input: { [K in ProfileKey]?: ProfilePatch[K] | undefined }): ProfilePatch =>
+  sentOnly(input, PROFILE_KEYS);
 
 /** A base role change is refused when a teacher / student / guardian record is (or would be) involved. */
 export const roleChangeBlocked = (ctx: { from: UserRole; to: UserRole; linked: boolean }): boolean =>
