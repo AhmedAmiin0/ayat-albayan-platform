@@ -1,10 +1,10 @@
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { sectionTitle } from '../shared/Bar';
+import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { LessonsByStatus } from './LessonsByStatus';
 import { TeacherLoad } from './TeacherLoad';
-import type { DashboardData, DayRange } from '../types';
+import type { DashboardData, DayRange } from '@/features/reporting/dashboard/types';
 
 /** «الأسبوع ده» (Saturday → Friday, Riyadh): lessons by status and teacher load (R-RPT-01). */
 export function WeekSection({ week, data }: { week: DayRange; data: DashboardData | undefined }) {

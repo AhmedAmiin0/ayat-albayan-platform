@@ -1,4 +1,4 @@
-import type { TileView } from '../components/room-types';
+import type { TileView } from '@/features/teaching/classroom/room/components/room-types';
 
 /**
  * - `stage`: the board (when open here) or the first shared screen takes the big area, everyone's

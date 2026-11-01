@@ -1,12 +1,12 @@
 import type { JoinRole } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import type { BoardController } from '../../board/use-board';
+import type { BoardController } from '@/features/teaching/classroom/board/use-board';
 import { RoomButton } from './RoomButton';
-import { RequestButton } from '../../share/RequestButton';
-import { ShareButton } from '../../share/ShareButton';
-import type { ShareRequests } from '../../share/use-share-requests';
-import type { RoomController } from '../livekit/use-room';
+import { RequestButton } from '@/features/teaching/classroom/share/RequestButton';
+import { ShareButton } from '@/features/teaching/classroom/share/ShareButton';
+import type { ShareRequests } from '@/features/teaching/classroom/share/use-share-requests';
+import type { RoomController } from '@/features/teaching/classroom/room/livekit/use-room';
 
 interface Props {
   room: RoomController;

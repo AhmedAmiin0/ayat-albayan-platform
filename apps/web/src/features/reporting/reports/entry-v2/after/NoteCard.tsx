@@ -3,10 +3,10 @@ import { useId } from 'react';
 import { controlClass } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { AttachmentsField } from '../../entry/AttachmentsField';
-import type { ReportEntryV2State } from '../use-report-entry-v2';
-import { ToggleChips } from '../ToggleChips';
-import { CARD, CARD_TITLE, OPTIONAL } from '../v2-classes';
+import { AttachmentsField } from '@/features/reporting/reports/entry/AttachmentsField';
+import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
+import { ToggleChips } from '@/features/reporting/reports/entry-v2/ToggleChips';
+import { CARD, CARD_TITLE, OPTIONAL } from '@/features/reporting/reports/entry-v2/v2-classes';
 
 export interface NoteCardProps {
   s: ReportEntryV2State;

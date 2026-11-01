@@ -4,10 +4,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { StudentProfileForm } from './StudentProfileForm';
-import type { StudentProfile } from '../types';
+import type { StudentProfile } from '@/features/people/students/types';
 
 const api = vi.hoisted(() => ({ updateStudent: vi.fn(), fetchStudent: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({
+vi.mock('@/features/people/students/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   updateStudent: api.updateStudent,
   teacherOptionsQuery: queryOptions({ queryKey: ['teacher-options-test'], queryFn: async () => [] }),

@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { publicConfigQuery } from '@/lib/settings/public-config';
-import { scheduleLesson } from '../academy.fixtures';
+import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { LessonMeetingLink } from './LessonMeetingLink';
 
 const apiFetch = vi.hoisted(() => vi.fn());

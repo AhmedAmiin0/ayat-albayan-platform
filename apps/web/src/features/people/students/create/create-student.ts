@@ -1,6 +1,6 @@
 import { normalizePhone, type Gender, type LeadSource, type Program } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { CreateStudentBody } from '../api';
+import type { CreateStudentBody } from '@/features/people/students/api';
 
 export type CreateStudentValues = {
   guardianPhone: string;

@@ -2,16 +2,16 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { ComposerPhone } from '../../composer/components/ComposerPhone';
+import { ComposerPhone } from '@/features/messaging/inbox/composer/components/ComposerPhone';
 import { InboxPage } from './InboxPage';
-import { detail, message, PHONE, thread } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
-import { ThreadPane } from '../pane/ThreadPane';
-import { windowText } from '../pane/window-state';
+import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane';
+import { windowText } from '@/features/messaging/inbox/threads/pane/window-state';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const CHAT = thread({ last_inbound_line: 'chat' });
 const OLD = thread({ phone_e164: '+201001234567', display_name: 'أم عمر', lead_name: 'أم عمر', last_inbound_line: null });

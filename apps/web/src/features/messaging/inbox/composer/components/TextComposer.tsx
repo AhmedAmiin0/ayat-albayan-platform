@@ -8,15 +8,15 @@ import { usePhone } from '@/components/ui/layout/use-narrow';
 import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { sendText } from '../../api/api';
-import type { ComposerExtras } from '../lib/composer-extras';
-import { sendsOnKey } from '../lib/composer-keys';
+import { sendText } from '@/features/messaging/inbox/api/api';
+import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
+import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '../lib/draft-store';
-import { ownSendGeneration, recordOwnSend } from '../lib/own-send';
+import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
-import { sendErrorCode, sendErrorCodeText, sendErrorText } from '../lib/send-error';
-import { useReplyTarget } from '../lib/use-reply-target';
+import { sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
 type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };

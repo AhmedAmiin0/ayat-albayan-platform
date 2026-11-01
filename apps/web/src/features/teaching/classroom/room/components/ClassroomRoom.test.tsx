@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { ClassroomRoom } from './ClassroomRoom';
-import { fakeClient, tile, type FakeClient } from '../livekit/fake-client';
+import { fakeClient, tile, type FakeClient } from '@/features/teaching/classroom/room/livekit/fake-client';
 
 const JOIN: RoomJoinResult = { url: 'wss://lk.test', token: 'tok', room: 'lesson-1', role: 'teacher' };
 

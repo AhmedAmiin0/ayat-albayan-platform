@@ -1,7 +1,7 @@
 import { signInApi, signInError } from '@ab/client-core';
 import * as http from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { isAccountDisabled } from '../me';
+import { isAccountDisabled } from '@/features/people/auth/me';
 
 /**
  * The public sign-in routes (docs/30 §6) on the web's API client. The client's functions are read at

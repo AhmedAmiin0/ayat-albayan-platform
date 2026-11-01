@@ -3,7 +3,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
-import type { BookingDraft } from '../../draft/draft';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import type { SeriesCheckResult } from './SeriesCheck';
 
 export interface CourseCheckNoticeProps {

@@ -3,13 +3,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { ComposerPhone } from './ComposerPhone';
-import { detail, message, PHONE, thread } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
-import { ThreadPane } from '../../threads/pane/ThreadPane';
+import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const replyFrom = t.inbox.line.replyFrom.replace('{line}', t.enums.waLine.chat);
 const fresh = new Date(Date.now() - 3_600_000).toISOString();

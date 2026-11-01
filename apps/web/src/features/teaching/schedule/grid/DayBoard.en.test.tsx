@@ -3,10 +3,10 @@ import { render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { DayBoard } from './DayBoard';
-import { lesson } from '../lesson/lesson-fixture';
-import { boardRows } from '../overview';
-import { T_ABRAR, T_FATMA, T_NOUR } from '../overview-fixture';
-import { ScheduleNav } from '../ScheduleNav';
+import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { boardRows } from '@/features/teaching/schedule/overview';
+import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
+import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
 
 // The calendar in English (LTR): every word from en.json, Western digits, the same layout.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

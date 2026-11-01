@@ -7,11 +7,11 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { CreatedMeeting } from '../internal/CreatedMeeting';
-import { MEETINGS_KEY } from '../internal/internal-api';
-import type { PickedInvitee } from '../invitees/invitee-list';
-import { InviteePicker } from '../invitees/InviteePicker';
-import { createMeetingWith, meetingErrorText } from '../invitees/meeting-invites-api';
+import { CreatedMeeting } from '@/features/teaching/meetings/internal/CreatedMeeting';
+import { MEETINGS_KEY } from '@/features/teaching/meetings/internal/internal-api';
+import type { PickedInvitee } from '@/features/teaching/meetings/invitees/invitee-list';
+import { InviteePicker } from '@/features/teaching/meetings/invitees/InviteePicker';
+import { createMeetingWith, meetingErrorText } from '@/features/teaching/meetings/invitees/meeting-invites-api';
 import { createBody, defaultSchedule, scheduleIssue, type ScheduleValue } from './schedule-form';
 import { ScheduleFields } from './ScheduleFields';
 

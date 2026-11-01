@@ -12,9 +12,9 @@ import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';
 import type { CourseDraft, TrialDateDraft } from './draft.flows';
-import { leadParts, type NewStudentDraft } from '../steps/who/new-student';
+import { leadParts, type NewStudentDraft } from '@/features/teaching/booking/steps/who/new-student';
 
-export type { NewStudentDraft } from '../steps/who/new-student';
+export type { NewStudentDraft } from '@/features/teaching/booking/steps/who/new-student';
 export type { InvoiceDraft, MissedPick } from './draft.invoice';
 export type { CourseDraft, TrialDateDraft } from './draft.flows';
 

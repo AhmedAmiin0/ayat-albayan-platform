@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { lead, PHONE } from '../testing/inbox-fixture';
+import { lead, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { leadSummary, registerInitial } from './lead-summary';
 
 const H24 = { cycle: '24', locale: 'ar' } as const;

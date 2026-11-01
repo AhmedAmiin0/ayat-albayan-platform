@@ -3,17 +3,17 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { BubbleActions, useHasBubbleActions } from './BubbleActions';
 import { DeliveryTicks } from './DeliveryTicks';
-import { ReactionPill } from '../reactions/ReactionPill';
-import { clockText, fullTime } from '../../format';
-import { BUBBLE_ROW } from '../lib/bubble-side';
-import { bubbleId } from '../lib/jump-to-message';
-import { LineBadge } from '../../shared/LineBadge';
+import { ReactionPill } from '@/features/messaging/inbox/messages/reactions/ReactionPill';
+import { clockText, fullTime } from '@/features/messaging/inbox/format';
+import { BUBBLE_ROW } from '@/features/messaging/inbox/messages/lib/bubble-side';
+import { bubbleId } from '@/features/messaging/inbox/messages/lib/jump-to-message';
+import { LineBadge } from '@/features/messaging/inbox/shared/LineBadge';
 import { MessageActions } from './MessageActions';
 import { Content, SenderLine } from './MessageContent';
-import { useInboxMode } from '../../shared/mode';
-import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes';
 import { useClock } from '@/lib/clock';
-import { TemplateButtons } from '../template/TemplateButtons';
+import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {

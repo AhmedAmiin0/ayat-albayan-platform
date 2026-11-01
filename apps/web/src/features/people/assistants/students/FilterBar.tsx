@@ -3,7 +3,7 @@ import { Select } from '@/components/ui/form/select';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
 import { t } from '@/lib/i18n/i18n';
-import type { AssistantRow } from '../api';
+import type { AssistantRow } from '@/features/people/assistants/api';
 
 export type Filter<S extends string> = { assistantId: string; month: string; status: '' | S };
 type Props<S extends string> = {

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { assistantLessonsQuery, localDay } from '../api/api';
+import { assistantLessonsQuery, localDay } from '@/features/teaching/classroom/api/api';
 import { AssistantLessonRow } from './AssistantLessonRow';
 import { useNow } from '@/lib/time/use-now';
 

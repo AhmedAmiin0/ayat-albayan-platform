@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import { integrationsQuery } from '../../platform/integrations/integrations-api';
-import { linesCheckQuery } from '../messaging/api';
+import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
+import { linesCheckQuery } from '@/features/messaging/messaging/api';
 import { catalogueQuery } from './catalogue-api';
 
 /**

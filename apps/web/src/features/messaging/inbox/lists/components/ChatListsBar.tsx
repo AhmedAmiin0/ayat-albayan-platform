@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { chatListsQuery } from '../lib/api';
+import { chatListsQuery } from '@/features/messaging/inbox/lists/lib/api';
 import { AutoListNote } from './AutoListNote';
 import { ChatListChips } from './ChatListChips';
 import { CreateListDialog } from './CreateListDialog';

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { takenDays, takenTexts } from './course-taken';
-import type { BookingDraft } from '../../draft/draft';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 
 const SUN = '2026-10-11T14:00:00.000Z'; // Sunday 17:00 Riyadh
 const SUN_LATER = '2026-10-11T15:00:00.000Z';

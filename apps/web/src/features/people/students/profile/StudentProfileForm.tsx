@@ -9,13 +9,13 @@ import { Select } from '@/components/ui/form/select';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { teacherOptionsQuery } from '../api';
+import { teacherOptionsQuery } from '@/features/people/students/api';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PROFILE_LABELS, toProfileValues, type ProfileValues } from './profile-form';
 import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
 import { ContactIsSelfField } from './FactFields';
-import type { StudentProfile } from '../types';
+import type { StudentProfile } from '@/features/people/students/types';
 
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
 type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;

@@ -7,7 +7,7 @@ import { StaffPanel } from './StaffPanel';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
-vi.mock('../sign-in', () => ({ signIn: vi.fn() }));
+vi.mock('@/features/people/auth/sign-in', () => ({ signIn: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 
 const F = t.familyAuth;

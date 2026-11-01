@@ -1,4 +1,4 @@
-import { deleteWebPush, saveWebPush } from '../api';
+import { deleteWebPush, saveWebPush } from '@/features/messaging/notifications/api';
 
 // This browser's push subscription (R-NOT-01): public/sw.js shows what arrives. Subscribing asks
 // for permission, so it only ever runs from a click («فعّل إشعارات المتصفح»), never on load.

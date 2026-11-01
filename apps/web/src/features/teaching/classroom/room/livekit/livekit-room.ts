@@ -3,8 +3,8 @@ import { boardSharer } from './livekit-board-share';
 import { listenData, sendData } from './livekit-data';
 import { watchModeration } from './livekit-moderated';
 import { attachTrack } from './media-attach';
-import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '../components/room-types';
-import { stopRevokedShare } from '../../share/stop-revoked';
+import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '@/features/teaching/classroom/room/components/room-types';
+import { stopRevokedShare } from '@/features/teaching/classroom/share/stop-revoked';
 import { snapshotOf } from './snapshot';
 
 const REFRESH: readonly RoomEvent[] = [

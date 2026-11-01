@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '../api';
+import type { Teacher } from '@/features/people/teachers/api';
 import { apiErrorMessage, emptyTeacherForm, toTeacherForm, validateTeacher } from './teacher-form';
 
 const filled = { ...emptyTeacherForm(), display_name_ar: 'أ. سارة', phone_e164: '01001234567', rate_60: '120' };

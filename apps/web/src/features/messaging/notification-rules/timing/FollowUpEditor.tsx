@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { fillText } from '../rule-text';
-import { MAX_FOLLOW_UPS, type TimingDraft } from '../rule-timing';
+import { fillText } from '@/features/messaging/notification-rules/rule-text';
+import { MAX_FOLLOW_UPS, type TimingDraft } from '@/features/messaging/notification-rules/rule-timing';
 import { CountInput } from './CountInput';
 
 type FollowUp = Extract<TimingDraft, { kind: 'follow_up_slots' }>;
