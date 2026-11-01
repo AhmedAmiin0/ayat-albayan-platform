@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { ConflictInput } from '@/modules/teaching/scheduling/conflicts/conflicts';
 import { BusyQueries } from '@/modules/teaching/scheduling/conflicts/busy.queries';
 import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
-import type { Range } from '@/modules/teaching/booking/core/booking.queries';
+import type { Range } from '@/modules/teaching/booking/core/booking.repo';
 
 type ContextQuery = Range & {
   teacherId: string;

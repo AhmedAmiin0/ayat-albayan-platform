@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { CourseChangeQueries } from '@/modules/teaching/booking/course-change/course-change.queries';
+import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
 import {
   CourseChange,
   type ChangeActor,
@@ -36,7 +36,7 @@ export class ProfileCourse {
   constructor(
     private readonly course: CourseChange,
     private readonly views: CourseChangeViews,
-    private readonly queries: CourseChangeQueries,
+    private readonly queries: CourseChangeRepo,
     private readonly repo: ProfileCourseRepo,
   ) {}
 

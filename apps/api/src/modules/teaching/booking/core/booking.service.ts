@@ -1,7 +1,7 @@
 import type { BookingRequest, BookingResult, Conflict } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { BookingPlanner, type PrepareOptions } from '../plan/booking.planner';
-import { BookingQueries } from './booking.queries';
+import { BookingPlanner, type PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
+import { BookingRepo } from './booking.repo';
 import { BookingWriter } from './booking.writer';
 
 /**
@@ -17,7 +17,7 @@ export class BookingService {
   constructor(
     private readonly planner: BookingPlanner,
     private readonly writer: BookingWriter,
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
   ) {}
 
   /** POST /booking/check: what «احجز» would clash with, before the review step. */

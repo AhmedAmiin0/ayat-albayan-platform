@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES, type Attendance, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '../../sales';
-import { TrialDateQueries } from '../../../teaching/booking';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales';
+import { TrialDateRepo } from '@/modules/teaching/booking';
 
 /** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
 export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
@@ -53,7 +53,7 @@ const ATTENDANCE_LIMIT = 60;
 /** Sales' «تفاصيل الطالب» reads (service role; any student, owner 2026-10-28); `trialDates`: «مواعيد الحلقة التجريبية»'s. */
 @Injectable()
 export class SalesStudentQueries {
-  constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateQueries) {}
+  constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateRepo) {}
 
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db

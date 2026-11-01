@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { CourseChangeQueries } from './course-change.queries';
+import { CourseChangeRepo } from './course-change.repo';
 
 // PR #464 review B2: the course's rules come from course_rules_of (migration 991), not from
 // schedule_rules.subscription_id alone (null for imported, handed-over and admin-booked rules).
@@ -10,7 +10,7 @@ function fake(rows: unknown, refs: unknown) {
   Object.assign(q, { then: (ok: (v: unknown) => unknown) => Promise.resolve(rows).then(ok) });
   const rpc = vi.fn(async () => refs);
   const db = { from: vi.fn(() => q), rpc } as unknown as Db;
-  return { q, rpc, queries: new CourseChangeQueries(db) };
+  return { q, rpc, queries: new CourseChangeRepo(db) };
 }
 const REF = { rule_id: 'ra', linked: false, clean: true, from_on: '2026-10-01', until_on: null };
 

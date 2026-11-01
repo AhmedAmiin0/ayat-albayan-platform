@@ -1,13 +1,13 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { readerOf } from '../../../../../common/settings/settings.fakes';
-import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
-import type { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { errorCode } from '../../../../../common/http/errors';
-import { BookingSettings } from '../../booking.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import type { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { errorCode } from '@/common/http/errors';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
+import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { assertBookingScope } from './sales-booking.scope';
 
 // The assistant's course (owner 2026-10-18): kind 'package' with self.sales_money, one student of hers.
@@ -79,7 +79,7 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
 describe('SalesBookingScope.forRequest — a course always reads her ownership', () => {
   const scopeWith = (on: boolean) => {
     const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateQueries) };
+    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateRepo) };
   };
 
   it('auto-assign OFF: a course gets her ownership, a trial gets null', async () => {

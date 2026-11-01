@@ -1,9 +1,9 @@
 import { meetingModeOf, type LessonStatus, type PackageSize, type TeacherMeetingMode } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import type { Contact } from '../../lessons/status/confirmation-messages';
-import { notFound } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import type { Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
+import { notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
 
 /** The subscription a course belongs to (subscriptions row). */
 export type CourseSub = {
@@ -61,7 +61,7 @@ type OtherRule = { id: string; starts_on: string; ends_on: string | null; packag
 
 /** «تغيير أيام الحلقات»'s reads (service role; ownership is checked by CourseChange). */
 @Injectable()
-export class CourseChangeQueries {
+export class CourseChangeRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** 404 subscription_not_found. */

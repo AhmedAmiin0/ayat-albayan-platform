@@ -1,9 +1,9 @@
 import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
-import { BookingQueries } from '@/modules/teaching/booking/core/booking.queries';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import type { TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
-import { TeacherOptionsQueries, type TeacherFilter } from './teacher-options.queries';
+import { TeacherOptionsRepo, type TeacherFilter } from './teacher-options.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
@@ -14,8 +14,8 @@ import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 @Injectable()
 export class TeacherOptionsService {
   constructor(
-    private readonly options: TeacherOptionsQueries,
-    private readonly queries: BookingQueries,
+    private readonly options: TeacherOptionsRepo,
+    private readonly queries: BookingRepo,
     private readonly teachers: TeachersRepo,
   ) {}
 

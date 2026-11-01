@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
 import { generatedKey } from '@/modules/teaching/scheduling/rules/rule-projection';
-import type { OpenCourseLesson } from './course-change.queries';
+import type { OpenCourseLesson } from './course-change.repo';
 
 export type MovedLesson = OpenCourseLesson & { rule_id: string | null; starts_at: string };
 /** A lesson of the course, its rule and local day (a rule without subscription_id is bounded). */
@@ -15,7 +15,7 @@ interface CourseLesson extends CourseLessonFact {
 
 /** The lessons of a course «تغيير أيام الحلقات» reads (service role; ownership is checked by CourseChange). */
 @Injectable()
-export class CourseLessonQueries {
+export class CourseLessonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every lesson of these rules of the student, any time and status: what the course uses (with ids). */

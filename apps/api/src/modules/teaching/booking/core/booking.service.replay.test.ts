@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
-import type { BookingInvoices } from '../invoice/booking.invoice';
-import type { BookingQueries } from './booking.queries';
+import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
+import type { BookingRepo } from './booking.repo';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
+import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
 const FIRST = { rule_id: 'R1', student_ids: [IDS.s1], guardian_ids: [IDS.g1], lessons: [], message_ids: [], invoice_id: 'I1' };
 const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';
@@ -12,8 +12,8 @@ const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';
 function setup() {
   const deps = fakePlanner();
   const alert = fakeTeacherAlert();
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, { resolve: vi.fn() } as unknown as BookingInvoices, alert.after);
-  return { ...deps, alert, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries) };
+  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, { resolve: vi.fn() } as unknown as BookingInvoices, alert.after);
+  return { ...deps, alert, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
 }
 
 describe('BookingService replay (rule 8)', () => {

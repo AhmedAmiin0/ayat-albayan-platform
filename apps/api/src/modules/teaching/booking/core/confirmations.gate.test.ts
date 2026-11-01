@@ -5,7 +5,7 @@ import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notificati
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import type { BookingPayload } from './booking.mapper';
-import { BookingQueries } from './booking.queries';
+import { BookingRepo } from './booking.repo';
 import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
 import { CourseChangeNotices } from '@/modules/teaching/booking/course-change/notices/course-change.notices';
 import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.service';
@@ -54,7 +54,7 @@ describe('booking_confirmation at the writes', () => {
   ])('create_booking — %s', async (_name, rules, messages) => {
     const { db, calls } = fakeDb({ 'rpc:create_booking': [{ data: BOOKED }] });
     const payload = { rule: {}, messages: [msg] } as unknown as BookingPayload;
-    await new BookingQueries(db, fakePolicy(rules)).createBooking(payload, 'actor');
+    await new BookingRepo(db, fakePolicy(rules)).createBooking(payload, 'actor');
     expect(rpcArg(calls, 'create_booking')).toEqual({ p_booking: { ...payload, messages }, p_actor: 'actor' });
   });
 

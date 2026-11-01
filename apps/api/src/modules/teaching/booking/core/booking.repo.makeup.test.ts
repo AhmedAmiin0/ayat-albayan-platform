@@ -1,10 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { fakePolicy } from '../../../messaging/notification-rules/policy/policy.fakes';
-import { IDS } from '../booking.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingPayload } from './booking.mapper';
-import { BookingQueries } from './booking.queries';
+import { BookingRepo } from './booking.repo';
 
 const RESULT = {
   rule_id: 'R1',
@@ -17,7 +17,7 @@ const RESULT = {
 const PAYLOAD = { rule: {} } as unknown as BookingPayload;
 const book = (rpc: { data?: unknown; error?: { code?: string; message: string } }[]) => {
   const { db, calls } = fakeDb({ 'rpc:create_booking': rpc });
-  return { run: () => new BookingQueries(db, fakePolicy()).createBooking(PAYLOAD, 'actor'), calls };
+  return { run: () => new BookingRepo(db, fakePolicy()).createBooking(PAYLOAD, 'actor'), calls };
 };
 const failure = async (p: Promise<unknown>) => {
   const e: unknown = await p.catch((err: unknown) => err);
@@ -62,7 +62,7 @@ describe('BookingQueries — makeupOriginal / invoiceByRequest', () => {
   it('invoiceByRequest maps the stored row and ignores a request with none', async () => {
     const row = { kind: 'makeup', storage_path: 'r/a.png', mime: 'image/png', size_bytes: 9, source: 'whatsapp', message_id: 'M1' };
     const { db, argsOf } = fakeDb({ invoices: [{ data: row }, { data: null }] });
-    const q = new BookingQueries(db, fakePolicy());
+    const q = new BookingRepo(db, fakePolicy());
     expect(await q.invoiceByRequest('r')).toEqual({
       kind: 'makeup',
       path: 'r/a.png',
@@ -78,7 +78,7 @@ describe('BookingQueries — makeupOriginal / invoiceByRequest', () => {
   it('makeupOriginal reads the lesson with its rule package and students', async () => {
     const lesson = { id: IDS.missed, status: 'no_show' };
     const { db, argsOf } = fakeDb({ lessons: [{ data: lesson }] });
-    expect(await new BookingQueries(db, fakePolicy()).makeupOriginal(IDS.missed)).toEqual(lesson);
+    expect(await new BookingRepo(db, fakePolicy()).makeupOriginal(IDS.missed)).toEqual(lesson);
     expect(argsOf('lessons', 'eq')).toEqual(['id', IDS.missed]);
   });
 });

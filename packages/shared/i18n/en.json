@@ -7386,6 +7386,7 @@
     },
     "referencePrice": "Calculator price: {amount} {currency}",
     "agreedAmount": "Agreed amount ({currency})",
+    "customAmount": "Custom amount",
     "minAmount": "Lowest allowed amount: {amount} {currency}",
     "create": "Create link",
     "creating": "Creating the link…",
