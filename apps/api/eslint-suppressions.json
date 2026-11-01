@@ -2353,18 +2353,7 @@
     }
   },
   "src/modules/finance/pricing/pricing.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/pricing/pricing.controller.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 2
     }
   },
@@ -11130,17 +11119,9 @@
       "count": 1
     }
   },
-  "src/modules/sales/job-applicants/job-applicants.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/sales/job-applicants/job-applicants.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/sales/job-applicants/job-applicants.list.test.ts": {
@@ -11177,15 +11158,7 @@
       "count": 2
     }
   },
-  "src/modules/sales/leads/lead-family.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
   "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -11234,11 +11207,6 @@
   "src/modules/sales/leads/leads.controller.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/sales/leads/leads.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/sales/leads/leads.fakes.ts": {
