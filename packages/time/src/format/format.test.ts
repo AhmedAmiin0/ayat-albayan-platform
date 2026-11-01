@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dateRangeText, dateText, engineHourCycle } from './format.js';
-import { zonedFieldsIn } from './zoned.js';
+import { zonedFieldsIn } from '../zone/index.js';
 
 // The words half of the facade (docs/34 §7): the same strings Intl gave the apps before.
 

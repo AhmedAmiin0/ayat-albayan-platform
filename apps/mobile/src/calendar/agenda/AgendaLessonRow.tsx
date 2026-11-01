@@ -6,7 +6,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
-import { durationLabel, lessonClock, studentNames } from '@/today/lib/lesson-text';
+import { durationLabel, lessonClock, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';

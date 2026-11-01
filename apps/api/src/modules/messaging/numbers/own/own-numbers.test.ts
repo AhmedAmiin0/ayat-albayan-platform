@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
-import type { NumbersQueries } from '../numbers.queries';
+import type { Db } from '@/common/db/db.module';
+import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { OwnNumbers, ownPhonesOf, phoneList } from './own-numbers';
 
 // Example numbers only.
@@ -10,7 +10,7 @@ const NOTIFY = '+966500000008';
 function own(rows: { display_phone_e164: string | null }[][]) {
   const all = vi.fn();
   for (const r of rows) all.mockResolvedValueOnce(r);
-  return { all, svc: new OwnNumbers({ all } as unknown as NumbersQueries, {} as Db) };
+  return { all, svc: new OwnNumbers({ all } as unknown as NumbersRepo, {} as Db) };
 }
 
 beforeEach(() => {
@@ -54,7 +54,7 @@ describe('OwnNumbers', () => {
 
   it('a failed read keeps the last set; none yet = nobody hidden', async () => {
     const all = vi.fn().mockRejectedValueOnce(new Error('down')).mockResolvedValueOnce([{ display_phone_e164: CHAT }]).mockRejectedValueOnce(new Error('down'));
-    const svc = new OwnNumbers({ all } as unknown as NumbersQueries, {} as Db);
+    const svc = new OwnNumbers({ all } as unknown as NumbersRepo, {} as Db);
     expect(await svc.has(CHAT)).toBe(false);
     expect(await svc.has(CHAT)).toBe(true);
     svc.forget();

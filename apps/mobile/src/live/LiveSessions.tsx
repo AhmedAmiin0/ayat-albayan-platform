@@ -7,7 +7,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { shape, type, useTheme } from '@/theme';
-import { lessonClock, studentNames } from '@/today/lib/lesson-text';
+import { lessonClock, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
