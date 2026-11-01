@@ -761,9 +761,6 @@
     "@typescript-eslint/return-await": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 6
     }
@@ -1323,9 +1320,6 @@
     }
   },
   "src/config/role/worker-kick.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -1830,7 +1824,7 @@
   },
   "src/modules/finance/fx/fx.fetcher.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/fx/fx.module.ts": {
