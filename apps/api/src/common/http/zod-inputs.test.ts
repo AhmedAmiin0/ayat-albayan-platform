@@ -1,4 +1,4 @@
-import { Controller, Get, Module, Patch, Post } from '@nestjs/common';
+import { Controller, Get, Module, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -26,6 +26,11 @@ class ProbeController {
   @Post('empty')
   empty(@ZodBody(query, { orEmpty: true }) input: z.output<typeof query>) {
     return input;
+  }
+
+  @Patch(':id')
+  byId(@Param('id', ParseUUIDPipe) id: string, @ZodBody(body) input: z.output<typeof body>) {
+    return { id, ...input };
   }
 
   @Get()
@@ -80,6 +85,12 @@ describe('ZodBody / ZodQuery (docs/36 z1b)', () => {
     const res = await app.inject({ method: 'POST', url: '/probe/empty' });
     expect(res.statusCode).toBe(201);
     expect(res.json()).toEqual({ page: 1 });
+  });
+
+  it('a bad uuid param still wins over a bad body (as when the handler parsed)', async () => {
+    const res = await app.inject({ method: 'PATCH', url: '/probe/nope', payload: { name: '' } });
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ message: 'Validation failed (uuid is expected)' });
   });
 
   it('a query is coerced; a bad one is the one 400 envelope', async () => {

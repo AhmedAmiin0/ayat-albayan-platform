@@ -20,9 +20,12 @@ const isBody = (key: string): boolean => key.startsWith(`${RouteParamtypes.BODY}
 export function bodyPipeOf<T>(
   controller: Type<T>,
   method: keyof T & string,
-): (raw: unknown) => unknown {
+): (raw: unknown) => Promise<unknown> {
   const args = routeArgsSchema.parse(Reflect.getMetadata(ROUTE_ARGS_METADATA, controller, method));
   const pipes = Object.entries(args).find(([key]) => isBody(key))?.[1].pipes ?? [];
-  return (raw) =>
-    pipes.reduce<unknown>((value, pipe) => pipe.transform(value, { type: 'body' }), raw);
+  return async (raw) => {
+    let value = raw;
+    for (const pipe of pipes) value = await pipe.transform(value, { type: 'body' });
+    return value;
+  };
 }

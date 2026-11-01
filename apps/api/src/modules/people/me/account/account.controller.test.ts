@@ -1,6 +1,6 @@
 import { PATH_METADATA } from '@nestjs/common/constants';
 import { describe, expect, it } from 'vitest';
-import { PERMISSION, SIGNED_IN } from '../../../../common/auth/decorators';
+import { PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
 import { AccountController } from './account.controller';
 import { accountKit, ME, PASSWORD } from './account.fakes';
@@ -34,7 +34,7 @@ describe('AccountController', () => {
   it('acts on the token’s user and ignores ids in the body', async () => {
     const kit = accountKit();
     const controller = new AccountController(kit.account, kit.avatar);
-    const body = bodyPipeOf(
+    const body = await bodyPipeOf(
       AccountController,
       'updateProfile',
     )({ id: 'user-2', full_name: 'Huda Ali', role: 'admin' });
@@ -48,12 +48,10 @@ describe('AccountController', () => {
     const kit = accountKit();
     const controller = new AccountController(kit.account, kit.avatar);
     // @ZodBody's pipe runs before the handler, so no service call happens.
-    expect(() => bodyPipeOf(AccountController, 'updateProfile')({ role: 'admin' })).toThrow(
-      'validation_failed',
-    );
-    expect(() => bodyPipeOf(AccountController, 'changePassword')({ new_password: 'x' })).toThrow(
-      'validation_failed',
-    );
+    const updateProfile = bodyPipeOf(AccountController, 'updateProfile');
+    const changePassword = bodyPipeOf(AccountController, 'changePassword');
+    await expect(updateProfile({ role: 'admin' })).rejects.toThrow('validation_failed');
+    await expect(changePassword({ new_password: 'x' })).rejects.toThrow('validation_failed');
     expect(kit.store.patches).toEqual([]);
     await expect(
       controller.changeEmail({ email: 'a@b.test', current_password: PASSWORD }, ME),

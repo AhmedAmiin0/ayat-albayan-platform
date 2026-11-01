@@ -5,10 +5,18 @@ import { parseOrThrow, sentOnly } from './http';
 // docs/36 Z-1: a Nest input is parsed by its zod schema before the handler runs (400 = the one
 // `validation_failed` envelope). Built on @Body/@Query + a pipe, so Swagger and pipe order stay.
 
+/**
+ * Before z1b the parse ran inside the handler, after every other param's pipe (ParseUUIDPipe…), so
+ * a bad `:id` won over a bad body. Nest resolves params with Promise.all; waiting one event-loop
+ * turn keeps that order whatever the compile target does to async timing.
+ */
+const afterOtherParams = (): Promise<void> => new Promise((resolve) => setImmediate(resolve));
+
 class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, z.output<S>> {
   constructor(private readonly schema: S) {}
 
-  transform(value: unknown): z.output<S> {
+  async transform(value: unknown): Promise<z.output<S>> {
+    await afterOtherParams();
     return parseOrThrow(this.schema, value);
   }
 }
@@ -20,7 +28,8 @@ class SentOnlyPipe<S extends z.ZodType<object>> implements PipeTransform<
 > {
   constructor(private readonly schema: S) {}
 
-  transform(value: unknown): Partial<z.output<S>> {
+  async transform(value: unknown): Promise<Partial<z.output<S>>> {
+    await afterOtherParams();
     return sentOnly(parseOrThrow(this.schema, value), value);
   }
 }
