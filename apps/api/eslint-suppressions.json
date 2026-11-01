@@ -7986,9 +7986,6 @@
     }
   },
   "src/modules/people/me/account/account.avatar.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
@@ -8008,18 +8005,8 @@
       "count": 3
     }
   },
-  "src/modules/people/me/account/account.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
   "src/modules/people/me/account/account.password.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "src/modules/people/me/account/account.ports.provider.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -8046,9 +8033,6 @@
     }
   },
   "src/modules/people/me/account/account.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -8891,9 +8875,6 @@
     }
   },
   "src/modules/people/users/audit/users.audit.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8920,9 +8901,6 @@
     }
   },
   "src/modules/people/users/auth/users.credential.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -8948,25 +8926,9 @@
       "count": 1
     }
   },
-  "src/modules/people/users/lifecycle/users.create.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
   "src/modules/people/users/lifecycle/users.create.test.ts": {
     "ab/no-parent-imports": {
       "count": 3
-    }
-  },
-  "src/modules/people/users/lifecycle/users.lifecycle.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    },
-    "max-len": {
-      "count": 8
     }
   },
   "src/modules/people/users/lifecycle/users.lifecycle.test.ts": {
@@ -8978,9 +8940,6 @@
     }
   },
   "src/modules/people/users/photo/staff-photo.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 6
     }
@@ -9031,9 +8990,6 @@
     }
   },
   "src/modules/people/users/users.access.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -9050,9 +9006,6 @@
     }
   },
   "src/modules/people/users/users.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -9070,9 +9023,6 @@
   "src/modules/people/users/users.fakes.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -9116,11 +9066,6 @@
       "count": 1
     }
   },
-  "src/modules/people/users/users.ports.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/people/users/users.rules.ts": {
     "ab/module-boundaries": {
       "count": 2
@@ -9133,18 +9078,7 @@
     }
   },
   "src/modules/people/users/users.service.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 11
-    }
-  },
-  "src/modules/people/users/users.update.test.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
