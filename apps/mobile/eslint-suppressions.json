@@ -789,11 +789,8 @@
     }
   },
   "src/auth/verify-role.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/booking/invoice/ChatMediaSheet.test.tsx": {

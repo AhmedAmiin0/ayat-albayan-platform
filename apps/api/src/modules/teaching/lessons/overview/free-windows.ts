@@ -1,10 +1,8 @@
-import { DURATIONS } from '@ab/shared';
-import { expandRow, type TimeRange, type WeeklyRow } from '../../../people/teachers/availability/free-slots';
-import { mergeIntervals, subtractIntervals, type Interval } from '../../../people/teachers/availability/intervals';
-import { MINUTE } from '../../../people/teachers/availability/zoned-time';
-
+import { DURATIONS, MINUTE_MS } from '@ab/shared';
+import { expandRow, type TimeRange, type WeeklyRow } from '@/modules/people/teachers/availability/free-slots';
+import { mergeIntervals, subtractIntervals, type Interval } from '@/modules/people/teachers/availability/intervals';
 /** The shortest lesson: a shorter gap can never be booked, so it is not shown as free. */
-const MIN_GAP = Math.min(...DURATIONS) * MINUTE;
+const MIN_GAP = Math.min(...DURATIONS) * MINUTE_MS;
 
 type TeacherSpansInput = {
   from: Date;
