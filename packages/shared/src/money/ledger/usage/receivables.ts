@@ -1,4 +1,4 @@
-import { calendarDaysBetween } from '../../../time/index.js';
+import { calendarDaysBetween } from '@ab/time';
 // Receivables («مستحق على الطلاب», owner 2026-10-05): who still owes on a package, how much and
 // for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
 

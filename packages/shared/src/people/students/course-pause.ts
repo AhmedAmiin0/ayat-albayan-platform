@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { daysBetween } from '../../schedule/lessons/index.js';
 import { localDate } from '../../schemas/index.js';
-import { addDays } from '../../time/index.js';
+import { addDays } from '@ab/time';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b): a pause of a student's course between two Riyadh
 // days. The database (migrations 955–957) does the work; these are the contracts and the day arithmetic it

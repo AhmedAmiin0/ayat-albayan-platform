@@ -1,6 +1,6 @@
 import { fromCents, toCents } from '@ab/core';
 import { localDay } from './first-paid.js';
-import { addCalendarDays, addCalendarMonths } from '../../time/index.js';
+import { addCalendarDays, addCalendarMonths } from '@ab/time';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:
 // salary + the commissions earned up to that month +/- adjustments, per currency, never summed across

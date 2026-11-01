@@ -12,6 +12,7 @@ export const ROOTS = [
   'apps/api/src',
   'packages/core/src',
   'packages/i18n/src',
+  'packages/time/src',
   'packages/shared/src',
   'packages/client-core/src',
   'e2e',
@@ -22,6 +23,7 @@ const UNIT =
 const ALIAS = {
   '@ab/core': 'packages/core/src/index.ts',
   '@ab/i18n': 'packages/i18n/src/index.ts',
+  '@ab/time': 'packages/time/src/index.ts',
   '@ab/shared': 'packages/shared/src/index.ts',
   '@ab/shared/testing': 'packages/shared/src/testing/index.ts',
   '@ab/client-core': 'packages/client-core/src/index.ts',
