@@ -12,7 +12,7 @@ import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
+import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { SalesQueries } from '../../sales/sales/sales.queries';
 import { MessageSender } from '../whatsapp/sender/message.sender';
 import { SendGate } from '../whatsapp/gate/send-gate';
@@ -94,7 +94,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(ThreadsRepo).useValue(m.queries)
     .overrideProvider(TeacherThreadsRepo).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
-    .overrideProvider(ChatListsQueries).useValue(m.lists)
+    .overrideProvider(ChatListsRepo).useValue(m.lists)
     .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })

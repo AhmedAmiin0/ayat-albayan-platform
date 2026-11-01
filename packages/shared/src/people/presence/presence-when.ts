@@ -1,6 +1,13 @@
 import { counted, type Locale, type PluralForm } from '@ab/core';
-import { isolateClock, type ClockCycle } from '../../core/format/index.js';
-import { chatDay, clockOf, dateText, dayParts, type DateFields } from '../../time/index.js';
+import {
+  chatDay,
+  type ClockCycle,
+  clockOf,
+  type DateFields,
+  dateText,
+  dayParts,
+  isolateClock,
+} from '@ab/time';
 
 // «آخر ظهور …» / «آخر رسالة …» (docs/33 §4): how long ago, on the viewer's clock and zone. The
 // words come from each app's ar.json / en.json (`presence`), so this stays pure.

@@ -12,7 +12,7 @@ import { RulesFacts } from './policy/rules.facts';
 import { RulesJournal } from './store/rules.journal';
 import { RulesParity } from './sync/rules.parity';
 import { RulesPersist } from './store/rules.persist';
-import { RULES_CLASSROOM, RulesQueries, type ClassroomOn } from './rules.queries';
+import { RULES_CLASSROOM, RulesRepo, type ClassroomOn } from './rules.repo';
 import { RulesReader } from './store/rules.reader';
 import { RulesService } from './rules.service';
 import { DbRulesReader } from './store/rules.store';
@@ -34,7 +34,7 @@ import { RulesWriter } from './store/rules.writer';
     { provide: RULES_CLASSROOM, useFactory: (): ClassroomOn => () => livekitEnv(loadEnv()) !== null },
     NotificationRulesSettings,
     RulesSourceSettings,
-    RulesQueries,
+    RulesRepo,
     RulesFacts,
     RulesTable,
     DbRulesReader,

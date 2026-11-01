@@ -4,7 +4,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
-import { lessonClock, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
+import { lessonClock, studentNames, viewerDayHint } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';

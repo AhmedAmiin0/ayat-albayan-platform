@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { callsOf, chainDb } from './chain-db.fake';
-import { queueMessages, REMINDER_KEYS, RemindersQueries } from './reminders.queries';
+import { queueMessages, REMINDER_KEYS, RemindersRepo } from './reminders.repo';
 
 describe('RemindersQueries', () => {
   it('upcoming: open lessons in (now, until], students (with their code) flattened from lesson_students', async () => {
@@ -14,7 +14,7 @@ describe('RemindersQueries', () => {
       lesson_students: [{ student: { id: 's-1', name: 'سهيلة', code: 'AB-0101', guardian: null } }, { student: null }],
     };
     const { db, log } = chainDb({ lessons: [{ data: [lesson] }] });
-    const rows = await new RemindersQueries(db).upcoming({ now: new Date('2026-10-04T13:00:00Z'), until: new Date('2026-10-05T14:00:00Z') });
+    const rows = await new RemindersRepo(db).upcoming({ now: new Date('2026-10-04T13:00:00Z'), until: new Date('2026-10-05T14:00:00Z') });
     expect(rows).toEqual([
       {
         id: 'l1',
@@ -49,7 +49,7 @@ describe('RemindersQueries', () => {
         { data: [{ id: 'm1' }, { id: 'm3' }] },
       ],
     });
-    expect(await new RemindersQueries(db).dropCancelled(new Date('2026-10-04T13:00:00Z'))).toBe(2);
+    expect(await new RemindersRepo(db).dropCancelled(new Date('2026-10-04T13:00:00Z'))).toBe(2);
     expect(callsOf(log, 'messages', 0)).toContainEqual(['gt', ['expires_at', '2026-10-04T13:00:00.000Z']]);
     // The classroom links (job-made or «ابعت لينك الحلقة») of a cancelled lesson go too.
     expect(callsOf(log, 'messages', 0)).toContainEqual(['in', ['template_key', [...REMINDER_KEYS]]]);
@@ -64,7 +64,7 @@ describe('RemindersQueries', () => {
 
   it('dropCancelled with nothing to drop writes nothing', async () => {
     const { db, log } = chainDb({ messages: [{ data: [{ id: 'm2', lesson: { status: 'scheduled' } }] }] });
-    expect(await new RemindersQueries(db).dropCancelled(new Date())).toBe(0);
+    expect(await new RemindersRepo(db).dropCancelled(new Date())).toBe(0);
     expect(log).toHaveLength(1);
   });
 
@@ -79,7 +79,7 @@ describe('RemindersQueries', () => {
         },
       ],
     });
-    const subjects = await new RemindersQueries(db).pushedSubjects('lesson_needs_confirmation', new Date());
+    const subjects = await new RemindersRepo(db).pushedSubjects('lesson_needs_confirmation', new Date());
     expect([...subjects]).toEqual(['lesson-1', 'renewal:sub-1']);
   });
 
@@ -94,6 +94,6 @@ describe('RemindersQueries', () => {
 
   it('a database error is thrown (the job logs it)', async () => {
     const { db } = chainDb({ message_templates: [{ data: null, error: { message: 'boom' } }] });
-    await expect(new RemindersQueries(db).approved(['lesson_reminder_24h'])).rejects.toBeTruthy();
+    await expect(new RemindersRepo(db).approved(['lesson_reminder_24h'])).rejects.toBeTruthy();
   });
 });

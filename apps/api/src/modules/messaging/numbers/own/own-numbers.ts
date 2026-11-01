@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { integrationRefreshMs } from '@/common/configuration/integrations/integration-refresh';
 import { loadEnv } from '@/config/env/env';
-import { NumbersQueries, type NumberRow } from '@/modules/messaging/numbers/numbers.queries';
+import { NumbersRepo, type NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
 const MIN_TTL_MS = 1_000;
 const WEEK_MS = 7 * 24 * 3_600_000;
@@ -33,7 +33,7 @@ export class OwnNumbers {
   private cached: { phones: ReadonlySet<string>; at: number } | null = null;
 
   constructor(
-    private readonly queries: NumbersQueries,
+    private readonly queries: NumbersRepo,
     @Inject(DB) private readonly db: Db,
   ) {}
 

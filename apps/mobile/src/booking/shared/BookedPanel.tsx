@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
-import { viewerToday } from '@/calendar/lib/week';
+import { viewerToday } from '@/calendar';
 import { whenText } from './slots';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

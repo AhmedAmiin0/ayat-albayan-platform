@@ -1,7 +1,16 @@
 import { describe, expect, it, vi } from 'vitest';
-import { addCalendarDays, addDaysIn, startOfDayIn, weekStartOfDate, weekdayOfDate } from '../calendar.js';
-import { clockOf } from '../format.js';
-import { localDateIn, offsetMinutesIn, wallInstant, weekdayIn } from '../zoned.js';
+import {
+  addCalendarDays,
+  addDaysIn,
+  clockOf,
+  localDateIn,
+  offsetMinutesIn,
+  startOfDayIn,
+  wallInstant,
+  weekdayIn,
+  weekdayOfDate,
+  weekStartOfDate,
+} from '@ab/time';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 
 // A whole year per zone: seconds, not the default 5 s, on a busy CI runner.

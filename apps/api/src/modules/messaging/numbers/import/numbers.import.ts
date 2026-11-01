@@ -6,7 +6,7 @@ import { envFrom } from '@/config/env/env';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { NumbersEffects } from '@/modules/messaging/numbers/numbers.effects';
 import { planAll, type RolePlan } from './numbers.import-plan';
-import { NumbersQueries } from '@/modules/messaging/numbers/numbers.queries';
+import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { NumbersSecrets } from '@/modules/messaging/numbers/config/numbers.secrets';
 
 /** The response view of a plan: no copy sources, no row draft. */
@@ -36,7 +36,7 @@ export class NumbersImport {
   private readonly log = new Logger(NumbersImport.name);
 
   constructor(
-    private readonly queries: NumbersQueries,
+    private readonly queries: NumbersRepo,
     private readonly secrets: NumbersSecrets,
     private readonly effects: NumbersEffects,
   ) {}

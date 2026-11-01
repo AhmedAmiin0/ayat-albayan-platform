@@ -1,5 +1,4 @@
-import { calendarDaysBetween, weekdayOfDate } from './calendar.js';
-import { localDateIn, zonedFieldsIn } from './zoned.js';
+import { calendarDaysBetween, localDateIn, weekdayOfDate, zonedFieldsIn } from '../zone/index.js';
 
 // The day a chat message belongs to, as WhatsApp shows it above each day's first bubble (owner
 // 2026-10-27): today, yesterday, the weekday within the last 6 days, else the date (the year only
