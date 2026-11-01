@@ -1,4 +1,4 @@
-import { COUNTS_FOR_MONEY } from '@ab/shared';
+import { COUNTS_FOR_MONEY, renewalShareNow } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
@@ -13,9 +13,9 @@ export class TermsQueries {
     private readonly settings: AssistantPaySettings,
   ) {}
 
-  /** settings.renewal_commission_percent: the share of the commission earned on each renewal (0..100). */
+  /** The share of the commission earned on each renewal now (0..100): renewal_commission_percent, 0 while «عمولة التجديد» is off. */
   async renewalShare(): Promise<number> {
-    return (await this.settings.read()).renewal_commission_percent;
+    return renewalShareNow(await this.settings.read());
   }
 
   /** Every assistant (base role sales), by name. */

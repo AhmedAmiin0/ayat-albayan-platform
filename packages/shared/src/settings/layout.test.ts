@@ -27,7 +27,7 @@ const LEGACY_PAGE_ORDER = [
   'presence_enabled',
   'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
-  'renewal_commission_percent',
+  'renewal_commission_enabled', 'renewal_commission_percent',
 ];
 
 const flat = (): SettingKey[] => SETTINGS_SECTIONS.flatMap((id): readonly SettingKey[] => SETTINGS_LAYOUT[id]);
