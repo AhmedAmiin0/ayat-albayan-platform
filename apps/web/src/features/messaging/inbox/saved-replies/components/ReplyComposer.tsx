@@ -13,6 +13,7 @@ import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/
 import { useReplyValues } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-values';
 import { useRepliesPicker } from '@/features/messaging/inbox/saved-replies/hooks/use-replies-picker';
 import { useStagedSend } from '@/features/messaging/inbox/saved-replies/hooks/use-staged-send';
+import { useMaySend } from '@/features/messaging/inbox/shared/may-send';
 
 export interface ReplyComposerProps {
   thread: ThreadView;
@@ -56,7 +57,8 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
     if (next || replacesBox(before)) setStaged(phone, next);
     focusBox(boxId);
   };
-  const picker = useRepliesPicker({ text: draft.text, enabled: thread.session_open, onPick, onClose: () => focusBox(boxId) });
+  const may = useMaySend(thread);
+  const picker = useRepliesPicker({ text: draft.text, enabled: may, onPick, onClose: () => focusBox(boxId) });
   const active = picker.bySlash && picker.list.length ? optionId(listId, picker.keys.active) : undefined;
   const above = (
     <>

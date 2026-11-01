@@ -11,7 +11,7 @@ import { t } from '@/lib/i18n/i18n';
 import { LinkFamilyDialog } from '@/features/messaging/inbox';
 import { useInboxMode } from '@/features/messaging/inbox';
 import { SalesRegisterButton, SalesRegisterDialog } from '@/features/messaging/inbox';
-import { canRegisterFrom } from '@/features/messaging/inbox';
+import { canRegisterFrom, useMaySend } from '@/features/messaging/inbox';
 import { salesFamilyQuery } from './api';
 import { ChildChoiceDialog } from './ChildChoiceDialog';
 import { SalesCourseDialog } from './course/SalesCourseDialog';
@@ -50,6 +50,8 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const mode = useInboxMode();
   const sales = mode === 'sales' && !!thread.guardian_id;
   const family = useQuery({ ...salesFamilyQuery(thread.phone_e164), enabled: sales });
+  // A payment link's text goes into the box wherever a text goes (owner 2026-11-01).
+  const canSend = useMaySend(thread);
   const { can } = usePermissions();
   const check = can('students.check_registration');
   const [opened, setOpened] = useState<Opened | null>(null);
@@ -89,7 +91,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
       {opened && (
-        <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} sessionOpen={thread.session_open} onClose={() => setOpened(null)} />
+        <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} canSend={canSend} onClose={() => setOpened(null)} />
       )}
       {chosen && <ChildChoiceDialog title={chosen.title} students={chosen.list} onPick={pickChild} onClose={() => setChoosing(null)} />}
       {linkingFamily && (

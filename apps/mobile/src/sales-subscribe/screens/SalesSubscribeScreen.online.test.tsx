@@ -26,7 +26,7 @@ const mockWindow = { open: true };
 const mockSetText = jest.fn();
 jest.mock('@/inbox', () => ({
   ...jest.requireActual('@/inbox'),
-  chatWindowOpen: () => mockWindow.open,
+  chatMaySend: () => mockWindow.open,
   appendComposerText: (...mockArgs: unknown[]) => mockSetText(...mockArgs),
 }));
 
@@ -94,11 +94,11 @@ test('the link made: the family refetches (its unpaid package); «إرسال ف�
   expect(mockApiSend.mock.calls.some((c: unknown[]) => String(c[1]).startsWith('/threads'))).toBe(false);
 });
 
-test('the window closed: the template note, the box untouched', async () => {
+test('no text can go in this chat (chatMaySend no): the box’s closed note, the box untouched', async () => {
   mockWindow.open = false;
   await createLink();
   await fireEvent.press(await screen.findByRole('button', { name: pl.sendInChat }));
-  expect(screen.getByText(pl.templateNeeded)).toBeTruthy();
+  expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
   expect(mockSetText).not.toHaveBeenCalled();
   expect(mockBack).not.toHaveBeenCalled();
 });
