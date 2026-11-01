@@ -20,14 +20,15 @@ describe('UserJournal', () => {
 
   it('record writes one users audit row with the extra fields only (no credential)', async () => {
     const { record, journal } = setup();
-    await journal.record({ actorId: 'a1', userId: 'u1', action: 'sign_out' });
+    const extra = { credential_mode: 'link' };
+    await journal.record({ actorId: 'a1', userId: 'u1', action: 'reset_password', extra });
     expect(record).toHaveBeenCalledWith({
       actorId: 'a1',
       entity: 'users',
       entityId: 'u1',
-      action: 'sign_out',
+      action: 'reset_password',
       before: null,
-      after: null,
+      after: extra,
     });
   });
 });

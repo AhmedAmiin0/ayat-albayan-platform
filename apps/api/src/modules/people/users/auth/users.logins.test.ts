@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
+import { errorCode } from '@/common/http/errors';
 import { FakeAuthAdmin } from './users.fakes.auth';
 import { UserLogins } from './users.logins';
+
+const codeOf = (run: () => unknown): string | undefined => {
+  try {
+    run();
+    return undefined;
+  } catch (e: unknown) {
+    return errorCode(e);
+  }
+};
 
 const config = { passwordMinLength: 10, setPasswordUrl: 'https://app.example.test/set-password' };
 const setup = () => {
@@ -21,7 +31,8 @@ describe('UserLogins', () => {
 
   it('prepares a credential under the configured minimum length', () => {
     const { logins } = setup();
-    expect(() => logins.prepare({ mode: 'password', password: 'short' })).toThrow();
+    const short = () => logins.prepare({ mode: 'set', password: 'short9chr' });
+    expect(codeOf(short)).toBe('password_too_short');
     const generated = logins.prepare({ mode: 'generate' });
     expect(generated.password?.length).toBeGreaterThanOrEqual(10);
     expect(logins.prepare({ mode: 'link' })).toEqual({ password: undefined, issued: null });
