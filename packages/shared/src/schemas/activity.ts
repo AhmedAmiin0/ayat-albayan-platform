@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { USER_ROLES } from '../catalog/permissions/roles.js';
-import { listSortShape } from '../core/schemas/index.js';
+import { listSortShape } from '@ab/core';
 
 // «سجل النشاط» (owner, 2026-10-05): GET /activity, admin only, paged (R-NFR-08). The API logs
 // every mutating request + sign-in/out; this is the list's query and row shape.

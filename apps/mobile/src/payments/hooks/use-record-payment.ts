@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import type { Page } from '@/core/lib/query/paging';
 import { requestId } from '@/core/lib/http/request-id';
-import { useAttachmentPaths } from '../receipts/attachments';
-import { pendingPayment, withPaid, withPayment, type PaymentInput } from '../lib/optimistic';
+import { useAttachmentPaths } from '@/payments/receipts/attachments';
+import { pendingPayment, withPaid, withPayment, type PaymentInput } from '@/payments/lib/optimistic';
 import { balanceKey } from './queries';
-import { uploadReceipt } from '../upload-receipt';
+import { uploadReceipt } from '@/core/lib/receipts/upload-receipt';
 
 /** Cached GET /payments lists of this student (their params carry its studentId). */
 function studentLists(studentId: string) {

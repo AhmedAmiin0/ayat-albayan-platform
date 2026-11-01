@@ -1,5 +1,5 @@
 import type { Header, ReactTable, RowData } from '@tanstack/react-table';
-import type { ColumnFilterControl } from '../table-toolbar/types';
+import type { ColumnFilterControl } from '@/components/table-toolbar/types';
 import type { DataTableFeatures, DataTableFilters } from './data-table-features';
 
 /** A header's plain text (`header: () => t.x` or a string), for filter labels; else the column id. */

@@ -14,7 +14,7 @@ import {
 import type { Href } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate, ltr } from '@/core/ui/primitives/Ltr';
-import { money, partPaidLine } from '@/payments/format';
+import { money, partPaidLine } from '@/core/lib/money/format';
 
 // A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
 // GET /threads/:phone `people`. The rules (badge, child chip, new vs renew) are @ab/shared's, so

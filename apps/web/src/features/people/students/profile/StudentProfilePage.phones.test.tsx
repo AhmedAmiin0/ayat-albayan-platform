@@ -11,7 +11,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 vi.mock('@/features/people/auth', async (orig) => ({ ...(await orig<object>()), usePermissions: () => ({ permissions: [], can: () => false }) }));
 vi.mock('@/features/finance/subscriptions/balance/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));
-vi.mock('../duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
+vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
 // The family's second number (owner 2026-10-29) in the file's meta line, beside the main one.
 const MAIN = '+966500000001';

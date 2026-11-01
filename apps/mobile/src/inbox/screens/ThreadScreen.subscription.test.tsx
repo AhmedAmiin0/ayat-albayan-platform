@@ -2,10 +2,10 @@ import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '../subscription/people-fixtures';
-import { detail, PHONE, thread } from '../shared/thread-fixtures';
+import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
+import { detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();

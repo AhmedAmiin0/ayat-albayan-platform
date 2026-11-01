@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { authSubject } from './message.job';
 import { MessageWorker, type SendJob } from './message.worker';
-import { N2 } from '../numbers/number-route.fakes';
+import { N2 } from '@/modules/messaging/whatsapp/numbers/number-route.fakes';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/23c decision 8: the claim stamps the chosen number and line = its role; a broken token pauses that number.
 
@@ -18,7 +18,7 @@ const NOW = new Date('2026-10-02T08:00:00Z');
 const route = { numberId: N2, line: 'chat' as const };
 
 function run(over: Partial<SendJob> = {}) {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true, route, ...over });
 }

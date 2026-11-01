@@ -1,7 +1,7 @@
 import { GRANTABLE_PERMISSIONS, type Permission } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import type { RoleRecord } from '../roles/roles.store';
-import { errorCode } from '../../../common/http/errors';
+import type { RoleRecord } from '@/modules/people/roles/roles.store';
+import { errorCode } from '@/common/http/errors';
 import { ADMIN_ACTOR, row, setupUsers, type Link } from './users.fakes';
 import type { Actor } from './users.rules';
 
@@ -41,9 +41,9 @@ describe('M2: the record behind a login needs its own write permission', () => {
   });
 
   it('refuses every action on a student / guardian / teacher login without that permission', async () => {
-    const { users, lifecycle, auth } = setup();
+    const { updater, lifecycle, auth } = setup();
     const refusals = (actor: Actor, id: string) => [
-      users.update(id, { full_name: 'اسم جديد' }, actor),
+      updater.update(id, { full_name: 'اسم جديد' }, actor),
       lifecycle.disable(id, {}, actor),
       lifecycle.enable(id, actor),
       lifecycle.resetPassword(id, { credential: 'generate' }, actor),
@@ -68,14 +68,14 @@ describe('M2: the record behind a login needs its own write permission', () => {
 
 describe('M3: only a system admin touches a system admin', () => {
   it('refuses a custom admin role that holds every grant: reset, disable, sign-out, delete, update and role change', async () => {
-    const { users, lifecycle, creator, auth } = setup();
+    const { updater, lifecycle, creator, auth } = setup();
     const results = [
       lifecycle.resetPassword('admin1', { credential: 'generate' }, MANAGER),
       lifecycle.disable('admin1', {}, MANAGER),
       lifecycle.signOut('admin1', MANAGER),
       lifecycle.remove('admin1', MANAGER),
-      users.update('admin1', { email: 'taken-over@example.com' }, MANAGER),
-      users.update('admin1', { role_id: 'c-mgr' }, MANAGER),
+      updater.update('admin1', { email: 'taken-over@example.com' }, MANAGER),
+      updater.update('admin1', { role_id: 'c-mgr' }, MANAGER),
       creator.create({ email: 'new@example.com', full_name: 'علي أحمد', role: 'admin', credential: 'generate' }, MANAGER),
     ];
     expect(await Promise.all(results.map(codeOf))).toEqual(Array(7).fill('system_admin_only'));
@@ -91,14 +91,14 @@ describe('M3: only a system admin touches a system admin', () => {
 
 describe('M4: an admin-base role needs an actor whose own base role is admin', () => {
   it('refuses moving a user, the actor included, onto a custom admin role from another base role', async () => {
-    const { users } = setup();
-    expect(await codeOf(users.update('sales2', { role_id: 'c-mgr' }, SALES))).toBe('admin_role_only');
-    expect(await codeOf(users.update('sales1', { role_id: 'c-mgr' }, SALES))).toBe('admin_role_only');
+    const { updater } = setup();
+    expect(await codeOf(updater.update('sales2', { role_id: 'c-mgr' }, SALES))).toBe('admin_role_only');
+    expect(await codeOf(updater.update('sales1', { role_id: 'c-mgr' }, SALES))).toBe('admin_role_only');
   });
 
   it('lets an admin-base actor do it, and marks the option unassignable for the others', async () => {
-    const { users, store } = setup();
-    const out = await users.update('sales2', { role_id: 'c-mgr' }, MANAGER);
+    const { updater, users, store } = setup();
+    const out = await updater.update('sales2', { role_id: 'c-mgr' }, MANAGER);
     expect(out).toMatchObject({ role: 'admin', role_id: 'c-mgr' });
     expect(store.rows.find((r) => r.id === 'sales2')?.role).toBe('admin');
     const flag = async (actor: Actor) => (await users.roleOptions(actor)).find((o) => o.id === 'c-mgr')?.assignable;

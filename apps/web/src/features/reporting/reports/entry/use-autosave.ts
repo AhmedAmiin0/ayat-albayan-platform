@@ -2,7 +2,7 @@ import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues } f
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
-import { saveDraft } from '../api';
+import { saveDraft } from '@/features/reporting/reports/api';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
 

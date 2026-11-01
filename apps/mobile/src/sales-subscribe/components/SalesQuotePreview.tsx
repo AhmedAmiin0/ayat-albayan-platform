@@ -2,7 +2,7 @@ import type { SalesQuoteView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { planText } from '@/subscribe/QuotePreview';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

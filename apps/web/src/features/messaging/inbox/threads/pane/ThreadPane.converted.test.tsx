@@ -2,13 +2,13 @@ import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { detail, lead, PHONE } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { detail, lead, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 function renderLead(status: 'converted' | 'lost') {
   routeFetch(apiFetch, [

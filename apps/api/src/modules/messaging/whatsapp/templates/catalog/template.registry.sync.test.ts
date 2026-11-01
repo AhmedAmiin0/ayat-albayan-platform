@@ -1,17 +1,17 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
+import type { TemplatesRepo } from './templates.repo';
 import { RENEWAL_DUE_SEED } from './seed-templates.fakes';
-import { ADMIN, whatsappApp } from '../../test-app';
-import { type WhatsappLines } from '../../whatsapp.types';
+import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
+import { type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const lines = { notifications: client, chat: chatClient } as unknown as WhatsappLines;
-const registry = () => new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
+const registry = () => new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
 const status = (p: Promise<unknown>) =>
   p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
 const OFF = [409, { code: 'template_sync_off', message: 'template_sync_off' }];

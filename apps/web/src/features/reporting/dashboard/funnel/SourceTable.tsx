@@ -1,10 +1,10 @@
 import type { SourceRow } from '@ab/shared';
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { t } from '@/lib/i18n/i18n';
-import { Bar } from '../shared/Bar';
-import { amount, percent } from '../shared/format';
-import { useHandSort } from '../shared/hand-sort';
-import { SortableTh } from '../shared/SortableTh';
+import { Bar } from '@/features/reporting/dashboard/shared/Bar';
+import { amount, percent } from '@/features/reporting/dashboard/shared/format';
+import { useHandSort } from '@/features/reporting/dashboard/shared/hand-sort';
+import { SortableTh } from '@/features/reporting/dashboard/shared/SortableTh';
 
 const sourceLabel = (s: SourceRow['source']) => (s === 'unknown' ? t.dashboard.unknownSource : t.enums.leadSource[s]);
 

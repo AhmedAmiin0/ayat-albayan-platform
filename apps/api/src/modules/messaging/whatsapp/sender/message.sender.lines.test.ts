@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
-import type { SendGate } from '../gate/send-gate';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { dueMessage, fakeSwitches } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // The auth pause is per line (docs/12 §13.3 step 4): a dead chat token never delays notifications.
 
@@ -16,7 +16,7 @@ const chat = (id: string) => dueMessage({ id, template_key: null, body: 'نص', 
 const notif = (id: string) => dueMessage({ id });
 
 const sender = () =>
-  new MessageSender(gate as unknown as SendGate, queries as unknown as SenderQueries, worker as unknown as MessageWorker);
+  new MessageSender(gate as unknown as SendGate, queries as unknown as SenderRepo, worker as unknown as MessageWorker);
 const ids = () => worker.process.mock.calls.map(([job]) => (job as { row: { id: string } }).row.id);
 
 describe('MessageSender — per-line auth pause', () => {

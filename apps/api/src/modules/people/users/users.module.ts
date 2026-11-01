@@ -7,9 +7,12 @@ import { StaffPhotoController } from './photo/staff-photo.controller';
 import { UsersController } from './users.controller';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
-import { UserEffects, UserPorts } from './users.ports';
 import { UsersRepo } from './store/users.repo';
 import { UsersService } from './users.service';
+import { UserJournal } from './audit/users.journal';
+import { UserLogins } from './auth/users.logins';
+import { UserProfileWriter } from './update/users.profile-writer';
+import { UsersUpdateService } from './update/users.update.service';
 import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
 /** «المستخدمون» (owner, 2026-10-06). PermissionCache comes from AuthModule, AuditService from AuditModule. */
@@ -21,8 +24,10 @@ import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/
     UsersCreateService,
     UsersLifecycleService,
     UserAccess,
-    UserPorts,
-    UserEffects,
+    UsersUpdateService,
+    UserProfileWriter,
+    UserLogins,
+    UserJournal,
     { provide: USER_STORE, useClass: UsersRepo },
     { provide: AUTH_ADMIN, useClass: SupabaseAuthAdmin },
     {

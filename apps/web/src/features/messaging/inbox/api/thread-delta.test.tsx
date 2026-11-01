@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { detail, message, PHONE } from '../testing/inbox-fixture';
+import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());

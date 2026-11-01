@@ -2,7 +2,7 @@ import { chatOpen, dropsChat, type RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';
-import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type ModeratedEvent, type RoomClient, type RoomSnapshot } from '../components/room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type ModeratedEvent, type RoomClient, type RoomSnapshot } from '@/features/teaching/classroom/room/components/room-types';
 
 export interface RoomController {
   snap: RoomSnapshot;

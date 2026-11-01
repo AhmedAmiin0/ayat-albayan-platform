@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { updateUser, USERS_KEY } from '../api';
-import { DeleteUserDialog } from '../actions/DeleteUserDialog';
-import { DisableDialog } from '../actions/DisableDialog';
+import { updateUser, USERS_KEY } from '@/features/people/users/api';
+import { DeleteUserDialog } from '@/features/people/users/actions/DeleteUserDialog';
+import { DisableDialog } from '@/features/people/users/actions/DisableDialog';
 import { editBody, editErrors, initialEditForm, type EditForm } from './edit-form';
-import { userErrorText } from '../errors';
-import { ResetPasswordDialog } from '../actions/ResetPasswordDialog';
-import { UserActions, type ActionMode } from '../actions/UserActions';
+import { userErrorText } from '@/features/people/users/errors';
+import { ResetPasswordDialog } from '@/features/people/users/actions/ResetPasswordDialog';
+import { UserActions, type ActionMode } from '@/features/people/users/actions/UserActions';
 import { UserEditFields } from './UserEditFields';
 import { UserPhoto } from './UserPhoto';
 import { UserSummary } from './UserSummary';
-import type { FormErrors } from '../validation';
+import type { FormErrors } from '@/features/people/users/validation';
 
 export interface UserEditorProps {
   user: UserDetail;

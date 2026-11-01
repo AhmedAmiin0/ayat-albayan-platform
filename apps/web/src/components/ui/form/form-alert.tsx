@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { isolateLtr } from '../display/ltr';
-import { NuqtaGlyph } from '../display/nuqta-glyph';
+import { isolateLtr } from '@/components/ui/display/ltr';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { cn } from '@/lib/utils';
 
 /** Form-level inline alert (docs/07 §10): danger-soft, inset danger ring, struck glyph. */

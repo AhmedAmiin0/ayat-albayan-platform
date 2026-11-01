@@ -3,11 +3,11 @@ import { useEffect, useRef } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { mediaKind } from '../../format';
-import { useChatActions } from '../../shared/chat-actions';
-import type { BubbleOffers } from '../lib/bubble-offers';
-import type { BubbleTools } from '../lib/use-bubble-tools';
-import { ReactionRow } from '../reactions/ReactionRow';
+import { mediaKind } from '@/features/messaging/inbox/format';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
+import type { BubbleOffers } from '@/features/messaging/inbox/messages/lib/bubble-offers';
+import type { BubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
+import { ReactionRow } from '@/features/messaging/inbox/messages/reactions/ReactionRow';
 import { HideItems } from '@/features/messaging/inbox/messages/hide/HideItems';
 
 export interface BubbleMenuProps {

@@ -10,15 +10,15 @@ import {
   type ThreadFileUpload,
 } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, chatOutPath, isChatOutPathOf } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { sniffMime, SNIFF_BYTES } from '../../../teaching/booking/invoice/invoice-sniff';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import { InboxSettings } from '../inbox.settings';
-import { Outbox, type Sent } from '../send/outbox';
-import { ThreadQuotes } from '../threads/thread-quotes';
-import { dedupKey, outboundBase, replyOf, sendLine, type ThreadSend } from '../send/thread-send.service';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { BUCKETS, chatOutPath, isChatOutPathOf } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { dedupKey, outboundBase, replyOf, sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { toVoiceOgg } from './voice-ogg';
 import { voiceMedia } from './voice-send';
 
@@ -51,7 +51,7 @@ export class ThreadFileSender {
   private readonly toOgg = toVoiceOgg;
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly outbox: Outbox,
     private readonly storage: StorageService,
   ) {}

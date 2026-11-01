@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SalesModule } from '../../sales/sales/sales.module';
-import { InboxModule } from '../inbox/inbox.module';
+import { SalesModule } from '@/modules/sales/sales/sales.module';
+import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
 import { CallAccess } from './access/call-access';
 import { CallsGate } from './access/calls-gate';
 import { CallsSettings } from './calls.settings';
@@ -18,7 +18,7 @@ import { CallsController } from './http/calls.controller';
 import { CALLS_API } from './kapso/calls-api';
 import { KapsoCallsApi } from './kapso/kapso-calls';
 import { CallsNumberRepo } from './store/calls-number.repo';
-import { CallsQueries } from './store/calls.queries';
+import { CallsRepo } from './store/calls.repo';
 
 /**
  * WhatsApp voice calls from the chat number (docs/28), dark behind whatsapp_calls_enabled. InboxModule
@@ -32,7 +32,7 @@ import { CallsQueries } from './store/calls.queries';
   providers: [
     { provide: CALLS_API, useFactory: () => new KapsoCallsApi() },
     { provide: CALL_EVENTS, useExisting: CallEvents },
-    ...[CallsQueries, CallsKit, CallsSettings, CallsGate, CallAccess, CallEvents, CallFlows],
+    ...[CallsRepo, CallsKit, CallsSettings, CallsGate, CallAccess, CallEvents, CallFlows],
     ...[
       OutboundCalls,
       InboundCalls,

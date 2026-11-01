@@ -4,7 +4,6 @@ import { SupabaseAccountAuth } from './account/account.auth';
 import { AccountAvatarService } from './account/account.avatar.service';
 import { AccountController } from './account/account.controller';
 import { ACCOUNT_AUTH, ACCOUNT_CONFIG, ACCOUNT_STORE, type AccountConfig } from './account/account.ports';
-import { AccountPorts } from './account/account.ports.provider';
 import { AccountRepo } from './account/account.repo';
 import { AccountService } from './account/account.service';
 import { MeController } from './me.controller';
@@ -17,7 +16,6 @@ import { MeService } from './me.service';
     MeService,
     AccountService,
     AccountAvatarService,
-    AccountPorts,
     { provide: ACCOUNT_STORE, useClass: AccountRepo },
     { provide: ACCOUNT_AUTH, useClass: SupabaseAccountAuth },
     {

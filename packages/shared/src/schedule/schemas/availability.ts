@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { optionalText, timeOfDay, timeZone } from '../../core/schemas/index.js';
+import { optionalText, timeOfDay, timeZone } from '@ab/core';
 
 /** One weekly slot, wall-clock in `tz`. weekday: 0 = الأحد … 6 = السبت. R-TCH-02. */
 export const availabilitySlotSchema = z

@@ -15,7 +15,7 @@ vi.mock('@/features/people/auth', async (orig) => ({
 }));
 vi.mock('@/features/finance/subscriptions/balance/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));
-vi.mock('../duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
+vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
 // «إيقاف مؤقت» on the admin's student file (owner 2026-10-28): the head action and the banner.
 const STUDENT = {

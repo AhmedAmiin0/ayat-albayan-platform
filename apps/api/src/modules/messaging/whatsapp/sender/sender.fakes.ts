@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
-import type { MessageRow } from '../messages/message.mapper';
-import type { DueMessage } from './sender.queries';
+import type { MessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import type { DueMessage } from './sender.repo';
 
 // Test-only (excluded from the build): queued outbound rows as the producers write them.
 

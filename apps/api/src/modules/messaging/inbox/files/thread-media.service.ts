@@ -1,10 +1,10 @@
 import type { SignedDownload, ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { BUCKETS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries, type MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
-import { baseMime, chatServable, InboundMedia, type InboundFile, mediaExpired, servable } from '../../whatsapp/messages/inbound-media.service';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { baseMime, chatServable, InboundMedia, type InboundFile, mediaExpired, servable } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { isCrmHistoryRow, receiptMime, receiptName } from '@/modules/messaging/whatsapp';
 import { downloadName } from './download-name';
 
@@ -29,7 +29,7 @@ interface PickedFile {
 @Injectable()
 export class ThreadMediaService {
   constructor(
-    private readonly queries: InboundMediaQueries,
+    private readonly queries: InboundMediaRepo,
     private readonly media: InboundMedia,
     private readonly storage: StorageService,
   ) {}

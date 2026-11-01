@@ -1,9 +1,9 @@
 import { isPlayableMime } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { BUCKETS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries } from './inbound-media.queries';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMediaRepo } from './inbound-media.repo';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 const EVERY_MS = 24 * 3_600_000;
@@ -29,7 +29,7 @@ export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDest
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly queries: InboundMediaQueries,
+    private readonly queries: InboundMediaRepo,
     private readonly storage: StorageService,
   ) {}
 

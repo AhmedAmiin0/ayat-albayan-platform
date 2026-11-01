@@ -1,5 +1,5 @@
 import { baseMime } from '@ab/shared';
-import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.queries';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 
 // The files the chat pickers offer (the booking's «من الشات», the sales «اختر صورة الإيصال من
 // المحادثة»; owner 2026-10-31: stickers filled the list and the PDF never showed): a photo or a PDF

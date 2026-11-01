@@ -1,6 +1,6 @@
 import { RIYADH_TZ, type ClockOptions } from '../core/format/index.js';
 import { clockOf, engineTimeZone } from './format.js';
-import { isTimeZone } from '../core/schemas/index.js';
+import { isTimeZone } from '@ab/core';
 
 // Whose clock a screen reads in (owner 2026-10-30, docs/34): «Store all in utc server time and
 // format it according to the device region or user region». DB instants stay UTC (rule 6).

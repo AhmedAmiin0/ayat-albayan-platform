@@ -1,7 +1,7 @@
 import { LESSON_STATUSES, lessonStatusStyle, type LessonStatus } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { Bar } from '../shared/Bar';
+import { Bar } from '@/features/reporting/dashboard/shared/Bar';
 
 /**
  * This week's lessons by status (R-RPT-01): one row per status that has lessons, the status chip

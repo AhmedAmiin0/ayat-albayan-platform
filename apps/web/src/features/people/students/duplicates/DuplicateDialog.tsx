@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n/i18n';
-import { studentQuery } from '../api';
-import type { CreateStudentValues } from '../create/create-student';
+import { studentQuery } from '@/features/people/students/api';
+import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { DuplicateCompare } from './DuplicateCompare';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
-import type { StudentRef } from '../types';
+import type { StudentRef } from '@/features/people/students/types';
 
 export type DuplicateDialogProps = {
   typed: CreateStudentValues;

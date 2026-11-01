@@ -2,7 +2,7 @@ import { formatAmount, type AssistantCommissionView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { instantDay, money } from '@/payments/format';
+import { instantDay, money } from '@/core/lib/money/format';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { CardTitle } from '@/sales-money/components/CardTitle';
 import { Ltr } from '@/core/ui/primitives/Ltr';

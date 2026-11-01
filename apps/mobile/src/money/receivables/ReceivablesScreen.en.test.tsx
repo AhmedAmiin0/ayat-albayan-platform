@@ -1,9 +1,9 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { receivable, receivablesView } from '../shared/fixtures';
+import { receivable, receivablesView } from '@/money/shared/fixtures';
 import { ReceivablesScreen } from './ReceivablesScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

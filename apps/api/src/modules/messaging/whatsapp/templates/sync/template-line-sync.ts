@@ -1,10 +1,10 @@
 import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
-import { lineFacts, readError } from '../catalog/template-env';
+import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import { findMeta, syncPatch } from './template-sync';
-import { CRM_MANAGED } from '../catalog/template.mapper';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.types';
+import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One number's sync with Meta (owner 2026-10-18: «more options to sync it with meta for each number»):
 // only that line's rows, against only that line's WABA list, then that WABA's new templates imported.
@@ -13,7 +13,7 @@ import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.t
 type Warn = { warn: (message: string) => void };
 
 export interface LineSyncDeps {
-  queries: Pick<TemplatesQueries, 'all' | 'update' | 'insert'>;
+  queries: Pick<TemplatesRepo, 'all' | 'update' | 'insert'>;
   lines: WhatsappLines;
   log: Warn;
 }

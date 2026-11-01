@@ -49,14 +49,17 @@ export const FILES = {
   [`${W}/features/messaging/inbox/Bubble.test.tsx`]: "import { Bubble } from './Bubble';\n",
   [`${W}/features/finance/payments/index.ts`]: "export { PaymentsPage } from './PaymentsPage';\n",
   [`${W}/features/finance/payments/PaymentsPage.tsx`]:
-    "import { money } from '@ab/shared';\nimport { t } from '@/lib/i18n';\nexport const PaymentsPage = () => [money, t.pay.title];\n",
+    "import { digits, money } from '@ab/shared';\nimport { t } from '@/lib/i18n';\nexport const PaymentsPage = () => [digits, money, t.pay.title];\n",
   [`${W}/lib/i18n.ts`]: "import ar from '@ab/shared/i18n/ar.json';\nexport const t = ar;\n",
   'apps/api/src/app.module.ts':
     "import { InboxService } from './modules/messaging/inbox/inbox.service';\n",
   'apps/api/src/modules/messaging/inbox/inbox.service.ts':
     "import { toE164 } from '@ab/shared';\nexport class InboxService {}\n",
   'apps/api/src/common/auth/guard.ts': 'export const guard = 1;\n',
-  'packages/shared/src/index.ts': "export * from './phone.js';\nexport * from './money.js';\n",
+  'packages/shared/src/index.ts':
+    "export * from '@ab/core';\nexport * from './phone.js';\nexport * from './money.js';\n",
+  'packages/core/src/index.ts': "export * from './digits.js';\n",
+  'packages/core/src/digits.ts': 'export const digits = 1;\n',
   'packages/shared/src/phone.ts': 'export function toE164(s: string) { return s; }\n',
   'packages/shared/src/money.ts': 'export const money = 1;\n',
   'packages/shared/i18n/ar.json':

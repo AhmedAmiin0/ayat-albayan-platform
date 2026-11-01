@@ -1,0 +1,124 @@
+{
+  "id": "r4",
+  "seq": 216,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/messages/messages.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/messages/messages.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/messages/messages.queries.requeue.test.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/messages/messages.repo.requeue.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/numbers/route.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/numbers/route.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.allowed.test.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.allowed.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.calls.test.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.calls.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.chat.test.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.chat.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.queries.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.queries.shared.test.ts",
+      "to": "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.repo.shared.test.ts"
+    }
+  ],
+  "renames": {
+    "CrmMediaCopyQueries": "CrmMediaCopyRepo",
+    "InboundMediaQueries": "InboundMediaRepo",
+    "MessagesQueries": "MessagesRepo",
+    "RouteQueries": "RouteRepo",
+    "SenderQueries": "SenderRepo",
+    "TemplatesQueries": "TemplatesRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.queries.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.queries.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/messages.queries.requeue.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/messages.repo.requeue.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/messages/messages.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/messages/messages.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/numbers/route.queries.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/numbers/route.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/numbers/route.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/numbers/route.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.allowed.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.allowed.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.calls.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.calls.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.chat.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.chat.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/sender/sender.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.queries.shared.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.repo.shared.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.queries.test.ts",
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.queries.ts",
+      "apps/api/src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts"
+    ]
+  ]
+}

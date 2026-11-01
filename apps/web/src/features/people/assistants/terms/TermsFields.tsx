@@ -3,8 +3,8 @@ import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
-import { CurrencySelect } from '../commissions/CurrencySelect';
-import { fieldError } from '../status';
+import { CurrencySelect } from '@/features/people/assistants/commissions/CurrencySelect';
+import { fieldError } from '@/features/people/assistants/status';
 import type { TermsErrors, TermsForm } from './terms-form';
 
 type Props = {

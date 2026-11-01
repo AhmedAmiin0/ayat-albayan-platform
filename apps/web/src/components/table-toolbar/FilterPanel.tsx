@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { Button } from '../ui/form/button';
-import { Dialog } from '../ui/overlay/dialog';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
 import { FilterSummary } from './FilterSummary';
 
 export interface FilterPanelProps {

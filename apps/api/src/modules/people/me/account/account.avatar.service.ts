@@ -1,10 +1,11 @@
 import type { AccountProfile, AvatarUpload, SignedUpload } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { AvatarWriter, type AvatarSlot } from '../../../../common/storage/avatars/avatar-writer';
-import { avatarPath, isUserAvatarPathOf } from '../../../../common/storage/storage.paths';
-import { AccountPorts } from './account.ports.provider';
+import { Inject, Injectable } from '@nestjs/common';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { AvatarWriter, type AvatarSlot } from '@/common/storage/avatars/avatar-writer';
+import { avatarPath, isUserAvatarPathOf } from '@/common/storage/storage.paths';
+import { AVATAR_FILES } from '@/common/storage/avatars/avatar-files';
+import { ACCOUNT_STORE, type AccountFiles, type AccountStore } from './account.ports';
 import { AccountService } from './account.service';
 
 /**
@@ -15,13 +16,14 @@ import { AccountService } from './account.service';
 @Injectable()
 export class AccountAvatarService {
   constructor(
-    private readonly ports: AccountPorts,
+    @Inject(ACCOUNT_STORE) private readonly store: AccountStore,
+    @Inject(AVATAR_FILES) private readonly files: AccountFiles,
     private readonly account: AccountService,
     private readonly writer: AvatarWriter,
   ) {}
 
   uploadUrl(user: AuthUser, input: AvatarUpload): Promise<SignedUpload> {
-    return this.ports.files.uploadUrl(avatarPath({ userId: user.id, mime: input.mime }));
+    return this.files.uploadUrl(avatarPath({ userId: user.id, mime: input.mime }));
   }
 
   /** 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted. The previous photo goes. */
@@ -36,7 +38,7 @@ export class AccountAvatarService {
   }
 
   private slot(user: AuthUser): AvatarSlot {
-    const { store } = this.ports;
+    const { store } = this;
     return {
       owns: (path) => isUserAvatarPathOf(path, user.id),
       read: async () => {

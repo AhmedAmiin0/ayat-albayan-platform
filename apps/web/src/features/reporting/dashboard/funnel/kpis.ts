@@ -1,6 +1,6 @@
 import type { DashboardSummary } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { WorkTab } from '../search';
+import type { WorkTab } from '@/features/reporting/dashboard/search';
 
 // docs/07 §6 KPI strip: four numbers, each a filter link to the work behind it. Saffron («دورك»)
 // only when there is work: a count above zero.

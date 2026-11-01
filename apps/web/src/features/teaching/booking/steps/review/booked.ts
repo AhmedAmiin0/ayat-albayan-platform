@@ -1,5 +1,5 @@
 import { normalizePhone, type BookingResult } from '@ab/shared';
-import type { BookingDraft, PickedStudent } from '../../draft/draft';
+import type { BookingDraft, PickedStudent } from '@/features/teaching/booking/draft/draft';
 
 // What the booked panel offers next (R-SUB-01): the subscription for a regular package, and the way
 // back to the chat the lead came from.

@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { STUB_WA_ENV, rows } from '../gate/send-gate.fakes';
-import { SendGate } from '../gate/send-gate';
-import { WhatsappSettings } from '../whatsapp.settings';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { STUB_WA_ENV, rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
-import { SenderQueries } from './sender.queries';
+import { SenderRepo } from './sender.repo';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
 const ON = rows({ messaging_enabled: true, auto_messages_enabled: true });
@@ -16,7 +16,7 @@ const worker = { process: vi.fn(async () => 'sent' as const), deferRest: vi.fn()
 function sender(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
   const gate = new SendGate(new WhatsappSettings(fake.db), fake.db);
-  return { ...fake, sender: new MessageSender(gate, new SenderQueries(fake.db), worker as unknown as MessageWorker) };
+  return { ...fake, sender: new MessageSender(gate, new SenderRepo(fake.db), worker as unknown as MessageWorker) };
 }
 
 describe('MessageSender — round trips per tick (owner 2026-10-27: the API is slowed)', () => {

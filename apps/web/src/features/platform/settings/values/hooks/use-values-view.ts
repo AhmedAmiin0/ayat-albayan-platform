@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { customConfigQuery } from '@/features/platform/custom-config/custom-api';
 import { googleStatusQuery } from '@/features/platform/google-sync/google-api';
 import { t } from '@/lib/i18n/i18n';
-import { allRows, groupRows, type RowQuery } from '../lib/value-rows';
-import { GROUP_IDS, groupLabel, groupOfKey, isOwnedGroup, OWNER_PAGE, resolveGroup } from '../lib/value-groups-view';
-import { useValues } from '../values-context';
-import { showsAll, type ValuesSearch } from '../values-search';
+import { allRows, groupRows, type RowQuery } from '@/features/platform/settings/values/lib/value-rows';
+import { GROUP_IDS, groupLabel, groupOfKey, isOwnedGroup, OWNER_PAGE, resolveGroup } from '@/features/platform/settings/values/lib/value-groups-view';
+import { useValues } from '@/features/platform/settings/values/values-context';
+import { showsAll, type ValuesSearch } from '@/features/platform/settings/values/values-search';
 
 /**
  * What «القيم» shows for the URL's search: one group, or «الكل» (the search/filter results from

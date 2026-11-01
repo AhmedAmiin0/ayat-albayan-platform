@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { receivable, receivablesView } from '../shared/fixtures';
+import { receivable, receivablesView } from '@/money/shared/fixtures';
 import { ReceivablesScreen } from './ReceivablesScreen';
 
 const mockApiFetch = jest.fn();

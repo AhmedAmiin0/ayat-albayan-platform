@@ -2,8 +2,8 @@ import { View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { formatTimeOff } from '../schedule';
-import type { TimeOff } from '../types';
+import { formatTimeOff } from '@/more/schedule';
+import type { TimeOff } from '@/core/lib/staff/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** One time-off: the span (device zone), and the reason when there is one. */

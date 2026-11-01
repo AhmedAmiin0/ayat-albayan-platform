@@ -13,7 +13,7 @@ describe('link-family texts', () => {
   });
 
   it('a validation body, a 403 or a network failure is the generic error', () => {
-    expect(linkFamilyErrorText(new ApiError(400, { code: 'validation', issues: [] }))).toBe(t.common.error);
+    expect(linkFamilyErrorText(new ApiError(400, { message: 'validation_failed', issues: [] }))).toBe(t.common.error);
     expect(linkFamilyErrorText(new ApiError(403, { message: 'Forbidden resource' }))).toBe(t.common.error);
     expect(linkFamilyErrorText(new Error('offline'))).toBe(t.common.error);
   });

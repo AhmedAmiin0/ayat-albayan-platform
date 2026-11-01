@@ -2,9 +2,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { openRoom } from '../../board/board-fixture';
-import { fakeClient, tile, type FakeClient } from '../livekit/fake-client';
-import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '../../share/share-messages';
+import { openRoom } from '@/features/teaching/classroom/board/board-fixture';
+import { fakeClient, tile, type FakeClient } from '@/features/teaching/classroom/room/livekit/fake-client';
+import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '@/features/teaching/classroom/share/share-messages';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<typeof import('@/lib/http/api')>()), apiSend }));

@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { currencyLabel, rateDate } from '../shared/format';
-import type { DashboardData } from '../types';
+import { currencyLabel, rateDate } from '@/features/reporting/dashboard/shared/format';
+import type { DashboardData } from '@/features/reporting/dashboard/types';
 
 type Finance = DashboardData['finance'];
 

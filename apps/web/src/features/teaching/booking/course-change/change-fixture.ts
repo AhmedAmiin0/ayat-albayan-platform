@@ -2,7 +2,7 @@ import type { BookedCourse, CourseChangeView } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { ABRAR } from '../wizard-fixture';
+import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 
 // Test data only: «تغيير أيام الحلقات» (owner 2026-10-18). Now is Saturday 3 October 2026, 12:00 Riyadh.
 

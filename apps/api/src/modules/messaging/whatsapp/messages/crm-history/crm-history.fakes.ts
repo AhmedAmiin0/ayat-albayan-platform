@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import type { MediaMessage } from '../inbound-media.queries';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { CRM_MEDIA_PREFIX } from './crm-history-url';
 
 /** Tests only: a made-up CRM storage host (reserved .example TLD); the real one is a setting, never in the repo. */

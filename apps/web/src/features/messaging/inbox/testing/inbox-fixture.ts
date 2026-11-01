@@ -6,7 +6,7 @@ import type {
   ThreadSubscriptionView,
   ThreadView,
 } from '@ab/shared';
-import type { InboxLead } from '../api/api';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
 
 // Test rows shaped like the Phase 4 API (docs/12 §4). Not imported by app code.
 

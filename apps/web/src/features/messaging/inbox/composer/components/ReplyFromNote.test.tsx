@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { thread } from '../../testing/inbox-fixture';
+import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { ReplyFromNote } from './ReplyFromNote';
 
 const lang = vi.hoisted(() => ({ en: false }));

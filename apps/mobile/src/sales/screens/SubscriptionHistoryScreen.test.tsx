@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { history } from '../testing/fixtures';
+import { history } from '@/sales/testing/fixtures';
 import { SubscriptionHistoryScreen } from './SubscriptionHistoryScreen';
 
 const mockApiFetch = jest.fn();

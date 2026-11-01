@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { KAPSO_ENV, kapsoFetch } from '../../drivers/kapso/kapso.fakes';
-import { REPORT_READY_SEED } from '../catalog/seed-templates.fakes';
-import { TemplateRegistry } from '../catalog/template.registry';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import { HttpWhatsappClient } from '../../whatsapp.client';
+import type { AuditService } from '@/common/audit/audit.service';
+import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 
 // docs/19: Kapso has no sample upload, so a document-header submit on a kapso notifications line
 // names the real fix (switch the line to meta), not WA_APP_ID, and nothing reaches Kapso.
@@ -22,7 +22,7 @@ describe('submit of a document-header template on a kapso line', () => {
     queries.get.mockResolvedValue(REPORT_READY_SEED);
     const f = kapsoFetch();
     const lines = { notifications: new HttpWhatsappClient(KAPSO_ENV, { fetch: f.fetch }), chat: new HttpWhatsappClient(null) };
-    const registry = new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
+    const registry = new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
     const error = await registry.submit('report_ready', 'admin-1').then(
       () => null,
       (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()],

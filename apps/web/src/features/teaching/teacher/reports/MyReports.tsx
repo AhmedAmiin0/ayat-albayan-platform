@@ -7,8 +7,8 @@ import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import type { ServerListPatch, ServerListSearch } from '@/lib/list/server-list-search';
-import { teacherMeQuery } from '../api';
-import { MyStudents } from '../MyStudents';
+import { teacherMeQuery } from '@/features/teaching/teacher/api';
+import { MyStudents } from '@/features/teaching/teacher/MyStudents';
 import { SubmittedReports } from './SubmittedReports';
 
 /**

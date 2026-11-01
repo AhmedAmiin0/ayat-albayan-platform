@@ -1,14 +1,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries, type MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../../whatsapp/whatsapp.types';
-import { TeacherThreadsQueries } from '../teacher-threads/teacher-threads.queries';
-import { ADMIN, SALES, TEACHER } from '../test-app';
-import { PdfPreviewQueries } from './pdf/pdf-preview.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
+import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
+import { PdfPreviewRepo } from './pdf/pdf-preview.repo';
 
 // No poppler here: every 200 is «already probed, already rendered» (storage.exists true), so nothing is spawned.
 const PHONE = '+966552147730';
@@ -46,9 +46,9 @@ describe('GET /threads/:phone/messages/:id/pdf/:page: a PDF page under the file 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaQueries).useValue(queries)
-      .overrideProvider(PdfPreviewQueries).useValue(pdfs)
-      .overrideProvider(TeacherThreadsQueries).useValue(teachers)
+      .overrideProvider(InboundMediaRepo).useValue(queries)
+      .overrideProvider(PdfPreviewRepo).useValue(pdfs)
+      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
       .overrideProvider(StorageService).useValue(storage)

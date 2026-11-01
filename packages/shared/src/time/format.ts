@@ -1,5 +1,5 @@
 import { clockOfParts, type ClockOptions } from '../core/format/index.js';
-import { intlLocale, type Locale } from '../i18n/index.js';
+import { intlLocale, type Locale } from '@ab/core';
 import { zonedFieldsIn } from './zoned.js';
 
 // The date-fns facade, part 3 (docs/34 §7): words for dates and clocks. The arithmetic is

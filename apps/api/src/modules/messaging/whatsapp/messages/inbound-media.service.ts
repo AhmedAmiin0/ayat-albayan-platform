@@ -1,15 +1,15 @@
 import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable, Optional } from '@nestjs/common';
-import { BUCKETS, waMediaPath } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
+import { BUCKETS, waMediaPath } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
 import { CrmHistoryMedia } from './crm-history/crm-history-media';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
-import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
-import { mediaSource } from '../numbers/media-client';
-import { NumberClients } from '../numbers/number-clients';
-import { KAPSO_AUTH } from '../sender/send-plan';
-import { waHttpError } from '../templates/catalog/template.mapper';
-import { WHATSAPP_LINES, WaError, type WhatsappLines } from '../whatsapp.types';
+import { InboundMediaRepo, type MediaMessage } from './inbound-media.repo';
+import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
+import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
+import { KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { WHATSAPP_LINES, WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** 409 for inbound media on a crm line: the CRM holds that number's files (docs/19). */
 export const CRM_NO_MEDIA = 'crm_no_media';
@@ -77,7 +77,7 @@ export class InboundMedia {
   @Optional() @Inject(CrmHistoryMedia) private readonly crm?: CrmHistoryMedia;
 
   constructor(
-    private readonly queries: InboundMediaQueries,
+    private readonly queries: InboundMediaRepo,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
     private readonly storage: StorageService,
   ) {}

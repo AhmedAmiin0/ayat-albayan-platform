@@ -1,7 +1,7 @@
 // Package catalog, copied from ayatalbayan.com/calculator (docs/08 §2). Every price the platform
 // quotes comes from these numbers. `base` is SAR. Names/taglines live in ar.json `pricing.tiers`.
 
-import { asciiDigits } from '../../core/format/index.js';
+import { asciiDigits } from '@ab/core';
 
 /** Lesson durations a price exists for (the site's TA). Weekly is fixed at 90 instead. */
 export const PRICING_DURATIONS = [30, 45, 60] as const;

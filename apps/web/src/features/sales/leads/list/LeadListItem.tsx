@@ -8,10 +8,10 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { formatAge, formatDateTime } from '../format';
+import { formatAge, formatDateTime } from '@/features/sales/leads/format';
 import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
-import type { LeadRow } from '../types';
+import type { LeadRow } from '@/features/sales/leads/types';
 import { useClock } from '@/lib/clock';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */

@@ -2,17 +2,17 @@
 import type { TablesInsert } from '@ab/db';
 import { isUnsupportedMessage } from '@ab/shared';
 import { vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
-import type { PushService } from '../../../common/push/push.service';
-import { lead } from '../../sales/leads/leads.fakes';
-import type { LeadsService } from '../../sales/leads/leads.service';
-import type { RatingStore } from '../../teaching/lesson-rating/rating.store';
-import type { LessonStatusService } from '../../teaching/lessons/status/lesson-status.service';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { PushService } from '@/common/push/push.service';
+import { lead } from '@/modules/sales/leads/leads.fakes';
+import type { LeadsService } from '@/modules/sales/leads/leads.service';
+import type { RatingStore } from '@/modules/teaching/lesson-rating/rating.store';
+import type { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
 import type { InboundEvent } from './webhook.events';
 import { InboundService } from './inbound/webhook.inbound.service';
 import { InboundStore } from './inbound/webhook.inbound.store';
 import { refillPatch } from './inbound/inbound-refill';
-import type { Contact, OutboundRow, WebhookQueries } from './webhook.queries';
+import type { Contact, OutboundRow, WebhookRepo } from './webhook.repo';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { StatusService } from './status/webhook.status.service';
 import { externalServices } from './external/external.fakes';
@@ -111,7 +111,7 @@ type Deps = ReturnType<typeof fakeDeps>;
 
 /** The real services over the fakes. */
 export function services(d: Deps = fakeDeps()) {
-  const queries = d.queries as unknown as WebhookQueries;
+  const queries = d.queries as unknown as WebhookRepo;
   const push = d.push as unknown as PushService;
   const replies = new QuickReplies(
     queries,

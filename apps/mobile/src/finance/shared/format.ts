@@ -1,6 +1,6 @@
 import { round2 } from '@ab/shared';
 import { egp } from '@/earnings/lib/format';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 
 /** «145 ج.م» / «20 ر.س»: Western digits, isolated; EGP is the academy's own money (docs/11). */
 export function amountText(amount: number, currency = 'EGP'): string {

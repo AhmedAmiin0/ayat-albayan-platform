@@ -1,7 +1,7 @@
 import { passwordProblem, type CredentialMode, type IssuedCredential } from '@ab/shared';
-import { badRequest } from '../../../../common/http/errors';
+import { badRequest } from '@/common/http/errors';
 import { generatePassword } from './users.password';
-import type { AuthAdmin } from '../store/users.store';
+import type { AuthAdmin } from '@/modules/people/users/store/users.store';
 
 interface CredentialRequest {
   mode: CredentialMode;
@@ -10,7 +10,7 @@ interface CredentialRequest {
 }
 
 /** The password to set now (undefined in link mode) and what to show the admin once. */
-interface PreparedCredential {
+export interface PreparedCredential {
   password: string | undefined;
   issued: IssuedCredential | null;
 }

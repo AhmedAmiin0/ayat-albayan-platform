@@ -1,13 +1,13 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { SUMMARY } from '../dashboard-fixture';
-import { FinanceByMonth } from '../finance/FinanceByMonth';
+import { SUMMARY } from '@/features/reporting/dashboard/dashboard-fixture';
+import { FinanceByMonth } from '@/features/reporting/dashboard/finance/FinanceByMonth';
 import { sortRows, toggleSort } from './hand-sort';
-import { SourceTable } from '../funnel/SourceTable';
-import { TeacherLoad } from '../today/TeacherLoad';
+import { SourceTable } from '@/features/reporting/dashboard/funnel/SourceTable';
+import { TeacherLoad } from '@/features/reporting/dashboard/today/TeacherLoad';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const rowHeads = (name: string) =>
   within(screen.getByRole('table', { name })).getAllByRole('rowheader').map((h) => h.textContent);

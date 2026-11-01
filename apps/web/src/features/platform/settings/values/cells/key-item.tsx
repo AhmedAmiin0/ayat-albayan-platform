@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n/i18n';
-import type { RowMenuItem } from '../sheet/RowMenu';
+import type { RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 
 const v = t.settingsValues;
 

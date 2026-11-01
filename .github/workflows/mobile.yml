@@ -108,9 +108,10 @@ jobs:
       # Install BEFORE the guard: `eas build:list` loads the app config, which resolves the config plugins
       # (expo-router ...) from node_modules. No secret is present in this step.
       - run: pnpm i --frozen-lockfile
-      # Metro resolves @ab/shared through its `exports` (dist/index.js), which only exists after a build:
+      # Metro resolves @ab/shared (and the packages cut from it) through their `exports` (dist/index.js),
+      # which only exist after a build:
       # without it `eas update` fails with "While trying to resolve module `@ab/shared`" (run 37498286784).
-      - run: pnpm --filter @ab/db --filter @ab/shared --filter @ab/client-core build
+      - run: pnpm --filter "mobile^..." build
       - name: Native-change guard (OTA = JavaScript only)
         working-directory: apps/mobile
         env:

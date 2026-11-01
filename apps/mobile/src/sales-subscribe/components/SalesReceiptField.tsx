@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { AttachmentRow } from '@/payments/receipts/AttachmentRow';
 import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/receipts/attachments';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PhotoButtons } from '@/payments/receipts/PhotoButtons';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChatReceiptList } from '@/sales-subscribe/receipts/ChatReceiptList';
