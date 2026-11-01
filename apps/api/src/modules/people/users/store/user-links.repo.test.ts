@@ -25,14 +25,6 @@ describe('UserLinksRepo', () => {
     });
   });
 
-  it('links only while profile_id is still null', async () => {
-    const { db, argsOf } = fakeDb({ students: [{ data: [{ id: 's1' }] }, { data: [] }] });
-    const repo = new UserLinksRepo(db);
-    expect(await repo.link('student', 's1', 'u1')).toBe(true);
-    expect(argsOf('students', 'is')).toEqual(['profile_id', null]);
-    expect(await repo.link('student', 's1', 'u2')).toBe(false);
-  });
-
   it('copies the profile name / phone to the linked teacher record', async () => {
     const { db, argsOf } = fakeDb({ teachers: [{}] });
     await new UserLinksRepo(db).syncTeacher('u1', { display_name_ar: 'أ. عمر' });

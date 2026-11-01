@@ -46,10 +46,13 @@ describe('RoleGrants', () => {
     });
   });
 
-  it('assertManagers: 409 when nobody would keep roles.manage', () => {
+  it('assertManagers: 409 last_admin when nobody would keep roles.manage', () => {
     const next = grants.withProfile(state(), profile('owner', 'teacher'));
     expect(codeOf(() => grants.assertManagers(state(), 'owner'))).toBeUndefined();
-    expect(codeOf(() => grants.assertManagers(next, 'owner'))?.status).toBe(409);
+    expect(codeOf(() => grants.assertManagers(next, 'owner'))).toEqual({
+      status: 409,
+      code: 'last_admin',
+    });
   });
 
   it('assertEditable: the admin and the portal roles are fixed (400), the others are not', () => {

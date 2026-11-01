@@ -25,7 +25,8 @@ const listArgs = (q: UsersListQuery, lim: number, off: number) => ({
 /**
  * The directory half of UserStore on the service-role client (migrations 20261006000281-288): the
  * page, one login with its auth data, and what references it. The profile writes live in
- * user-profiles.repo.ts, the linked records in user-links.repo.ts; users.store.provider.ts joins them.
+ * user-profiles.repo.ts, the linked records in user-links.repo.ts; users.store.provider.ts joins
+ * them.
  */
 @Injectable()
 export class UsersRepo {

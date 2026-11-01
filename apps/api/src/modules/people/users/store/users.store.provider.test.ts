@@ -45,6 +45,19 @@ describe('userStoreOf', () => {
     } as const;
     expect(await s.createTeacher(row)).toBe('t1');
   });
+
+  it('keeps the argument order of link and phoneTaken', async () => {
+    const { store: s, argsOf } = store({
+      students: [{ data: [{ id: 's1' }] }],
+      profiles: [{ data: [{ id: 'other' }] }],
+      teachers: [{ data: [] }, { data: null }],
+    });
+    expect(await s.link('student', 's1', 'u1')).toBe(true);
+    expect(argsOf('students', 'update')).toEqual([{ profile_id: 'u1' }]);
+    expect(argsOf('students', 'eq')).toEqual(['id', 's1']);
+    expect(await s.phoneTaken('+966501234567', 'u1')).toBe(true);
+    expect(argsOf('profiles', 'eq')).toEqual(['phone_e164', '+966501234567']);
+  });
 });
 
 describe('USER_STORE_PROVIDERS', () => {
