@@ -1,8 +1,8 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../../common/db/db.module';
-import { SENDING } from '../../../../messaging/whatsapp/sender/send-plan';
-import { dbError } from '../../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { dbError } from '@/common/http/http';
 import type { InviteeRow } from './meeting-invites.mapper';
 
 /** The server's view of an invitee: the phone and profile too (never sent to a client), never the hash. */
@@ -24,7 +24,7 @@ const tooMany = (e: { message: string }) => /\btoo_many_invitees\b/.test(e.messa
 
 /** public.meeting_invitees (migration 411; service role, the services guard). */
 @Injectable()
-export class MeetingInviteesQueries {
+export class MeetingInviteesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async forMeeting(meetingId: string): Promise<StoredInvitee[]> {

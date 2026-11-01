@@ -1,15 +1,15 @@
 import { guestJoinSchema, meetingRoomName, meetingState, meetingWindow, type JoinRole, type PublicMeetingView, type RoomJoinResult } from '@ab/shared';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { assertWindowOpen } from '../join/join-gate';
-import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
+import { InternalMeetingsRepo, type MeetingRow } from './internal-meetings.repo';
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';
-import { PublicJoinLimit } from '../join/join-limit';
-import { mintToken, newIdentity } from '../livekit/livekit-token';
-import { meetingTarget } from '../recordings/recording-target';
-import { RoomAdmission } from '../join/room-admission';
+import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
+import { mintToken, newIdentity } from '@/modules/teaching/classroom/livekit/livekit-token';
+import { meetingTarget } from '@/modules/teaching/classroom/recordings/recording-target';
+import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
 /** 410 meeting_ended: «إنهاء» was pressed, or the row was revoked. */
 export const meetingEnded = (): HttpException => new HttpException({ code: 'meeting_ended', message: 'meeting_ended' }, HttpStatus.GONE);
@@ -23,7 +23,7 @@ export const meetingEnded = (): HttpException => new HttpException({ code: 'meet
 @Injectable()
 export class InternalMeetingJoinService {
   constructor(
-    private readonly queries: InternalMeetingsQueries,
+    private readonly queries: InternalMeetingsRepo,
     private readonly limit: PublicJoinLimit,
     private readonly admission: RoomAdmission,
   ) {}

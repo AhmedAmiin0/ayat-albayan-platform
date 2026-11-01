@@ -1,11 +1,11 @@
 import { canRemove, meetingRoomName } from '@ab/shared';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { InternalMeetingsQueries } from './internal-meetings.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { InternalMeetingsRepo } from './internal-meetings.repo';
 import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
-import { notConfigured } from '../join/join-gate';
-import { LivekitApi, LivekitError } from '../livekit/livekit-api';
+import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
+import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
 
 /**
  * «إخراج» in an internal meeting (POST /meetings/:id/participants/:identity/remove). The remover's
@@ -17,7 +17,7 @@ import { LivekitApi, LivekitError } from '../livekit/livekit-api';
 @Injectable()
 export class InternalMeetingKickService {
   constructor(
-    private readonly queries: InternalMeetingsQueries,
+    private readonly queries: InternalMeetingsRepo,
     private readonly livekit: LivekitApi,
   ) {}
 

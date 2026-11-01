@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { ownerColumns, type RoomTarget } from './recording-target';
 
 export type RecordingRow = Tables<'lesson_recordings'>;
@@ -18,7 +18,7 @@ export interface FinishInput {
 
 /** lesson_recordings (service role; the services guard). */
 @Injectable()
-export class RecordingQueries {
+export class RecordingRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

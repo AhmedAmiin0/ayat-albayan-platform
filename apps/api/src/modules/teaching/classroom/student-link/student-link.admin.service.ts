@@ -1,10 +1,10 @@
 import type { StudentJoinLinkUrl } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { notFound } from '../../../../common/http/errors';
-import { CLASSROOM_WEB_ORIGIN } from '../classroom.config';
-import { hashLinkToken, newLinkToken } from '../join/join-link.token';
-import { StudentLinkQueries } from './student-link.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { notFound } from '@/common/http/errors';
+import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.config';
+import { hashLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import { StudentLinkRepo } from './student-link.repo';
 
 /**
  * POST /students/:id/join-link (admin) «رابط دخول الطالب»: the student's long-lived link, created on
@@ -14,7 +14,7 @@ import { StudentLinkQueries } from './student-link.queries';
 @Injectable()
 export class StudentLinkAdminService {
   constructor(
-    private readonly queries: StudentLinkQueries,
+    private readonly queries: StudentLinkRepo,
     private readonly audit: AuditService,
     @Inject(CLASSROOM_WEB_ORIGIN) private readonly origin: string,
   ) {}

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { egressOutcome } from './livekit-webhook';
-import { RecordingQueries } from '../recordings/recording.queries';
-import { lessonTarget } from '../recordings/recording-target';
+import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
+import { lessonTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 const ended = (info: object) => egressOutcome({ event: 'egress_ended', egressInfo: { egressId: 'EG_1', status: 'EGRESS_COMPLETE', ...info } }, NOW);
@@ -21,7 +21,7 @@ describe('the finished file’s size (migration 240)', () => {
 
   it('finishByEgress writes size_bytes only when it is known', async () => {
     const f = fakeDb({ lesson_recordings: [{}, {}] });
-    const q = new RecordingQueries(f.db);
+    const q = new RecordingRepo(f.db);
     await q.finishByEgress('EG', { status: 'done', endedAt: 't', sizeBytes: 7 });
     await q.finishByEgress('EG', { status: 'done', endedAt: 't' });
     const updates = f.calls.filter((c) => c.method === 'update').map((c) => c.args[0]);
@@ -30,7 +30,7 @@ describe('the finished file’s size (migration 240)', () => {
 
   it('the live-room list leaves removed recordings out', async () => {
     const f = fakeDb({ lesson_recordings: [{ data: [] }] });
-    await new RecordingQueries(f.db).forTarget(lessonTarget('L'));
+    await new RecordingRepo(f.db).forTarget(lessonTarget('L'));
     expect(f.argsOf('lesson_recordings', 'neq')).toEqual(['status', 'deleted']);
   });
 });

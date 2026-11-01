@@ -1,9 +1,9 @@
 // Test fixtures for the student's long-lived link (not shipped; excluded from the build by *.fakes.ts).
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { vi } from 'vitest';
-import { LESSON, STUDENT_ID } from '../classroom.fakes';
-import { hashLinkToken } from '../join/join-link.token';
-import type { StudentLesson } from './student-link.queries';
+import { LESSON, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
+import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import type { StudentLesson } from './student-link.repo';
 
 export const STUDENT_TOKEN = 'ZYXWVUTSRQPONMLKJIHGFEDCBA_-9876';
 export const LESSON_LINK_ID = '00000000-0000-4000-8000-0000000000f9';

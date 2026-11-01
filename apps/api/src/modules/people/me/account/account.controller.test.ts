@@ -1,12 +1,21 @@
 import { PATH_METADATA } from '@nestjs/common/constants';
 import { describe, expect, it } from 'vitest';
-import { PERMISSION, SIGNED_IN } from '../../../../common/auth/decorators';
+import { PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
+import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
 import { AccountController } from './account.controller';
 import { accountKit, ME, PASSWORD } from './account.fakes';
 
 // R-ACC-01..05: every signed-in role, always the caller (no id in any path).
 
-const HANDLERS = ['profile', 'updateProfile', 'changeEmail', 'changePassword', 'avatarUploadUrl', 'setAvatar', 'removeAvatar'] as const;
+const HANDLERS = [
+  'profile',
+  'updateProfile',
+  'changeEmail',
+  'changePassword',
+  'avatarUploadUrl',
+  'setAvatar',
+  'removeAvatar',
+] as const;
 
 describe('AccountController', () => {
   it('is @SignedIn on /me with no permission: custom roles, students and guardians may use it', () => {
@@ -25,7 +34,12 @@ describe('AccountController', () => {
   it('acts on the token’s user and ignores ids in the body', async () => {
     const kit = accountKit();
     const controller = new AccountController(kit.account, kit.avatar);
-    const view = await controller.updateProfile({ id: 'user-2', full_name: 'Huda Ali', role: 'admin' }, ME);
+    const body = await bodyPipeOf(
+      AccountController,
+      'updateProfile',
+    )({ id: 'user-2', full_name: 'Huda Ali', role: 'admin' });
+    expect(body).toEqual({ full_name: 'Huda Ali' });
+    const view = await controller.updateProfile({ full_name: 'Huda Ali' }, ME);
     expect(view).toMatchObject({ id: 'user-1', full_name: 'Huda Ali', role: { base: 'teacher' } });
     expect(kit.store.patches).toEqual([{ full_name: 'Huda Ali' }]);
   });
@@ -33,10 +47,14 @@ describe('AccountController', () => {
   it('validates bodies before the services run (400 validation_failed)', async () => {
     const kit = accountKit();
     const controller = new AccountController(kit.account, kit.avatar);
-    // parseOrThrow throws synchronously, before any service call.
-    expect(() => controller.updateProfile({ role: 'admin' }, ME)).toThrow('validation_failed');
-    expect(() => controller.changePassword({ new_password: 'x' }, ME)).toThrow('validation_failed');
+    // @ZodBody's pipe runs before the handler, so no service call happens.
+    const updateProfile = bodyPipeOf(AccountController, 'updateProfile');
+    const changePassword = bodyPipeOf(AccountController, 'changePassword');
+    await expect(updateProfile({ role: 'admin' })).rejects.toThrow('validation_failed');
+    await expect(changePassword({ new_password: 'x' })).rejects.toThrow('validation_failed');
     expect(kit.store.patches).toEqual([]);
-    await expect(controller.changeEmail({ email: 'a@b.test', current_password: PASSWORD }, ME)).resolves.toMatchObject({ email: 'a@b.test' });
+    await expect(
+      controller.changeEmail({ email: 'a@b.test', current_password: PASSWORD }, ME),
+    ).resolves.toMatchObject({ email: 'a@b.test' });
   });
 });

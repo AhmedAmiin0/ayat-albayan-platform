@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { RecordingConfig } from '../classroom.config';
-import { CONFIG, LESSON_ID, OPEN } from '../classroom.fakes';
-import { LivekitApi } from '../livekit/livekit-api';
-import { http, recordingQueries, S3 } from '../moderation/moderation.fakes';
-import type { RecordingQueries } from './recording.queries';
+import type { RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
+import { CONFIG, LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { http, recordingQueries, S3 } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import type { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
 import { lessonTarget, meetingTarget } from './recording-target';
 
@@ -11,7 +11,7 @@ let q: ReturnType<typeof recordingQueries>;
 let h: ReturnType<typeof http>;
 const starter = (opts: { s3?: RecordingConfig; livekit?: typeof CONFIG | null } = {}) =>
   new RecordingStarter(
-    q as unknown as RecordingQueries,
+    q as unknown as RecordingRepo,
     new LivekitApi(opts.livekit === undefined ? CONFIG : opts.livekit, h),
     opts.s3 === undefined ? S3 : opts.s3,
   );

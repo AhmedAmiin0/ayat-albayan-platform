@@ -2,9 +2,9 @@
 import { vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
-import type { InternalMeetingsQueries } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.queries';
+import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { LivekitApi, type HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
-import type { RecordingQueries } from '@/modules/teaching/classroom/recordings/recording.queries';
+import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { MaxDurationRepo, OverdueMeeting } from './max-duration.repo';
 import type { MaxDurationSettings } from './max-duration.settings';
 import { MeetingAutoEnd } from './meeting-auto-end';
@@ -89,10 +89,10 @@ export function jobWith(parts: JobParts = {}) {
   const recordings = { runningEgress: vi.fn(async (t: { id: string }) => egress[t.id] ?? null) };
   const settings = { read: vi.fn(async () => ({ meeting_max_minutes: parts.minutes ?? 120 })) };
   const ender = new MeetingAutoEnd(
-    store as unknown as InternalMeetingsQueries,
+    store as unknown as InternalMeetingsRepo,
     audit as unknown as AuditService,
   );
-  const closer = new RoomCloser(lk.api, recordings as unknown as RecordingQueries);
+  const closer = new RoomCloser(lk.api, recordings as unknown as RecordingRepo);
   const job = new MeetingMaxDurationJob(
     repo as unknown as MaxDurationRepo,
     closer,

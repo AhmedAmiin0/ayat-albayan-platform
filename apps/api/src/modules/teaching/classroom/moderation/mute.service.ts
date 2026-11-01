@@ -1,15 +1,15 @@
 import { canMute, JOIN_ROLES, lessonRoomName, meetingRoomName, muteSchema, type JoinRole, type MuteSource } from '@ab/shared';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { InternalMeetingsQueries } from '../internal-meetings/internal-meetings.queries';
-import { meetingRoleOf, roleOfIdentity } from '../internal-meetings/internal-meetings.token';
-import { notConfigured } from '../join/join-gate';
-import { LessonRoleService } from '../join/lesson-role.service';
-import { LivekitApi, LivekitError } from '../livekit/livekit-api';
-import { muteTrack } from '../livekit/livekit-api.mute';
-import { ModerationQueries } from './moderation.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { meetingRoleOf, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
+import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
+import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { muteTrack } from '@/modules/teaching/classroom/livekit/livekit-api.mute';
+import { ModerationRepo } from './moderation.repo';
 
 interface MuteInput {
   user: AuthUser;
@@ -46,7 +46,7 @@ async function applyMute(livekit: LivekitApi, input: { room: string; identity: s
 export class MuteService {
   constructor(
     private readonly roles: LessonRoleService,
-    private readonly moderation: ModerationQueries,
+    private readonly moderation: ModerationRepo,
     private readonly livekit: LivekitApi,
   ) {}
 
@@ -65,7 +65,7 @@ export class MuteService {
 @Injectable()
 export class MeetingMuteService {
   constructor(
-    private readonly meetings: InternalMeetingsQueries,
+    private readonly meetings: InternalMeetingsRepo,
     private readonly livekit: LivekitApi,
   ) {}
 
