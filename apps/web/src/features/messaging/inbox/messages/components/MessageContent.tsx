@@ -2,6 +2,7 @@ import {
   isUnavailableMessage,
   isUnsupportedMessage,
   messageNote,
+  pdfCaptionIsName,
   reactionText,
   senderLine,
   type MessageView,
@@ -69,7 +70,11 @@ const hasMedia = (m: MessageView): boolean => Boolean(m.media_mime || m.media_ur
  * a template's header, the media, the text, its footer, what a quick reply did and what to do now.
  * A message deleted for everyone shows only that; an edited one «تم التعديل» (owner 2026-10-30).
  */
+/** The caption under the media; none when it is only a PDF's name (on its card, 2026-11-01). */
+const shownCaption = (m: MessageView): string | null => (pdfCaptionIsName(m) ? null : m.body);
+
 export function Content({ message: m }: { message: MessageView }) {
+  const caption = shownCaption(m);
   if (m.deleted) return <NoteLine message={m} />;
   const empty = isEmpty(m);
   const noted = messageNote(m) !== null;
@@ -82,7 +87,7 @@ export function Content({ message: m }: { message: MessageView }) {
       <TappedLabel message={m} />
       <TemplateFrame block={m.template} hasMedia={media}>
         {media && <MessageMedia message={m} />}
-        {m.body && <LinkedBody text={m.body} />}
+        {caption && <LinkedBody text={caption} />}
       </TemplateFrame>
       {empty && (noted ? <NoteLine message={m} /> : <EmptyLine message={m} />)}
       {m.edited && <p className="mt-0.5 text-2xs text-ink-3">{t.inbox.edited}</p>}

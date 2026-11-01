@@ -10,6 +10,10 @@ import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/te
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 import { PdfPreviewRepo } from './pdf/pdf-preview.repo';
 
+// A socket is «there» (no poppler runs: storage.download answers null first), else 503
+// pdf_unavailable.
+vi.mock('./pdf/pdf-client', async (orig) => ({ ...(await orig<object>()), sandboxReady: async () => true }));
+
 // No poppler here: every 200 is «already probed, already rendered» (storage.exists true), so nothing is spawned.
 const PHONE = '+966552147730';
 const M1 = 'b1111111-1111-4111-8111-111111111111';

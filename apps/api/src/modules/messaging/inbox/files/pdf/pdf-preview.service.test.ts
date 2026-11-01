@@ -2,16 +2,18 @@ import { HttpStatus } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MediaMessage, waHttpError } from '../../../whatsapp';
 import { ask, jpgs, PDF_BYTES, setup, status } from './pdf-preview.fakes';
-import { pdfPageCount, renderPdfPages } from './pdf-client';
+import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 
 // The sandbox's two calls (pdf-client.ts); the slot and PdfToolError stay pdf-render's own.
-vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn() }));
+vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn(), sandboxReady: vi.fn() }));
 const count = vi.mocked(pdfPageCount);
 const render = vi.mocked(renderPdfPages);
+const ready = vi.mocked(sandboxReady);
 const EXPIRES = '2026-10-29T13:00:00.000Z';
 
 beforeEach(() => {
   count.mockReset().mockResolvedValue(12);
+  ready.mockReset().mockResolvedValue(true);
   render.mockReset().mockImplementation(async (_bytes, range) => jpgs(range));
 });
 
@@ -46,6 +48,34 @@ describe('PdfPreviewService.page (owner 2026-10-29: a PDF bubble like WhatsApp)'
     expect(render).toHaveBeenCalledExactlyOnceWith(PDF_BYTES, { first: 2, last: 6 });
     expect(t.storage.upload.mock.calls.map(([ref]) => ref.path)).toEqual([2, 3, 4, 5, 6].map((n) => `pdf/m1/${n}.jpg`));
     expect(count).not.toHaveBeenCalled();
+  });
+
+  it('page 1 asked again while its first render runs (two screens, a scroll back): one pdfinfo, one render', async () => {
+    const t = setup();
+    t.objects.set('m1.pdf', PDF_BYTES);
+    let finish: () => void = () => undefined;
+    render.mockImplementationOnce(async (_bytes, range) => {
+      await new Promise<void>((r) => (finish = r));
+      return jpgs(range);
+    });
+    const a = t.service.page(ask(1));
+    await vi.waitFor(() => expect(render).toHaveBeenCalledTimes(1));
+    const b = t.service.page(ask(1));
+    finish();
+    const [ra, rb] = await Promise.all([a, b]);
+    expect([ra.url, rb.url]).toEqual(['https://signed/pdf/m1/1.jpg', 'https://signed/pdf/m1/1.jpg']);
+    const runs = [count, render, t.storage.upload].map((f) => f.mock.calls.length);
+    expect(runs).toEqual([1, 1, 1]);
+  });
+
+  it('page 1 fails after pdfinfo: its answer is kept, so the next ask renders without pdfinfo', async () => {
+    const t = setup();
+    t.objects.set('m1.pdf', PDF_BYTES);
+    render.mockRejectedValueOnce(new Error('upload blip'));
+    await expect(t.service.page(ask(1))).rejects.toThrow('upload blip');
+    expect(t.docs.get('m1')).toEqual({ pages: 12, bytes: PDF_BYTES.byteLength });
+    await expect(t.service.page(ask(1))).resolves.toMatchObject({ page: 1, pages: 12 });
+    expect(count).toHaveBeenCalledTimes(1);
   });
 
   it('no preview (encrypted, broken) is 422 pdf_no_preview; a page past min(pages, 30) is 400', async () => {

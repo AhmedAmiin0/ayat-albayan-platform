@@ -4404,7 +4404,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/inbox/messages/components/MessageFile.tsx": {
@@ -4412,7 +4412,7 @@
       "count": 10
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/inbox/messages/components/MessageList.band.test.tsx": {
@@ -4744,7 +4744,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 10
+      "count": 9
     },
     "no-restricted-syntax": {
       "count": 1
@@ -4934,9 +4934,6 @@
   "src/inbox/messages/photo/PdfPreview.states.test.tsx": {
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/messages/photo/PdfPreview.test.tsx": {
@@ -4944,7 +4941,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/photo/PdfPreview.tsx": {
@@ -4958,7 +4955,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1
@@ -5050,7 +5047,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/photo/use-zoom.ts": {

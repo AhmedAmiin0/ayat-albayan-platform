@@ -22,5 +22,3 @@ export const pdfPage = (page: number, fields: Partial<ThreadPdfPage> = {}): Thre
 // The i18n literal scan reads this file (a .tsx that is not a test): a Latin name.
 export const pdfDoc = (fields: Partial<MessageView> = {}) =>
   photo({ id: 'd1', media_mime: 'application/pdf', media_name: 'hifz-plan.pdf', ...fields });
-/** A PDF staff sent from the platform (sender_name set): its page 1 is asked as the bubble renders. */
-export const staffPdf = (fields: Partial<MessageView> = {}) => pdfDoc({ direction: 'outbound', sender_name: 'Amal', ...fields });

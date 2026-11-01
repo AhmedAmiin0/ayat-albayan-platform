@@ -19,4 +19,11 @@ describe('downloadName: what «تنزيل» saves a bubble file as', () => {
   it('a blank name falls back too', () => {
     expect(downloadName({ media_name: '  ', media_mime: 'video/mp4', created_at: AT })).toBe('whatsapp-2026-10-26-1432.mp4');
   });
+
+  it('a family’s document name (owner 2026-11-01) is cleaned: no RTL override, no path, a PDF ends .pdf', () => {
+    const named = (media_name: string) => downloadName({ media_name, media_mime: 'application/pdf', created_at: AT });
+    expect(named('plan\u202efdp.exe')).toBe('planfdp.exe.pdf');
+    expect(named('../etc/report')).toBe('.._etc_report.pdf');
+    expect(named('Report.PDF')).toBe('Report.PDF');
+  });
 });

@@ -8,6 +8,7 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
 import { messageGap } from '../hooks/list-gap';
+import { SeenRowsContext, useSeenRows } from '@/inbox/messages/hooks/seen-rows';
 import { deviceTimeZone } from '../hooks/message-text';
 import { MessageRow } from '../list/MessageRow';
 import { dayLabel, hasDayChip } from '../days/day-label';
@@ -91,43 +92,48 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   // «اليوم» / «أمس» move at midnight with no new message: today's key redraws the rows' day chips.
   const today = chatDayKey(new Date(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
+  // The rows seen on screen: a PDF asks its page 1 only then (owner 2026-11-01), never a burst.
+  const seen = useSeenRows<LogRow>(top.list.onViewableItemsChanged);
   return (
-    <CellFrames.Provider value={top.frame}>
-      <View style={{ flex: 1 }}>
-        <FlatList
-          ref={list}
-          testID="message-list"
-          inverted
-          style={{ flex: 1 }}
-          contentContainerStyle={{ paddingVertical: 4 }}
-          data={rows}
-          keyExtractor={(m) => m.id}
-          extraData={`${lit ?? ''}|${today}`}
-          onScrollToIndexFailed={onScrollToIndexFailed}
-          renderItem={renderItem}
-          maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={OLDER_THRESHOLD}
-          {...top.list}
-          refreshing={pulling}
-          onRefresh={() => {
-            setPulling(true);
-            void query.refetch().finally(() => setPulling(false));
-          }}
-          ListFooterComponent={
-            query.isFetchingNextPage ? (
-              <ActivityIndicator testID="older-loading" accessibilityLabel={t.common.loading} color={color.ink2} style={{ padding: 12 }} />
-            ) : null
-          }
-          // The list clones its empty cell to flip it upright; EmptyState drops that style, a View keeps it.
-          ListEmptyComponent={
-            <View testID="message-empty">
-              <EmptyState title={t.inbox.empty} />
-            </View>
-          }
-        />
-        <FloatingDay label={top.label} opacity={top.opacity} onChip={top.onChip} />
-      </View>
-    </CellFrames.Provider>
+    <SeenRowsContext value={seen.rows}>
+      <CellFrames.Provider value={top.frame}>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            ref={list}
+            testID="message-list"
+            inverted
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingVertical: 4 }}
+            data={rows}
+            keyExtractor={(m) => m.id}
+            extraData={`${lit ?? ''}|${today}`}
+            onScrollToIndexFailed={onScrollToIndexFailed}
+            renderItem={renderItem}
+            maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={OLDER_THRESHOLD}
+            {...top.list}
+            onViewableItemsChanged={seen.onViewableItemsChanged}
+            refreshing={pulling}
+            onRefresh={() => {
+              setPulling(true);
+              void query.refetch().finally(() => setPulling(false));
+            }}
+            ListFooterComponent={
+              query.isFetchingNextPage ? (
+                <ActivityIndicator testID="older-loading" accessibilityLabel={t.common.loading} color={color.ink2} style={{ padding: 12 }} />
+              ) : null
+            }
+            // The list clones its empty cell to flip it upright; EmptyState drops that style, a View keeps it.
+            ListEmptyComponent={
+              <View testID="message-empty">
+                <EmptyState title={t.inbox.empty} />
+              </View>
+            }
+          />
+          <FloatingDay label={top.label} opacity={top.opacity} onChip={top.onChip} />
+        </View>
+      </CellFrames.Provider>
+    </SeenRowsContext>
   );
 }

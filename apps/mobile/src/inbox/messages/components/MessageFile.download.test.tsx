@@ -18,14 +18,18 @@ const name = t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf');
 const openURL = jest.spyOn(Linking, 'openURL');
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockResolvedValue({ url: 'https://storage.test/f1.pdf?download=x', mime: 'application/pdf', expires_at: '' });
+  mockApiFetch.mockReset().mockImplementation(async (path: string) =>
+    path.includes('/pdf/')
+      ? { url: 'https://storage.test/pdf/f1/1.jpg', expires_at: '', page: 1, pages: 2, bytes: 2048 }
+      : { url: 'https://storage.test/f1.pdf?download=x', mime: 'application/pdf', expires_at: '' },
+  );
   openURL.mockReset().mockResolvedValue(true);
 });
 
-test('the PDF card’s «تنزيل»: a family’s PDF signs nothing on render (not even page 1), then it asks ?download=1 and opens it', async () => {
+test('the PDF card’s «تنزيل»: a family’s PDF shows page 1 (never the file itself), then it asks ?download=1 and opens it', async () => {
   await renderWithQuery(<MessageFile message={pdf} phone={PHONE} />);
-  expect(screen.getByText(t.inbox.pdf.tapToPreview)).toBeTruthy();
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(await screen.findByTestId('pdf-thumb-f1')).toBeTruthy();
+  expect(mockApiFetch.mock.calls.map(([p]) => p)).toEqual(['/threads/%2B966552147730/messages/f1/pdf/1']);
   await fireEvent.press(screen.getByRole('button', { name }));
   expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966552147730/messages/f1/file?download=1');
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://storage.test/f1.pdf?download=x'));

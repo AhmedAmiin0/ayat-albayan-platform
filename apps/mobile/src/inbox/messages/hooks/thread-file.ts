@@ -1,6 +1,7 @@
 import type { ThreadPdfPage } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import { pdfPageRetryable } from '@ab/client-core';
 import { ApiError, apiFetch } from '@/core/lib/http/api';
 import { threadPath } from '../../thread/hooks/thread-cache';
 
@@ -70,8 +71,6 @@ export const fetchDownload = (phone: string, messageId: string): Promise<ThreadF
 export const pdfPagePath = (phone: string, messageId: string, page: number): string =>
   `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`;
 
-/** A 503 (one render at a time per API copy, a failed render) is worth another try; a 4xx ends there. */
-const busy = (e: unknown): boolean => e instanceof ApiError && e.status === 503;
 /** A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never a retry). */
 export const finalError = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
 
@@ -85,6 +84,8 @@ export const pdfPageQuery = (phone: string, messageId: string, page: number) =>
     ...SIGNED_QUERY,
     queryKey: ['thread-pdf', phone, messageId, page],
     queryFn: () => apiFetch<ThreadPdfPage>(pdfPagePath(phone, messageId, page)),
-    retry: (failures, e) => failures < 3 && busy(e),
+    // A busy slot or failed render (503) is worth another try; pdf_unavailable (no sandbox) and a
+    // 4xx not.
+    retry: (failures, e) => failures < 3 && pdfPageRetryable(e),
     retryOnMount: (query) => !finalError(query.state.error),
   });

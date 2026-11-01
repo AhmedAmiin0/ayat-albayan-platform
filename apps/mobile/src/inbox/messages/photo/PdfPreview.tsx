@@ -1,4 +1,4 @@
-import { type MessageView, pdfMetaLine } from '@ab/shared';
+import { type MessageView, pdfBubbleName, pdfMetaLine } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
@@ -9,6 +9,7 @@ import { ContentText } from '@/core/ui/primitives/ContentText';
 import { DownloadLink } from '../copy-download/DownloadLink';
 import { useSmall } from '../components/MessageMeta';
 import { finalError, pdfPageQuery } from '../hooks/thread-file';
+import { useSeen } from '@/inbox/messages/hooks/seen-rows';
 import { MediaNote, problemText } from './MediaNote';
 import { mediaProblem } from './media-problem';
 import { A4, imageRatio } from './PdfPage';
@@ -32,29 +33,21 @@ const WIDTH = 240;
 const resigned = new Set<string>();
 
 /**
- * Staff sent it from the platform (sender_name: never an echo, an import or a family's file; a teacher
- * sends no files; not a forward, which may be a family's), so page 1 renders as the bubble shows. Any
- * other PDF waits for a tap: poppler parses the sender's bytes inside the API (docs/09 «Known risk»).
- */
-const staffSent = (m: MessageView): boolean => m.direction === 'outbound' && Boolean(m.sender_name) && !m.forwarded;
-/** Page 1 was asked before: an answer or a failure in the cache (a disabled query's entry is still pending). */
-const askedBefore = (state: { status: string } | undefined): boolean => state !== undefined && state.status !== 'pending';
-
-/**
- * A chat PDF like WhatsApp's (owner 2026-10-29): the top of page 1, a «PDF» badge, the name and
- * «12 صفحة · PDF · 1.2 ميغابايت»; a tap opens every page in the app (PdfViewer), «تنزيل» saves it.
- * The strip keeps one height (PdfStrip): a large «PDF» and «اضغط لمعاينة الملف» until a tap asks
- * page 1, a spinner until its image has loaded, a large «PDF» when the image fails after one re-sign,
- * «تعذّر تحميل الصفحة» after a 5xx or no network (a tap asks again). Only a 4xx leaves the card.
+ * A chat PDF like WhatsApp's (owner 2026-10-29, 2026-11-01 «do it like WhatsApp»): the top of page
+ * 1, a «PDF» badge, the name and «12 صفحة · PDF · 1.2 ميغابايت»; a tap opens every page in the app
+ * (PdfViewer), «تنزيل» saves it. Every PDF (a family's, an echo, an import, a forward, one staff
+ * sent) asks page 1 once its row has been on screen (useSeen), so a long thread never asks a burst;
+ * the API renders it in the ayat-pdf sandbox and keeps it, so a scroll back reads the cache. The
+ * strip keeps one height (PdfStrip): a spinner until the image has loaded, a large «PDF» when the
+ * image fails after one re-sign, «تعذّر تحميل الصفحة» after a 5xx or no network (a tap asks again).
+ * Only a 4xx leaves the card.
  */
 export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: PdfPreviewProps) {
   const { color } = useTheme();
   const small = useSmall();
   const client = useQueryClient();
   const query = pdfPageQuery(phone, m.id, 1);
-  // Asked once: a remount (a scroll back) shows and re-signs it with no second tap.
-  const [asked, setAsked] = useState(() => staffSent(m) || askedBefore(client.getQueryState(query.queryKey)));
-  const first = useQuery({ ...query, enabled: asked });
+  const first = useQuery({ ...query, enabled: useSeen(m.id) });
   const [noThumb, setNoThumb] = useState(false);
   const [loaded, setLoaded] = useState<string | null>(null);
   const [ratio, setRatio] = useState(A4);
@@ -67,19 +60,20 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
   }
   const failed = !doc && first.error !== null && !first.isFetching;
   const uri = doc && !noThumb ? doc.url : null;
-  const waiting = uri ? loaded !== uri : asked && !doc && !failed;
-  const note = uri || waiting ? null : !asked ? t.inbox.pdf.tapToPreview : failed ? t.inbox.pdf.pageFailed : '';
-  const name = m.media_name ?? kind;
-  const meta = doc ? pdfMetaLine(doc, t.inbox.pdf) : waiting ? t.common.loading : kind;
+  const waiting = uri ? loaded !== uri : !doc && !failed;
+  const note = uri || waiting ? null : failed ? t.inbox.pdf.pageFailed : '';
+  const name = pdfBubbleName(m, t.inbox.pdf.untitled);
+  // Never the name twice («File / File»): «PDF» until page 1 tells the count and size.
+  const meta = doc ? pdfMetaLine(doc, t.inbox.pdf) : t.inbox.pdf.type;
   const onError = () => {
     if (resigned.has(m.id)) return setNoThumb(true);
     resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
-  // One tap asks page 1 (or asks again after a failure) and opens the viewer once it answers.
+  // On «تعذّر تحميل الصفحة» a tap only asks again (a viewer must never open by itself later);
+  // else it opens the viewer, at once or as page 1 answers.
   const show = () => {
-    setAsked(true);
-    setOpen(true);
+    setOpen(!failed);
     if (failed) void first.refetch();
   };
   return (
