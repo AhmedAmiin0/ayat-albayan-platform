@@ -25,8 +25,8 @@ export function stripeSwitch(items: readonly IntegrationConfigItem[]): StripeSwi
 export function switchNote(s: StripeSwitch): string {
   const S = t.paymentLinks.settings;
   if (!s.on) return S.hint;
-  if (s.missing.length === 0) return S.ready;
-  return fill(S.missing, { keys: s.missing.map((k) => t.integrations.keys[k].label).join('، ') });
+  const keys = s.missing.map((k) => t.integrations.keys[k].label).join('، ');
+  return keys === '' ? S.ready : fill(S.missing, { keys });
 }
 
 /** PUT /settings/integrations body: the switch alone. */

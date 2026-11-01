@@ -3,11 +3,11 @@ import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 996 (Stripe in «التكاملات», docs/30), read as text: no database in unit tests.
-const sql = readFileSync(migrationPath('20261101000996_stripe_integrations.sql'), 'utf8');
+// Migration 997 (Stripe in «التكاملات», docs/30), read as text: no database in unit tests.
+const sql = readFileSync(migrationPath('20261101000997_stripe_integrations.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 
-describe('migration 996: the Stripe keys move to the integration config', () => {
+describe('migration 997: the Stripe keys move to the integration config', () => {
   it('integration_secret_key_ok lists every shared secret key, the two Stripe ones included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);

@@ -32,7 +32,7 @@ export class StripeClients {
   client(): Promise<StripeApi> {
     const key = loadEnv().STRIPE_API_KEY;
     if (!key) return Promise.reject(notConfigured());
-    if (this.cached?.key !== key) this.cached = { key, api: this.factory(key) };
+    this.cached = this.cached?.key === key ? this.cached : { key, api: this.factory(key) };
     return Promise.resolve(this.cached.api);
   }
 
