@@ -31,7 +31,8 @@ const OWNER = {
     return profile_id ? { kind: 'user', id: profile_id } : { kind: 'teacher', id };
   },
   user: async (db, id) => {
-    const { role } = orNotFound(await db.from('profiles').select('role').eq('id', id).maybeSingle(), 'user_not_found');
+    const found = await db.from('profiles').select('role').eq('id', id).maybeSingle();
+    const { role } = orNotFound(found, 'user_not_found');
     if (NOT_STAFF.has(role)) throw badRequest('avatar_not_staff');
     return { kind: 'user', id };
   },

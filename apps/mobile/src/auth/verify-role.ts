@@ -7,8 +7,15 @@ import { supabase } from '@/core/lib/http/supabase';
 import { isAccountDisabled, isOtherAppRole, setLoginNotice } from './login-notice';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 
-/** /auth/me as this gate reads it: a missing or odd role is no role (signed out); the rest is kept. */
-export const meSchema = z.looseObject({ role: z.string().nullable().catch(null) });
+/**
+ * /auth/me as this gate reads it: a missing or odd role is no role (signed out), and so is a body
+ * that is not an object (a captive portal's HTML page). Only a null/empty body fails the parse, and
+ * that falls back to the token claim like any other failure. Other fields are kept for the cache.
+ */
+export const meSchema = z.union([
+  z.looseObject({ role: z.string().nullable().catch(null) }),
+  z.unknown().refine((body) => body != null).transform(() => ({ role: null })),
+]);
 export type Me = z.infer<typeof meSchema>;
 
 /** With the role the last run saved (/auth/me in the persisted cache), the app opens on it after this
