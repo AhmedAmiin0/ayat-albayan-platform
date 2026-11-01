@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { ruleRow } from '../../scheduling/scheduling.fakes';
-import type { ScheduleQueries } from '../../scheduling/schedule.queries';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import type { LessonRow } from '../store/lesson-row';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, RULE_ID, STUDENT_ID, TEACHER_ID } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import type { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, RULE_ID, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RulePlanner } from './rule-planner';
 
@@ -20,7 +20,7 @@ const MOVED = [{ id: 'old-1', status: 'scheduled' as const, starts_at: '2026-10-
 
 function setup(row: LessonRow = lessonRow(), weeks = 2) {
   const deps = fakeStore(row);
-  const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, readerOf(LessonsSettings, { booking_horizon_weeks: weeks }));
+  const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersRepo, readerOf(LessonsSettings, { booking_horizon_weeks: weeks }));
   const service = new RescheduleRuleService(deps.store, planner, checker as unknown as ConflictChecker);
   return { ...deps, service };
 }

@@ -7,7 +7,7 @@ import type { AuthUser } from '../../../../../common/auth/verify-token';
 import { forbidden } from '../../../../../common/http/errors';
 import { parseOrThrow } from '../../../../../common/http/http';
 import { courseQuerySchema } from '../../booking.dto';
-import { CourseChange } from '../../course-change/course-change.service';
+import { CourseChange, type ChangeActor } from '../../course-change/course-change.service';
 import { SalesCourse } from './sales-course.service';
 
 /**
@@ -15,7 +15,7 @@ import { SalesCourse } from './sales-course.service';
  * Needs both self.sales_money (the route's) and self.sales (the booking wizard's; 403 otherwise), and the
  * student must be hers whatever settings.sales_auto_assign says. The booking itself is POST /sales/booking
  * with kind 'package'. «تغيير أيام الحلقات» (POST course/change[/check]) changes her own student's course,
- * never over a clash (CourseChange).
+ * never over a clash (CourseChange). ANY student with sales.renew_any (docs/16 row 38).
  */
 @ApiTags('booking')
 @ApiBearerAuth()
@@ -39,13 +39,18 @@ export class SalesCourseController {
   @HttpCode(200)
   check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeCheck> {
     if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.changes.check(parseOrThrow(courseChangeCheckSchema, body), { user, role: 'sales' });
+    return this.changes.check(parseOrThrow(courseChangeCheckSchema, body), salesActor(user));
   }
 
   /** 201 CourseChangeResult; codes: CourseChange.change (a clash is always 409 conflict). */
   @Post('course/change')
   change(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeResult> {
     if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.changes.change(parseOrThrow(courseChangeSchema, body), { user, role: 'sales' });
+    return this.changes.change(parseOrThrow(courseChangeSchema, body), salesActor(user));
   }
+}
+
+/** The assistant changes her own student's course; ANY student's with sales.renew_any. */
+function salesActor(user: AuthUser): ChangeActor {
+  return { user, role: 'sales', anyStudent: can(user, 'sales.renew_any') };
 }

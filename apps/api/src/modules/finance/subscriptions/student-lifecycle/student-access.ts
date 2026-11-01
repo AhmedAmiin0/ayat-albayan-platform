@@ -1,9 +1,9 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { notFound } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { DB, type Db } from '@/common/db/db.module';
+import { notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
  * S6 guard (rule 9): admin sees every student; a teacher only a student in their scope
@@ -13,7 +13,7 @@ import { TeachersQueries } from '../../../people/teachers/teachers.queries';
 export class StudentAccess {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   async check(user: AuthUser, studentId: string): Promise<void> {

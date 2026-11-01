@@ -5,11 +5,11 @@ import type {
   TeacherFeedbackView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import type { Page, PageQuery } from '../../../../common/http/http';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { peopleOf, toRowView, toSummary, toTeacherRowView, type People } from '../feedback.mapper';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import type { Page, PageQuery } from '@/common/http/http';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { peopleOf, toRowView, toSummary, toTeacherRowView, type People } from '@/modules/teaching/feedback/feedback.mapper';
 import { FeedbackReadQueries, type FeedbackListRow } from './feedback.read.queries';
 
 /** The lists behind «رأيك يهمّنا»: the admin sees everything, a teacher only their own rows (rule 9). */
@@ -17,7 +17,7 @@ import { FeedbackReadQueries, type FeedbackListRow } from './feedback.read.queri
 export class FeedbackReadService {
   constructor(
     private readonly queries: FeedbackReadQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   /** GET /feedback (admin): filtered, newest request first unless sorted. */

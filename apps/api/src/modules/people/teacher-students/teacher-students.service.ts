@@ -1,8 +1,8 @@
 import { TEACHER_STUDENT_STATUSES, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
-import { TeachersQueries } from '../teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { nextLessonByStudent, studentIdsOf, toStudentViews } from './teacher-students.mapper';
 import { TeacherStudentsQueries } from './teacher-students.queries';
 
@@ -19,7 +19,7 @@ const LOOKBACK_DAYS = 60;
 @Injectable()
 export class TeacherStudentsService {
   constructor(
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     private readonly queries: TeacherStudentsQueries,
   ) {}
 

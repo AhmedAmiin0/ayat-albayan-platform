@@ -7,7 +7,7 @@ import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PushService } from '@/common/push/push.service';
 import { PortalScopeQueries } from '@/modules/people/portal/scope/portal-scope.queries';
-import { TeachersQueries } from '@/modules/people/teachers';
+import { TeachersRepo } from '@/modules/people/teachers';
 import { AuditService } from '@/common/audit/audit.service';
 import { ChannelEditsRepo } from './channel-edits.repo';
 import { PresenceRepo, PresenceSettings } from '@/modules/people/presence';
@@ -117,7 +117,7 @@ export async function channelApp() {
   };
   const overrides: [unknown, unknown][] = [
     [ChannelQueries, queries], [ChannelPeopleQueries, people], [PortalScopeQueries, scope],
-    [TeachersQueries, teachers], [PushService, push], [ChannelEditsRepo, edits],
+    [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
   ];
   const builder = overrides.reduce(

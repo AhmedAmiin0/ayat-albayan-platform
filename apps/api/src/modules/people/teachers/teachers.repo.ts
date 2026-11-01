@@ -22,7 +22,7 @@ export function withoutPath<T extends { avatar_path?: string | null }>(row: T): 
 
 /** All supabase access for `teachers` (service role — callers enforce roles). R-TCH-01. */
 @Injectable()
-export class TeachersQueries {
+export class TeachersRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly photos: StaffPhotos,

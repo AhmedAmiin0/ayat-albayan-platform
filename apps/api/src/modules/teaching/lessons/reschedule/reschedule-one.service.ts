@@ -5,7 +5,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { conflict } from '@/common/http/errors';
-import { TeachersQueries } from '@/modules/people/teachers/teachers.queries';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { confirmationMessages, forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
@@ -30,7 +30,7 @@ type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
 export class RescheduleOneService {
   constructor(
     private readonly store: LessonStore,
-    private readonly teachers: TeachersQueries,
+    private readonly teachers: TeachersRepo,
     private readonly checker: ConflictChecker,
   ) {}
 

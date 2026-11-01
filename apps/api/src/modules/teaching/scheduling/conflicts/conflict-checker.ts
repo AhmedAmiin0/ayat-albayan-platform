@@ -1,10 +1,10 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AvailabilityQueries } from '../../../people/teachers/availability/availability.queries';
+import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import { BusyQueries } from './busy.queries';
 import { findConflicts } from './conflicts';
-import type { Occurrence } from '../occurrences/occurrences';
-import { RuleProjectionQueries } from '../rules/rule-projection.queries';
+import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
 
 export type CheckInput = {
   teacherId: string;
@@ -25,7 +25,7 @@ export type CheckInput = {
 export class ConflictChecker {
   constructor(
     private readonly busy: BusyQueries,
-    private readonly availability: AvailabilityQueries,
+    private readonly availability: AvailabilityRepo,
     private readonly projection: RuleProjectionQueries,
   ) {}
 

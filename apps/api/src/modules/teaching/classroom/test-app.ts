@@ -3,12 +3,12 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { Outbox } from '../../messaging/inbox/send/outbox';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
-import { TemplateRegistry } from '../../messaging/whatsapp/templates/catalog/template.registry';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { AssistantLessonsQueries } from './assistants/assistants.lessons';
 import { AssistantsQueries } from './assistants/assistants.queries';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './classroom.config';
@@ -24,10 +24,10 @@ import { ModerationQueries } from './moderation/moderation.queries';
 import { RecordingQueries } from './recordings/recording.queries';
 import { studentLinkQueries } from './student-link/student-link.fakes';
 import { StudentLinkQueries } from './student-link/student-link.queries';
-import { StorageService } from '../../../common/storage/storage.service';
-import { AuditService } from '../../../common/audit/audit.service';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { AuditService } from '@/common/audit/audit.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -71,7 +71,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(ClassroomQueries).useValue(m.queries)
     .overrideProvider(AssistantsQueries).useValue(m.assistants)
     .overrideProvider(AssistantLessonsQueries).useValue(m.assistantLessons)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(CLASSROOM_CONFIG).useValue(config)

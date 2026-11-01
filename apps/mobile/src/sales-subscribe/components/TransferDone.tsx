@@ -13,8 +13,6 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 interface TransferDoneProps {
   payment: SalesPaymentView;
   onDone: () => void;
-  /** Off for a child not hers (sales.renew_any): «أيام الحلقات» stay hers (docs/16 row 38). */
-  courseDays?: boolean;
 }
 
 /**
@@ -24,7 +22,7 @@ interface TransferDoneProps {
  * «مدفوعاتي» (her recorded payments: a tab's screen, so dismissTo pops the chat group back to the
  * tabs; a push would stack a second tab host).
  */
-export function TransferDone({ payment, onDone, courseDays = true }: TransferDoneProps) {
+export function TransferDone({ payment, onDone }: TransferDoneProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
   const base = useTreeBase();
@@ -51,9 +49,7 @@ export function TransferDone({ payment, onDone, courseDays = true }: TransferDon
       </AppText>
       <Button label={m.done} onPress={onDone} />
       <ButtonRow testID="transfer-done-actions">
-        {courseDays ? (
-          <Button variant="secondary" label={t.booking.bookCourseDays} onPress={() => router.push(inTree(base, course))} />
-        ) : null}
+        <Button variant="secondary" label={t.booking.bookCourseDays} onPress={() => router.push(inTree(base, course))} />
         <Button variant="secondary" label={m.openMyPayments} onPress={() => router.dismissTo(`${more}/earnings?view=payments`)} />
       </ButtonRow>
     </View>
