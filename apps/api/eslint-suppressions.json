@@ -3083,12 +3083,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-depth": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -15446,12 +15440,6 @@
   "src/modules/teaching/scheduling/occurrences/horizon.job.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/occurrences/horizon.ts": {
@@ -15566,12 +15554,6 @@
   "src/modules/teaching/scheduling/rules/rule-projection.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rules/schedule-rules.controller.test.ts": {
