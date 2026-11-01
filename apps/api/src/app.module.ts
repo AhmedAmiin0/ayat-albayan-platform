@@ -121,7 +121,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
-    // Test build only (docs/30): an empty module unless FEATURE_STRIPE=test.
+    // With FEATURE_STRIPE (test or live) (docs/30): an empty module without it.
     StripeTestModule.register(),
     TeacherEarningsModule,
     ExpensesModule,

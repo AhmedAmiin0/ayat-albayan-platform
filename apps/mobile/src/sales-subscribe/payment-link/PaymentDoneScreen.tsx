@@ -73,7 +73,7 @@ function DoneScreen() {
 }
 
 /**
- * /pay-done?token=…&r=done|cancelled (docs/30, the Stripe test build only): where the pay page sends her
+ * /pay-done?token=…&r=done|cancelled (docs/30, a Stripe build only): where the pay page sends her
  * back after Stripe when the app opened the link (owner 2026-10-29). The result comes from our API only.
  * Any other build asks nothing and goes to its start (never a blank root screen with no way back).
  */

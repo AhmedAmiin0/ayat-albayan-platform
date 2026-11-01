@@ -9,7 +9,7 @@ import { linkColumns } from './link-columns';
 
 const P = t.paymentLinks;
 
-/** «روابط الدفع» under «مدفوعاتي» (docs/30, TEST BUILD ONLY): nothing unless useStripeFeature. */
+/** «روابط الدفع» under «مدفوعاتي» (docs/30, FEATURE_STRIPE): nothing unless useStripeFeature. */
 export function PaymentLinksSection() {
   return useStripeFeature() ? <PaymentLinksList /> : null;
 }

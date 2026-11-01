@@ -25,10 +25,10 @@ import { StripeWebhookService, WebhookHandlers } from './webhook/stripe-webhook.
 import { WebhookDeps } from './webhook/webhook-deps';
 
 /**
- * Stripe payment links, TEST BUILD ONLY (owner 2026-10-28: «dont make stripe available for the
- * normal production build»; docs/30). register() reads FEATURE_STRIPE once, when AppModule is
- * loaded: anything but 'test' gives an empty module (no controller, no provider, the webhook route
- * not mounted: every Stripe URL is 404). With it, GET /stripe/feature is mounted, and every other
+ * Stripe payment links, with FEATURE_STRIPE (test or live) (owner 2026-10-28, go live 2026-11-01;
+ * docs/30). register() reads FEATURE_STRIPE once, when AppModule is loaded: anything but 'test' or
+ * 'live' gives an empty module (no controller, no provider, the webhook route not mounted: every
+ * Stripe URL is 404). With it, GET /stripe/feature is mounted, and every other
  * route but the signed webhook is still 404 until an admin turns «الدفع الإلكتروني» on in
  * «التكاملات» (STRIPE_ENABLED, StripeEnabledGuard). The keys are integration keys too
  * (StripeClients). The money logic is the platform's own (SubscriptionCreator, PaymentsService,

@@ -37,7 +37,7 @@ function LinksScreen() {
 }
 
 /**
- * /sales/more/payment-links (docs/30, the Stripe test build only): her links, newest first, with
+ * /sales/more/payment-links (docs/30, a Stripe build only): her links, newest first, with
  * «إلغاء الرابط» on an open one. Any other build renders nothing here and asks nothing.
  */
 export function PaymentLinksScreen() {

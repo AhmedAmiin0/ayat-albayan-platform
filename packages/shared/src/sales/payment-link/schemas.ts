@@ -3,7 +3,7 @@ import { localDate } from '../../schemas/index.js';
 import type { PaymentMethod } from '../../enums/index.js';
 import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '../../money/ledger/index.js';
 
-// «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; TEST BUILD ONLY): the assistant agrees an amount with
+// «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with
 // the family in the chat and sends a Stripe Checkout link; the verified webhook records the payment. Strict
 // objects, like the sales money commands: an unknown field is a 400, never silently dropped.
 

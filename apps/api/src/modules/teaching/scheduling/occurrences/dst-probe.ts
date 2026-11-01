@@ -1,4 +1,4 @@
-import { DAY, offsetMs } from '../../../people/teachers/availability/zoned-time';
+import { DAY_MS, offsetMs } from '@ab/shared';
 import { ruleOccurrences, type Occurrence, type RuleTiming } from './occurrences';
 
 /** First day-step instants after `from` (within `days`) at which `tz`'s UTC offset differs. */
@@ -6,9 +6,9 @@ export function offsetChanges(tz: string, from: Date, days = 366): Date[] {
   const out: Date[] = [];
   let prev = offsetMs(from.getTime(), tz);
   for (let i = 1; i <= days; i += 1) {
-    const at = from.getTime() + i * DAY;
+    const at = from.getTime() + i * DAY_MS;
     const offset = offsetMs(at, tz);
-    if (offset !== prev) out.push(new Date(at - DAY));
+    if (offset !== prev) out.push(new Date(at - DAY_MS));
     prev = offset;
   }
   return out;
@@ -33,7 +33,7 @@ export function probeOccurrences(input: ProbeInput): Occurrence[] {
   if (zones.length < 2) return [];
   const byStart = new Map<number, Occurrence>();
   for (const at of zones.flatMap((tz) => offsetChanges(tz, input.after))) {
-    const window = { from: at, to: new Date(at.getTime() + 8 * DAY) };
+    const window = { from: at, to: new Date(at.getTime() + 8 * DAY_MS) };
     for (const o of ruleOccurrences(input.timing, window)) {
       if (o.starts_at > input.after) byStart.set(o.starts_at.getTime(), o);
     }

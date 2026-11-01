@@ -789,11 +789,8 @@
     }
   },
   "src/auth/verify-role.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/booking/invoice/ChatMediaSheet.test.tsx": {
@@ -2086,7 +2083,7 @@
   },
   "src/core/lib/stripe-flag.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/core/lib/time/use-following-day.ts": {
@@ -5288,7 +5285,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/inbox/messages/text/use-hold-press.test.ts": {
@@ -8999,7 +8996,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     },
     "max-lines-per-function": {
       "count": 1
@@ -9179,7 +9176,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-subscribe/payment-link/flag.ts": {
@@ -9235,9 +9232,6 @@
   "src/sales-subscribe/payment-link/list/PaymentLinksRow.tsx": {
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/sales-subscribe/payment-link/list/PaymentLinksScreen.test.tsx": {
@@ -9251,11 +9245,8 @@
     }
   },
   "src/sales-subscribe/payment-link/use-link-pay.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 7
+      "count": 1
     }
   },
   "src/sales-subscribe/payment-link/use-stripe.ts": {
@@ -9404,7 +9395,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/sales-subscribe/screens/SalesSubscribeScreen.used.test.tsx": {

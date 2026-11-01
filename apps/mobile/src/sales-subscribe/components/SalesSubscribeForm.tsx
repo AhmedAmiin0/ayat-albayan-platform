@@ -18,6 +18,7 @@ import { checkStart, type StartDraft } from '@/sales-subscribe/lib/start-date';
 import { StartDateField } from './StartDateField';
 import { SalesTeacherPills, useTeacherPick } from './SalesTeacherPills';
 import { useSalesCreateSubscription, useSalesQuote } from '@/sales-subscribe/hooks/use-sales-subscribe';
+import { CustomAmountPill } from '@/sales-subscribe/payment-link/CustomAmountPill';
 import { LinkCreated } from '@/sales-subscribe/payment-link/LinkCreated';
 import { linkErrorText } from '@/sales-subscribe/payment-link/link-text';
 import { OnlinePrice } from '@/sales-subscribe/payment-link/OnlinePrice';
@@ -43,7 +44,7 @@ const pl = t.paymentLinks;
  * The child, the admin's calculator inputs, the API's price, the first day (only with subscriptions.set_start_date),
  * «المعلم/ة» (the trial's unless she picks another; teacherId). «طريقة الدفع» (owner 2026-10-29) where both exist:
  * «تحويل بنكي» saves the package (on to its weekly days, then the transfer; the screen is replaced), «دفع إلكتروني»
- * (the Stripe test build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
+ * (a Stripe build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
  */
 export function SalesSubscribeForm({ phone, students, studentId, onPick, renew = false, onDone }: SalesSubscribeFormProps) {
   const child = students.find((s) => s.id === studentId);
@@ -100,7 +101,12 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   return (
     <>
       <ChildPills students={students} value={studentId} onChange={pick} />
-      <PricingInputs form={form} freeDiscount={false} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+      <PricingInputs
+        form={form}
+        freeDiscount={false}
+        onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+        discountExtra={online ? <CustomAmountPill pay={pay} /> : null}
+      />
       {canOnline ? <PayMethodPills value={method} onChange={setMethod} /> : null}
       {online ? <OnlinePrice pay={pay} /> : <SalesPriceSection quote={quote} />}
       <SalesTeacherPills hidden={studentId === ''} value={teacher.teacherId} onChange={teacher.setTeacher} />

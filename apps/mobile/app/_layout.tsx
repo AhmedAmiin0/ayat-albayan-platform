@@ -123,7 +123,7 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
                 <Stack.Screen name="sales" />
                 <Stack.Screen name="(sales-chat)" />
               </Stack.Protected>
-              {/* Back from Stripe into the test app (pay-return): whoever makes payment links. */}
+              {/* Back from Stripe into the app (pay-return): whoever makes payment links. */}
               <Stack.Protected guard={gate === 'admin' || gate === 'sales'}>
                 <Stack.Screen name="pay-done" />
               </Stack.Protected>

@@ -22,11 +22,15 @@ const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
 // reason for a new preview / production APK. Every other part of eas.json still is. For a side profile's own
 // OTA it is the reverse: only that profile (and the non-build parts) decide.
 export const SIDE_PROFILES = ['stripe-test'];
+// A profile's EXPO_PUBLIC_* env is inlined into the JS bundle, never the binary: an OTA brings
+// its own value (mobile.yml's EAS update step), so changing one needs no APK (docs/30).
+const nativeEnv = (env) => Object.fromEntries(Object.entries(env ?? {}).filter(([k]) => !k.startsWith('EXPO_PUBLIC_')));
 const easCore = (text, profile) => {
   try {
     const eas = JSON.parse(text);
     const side = SIDE_PROFILES.includes(profile);
     for (const p of Object.keys(eas.build ?? {})) if (side ? p !== profile : SIDE_PROFILES.includes(p)) delete eas.build[p];
+    for (const p of Object.values(eas.build ?? {})) p.env = nativeEnv(p.env);
     return JSON.stringify(eas);
   } catch {
     return `unparsed:${text}`;

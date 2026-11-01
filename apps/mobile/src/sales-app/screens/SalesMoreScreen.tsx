@@ -26,7 +26,7 @@ const rows = () =>
 /**
  * The salesperson's «المزيد»: the web SalesNav pages that do not earn a tab, in its order and with
  * its gates («المعلمون», «الحلقات الجارية», «الاشتراكات» with history, «أرباحي» with «مدفوعاتي»
- * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», «روابط الدفع» in the Stripe test build only,
+ * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», «روابط الدفع» in a Stripe build only,
  * then the appearance, the language and sign-out.
  */
 export function SalesMoreScreen({ can }: { can: Can }) {

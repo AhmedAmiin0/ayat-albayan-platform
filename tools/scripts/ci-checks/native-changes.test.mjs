@@ -82,6 +82,13 @@ test('eas.json: a side profile (the Stripe test app, docs/30) is not native; a n
   assert.deepEqual(nativeChanges(before, preview, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
 });
 
+test('eas.json: an EXPO_PUBLIC_* env value is bundled JS, not native (docs/30: the Stripe flag on preview)', () => {
+  const before = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
+  const flagged = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1', EXPO_PUBLIC_FEATURE_STRIPE: '1' } } }) };
+  assert.deepEqual(nativeChanges(before, flagged, { files: ['apps/mobile/eas.json'] }), []);
+  assert.deepEqual(nativeChanges({ ...snap(base), eas: eas(PROFILES) }, flagged, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
+});
+
 const CONFIG = `import type { ConfigContext, ExpoConfig } from 'expo/config';
 export default ({ config }: ConfigContext): ExpoConfig => ({ ...(config as ExpoConfig), android: { ...config.android, googleServicesFile: './g.json' } });
 `;

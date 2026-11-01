@@ -36,7 +36,7 @@ export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscrip
 /**
  * The money flow of a sales chat: step 1 «اشتراك جديد» (calculator → saved at the API's price), step 2
  * «سجّل التحويل البنكي» (attachments optional) for the new package or one still owed, then the result; or,
- * with «دفع إلكتروني» (the Stripe test build), the payment link made to send in the chat.
+ * with «دفع إلكتروني» (a Stripe build), the payment link made to send in the chat.
  * Right after «اشتراك جديد» (and after the transfer) «احجز أيام الحلقات الآن» opens the course wizard
  * (owner 2026-10-18: before the transfer is fine) on top of the step; closing it comes back to it as left.
  */

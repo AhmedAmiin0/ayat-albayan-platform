@@ -1,10 +1,9 @@
-import { timeGroups } from '@ab/shared';
-import { localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { DAY } from '../../../people/teachers/availability/zoned-time';
-import { planBooking } from '../plan/booking.plan';
-import type { SeriesRule } from '../plan/booking.series-plan';
+import { DAY_MS, timeGroups } from '@ab/shared';
+import { localDateOf, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { planBooking } from '@/modules/teaching/booking/plan/booking.plan';
+import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
-const WEEK = 7 * DAY;
+const WEEK = 7 * DAY_MS;
 
 type CourseEndInput = { rule: SeriesRule; now: Date; lessonsTotal: number };
 

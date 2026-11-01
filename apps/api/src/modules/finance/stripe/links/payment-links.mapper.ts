@@ -1,5 +1,7 @@
 import type { Duration, PaymentLinkKind, PaymentLinkView, PublicPaymentLink } from '@ab/shared';
 import { effectiveLinkStatus, firstName, paymentLinkUrl } from '@ab/shared';
+import { loadEnv } from '@/config/env/env';
+import { stripeKeyIsLive } from '@/config/env/env.stripe';
 import type { LinkRow } from './payment-links.queries';
 
 // Whitelists (docs/30): explicit keys, never a spread of the row (the token appears only inside the url,
@@ -25,7 +27,10 @@ export function toLinkView(row: LinkRow, ctx: { payOrigin: string; now: Date }):
   };
 }
 
-/** The public page: the first name, the amount and the package; nothing else about the family. */
+/**
+ * The public page: the first name, the amount and the package; nothing else about the family.
+ * `sandbox`: the saved key is not a live one (the page says it is a test page).
+ */
 export function toPublicLink(row: LinkRow, now: Date): PublicPaymentLink {
   const status = effectiveLinkStatus({ status: statusOf(row), expires_at: row.expires_at }, now);
   return {
@@ -35,6 +40,7 @@ export function toPublicLink(row: LinkRow, now: Date): PublicPaymentLink {
     currency: row.currency,
     package: row.package,
     lessons: row.lessons,
+    sandbox: !stripeKeyIsLive(loadEnv()),
   };
 }
 

@@ -189,6 +189,10 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
           # Public by design; accepted as a variable or a secret.
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
+          # Stripe go live (owner 2026-11-01, docs/30): the pay-link buttons are built in. They still show only
+          # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
+          # FEATURE_STRIPE that route is 404 and nothing shows.
+          VITE_FEATURE_STRIPE: "1"
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile

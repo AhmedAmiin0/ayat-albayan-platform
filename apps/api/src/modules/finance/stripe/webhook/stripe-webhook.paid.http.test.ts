@@ -81,10 +81,12 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(s.events.done).toHaveBeenCalledWith('evt_4', 'async_failed');
   });
 
-  it('a live-mode event is refused (the test build); a package the platform refuses alerts the admins, no retry', async () => {
-    await post({ ...sessionEvent('checkout.session.completed'), livemode: true });
+  it('a live-mode event on a test server is held for a retry (503, a bell, nothing recorded); a package the platform refuses alerts the admins, no retry', async () => {
+    const held = await post({ ...sessionEvent('checkout.session.completed'), livemode: true });
+    expect(held.statusCode).toBe(503);
     expect(m.payments.insert).not.toHaveBeenCalled();
-    expect(s.events.done).toHaveBeenCalledWith('evt_1', 'live_refused');
+    expect(s.events.done).not.toHaveBeenCalledWith('evt_1', expect.anything());
+    s.push.notifyAdmins.mockClear();
     m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'cancelled', cancel_kind: 'unused' });
     const res = await post(sessionEvent('checkout.session.completed', {}, 'evt_5'));
     expect(res.statusCode).toBe(200);

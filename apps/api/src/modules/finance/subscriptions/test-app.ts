@@ -54,7 +54,7 @@ export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teach
 
 /**
  * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
- * `more`: a module's own overrides on top (the Stripe test build's queries and client).
+ * `more`: a module's own overrides on top (the Stripe module's queries and client).
  */
 export async function moneyApp(resolver: PermissionResolver = systemResolver, more: (b: TestingModuleBuilder) => TestingModuleBuilder = (b) => b) {
   const m = mocks();

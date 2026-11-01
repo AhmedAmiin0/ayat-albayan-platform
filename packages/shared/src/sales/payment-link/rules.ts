@@ -29,6 +29,8 @@ export function effectiveLinkStatus(link: { status: PaymentLinkStatus; expires_a
  * app-config.stripe.test.ts pins this): the pay page names it to bring the payer back into that app.
  */
 export const STRIPE_TEST_APP_PACKAGE = 'com.ayatalbayan.admin.stripetest';
+/** The normal app's Android package (app.json; app-config.stripe.test.ts pins it): live mode. */
+export const STRIPE_APP_PACKAGE = 'com.ayatalbayan.admin';
 
 /** The platform link the assistant sends: https://<web>/pay/<token> (WEB_ORIGIN's first origin). */
 export function paymentLinkUrl(webOrigin: string, token: string): string {

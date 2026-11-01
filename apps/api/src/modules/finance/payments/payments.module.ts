@@ -21,7 +21,7 @@ import { ReceiptsService } from './attachments/receipts.service';
   controllers: [PaymentsController],
   providers: [PaymentInputs, PaymentsQueries, PaymentsService, PaymentsSettings, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsQueries],
   // The salesperson's bank transfer from the chat reuses them (sales-money); her own files (/sales/me, assistant-pay);
-  // the Stripe test build's webhook reads a session's own payment (PaymentsQueries.byRequest).
+  // the Stripe module's webhook reads a session's own payment (PaymentsQueries.byRequest).
   exports: [PaymentsService, ReceiptsService, PaymentAttachments, PaymentsQueries],
 })
 export class PaymentsModule {}

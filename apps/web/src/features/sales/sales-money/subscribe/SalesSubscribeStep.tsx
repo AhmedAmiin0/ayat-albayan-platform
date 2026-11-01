@@ -14,6 +14,7 @@ import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '@/features/sales/sales-money/api';
 import { ChildPicker } from './ChildPicker';
 import { linkStepErrorText, salesErrorText } from '@/features/sales/sales-money/errors';
+import { CustomAmountToggle } from '@/features/sales/sales-money/payment-link/CustomAmountToggle';
 import { OnlinePayFields } from '@/features/sales/sales-money/payment-link/OnlinePayFields';
 import { useLinkPay } from '@/features/sales/sales-money/payment-link/use-link-pay';
 import { SalesQuotePreview } from './SalesQuotePreview';
@@ -48,7 +49,7 @@ const METHODS: { value: Method; label: string }[] = [
  * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
  * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
  * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
- * «طريقة الدفع» (owner 2026-10-29) only where both exist (the Stripe test build with the API's switch on, her own
+ * «طريقة الدفع» (owner 2026-10-29) only where both exist (a Stripe build with the API's switch on, her own
  * child): «تحويل بنكي» saves the package as above, «دفع إلكتروني» makes a payment link from the same fields.
  */
 export function SalesSubscribeStep({ students, phone = '', picked, renew = false, onClose, onSaved, onLinked }: Props) {
@@ -129,7 +130,12 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     >
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
         <ChildPicker students={choices} value={studentId} onChange={pick} />
-        <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+        <PricingFields
+          form={form}
+          discounts={DISCOUNTS}
+          set={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          discountExtra={online ? <CustomAmountToggle pay={pay} /> : undefined}
+        />
         {canOnline && <SegmentedControl label={t.payments.method} options={METHODS} value={method} onChange={setMethod} />}
         {studentId && (online ? <OnlinePayFields pay={pay} /> : <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />)}
         {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}

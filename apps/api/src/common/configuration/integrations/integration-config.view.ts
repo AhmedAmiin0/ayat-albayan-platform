@@ -14,7 +14,7 @@ const nonBlank = (v: string | undefined): string | null => (v !== undefined && v
 /**
  * GET /settings/integrations: every registry key with where its value comes from. A secret is only
  * ever `set` / `source`: its value (from Vault OR env) is never put in the view. The Stripe group
- * is listed only where the module exists (FEATURE_STRIPE=test, docs/30): elsewhere it is not there.
+ * is listed only where the module exists (FEATURE_STRIPE test or live, docs/30), nowhere else.
  */
 export function integrationItems({ plain, secrets, env }: ViewInput): IntegrationConfigItem[] {
   const keys = INTEGRATION_KEYS.filter((d) => integrationKeyAvailable(d.key, env));

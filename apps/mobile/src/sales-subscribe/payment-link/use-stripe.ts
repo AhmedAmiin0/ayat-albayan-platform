@@ -18,7 +18,7 @@ async function serverStripe(): Promise<boolean> {
 }
 
 /**
- * The test build's flag AND the server's switch («خدمة الدفع الإلكتروني» in «التكاملات»,
+ * The Stripe build flag AND the server's switch («خدمة الدفع الإلكتروني» in «التكاملات»,
  * STRIPE_ENABLED). With the build flag off nothing is asked: the query never runs.
  */
 export function useStripeOn(): boolean {

@@ -34,15 +34,14 @@ x-app: &app
 x-shared-env: &shared-env
   # Shared cache (docs/09 «Shared cache»), on every app process. Redis down = the database, never an error.
   REDIS_URL: redis://ayat-redis:6379
-  # Owner, 2026-10-28: «I want a new seperate build with stripe and all the features continue normally
-  # on the current build». STAGING ONLY (never a production file): mounts the Stripe test module
-  # (docs/30), and «التكاملات» on ANY web build lists the Stripe group (the keys, the switch). Every
-  # Stripe route but the signed webhook stays 404 until an admin turns on «خدمة الدفع الإلكتروني»
-  # there (STRIPE_ENABLED); GET /stripe/feature says on only once both keys are saved too. Only the
-  # pay-link buttons need a Stripe build flag (VITE_FEATURE_STRIPE=1, the stripe-test app). To switch
-  # it off: delete these two lines and redeploy (docs/09). API_PUBLIC_URL is the host of the family's
-  # /pay/<token> pages.
-  FEATURE_STRIPE: test
+  # Owner, 2026-11-01: «i want to go live with strip payments now». This stack is PRODUCTION
+  # (api.ayatalbayan.com). FEATURE_STRIPE=live mounts the Stripe module (docs/30) and takes live keys
+  # only (test = sandbox keys only). «التكاملات» lists the Stripe group (the keys, the switch). Nothing
+  # takes real money until an admin saves a live key and the live webhook secret there and turns on
+  # «خدمة الدفع الإلكتروني» (STRIPE_ENABLED): until then every Stripe route but the signed webhook is
+  # 404 and GET /stripe/feature says off. To switch Stripe off: delete these two lines and redeploy
+  # (docs/09). API_PUBLIC_URL is the host of the family's /pay/<token> pages.
+  FEATURE_STRIPE: live
   API_PUBLIC_URL: https://api.ayatalbayan.com
 
 x-api-env: &api-env

@@ -26,12 +26,12 @@ describe('integrationItems (GET /settings/integrations)', () => {
     for (const d of INTEGRATION_KEYS.filter((k) => k.secret)) expect(json).not.toContain(`SENTINEL-${d.key}`);
   });
 
-  it('lists the Stripe group only on a server with FEATURE_STRIPE=test (docs/30)', () => {
+  it.each(['test', 'live'])('lists the Stripe group only on a server with FEATURE_STRIPE (here %s, docs/30)', (mode) => {
     const stripeKeys = (env: NodeJS.ProcessEnv) =>
       integrationItems({ plain: [], secrets: [{ key: 'STRIPE_API_KEY', updated_at: AT }], env }).filter((i) => i.group === 'stripe');
     expect(stripeKeys({})).toEqual([]);
     expect(stripeKeys({ FEATURE_STRIPE: '1' })).toEqual([]);
-    const on = stripeKeys({ FEATURE_STRIPE: 'test', STRIPE_ENABLED: 'true' });
+    const on = stripeKeys({ FEATURE_STRIPE: mode, STRIPE_ENABLED: 'true' });
     expect(on.map((i) => i.key)).toEqual(['STRIPE_ENABLED', 'STRIPE_API_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_MAX_DISCOUNT_PCT']);
     expect(on.map((i) => i.set)).toEqual([true, true, false, false]);
     expect(on[0]).toMatchObject({ value: 'true', source: 'env' });
