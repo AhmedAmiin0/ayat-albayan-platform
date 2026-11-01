@@ -295,11 +295,6 @@
       "count": 3
     }
   },
-  "src/common/configuration/config-store/store/config-store.service.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/common/configuration/custom-config/custom-config.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
