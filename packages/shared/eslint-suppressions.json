@@ -2102,10 +2102,5 @@
     "max-len": {
       "count": 2
     }
-  },
-  "src/time/zoned.ts": {
-    "complexity": {
-      "count": 1
-    }
   }
 }
