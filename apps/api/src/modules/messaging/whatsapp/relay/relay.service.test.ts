@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { fakeLine, fakeRepo, KEY, templateBody, TO } from './relay.fakes';
+import { crmMe, fakeLine, fakeRepo, KEY, templateBody, TO } from './relay.fakes';
 import type { RelayRepo } from './relay.repo';
 import { relayRequestSchema } from './relay.schema';
 import { RelayService } from './relay.service';
@@ -85,9 +85,20 @@ describe('RelayService', () => {
     });
   });
 
-  it("authorize: the line's own key only", () => {
-    const s = setup();
-    expect(s.service.authorize(KEY)).toBe(s.now);
-    expect(() => s.service.authorize('Bearer other')).toThrow();
+  it("authorize: the line's own key without a call; a key the CRM refuses is 401", async () => {
+    const s = setup(crmFailure(401, 'unauthorized'));
+    await expect(s.service.authorize(KEY)).resolves.toBe(s.now);
+    await expect(s.service.authorize('Bearer other')).rejects.toMatchObject({ status: 401 });
+    expect(s.f.requests).toHaveLength(1);
+  });
+
+  it("authorize: the script's own key of the same CRM account is accepted", async () => {
+    const s = setup(crmMe(), crmMe());
+    await expect(s.service.authorize('Bearer script-key')).resolves.toBe(s.now);
+  });
+
+  it('authorize: the CRM unreachable while checking a key is 502, not 401', async () => {
+    const s = setup(new TypeError('fetch failed'));
+    await expect(s.service.authorize('Bearer script-key')).rejects.toMatchObject({ status: 502 });
   });
 });
