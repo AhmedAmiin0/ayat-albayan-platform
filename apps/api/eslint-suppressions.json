@@ -1099,9 +1099,6 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "complexity": {
       "count": 1
     },
@@ -9416,7 +9413,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-nested-ternary": {
       "count": 1
@@ -9504,9 +9501,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "complexity": {
       "count": 1
