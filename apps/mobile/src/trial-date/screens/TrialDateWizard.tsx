@@ -2,7 +2,7 @@ import type { Program, TrialHistory } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { bookFailure } from '@/booking/shared/booking-errors';
+import { bookFailure } from '@/booking';
 import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

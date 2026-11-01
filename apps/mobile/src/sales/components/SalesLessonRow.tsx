@@ -6,7 +6,7 @@ import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
+import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';

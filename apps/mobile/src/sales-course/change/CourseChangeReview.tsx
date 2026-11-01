@@ -1,8 +1,6 @@
 import { counted, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
 import { View } from 'react-native';
-import type { BookFailure } from '@/booking/shared/booking-errors';
-import { ConflictNotice } from '@/booking/shared/ConflictNotice';
-import { whenText } from '@/booking/shared/slots';
+import { type BookFailure, ConflictNotice, whenText } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/core/lib/money/format';
