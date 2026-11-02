@@ -11,7 +11,7 @@ import type {
   StudentStatus,
   SubscriptionStatus,
   TeacherStatus,
-} from '../../enums/index.js';
+} from '@ab/catalog';
 import type { EarningStatus } from '../ledger/earnings/earnings.js';
 
 // Status → visual grammar (docs/07 §6). Labels come from ar.json `enums.*`; this map is shape only.

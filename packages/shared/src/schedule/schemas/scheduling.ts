@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DURATIONS, PACKAGE_SIZES } from '../../enums/index.js';
+import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
 import { bookingExtras, refineBookingKind } from './booking-extras.js';
 import { requiredText, timeOfDay, timeZone } from '@ab/core';

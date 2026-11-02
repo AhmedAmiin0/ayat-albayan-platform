@@ -1,4 +1,4 @@
-import type { Duration, PackageSize } from '../../enums/index.js';
+import type { Duration, PackageSize } from '@ab/catalog';
 import type { SalesQuoteView, SalesStudentRef } from '../money-views.js';
 import type { PaymentLinkKind, PaymentLinkStatus } from './schemas.js';
 

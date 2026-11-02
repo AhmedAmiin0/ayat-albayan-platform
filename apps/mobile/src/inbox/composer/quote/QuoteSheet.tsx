@@ -15,7 +15,7 @@ import { useQuoteSend, useQuoteSheet } from './use-quote-sheet';
 
 interface QuoteSheetProps {
   phone: string;
-  /** The 24 h window (thread.session_open): closed → send and edit disabled, copy stays. */
+  /** A text may go (the composer's rule, owner 2026-11-01): no → send and edit off, copy stays. */
   open: boolean;
   onClose: () => void;
 }

@@ -32,7 +32,7 @@ async function online() {
     ['/sales/subscriptions/teachers', []],
   ]);
   answer(apiSend);
-  renderWithClient(<SalesMoneyFlow start="subscribe" students={[student()]} phone={PHONE} sessionOpen onClose={vi.fn()} />);
+  renderWithClient(<SalesMoneyFlow start="subscribe" students={[student()]} phone={PHONE} canSend onClose={vi.fn()} />);
   const dialog = within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
   const method = within(await dialog.findByRole('group', { name: t.payments.method }));
   fireEvent.click(method.getByRole('button', { name: t.salesMoney.payOnline }));
