@@ -1,7 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/shared';
 import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
@@ -44,6 +45,9 @@ const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule'
 async function renderNote(m: typeof ASK, permissions?: Permission[]) {
   const client = createTestQueryClient();
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
+  // «تأكيد الحلقة» only while the academy requires a confirmation (#619).
+  const config = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false };
+  client.setQueryData(publicConfigQuery.queryKey, { ...config, lesson_confirmation_required: true });
   await renderWithQuery(
     <ReplyActionsProvider phone={PHONE} lessons={[LESSON]}>
       <ReplyNoteLine message={m} />
