@@ -7,7 +7,7 @@ import { STUDENT_ID, TEACHER_ID } from '@/modules/teaching/scheduling/scheduling
 import type { LessonRow } from './store/lesson-row';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { LessonStore } from './store/lesson-store';
-import type { LessonsQueries } from './lessons.queries';
+import type { LessonsRepo } from './lessons.repo';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 export { RULE_ID, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
@@ -79,7 +79,7 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
   const events = new LessonEvents();
   // lesson_rescheduled unusable by default: a move's booking confirmation stays (FamilyMoveNotice).
   const family = fakeFamilyMove();
-  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter, events, family.move);
+  const store = new LessonStore(queries as unknown as LessonsRepo, writer as unknown as LessonWriter, events, family.move);
   return { store, queries, writer, record, events, family: family.gate };
 }
 

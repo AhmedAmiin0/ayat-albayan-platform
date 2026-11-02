@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import type { PushTree } from './notification-route';
 import { registerPush } from './registerPush';
 import { useNotificationHandling } from './useNotificationHandling';

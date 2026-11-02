@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 
 export type StatementCan = { read: boolean; write: boolean; approve: boolean };
 

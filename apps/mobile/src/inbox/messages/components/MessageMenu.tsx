@@ -12,7 +12,7 @@ import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-d
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useHideRights } from '@/auth';
+import { useHideRights } from '@/core/auth';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 
@@ -34,7 +34,7 @@ interface MessageMenuProps {
 /**
  * A long press on a bubble, at the bottom of the screen as the attach sheet, in WhatsApp's order: «رد»,
  * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
- * after the 24 h window (only a template can go then), with the reason under it.
+ * where no text can go (canSend: the text rule), with the reason under it.
  */
 export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();

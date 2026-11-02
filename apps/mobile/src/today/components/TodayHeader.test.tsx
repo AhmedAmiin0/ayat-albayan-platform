@@ -7,7 +7,7 @@ import { TodayHeader } from './TodayHeader';
 
 // The header's bell: the admin's always; the salesperson's only with notifications.push (as «المحادثات»).
 let mockHeld: Permission[] = [];
-jest.mock('@/auth', () => ({ ...jest.requireActual('@/auth'), useHolds: (p: Permission) => mockHeld.includes(p) }));
+jest.mock('@/core/auth', () => ({ ...jest.requireActual('@/core/auth'), useHolds: (p: Permission) => mockHeld.includes(p) }));
 jest.mock('@/notifications/BellButton', () => {
   const { Text: MockText } = jest.requireActual<typeof import('react-native')>('react-native');
   return { BellButton: ({ tree }: { tree: string }) => <MockText>{`bell:${tree}`}</MockText> };

@@ -1,4 +1,4 @@
-import type { LeadSource, LeadStatus, LessonStatus } from '../../enums/index.js';
+import type { LeadSource, LeadStatus, LessonStatus } from '@ab/catalog';
 
 // GET /dashboard/summary (docs/11 §8). Money in settings.reporting_currency.
 

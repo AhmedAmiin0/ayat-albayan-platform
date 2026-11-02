@@ -1,4 +1,5 @@
-import { canReact, formatPhone, sessionWindowOpen, type MessageView, type ThreadView } from '@ab/shared';
+import { staffMaySend } from '@ab/client-core';
+import { canReact, formatPhone, type MessageView, type ThreadView } from '@ab/shared';
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import {
@@ -7,16 +8,17 @@ import {
   type ChatActions,
   ChatActionsContext,
   type ChatNoticeValue,
-} from '../hooks/chat-actions';
-import { CopySheet } from '../../messages/copy-download/CopySheet';
+} from '@/inbox/thread/hooks/chat-actions';
+import { CopySheet } from '@/inbox/messages/copy-download/CopySheet';
 import { ForwardSheet } from './ForwardSheet';
-import type { CopyRequest } from '../../messages/copy-download/chat-tools';
-import { MessageMenu } from '../../messages/components/MessageMenu';
-import { FailedSheet } from '../../messages/resend/FailedSheet';
-import { ReactorsSheet } from '../../messages/reactions/ReactorsSheet';
-import { useReact } from '../../messages/reactions/use-react';
-import { EmojiSheet } from '../../composer/emoji/EmojiSheet';
-import { isOwnThread, useThreadMode } from '../hooks/thread-mode';
+import type { CopyRequest } from '@/inbox/messages/copy-download/chat-tools';
+import { MessageMenu } from '@/inbox/messages/components/MessageMenu';
+import { FailedSheet } from '@/inbox/messages/resend/FailedSheet';
+import { ReactorsSheet } from '@/inbox/messages/reactions/ReactorsSheet';
+import { useReact } from '@/inbox/messages/reactions/use-react';
+import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
+import { isOwnThread, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { sendState } from '@/inbox/thread/hooks/chat-window';
 
 export interface ChatActionsProviderProps {
   phone: string;
@@ -41,7 +43,10 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const [failed, setFailed] = useState<MessageView | null>(null);
   const { mutate: reactNow } = useReact(phone, (text) => say({ text }));
   const own = isOwnThread(mode, thread);
-  const canSend = !own && sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
+  const chat = sendState(thread, new Date());
+  // «رد» follows the text rule (owner 2026-11-01); a reaction keeps the window.
+  const canSend = !own && staffMaySend(chat, mode.kind !== 'teacher');
+  const windowOpen = !own && chat.open;
   const threadName = thread?.display_name ?? (phone ? ltr(formatPhone(phone)) : null);
   const enabled = mode.kind === 'admin';
   const reactableNow = thread?.reactable;
@@ -56,13 +61,13 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
       openMenu: (m, at) => setMenu({ m, at: at ?? null }),
       openForward: setForward,
       showCopy: setCopy,
-      // The window as of now (canSend), not as of the last fetch.
-      reactable: (m) => enabled && canSend && canReact(m, { reactable: reactableNow, session_open: true }, new Date()),
+      // The window as of now (windowOpen), not as of the last fetch.
+      reactable: (m) => enabled && windowOpen && canReact(m, { reactable: reactableNow, session_open: true }, new Date()),
       react: (m, emoji) => reactNow({ message: m, emoji }),
       openReactors: setReactors,
       openFailed: setFailed,
     }),
-    [enabled, canSend, threadName, reactableNow, reactNow],
+    [enabled, canSend, windowOpen, threadName, reactableNow, reactNow],
   );
   const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say }), [bubble, reply, notice]);
   const removable = reactors !== null && value.reactable(reactors);

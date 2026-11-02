@@ -1,5 +1,5 @@
-import { canOpen } from '@/auth/route-permissions';
-import { type Can, usePermissions } from '@/auth/use-permissions';
+import { canOpen } from '@/core/auth/route-permissions';
+import { type Can, usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
 import { TeacherScope } from './TeacherScope';

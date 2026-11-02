@@ -5,6 +5,7 @@ import { MEETING_ID, meetingQueries } from './internal-meetings.fakes';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import type { InternalMeetingsRepo } from './internal-meetings.repo';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
@@ -24,7 +25,7 @@ describe('InternalMeetingKickService', () => {
     await service().remove({ user: TEACHER, id: MEETING_ID, identity: GUEST });
     const [url, init] = post.mock.calls[0] ?? [];
     expect(url).toContain('RemoveParticipant');
-    expect(JSON.parse(init?.body ?? '{}')).toEqual({ room: `meeting-${MEETING_ID}`, identity: GUEST });
+    expect(sentBody(init)).toEqual({ room: `meeting-${MEETING_ID}`, identity: GUEST });
   });
 
   it('403 cannot_remove: an assistant may not remove, nobody removes an admin', async () => {

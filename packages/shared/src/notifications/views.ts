@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { PushKind } from '../enums/index.js';
+import type { PushKind } from '@ab/catalog';
 
 // The bell (R-NOT-01): GET /me/notifications and POST /me/notifications/read. The rows are
 // public.push_notifications addressed to the caller; `data` is what the push carried ({ phone },

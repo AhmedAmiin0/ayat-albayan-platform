@@ -16,7 +16,7 @@ export interface CrmConn {
 interface CrmRequest {
   /** Relative to the base («messages», «me»). */
   path: string;
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
 }
 

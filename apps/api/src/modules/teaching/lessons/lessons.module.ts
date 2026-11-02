@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { SchedulingModule } from '../scheduling/scheduling.module';
-import { SubscriptionsModule } from '../../finance/subscriptions/subscriptions.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
+import { SchedulingModule } from '@/modules/teaching/scheduling/scheduling.module';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
 import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
 import { LessonAccess } from './store/lesson-access';
 import { LessonActionsController } from './status/lesson-actions.controller';
 import { LessonCancelService } from './status/lesson-cancel.service';
 import { LessonProposalsController } from './proposals/lesson-proposals.controller';
-import { LessonProposalQueries } from './proposals/lesson-proposals.queries';
+import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
 import { LessonProposeService, ProposalDecisionService } from './proposals/lesson-proposals.service';
 import { LessonRescheduleController } from './reschedule/lesson-reschedule.controller';
 import { LessonTimeController } from './time-edit/lesson-time.controller';
@@ -15,9 +15,9 @@ import { LessonStatusService } from './status/lesson-status.service';
 import { LessonStore } from './store/lesson-store';
 import { LessonViews } from './store/lesson-views';
 import { LessonsController } from './lessons.controller';
-import { LessonsQueries } from './lessons.queries';
+import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
-import { OverviewQueries } from './overview/overview.queries';
+import { OverviewRepo } from './overview/overview.repo';
 import { OverviewService } from './overview/overview.service';
 import { RescheduleOneService } from './reschedule/reschedule-one.service';
 import { RescheduleRuleService } from './reschedule/reschedule-rule.service';
@@ -26,9 +26,9 @@ import { RulePlanner } from './reschedule/rule-planner';
 import { StudentLessonsController } from './student-lessons.controller';
 import { LessonTimeService } from './time-edit/time-edit.service';
 import { TimeEditPayout } from './time-edit/time-edit.payout';
-import { TimeEditQueries } from './time-edit/time-edit.queries';
+import { TimeEditRepo } from './time-edit/time-edit.repo';
 import { TeacherMeController } from './teacher-me/teacher-me.controller';
-import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
+import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
 
 /**
  * Lesson lists (week / day / student), confirm, status, reschedule, cancel, and the teacher's own
@@ -55,24 +55,24 @@ import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
   providers: [
     LessonAccess,
     LessonCancelService,
-    LessonProposalQueries,
+    LessonProposalRepo,
     LessonProposeService,
     LessonStatusService,
     LessonStore,
     LessonTimeService,
     LessonViews,
-    LessonsQueries,
+    LessonsRepo,
     LessonsSettings,
-    OverviewQueries,
+    OverviewRepo,
     OverviewService,
     ProposalDecisionService,
     RescheduleOneService,
     RescheduleRuleService,
     RulePlanner,
-    TeacherMeQueries,
+    TeacherMeRepo,
     TimeEditPayout,
-    TimeEditQueries,
+    TimeEditRepo,
   ],
-  exports: [LessonCancelService, LessonStatusService, LessonViews, RescheduleOneService, TeacherMeQueries],
+  exports: [LessonCancelService, LessonStatusService, LessonViews, RescheduleOneService, TeacherMeRepo],
 })
 export class LessonsModule {}

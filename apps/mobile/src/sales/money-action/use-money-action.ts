@@ -1,9 +1,9 @@
 import type { SalesFamilyView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { apiFetch } from '@/core/lib/http/api';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { useSalesStudent } from '../student/student-api';
+import { useSalesStudent } from '@/sales/student/student-api';
 import { type MoneyAction, pickMoneyAction } from './money-action';
 
 /**

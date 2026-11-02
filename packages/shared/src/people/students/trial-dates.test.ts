@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STUDENT_STATUSES } from '../../enums/index.js';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { canPickTrialDate, trialOutcome, upcomingTrial, warnsTrialDate } from './trial-dates.js';
 
 const NOW = new Date('2026-10-25T12:00:00Z');

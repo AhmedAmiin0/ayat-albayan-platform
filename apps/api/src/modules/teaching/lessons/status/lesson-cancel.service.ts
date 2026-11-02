@@ -1,11 +1,11 @@
 import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { ScheduleQueries, type RuleWithLinks } from '../../scheduling/schedule.queries';
-import { LessonStore } from '../store/lesson-store';
-import { LessonsSettings } from '../lessons.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict } from '@/common/http/errors';
+import { addDays, localDateOf, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
@@ -33,7 +33,7 @@ interface EndRule {
 export class LessonCancelService {
   constructor(
     private readonly store: LessonStore,
-    private readonly rules: ScheduleQueries,
+    private readonly rules: ScheduleRepo,
     private readonly settings: LessonsSettings,
   ) {}
 

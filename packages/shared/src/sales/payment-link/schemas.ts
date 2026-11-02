@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { localDate } from '../../schemas/index.js';
-import type { PaymentMethod } from '../../enums/index.js';
+import type { PaymentMethod } from '@ab/catalog';
 import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '../../money/ledger/index.js';
 
 // «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with

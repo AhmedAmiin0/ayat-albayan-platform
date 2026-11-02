@@ -1796,7 +1796,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/messaging/inbox/api/api.forward.ts": {
@@ -1991,7 +1991,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     },
     "max-lines-per-function": {
       "count": 1
@@ -2063,7 +2063,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -2419,7 +2419,7 @@
   },
   "src/features/messaging/inbox/messages/components/MessageMedia.tsx": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/messaging/inbox/messages/forward/ForwardDialog.test.tsx": {
@@ -2493,11 +2493,6 @@
   },
   "src/features/messaging/inbox/messages/lib/use-bubble-tools.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/pdf/PdfCard.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -7732,9 +7727,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "max-len": {
-      "count": 2
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -10438,11 +10430,6 @@
     }
   },
   "src/features/teaching/schedule/schedule.en.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/schedule/tz.ts": {
     "max-len": {
       "count": 1
     }

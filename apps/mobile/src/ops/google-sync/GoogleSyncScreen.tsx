@@ -1,8 +1,8 @@
-import { useHolds, useIsAdmin } from '@/auth/use-permissions';
+import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Screen } from '@/core/ui/layout/Screen';
 import { GoogleSyncCard } from './GoogleSyncCard';
-import { SubScreenHeader } from '../shared/SubScreenHeader';
+import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 
 /**
  * «مزامنة Google» (docs/26b §4): the read-only card, unchanged. Admins only (settings.read AND the

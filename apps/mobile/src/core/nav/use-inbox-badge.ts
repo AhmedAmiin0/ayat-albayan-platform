@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
-import { canOpen } from '@/auth/route-permissions';
-import type { Can } from '@/auth/use-permissions';
+import { canOpen } from '@/core/auth/route-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { apiFetch } from '@/core/lib/http/api';
 import { badgeText } from './tab-badge';
 

@@ -1,5 +1,5 @@
 import { Switch, View } from 'react-native';
-import { useHolds, useIsAdmin } from '@/auth';
+import { useHolds, useIsAdmin } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Note } from '@/more';

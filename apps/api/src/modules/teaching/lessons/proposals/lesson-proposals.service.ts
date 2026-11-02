@@ -1,12 +1,12 @@
 import { isOpenLesson, type LessonProposalRequest, type ProposalApprove } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { LessonAccess } from '../store/lesson-access';
-import { LessonProposalQueries } from './lesson-proposals.queries';
-import { LessonStore } from '../store/lesson-store';
-import { RescheduleOneService } from '../reschedule/reschedule-one.service';
-import { invalidTransition } from '../status/transition';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict } from '@/common/http/errors';
+import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
+import { LessonProposalRepo } from './lesson-proposals.repo';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
+import { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
+import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
 type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
 type DecideInput = { proposalId: string; actor: AuthUser };
@@ -16,7 +16,7 @@ type ApproveInput = DecideInput & { body: ProposalApprove };
 @Injectable()
 export class LessonProposeService {
   constructor(
-    private readonly proposals: LessonProposalQueries,
+    private readonly proposals: LessonProposalRepo,
     private readonly store: LessonStore,
     private readonly access: LessonAccess,
   ) {}
@@ -46,7 +46,7 @@ export class LessonProposeService {
 @Injectable()
 export class ProposalDecisionService {
   constructor(
-    private readonly proposals: LessonProposalQueries,
+    private readonly proposals: LessonProposalRepo,
     private readonly reschedule: RescheduleOneService,
   ) {}
 
