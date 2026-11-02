@@ -7678,7 +7678,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template-crm-name.ts": {
@@ -7719,14 +7719,11 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.crm.test.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.mapper.ts": {
@@ -7736,18 +7733,15 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.lines.test.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.sync.test.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.test.ts": {
@@ -7755,7 +7749,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.ts": {
@@ -7763,12 +7757,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 17
+      "count": 8
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
     "max-len": {
-      "count": 13
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts": {
@@ -7828,9 +7822,6 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-line-sync.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "max-len": {
       "count": 9
     }
@@ -7911,21 +7902,10 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template.move.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template.submit-chat.test.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
-    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/whatsapp/templates/sync/template.submit-doc.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
@@ -7933,12 +7913,20 @@
       "count": 5
     }
   },
+  "src/modules/messaging/whatsapp/templates/sync/template.submit-doc.test.ts": {
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
   "src/modules/messaging/whatsapp/templates/sync/template.submit-kapso.test.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/templates.lines.http.test.ts": {
@@ -8026,7 +8014,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/whatsapp.sales.http.test.ts": {

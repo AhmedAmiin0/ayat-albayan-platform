@@ -1,13 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
-import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
-import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { templateServices } from './template-services.fakes';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-18: a template is submitted to its OWN line's WABA, chat rows included, under that
 // line's driver: Meta directly, or Kapso (a rejected one edited through hsm_id; no sample upload).
@@ -15,7 +12,7 @@ import { type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types'
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
 const mock = () => ({ configured: vi.fn(() => true), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() });
-const registry = (lines: object) => new TemplateRegistry(queries as unknown as TemplatesRepo, lines as WhatsappLines, audit as unknown as AuditService);
+const registry = (lines: object) => templateServices(queries, lines, audit);
 const failure = (p: Promise<unknown>) => p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
 /** The chat line on Meta with its own ids (and whatever else `over` sets). */
 function stubChat(over: Record<string, string>): void {
@@ -36,7 +33,7 @@ describe('submit to the template’s own number', () => {
     const chat = mock();
     chat.submitTemplate.mockResolvedValue({ metaId: 'c-1', status: 'PENDING' });
     queries.get.mockResolvedValue(CHAT_ROW);
-    await expect(registry({ notifications, chat }).submit('trial_reschedule', 'admin-1')).resolves.toMatchObject({ status: 'pending', line: 'chat' });
+    await expect(registry({ notifications, chat }).admin.submit('trial_reschedule', 'admin-1')).resolves.toMatchObject({ status: 'pending', line: 'chat' });
     expect(chat.submitTemplate).toHaveBeenCalledWith(CHAT_ROW, { headerHandle: undefined });
     expect(notifications.submitTemplate).not.toHaveBeenCalled();
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { key: 'trial_reschedule', status: 'pending', meta_id: 'c-1', line: 'chat' } }));
@@ -47,7 +44,7 @@ describe('submit to the template’s own number', () => {
     const chat = mock();
     chat.configured.mockReturnValue(false);
     queries.get.mockResolvedValue(CHAT_ROW);
-    expect(await failure(registry({ notifications, chat }).submit('trial_reschedule', 'a'))).toEqual([503, { code: 'not_configured', message: 'not_configured', line: 'chat' }]);
+    expect(await failure(registry({ notifications, chat }).admin.submit('trial_reschedule', 'a'))).toEqual([503, { code: 'not_configured', message: 'not_configured', line: 'chat' }]);
     expect(notifications.submitTemplate).not.toHaveBeenCalled();
   });
 
@@ -56,7 +53,7 @@ describe('submit to the template’s own number', () => {
     const f = kapsoFetch({ status: 200, body: { id: 'k-1', status: 'PENDING' } });
     queries.get.mockResolvedValue(CHAT_ROW);
     const lines = { notifications: mock(), chat: whatsappClient({ ...KAPSO_ENV, wabaId: 'chat-waba' }, { fetch: f.fetch }) };
-    await registry(lines).submit('trial_reschedule', 'a');
+    await registry(lines).admin.submit('trial_reschedule', 'a');
     expect(f.requests.map((r) => r.url)).toEqual([`${KAPSO_ENV.base}/${KAPSO_ENV.version}/chat-waba/message_templates`]);
   });
 
@@ -65,7 +62,7 @@ describe('submit to the template’s own number', () => {
     const f = kapsoFetch({ status: 200, body: { success: true } });
     queries.get.mockResolvedValue({ ...CHAT_ROW, status: 'rejected', meta_id: '777' });
     const lines = { notifications: mock(), chat: whatsappClient({ ...KAPSO_ENV, wabaId: 'chat-waba' }, { fetch: f.fetch }) };
-    await registry(lines).submit('trial_reschedule', 'a');
+    await registry(lines).admin.submit('trial_reschedule', 'a');
     expect(f.requests[0]?.url).toBe(`${KAPSO_ENV.base}/${KAPSO_ENV.version}/chat-waba/message_templates?hsm_id=777`);
   });
 
@@ -75,7 +72,7 @@ describe('submit to the template’s own number', () => {
     const f = kapsoFetch();
     queries.get.mockResolvedValue({ ...REPORT_READY_SEED, line: 'chat' });
     const lines = { notifications: mock(), chat: whatsappClient(KAPSO_ENV, { fetch: f.fetch }) };
-    expect(await failure(registry(lines).submit('report_ready', 'a'))).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver', line: 'chat' }]);
+    expect(await failure(registry(lines).admin.submit('report_ready', 'a'))).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver', line: 'chat' }]);
     expect(f.requests).toHaveLength(0);
     expect(queries.update).not.toHaveBeenCalled();
   });
@@ -87,7 +84,7 @@ describe('submit to the template’s own number', () => {
     const f = scriptedFetch(RECORDED_UPLOAD.session, RECORDED_UPLOAD.handle, RECORDED_UPLOAD.createDoc);
     queries.get.mockResolvedValue({ ...REPORT_READY_SEED, line: 'chat' });
     const notifications = mock();
-    await registry({ notifications, chat: whatsappClient(env, { fetch: f.fetch }) }).submit('report_ready', 'a');
+    await registry({ notifications, chat: whatsappClient(env, { fetch: f.fetch }) }).admin.submit('report_ready', 'a');
     const urls = f.requests.map((r) => r.url.replace('http://127.0.0.1:4010/v21.0/', ''));
     expect(urls[0]).toMatch(/^chat-app\/uploads\?/);
     expect(urls[2]).toBe('chat-waba/message_templates');
@@ -99,7 +96,7 @@ describe('submit to the template’s own number', () => {
     const f = scriptedFetch();
     queries.get.mockResolvedValue({ ...REPORT_READY_SEED, line: 'chat' });
     const lines = { notifications: mock(), chat: whatsappClient(lineEnvs(loadEnv()).chat, { fetch: f.fetch }) };
-    expect(await failure(registry(lines).submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id', line: 'chat' }]);
+    expect(await failure(registry(lines).admin.submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id', line: 'chat' }]);
     expect(f.requests).toHaveLength(0);
   });
 });
