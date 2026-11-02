@@ -18,6 +18,8 @@ import { AnyPackageCancelController } from './package-cancel/any-package-cancel.
 import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { UsedBeforeAccess } from './used-before/used-before-access';
+import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
 
 /**
  * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
@@ -25,8 +27,6 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
  * admin's (SubscriptionCreator, PaymentsService, ReceiptsService), the ownership is SalesQueries.ownership,
  * and the chat files are ThreadMediaService's (its deps are global: InboundMedia, StorageService).
  */
-import { UsedBeforeAccess } from './used-before/used-before-access';
-import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
 @Module({
   imports: [SubscriptionsModule, PaymentsModule, SalesModule],
   controllers: [
