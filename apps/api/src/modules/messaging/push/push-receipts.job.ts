@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/modules/messaging/reminders/ticker';
+import { Ticker } from '@/common/jobs';
 import { readReceipts, type ExpoReceipt } from './push-receipts';
 import { PushReceiptsRepo, type TicketRow } from './push-receipts.repo';
 import { RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';

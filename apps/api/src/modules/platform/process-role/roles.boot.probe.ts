@@ -1,9 +1,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { backgroundJobs } from '../../../config/role/background-job';
-import { Ticker } from '../../messaging/reminders';
+import { AppModule } from '@/app.module';
+import { backgroundJobs } from '@/config/role/background-job';
+import { Ticker } from '@/common/jobs';
 
 /** What one boot started: timers per @BackgroundJob (by name), other timers by source file, Tickers. */
 interface BootProbe {
@@ -26,7 +26,7 @@ function caller(stack: string | undefined): string | null {
     .split('\n')
     .slice(1)
     .filter(
-      (l) => !/roles\.boot|tinyspy|@vitest|[/\\]vitest[/\\]dist|reminders[/\\]ticker\.ts/.test(l),
+      (l) => !/roles\.boot|tinyspy|@vitest|[/\\]vitest[/\\]dist|common[/\\]jobs[/\\]ticker\.ts/.test(l),
     );
   const file = frames[0]?.match(APP)?.[1]?.replaceAll('\\', '/');
   return file && !file.endsWith('.test.ts') ? file : null;

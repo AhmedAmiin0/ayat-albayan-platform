@@ -3870,9 +3870,6 @@
     }
   },
   "src/modules/messaging/follow-ups/follow-ups.job.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -5517,9 +5514,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -5717,11 +5711,6 @@
       "count": 2
     }
   },
-  "src/modules/messaging/reminders/ticker.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/saved-replies/saved-replies.access.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -5819,9 +5808,6 @@
     }
   },
   "src/modules/messaging/webhook/external/external-catchup.job.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
@@ -7131,9 +7117,6 @@
     }
   },
   "src/modules/messaging/whatsapp/sender/message.sender.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
     "max-len": {
       "count": 10
     }
@@ -9450,9 +9433,6 @@
     }
   },
   "src/modules/platform/process-role/roles.boot.probe.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 5
     }
@@ -13864,9 +13844,6 @@
     }
   },
   "src/modules/teaching/lesson-rating/queue/rating.job.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
