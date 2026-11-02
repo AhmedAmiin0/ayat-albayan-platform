@@ -18,5 +18,10 @@
     "max-len": {
       "count": 1
     }
+  },
+  "src/zone/zoned.ts": {
+    "complexity": {
+      "count": 1
+    }
   }
 }
