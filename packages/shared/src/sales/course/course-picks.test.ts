@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayTimesFromPicks } from '../../schedule/lessons/series/day-times.js';
+import { dayTimesFromPicks } from '@ab/schedule';
 import { prefillDays } from './course-follow.js';
 import { changeOpensOn, changePicks, changePrefillFrom, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks.js';
 

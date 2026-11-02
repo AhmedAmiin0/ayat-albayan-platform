@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
-import { formatAmount, offerText } from './offer-text.js';
-import { quote, type QuoteOptions } from './quote.js';
+import { formatAmount, offerText } from '@ab/money';
+import { quote, type QuoteOptions } from '@ab/money';
 
 const base = {
   duration: 45,

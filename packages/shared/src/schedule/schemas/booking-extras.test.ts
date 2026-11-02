@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../../money/ledger/schemas.js';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '@ab/money';
 import {
   INVOICE_MAX_BYTES,
   INVOICE_MIMES,
@@ -7,8 +7,8 @@ import {
   invoiceInputSchema,
   invoiceUploadSchema,
   isSingleLesson,
-} from './booking-extras.js';
-import { bookingRequestSchema } from './scheduling.js';
+} from '@ab/schedule';
+import { bookingRequestSchema } from '../../schemas/index.js';
 
 const T = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const S1 = '0b7c6a52-6a7e-4b38-9a3f-1c2d3e4f5a61';

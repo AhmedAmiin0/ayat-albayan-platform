@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { guestJoinSchema } from './schemas.js';
-import { CHAT_TOPIC, chatOpen, CLASSROOM_ERRORS, dropsChat, JOIN_ROLES, lessonRoomName } from './room.js';
+import { guestJoinSchema } from '@ab/schedule';
+import { CHAT_TOPIC, chatOpen, CLASSROOM_ERRORS, dropsChat, JOIN_ROLES, lessonRoomName } from '@ab/schedule';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
 
