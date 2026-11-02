@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../common/storage/storage.service';
-import type { InvoicesQueries } from './invoices.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InvoicesRepo } from './invoices.repo';
 import { InvoicesService } from './invoices.service';
 
 const row = (id: string) => ({
@@ -21,7 +21,7 @@ describe('InvoicesService.recent (the admin invoices page)', () => {
       recent: vi.fn().mockResolvedValue({ rows: [row('i1'), row('i2')], total: 2 }),
       paymentsOf: vi.fn().mockResolvedValue(new Map([['i2', 'p9']])),
     };
-    const svc = new InvoicesService(queries as unknown as InvoicesQueries, {} as StorageService);
+    const svc = new InvoicesService(queries as unknown as InvoicesRepo, {} as StorageService);
     const page = await svc.recent({ page: 1, pageSize: 25 });
     expect(queries.paymentsOf).toHaveBeenCalledWith(['i1', 'i2']);
     expect(page.items.map((i) => [i.id, i.payment_id])).toEqual([

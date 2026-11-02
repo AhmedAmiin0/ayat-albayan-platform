@@ -1,8 +1,8 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 export type ExpenseRow = Tables<'expenses'>;
 
@@ -26,7 +26,7 @@ export function toExpenseView(row: ExpenseRow): ExpenseView {
 
 /** All supabase access for `expenses` and `expense_categories` (service role; admin-only routes). */
 @Injectable()
-export class ExpensesQueries {
+export class ExpensesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Months `first`…`last` (YYYY-MM-01), inclusive; one month when equal. */

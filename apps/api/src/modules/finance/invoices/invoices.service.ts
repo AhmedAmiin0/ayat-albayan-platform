@@ -5,7 +5,7 @@ import { BUCKETS, extFor } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { notFound } from '@/common/http/errors';
 import type { RecentFilter } from './invoices.dto';
-import { InvoicesQueries, type InvoiceRowOut } from './invoices.queries';
+import { InvoicesRepo, type InvoiceRowOut } from './invoices.repo';
 
 export type InvoiceFilter = { ruleId?: string | undefined; studentId?: string | undefined };
 
@@ -30,7 +30,7 @@ function view(row: InvoiceRowOut): InvoiceView {
 @Injectable()
 export class InvoicesService {
   constructor(
-    private readonly queries: InvoicesQueries,
+    private readonly queries: InvoicesRepo,
     private readonly storage: StorageService,
   ) {}
 
