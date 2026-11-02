@@ -12,6 +12,8 @@ const WHITELIST = new Set([
   'config/env/whatsapp/env.whatsapp.ts',
   'modules/messaging/inbox/reads/read-receipts.ts',
   'modules/messaging/whatsapp/drivers/meta/graph.ts',
+  // The template sample's resumable upload (the 150-line cap took it out of whatsapp.client.ts).
+  'modules/messaging/whatsapp/drivers/meta/meta-upload.ts',
   'modules/messaging/whatsapp/messages/inbound-media.service.ts',
   'modules/messaging/whatsapp/drivers/kapso/kapso.ts',
   // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
@@ -49,7 +51,7 @@ const META_CALLS: readonly (readonly [string, RegExp])[] = [
   ['client method', new RegExp(`\\.\\s*(${METHODS})\\b`)],
   ['bracket method', new RegExp(`\\[\\s*['"\`](${METHODS})['"\`]\\s*\\]`)],
   ['destructured method', new RegExp(`\\{[^}]*\\b(${METHODS})\\b[^}]*\\}\\s*=`)],
-  ['graph helper', /\bgraph(Fetch|Json)\b/],
+  ['graph helper', /\bgraph(Fetch|Json|Http|Download)\b/],
   ['WA_API_BASE', /\bWA_API_BASE\b/],
   ['graph.facebook.com', /graph\.facebook\.com/],
   ['KAPSO_API_BASE', /\bKAPSO_API_BASE\b/],
