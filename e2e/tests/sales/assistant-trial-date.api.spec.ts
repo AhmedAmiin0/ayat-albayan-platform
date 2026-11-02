@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import type { TrialDateResult, TrialHistory } from '@ab/shared';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
+import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 
 // Owner 2026-10-25 «موعد تجريبي جديد», through the REAL API and database: her student's trial is
@@ -32,10 +33,12 @@ test.describe.serial('sales: a new trial date for her student (API + DB)', () =>
   test.beforeAll(async () => {
     teacher = await resetAbrar();
     await setAvailability(teacher, [[0, '08:00', '22:00']]);
+    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
     a = await makeAssistant('triala');
     b = await makeAssistant('trialb');
     student = (await family(need(a).id, 'لمى')).student;
   });
+  test.afterAll(() => setSetting('sales_require_assignee', false));
 
   test('no upcoming trial: a new trial lesson; the student → trial; one date in the history', async ({ request }) => {
     const first = await pick(request, need(a).token, trial('17:00'));

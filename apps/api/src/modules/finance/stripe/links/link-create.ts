@@ -16,7 +16,7 @@ import type { LinkRow } from './payment-links.repo';
  * and the commission triggers run on what the family paid. The agreed amount is free (> 0) unless the admin set
  * STRIPE_MAX_DISCOUNT_PCT («التكاملات»). A retry of the same form (clientRequestId) returns the link it already made. The kind is the
  * server's (owner 2026-10-29): 'renewal' once the student has a priced package, else 'new'. «المعلم/ة» (teacherId,
- * «اشتراك جديد» → «دفع إلكتروني») as POST /sales/subscriptions saves it: her own student only, checked active
+ * «اشتراك جديد» → «دفع إلكتروني») as POST /sales/subscriptions saves it: her own student only while the ownership rule enforces, checked active
  * before the package is made, assigned once the link exists and again on a retry (a no-op once done).
  */
 @Injectable()
@@ -78,7 +78,8 @@ export class LinkCreate {
 
   /**
    * «المعلم/ة» writes students.teacher_id and opens the teacher-student chat: her own student only
-   * (SalesMoneyScope.assertOwns; unlike the bank path, sales.renew_any never widens a link). The link alone stays any student.
+   * while SalesOwnershipRule enforces it (SalesMoneyScope.assertOwns; unlike the bank path, sales.renew_any never widens a link),
+   * any student otherwise. The link alone stays any student.
    */
   private async mayAssign(input: PaymentLinkCreate, user: AuthUser): Promise<void> {
     if (input.teacherId && user.role !== 'admin') await this.extra.sales.scope.assertOwns(user, input.studentId);

@@ -51,3 +51,18 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
     expect(t.lessons.cancels.cancel).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON }));
   });
 });
+
+// Owner 2026-11-02 (docs/16 row 39): «اشتراط التعيين» OFF (default) = she acts on ANY student.
+describe('GET /sales/students/:id while the ownership rule does not enforce', () => {
+  let t: App;
+  beforeAll(async () => {
+    t = await studentsApp({ sales_require_assignee: false });
+  });
+  afterAll(() => t.app.close());
+  beforeEach(() => t.reset());
+
+  it('another\'s student reads mine = true (the money actions and trial date are offered)', async () => {
+    const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesB' });
+    expect([res.statusCode, res.json().mine]).toEqual([200, true]);
+  });
+});

@@ -7,6 +7,7 @@ import { SalesAdminController } from './sales-admin.controller';
 import { SalesAssignRepo } from './assign/sales-assign.repo';
 import { SalesAssignService } from './assign/sales-assign.service';
 import { SalesHistoryRepo } from './history/sales-history.repo';
+import { SalesOwnershipRule } from './rule/sales-ownership-rule';
 import { SalesScheduleRepo } from './schedule/sales-schedule.repo';
 import { SalesScheduleService } from './schedule/sales-schedule.service';
 import { SalesScopes } from './sales-scope';
@@ -27,7 +28,11 @@ import { SalesSettings } from './sales.settings';
     ...[SalesSettings, SalesRepo, SalesService, SalesScopes, SalesAssignRepo, SalesAssignService],
     ...[SalesAcademyRepo, SalesHistoryRepo, SalesAcademyService, SalesScheduleRepo, SalesScheduleService],
     SalesRosterRepo,
+    SalesOwnershipRule,
   ],
-  exports: [SalesRepo, SalesScopes, SalesAssignService, SalesHistoryRepo, SalesRosterRepo],
+  exports: [
+    ...[SalesRepo, SalesOwnershipRule, SalesScopes],
+    ...[SalesAssignService, SalesHistoryRepo, SalesRosterRepo],
+  ],
 })
 export class SalesModule {}

@@ -47,7 +47,7 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
+      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_require_assignee: true }))
       .overrideProvider(ConflictChecker).useValue(checker)
       .overrideProvider(CourseChangeRepo).useValue(queries)
       .overrideProvider(CourseLessonRepo).useValue(lessons)
