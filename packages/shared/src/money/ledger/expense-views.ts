@@ -1,4 +1,4 @@
-import type { ExpenseCategory, PaymentMethod } from '../../enums/index.js';
+import type { ExpenseCategory, PaymentMethod } from '@ab/catalog';
 
 // Expenses responses (R-RPT-02, issue E4; owner 2026-10-05, migration 20261005000204).
 

@@ -1,4 +1,4 @@
-import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '../enums/index.js';
+import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import type { Quote } from '../money/pricing/quote.js';
 import type { RenewalPricing } from '../money/pricing/index.js';
 

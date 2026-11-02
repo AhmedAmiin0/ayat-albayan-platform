@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { hasTwoDecimals } from '@ab/core';
-import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '../../enums/index.js';
+import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
 import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
