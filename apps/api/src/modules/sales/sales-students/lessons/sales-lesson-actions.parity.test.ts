@@ -10,6 +10,7 @@ import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/le
 import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
+import { fakeCorrection } from '@/modules/teaching/lessons/auto-held/auto-held.fakes';
 
 // The owner's rule (docs/16 row 37): a salesperson's move / cancel has the admin's side effects exactly —
 // the same change set (status changes, new row, confirmation messages queued to the family, audit), only
@@ -23,7 +24,8 @@ function rig() {
   const deps = fakeStore(lessonRow());
   const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings);
+  const { correction } = fakeCorrection(deps.store, settings);
+  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings, correction);
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
   const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
   const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);
@@ -68,16 +70,6 @@ describe('sales move / cancel = the admin path (docs/16 row 37)', () => {
     expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({ to_status: 'cancelled_by_admin', chargeable: false });
     for (const path of [admin, sales]) expect(appliedChange(path.writer)?.messages ?? []).toEqual([]);
     expect(sales.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: SALES.id, action: 'cancel', after: expect.objectContaining({ reason: null }) }));
-  });
-
-  it('cancel by the student: the admin\'s very change set and audit (status, whether it counts)', async () => {
-    const admin = rig();
-    await admin.cancels.cancel({ lessonId: LESSON_ID, body: { scope: 'one', by: 'student', reason: 'سفر' }, actor: ADMIN });
-    const sales = rig();
-    await sales.actions.cancel({ lessonId: LESSON_ID, body: { by: 'student', reason: 'سفر' }, actor: SALES });
-    expect(appliedChange(sales.writer)?.changes).toEqual(appliedChange(admin.writer)?.changes);
-    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({ to_status: 'excused' });
-    expect(sales.record.mock.calls[0]?.[0].after).toEqual(admin.record.mock.calls[0]?.[0].after);
   });
 
   it('touches only the one lesson: no rule end, no other lesson', async () => {

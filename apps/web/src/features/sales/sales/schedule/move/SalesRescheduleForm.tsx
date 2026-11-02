@@ -4,20 +4,14 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { BookingModeContext } from '@/features/teaching/booking';
-import {
-  ConflictNotice,
-  conflictsOf,
-  durationMin,
-  lessonErrorText,
-  SlotPicker,
-} from '@/features/teaching/schedule';
+import { ConflictNotice, conflictsOf, durationMin, lessonErrorText, SlotPicker } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { useSalesReschedule } from './sales-lesson-api';
+import { useSalesMove } from './sales-move-api';
 
 interface SalesRescheduleFormProps {
   lesson: SalesScheduleLesson;
   onBack: () => void;
-  onDone: (message: string) => void;
+  onDone: () => void;
 }
 
 /**
@@ -27,7 +21,7 @@ interface SalesRescheduleFormProps {
  */
 export function SalesRescheduleForm({ lesson, onBack, onDone }: SalesRescheduleFormProps) {
   const [startsAt, setStartsAt] = useState<string | null>(null);
-  const move = useSalesReschedule(lesson.id, () => onDone(t.lessons.rescheduled));
+  const move = useSalesMove(lesson.id, onDone);
   const conflicts = conflictsOf(move.error);
   const pick = (slot: string | null) => {
     move.reset();
@@ -57,11 +51,7 @@ export function SalesRescheduleForm({ lesson, onBack, onDone }: SalesRescheduleF
           move.isError && <FormAlert>{lessonErrorText(move.error)}</FormAlert>
         )}
         <ButtonRow>
-          <Button
-            type="button"
-            disabled={!startsAt || move.isPending}
-            onClick={() => startsAt && move.mutate(startsAt)}
-          >
+          <Button type="button" disabled={!startsAt || move.isPending} onClick={() => startsAt && move.mutate(startsAt)}>
             {move.isPending ? t.common.saving : t.lessons.rescheduleSubmit}
           </Button>
           <Button type="button" variant="secondary" onClick={onBack}>

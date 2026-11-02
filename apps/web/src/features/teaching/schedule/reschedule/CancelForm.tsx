@@ -1,5 +1,5 @@
-import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@ab/shared';
-import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
+import { CANCEL_BY, type CancelBy, type LessonView } from '@ab/shared';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -8,45 +8,39 @@ import { Input } from '@/components/ui/form/input';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
 import { cancelLesson, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { CORRECT_BY, type CorrectBy } from '@/features/teaching/schedule/correct/correct-by';
+import { CancelByRadios } from './CancelByRadios';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 
-/** Where a cancel goes and what it refreshes: the admin's route or the assistant's. */
-export interface CancelRoute {
-  send: (body: CancelRequest) => Promise<unknown>;
-  refresh: QueryKey;
-}
-
 export interface CancelFormProps {
-  /** Its series decides «كل اللي بعدها» (none: this lesson only). */
-  lesson: Pick<LessonView, 'id' | 'rule_id'>;
+  lesson: LessonView;
   onBack: () => void;
   onDone: (message: string) => void;
-  /** Default the admin's POST /lessons/:id/cancel. */
-  route?: CancelRoute;
+  /**
+   * «لم تنعقد؟» (owner 2026-11-02): this lesson only, by its teacher or the student (`correction`
+   * preselected); the API records it, or corrects a lesson held automatically.
+   */
+  correction?: CorrectBy | undefined;
 }
 
-const adminRoute = (id: string): CancelRoute => ({
-  send: (body) => cancelLesson({ id, body }),
-  refresh: LESSONS_KEY,
-});
+const DONE: Record<Scope, string> = { one: t.lessons.cancelled, rule: t.lessons.seriesCancelled };
 
 /**
  * «إلغاء الحلقة» (R-SCH-07): this lesson or it and every later one of its rule, who cancelled and
- * why. Whether it consumes the package is the API's call (teacher/admin never; student per
- * setting). The assistant's drawer sends it to her own route (owner 2026-11-02), one lesson only.
+ * why. Whether it consumes the package is the API's call (teacher/admin never; student per setting).
  */
-export function CancelForm(props: CancelFormProps) {
-  const { lesson, onBack, onDone, route = adminRoute(lesson.id) } = props;
+export function CancelForm({ lesson, onBack, onDone, correction }: CancelFormProps) {
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
-  const [by, setBy] = useState<CancelBy>('admin');
+  const [by, setBy] = useState<CancelBy>(correction ?? 'admin');
+  const title = correction ? t.lessons.correct.title : t.lessons.cancelTitle;
   const [reason, setReason] = useState('');
   const [missing, setMissing] = useState(false);
   const cancel = useMutation({
-    mutationFn: () => route.send({ scope, by, reason: reason.trim() }),
+    mutationFn: () => cancelLesson({ id: lesson.id, body: { scope, by, reason: reason.trim() } }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: route.refresh });
-      onDone(scope === 'rule' ? t.lessons.seriesCancelled : t.lessons.cancelled);
+      await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
+      onDone(correction ? t.lessons.correct.done : DONE[scope]);
     },
   });
   const submit = () => {
@@ -57,24 +51,18 @@ export function CancelForm(props: CancelFormProps) {
   return (
     <form
       noValidate
-      aria-label={t.lessons.cancelTitle}
+      aria-label={title}
       className="grid gap-4"
       onSubmit={(e) => {
         e.preventDefault();
         submit();
       }}
     >
-      <h3 className="font-display text-h4 font-bold">{t.lessons.cancelTitle}</h3>
-      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelCancel} />
-      <fieldset className="grid gap-1">
-        <legend className="mb-1 text-xs font-semibold text-ink-2">{t.lessons.cancelBy}</legend>
-        {CANCEL_BY.map((x) => (
-          <label key={x} className="flex min-h-11 items-center gap-2 text-sm sm:min-h-9">
-            <input type="radio" name="cancel-by" checked={by === x} onChange={() => setBy(x)} className="size-4 accent-[var(--lapis)]" />
-            <span>{t.lessons.by[x]}</span>
-          </label>
-        ))}
-      </fieldset>
+      <h3 className="font-display text-h4 font-bold">{title}</h3>
+      {!correction && (
+        <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelCancel} />
+      )}
+      <CancelByRadios options={correction ? CORRECT_BY : CANCEL_BY} value={by} onChange={setBy} />
       <Field label={t.lessons.reason} error={missing ? t.common.required : undefined}>
         {(p) => (
           <Input

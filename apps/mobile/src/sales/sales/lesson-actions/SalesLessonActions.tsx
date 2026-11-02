@@ -1,4 +1,4 @@
-import { canSalesChangeLesson, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/core/auth';
@@ -7,8 +7,12 @@ import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
+import { salesCancelRights } from './cancel-by';
+import { canChangeLesson } from './lesson-actions-api';
 import { SalesCancelLesson } from './SalesCancelLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
+import { SalesCorrectLesson } from './SalesCorrectLesson';
 
 interface SalesLessonActionsProps {
   lesson: SalesScheduleLesson;
@@ -25,27 +29,39 @@ interface SalesLessonActionsProps {
  * each behind its own key. «إلغاء الحلقة» opens its reason form in place of the row and hides «تأكيد الحلقة»
  * until «رجوع»: two «تأكيد…» buttons that do opposite things, the filled one the wrong one, invited a
  * mis-tap that confirms the lesson (UX review 2026-10-29). The form's danger «تأكيد الإلغاء» is its one path.
+ * No confirmation required (owner 2026-11-02): «إلغاء الحلقة» also after the end (teacher or
+ * student only), and a held lesson offers «لم تنعقد الحلقة؟» (SalesCorrectLesson).
  */
 export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesLessonActionsProps) {
   const can = usePermissions();
   const now = useNow();
   const joinLive = useJoinOpen(lesson) && isRunningLesson(lesson, now);
   const [cancelling, setCancelling] = useState(false);
-  const allowed = canSalesChangeLesson(lesson, { now, can });
+  const { required } = useLessonStatusText();
+  const reschedule = canChangeLesson(lesson, { now, can }).reschedule;
+  const rights = salesCancelRights(lesson, { now, holds: can('lessons.cancel'), required });
+  const cancel = rights.cancelBy.length > 0;
   const a = t.sales.lessonActions;
   const confirm = (secondary: boolean) =>
     onConfirmed ? <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} /> : null;
-  const changes = allowed.reschedule || allowed.cancel;
+  const changes = reschedule || cancel;
   return (
     <View style={{ gap: 8 }}>
       {cancelling ? null : confirm(joinLive)}
-      {changes && cancelling ? <SalesCancelLesson lessonId={lesson.id} onClose={() => setCancelling(false)} /> : null}
+      {changes && cancelling ? (
+        <SalesCancelLesson
+          lessonId={lesson.id}
+          choices={rights.cancelBy}
+          onClose={() => setCancelling(false)}
+        />
+      ) : null}
       {changes && !cancelling ? (
         <ButtonRow>
-          {allowed.reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
-          {allowed.cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
+          {reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
+          {cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
         </ButtonRow>
       ) : null}
+      {rights.correct ? <SalesCorrectLesson lessonId={lesson.id} /> : null}
     </View>
   );
 }

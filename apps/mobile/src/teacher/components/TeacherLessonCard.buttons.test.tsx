@@ -24,7 +24,7 @@ const cellTexts = () =>
 
 async function show(l: LessonView, report: ReportAction | null) {
   const client = createTestQueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false });
+  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false, lesson_confirmation_required: true });
   const noop = () => undefined;
   await renderWithQuery(
     <TeacherLessonCard lesson={l} tz="Africa/Cairo" report={report} busy={false} onConfirm={noop} onReport={noop} />,

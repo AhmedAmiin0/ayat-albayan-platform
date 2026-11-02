@@ -19,6 +19,8 @@ export {
   type Window,
 } from './api';
 export { WeekGrid, type WeekGridProps } from './grid/WeekGrid';
+export { CORRECT_BY_LABEL, type CorrectBy } from './correct/correct-by';
+export { CorrectLessonChoice } from './correct/CorrectLessonChoice';
 export { LessonActions, type LessonActionsProps } from './lesson/LessonActions';
 export { type ChipLesson, LessonChip, type LessonChipProps } from './lesson/LessonChip';
 export {
@@ -42,5 +44,4 @@ export {
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
 export { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './reschedule/slots';
 export { dateLabel, dayMonthLabel } from './tz';
-export { CancelForm, type CancelFormProps, type CancelRoute } from './reschedule/CancelForm';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';

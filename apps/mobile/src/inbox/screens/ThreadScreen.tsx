@@ -21,6 +21,7 @@ import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
 import { SendRating } from '@/inbox/rating/SendRating';
 import { SubscriptionPanel } from '@/inbox/subscription/SubscriptionPanel';
 import { ThreadHeaderActions } from '@/inbox/thread/components/ThreadHeaderActions';
+import { ChatSearchButton } from '@/inbox/thread/search';
 import { useHeaderStudents } from '@/inbox/thread/components/HeaderStudents';
 import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { useInboxRead } from '@/inbox/thread/hooks/inbox-sync';
@@ -105,7 +106,7 @@ export function ThreadScreen() {
                 <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
               </>
             ) : (
-              call
+              <>{call}<ChatSearchButton /></>
             )
           }
         />

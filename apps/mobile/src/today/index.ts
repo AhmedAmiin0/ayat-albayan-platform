@@ -1,4 +1,3 @@
-export { CancelLesson } from './components/CancelLesson';
 export { HeroCard } from './hero/HeroCard';
 export type { TodaySource } from './lib/today-source';
 export { TodayLayout } from './screens/TodayLayout';

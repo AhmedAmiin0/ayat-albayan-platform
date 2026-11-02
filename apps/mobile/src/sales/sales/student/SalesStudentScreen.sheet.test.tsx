@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { SAT_17, SLOTS } from '@/teaching/reschedule/fixtures';
 import { details, upcoming } from './fixtures';
 import { SalesStudentScreen } from './SalesStudentScreen';
@@ -38,7 +38,7 @@ const first = <T,>(all: readonly T[]): T => {
 };
 
 const open = async (day: RegExp) => {
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   await fireEvent.press(first(await screen.findAllByRole('button', { name: day })));
   return screen.findByText(t.lessons.details);
 };
@@ -67,10 +67,8 @@ test('cancel from the sheet reads «تفاصيل الطالب» again: the cance
   mockApiSend.mockResolvedValue({ id: 'u1', status: 'cancelled_by_admin' });
   await open(/2 أكتوبر 18:00$/);
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
-  await fireEvent.press(screen.getByRole('radio', { name: t.lessons.by.admin }));
-  await fireEvent.changeText(screen.getByLabelText(t.lessons.reason), 'ظرف');
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/u1/cancel', { by: 'admin', reason: 'ظرف' }));
+  await fireEvent.press(screen.getByRole('button', { name: a.confirmCancel }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/u1/cancel', {}));
   expect(await screen.findByText(a.cancelled)).toBeTruthy();
   await waitFor(() => expect(reads()).toBe(2));
   await fireEvent.press(screen.getByRole('button', { name: t.common.close }));

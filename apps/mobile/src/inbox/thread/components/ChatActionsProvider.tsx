@@ -19,6 +19,7 @@ import { useReact } from '@/inbox/messages/reactions/use-react';
 import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
 import { isOwnThread, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { sendState } from '@/inbox/thread/hooks/chat-window';
+import { ChatSearchProvider } from '@/inbox/thread/search';
 
 export interface ChatActionsProviderProps {
   phone: string;
@@ -73,7 +74,9 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const removable = reactors !== null && value.reactable(reactors);
   return (
     <ChatActionsContext.Provider value={value}>
-      <BubbleActionsContext.Provider value={bubble}>{children}</BubbleActionsContext.Provider>
+      <BubbleActionsContext.Provider value={bubble}>
+        <ChatSearchProvider phone={phone}>{children}</ChatSearchProvider>
+      </BubbleActionsContext.Provider>
       <MessageMenu message={menu?.m ?? null} at={menu?.at ?? null} phone={phone} onClose={() => setMenu(null)} onMoreEmoji={setEmojiFor} />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
       <CopySheet request={copy} onClose={() => setCopy(null)} />
