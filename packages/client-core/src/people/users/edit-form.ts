@@ -29,17 +29,38 @@ export function initialEditForm(d: UserDetail, options: readonly UserRoleOption[
   };
 }
 
+/** `part` when `when` holds, else nothing: one PATCH field that changed. */
+const onlyIf = <T extends object>(when: boolean, part: T): Partial<T> => (when ? part : {});
+
+/** The typed phone in E.164; null when empty or not a phone (editErrors rejected that). */
+function e164Of(raw: string): string | null {
+  const phone = raw.trim() ? normalizePhone(raw) : null;
+  return phone?.ok ? phone.e164 : null;
+}
+
+/** The role and its custom role travel together: either changed sends `role_id` ('' → null). */
+function roleIdPart(
+  d: UserDetail,
+  f: EditForm,
+  options: readonly UserRoleOption[],
+): Partial<UserUpdate> {
+  const changed = f.role !== d.role || f.role_id !== customRoleId(d, options);
+  return onlyIf(changed, { role_id: f.role_id || null });
+}
+
 /** The PATCH body: only what changed (null when nothing did). Call after editErrors is empty. */
 export function editBody(d: UserDetail, f: EditForm, options: readonly UserRoleOption[]): UserUpdate | null {
-  const body: UserUpdate = {};
-  const phone = f.phone.trim() ? normalizePhone(f.phone) : null;
-  const e164 = phone?.ok ? phone.e164 : null;
-  if (f.email.trim().toLowerCase() !== (d.email ?? '')) body.email = f.email.trim().toLowerCase();
-  if (f.full_name.trim() !== d.full_name) body.full_name = f.full_name.trim();
-  if (e164 !== d.phone_e164) body.phone_e164 = e164;
-  if (f.locale !== d.locale) body.locale = f.locale;
-  if (f.tz !== d.tz) body.tz = f.tz;
-  if (f.role !== d.role) body.role = f.role;
-  if (f.role !== d.role || f.role_id !== customRoleId(d, options)) body.role_id = f.role_id || null;
+  const email = f.email.trim().toLowerCase();
+  const full_name = f.full_name.trim();
+  const phone_e164 = e164Of(f.phone);
+  const body: UserUpdate = {
+    ...onlyIf(email !== (d.email ?? ''), { email }),
+    ...onlyIf(full_name !== d.full_name, { full_name }),
+    ...onlyIf(phone_e164 !== d.phone_e164, { phone_e164 }),
+    ...onlyIf(f.locale !== d.locale, { locale: f.locale }),
+    ...onlyIf(f.tz !== d.tz, { tz: f.tz }),
+    ...onlyIf(f.role !== d.role, { role: f.role }),
+    ...roleIdPart(d, f, options),
+  };
   return Object.keys(body).length > 0 ? body : null;
 }

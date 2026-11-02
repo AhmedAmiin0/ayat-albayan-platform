@@ -1267,9 +1267,6 @@
     }
   },
   "src/sales/student/student-details.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 16
     }

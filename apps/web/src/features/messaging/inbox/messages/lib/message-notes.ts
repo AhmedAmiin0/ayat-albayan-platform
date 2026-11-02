@@ -10,36 +10,65 @@ export interface NotesInput {
   clock: Clock;
 }
 
-const at = (template: string, iso: string, clock: Clock) => template.replace('{time}', fullTime(iso, clock));
+const at = (template: string, iso: string, clock: Clock) =>
+  template.replace('{time}', fullTime(iso, clock));
+
+type Note = (m: MessageView, o: NotesInput) => string | null;
+
+const errorLine = (m: MessageView): string =>
+  t.messages.errorLine.replace('{reason}', errorText(m));
+const isLater = (iso: string | null, now: Date): iso is string =>
+  !!iso && Date.parse(iso) > now.getTime();
+const isText = (line: string | null): line is string => line !== null;
+
+/** A template still waiting on Meta, else a send planned for later. */
+const waitLine: Note = (m, o) => {
+  const later = isLater(m.scheduled_for, o.now)
+    ? at(t.messages.queuedFor, m.scheduled_for, o.clock)
+    : null;
+  return o.waitingTemplate ? t.messages.waitingTemplate : later;
+};
+
+/** Tries so far, the error (a hold, wa_payment_hold, has one with no try counted), the next try. */
+const RETRY_LINES: readonly Note[] = [
+  (m) =>
+    m.attempts > 0
+      ? t.messages.attempts
+          .replace('{n}', String(m.attempts))
+          .replace('{max}', String(MAX_SEND_ATTEMPTS))
+      : null,
+  (m) => (m.error_code ? errorLine(m) : null),
+  (m, o) => {
+    const next = m.attempts > 0 || m.error_code ? m.next_attempt_at : null;
+    return next ? at(t.messages.nextAttempt, next, o.clock) : null;
+  },
+];
+
+/** Claimed by the sender now (its lease, not a retry time): no «المحاولة الجاية» then. */
+function queuedNotes(m: MessageView, o: NotesInput): string[] {
+  const tail =
+    m.error_code === 'sending' ? [t.messages.sendingNow] : RETRY_LINES.map((line) => line(m, o));
+  return [waitLine(m, o), ...tail].filter(isText);
+}
+
+/** Per status, the lines it shows; any other status shows none. */
+const STATUS_NOTES: Partial<
+  Record<MessageView['status'], (m: MessageView, o: NotesInput) => string[]>
+> = {
+  failed: (m) => [errorLine(m)],
+  sent_manually: (m, o) =>
+    m.sent_manually_at ? [at(t.messages.sentManuallyAt, m.sent_manually_at, o.clock)] : [],
+  queued: queuedNotes,
+};
 
 /**
  * Lines under an outbound bubble that say why it has not arrived (R-MSG-05): the error in words,
  * tries so far, the next try, a template still waiting on Meta, or when it was sent by hand.
+ * A hand-off shows none: MessageActions asks «بعتّها؟» instead.
  */
 export function outboundNotes(m: MessageView, o: NotesInput): string[] {
-  if (m.direction !== 'outbound') return [];
-  if (isHandedOff(m)) return []; // MessageActions asks «بعتّها؟» instead
-  if (m.status === 'failed') return [t.messages.errorLine.replace('{reason}', errorText(m))];
-  if (m.status === 'sent_manually') return m.sent_manually_at ? [at(t.messages.sentManuallyAt, m.sent_manually_at, o.clock)] : [];
-  return m.status === 'queued' ? queuedNotes(m, o) : [];
-}
-
-function queuedNotes(m: MessageView, o: NotesInput): string[] {
-  const notes: string[] = [];
-  if (o.waitingTemplate) notes.push(t.messages.waitingTemplate);
-  else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {
-    notes.push(at(t.messages.queuedFor, m.scheduled_for, o.clock));
-  }
-  // Claimed by the sender right now (its lease, not a retry time): say so instead of «المحاولة الجاية».
-  if (m.error_code === 'sending') return [...notes, t.messages.sendingNow];
-  if (m.attempts > 0) {
-    notes.push(t.messages.attempts.replace('{n}', String(m.attempts)).replace('{max}', String(MAX_SEND_ATTEMPTS)));
-  }
-  // A hold (token or payment, wa_payment_hold) has its reason and next try with no try counted.
-  if (m.error_code) notes.push(t.messages.errorLine.replace('{reason}', errorText(m)));
-  const next = m.attempts > 0 || m.error_code ? m.next_attempt_at : null;
-  if (next) notes.push(at(t.messages.nextAttempt, next, o.clock));
-  return notes;
+  if (m.direction !== 'outbound' || isHandedOff(m)) return [];
+  return STATUS_NOTES[m.status]?.(m, o) ?? [];
 }
 
 /** «اتبعتت … · وصلت … · اتقرت …»: every delivery time Meta reported, for the status chip's title. */
@@ -53,7 +82,8 @@ export function deliveryTitle(m: MessageView, clock: Clock): string {
 }
 
 /** The admin opened wa.me for it (M3): the row waits for their «بعتّها؟» answer. */
-export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' && m.error_code === 'handed_off';
+export const isHandedOff = (m: MessageView): boolean =>
+  m.status === 'failed' && m.error_code === 'handed_off';
 
 /**
  * Retry (M1) is for failed rows where trying again can help (not «not on WhatsApp», a closed 24 h
@@ -63,4 +93,6 @@ export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' &&
 export const canRetry = (m: MessageView): boolean =>
   m.direction === 'outbound' && m.status === 'failed' && canRetryCode(m.error_code);
 export const canSendByHand = (m: MessageView): boolean =>
-  m.direction === 'outbound' && (m.status === 'failed' || m.status === 'queued') && !!m.click_to_chat;
+  m.direction === 'outbound' &&
+  (m.status === 'failed' || m.status === 'queued') &&
+  !!m.click_to_chat;

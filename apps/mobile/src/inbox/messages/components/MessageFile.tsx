@@ -1,20 +1,20 @@
 import { baseMime, isGifMessage, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { DownloadLink } from '../copy-download/DownloadLink';
-import { mediaKind } from '../hooks/message-text';
+import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
+import { mediaKind } from '@/inbox/messages/hooks/message-text';
 import { useSmall } from './MessageMeta';
-import { useThreadFile } from '../hooks/thread-file';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
-import { VideoTile } from '../media/VideoTile';
-import { VoiceNote } from '../media/VoiceNote';
-import { MediaNote, problemText } from '../photo/MediaNote';
-import { mediaProblem, type MediaProblem, photoBox } from '../photo/media-problem';
-import { PdfPreview } from '../photo/PdfPreview';
-import { PhotoPreview } from '../photo/PhotoPreview';
+import { useThreadFile } from '@/inbox/messages/hooks/thread-file';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { VideoTile } from '@/inbox/messages/media/VideoTile';
+import { VoiceNote } from '@/inbox/messages/media/VoiceNote';
+import { MediaNote, problemText } from '@/inbox/messages/photo/MediaNote';
+import { mediaProblem, type MediaProblem, photoBox } from '@/inbox/messages/photo/media-problem';
+import { PdfPreview } from '@/inbox/messages/photo/PdfPreview';
+import { PhotoPreview } from '@/inbox/messages/photo/PhotoPreview';
 import { GifBubble } from '@/inbox/messages/media/gif/GifBubble';
 
 type State = { step: 'idle' | 'loading' } | { step: 'problem'; problem: MediaProblem };
@@ -90,19 +90,40 @@ interface MessageFileProps {
  * (DownloadLink). A teacher gets the label only: the API refuses the file (403 media_forbidden; a photo
  * may be a payment proof), so no request is made.
  */
+interface ViewProps extends MessageFileProps {
+  kind: string;
+}
+
+/** A playable audio file is a voice note (as on WhatsApp); any other playable one, a video. */
+const isAudio = (mime: string | null): boolean =>
+  isPlayableMime(mime) && baseMime(mime).startsWith('audio/');
+
+/**
+ * In order, the first view that takes the file; none → «عرض …» (FileOpener). A GIF (owner
+ * 2026-11-01) plays inline, muted and looping, before any other video.
+ */
+const MEDIA_VIEWS: readonly ((p: ViewProps) => ReactNode)[] = [
+  (p) => {
+    const box = photoBox(p.message.media_mime);
+    return box ? <PhotoPreview {...p} box={box} /> : null;
+  },
+  (p) => (isGifMessage(p.message) ? <GifBubble {...p} kind={t.inbox.media.gif} /> : null),
+  (p) => (isAudio(p.message.media_mime) ? <VoiceNote {...p} /> : null),
+  (p) => (isPlayableMime(p.message.media_mime) ? <VideoTile {...p} /> : null),
+  (p) => (isPdfMime(p.message.media_mime) ? <PdfPreview {...p} fallback={<FileOpener {...p} />} /> : null),
+];
+
+function MediaView(p: ViewProps) {
+  for (const view of MEDIA_VIEWS) {
+    const shown = view(p);
+    if (shown) return shown;
+  }
+  return <FileOpener {...p} />;
+}
+
 export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps) {
   const teacher = useThreadMode().kind === 'teacher';
   const kind = t.inbox.media[mediaKind(m.media_mime)];
   if (teacher) return <MediaNote text={`${kind} · ${t.inbox.mediaNotAllowed}`} />;
-  const box = photoBox(m.media_mime);
-  if (box) return <PhotoPreview message={m} phone={phone} box={box} kind={kind} onLongPress={onLongPress} />;
-  // A GIF (owner 2026-11-01) plays inline, muted and looping, before any other video.
-  const gif = isGifMessage(m) ? t.inbox.media.gif : null;
-  if (gif) return <GifBubble message={m} phone={phone} kind={gif} onLongPress={onLongPress} />;
-  const playable = isPlayableMime(m.media_mime);
-  if (playable && baseMime(m.media_mime).startsWith('audio/')) return <VoiceNote message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
-  if (playable) return <VideoTile message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
-  const opener = <FileOpener message={m} phone={phone} kind={kind} />;
-  if (isPdfMime(m.media_mime)) return <PdfPreview message={m} phone={phone} kind={kind} onLongPress={onLongPress} fallback={opener} />;
-  return opener;
+  return <MediaView message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
 }

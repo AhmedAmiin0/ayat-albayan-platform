@@ -7,8 +7,21 @@ import { StudentStatusRepo } from './student-status.repo';
 import { NO_TRIAL, trialFactsOf } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
-export type DeletedPayment = { id: string; kind: string; amount: number | string };
-type Ctx = { payment: DeletedPayment; ids: { studentId: string; actorId: string }; current: StudentStatus };
+export interface DeletedPayment {
+  id: string;
+  kind: string;
+  amount: number | string;
+}
+interface Ids {
+  studentId: string;
+  actorId: string;
+}
+interface Ctx {
+  payment: DeletedPayment;
+  ids: Ids;
+  current: StudentStatus;
+  tz: string;
+}
 
 /**
  * A deleted payment reverts the automatic flip it caused (owner 2026-10-12, docs/11 §7): only when the
@@ -27,23 +40,36 @@ export class StudentDeactivation {
     private readonly trials: StudentTrialRepo,
   ) {}
 
-  async afterDelete(payment: DeletedPayment, ids: { studentId: string; actorId: string }): Promise<boolean> {
-    if (!activatesStudent(payment)) return false;
-    const last = await this.statuses.lastStatusChange(ids.studentId);
-    if (!isFlipBy(last, payment.id)) return false;
-    const student = await this.statuses.student(ids.studentId);
-    if (!student) return false;
-    const ctx: Ctx = { payment, ids, current: student.status };
-    const from = recordedFrom(last);
+  async afterDelete(payment: DeletedPayment, ids: Ids): Promise<boolean> {
+    const flipped = await this.flippedBy(payment, ids.studentId);
+    if (!flipped) return false;
+    const ctx: Ctx = { payment, ids, current: flipped.student.status, tz: flipped.student.tz };
+    return this.revertFlip(recordedFrom(flipped.last), ctx);
+  }
+
+  /** The student and its newest status_change, only when that change is this payment's flip. */
+  private async flippedBy(payment: DeletedPayment, studentId: string) {
+    if (!activatesStudent(payment)) return null;
+    const last = await this.statuses.lastStatusChange(studentId);
+    const student = isFlipBy(last, payment.id) ? await this.statuses.student(studentId) : null;
+    return student ? { last, student } : null;
+  }
+
+  /** A recorded subscribed from wins; a not-subscribed one only when no other positive payment remains. */
+  private async revertFlip(from: StudentStatus | null, ctx: Ctx): Promise<boolean> {
     if (from && !isNotSubscribed(from)) return this.revertTo(from, ctx);
-    const otherPayment = await this.statuses.hasPositivePayment(ids.studentId);
-    if (from && !otherPayment) return this.revertTo(from, ctx);
-    const ended = otherPayment && (await this.renewal.ended(ids.studentId, student.tz));
-    const facts = otherPayment ? NO_TRIAL : await this.trialFacts(ids.studentId);
+    const otherPayment = await this.statuses.hasPositivePayment(ctx.ids.studentId);
+    return from && !otherPayment ? this.revertTo(from, ctx) : this.revertByFacts(otherPayment, ctx);
+  }
+
+  /** revertTarget: another payment → active / pending_renewal; none → by the trial facts. */
+  private async revertByFacts(otherPayment: boolean, o: Ctx): Promise<boolean> {
+    const ended = otherPayment && (await this.renewal.ended(o.ids.studentId, o.tz));
+    const facts = otherPayment ? NO_TRIAL : await this.trialFacts(o.ids.studentId);
     const to = revertTarget({ otherPayment, ended, facts });
-    if (to === student.status) return false;
-    const move = { studentId: ids.studentId, from: student.status, to };
-    return this.statuses.move(move, { actorId: ids.actorId, after: { via: 'payment_deleted', payment_id: payment.id } });
+    const move = { studentId: o.ids.studentId, from: o.current, to };
+    const audit = { actorId: o.ids.actorId, after: { via: 'payment_deleted', payment_id: o.payment.id } };
+    return to === o.current ? false : this.statuses.move(move, audit);
   }
 
   private async trialFacts(studentId: string): Promise<TrialFacts> {

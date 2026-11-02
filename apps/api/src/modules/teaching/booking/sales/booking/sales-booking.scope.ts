@@ -1,9 +1,22 @@
-import { bookingKindOf, type BookingRequest } from '@ab/shared';
+import { bookingKindOf, type BookingKind, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
-import { forbidden } from '../../../../../common/http/errors';
-import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
+import { forbidden } from '@/common/http/errors';
+import type { SalesOwnership } from '@/modules/sales/sales';
 
-const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
+const all = (ids: readonly string[], allowed: readonly string[]): boolean =>
+  ids.every((id) => allowed.includes(id));
+
+type StudentsRequest = Extract<BookingRequest, { studentIds: unknown }>;
+/** Booked for existing students (no new family). */
+const forStudents = (req: BookingRequest): req is StudentsRequest => 'studentIds' in req;
+
+/** A 403 code and when it applies; the first rule that holds wins. */
+type Rule<T> = readonly [code: string, holds: (input: T) => boolean];
+
+function refuse<T>(rules: readonly Rule<T>[], input: T): void {
+  const hit = rules.find(([, holds]) => holds(input));
+  if (hit) throw forbidden(hit[0]);
+}
 
 /**
  * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and students while
@@ -28,34 +41,62 @@ export type CourseGrant = boolean | 'any';
  * canCourse 'any' (sales.renew_any, owner 2026-11-01, docs/16 row 38): a course of ANY one student.
  */
 export function assertBookingScope(req: BookingRequest, own: BookingOwnership, canCourse: CourseGrant = false): void {
-  if (req.override) throw forbidden('override_not_allowed');
   const kind = bookingKindOf(req);
-  if (kind === 'makeup' || (kind === 'package' && !canCourse)) throw forbidden('kind_not_allowed');
-  if (req.meetingLink) throw forbidden('meeting_link_not_allowed');
-  if (req.invoice) throw forbidden('invoice_not_allowed');
-  if (kind === 'package') return assertCourse(req, own, canCourse);
-  if (own) assertOwned(req, own); // null = sales_auto_assign OFF: any lead, family or student
+  refuse(ALWAYS_REFUSED, { req, kind, canCourse });
+  KIND_SCOPE[kind](req, own, canCourse);
 }
+
+interface Asked {
+  req: BookingRequest;
+  kind: BookingKind;
+  canCourse: CourseGrant;
+}
+
+/** What an assistant never books, in this order. */
+const ALWAYS_REFUSED: readonly Rule<Asked>[] = [
+  ['override_not_allowed', ({ req }) => !!req.override],
+  ['kind_not_allowed', (a) => a.kind === 'makeup' || (a.kind === 'package' && !a.canCourse)],
+  ['meeting_link_not_allowed', ({ req }) => !!req.meetingLink],
+  ['invoice_not_allowed', ({ req }) => !!req.invoice],
+];
 
 /**
  * A course: exactly one existing student (no lead, no new family), one of hers (null owns nothing
- * here), or any with the grant 'any' (sales.renew_any). Split out for the complexity cap (10).
+ * here), or any with the grant 'any' (sales.renew_any).
  */
 function assertCourse(req: BookingRequest, own: BookingOwnership, grant: CourseGrant): void {
-  if (!('studentIds' in req) || req.studentIds.length !== 1 || req.leadId) throw forbidden('course_one_student');
+  if (!forStudents(req) || req.studentIds.length !== 1 || req.leadId) throw forbidden('course_one_student');
   if (grant === 'any') return;
   if (!own || !all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');
 }
 
-// Split from assertBookingScope to stay under the complexity cap (10).
-function assertOwned(req: BookingRequest, own: SalesOwnership): void {
-  if (req.leadId && !own.leadIds.includes(req.leadId)) throw forbidden('not_your_lead');
-  if ('studentIds' in req) {
-    if (!all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');
-    return;
-  }
-  if (!own.phones.includes(req.guardian.phone_e164)) throw forbidden('not_your_family');
+interface Owned {
+  req: BookingRequest;
+  own: SalesOwnership;
 }
+
+const phoneOf = (req: Exclude<BookingRequest, StudentsRequest>): string => req.guardian.phone_e164;
+
+/** Her lead, her students, or a new family whose phone is one of hers, in this order. */
+const NOT_OWNED: readonly Rule<Owned>[] = [
+  ['not_your_lead', ({ req, own }) => !!req.leadId && !own.leadIds.includes(req.leadId)],
+  ['not_your_student', ({ req, own }) => forStudents(req) && !all(req.studentIds, own.studentIds)],
+  ['not_your_family', ({ req, own }) => !forStudents(req) && !own.phones.includes(phoneOf(req))],
+];
+
+/** A trial: checked only while ownership is (null = sales_auto_assign OFF: no check at all). */
+function assertTrial(req: BookingRequest, own: BookingOwnership): void {
+  if (own) refuse(NOT_OWNED, { req, own });
+}
+
+type KindScope = (req: BookingRequest, own: BookingOwnership, grant: CourseGrant) => void;
+
+/** Per kind, the ownership check after ALWAYS_REFUSED (a makeup never gets here). */
+const KIND_SCOPE = {
+  package: assertCourse,
+  trial: assertTrial,
+  makeup: assertTrial,
+} satisfies Record<BookingKind, KindScope>;
 
 /** The teachers list and the slots grid name a student only when it is hers (any student while own is null). */
 export function assertOwnStudents(ids: readonly string[], own: BookingOwnership): void {

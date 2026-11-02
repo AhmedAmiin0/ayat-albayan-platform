@@ -2351,15 +2351,6 @@
     }
   },
   "src/core/push/registerPush.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     },
@@ -4621,14 +4612,8 @@
     }
   },
   "src/inbox/messages/components/MessageFile.tsx": {
-    "ab/no-parent-imports": {
-      "count": 10
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/inbox/messages/components/MessageList.band.test.tsx": {

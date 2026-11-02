@@ -23,6 +23,16 @@ describe('attendanceKind', () => {
   it('drops a moved lesson: its new lesson is the day', () => {
     expect(attendanceKind('rescheduled', null)).toBeNull();
   });
+
+  it.each([
+    ['rescheduled', 'on_time', null],
+    ['cancelled_by_admin', 'on_time', 'cancelled'],
+    ['cancelled_by_teacher', 'absent', 'cancelled'],
+    ['no_show', 'late', 'present'],
+    ['scheduled', 'excused', 'excused'],
+  ] as const)('the mark loses only to a move or a cancel: %s + %s = %s', (status, mark, kind) => {
+    expect(attendanceKind(status, mark)).toBe(kind);
+  });
 });
 
 describe('attendanceTotals', () => {

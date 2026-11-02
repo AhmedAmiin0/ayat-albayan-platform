@@ -1,10 +1,9 @@
-import type { TablesUpdate } from '@ab/db';
 import type { PaymentAttachmentView, PaymentWrite, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { notFound } from '../../../common/http/errors';
-import { MoneyWrites } from '../subscriptions/money/money-writes';
-import type { Page } from '../../../common/http/http';
-import { toPaymentView } from './payments.mapper';
+import { notFound } from '@/common/http/errors';
+import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
+import type { Page } from '@/common/http/http';
+import { toPaymentView, toPaymentWrite } from './payments.mapper';
 import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';
 import { PaymentInputs } from './payment-inputs';
 import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
@@ -69,17 +68,11 @@ export class PaymentsService {
   async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
     const before = notCancelled(await this.row(id));
     await this.files.checkPatch(before, patch);
-    const write: TablesUpdate<'payments'> = {};
-    if (patch.amount !== undefined) write.amount = patch.amount;
-    if (patch.method !== undefined) write.method = patch.method;
-    if (patch.paidAt !== undefined) write.paid_at = patch.paidAt;
-    if (patch.receiptPath !== undefined) write.receipt_path = patch.receiptPath;
-    if (patch.note !== undefined) write.note = patch.note;
+    const write = toPaymentWrite(patch);
     const after = Object.keys(write).length > 0 ? await this.payments.update(id, write) : before;
     const audit = { actorId, entity: 'payments', entityId: id, action: 'update', before, after };
     await this.writes.done(audit, studentOf(before));
-    if (patch.receiptPath !== undefined && before.receipt_path !== patch.receiptPath)
-      await this.receipts.discard(before.receipt_path);
+    if (receiptReplaced(before, patch)) await this.receipts.discard(before.receipt_path);
     return this.get(id);
   }
 
@@ -143,3 +136,7 @@ export class PaymentsService {
 }
 
 const studentOf = (row: PaymentRow): string | null => row.subscription?.student_id ?? null;
+
+/** The patch sends a receipt (or null) other than the stored one: the old file goes. */
+const receiptReplaced = (before: PaymentRow, patch: Partial<PaymentUpdate>): boolean =>
+  patch.receiptPath !== undefined && before.receipt_path !== patch.receiptPath;

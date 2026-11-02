@@ -1,18 +1,9 @@
-import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
 import { Ticker } from '@/common/jobs';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
-import {
-  followUpDedupKey,
-  followUpRow,
-  followUpStep,
-  leadZone,
-  pickTwoSlots,
-  sameInstant,
-  type FollowUpLeadRow,
-} from './follow-ups.plan';
+import { stepLead, type Outcome, type Tick } from './follow-ups.step';
 import { FollowUpsSettings } from './follow-ups.settings';
 import { FollowUpsRepo } from './follow-ups.repo';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -20,17 +11,7 @@ import { BackgroundJob } from '@/config/role/background-job';
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
 
-type Outcome = 'queued' | 'waiting' | 'advanced' | 'notDue' | 'waitingTemplate' | 'noSlots' | 'failed';
 export type FollowUpSummary = { leads: number } & Record<Outcome, number>;
-
-interface Tick {
-  lead: FollowUpLeadRow;
-  hours: readonly number[];
-  approved: boolean;
-  now: Date;
-  /** Free starts, loaded once per tick and only when a lead is due. */
-  starts: () => Promise<Date[]>;
-}
 
 /**
  * R-LEAD-05 follow-up scheduler (docs/12 §7): every 5 minutes, single flight. A lead in
@@ -112,39 +93,10 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   private async process(t: Tick): Promise<Outcome> {
     try {
-      return await this.step(t);
+      return await stepLead(this.queries, t);
     } catch (e) {
       this.log.warn(`follow-up for lead ${t.lead.id} failed: ${e instanceof Error ? e.message : String(e)}`);
       return 'failed';
     }
-  }
-
-  private async step(t: Tick): Promise<Outcome> {
-    const { lead, hours, now } = t;
-    const due = nextFollowUpAt(lead, hours);
-    if (!due || due > now) return this.note(t, { due, note: null, outcome: 'notDue' });
-    const prior = await this.queries.stageRow(followUpDedupKey(lead));
-    const step = followUpStep(prior);
-    if (step === 'advance') {
-      const next = nextFollowUpAt({ ...lead, follow_up_stage: lead.follow_up_stage + 1 }, hours);
-      await this.queries.advance({ id: lead.id, stage: lead.follow_up_stage, next });
-      return 'advanced';
-    }
-    if (step === 'wait') return this.note(t, { due, note: 'queued', outcome: 'waiting' });
-    if (!t.approved) return this.note(t, { due, note: 'waiting_template', outcome: 'waitingTemplate' });
-    const zone = leadZone(lead);
-    const pair = pickTwoSlots(await t.starts(), zone.tz);
-    if (!pair) return this.note(t, { due, note: 'no_slots', outcome: 'noSlots' });
-    if (step === 'requeue' && prior) await this.queries.drop(prior.id);
-    const added = await this.queries.queue(followUpRow({ lead, slots: pair, zone, now }));
-    return this.note(t, { due, note: 'queued', outcome: added > 0 ? 'queued' : 'waiting' });
-  }
-
-  /** Writes next_follow_up_at / follow_up_note only when they changed, then reports `outcome`. */
-  private async note(t: Tick, s: { due: Date | null; note: FollowUpNote | null; outcome: Outcome }): Promise<Outcome> {
-    if (!sameInstant(t.lead.next_follow_up_at, s.due) || t.lead.follow_up_note !== s.note) {
-      await this.queries.sync(t.lead.id, { next_follow_up_at: s.due?.toISOString() ?? null, follow_up_note: s.note });
-    }
-    return s.outcome;
   }
 }

@@ -2638,11 +2638,8 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.ts": {
-    "complexity": {
-      "count": 2
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/lib/stick-to-bottom.test.ts": {

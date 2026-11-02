@@ -82,7 +82,30 @@ export interface SalesLessonMoved {
   status: LessonStatus;
 }
 
-const HELD: readonly LessonStatus[] = ['completed', 'late'];
+/** What the lesson's status says on its own: a moved lesson (rescheduled) is not a day (null). */
+const BY_STATUS = {
+  scheduled: 'unmarked',
+  confirmed: 'unmarked',
+  completed: 'present',
+  late: 'present',
+  excused: 'excused',
+  no_show: 'absent',
+  cancelled_by_teacher: 'cancelled',
+  cancelled_by_admin: 'cancelled',
+  rescheduled: null,
+} as const satisfies Record<LessonStatus, AttendanceKind | null>;
+
+/** The student's own mark: on time / late = حضر, absent = غاب, excused. */
+const BY_ATTENDANCE = {
+  on_time: 'present',
+  late: 'present',
+  absent: 'absent',
+  excused: 'excused',
+} as const satisfies Record<Attendance, AttendanceKind>;
+
+/** A moved or cancelled lesson is decided by its status, whatever the student's mark says. */
+const statusOverrides = (status: LessonStatus): boolean =>
+  BY_STATUS[status] === null || isCancelledLesson(status);
 
 /**
  * The student's own attendance wins (on time / late = حضر, absent = غاب, excused); without it the lesson's
@@ -90,14 +113,8 @@ const HELD: readonly LessonStatus[] = ['completed', 'late'];
  * «لم تُسجَّل». A moved lesson (rescheduled) is not a day of its own: null, its new lesson counts.
  */
 export function attendanceKind(status: LessonStatus, attendance: Attendance | null): AttendanceKind | null {
-  if (status === 'rescheduled') return null;
-  if (isCancelledLesson(status)) return 'cancelled';
-  if (attendance === 'on_time' || attendance === 'late') return 'present';
-  if (attendance === 'absent') return 'absent';
-  if (attendance === 'excused') return 'excused';
-  if (HELD.includes(status)) return 'present';
-  if (status === 'no_show') return 'absent';
-  return status === 'excused' ? 'excused' : 'unmarked';
+  const statusDecides = attendance === null || statusOverrides(status);
+  return statusDecides ? BY_STATUS[status] : BY_ATTENDANCE[attendance];
 }
 
 const ZERO = (): Record<AttendanceKind, number> => ({ present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 });

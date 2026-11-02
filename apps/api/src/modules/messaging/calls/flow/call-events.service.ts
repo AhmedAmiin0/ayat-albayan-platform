@@ -1,14 +1,17 @@
-import { waIdToE164, type CallEvent } from '@ab/shared';
+import { waIdToE164 } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type { CallPermissionReplyEvent, CallWebhookEvent } from '../../webhook/webhook.events';
-import { CallsGate } from '../access/calls-gate';
-import { callingLine, type CallingLine } from '../kapso/calling-line';
-import type { CallRow } from '../store/call-row';
+import type { CallPermissionReplyEvent, CallWebhookEvent } from '@/modules/messaging/webhook';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
-import { CallsNumberRepo } from '../store/calls-number.repo';
+import { CallsNumberRepo } from '@/modules/messaging/calls/store/calls-number.repo';
 import { CallsSweeper } from './calls.sweeper';
+import { machineEvent, stillUpOnWhatsapp } from './call-machine-event';
+
+export { machineEvent } from './call-machine-event';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */
 export interface CallEventsPort {
@@ -20,23 +23,18 @@ export const CALL_EVENTS = Symbol('CALL_EVENTS');
 
 const isUuid = (v: string | null): v is string => v !== null && z.uuid().safeParse(v).success;
 
-/** The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled apart). */
-export function machineEvent(e: CallWebhookEvent): CallEvent | null {
-  const at = e.at.toISOString();
-  if (e.kind === 'terminate') return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };
-  if (e.kind === 'connect') return e.direction === 'outbound' && e.sdp ? { type: 'answer_sdp', sdp: e.sdp } : null;
-  if (e.status === 'RINGING') return { type: 'ringing' };
-  if (e.status === 'ACCEPTED') return { type: 'accepted', at };
-  return e.status === 'REJECTED' ? { type: 'rejected', at } : null;
+/** The calling line, only when the item is for its number (Meta may leave the number out). */
+function lineFor(e: CallWebhookEvent): CallingLine | null {
+  const line = callingLine();
+  const ours = e.phoneNumberId === null || e.phoneNumberId === line?.env.phoneNumberId;
+  return ours ? line : null;
 }
 
-/**
- * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the call)
- * but WhatsApp says the call rings, was answered or got its answer: it is still up there, so end it.
- */
-function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
-  return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
-}
+const isInboundOffer = (e: CallWebhookEvent): boolean => e.kind === 'connect' && e.direction === 'inbound';
+
+/** Our outbound call, unless it already names another wacid. */
+const isOwnCall = (own: CallRow | null, e: CallWebhookEvent): own is CallRow =>
+  own?.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId);
 
 /**
  * Webhook → wa_calls. Only the calling number's items count (the chat line on Kapso). An inbound
@@ -75,16 +73,25 @@ export class CallEvents implements CallEventsPort {
   }
 
   async handle(e: CallWebhookEvent): Promise<void> {
-    const line = callingLine();
-    if (!line || (e.phoneNumberId !== null && e.phoneNumberId !== line.env.phoneNumberId)) return;
-    if (e.kind === 'connect' && e.direction === 'inbound') return this.ring(e, line);
+    const line = lineFor(e);
+    if (!line) return;
+    await (isInboundOffer(e) ? this.ring(e, line) : this.track(e, line));
+  }
+
+  /** Moves the call's row through the machine (naming its wacid first when it has none yet). */
+  private async track(e: CallWebhookEvent, line: CallingLine): Promise<void> {
     const row = await this.find(e);
     if (!row) return;
     if (!row.wa_call_id) await this.kit.queries.setWaCallId(row.id, e.waCallId);
+    await this.step(row, e, line);
+  }
+
+  /** The item's machine event; a call still up on WhatsApp is ended there. */
+  private async step(row: CallRow, e: CallWebhookEvent, line: CallingLine): Promise<void> {
     const event = machineEvent(e);
     if (!event) return;
-    if (stillUpOnWhatsapp(row, event)) return this.terminate(line, e.waCallId);
-    await this.kit.apply(row, event);
+    const stillUp = stillUpOnWhatsapp(row, event);
+    await (stillUp ? this.terminate(line, e.waCallId) : this.kit.apply(row, event));
   }
 
   /** Best effort, never a connect: a terminate is not billed. */
@@ -94,11 +101,8 @@ export class CallEvents implements CallEventsPort {
 
   /** Our outbound call by its biz_opaque_callback_data (our id), else any call by its wacid. */
   private async find(e: CallWebhookEvent): Promise<CallRow | null> {
-    if (isUuid(e.ref)) {
-      const own = await this.kit.queries.get(e.ref);
-      if (own && own.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId)) return own;
-    }
-    return this.kit.queries.byWaCallId(e.waCallId);
+    const own = isUuid(e.ref) ? await this.kit.queries.get(e.ref) : null;
+    return isOwnCall(own, e) ? own : this.kit.queries.byWaCallId(e.waCallId);
   }
 
   private async ring(e: CallWebhookEvent, line: CallingLine): Promise<void> {

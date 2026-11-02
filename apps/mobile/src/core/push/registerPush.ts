@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import { z } from 'zod';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { putPushToken, TOKEN_KEY } from './device-key';
@@ -18,14 +19,41 @@ export { DEVICE_KEY, TOKEN_KEY } from './device-key';
 /** Matches the expo-notifications config plugin's defaultChannel in app.json. */
 export const ANDROID_CHANNEL = 'default';
 
-const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
+/** app.json `extra`: only `eas.projectId` matters, the rest passes through. */
+const extraSchema = z.looseObject({ eas: z.looseObject({ projectId: z.string().min(1) }) });
 
 /** app.json `extra.eas.projectId` (EAS project @holdmycup/ayat-albayan-admin); null if unlinked. */
 export function easProjectId(extra: unknown): string | null {
-  const eas = isRecord(extra) ? extra['eas'] : undefined;
-  const id = isRecord(eas) ? eas['projectId'] : undefined;
-  return typeof id === 'string' && id ? id : null;
+  const parsed = extraSchema.safeParse(extra);
+  return parsed.success ? parsed.data.eas.projectId : null;
 }
+
+/** A real device, an EAS project and a live session (never prompt or PUT before sign-in). */
+async function pushProjectId(): Promise<string | null> {
+  const projectId = Device.isDevice ? easProjectId(Constants.expoConfig?.extra) : null;
+  return projectId && (await hasLiveSession()) ? projectId : null;
+}
+
+/** Per platform, what the prompt needs first: Android 13+ prompts only once a channel exists. */
+const CHANNEL_SETUP: Partial<Record<typeof Platform.OS, () => Promise<unknown>>> = {
+  android: () =>
+    Notifications.setNotificationChannelAsync(ANDROID_CHANNEL, {
+      name: t.mobile.pushChannel,
+      importance: Notifications.AndroidImportance.HIGH,
+    }),
+};
+
+/** Permission (re-asked weekly) → Expo push token → PUT /me/push-tokens. */
+async function tokenToApi(projectId: string): Promise<void> {
+  if (!(await ensurePushPermission())) return;
+  // A sign-out's OS unregister still running (slow network) would kill the token fetched next.
+  await silenceSettled();
+  const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
+  await putPushToken(token);
+}
+
+/** A 403 is a role without notifications.push (sales, a classroom assistant): expected. */
+const isForbidden = (error: unknown): boolean => error instanceof ApiError && error.status === 403;
 
 /**
  * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token →
@@ -33,30 +61,16 @@ export function easProjectId(extra: unknown): string | null {
  * and the next start tries again. Never throws.
  */
 export async function registerPush(): Promise<void> {
-  if (!Device.isDevice) return;
-  const projectId = easProjectId(Constants.expoConfig?.extra);
+  const projectId = await pushProjectId();
   if (!projectId) return;
-  // Never before the user is authenticated (a cold start on an expired session): no prompt, no PUT.
-  if (!(await hasLiveSession())) return;
   try {
-    if (Platform.OS === 'android') {
-      // Android 13+ shows the permission prompt only once a channel exists.
-      await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL, {
-        name: t.mobile.pushChannel,
-        importance: Notifications.AndroidImportance.HIGH,
-      });
-    }
-    if (!(await ensurePushPermission())) return;
-    // A sign-out's OS unregister still running (slow network) would kill the token fetched next.
-    await silenceSettled();
-    const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
-    await putPushToken(token);
+    await CHANNEL_SETUP[Platform.OS]?.();
+    await tokenToApi(projectId);
   } catch (error) {
     // Push is a convenience: no error UI. The next start registers again. A dev build says why
-    // (an Android build without android.googleServicesFile never gets a token). A 403 is a role
-    // without notifications.push (sales, a classroom assistant): expected, so not even a warning.
-    if (error instanceof ApiError && error.status === 403) return;
-    if (__DEV__) console.warn('registerPush', error);
+    // (an Android build without android.googleServicesFile never gets a token); a 403 is expected,
+    // so not even a warning.
+    if (__DEV__ && !isForbidden(error)) console.warn('registerPush', error);
   }
 }
 

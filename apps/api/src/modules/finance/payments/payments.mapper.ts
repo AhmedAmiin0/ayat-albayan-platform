@@ -1,5 +1,6 @@
-import type { PaymentView } from '@ab/shared';
-import { studentRef } from '../subscriptions/subscriptions.mapper';
+import type { TablesUpdate } from '@ab/db';
+import type { PaymentUpdate, PaymentView } from '@ab/shared';
+import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { PaymentRow } from './payments.queries';
 
 /** payments row (+ its package's student) → PaymentView. */
@@ -25,4 +26,21 @@ export function toPaymentView(row: PaymentRow, recorders: ReadonlyMap<string, st
         : null,
     invoice_id: row.invoice_id,
   };
+}
+
+/** Only the fields sent (null included): undefined means «not in the patch». */
+function definedOnly<T extends object>(fields: T): Partial<T> {
+  const sent = Object.entries(fields).filter(([, v]) => v !== undefined);
+  return Object.fromEntries(sent) as Partial<T>;
+}
+
+/** PATCH body → the payments columns it changes ({} when none). */
+export function toPaymentWrite(patch: Partial<PaymentUpdate>): TablesUpdate<'payments'> {
+  return definedOnly({
+    amount: patch.amount,
+    method: patch.method,
+    paid_at: patch.paidAt,
+    receipt_path: patch.receiptPath,
+    note: patch.note,
+  });
 }

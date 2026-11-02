@@ -333,9 +333,6 @@
     }
   },
   "src/people/users/edit-form.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
