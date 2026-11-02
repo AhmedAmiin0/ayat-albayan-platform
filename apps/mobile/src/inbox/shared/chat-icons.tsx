@@ -13,6 +13,9 @@ const hidden = {
   importantForAccessibility: 'no-hide-descendants',
 } as const;
 
+/** «بحث» inside the chat: a magnifier. */
+export const SearchIcon = (p: IconProps) => <Line {...p} d="M16.5 10.5a6 6 0 1 1-12 0 6 6 0 0 1 12 0ZM15 15l5 5" />;
+
 /** «أرسل قالبًا»: a sheet with lines (an approved message to fill in). */
 export function TemplateIcon({ color, size = 22 }: IconProps) {
   return (

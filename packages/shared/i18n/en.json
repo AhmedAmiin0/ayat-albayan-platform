@@ -3078,6 +3078,18 @@
     "sticker": {
       "favourite": "Add to favourites",
       "unfavourite": "Remove from favourites"
+    },
+    "chatSearch": {
+      "open": "Search",
+      "label": "Search this chat",
+      "placeholder": "Search the chat…",
+      "older": "Older result",
+      "newer": "Newer result",
+      "close": "Close search",
+      "counter": "{n} of {m}",
+      "empty": "No results",
+      "searching": "Searching…",
+      "unreachable": "This message could not be reached in the chat"
     }
   },
   "mobileFinance": {

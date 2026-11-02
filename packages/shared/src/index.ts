@@ -30,6 +30,7 @@ export * from './sales/student/student-details.js';
 export * from './sales/student/student-schedule.js';
 export * from './sales/student/student-roster.js';
 export * from './sales/student/student-package.js';
+export * from './sales/student/package-cancel.js';
 export * from './sales/teacher/teacher-overview.js';
 export * from './sales/course/course.js';
 export * from './sales/course/course-follow.js';
