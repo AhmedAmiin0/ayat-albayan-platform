@@ -4,6 +4,7 @@ import { systemResolver } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
 // GET /subscriptions/:id/lessons-used-before: what the editor offers (review 2026-11-02), and the
@@ -25,6 +26,7 @@ describe('GET /subscriptions/:id/lessons-used-before', () => {
   });
   beforeEach(() => {
     resetMocks(m);
+    salesDefaults(m);
     edits.courseBooked.mockReset().mockResolvedValue(false);
     m.subs.get.mockResolvedValue(subRow({ lessons_used_before: 1 }));
     m.balances.forSubscriptions.mockResolvedValue(balanceOf(2));
