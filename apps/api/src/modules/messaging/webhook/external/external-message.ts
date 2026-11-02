@@ -6,6 +6,7 @@ import {
   type DeliveryStatus,
 } from '@/modules/messaging/webhook/webhook.events';
 import { field, get } from '@/modules/messaging/webhook/parse/webhook.parse';
+import { mediaFileName } from '@/modules/messaging/webhook/parse/file-name';
 
 // A message the business sent outside the app, read out of Meta's message object: an
 // smb_message_echoes item, or an item of Kapso's message history (the same Meta shape plus a
@@ -90,7 +91,7 @@ export function externalMessage(m: unknown): ExternalMessage | null {
     templateParams: type === 'template' ? templateParams(get(m, 'template.components')) : null,
     mediaId: mf('id'),
     mediaMime: mimeOf(m, media),
-    mediaName: first(mf('filename'), f('kapso.media_data.filename')),
+    mediaName: mediaFileName(first(mf('filename'), f('kapso.media_data.filename'))),
     replyTo: f('context.id'),
     status: statusOf(m),
     direction: f('kapso.direction'),
