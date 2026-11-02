@@ -13,7 +13,10 @@ import type { TrialTarget } from '@/modules/teaching/booking/trial-date/trial-da
  * An assistant's own meeting link for the trial she moves (owner 2026-11-02, «update student
  * booking»): https only; anything else is 400 meeting_link_invalid. Absent = the teacher's link.
  */
-const salesLinkSchema = z.url({ protocol: /^https$/ }).nullish();
+const salesLinkSchema = z
+  .url({ protocol: /^https$/ })
+  .regex(/^https:\/\/[^/\s]+/) // a real host after «https://» (not «https:x» or «https:/x»)
+  .nullish();
 
 /** The booking scope's checks without the link: a trial DATE may carry her https link. */
 const withoutLink = (req: BookingRequest): BookingRequest => ({ ...req, meetingLink: null });

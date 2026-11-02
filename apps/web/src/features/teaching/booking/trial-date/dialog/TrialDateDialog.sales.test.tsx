@@ -73,5 +73,6 @@ describe('TrialDateDialog, sales (R-ASST-01)', () => {
     expect(await screen.findByText(t.trialDate.done)).toBeTruthy();
     const [body] = sentTo(apiSend, `${BASE}/trial-date`);
     expect(body).toMatchObject({ meetingLink: 'https://meet.jit.si/ab-trial', durationMin: 45 });
+    expect(sentTo(apiSend, `${BASE}/trial-date/check`).every((b) => !b.meetingLink)).toBe(true);
   });
 });

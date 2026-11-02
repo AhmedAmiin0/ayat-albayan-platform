@@ -7122,7 +7122,7 @@
     "action": "New trial date",
     "actionHint": "Pick a new trial lesson date for this student",
     "editAction": "Change trial time",
-    "meetingLinkHint": "Optional: left empty, the teacher’s link is sent. The link must start with https://",
+    "meetingLinkHint": "Optional: left empty, the student’s or the teacher’s usual link is used. The link must start with https://",
     "title": "New trial date for {name}",
     "historyTitle": "Trial lesson dates",
     "count": {

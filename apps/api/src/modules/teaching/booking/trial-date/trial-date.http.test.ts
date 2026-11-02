@@ -108,7 +108,7 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
     const refused = async (over: object) => (await post('/sales/booking/trial-date', 'sales', { ...TRIAL, ...over })).json().code;
     expect(await refused({ studentIds: [S2] })).toBe('not_your_student');
     expect(await refused({ override: { reason: 'سبب' } })).toBe('override_not_allowed');
-    expect(await refused({ meetingLink: 'http://meet.example/x' })).toBe('meeting_link_invalid');
+    for (const bad of ['http://a.b/x', 'https:evil.example', 'https:/x']) expect(await refused({ meetingLink: bad })).toBe('meeting_link_invalid');
     expect(await refused({ startsAt: '2020-01-05T14:00:00Z' })).toBe('date_in_past');
     const link = { ...TRIAL, meetingLink: 'https://meet.jit.si/ab-trial' }; // her https link (2026-11-02)
     expect((await post('/sales/booking/trial-date', 'sales', link)).statusCode).toBe(201);
