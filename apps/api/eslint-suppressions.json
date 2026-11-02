@@ -917,14 +917,8 @@
     }
   },
   "src/common/settings/settings-patch.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/common/settings/settings-rules.port.ts": {
@@ -994,9 +988,6 @@
     }
   },
   "src/common/settings/settings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 3
     }
