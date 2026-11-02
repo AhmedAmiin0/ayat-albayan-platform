@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../common/db/db.module';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import { LessonsQueries } from './lessons.queries';
+import type { Db } from '@/common/db/db.module';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
 
 /** A v_lesson_sequence read that takes one 60 ms round trip per chunk. */
@@ -18,7 +18,7 @@ describe('LessonsQueries.seq — the chunks in parallel (week / day views)', () 
     const db = slowDb();
     const ids = Array.from({ length: 250 }, (_, i) => `l${i}`);
     const start = Date.now();
-    const done = new LessonsQueries(db, readerOf(LessonsSettings)).seq(ids);
+    const done = new LessonsRepo(db, readerOf(LessonsSettings)).seq(ids);
     await vi.advanceTimersByTimeAsync(60);
     await done;
     expect(Date.now() - start).toBe(60);

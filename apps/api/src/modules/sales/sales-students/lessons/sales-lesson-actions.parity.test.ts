@@ -3,7 +3,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import type { ScheduleQueries } from '@/modules/teaching/scheduling/schedule.queries';
+import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/lessons';
@@ -23,7 +23,7 @@ function rig() {
   const deps = fakeStore(lessonRow());
   const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleQueries, settings);
+  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings);
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
   const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
   const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentQueries, { one, cancels } as LessonServices);

@@ -8,7 +8,7 @@ export type RecordingWithTeacher = RecordingRow & { lessons: { teacher_id: strin
 
 /** Single-row reads and writes of the visibility toggle, the admin delete and the retention job. */
 @Injectable()
-export class RecordingAdminQueries {
+export class RecordingAdminRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async byId(id: string): Promise<RecordingWithTeacher | null> {

@@ -1,8 +1,8 @@
 import { OCCUPYING_LESSON_STATUSES, type LessonView, type OverviewTeacher, type ScheduleOverview, type Span } from '@ab/shared';
-import type { Interval } from '../../../people/teachers/availability/intervals';
-import type { LessonWindow } from '../lessons.queries';
+import type { Interval } from '@/modules/people/teachers/availability/intervals';
+import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { teacherSpans } from './free-windows';
-import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.queries';
+import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.repo';
 
 export type OverviewParts = {
   window: LessonWindow;

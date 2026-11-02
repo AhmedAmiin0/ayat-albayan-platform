@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
-import { fakePolicy } from '../../messaging/notification-rules/policy/policy.fakes';
-import { BusyQueries } from './conflicts/busy.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { BusyRepo } from './conflicts/busy.repo';
 import { LessonWriter } from './occurrences/lesson-writer';
 import { ruleRow } from './scheduling.fakes';
-import { ruleStudents, ScheduleQueries } from './schedule.queries';
+import { ruleStudents, ScheduleRepo } from './schedule.repo';
 
 const SPAN = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2026-10-04T14:45:00Z') };
 
 describe('ScheduleQueries', () => {
   it('rule: one row with teacher link and students; activeRuleIds: active and not ended before today', async () => {
     const { db, calls } = fakeDb({ schedule_rules: [{ data: ruleRow() }, { data: [{ id: 'r1' }] }] });
-    const q = new ScheduleQueries(db);
+    const q = new ScheduleRepo(db);
     expect((await q.rule('r1'))?.id).toBe(ruleRow().id);
     expect(await q.activeRuleIds('2026-10-01')).toEqual([{ id: 'r1' }]);
     expect(calls).toContainEqual({ table: 'schedule_rules', method: 'eq', args: ['status', 'active'] });
@@ -26,7 +26,7 @@ describe('ScheduleQueries', () => {
 describe('BusyQueries — occupying lessons only (R-SCH-04)', () => {
   it("teacher lessons overlapping the span, as Dates", async () => {
     const { db, calls } = fakeDb({ lessons: [{ data: [{ id: 'a', starts_at: '2026-10-04T14:30:00+00:00', ends_at: '2026-10-04T15:15:00+00:00' }] }] });
-    const rows = await new BusyQueries(db).teacherLessons('t1', SPAN);
+    const rows = await new BusyRepo(db).teacherLessons('t1', SPAN);
     expect(rows).toEqual([{ id: 'a', starts_at: new Date('2026-10-04T14:30:00Z'), ends_at: new Date('2026-10-04T15:15:00Z') }]);
     expect(calls).toContainEqual({ table: 'lessons', method: 'in', args: ['status', ['scheduled', 'confirmed', 'completed', 'late', 'no_show']] });
     expect(calls).toContainEqual({ table: 'lessons', method: 'lt', args: ['starts_at', SPAN.to.toISOString()] });
@@ -37,7 +37,7 @@ describe('BusyQueries — occupying lessons only (R-SCH-04)', () => {
     const { db, calls } = fakeDb({
       lesson_students: [{ data: [{ student_id: 's1', lessons: { id: 'b', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z', status: 'scheduled' } }] }],
     });
-    const q = new BusyQueries(db);
+    const q = new BusyRepo(db);
     expect(await q.studentLessons([], SPAN)).toEqual([]);
     expect(calls).toEqual([]);
     expect(await q.studentLessons(['s1'], SPAN)).toEqual([{ id: 'b', student_id: 's1', starts_at: SPAN.from, ends_at: SPAN.to }]);

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TeachersModule } from '../../people/teachers/teachers.module';
-import { BusyQueries } from './conflicts/busy.queries';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { BusyRepo } from './conflicts/busy.repo';
 import { ConflictChecker } from './conflicts/conflict-checker';
 import { HorizonJob } from './occurrences/horizon.job';
 import { LessonWriter } from './occurrences/lesson-writer';
 import { OccurrenceGenerator } from './occurrences/occurrence-generator';
 import { RuleExtendService } from './rules/rule-extend.service';
-import { RuleProjectionQueries } from './rules/rule-projection.queries';
+import { RuleProjectionRepo } from './rules/rule-projection.repo';
 import { ScheduleRulesController } from './rules/schedule-rules.controller';
-import { ScheduleQueries } from './schedule.queries';
+import { ScheduleRepo } from './schedule.repo';
 import { SchedulingSettings } from './scheduling.settings';
 
 /**
@@ -19,16 +19,16 @@ import { SchedulingSettings } from './scheduling.settings';
   imports: [TeachersModule],
   controllers: [ScheduleRulesController],
   providers: [
-    BusyQueries,
+    BusyRepo,
     ConflictChecker,
     HorizonJob,
     LessonWriter,
     OccurrenceGenerator,
     RuleExtendService,
-    RuleProjectionQueries,
-    ScheduleQueries,
+    RuleProjectionRepo,
+    ScheduleRepo,
     SchedulingSettings,
   ],
-  exports: [BusyQueries, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries, SchedulingSettings],
+  exports: [BusyRepo, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleRepo, SchedulingSettings],
 })
 export class SchedulingModule {}

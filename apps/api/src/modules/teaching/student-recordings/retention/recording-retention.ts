@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RecordingEraser } from './recording-eraser';
-import { RecordingRetentionQueries } from './recording-retention.queries';
-import { RecordingSettings } from '../recordings.settings';
+import { RecordingRetentionRepo } from './recording-retention.repo';
+import { RecordingSettings } from '@/modules/teaching/student-recordings/recordings.settings';
 
 export const RETENTION_KEY = 'recording_retention_days';
 /** A lesson never runs this long: a row still `recording` after it lost its egress webhook. */
@@ -21,7 +21,7 @@ export class RecordingRetention {
 
   constructor(
     private readonly settings: RecordingSettings,
-    private readonly queries: RecordingRetentionQueries,
+    private readonly queries: RecordingRetentionRepo,
     private readonly eraser: RecordingEraser,
   ) {}
 

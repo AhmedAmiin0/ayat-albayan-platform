@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 export const STUCK_ERROR = 'stuck_recording';
 
 /** The two sweeps over lesson_recordings (service role). */
 @Injectable()
-export class RecordingRetentionQueries {
+export class RecordingRetentionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Rows still `recording` that started before `cutoff` become `failed`; returns how many. A second run finds none. */

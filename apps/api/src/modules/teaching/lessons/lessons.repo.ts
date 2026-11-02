@@ -14,7 +14,7 @@ export type SeqMap = ReadonlyMap<string, number>;
 
 /** Reads of lessons for the views and the write services (service role — callers guard). */
 @Injectable()
-export class LessonsQueries {
+export class LessonsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: LessonsSettings,
