@@ -62,7 +62,7 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     openFrom: vi.fn().mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]),
     held: vi.fn().mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21'])),
   };
-  const scope = { owned: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: o.owned ?? [S1], phones: [] }) };
+  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: o.owned ?? [S1], phones: [] }) };
   const writer = {
     replay: vi.fn().mockResolvedValue(null),
     apply: vi.fn().mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' }),

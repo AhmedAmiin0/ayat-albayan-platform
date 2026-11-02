@@ -14,6 +14,8 @@ import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneySettings } from './sales-money.settings';
+import { AnyPackageCancelController } from './package-cancel/any-package-cancel.controller';
+import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
 
@@ -25,10 +27,14 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
  */
 @Module({
   imports: [SubscriptionsModule, PaymentsModule, SalesModule],
-  controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
+  controllers: [
+    ...[SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
+    AnyPackageCancelController,
+  ],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
+    AnyPackageCancel,
   ],
   // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],

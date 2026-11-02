@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import type { MyPaymentRow, SalesChatReceipt, SalesMoneySubscriptionView, SalesPaymentView, SalesQuoteView } from '@ab/shared';
 import { call, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { stubInboundMedia } from '../../support/messaging/inbox';
-import { freshDigits } from '../../support/core/messages';
+import { freshDigits, setSetting } from '../../support/core/messages';
 import { PNG, statusFacts, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
 import { withSql } from '../../support/core/schedule';
 import { stubReset } from '../../support/core/wa-stub';
@@ -31,10 +31,12 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
 
   test.beforeAll(async () => {
     await stubReset();
+    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
     a = await makeAssistant('subsa');
     b = await makeAssistant('subsb');
     student = await trialFamily({ broughtBy: need(a).id, phone, name: `سلمى${digits.slice(-3)}` });
   });
+  test.afterAll(() => setSetting('sales_require_assignee', false));
 
   test('B: 403 not_your_student on the quote and the create; her family view is empty', async ({ request }) => {
     const token = need(b).token;

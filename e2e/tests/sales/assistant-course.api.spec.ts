@@ -35,6 +35,7 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     const ctx = await playwright.request.newContext();
     teacher = await resetAbrar();
     await setAvailability(teacher, [[0, '08:00', '22:00'], [2, '08:00', '22:00']]);
+    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
     a = await makeAssistant('coursea');
     b = await makeAssistant('courseb');
     student = (await family(need(a).id, 'جنى')).student;
@@ -46,7 +47,10 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     expect(sub.body.status).toBe('unpaid');
     await ctx.dispose();
   });
-  test.afterAll(() => setSetting('sales_auto_assign', true));
+  test.afterAll(async () => {
+    await setSetting('sales_auto_assign', true);
+    await setSetting('sales_require_assignee', false);
+  });
 
   test('GET /sales/booking/course: her student, the unpaid 8-lesson subscription, 2 days a week, not blocked', async ({ request }) => {
     const res = await call<SalesCourseView>(request, { token: need(a).token, method: 'GET', path: `/sales/booking/course?studentId=${student}` });
@@ -63,14 +67,9 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     expect([invoice.status, invoice.body.code, link.status, link.body.code]).toEqual([403, 'invoice_not_allowed', 403, 'meeting_link_not_allowed']);
   });
 
-  test('another assistant’s student is 403 not_your_student even with auto-assign OFF', async ({ request }) => {
-    await setSetting('sales_auto_assign', false);
-    try {
-      const res = await book(request, need(b).token, course());
-      expect([res.status, res.body.code]).toEqual([403, 'not_your_student']);
-    } finally {
-      await setSetting('sales_auto_assign', true);
-    }
+  test('another assistant’s student is 403 not_your_student while «اشتراط التعيين» and auto-assign are ON', async ({ request }) => {
+    const res = await book(request, need(b).token, course());
+    expect([res.status, res.body.code]).toEqual([403, 'not_your_student']);
   });
 
   test('a clash in any week is 409 conflict (she cannot override it)', async ({ request }) => {

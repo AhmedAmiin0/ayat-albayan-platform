@@ -26,10 +26,12 @@ export class SalesMoneyReads {
   /**
    * Only the children she owns, or every child with `all` (sales.renew_any, docs/16 row 38; `mine` says which are
    * hers); each with its unpaid packages that still have money due, and its renewal (SalesRenewals).
+   * `own` null (SalesOwnershipRule not enforcing, owner 2026-11-02): every child, each `mine`
+   * (she may act on it).
    */
-  async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'>; all: boolean }): Promise<SalesFamilyView> {
+  async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'> | null; all: boolean }): Promise<SalesFamilyView> {
     const rows = await this.family.studentsOfPhone(phone);
-    const isMine = (id: string) => scope.own.studentIds.includes(id);
+    const isMine = (id: string) => !scope.own || scope.own.studentIds.includes(id);
     const listed = scope.all ? rows : rows.filter((s) => isMine(s.id));
     const renewals = await this.renewals.of(listed);
     const students = await Promise.all(
