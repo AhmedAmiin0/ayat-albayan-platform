@@ -20,7 +20,7 @@ export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 
     <View style={{ gap: 8 }}>
       <SectionLabel>{s.subscription}</SectionLabel>
       {current ? <HistoryEntryCard entry={current} current brief /> : <Note>{s.noSubscription}</Note>}
-      {current ? <UsedBeforeEdit sub={current} stale={[pathKey('/sales/students')]} /> : null}
+      {current ? <UsedBeforeEdit sub={current} stale={[pathKey('/sales')]} /> : null}
       {past.length > 0 ? (
         <Button
           variant="secondary"

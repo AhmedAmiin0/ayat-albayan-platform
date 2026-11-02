@@ -52,9 +52,7 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
             </Button>
           )}
           {current && (
-            <EditUsedBeforeAction
-              pkg={{ ...current, lessons_used: current.balance.lessons_used }}
-            />
+            <EditUsedBeforeAction pkg={current} />
           )}
           {current && cancelOffered(current) && (
             <Button type="button" variant="ghost" size="sm" onClick={() => setDialog('cancel')}>

@@ -4,12 +4,19 @@ import { Button } from '@/components/ui/form/button';
 import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/people/auth';
 import { t } from '@/lib/i18n/i18n';
-import { EditUsedBeforeDialog, type UsedBeforePackage } from './EditUsedBeforeDialog';
+import { EditUsedBeforeDialog } from './EditUsedBeforeDialog';
+
+/** What the card knows of the package: enough to offer the edit (the dialog reads the rest). */
+export interface UsedBeforePackage {
+  id: string;
+  status: SubscriptionStatus | null;
+  /** YYYY-MM-DD: a count > 0 only with a start before today (the create's rule). */
+  starts_on: string;
+  lessons_used_before?: number | undefined;
+}
 
 export interface EditUsedBeforeActionProps {
-  pkg: UsedBeforePackage & { status: SubscriptionStatus | null };
-  /** The sales history's query (the admin's money is always refreshed). */
-  staleKey?: readonly unknown[] | undefined;
+  pkg: UsedBeforePackage;
 }
 
 /**
@@ -17,7 +24,7 @@ export interface EditUsedBeforeActionProps {
  * (subscriptions.set_start_date); never on a cancelled package, nor on one starting today or later
  * with nothing to lower.
  */
-export function EditUsedBeforeAction({ pkg, staleKey }: EditUsedBeforeActionProps) {
+export function EditUsedBeforeAction({ pkg }: EditUsedBeforeActionProps) {
   const allowed = usePermissions().can('subscriptions.set_start_date');
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -38,8 +45,7 @@ export function EditUsedBeforeAction({ pkg, staleKey }: EditUsedBeforeActionProp
       </Button>
       {open && (
         <EditUsedBeforeDialog
-          pkg={pkg}
-          staleKey={staleKey}
+          subscriptionId={pkg.id}
           onClose={() => setOpen(false)}
           onSaved={saved}
         />

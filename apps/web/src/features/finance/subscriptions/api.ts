@@ -1,4 +1,4 @@
-import { usedBeforeEditResultSchema } from '@ab/shared';
+import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
 import type {
   AdminTaskView,
   QuoteResponse,
@@ -81,5 +81,15 @@ export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
   apiSend('PATCH', `/subscriptions/${id}/lessons-used-before`, { lessonsUsedBefore }).then(
     (raw: unknown) => usedBeforeEditResultSchema.parse(raw),
   );
+
+/** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
+export const usedBeforeStateQuery = (id: string) =>
+  queryOptions({
+    queryKey: [...MONEY_KEY, 'used-before', id],
+    queryFn: () =>
+      apiFetch(`/subscriptions/${id}/lessons-used-before`).then((raw: unknown) =>
+        usedBeforeStateSchema.parse(raw),
+      ),
+  });
 
 export const completeTask = (id: string) => apiSend<AdminTaskView>('POST', `/admin-tasks/${id}/done`);

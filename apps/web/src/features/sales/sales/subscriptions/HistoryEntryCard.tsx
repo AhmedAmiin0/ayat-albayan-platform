@@ -1,37 +1,39 @@
 import type { SalesHistoryEntry } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { EditUsedBeforeAction } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
-const HISTORY_KEY = ['sales', 'subscriptions', 'history'] as const;
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');
 const fill = (text: string, values: Record<string, string>): string =>
   Object.entries(values).reduce((out, [k, v]) => out.replace(`{${k}}`, v), text);
 
 /** One subscription in the history: package, status, dates, lessons, status changes and payments (date, kind, amount). */
-export function HistoryEntryCard({ entry, current }: { entry: SalesHistoryEntry; current: boolean }) {
+interface HistoryEntryCardProps {
+  entry: SalesHistoryEntry;
+  current: boolean;
+  /** «تعديل عدد الحلقات المستخدمة» on the student's current package (SubscriptionHistory). */
+  action?: ReactNode;
+}
+
+export function HistoryEntryCard({ entry, current, action }: HistoryEntryCardProps) {
   const h = t.sales.history;
   return (
     <li className={cn('grid gap-2 rounded-md border border-rule bg-page p-4', current && 'border-lapis')}>
       <p className="flex flex-wrap items-baseline gap-x-3 font-semibold">
         <span>{entry.package ?? '—'}</span>
         <span className="text-ink-2">{status(entry.status)}</span>
-        {current && (
-          <>
-            <span className="text-xs text-lapis">{h.current}</span>
-            <EditUsedBeforeAction pkg={entry} staleKey={HISTORY_KEY} />
-          </>
-        )}
+        {current && <span className="text-xs text-lapis">{h.current}</span>}
       </p>
       <p className="flex flex-wrap gap-x-4 text-sm text-ink-2">
         <span>{fill(h.starts, { date: '' })}<Ltr className="tabular-nums">{entry.starts_on}</Ltr></span>
         {entry.renews_on && <span>{fill(h.renews, { date: '' })}<Ltr className="tabular-nums">{entry.renews_on}</Ltr></span>}
         {entry.ended_at && <span>{fill(h.ended, { date: formatDate(entry.ended_at) })}</span>}
       </p>
+      {action}
       <p className="text-sm tabular-nums">
         {fill(h.used, { used: String(entry.lessons_used), total: String(entry.lessons_total) })} ·{' '}
         {fill(h.remaining, { n: String(entry.lessons_remaining) })}

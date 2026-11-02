@@ -89,7 +89,8 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe, no route gate.
+  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe; also
+  // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02, GET / PATCH /subscriptions/:id/lessons-used-before).
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
   // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
   { key: 'sales.renew_any', area: 'finance', grants: [] },
