@@ -98,6 +98,7 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
       expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
     }
     expect(dates.replay).not.toHaveBeenCalled();
+    expect(sales.ownership).not.toHaveBeenCalled();
     expect(dates.check).not.toHaveBeenCalled();
   });
 

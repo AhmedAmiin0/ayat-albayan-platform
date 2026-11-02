@@ -6,18 +6,27 @@ import {
   type TeacherFeedbackSummary,
   type TeacherFeedbackView,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { pageQuerySchema, type Page } from '@/common/http/http';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { pageQuerySchema, parseOrThrow, type Page } from '@/common/http/http';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
 
 type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 type PageQuery = z.output<typeof pageQuerySchema>;
+
+/**
+ * One query, two schemas: the filter's 400 wins over the paging's, as before z1d. Two
+ * `@ZodQuery` params would not keep that order (Nest runs the last param's pipe first).
+ */
+const filterThenPage = (query: unknown): [FeedbackQuery, PageQuery] => [
+  parseOrThrow(feedbackQuerySchema, query),
+  parseOrThrow(pageQuerySchema, query),
+];
 
 /**
  * «رأيك يهمّنا», the staff side: the admin asks a family for it and reads every answer; a teacher
@@ -46,11 +55,8 @@ export class FeedbackController {
   }
 
   @Get('feedback')
-  list(
-    @ZodQuery(feedbackQuerySchema) filter: FeedbackQuery,
-    @ZodQuery(pageQuerySchema) page: PageQuery,
-  ): Promise<Page<FeedbackRowView>> {
-    return this.reads.list(filter, page);
+  list(@Query() query: unknown): Promise<Page<FeedbackRowView>> {
+    return this.reads.list(...filterThenPage(query));
   }
 
   @Get('feedback/summary')
@@ -61,11 +67,8 @@ export class FeedbackController {
   /** A teacher's own rows and average; contact phone and guardian are never in them. */
   @Get('teachers/me/feedback')
   @Permissions('self.teacher')
-  mine(
-    @ZodQuery(feedbackQuerySchema) filter: FeedbackQuery,
-    @ZodQuery(pageQuerySchema) page: PageQuery,
-    @CurrentUser() user: AuthUser,
-  ): Promise<TeacherFeedbackView> {
+  mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<TeacherFeedbackView> {
+    const [filter, page] = filterThenPage(query);
     return this.reads.mine(user, { filter, page });
   }
 }
