@@ -108,8 +108,6 @@
   "apps/api/src/modules/teaching/lessons/time-edit/time-edit.fakes.ts exports ADMIN",
   "apps/api/src/modules/teaching/scheduling/conflicts/conflict-checker.ts types CheckInput",
   "apps/api/src/modules/teaching/scheduling/meeting-link.ts types LinkSources",
-  "apps/api/src/modules/teaching/scheduling/occurrences/dst-probe.ts types ProbeInput",
-  "apps/api/src/modules/teaching/scheduling/occurrences/horizon.ts types HorizonInput",
   "apps/api/src/modules/teaching/scheduling/occurrences/lesson-writer.ts types GenerateInput",
   "apps/api/src/modules/teaching/scheduling/occurrences/lesson-writer.ts types OccurrenceRow",
   "apps/api/src/modules/teaching/scheduling/rules/rule-projection.repo.ts types ProjectionQuery",
