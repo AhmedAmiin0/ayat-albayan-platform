@@ -1,17 +1,19 @@
 import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ask, jpgs, PDF_BYTES, setup, status } from './pdf-preview.fakes';
-import { pdfPageCount, renderPdfPages } from './pdf-client';
+import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { PdfToolError } from './pdf-render';
 
 // The limits a hostile or huge PDF meets in PdfPreviewService (the timeouts and the memory cap: pdf-render.spawn.test.ts;
 // the socket's own: pdf-client.test.ts).
-vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn() }));
+vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn(), sandboxReady: vi.fn() }));
 const count = vi.mocked(pdfPageCount);
 const render = vi.mocked(renderPdfPages);
+const ready = vi.mocked(sandboxReady);
 
 beforeEach(() => {
   count.mockReset().mockResolvedValue(12);
+  ready.mockReset().mockResolvedValue(true);
   render.mockReset().mockImplementation(async (_bytes, range) => jpgs(range));
 });
 
@@ -52,6 +54,15 @@ describe('PdfPreviewService limits', () => {
     expect(t.queries.setDoc).not.toHaveBeenCalled();
     await expect(t.service.page(ask(1))).resolves.toMatchObject({ page: 1, pages: 12 });
     expect(count).toHaveBeenCalledTimes(2);
+  });
+
+  it('no socket at all: 503 pdf_unavailable before the slot, with no read of the PDF', async () => {
+    const t = setup();
+    t.objects.set('m1.pdf', PDF_BYTES);
+    ready.mockResolvedValue(false);
+    expect(await status(t.service.page(ask(1)))).toMatchObject({ status: 503, body: { code: 'pdf_unavailable' } });
+    const asked = [t.storage.download, count, t.queries.setDoc].map((f) => f.mock.calls.length);
+    expect(asked).toEqual([0, 0, 0]);
   });
 
   it('one render per process and 8 waiting: the next is 503 pdf_busy, nothing stored, and it works once the queue drains', async () => {

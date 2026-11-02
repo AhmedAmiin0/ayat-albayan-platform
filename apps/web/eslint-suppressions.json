@@ -742,7 +742,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -1078,7 +1078,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 9
@@ -1881,7 +1881,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/messaging/inbox/api/api.forward.ts": {
@@ -2563,7 +2563,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/messaging/inbox/messages/forward/ForwardDialog.test.tsx": {
@@ -2657,11 +2657,6 @@
   },
   "src/features/messaging/inbox/messages/lib/use-quote-thumb.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/pdf/PdfCard.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -6570,7 +6565,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -9469,7 +9464,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -9663,7 +9658,7 @@
       "count": 3
     },
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -10876,7 +10871,7 @@
   },
   "src/features/teaching/schedule/lesson/LessonActions.tsx": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 8
