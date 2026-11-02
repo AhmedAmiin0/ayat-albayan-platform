@@ -1,12 +1,13 @@
 // Pure-move gate for refactor PRs (docs/27 §4, §6). Usage: node tools/scripts/pure-move-check.mjs <base> [head]
 // Against the merge base it allows only: renames, changed module paths (import/export/require/import()/vi|jest
-// mock strings), identifier renames from the move maps (pure-move/identifiers.mjs), new export-from index.ts
-// barrels, config that only follows moved paths (pure-move/configs.mjs; a DOMAINS entry: pure-move/domains.mjs)
-// and baselines whose entries only follow their moved files (pure-move/baselines.mjs). Anything else fails.
+// mock strings), identifier renames listed in the diff's move maps (pure-move/identifiers.mjs), new index.ts
+// barrels made of `export … from` lines, config that only follows moved paths (code configs as code,
+// pure-move/configs.mjs for workflows, tsconfig, knip.json and refactor/) and path-keyed baselines whose
+// entries only follow their moved files (pure-move/baselines.mjs: eslint suppressions, knip, folder cap). Anything else fails.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { classifyBaseline } from './pure-move/baselines.mjs';
-import { classifyConfig, followDomains, rewritePaths as rewriteText, textPairs } from './pure-move/configs.mjs';
+import { classifyConfig, rewritePaths as rewriteText, textPairs } from './pure-move/configs.mjs';
 import { CODE_SPECS, grepFiles, identifierTable, renameIdentifiers, renameProblems } from './pure-move/identifiers.mjs';
 import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
@@ -100,8 +101,7 @@ export function classify(entry, read, ctx = {}) {
   if (status === 'D') return { kind: 'bad', why: 'deleted file (a move is a rename)' };
   if ((status.startsWith('R') || status === 'M') && CODE.test(to)) {
     const base = renameIdentifiers(read('base', from), ctx.ids ?? new Map());
-    const head = followDomains(base, read('head', to), { file: to, renames: ctx.renames ?? [] });
-    if (!onlyPathsChanged(base, head, { ...ctx, from, to })) return { kind: 'bad', why: 'changes more than import/export/mock paths' };
+    if (!onlyPathsChanged(base, read('head', to), { ...ctx, from, to })) return { kind: 'bad', why: 'changes more than import/export/mock paths' };
     return { kind: isConfig(to) ? 'config' : 'paths' };
   }
   return { kind: 'bad', why: `${status}: not a move` };

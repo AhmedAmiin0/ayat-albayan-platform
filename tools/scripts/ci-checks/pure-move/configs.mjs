@@ -4,7 +4,6 @@
 // count baselines (jscpd, lint, cycles) with the same keys and counts at or below base. Anything else fails.
 import { posix } from 'node:path';
 import { relativePairs } from './baselines.mjs';
-export { followDomains } from './domains.mjs';
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 /** Whole paths of moved files replaced by their new path (as the codemod writes them). */
