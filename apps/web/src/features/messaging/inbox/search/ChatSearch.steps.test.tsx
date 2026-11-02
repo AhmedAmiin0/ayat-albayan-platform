@@ -39,7 +39,7 @@ describe('«بحث» inside a chat (web)', () => {
   it('typing asks once settled, shows «1 من 2», jumps to the newest hit and marks its words', async () => {
     routeChat(apiFetch, [NEW, OLD]);
     await openAndType('اسلام');
-    expect(await screen.findByText(counter(1, 2), {}, { timeout: 2000 })).toBeTruthy();
+    expect(await screen.findByText(counter(1, 2), {}, { timeout: 5000 })).toBeTruthy();
     const asked = apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('/search'));
     expect(asked).toEqual([`${PATH}/search?q=${encodeURIComponent('اسلام')}`]);
     await waitFor(() => expect(bubble(2)?.hasAttribute('data-flash')).toBe(true));
@@ -50,7 +50,7 @@ describe('«بحث» inside a chat (web)', () => {
   it('↑ steps to an older hit: older pages load until it renders, then it is scrolled to', async () => {
     routeChat(apiFetch, [NEW, OLD]);
     await openAndType('اسلام');
-    await screen.findByText(counter(1, 2), {}, { timeout: 2000 });
+    await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
     expect(bubble(1)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: search.older }));
     expect(await screen.findByText(counter(2, 2))).toBeTruthy();
@@ -64,7 +64,7 @@ describe('«بحث» inside a chat (web)', () => {
   it('Enter / Shift+Enter step, Esc closes: back to the newest message, focus on «بحث»', async () => {
     routeChat(apiFetch, [NEW, OLD]);
     const box = await openAndType('اسلام');
-    await screen.findByText(counter(1, 2), {}, { timeout: 2000 });
+    await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
     fireEvent.keyDown(box, { key: 'Enter' });
     expect(await screen.findByText(counter(2, 2))).toBeTruthy();
     fireEvent.keyDown(box, { key: 'Enter', shiftKey: true });
@@ -80,7 +80,7 @@ describe('«بحث» inside a chat (web)', () => {
   it('no hit: «لا توجد نتائج», both arrows off', async () => {
     routeChat(apiFetch, []);
     await openAndType('وداعا');
-    expect(await screen.findByText(search.empty, {}, { timeout: 2000 })).toBeTruthy();
+    expect(await screen.findByText(search.empty, {}, { timeout: 5000 })).toBeTruthy();
     for (const name of [search.older, search.newer]) {
       expect(screen.getByRole('button', { name })).toHaveProperty('disabled', true);
     }

@@ -59,7 +59,7 @@ export function ChatSearchBar({ search: s }: { search: ChatSearchValue }) {
         placeholderTextColor={color.ink3}
         style={{ ...FIELD, color: color.ink }}
       />
-      <AppText testID="chat-search-status" accessibilityLiveRegion="polite" style={small}>
+      <AppText testID="chat-search-status" accessibilityLiveRegion="polite" numberOfLines={1} style={{ ...small, flexShrink: 1 }}>
         {status}
       </AppText>
       {ARROWS.map(({ dir, Icon }) => (

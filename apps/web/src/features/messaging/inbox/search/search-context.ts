@@ -2,7 +2,10 @@ import type { ChatSearchControls } from '@ab/client-core';
 import { createContext, use } from 'react';
 
 /** The open chat's «بحث» (ChatSearchProvider): its bar, its hits and the words to light up. */
-export type ChatSearchValue = ChatSearchControls;
+export interface ChatSearchValue extends ChatSearchControls {
+  /** The shown hit could not be reached in the chat's pages (the bar says so). */
+  lost: boolean;
+}
 
 export const ChatSearchContext = createContext<ChatSearchValue | null>(null);
 

@@ -6,6 +6,7 @@ import {
   type ChatSearchHit,
   type ChatSearchPage,
 } from '@ab/shared';
+import { looksCrmHistory } from '@/modules/messaging/whatsapp';
 import type { SearchRow } from './chat-search.repo';
 
 interface SearchInput {
@@ -24,7 +25,11 @@ const keyOf = (r: SearchRow): Key => ({ at: Date.parse(r.created_at), id: r.id }
 /** Newest first, the id breaking a tie (the page order and the cursor's keyset). */
 const newerFirst = (a: Key, b: Key): number => b.at - a.at || b.id.localeCompare(a.id);
 
-const texts = (r: SearchRow): (string | null)[] => [r.body, r.media_name];
+/** What the chat shows as text: an old-CRM file's body is only its storage link (never shown). */
+const texts = (r: SearchRow): (string | null)[] => [
+  looksCrmHistory(r) ? null : r.body,
+  r.media_name,
+];
 
 /** The first of the row's texts that matches: its snippet. */
 function hitOf(r: SearchRow, q: string): ChatSearchHit {

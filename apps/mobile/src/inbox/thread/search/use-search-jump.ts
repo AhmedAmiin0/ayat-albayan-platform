@@ -9,15 +9,16 @@ import { useChatSearch } from './search-context';
  */
 export function useSearchJump<T>(
   list: RefObject<FlatList<T> | null>,
-  jump: (id: string, notFound?: string) => void,
+  jumps: { jump: (id: string, notFound?: string) => void; cancel: () => void },
 ): void {
   const search = useChatSearch();
   const shown = search?.hits[search.state.index]?.id;
   const closed = search?.closed ?? 0;
-  const go = useEffectEvent((id: string) => jump(id, t.inbox.chatSearch.unreachable));
-  const toNewest = useEffectEvent(() =>
-    list.current?.scrollToOffset({ offset: 0, animated: true }),
-  );
+  const go = useEffectEvent((id: string) => jumps.jump(id, t.inbox.chatSearch.unreachable));
+  const toNewest = useEffectEvent(() => {
+    jumps.cancel();
+    list.current?.scrollToOffset({ offset: 0, animated: true });
+  });
   useEffect(() => {
     if (shown) go(shown);
   }, [shown]);

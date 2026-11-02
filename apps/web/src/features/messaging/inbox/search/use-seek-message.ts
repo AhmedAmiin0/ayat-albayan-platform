@@ -20,7 +20,7 @@ interface Target {
 /**
  * A search step's jump (owner 2026-11-02): the bubble scrolled to and lit up as a quote's jump
  * does (jumpToMessage). Older than the loaded pages: the chat's older pages load one by one (as
- * «رسائل أقدم») until it renders, at most SEEK_PAGES.
+ * «رسائل أقدم») until it renders, at most SEEK_PAGES; `lost` names a hit it could not reach.
  */
 export function useSeekMessage(messages: readonly MessageView[], older: OlderPages) {
   const [target, setTarget] = useState<Target | null>(null);
@@ -30,7 +30,7 @@ export function useSeekMessage(messages: readonly MessageView[], older: OlderPag
     older.hasNextPage && !older.isFetchingNextPage && loads.current < SEEK_PAGES;
   const reach = (to: Target) => {
     reached.current = to;
-    jumpToMessage(to.id);
+    jumpToMessage(to.id, false);
   };
   const load = () => {
     loads.current += 1;
@@ -43,8 +43,14 @@ export function useSeekMessage(messages: readonly MessageView[], older: OlderPag
     if (!found && mayLoad()) load();
   });
   useEffect(() => advance(), [target, messages, older.isFetchingNextPage]);
-  return (id: string) => {
+  const seek = (id: string) => {
     loads.current = 0;
     setTarget({ id });
   };
+  /** Closing the search: a seek still loading pages stops (it never scrolls away afterwards). */
+  const cancel = () => setTarget(null);
+  // Not loaded and the chat has no older page left: the bar says it cannot be reached.
+  const done = !older.hasNextPage && !older.isFetchingNextPage;
+  const lost = target !== null && done && !messages.some((m) => m.id === target.id);
+  return { seek, cancel, lost: lost ? target.id : null };
 }

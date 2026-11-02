@@ -9,6 +9,8 @@ const row = (n: number, over: Partial<SearchRow> = {}): SearchRow => ({
   body: null,
   media_name: null,
   template_key: null,
+  direction: 'inbound',
+  media_mime: null,
   ...over,
 });
 
@@ -49,6 +51,12 @@ describe('searchPage', () => {
     const cursor = first.next_cursor ?? undefined;
     const second = searchPage(rows, { q: 'zoom', cursor, limit: 2 });
     expect([...first.items, ...second.items].map((h) => h.id)).toEqual([3, 2, 1].map(id));
+  });
+
+  it('an old-CRM file is never found by its hidden storage link', () => {
+    const link = 'https://crm.test/storage/v1/object/public/chat-media/a/b.pdf';
+    const crm = row(1, { body: link, media_mime: 'application/pdf' });
+    expect(searchPage([crm], { q: 'chat-media', limit: 5 }).total).toBe(0);
   });
 
   it('no hit: an empty page', () => {

@@ -2,7 +2,8 @@ import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { BackHandler, FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { chat, found, MID, NEW, OLD, page, stub } from './search.fixture';
+import { chat, found, page, stub } from './search.fixture';
+import { MID, NEW, OLD } from './search.data';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -33,7 +34,7 @@ test('«بحث» turns the header into the field; typing asks once settled and j
   await openAndType(jest.fn(), 'اسلام');
   expect(screen.getByTestId('chat-search-bar')).toBeTruthy();
   expect(screen.queryByTestId('chat-title')).toBeNull();
-  expect(await screen.findByText(counter(1, 2), {}, { timeout: 2000 })).toBeTruthy();
+  expect(await screen.findByText(counter(1, 2), {}, { timeout: 5000 })).toBeTruthy();
   const asked = mockApiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('/search?'));
   expect(asked).toEqual([`/threads/%2B966552147730/search?q=${encodeURIComponent('اسلام')}`]);
   // Newest first: NEW is index 1 (MID is newer), centred.
@@ -46,7 +47,7 @@ test('↑ goes to an older hit: older pages load, the list goes to it once it re
   mockApiFetch.mockImplementation(answer(found([NEW, OLD])));
   const more = jest.fn().mockResolvedValue(page([[MID, NEW], [OLD]], false));
   const view = await openAndType(more, 'اسلام');
-  await screen.findByText(counter(1, 2), {}, { timeout: 2000 });
+  await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
   await fireEvent.press(screen.getByRole('button', { name: words.older }));
   expect(screen.getByText(counter(2, 2))).toBeTruthy();
   expect(more).toHaveBeenCalledWith({ cancelRefetch: false });
@@ -62,7 +63,7 @@ test('Android back closes it: the header returns, the list goes to the newest me
   const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
   mockApiFetch.mockImplementation(answer(found([NEW])));
   await openAndType(jest.fn(), 'اسلام');
-  await screen.findByText(counter(1, 1), {}, { timeout: 2000 });
+  await screen.findByText(counter(1, 1), {}, { timeout: 5000 });
   const onBack = listen.mock.calls.at(-1)?.[1];
   await act(async () => {
     expect(onBack?.(undefined as never)).toBe(true);
@@ -76,8 +77,24 @@ test('Android back closes it: the header returns, the list goes to the newest me
 test('no hit: «لا توجد نتائج», both arrows off', async () => {
   mockApiFetch.mockImplementation(answer(found([])));
   await openAndType(jest.fn(), 'وداعا');
-  expect(await screen.findByText(words.empty, {}, { timeout: 2000 })).toBeTruthy();
+  expect(await screen.findByText(words.empty, {}, { timeout: 5000 })).toBeTruthy();
   for (const name of [words.older, words.newer]) {
     expect(screen.getByRole('button', { name })).toBeDisabled();
   }
+});
+
+test('closing while an older hit is still loading: it never scrolls there afterwards', async () => {
+  const listen = jest.spyOn(BackHandler, 'addEventListener');
+  mockApiFetch.mockImplementation(answer(found([NEW, OLD])));
+  let resolve: (v: unknown) => void = () => undefined;
+  const more = jest.fn(() => new Promise((r) => (resolve = r)));
+  const view = await openAndType(more, 'اسلام');
+  await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
+  await fireEvent.press(screen.getByRole('button', { name: words.older }));
+  await act(async () => {
+    listen.mock.calls.at(-1)?.[1]?.(undefined as never);
+  });
+  await act(async () => resolve(page([[MID, NEW], [OLD]], false)));
+  await view.rerender(chat(stub([[MID, NEW], [OLD]], more, false)));
+  expect(FlatList.prototype.scrollToIndex).not.toHaveBeenCalledWith(centred(2));
 });

@@ -14,11 +14,18 @@ export function searchFold(text: string): string {
 }
 
 /** A page's end: the last hit's time and id (keyset; the hits are newest first). */
-const CURSOR_RE = /^\d{4}-\d{2}-\d{2}T[\d:.]+(Z|[+-]\d{2}:?\d{2})_[0-9a-f-]{36}$/i;
+const cursorSchema = z
+  .string()
+  .max(80)
+  .refine((c) => {
+    const cut = c.lastIndexOf('_');
+    const at = z.iso.datetime({ offset: true }).safeParse(c.slice(0, cut));
+    return cut > 0 && at.success && z.uuid().safeParse(c.slice(cut + 1)).success;
+  });
 
 export const chatSearchQuerySchema = z.object({
   q: z.string().trim().min(1).max(100),
-  cursor: z.string().regex(CURSOR_RE).optional(),
+  cursor: cursorSchema.optional(),
 });
 export type ChatSearchQuery = z.infer<typeof chatSearchQuerySchema>;
 

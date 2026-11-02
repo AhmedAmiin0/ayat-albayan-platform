@@ -43,7 +43,7 @@ describe('chatSearchQuerySchema', () => {
   it('accepts only a well-formed cursor (no filter text can ride in it)', () => {
     const cursor = searchCursor({ id: ID, created_at: '2026-11-01T10:00:00.123456+00:00' });
     expect(chatSearchQuerySchema.parse({ q: 'a', cursor }).cursor).toBe(cursor);
-    for (const bad of ['x', `2026-11-01T10:00:00Z_${ID},id.eq.1`, '%_%']) {
+    for (const bad of ['x', `2026-11-01T10:00:00Z_${ID},id.eq.1`, '%_%', `2026-13-45T::Z_${ID}`]) {
       expect(chatSearchQuerySchema.safeParse({ q: 'a', cursor: bad }).success).toBe(false);
     }
   });

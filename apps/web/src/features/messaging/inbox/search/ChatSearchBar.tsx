@@ -2,8 +2,10 @@ import { canStep, searchStatus, type SearchStep } from '@ab/client-core';
 import type { KeyboardEvent } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
+import { SearchInput } from '@/components/ui/form/search-input';
 import { t } from '@/lib/i18n/i18n';
 import { useChatSearch, type ChatSearchValue } from './search-context';
+import { SEARCH_BAR_ID } from './to-newest';
 
 /** The bar's line words (client-core's searchStatus). */
 const WORDS = { ...t.inbox.chatSearch, error: t.common.error };
@@ -32,26 +34,26 @@ export function ChatSearchBar() {
   if (!s?.state.open) return null;
   const onKey = (e: KeyboardEvent) => {
     const run = KEYS[keyName(e)];
-    if (!run) return;
+    if (!run || e.nativeEvent.isComposing) return;
     e.preventDefault();
     run(s);
   };
   return (
-    <div role="search" className="mt-2 flex items-center gap-1 rounded-md border border-rule bg-raised ps-2.5">
-      <Icon name="search" className="text-ink-3" />
-      <input
-        ref={focusOnMount}
-        type="search"
-        dir="auto"
-        aria-label={t.inbox.chatSearch.label}
-        placeholder={t.inbox.chatSearch.placeholder}
-        value={s.state.text}
-        onChange={(e) => s.type(e.target.value)}
-        onKeyDown={onKey}
-        className="min-h-11 min-w-0 flex-1 bg-transparent text-sm outline-none sm:min-h-9"
-      />
+    <div id={SEARCH_BAR_ID} role="search" className="mt-2 flex items-center gap-1">
+      <div className="min-w-0 flex-1">
+        <SearchInput
+          ref={focusOnMount}
+          dir="auto"
+          aria-label={t.inbox.chatSearch.label}
+          placeholder={t.inbox.chatSearch.placeholder}
+          value={s.state.text}
+          onChange={(e) => s.type(e.target.value)}
+          onKeyDown={onKey}
+          className="[&::-webkit-search-cancel-button]:hidden"
+        />
+      </div>
       <span role="status" className="shrink-0 text-xs whitespace-nowrap text-ink-3 tabular-nums">
-        {searchStatus({ ...s, index: s.state.index }, WORDS)}
+        {s.lost ? WORDS.unreachable : searchStatus({ ...s, index: s.state.index }, WORDS)}
       </span>
       {ARROWS.map((a) => (
         <IconButton

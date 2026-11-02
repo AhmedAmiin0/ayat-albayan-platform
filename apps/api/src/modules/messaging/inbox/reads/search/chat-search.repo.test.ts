@@ -4,7 +4,9 @@ import { NOT_A_REACTION } from '@/modules/messaging/whatsapp';
 import { ChatSearchRepo, SCAN_BATCH } from './chat-search.repo';
 
 const PHONE = '+966500000001';
-const full = { data: Array.from({ length: SCAN_BATCH }, (_, i) => ({ id: String(i) })) };
+const AT = '2026-10-01T00:00:00.000Z';
+const row = (i: number) => ({ id: String(i), created_at: AT });
+const full = { data: Array.from({ length: SCAN_BATCH }, (_, i) => row(i)) };
 
 describe('ChatSearchRepo.rows', () => {
   it('this chat only, never deleted, hidden or marker rows, newest first; the words never reach SQL', async () => {
@@ -17,12 +19,13 @@ describe('ChatSearchRepo.rows', () => {
     expect(f.calls.some((c) => ['ilike', 'like', 'textSearch'].includes(c.method))).toBe(false);
   });
 
-  it('reads in batches until a short one', async () => {
-    const f = fakeDb({ messages: [full, { data: [{ id: 'last' }] }] });
+  it('reads keyset batches (up to the oldest time seen) until a short one, each row once', async () => {
+    const again = { data: [{ id: String(SCAN_BATCH - 1), created_at: AT }, { id: 'last', created_at: AT }] };
+    const f = fakeDb({ messages: [full, again] });
     const rows = await new ChatSearchRepo(f.db).rows(PHONE);
     expect(rows).toHaveLength(SCAN_BATCH + 1);
-    const ranges = f.calls.filter((c) => c.method === 'range').map((c) => c.args);
-    expect(ranges).toEqual([[0, SCAN_BATCH - 1], [SCAN_BATCH, 2 * SCAN_BATCH - 1]]);
+    expect(f.calls.filter((c) => c.method === 'lte').map((c) => c.args)).toEqual([['created_at', AT]]);
+    expect(f.calls.some((c) => c.method === 'range')).toBe(false);
   });
 
   it('a failed read throws', async () => {
