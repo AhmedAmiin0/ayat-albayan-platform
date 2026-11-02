@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
-import { graphHttp, type FetchLike } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import {
+  graphHttp,
+  graphSend,
+  type FetchLike,
+  type GraphConn,
+} from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { waTo } from '@/modules/messaging/whatsapp/messages/wa-components';
 import { DEFAULT_TIMEOUT_MS } from '@/modules/messaging/whatsapp/whatsapp.client';
 import type { CallingLine } from './calling-line';
@@ -63,7 +68,8 @@ export class KapsoCallsApi implements CallsApi {
   ): Promise<{ waMessageId: string }> {
     const body = permissionRequestBody(input);
     const path = `${line.env.phoneNumberId}/messages`;
-    const res = await this.http(line).json({ path, method: 'POST', json: body, schema: sentSchema });
+    const http = this.http(line, graphSend);
+    const res = await http.json({ path, method: 'POST', json: body, schema: sentSchema });
     return { waMessageId: res.messages[0]?.id ?? '' };
   }
 
@@ -76,10 +82,11 @@ export class KapsoCallsApi implements CallsApi {
     return this.http(line).json({ path, method: 'POST', json: body, schema });
   }
 
-  private http(line: CallingLine): Http {
+  /** graphSend for the `/messages` POST: a 2xx without a message id is uncertain (h8b). */
+  private http(line: CallingLine, profile: (c: GraphConn) => Http = graphHttp): Http {
     const fetchLike = this.opts.fetch ?? fetch;
     const timeoutMs = this.opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    return graphHttp({ env: line.env, fetch: fetchLike, timeoutMs });
+    return profile({ env: line.env, fetch: fetchLike, timeoutMs });
   }
 }
 
