@@ -32,4 +32,14 @@ describe('createTokenVerifier claims (docs/36 z9)', () => {
     await expect(verify(await hs256({ email: 'a@x.com' }))).rejects.toThrow('token has no subject');
     await expect(verify(await hs256({ sub: '' }))).rejects.toThrow('token has no subject');
   });
+
+  it('a non-string subject is refused (z9: was passed on as a non-string id)', async () => {
+    const token = await new SignJWT({ sub: 7 } as unknown as JWTPayload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuer(`${URL_}/auth/v1`)
+      .setAudience('authenticated')
+      .setExpirationTime('1h')
+      .sign(new TextEncoder().encode(SECRET));
+    await expect(verify(token)).rejects.toThrow('token has no subject');
+  });
 });

@@ -42,7 +42,9 @@ export function parseStored<T>(raw: string): Stored<T> | null {
 }
 
 /** An invalidation message: a topic, and the instance that sent it (its own are skipped). */
-export const cacheMessageSchema = jsonOf(z.looseObject({ origin: z.unknown(), topic: z.string() }));
+export const cacheMessageSchema = jsonOf(
+  z.looseObject({ origin: z.unknown().optional(), topic: z.string() }),
+);
 
 export interface CacheEntry<T> {
   value: T;

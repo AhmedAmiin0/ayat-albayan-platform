@@ -23,6 +23,11 @@ describe('cacheMessageSchema', () => {
     expect(parsed).toMatchObject({ origin: 'o1', topic: 'settings' });
   });
 
+  it('a message without an origin still counts (as before z9)', () => {
+    expect(cacheMessageSchema.parse('{"topic":"settings"}')).toEqual({ topic: 'settings' });
+    expect(cacheMessageSchema.safeParse('{"topic":""}').success).toBe(true);
+  });
+
   it.each(['x', 'null', '5', '{"origin":"o1"}', '{"topic":7}'])('%j is ignored', (raw) => {
     expect(cacheMessageSchema.safeParse(raw).success).toBe(false);
   });
