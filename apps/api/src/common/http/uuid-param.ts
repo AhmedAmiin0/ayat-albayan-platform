@@ -7,7 +7,7 @@ import { parseOrThrow } from './http';
 // The 400 body is the one `validation_failed` envelope, the issue path being the param's name.
 
 /** The issue message of a bad id (was «Validation failed (uuid is expected)»). */
-export const INVALID_UUID = 'invalid_uuid';
+const INVALID_UUID = 'invalid_uuid';
 
 /** `{ [name]: guid }` → the id; a bad one is the issue `{ path: name, message: invalid_uuid }`. */
 const guidField = (name: string): z.ZodType<string> =>
