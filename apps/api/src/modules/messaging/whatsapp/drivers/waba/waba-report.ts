@@ -8,7 +8,7 @@ import type { WabaTemplate } from './waba-template';
 // report_trial_session (a trial lesson) or report_session (a regular one) without variables.
 // Both drivers send it so.
 
-export interface WabaReport {
+interface WabaReport {
   document: MediaSend;
   template: WabaTemplate;
 }

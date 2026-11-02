@@ -8,7 +8,7 @@ import { sentAs, wabaTemplate, type WabaTemplate } from './waba-template';
 // (waba-template.ts), or the old script's report as two sends (waba-report.ts).
 
 /** The client's own calls: one Graph message (allow-list, POST, wamid parse) and a file by link. */
-export interface GraphPorts {
+interface GraphPorts {
   post: (to: string, build: () => GraphBody) => Promise<WaSent>;
   document: (input: MediaSend) => Promise<WaSent>;
 }

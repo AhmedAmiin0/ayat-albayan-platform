@@ -10,7 +10,7 @@ import type { FetchLike, GraphConn } from '@/modules/messaging/whatsapp/drivers/
 type Apps = NonNullable<LineCheckView['subscribed_apps']>;
 type MetaReady = NonNullable<LineCheckView['meta_ready']>;
 
-export interface ReadyContext {
+interface ReadyContext {
   env: Env;
   line: WaLine;
   fetch: FetchLike;
