@@ -2932,6 +2932,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -3031,6 +3034,9 @@
     }
   },
   "src/modules/finance/subscriptions/money/balance.repo.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -3332,6 +3338,9 @@
       "count": 1
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 2
+    },
+    "complexity": {
       "count": 2
     }
   },

@@ -449,6 +449,11 @@
       "count": 2
     }
   },
+  "ci-checks/pure-move/domains.mjs": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "ci-checks/pure-move/identifiers.mjs": {
     "ab/no-shape-checks": {
       "count": 1
