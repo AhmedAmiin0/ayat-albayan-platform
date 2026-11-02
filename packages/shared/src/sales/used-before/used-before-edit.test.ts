@@ -12,9 +12,10 @@ const base = {
 };
 
 describe('usedBeforeEditMax', () => {
-  it('is usedBeforeMax for an untouched package (8 lessons, 2 days a week: 6)', () => {
-    expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(6);
-    expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(9);
+  // usedBeforeMax is every lesson but one since #610 (owner 2026-11-02, «no cap»).
+  it('is usedBeforeMax for an untouched package (8 lessons: 7)', () => {
+    expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(7);
+    expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(11);
   });
 
   it('never more than the lessons still free after the platform ones', () => {
@@ -23,19 +24,19 @@ describe('usedBeforeEditMax', () => {
   });
 
   it('ignores a negative platform count (never widens the bound)', () => {
-    expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: -2, pastStart: true })).toBe(6);
+    expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: -2, pastStart: true })).toBe(7);
   });
 });
 
 describe('usedBeforeEditProblem', () => {
   it('accepts 0..max on a package without a course', () => {
     expect(usedBeforeEditProblem({ ...base, next: 0 })).toBeNull();
-    expect(usedBeforeEditProblem({ ...base, next: 6 })).toBeNull();
+    expect(usedBeforeEditProblem({ ...base, next: 7 })).toBeNull();
   });
 
   it('refuses more than the max: never the whole package', () => {
-    expect(usedBeforeEditProblem({ ...base, next: 7 })).toBe('used_before_too_many');
     expect(usedBeforeEditProblem({ ...base, next: 8 })).toBe('used_before_too_many');
+    expect(usedBeforeEditProblem({ ...base, next: 9 })).toBe('used_before_too_many');
     expect(usedBeforeEditProblem({ ...base, next: 4, platformUsed: 5, pastStart: true })).toBe('used_before_too_many');
   });
 
