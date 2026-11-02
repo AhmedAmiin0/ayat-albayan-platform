@@ -6,6 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
+import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
@@ -56,7 +57,7 @@ describe('POST /sales/booking/course/change[/check] with sales.renew_any', () =>
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: true }))
+      .overrideProvider(SettingsService).useValue(fakeSettings(REQUIRE_ON))
       .overrideProvider(ConflictChecker).useValue(checker)
       .overrideProvider(CourseChangeRepo).useValue(queries)
       .overrideProvider(CourseLessonRepo).useValue(lessons)

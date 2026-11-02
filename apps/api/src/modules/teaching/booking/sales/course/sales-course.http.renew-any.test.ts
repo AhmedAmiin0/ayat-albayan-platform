@@ -6,6 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
+import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
@@ -68,7 +69,7 @@ describe('/sales/booking course routes with sales.renew_any', () => {
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: true }))
+      .overrideProvider(SettingsService).useValue(fakeSettings(REQUIRE_ON))
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(SalesCourseRepo).useValue(queries)

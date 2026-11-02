@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesOwnershipRule } from '@/modules/sales/sales';
 import { SalesFamilyRepo } from './reads/sales-family.repo';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
@@ -28,26 +28,28 @@ export function renewsAny(user: AuthUser): boolean {
 }
 
 /**
- * Whose money a salesperson may write (docs/16 row 17): ownershipOf(...).studentIds, i.e. the students of
- * her leads' families and the students she brought (students.brought_by), whatever settings.sales_auto_assign
- * says. Never SalesBookingScope: its OFF rule (no ownership check, row 13) is for trial bookings only.
- * With sales.renew_any (row 38; owner 2026-11-01: «renew any one without checking if it was the
+ * Whose money a salesperson may write (docs/16 row 17): while SalesOwnershipRule enforces ownership
+ * (sales_require_assignee AND sales_auto_assign ON) ownershipOf(...).studentIds, i.e. the students of
+ * her leads' families and the students she brought (students.brought_by); otherwise ANY student
+ * (owner 2026-11-02). With sales.renew_any (row 38; owner 2026-11-01: «renew any one without checking if it was the
  * creator») the renew flow takes ANY student: no owner, brought_by, lead or family-chat check.
  */
 @Injectable()
 export class SalesMoneyScope {
   constructor(
-    private readonly sales: SalesRepo,
+    private readonly rule: SalesOwnershipRule,
     private readonly family: SalesFamilyRepo,
   ) {}
 
-  ownership(user: AuthUser): Promise<SalesOwnership> {
-    return this.sales.ownership(user.id);
+  /** Her ownership while the rule enforces it; null = any student (SalesOwnershipRule). */
+  ownership(user: AuthUser): Promise<SalesOwnership | null> {
+    return this.rule.scope(user);
   }
 
-  /** 403 not_your_student unless hers, whatever the key («إلغاء الباقة», a link's teacher). */
+  /** 403 not_your_student unless hers (while enforced), whatever the key («إلغاء الباقة», a link's teacher). */
   async assertOwns(user: AuthUser, studentId: string): Promise<void> {
-    assertOwnStudent(await this.ownership(user), studentId);
+    const own = await this.ownership(user);
+    if (own) assertOwnStudent(own, studentId);
   }
 
   /** The renew flow (quote, create, transfer, its receipts): hers, or ANY student with the key. */

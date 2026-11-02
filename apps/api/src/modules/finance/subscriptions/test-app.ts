@@ -36,7 +36,7 @@ import { StudentTrialRepo } from './trial/student-trial.repo';
 import { SubscriptionsRepo } from './subscriptions.repo';
 import { mocks } from './test-app.fakes';
 
-export { resetMocks, type Mocks } from './test-app.fakes';
+export { ENFORCED_SETTINGS, resetMocks, type Mocks } from './test-app.fakes';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 export const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };

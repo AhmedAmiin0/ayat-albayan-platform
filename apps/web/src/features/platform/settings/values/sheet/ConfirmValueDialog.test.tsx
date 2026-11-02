@@ -23,6 +23,7 @@ describe('the confirmation words', () => {
     expect(plainYes('teachers_always_available', true)).toBe(v.confirmYes.teachersAlwaysAvailable.on);
     expect(plainYes('meeting_link_auto', false)).toBe(v.confirmYes.meetingLinkAuto.off);
     expect(plainYes('sales_auto_assign', true)).toBe(v.confirmYes.salesAutoAssign.on);
+    expect(plainYes('sales_require_assignee', false)).toBe(v.confirmYes.salesRequireAssignee.off);
     expect(plainYes('fx_fresh_hours', 6)).toBe(v.confirm.plainYes);
   });
 });

@@ -298,6 +298,8 @@
   "CourseStopController.stop": ["admin","sales"],
   "UsedBeforeEditController.edit": ["admin","sales"],
   "UsedBeforeEditController.state": ["admin","sales"],
+  "AnyPackageCancelController.cancel": ["admin","sales"],
+  "AnyPackageCancelController.check": ["admin","sales"],
   "SalesLessonActionsController.cancel": ["admin","sales"],
   "SalesLessonActionsController.confirm": ["admin","sales"],
   "SalesLessonActionsController.reschedule": ["admin","sales"],
