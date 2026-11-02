@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findConflicts, type ConflictInput } from './conflicts';
+import { findConflicts, type ConflictInput } from './conflicts.js';
 
 const occ = (start: string, end: string) => ({
   starts_at: new Date(start),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allDayRows, freeSlots } from './free-slots';
+import { allDayRows, freeSlots } from './free-slots.js';
 
 const MIN = 60_000;
 const gaps = (starts: Date[]) => starts.slice(1).map((s, i) => (s.getTime() - (starts[i]?.getTime() ?? 0)) / MIN);

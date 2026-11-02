@@ -1,5 +1,4 @@
-import { addDays, localDateOf, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
-import { ruleOccurrences } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { addDays, localDateOf, startOfLocalDay, ruleOccurrences } from '@ab/shared';
 import { generatedKey } from '@/modules/teaching/scheduling/rules/rule-projection';
 import type { ChangeRule } from './course-change.repo';
 

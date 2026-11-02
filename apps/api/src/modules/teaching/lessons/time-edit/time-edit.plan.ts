@@ -1,7 +1,6 @@
-import { MINUTE_MS } from '@ab/shared';
+import { MINUTE_MS, localDateOf } from '@ab/shared';
 import type { ConflictKind, LessonStatus, PayoutStatus, TimeEditMode } from '@ab/shared';
 import { badRequest } from '@/common/http/errors';
-import { localDateOf } from '@/modules/teaching/scheduling/occurrences/horizon';
 // Pure decisions of «عدّل الوقت» (R-SCH-11, docs/10 §10): what a time edit may do to a lesson,
 // which side effects it sets in motion, and whether a payout month stands in its way.
 

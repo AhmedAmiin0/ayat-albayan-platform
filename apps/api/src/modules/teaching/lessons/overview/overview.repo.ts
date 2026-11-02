@@ -1,8 +1,7 @@
-import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus } from '@ab/shared';
+import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus, allDayRows } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
-import { allDayRows } from '@/modules/people/teachers/availability/free-slots';
 import { dbError } from '@/common/http/http';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';

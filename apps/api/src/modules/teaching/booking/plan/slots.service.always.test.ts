@@ -1,7 +1,6 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ, allDayRows } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { allDayRows } from '@/modules/people/teachers/availability/free-slots';
 import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

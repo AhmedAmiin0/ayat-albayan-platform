@@ -1,9 +1,8 @@
 import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/shared';
-import type { Conflict } from '@ab/shared';
-import type { Occurrence, RuleTiming } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/shared';
 import { lessonRows, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 
-type InstantPlan = { timing: RuleTiming; occurrence: Occurrence };
+type InstantPlan = { timing: OccurrenceTiming; occurrence: Occurrence };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 

@@ -5,10 +5,10 @@ import {
   MINUTE_MS,
   minutesOfHhmm,
   weekdayOfDay,
-} from '@ab/shared';
+} from '@ab/time';
 
 /** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
-export type RuleTiming = {
+export type OccurrenceTiming = {
   /** 0 = الأحد … 6 = السبت. */
   byday: readonly number[];
   /** Wall-clock in `tz`, "HH:MM" or Postgres "HH:MM:SS". */
@@ -31,7 +31,7 @@ const localDate = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
  * Local days are scanned with a ±1 day margin so a slot whose UTC instant falls on another
  * calendar day than its local one is still found at the window edges.
  */
-export function ruleOccurrences(rule: RuleTiming, window: UtcWindow): Occurrence[] {
+export function ruleOccurrences(rule: OccurrenceTiming, window: UtcWindow): Occurrence[] {
   const startMin = minutesOfHhmm(rule.start_time_local);
   const days = new Set(rule.byday);
   const from = window.from.getTime();

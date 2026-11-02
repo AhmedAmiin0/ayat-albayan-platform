@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type RuleTiming } from './occurrences';
+import { ruleOccurrences, type OccurrenceTiming } from './occurrences.js';
 
 // Sun + Tue 17:00 Riyadh (UTC+3 all year) → 14:00Z. 2026-10-04 is a Sunday.
-const RULE: RuleTiming = {
+const RULE: OccurrenceTiming = {
   byday: [0, 2],
   start_time_local: '17:00',
   duration_min: 45,
@@ -11,7 +11,7 @@ const RULE: RuleTiming = {
   ends_on: null,
 };
 const win = (from: string, to: string) => ({ from: new Date(from), to: new Date(to) });
-const starts = (rule: RuleTiming, w: ReturnType<typeof win>) =>
+const starts = (rule: OccurrenceTiming, w: ReturnType<typeof win>) =>
   ruleOccurrences(rule, w).map((o) => o.starts_at.toISOString());
 
 describe('ruleOccurrences — Asia/Riyadh (R-SCH-02, R-SCH-01)', () => {

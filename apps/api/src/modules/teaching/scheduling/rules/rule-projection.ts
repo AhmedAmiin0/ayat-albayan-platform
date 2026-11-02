@@ -1,9 +1,7 @@
-import type { BusyLesson, StudentBusyLesson } from '@/modules/teaching/scheduling/conflicts/conflicts';
-import { localDateOf } from '@/modules/teaching/scheduling/occurrences/horizon';
-import { ruleOccurrences, type RuleTiming, type UtcWindow } from '@/modules/teaching/scheduling/occurrences/occurrences';
-
+import type { BusyLesson, StudentBusyLesson } from '@ab/shared';
+import { localDateOf, ruleOccurrences, type OccurrenceTiming, type UtcWindow } from '@ab/shared';
 /** An active rule with its students (what projection needs from schedule_rules). */
-export type ProjectedRule = RuleTiming & {
+export type ProjectedRule = OccurrenceTiming & {
   id: string;
   teacher_id: string;
   student_ids: readonly string[];

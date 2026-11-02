@@ -2,7 +2,7 @@ import { GOLDEN_ZONES, digest, goldenDates } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { monthWindow } from '@/modules/finance/payouts/payouts.plan';
 import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
-import { ruleOccurrences } from './occurrences';
+import { ruleOccurrences } from '@ab/shared';
 
 // A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
 vi.setConfig({ testTimeout: 60_000 });

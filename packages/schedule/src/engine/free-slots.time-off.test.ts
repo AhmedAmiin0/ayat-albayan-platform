@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { freeSlots, type FreeSlotsInput, type TimeRange } from './free-slots';
+import { freeSlots, type FreeSlotsInput, type TimeRange } from './free-slots.js';
 
 const starts = (input: FreeSlotsInput) => freeSlots(input).map((s) => s.start.toISOString());
 const range = (start: string, end: string): TimeRange => ({ start: new Date(start), end: new Date(end) });

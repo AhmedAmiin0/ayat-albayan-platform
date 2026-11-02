@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type RuleTiming } from './occurrences';
+import { ruleOccurrences, type OccurrenceTiming } from './occurrences.js';
 
 // Africa/Cairo 2026 (checked with Intl): spring-forward Fri 24 Apr 00:00 EET → 01:00 EEST;
 // fall-back Thu 29 Oct 24:00 EEST → 23:00 EET (23:00–24:00 happens twice).
-const DAILY_18: RuleTiming = {
+const DAILY_18: OccurrenceTiming = {
   byday: [0, 1, 2, 3, 4, 5, 6],
   start_time_local: '18:00',
   duration_min: 30,
@@ -11,7 +11,7 @@ const DAILY_18: RuleTiming = {
   starts_on: '2026-01-01',
   ends_on: null,
 };
-const starts = (rule: RuleTiming, from: string, to: string) =>
+const starts = (rule: OccurrenceTiming, from: string, to: string) =>
   ruleOccurrences(rule, { from: new Date(from), to: new Date(to) }).map((o) =>
     o.starts_at.toISOString(),
   );

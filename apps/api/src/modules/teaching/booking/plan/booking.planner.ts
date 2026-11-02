@@ -1,14 +1,13 @@
-import { bookingKindOf, isSingleLesson, meetingModeOf, uploadMaxBytes, usesPlatform, type BookingRequest, type Conflict } from '@ab/shared';
+import { bookingKindOf, isSingleLesson, meetingModeOf, uploadMaxBytes, usesPlatform, type BookingRequest, type Conflict, probeOccurrences } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { probeOccurrences } from '@/modules/teaching/scheduling/occurrences/dst-probe';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { meetingLinkFor, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import { bookingPayload, type CourseLabel } from '@/modules/teaching/booking/core/booking.payload';
 import { BookingParties, type Resolved } from '@/modules/teaching/booking/core/booking.parties';
 import type { Plan } from './booking.plan';
 import type { BookingTeacher } from '@/modules/teaching/booking/core/booking.repo';
-import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import type { Occurrence } from '@ab/shared';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
