@@ -11625,11 +11625,6 @@
       "count": 3
     }
   },
-  "src/modules/teaching/booking/booking-extras.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/booking/booking.controller.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -11639,11 +11634,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/booking/booking.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/teaching/booking/booking.dto.ts": {
@@ -11883,9 +11873,6 @@
     }
   },
   "src/modules/teaching/booking/course-change/course-change.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -12046,9 +12033,6 @@
     }
   },
   "src/modules/teaching/booking/instant/instant.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -12340,11 +12324,8 @@
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.course-scope.test.ts": {
@@ -12550,11 +12531,8 @@
     }
   },
   "src/modules/teaching/booking/trial-date/trial-date.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/teaching/booking/trial-date/trial-date.fakes.ts": {
@@ -12687,11 +12665,8 @@
     }
   },
   "src/modules/teaching/classroom/classroom.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/classroom.fakes.ts": {
@@ -13568,11 +13543,8 @@
     }
   },
   "src/modules/teaching/course-pause/course-pause.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 9
+      "count": 6
     }
   },
   "src/modules/teaching/course-pause/course-pause.fakes.ts": {
@@ -13661,11 +13633,8 @@
     }
   },
   "src/modules/teaching/feedback/feedback.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/teaching/feedback/feedback.fakes.ts": {
@@ -13899,12 +13868,6 @@
   "src/modules/teaching/lesson-rating/rating.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/teaching/lesson-rating/rating.http.test.ts": {
@@ -14132,14 +14095,6 @@
       "count": 3
     }
   },
-  "src/modules/teaching/lessons/proposals/lesson-proposals.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/lessons/proposals/lesson-proposals.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
@@ -14159,11 +14114,6 @@
     }
   },
   "src/modules/teaching/lessons/reschedule/lesson-reschedule.controller.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/modules/teaching/lessons/reschedule/lesson-reschedule.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
     }
@@ -14216,14 +14166,6 @@
       "count": 5
     }
   },
-  "src/modules/teaching/lessons/reschedule/rule-cancel.controller.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/lessons/reschedule/rule-plan.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -14273,14 +14215,6 @@
   "src/modules/teaching/lessons/status/lesson-actions.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/lessons/status/lesson-actions.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.test.ts": {
@@ -14401,11 +14335,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/student-lessons.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/lessons/teacher-me/teacher-me.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -14441,11 +14370,8 @@
     }
   },
   "src/modules/teaching/lessons/time-edit/lesson-time.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lessons/time-edit/time-edit.fakes.ts": {
@@ -14710,11 +14636,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/scheduling/rules/schedule-rules.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/scheduling/rules/schedule-rules.refresh.test.ts": {
     "ab/no-parent-imports": {
       "count": 4
@@ -14822,17 +14743,11 @@
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -14917,11 +14832,8 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.fakes.ts": {

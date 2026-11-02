@@ -1,11 +1,12 @@
 import { lessonProposalRequestSchema, proposalApproveSchema, type LessonView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
-import { LessonViews } from '../store/lesson-views';
+import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
 /**
  * Teacher self-service «اقترح ميعاد تاني» and the admin's answer (R-SCH-08). Every route returns
@@ -27,11 +28,11 @@ export class LessonProposalsController {
   @Permissions('self.teacher')
   async propose(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(lessonProposalRequestSchema) req: z.output<typeof lessonProposalRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const req = parseOrThrow(lessonProposalRequestSchema, body);
-    return this.views.one(await this.proposing.propose({ lessonId: id, body: req, actor: user }), user.role);
+    const lessonId = await this.proposing.propose({ lessonId: id, body: req, actor: user });
+    return this.views.one(lessonId, user.role);
   }
 
   /** Lessons waiting for an answer (still open: a closed lesson's proposal is moot). */
@@ -46,16 +47,19 @@ export class LessonProposalsController {
   @HttpCode(200)
   async approve(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(proposalApproveSchema, { orEmpty: true }) req: z.output<typeof proposalApproveSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const req = parseOrThrow(proposalApproveSchema, body ?? {});
-    return this.views.one(await this.deciding.approve({ proposalId: id, body: req, actor: user }), 'admin');
+    const lessonId = await this.deciding.approve({ proposalId: id, body: req, actor: user });
+    return this.views.one(lessonId, 'admin');
   }
 
   @Post('lesson-proposals/:id/reject')
   @HttpCode(200)
-  async reject(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonView> {
+  async reject(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LessonView> {
     return this.views.one(await this.deciding.reject({ proposalId: id, actor: user }), 'admin');
   }
 }
