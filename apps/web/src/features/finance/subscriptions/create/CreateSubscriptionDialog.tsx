@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useRef, useState, type SubmitEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Field } from '@/components/ui/form/field';
@@ -9,13 +9,18 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { createSubscription, MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { CustomAmountToggle } from '@/features/finance/subscriptions/custom-price/CustomAmountToggle';
+import { CustomPriceField } from '@/features/finance/subscriptions/custom-price/CustomPriceField';
+import { useCustomPrice } from '@/features/finance/subscriptions/custom-price/use-custom-price';
 import { NoCommissionNote } from './NoCommissionNote';
-import { INITIAL_PRICING, pricingBody, pricingLessons, type PricingForm } from './pricing-form';
+import { INITIAL_PRICING, pricingLessons, type PricingForm } from './pricing-form';
 import { PricingFields } from './PricingFields';
 import { QuotePreview } from './QuotePreview';
 import { StudentPicker, type PickedStudent } from './StudentPicker';
 import { UsedBeforeField } from './UsedBeforeField';
+import { useBodyRequestId } from './use-body-request-id';
 import { useStartDay } from './use-start-day';
+import { usePricingBody, useSubscriptionQuote } from './use-subscription-quote';
 
 type Props = {
   /** Preset from the student profile; otherwise the admin picks one. */
@@ -36,11 +41,11 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
   const [student, setStudent] = useState<PickedStudent | null>(preset ?? null);
   const [form, setForm] = useState<PricingForm>(initial ?? INITIAL_PRICING);
   const [notes, setNotes] = useState('');
-  const pricing = pricingBody(form);
+  const pricing = usePricingBody(form);
+  const quote = useSubscriptionQuote(student?.id ?? '', pricing);
+  const price = useCustomPrice({ quote: quote.data, active: student !== null });
   const { startsOn, pickDay, usedBefore, extra } = useStartDay(pricingLessons(pricing));
-  // One idempotency key per body: a retry after a 5xx / lost reply re-sends it and gets the first
-  // package back; changing the child, price or day makes a new one (a different package).
-  const request = useRef<{ body: string; id: string } | null>(null);
+  const requestId = useBodyRequestId();
 
   const save = useMutation({
     mutationFn: createSubscription,
@@ -51,11 +56,11 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
   });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    if (!student || !startsOn) return;
-    const body = { studentId: student.id, pricing, startsOn, notes: notes.trim() || null, ...extra };
-    const key = JSON.stringify(body);
-    if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
-    save.mutate({ ...body, clientRequestId: request.current.id });
+    const custom = price.check();
+    if (!student || !startsOn || !custom) return;
+    const notesBody = { notes: notes.trim() || null };
+    const body = { studentId: student.id, pricing, startsOn, ...notesBody, ...extra, ...custom };
+    save.mutate({ ...body, clientRequestId: requestId(body) });
   };
 
   return (
@@ -90,6 +95,8 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
         )}
         <PricingFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
         {student && <QuotePreview studentId={student.id} pricing={pricing} />}
+        {student && <CustomAmountToggle {...price.toggle} />}
+        <CustomPriceField price={price} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.subscriptions.startsOn}>
             {(p) => <Input {...p} type="date" dir="ltr" value={startsOn} onChange={(e) => pickDay(e.target.value)} required />}

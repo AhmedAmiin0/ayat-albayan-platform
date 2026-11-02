@@ -1,21 +1,20 @@
 import { PAYMENT_KINDS, PAYMENT_METHODS, type MyPaymentRow } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
+import { MyPaymentActions, type MyPaymentHandlers } from './MyPaymentActions';
 import { StudentCell } from './StudentCell';
 
 const col = createColumnHelper<DataTableFeatures, MyPaymentRow>();
 const kindOptions = PAYMENT_KINDS.map((k) => ({ value: k, label: t.enums.paymentKind[k] }));
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
-type Handlers = { onAttachments: (p: MyPaymentRow) => void };
 
 // «مدفوعاتي»: only what I recorded. Amount per row in its own currency (never a total across them), and
 // «عرض المرفقات» (her transfer's files, GET /sales/me/payments/:id/attachments).
-export const myPaymentColumns = ({ onAttachments }: Handlers) =>
+export const myPaymentColumns = ({ onAttachments, onEditAmount }: MyPaymentHandlers) =>
   col.columns([
     col.accessor((p) => `${p.student.name} ${p.student.code}`, {
       id: 'student',
@@ -53,9 +52,7 @@ export const myPaymentColumns = ({ onAttachments }: Handlers) =>
       id: 'actions',
       header: () => t.common.actions,
       cell: (c) => (
-        <Button type="button" variant="secondary" size="sm" aria-label={`${t.payments.viewAttachments} ${c.row.original.student.name}`} onClick={() => onAttachments(c.row.original)}>
-          {t.payments.viewAttachments}
-        </Button>
+        <MyPaymentActions {...{ onAttachments, onEditAmount }} payment={c.row.original} />
       ),
       meta: { className: 'w-px max-sm:order-7' },
     }),

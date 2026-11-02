@@ -61,6 +61,8 @@ export type CreateSubscriptionBody = {
   notes?: string | null;
   /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a start before today, when > 0. */
   lessonsUsedBefore?: number;
+  /** «مبلغ مخصص» (owner 2026-11-02): the price instead of the quote's; absent = the quote. */
+  customPrice?: number;
   /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
   clientRequestId?: string;
 };

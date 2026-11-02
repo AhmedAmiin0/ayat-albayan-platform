@@ -63,6 +63,8 @@ export type SalesSubscriptionBody = SalesQuoteBody & {
   lessonsUsedBefore?: number;
   /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed. */
   teacherId?: string;
+  /** «مبلغ مخصص» (owner 2026-11-02): the price instead of the quote's (the admin's cap applies). */
+  customPrice?: number;
   clientRequestId: string;
 };
 

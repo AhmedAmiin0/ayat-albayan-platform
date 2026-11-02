@@ -82,10 +82,13 @@ export function useLinkPay({ studentId, pricing, onCreated }: Opts) {
     create,
     custom,
     setAmount: (text: string) => setTyped({ key, text }),
-    /** On or off, the amount starts again from the calculator price. */
-    setCustom: (on: boolean) => {
-      setCustomOn(on);
-      setTyped(null);
+    /** «مبلغ مخصص»: on or off, the amount starts again from the calculator price. */
+    toggle: {
+      on: custom,
+      onChange: (on: boolean) => {
+        setCustomOn(on);
+        setTyped(null);
+      },
     },
     submit: (extra: LinkExtra) => {
       setTried(true);
