@@ -46,7 +46,11 @@ describe('planChange — the remaining lessons on the new days', () => {
     const plan = planChange({ req: REQ, facts: { ...FACTS, before }, now: NOW, horizonWeeks: 5 });
     expect(plan.remaining).toBe(1);
     expect(plan.endsOn).toBe('2026-10-25');
-    expect(plan.plans.map((p) => [p.timing.start_time_local, p.occurrences.length])).toEqual([['17:00', 1]]);
+    const rows = plan.plans.map((p) => [p.timing.start_time_local, p.occurrences.length]);
+    expect(rows).toEqual([
+      ['17:00', 1],
+      ['19:30', 0],
+    ]);
   });
   it('nothing left → 409 course_finished', () => {
     const before = Array.from({ length: 8 }, () => held());

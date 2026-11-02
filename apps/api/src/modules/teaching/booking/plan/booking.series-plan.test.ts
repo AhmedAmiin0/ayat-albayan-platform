@@ -70,11 +70,16 @@ describe('planSeries — one plan per start time (owner 2026-10-18, R-SCH-02)', 
     expect(plans.flatMap(starts).every((s) => s < '2026-10-28')).toBe(true);
   });
 
-  it('fewer lessons than days (owner 2026-11-02): the day after the last lesson is dropped, no 400', () => {
+  it('fewer lessons than days (owner 2026-11-02): the later day keeps an empty rule, no 400', () => {
     const endsOn = courseEndsOn({ groups: timeGroups(rule), startsOn: '2026-10-01', lessonsTotal: 1 }) ?? '';
     expect(endsOn).toBe('2026-10-04');
     const plans = plan({}, endsOn);
-    expect(plans.map((p) => [p.timing.start_time_local, p.timing.ends_on])).toEqual([['17:00', endsOn]]);
+    const rows = plans.map((p) => [p.timing.start_time_local, p.timing.ends_on]);
+    expect(plans.map((p) => p.occurrences.length)).toEqual([1, 0]);
+    expect(rows).toEqual([
+      ['17:00', endsOn],
+      ['19:30', endsOn],
+    ]);
     expect(plans.flatMap(starts)).toEqual(['2026-10-04T14:00:00.000Z']);
   });
 
