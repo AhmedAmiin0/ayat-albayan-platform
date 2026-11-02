@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type RuleTiming } from './occurrences';
+import { ruleOccurrences, type OccurrenceTiming } from './occurrences.js';
 
-const RULE: RuleTiming = {
+const RULE: OccurrenceTiming = {
   byday: [0, 2],
   start_time_local: '17:00',
   duration_min: 45,
@@ -9,7 +9,7 @@ const RULE: RuleTiming = {
   starts_on: '2026-10-04',
   ends_on: null,
 };
-const starts = (rule: RuleTiming, from: string, to: string) =>
+const starts = (rule: OccurrenceTiming, from: string, to: string) =>
   ruleOccurrences(rule, { from: new Date(from), to: new Date(to) }).map((o) =>
     o.starts_at.toISOString(),
   );

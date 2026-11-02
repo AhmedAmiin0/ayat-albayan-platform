@@ -1,5 +1,5 @@
-import { DAY_MS, offsetMs } from '@ab/shared';
-import { ruleOccurrences, type Occurrence, type RuleTiming } from './occurrences';
+import { DAY_MS, offsetMs } from '@ab/time';
+import { ruleOccurrences, type Occurrence, type OccurrenceTiming } from './occurrences.js';
 
 /** First day-step instants after `from` (within `days`) at which `tz`'s UTC offset differs. */
 export function offsetChanges(tz: string, from: Date, days = 366): Date[] {
@@ -15,7 +15,7 @@ export function offsetChanges(tz: string, from: Date, days = 366): Date[] {
 }
 
 export type ProbeInput = {
-  timing: RuleTiming;
+  timing: OccurrenceTiming;
   /** The rule's tz and the teacher's tz (availability is kept in the teacher's). */
   tzs: readonly string[];
   /** Horizon end: the generated lessons before it are checked already. */

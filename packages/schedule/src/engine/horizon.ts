@@ -1,5 +1,5 @@
-import { addDays, DAY_MS, dayInZone, dayWallToUtc } from '@ab/shared';
-import type { UtcWindow } from './occurrences';
+import { DAY_MS, dayInZone, dayWallToUtc } from '@ab/time';
+import type { UtcWindow } from './occurrences.js';
 
 const WEEK = 7 * DAY_MS;
 
@@ -10,9 +10,6 @@ const dateOf = (day: number): string => new Date(day).toISOString().slice(0, 10)
 /** Calendar date of `instant` in `tz`, "YYYY-MM-DD". */
 export const localDateOf = (instant: Date, tz: string): string =>
   dateOf(dayInZone(instant.getTime(), tz));
-
-/** Re-exported for the scheduling callers; the one engine lives in @ab/shared (docs/32 k2). */
-export { addDays };
 
 /** UTC instant of local midnight at the start of `date` in `tz` (DST-safe). */
 export const startOfLocalDay = (date: string, tz: string): Date =>

@@ -1,9 +1,6 @@
-import { DAY_MS } from '@ab/shared';
-import type { Conflict, SlotsResponse, SlotView } from '@ab/shared';
+import { DAY_MS, findConflicts, freeSlots } from '@ab/shared';
+import type { Conflict, SlotsResponse, SlotView, Occurrence } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { findConflicts } from '@/modules/teaching/scheduling/conflicts/conflicts';
-import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
-import { freeSlots } from '@/modules/people/teachers/availability/free-slots';
 import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

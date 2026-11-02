@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, dayOf, horizonWindow, localDateOf, startOfLocalDay } from './horizon';
+import { addDays } from '@ab/time';
+import { dayOf, horizonWindow, localDateOf, startOfLocalDay } from './horizon.js';
 
 describe('horizon helpers (R-SCH-02, R-SCH-01)', () => {
   it('horizon starts now for a rule that already started, and ends now + weeks', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type RuleTiming } from './occurrences';
+import { ruleOccurrences, type OccurrenceTiming } from './occurrences.js';
 
 // Same Cairo DST dates as free-slots.cairo-dst.test.ts: summer UTC+3, winter UTC+2.
-const CAIRO_SUN_16: RuleTiming = {
+const CAIRO_SUN_16: OccurrenceTiming = {
   byday: [0],
   start_time_local: '16:00',
   duration_min: 60,
@@ -10,7 +10,7 @@ const CAIRO_SUN_16: RuleTiming = {
   starts_on: '2026-01-01',
   ends_on: null,
 };
-const occ = (rule: RuleTiming, from: string, to: string) =>
+const occ = (rule: OccurrenceTiming, from: string, to: string) =>
   ruleOccurrences(rule, { from: new Date(from), to: new Date(to) }).map((o) => [
     o.starts_at.toISOString(),
     o.ends_at.toISOString(),

@@ -1,7 +1,6 @@
-import { DAY_MS } from '@ab/shared';
+import { DAY_MS, freeSlots, type TimeRange } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from './availability.repo';
-import { freeSlots, type TimeRange } from './free-slots';
 export type FreeSlotsQuery = {
   teacherId: string;
   from: Date;

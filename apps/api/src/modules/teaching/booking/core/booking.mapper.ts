@@ -5,12 +5,10 @@ import type {
   GuardianCreate,
   LeadStatus,
   PackageSize,
-  StudentCreate,
-} from '@ab/shared';
+  StudentCreate, Occurrence, OccurrenceTiming } from '@ab/shared';
 import type { Json } from '@ab/db';
 import { z } from 'zod';
 import { canTransitionLead } from '../../../sales/leads/lead-state-machine';
-import type { Occurrence, RuleTiming } from '../../scheduling/occurrences/occurrences';
 import type { MessageDraft } from './booking.messages';
 
 export type LessonRow = {
@@ -19,7 +17,7 @@ export type LessonRow = {
   meeting_link: string | null;
   override_reason: string | null;
 };
-export type RuleRow = RuleTiming & {
+export type RuleRow = OccurrenceTiming & {
   teacher_id: string;
   /** Only the admin's explicit link: lessons resolve the current teacher link (issue B8). */
   meeting_link: string | null;

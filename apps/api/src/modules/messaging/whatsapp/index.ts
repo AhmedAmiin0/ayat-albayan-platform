@@ -83,6 +83,7 @@ export {
   withNumbers,
 } from './templates/catalog/template.mapper';
 export { TemplateRegistry } from './templates/catalog/template.registry';
+export { sendableTemplates } from './templates/gate/template-gate.repo';
 export {
   type ApprovalRow,
   type ApprovalWrite,

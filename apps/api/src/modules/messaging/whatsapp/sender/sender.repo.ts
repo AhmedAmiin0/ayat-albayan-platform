@@ -8,7 +8,8 @@ import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
-import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { DueMessage } from './sender.due';
 
@@ -31,10 +32,9 @@ export class SenderRepo {
     return staffAtSend(this.db, row);
   }
 
-  async approvedTemplates(): Promise<TemplateRow[]> {
-    const { data, error } = await this.db.from('message_templates').select('*').eq('status', 'approved');
-    if (error) throw new Error(`templates read failed: ${error.message}`);
-    return templateRows(data);
+  /** Approved rows; a crm line's teacher_new_student by its CRM template (template-gate.repo). */
+  approvedTemplates(): Promise<TemplateRow[]> {
+    return sendableTemplates(this.db);
   }
 
   /** One cheap read: is anything due now (sender.due.ts)? false = the pass reads nothing more. */

@@ -1,8 +1,7 @@
-import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
+import { isOpenLesson, type CancelRequest, type RuleCancelRequest, addDays, localDateOf, startOfLocalDay } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
 import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';

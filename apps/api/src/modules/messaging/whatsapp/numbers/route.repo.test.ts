@@ -19,7 +19,7 @@ describe('RouteQueries', () => {
     expect(calls.find((c) => c.method === 'select')?.args).toEqual(['template_key, number_id, status']);
   });
 
-  it('templates: approved on the registry OR approved on some number (malformed keys never filtered on)', async () => {
+  it('templates: approved on the registry OR on some number OR a crm-gated key (malformed keys never filtered on)', async () => {
     const { db, calls } = fakeDb({ message_templates: [{ data: [templateRow()] }] });
     const approvals = new Map([
       ['renewal_due', new Map([['n1', 'approved']])],
@@ -27,7 +27,7 @@ describe('RouteQueries', () => {
       ['bad,key', new Map([['n1', 'approved']])],
     ]);
     await expect(new RouteRepo(db).templates(approvals)).resolves.toEqual([templateRow()]);
-    expect(calls.find((c) => c.method === 'or')?.args).toEqual(['status.eq.approved,key.in.(renewal_due)']);
+    expect(calls.find((c) => c.method === 'or')?.args).toEqual(['status.eq.approved,key.in.(renewal_due,teacher_new_student)']);
   });
 
   it('a failed read throws (the pass sends nothing)', async () => {

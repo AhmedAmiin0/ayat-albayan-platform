@@ -8735,46 +8735,8 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/modules/people/teachers/availability/free-slots.always.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/teachers/availability/free-slots.time-off.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/teachers/availability/free-slots.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    }
-  },
-  "src/modules/people/teachers/availability/intervals.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/people/teachers/meeting-view.ts": {
@@ -12106,9 +12068,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -12164,10 +12123,10 @@
       "count": 6
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -12214,9 +12173,6 @@
   },
   "src/modules/teaching/booking/core/booking.payload.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-shape-checks": {
@@ -12353,7 +12309,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     },
     "complexity": {
       "count": 2
@@ -12382,9 +12338,6 @@
     }
   },
   "src/modules/teaching/booking/course-change/course-change.planner.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 2
     },
@@ -12405,7 +12358,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -12473,9 +12426,6 @@
     }
   },
   "src/modules/teaching/booking/instant/instant.plan.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -12483,9 +12433,6 @@
   "src/modules/teaching/booking/instant/instant.plan.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "max-len": {
       "count": 4
@@ -12606,9 +12553,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -12657,7 +12601,7 @@
   },
   "src/modules/teaching/booking/plan/booking.planner.makeup.probe.test.ts": {
     "ab/no-parent-imports": {
-      "count": 4
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -12672,11 +12616,8 @@
     }
   },
   "src/modules/teaching/booking/plan/booking.planner.series.test.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "ab/no-parent-imports": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/teaching/booking/plan/booking.planner.teacher-mode.test.ts": {
@@ -12692,7 +12633,7 @@
       "count": 4
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     },
     "complexity": {
       "count": 1
@@ -12710,25 +12651,19 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
       "count": 7
     }
   },
   "src/modules/teaching/booking/plan/conflict-context.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 3
     }
   },
   "src/modules/teaching/booking/plan/conflicts.dst.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -12757,9 +12692,6 @@
     }
   },
   "src/modules/teaching/booking/plan/slots.service.ts": {
-    "ab/module-boundaries": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -14633,18 +14565,12 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/teaching/lessons/overview/free-windows.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
       "count": 2
     }
   },
@@ -14670,9 +14596,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -14690,9 +14613,6 @@
   "src/modules/teaching/lessons/overview/overview.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 4
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "max-len": {
       "count": 5
@@ -14784,7 +14704,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -14819,7 +14739,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 5
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -14833,7 +14753,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -14875,7 +14795,7 @@
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -14955,9 +14875,6 @@
     }
   },
   "src/modules/teaching/lessons/store/lesson-queries.schema.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -15082,9 +14999,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 4
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -15171,28 +15085,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/scheduling/conflicts/conflicts.always.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/teaching/scheduling/conflicts/conflicts.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/scheduling/meeting-link.test.ts": {
     "max-len": {
       "count": 4
@@ -15203,21 +15095,8 @@
       "count": 1
     }
   },
-  "src/modules/teaching/scheduling/occurrences/dst-probe.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/scheduling/occurrences/horizon.job.test.ts": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/scheduling/occurrences/horizon.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -15252,14 +15131,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/teaching/scheduling/occurrences/occurrences.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rpc.test.ts": {

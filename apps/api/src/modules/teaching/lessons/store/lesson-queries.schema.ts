@@ -1,7 +1,6 @@
-import { instant, localDate, SETTING_DEFAULTS, timeZone } from '@ab/shared';
+import { instant, localDate, SETTING_DEFAULTS, timeZone, addDays, startOfLocalDay } from '@ab/shared';
 import { z } from 'zod';
 import { badRequest } from '@/common/http/errors';
-import { addDays, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
 import { parseOrThrow } from '@/common/http/http';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 
