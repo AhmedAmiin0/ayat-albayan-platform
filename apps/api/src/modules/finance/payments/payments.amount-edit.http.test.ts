@@ -57,6 +57,17 @@ describe('PATCH /payments/:id amount', () => {
     expect(m.payments.update).toHaveBeenCalledWith(PAYMENT_ID, { note: 'ملاحظة' });
   });
 
+  it('a method switch into or out of card: 409 stripe_method_locked (no two-step unlock)', async () => {
+    m.payments.get.mockResolvedValue(paymentRow({ method: 'card' }));
+    const out = await call({ method: 'PATCH', url: URL, body: { method: 'bank' } });
+    expect(out.statusCode).toBe(409);
+    expect(out.json().code).toBe('stripe_method_locked');
+    m.payments.get.mockResolvedValue(paymentRow({ method: 'bank' }));
+    const into = await call({ method: 'PATCH', url: URL, body: { method: 'card', amount: 9 } });
+    expect(into.json().code).toBe('stripe_method_locked');
+    expect(m.payments.update).not.toHaveBeenCalled();
+  });
+
   it('a payment under the refunds already made: 409 refund_exceeds_paid', async () => {
     m.payments.netPaid.mockResolvedValue(45); // 145 paid, 100 refunded
     const res = await call({ method: 'PATCH', url: URL, body: { amount: 40 } });

@@ -20,6 +20,7 @@ const CODES: Record<string, { table: Record<string, string>; codes: string[] }> 
       'payment_not_found',
       'receipt_not_found',
       'stripe_amount_locked',
+      'stripe_method_locked',
       'refund_exceeds_paid',
       'refund_not_allowed',
     ],

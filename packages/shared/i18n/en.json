@@ -2028,7 +2028,8 @@
       "too_many_attachments": "At most 5 attachments",
       "stripe_amount_locked": "An online payment's amount comes from Stripe and cannot be edited by hand",
       "refund_exceeds_paid": "The package's paid total cannot go below zero after this edit",
-      "refund_not_allowed": "Only an admin edits a refund's amount"
+      "refund_not_allowed": "Only an admin edits a refund's amount",
+      "stripe_method_locked": "A payment cannot switch to or from an online (Stripe) payment"
     },
     "mobile": {
       "tab": "Payments",
