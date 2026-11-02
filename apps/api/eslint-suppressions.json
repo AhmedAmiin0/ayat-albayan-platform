@@ -3855,13 +3855,10 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
-    },
-    "ab/no-parent-imports": {
-      "count": 4
+      "count": 3
     },
     "max-len": {
-      "count": 7
+      "count": 6
     },
     "no-restricted-globals": {
       "count": 1
@@ -6667,9 +6664,6 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-http.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 3
     },
@@ -6755,45 +6749,22 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/drivers/kapso/kapso.media.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/whatsapp/drivers/kapso/kapso.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
   },
   "src/modules/messaging/whatsapp/drivers/kapso/kapso.ts": {
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/graph.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 3
-    },
     "complexity": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/meta-reaction.ts": {
@@ -6805,11 +6776,8 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/meta-shapes.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/gate/gate.controller.test.ts": {
@@ -7990,14 +7958,11 @@
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-restricted-globals": {
       "count": 1
