@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { MeService } from './me.service';
 import { pushTokenBody, pushTokenSchema } from './push/push-tokens';
