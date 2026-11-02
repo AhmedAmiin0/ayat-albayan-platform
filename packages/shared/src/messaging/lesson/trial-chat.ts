@@ -1,4 +1,4 @@
-import type { StudentStatus } from '../../enums/index.js';
+import type { StudentStatus } from '@ab/catalog';
 import { isNotSubscribed } from '../../people/students/status-flow.js';
 
 // Trial students (owner, 2026-10-11): a teacher and a trial family do not chat directly; sales

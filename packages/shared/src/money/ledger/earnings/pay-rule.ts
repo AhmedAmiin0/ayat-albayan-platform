@@ -1,4 +1,4 @@
-import { DURATIONS, type Duration } from '../../../enums/index.js';
+import { DURATIONS, type Duration } from '@ab/catalog';
 
 // Executable specification of the ONE teacher-pay rule (migration 20261005000200): which lessons
 // count (public.lesson_counts_for_pay) and what a lesson pays (public.teacher_rate_for). The ledger

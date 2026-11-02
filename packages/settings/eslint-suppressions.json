@@ -1,0 +1,261 @@
+{
+  "src/boundaries.test.ts": {
+    "@typescript-eslint/no-unnecessary-template-expression": {
+      "count": 1
+    }
+  },
+  "src/custom-config/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/custom-config/public-config.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/public.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/defs.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/domains/activity.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/feedback.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/finance/finance.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/finance/payouts.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/messaging.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/domains/notifications.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/notifications.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/domains/sales.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/domains/teaching/classroom.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/domains/teaching/recordings.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/teaching/reports.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/teaching/scheduling.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/uploads.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/gate.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/google-defs.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/groups.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/index.ts": {
+    "@typescript-eslint/consistent-type-exports": {
+      "count": 2
+    }
+  },
+  "src/layout.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ownership.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/public.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/read-settings.messaging.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/read-settings.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/registry.nullable.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/registry.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/seed/config-describe.migration.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/entries.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/seed/entries.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/seed/google-settings-keys.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/seed-entries.metadata.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/seed/seed-entries.sql-keys.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/seed/seed-entries.test.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/seed/seed-entries.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/seed/seed-payload.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/seed/sql-defaults.migration.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/sql-readers.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/validation/patch.test.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/validation/patch.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/validation/schema.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/validation/schema.ts": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/validation/validate.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/validation/validate.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/value-groups.registry.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  }
+}

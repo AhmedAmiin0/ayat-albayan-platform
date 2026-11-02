@@ -6,10 +6,10 @@ import {
   type FeedbackKind,
   type FeedbackRating,
   type FeedbackRecommend,
-} from '../enums/index.js';
+} from '@ab/catalog';
 import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating.js';
 import { listSortShape, phoneE164 } from '@ab/core';
-import type { Attendance, LessonStatus } from '../enums/index.js';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 
 // «رأيك يهمّنا» (docs/13-forms-spec.md form 3). camelCase commands, snake_case responses like the
 // rest of the API. The server fills teacher and kind from the signed link; the client never sends them.

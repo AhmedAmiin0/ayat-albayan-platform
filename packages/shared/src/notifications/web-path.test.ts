@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUSH_KINDS } from '../enums/index.js';
+import { PUSH_KINDS } from '@ab/catalog';
 import { notificationKind, webNotificationPath } from './web-path.js';
 
 const STUDENT = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';

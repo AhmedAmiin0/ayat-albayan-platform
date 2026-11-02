@@ -1,4 +1,4 @@
-import { GRADES, type Attendance, type Grade, type Program } from '../../enums/index.js';
+import { GRADES, type Attendance, type Grade, type Program } from '@ab/catalog';
 import { ayahCount, nextAyah } from '../quran/quran.js';
 import { attended } from '../rules.js';
 import {

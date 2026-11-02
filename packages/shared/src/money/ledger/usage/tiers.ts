@@ -1,4 +1,4 @@
-import type { PackageSize } from '../../../enums/index.js';
+import type { PackageSize } from '@ab/catalog';
 import type { PackageId } from '../../pricing/catalog.js';
 
 /**

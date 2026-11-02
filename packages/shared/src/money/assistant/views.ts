@@ -1,4 +1,4 @@
-import type { PaymentKind, PaymentMethod, PayoutStatus } from '../../enums/index.js';
+import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
 import type { AssistantCommissionStatus, AssistantCommissionType } from './commission.js';
 import type { AssistantCommissionKind } from './kind.js';
 import type { CurrencyTotals, StatementLineKind } from './statement.js';

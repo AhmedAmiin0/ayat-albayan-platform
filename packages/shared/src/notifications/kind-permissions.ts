@@ -1,5 +1,4 @@
-import type { PushKind } from '../enums/index.js';
-import type { Permission } from '../catalog/permissions/catalog.js';
+import type { Permission, PushKind } from '@ab/catalog';
 
 /** What every bell row needs: the staff member reads their own notifications (R-NOT-01). */
 const BELL: readonly Permission[] = ['notifications.push'];

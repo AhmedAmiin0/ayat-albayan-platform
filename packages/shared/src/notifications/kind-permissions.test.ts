@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUSH_KINDS } from '../enums/index.js';
+import { PUSH_KINDS } from '@ab/catalog';
 import { mayReceivePush, PUSH_KIND_PERMISSIONS } from './kind-permissions.js';
 
 describe('PUSH_KIND_PERMISSIONS (R-NOT-01)', () => {
