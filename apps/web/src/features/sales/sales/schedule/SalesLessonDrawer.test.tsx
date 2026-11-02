@@ -44,7 +44,9 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     renderDay();
     fireEvent.click(await screen.findByRole('button', { name: /سهيلة/ }));
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
-    expect(within(drawer).getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
+    // No confirmation required (the default): an upcoming lesson, never «يحتاج تأكيد».
+    expect(within(drawer).getByText(t.lessons.noConfirm.scheduled)).toBeTruthy();
+    expect(within(drawer).queryByText(t.enums.lessonStatus.scheduled)).toBeNull();
     expect(within(drawer).getByText(t.schedule.trialTag)).toBeTruthy();
     expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
     for (const line of salesClockLines(LATER, Z24)) expect(within(drawer).getByText(line)).toBeTruthy();

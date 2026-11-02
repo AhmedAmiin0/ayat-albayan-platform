@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
-import { useJoinWindow } from '@/lib/settings/public-config';
+import { useJoinWindow, usePublicConfig } from '@/lib/settings/public-config';
 import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '@/features/teaching/schedule/api';
@@ -49,6 +49,9 @@ export function LessonActions(props: LessonActionsProps) {
   const error = confirm.error ?? status.error;
   const outcomes = eventsNow(lesson, now);
   const win = useJoinWindow();
+  // No «تأكيد» while the academy requires none (owner 2026-11-02); a family's «نعم» still confirms.
+  const required = usePublicConfig().lesson_confirmation_required;
+  const confirmable = required && lesson.allowed_events.includes('confirm');
   const live = useNow();
   // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
   const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
@@ -56,7 +59,7 @@ export function LessonActions(props: LessonActionsProps) {
   return (
     <div className="grid gap-3">
       {error && <FormAlert>{lessonErrorText(error)}</FormAlert>}
-      {lesson.allowed_events.includes('confirm') && (
+      {confirmable && (
         <Button
           type="button"
           variant={stepDown ? 'secondary' : 'primary'}

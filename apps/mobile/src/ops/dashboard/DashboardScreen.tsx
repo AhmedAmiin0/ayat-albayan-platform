@@ -10,6 +10,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useNow } from '@/core/lib/time/use-now';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { useSummary, useWork, weekRange } from './dashboard-queries';
 import type { WorkTab } from './dashboard-types';
 import { kpisOf } from './kpis';
@@ -31,6 +32,7 @@ export function DashboardScreen() {
   const summary = useSummary(range);
   const work = useWork();
   const [tab, setTab] = useState<WorkTab>('reports');
+  const { required } = useLessonStatusText();
   const refresh = () => void Promise.all([summary.refetch(), work.refetch()]);
   const stale = (summary.isError || work.isError) && summary.data !== undefined;
   const subtitle = stale
@@ -47,7 +49,7 @@ export function DashboardScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         {summary.data ? (
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-            {kpisOf(summary.data).map((k) => (
+            {kpisOf(summary.data, required).map((k) => (
               <KpiTile
                 key={k.key}
                 kpi={k}

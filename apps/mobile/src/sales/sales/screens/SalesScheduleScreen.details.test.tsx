@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from './SalesScheduleScreen';
 
@@ -36,7 +36,7 @@ const openRow = async (who: string) =>
   fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
 test('sales: a tap opens the details with every clock, the lesson link, her move / cancel / confirm and the student file; no admin action', async () => {
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   // The agenda row never paints the URL: the tap opens the sheet that has it.
   await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'سلمى') });
   expect(screen.queryByText('https://meet.example.org/salma')).toBeNull();
@@ -65,7 +65,7 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
 });
 
 test('sales: a running lesson keeps «ادخل الحلقة» and «جارية الآن» in the sheet', async () => {
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   await openRow('يوسف أحمد');
   // The sheet's only: the row carries no button.
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);

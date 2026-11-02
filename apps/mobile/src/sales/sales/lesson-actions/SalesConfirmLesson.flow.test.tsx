@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { fakeNow } from '@/test/fake-now';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
 
@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-const open = async (client = createTestQueryClient()) => {
+const open = async (client = confirmingQueryClient()) => {
   await renderWithQuery(<SalesScheduleScreen />, client);
   await fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد') }));
   await screen.findByRole('header', { name: 'يوسف أحمد' });
@@ -64,7 +64,7 @@ test('an ended lesson offers no action and stays «للاطلاع فقط»', asy
 });
 
 test('without lessons.confirm the button is not there', async () => {
-  const client = createTestQueryClient({ meFromApi: true });
+  const client = confirmingQueryClient({ meFromApi: true });
   client.setQueryDefaults(pathKey('/auth/me'), { staleTime: Infinity });
   client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: [...GRANTABLE_PERMISSIONS.filter((p) => p !== 'lessons.confirm'), ...selfPermissionsOf('sales')] });
   await open(client);

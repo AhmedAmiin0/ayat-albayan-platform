@@ -1,4 +1,4 @@
-import { lessonStatusStyle, type LessonView, lessonWhenAt, sameClockAt, subscriptionStatusStyle } from '@ab/shared';
+import { type LessonView, lessonWhenAt, sameClockAt, subscriptionStatusStyle } from '@ab/shared';
 import { Avatar } from '@/components/ui/display/avatar';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
@@ -14,6 +14,7 @@ import { DetailRow } from './DetailRow';
 import { LessonTags } from './LessonTags';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 /**
  * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in the viewer's zone
@@ -29,10 +30,11 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
   const teacherTz = lesson.teacher.tz;
   const mins = durationMin(lesson);
   const platform = usePlatformClassroom(lesson.platform_classroom);
+  const status = useLessonStatusText();
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} className="justify-self-start" />
+        <StatusChip {...status.chip(lesson.status)} className="justify-self-start" />
         <LessonTags lesson={lesson} />
       </div>
       <dl className="grid gap-3">

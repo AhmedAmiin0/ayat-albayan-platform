@@ -6,6 +6,8 @@ import { useHolds, usePermissions } from '@/core/auth';
 import { Note } from '@/more';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
+import { offersCancel, salesCancelRights } from '@/sales/sales/lesson-actions/cancel-by';
 import { canChangeLesson } from '@/sales/sales/lesson-actions/lesson-actions-api';
 import { SalesLessonActions } from '@/sales/sales/lesson-actions/SalesLessonActions';
 import { SalesRescheduleSheet } from '@/sales/sales/lesson-actions/SalesRescheduleSheet';
@@ -28,18 +30,23 @@ export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonShee
   const now = useNow();
   const can = usePermissions();
   const holdsConfirm = useHolds('lessons.confirm');
+  const { required } = useLessonStatusText();
   const [moving, setMoving] = useState<SalesScheduleLesson | null>(null);
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
   const justConfirmed = lesson !== null && lesson.id === confirmedId;
   const shown = lesson && justConfirmed ? { ...lesson, status: 'confirmed' as const } : lesson;
-  const changeable = shown ? canChangeLesson(shown, { now, can }) : null;
-  const confirmable = shown ? canSalesConfirm(shown, { now, holds: holdsConfirm }) : false;
+  const moves = shown ? canChangeLesson(shown, { now, can }).reschedule : false;
+  const cancelInput = { now, holds: can('lessons.cancel'), required };
+  const cancels = shown ? offersCancel(salesCancelRights(shown, cancelInput)) : false;
+  // «تأكيد الحلقة» only while the academy requires one (settings.lesson_confirmation_required).
+  const confirmInput = { now, holds: holdsConfirm };
+  const confirmable = shown ? required && canSalesConfirm(shown, confirmInput) : false;
   return (
     <LessonDetailsSheet
       lesson={shown}
       role="sales"
       onClose={onClose}
-      readOnly={!changeable?.reschedule && !changeable?.cancel && !confirmable && !justConfirmed}
+      readOnly={!moves && !cancels && !confirmable && !justConfirmed}
       hereStudentId={studentId}
       actions={(l) => (
         <>

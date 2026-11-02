@@ -66,7 +66,9 @@ test('«هذه الحلقة فقط»: Sunday 17:00 sends scope one; the guardian
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/reschedule', { scope: 'one', startsAt: SUN_17 });
   expect(await screen.findByText(t.lessons.rescheduled)).toBeTruthy();
   expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
-  expect(screen.getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
+  // No confirmation required (the default): the moved lesson is «مجدولة», not «يحتاج تأكيد».
+  expect(screen.getByText(t.lessons.noConfirm.scheduled)).toBeTruthy();
+  expect(screen.queryByText(t.enums.lessonStatus.scheduled)).toBeNull();
   expect(screen.getByText(t.reschedule.guardianNote)).toBeTruthy();
   // Today and the calendars refetch.
   expect(client.getQueryState(dayKey)?.isInvalidated).toBe(true);

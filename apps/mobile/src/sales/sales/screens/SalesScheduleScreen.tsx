@@ -1,4 +1,4 @@
-import { lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/shared';
+import { localizedName, type SalesScheduleLesson } from '@ab/shared';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -21,7 +21,14 @@ import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesSchedule, useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesLessonRow } from '@/sales/sales/components/SalesLessonRow';
 import { SalesLessonSheet } from '@/sales/sales/components/SalesLessonSheet';
-import { byScheduleStatus, SCHEDULE_STATUSES, scheduleStatusCounts, type ScheduleStatus } from '@/sales/sales/lib/schedule-status';
+import {
+  byScheduleStatus,
+  SCHEDULE_STATUSES,
+  scheduleStatusCounts,
+  statusPill,
+  type ScheduleStatus,
+} from '@/sales/sales/lib/schedule-status';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -77,11 +84,11 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   );
   const all = day.data?.lessons ?? [];
   const counts = scheduleStatusCounts(all);
+  const statusText = useLessonStatusText();
   const statuses = SCHEDULE_STATUSES.map((value) => ({
     value,
-    label: t.sales.academySchedule.status[value],
     count: day.data ? counts[value] : undefined,
-    ...(value === 'all' ? {} : lessonStatusStyle[value === 'cancelled' ? 'cancelled_by_admin' : value]),
+    ...statusPill(value, statusText),
   }));
   const lessons = byScheduleStatus(all, status);
   const cells = useInsetRows(row, lessons.length);

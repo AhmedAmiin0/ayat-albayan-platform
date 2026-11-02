@@ -1,8 +1,9 @@
-import { isRunningLesson, lessonStatusStyle } from '@ab/shared';
+import { isRunningLesson } from '@ab/shared';
 import { View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { Tag } from '../agenda/Tag';
 import type { DetailsLesson } from './details-text';
 
@@ -14,10 +15,7 @@ export function DetailsHead({ lesson }: { lesson: DetailsLesson }) {
   const now = useNow();
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
-      <StatusChip
-        {...lessonStatusStyle[lesson.status]}
-        label={t.enums.lessonStatus[lesson.status]}
-      />
+      <LessonStatusChip status={lesson.status} full />
       {isRunningLesson(lesson, now) ? (
         <StatusChip tone="ok" glyph="fill" label={t.lessons.sheet.live} />
       ) : null}

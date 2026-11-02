@@ -6,7 +6,13 @@ import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { AutoHeldCorrection, isAutoHeldCorrection } from '@/modules/teaching/lessons/auto-held/auto-held-correction';
-import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
+import {
+  CANCEL_EVENT,
+  cancelChange,
+  cancelCommit,
+  invalidTransition,
+  type CancelContext,
+} from './transition';
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
@@ -56,15 +62,7 @@ export class LessonCancelService {
     }
     const change = cancelChange(lesson, await this.context(body));
     await this.store.commit({
-      change: { actor: actor.id, changes: [change] },
-      audit: {
-        entity: 'lessons',
-        entityId: lesson.id,
-        action: 'cancel',
-        before: { status: lesson.status },
-        after: { status: change.to_status, by: body.by, reason: body.reason, chargeable: change.chargeable },
-      },
-      transition: { from: lesson.status, event },
+      ...cancelCommit({ lesson, change, body, actorId: actor.id }),
       notice: { kind: 'lesson_cancelled', lessonId: lesson.id, actorId: actor.id },
     });
     return [lesson.id];

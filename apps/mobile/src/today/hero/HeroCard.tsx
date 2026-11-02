@@ -1,10 +1,8 @@
-import { lessonStatusStyle } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { type, useTheme } from '@/theme';
 import { lessonClock, studentNames } from '@/today/lib/lesson-text';
 import type { Hero } from '@/today/lib/today-plan';
@@ -39,7 +37,7 @@ export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: He
           {heroLead(hero)}
         </AppText>
         <View style={{ flexShrink: 0, maxWidth: '60%' }}>
-          <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
+          <LessonStatusChip status={lesson.status} size="sm" />
         </View>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>

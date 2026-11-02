@@ -5,14 +5,14 @@ import { conflict } from '@/common/http/errors';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
-import { CANCEL_EVENT, cancelChange } from '@/modules/teaching/lessons/status/transition';
+import { cancelChange, cancelCommit } from '@/modules/teaching/lessons/status/transition';
 import { AutoHeldRepo } from './auto-held.repo';
 
 /**
  * body.by: its teacher (not counted) or the student (excused); isAutoHeldCorrection keeps out
  * 'admin'.
  */
-export interface CorrectionInput {
+interface CorrectionInput {
   lesson: LessonRow;
   body: { by: CancelBy; reason: string | null };
   actor: AuthUser;
@@ -47,23 +47,8 @@ export class AutoHeldCorrection {
     if (!(await this.repo.correctable([lesson.id])).has(lesson.id)) throw conflict('not_auto_held');
     const { late_cancel_hours: lateCancelHours } = await this.settings.read();
     const change = cancelChange(lesson, { ...body, now: new Date(), lateCancelHours });
-    await this.store.commit({
-      change: { actor: actor.id, changes: [change] },
-      audit: {
-        entity: 'lessons',
-        entityId: lesson.id,
-        action: 'cancel',
-        before: { status: lesson.status },
-        after: {
-          status: change.to_status,
-          by: body.by,
-          reason: body.reason,
-          chargeable: change.chargeable,
-          correction: AUTO_HELD_CORRECTION_REASON,
-        },
-      },
-      transition: { from: lesson.status, event: CANCEL_EVENT[body.by] },
-    });
+    const input = { lesson, change, body, actorId: actor.id };
+    await this.store.commit(cancelCommit(input, { correction: AUTO_HELD_CORRECTION_REASON }));
     return lesson.id;
   }
 }

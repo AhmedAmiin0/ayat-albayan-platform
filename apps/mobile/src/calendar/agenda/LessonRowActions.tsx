@@ -1,8 +1,10 @@
+import { canCorrectAutoHeld } from '@ab/client-core';
 import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { useJoinOpen } from '@/classroom';
+import { CorrectAutoHeld, type CorrectBy } from '@/teaching';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
@@ -11,6 +13,13 @@ import { studentNames } from '@/today';
 import type { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
+
+/** The reason the API requires on a correction: the choice's own words. */
+const CORRECT_REASON: Record<CorrectBy, string> = {
+  teacher: t.lessons.correct.byTeacher,
+  student: t.lessons.correct.byStudent,
+};
 
 interface LessonRowActionsProps {
   lesson: LessonView;
@@ -39,6 +48,13 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
   const error = action.errorFor(lesson.id);
   const who = studentNames(lesson);
   const joinOpen = useJoinOpen(lesson);
+  // «تأكيد» only while the academy requires a confirmation (settings.lesson_confirmation_required);
+  // without one, a lesson held automatically offers «لم تنعقد الحلقة؟» instead.
+  const { required } = useLessonStatusText();
+  const confirmable = required && can('confirm');
+  const correctable = !required && canCorrectAutoHeld(lesson);
+  const correct = (by: CorrectBy) =>
+    action.cancel(lesson.id, { scope: 'one', by, reason: CORRECT_REASON[by] });
   const act = (label: string, variant: ButtonVariant, onPress: () => void) => (
     <Button
       variant={variant}
@@ -57,16 +73,17 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
       />
     );
   }
-  const lead = can('confirm') && lesson.status === 'scheduled' && !joinOpen;
+  const lead = confirmable && lesson.status === 'scheduled' && !joinOpen;
   const confirm = () => action.confirm(lesson.id);
   return (
     <View style={{ gap: 8 }}>
-      {can('confirm') ? act(t.today.confirm, lead ? 'primary' : 'secondary', confirm) : null}
+      {confirmable ? act(t.today.confirm, lead ? 'primary' : 'secondary', confirm) : null}
       <ButtonRow>
         {onEditTime && lesson.time_edit_mode ? act(t.editTime.action, 'secondary', () => onEditTime(lesson)) : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'secondary', () => onReschedule(lesson)) : null}
         {can('cancel_by_admin') ? act(t.today.cancel, 'danger', () => setCancelling(true)) : null}
       </ButtonRow>
+      {correctable ? <CorrectAutoHeld onCorrect={correct} busy={busy} /> : null}
       <MakeupAction lesson={lesson} onLeave={onLeave} />
       <FeedbackRequestButton lesson={lesson} />
       {error ? <ErrorLine message={error} /> : null}
