@@ -37,7 +37,7 @@ interface StatusMove {
 
 /** Thin supabase-js access for `leads`; business rules live in LeadsService. */
 @Injectable()
-export class LeadsQueries {
+export class LeadsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     /** The academy's own numbers: their lead (made before 2026-10-27) is kept but never listed or counted. */

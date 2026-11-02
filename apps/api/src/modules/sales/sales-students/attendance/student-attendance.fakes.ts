@@ -1,6 +1,6 @@
 // «سجل الحضور» rows as the database could return them, secrets present (test-only, *.fakes.ts).
 import type { Mock } from 'vitest';
-import type { AttendanceLessonRow } from './student-attendance.queries';
+import type { AttendanceLessonRow } from './student-attendance.repo';
 
 export const STUDENT = '51000000-0000-4000-8000-0000000000a1';
 /** Wed 28 Oct 2026, 13:00 Riyadh. */

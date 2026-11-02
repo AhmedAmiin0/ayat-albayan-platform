@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from './schedule/sales-lessons';
 import { ownershipOf, type SalesOwnership } from './sales-ownership';
 
@@ -12,7 +12,7 @@ export type SalesSubscriptionRow = Pick<Tables<'subscriptions'>, 'id' | 'package
 
 /** Sales portal reads (service role; SalesService and SalesScopes scope every call, rule 9). */
 @Injectable()
-export class SalesQueries {
+export class SalesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   ownership(profileId: string): Promise<SalesOwnership> {

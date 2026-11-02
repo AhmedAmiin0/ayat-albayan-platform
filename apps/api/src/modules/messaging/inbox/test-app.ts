@@ -13,11 +13,11 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
-import { SalesQueries } from '../../sales/sales/sales.queries';
-import { MessageSender } from '../whatsapp/sender/message.sender';
-import { SendGate } from '../whatsapp/gate/send-gate';
-import { TemplatesRepo, type ApprovalRow } from '../whatsapp/templates/catalog/templates.repo';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
@@ -96,7 +96,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(ThreadMessagesRepo).useValue(m.queries)
     .overrideProvider(ThreadReadsRepo).useValue(m.queries)
     .overrideProvider(TeacherThreadsRepo).useValue(m.teacher)
-    .overrideProvider(SalesQueries).useValue(m.sales)
+    .overrideProvider(SalesRepo).useValue(m.sales)
     .overrideProvider(ChatListsRepo).useValue(m.lists)
     .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)

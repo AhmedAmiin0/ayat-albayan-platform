@@ -79,7 +79,7 @@
   "apps/api/src/modules/reporting/reports/reports.fakes.ts exports OTHER_TEACHER_ID",
   "apps/api/src/modules/reporting/reports/reports.settings.ts types ReportsSettingsValues",
   "apps/api/src/modules/reporting/reports/test-app.ts types InjectArgs",
-  "apps/api/src/modules/sales/job-applicants/job-applicants.queries.ts types ApplicantMove",
+  "apps/api/src/modules/sales/job-applicants/job-applicants.repo.ts types ApplicantMove",
   "apps/api/src/modules/sales/leads/lead-state-machine.ts exports LEAD_TRANSITIONS",
   "apps/api/src/modules/sales/leads/leads.service.ts exports invalidTransition",
   "apps/api/src/modules/sales/leads/leads.service.ts types LeadAction",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SalesAssignQueries } from './sales-assign.queries';
+import { SalesAssignRepo } from './sales-assign.repo';
 
 /** A PostgREST-like builder that records every filter and resolves to `result` when awaited or on maybeSingle(). */
 function recorder(result: { data: unknown; error: null }) {
@@ -20,14 +20,14 @@ function recorder(result: { data: unknown; error: null }) {
 describe('SalesAssignQueries: a disabled assistant is not a salesperson', () => {
   it('salespeople() asks only for active profiles of the sales role', async () => {
     const r = recorder({ data: [{ id: 'a', full_name: 'A' }], error: null });
-    await new SalesAssignQueries(r.db as never).salespeople();
+    await new SalesAssignRepo(r.db as never).salespeople();
     expect(r.calls).toContainEqual(['eq', 'role', 'sales']);
     expect(r.calls).toContainEqual(['is', 'disabled_at', null]);
   });
 
   it('isSalesperson() refuses a disabled login (explicit assignment)', async () => {
     const r = recorder({ data: null, error: null });
-    expect(await new SalesAssignQueries(r.db as never).isSalesperson('x')).toBe(false);
+    expect(await new SalesAssignRepo(r.db as never).isSalesperson('x')).toBe(false);
     expect(r.calls).toContainEqual(['is', 'disabled_at', null]);
   });
 });

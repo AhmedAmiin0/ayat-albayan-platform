@@ -1,13 +1,13 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { OwnNumbers } from '../../../messaging/numbers';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { AssignedLead } from './sales-assign.mapper';
 
 /** Reads and writes behind the lead assignment (service role; SalesAssignService decides). */
 @Injectable()
-export class SalesAssignQueries {
+export class SalesAssignRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     /** The academy's own numbers: their old lead is never handed to a salesperson (owner 2026-10-27). */

@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { SalesAcademyController } from './academy/sales-academy.controller';
-import { SalesAcademyQueries } from './academy/sales-academy.queries';
+import { SalesAcademyRepo } from './academy/sales-academy.repo';
 import { SalesAcademyService } from './academy/sales-academy.service';
 import { SalesRosterRepo } from './academy/sales-roster.repo';
 import { SalesAdminController } from './sales-admin.controller';
-import { SalesAssignQueries } from './assign/sales-assign.queries';
+import { SalesAssignRepo } from './assign/sales-assign.repo';
 import { SalesAssignService } from './assign/sales-assign.service';
-import { SalesHistoryQueries } from './history/sales-history.queries';
-import { SalesScheduleQueries } from './schedule/sales-schedule.queries';
+import { SalesHistoryRepo } from './history/sales-history.repo';
+import { SalesScheduleRepo } from './schedule/sales-schedule.repo';
 import { SalesScheduleService } from './schedule/sales-schedule.service';
 import { SalesScopes } from './sales-scope';
 import { SalesController } from './sales.controller';
-import { SalesQueries } from './sales.queries';
+import { SalesRepo } from './sales.repo';
 import { SalesService } from './sales.service';
 import { SalesSettings } from './sales.settings';
 
@@ -24,10 +24,10 @@ import { SalesSettings } from './sales.settings';
 @Module({
   controllers: [SalesController, SalesAcademyController, SalesAdminController],
   providers: [
-    ...[SalesSettings, SalesQueries, SalesService, SalesScopes, SalesAssignQueries, SalesAssignService],
-    ...[SalesAcademyQueries, SalesHistoryQueries, SalesAcademyService, SalesScheduleQueries, SalesScheduleService],
+    ...[SalesSettings, SalesRepo, SalesService, SalesScopes, SalesAssignRepo, SalesAssignService],
+    ...[SalesAcademyRepo, SalesHistoryRepo, SalesAcademyService, SalesScheduleRepo, SalesScheduleService],
     SalesRosterRepo,
   ],
-  exports: [SalesQueries, SalesScopes, SalesAssignService, SalesHistoryQueries, SalesRosterRepo],
+  exports: [SalesRepo, SalesScopes, SalesAssignService, SalesHistoryRepo, SalesRosterRepo],
 })
 export class SalesModule {}

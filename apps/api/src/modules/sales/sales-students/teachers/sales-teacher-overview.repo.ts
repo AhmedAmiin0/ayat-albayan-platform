@@ -1,8 +1,8 @@
 import type { Tables } from '@ab/db';
 import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** A student as the overview names them: name and code, nothing else. */
 interface NamedStudent {
@@ -32,7 +32,7 @@ const LESSONS_LIMIT = 1000;
 
 /** «الجدول» and «الحضور» of one teacher for sales (service role; whitelisted columns, never money or a link). */
 @Injectable()
-export class SalesTeacherOverviewQueries {
+export class SalesTeacherOverviewRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async exists(teacherId: string): Promise<boolean> {

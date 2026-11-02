@@ -1,6 +1,6 @@
 // One teacher's «الجدول» / «الحضور» rows as the database could return them, secrets present (test-only, *.fakes.ts).
 import type { Mock } from 'vitest';
-import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.queries';
+import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.repo';
 
 export const TEACHER = '7c000000-0000-4000-8000-0000000000e1';
 export const NOW = new Date('2026-10-28T10:00:00Z');

@@ -1,11 +1,11 @@
 import { pickSales, type SalesPersonView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import type { Tables } from '@ab/db';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { badRequest, notFound } from '../../../../common/http/errors';
+import { AuditService } from '@/common/audit/audit.service';
+import { badRequest, notFound } from '@/common/http/errors';
 import { toCandidates } from './sales-assign.mapper';
-import { SalesAssignQueries } from './sales-assign.queries';
-import { SalesSettings } from '../sales.settings';
+import { SalesAssignRepo } from './sales-assign.repo';
+import { SalesSettings } from '@/modules/sales/sales/sales.settings';
 
 /**
  * Who gets a lead. Assignment is the API's job, never a trigger: seed:demo and migrate:apply must
@@ -16,7 +16,7 @@ export class SalesAssignService {
   private readonly log = new Logger(SalesAssignService.name);
 
   constructor(
-    private readonly queries: SalesAssignQueries,
+    private readonly queries: SalesAssignRepo,
     private readonly settings: SalesSettings,
     private readonly audit: AuditService,
   ) {}

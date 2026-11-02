@@ -1,14 +1,14 @@
 import type { TablesUpdate } from '@ab/db';
 import type { JobApplicantCreate } from '@ab/shared';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import type { Page } from '../leads/http';
+import { AuditService } from '@/common/audit/audit.service';
+import type { Page } from '@/modules/sales/leads/http';
 import { canTransitionApplicant, type ApplicantStatus } from './applicant-state-machine';
 import {
-  JobApplicantsQueries,
+  JobApplicantsRepo,
   type ApplicantListFilter,
   type JobApplicantRow,
-} from './job-applicants.queries';
+} from './job-applicants.repo';
 
 interface ApplicantAction {
   id: string;
@@ -22,7 +22,7 @@ type ApplicantPatch = Omit<TablesUpdate<'job_applicants'>, 'status' | 'from_lead
 @Injectable()
 export class JobApplicantsService {
   constructor(
-    private readonly applicants: JobApplicantsQueries,
+    private readonly applicants: JobApplicantsRepo,
     private readonly audit: AuditService,
   ) {}
 

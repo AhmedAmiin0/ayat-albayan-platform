@@ -1,11 +1,11 @@
 // Test fixtures for the leads + job-applicants service tests (not shipped behaviour).
 import { vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import type {
   JobApplicantRow,
-  JobApplicantsQueries,
-} from '../job-applicants/job-applicants.queries';
-import type { LeadRow, LeadsQueries } from './leads.queries';
+  JobApplicantsRepo,
+} from '@/modules/sales/job-applicants/job-applicants.repo';
+import type { LeadRow, LeadsRepo } from './leads.repo';
 import { LeadsService } from './leads.service';
 
 export const LEAD_ID = '00000000-0000-4000-8000-000000000001';
@@ -73,8 +73,8 @@ export function fakeDeps() {
     leads,
     applicants,
     audit,
-    asLeads: leads as unknown as LeadsQueries,
-    asApplicants: applicants as unknown as JobApplicantsQueries,
+    asLeads: leads as unknown as LeadsRepo,
+    asApplicants: applicants as unknown as JobApplicantsRepo,
     asAudit: audit as unknown as AuditService,
   };
 }

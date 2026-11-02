@@ -1,11 +1,11 @@
 import { DISCOUNTS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { forbidden } from '../../../common/http/errors';
-import { SalesQueries } from '../sales/sales.queries';
-import { SalesFamilyQueries } from './reads/sales-family.queries';
-import type { SalesOwnership } from '../sales/sales-ownership';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden } from '@/common/http/errors';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesFamilyRepo } from './reads/sales-family.repo';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** 403 not_your_student unless the student is one of hers. */
 export function assertOwnStudent(own: Pick<SalesOwnership, 'studentIds'>, studentId: string): void {
@@ -37,8 +37,8 @@ export function renewsAny(user: AuthUser): boolean {
 @Injectable()
 export class SalesMoneyScope {
   constructor(
-    private readonly sales: SalesQueries,
-    private readonly family: SalesFamilyQueries,
+    private readonly sales: SalesRepo,
+    private readonly family: SalesFamilyRepo,
   ) {}
 
   ownership(user: AuthUser): Promise<SalesOwnership> {

@@ -1,8 +1,8 @@
 import { livePackages, salesRenewal, type SalesRenewal } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { PackagesService } from '../../../finance/subscriptions';
-import type { FamilyStudentRow } from './sales-family.queries';
-import { SalesMoneySettings } from '../sales-money.settings';
+import { PackagesService } from '@/modules/finance/subscriptions';
+import type { FamilyStudentRow } from './sales-family.repo';
+import { SalesMoneySettings } from '@/modules/sales/sales-money/sales-money.settings';
 
 /**
  * «جدّد الاشتراك» from the chat (owner 2026-10-26): for each of her students, whether a renewal is due (the
