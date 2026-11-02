@@ -24,6 +24,7 @@ import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/layout/head-actions';
+import { PeopleEditActions } from '@/features/people/students/people-edit';
 import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
 import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
@@ -102,6 +103,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         />
       </PageHead>
       <CoursePausePanel studentId={student.id} onDone={setNotice} />
+      <PeopleEditActions studentId={student.id} />
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
           <div key={term} className="flex min-w-0 items-baseline gap-2">

@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
+import { PeopleEditActions } from '@/features/people/students';
 import { t } from '@/lib/i18n/i18n';
 import { rosterAttendanceLine, rosterPackageLine } from './roster-text';
 import { RosterScheduleCell } from './RosterScheduleCell';
@@ -73,5 +74,12 @@ export const allStudentColumns = col.columns([
     id: 'attendance',
     header: () => t.sales.allStudents.attendance,
     meta: { className: 'text-sm text-ink-2 max-sm:order-9 max-sm:basis-full' },
+  }),
+  // Owner 2026-11-02: «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل», by the role's keys.
+  col.display({
+    id: 'people',
+    header: () => t.peopleEdit.editData,
+    cell: (c) => <PeopleEditActions studentId={c.row.original.id} />,
+    meta: { className: 'max-sm:order-10 max-sm:basis-full' },
   }),
 ]);
