@@ -125,6 +125,6 @@ export class SalesPaymentsController {
     @ZodBody(paymentAmountSchema) body: PaymentAmount,
     @CurrentUser() user: AuthUser,
   ): Promise<SalesPaymentView> {
-    return this.amounts.edit(id, body, user.id);
+    return this.amounts.edit(id, body, user);
   }
 }

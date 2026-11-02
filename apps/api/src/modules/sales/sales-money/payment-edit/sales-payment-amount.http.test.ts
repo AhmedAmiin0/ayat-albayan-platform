@@ -1,4 +1,5 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -27,7 +28,8 @@ describe('PATCH /sales/payments/:id/amount', () => {
     m.payments.update.mockResolvedValue(paymentRow({ amount: 120 }));
   });
 
-  it('any student (salesB owns none): the admin’s update with her as actor, audited, whitelisted', async () => {
+  it('rule OFF (the default): any student (salesB owns none), the admin’s update, audited', async () => {
+    m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
     const before = paymentRow();
     m.payments.get.mockResolvedValueOnce(before).mockResolvedValueOnce(before);
     m.payments.get.mockResolvedValue(paymentRow({ amount: 120 }));
@@ -41,6 +43,15 @@ describe('PATCH /sales/payments/:id/amount', () => {
     expect(m.commissionBell.notify).toHaveBeenCalled();
     expect(res.json()).toMatchObject({ id: PAYMENT_ID, amount: 120 });
     expect(res.json()).not.toHaveProperty('recorded_by');
+  });
+
+  it('«اشتراط التعيين» enforced: another assistant’s student → 403 not_your_student', async () => {
+    m.payments.get.mockResolvedValue(paymentRow());
+    const res = await call({ method: 'PATCH', url: URL, token: 'salesB', body: { amount: 120 } });
+    expect([res.statusCode, res.json().code]).toEqual([403, 'not_your_student']);
+    expect(m.payments.update).not.toHaveBeenCalled();
+    const own = await call({ method: 'PATCH', url: URL, token: 'salesA', body: { amount: 120 } });
+    expect(own.statusCode).toBe(200);
   });
 
   it('a card (Stripe) payment: 409 stripe_amount_locked, even with its own amount', async () => {
