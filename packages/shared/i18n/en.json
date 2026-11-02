@@ -4889,7 +4889,7 @@
       "action": "Edit start date",
       "title": "Edit the package start date",
       "label": "Start date",
-      "hint": "Only the start date changes; lessons, payments and the renewal date stay as they are.",
+      "hint": "Only the start date changes; payments and the renewal date stay as they are, and the lessons counted from the package may follow the new date.",
       "save": "Save",
       "cancel": "Cancel",
       "saved": "Start date updated.",
