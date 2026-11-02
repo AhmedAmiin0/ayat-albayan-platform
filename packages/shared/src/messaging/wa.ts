@@ -112,6 +112,8 @@ const RETRY_POINTLESS = new Set<string>([
   'expired',
   'stale',
   'handed_off',
+  // Outside the window on a row that is not held (a teacher's text): only a template reopens it.
+  'window_closed',
   // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
   // (368), number not registered (131045, 133010), display name (131037).
   ...[E.paymentIssue, E.accountLocked, E.policyBlocked, E.certificateError].map(String),
@@ -124,4 +126,9 @@ const RETRY_POINTLESS = new Set<string>([
 
 export function canRetryCode(code: string | null | undefined): boolean {
   return !RETRY_POINTLESS.has(code ?? '');
+}
+
+/** Free text refused: the 24 h window is closed (131047, 470); only a template reopens it. */
+export function isWaWindowClosed(code: number | null | undefined): boolean {
+  return code === E.reEngagement || code === E.outsideWindow;
 }

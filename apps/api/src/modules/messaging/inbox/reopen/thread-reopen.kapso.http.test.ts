@@ -13,7 +13,7 @@ import { kapsoReopen } from './kapso-reopener';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/reopen`;
-const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: [], buttons: [], body_ar: 'أهلًا' });
+const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: [], buttons: [], body_ar: 'أهلًا', sales_starter: true });
 const reopen = (token = 'admin') => t.call({ method: 'POST', url: URL, token });
 const log = new Logger('t');
 const hang = () => new Promise<Response>(() => undefined);

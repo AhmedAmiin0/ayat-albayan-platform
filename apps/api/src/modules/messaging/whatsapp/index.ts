@@ -91,3 +91,4 @@ export {
   TemplatesRepo,
 } from './templates/catalog/templates.repo';
 export { WhatsappModule } from './whatsapp.module';
+export { reopenUsable } from './sender/window/window-rules';

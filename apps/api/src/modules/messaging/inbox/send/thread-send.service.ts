@@ -5,7 +5,6 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
-import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { chatLine } from './text-line';
 import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
@@ -76,8 +75,6 @@ export async function replyOf(
 export class ThreadSendService {
   /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
-  /** Kapso's conversation record, for a text tried after the window (textLine). */
-  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -87,8 +84,8 @@ export class ThreadSendService {
 
   /**
    * H3: free text from the chat line when its window is open, else from notifications; after
-   * every window, a staff member's text (a forward too, owner 2026-11-01) is tried from a
-   * Kapso chat line (chatLine). Teacher mode (docs/19) keeps 409 session_closed (sendLine).
+   * every window, a staff member's text (a forward too) is held behind the reopen template
+   * (chatLine, owner 2026-11-03). Teacher mode (docs/19) keeps 409 session_closed (sendLine).
    */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
@@ -96,7 +93,7 @@ export class ThreadSendService {
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
     const teacher = !!s.scope;
-    const from = await chatLine(thread, { ...at, phone: s.phone, kapso: this.kapso, teacher });
+    const from = await chatLine(thread, { ...at, teacher });
     const reply = await replyOf(this.quotes, s, from);
     return this.outbox.queue({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
   }

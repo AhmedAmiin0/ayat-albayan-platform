@@ -5,8 +5,8 @@ import { ReopenRepo } from './reopen.repo';
 import { ReopenSettings } from './reopen.settings';
 
 describe('ReopenSettings', () => {
-  it('defaults to inquiry_followup_ar_v2 (owner 2026-10-26), never v1', async () => {
-    expect(await readerOf(ReopenSettings).read()).toEqual({ chat_reopen_template: 'inquiry_followup_ar_v2' });
+  it('defaults to welcome_greeting (owner 2026-11-03: a starter with no variables)', async () => {
+    expect(await readerOf(ReopenSettings).read()).toEqual({ chat_reopen_template: 'welcome_greeting' });
   });
 
   it('answers the stored key', async () => {

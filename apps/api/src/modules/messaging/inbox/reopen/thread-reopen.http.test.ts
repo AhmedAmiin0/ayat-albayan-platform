@@ -12,7 +12,8 @@ type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/reopen`;
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const STALE = '2026-01-01T00:00:00Z';
-const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: ['contact_name'], buttons: [], body_ar: 'أهلًا {{1}}' });
+// Owner 2026-11-03: the reopen template is an approved chat-line starter with no variables.
+const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: [], buttons: [], body_ar: 'أهلًا', sales_starter: true });
 const reopen = (token = 'admin') => t.call({ method: 'POST', url: URL, token });
 let t: App;
 
@@ -47,7 +48,7 @@ describe('POST /threads/:phone/reopen', () => {
     expect(t.queries.enqueue).toHaveBeenCalledTimes(1);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       direction: 'outbound', status: 'queued', phone_e164: PHONE, created_by: ADMIN.id,
-      template_key: 'inquiry_followup_ar_v2', template_params: { '1': 'أم ياسمين' },
+      template_key: 'inquiry_followup_ar_v2', template_params: {},
       dedup_key: reopenDedupKey(PHONE, new Date()),
     }));
     // The sender (and its gate) decides whether it goes out, as for any send; audited like the composer's.
@@ -90,9 +91,11 @@ describe('POST /threads/:phone/reopen', () => {
     expect([res.statusCode, res.json()]).toEqual([200, { kapso_reopened: false, template: 'template_queued' }]);
   });
 
-  it('a variable it cannot fill: not_sent, nothing queued', async () => {
+  it('a template with a variable, or not a starter: template_unavailable, nothing queued', async () => {
     t.templates.get.mockResolvedValue({ ...REOPEN, params: ['var_1'] });
-    expect((await reopen()).json().template).toBe('not_sent');
+    expect((await reopen()).json().template).toBe('template_unavailable');
+    t.templates.get.mockResolvedValue({ ...REOPEN, sales_starter: false });
+    expect((await reopen()).json().template).toBe('template_unavailable');
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 

@@ -10,7 +10,7 @@ export class ReopenRepo {
     private readonly settings: ReopenSettings,
   ) {}
 
-  /** The `chat_reopen_template` setting (default inquiry_followup_ar_v2; no fallback key). */
+  /** The `chat_reopen_template` setting (default welcome_greeting; no fallback key). */
   async templateKey(): Promise<string> {
     return (await this.settings.read()).chat_reopen_template;
   }

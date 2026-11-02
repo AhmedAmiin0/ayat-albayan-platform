@@ -42,7 +42,7 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
     reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
-    // Owner 2026-10-31: a Kapso chat line still tries free text after the window (textLine).
+    // Owner 2026-11-03: a Kapso chat line holds a late text behind the reopen template (textLine).
     ...(chat?.provider === 'kapso' ? { try_after_window: true } : {}),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,

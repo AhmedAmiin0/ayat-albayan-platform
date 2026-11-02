@@ -2,6 +2,7 @@ import { sendErrorReason } from '@ab/client-core';
 import {
   type ClockCycle,
   dayParts,
+  isAwaitingReply,
   isUnavailableMessage,
   isUnsupportedMessage,
   type MessageView,
@@ -106,8 +107,11 @@ export function clock(iso: string, cycle: ClockCycle, tz = deviceTimeZone()): st
   return clockIn(new Date(iso), tz, cycle);
 }
 
-/** «هتتبعت …» for a row scheduled later (a booking confirmation, a reminder), else null. */
-export function queuedLine(m: Pick<MessageView, 'status' | 'scheduled_for'>, options: StampOptions) {
+/** «بانتظار رد العائلة» for a held text; «ستُرسل …» for a row scheduled later; else null. */
+type QueuedRow = Pick<MessageView, 'status' | 'scheduled_for' | 'error_code'>;
+
+export function queuedLine(m: QueuedRow, options: StampOptions) {
+  if (isAwaitingReply(m)) return t.messages.awaitingReply;
   const now = options.now ?? new Date();
   if (m.status !== 'queued' || !m.scheduled_for || Date.parse(m.scheduled_for) <= now.getTime()) {
     return null;

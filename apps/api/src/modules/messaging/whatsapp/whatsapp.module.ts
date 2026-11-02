@@ -24,6 +24,9 @@ import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
+import { WindowHold } from './sender/window/window-hold';
+import { WindowRepo } from './sender/window/window.repo';
+import { WindowSettings } from './sender/window/window.settings';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
@@ -96,6 +99,9 @@ function lines(): WhatsappLines {
     CodeSend,
     PaymentHoldRepo,
     PaymentHolds,
+    WindowRepo,
+    WindowSettings,
+    WindowHold,
     MessageWorker,
     MessageSender,
     MessagesRepo,

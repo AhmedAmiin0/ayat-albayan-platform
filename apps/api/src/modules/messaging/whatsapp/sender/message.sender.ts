@@ -17,16 +17,18 @@ import { BackgroundJob } from '@/config/role/background-job';
 const BATCH = 50;
 
 export type SendSummary = Record<SendOutcome, number>;
+const EMPTY: SendSummary = {
+  sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0,
+};
 
 /** One due row of a pass and the line (legacy) or number (module mode) a pause applies to. */
 interface PassItem { job: PassJob; pause: string | null }
 
 /**
- * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains `messages` where status = queued, due,
- * and either a session text or an approved template. Gate closed (WhatsApp config or the
- * admin's kill switch) → nothing is read, rows wait; the gate is asked again before every row. In-process and single-flight; safe across
- * instances because each row is claimed by compare-and-set. Module mode (the numbers overlay installed,
- * docs/23c) routes each row to a number instead; legacy (overlayNumbers() null) is today's pass exactly.
+ * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains due queued `messages` (a session text or
+ * an approved template). Gate closed (config or kill switch) → nothing is read, rows wait; it is
+ * asked again before every row. Single-flight; safe across instances (each row is claimed by
+ * compare-and-set). Module mode (docs/23c) routes each row to a number; legacy is today's pass.
  */
 @BackgroundJob({ name: 'message-sender', kick: 'kick' })
 @Injectable()
@@ -57,31 +59,35 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.stop();
   }
 
-  /**
-   * Run now (after an enqueue or an admin retry) instead of waiting for the next tick. A kick
-   * during a run queues exactly one more run.
-   */
+  /** Run now (after an enqueue or an admin retry); a kick during a run queues exactly one more. */
   kick(): Promise<void> {
     return this.ticker.kick();
   }
 
   /** One pass over the due rows. Never throws. */
   async runOnce(now = new Date()): Promise<SendSummary> {
-    const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0 };
+    const summary: SendSummary = { ...EMPTY };
     try {
       const gate = await this.gate.switches();
       if (!gate.open) return summary;
       // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved template).
       if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
+      await this.worker.release(); // held texts the family answered (window/): due again
       // Idle (the usual tick): one cheap read instead of the templates + the queue (+ the routes).
       if (!(await this.queries.anyDue(now))) return this.report(summary);
-      const numbers = overlayNumbers();
-      if (numbers === null) await this.linesPass(summary, now);
-      else await this.numbersPass({ summary, now, numbers });
+      await this.pass(summary, now);
+      // A text just held queued its reopen template: one more pass sends it now, not next tick.
+      if (summary.waiting > 0) await this.pass(summary, new Date());
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
     return this.report(summary);
+  }
+
+  private pass(summary: SendSummary, now: Date): Promise<void> {
+    const numbers = overlayNumbers();
+    if (numbers === null) return this.linesPass(summary, now);
+    return this.numbersPass({ summary, now, numbers });
   }
 
   /** Legacy (comms_source = legacy): today's pass, line by line. */

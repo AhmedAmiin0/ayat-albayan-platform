@@ -65,7 +65,7 @@ test('stamp: the clock today, day/month + clock another day, in the given zone',
 });
 
 test('queued line only for a row scheduled later', () => {
-  const later = { status: 'queued' as const, scheduled_for: '2026-10-02T12:00:00Z' };
+  const later = { status: 'queued' as const, scheduled_for: '2026-10-02T12:00:00Z', error_code: null };
   expect(queuedLine(later, RIYADH)).toBe(t.messages.queuedFor.replace('{time}', '15:00'));
   expect(queuedLine({ ...later, scheduled_for: '2026-10-02T08:00:00Z' }, RIYADH)).toBeNull();
   expect(queuedLine({ ...later, scheduled_for: null }, RIYADH)).toBeNull();

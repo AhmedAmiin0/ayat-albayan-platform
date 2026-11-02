@@ -10,7 +10,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const gate = fakeSwitches();
 const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn(), chatConfigured: false };
-const worker = { process: vi.fn(), deferRest: vi.fn() };
+const worker = { process: vi.fn(), deferRest: vi.fn(), release: vi.fn(async () => 0) };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const chat = (id: string) => dueMessage({ id, template_key: null, body: 'نص', line: 'chat' });
 const notif = (id: string) => dueMessage({ id });
@@ -53,7 +53,7 @@ describe('MessageSender — per-line auth pause', () => {
     expect(ids()).toEqual(['c1']);
     expect(gate.open).toHaveBeenCalledTimes(2); // the pass, then row c1 only
     expect(gate.automaticOn).toHaveBeenCalledTimes(2);
-    expect(summary).toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 1, skipped: 0 });
+    expect(summary).toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 1, skipped: 0, waiting: 0 });
   });
 
   it('one line: every row is notifications, so a pause ends the pass as before', async () => {

@@ -1,6 +1,7 @@
 import { reopenDedupKey, type ReopenTemplateOutcome } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import { reopenUsable } from '@/modules/messaging/whatsapp';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
@@ -28,7 +29,7 @@ interface ReopenSend {
 }
 
 /**
- * The reopen template, the `chat_reopen_template` setting (owner 2026-10-26: inquiry_followup_ar_v2, and
+ * The reopen template, the `chat_reopen_template` setting (owner 2026-11-03: welcome_greeting, and
  * no fallback: while the registry has it not approved on the thread's line, template_unavailable and nothing queued; once the
  * template sync brings it approved, this same path queues it), through the composer's own path,
  * ThreadSendService.template (approved, allow-list, params, its line), then the Outbox: the send gate
@@ -50,7 +51,8 @@ export class ReopenTemplate {
     const key = await this.reopens.templateKey();
     if (await this.reopens.requestedSince(r.phone, new Date(r.now.getTime() - DAY_MS), key)) return { outcome: 'already_requested_today' };
     const template = await this.templates.approved(key);
-    if (!template || !onThreadLine(template.line, r.thread)) {
+    // Owner 2026-11-03: only an approved chat-line starter with no variables (reopenUsable).
+    if (!template || !reopenUsable(template) || !onThreadLine(template.line, r.thread)) {
       this.log.log(`reopen template ${key} not approved on the thread's line yet: Kapso reopen only for ${last4(r.phone)}`);
       return { outcome: 'template_unavailable' };
     }

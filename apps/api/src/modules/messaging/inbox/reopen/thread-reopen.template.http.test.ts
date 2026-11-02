@@ -11,7 +11,7 @@ type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/reopen`;
 const STALE = '2026-01-01T00:00:00Z';
 const row = (key: string, over: object = {}) =>
-  templateRow({ key, meta_name: key, line: 'chat', params: ['contact_name'], buttons: [], body_ar: 'أهلًا {{1}}', ...over });
+  templateRow({ key, meta_name: key, line: 'chat', params: [], buttons: [], body_ar: 'أهلًا', sales_starter: true, ...over });
 const reopen = () => t.call({ method: 'POST', url: URL, token: 'admin' });
 let t: App;
 /** The registry: only these rows exist (by key). */

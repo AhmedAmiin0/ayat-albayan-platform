@@ -11,7 +11,9 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 
 /** paused = the line's (module mode: the number's) token is broken: the sender skips it for this pass. */
 /** held = a job-made reminder / follow-up / renewal while automatic messages are OFF (auto_off). */
-export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'held' | 'paused' | 'skipped';
+/** waiting = a staff chat text held behind the reopen template until the family replies. */
+export type SendOutcome =
+  | 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'held' | 'paused' | 'skipped' | 'waiting';
 
 export interface SendJob {
   row: DueMessage;
