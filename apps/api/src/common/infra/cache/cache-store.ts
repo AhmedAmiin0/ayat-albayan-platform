@@ -1,3 +1,6 @@
+import { jsonOf } from '@ab/shared';
+import { z } from 'zod';
+
 /** Where the shared cache lives: `redis` when REDIS_URL is set, else `memory` (this process only). */
 export type CacheMode = 'redis' | 'memory';
 
@@ -20,25 +23,26 @@ export interface CacheStore {
   close(): Promise<void>;
 }
 
-/** A stored value or message that is not JSON reads as a miss (never a thrown request). */
-export function parseJson<T>(raw: string): { value: T } | null {
-  try {
-    return { value: JSON.parse(raw) as T };
-  } catch {
-    return null;
-  }
-}
-
 /** What Redis holds: the value and when its load began (its age caps every local copy taken from it). */
 export interface Stored<T> {
   at: number;
   v: T;
 }
 
+/** A stored entry (docs/36 z9): JSON with a numeric `at` and a `v` (any JSON). Else a miss. */
+const cacheEnvelopeSchema = jsonOf(
+  z.looseObject({ at: z.number() }).refine((s) => Object.hasOwn(s, 'v')),
+);
+
+/** A stored value that is not a well-formed entry reads as a miss (never a thrown request). */
 export function parseStored<T>(raw: string): Stored<T> | null {
-  const s = parseJson<Partial<Stored<T>>>(raw)?.value;
-  return s && typeof s === 'object' && typeof s.at === 'number' && 'v' in s ? (s as Stored<T>) : null;
+  const parsed = cacheEnvelopeSchema.safeParse(raw);
+  // The value's own type is the caller's (this process wrote it under the same key).
+  return parsed.success ? ({ at: parsed.data.at, v: parsed.data.v } as Stored<T>) : null;
 }
+
+/** An invalidation message: a topic, and the instance that sent it (its own are skipped). */
+export const cacheMessageSchema = jsonOf(z.looseObject({ origin: z.unknown(), topic: z.string() }));
 
 export interface CacheEntry<T> {
   value: T;

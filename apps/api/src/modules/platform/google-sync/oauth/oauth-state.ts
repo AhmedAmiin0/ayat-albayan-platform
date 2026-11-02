@@ -1,4 +1,6 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { jsonOf } from '@ab/shared';
+import { z } from 'zod';
 
 // The OAuth `state` (CSRF): base64url({ u: admin id, n: nonce, e: expiry }) + '.' + HMAC-SHA256.
 // The HMAC key is derived from the server's service key (never sent anywhere); the nonce's sha256
@@ -7,11 +9,15 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypt
 
 export const STATE_TTL_MS = 10 * 60_000;
 
-interface StatePayload {
-  u: string;
-  n: string;
-  e: number;
-}
+/** The signed payload: who started it, the nonce, the expiry (ms). Extra keys are dropped. */
+const statePayloadSchema = z.object({ u: z.string(), n: z.string(), e: z.number() });
+type StatePayload = z.infer<typeof statePayloadSchema>;
+
+/** The state's first part: base64url of the payload's JSON (anything else reads as no payload). */
+const oauthStateSchema = z
+  .string()
+  .transform((body) => Buffer.from(body, 'base64url').toString('utf8'))
+  .pipe(jsonOf(statePayloadSchema));
 
 const b64 = (buf: Buffer | string): string => Buffer.from(buf).toString('base64url');
 export const stateKey = (secret: string): Buffer => createHmac('sha256', secret).update('google-oauth-state:v1').digest();
@@ -33,11 +39,6 @@ export function readState(input: { state: string; key: Buffer; now: number }): S
   const want = Buffer.from(sign(body, input.key));
   const got = Buffer.from(mac);
   if (want.length !== got.length || !timingSafeEqual(want, got)) return null;
-  try {
-    const p = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as Partial<StatePayload>;
-    if (typeof p.u !== 'string' || typeof p.n !== 'string' || typeof p.e !== 'number') return null;
-    return p.e > input.now ? { u: p.u, n: p.n, e: p.e } : null;
-  } catch {
-    return null;
-  }
+  const parsed = oauthStateSchema.safeParse(body);
+  return parsed.success && parsed.data.e > input.now ? parsed.data : null;
 }

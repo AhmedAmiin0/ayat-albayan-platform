@@ -146,9 +146,6 @@
     }
   },
   "src/common/auth/verify-token.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -493,12 +490,6 @@
     }
   },
   "src/common/infra/cache/cache-store.ts": {
-    "@typescript-eslint/no-unnecessary-type-parameters": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -542,9 +533,6 @@
     }
   },
   "src/common/infra/cache/shared-cache.ts": {
-    "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 1
-    },
     "max-len": {
       "count": 10
     }
@@ -8935,12 +8923,6 @@
     }
   },
   "src/modules/platform/google-sync/oauth/oauth-state.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { CacheGuard } from './cache-guard';
 import type { CacheTopic } from './cache-keys';
-import { parseJson, parseStored, type CacheEntry, type CacheStore, type Stored } from './cache-store';
+import { cacheMessageSchema, parseStored, type CacheEntry, type CacheStore, type Stored } from './cache-store';
 
 export const CACHE_STORE = Symbol('CACHE_STORE');
 const CHANNEL = 'invalidate';
@@ -121,15 +121,16 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
   }
 
   private receive(message: string): void {
-    const parsed = parseJson<{ origin?: unknown; topic?: unknown }>(message)?.value;
-    if (!parsed || parsed.origin === this.origin || typeof parsed.topic !== 'string') return;
+    const parsed = cacheMessageSchema.safeParse(message);
+    if (!parsed.success || parsed.data.origin === this.origin) return;
+    const { topic } = parsed.data;
     this.epoch += 1;
     this.freshUntil = this.guard.now() + FRESH_AFTER_CHANGE_MS;
-    for (const handler of this.handlers.get(parsed.topic as CacheTopic) ?? []) {
+    for (const handler of this.handlers.get(topic as CacheTopic) ?? []) {
       try {
         handler();
       } catch (e) {
-        log.warn(`cache invalidation of ${String(parsed.topic)} failed here: ${e instanceof Error ? e.message : String(e)}`);
+        log.warn(`cache invalidation of ${topic} failed here: ${e instanceof Error ? e.message : String(e)}`);
       }
     }
   }

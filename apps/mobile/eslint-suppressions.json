@@ -1640,14 +1640,6 @@
       "count": 2
     }
   },
-  "src/core/auth/role-claim.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
   "src/core/auth/route-permissions.test.ts": {
     "max-len": {
       "count": 1

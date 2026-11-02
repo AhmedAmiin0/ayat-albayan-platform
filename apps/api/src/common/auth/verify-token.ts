@@ -1,4 +1,4 @@
-import { isUserRole, type Permission, type UserRole } from '@ab/shared';
+import { isUserRole, supabaseClaimsSchema, type Permission, type UserRole } from '@ab/shared';
 import { createRemoteJWKSet, decodeProtectedHeader, jwtVerify, type JWTVerifyGetKey } from 'jose';
 
 export type Role = UserRole;
@@ -39,10 +39,10 @@ export function createTokenVerifier(opts: VerifierOptions) {
       alg === 'HS256'
         ? await jwtVerify(token, secret ?? failNoSecret(), verifyOpts)
         : await jwtVerify(token, jwks, verifyOpts);
-    if (!payload.sub) throw new Error('token has no subject');
-    const email = typeof payload['email'] === 'string' ? payload['email'] : null;
-    const sessionId = typeof payload['session_id'] === 'string' ? payload['session_id'] : null;
-    return { id: payload.sub, email, role: toRole(payload['user_role']), sessionId };
+    const claims = supabaseClaimsSchema.parse(payload);
+    if (!claims.sub) throw new Error('token has no subject');
+    const { sub, email, session_id: sessionId, user_role: role } = claims;
+    return { id: sub, email, role: toRole(role), sessionId };
   };
 }
 
