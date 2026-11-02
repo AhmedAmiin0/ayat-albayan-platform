@@ -1,6 +1,7 @@
 // The money harness plus the edit's own repo as a mock (test-only, excluded from the build).
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { vi } from 'vitest';
+import type { Permission } from '@ab/shared';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { systemResolver } from '@/common/auth/auth.guard';
 import { SUB_ID, STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
@@ -25,10 +26,12 @@ export function balanceOf(used: number): Map<string, BalanceRow> {
   return new Map([[SUB_ID, row]]);
 }
 
-/** The special assistant: the system sales role plus subscriptions.edit_terms (owner 2026-11-03). */
+const SPECIAL: Partial<Record<string, readonly Permission[]>> = { sales: ['subscriptions.edit_terms'] };
+
+/** «مساعد خاص»: the system sales role plus subscriptions.edit_terms (owner 2026-11-03). */
 export const withEditTerms: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),
-  'subscriptions.edit_terms',
+  ...(SPECIAL[user.role ?? ''] ?? []),
 ];
 
 export async function editApp(resolver: PermissionResolver = withEditTerms) {
