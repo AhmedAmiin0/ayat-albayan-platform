@@ -8,8 +8,8 @@ const drawable = (mime: string): boolean => mime.startsWith('image/') && baseMim
 
 /**
  * The thumb of a quoted photo or PDF (owner 2026-10-31): the same queries as the bubble, read from
- * the cache only, so a quote shows it once the bubble's file (or PDF page 1) was opened; W6:
- * rendering the log never signs a URL. Anything else, or nothing cached: null (the icon stays).
+ * the cache only, so a quote shows it once the bubble's file was opened or its PDF card was on
+ * screen; a quote never asks on its own. Anything else, or nothing cached: null (the icon stays).
  */
 export function useQuoteThumb(quote: MessageQuote, phone: string): string | null {
   const kind = quoteKindOf(quote.media_mime);
