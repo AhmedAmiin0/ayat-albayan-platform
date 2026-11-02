@@ -6250,9 +6250,6 @@
     }
   },
   "src/inbox/thread/components/ChatActionsProvider.tsx": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "complexity": {
       "count": 1
     },
@@ -6312,9 +6309,6 @@
     }
   },
   "src/inbox/thread/components/ForwardRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     },
@@ -6402,11 +6396,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/inbox/thread/hooks/chat-window.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/inbox/thread/hooks/inbox-sync.test.tsx": {

@@ -43,7 +43,7 @@ const BODIES: Record<PanelTab, TabBody> = {
   stickers: ({ media, onSent }) => <StickerTab media={media} onSent={onSent} />,
 };
 
-/** The open tab; without `media` (a teacher, a closed window) the emoji alone, as before. */
+/** The open tab; without `media` (a teacher, no text can go) the emoji alone, as before. */
 export function PanelBody({ tab, media, onPick, onSent }: BodyProps) {
   if (!media) return <EmojiGrid onPick={onPick} />;
   return <View style={{ flex: 1 }}>{BODIES[tab]({ onPick, media, onSent })}</View>;
