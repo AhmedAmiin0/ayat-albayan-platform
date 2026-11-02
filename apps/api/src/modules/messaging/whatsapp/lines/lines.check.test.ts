@@ -90,7 +90,7 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     const { lines } = checker({ [N]: R.badToken, [NW]: down, [C]: R.chatPhone, [CW]: R.subscribed });
     const [notifications, chat] = await lines.check();
     expect(notifications?.errors.map((e) => [e.step, e.code])).toEqual([['phone', 190], ['subscribed_apps', null]]);
-    expect(notifications?.errors[1]?.message).toContain('fetch failed');
+    expect(notifications?.errors[1]?.message).toBe('WhatsApp request failed');
     expect(chat?.errors).toEqual([]);
   });
 

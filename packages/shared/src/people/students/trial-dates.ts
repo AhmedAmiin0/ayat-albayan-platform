@@ -1,5 +1,5 @@
 import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '@ab/catalog';
-import { isCancelledLesson } from '../../schedule/lessons/index.js';
+import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow.js';
 
 // «موعد تجريبي جديد» (owner 2026-10-25): a new free-trial date for an existing student who has no

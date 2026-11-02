@@ -26,7 +26,7 @@ const RECENT_SORT: SortSpec<InvoiceSortKey> = {
 
 /** The invoices table (service role; the controller is admin-only, and RLS has no other policy). */
 @Injectable()
-export class InvoicesQueries {
+export class InvoicesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Newest first. */

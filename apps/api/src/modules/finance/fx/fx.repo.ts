@@ -1,6 +1,6 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { FxSnapshot } from './fx.fetcher';
 
 export type FxRow = Tables<'fx_rates'>;
@@ -9,7 +9,7 @@ const CURRENCY = /^[A-Z]{3}$/;
 
 /** fx_rates access (service role; the table is admin-read-only under RLS). */
 @Injectable()
-export class FxQueries {
+export class FxRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Most recently fetched SAR→quote rate, any age. */

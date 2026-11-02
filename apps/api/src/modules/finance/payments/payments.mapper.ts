@@ -1,7 +1,7 @@
 import type { TablesUpdate } from '@ab/db';
 import type { PaymentUpdate, PaymentView } from '@ab/shared';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
-import type { PaymentRow } from './payments.queries';
+import type { PaymentRow } from './payments.repo';
 
 /** payments row (+ its package's student) → PaymentView. */
 export function toPaymentView(row: PaymentRow, recorders: ReadonlyMap<string, string>): PaymentView {

@@ -21,7 +21,7 @@ const SELECT = '*, subscription:subscriptions!inner(student_id, currency, status
 
 /** All supabase access for `payments` (service role; admin-only routes). R-PAY-01. */
 @Injectable()
-export class PaymentsQueries {
+export class PaymentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: PaymentFilter): Promise<Page<PaymentRow>> {
