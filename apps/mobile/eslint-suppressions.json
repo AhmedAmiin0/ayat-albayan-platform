@@ -816,12 +816,6 @@
     }
   },
   "src/auth/verify-role.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -4280,7 +4274,7 @@
   },
   "src/inbox/composer/voice/voice-machine.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     }
   },
   "src/inbox/composer/voice/voice-support.test.ts": {
@@ -10034,6 +10028,11 @@
       "count": 2
     },
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales-subscribe/screens/SalesSubscribeScreen.custom.test.tsx": {
+    "no-nested-ternary": {
       "count": 1
     }
   },

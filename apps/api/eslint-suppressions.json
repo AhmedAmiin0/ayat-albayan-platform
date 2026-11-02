@@ -1094,9 +1094,6 @@
     "ab/forbidden-imports": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -1551,7 +1548,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 7
@@ -1597,7 +1594,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -2746,7 +2743,7 @@
       "count": 5
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 12
@@ -4327,7 +4324,7 @@
       "count": 3
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 8
@@ -4929,7 +4926,7 @@
       "count": 3
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 12
@@ -6919,7 +6916,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 8
@@ -7160,9 +7157,6 @@
     },
     "max-len": {
       "count": 3
-    },
-    "no-nested-ternary": {
-      "count": 1
     },
     "no-restricted-globals": {
       "count": 1
@@ -9364,13 +9358,10 @@
   },
   "src/modules/people/users/store/users.links.repo.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 4
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/modules/people/users/store/users.repo.ts": {
@@ -9455,9 +9446,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "complexity": {
-      "count": 1
     },
     "max-len": {
       "count": 11
@@ -9715,7 +9703,7 @@
       "count": 3
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -10021,7 +10009,7 @@
       "count": 6
     },
     "complexity": {
-      "count": 1
+      "count": 3
     },
     "max-len": {
       "count": 15
@@ -10068,7 +10056,7 @@
       "count": 5
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 6
@@ -10644,7 +10632,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 5
@@ -14112,7 +14100,7 @@
       "count": 5
     },
     "complexity": {
-      "count": 1
+      "count": 5
     },
     "max-len": {
       "count": 2
@@ -14397,7 +14385,7 @@
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.service.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 19
@@ -15155,7 +15143,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 6
@@ -15793,7 +15781,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 6

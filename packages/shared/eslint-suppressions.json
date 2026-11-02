@@ -291,11 +291,6 @@
       "count": 1
     }
   },
-  "src/messaging/lesson/rating.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/messaging/lesson/timing.day-before.test.ts": {
     "max-len": {
       "count": 2
@@ -316,7 +311,7 @@
       "count": 1
     }
   },
-  "src/messaging/markers/echo-payload.ts": {
+  "src/messaging/markers/chat-markers.ts": {
     "complexity": {
       "count": 1
     }
@@ -354,16 +349,6 @@
     },
     "max-len": {
       "count": 7
-    }
-  },
-  "src/messaging/reactions/reactions.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/messaging/replies/button-reply.ts": {
-    "complexity": {
-      "count": 1
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -547,7 +532,7 @@
   },
   "src/money/assistant/commission.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 8
@@ -975,7 +960,7 @@
   },
   "src/notifications/rules.legacy.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 5
@@ -1682,7 +1667,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 6
