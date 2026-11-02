@@ -25,6 +25,8 @@ export interface SubscribeInput {
   startsOn: string;
   /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a past startsOn, only above 0. */
   lessonsUsedBefore?: number;
+  /** «مبلغ مخصص» (owner 2026-11-02): the package price; omitted = the quote's. */
+  customPrice?: number;
 }
 
 /**
