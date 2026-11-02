@@ -21,11 +21,12 @@ export class LessonServices {
 }
 
 /**
- * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's while SalesOwnershipRule does not
- * enforce, owner 2026-11-02) through the admin's very services, with her as the actor: the same transaction,
- * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
- * override) and «إلغاء» (scope one; who cancelled as the admin picks it, the academy when
- * absent; the reason optional: null when absent).
+ * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's while
+ * SalesOwnershipRule does not enforce, owner 2026-11-02) through the admin's very services, with
+ * her as the actor: the same transaction, confirmation messages, package counts, calendar sync and
+ * audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash override) and «إلغاء»
+ * (scope one; who cancelled as the admin picks it, the academy when absent; the reason optional:
+ * null when absent).
  */
 @Injectable()
 export class SalesLessonActions {

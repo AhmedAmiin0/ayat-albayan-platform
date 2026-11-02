@@ -6,7 +6,7 @@ const NOW = new Date('2026-10-27T10:00:00Z');
 const MOVED = '1e000000-0000-4000-8000-0000000000c2';
 const AT = '2026-11-02T15:00:00.000Z';
 
-// «اشتراط التعيين» OFF (the default, owner 2026-11-02): ANY lesson; the rule ON: sales-lesson-actions.rule.
+// «اشتراط التعيين» OFF (the default, owner 2026-11-02): ANY lesson; ON: the .rule test.
 describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule off', () => {
   let t: App;
   beforeAll(async () => {
@@ -70,7 +70,8 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule 
   });
 
   it('a group lesson with another family\'s child moves / cancels as one lesson, for every student of it', async () => {
-    t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: [{ student_id: MINE }, { student_id: OTHER }] }));
+    const group = [{ student_id: MINE }, { student_id: OTHER }];
+    t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: group }));
     const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body: { startsAt: AT } });
     expect(move.statusCode).toBe(200);
     expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, body: { scope: 'one', startsAt: AT } }));

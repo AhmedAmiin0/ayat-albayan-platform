@@ -1,4 +1,4 @@
-import type { CancelRequest, LessonStatus, SalesLessonMoved } from '@ab/shared';
+import type { CancelRequest } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CancelRoute } from '@/features/teaching/schedule';
 import { apiSend } from '@/lib/http/api';
@@ -12,19 +12,20 @@ const SALES_KEY = ['sales'] as const;
  */
 export const salesCancelRoute = (lessonId: string): CancelRoute => ({
   send: ({ by, reason }: CancelRequest) =>
-    apiSend<{ id: string; status: LessonStatus }>('POST', `/sales/lessons/${lessonId}/cancel`, {
+    apiSend('POST', `/sales/lessons/${lessonId}/cancel`, {
       by,
       reason,
     }),
   refresh: SALES_KEY,
 });
 
-/** POST /sales/lessons/:id/reschedule { startsAt }: the admin's one-lesson move, her the actor. */
+/** POST /sales/lessons/:id/reschedule { startsAt }: the admin's one-lesson move, her the actor;
+ * the answer is not read (the day refetches). */
 export function useSalesReschedule(lessonId: string, onDone: () => void) {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (startsAt: string) =>
-      apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/reschedule`, { startsAt }),
+      apiSend('POST', `/sales/lessons/${lessonId}/reschedule`, { startsAt }),
     onSuccess: async () => {
       await client.invalidateQueries({ queryKey: SALES_KEY });
       onDone();

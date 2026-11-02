@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LESSON, lessonFacts, MINE, OTHER, studentsApp } from '../sales-students.fakes';
+import { LESSON, lessonFacts, MINE, OTHER, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const NOW = new Date('2026-10-27T10:00:00Z');
 const AT = '2026-11-02T15:00:00.000Z';
 const ACTIONS = [['reschedule', { startsAt: AT }], ['cancel', { by: 'student', reason: 'سفر' }]] as const;
 
-// Owner 2026-11-02: while «اشتراط التعيين» enforces (SalesOwnershipRule), only her students' lessons.
+// Owner 2026-11-02: while «اشتراط التعيين» enforces (SalesOwnershipRule), only her students'.
 describe('POST /sales/lessons/:id/reschedule and /cancel while the ownership rule enforces', () => {
   let t: App;
   beforeAll(async () => {
@@ -33,7 +33,8 @@ describe('POST /sales/lessons/:id/reschedule and /cancel while the ownership rul
 
   it('another family\'s lesson, or a group with another family\'s child: 403 not_your_student', async () => {
     for (const students of [[OTHER], [MINE, OTHER]]) {
-      t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: students.map((id) => ({ student_id: id })) }));
+      const lesson_students = students.map((id) => ({ student_id: id }));
+      t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students }));
       for (const [action, body] of ACTIONS) {
         const res = await call(action, body);
         expect([action, res.statusCode, res.json().code]).toEqual([action, 403, 'not_your_student']);

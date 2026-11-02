@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Permission } from '../catalog/permissions/catalog.js';
+import type { Permission } from '@ab/catalog';
 import { canSalesChangeLesson } from './teacher-filter.js';
 
 const NOW = new Date('2026-10-12T14:00:00.000Z');

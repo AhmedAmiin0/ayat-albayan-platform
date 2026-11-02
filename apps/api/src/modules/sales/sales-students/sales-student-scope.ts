@@ -55,8 +55,13 @@ export class SalesStudentScope {
     const lesson = await this.queries.lesson(input.lessonId);
     if (!lesson || lesson.lesson_students.length === 0) throw notFound('lesson_not_found');
     if (Date.parse(lesson.ends_at) <= input.now.getTime()) throw conflict('lesson_ended');
-    const own = isAssistant(input.user) ? await this.rule.scope(input.user) : null;
-    if (own && !ownsEvery(own, lesson)) throw forbidden('not_your_student');
+    await this.assertOwnsLesson(input.user, lesson);
     return lesson;
+  }
+
+  /** 403 not_your_student while the rule enforces and a student of the lesson is not hers. */
+  private async assertOwnsLesson(user: AuthUser, lesson: LessonFacts): Promise<void> {
+    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    if (own && !ownsEvery(own, lesson)) throw forbidden('not_your_student');
   }
 }

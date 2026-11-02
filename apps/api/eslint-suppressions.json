@@ -11582,7 +11582,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/sales/sales-students/details/sales-student.part-paid.test.ts": {
@@ -11619,9 +11619,6 @@
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.parity.test.ts": {
@@ -11640,7 +11637,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-confirm.http.test.ts": {
@@ -11655,7 +11652,7 @@
   },
   "src/modules/sales/sales-students/sales-student-scope.ts": {
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/sales/sales-students/sales-students.fakes.ts": {
