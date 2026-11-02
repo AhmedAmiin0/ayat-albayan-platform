@@ -86,11 +86,8 @@ export const PLAIN: ErrorTable<WaError> = {
  * not parse (no message id) is `uncertain`: the sender fails the row instead of sending it twice.
  */
 export const SENT_SHAPE: Partial<ErrorTable<WaError>> = {
-  shape: (f) =>
-    new WaError('Unexpected WhatsApp response', {
-      code: null,
-      status: 200,
-      details: issuesOf(f),
-      uncertain: true,
-    }),
+  shape: (f) => {
+    const e = shapeError(f);
+    return new WaError(e.message, { ...e.info, uncertain: true });
+  },
 };

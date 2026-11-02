@@ -14,9 +14,11 @@ const NOW = new Date('2026-11-02T12:00:00Z');
 const json = (body: unknown): FetchLike => () =>
   Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
 
-/** undici's error for a 3xx under `redirect: 'error'` (no errno on its cause). */
-const redirected: FetchLike = () =>
-  Promise.reject(new TypeError('fetch failed', { cause: new Error('unexpected redirect') }));
+/** A 3xx: undici's error under `redirect: 'error'` (no errno on its cause), else the 3xx. */
+const redirected: FetchLike = (_url, init) =>
+  init.redirect === 'error'
+    ? Promise.reject(new TypeError('fetch failed', { cause: new Error('unexpected redirect') }))
+    : Promise.resolve(new Response('{}', { status: 200 }));
 
 async function sendError(fetch: FetchLike, env: GraphEnv = STUB_ENV): Promise<WaError> {
   const client = new HttpWhatsappClient(env, { fetch });
