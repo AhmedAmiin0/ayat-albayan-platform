@@ -5,7 +5,8 @@ import { SettingsService } from '../../../common/settings/settings.service';
 
 /**
  * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson join
- * window (joinWindowConfig). The reminder timing and switches are notification rules (NotificationPolicy).
+ * window (joinWindowConfig), and whether a lesson needs a confirmation at all (the
+ * lesson_needs_confirmation push, owner 2026-11-02). The reminder timing and switches are notification rules (NotificationPolicy).
  */
 const KEYS = [
   'reminder_lookahead_hours',
@@ -13,6 +14,7 @@ const KEYS = [
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',
+  'lesson_confirmation_required',
 ] as const satisfies readonly SettingKey[];
 export type RemindersSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

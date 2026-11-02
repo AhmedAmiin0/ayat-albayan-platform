@@ -12,6 +12,7 @@ const EXPECTED = [
   'academy_timezone',
   'payout_count_late',
   'payout_count_no_show',
+  'lesson_confirmation_required',
 ] as const;
 
 describe('LessonsSettings', () => {

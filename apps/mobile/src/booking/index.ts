@@ -1,3 +1,5 @@
+export { DurationPills } from './trial/components/DurationPills';
+export { SlotStep } from './trial/components/SlotStep';
 export { MakeupScreen } from './makeup/MakeupScreen';
 export { BookTrialScreen } from './screens/BookTrialScreen';
 export { ConflictNotice } from './shared/ConflictNotice';

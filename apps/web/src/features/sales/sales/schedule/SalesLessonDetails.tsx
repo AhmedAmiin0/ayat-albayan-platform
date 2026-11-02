@@ -1,4 +1,4 @@
-import { lessonStatusStyle, lessonWhenAt, sameClockAt, type SalesScheduleLesson } from '@ab/shared';
+import { lessonWhenAt, sameClockAt, type SalesScheduleLesson } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
@@ -10,6 +10,7 @@ import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { LessonMeetingLink } from './LessonMeetingLink';
 import { type Clock, useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 /**
  * «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when its clock
@@ -39,10 +40,11 @@ export function salesClockLines(
 export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) {
   const clock = useClock();
   const tz = useViewerTz();
+  const words = useLessonStatusText();
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} className="justify-self-start" />
+        <StatusChip {...words.chip(lesson.status)} className="justify-self-start" />
         <LessonTags lesson={lesson} />
       </div>
       <dl className="grid gap-3">

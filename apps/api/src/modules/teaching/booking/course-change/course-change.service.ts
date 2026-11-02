@@ -83,9 +83,9 @@ export class CourseChange {
 
   /**
    * 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers
-   * (only while SalesOwnershipRule enforces it).
+   * (only while SalesOwnershipRule enforces it). Public: the profile's GET reads through it too.
    */
-  private async owned(subscriptionId: string, actor: ChangeActor): Promise<CourseSub> {
+  async owned(subscriptionId: string, actor: ChangeActor): Promise<CourseSub> {
     const sub = await this.queries.subscription(subscriptionId);
     if (actor.role === 'sales' && actor.anyStudent !== true)
       assertOwnStudents([sub.student_id], await this.scope.of(actor.user));

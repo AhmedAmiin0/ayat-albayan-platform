@@ -9,6 +9,7 @@ import { RecentInbox } from './work/RecentInbox';
 import { lessonAt } from './today/today-fixture';
 import { TodayKpis } from './today/TodayKpis';
 import { TodayLessons } from './today/TodayLessons';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
@@ -38,7 +39,10 @@ afterEach(() => {
 
 describe('TodayKpis', () => {
   it('shows bars while loading, then the numbers; saffron only where there is work', () => {
-    const { rerender, container } = render(<TodayKpis today={undefined} needsConfirmation={undefined} unpaid={undefined} />);
+    const { rerender, container } = render(
+      <TodayKpis today={undefined} needsConfirmation={undefined} unpaid={undefined} />,
+      { wrapper: configWrapper(true) },
+    );
     expect(container.querySelectorAll('.animate-shimmer')).toHaveLength(4);
     rerender(<TodayKpis today={{ lessons: 5, live: 1 }} needsConfirmation={2} unpaid={0} />);
     expect(screen.getByRole('link', { name: `${t.dashboard.home.lessonsToday} 5` }).getAttribute('href')).toBe('/admin/classrooms');

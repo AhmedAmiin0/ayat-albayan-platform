@@ -4,7 +4,7 @@ import { STUDENT_ID, subRow, WEEKLY_SA } from './money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from './test-app';
 
 // POST /subscriptions lessonsUsedBefore (owner 2026-10-28, migration 932): only with a start before
-// the academy's today; at most one lesson left per course day (the weekly package: 4, 1 a week).
+// the academy's today; every lesson but one (the weekly package: 4, at most 3).
 const NOW = new Date('2026-10-28T10:00:00Z'); // Riyadh today = 2026-10-28
 
 describe('POST /subscriptions lessonsUsedBefore', () => {

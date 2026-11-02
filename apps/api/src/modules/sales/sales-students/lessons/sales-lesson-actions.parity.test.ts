@@ -10,6 +10,7 @@ import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/le
 import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
+import { fakeCorrection } from '@/modules/teaching/lessons/auto-held/auto-held.fakes';
 
 // The owner's rule (docs/16 row 37): a salesperson's move / cancel has the admin's side effects exactly —
 // the same change set (status changes, new row, confirmation messages queued to the family, audit), only
@@ -23,7 +24,8 @@ function rig() {
   const deps = fakeStore(lessonRow());
   const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings);
+  const { correction } = fakeCorrection(deps.store, settings);
+  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings, correction);
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
   const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
   const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);

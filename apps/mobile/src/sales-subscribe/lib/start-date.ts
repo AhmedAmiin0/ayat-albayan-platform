@@ -3,18 +3,19 @@ import { t } from '@/core/lib/i18n/i18n';
 import { usedBefore } from '@/subscribe';
 
 // The sales subscribe's first day (owner 2026-10-12, docs/16 row 24). Pure. Without
-// subscriptions.set_start_date nothing is asked or sent (the API starts the package on today). With it:
-// the day chips, or «بدأ الاشتراك سابقًا» and a past day picked with steppers (rule 6: never typed)
-// down to a year back (salesStartDate, the API's own rule, so its 400 shows before posting). Every day
-// is the academy's (Riyadh), as the API checks it. With the switch on, «حلقات مستخدمة من الباقة» too
-// (owner 2026-10-28): sent only above 0, and only with a past day (usedBeforeProblem, the API's rule).
+// subscriptions.set_start_date nothing is asked or sent (the API starts the package on today).
+// With it: the day chips, or «بدأ الاشتراك سابقًا» and a past day picked on the calendar (rule 6:
+// never typed) down to a year back (salesStartDate, the API's own rule, so its 400 shows before
+// posting). Every day is the academy's (Riyadh), as the API checks it. With the switch on,
+// «حلقات مستخدمة من الباقة» too (owner 2026-10-28): sent only above 0, and only with a past day
+// (usedBeforeProblem, the API's rule).
 
 export interface StartDraft {
   /** The chip picked (academy YYYY-MM-DD). */
   day: string;
   /** «بدأ الاشتراك سابقًا» is on. */
   alreadyStarted: boolean;
-  /** The past day picked while it is on (YYYY-MM-DD, from the StartDayPicker). */
+  /** The past day picked while it is on (YYYY-MM-DD, from the DatePickerField). */
   past: string;
   /** «حلقات مستخدمة من الباقة» while it is on (0 when off). */
   usedBefore: number;

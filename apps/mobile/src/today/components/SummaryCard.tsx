@@ -4,6 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { raisedCard } from '@/core/ui/surface/surface';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { TODAY_FILTERS, type TodayFilter } from '../lib/timeline';
 
 interface SummaryCardProps {
@@ -19,8 +20,17 @@ interface SummaryCardProps {
  * 2026-10-28: «need confirmation» broke in two): short words, shrunk to fit at a large font scale, and
  * the number and label centred alike in each column.
  */
+/** The column words: OFF (no confirmation required) the scheduled ones are simply «قادمة». */
+const LABELS: Record<'on' | 'off', Record<TodayFilter, string>> = {
+  on: t.today.summary,
+  off: { ...t.today.summary, scheduled: t.lessons.noConfirm.scheduledShort },
+};
+
+/** OFF (no confirmation required), the middle column is «قادمة» in ink. */
 export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
   const { color } = useTheme();
+  const { required } = useLessonStatusText();
+  const labels = LABELS[required ? 'on' : 'off'];
   return (
     <View
       accessibilityRole="toolbar"
@@ -29,8 +39,8 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
     >
       {TODAY_FILTERS.map((value, i) => {
         const active = filter === value;
-        const act = value === 'scheduled';
-        const label = t.today.summary[value];
+        const act = required && value === 'scheduled';
+        const label = labels[value];
         return (
           <Fragment key={value}>
             {i > 0 ? <View style={{ width: 1, alignSelf: 'stretch', marginVertical: 6, backgroundColor: color.rule }} /> : null}

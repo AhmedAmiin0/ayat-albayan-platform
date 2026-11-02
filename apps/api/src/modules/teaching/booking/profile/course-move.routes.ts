@@ -26,8 +26,12 @@ export abstract class CourseMoveRoutes {
 
   /** `?subscriptionId=` (absent = the current package): the course and «من تاريخ»'s default. */
   @Get('change')
-  view(@Param('id', ParseUUIDPipe) id: string, @Query() query: unknown): Promise<ProfileCourseView> {
-    return this.course.view(id, parseOrThrow(profileCourseQuerySchema, query).subscriptionId);
+  view(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ProfileCourseView> {
+    return this.course.view(id, parseOrThrow(profileCourseQuerySchema, query).subscriptionId, user);
   }
 
   /** 200 { conflicts, remaining, endsOn }, nothing written. */

@@ -1,4 +1,3 @@
-import { courseDaysPerWeek } from './course/course.js';
 import { addCalendarDays } from '@ab/time';
 
 // The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
@@ -43,8 +42,8 @@ export function salesStartDate(input: SalesStartInput): SalesStartResult {
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons the student took before the
 // platform, counted as used; the course books only the rest. Only with a past start (the «بدأ الاشتراك
-// سابقًا» path, subscriptions.set_start_date), never the whole package (subscriptions check), and at least
-// one lesson left per course day (8 lessons, 2 days a week: at most 6), else the course cannot book its days.
+// سابقًا» path, subscriptions.set_start_date) and never the whole package (subscriptions check): every
+// lesson but one, whatever the days a week (owner 2026-11-02 «dont put limit»; the course books the rest).
 
 export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
 
@@ -67,10 +66,9 @@ export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | n
 }
 
 /**
- * The stepper's last value: one lesson left per course day (courseDaysPerWeek; a package's lessons are
- * its size, so lessons_total alone gives it), else every lesson but one (a custom count the admin books).
+ * The stepper's last value: every lesson but one (owner 2026-11-02), whatever the course days; with
+ * fewer lessons left than days a week the course books just those (planSeries drops the later days).
  */
 export function usedBeforeMax(lessonsTotal: number): number {
-  const left = courseDaysPerWeek({ package: null, lessons_total: lessonsTotal }) ?? 1;
-  return Math.max(0, lessonsTotal - left);
+  return Math.max(0, lessonsTotal - 1);
 }

@@ -11,10 +11,17 @@ export interface Kpi {
   tab?: WorkTab;
 }
 
-/** The web's KPI strip (reports, unpaid, tasks, «يحتاج تأكيد») plus the active students. */
-export function kpisOf(s: Summary): Kpi[] {
+/** «يحتاج تأكيد» exists only while the academy requires a confirmation (no 0 tile otherwise). */
+const confirmTile = (s: Summary, required: boolean): Omit<Kpi, 'act'>[] =>
+  required ? [{ key: 'needsConfirm', value: s.needs_confirmation, label: t.enums.lessonStatus.scheduled }] : [];
+
+/**
+ * The web's KPI strip (reports, unpaid, tasks, «يحتاج تأكيد» when `required`, settings
+ * .lesson_confirmation_required) plus the active students.
+ */
+export function kpisOf(s: Summary, required: boolean): Kpi[] {
   const rows: Omit<Kpi, 'act'>[] = [
-    { key: 'needsConfirm', value: s.needs_confirmation, label: t.enums.lessonStatus.scheduled },
+    ...confirmTile(s, required),
     { key: 'reports', value: s.pending_reports, label: t.dashboard.pendingReports, tab: 'reports' },
     {
       key: 'unpaid',

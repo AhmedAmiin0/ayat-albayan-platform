@@ -70,9 +70,25 @@ describe('planSeries — one plan per start time (owner 2026-10-18, R-SCH-02)', 
     expect(plans.flatMap(starts).every((s) => s < '2026-10-28')).toBe(true);
   });
 
-  it('a course whose picked day has no lesson before endsOn → 400 no_occurrences (never dropped)', () => {
-    expect(code(() => plan({}, '2026-10-05'))).toBe('no_occurrences');
+  it('fewer lessons than days (owner 2026-11-02): the later day keeps an empty rule, no 400', () => {
+    const endsOn = courseEndsOn({ groups: timeGroups(rule), startsOn: '2026-10-01', lessonsTotal: 1 }) ?? '';
+    expect(endsOn).toBe('2026-10-04');
+    const plans = plan({}, endsOn);
+    const rows = plans.map((p) => [p.timing.start_time_local, p.timing.ends_on]);
+    expect(plans.map((p) => p.occurrences.length)).toEqual([1, 0]);
+    expect(rows).toEqual([
+      ['17:00', endsOn],
+      ['19:30', endsOn],
+    ]);
+    expect(plans.flatMap(starts)).toEqual(['2026-10-04T14:00:00.000Z']);
+  });
+
+  it('nothing before endsOn, or a picked day with no lesson at all → 400 no_occurrences', () => {
     expect(code(() => plan({}, '2026-10-02'))).toBe('no_occurrences');
+    const never = { startsOn: '2026-10-01', byday: [0, 2], dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }] };
+    expect(code(() => planSeries({ rule: { ...rule, ...never }, now, horizonWeeks: 0, endsOn: '2026-09-30' }))).toBe(
+      'no_occurrences',
+    );
   });
 
   it('a course is planned through its last day whatever the horizon: 2-week horizon, 4-week course → all 8', () => {

@@ -1,4 +1,4 @@
-import type { Gender, Program, TrialHistory } from '@ab/shared';
+import { trialLength, type Gender, type Program, type TrialHistory } from '@ab/shared';
 import { emptyDraft, type BookingDraft, type PickedStudent } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 
@@ -31,6 +31,7 @@ export function trialDateDraft({ student, history, facts = {} }: TrialDraftInput
     tz: facts.tz ?? history.student_tz ?? history.family_tz,
     program: facts.program ?? history.program ?? 'quran',
     genderPref: facts.genderPref ?? history.teacher_gender_pref ?? null,
+    durationMin: trialLength(history), // the last trial's length (shared with mobile), changeable
     trialDate: { upcomingId: history.upcoming_id, upcomingAt: upcomingRow(history)?.starts_at ?? null, count: history.count },
   };
 }

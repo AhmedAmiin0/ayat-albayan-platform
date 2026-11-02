@@ -10,3 +10,4 @@ export type * from './makeup-views.js';
 export * from './makeup-offer.js';
 export * from './series/day-times.js';
 export * from './pick-progress.js';
+export * from './auto-held.js';

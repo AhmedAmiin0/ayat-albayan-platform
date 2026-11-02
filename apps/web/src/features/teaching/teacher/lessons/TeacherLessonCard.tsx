@@ -1,4 +1,4 @@
-import { clockOf, isOpenLesson, lessonStatusStyle, type LessonView, subscriptionStatusStyle } from '@ab/shared';
+import { clockOf, isOpenLesson, type LessonView, subscriptionStatusStyle } from '@ab/shared';
 import { buttonVariants } from '@/components/ui/form/button';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { TeacherProposal } from '@/features/teaching/teacher/proposals/TeacherProposal';
 import { useClock } from '@/lib/clock';
 import { clockDir } from '@/lib/clock-text';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
@@ -33,7 +34,7 @@ export interface TeacherLessonCardProps {
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const clock = useClock();
-  const style = lessonStatusStyle[lesson.status];
+  const style = useLessonStatusText().chip(lesson.status);
   const platform = usePlatformClassroom(lesson.platform_classroom);
   const link = lesson.meeting_link ?? fallbackLink;
   return (
@@ -66,7 +67,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
             />
           ))}
         </div>
-        <StatusChip {...style} label={t.enums.lessonStatus[lesson.status]} className="ms-auto" />
+        <StatusChip {...style} className="ms-auto" />
       </div>
       {/* docs/07 «الأزرار»: one column, each action fills its width (no wrapped row of mixed buttons). */}
       <div className="grid gap-3">

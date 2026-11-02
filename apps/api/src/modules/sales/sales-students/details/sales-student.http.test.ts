@@ -22,7 +22,7 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     expect(body.subscriptions.map((s: { id: string }) => s.id)).toEqual(['c1000000-0000-4000-8000-0000000000c1', 'old']);
     expect(body.subscriptions[0]).toEqual({
       id: 'c1000000-0000-4000-8000-0000000000c1', package: '8', status: 'active', starts_on: '2026-09-01', renews_on: '2026-10-01',
-      ended_at: null, created_at: '2026-09-01T10:00:00Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5,
+      ended_at: null, created_at: '2026-09-01T10:00:00Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5, lessons_used_before: 0,
     });
     expect(body.current_id).toBe('c1000000-0000-4000-8000-0000000000c1');
     expect(body.mine).toBe(true);

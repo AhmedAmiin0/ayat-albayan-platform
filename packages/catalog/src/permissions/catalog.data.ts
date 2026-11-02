@@ -92,8 +92,12 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe, no route gate.
+  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
+  // «تعديل بيانات الباقة» (owner 2026-11-03): every change to an EXISTING package or payment
+  // (start date, «حلقات مستخدمة من الباقة», price, a payment's amount). Admin only; granted by
+  // hand to a trusted assistant's role, never to sales by default (migration 999: admin row).
+  { key: 'subscriptions.edit_terms', area: 'finance', grants: [] },
   // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
   { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },
