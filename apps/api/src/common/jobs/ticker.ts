@@ -19,7 +19,8 @@ const messageOf = (e: unknown): string => (e instanceof Error ? e.message : Stri
 
 /**
  * In-process interval with single flight: a tick while the previous run is still going joins it
- * instead of starting a second one, so a slow database never stacks runs. Timers are unref'd.
+ * instead of starting a second one, so a slow database never stacks runs; kick() queues one more
+ * run instead (timer 'kick' makes the timers kick). Timers are unref'd; start() once per job.
  * ponytail: one API instance (like HorizonJob / AlertsJob); a second instance only repeats work,
  * which the dedup keys make a no-op (rule 8). Move to pg_cron / pg-boss when the API scales out.
  */

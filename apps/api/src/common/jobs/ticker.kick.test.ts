@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Ticker } from './ticker';
 
@@ -12,7 +13,7 @@ function deferred() {
 describe('Ticker.kick (one more run after the current one)', () => {
   afterEach(() => vi.useRealTimers());
 
-  it('kicks during a run queue exactly one more run, and share its promise', async () => {
+  it('a kick during a run queues exactly one more run and shares its promise', async () => {
     const gate = deferred();
     const run = vi.fn().mockReturnValueOnce(gate.promise).mockResolvedValue(undefined);
     const ticker = new Ticker({ name: 't', firstMs: 1, everyMs: 1, run });
@@ -38,12 +39,15 @@ describe('Ticker.kick (one more run after the current one)', () => {
   });
 
   it('a rejected run is logged and the queued run still goes', async () => {
+    const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const run = vi.fn().mockRejectedValueOnce(new Error('boom')).mockResolvedValue(undefined);
     const ticker = new Ticker({ name: 't', firstMs: 1, everyMs: 1, run });
     const first = ticker.kick();
     void ticker.kick();
     await expect(first).resolves.toBeUndefined();
     expect(run).toHaveBeenCalledTimes(2);
+    expect(error).toHaveBeenCalledWith('run aborted: boom');
+    error.mockRestore();
   });
 
   it("timer 'kick': a timer firing during a run queues one more", async () => {
