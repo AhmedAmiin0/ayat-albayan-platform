@@ -15,6 +15,7 @@ import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { MoneyActionButton } from '@/sales/sales/money-action';
 import { AttendanceSection } from './AttendanceSection';
+import { PackageCancelAction } from './PackageCancelAction';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
 import { SubscriptionSection } from './SubscriptionSection';
@@ -69,6 +70,7 @@ export function SalesStudentScreen() {
           {mine || renewsAny ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <CoursePauseSection studentId={data.student.id} />
           <CourseActionsSection studentId={data.student.id} subscriptionId={data.current_id} />
+          <PackageCancelAction studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />

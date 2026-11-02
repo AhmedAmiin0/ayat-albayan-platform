@@ -12,6 +12,7 @@ import { refreshAfterSalesWrite, salesCourseQuery } from '@/features/sales/sales
 import { continuePlan, type ContinuePlan } from './course-continue';
 import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 import { ContinueChoice } from './ContinueChoice';
+import { SalesPackageCancel } from './SalesPackageCancel';
 import { SalesRunningCourse } from './SalesRunningCourse';
 
 type Props = { studentId: string; onClose: () => void };
@@ -90,7 +91,8 @@ function CourseFacts({ sub }: { sub: CourseSubscription }) {
  * free slots; the course stops after the plan's lessons. No invoice, no link, never over a clash. A
  * student without a subscription, with a course already, or with a custom count gets the reason instead;
  * a course to change (view.current: running, or booked ahead) offers «تغيير أيام الحلقات» beside the
- * rest, a renewal «تابِع بنفس الأيام» (owner 2026-10-18).
+ * rest, a renewal «تابِع بنفس الأيام» (owner 2026-10-18). «إلغاء الباقة» (owner 2026-11-02) of
+ * that subscription while it is unused (no course booked on it, nothing paid).
  */
 export function SalesCourseDialog({ studentId, onClose }: Props) {
   const queryClient = useQueryClient();
@@ -111,6 +113,14 @@ export function SalesCourseDialog({ studentId, onClose }: Props) {
       {!view && course.isError && <FormAlert>{lessonErrorText(course.error)}</FormAlert>}
       {!view && course.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {view && <CourseBody view={view} onClose={close} />}
+      {view?.subscription && (
+        <SalesPackageCancel
+          studentId={view.student.id}
+          subscriptionId={view.subscription.id}
+          label={`${view.student.name} · ${view.student.code}`}
+          onDone={close}
+        />
+      )}
     </Dialog>
   );
 }
