@@ -52,6 +52,7 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
         <CallButton phone={th.phone_e164} name={title} canSend={callable} />
         {action}
       </div>
+      <ChatSearchBar />
       <div className="-mx-1.5 mt-1 flex items-center gap-1.5 overflow-x-auto px-3 text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">
         {kind === 'lead' && th.lead_status ? (
           <StatusChip size="sm" {...leadChip(th.lead_status)} />
@@ -65,7 +66,6 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
         <ThreadListChips phone={th.phone_e164} lists={lists} listSearch={listSearch} />
         <span>{timesInText()}</span>
       </div>
-      <ChatSearchBar />
     </header>
   );
 }

@@ -1,10 +1,12 @@
-import { canStep, type SearchStep } from '@ab/client-core';
+import { canStep, searchStatus, type SearchStep } from '@ab/client-core';
 import type { KeyboardEvent } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { useChatSearch, type ChatSearchValue } from './search-context';
-import { searchStatus } from './search-status';
+
+/** The bar's line words (client-core's searchStatus). */
+const WORDS = { ...t.inbox.chatSearch, error: t.common.error };
 
 /** Esc closes; Enter goes to the older hit, Shift+Enter to the newer one. */
 const KEYS: Record<string, (s: ChatSearchValue) => void> = {
@@ -49,7 +51,7 @@ export function ChatSearchBar() {
         className="min-h-11 min-w-0 flex-1 bg-transparent text-sm outline-none sm:min-h-9"
       />
       <span role="status" className="shrink-0 text-xs whitespace-nowrap text-ink-3 tabular-nums">
-        {searchStatus(s)}
+        {searchStatus({ ...s, index: s.state.index }, WORDS)}
       </span>
       {ARROWS.map((a) => (
         <IconButton
