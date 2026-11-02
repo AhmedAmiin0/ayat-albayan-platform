@@ -14,6 +14,7 @@ import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '@/features/sales/sales-money/api';
 import { ChildPicker } from './ChildPicker';
 import { linkStepErrorText, salesErrorText } from '@/features/sales/sales-money/errors';
+import { CustomAmountToggle } from '@/features/sales/sales-money/payment-link/CustomAmountToggle';
 import { OnlinePayFields } from '@/features/sales/sales-money/payment-link/OnlinePayFields';
 import { useLinkPay } from '@/features/sales/sales-money/payment-link/use-link-pay';
 import { SalesQuotePreview } from './SalesQuotePreview';
@@ -129,7 +130,12 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     >
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
         <ChildPicker students={choices} value={studentId} onChange={pick} />
-        <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+        <PricingFields
+          form={form}
+          discounts={DISCOUNTS}
+          set={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          discountExtra={online ? <CustomAmountToggle pay={pay} /> : undefined}
+        />
         {canOnline && <SegmentedControl label={t.payments.method} options={METHODS} value={method} onChange={setMethod} />}
         {studentId && (online ? <OnlinePayFields pay={pay} /> : <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />)}
         {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}

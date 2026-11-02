@@ -4,13 +4,16 @@ import { fill } from '@/sales';
 import { LinkPriceSection } from './LinkPriceSection';
 import type { LinkPay } from './use-link-pay';
 
-/** «دفع إلكتروني»: the calculator price as the reference, then the agreed amount (the reference by default). */
+/**
+ * «دفع إلكتروني»: the calculator price after the pill (the link's amount); with «مبلغ مخصص» on, the amount field
+ * (the price by default) and the admin's lowest amount.
+ */
 export function OnlinePrice({ pay }: { pay: LinkPay }) {
   const currency = pay.priced?.quote.currency;
   return (
     <>
-      <LinkPriceSection quote={pay.quote} />
-      {currency ? (
+      <LinkPriceSection quote={pay.quote} custom={pay.custom} />
+      {currency && pay.custom ? (
         <AmountField
           label={fill(t.paymentLinks.agreedAmount, { currency: currencyName(currency) })}
           value={pay.amountText}

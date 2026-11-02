@@ -5,6 +5,7 @@ import {
   PRICING_DURATIONS,
   SITE_COUNTRIES,
 } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
@@ -41,6 +42,8 @@ interface PricingInputsProps {
   onChange: (patch: Partial<SubscribeForm>) => void;
   /** false (sales): only the site's pills 0/5/10/15 %, no free number field. Default true (admin). */
   freeDiscount?: boolean;
+  /** Under the discount pills (sales «دفع إلكتروني»: «مبلغ مخصص»). */
+  discountExtra?: ReactNode;
 }
 
 /**
@@ -48,7 +51,8 @@ interface PricingInputsProps {
  * length, package (or a custom count) and discount. No students step: a family buys one package
  * per child. Built from the «حاسبة الأسعار» pieces; never a price.
  */
-export function PricingInputs({ form, onChange, freeDiscount = true }: PricingInputsProps) {
+export function PricingInputs(props: PricingInputsProps) {
+  const { form, onChange, freeDiscount = true, discountExtra } = props;
   return (
     <>
       <Section title={s.country}>
@@ -102,6 +106,7 @@ export function PricingInputs({ form, onChange, freeDiscount = true }: PricingIn
         {freeDiscount ? (
           <DiscountField value={form.discount} onChange={(discount) => onChange({ discount })} />
         ) : null}
+        {discountExtra}
       </Section>
     </>
   );
