@@ -1798,9 +1798,6 @@
     }
   },
   "src/modules/finance/expenses/expense-categories.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "ab/zod-inputs": {
       "count": 1
     }
@@ -1815,9 +1812,6 @@
   },
   "src/modules/finance/expenses/expense-year.service.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
@@ -1870,9 +1864,6 @@
     }
   },
   "src/modules/finance/expenses/expenses.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -1888,15 +1879,7 @@
       "count": 2
     }
   },
-  "src/modules/finance/expenses/expenses.job.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/finance/expenses/expenses.job.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -1905,28 +1888,19 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/expenses/expenses.queries.ts": {
+  "src/modules/finance/expenses/expenses.repo.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/finance/expenses/expenses.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -1953,9 +1927,6 @@
     }
   },
   "src/modules/finance/fx/fx.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -1971,17 +1942,11 @@
     }
   },
   "src/modules/finance/fx/fx.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/fx/fx.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/finance/fx/fx.repo.ts": {
     "max-len": {
       "count": 1
     }
@@ -2041,14 +2006,11 @@
     }
   },
   "src/modules/finance/invoices/invoices.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/invoices/invoices.queries.ts": {
+  "src/modules/finance/invoices/invoices.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
@@ -2056,11 +2018,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/invoices/invoices.recent.test.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -2086,19 +2043,13 @@
     }
   },
   "src/modules/finance/invoices/invoices.sort.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/payments/attachments/payment-attachments.queries.ts": {
+  "src/modules/finance/payments/attachments/payment-attachments.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 3
@@ -2113,9 +2064,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 13
@@ -2139,17 +2087,11 @@
     }
   },
   "src/modules/finance/payments/attachments/receipts.service.limit.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/finance/payments/attachments/receipts.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 3
     }
@@ -2169,18 +2111,12 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/finance/payments/payment-precheck.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "complexity": {
@@ -2236,9 +2172,6 @@
     }
   },
   "src/modules/finance/payments/payments.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/zod-inputs": {
       "count": 9
     },
@@ -2279,9 +2212,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -2293,14 +2223,11 @@
     "ab/module-boundaries": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
   },
-  "src/modules/finance/payments/payments.queries.ts": {
+  "src/modules/finance/payments/payments.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
@@ -2329,9 +2256,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "complexity": {
       "count": 2
     },
@@ -2349,11 +2273,6 @@
       "count": 2
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/payments/payments.sort.test.ts": {
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -2525,11 +2444,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/pricing/pricing.test-app.ts": {
-    "ab/no-parent-imports": {
-      "count": 8
-    }
-  },
   "src/modules/finance/receivables/receivables.controller.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -2542,19 +2456,11 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/receivables/receivables.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/receivables/receivables.queries.ts": {
+  "src/modules/finance/receivables/receivables.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -2565,16 +2471,8 @@
       "count": 1
     }
   },
-  "src/modules/finance/receivables/receivables.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/finance/receivables/receivables.service.ts": {
     "ab/module-boundaries": {
-      "count": 3
-    },
-    "ab/no-parent-imports": {
       "count": 3
     },
     "max-len": {
