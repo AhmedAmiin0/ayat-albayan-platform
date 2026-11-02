@@ -8,9 +8,9 @@ import type {
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
 import {
   slotsQuerySchema,

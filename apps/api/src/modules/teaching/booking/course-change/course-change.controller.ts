@@ -9,8 +9,8 @@ import {
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
