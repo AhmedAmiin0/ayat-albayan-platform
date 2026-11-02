@@ -1,5 +1,4 @@
 import {
-  chargeShare,
   refundAmountProblem,
   splitRefund,
   stopRefund,
@@ -11,7 +10,12 @@ import { conflict } from '@/common/http/errors';
 import { uuidFor } from '@/modules/finance/stripe';
 import { StopRefundCards, type CardState } from './stop-refund.cards';
 import { StopRefundRepo, type MoneyRow } from './stop-refund.repo';
-import { manualRefundKey, type RefundPlan, type RefundSub } from './stop-refund.plan';
+import {
+  manualRefundKey,
+  replayMismatch,
+  type RefundPlan,
+  type RefundSub,
+} from './stop-refund.plan';
 import { StopRefundLedger } from './stop-refund.ledger';
 import { CourseStopSettings } from './course-stop.settings';
 
@@ -23,8 +27,10 @@ const net = (rows: readonly MoneyRow[]): number =>
  * rate setting, floored at 0 (stopRefund). The person may lower it. Card payments of a payment
  * link are refunded through Stripe first (the webhook records their rows), the rest is one manual
  * refund row plus an admin bell «حوّل … للعائلة». Every leg is idempotent on the stop's
- * clientRequestId, and this stop's own refunds are left out of «net paid», so a replay plans the
- * same amounts and creates nothing twice.
+ * clientRequestId: this stop's own refunds are left out of «net paid» (other refunds still
+ * pending in Stripe are taken off it), so a replay plans the same split and creates nothing twice;
+ * a replay asking another split is 409 refund_mismatch. A converted or 3-decimal card payment is
+ * refunded by hand (the manual leg).
  */
 @Injectable()
 export class StopRefunds {
@@ -51,12 +57,20 @@ export class StopRefunds {
     ]);
     const intents = await this.repo.intents(rows.map((r) => r.id));
     const cards = await this.cards.states({ rows, intents, requestId });
-    const own = new Set([manualRefundKey(requestId), ...cards.flatMap((c) => c.mine.map(uuidFor))]);
-    const paid = net(rows.filter((r) => !own.has(r.client_request_id ?? '')));
-    const calc = stopRefund({ ...pkg, paid, ratePercent: rate, currency: sub.currency });
-    if (refundAmountProblem(input.amount, calc.refund, sub.currency))
+    const manualKey = manualRefundKey(requestId);
+    const mineIds = cards.flatMap((c) => c.mine.map((r) => uuidFor(r.id)));
+    const own = new Set([manualKey, ...mineIds]);
+    const pending = cards.reduce((n, c) => n + c.unrecorded, 0);
+    const paid = net(rows.filter((r) => !own.has(r.client_request_id ?? ''))) - pending;
+    const { currency } = sub;
+    const calc = stopRefund({ ...pkg, paid, ratePercent: rate, currency });
+    if (refundAmountProblem(input.amount, calc.refund, currency))
       throw conflict('refund_exceeds_allowed');
-    return { sub, pkg, calc, cards, rows, requestId, amount: input.amount };
+    const legs = cards.map((c) => ({ id: c.paymentId, refundable: c.refundable }));
+    const split = splitRefund({ amount: input.amount, cards: legs, currency });
+    const manualRow = rows.find((r) => r.client_request_id === manualKey)?.amount ?? null;
+    if (replayMismatch({ cards, split, manualRow, currency })) throw conflict('refund_mismatch');
+    return { sub, pkg, calc, cards, rows, requestId, amount: input.amount, split };
   }
 
   /** After the stop committed (again on a replay): card legs, then the manual leg, audited. */
@@ -65,9 +79,7 @@ export class StopRefunds {
     actor: { id: string; reason: string };
   }): Promise<CourseStopRefunded> {
     const { plan } = input;
-    const { amount } = plan;
-    const cards = plan.cards.map((c) => ({ id: c.paymentId, refundable: c.refundable }));
-    const split = splitRefund({ amount, cards, currency: plan.sub.currency });
+    const { amount, split } = plan;
     const byId = new Map(plan.cards.map((c) => [c.paymentId, c]));
     const legs = split.cards.flatMap((leg) => {
       const card = byId.get(leg.id);
@@ -93,9 +105,9 @@ export class StopRefunds {
     requestId: string;
   }): Promise<string[]> {
     if (leg.card.mine.length > 0) return [];
-    const { refundable, chargeRefundable } = leg.card;
-    const charge = chargeShare({ take: leg.take, refundable, chargeRefundable });
-    return [await this.cards.refund({ card: leg.card, amount: charge, requestId: leg.requestId })];
+    return [
+      await this.cards.refund({ card: leg.card, amount: leg.take, requestId: leg.requestId }),
+    ];
   }
 
   private async rate(): Promise<number> {

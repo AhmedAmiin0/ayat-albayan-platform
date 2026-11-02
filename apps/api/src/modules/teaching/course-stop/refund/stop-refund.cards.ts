@@ -1,55 +1,69 @@
-import { fromMinor, fromMinorUnits, toMinor, toMinorUnits } from '@ab/shared';
+import { fromMinorUnits, toMinorUnits } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type Stripe from 'stripe';
-import { StripeClients, type StripeApi } from '@/modules/finance/stripe';
+import { StripeClients, uuidFor, type StripeApi } from '@/modules/finance/stripe';
 import type { MoneyRow } from './stop-refund.repo';
 
-/** A card payment of a payment link, as Stripe can still refund it. */
+/** A card payment of a payment link, as Stripe can still refund it (package currency). */
 export interface CardState {
   paymentId: string;
   intent: string;
-  /** In the package currency: what the split may take from this card. */
+  /** What the split may take from this card: its amount − every other live refund. */
   refundable: number;
-  /** In the charge currency (the same unless the payment was converted on record). */
-  chargeRefundable: number;
   /** This stop's own refunds on the card (a replay creates none). */
-  mine: string[];
+  mine: { id: string; amount: number }[];
+  /** Other live refunds the platform has no row of yet (pending): out of «paid» too. */
+  unrecorded: number;
 }
 
 /** A refund that still counts (pending or done). */
 const LIVE = new Set<string>(['succeeded', 'pending', 'requires_action']);
+/** Stripe counts these in 1/1000 (the links charge ×100): such a payment is refunded by hand. */
+const THREE_DECIMALS = new Set(['KWD', 'OMR', 'BHD', 'JOD']);
 const isMine = (r: Stripe.Refund, requestId: string): boolean =>
   r.metadata?.course_stop === requestId;
+const sum = (refunds: readonly Stripe.Refund[]): number =>
+  fromMinorUnits(refunds.reduce((n, r) => n + r.amount, 0));
+
+/**
+ * A card the stop refunds through Stripe: a payment link's, charged in the package currency
+ * (a payment converted on record would come back at another rate) with 2 decimals.
+ */
+const isStripeCard = (row: MoneyRow, intents: ReadonlyMap<string, string>): boolean =>
+  row.kind === 'payment' &&
+  intents.has(row.id) &&
+  row.original_currency === null &&
+  !THREE_DECIMALS.has(row.currency);
 
 /** The idempotency key of one card refund of one stop (Stripe keeps it 24 h; `mine` beyond). */
 export const cardRefundKey = (requestId: string, paymentId: string): string =>
   `course-stop-refund:${requestId}:${paymentId}`;
 
+interface StatesInput {
+  rows: readonly MoneyRow[];
+  intents: ReadonlyMap<string, string>;
+  requestId: string;
+}
+
 /**
  * The Stripe part of «إلغاء مع استرداد» (owner 2026-11-02): what each payment-link card can still
- * refund (its other refunds listed from Stripe, this stop's own left out so a replay plans the
- * same split) and the refund itself. The webhook (LinkRefunds) records the refund row, once.
+ * refund (every refund listed from Stripe, this stop's own kept apart so a replay plans the same
+ * split) and the refund itself. The webhook (LinkRefunds) records the refund row, once.
  */
 @Injectable()
 export class StopRefundCards {
   constructor(private readonly clients: StripeClients) {}
 
-  async states(input: {
-    rows: readonly MoneyRow[];
-    intents: ReadonlyMap<string, string>;
-    requestId: string;
-  }): Promise<CardState[]> {
-    const cards = input.rows.filter((r) => r.kind === 'payment' && input.intents.has(r.id));
+  async states(input: StatesInput): Promise<CardState[]> {
+    const cards = input.rows.filter((r) => isStripeCard(r, input.intents));
     if (cards.length === 0) return [];
     const stripe = await this.clients.client();
+    const recorded = new Set(input.rows.map((r) => r.client_request_id));
     return Promise.all(
-      cards.map((row) =>
-        this.state(stripe, {
-          row,
-          intent: input.intents.get(row.id) ?? '',
-          requestId: input.requestId,
-        }),
-      ),
+      cards.map((row) => {
+        const intent = input.intents.get(row.id) ?? '';
+        return this.state(stripe, { row, intent, requestId: input.requestId, recorded });
+      }),
     );
   }
 
@@ -70,21 +84,23 @@ export class StopRefundCards {
 
   private async state(
     stripe: StripeApi,
-    c: { row: MoneyRow; intent: string; requestId: string },
+    c: { row: MoneyRow; intent: string; requestId: string; recorded: ReadonlySet<string | null> },
   ): Promise<CardState> {
-    const listed = await stripe.refunds.list({ payment_intent: c.intent, limit: 100 });
-    const live = listed.data.filter((r) => LIVE.has(r.status ?? ''));
-    const other = live.filter((r) => !isMine(r, c.requestId)).reduce((sum, r) => sum + r.amount, 0);
-    const gross = c.row.original_amount ?? c.row.amount;
-    const chargeRefundable = Math.max(0, fromMinorUnits(toMinorUnits(gross) - other));
-    const currency = c.row.currency;
-    const share = gross > 0 ? (chargeRefundable * c.row.amount) / gross : 0;
+    const listed = await stripe.refunds
+      .list({ payment_intent: c.intent, limit: 100 })
+      .autoPagingToArray({ limit: 10_000 });
+    const live = listed.filter((r) => LIVE.has(r.status ?? ''));
+    const other = live.filter((r) => !isMine(r, c.requestId));
+    const mine = live.filter((r) => isMine(r, c.requestId));
     return {
       paymentId: c.row.id,
       intent: c.intent,
-      refundable: fromMinor(toMinor(share, currency), currency),
-      chargeRefundable,
-      mine: live.filter((r) => isMine(r, c.requestId)).map((r) => r.id),
+      refundable: Math.max(
+        0,
+        fromMinorUnits(toMinorUnits(c.row.amount) - toMinorUnits(sum(other))),
+      ),
+      mine: mine.map((r) => ({ id: r.id, amount: fromMinorUnits(r.amount) })),
+      unrecorded: sum(other.filter((r) => !c.recorded.has(uuidFor(r.id)))),
     };
   }
 }

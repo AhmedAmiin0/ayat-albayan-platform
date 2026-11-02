@@ -1,5 +1,5 @@
 import { stopRefundLines, type RefundChoice as Choice } from '@ab/client-core';
-import type { CourseStopPreview } from '@ab/shared';
+import type { CourseStopPreview, StopRefund } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Field } from '@/core/ui/form/Field';
@@ -9,6 +9,7 @@ import { SheetLines } from './SheetLines';
 
 interface RefundChoiceProps {
   preview: CourseStopPreview;
+  breakdown: StopRefund;
   choice: Choice;
   onChoice: (choice: Choice) => void;
   amount: string;
@@ -18,18 +19,19 @@ interface RefundChoiceProps {
 /** The refund's lines, the amount (empty = the computed refund, it may only be lowered). */
 function RefundLines({
   preview,
+  breakdown,
   amount,
   onAmount,
 }: Omit<RefundChoiceProps, 'choice' | 'onChoice'>) {
   const s = t.courseActions.stop;
   const fmt = (n: number) => money(n, preview.currency);
-  const hint = s.refundAmountHint.replace('{amount}', fmt(preview.refund.refund));
+  const hint = s.refundAmountHint.replace('{amount}', fmt(breakdown.refund));
   return (
     <View style={{ gap: 12 }}>
-      <SheetLines lines={stopRefundLines(s, preview.refund, fmt)} />
+      <SheetLines lines={stopRefundLines(s, breakdown, fmt)} />
       <Field
         label={s.refundAmount}
-        placeholder={String(preview.refund.refund)}
+        placeholder={String(breakdown.refund)}
         value={amount}
         onChangeText={onAmount}
         keyboardType="decimal-pad"

@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  fromMinor,
-  minorScale,
-  stopRefund,
-  toMinor,
-} from './stop-refund.js';
+import { fromMinor, minorScale, stopRefund, toMinor } from './stop-refund.js';
 
 // «إلغاء مع استرداد» (owner 2026-11-02): refund = net paid − attended × price / lessons × rate.
 const base = {
@@ -101,6 +96,14 @@ describe('stopRefund', () => {
     expect(
       stopRefund({ ...base, paid: 0.1 + 0.2, price: 0.3, attended: 0, currency: 'USD' }).refund,
     ).toBe(0.3);
+  });
+});
+
+it('more lessons used than the package holds counts the package only', () => {
+  expect(stopRefund({ ...base, attended: 10 })).toMatchObject({
+    attended: 8,
+    charged: 400,
+    refund: 0,
   });
 });
 

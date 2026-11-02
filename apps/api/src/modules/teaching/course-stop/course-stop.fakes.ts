@@ -92,10 +92,12 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.repo.stop.mockResolvedValue(STOPPED);
   m.writes.recorded.mockResolvedValue(undefined);
   m.events.changed.mockResolvedValue(undefined);
+  const created = (w: { amount: number }) => Promise.resolve({ amount: w.amount });
+  m.payments.create.mockImplementation(created);
   m.refunds.pkg.mockResolvedValue({ price: 400, lessonsTotal: 8, attended: 3, studentName: 'ط' });
   m.refunds.money.mockResolvedValue([bankRow()]);
   m.refunds.intents.mockResolvedValue(new Map());
-  m.stripe.refunds.list.mockResolvedValue({ data: [] });
+  m.stripe.refunds.list.mockReturnValue({ autoPagingToArray: () => Promise.resolve([]) });
   m.stripe.refunds.create.mockResolvedValue({ id: 're_new' });
   m.clients.client.mockResolvedValue(m.stripe);
 }

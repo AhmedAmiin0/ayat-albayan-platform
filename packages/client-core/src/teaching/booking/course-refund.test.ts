@@ -1,6 +1,12 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { courseStopBody, refundAmountOf, stopRefundLines, stopRefundOf } from './course-refund.js';
+import {
+  courseStopBody,
+  refundAmountOf,
+  refundOffer,
+  stopRefundLines,
+  stopRefundOf,
+} from './course-refund.js';
 
 const money = (n: number) => `${n} ر.س`;
 const refund = {
@@ -27,7 +33,7 @@ describe('refundAmountOf', () => {
   it('empty = the computed refund; lower amounts pass', () => {
     expect(refundAmountOf('', max)).toBe(175);
     expect(refundAmountOf(' 100.5 ', max)).toBe(100.5);
-    expect(refundAmountOf('١٢٠,٥', max)).toBe(120.5);
+    expect(refundAmountOf('١٢٠٫٥', max)).toBe(120.5);
   });
 
   it('above the refund, zero or not a number: null', () => {
@@ -35,6 +41,8 @@ describe('refundAmountOf', () => {
     expect(refundAmountOf('0', max)).toBeNull();
     expect(refundAmountOf('abc', max)).toBeNull();
     expect(refundAmountOf('-5', max)).toBeNull();
+    expect(refundAmountOf('1,500', { max: 2000, currency: 'SAR' })).toBeNull();
+    expect(refundAmountOf('0.001', max)).toBeNull();
   });
 });
 
@@ -73,5 +81,19 @@ describe('stopRefundOf', () => {
       refund: null,
       valid: false,
     });
+  });
+});
+
+describe('refundOffer', () => {
+  const base = { holds: true, refund, currency: 'SAR', choice: 'refund' as const, text: '' };
+  it('offered with the key and something to refund', () => {
+    expect(refundOffer(base)).toEqual({ breakdown: refund, asked: { refund: 175, valid: true } });
+  });
+
+  it('never without the key, without lines, or with 0 to refund', () => {
+    const cancel = { breakdown: null, asked: { refund: null, valid: true } };
+    expect(refundOffer({ ...base, holds: false })).toEqual(cancel);
+    expect(refundOffer({ ...base, refund: null })).toEqual(cancel);
+    expect(refundOffer({ ...base, refund: { ...refund, refund: 0 } })).toEqual(cancel);
   });
 });

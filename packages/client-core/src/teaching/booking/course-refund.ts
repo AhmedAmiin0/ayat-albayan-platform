@@ -1,4 +1,9 @@
-import { refundAmountProblem, type CourseStopRequest, type StopRefund } from '@ab/shared';
+import {
+  parseAmount,
+  refundAmountProblem,
+  type CourseStopRequest,
+  type StopRefund,
+} from '@ab/shared';
 
 // «إلغاء فقط» / «إلغاء مع استرداد» (owner 2026-11-02) for web and mobile: the sheet's refund lines,
 // the amount typed (lowered, never above the computed refund) and the POST body. Words and the
@@ -33,21 +38,16 @@ export function stopRefundLines(
   ];
 }
 
-const DIGITS = /^\d+(?:[.,]\d{1,3})?$/;
-
 /**
- * The amount the field holds (Western or Arabic-Indic digits, «.» or «,»); empty = the computed
- * refund. null = not a positive amount up to the computed refund.
+ * The amount the field holds (parseAmount: Arabic-Indic digits, «٫», at most 2 decimals, «1,500»
+ * refused); empty = the computed refund. null = not a positive amount up to the computed refund.
  */
 export function refundAmountOf(
   text: string,
   input: { max: number; currency: string },
 ): number | null {
-  const western = text.trim().replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
-  const typed = western === '' ? String(input.max) : western;
-  const amount = DIGITS.test(typed) ? Number(typed.replace(',', '.')) : Number.NaN;
-  const bad =
-    Number.isNaN(amount) || refundAmountProblem(amount, input.max, input.currency) !== null;
+  const amount = text.trim() === '' ? input.max : parseAmount(text);
+  const bad = amount === null || refundAmountProblem(amount, input.max, input.currency) !== null;
   return bad ? null : amount;
 }
 
@@ -59,6 +59,25 @@ export function stopRefundOf(input: {
 }): { refund: number | null; valid: boolean } {
   const amount = input.choice === 'refund' ? refundAmountOf(input.text, input.refund) : null;
   return { refund: amount, valid: input.choice === 'cancel' || amount !== null };
+}
+
+/** The refund lines when «إلغاء مع استرداد» is offered: the key and something to refund. */
+function offeredRefund(holds: boolean, refund: StopRefund | null | undefined): StopRefund | null {
+  return holds && refund && refund.refund > 0 ? refund : null;
+}
+
+/** What the sheet offers and asks: «إلغاء فقط» whenever the refund is not offered. */
+export function refundOffer(input: {
+  holds: boolean;
+  refund: StopRefund | null | undefined;
+  currency: string;
+  choice: RefundChoice;
+  text: string;
+}): { breakdown: StopRefund | null; asked: { refund: number | null; valid: boolean } } {
+  const breakdown = offeredRefund(input.holds, input.refund);
+  const max = { max: breakdown?.refund ?? 0, currency: input.currency };
+  const choice = breakdown ? input.choice : 'cancel';
+  return { breakdown, asked: stopRefundOf({ choice, text: input.text, refund: max }) };
 }
 
 interface BodyInput {

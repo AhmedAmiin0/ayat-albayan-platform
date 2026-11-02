@@ -7,6 +7,9 @@ import type { StopRefundLedger } from './stop-refund.ledger';
 import type { MoneyRow, StopRefundRepo } from './stop-refund.repo';
 import { StopRefunds } from './stop-refund.service';
 
+/** refunds.list's answer, as the SDK's auto-paging list. */
+export const listed = (data: object[]) => ({ autoPagingToArray: () => Promise.resolve(data) });
+
 export const REQ = 'e0000000-0000-4000-8000-0000000000e1';
 export const SUB = { id: 'sub1', studentId: 'st1', currency: 'SAR' };
 
@@ -27,17 +30,15 @@ export const cardRow = (over: Partial<MoneyRow> = {}): MoneyRow =>
 /** 400 SAR / 8 lessons, `attended` used; a 200 card payment (pi_1) and a 90 bank one. */
 export function kit(input: { attended?: number; rate?: number } = {}) {
   const stripe = { refunds: { list: vi.fn(), create: vi.fn() } };
-  stripe.refunds.list.mockResolvedValue({ data: [] });
+  stripe.refunds.list.mockReturnValue(listed([]));
   stripe.refunds.create.mockResolvedValue({ id: 're_new' });
   const repo = {
-    pkg: vi
-      .fn()
-      .mockResolvedValue({
-        price: 400,
-        lessonsTotal: 8,
-        attended: input.attended ?? 0,
-        studentName: 'ط',
-      }),
+    pkg: vi.fn().mockResolvedValue({
+      price: 400,
+      lessonsTotal: 8,
+      attended: input.attended ?? 0,
+      studentName: 'ط',
+    }),
     money: vi.fn().mockResolvedValue([cardRow(), row()]),
     intents: vi.fn().mockResolvedValue(new Map([['p-card', 'pi_1']])),
   };

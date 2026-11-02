@@ -1,8 +1,8 @@
-import { courseStopBody, stopRefundOf, type RefundChoice as Choice } from '@ab/client-core';
+import { courseStopBody, refundOffer, type RefundChoice as Choice } from '@ab/client-core';
 import type { CourseStopPreview, CourseStopResult } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Field } from '@/core/ui/form/Field';
@@ -24,12 +24,17 @@ interface CourseStopFormProps {
 function useRefund(preview: CourseStopPreview | undefined) {
   const [choice, setChoice] = useState<Choice>('cancel');
   const [amount, setAmount] = useState('');
-  const max = preview?.refund.refund ?? 0;
-  const offered = useHolds('subscriptions.refund') && max > 0;
-  const refund = { max, currency: preview?.currency ?? '' };
-  const asked = stopRefundOf({ choice: offered ? choice : 'cancel', text: amount, refund });
+  const holds = useHolds('subscriptions.refund');
+  const offer = refundOffer({
+    holds,
+    refund: preview?.refund,
+    currency: preview?.currency ?? '',
+    choice,
+    text: amount,
+  });
   const state = { choice, onChoice: setChoice, amount, onAmount: setAmount };
-  return { asked, state: offered ? state : null };
+  const { breakdown, asked } = offer;
+  return { asked, state: breakdown ? { ...state, breakdown } : null };
 }
 
 /**
@@ -63,6 +68,7 @@ export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
       <SheetLines lines={[s.intro, ...stopLines(preview.data, keeps)]} />
       {state ? <RefundChoice preview={preview.data} {...state} /> : null}
       <Field label={s.reason} placeholder={s.reasonHint} value={reason} onChangeText={setReason} />
+      {asked.valid ? null : <ErrorLine message={t.courseActions.errors.refund_exceeds_allowed} />}
       {stop.isError ? <ErrorLine message={stopErrorText(stop.error)} /> : null}
       <SheetActions label={s.confirm} busy={stop.isPending} onConfirm={submit} onCancel={onClose} />
     </View>

@@ -1,5 +1,5 @@
 import { stopRefundLines, type RefundChoice } from '@ab/client-core';
-import type { CourseStopPreview } from '@ab/shared';
+import type { CourseStopPreview, StopRefund } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { RadioChips } from '@/components/ui/form/radio-chips';
@@ -8,6 +8,8 @@ import { t } from '@/lib/i18n/i18n';
 
 export interface StopRefundChoiceProps {
   preview: CourseStopPreview;
+  /** The preview's refund lines (present: the person holds subscriptions.refund). */
+  breakdown: StopRefund;
   choice: RefundChoice;
   onChoice: (choice: RefundChoice) => void;
   amount: string;
@@ -17,16 +19,17 @@ export interface StopRefundChoiceProps {
 /** The refund's lines and the amount (empty = the computed refund, it may only be lowered). */
 function RefundLines({
   preview,
+  breakdown,
   amount,
   onAmount,
 }: Omit<StopRefundChoiceProps, 'choice' | 'onChoice'>) {
   const words = t.courseActions.stop;
   const money = (n: number) => moneyText(n, preview.currency);
-  const max = money(preview.refund.refund);
+  const max = money(breakdown.refund);
   return (
     <>
       <ul role="status" className="grid list-disc gap-1 rounded-md bg-sunk px-7 py-2.5 text-sm">
-        {stopRefundLines(words, preview.refund, money).map((line) => (
+        {stopRefundLines(words, breakdown, money).map((line) => (
           <li key={line}>{line}</li>
         ))}
       </ul>
@@ -36,7 +39,7 @@ function RefundLines({
             {...p}
             inputMode="decimal"
             value={amount}
-            placeholder={String(preview.refund.refund)}
+            placeholder={String(breakdown.refund)}
             onChange={(e) => onAmount(e.target.value)}
           />
         )}

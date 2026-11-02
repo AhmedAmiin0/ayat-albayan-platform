@@ -1,5 +1,5 @@
 import { courseStopLessonsText, type RefundChoice } from '@ab/client-core';
-import { COURSE_STOP_REASON_MAX, type CourseStopPreview } from '@ab/shared';
+import { COURSE_STOP_REASON_MAX, type CourseStopPreview, type StopRefund } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Amount } from '@/features/finance/subscriptions';
@@ -48,6 +48,7 @@ function StoppedLine({ stopped }: { stopped: NonNullable<CourseStopPreview['stop
 
 /** The refund part: null = no «إلغاء مع استرداد» (no subscriptions.refund, nothing to refund). */
 export interface RefundState {
+  breakdown: StopRefund;
   choice: RefundChoice;
   onChoice: (choice: RefundChoice) => void;
   amount: string;

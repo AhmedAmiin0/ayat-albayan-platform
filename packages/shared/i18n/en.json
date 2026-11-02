@@ -7473,7 +7473,8 @@
       "paidTitle": "Paid through a payment link",
       "refusedTitle": "A card payment was not recorded in the platform",
       "disputeTitle": "A card payment was disputed",
-      "disputeBody": "Needs review in the Stripe dashboard"
+      "disputeBody": "Needs review in the Stripe dashboard",
+      "refundFailedTitle": "A card refund failed: transfer it to the family by hand"
     },
     "settings": {
       "enabled": "Online payments",
@@ -7514,7 +7515,6 @@
       "refundAmount": "Refund amount",
       "refundAmountHint": "You may lower it; at most {amount}",
       "refundWhere": "What was paid by a payment link goes back to the card; the rest is recorded as a manual refund the admin transfers to the family",
-      "refundNone": "Nothing to refund after the attended lessons",
       "doneRefund": "Subscription cancelled and a {amount} refund recorded",
       "refundNote": "Cancel and refund: {reason}",
       "refundBell": "Transfer {amount} to the family (cancel and refund)"
@@ -7576,7 +7576,8 @@
       "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first.",
       "refund_exceeds_allowed": "The amount is above the refund due",
       "refund_not_allowed": "You are not allowed to refund",
-      "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded"
+      "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded",
+      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet"
     }
   },
   "coursePause": {

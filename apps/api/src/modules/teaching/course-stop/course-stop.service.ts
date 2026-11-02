@@ -2,11 +2,19 @@ import type { CourseStopPreview, CourseStopRequest, CourseStopResult } from '@ab
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
+import { can } from '@/common/auth/permissions';
 import { conflict, forbidden } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';
 import { toResult, toStopped } from './course-stop.mapper';
-import { StopRefunds, type RefundPlan } from './refund';
+import { StopRefunds, type RefundPlan, type RefundSub } from './refund';
+
+interface PreviewInput {
+  studentId: string;
+  /** Absent: the student's current package (a sales file of a student not hers). */
+  subscriptionId?: string | undefined;
+  user: AuthUser;
+}
 
 interface StopInput {
   studentId: string;
@@ -40,8 +48,9 @@ export class CourseStop {
     private readonly refunds: StopRefunds,
   ) {}
 
-  /** subscriptionId absent: the student's current package (a sales file of a student not hers). */
-  async preview(studentId: string, subscriptionId?: string): Promise<CourseStopPreview> {
+  /** The sheet's lines; `refund` only for a holder of subscriptions.refund. */
+  async preview(input: PreviewInput): Promise<CourseStopPreview> {
+    const { studentId, subscriptionId } = input;
     const sub = subscriptionId
       ? await this.repo.subscription(subscriptionId, studentId)
       : await this.repo.current(studentId);
@@ -53,13 +62,14 @@ export class CourseStop {
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
     const subRef = { id: sub.id, studentId, currency: sub.currency };
+    const refund = await this.refundLines({ user: input.user, sub: subRef, paid });
     return {
       subscriptionId: sub.id,
       futureLessons: live ? plan.lessons.length : 0,
       activeRules: live ? plan.rule_ids.length : 0,
       paid,
       currency: sub.currency,
-      refund: await this.refunds.preview(subRef, paid),
+      refund,
       stopped,
     };
   }
@@ -84,9 +94,15 @@ export class CourseStop {
     return toResult(body.subscriptionId, row, refund);
   }
 
+  /** The refund lines, for a holder of subscriptions.refund only. */
+  private async refundLines(c: { user: AuthUser; sub: RefundSub; paid: number }) {
+    if (!can(c.user, 'subscriptions.refund')) return null;
+    return this.refunds.preview(c.sub, c.paid);
+  }
+
   /** «إلغاء مع استرداد» needs subscriptions.refund; the amount at most the computed refund. */
   private async refundPlan({ studentId, body, actor }: StopInput): Promise<RefundPlan> {
-    if (!actor.permissions?.includes('subscriptions.refund')) throw forbidden('refund_not_allowed');
+    if (!can(actor, 'subscriptions.refund')) throw forbidden('refund_not_allowed');
     const sub = await this.repo.subscription(body.subscriptionId, studentId);
     return this.refunds.plan({
       sub: { id: sub.id, studentId, currency: sub.currency },

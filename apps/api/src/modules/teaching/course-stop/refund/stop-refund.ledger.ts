@@ -48,8 +48,9 @@ export class StopRefundLedger {
       note: words.refundNote.replace('{reason}', actor.reason),
       clientRequestId: manualRefundKey(plan.requestId),
     };
-    await this.payments.create(write, actor.id);
-    const left = `${amount} ${plan.sub.currency}`;
+    // A replay answers the row the first call recorded: the bell names that row's amount.
+    const row = await this.payments.create(write, actor.id);
+    const left = `${row.amount} ${plan.sub.currency}`;
     await this.push.notifyAdmins('payment_due', {
       subject: `course_stop_refund:${plan.requestId}`,
       title: words.refundBell.replace('{amount}', left),

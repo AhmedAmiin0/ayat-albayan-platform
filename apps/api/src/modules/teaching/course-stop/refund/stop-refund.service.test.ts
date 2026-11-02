@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
 import { cardRefundKey } from './stop-refund.cards';
-import { cardRow, kit, REQ, row, SUB } from './stop-refund.fakes';
+import { cardRow, kit, listed, REQ, row, SUB } from './stop-refund.fakes';
 import { manualRefundKey } from './stop-refund.plan';
 
 // «إلغاء مع استرداد» (owner 2026-11-02): card first through Stripe (the webhook records the row),
@@ -81,7 +81,7 @@ describe('StopRefunds.execute', () => {
     const { service, stripe, repo } = kit();
     repo.money.mockResolvedValue([cardRow(), row(), old]);
     const refunded = { id: 're_old', amount: 5000, status: 'succeeded', metadata: {} };
-    stripe.refunds.list.mockResolvedValue({ data: [refunded] });
+    stripe.refunds.list.mockReturnValue(listed([refunded]));
     const plan = await service.plan({ sub: SUB, requestId: REQ, amount: 240 });
     expect(await service.execute({ plan, actor })).toEqual({ amount: 240, card: 150, manual: 90 });
     expect(stripe.refunds.create.mock.calls[0]?.[0]).toMatchObject({ amount: 15000 });
@@ -95,7 +95,7 @@ describe('StopRefunds.execute', () => {
       status: 'succeeded',
       metadata: { course_stop: REQ },
     };
-    stripe.refunds.list.mockResolvedValue({ data: [mine] });
+    stripe.refunds.list.mockReturnValue(listed([mine]));
     const recorded = row({
       id: 'r1',
       kind: 'refund',
@@ -116,17 +116,6 @@ describe('StopRefunds.execute', () => {
     expect(stripe.refunds.create).not.toHaveBeenCalled();
     expect(ledger.audit).not.toHaveBeenCalled();
     expect(ledger.manual).toHaveBeenCalledWith({ plan, amount: 50, actor });
-  });
-
-  it('a card payment converted on record (USD charge, SAR package): the charge share in USD cents', async () => {
-    const { service, stripe, repo } = kit();
-    repo.money.mockResolvedValue([
-      cardRow({ original_amount: 53.33, original_currency: 'USD' }),
-      row(),
-    ]);
-    const plan = await service.plan({ sub: SUB, requestId: REQ, amount: 100 });
-    expect(await service.execute({ plan, actor })).toEqual({ amount: 100, card: 100, manual: 0 });
-    expect(stripe.refunds.create.mock.calls[0]?.[0]).toMatchObject({ amount: 2667 });
   });
 
   it('no card payment: Stripe is never called', async () => {

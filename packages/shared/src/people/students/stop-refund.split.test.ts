@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chargeShare, refundAmountProblem, splitRefund } from './stop-refund.js';
+import { refundAmountProblem, splitRefund } from './stop-refund.js';
 
 // «إلغاء مع استرداد» (owner 2026-11-02): card first, the rest manual; the cap.
 describe('splitRefund: card first, the rest manual', () => {
@@ -38,20 +38,6 @@ describe('splitRefund: card first, the rest manual', () => {
       cards: [],
       manual: 30,
     });
-  });
-});
-
-describe('chargeShare (a card payment converted on record)', () => {
-  it('the whole card: what the charge can still refund', () => {
-    expect(chargeShare({ take: 100, refundable: 100, chargeRefundable: 26.67 })).toBe(26.67);
-  });
-
-  it('a part: proportional, rounded to the cent', () => {
-    expect(chargeShare({ take: 50, refundable: 100, chargeRefundable: 26.8 })).toBe(13.4);
-  });
-
-  it('same currency: the same amount', () => {
-    expect(chargeShare({ take: 40, refundable: 100, chargeRefundable: 100 })).toBe(40);
   });
 });
 

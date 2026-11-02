@@ -62,6 +62,7 @@ const STOP_CODES = [
   'has_future_lessons',
   'subscription_not_found',
   'refund_exceeds_allowed',
+  'refund_mismatch',
   'refund_not_allowed',
   'stripe_not_configured',
 ] as const;

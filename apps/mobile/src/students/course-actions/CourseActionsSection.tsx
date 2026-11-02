@@ -46,11 +46,7 @@ export function CourseActionsSection({ studentId, subscriptionId }: CourseAction
         }}
       />
       <PauseSheetFrame open={open === 'stop'} title={c.stop.title} onClose={close}>
-        <CourseStopForm
-          sub={{ studentId, subscriptionId: sub }}
-          onClose={close}
-          onDone={done}
-        />
+        <CourseStopForm sub={{ studentId, subscriptionId: sub }} onClose={close} onDone={done} />
       </PauseSheetFrame>
       {isMove(open) ? (
         <CourseMoveSheet

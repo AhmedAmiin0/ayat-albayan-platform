@@ -13,15 +13,20 @@ const plan = (rows = [cardRow(), row({ method: 'cash' })]): RefundPlan => ({
   pkg: { price: 400, lessonsTotal: 8, attended: 0, studentName: 'ط' },
   calc,
   cards: [
-    { paymentId: 'p-card', intent: 'pi_1', refundable: 200, chargeRefundable: 200, mine: [] },
+    { paymentId: 'p-card', intent: 'pi_1', refundable: 200, mine: [], unrecorded: 0 },
   ],
   rows,
   requestId: REQ,
   amount: 250,
+  split: { cards: [{ id: 'p-card', amount: 200 }], manual: 50 },
 });
 
 function ledger() {
-  const payments = { create: vi.fn() };
+  const payments = {
+    create: vi.fn((w: { amount: number; note: string; method: string }) =>
+      Promise.resolve({ amount: w.amount }),
+    ),
+  };
   const push = { notifyAdmins: vi.fn() };
   const audits = { record: vi.fn() };
   const l = new StopRefundLedger(

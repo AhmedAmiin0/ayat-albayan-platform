@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '@ab/catalog';
+import { moneyAmount } from '@ab/money';
 import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
 import type { StopRefund } from './stop-refund.js';
 
@@ -21,7 +22,7 @@ export const courseStopSchema = z.strictObject({
   subscriptionId: z.uuid(),
   reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
   clientRequestId: z.uuid(),
-  refund: z.strictObject({ amount: z.number().positive().max(10_000_000) }).optional(),
+  refund: z.strictObject({ amount: moneyAmount }).optional(),
 });
 export type CourseStopRequest = z.infer<typeof courseStopSchema>;
 
@@ -46,8 +47,11 @@ export interface CourseStopPreview {
   /** Net paid, kept as it is with «إلغاء فقط». */
   paid: number;
   currency: string;
-  /** «إلغاء مع استرداد»'s lines (owner 2026-11-02): paid, attended × price × rate, refund. */
-  refund: StopRefund;
+  /**
+   * «إلغاء مع استرداد»'s lines (owner 2026-11-02): paid, attended × price × rate, refund; null
+   * for a caller without subscriptions.refund.
+   */
+  refund: StopRefund | null;
   /** Set once the package is cancelled (either kind): the sheet shows it instead of the button. */
   stopped: CourseStopped | null;
 }

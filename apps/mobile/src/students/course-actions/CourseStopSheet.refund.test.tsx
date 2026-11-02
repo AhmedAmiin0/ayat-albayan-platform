@@ -74,6 +74,7 @@ test('the amount may be lowered, never raised', async () => {
   await fireEvent.changeText(screen.getByPlaceholderText('187.5'), '200');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
+  expect(screen.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
   await fireEvent.changeText(screen.getByPlaceholderText('187.5'), '100');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await waitFor(() =>

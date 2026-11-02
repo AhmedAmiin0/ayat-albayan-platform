@@ -32,8 +32,9 @@ export class CourseStopController {
   preview(
     @Param('id', ParseUUIDPipe) id: string,
     @ZodQuery(courseStopQuerySchema) query: z.output<typeof courseStopQuerySchema>,
+    @CurrentUser() user: AuthUser,
   ): Promise<CourseStopPreview> {
-    return this.stops.preview(id, query.subscriptionId);
+    return this.stops.preview({ studentId: id, subscriptionId: query.subscriptionId, user });
   }
 
   /** 201 CourseStopResult (a retry with the same clientRequestId answers the first stop). */

@@ -58,15 +58,17 @@ export interface StopRefund {
 export function stopRefund(input: StopRefundInput): StopRefund {
   const { currency } = input;
   const total = Math.max(input.lessonsTotal, 1);
+  // Never more lessons than the package holds (a stopped package caps them the same way).
+  const attended = Math.min(input.attended, Math.max(input.lessonsTotal, 0));
   const priceMinor = toMinor(input.price, currency);
   const chargedMinor = Math.round(
-    (input.attended * priceMinor * input.ratePercent) / (100 * total),
+    (attended * priceMinor * input.ratePercent) / (100 * total),
   );
   const paidMinor = Math.max(0, toMinor(input.paid, currency));
   return {
     paid: fromMinor(paidMinor, currency),
     perLesson: fromMinor(Math.round(priceMinor / total), currency),
-    attended: input.attended,
+    attended,
     ratePercent: input.ratePercent,
     charged: fromMinor(chargedMinor, currency),
     refund: fromMinor(Math.max(0, paidMinor - chargedMinor), currency),
@@ -98,22 +100,6 @@ export function splitRefund(input: {
     return { id: card.id, amount: fromMinor(take, currency) };
   });
   return { cards: cards.filter((c) => c.amount > 0), manual: fromMinor(left, currency) };
-}
-
-/**
- * The charge-currency share of a card refund taken in the package currency (a card payment
- * converted on record): proportional, never above what the charge can still refund.
- */
-export function chargeShare(input: {
-  take: number;
-  refundable: number;
-  chargeRefundable: number;
-}): number {
-  const whole = input.take >= input.refundable || input.refundable <= 0;
-  const share = whole
-    ? input.chargeRefundable
-    : (input.take * input.chargeRefundable) / input.refundable;
-  return Math.min(input.chargeRefundable, Math.round(share * 100) / 100);
 }
 
 /** 409 refund_exceeds_allowed: the amount asked is above the computed refund (or not positive). */

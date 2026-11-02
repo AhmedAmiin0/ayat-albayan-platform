@@ -32,6 +32,7 @@ export {
   courseStopBody,
   type RefundChoice,
   refundAmountOf,
+  refundOffer,
   stopRefundLines,
   stopRefundOf,
   type StopRefundWords,

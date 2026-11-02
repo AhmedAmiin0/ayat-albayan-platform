@@ -95,6 +95,7 @@ describe('StopCourseDialog: the refund choice', () => {
     const field = dialog.getByLabelText(words.refundAmount);
     fireEvent.change(field, { target: { value: '200' } });
     expect(confirm().disabled).toBe(true);
+    expect(dialog.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
     fireEvent.change(field, { target: { value: '100' } });
     apiSend.mockResolvedValue({
       subscriptionId: SUB,
