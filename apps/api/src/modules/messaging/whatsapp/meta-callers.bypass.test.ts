@@ -37,6 +37,11 @@ describe('Meta callers guard: bypasses are caught', () => {
       expect(at('modules/x/x.ts', `await this.client.${m}(x);`)).toEqual(['modules/x/x.ts: client method']);
     }
     expect(at('modules/x/x.ts', 'await graphJson(conn, { path });')).toEqual(['modules/x/x.ts: graph helper']);
+    // docs/36 h8: the profiles and the two exported Graph calls built on them.
+    for (const call of ['graphHttp(conn).json(x)', 'graphDownload(conn).bytes(x)', 'resumableUpload(conn, f)', 'fetchMedia(conn, id)']) {
+      expect(at('modules/x/x.ts', `await ${call};`)).toEqual(['modules/x/x.ts: graph helper']);
+    }
+    expect(at('modules/messaging/whatsapp/drivers/meta/meta-upload.ts', 'await resumableUpload(conn, f);')).toEqual([]);
   });
 
   it('a client injected or constructed outside the whitelist', () => {

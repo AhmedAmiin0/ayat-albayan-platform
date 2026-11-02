@@ -1,9 +1,9 @@
 import { convertPayment, type PaymentWrite, type SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { FxService } from '../fx/fx.service';
-import { InvoicesService } from '../invoices/invoices.service';
-import { badRequest, errorCode } from '../../../common/http/errors';
-import type { PaymentRow, PaymentSubscription } from './payments.queries';
+import { FxService } from '@/modules/finance/fx/fx.service';
+import { InvoicesService } from '@/modules/finance/invoices/invoices.service';
+import { badRequest, errorCode } from '@/common/http/errors';
+import type { PaymentRow, PaymentSubscription } from './payments.repo';
 import { PaymentFiles } from './attachments/payment-files';
 import type { ReceiptsService } from './attachments/receipts.service';
 

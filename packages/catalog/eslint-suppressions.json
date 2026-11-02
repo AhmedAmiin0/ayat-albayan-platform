@@ -45,6 +45,9 @@
     }
   },
   "src/integrations/checks.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }

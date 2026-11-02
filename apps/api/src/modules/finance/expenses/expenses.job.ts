@@ -1,8 +1,8 @@
 import { addCalendarMonths, localDateIn, SETTING_DEFAULTS } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { ExpensesQueries } from './expenses.queries';
+import { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 6 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -25,7 +25,7 @@ export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly expenses: ExpensesQueries,
+    private readonly expenses: ExpensesRepo,
     private readonly settings: ExpensesSettings,
   ) {}
 

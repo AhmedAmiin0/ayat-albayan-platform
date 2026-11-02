@@ -1,9 +1,9 @@
 import { uploadMaxBytes } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { PaymentAttachmentsQueries } from './payment-attachments.queries';
-import type { PaymentsQueries } from '../payments.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { PaymentAttachmentsRepo } from './payment-attachments.repo';
+import type { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 import { ReceiptsService } from './receipts.service';
 
 const SUB = '00000000-0000-4000-8000-000000000001';
@@ -11,8 +11,8 @@ const SUB = '00000000-0000-4000-8000-000000000001';
 function setup() {
   const payments = { subscription: vi.fn().mockResolvedValue({ id: SUB }) };
   const storage = { signedUpload: vi.fn().mockResolvedValue({ bucket: 'receipts', path: 'p', token: 't', signed_url: 'u' }) };
-  const files = {} as unknown as PaymentAttachmentsQueries;
-  const svc = new ReceiptsService(payments as unknown as PaymentsQueries, storage as unknown as StorageService, files);
+  const files = {} as unknown as PaymentAttachmentsRepo;
+  const svc = new ReceiptsService(payments as unknown as PaymentsRepo, storage as unknown as StorageService, files);
   return { svc, storage };
 }
 const input = (size: number) => ({ subscriptionId: SUB, mime: 'image/png' as const, size });

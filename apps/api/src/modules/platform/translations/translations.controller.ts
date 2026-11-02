@@ -2,14 +2,27 @@ import {
   translationKeysQuerySchema,
   translationLocaleSchema,
   translationValueSchema,
+  type Locale,
   type TranslationKeysPage,
   type TranslationOverrides,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, Headers, HttpCode, Param, Put, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  HttpCode,
+  Param,
+  Put,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { TranslationsService } from './translations.service';
 
 /** The bit of the Fastify reply used here (no direct `fastify` dependency). */
@@ -31,11 +44,11 @@ export class TranslationsController {
   @Public()
   @Get(':locale/overrides')
   overrides(
-    @Param('locale') locale: string,
+    @ZodParam('locale', translationLocaleSchema) locale: Locale,
     @Headers('if-none-match') ifNoneMatch: string | undefined,
     @Res({ passthrough: true }) reply: CacheReply,
   ): TranslationOverrides | undefined {
-    const snap = this.translations.overrides(parseOrThrow(translationLocaleSchema, locale));
+    const snap = this.translations.overrides(locale);
     reply.header('Cache-Control', 'public, max-age=60');
     reply.header('ETag', snap.etag);
     if (ifNoneMatch === snap.etag) {
@@ -70,7 +83,10 @@ export class TranslationsController {
   @Permissions('translations.manage')
   @Delete(':locale/:key')
   @HttpCode(204)
-  async restore(@Param('locale') locale: string, @Param('key') key: string): Promise<void> {
-    await this.translations.restore(parseOrThrow(translationLocaleSchema, locale), key);
+  async restore(
+    @ZodParam('locale', translationLocaleSchema) locale: Locale,
+    @Param('key') key: string,
+  ): Promise<void> {
+    await this.translations.restore(locale, key);
   }
 }

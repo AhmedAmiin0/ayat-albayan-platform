@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DashboardModule } from '../../reporting/dashboard/dashboard.module';
+import { DashboardModule } from '@/modules/reporting/dashboard/dashboard.module';
 import { ReceivablesController } from './receivables.controller';
-import { ReceivablesQueries } from './receivables.queries';
+import { ReceivablesRepo } from './receivables.repo';
 import { ReceivablesService } from './receivables.service';
 import { ReceivablesSettings } from './receivables.settings';
 
@@ -9,7 +9,7 @@ import { ReceivablesSettings } from './receivables.settings';
 @Module({
   imports: [DashboardModule],
   controllers: [ReceivablesController],
-  providers: [ReceivablesQueries, ReceivablesSettings, ReceivablesService],
+  providers: [ReceivablesRepo, ReceivablesSettings, ReceivablesService],
   exports: [ReceivablesService],
 })
 export class ReceivablesModule {}

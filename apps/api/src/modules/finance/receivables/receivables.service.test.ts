@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import type { FxConverter } from '../../reporting/dashboard/finance/fx-converter';
-import type { ReceivablesQueries } from './receivables.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { FxConverter } from '@/modules/reporting/dashboard/finance/fx-converter';
+import type { ReceivablesRepo } from './receivables.repo';
 import { ReceivablesService } from './receivables.service';
 import { ReceivablesSettings } from './receivables.settings';
 
@@ -25,7 +25,7 @@ describe('ReceivablesService (GET /receivables)', () => {
       conversion: vi.fn().mockResolvedValue({ currency: 'SAR', rates: { SAR: 1, EGP: 13 }, missing: ['AED'], date: null }),
     };
     const svc = new ReceivablesService(
-      queries as unknown as ReceivablesQueries,
+      queries as unknown as ReceivablesRepo,
       fx as unknown as FxConverter,
       readerOf(ReceivablesSettings),
     );

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { makeupNames } from '../../messaging/lesson/booking-confirmation.js';
-import { makeupEligible, type MakeupOriginal } from './booking-extras.js';
+import { makeupEligible, type MakeupOriginal } from '@ab/schedule';
 
 describe('makeupEligible: only a charged student miss within 60 days', () => {
   const now = new Date('2026-10-03T10:00:00Z');

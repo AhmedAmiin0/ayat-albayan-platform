@@ -10,6 +10,19 @@
   "src/cli.args.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 2
+    },
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/cli.commands.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/cli.ts": {
+    "complexity": {
+      "count": 1
     }
   },
   "src/config.ts": {
@@ -17,6 +30,9 @@
       "count": 7
     },
     "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -60,6 +76,12 @@
   "src/delta/only.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
     }
   },
   "src/delta/orphans.ts": {
@@ -67,6 +89,12 @@
       "count": 1
     },
     "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
       "count": 1
     }
   },
@@ -91,6 +119,9 @@
   "src/hash.ts": {
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "src/keys.ts": {
@@ -101,11 +132,17 @@
   "src/map/applicants/applicants.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/expenses/expenses.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/leads/contacts.test.ts": {
@@ -116,6 +153,9 @@
   "src/map/leads/contacts.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/leads/fixtures.ts": {
@@ -131,14 +171,33 @@
       "count": 1
     }
   },
+  "src/map/leads/leads.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/map/leads/links.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/leads/record.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/leads/sheet-leads.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
+      "count": 1
     }
   },
   "src/map/lessons/lessons.ts": {
@@ -161,6 +220,9 @@
     "ab/no-shape-checks": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -168,6 +230,9 @@
   "src/map/money/fin.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/money/heart.ts": {
@@ -207,6 +272,11 @@
       "count": 1
     }
   },
+  "src/map/people/collect.merge.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
   "src/map/people/collect.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -216,6 +286,9 @@
     },
     "complexity": {
       "count": 1
+    },
+    "max-depth": {
+      "count": 3
     }
   },
   "src/map/people/match.test.ts": {
@@ -231,7 +304,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
+      "count": 3
     }
   },
   "src/map/people/rows.ts": {
@@ -254,9 +327,18 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
     }
   },
   "src/map/people/status/downgrade.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -269,6 +351,9 @@
   "src/map/people/status/payments.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/people/students.facts.test.ts": {
@@ -312,6 +397,11 @@
       "count": 6
     },
     "complexity": {
+      "count": 2
+    }
+  },
+  "src/map/people/taught.ts": {
+    "complexity": {
       "count": 1
     }
   },
@@ -328,6 +418,11 @@
       "count": 4
     }
   },
+  "src/map/reports/dedupe.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/map/reports/fields.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
@@ -341,6 +436,9 @@
       "count": 8
     },
     "ab/no-shape-checks": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-lines-per-function": {
@@ -363,16 +461,28 @@
   "src/map/reports/times.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 8
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
     }
   },
   "src/map/schedule/booking-row.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 6
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/schedule/booking-slot.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
+    },
+    "complexity": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -389,6 +499,9 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/schedule/heart.rules.test.ts": {
@@ -399,6 +512,9 @@
   "src/map/schedule/heart.rules.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 7
+    },
+    "complexity": {
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -444,6 +560,9 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/map/templates/templates.test.ts": {
@@ -454,6 +573,14 @@
   "src/map/templates/templates.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pdf-import/files.ts": {
+    "complexity": {
+      "count": 1
     }
   },
   "src/pdf-import/match.test.ts": {
@@ -468,6 +595,9 @@
     "@typescript-eslint/no-base-to-string": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -477,8 +607,24 @@
       "count": 1
     }
   },
+  "src/plan/apply.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 3
+    }
+  },
   "src/plan/changes.test.ts": {
     "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/plan/changes.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
       "count": 1
     }
   },
@@ -493,6 +639,9 @@
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/plan/creates-only.test.ts": {
@@ -505,9 +654,17 @@
       "count": 11
     }
   },
+  "src/plan/match/match.target.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/plan/match/match.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "complexity": {
+      "count": 2
     }
   },
   "src/plan/match/similar.ts": {
@@ -521,10 +678,21 @@
     },
     "@typescript-eslint/no-base-to-string": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
     }
   },
   "src/plan/plan.test.ts": {
     "@typescript-eslint/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/plan/resolve.ts": {
+    "complexity": {
       "count": 2
     }
   },
@@ -543,11 +711,17 @@
     "complexity": {
       "count": 1
     },
+    "max-depth": {
+      "count": 2
+    },
     "max-len": {
       "count": 1
     }
   },
   "src/report/report.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     },
@@ -590,10 +764,16 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "src/sources/extract-crm.ts": {
     "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -603,6 +783,12 @@
   "src/sources/extract-sheets.ts": {
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
     }
   },
   "src/sources/headers/headers.hub.ts": {
@@ -627,6 +813,9 @@
     "@typescript-eslint/no-misused-spread": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -634,6 +823,14 @@
   "src/sources/sheets/cells.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/sources/sheets/fixtures.ts": {
+    "complexity": {
+      "count": 1
     }
   },
   "src/sources/sheets/issues.ts": {
@@ -644,6 +841,9 @@
   "src/sources/sheets/siblings.ts": {
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/sources/teachers.dir.ts": {
@@ -652,6 +852,9 @@
     }
   },
   "src/sources/values.schedule.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -697,6 +900,9 @@
   "src/validate.sources.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/validate.ts": {

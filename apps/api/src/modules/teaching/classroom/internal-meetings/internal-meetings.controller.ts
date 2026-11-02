@@ -1,14 +1,32 @@
-import type { MeetingCreated, MeetingCreateResult, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Injectable, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import type {
+  MeetingCreated,
+  MeetingCreateResult,
+  MeetingView,
+  PublicMeetingView,
+  RoomJoinResult,
+} from '@ab/shared';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Injectable,
+  Ip,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
+import { z } from 'zod';
+import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import { InternalMeetingsService } from './internal-meetings.service';
-import { MeetingCreateService } from '../meetings/schedule/meeting-create.service';
-import { MeetingListService } from '../meetings/schedule/meeting-list.service';
+import { MeetingCreateService } from '@/modules/teaching/classroom/meetings/schedule/meeting-create.service';
+import { MeetingListService } from '@/modules/teaching/classroom/meetings/schedule/meeting-list.service';
 
 /** The staff routes' services (one injectable, so the controller stays at ≤ 3 params). */
 @Injectable()
@@ -22,6 +40,8 @@ export class InternalMeetingRoutes {
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
+const identitySchema = z.string().regex(IDENTITY);
+const participantNotFound = () => notFound('participant_not_found');
 
 /**
  * «اجتماع داخلي», staff side: any staff login creates (now or scheduled, with invitees: R-MEET-01/02),
@@ -72,22 +92,31 @@ export class InternalMeetingsController {
   /** «رابط جديد»: a fresh link; the previous one stops working. */
   @Post(':id/link')
   @HttpCode(200)
-  link(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MeetingCreated> {
+  link(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MeetingCreated> {
     return this.routes.meetings.newLink({ user, id });
   }
 
   /** 503 classroom_not_configured, 404 meeting_not_found, 410 meeting_ended | join_closed, 403 join_not_open_yet. */
   @Post(':id/join')
   @HttpCode(200)
-  join(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
+  join(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<RoomJoinResult> {
     return this.joins.staff({ user, id });
   }
 
   /** 204; 404 participant_not_found, 403 cannot_remove, 503, 502 LiveKit refused. */
   @Post(':id/participants/:identity/remove')
   @HttpCode(204)
-  async remove(@Param('id', ParseUUIDPipe) id: string, @Param('identity') identity: string, @CurrentUser() user: AuthUser): Promise<void> {
-    if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('identity', identitySchema, participantNotFound) identity: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await this.kicks.remove({ user, id, identity });
   }
 }
@@ -108,7 +137,11 @@ export class InternalMeetingsPublicController {
   /** {name} → a guest token; 404 link_invalid, 410 meeting_ended, 429, 400, 503. */
   @Post(':token/join')
   @HttpCode(200)
-  join(@Param('token') token: string, @Body() body: unknown, @Ip() ip: string): Promise<RoomJoinResult> {
+  join(
+    @Param('token') token: string,
+    @Body() body: unknown,
+    @Ip() ip: string,
+  ): Promise<RoomJoinResult> {
     return this.joins.guest({ token, ip, body });
   }
 }
