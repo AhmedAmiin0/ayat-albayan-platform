@@ -5,7 +5,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { ABRAR, next, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 import { TrialDateDialog } from './TrialDateDialog';
-import { history, routeTrialFetch, routeTrialSend, sentTo, UPCOMING_ID } from '@/features/teaching/booking/trial-date/trial-fixture';
+import { history, routeTrialFetch, routeTrialSend, row, sentTo, UPCOMING_ID } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -26,6 +26,7 @@ async function toReview(answers: unknown[], count = 1) {
   await waitFor(() => expect(abrar).toHaveProperty('checked', true));
   expect(screen.getByText(t.trialDate.lastTeacher)).toBeTruthy();
   next();
+  next(); // «مدة الحلقة»: the last trial's length, kept
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
   next();
@@ -84,5 +85,24 @@ describe('TrialDateDialog, admin (owner 2026-10-25, R-SCH-06)', () => {
     renderWithClient(<TrialDateDialog student={STUDENT} mode="admin" onClose={vi.fn()} />);
     expect(await screen.findByText(t.trialDate.notAllowed)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.booking.next })).toBeNull();
+  });
+
+  it('the length step keeps the last trial’s length and a new one reaches the body', async () => {
+    const items = [row({ lesson_id: UPCOMING_ID, ends_at: '2026-10-05T15:00:00.000Z' })];
+    routeTrialFetch(apiFetch, { base: '/booking', history: history({ items }) });
+    routeTrialSend(apiSend, { base: '/booking', answers: [DONE] });
+    renderWithClient(<TrialDateDialog student={STUDENT} mode="admin" onClose={vi.fn()} />);
+    await screen.findByText(t.trialDate.lastTeacher);
+    next();
+    const length = await screen.findByLabelText(t.booking.pickDuration);
+    expect(length).toHaveProperty('value', '60');
+    fireEvent.change(length, { target: { value: '30' } });
+    next();
+    const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
+    fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+    next();
+    fireEvent.click(screen.getByRole('button', { name: t.trialDate.submit }));
+    await screen.findByText(t.trialDate.doneMoved);
+    expect(sentTo(apiSend, '/booking/trial-date')[0]).toMatchObject({ durationMin: 30 });
   });
 });

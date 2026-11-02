@@ -766,7 +766,8 @@
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
       "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
-      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first.",
+      "meeting_link_invalid": "The lesson link is not valid; it must start with https://"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -4735,7 +4736,8 @@
         "title": "Trial lesson",
         "none": "No trial lesson",
         "teacher": "with {name}",
-        "again": "New trial date for {name}"
+        "again": "New trial date for {name}",
+        "edit": "Change the trial lesson time for {name}"
       },
       "log": {
         "title": "Attendance log",
@@ -7166,6 +7168,8 @@
   "trialDate": {
     "action": "New trial date",
     "actionHint": "Pick a new trial lesson date for this student",
+    "editAction": "Change trial time",
+    "meetingLinkHint": "Optional: left empty, the student’s or the teacher’s usual link is used. The link must start with https://",
     "title": "New trial date for {name}",
     "historyTitle": "Trial lesson dates",
     "count": {

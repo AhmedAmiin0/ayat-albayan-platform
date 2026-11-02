@@ -12824,11 +12824,6 @@
       "count": 13
     }
   },
-  "src/modules/teaching/booking/sales/course/sales-trial-date.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    }
-  },
   "src/modules/teaching/booking/teacher/teacher-alert.crm.test.ts": {
     "max-len": {
       "count": 1
