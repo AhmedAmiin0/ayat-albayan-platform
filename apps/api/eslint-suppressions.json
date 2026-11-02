@@ -233,6 +233,9 @@
     }
   },
   "src/common/configuration/config-store/io/config-entries.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -327,6 +330,11 @@
       "count": 1
     }
   },
+  "src/common/configuration/custom-config/custom-config.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
+    }
+  },
   "src/common/configuration/custom-config/custom-config.service.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -363,6 +371,9 @@
     }
   },
   "src/common/configuration/integrations/integration-config.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -697,6 +708,9 @@
     }
   },
   "src/common/push/notifications.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 2
     }
@@ -997,6 +1011,9 @@
     "ab/no-parent-imports": {
       "count": 5
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -1173,6 +1190,9 @@
   },
   "src/common/telemetry/activity/activity.controller.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/zod-inputs": {
       "count": 1
     }
   },
@@ -1487,6 +1507,9 @@
     "ab/no-parent-imports": {
       "count": 6
     },
+    "ab/zod-inputs": {
+      "count": 9
+    },
     "max-len": {
       "count": 4
     }
@@ -1551,6 +1574,9 @@
     },
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 2
     },
     "max-len": {
       "count": 4
@@ -1703,6 +1729,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 11
+    },
     "max-len": {
       "count": 6
     }
@@ -1806,6 +1835,9 @@
   "src/modules/finance/expenses/expense-categories.controller.ts": {
     "ab/no-parent-imports": {
       "count": 5
+    },
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/finance/expenses/expense-receipts.ts": {
@@ -1878,6 +1910,9 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 8
     },
     "max-len": {
       "count": 2
@@ -2021,6 +2056,9 @@
   "src/modules/finance/invoices/invoices.controller.ts": {
     "ab/no-parent-imports": {
       "count": 2
+    },
+    "ab/zod-inputs": {
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -2236,6 +2274,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 9
+    },
     "max-len": {
       "count": 1
     }
@@ -2370,6 +2411,9 @@
   "src/modules/finance/payouts/payouts.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 10
     },
     "max-len": {
       "count": 2
@@ -2512,6 +2556,11 @@
   },
   "src/modules/finance/pricing/pricing.controller.test.ts": {
     "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/pricing/pricing.controller.ts": {
+    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -2668,6 +2717,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -2789,6 +2841,9 @@
     "ab/no-parent-imports": {
       "count": 6
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "complexity": {
       "count": 1
     },
@@ -2873,6 +2928,9 @@
     "ab/no-parent-imports": {
       "count": 1
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -2909,6 +2967,11 @@
   },
   "src/modules/finance/stripe/webhook/webhook-deps.ts": {
     "ab/no-parent-imports": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/alerts/admin-tasks.controller.ts": {
+    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -3273,6 +3336,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 10
+    },
     "max-len": {
       "count": 2
     }
@@ -3429,6 +3495,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 13
+    },
     "max-len": {
       "count": 2
     }
@@ -3462,6 +3531,9 @@
   "src/modules/finance/teacher-earnings/earnings.mine.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 3
     },
     "max-len": {
       "count": 3
@@ -3816,6 +3888,14 @@
   "src/modules/messaging/calls/http/call-permission.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/zod-inputs": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/calls/http/calls.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
     }
   },
   "src/modules/messaging/calls/http/calls.http.test.ts": {
@@ -3917,6 +3997,11 @@
     },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/chat-lists/chat-lists.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 6
     }
   },
   "src/modules/messaging/chat-lists/chat-lists.guard.test.ts": {
@@ -4212,6 +4297,9 @@
   "src/modules/messaging/inbox/files/thread-file-send.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
+    },
+    "ab/zod-inputs": {
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/files/thread-file-send.http.test.ts": {
@@ -4258,6 +4346,9 @@
     },
     "ab/no-parent-imports": {
       "count": 6
+    },
+    "ab/zod-inputs": {
+      "count": 3
     },
     "max-len": {
       "count": 5
@@ -4356,6 +4447,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -4405,6 +4499,11 @@
       "count": 2
     },
     "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/hide/message-hide.controller.ts": {
+    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -4491,6 +4590,9 @@
   "src/modules/messaging/inbox/reactions/thread-reaction.controller.ts": {
     "ab/no-parent-imports": {
       "count": 7
+    },
+    "ab/zod-inputs": {
+      "count": 2
     },
     "max-len": {
       "count": 3
@@ -4629,6 +4731,9 @@
   "src/modules/messaging/inbox/reopen/thread-reopen.controller.ts": {
     "ab/no-parent-imports": {
       "count": 6
+    },
+    "ab/zod-inputs": {
+      "count": 1
     },
     "max-len": {
       "count": 4
@@ -4779,6 +4884,11 @@
     },
     "no-nested-ternary": {
       "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 7
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.test.ts": {
@@ -4962,6 +5072,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 4
     },
     "max-len": {
       "count": 2
@@ -5196,6 +5309,11 @@
     },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/modules/messaging/notification-rules/rules.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
     }
   },
   "src/modules/messaging/notification-rules/rules.errors.ts": {
@@ -5570,6 +5688,9 @@
     }
   },
   "src/modules/messaging/numbers/numbers.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
+    },
     "max-len": {
       "count": 3
     }
@@ -5932,6 +6053,11 @@
     },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/modules/messaging/saved-replies/saved-replies.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.fakes.ts": {
@@ -6411,6 +6537,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -6423,6 +6552,9 @@
   "src/modules/messaging/webhook/providers/webhook.wacrm.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 1
     },
     "complexity": {
       "count": 1
@@ -6497,6 +6629,9 @@
   "src/modules/messaging/webhook/webhook.controller.ts": {
     "ab/no-parent-imports": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -7224,6 +7359,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 5
     }
@@ -7385,6 +7523,9 @@
     }
   },
   "src/modules/messaging/whatsapp/relay/relay.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "complexity": {
       "count": 1
     }
@@ -7767,6 +7908,9 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 8
+    },
     "max-len": {
       "count": 13
     }
@@ -7872,6 +8016,9 @@
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
     "ab/no-parent-imports": {
       "count": 2
+    },
+    "ab/zod-inputs": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -8111,6 +8258,9 @@
     }
   },
   "src/modules/people/guardians/guardians.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
@@ -8212,6 +8362,11 @@
     },
     "ab/no-parent-imports": {
       "count": 5
+    }
+  },
+  "src/modules/people/me/me.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/people/me/me.service.takeover.test.ts": {
@@ -8326,6 +8481,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 9
+    },
     "max-len": {
       "count": 3
     }
@@ -8395,6 +8553,9 @@
     }
   },
   "src/modules/people/roles/roles.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -8706,6 +8867,9 @@
     "ab/module-boundaries": {
       "count": 1
     },
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
@@ -8879,6 +9043,11 @@
       "count": 1
     }
   },
+  "src/modules/people/teachers/availability/availability.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 8
+    }
+  },
   "src/modules/people/teachers/availability/availability.query.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -8974,6 +9143,9 @@
     }
   },
   "src/modules/people/teachers/teachers.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -9120,6 +9292,9 @@
     }
   },
   "src/modules/people/users/photo/staff-photo.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 6
+    },
     "max-len": {
       "count": 4
     }
@@ -9186,6 +9361,9 @@
     }
   },
   "src/modules/people/users/users.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 7
+    },
     "max-len": {
       "count": 3
     }
@@ -9271,6 +9449,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -9297,6 +9478,9 @@
   "src/modules/platform/google-sync/admin/google-items.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/platform/google-sync/admin/google-log.queries.ts": {
@@ -9511,6 +9695,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 9
+    },
     "max-len": {
       "count": 2
     }
@@ -9587,6 +9774,9 @@
     },
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -9990,6 +10180,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 3
     }
@@ -10047,6 +10240,9 @@
     },
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 7
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
@@ -10100,6 +10296,9 @@
   },
   "src/modules/reporting/dashboard/dashboard.controller.ts": {
     "ab/no-parent-imports": {
+      "count": 1
+    },
+    "ab/zod-inputs": {
       "count": 1
     },
     "max-len": {
@@ -10316,6 +10515,9 @@
     "ab/no-parent-imports": {
       "count": 4
     },
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 2
     }
@@ -10372,6 +10574,9 @@
     },
     "ab/no-shape-checks": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -10698,6 +10903,9 @@
   "src/modules/reporting/reports/files/report-attachments.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 8
     }
   },
   "src/modules/reporting/reports/files/report-attachments.queries.ts": {
@@ -10843,6 +11051,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 7
+    },
     "max-len": {
       "count": 1
     }
@@ -10906,6 +11117,9 @@
   "src/modules/reporting/reports/submit/report-entry.controller.ts": {
     "ab/no-parent-imports": {
       "count": 6
+    },
+    "ab/zod-inputs": {
+      "count": 4
     },
     "max-len": {
       "count": 4
@@ -11110,6 +11324,9 @@
   "src/modules/reporting/reports/v2/report-v2.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 4
     }
   },
   "src/modules/reporting/reports/v2/report-v2.form.http.test.ts": {
@@ -11163,6 +11380,9 @@
   "src/modules/sales/job-applicants/job-applicants.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 8
     }
   },
   "src/modules/sales/job-applicants/job-applicants.list.test.ts": {
@@ -11200,6 +11420,9 @@
     }
   },
   "src/modules/sales/leads/lead-family.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 2
+    },
     "max-len": {
       "count": 3
     }
@@ -11254,6 +11477,11 @@
   "src/modules/sales/leads/leads.controller.test.ts": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/modules/sales/leads/leads.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 8
     }
   },
   "src/modules/sales/leads/leads.fakes.ts": {
@@ -11375,6 +11603,9 @@
     "ab/no-parent-imports": {
       "count": 5
     },
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -11401,6 +11632,9 @@
   "src/modules/sales/sales-money/sales-money.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 7
     },
     "max-len": {
       "count": 14
@@ -11638,6 +11872,9 @@
     "ab/no-parent-imports": {
       "count": 3
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -11696,6 +11933,9 @@
   "src/modules/sales/sales-students/attendance/student-attendance.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 4
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.fakes.ts": {
@@ -11772,6 +12012,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -11846,6 +12089,9 @@
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 5
     },
     "max-len": {
       "count": 10
@@ -11927,6 +12173,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -11970,6 +12219,9 @@
   "src/modules/sales/sales/academy/sales-academy.controller.ts": {
     "ab/no-parent-imports": {
       "count": 5
+    },
+    "ab/zod-inputs": {
+      "count": 3
     },
     "max-len": {
       "count": 5
@@ -12134,6 +12386,9 @@
   "src/modules/sales/sales/sales-admin.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 2
     }
   },
   "src/modules/sales/sales/sales-admin.http.test.ts": {
@@ -12179,6 +12434,9 @@
   "src/modules/sales/sales/sales.controller.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -13022,6 +13280,16 @@
       "count": 3
     }
   },
+  "src/modules/teaching/booking/profile/course-move.routes.ts": {
+    "ab/zod-inputs": {
+      "count": 6
+    }
+  },
+  "src/modules/teaching/booking/profile/profile-course.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/booking/sales/booking/sales-booking.controller.ts": {
     "max-len": {
       "count": 5
@@ -13106,6 +13374,9 @@
   "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
     "ab/no-parent-imports": {
       "count": 7
+    },
+    "ab/zod-inputs": {
+      "count": 3
     },
     "max-len": {
       "count": 5
@@ -13353,6 +13624,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 6
+    },
     "max-len": {
       "count": 1
     }
@@ -13390,6 +13664,9 @@
     }
   },
   "src/modules/teaching/classroom/classroom.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
@@ -13413,6 +13690,9 @@
   "src/modules/teaching/classroom/classroom.public.controller.ts": {
     "ab/no-parent-imports": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/classroom.repo.ts": {
@@ -13450,6 +13730,9 @@
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.controller.ts": {
     "ab/no-parent-imports": {
       "count": 5
+    },
+    "ab/zod-inputs": {
+      "count": 10
     },
     "max-len": {
       "count": 4
@@ -13708,6 +13991,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -13785,6 +14071,9 @@
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.controller.ts": {
     "ab/no-parent-imports": {
+      "count": 1
+    },
+    "ab/zod-inputs": {
       "count": 1
     },
     "max-len": {
@@ -13964,6 +14253,9 @@
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 9
     },
     "max-len": {
       "count": 6
@@ -14160,6 +14452,9 @@
   "src/modules/teaching/classroom/moderation/moderation.controller.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    },
+    "ab/zod-inputs": {
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/moderation/moderation.fakes.ts": {
@@ -14198,6 +14493,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 3
     }
@@ -14218,6 +14516,9 @@
     },
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "ab/zod-inputs": {
+      "count": 4
     },
     "max-len": {
       "count": 4
@@ -14270,6 +14571,9 @@
     "ab/no-parent-imports": {
       "count": 2
     },
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -14301,6 +14605,9 @@
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/no-parent-imports": {
       "count": 2
+    },
+    "ab/zod-inputs": {
+      "count": 4
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
@@ -14344,6 +14651,9 @@
     }
   },
   "src/modules/teaching/course-pause/course-pause.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
+    },
     "max-len": {
       "count": 6
     }
@@ -14442,7 +14752,15 @@
       "count": 16
     }
   },
+  "src/modules/teaching/course-stop/course-stop.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 2
+    }
+  },
   "src/modules/teaching/feedback/feedback.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
+    },
     "max-len": {
       "count": 1
     }
@@ -14505,6 +14823,9 @@
   "src/modules/teaching/feedback/public/feedback.public.controller.ts": {
     "ab/no-parent-imports": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 3
     }
   },
   "src/modules/teaching/feedback/public/feedback.public.http.test.ts": {
@@ -14687,6 +15008,9 @@
   "src/modules/teaching/lesson-rating/rating.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/teaching/lesson-rating/rating.http.test.ts": {
@@ -14768,6 +15092,9 @@
   "src/modules/teaching/lessons/lessons.controller.ts": {
     "ab/no-parent-imports": {
       "count": 1
+    },
+    "ab/zod-inputs": {
+      "count": 3
     }
   },
   "src/modules/teaching/lessons/lessons.fakes.ts": {
@@ -14929,6 +15256,11 @@
       "count": 3
     }
   },
+  "src/modules/teaching/lessons/proposals/lesson-proposals.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
+    }
+  },
   "src/modules/teaching/lessons/proposals/lesson-proposals.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
@@ -14950,6 +15282,11 @@
   "src/modules/teaching/lessons/reschedule/lesson-reschedule.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 4
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/lesson-reschedule.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/reschedule/reschedule-one.service.test.ts": {
@@ -15004,6 +15341,11 @@
   "src/modules/teaching/lessons/reschedule/reschedule.meeting-mode.test.ts": {
     "max-len": {
       "count": 5
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/rule-cancel.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/reschedule/rule-plan.test.ts": {
@@ -15061,6 +15403,11 @@
   "src/modules/teaching/lessons/status/lesson-actions.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/status/lesson-actions.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 3
     }
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.test.ts": {
@@ -15187,9 +15534,19 @@
       "count": 2
     }
   },
+  "src/modules/teaching/lessons/student-lessons.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/lessons/teacher-me/teacher-me.controller.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/teacher-me/teacher-me.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/teacher-me/teacher-me.repo.test.ts": {
@@ -15222,6 +15579,9 @@
     }
   },
   "src/modules/teaching/lessons/time-edit/lesson-time.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -15505,6 +15865,11 @@
       "count": 1
     }
   },
+  "src/modules/teaching/scheduling/rules/schedule-rules.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 1
+    }
+  },
   "src/modules/teaching/scheduling/rules/schedule-rules.refresh.test.ts": {
     "ab/no-parent-imports": {
       "count": 4
@@ -15617,8 +15982,16 @@
       "count": 1
     }
   },
+  "src/modules/teaching/student-channels/controllers/channel.edits.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 7
+    }
+  },
   "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
     "ab/no-parent-imports": {
+      "count": 4
+    },
+    "ab/zod-inputs": {
       "count": 4
     },
     "max-len": {
@@ -15626,11 +15999,22 @@
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 5
+    },
     "max-len": {
       "count": 1
     }
   },
+  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    }
+  },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 1
     }
@@ -15718,6 +16102,9 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
+    },
     "max-len": {
       "count": 4
     }
