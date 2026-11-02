@@ -364,7 +364,7 @@
   },
   "src/common/configuration/integrations/integration-config.controller.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/common/configuration/integrations/integration-config.fakes.ts": {
@@ -2367,14 +2367,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/payouts/payouts.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/finance/payouts/payouts.corrections.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -3919,20 +3911,12 @@
       "count": 3
     }
   },
-  "src/modules/messaging/chat-lists/chat-lists.guard.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/chat-lists/chat-lists.guard.ts": {
     "max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/chat-lists/chat-lists.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -4353,9 +4337,6 @@
     }
   },
   "src/modules/messaging/inbox/files/thread-media.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -4627,11 +4608,8 @@
     }
   },
   "src/modules/messaging/inbox/reopen/thread-reopen.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reopen/thread-reopen.http.test.ts": {
@@ -4877,9 +4855,6 @@
   },
   "src/modules/messaging/inbox/threads/phone-param.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     }
   },
@@ -5927,9 +5902,6 @@
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.access.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -6019,9 +5991,6 @@
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.units.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -8091,9 +8060,6 @@
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -10032,9 +9998,6 @@
   "src/modules/platform/translations/translations.controller.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
@@ -13436,9 +13399,6 @@
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 4
     }
@@ -14143,11 +14103,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/classroom/moderation/moderation.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
     }
   },
   "src/modules/teaching/classroom/moderation/moderation.fakes.ts": {
