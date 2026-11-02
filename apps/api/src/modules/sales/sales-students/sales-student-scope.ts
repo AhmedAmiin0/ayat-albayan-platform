@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
-import { SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
+import { SalesOwnershipRule, SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
 import { type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
+
+interface StudentAccess {
+  own: SalesOwnership;
+  mine: boolean;
+  acts: boolean;
+}
 
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
@@ -16,12 +22,19 @@ export class SalesStudentScope {
   constructor(
     private readonly sales: SalesRepo,
     private readonly queries: SalesStudentRepo,
+    private readonly rule: SalesOwnershipRule,
   ) {}
 
-  /** Her ownership and whether this student is hers (the money actions of «تفاصيل الطالب»). */
-  async access(user: AuthUser, studentId: string): Promise<{ own: SalesOwnership; mine: boolean }> {
-    const own = await this.sales.ownership(user.id);
-    return { own, mine: own.studentIds.includes(studentId) };
+  /**
+   * Her ownership, whether this student is hers (`mine`), and whether she may act on it
+   * (`acts`: the money actions and trial date of «تفاصيل الطالب»): hers, or ANY while
+   * SalesOwnershipRule does not enforce.
+   */
+  async access(user: AuthUser, studentId: string): Promise<StudentAccess> {
+    const ownership = this.sales.ownership(user.id);
+    const [own, enforced] = await Promise.all([ownership, this.rule.enforced()]);
+    const mine = own.studentIds.includes(studentId);
+    return { own, mine, acts: mine || !enforced };
   }
 
   /**

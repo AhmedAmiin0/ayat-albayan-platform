@@ -21,6 +21,7 @@ const YES: Partial<Record<SettingKey, { on: string; off: string }>> = {
   teachers_always_available: v.confirmYes.teachersAlwaysAvailable,
   meeting_link_auto: v.confirmYes.meetingLinkAuto,
   sales_auto_assign: v.confirmYes.salesAutoAssign,
+  sales_require_assignee: v.confirmYes.salesRequireAssignee,
 };
 
 /** The yes button says what it does to that switch («أتِح كل المعلمين للحجز» / «أوقف…»). */

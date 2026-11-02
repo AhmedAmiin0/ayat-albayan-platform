@@ -13,7 +13,7 @@ import { SalesCourse } from './sales-course.service';
 /**
  * The assistant's course wizard (owner 2026-10-18, R-ASST-01): what to book for the subscription she sold.
  * Needs both self.sales_money (the route's) and self.sales (the booking wizard's; 403 otherwise), and the
- * student must be hers whatever settings.sales_auto_assign says. The booking itself is POST /sales/booking
+ * student must be hers while SalesOwnershipRule enforces it. The booking itself is POST /sales/booking
  * with kind 'package'. «تغيير أيام الحلقات» (POST course/change[/check]) changes her own student's course,
  * never over a clash (CourseChange). ANY student with sales.renew_any (docs/16 row 38).
  */

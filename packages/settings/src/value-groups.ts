@@ -4,7 +4,7 @@ import type { SettingKey } from './registry.js';
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
 // old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
-/** The editable groups of «القيم», in list order (40 keys). */
+/** The editable groups of «القيم», in list order (43 keys). */
 export const VALUE_GROUPS = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
@@ -30,7 +30,7 @@ export const VALUE_GROUPS = {
     'login_code_max_attempts',
   ],
   messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'calls_permission_template', 'crm_media_host', 'crm_media_copy_all', 'presence_enabled'],
-  sales: ['sales_auto_assign', 'renewal_commission_enabled', 'renewal_commission_percent'],
+  sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type ValueGroupId = keyof typeof VALUE_GROUPS;
@@ -72,6 +72,7 @@ export const VALUE_CONFIRM: Partial<Record<SettingKey, 'typed' | 'plain'>> = {
   teachers_always_available: 'plain',
   meeting_link_auto: 'plain',
   sales_auto_assign: 'plain',
+  sales_require_assignee: 'plain',
   whatsapp_calls_enabled: 'plain',
   crm_media_copy_all: 'plain',
   family_login_enabled: 'plain',

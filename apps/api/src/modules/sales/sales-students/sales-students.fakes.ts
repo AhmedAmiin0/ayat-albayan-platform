@@ -1,4 +1,5 @@
 // Test fixtures and HTTP harness for sales' «تفاصيل الطالب» and lesson actions (test-only, excluded from the build by *.fakes.ts).
+import type { AcademySettings } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -63,7 +64,8 @@ const reportRow = { id: REPORT, lesson_id: 'l1', teacher_id: 'tc1', attendance: 
   grade_engagement: null, grade_commitment: null, grade_overall: 'excellent', status: 'submitted', version: 1, pdf_status: 'ready', sent_at: '2026-10-11T16:00:00Z', notes: 'سر',
 };
 
-export async function studentsApp() {
+/** `settings` over the registry defaults; «اشتراط التعيين» ON unless overridden (enforced). */
+export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN : NONE)), subscriptions: vi.fn(), meetings: vi.fn() };
   const schedule = { rules: vi.fn(), upcoming: vi.fn() };
   const queries = { student: vi.fn(), pastLessons: vi.fn(), lesson: vi.fn(), prices: vi.fn(), trialDates: { trialLessons: vi.fn() }, rules: schedule.rules, upcoming: schedule.upcoming };
@@ -85,7 +87,8 @@ export async function studentsApp() {
     .overrideProvider(SalesTeacherOverviewRepo).useValue(overview)
     .overrideProvider(StudentAttendanceRepo).useValue(attendance)
     .overrideProvider(SalesRosterRepo).useValue(roster)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings({ sales_require_assignee: true, ...settings }))
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

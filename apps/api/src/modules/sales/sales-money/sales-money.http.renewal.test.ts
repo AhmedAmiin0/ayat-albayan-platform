@@ -1,8 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { CUSTOM_COUNT_DEFAULT, quote, SETTING_DEFAULTS } from '@ab/shared';
+import { CUSTOM_COUNT_DEFAULT, quote } from '@ab/shared';
 import { STUDENT_ID, SUB_ID, subRow } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../../finance/subscriptions/test-app';
+import { ENFORCED_SETTINGS, moneyApp, resetMocks, type Mocks } from '../../finance/subscriptions/test-app';
 import { salesDefaults } from './sales-money.fakes';
 
 const SIBLING = '5a000000-0000-4000-8000-0000000000aa';
@@ -44,7 +44,7 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
     m.balances.forSubscriptions.mockResolvedValue(new Map([[SUB_ID, used(2)]]));
     expect((await family())[0].renew_due).toBe(true);
     m.balances.forSubscriptions.mockResolvedValue(new Map([[SUB_ID, used(3)]]));
-    m.settings.all.mockResolvedValue({ ...SETTING_DEFAULTS, renewal_alert_remaining: 3 });
+    m.settings.all.mockResolvedValue({ ...ENFORCED_SETTINGS, renewal_alert_remaining: 3 });
     expect((await family())[0].renew_due).toBe(true);
   });
 

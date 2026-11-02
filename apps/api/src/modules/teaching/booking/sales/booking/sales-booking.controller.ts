@@ -21,7 +21,7 @@ import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size'
 
 /**
  * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads
- * and students while settings.sales_auto_assign is ON (any lead when it is OFF: sales-booking.ownership.ts),
+ * and students while SalesOwnershipRule enforces it (any lead otherwise: sales-booking.ownership.ts),
  * with them as the actor so they are recorded as the one who brought the student. Trials only: no price, no
  * invoice, no custom meeting link (assertBookingScope), whatever the switch.
  */
@@ -42,7 +42,7 @@ export class SalesBookingController {
     return { conflicts: await this.booking.check(req, user) };
   }
 
-  /** 201 BookingResult; 403 override_not_allowed | kind_not_allowed | meeting_link_not_allowed | invoice_not_allowed, and (sales_auto_assign ON only) not_your_lead | not_your_student | not_your_family. */
+  /** 201 BookingResult; 403 override_not_allowed | kind_not_allowed | meeting_link_not_allowed | invoice_not_allowed, and (rule enforced only) not_your_lead | not_your_student | not_your_family. */
   @Post()
   book(
     @ZodBody(bookingBodySchema) req: BookingRequest,

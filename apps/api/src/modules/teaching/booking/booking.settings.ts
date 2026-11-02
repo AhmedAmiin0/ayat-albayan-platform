@@ -6,7 +6,7 @@ import { SettingsService } from '../../../common/settings/settings.service';
 /**
  * BookingPlanner and CourseChangePlanner (horizon, meeting mode, invoice size), BookingParties and
  * MakeupCandidates (makeup window, R-SCH-10), SlotsService and TeacherOptionsQueries (24/7 grid, meeting
- * mode), BookingExtrasController (invoice size) and SalesBookingScope (sales_auto_assign). The teacher's
+ * mode) and BookingExtrasController (invoice size). The teacher's
  * WhatsApp on a new student (R-NOT-03) is the teacher_new_student rule (NotificationPolicy).
  */
 const KEYS = [
@@ -15,7 +15,6 @@ const KEYS = [
   'teachers_always_available',
   'meeting_link_auto',
   'upload_max_mb',
-  'sales_auto_assign',
 ] as const satisfies readonly SettingKey[];
 export type BookingSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

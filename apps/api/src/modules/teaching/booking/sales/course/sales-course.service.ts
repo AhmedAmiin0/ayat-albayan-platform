@@ -61,11 +61,11 @@ export class SalesCourse {
    * GET /sales/booking/course: the student, the subscription to book, its days a week, why not (blocked),
    * the previous course a renewal may continue (owner 2026-10-18) and the running course she may change.
    * A previous course still running does not block: the new one starts after its last day (the guard's
-   * rule). 403 not_your_student unless the student is hers, whatever sales_auto_assign says; ANY
-   * student with sales.renew_any (owner 2026-11-01, docs/16 row 38).
+   * rule). 403 not_your_student unless the student is hers while SalesOwnershipRule enforces
+   * it; ANY student with sales.renew_any (owner 2026-11-01, docs/16 row 38) or while it does not.
    */
   async view(studentId: string, user: AuthUser): Promise<SalesCourseView> {
-    if (!can(user, 'sales.renew_any')) assertOwnStudents([studentId], await this.scope.owned(user));
+    if (!can(user, 'sales.renew_any')) assertOwnStudents([studentId], await this.scope.of(user));
     const student = await this.queries.student(studentId);
     const [sub, rules, rows] = await Promise.all([
       this.queries.subscription(studentId),

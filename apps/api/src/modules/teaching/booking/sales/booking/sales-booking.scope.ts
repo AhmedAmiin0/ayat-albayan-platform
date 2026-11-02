@@ -6,9 +6,10 @@ import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
 const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
 
 /**
- * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and students while
- * settings.sales_auto_assign is ON; null while it is OFF = no ownership check at all (owner 2026-10-12, docs/16
- * row 13). null is NOT NO_OWNERSHIP (owns nothing): never write `own ?? NO_OWNERSHIP`, it would block everyone.
+ * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and
+ * students while SalesOwnershipRule enforces it (require assignee AND auto-assign ON); null
+ * otherwise = no ownership check at all (owner 2026-11-02, docs/16 row 39). null is NOT
+ * NO_OWNERSHIP (owns nothing): never write `own ?? NO_OWNERSHIP`, it would block everyone.
  */
 export type BookingOwnership = SalesOwnership | null;
 
@@ -19,9 +20,9 @@ export type CourseGrant = boolean | 'any';
  * What an assistant (base role sales) may book (R-ASST-01): a free TRIAL, and with self.sales_money (`canCourse`)
  * the weekly course of a subscription she sold (owner 2026-10-18: kind 'package', no invoice: the money is the
  * subscription's). Never a makeup, never over a clash (the override is the admin's, R-SCH-04), never a custom
- * meeting link or an invoice: these always hold. A course is one existing student of HERS, whatever
- * sales_auto_assign says (own is then always read, SalesBookingScope.forRequest). A trial is checked only while
- * ownership is (own not null): her own leads' families and her own students, and a new guardian must be the family
+ * meeting link or an invoice: these always hold. A course is one existing student, of HERS while
+ * ownership is checked (own not null). A trial too, only while it is: her own leads' families
+ * and her own students, and a new guardian must be the family
  * of one of her leads (its phone is one of hers): otherwise any phone could be typed in to attach an existing
  * family. 403 with the code: override_not_allowed, kind_not_allowed, meeting_link_not_allowed, invoice_not_allowed,
  * then course_one_student / not_your_student (a course), or (ON only) not_your_lead, not_your_student, not_your_family.
@@ -34,17 +35,17 @@ export function assertBookingScope(req: BookingRequest, own: BookingOwnership, c
   if (req.meetingLink) throw forbidden('meeting_link_not_allowed');
   if (req.invoice) throw forbidden('invoice_not_allowed');
   if (kind === 'package') return assertCourse(req, own, canCourse);
-  if (own) assertOwned(req, own); // null = sales_auto_assign OFF: any lead, family or student
+  if (own) assertOwned(req, own); // null = the rule does not enforce: any lead, family or student
 }
 
 /**
- * A course: exactly one existing student (no lead, no new family), one of hers (null owns nothing
- * here), or any with the grant 'any' (sales.renew_any). Split out for the complexity cap (10).
+ * A course: exactly one existing student (no lead, no new family), one of hers while ownership
+ * is checked (null = any), or any with the grant 'any' (sales.renew_any). Split out for the
+ * complexity cap (10).
  */
 function assertCourse(req: BookingRequest, own: BookingOwnership, grant: CourseGrant): void {
   if (!('studentIds' in req) || req.studentIds.length !== 1 || req.leadId) throw forbidden('course_one_student');
-  if (grant === 'any') return;
-  if (!own || !all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');
+  assertOwnStudents(req.studentIds, grant === 'any' ? null : own);
 }
 
 // Split from assertBookingScope to stay under the complexity cap (10).
