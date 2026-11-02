@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { DashboardModule } from '../../reporting/dashboard/dashboard.module';
+import { DashboardModule } from '@/modules/reporting/dashboard/dashboard.module';
 import { ExpenseCategoriesController } from './expense-categories.controller';
 import { ExpenseReceipts } from './expense-receipts';
 import { ExpenseYearService } from './expense-year.service';
 import { ExpensesController } from './expenses.controller';
 import { ExpensesJob } from './expenses.job';
-import { ExpensesQueries } from './expenses.queries';
+import { ExpensesRepo } from './expenses.repo';
 import { ExpensesService } from './expenses.service';
 import { ExpensesSettings } from './expenses.settings';
 
@@ -17,7 +17,7 @@ import { ExpensesSettings } from './expenses.settings';
 @Module({
   imports: [DashboardModule],
   controllers: [ExpensesController, ExpenseCategoriesController],
-  providers: [ExpensesQueries, ExpensesService, ExpensesSettings, ExpenseReceipts, ExpenseYearService, ExpensesJob],
-  exports: [ExpensesQueries],
+  providers: [ExpensesRepo, ExpensesService, ExpensesSettings, ExpenseReceipts, ExpenseYearService, ExpensesJob],
+  exports: [ExpensesRepo],
 })
 export class ExpensesModule {}

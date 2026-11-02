@@ -1,7 +1,7 @@
 // Test fixtures for the money modules (test-only, excluded from the build).
 import { quote, type QuoteResponse } from '@ab/shared';
-import type { ExpenseRow } from '@/modules/finance/expenses/expenses.queries';
-import type { PaymentRow } from '@/modules/finance/payments/payments.queries';
+import type { ExpenseRow } from '@/modules/finance/expenses/expenses.repo';
+import type { PaymentRow } from '@/modules/finance/payments/payments.repo';
 import type { PayoutRow } from '@/modules/finance/payouts/payouts.repo';
 import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 

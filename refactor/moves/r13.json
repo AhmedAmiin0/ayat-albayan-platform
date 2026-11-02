@@ -1,0 +1,68 @@
+{
+  "id": "r13",
+  "seq": 226,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/finance/payments/payments.queries.ts",
+      "to": "apps/api/src/modules/finance/payments/payments.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/payments/attachments/payment-attachments.queries.ts",
+      "to": "apps/api/src/modules/finance/payments/attachments/payment-attachments.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/expenses/expenses.queries.ts",
+      "to": "apps/api/src/modules/finance/expenses/expenses.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/invoices/invoices.queries.ts",
+      "to": "apps/api/src/modules/finance/invoices/invoices.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/receivables/receivables.queries.ts",
+      "to": "apps/api/src/modules/finance/receivables/receivables.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/fx/fx.queries.ts",
+      "to": "apps/api/src/modules/finance/fx/fx.repo.ts"
+    }
+  ],
+  "renames": {
+    "ExpensesQueries": "ExpensesRepo",
+    "FxQueries": "FxRepo",
+    "InvoicesQueries": "InvoicesRepo",
+    "PaymentAttachmentsQueries": "PaymentAttachmentsRepo",
+    "PaymentsQueries": "PaymentsRepo",
+    "ReceivablesQueries": "ReceivablesRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/finance/expenses/expenses.queries.ts",
+      "apps/api/src/modules/finance/expenses/expenses.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/fx/fx.queries.ts",
+      "apps/api/src/modules/finance/fx/fx.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/invoices/invoices.queries.ts",
+      "apps/api/src/modules/finance/invoices/invoices.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/payments/attachments/payment-attachments.queries.ts",
+      "apps/api/src/modules/finance/payments/attachments/payment-attachments.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/payments/payments.queries.ts",
+      "apps/api/src/modules/finance/payments/payments.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/receivables/receivables.queries.test.ts",
+      "apps/api/src/modules/finance/receivables/receivables.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/receivables/receivables.queries.ts",
+      "apps/api/src/modules/finance/receivables/receivables.repo.ts"
+    ]
+  ]
+}
