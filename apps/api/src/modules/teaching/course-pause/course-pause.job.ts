@@ -1,5 +1,6 @@
 import { riyadhToday } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
@@ -8,19 +9,30 @@ const HOUR_MS = 3_600_000;
 /** Not on boot: every API test boots AppModule. */
 const FIRST_RUN_MS = 6 * 60_000;
 
-type ResumeSummary = { begun: number; due: number; resumed: number; failed: number };
+interface ResumeSummary {
+  begun: number;
+  due: number;
+  resumed: number;
+  failed: number;
+}
 
 /**
- * The pause calendar (docs/11 §7b), hourly with the job as actor null: a pause from a later day begins on its from
- * day (course_pause_begin: rules, package and student paused), and every open pause whose until day is before
- * Riyadh today is resumed as of the day after it (the automatic «استئناف»). Idempotent: each RPC locks the pause
- * and one already begun / resumed changes nothing (the dates move exactly once), so a re-run is harmless.
+ * The pause calendar (docs/11 §7b), hourly with the job as actor null: a pause from a later day
+ * begins on its from day (course_pause_begin: rules, package and student paused), and every open
+ * pause whose until day is before Riyadh today is resumed as of the day after it (the automatic
+ * «استئناف»). Idempotent: each RPC locks the pause and one already begun / resumed changes nothing
+ * (the dates move exactly once), so a re-run is harmless.
  */
 @BackgroundJob({ name: 'course-pause-resume' })
 @Injectable()
 export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(CoursePauseJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: CoursePauseJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: HOUR_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queries: CoursePauseRepo,
@@ -28,12 +40,11 @@ export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, HOUR_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** One pass. Never throws: one bad pause does not stop the others. */
