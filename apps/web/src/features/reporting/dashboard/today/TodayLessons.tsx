@@ -1,4 +1,4 @@
-import { clockOf, lessonStatusStyle, type LessonView } from '@ab/shared';
+import { clockOf, type LessonView } from '@ab/shared';
 import { Avatar } from '@/components/ui/display/avatar';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -12,13 +12,14 @@ import { isLiveNow, todaysLessons } from './today';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';
 import { clockDir, viewerZone } from '@/lib/clock-text';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 /**
  * Folds by the card's own width (container query), not the screen's (owner 2026-10-18): the card is a
  * third of the dashboard on a wide screen, so the join buttons go under the details until it is 36rem.
  */
 function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
-  const style = lessonStatusStyle[lesson.status];
+  const chip = useLessonStatusText().chip(lesson.status);
   const clock = { ...useClock(), tz: viewerZone() };
   return (
     <li
@@ -41,7 +42,7 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
           {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <StatusChip size="sm" tone={style.tone} glyph={style.glyph} label={t.enums.lessonStatus[lesson.status]} />
+          <StatusChip size="sm" {...chip} />
           {live && <span className="text-xs font-semibold text-ok">{t.dashboard.home.live}</span>}
         </span>
       </div>

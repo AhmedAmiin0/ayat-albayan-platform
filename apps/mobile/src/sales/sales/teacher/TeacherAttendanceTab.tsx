@@ -1,16 +1,15 @@
-import { lessonStatusStyle, type SalesTeacherOverview } from '@ab/shared';
+import type { SalesTeacherOverview } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { InsetGroup } from '@/core/ui/surface/inset';
 import { SmallHeading } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { studentsLine, totalsLine } from './overview-text';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 /** «الحضور»: the last 30 days' totals in one line, then the latest lessons (Riyadh time, students, status chip). */
 export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherOverview['attendance'] }) {
@@ -31,7 +30,7 @@ export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherO
             key={l.lesson_id}
             title={whenIn(new Date(l.starts_at), tz, cycle)}
             subtitle={studentsLine(l.students)}
-            trailing={<StatusChip {...lessonStatusStyle[l.status]} size="sm" label={statusWord(l.status)} />}
+            trailing={<LessonStatusChip status={l.status} size="sm" />}
           />
         ))}
       </InsetGroup>

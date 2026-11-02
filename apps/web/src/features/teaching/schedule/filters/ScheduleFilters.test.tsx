@@ -6,6 +6,7 @@ import { clearAllFilters, closeFilters, openFilters } from '@/test/open-filters'
 import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { ScheduleFilters } from './ScheduleFilters';
 import type { ScheduleSearch } from './search';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 const ALL = [T_ABRAR, T_FATMA, T_NOUR];
 const chip = (label: string, value: string) =>
@@ -13,7 +14,7 @@ const chip = (label: string, value: string) =>
 
 function renderFilters(search: ScheduleSearch = {}, resultCount?: number) {
   const onSearch = vi.fn();
-  render(<ScheduleFilters search={search} teachers={ALL} onSearch={onSearch} resultCount={resultCount} />);
+  render(<ScheduleFilters search={search} teachers={ALL} onSearch={onSearch} resultCount={resultCount} />, { wrapper: configWrapper() });
   return onSearch;
 }
 
@@ -71,7 +72,7 @@ describe('ScheduleFilters on the shared toolbar', () => {
   });
 
   it('«عرض النتائج (N)» counts the lessons shown, and is plain while the week loads', () => {
-    const { unmount } = render(<ScheduleFilters search={{ program: 'quran' }} teachers={ALL} onSearch={vi.fn()} resultCount={14} />);
+    const { unmount } = render(<ScheduleFilters search={{ program: 'quran' }} teachers={ALL} onSearch={vi.fn()} resultCount={14} />, { wrapper: configWrapper() });
     openFilters();
     expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '14') })).toBeTruthy();
     closeFilters();

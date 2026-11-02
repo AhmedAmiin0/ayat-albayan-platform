@@ -887,7 +887,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/sales/student/student-attendance.test.ts": {
@@ -911,7 +911,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 16
+      "count": 15
     }
   },
   "src/sales/student/student-roster.ts": {

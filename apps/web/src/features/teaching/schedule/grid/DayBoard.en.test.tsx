@@ -7,6 +7,7 @@ import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { boardRows } from '@/features/teaching/schedule/overview';
 import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 // The calendar in English (LTR): every word from en.json, Western digits, the same layout.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
@@ -20,7 +21,7 @@ const BEFORE = new Date('2026-10-03T09:00:00.000Z');
 describe('all-teachers calendar in English', () => {
   it('the day board reads in English', () => {
     const rows = boardRows([T_ABRAR, T_FATMA, T_NOUR], [lesson({ trial: true })], 'Asia/Riyadh');
-    render(<DayBoard day="2026-10-04" rows={rows} now={BEFORE} onOpen={vi.fn()} />);
+    render(<DayBoard day="2026-10-04" rows={rows} now={BEFORE} onOpen={vi.fn()} />, { wrapper: configWrapper() });
     const abrar = screen.getByRole('region', { name: 'أبرار' });
     expect(within(abrar).getByText('Trial')).toBeTruthy();
     expect(within(abrar).getByText('4 of 10')).toBeTruthy();
@@ -29,7 +30,7 @@ describe('all-teachers calendar in English', () => {
   });
 
   it('a day off and the nav controls', () => {
-    render(<DayBoard day="2026-10-05" rows={boardRows([T_FATMA], [], 'Asia/Riyadh')} now={BEFORE} onOpen={vi.fn()} />);
+    render(<DayBoard day="2026-10-05" rows={boardRows([T_FATMA], [], 'Asia/Riyadh')} now={BEFORE} onOpen={vi.fn()} />, { wrapper: configWrapper() });
     expect(screen.getByText('Day off · سفر')).toBeTruthy();
     render(<ScheduleNav search={{ view: 'day', day: '2026-10-05' }} today="2026-10-03" onSearch={vi.fn()} />);
     expect(screen.getByRole('button', { name: 'Day' }).getAttribute('aria-pressed')).toBe('true');

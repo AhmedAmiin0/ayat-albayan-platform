@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDetails } from './LessonDetails';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 // R-SUB-02: the API sets students[].unpaid on upcoming lessons; every lesson surface says so.
 const FLAG = t.subscriptions.unpaidFlag;
@@ -22,7 +23,8 @@ function card(l = flagged) {
 
 describe('«الباقة غير مدفوعة» on lessons (R-SUB-02)', () => {
   it('the week grid chip shows one flag when any student is flagged', () => {
-    const { rerender } = render(<LessonChip lesson={flagged} onOpen={vi.fn()} />);
+    const wrapper = configWrapper();
+    const { rerender } = render(<LessonChip lesson={flagged} onOpen={vi.fn()} />, { wrapper });
     expect(screen.getAllByText(FLAG)).toHaveLength(1);
     rerender(<LessonChip lesson={clear} onOpen={vi.fn()} />);
     expect(screen.queryByText(FLAG)).toBeNull();

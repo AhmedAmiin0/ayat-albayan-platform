@@ -2,6 +2,7 @@ import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useHolds, usePermissions } from '@/core/auth';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReplyActionsContext, replyMovedKey, type ReplyActionsValue, type ReplyMove } from './reply-actions-context';
@@ -26,7 +27,10 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const [move, setMove] = useState<ReplyMove | null>(null);
   const moved = useQuery({ queryKey: replyMovedKey(phone), queryFn: () => [] as string[], initialData: [] as string[], staleTime: Infinity, gcTime: Infinity });
   const flow = teacher ? null : sales ? 'sales' : 'admin';
-  const { reschedule, confirm } = replyRights(can, flow);
+  const rights = replyRights(can, flow);
+  const { reschedule } = rights;
+  // «تأكيد الحلقة» only while the academy requires a confirmation (owner 2026-11-02).
+  const confirm = useLessonStatusText().required ? rights.confirm : null;
   const value = useMemo<ReplyActionsValue>(
     () => ({
       phone,

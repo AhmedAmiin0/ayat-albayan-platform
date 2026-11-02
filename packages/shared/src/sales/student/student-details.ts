@@ -73,8 +73,15 @@ export interface SalesStudentDetails {
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
 export const salesRescheduleSchema = z.strictObject({ startsAt: instant });
-/** POST /sales/lessons/:id/cancel: one lesson only; the reason is optional for sales (null when absent). */
-export const salesCancelSchema = z.strictObject({ reason: z.string().trim().max(500).optional() });
+/**
+ * POST /sales/lessons/:id/cancel: one lesson only; the reason is optional (null when absent).
+ * `by` (owner 2026-11-02, default admin «ألغتها الإدارة»): teacher «ألغاها المعلم/ة» or
+ * student «اعتذر الطالب» may also come after the lesson ended, and correct an auto-held one.
+ */
+export const salesCancelSchema = z.strictObject({
+  reason: z.string().trim().max(500).optional(),
+  by: z.enum(['admin', 'teacher', 'student']).optional(),
+});
 export type SalesReschedule = z.infer<typeof salesRescheduleSchema>;
 export type SalesCancel = z.infer<typeof salesCancelSchema>;
 

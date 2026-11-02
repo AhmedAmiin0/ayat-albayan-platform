@@ -14,7 +14,8 @@ import { ProfileCourse } from './profile-course.service';
 
 /**
  * «تغيير المعلم» from the student's profile (owner 2026-10-30): students.change_teacher (system
- * admin and sales, migration 990), ANY student. Codes: CourseChange.change plus 404
+ * admin and sales, migration 990), ANY student (an assistant: her own while SalesOwnershipRule
+ * enforces it, 403 not_your_student; ProfileCourse). Codes: CourseChange.change plus 404
  * teacher_not_found, 409 teacher_inactive, 400 same_teacher; 404 subscription_not_found for another
  * student's package.
  */
@@ -39,7 +40,8 @@ export class CourseTeacherController extends CourseMoveRoutes {
 
 /**
  * «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): courses.reschedule (system
- * admin and sales, migration 990), ANY student; the remaining lessons keep their count and teacher.
+ * admin and sales, migration 990), ANY student (an assistant: as above); the remaining lessons keep
+ * their count and teacher.
  * Codes: CourseChange.
  */
 @ApiTags('course-actions')

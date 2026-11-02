@@ -11,7 +11,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { templateLine } from '@/features/messaging/inbox/format';
 import { MessageMedia } from './MessageMedia';
-import { LinkedBody } from '@/components/ui/display/linked-body';
+import { SearchableBody } from '@/features/messaging/inbox/search';
 import { QuoteBlock } from './QuoteBlock';
 import { NoteLine } from '@/features/messaging/inbox/messages/notes/NoteLine';
 import { ResendAsk } from '@/features/messaging/inbox/messages/resend/ResendAsk';
@@ -87,7 +87,7 @@ export function Content({ message: m }: { message: MessageView }) {
       <TappedLabel message={m} />
       <TemplateFrame block={m.template} hasMedia={media}>
         {media && <MessageMedia message={m} />}
-        {caption && <LinkedBody text={caption} />}
+        {caption && <SearchableBody text={caption} />}
       </TemplateFrame>
       {empty && (noted ? <NoteLine message={m} /> : <EmptyLine message={m} />)}
       {m.edited && <p className="mt-0.5 text-2xs text-ink-3">{t.inbox.edited}</p>}

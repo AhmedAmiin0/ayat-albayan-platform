@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { TodayScreen } from '../screens/TodayScreen';
 import { yusuf } from './fixtures';
 
@@ -11,8 +11,9 @@ const { openLesson } = t.today;
 /** What a row's spoken name puts between the time and the names («، »). */
 const timeToNames = openLesson.slice('{time}'.length, openLesson.indexOf('{names}'));
 
-export async function openToday() {
-  await renderWithQuery(<TodayScreen />);
+/** An academy that requires lesson confirmation (the Today flows predate the OFF default). */
+export async function openToday(client = confirmingQueryClient()) {
+  await renderWithQuery(<TodayScreen />, client);
   await screen.findByText(yusuf.name);
 }
 

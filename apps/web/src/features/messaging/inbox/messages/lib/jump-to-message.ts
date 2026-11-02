@@ -10,12 +10,15 @@ export const bubbleId = (id: string): string => `msg-${id}`;
 const reducedMotion = (): boolean =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** false when the original is not in the log (older than the loaded pages). */
-export function jumpToMessage(id: string): boolean {
+/**
+ * false when the original is not in the log (older than the loaded pages). `focus: false` keeps the
+ * keyboard where it is (the chat search's field).
+ */
+export function jumpToMessage(id: string, focus = true): boolean {
   const el = document.getElementById(bubbleId(id));
   if (!el) return false;
   el.scrollIntoView({ block: 'center', behavior: reducedMotion() ? 'auto' : 'smooth' });
-  el.focus({ preventScroll: true });
+  if (focus) el.focus({ preventScroll: true });
   el.setAttribute('data-flash', '');
   setTimeout(() => el.removeAttribute('data-flash'), FLASH_MS);
   return true;

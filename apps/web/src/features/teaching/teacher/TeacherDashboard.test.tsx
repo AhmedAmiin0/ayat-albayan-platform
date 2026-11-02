@@ -6,6 +6,7 @@ import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixt
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherDashboard } from './TeacherDashboard';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -39,7 +40,7 @@ function renderDash(me: TeacherMe | Error = ME, auto = false, lessons: LessonVie
     return Promise.resolve([]);
   });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
       <TeacherDashboard />
     </QueryClientProvider>,
   );

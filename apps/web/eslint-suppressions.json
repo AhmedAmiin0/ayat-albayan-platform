@@ -7193,7 +7193,7 @@
   },
   "src/features/reporting/dashboard/DashboardHome.test.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/reporting/dashboard/DashboardPage.layout.test.tsx": {
@@ -7229,7 +7229,7 @@
   },
   "src/features/reporting/dashboard/charts.test.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/reporting/dashboard/dashboard-fixture.ts": {
@@ -7282,7 +7282,7 @@
   },
   "src/features/reporting/dashboard/funnel/kpis.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/dashboard/link-mock.tsx": {
@@ -8220,7 +8220,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {
@@ -8435,11 +8435,6 @@
       "count": 2
     }
   },
-  "src/features/sales/sales/academy.test-utils.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/sales/sales/api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 8
@@ -8652,7 +8647,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/features/sales/sales/schedule/SalesSchedule.test.tsx": {
@@ -8730,7 +8725,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.en.test.tsx": {
@@ -8758,7 +8753,7 @@
   },
   "src/features/sales/sales/subscriptions/SubscriptionHistory.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/history-column.tsx": {
@@ -9503,7 +9498,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
