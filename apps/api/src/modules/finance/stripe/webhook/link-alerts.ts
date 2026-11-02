@@ -4,9 +4,10 @@ import { PushService } from '@/common/push/push.service';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
 /**
- * The bell rows of the payment links (never WhatsApp). They reuse the payment_due kind (its rule, so its
- * bell + device push like any staff kind; its permission and its tap target: the student), with their own
- * title, so no notification kind is added to the normal build. Never throws (PushService swallows its own failures).
+ * The bell rows of the payment links (never WhatsApp). They reuse the payment_due kind (its rule,
+ * so its bell + device push like any staff kind; its permission and its tap target: the student),
+ * with their own title, so no notification kind is added to the normal build. Never throws
+ * (PushService swallows its own failures).
  */
 @Injectable()
 export class LinkAlerts {
@@ -24,7 +25,10 @@ export class LinkAlerts {
     });
   }
 
-  /** The admins: a dispute, or a payment Stripe took that the platform could not record (no automatic change). */
+  /**
+   * The admins: a dispute, or a payment Stripe took that the platform could not record (no
+   * automatic change).
+   */
   async admins(input: {
     subject: string;
     title: string;

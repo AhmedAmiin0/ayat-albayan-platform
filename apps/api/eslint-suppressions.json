@@ -691,11 +691,6 @@
       "count": 2
     }
   },
-  "src/common/push/expo/expo-deliver.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/common/push/expo/expo-push.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -2686,11 +2681,6 @@
   "src/modules/finance/stripe/testing/stripe-mocks.fakes.ts": {
     "max-len": {
       "count": 8
-    }
-  },
-  "src/modules/finance/stripe/webhook/link-alerts.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/finance/stripe/webhook/link-fulfilment.ts": {

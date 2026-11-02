@@ -23,8 +23,9 @@ interface ExpoDelivery {
 type SendOutcome = ReturnType<typeof readTickets> & { failure?: Error };
 
 /**
- * One Expo call; a failed call (HTTP, timeout, an answer we cannot read) is an outcome too: the row
- * records its message, so an app push that never left is never a silent row (sent_at and error NULL).
+ * One Expo call; a failed call (HTTP, timeout, an answer we cannot read) is an outcome too: the
+ * row records its message, so an app push that never left is never a silent row (sent_at and
+ * error NULL).
  */
 async function sendOnce(d: ExpoDelivery, tokens: readonly string[]): Promise<SendOutcome> {
   try {
