@@ -9,7 +9,8 @@ import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes
 import { lineOf } from './send-line';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderRepo } from './sender.repo';
-import { senderTiming } from './sender-timing';
+import { SENDER_FIRST_RUN_MS, SENDER_POLL_MS, senderTiming } from './sender-timing';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
@@ -31,9 +32,14 @@ interface PassItem { job: PassJob; pause: string | null }
 @Injectable()
 export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(MessageSender.name);
-  private readonly timers: NodeJS.Timeout[] = [];
-  private running: Promise<void> | null = null;
-  private again = false;
+  /** Timers kick too: a tick during a run queues one more, as an enqueue does. */
+  private readonly ticker = new Ticker({
+    name: MessageSender.name,
+    firstMs: SENDER_FIRST_RUN_MS,
+    everyMs: SENDER_POLL_MS,
+    run: () => this.runOnce(),
+    timer: 'kick',
+  });
   /** Property-injected (the constructor is at the 3-parameter limit); absent = module mode sends nothing. */
   @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes;
 
@@ -44,13 +50,11 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.kick();
-    const { firstMs, everyMs } = senderTiming(loadEnv().MESSAGE_SENDER_POLL_MS);
-    this.timers.push(setTimeout(tick, firstMs).unref(), setInterval(tick, everyMs).unref());
+    this.ticker.start(senderTiming(loadEnv().MESSAGE_SENDER_POLL_MS));
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /**
@@ -58,20 +62,7 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
    * during a run queues exactly one more run.
    */
   kick(): Promise<void> {
-    if (this.running) {
-      this.again = true;
-      return this.running;
-    }
-    const loop = async () => {
-      do {
-        this.again = false;
-        await this.runOnce();
-      } while (this.again);
-    };
-    this.running = loop().finally(() => {
-      this.running = null;
-    });
-    return this.running;
+    return this.ticker.kick();
   }
 
   /** One pass over the due rows. Never throws. */

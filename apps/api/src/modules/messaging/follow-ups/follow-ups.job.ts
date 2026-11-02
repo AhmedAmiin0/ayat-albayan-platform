@@ -1,7 +1,7 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
-import { Ticker } from '@/modules/messaging/reminders/ticker';
+import { Ticker } from '@/common/jobs';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import { FollowUpsReads } from './follow-ups.deps';
 import {
