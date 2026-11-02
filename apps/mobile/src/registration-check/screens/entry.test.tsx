@@ -4,7 +4,7 @@ import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { AllStudentsScreen } from '@/sales/screens/AllStudentsScreen';
+import { AllStudentsScreen } from '@/sales/sales/screens/AllStudentsScreen';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The two ways in: the sales chat header (the number filled in) and the «الطلاب» tab header.
