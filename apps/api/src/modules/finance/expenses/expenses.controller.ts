@@ -12,11 +12,11 @@ import {
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { ExpenseYearService } from './expense-year.service';
-import { ExpensesQueries, toExpenseView } from './expenses.queries';
+import { ExpensesRepo, toExpenseView } from './expenses.repo';
 import { ExpensesService } from './expenses.service';
 
 const yearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') });
@@ -28,7 +28,7 @@ const yearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') }
 @Controller('expenses')
 export class ExpensesController {
   constructor(
-    private readonly expenses: ExpensesQueries,
+    private readonly expenses: ExpensesRepo,
     private readonly service: ExpensesService,
     private readonly years: ExpenseYearService,
   ) {}

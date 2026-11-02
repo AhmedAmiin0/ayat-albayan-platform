@@ -7,10 +7,11 @@ import {
   type IntegrationPlainKey,
   type IntegrationSecretKey,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -18,10 +19,13 @@ import { integrationKeyAvailable, stripeServerKey } from '@/config/env/env.strip
 import { IntegrationConfigService, INTEGRATIONS_ENTITY_ID } from './integration-config.service';
 
 // A key this server does not offer (a Stripe one without FEATURE_STRIPE) is an unknown key: 400.
-const secretKey = z.enum(INTEGRATION_SECRET_KEYS).refine((k) => integrationKeyAvailable(k), 'unknown_key');
+const secretKey = z
+  .enum(INTEGRATION_SECRET_KEYS)
+  .refine((k) => integrationKeyAvailable(k), 'unknown_key');
 const valuesBody = integrationValuesSchema.superRefine(({ values }, ctx) => {
   for (const key of Object.keys(values) as IntegrationPlainKey[]) {
-    if (!integrationKeyAvailable(key)) ctx.addIssue({ code: 'custom', path: ['values', key], message: 'unknown_key' });
+    if (!integrationKeyAvailable(key))
+      ctx.addIssue({ code: 'custom', path: ['values', key], message: 'unknown_key' });
   }
 });
 /** Where the server is stricter than the shared check (a live Stripe key: live mode only). */
@@ -54,7 +58,10 @@ export class IntegrationConfigController {
   /** Plain keys only; null or blank clears a key (the env value applies again). 400 names the key. */
   @Put()
   @Permissions('settings.write')
-  async put(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
+  async put(
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<IntegrationConfigItem[]> {
     const { values } = parseOrThrow(valuesBody, body);
     await this.config.writeValues(values, user.id);
     await this.record(user, { action: 'update', keys: Object.keys(values) });
@@ -64,8 +71,11 @@ export class IntegrationConfigController {
   /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test). */
   @Put('secrets/:key')
   @Permissions('settings.write')
-  async putSecret(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
-    const key = parseOrThrow(secretKey, rawKey);
+  async putSecret(
+    @ZodParam('key', secretKey) key: IntegrationSecretKey,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<IntegrationConfigItem[]> {
     const { value } = parseOrThrow(integrationSecretSchema, body);
     await this.config.setSecret({ key, value: parseOrThrow(secretCheck(key), value) });
     await this.record(user, { action: `secret_set:${key}`, keys: [key] });
@@ -74,9 +84,12 @@ export class IntegrationConfigController {
 
   @Delete('secrets/:key')
   @Permissions('settings.write')
-  async clearSecret(@Param('key') rawKey: string, @CurrentUser() user: AuthUser): Promise<IntegrationConfigItem[]> {
-    const key = parseOrThrow(secretKey, rawKey);
-    if (await this.config.clearSecret(key)) await this.record(user, { action: `secret_clear:${key}`, keys: [key] });
+  async clearSecret(
+    @ZodParam('key', secretKey) key: IntegrationSecretKey,
+    @CurrentUser() user: AuthUser,
+  ): Promise<IntegrationConfigItem[]> {
+    if (await this.config.clearSecret(key))
+      await this.record(user, { action: `secret_clear:${key}`, keys: [key] });
     return this.config.items();
   }
 

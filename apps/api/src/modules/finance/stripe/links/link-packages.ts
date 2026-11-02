@@ -1,8 +1,8 @@
 import { effectiveLinkStatus } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { SubscriptionCancel } from '../../subscriptions';
+import { SubscriptionCancel } from '@/modules/finance/subscriptions';
 import { statusOf } from './payment-links.mapper';
-import { PaymentLinksQueries } from './payment-links.queries';
+import { PaymentLinksRepo } from './payment-links.repo';
 
 /**
  * The unpaid package of a link nobody will pay (cancelled, or expired) is cancelled with the admin's rules
@@ -14,7 +14,7 @@ export class LinkPackages {
   private readonly log = new Logger(LinkPackages.name);
 
   constructor(
-    private readonly links: PaymentLinksQueries,
+    private readonly links: PaymentLinksRepo,
     private readonly cancels: SubscriptionCancel,
   ) {}
 

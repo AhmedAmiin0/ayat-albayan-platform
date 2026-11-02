@@ -1,10 +1,10 @@
 import { monthStart, type AssistantStatementView, type SignedDownload, type SignedUpload, type TeacherReceiptUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { notFound } from '../../../../common/http/errors';
-import { EarningsReceipts } from '../../teacher-earnings/earnings.receipts';
-import type { StatementPay as Pay, StatementsQuery as Query } from '../shared/assistant-pay.dto';
-import { AssistantRpc } from '../shared/assistant-pay.rpc';
-import { StatementsQueries } from './statements.queries';
+import { notFound } from '@/common/http/errors';
+import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
+import type { StatementPay as Pay, StatementsQuery as Query } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
+import { AssistantRpc } from '@/modules/finance/assistant-pay/shared/assistant-pay.rpc';
+import { StatementsRepo } from './statements.repo';
 import { toStatementView, type StatementRow } from './statements.mapper';
 
 /**
@@ -15,7 +15,7 @@ import { toStatementView, type StatementRow } from './statements.mapper';
 @Injectable()
 export class StatementsService {
   constructor(
-    private readonly queries: StatementsQueries,
+    private readonly queries: StatementsRepo,
     private readonly rpc: AssistantRpc,
     private readonly receipts: EarningsReceipts,
   ) {}

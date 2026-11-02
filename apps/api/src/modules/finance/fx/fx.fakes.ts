@@ -1,9 +1,9 @@
 // Test doubles for FxService (not shipped behaviour): no network, no database.
 import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import type { FxFetcher, FxSnapshot } from './fx.fetcher';
-import type { FxQueries, FxRow } from './fx.queries';
+import type { FxRepo, FxRow } from './fx.repo';
 import { FxService } from './fx.service';
 import { FxSettings } from './fx.settings';
 
@@ -40,9 +40,9 @@ export function snapshot(over: Partial<FxSnapshot> = {}): FxSnapshot {
 export function fakeFx(settings: Partial<AcademySettings> = {}) {
   const fetcher = { latest: vi.fn<FxFetcher['latest']>().mockResolvedValue(snapshot()) };
   const queries = {
-    newest: vi.fn<FxQueries['newest']>().mockResolvedValue(null),
-    save: vi.fn<FxQueries['save']>().mockResolvedValue(undefined),
+    newest: vi.fn<FxRepo['newest']>().mockResolvedValue(null),
+    save: vi.fn<FxRepo['save']>().mockResolvedValue(undefined),
   };
-  const service = new FxService(fetcher, queries as unknown as FxQueries, readerOf(FxSettings, settings));
+  const service = new FxService(fetcher, queries as unknown as FxRepo, readerOf(FxSettings, settings));
   return { fetcher, queries, service };
 }

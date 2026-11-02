@@ -1,5 +1,5 @@
 import type { Weekday } from '@ab/catalog';
-import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule } from '../../schedule/lessons/series/day-times.js';
+import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule } from '@ab/schedule';
 import type { BookedCourse, PrefilledPick } from './course-follow.js';
 import { prefillDays } from './course-follow.js';
 

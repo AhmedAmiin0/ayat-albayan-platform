@@ -2,7 +2,7 @@ import { matchesQuery } from '@ab/core';
 import type { Gender, Program } from '@ab/catalog';
 import type { SalesTeacherView } from './academy.js';
 import type { SalesScheduleLesson } from './schedule.js';
-import { isOpenLesson } from '../schedule/lessons/state-machine.js';
+import { isOpenLesson } from '@ab/schedule';
 
 // «المعلمون» and «جدول الحلقات» of the salesperson, the same rules on web and mobile (owner rule: in sync).
 

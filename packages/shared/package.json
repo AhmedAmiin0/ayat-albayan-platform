@@ -33,6 +33,8 @@
     "@ab/core": "workspace:*",
     "@ab/db": "workspace:*",
     "@ab/i18n": "workspace:*",
+    "@ab/money": "workspace:*",
+    "@ab/schedule": "workspace:*",
     "@ab/settings": "workspace:*",
     "@ab/time": "workspace:*",
     "zod": "^4.6.5"

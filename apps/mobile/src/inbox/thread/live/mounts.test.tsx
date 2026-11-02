@@ -43,7 +43,7 @@ test('only the admin tab layout and the sales tabs mount it, once each', () => {
     const n = fs.readFileSync(`${ROOT}/${f}`, 'utf8').match(/\buseInboxRealtime\(/g)?.length ?? 0;
     return f.endsWith('use-inbox-realtime.ts') || n === 0 ? [] : [`${f} ×${n}`];
   });
-  expect(calls).toEqual(['app/(tabs)/_layout.tsx ×1', 'src/sales-app/screens/SalesTabs.tsx ×1']);
+  expect(calls).toEqual(['app/(tabs)/_layout.tsx ×1', 'src/sales/app/screens/SalesTabs.tsx ×1']);
 });
 
 test('the admin tree mounts it exactly once, enabled only with inbox.read', async () => {

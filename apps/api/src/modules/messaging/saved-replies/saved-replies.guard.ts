@@ -1,4 +1,9 @@
-import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  type CanActivate,
+  type ExecutionContext,
+  type HttpException,
+} from '@nestjs/common';
 import { z } from 'zod';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -26,10 +31,6 @@ export class RepliesUserGuard implements CanActivate {
 /** May this caller add, edit, delete or reorder the SHARED list? */
 export const managesShared = (user: AuthUser): boolean => can(user, 'saved_replies.manage');
 
-const uuid = z.uuid();
-
 /** `:id` that is not a uuid cannot name a reply: 404 saved_reply_not_found (never a 500 from Postgres). */
-export function replyIdParam(raw: string): string {
-  if (!uuid.safeParse(raw).success) throw notFound('saved_reply_not_found');
-  return raw;
-}
+export const replyIdSchema = z.uuid();
+export const replyNotFound = (): HttpException => notFound('saved_reply_not_found');

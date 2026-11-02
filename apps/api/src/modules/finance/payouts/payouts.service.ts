@@ -5,13 +5,13 @@ import { conflict, notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { toPayoutView } from './payouts.mapper';
 import { approveBlock, monthWindow } from './payouts.plan';
-import { PayoutsQueries, type PayoutRow } from './payouts.queries';
+import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
 /** Y1, Y3, Y5: list a month, approve (draft → approved), a teacher's own. Pay / un-pay / reopen: PayoutsLedger. */
 @Injectable()
 export class PayoutsService {
   constructor(
-    private readonly payouts: PayoutsQueries,
+    private readonly payouts: PayoutsRepo,
     private readonly teachers: TeachersRepo,
     private readonly audit: AuditService,
   ) {}

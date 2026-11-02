@@ -1,24 +1,24 @@
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { can } from '../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { Page, PageQuery } from '../../../../common/http/http';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { Page, PageQuery } from '@/common/http/http';
 import { toMyCommission } from './my.commissions.mapper';
 import { buildEarnings, frozenLines } from './my.earnings';
 import { toMyPayment, toMyStudent } from './my.mapper';
-import { MyQueries } from './my.queries';
-import { StatementsQueries } from '../statements/statements.queries';
-import { toStatementView } from '../statements/statements.mapper';
-import { toTermsView } from '../terms/terms.mapper';
-import { TermsQueries } from '../terms/terms.queries';
+import { MyRepo } from './my.repo';
+import { StatementsRepo } from '@/modules/finance/assistant-pay/statements/statements.repo';
+import { toStatementView } from '@/modules/finance/assistant-pay/statements/statements.mapper';
+import { toTermsView } from '@/modules/finance/assistant-pay/terms/terms.mapper';
+import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
 
 /** The assistant's own pages (R-ASST-04, R-ASST-06). The profile id comes from the login, never from a parameter. */
 @Injectable()
 export class MyService {
   constructor(
-    private readonly queries: MyQueries,
-    private readonly terms: TermsQueries,
-    private readonly statements: StatementsQueries,
+    private readonly queries: MyRepo,
+    private readonly terms: TermsRepo,
+    private readonly statements: StatementsRepo,
   ) {}
 
   /** The students I brought, newest first: when, the guardian's phone, whether the first subscription is paid, my commission. No price. */

@@ -5,7 +5,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { confirmFailureText } from '@/sales';
+import { confirmFailureText } from '@/sales/sales';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 

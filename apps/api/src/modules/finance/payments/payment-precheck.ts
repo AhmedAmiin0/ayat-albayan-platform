@@ -1,8 +1,8 @@
 import { countsForMoney, type PaymentWrite } from '@ab/shared';
-import { conflict } from '../../../common/http/errors';
+import { conflict } from '@/common/http/errors';
 import type { CheckedAttachment } from './attachments/payment-attachments.service';
 import type { Converted, PaymentInputs } from './payment-inputs';
-import type { PaymentRow, PaymentsQueries, PaymentSubscription } from './payments.queries';
+import type { PaymentRow, PaymentsRepo, PaymentSubscription } from './payments.repo';
 
 /**
  * An unused-cancelled package's money is frozen (owner 2026-10-28: it stays net 0; migration 934
@@ -23,7 +23,7 @@ export type Prechecked = { files: CheckedAttachment[]; converted: Converted };
  * here may only mean a racing send of the same form booked it first, so it replays when that payment exists.
  */
 export async function precheckPayment(
-  deps: { payments: PaymentsQueries; inputs: PaymentInputs },
+  deps: { payments: PaymentsRepo; inputs: PaymentInputs },
   v: { input: PaymentWrite; sub: PaymentSubscription },
 ): Promise<Prechecked> {
   const { input, sub } = v;

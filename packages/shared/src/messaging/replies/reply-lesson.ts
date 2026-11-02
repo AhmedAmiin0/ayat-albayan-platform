@@ -1,6 +1,6 @@
 import type { LessonStatus, Permission } from '@ab/catalog';
 import { chatDayKey, RIYADH_TZ } from '@ab/time';
-import { isOpenLesson } from '../../schedule/lessons/index.js';
+import { isOpenLesson } from '@ab/schedule';
 import type { MessageView, ThreadLesson } from '../chat/views.js';
 
 // Which lesson a guardian's quick reply is about, and what the viewer may do to it from the chat
