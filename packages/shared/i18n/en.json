@@ -7634,5 +7634,30 @@
     "staffEmpty": "No team members yet",
     "off": "Online status is turned off in Values",
     "loadError": "Could not load the team status"
+  },
+  "datePicker": {
+    "title": "Choose a date",
+    "change": "Change the date: {date}",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "weekdays": {
+      "sat": "Saturday",
+      "sun": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday"
+    },
+    "weekdaysShort": {
+      "sat": "Sa",
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr"
+    },
+    "earliest": "Earliest allowed date: {date}"
   }
 }

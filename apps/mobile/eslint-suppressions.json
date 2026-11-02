@@ -9426,7 +9426,7 @@
   },
   "src/sales-subscribe/components/StartDateField.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 9
@@ -9544,7 +9544,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/sales-subscribe/lib/transfer-form.test.ts": {
