@@ -21,7 +21,7 @@
   },
   "src/defs.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/domains/activity.ts": {
@@ -106,7 +106,7 @@
   },
   "src/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/layout.ts": {
@@ -233,11 +233,8 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/validation/validate.test.ts": {

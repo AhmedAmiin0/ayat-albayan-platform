@@ -5,15 +5,17 @@ import {
   settingZod,
   tzChoices,
   VALUE_CONFIRM,
+  byType,
   type SettingKey,
+  type SettingTypeTable,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { ascii } from '../../shared/ascii-digits';
+import { ascii } from '@/ops/shared/ascii-digits';
 
 // The bottom sheet's editor model: which editor a key gets, the typed draft, and the draft parsed
 // and checked with the API's own schema (settingZod) before anything is sent.
 
-type EditorKind = 'int' | 'nullableInt' | 'bool' | 'choice' | 'text' | 'readonly';
+export type EditorKind = 'int' | 'nullableInt' | 'bool' | 'choice' | 'text' | 'readonly';
 
 /** on: a switch (bool, or a number that can be off); text: the typed or picked value. */
 export interface Draft {
@@ -23,15 +25,23 @@ export interface Draft {
 
 type Parsed = { ok: true; value: unknown } | { ok: false; error: string };
 
+/** The phone's editor per setting type: lists and shapes stay on the web (docs/36 f5). */
+const EDITOR_OF: SettingTypeTable<EditorKind> = {
+  int: (def) => (def.nullable ? 'nullableInt' : 'int'),
+  bool: () => 'bool',
+  enum: () => 'choice',
+  currency: () => 'choice',
+  tz: () => 'choice',
+  e164: () => 'text',
+  string: () => 'text',
+  int_list: () => 'readonly',
+  json: () => 'readonly',
+};
+
 /** Scalars are edited here; shapes, lists and module-owned keys stay on the web. */
 export function editorOf(key: SettingKey): EditorKind {
   if (!isEditableValueKey(key)) return 'readonly';
-  const def = settingDef(key);
-  if (def.type === 'int') return def.nullable ? 'nullableInt' : 'int';
-  if (def.type === 'bool') return 'bool';
-  if (def.type === 'enum' || def.type === 'currency' || def.type === 'tz') return 'choice';
-  if (def.type === 'e164' || def.type === 'string') return 'text';
-  return 'readonly';
+  return byType(EDITOR_OF, settingDef(key));
 }
 
 /**
@@ -62,13 +72,20 @@ const num = (v: string): number => {
   return w === '' ? Number.NaN : Number(w);
 };
 
-function rawOf(key: SettingKey, draft: Draft): unknown {
-  const kind = editorOf(key);
-  if (kind === 'int') return num(draft.text);
-  if (kind === 'nullableInt') return draft.on ? num(draft.text) : null;
-  if (kind === 'bool') return draft.on;
-  return settingDef(key).type === 'e164' ? ascii(draft.text).replace(/\s/g, '') : draft.text.trim();
-}
+const textOf = (key: SettingKey, draft: Draft): string =>
+  settingDef(key).type === 'e164' ? ascii(draft.text).replace(/\s/g, '') : draft.text.trim();
+
+/** The draft as the raw value the schema checks, per editor. */
+const RAW_OF: Record<EditorKind, (key: SettingKey, draft: Draft) => unknown> = {
+  int: (_key, draft) => num(draft.text),
+  nullableInt: (_key, draft) => (draft.on ? num(draft.text) : null),
+  bool: (_key, draft) => draft.on,
+  choice: textOf,
+  text: textOf,
+  readonly: textOf,
+};
+
+const rawOf = (key: SettingKey, draft: Draft): unknown => RAW_OF[editorOf(key)](key, draft);
 
 /** The draft as the value to send, or the line to show under the editor. */
 export function parseDraft(key: SettingKey, draft: Draft): Parsed {
@@ -78,14 +95,19 @@ export function parseDraft(key: SettingKey, draft: Draft): Parsed {
   return { ok: false, error: def.type === 'e164' ? t.settings.invalidPhone : t.settings.invalid };
 }
 
-export const sameValue = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+export const sameValue = (a: unknown, b: unknown): boolean =>
+  JSON.stringify(a) === JSON.stringify(b);
 
 /**
  * Which question «احفظ» asks first: a plain dialog for the academy-wide switches; typed days only
  * when a retention can delete more data than before: turned on (from off) or made shorter than the
  * stored period. Lengthening it, or turning it off, deletes nothing and saves without typing.
  */
-export function confirmOf(key: SettingKey, value: unknown, saved: unknown): 'typed' | 'plain' | null {
+export function confirmOf(
+  key: SettingKey,
+  value: unknown,
+  saved: unknown,
+): 'typed' | 'plain' | null {
   const kind = VALUE_CONFIRM[key];
   if (kind !== 'typed') return kind ?? null;
   if (typeof value !== 'number') return null;
