@@ -1,10 +1,10 @@
 import { DEFAULT_RENEWAL_PRICING, type SalesFamilyView, type SalesMoneySubscriptionView, type StudentStatus } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { SalesOwnership } from '../../sales/sales-ownership';
-import { SubscriptionsService } from '../../../finance/subscriptions/subscriptions.service';
-import { SalesFamilyQueries } from './sales-family.queries';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SalesFamilyRepo } from './sales-family.repo';
 import { SalesRenewals } from './sales-renewals';
-import { toSalesSubscription } from '../sales-money.mapper';
+import { toSalesSubscription } from '@/modules/sales/sales-money/sales-money.mapper';
 
 /** A family has a handful of children, each with one or two packages owed. */
 const OPEN_PAGE = { page: 1, pageSize: 20 } as const;
@@ -14,7 +14,7 @@ const NOT_DUE = { renew_due: false, renewal: DEFAULT_RENEWAL_PRICING } as const;
 @Injectable()
 export class SalesMoneyReads {
   constructor(
-    private readonly family: SalesFamilyQueries,
+    private readonly family: SalesFamilyRepo,
     private readonly subs: SubscriptionsService,
     private readonly renewals: SalesRenewals,
   ) {}

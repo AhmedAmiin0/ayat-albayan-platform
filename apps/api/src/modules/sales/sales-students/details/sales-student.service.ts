@@ -1,15 +1,15 @@
 import type { SalesPackageSummary, SalesStudentDetails, SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { chatPhone } from '../../../../common/auth/chat-phone';
-import { can } from '../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
+import { chatPhone } from '@/common/auth/chat-phone';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
 import { packageSummaries, SalesRosterRepo } from '@/modules/sales/sales';
-import { SalesStudentScope } from '../sales-student-scope';
+import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { scheduleWindow, toStudentSchedule } from './sales-student-schedule.mapper';
 import { toTrialLessons } from './sales-student-trial.mapper';
 import { toStudentDetails } from './sales-student.mapper';
-import { SalesStudentQueries } from './sales-student.queries';
+import { SalesStudentRepo } from './sales-student.repo';
 import { SalesStudentReads } from './sales-student.reads';
 
 /**
@@ -23,7 +23,7 @@ import { SalesStudentReads } from './sales-student.reads';
 export class SalesStudentService {
   constructor(
     private readonly scope: SalesStudentScope,
-    private readonly queries: SalesStudentQueries,
+    private readonly queries: SalesStudentRepo,
     private readonly reads: SalesStudentReads,
     private readonly roster: SalesRosterRepo,
   ) {}

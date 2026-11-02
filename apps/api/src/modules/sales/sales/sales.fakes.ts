@@ -6,10 +6,10 @@ import { AppModule } from '../../../app.module';
 import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { SalesAssignQueries } from './assign/sales-assign.queries';
+import { SalesAssignRepo } from './assign/sales-assign.repo';
 import type { SalesLessonRow } from './schedule/sales-lessons';
 import type { SalesOwnership } from './sales-ownership';
-import { SalesQueries, type SalesSubscriptionRow } from './sales.queries';
+import { SalesRepo, type SalesSubscriptionRow } from './sales.repo';
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
 
@@ -60,8 +60,8 @@ export async function salesApp() {
   const audit = { record: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesQueries).useValue(sales)
-    .overrideProvider(SalesAssignQueries).useValue(assign)
+    .overrideProvider(SalesRepo).useValue(sales)
+    .overrideProvider(SalesAssignRepo).useValue(assign)
     .overrideProvider(AuditService).useValue(audit)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();

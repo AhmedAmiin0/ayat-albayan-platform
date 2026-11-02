@@ -4567,7 +4567,7 @@
   },
   "src/modules/messaging/inbox/test-app.ts": {
     "ab/no-parent-imports": {
-      "count": 10
+      "count": 5
     },
     "max-len": {
       "count": 7
@@ -10839,17 +10839,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/job-applicants/job-applicants.list.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/modules/sales/job-applicants/job-applicants.list.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/sales/job-applicants/job-applicants.queries.ts": {
+  "src/modules/sales/job-applicants/job-applicants.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -10868,9 +10863,6 @@
   "src/modules/sales/job-applicants/job-applicants.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/sales/leads/lead-family.controller.ts": {
@@ -10907,9 +10899,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -10930,11 +10919,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/leads/leads.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/sales/leads/leads.list-assignee.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
@@ -10943,25 +10927,14 @@
   "src/modules/sales/leads/leads.module.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/sales/leads/leads.own.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/leads/leads.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/leads/leads.queries.ts": {
+  "src/modules/sales/leads/leads.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -10979,19 +10952,11 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/sales/leads/leads.sort.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/sales/leads/leads.status.test.ts": {
@@ -11000,9 +10965,6 @@
     }
   },
   "src/modules/sales/leads/test-app.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 1
     }
@@ -11026,20 +10988,12 @@
       "count": 6
     }
   },
-  "src/modules/sales/sales-money/reads/sales-family.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/reads/sales-family.queries.ts": {
+  "src/modules/sales/sales-money/reads/sales-family.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 3
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 6
@@ -11057,17 +11011,11 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/sales/sales-money/reads/sales-renewals.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 4
     }
@@ -11193,9 +11141,6 @@
     "ab/module-boundaries": {
       "count": 4
     },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 5
     }
@@ -11206,9 +11151,6 @@
     }
   },
   "src/modules/sales/sales-money/sales-money.scope.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -11216,9 +11158,6 @@
   "src/modules/sales/sales-money/sales-money.scope.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 8
@@ -11317,9 +11256,6 @@
     }
   },
   "src/modules/sales/sales-registration/sales-registration.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -11329,29 +11265,20 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-registration/sales-registration.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/sales/sales-registration/sales-registration.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/sales-registration/sales-registration.queries.ts": {
+  "src/modules/sales/sales-registration/sales-registration.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/sales/sales-registration/sales-registration.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -11359,9 +11286,6 @@
   "src/modules/sales/sales-registration/sales-registration.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 7
@@ -11388,9 +11312,6 @@
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -11398,23 +11319,12 @@
       "count": 4
     }
   },
-  "src/modules/sales/sales-students/attendance/student-attendance.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-students/attendance/student-attendance.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/sales/sales-students/attendance/student-attendance.repo.ts": {
     "max-len": {
       "count": 2
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -11459,9 +11369,6 @@
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -11469,9 +11376,6 @@
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "complexity": {
       "count": 1
@@ -11489,30 +11393,21 @@
     }
   },
   "src/modules/sales/sales-students/details/sales-student.part-paid.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales-students/details/sales-student.queries.ts": {
-    "max-len": {
-      "count": 6
     }
   },
   "src/modules/sales/sales-students/details/sales-student.reads.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
   },
+  "src/modules/sales/sales-students/details/sales-student.repo.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
   "src/modules/sales/sales-students/details/sales-student.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 1
     }
@@ -11548,9 +11443,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
     },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 7
     }
@@ -11561,25 +11453,16 @@
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-confirm.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 4
     }
   },
   "src/modules/sales/sales-students/sales-student-scope.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 7
     }
   },
   "src/modules/sales/sales-students/sales-students.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
       "count": 8
     }
@@ -11598,9 +11481,6 @@
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -11628,15 +11508,7 @@
       "count": 5
     }
   },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/sales/sales-students/teachers/sales-teacher-overview.repo.ts": {
     "max-len": {
       "count": 1
     }
@@ -11651,7 +11523,7 @@
   },
   "src/modules/sales/sales/academy/sales-academy.fakes.ts": {
     "ab/no-parent-imports": {
-      "count": 11
+      "count": 6
     },
     "max-len": {
       "count": 5
@@ -11668,9 +11540,6 @@
     }
   },
   "src/modules/sales/sales/academy/sales-academy.mapper.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 2
     },
@@ -11678,26 +11547,15 @@
       "count": 7
     }
   },
-  "src/modules/sales/sales/academy/sales-academy.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales/academy/sales-academy.queries.ts": {
+  "src/modules/sales/sales/academy/sales-academy.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 6
     }
   },
   "src/modules/sales/sales/academy/sales-academy.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 3
     }
@@ -11708,9 +11566,6 @@
     }
   },
   "src/modules/sales/sales/assign/sales-assign.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 5
     }
@@ -11725,20 +11580,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.own.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales/assign/sales-assign.queries.test.ts": {
+  "src/modules/sales/sales/assign/sales-assign.repo.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/sales/sales/assign/sales-assign.repo.ts": {
     "max-len": {
       "count": 3
     }
@@ -11752,9 +11599,6 @@
     }
   },
   "src/modules/sales/sales/assign/sales-assign.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
     },
@@ -11786,16 +11630,8 @@
       "count": 4
     }
   },
-  "src/modules/sales/sales/history/sales-history.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales/history/sales-history.queries.ts": {
+  "src/modules/sales/sales/history/sales-history.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "complexity": {
@@ -11876,18 +11712,10 @@
   },
   "src/modules/sales/sales/sales.module.ts": {
     "max-len": {
-      "count": 5
-    }
-  },
-  "src/modules/sales/sales/sales.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
+      "count": 4
     }
   },
   "src/modules/sales/sales/sales.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 6
     }
@@ -11948,23 +11776,12 @@
       "count": 8
     }
   },
-  "src/modules/sales/sales/schedule/sales-schedule.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales/schedule/sales-schedule.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/sales/sales/schedule/sales-schedule.repo.ts": {
     "max-len": {
       "count": 3
     }
   },
   "src/modules/sales/sales/schedule/sales-schedule.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -12709,9 +12526,6 @@
   "src/modules/teaching/booking/sales/booking/sales-booking.http.test.ts": {
     "@typescript-eslint/no-unsafe-enum-assignment": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 10
     },
     "max-len": {
       "count": 3

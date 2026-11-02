@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import type { SalesQueries } from '../sales/sales.queries';
-import type { SalesFamilyQueries } from './reads/sales-family.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import type { SalesFamilyRepo } from './reads/sales-family.repo';
 import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 
 const USER: AuthUser = { id: 'u1', email: null, role: 'sales' };
@@ -13,7 +13,7 @@ function setup() {
     familyPhone: vi.fn().mockResolvedValue('+966551110000'),
     phonesOf: vi.fn().mockResolvedValue(['+966551110000', '+966552220000']),
   };
-  return { sales, family, scope: new SalesMoneyScope(sales as unknown as SalesQueries, family as unknown as SalesFamilyQueries) };
+  return { sales, family, scope: new SalesMoneyScope(sales as unknown as SalesRepo, family as unknown as SalesFamilyRepo) };
 }
 
 describe('SalesMoneyScope: ownershipOf(...).studentIds, never the booking switch', () => {

@@ -4,17 +4,17 @@ import { ReportsModule } from '@/modules/reporting/reports';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 import { SalesModule } from '@/modules/sales/sales';
 import { SalesStudentAttendanceController, StudentAttendanceController } from './attendance/student-attendance.controller';
-import { StudentAttendanceQueries } from './attendance/student-attendance.queries';
+import { StudentAttendanceRepo } from './attendance/student-attendance.repo';
 import { StudentAttendanceService } from './attendance/student-attendance.service';
 import { SalesStudentController } from './details/sales-student.controller';
-import { SalesStudentQueries } from './details/sales-student.queries';
+import { SalesStudentRepo } from './details/sales-student.repo';
 import { SalesStudentReads } from './details/sales-student.reads';
 import { SalesStudentService } from './details/sales-student.service';
 import { SalesLessonActionsController } from './lessons/sales-lesson-actions.controller';
 import { LessonServices, SalesLessonActions } from './lessons/sales-lesson-actions.service';
 import { SalesStudentScope } from './sales-student-scope';
 import { SalesTeacherOverviewController, SalesTeacherOverviewService } from './teachers/sales-teacher-overview.controller';
-import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.queries';
+import { SalesTeacherOverviewRepo } from './teachers/sales-teacher-overview.repo';
 
 /**
  * Sales as the academy's assistant (docs/16 rows 36–37): «تفاصيل الطالب» of any student (subscriptions and
@@ -27,7 +27,7 @@ import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.q
   imports: [SalesModule, LessonsModule, ReportsModule],
   controllers: [SalesStudentController, SalesLessonActionsController, SalesTeacherOverviewController, SalesStudentAttendanceController,
     StudentAttendanceController],
-  providers: [SalesStudentScope, SalesStudentQueries, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
-    SalesTeacherOverviewQueries, SalesTeacherOverviewService, StudentAttendanceQueries, StudentAttendanceService],
+  providers: [SalesStudentScope, SalesStudentRepo, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
+    SalesTeacherOverviewRepo, SalesTeacherOverviewService, StudentAttendanceRepo, StudentAttendanceService],
 })
 export class SalesStudentsModule {}

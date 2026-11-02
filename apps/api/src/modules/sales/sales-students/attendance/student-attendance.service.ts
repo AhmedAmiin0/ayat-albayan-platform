@@ -1,8 +1,8 @@
 import { attendanceMonthQuery, riyadhMonthOf, type StudentAttendanceTable } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, notFound } from '../../../../common/http/errors';
+import { badRequest, notFound } from '@/common/http/errors';
 import { attendanceWindow, toAttendanceTable } from './student-attendance.mapper';
-import { StudentAttendanceQueries } from './student-attendance.queries';
+import { StudentAttendanceRepo } from './student-attendance.repo';
 
 /** `?month=YYYY-MM` or the current Riyadh month; 400 invalid_month otherwise. */
 export function monthOf(query: unknown, now: Date): string {
@@ -17,7 +17,7 @@ export function monthOf(query: unknown, now: Date): string {
  */
 @Injectable()
 export class StudentAttendanceService {
-  constructor(private readonly queries: StudentAttendanceQueries) {}
+  constructor(private readonly queries: StudentAttendanceRepo) {}
 
   /** 404 student_not_found for an unknown id. */
   async table(studentId: string, o: { month: string; mine: boolean }, now = new Date()): Promise<StudentAttendanceTable> {

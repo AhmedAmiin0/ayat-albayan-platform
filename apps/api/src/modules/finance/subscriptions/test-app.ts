@@ -18,8 +18,8 @@ import { PayoutsRepo } from '@/modules/finance/payouts/payouts.repo';
 import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
 import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
-import { SalesQueries } from '@/modules/sales/sales/sales.queries';
-import { SalesFamilyQueries } from '@/modules/sales/sales-money/reads/sales-family.queries';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesFamilyRepo } from '@/modules/sales/sales-money/reads/sales-family.repo';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
 import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
@@ -84,8 +84,8 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(PricingService).useValue(m.pricing)
-    .overrideProvider(SalesQueries).useValue(m.sales)
-    .overrideProvider(SalesFamilyQueries).useValue(m.family)
+    .overrideProvider(SalesRepo).useValue(m.sales)
+    .overrideProvider(SalesFamilyRepo).useValue(m.family)
     .overrideProvider(InboundMedia).useValue(m.media)
     .overrideProvider(InboundMediaRepo).useValue(m.mediaQueries);
   const mod = await more(builder).compile();

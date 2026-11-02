@@ -7,7 +7,7 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SalesCourseRepo } from './sales-course.repo';
@@ -53,7 +53,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SalesQueries).useValue(sales)
+      .overrideProvider(SalesRepo).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SalesCourseRepo).useValue(course)

@@ -1,16 +1,16 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { fakeSettings } from '../../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../../common/settings/settings.service';
-import { domainError } from '../../booking.errors';
-import { BookingService } from '../../core/booking.service';
-import { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { SlotsService } from '../../plan/slots.service';
-import { TeacherOptionsService } from '../../teacher/teacher-options.service';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
+import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
@@ -48,7 +48,7 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SalesQueries).useValue(sales)
+      .overrideProvider(SalesRepo).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON (the default): ownership is checked
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)

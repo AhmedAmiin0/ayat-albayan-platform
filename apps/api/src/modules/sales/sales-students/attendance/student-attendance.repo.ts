@@ -1,7 +1,7 @@
 import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /** A lesson of the student in the month: never its meeting_link, notes or a price. `own` is the student's row only. */
 export interface AttendanceLessonRow {
@@ -34,7 +34,7 @@ const HISTORY_LIMIT = 5000;
 
 /** «سجل الحضور» reads (service role; whitelisted columns, any student). */
 @Injectable()
-export class StudentAttendanceQueries {
+export class StudentAttendanceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async exists(studentId: string): Promise<boolean> {
