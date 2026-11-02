@@ -1,9 +1,13 @@
-import { instantLessonSchema, type InstantLessonResult } from '@ab/shared';
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  instantLessonSchema,
+  type InstantLessonRequest,
+  type InstantLessonResult,
+} from '@ab/shared';
+import { Controller, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { InstantLessonService } from './instant.service';
 
 /** «حلقة فورية»: an online lesson that starts now (admin only). */
@@ -16,7 +20,10 @@ export class InstantController {
 
   /** 201 { lessonId }; 409 { code: 'conflict', conflicts } unless override.reason; 404 teacher / student_not_found. */
   @Post('instant')
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<InstantLessonResult> {
-    return this.instant.create({ req: parseOrThrow(instantLessonSchema, body), actorId: user.id });
+  create(
+    @ZodBody(instantLessonSchema) req: InstantLessonRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<InstantLessonResult> {
+    return this.instant.create({ req, actorId: user.id });
   }
 }
