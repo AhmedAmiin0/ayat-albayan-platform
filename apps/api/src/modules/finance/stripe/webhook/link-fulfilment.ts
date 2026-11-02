@@ -6,7 +6,7 @@ import { ar } from '@/common/infra/i18n/server-text';
 import { PaymentsQueries } from '@/modules/finance/payments';
 import { uuidFor } from '@/modules/finance/stripe/links/link-ids';
 import { LinkPackages } from '@/modules/finance/stripe/links/link-packages';
-import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 import { WebhookDeps } from './webhook-deps';
 
 export const idOf = (v: string | { id: string } | null): string | null => (typeof v === 'string' ? v : (v?.id ?? null));

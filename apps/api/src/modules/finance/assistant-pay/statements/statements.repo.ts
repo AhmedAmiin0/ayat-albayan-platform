@@ -1,7 +1,7 @@
 import type { Enums } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { STATEMENT_SELECT, type StatementRow } from './statements.mapper';
 
 interface StatementFilter {
@@ -15,7 +15,7 @@ interface StatementFilter {
 
 /** Reads of assistant_statements with their lines (service role; the controllers scope every call, rule 9). */
 @Injectable()
-export class StatementsQueries {
+export class StatementsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Newest month first, then by assistant name. */

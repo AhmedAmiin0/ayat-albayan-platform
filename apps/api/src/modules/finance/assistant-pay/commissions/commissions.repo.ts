@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import type { CommissionsQuery } from '../shared/assistant-pay.dto';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import type { CommissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
 import { COMMISSION_SELECT, type CommissionRow } from './commissions.mapper';
 
 /** The admin's ledger cap: the newest rows first; narrow by assistant, status or date for more. */
@@ -9,7 +9,7 @@ const LEDGER_LIMIT = 500;
 
 /** assistant_commissions reads for the admin (service role; the controllers guard). */
 @Injectable()
-export class CommissionsQueries {
+export class CommissionsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: CommissionsQuery): Promise<CommissionRow[]> {

@@ -1,5 +1,5 @@
 import { outstanding, type TeacherEarningView, type TeacherPaymentView } from '@ab/shared';
-import type { EarningRow, PaymentRow, SessionRow } from './earnings.queries';
+import type { EarningRow, PaymentRow, SessionRow } from './earnings.repo';
 
 const names = (row: SessionRow): string[] =>
   (row.lesson?.lesson_students ?? []).flatMap((s) => (s.student ? [s.student.name] : []));

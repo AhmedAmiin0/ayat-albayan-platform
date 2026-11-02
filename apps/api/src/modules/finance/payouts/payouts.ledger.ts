@@ -1,10 +1,10 @@
 import { PAYOUT_CORRECTIONS, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../common/http/errors';
-import { CorrectionsQueries } from '../teacher-earnings/summary/corrections.queries';
-import { EarningsQueries } from '../teacher-earnings/earnings.queries';
+import { conflict, notFound } from '@/common/http/errors';
+import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
+import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
 import { toPayoutView } from './payouts.mapper';
-import { PayoutsQueries, type PayoutRow } from './payouts.queries';
+import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
 /**
  * Keeps the monthly statement and the per-session ledger (docs/11 §12) from counting a lesson twice.
@@ -16,9 +16,9 @@ import { PayoutsQueries, type PayoutRow } from './payouts.queries';
 @Injectable()
 export class PayoutsLedger {
   constructor(
-    private readonly payouts: PayoutsQueries,
-    private readonly earnings: EarningsQueries,
-    private readonly corrections: CorrectionsQueries,
+    private readonly payouts: PayoutsRepo,
+    private readonly earnings: EarningsRepo,
+    private readonly corrections: CorrectionsRepo,
   ) {}
 
   /** paid → approved: its settlement payment is voided (sessions owed again), audited in the RPC. */

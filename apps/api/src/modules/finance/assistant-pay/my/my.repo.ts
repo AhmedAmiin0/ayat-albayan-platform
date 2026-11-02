@@ -1,7 +1,7 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError, type PageQuery } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError, type PageQuery } from '@/common/http/http';
 import { MY_COMMISSION_SELECT, type MyCommissionSource } from './my.commissions.mapper';
 import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStudentSource } from './my.mapper';
 
@@ -19,7 +19,7 @@ export const MY_PAYMENTS_LIMIT = 500;
  * recorded by someone else, never match (rule 9; RLS in migrations 271 and 274 is the second wall).
  */
 @Injectable()
-export class MyQueries {
+export class MyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The students this assistant brought, newest first (v_assistant_students). */

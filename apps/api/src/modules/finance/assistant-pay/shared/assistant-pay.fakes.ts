@@ -2,17 +2,17 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { CommissionBell } from '../../subscriptions';
-import { EarningsReceipts } from '../../teacher-earnings/earnings.receipts';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { CommissionBell } from '@/modules/finance/subscriptions';
+import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { CommissionsQueries } from '../commissions/commissions.queries';
-import { MyQueries } from '../my/my.queries';
-import { StatementsQueries } from '../statements/statements.queries';
-import { TermsQueries } from '../terms/terms.queries';
+import { CommissionsRepo } from '@/modules/finance/assistant-pay/commissions/commissions.repo';
+import { MyRepo } from '@/modules/finance/assistant-pay/my/my.repo';
+import { StatementsRepo } from '@/modules/finance/assistant-pay/statements/statements.repo';
+import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
 
 import { A, ADMIN, B } from './rows.fakes';
 
@@ -47,10 +47,10 @@ export async function assistantApp() {
   const bell = { notify: vi.fn() }; // «عمولة جديدة» after an attribution or new terms
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(MyQueries).useValue(my)
-    .overrideProvider(TermsQueries).useValue(terms)
-    .overrideProvider(StatementsQueries).useValue(statements)
-    .overrideProvider(CommissionsQueries).useValue(ledger)
+    .overrideProvider(MyRepo).useValue(my)
+    .overrideProvider(TermsRepo).useValue(terms)
+    .overrideProvider(StatementsRepo).useValue(statements)
+    .overrideProvider(CommissionsRepo).useValue(ledger)
     .overrideProvider(AssistantRpc).useValue(rpc)
     .overrideProvider(EarningsReceipts).useValue(receipts)
     .overrideProvider(AuditService).useValue(audit)
