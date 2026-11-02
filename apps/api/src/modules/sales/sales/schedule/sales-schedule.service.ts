@@ -1,10 +1,10 @@
 import type { SalesScheduleDay, SalesScheduleQuery, SalesTeacherView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { toSalesTeacher } from '../academy/sales-academy.mapper';
-import { SalesAcademyQueries } from '../academy/sales-academy.queries';
+import { toSalesTeacher } from '@/modules/sales/sales/academy/sales-academy.mapper';
+import { SalesAcademyRepo } from '@/modules/sales/sales/academy/sales-academy.repo';
 import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from './sales-schedule.mapper';
-import { SalesScheduleQueries } from './sales-schedule.queries';
-import { SalesSettings } from '../sales.settings';
+import { SalesScheduleRepo } from './sales-schedule.repo';
+import { SalesSettings } from '@/modules/sales/sales/sales.settings';
 
 /**
  * The salesperson's view of the teachers and the academy's day (owner report 2026-10-12: «listing all
@@ -13,8 +13,8 @@ import { SalesSettings } from '../sales.settings';
 @Injectable()
 export class SalesScheduleService {
   constructor(
-    private readonly academy: SalesAcademyQueries,
-    private readonly schedule: SalesScheduleQueries,
+    private readonly academy: SalesAcademyRepo,
+    private readonly schedule: SalesScheduleRepo,
     private readonly settings: SalesSettings,
   ) {}
 

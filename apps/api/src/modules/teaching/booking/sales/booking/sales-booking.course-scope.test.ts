@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import type { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { errorCode } from '@/common/http/errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
@@ -79,7 +79,7 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
 describe('SalesBookingScope.forRequest — a course always reads her ownership', () => {
   const scopeWith = (on: boolean) => {
     const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateRepo) };
+    return { sales, scope: new SalesBookingScope(sales as unknown as SalesRepo, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateRepo) };
   };
 
   it('auto-assign OFF: a course gets her ownership, a trial gets null', async () => {

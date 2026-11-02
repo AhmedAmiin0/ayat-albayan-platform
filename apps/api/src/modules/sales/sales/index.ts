@@ -2,7 +2,7 @@ export { packageSummaries } from './academy/sales-package.mapper';
 export { SalesRosterRepo } from './academy/sales-roster.repo';
 export { SalesAssignService } from './assign/sales-assign.service';
 export { toSalesHistory } from './history/sales-history.mapper';
-export { type HistoryBundle, SalesHistoryQueries } from './history/sales-history.queries';
+export { type HistoryBundle, SalesHistoryRepo } from './history/sales-history.repo';
 export {
   guardianOwnerIds,
   NO_OWNERSHIP,
@@ -11,7 +11,7 @@ export {
 } from './sales-ownership';
 export { type SalesScope, SalesScopes } from './sales-scope';
 export { SalesModule } from './sales.module';
-export { SalesQueries, type SalesSubscriptionRow } from './sales.queries';
+export { SalesRepo, type SalesSubscriptionRow } from './sales.repo';
 export {
   inSalesScope,
   isSalesLesson,
@@ -30,7 +30,7 @@ export {
   upcomingRange,
   withMine,
 } from './schedule/sales-schedule.mapper';
-export type { SalesScheduleRow } from './schedule/sales-schedule.queries';
+export type { SalesScheduleRow } from './schedule/sales-schedule.repo';
 export {
   nextStarts,
   toWeeklySlot,

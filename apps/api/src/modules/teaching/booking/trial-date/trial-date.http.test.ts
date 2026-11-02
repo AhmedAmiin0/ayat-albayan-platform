@@ -6,7 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TrialDateRepo } from './trial-date.repo';
 import { TrialDates } from './trial-date.service';
@@ -44,7 +44,7 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SalesQueries).useValue(sales)
+      .overrideProvider(SalesRepo).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON: her own families only
       .overrideProvider(TrialDates).useValue(dates)
       .overrideProvider(SlotsService).useValue(slots)

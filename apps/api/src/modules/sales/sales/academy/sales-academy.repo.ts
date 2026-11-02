@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES, type SalesStudentsQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { StaffPhotos } from '../../../../common/storage/avatars/staff-photos';
-import { studentNameOrCodeFilter } from '../../../people/students/students.mapper';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
+import { dbError } from '@/common/http/http';
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
@@ -38,7 +38,7 @@ export interface SalesLiveRow {
  * every student and the lessons running now. Each select is a whitelist; the mappers whitelist again.
  */
 @Injectable()
-export class SalesAcademyQueries {
+export class SalesAcademyRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly photos: StaffPhotos,

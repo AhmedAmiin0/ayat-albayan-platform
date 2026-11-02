@@ -2,11 +2,11 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SalesRegistrationQueries } from './sales-registration.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SalesRegistrationRepo } from './sales-registration.repo';
 
 const SALES_OFF = 'sa000000-0000-4000-8000-0000000000a2';
 const USERS: Record<string, AuthUser> = {
@@ -37,7 +37,7 @@ export async function registrationApp() {
   const queries = { byPhone: vi.fn(async () => []), byName: vi.fn(async () => []) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesRegistrationQueries).useValue(queries)
+    .overrideProvider(SalesRegistrationRepo).useValue(queries)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

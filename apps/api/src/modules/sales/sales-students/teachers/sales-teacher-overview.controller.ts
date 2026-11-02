@@ -1,14 +1,14 @@
 import type { SalesTeacherOverview } from '@ab/shared';
 import { Controller, Get, Injectable, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../../../../common/auth/decorators';
-import { notFound } from '../../../../common/http/errors';
+import { Permissions } from '@/common/auth/decorators';
+import { notFound } from '@/common/http/errors';
 import { overviewWindow, toTeacherOverview } from './sales-teacher-overview.mapper';
-import { SalesTeacherOverviewQueries } from './sales-teacher-overview.queries';
+import { SalesTeacherOverviewRepo } from './sales-teacher-overview.repo';
 
 @Injectable()
 export class SalesTeacherOverviewService {
-  constructor(private readonly queries: SalesTeacherOverviewQueries) {}
+  constructor(private readonly queries: SalesTeacherOverviewRepo) {}
 
   async overview(teacherId: string, now = new Date()): Promise<SalesTeacherOverview> {
     if (!(await this.queries.exists(teacherId))) throw notFound('teacher_not_found');

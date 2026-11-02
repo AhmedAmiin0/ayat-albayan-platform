@@ -13,8 +13,8 @@ import {
   type SalesStudentSubscription,
   type SalesTrialLesson,
 } from '@ab/shared';
-import { type HistoryBundle, toSalesHistory } from '../../sales';
-import type { AttendanceRow, DetailsStudentRow, PriceRow } from './sales-student.queries';
+import { type HistoryBundle, toSalesHistory } from '@/modules/sales/sales';
+import type { AttendanceRow, DetailsStudentRow, PriceRow } from './sales-student.repo';
 
 interface DetailsParts {
   student: DetailsStudentRow;

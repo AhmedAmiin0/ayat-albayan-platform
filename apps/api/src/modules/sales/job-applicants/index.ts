@@ -3,5 +3,5 @@ export {
   type ApplicantListFilter,
   type ApplicantMove,
   type JobApplicantRow,
-  JobApplicantsQueries,
-} from './job-applicants.queries';
+  JobApplicantsRepo,
+} from './job-applicants.repo';

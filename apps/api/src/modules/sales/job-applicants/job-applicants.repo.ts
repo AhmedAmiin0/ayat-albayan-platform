@@ -19,7 +19,7 @@ export interface ApplicantMove {
 
 /** Thin supabase-js access for `job_applicants`; rules live in JobApplicantsService. */
 @Injectable()
-export class JobApplicantsQueries {
+export class JobApplicantsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async findById(id: string): Promise<JobApplicantRow | null> {

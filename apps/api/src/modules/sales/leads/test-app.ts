@@ -1,15 +1,15 @@
 // HTTP test harness for the leads + job-applicants controllers (test-only).
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { JobApplicantsModule } from '../job-applicants/job-applicants.module';
-import { JobApplicantsQueries } from '../job-applicants/job-applicants.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { JobApplicantsModule } from '@/modules/sales/job-applicants/job-applicants.module';
+import { JobApplicantsRepo } from '@/modules/sales/job-applicants/job-applicants.repo';
 import { fakeDeps } from './leads.fakes';
 import { LeadsModule } from './leads.module';
-import { LeadsQueries } from './leads.queries';
+import { LeadsRepo } from './leads.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'admin@x.com', role: 'admin' },
@@ -34,9 +34,9 @@ export async function testApp() {
   const mod = await Test.createTestingModule({ imports: [AppModule, LeadsModule, JobApplicantsModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
-    .overrideProvider(LeadsQueries)
+    .overrideProvider(LeadsRepo)
     .useValue(deps.leads)
-    .overrideProvider(JobApplicantsQueries)
+    .overrideProvider(JobApplicantsRepo)
     .useValue(deps.applicants)
     .overrideProvider(AuditService)
     .useValue(deps.audit)

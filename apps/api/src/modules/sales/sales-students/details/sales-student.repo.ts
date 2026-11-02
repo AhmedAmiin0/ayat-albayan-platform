@@ -52,7 +52,7 @@ const ATTENDANCE_LIMIT = 60;
 
 /** Sales' «تفاصيل الطالب» reads (service role; any student, owner 2026-10-28); `trialDates`: «مواعيد الحلقة التجريبية»'s. */
 @Injectable()
-export class SalesStudentQueries {
+export class SalesStudentRepo {
   constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateRepo) {}
 
   async student(id: string): Promise<DetailsStudentRow | null> {
