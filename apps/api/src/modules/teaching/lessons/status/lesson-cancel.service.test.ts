@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { conflict } from '../../../../common/http/errors';
-import { ruleRow } from '../../scheduling/scheduling.fakes';
-import type { ScheduleQueries } from '../../scheduling/schedule.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { conflict } from '@/common/http/errors';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { LessonCancelService } from './lesson-cancel.service';
-import type { LessonRow } from '../store/lesson-row';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, RULE_ID } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, RULE_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 const rules = { rule: vi.fn() };
 const NOW = new Date('2026-10-04T10:00:00Z'); // Sunday 13:00 Riyadh, 4 h before the lesson
@@ -14,7 +14,7 @@ const LATER = { id: 'l2', status: 'confirmed' as const, starts_at: '2026-10-06T1
 
 function setup(row: LessonRow | null = lessonRow(), lateCancelHours: number | null = null) {
   const deps = fakeStore(row);
-  const service = new LessonCancelService(deps.store, rules as unknown as ScheduleQueries, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }));
+  const service = new LessonCancelService(deps.store, rules as unknown as ScheduleRepo, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }));
   return { ...deps, service };
 }
 const body = (over: object = {}) => ({ scope: 'one' as const, by: 'teacher' as const, reason: 'ظرف طارئ', ...over });

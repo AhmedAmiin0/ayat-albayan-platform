@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries, SchedulingSettings } from '@/modules/teaching/scheduling';
+import { ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleRepo, SchedulingSettings } from '@/modules/teaching/scheduling';
 import { changedLessons, type RpcOut } from './course-pause.mapper';
-import { CoursePauseQueries, type ReopenedLesson } from './course-pause.queries';
+import { CoursePauseRepo, type ReopenedLesson } from './course-pause.repo';
 
 const occurrence = (l: ReopenedLesson) => ({ starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) });
 
@@ -10,7 +10,7 @@ const occurrence = (l: ReopenedLesson) => ({ starts_at: new Date(l.starts_at), e
 @Injectable()
 export class PauseScheduling {
   constructor(
-    readonly rules: ScheduleQueries,
+    readonly rules: ScheduleRepo,
     readonly generator: OccurrenceGenerator,
     readonly settings: SchedulingSettings,
   ) {}
@@ -20,7 +20,7 @@ export class PauseScheduling {
 @Injectable()
 export class PauseClashes {
   constructor(
-    readonly queries: CoursePauseQueries,
+    readonly queries: CoursePauseRepo,
     readonly checker: ConflictChecker,
     readonly writer: LessonWriter,
   ) {}

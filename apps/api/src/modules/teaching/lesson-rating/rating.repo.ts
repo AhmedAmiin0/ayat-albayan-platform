@@ -15,7 +15,7 @@ const HELD = ['completed', 'late'] as const;
 
 /** Reads and the idempotent queue of lesson_rating (migration 195). Service role; callers guard. */
 @Injectable()
-export class RatingQueries {
+export class RatingRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Lessons that took place and started in [since, until]. */

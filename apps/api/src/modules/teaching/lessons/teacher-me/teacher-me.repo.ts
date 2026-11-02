@@ -1,16 +1,16 @@
 import type { TeacherMe } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { withMeeting } from '../../../people/teachers/meeting-view';
-import { dbError } from '../../../../common/http/http';
-import { LessonsSettings } from '../lessons.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { withMeeting } from '@/modules/people/teachers/meeting-view';
+import { dbError } from '@/common/http/http';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 type MyStudent = TeacherMe['students'][number];
 const STUDENT = 'id, code, name, tz, status' as const;
 
 /** GET /teachers/me data (R-TCH-03): the teacher's own row and students. */
 @Injectable()
-export class TeacherMeQueries {
+export class TeacherMeRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: LessonsSettings,

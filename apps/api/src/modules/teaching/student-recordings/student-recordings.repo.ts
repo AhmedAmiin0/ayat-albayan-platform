@@ -1,7 +1,7 @@
 import type { StudentRecordingsQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { dayBounds, type RecordingJoinRow } from './student-recordings.mapper';
 
 const SELECT =
@@ -16,7 +16,7 @@ interface RecordingsPageInput {
 
 /** The student file's recordings (service role; the services guard who may ask). */
 @Injectable()
-export class StudentRecordingQueries {
+export class StudentRecordingRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async student(id: string): Promise<{ id: string; teacher_id: string | null } | null> {
