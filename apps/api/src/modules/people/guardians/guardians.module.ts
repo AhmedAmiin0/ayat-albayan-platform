@@ -6,6 +6,6 @@ import { GuardiansService } from './guardians.service';
 @Module({
   controllers: [GuardiansController],
   providers: [GuardiansService, GuardianPhonesService],
-  exports: [GuardiansService],
+  exports: [GuardiansService, GuardianPhonesService],
 })
 export class GuardiansModule {}
