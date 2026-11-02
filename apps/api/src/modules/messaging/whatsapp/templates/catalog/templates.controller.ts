@@ -17,11 +17,12 @@ import { TemplateVerifier } from '@/modules/messaging/whatsapp/templates/sync/te
 import { TemplateRegistry } from './template.registry';
 
 /**
- * T1–T3 (docs/12 §4): the template registry and its health (the edits: TemplateEditsController) (R-MSG-01), per number (owner 2026-10-18).
- * Every route but the list is admin only: templates.manage, and never a role based on sales, the
- * classroom assistant or teacher (TemplateManagerGuard, 403 allow_list_only). templates.manage or
- * templates.send_all list every template; every other role (teacher, sales, classroom assistant, custom)
- * only the restricted allow-list (owner 2026-10-12): restrictedMay, the rule the thread send applies.
+ * T1–T3 (docs/12 §4): the template registry and its health (R-MSG-01), per number (owner
+ * 2026-10-18); the edits of one template are TemplateEditsController's. Every route but the list
+ * is admin only: templates.manage, and never a role based on sales, the classroom assistant or
+ * teacher (TemplateManagerGuard, 403 allow_list_only). templates.manage or templates.send_all list
+ * every template; every other role (teacher, sales, classroom assistant, custom) only the
+ * restricted allow-list (owner 2026-10-12): restrictedMay, the rule the thread send applies.
  */
 @ApiTags('messaging')
 @ApiBearerAuth()

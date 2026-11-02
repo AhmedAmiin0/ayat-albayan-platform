@@ -7332,7 +7332,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts": {
