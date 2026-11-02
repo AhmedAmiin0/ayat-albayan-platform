@@ -30,7 +30,8 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
     const { c } = client(reply);
     const err = await send(c).catch((e: unknown) => e);
     expect(err).toBeInstanceOf(WaError);
-    expect((err as WaError).info).toEqual(info);
+    // A refused template keeps the WABA name it went as (template-missing.ts).
+    expect((err as WaError).info).toEqual({ ...info, template: templateRow().meta_name });
   });
 
   it('a 5xx without a Meta body or a refused connection → code null, safe to retry', async () => {
@@ -46,7 +47,8 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
       timeoutMs: 5,
       fetch: (_u, init) => new Promise((_r, reject) => init.signal?.addEventListener('abort', () => reject(init.signal?.reason))),
     });
-    expect(await send(slow).catch((e: WaError) => e.info)).toEqual({ code: null, status: 0, uncertain: true });
+    const info = { code: null, status: 0, uncertain: true, template: templateRow().meta_name };
+    expect(await send(slow).catch((e: WaError) => e.info)).toEqual(info);
     const reset = new TypeError('fetch failed', { cause: Object.assign(new Error('socket'), { code: 'ECONNRESET' }) });
     await expect(send(client(reset).c)).rejects.toMatchObject({ info: { uncertain: true } });
   });

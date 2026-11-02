@@ -4,9 +4,9 @@ import {
   mediaMessage,
   readReceipt,
   submitPayload,
-  templateMessage,
   textMessage,
 } from './wa-components';
+import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
 import { REMINDER_24H, REPORT_READY, templateRow } from '../whatsapp.fakes';
 import { WaError } from '../whatsapp.types';
 

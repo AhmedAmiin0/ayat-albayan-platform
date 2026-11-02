@@ -1,22 +1,18 @@
 import type { TemplateCrmNameInput, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
-import { onCrm } from './template-env';
 import type { CrmStatusDeps } from './template-crm-status';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
+import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 
 /**
- * A crm line's template name / language in the CRM (docs/19 «crm driver», migration 680): what the crm driver
- * sends instead of meta_name / language; null = the default (crmTemplateName). Set only while the row's line
- * is on crm (409 not_crm_line otherwise); cleared on any line; audited. The meta and kapso drivers never read it.
+ * A template's name / language on the WhatsApp account («اسم القالب في واتساب», docs/19, migration 680):
+ * what every driver sends instead of meta_name / language (waba-template.ts); null = the default
+ * (crmTemplateName). Set on any line, so a line switched from crm to meta keeps sending the WABA's own
+ * templates; audited.
  */
 export async function setCrmName(deps: CrmStatusDeps, input: TemplateCrmNameInput & { key: string }, actorId: string): Promise<TemplateView> {
   const { key, crm_name, crm_language } = input;
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-  // Back to the default is allowed on any line: a name left from the line's crm days (or read by a module-mode
-  // crm number) can always be cleared; a new name only while the line is on crm.
-  const reset = crm_name === null && crm_language === null;
-  if (!reset && !onCrm(row.line)) throw waHttpError('not_crm_line', 409, { line: row.line });
   const patch = { crm_name, crm_language };
   const updated = await deps.queries.update(key, patch);
   await deps.audit.record({

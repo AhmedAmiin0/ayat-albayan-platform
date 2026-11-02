@@ -6,6 +6,7 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { LineDriver } from './LineDriver';
+import { MetaReady } from './MetaReady';
 import { LineFacts } from './LineFacts';
 import { webhookState, type WebhookState } from './line-status';
 import { useClock } from '@/lib/clock';
@@ -113,6 +114,7 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
         <>
           <LineFacts view={view} />
           <Webhook view={view} />
+          <MetaReady ready={view.meta_ready} />
           <CallErrors errors={view.errors} />
         </>
       )}
