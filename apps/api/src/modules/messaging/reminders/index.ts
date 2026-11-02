@@ -34,4 +34,3 @@ export {
   RemindersRepo,
 } from './reminders.repo';
 export { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
-export { Ticker, type TickerOptions } from './ticker';
