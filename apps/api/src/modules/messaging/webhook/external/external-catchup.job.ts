@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/modules/messaging/reminders/ticker';
+import { Ticker } from '@/common/jobs';
 import { field } from '@/modules/messaging/webhook/parse/webhook.parse';
 import { KAPSO_HISTORY } from './external-status';
 import { ExternalRepo } from './external.repo';

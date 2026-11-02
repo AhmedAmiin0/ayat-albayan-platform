@@ -2,7 +2,7 @@ import { type FamilyPhone, formatPhone, secondPhoneOf } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

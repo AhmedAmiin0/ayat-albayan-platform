@@ -20,7 +20,7 @@ jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe.answer : { total: 0 }),
 }));
-jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
+jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
 
 const SALES = ['inbox.read', 'inbox.send', 'self.sales', 'self.sales_academy', 'self.sales_earnings', 'classroom.join'];
 const stub = (label: string) => () => <Text>{label}</Text>;

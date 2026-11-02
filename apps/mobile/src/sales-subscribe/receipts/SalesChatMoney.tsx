@@ -1,10 +1,10 @@
 import type { ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { openPackages, useSalesFamily } from '../lib/family';
+import { openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
 
 /**
  * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): ONE money pill (owner 2026-10-29:

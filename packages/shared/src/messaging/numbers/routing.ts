@@ -1,4 +1,4 @@
-import type { WaLine } from '../../enums/messaging.js';
+import type { WaLine } from '@ab/catalog';
 
 // Routing per number (docs/23 §3 phase 5, contract docs/23c). Pure: the API feeds it the loaded numbers
 // and approvals. Used ONLY while settings.comms_source = 'module'; legacy keeps lineOf() / replyLine().

@@ -1,13 +1,13 @@
 import type { LessonView, TeacherMe } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { LessonAccess } from '../store/lesson-access';
-import { parseWindow } from '../store/lesson-queries.schema';
-import { LessonViews } from '../store/lesson-views';
-import { TeacherMeQueries } from './teacher-me.queries';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
+import { parseWindow } from '@/modules/teaching/lessons/store/lesson-queries.schema';
+import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
+import { TeacherMeRepo } from './teacher-me.repo';
 
 /**
  * Teacher self-service (R-TCH-03, R-SCH-08): own profile + students, own week. Scoped by the
@@ -20,7 +20,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
 @Controller('teachers/me')
 export class TeacherMeController {
   constructor(
-    private readonly queries: TeacherMeQueries,
+    private readonly queries: TeacherMeRepo,
     private readonly access: LessonAccess,
     private readonly views: LessonViews,
   ) {}

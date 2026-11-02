@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { Button } from '@/core/ui/primitives/Button';

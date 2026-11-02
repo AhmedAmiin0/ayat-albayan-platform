@@ -30,3 +30,9 @@ export function expoHttp(input: ExpoHttpInput): Http {
     errors: { default: (f) => new Error(`${input.label} ${describe(f)}`) },
   });
 }
+
+/** `items` in consecutive batches of at most `size` (Expo's per-request limits). */
+export const batchesOf = <T>(items: readonly T[], size: number): T[][] =>
+  Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
+    items.slice(i * size, (i + 1) * size),
+  );

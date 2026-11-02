@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PROGRAMS } from '../enums/index.js';
+import { PROGRAMS } from '@ab/catalog';
 import type { SalesTeacherView } from './academy.js';
 import { canSalesConfirm, filterSalesTeachers, isRunningLesson, isTeacherFilterOn, NO_TEACHER_FILTER, teacherPrograms } from './teacher-filter.js';
 

@@ -20,4 +20,4 @@ export {
   type StatusInput,
 } from './status/lesson-status.service';
 export { ATTENDANCE, outcomeChange, type OutcomeInput } from './status/outcomes';
-export { TeacherMeQueries } from './teacher-me/teacher-me.queries';
+export { TeacherMeRepo } from './teacher-me/teacher-me.repo';

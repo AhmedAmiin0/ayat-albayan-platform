@@ -22,3 +22,14 @@ test('131047: the failed text, no retry and no «أرسل قالبًا»', async
   expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(s.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
 });
+
+// Owner 2026-11-01: a payment link leaves as a text, so its refusal reads the same on its bubble.
+test('a payment link refused with 131047: the same failed text, no retry', async () => {
+  const body = 'رابط الدفع: https://app.example.test/pay/tok_1';
+  const m = { ...failed, body, error_code: '131047' };
+  const props = { phone: PHONE, onClose: jest.fn(), onError: jest.fn() };
+  await renderWithQuery(<FailedSheet {...props} message={m} />);
+  const s = within(screen.getByTestId('failed-sheet'));
+  expect(s.getByText(errorLine(m))).toBeTruthy();
+  expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
+});

@@ -1,4 +1,4 @@
-import type { MessageStatus } from '../../enums/index.js';
+import type { MessageStatus } from '@ab/catalog';
 
 // WhatsApp-style delivery ticks on OUR messages (owner, 2026-10-18), one truth for web and mobile:
 // a clock while queued, one tick sent, two delivered, two in the read colour once read, a saffron «!»

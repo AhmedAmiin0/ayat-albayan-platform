@@ -12,7 +12,7 @@ interface EmojiSheetProps {
   onPick: (emoji: string) => void;
   /** «تم» or a tap outside: closed, the box takes the focus back. */
   onClose: () => void;
-  /** Staff while the 24 h window is open: «GIF» and «الملصقات» tabs too (owner 2026-11-01). */
+  /** Staff wherever a text goes: «GIF» and «الملصقات» tabs too (owner 2026-11-01). */
   media?: PanelMedia | undefined;
 }
 

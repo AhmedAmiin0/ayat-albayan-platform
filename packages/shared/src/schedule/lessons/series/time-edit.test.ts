@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LESSON_STATUSES } from '../../../enums/index.js';
+import { LESSON_STATUSES } from '@ab/catalog';
 import { lessonTimeEditSchema } from '../../schemas/lesson-time.js';
 import { durationText, payoutLockOf, timeEditMode } from './time-edit.js';
 

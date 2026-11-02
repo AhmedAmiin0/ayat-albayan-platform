@@ -22,11 +22,13 @@ const routes = {
     templates: [],
   })),
 };
-const make = () => {
-  const s = new CodeSend(gate as unknown as SendGate, queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch);
-  Object.assign(s, { routes: routes as unknown as NumberRoutes });
-  return s;
-};
+const make = () =>
+  new CodeSend(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    routes as unknown as NumberRoutes,
+  );
 const send = () => make().send({ phone: '+966500000001', code: '123456' });
 const via = () => dispatch.send.mock.calls[0]?.[2];
 

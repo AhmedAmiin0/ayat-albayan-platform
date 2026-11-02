@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { useHolds, useIsAdmin } from '@/auth/use-permissions';
+import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';

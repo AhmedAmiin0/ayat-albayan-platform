@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useStudentHref } from '@/core/nav/tree-base';
 import type { StudentProfile } from '@/students/shared/types';
@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { CreateAccountButton } from '@/users/create/CreateAccountButton';
 import { ContactIsSelfCard } from './ContactIsSelfCard';
 import { JoinLinkCard } from './JoinLinkCard';
-import { RecordingsButton } from '../recordings/RecordingsButton';
+import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
 
 /**
  * What the web student file has beyond the quick view: «تسجيلات الحلقات», «المدفوعات والفواتير»

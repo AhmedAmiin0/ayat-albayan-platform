@@ -1,8 +1,8 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { Ticker } from '@/modules/messaging/reminders/ticker';
+import { Ticker } from '@/common/jobs';
 import { RATING_LOOKBACK_MS } from '@/modules/teaching/lesson-rating/rating.plan';
-import { RatingQueries } from '@/modules/teaching/lesson-rating/rating.queries';
+import { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingQueue, type QueueResult } from './rating.queue';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -22,7 +22,7 @@ export class RatingJob implements OnModuleInit, OnApplicationBootstrap, OnModule
 
   constructor(
     private readonly queue: RatingQueue,
-    private readonly queries: RatingQueries,
+    private readonly queries: RatingRepo,
     private readonly events: LessonEvents,
   ) {}
 

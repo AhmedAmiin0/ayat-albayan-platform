@@ -3,6 +3,7 @@ import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy }
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo } from './inbound-media.repo';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
@@ -26,7 +27,12 @@ export const MAX_BATCHES = 50;
 @Injectable()
 export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(WaMediaRetentionJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: WaMediaRetentionJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queries: InboundMediaRepo,
@@ -34,12 +40,11 @@ export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDest
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, EVERY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** Never throws; the number of files purged. Any error is logged and ends this run. */

@@ -12,8 +12,8 @@ import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { FEEDBACK_CONFIG } from './feedback.config';
 import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
-import { FeedbackQueries } from './feedback.queries';
-import { FeedbackReadQueries } from './read/feedback.read.queries';
+import { FeedbackRepo } from './feedback.repo';
+import { FeedbackReadRepo } from './read/feedback.read.repo';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 
@@ -42,8 +42,8 @@ export async function feedbackApp(secret: string | null = SECRET) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(FeedbackQueries).useValue(m.queries)
-    .overrideProvider(FeedbackReadQueries).useValue(m.reads)
+    .overrideProvider(FeedbackRepo).useValue(m.queries)
+    .overrideProvider(FeedbackReadRepo).useValue(m.reads)
     .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)

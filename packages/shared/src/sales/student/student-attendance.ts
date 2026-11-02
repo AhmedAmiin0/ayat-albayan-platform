@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Attendance, LessonStatus } from '../../enums/index.js';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/time';
 import { monthParam } from '../../money/ledger/index.js';
 import { attendanceKind, type AttendanceKind } from './student-details.js';

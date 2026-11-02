@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LESSON_STATUSES } from '../../enums/index.js';
+import { LESSON_STATUSES } from '@ab/catalog';
 import { isCancelledLesson, isClosedLesson } from './state-machine.js';
 
 // Written out by hand: the sets the api mappers, the calendar writer and mobile used to copy.

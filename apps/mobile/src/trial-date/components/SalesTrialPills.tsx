@@ -2,14 +2,14 @@ import { canPickTrialDate, type SalesFamilyStudent, type ThreadView } from '@ab/
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform } from 'react-native';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { Button } from '@/core/ui/primitives/Button';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { ownStudents, useSalesFamily } from '@/sales-subscribe/lib/family';
-import { chatTrialHref } from '../lib/trial-href';
+import { chatTrialHref } from '@/trial-date/lib/trial-href';
 
 /** iOS shows one modal at a time: the trial-date screen waits for the sheet to close. */
 const AFTER_SHEET_MS = Platform.OS === 'ios' ? 350 : 0;

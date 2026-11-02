@@ -1,9 +1,9 @@
 import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState, type ReactNode } from 'react';
-import { useHolds, usePermissions } from '@/auth';
-import { threadKey } from '../../thread/hooks/thread-cache';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
+import { useHolds, usePermissions } from '@/core/auth';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReplyActionsContext, replyMovedKey, type ReplyActionsValue, type ReplyMove } from './reply-actions-context';
 import { ReplyRescheduleSheet } from './ReplyRescheduleSheet';
 
