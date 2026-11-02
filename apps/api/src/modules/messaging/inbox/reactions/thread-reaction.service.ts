@@ -7,6 +7,7 @@ import { dedupKey, outboundBase, sendLine, type ThreadSend } from '@/modules/mes
 import { assertCanSend } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { sameNumber } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { sendsOnCrm } from './reaction-line';
 import { assertReactable, reactionPayload, ReactionRepo } from './reaction.repo';
 
@@ -33,6 +34,7 @@ export class ThreadReactionService {
     private readonly reactions: ReactionRepo,
     private readonly threads: ThreadsRepo,
     private readonly outbox: Outbox,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   async react(r: ReactionRequest, now = new Date()): Promise<{ result: ReactionResult; sent: Sent }> {
@@ -66,7 +68,7 @@ export class ThreadReactionService {
   }
 
   private async result(targetId: string, sent: Sent, sales: boolean): Promise<ReactionResult> {
-    const row = await this.threads.get(targetId);
+    const row = await this.messages.get(targetId);
     if (!row || !this.views) throw new Error('reacted message read failed');
     const { status, error_code, error_text } = sent.view;
     const view = await this.views.view(row);

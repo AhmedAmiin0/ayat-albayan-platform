@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONFIG, LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes';
-import { LivekitApi, type HttpPost } from '@/modules/teaching/classroom/livekit/livekit-api';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { leftEventOf, peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { recordingQueries } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RecordingLifecycle } from './recording.lifecycle';
@@ -12,11 +14,9 @@ const EGRESS = { identity: 'EG_x', kind: 'EGRESS' };
 let people: object[];
 let rq: ReturnType<typeof recordingQueries>;
 let starter: { startFor: ReturnType<typeof vi.fn>; configured: boolean };
-const http = vi.fn<HttpPost>(async (url) => ({
-  ok: true,
-  status: 200,
-  text: async () => JSON.stringify(url.endsWith('/ListParticipants') ? { participants: people } : {}),
-}));
+const http = vi.fn<FetchLike>(async (url) =>
+  twirpAnswer(200, url.endsWith('/ListParticipants') ? { participants: people } : {}),
+);
 const life = () => new RecordingLifecycle(new LivekitApi(CONFIG, http), rq as unknown as RecordingRepo, starter as unknown as RecordingStarter);
 const methods = () => http.mock.calls.map(([url]) => url.split('/twirp/')[1]);
 
@@ -54,7 +54,7 @@ describe('RecordingLifecycle', () => {
     expect(await life().afterLeft({ room: `meeting-${LESSON_ID}`, identity: 'guest-0123456789ab' })).toBe('stopped');
     expect(rq.runningEgress).toHaveBeenCalledWith({ kind: 'meeting', id: LESSON_ID });
     expect(methods()).toEqual(['livekit.RoomService/ListParticipants', 'livekit.Egress/StopEgress']);
-    expect(JSON.parse(http.mock.calls[1]?.[1].body ?? '{}')).toEqual({ egress_id: 'EG_abc' });
+    expect(sentBody(http.mock.calls[1]?.[1])).toEqual({ egress_id: 'EG_abc' });
   });
 
   it('someone still there, or nothing running: no stop; a LiveKit failure is swallowed', async () => {

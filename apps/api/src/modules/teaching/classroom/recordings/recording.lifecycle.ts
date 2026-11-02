@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import {
+  ignoredAnswer,
+  participantsAnswer,
+} from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
@@ -47,7 +51,8 @@ export class RecordingLifecycle {
       if ((await this.people(input.room, input.identity)).length > 0) return 'idle';
       const egressId = await this.queries.runningEgress(target);
       if (!egressId) return 'idle';
-      await this.livekit.call({ method: 'livekit.Egress/StopEgress', body: { egress_id: egressId }, grant: { roomRecord: true } });
+      const stop = { method: 'livekit.Egress/StopEgress', body: { egress_id: egressId } };
+      await this.livekit.call({ ...stop, grant: { roomRecord: true } }, ignoredAnswer);
       return 'stopped';
     } catch (e) {
       this.log.warn(`recording stop failed for ${input.room}: ${String(e)}`);
@@ -56,7 +61,9 @@ export class RecordingLifecycle {
   }
 
   private async people(room: string, except = ''): Promise<string[]> {
-    const answer = await this.livekit.call({ method: 'livekit.RoomService/ListParticipants', body: { room }, grant: { roomAdmin: true, room } });
+    const list = { method: 'livekit.RoomService/ListParticipants', body: { room } };
+    const grant = { roomAdmin: true, room };
+    const answer = await this.livekit.call({ ...list, grant }, participantsAnswer);
     return peopleIn(answer, except);
   }
 }

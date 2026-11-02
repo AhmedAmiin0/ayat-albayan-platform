@@ -1,3 +1,4 @@
+import { zonedPartsIn } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -8,7 +9,6 @@ import { LESSONS_KEY } from '@/features/teaching/schedule/api';
 import { whenWithLength } from './edit-time-text';
 import type { TimeEditResult } from './edit-time.contract';
 import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
-import { zonedParts } from '@/features/teaching/schedule/tz';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { focusOnMount } from '@/lib/dom/mount-refs';
@@ -42,7 +42,7 @@ export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
   );
   const message = savedMessage(result);
   const { lesson } = result;
-  const month = zonedParts(new Date(lesson.starts_at), lesson.teacher.tz).date.slice(0, 7);
+  const month = zonedPartsIn(new Date(lesson.starts_at), lesson.teacher.tz).date.slice(0, 7);
   return (
     <section aria-label={t.lessons.timeEdit.saved} className="grid gap-3">
       <div className="flex items-start gap-2 rounded-md bg-sunk px-3.5 py-2.5">

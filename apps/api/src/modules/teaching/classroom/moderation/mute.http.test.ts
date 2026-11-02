@@ -1,10 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID, OTHER_TEACHER } from '../classroom.fakes';
-import { MEETING_ID } from '../internal-meetings/internal-meetings.fakes';
-import type { HttpPost } from '../livekit/livekit-api';
+import { LESSON_ID, OTHER_TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http, participantRow } from './moderation.fakes';
 import { MuteLimit, MUTES_PER_WINDOW } from './mute-limit';
-import { classroomApp } from '../test-app';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
 // «كتم الميكروفون» / «إيقاف الكاميرا» (owner, 2026-10-05): LiveKit GetParticipant → MutePublishedTrack.
 
@@ -14,15 +15,11 @@ const meeting = (identity = GUEST) => `/meetings/${MEETING_ID}/participants/${id
 const TRACKS = { tracks: [{ sid: 'TR_mic', source: 'MICROPHONE' }, { sid: 'TR_cam', source: 'CAMERA' }] };
 
 /** LiveKit answering GetParticipant with the guest's two tracks, anything else with {}. */
-const livekit: HttpPost = async (url) => ({
-  ok: true,
-  status: 200,
-  text: async () => JSON.stringify(url.endsWith('/GetParticipant') ? TRACKS : {}),
-});
+const livekit: FetchLike = async (url) => twirpAnswer(200, url.endsWith('/GetParticipant') ? TRACKS : {});
 
 describe('mute routes', () => {
   let h: Awaited<ReturnType<typeof classroomApp>>;
-  const muted = () => h.http.mock.calls.filter(([url]) => url.endsWith('/MutePublishedTrack')).map(([, init]) => JSON.parse(init.body) as unknown);
+  const muted = () => h.http.mock.calls.filter(([url]) => url.endsWith('/MutePublishedTrack')).map(([, init]) => sentBody(init));
   beforeAll(async () => {
     h = await classroomApp();
   });

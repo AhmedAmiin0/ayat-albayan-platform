@@ -25,6 +25,7 @@ import { ThreadQuotes } from './threads/thread-quotes';
 import { ThreadSendService } from './send/thread-send.service';
 import { ThreadsController } from './threads/threads.controller';
 import { ThreadsRepo } from './threads/threads.repo';
+import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
 import { ThreadsService } from './threads/threads.service';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenRepo } from './reopen/reopen.repo';
@@ -63,6 +64,8 @@ import { GifService, StickerRepo, StickersController, StickersService } from './
   controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController],
   providers: [
     ThreadsRepo,
+    ThreadMessagesRepo,
+    ThreadReadsRepo,
     ThreadsService,
     ThreadSendService,
     ReadReceipts,
@@ -98,6 +101,6 @@ import { GifService, StickerRepo, StickersController, StickersService } from './
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the
   // families TeacherScopes lets them write to.
-  exports: [Outbox, ThreadsRepo, TeacherScopes],
+  exports: [Outbox, ThreadsRepo, ThreadMessagesRepo, TeacherScopes],
 })
 export class InboxModule {}
