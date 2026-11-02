@@ -82,6 +82,8 @@ export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'
   created_at: string;
   lessons_used: number;
   lessons_remaining: number;
+  /** «حلقات مستخدمة من الباقة» (in lessons_used); absent from older APIs. */
+  lessons_used_before?: number;
   /** From the audit trail: when the status changed (`from` null = created). */
   status_changes: { at: string; from: SubscriptionStatus | null; to: SubscriptionStatus | null }[];
   /** The payments linked to it: date, kind, amount and currency (owner 2026-10-11); never method, receipt or note. */

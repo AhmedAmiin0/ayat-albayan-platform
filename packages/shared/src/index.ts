@@ -23,6 +23,7 @@ export * from './sales/payment-link/index.js';
 export * from './sales/registration.js';
 export * from './sales/family-link.js';
 export * from './sales/start-date.js';
+export * from './sales/used-before-edit.js';
 export * from './sales/renewal-due.js';
 export * from './sales/qualification-form.js';
 export * from './sales/student/student-attendance.js';

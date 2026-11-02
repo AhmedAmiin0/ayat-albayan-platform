@@ -73,9 +73,11 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   // Owner 2026-10-12: the start date of POST /sales/subscriptions is an inline check; the registration
-  // check is its own route. Both are on for the system sales role (and the admin) by default.
-  it('subscriptions.set_start_date gates no route and is held by admin and sales only', () => {
-    expect(routes.filter((r) => r.permission === 'subscriptions.set_start_date').map((r) => r.key)).toEqual([]);
+  // check is its own route. Both are on for the system sales role (and the admin) by default. Owner
+  // 2026-11-02: it also gates «تعديل عدد الحلقات المستخدمة»
+  // (PATCH /subscriptions/:id/lessons-used-before).
+  it('subscriptions.set_start_date gates the used-before edit only and is held by admin and sales only', () => {
+    expect(routes.filter((r) => r.permission === 'subscriptions.set_start_date').map((r) => r.key)).toEqual(['UsedBeforeEditController.edit']);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('subscriptions.set_start_date'))).toEqual(['admin', 'sales']);
   });
 

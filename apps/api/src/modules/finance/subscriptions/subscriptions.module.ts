@@ -29,6 +29,9 @@ import { StudentTrialRepo } from './trial/student-trial.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './alerts/unpaid-flags.service';
+import { UsedBeforeEditController } from './used-before-edit/used-before-edit.controller';
+import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
+import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
 /**
  * Subscriptions priced from the catalog, balances (v_subscription_balance), the alerts job.
@@ -42,7 +45,12 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
  */
 @Module({
   imports: [PricingModule, TeachersModule],
-  controllers: [SubscriptionsController, StudentBalanceController, AdminTasksController],
+  controllers: [
+    SubscriptionsController,
+    StudentBalanceController,
+    AdminTasksController,
+    UsedBeforeEditController,
+  ],
   providers: [
     AdminTasksRepo,
     AlertsJob,
@@ -72,6 +80,8 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     SubscriptionsService,
     SubscriptionsSettings,
     UnpaidFlags,
+    UsedBeforeEdit,
+    UsedBeforeEditRepo,
   ],
   exports: [
     BalanceRepo,
