@@ -15,7 +15,7 @@ import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { MoneyActionButton } from '@/sales/sales/money-action';
 import { AttendanceSection } from './AttendanceSection';
-import { FamilySection } from './FamilySection';
+import { FamilySection } from '@/sales/sales/family/FamilySection';
 import { PackageCancelAction } from './PackageCancelAction';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
