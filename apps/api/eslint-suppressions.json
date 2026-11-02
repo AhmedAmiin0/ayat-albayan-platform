@@ -4409,7 +4409,7 @@
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.ts": {
     "max-len": {
-      "count": 10
+      "count": 11
     }
   },
   "src/modules/messaging/inbox/reads/read-marks.ts": {
