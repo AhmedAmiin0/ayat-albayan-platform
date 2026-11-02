@@ -1,4 +1,4 @@
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import type { PushTree } from '@/core/push/notification-route';
 import { BellButton } from './BellButton';
 

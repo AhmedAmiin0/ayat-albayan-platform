@@ -30,7 +30,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: async (path: string) =>
     path === '/auth/me' ? mockMe.answer : path === '/teachers/me' ? mockTeacher : { total: 0 },
 }));
-jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
+jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
 
 /** Any tree's chat: the links (TreeBase) and the mode (ThreadMode) its group gives it. */
 function ChatStub() {

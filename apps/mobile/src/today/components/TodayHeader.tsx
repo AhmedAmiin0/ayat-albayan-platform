@@ -1,6 +1,6 @@
 import { formatRunningHead } from '@ab/shared';
 import { View } from 'react-native';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { BellButton } from '@/notifications/BellButton';
@@ -8,7 +8,7 @@ import { HeaderConnectingBar } from '@/core/ui/connecting/HeaderConnectingBar';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { hairline } from '@/core/ui/surface/surface';
-import { useGreeting } from '../lib/use-greeting';
+import { useGreeting } from '@/today/lib/use-greeting';
 
 interface TodayHeaderProps {
   now: Date;

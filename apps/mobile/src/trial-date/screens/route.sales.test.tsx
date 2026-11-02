@@ -17,7 +17,7 @@ jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'sales' } : { total: 0 }),
 }));
-jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => 'sales' }));
+jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => 'sales' }));
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string }) => {
     const { Text: T } = jest.requireActual('react-native');

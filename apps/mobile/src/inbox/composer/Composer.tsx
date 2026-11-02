@@ -2,7 +2,7 @@ import { triesAfterWindow } from '@ab/client-core';
 import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';

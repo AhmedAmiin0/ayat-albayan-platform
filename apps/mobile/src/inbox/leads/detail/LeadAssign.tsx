@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

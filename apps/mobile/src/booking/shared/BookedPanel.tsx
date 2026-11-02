@@ -1,7 +1,7 @@
 import type { BookingResult } from '@ab/shared';
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
-import { useTabOpen } from '@/auth/use-tab-open';
+import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

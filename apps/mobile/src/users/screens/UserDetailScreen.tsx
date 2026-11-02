@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
-import type { Can } from '@/auth/use-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
@@ -9,9 +9,9 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { roleOptionsQuery, userQuery } from '../shared/api';
-import { backToUsers } from '../shared/nav';
-import { UserEditor } from '../edit/UserEditor';
+import { roleOptionsQuery, userQuery } from '@/users/shared/api';
+import { backToUsers } from '@/users/shared/nav';
+import { UserEditor } from '@/users/edit/UserEditor';
 
 /** A user (users.read; the web's UserDetailDialog): loads the user and the role options, then the editor. */
 export function UserDetailScreen({ can }: { can: Can }) {

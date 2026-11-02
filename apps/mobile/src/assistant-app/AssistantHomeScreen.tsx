@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { canOpen } from '@/auth/route-permissions';
-import type { Can } from '@/auth/use-permissions';
+import { canOpen } from '@/core/auth/route-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { addDays, riyadhToday } from '@/calendar';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { AssistantLessonsList } from '@/classroom/assistants/AssistantLessonsList';

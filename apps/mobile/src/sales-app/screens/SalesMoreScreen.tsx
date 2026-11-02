@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { allowedRows } from '@/auth/route-permissions';
-import type { Can } from '@/auth/use-permissions';
+import { allowedRows } from '@/core/auth/route-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
