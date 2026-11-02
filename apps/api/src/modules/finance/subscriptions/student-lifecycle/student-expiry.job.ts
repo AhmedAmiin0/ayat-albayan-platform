@@ -4,33 +4,44 @@ import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryRepo } from './student-expiry.repo';
 import { StudentStatusRepo } from './student-status.repo';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 10 * 60_000;
 
-type ExpirySummary = { students: number; expired: number; failed: number };
+interface ExpirySummary {
+  students: number;
+  expired: number;
+  failed: number;
+}
 type Outcome = 'expired' | 'kept' | 'failed';
 
 const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * Transition 6 (owner 2026-10-15, docs/11 §7, R-STU-05): a student still «بانتظار التجديد»
- * settings.subscription_expiry_days days after it became so, with no positive payment since, becomes
- * «انتهى الاشتراك» (expired). Since = its newest status_change to pending_renewal. None (e.g. set
- * before the audit existed): the clock starts on first sight, an audited compare-and-set row
- * pending_renewal → pending_renewal (via expiry_clock_started), and it expires N days after that.
- * Compare-and-set pending_renewal → expired, audited with no actor (via subscription_expired), so it is
- * idempotent and a status set by hand meanwhile wins.
- * Sends nothing. A renewal payment later moves expired → active (StudentActivation / StudentRenewal).
- * ponytail: in-process daily timer on the single API instance, like HorizonJob; pg_cron when it scales.
+ * settings.subscription_expiry_days days after it became so, with no positive payment since,
+ * becomes «انتهى الاشتراك» (expired). Since = its newest status_change to pending_renewal. None
+ * (e.g. set before the audit existed): the clock starts on first sight, an audited compare-and-set
+ * row pending_renewal → pending_renewal (via expiry_clock_started), and it expires N days after
+ * that. Compare-and-set pending_renewal → expired, audited with no actor (via
+ * subscription_expired), so it is idempotent and a status set by hand meanwhile wins. Sends
+ * nothing. A renewal payment later moves expired → active (StudentActivation / StudentRenewal).
+ * ponytail: in-process daily timer on the single API instance, like HorizonJob; pg_cron when it
+ * scales.
  */
 @BackgroundJob({ name: 'student-expiry' })
 @Injectable()
 export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(StudentExpiryJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: StudentExpiryJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: DAY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queries: StudentExpiryRepo,
@@ -39,15 +50,17 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, DAY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
-  /** One pass over the pending_renewal students. Never throws: one bad student doesn't stop the others. */
+  /**
+   * One pass over the pending_renewal students. Never throws: one bad student doesn't stop the
+   * others.
+   */
   async runOnce(now = new Date()): Promise<ExpirySummary> {
     const summary: ExpirySummary = { students: 0, expired: 0, failed: 0 };
     try {
@@ -82,10 +95,14 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
     const plan = expiryMove({ current: 'pending_renewal', since, now: o.now, days: o.days, paidSince });
     if (!plan) return false;
     const after = { via: 'subscription_expired', from: plan.from, to: plan.to, reason: plan.reason };
-    return this.statuses.move({ studentId, from: plan.from, to: plan.to }, { actorId: null, after });
+    const move = { studentId, from: plan.from, to: plan.to };
+    return this.statuses.move(move, { actorId: null, after });
   }
 
-  /** No status_change row says since when: that row is written now (the clock starts); never expires now. */
+  /**
+   * No status_change row says since when: that row is written now (the clock starts); never expires
+   * now.
+   */
   private async startClock(studentId: string): Promise<false> {
     const move = { studentId, from: 'pending_renewal', to: 'pending_renewal' } as const;
     await this.statuses.move(move, { actorId: null, after: { via: 'expiry_clock_started' } });

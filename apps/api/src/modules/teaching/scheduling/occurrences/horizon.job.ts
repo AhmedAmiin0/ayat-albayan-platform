@@ -8,13 +8,19 @@ import { addDays } from '@ab/shared';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 5 * 60_000;
 
-export type RunSummary = { rules: number; inserted: number; failed: number; ended: number };
+export interface RunSummary {
+  rules: number;
+  inserted: number;
+  failed: number;
+  ended: number;
+}
 
 /**
  * Daily horizon refresh (R-SCH-02): ends the rules whose end date has passed (R-SCH-07), then
@@ -27,7 +33,12 @@ export type RunSummary = { rules: number; inserted: number; failed: number; ende
 @Injectable()
 export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(HorizonJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: HorizonJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: DAY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly rules: ScheduleRepo,
@@ -36,12 +47,11 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, DAY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** One pass over the active rules. Never throws: one bad rule doesn't stop the others. */

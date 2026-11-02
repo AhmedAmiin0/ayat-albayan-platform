@@ -1,6 +1,7 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { RecordingRetention } from './recording-retention';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { Ticker } from '@/common/jobs';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -15,17 +16,21 @@ const FIRST_RUN_MS = 20 * 60_000;
 @Injectable()
 export class RecordingMaintenanceJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(RecordingMaintenanceJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: RecordingMaintenanceJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(private readonly retention: RecordingRetention) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, EVERY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** Never throws; how many rows each sweep changed. */
