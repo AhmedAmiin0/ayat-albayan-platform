@@ -13,14 +13,12 @@ import { optionalText } from '@ab/core';
 import { instant, localDate } from '@ab/schedule';
 import { calendarDaysBetween } from '@ab/time';
 
-// Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
-// a subscription is priced by the API from the catalog (docs/08), the same quote as /pricing.
+// Money commands (docs/11 §5–8). camelCase. The API quotes every subscription from the catalog
+// (docs/08, as /pricing); only «مبلغ مخصص» (customPrice) replaces the quoted price, never `price`.
 
 /** `YYYY-MM` in routes and queries; stored as the month's first day (monthStart). */
 export const monthParam = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'invalid_month');
-export function monthStart(month: string): string {
-  return `${month}-01`;
-}
+export const monthStart = (month: string): string => `${month}-01`;
 
 /** ISO 4217, upper case. */
 export const currencyIso = z.string().regex(/^[A-Z]{3}$/, 'invalid_currency');
@@ -61,6 +59,8 @@ export const subscriptionCreateSchema = z.object({
   /** Lessons taken before the platform (owner 2026-10-28): only with a past startsOn (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
+  /** «مبلغ مخصص» (owner 2026-11-02): the price in the quote's currency; the quote stays in price_source. */
+  customPrice: moneyAmount.optional(),
 });
 
 /** PATCH /subscriptions/:id: no price, size or `paused` (a pause is the course pause, docs/11 §7b; the key is dropped). */

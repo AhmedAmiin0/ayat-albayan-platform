@@ -16,6 +16,7 @@ import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneySettings } from './sales-money.settings';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { SalesPaymentAmount } from './payment-edit';
 
 /**
  * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
@@ -29,6 +30,7 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
+    SalesPaymentAmount,
   ],
   // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],

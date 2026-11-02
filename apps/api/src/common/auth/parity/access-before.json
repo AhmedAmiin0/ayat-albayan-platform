@@ -324,6 +324,7 @@
   "SalesMoneyReadsController.chatReceipts": ["sales"],
   "SalesMoneyReadsController.family": ["sales"],
   "SalesPaymentsController.create": ["sales"],
+  "SalesPaymentsController.editAmount": ["admin"],
   "SalesPaymentsController.receiptFromChat": ["sales"],
   "SalesPaymentsController.receiptUploadUrl": ["sales"],
   "SalesRegistrationController.check": ["admin","sales"],

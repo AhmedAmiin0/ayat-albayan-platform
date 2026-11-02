@@ -1987,6 +1987,11 @@
     "guardianCountry": "Guardian's country",
     "mobile": {
       "offline": "The connection dropped before we got a reply, so we're not sure the subscription was saved. Try again when you're back online; we'll check first so it isn't saved twice."
+    },
+    "customPrice": {
+      "label": "Package price ({currency})",
+      "quoted": "Calculator price: {amount} {currency}",
+      "invalid": "Enter an amount above zero with at most 2 decimals."
     }
   },
   "payments": {
@@ -2020,7 +2025,10 @@
       "attachment_in_use": "This file is already attached to another payment; choose another file.",
       "attachment_path": "An attachment does not belong to this subscription; upload it again",
       "attachment_type": "An attachment must be an image or a PDF",
-      "too_many_attachments": "At most 5 attachments"
+      "too_many_attachments": "At most 5 attachments",
+      "stripe_amount_locked": "An online payment's amount comes from Stripe and cannot be edited by hand",
+      "refund_exceeds_paid": "The package's paid total cannot go below zero after this edit",
+      "refund_not_allowed": "Only an admin edits a refund's amount"
     },
     "mobile": {
       "tab": "Payments",
@@ -2055,7 +2063,19 @@
     "attachmentN": "Attachment {n}",
     "viewAttachments": "View attachments",
     "noAttachments": "This payment has no attachments.",
-    "legacyReceipt": "Receipt"
+    "legacyReceipt": "Receipt",
+    "editAmount": {
+      "action": "Edit amount",
+      "title": "Edit the payment amount",
+      "newAmount": "New amount ({currency})",
+      "current": "Current amount: {amount}",
+      "confirmTitle": "Confirm the amount change",
+      "confirmBody": "The payment amount changes from {old} to {new}; the paid total, the package state and the commission are recomputed.",
+      "confirm": "Confirm the change",
+      "same": "The new amount equals the current amount",
+      "saved": "Amount updated",
+      "fromStripe": "Online payment: the amount comes from Stripe"
+    }
   },
   "payouts": {
     "title": "Teacher payouts",
@@ -5393,6 +5413,7 @@
       "templates.send_all": "Send every template",
       "payments.read": "View payments",
       "payments.write": "Record and edit payments",
+      "payments.edit_amount": "Edit a recorded payment's amount",
       "subscriptions.read": "View packages",
       "subscriptions.write": "Create and edit packages",
       "invoices.read": "View invoices",
@@ -5451,6 +5472,7 @@
       "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
       "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
       "sales.renew_any": "Shows «Renew subscription», «New subscription», «Record a bank transfer» and «Lesson days» for every child of the family in its chat, and «Renew» and «Record transfer» in «Student details», for any student, even one that is not theirs or belongs to another assistant (e.g. families imported from the old sheet). They book and change the package's lesson days as for their own students, after checking the teacher's and the student's time and never over a clash. Commission keeps its rules. Renewing and recording a transfer send no message.",
+      "payments.edit_amount": "Shows «Edit amount» on recorded payments of any student: bank transfers and manual payments only, never an online payment (its amount comes from Stripe). The paid total, the package state and the commission are recomputed as on the admin's edit, and the change is audited (before and after). It does not grant recording or deleting payments.",
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
     "page": {

@@ -41,6 +41,13 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
     expect(r).not.toHaveProperty('price');
   });
 
+  it('«مبلغ مخصص»: customPrice is a positive 2-decimal amount (owner 2026-11-02)', () => {
+    const r = subscriptionCreateSchema.parse({ ...base, pricing: { tier: 'bulk' }, customPrice: 275.5 });
+    expect(r.customPrice).toBe(275.5);
+    for (const customPrice of [0, -5, 1.005])
+      expect(subscriptionCreateSchema.safeParse({ ...base, pricing: { count: 8 }, customPrice }).success).toBe(false);
+  });
+
   it('update: dates and notes only; no pause flag (the course pause, docs/11 §7b)', () => {
     expect(subscriptionUpdateSchema.parse({ paused: true })).toEqual({});
     expect(subscriptionUpdateSchema.parse({ renewsOn: null })).toEqual({ renewsOn: null });

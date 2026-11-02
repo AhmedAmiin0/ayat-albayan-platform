@@ -1,4 +1,6 @@
 import {
+  paymentAmountSchema,
+  type PaymentAmount,
   salesChatReceiptCopySchema,
   salesPaymentCreateSchema,
   salesQuoteSchema,
@@ -13,7 +15,7 @@ import {
   type SalesTeacherOption,
   type SignedUpload,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
@@ -23,6 +25,9 @@ import { SalesMoney } from './sales-money.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesMoneySettings } from './sales-money.settings';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { SalesPaymentAmount } from './payment-edit';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { z } from 'zod';
 
 /**
  * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 16): the price of the package
@@ -76,8 +81,8 @@ export class SalesSubscribeController {
 
 /**
  * «سجّل التحويل البنكي» (owner 2026-10-12, R-ASST-04): the family's bank transfer with its receipt, recorded
- * by her and counted at once (a trial student becomes «مشترك»). No edit, no delete, no refund: the admin
- * corrects a wrong payment with the admin tools.
+ * by her and counted at once (a trial student becomes «مشترك»). No delete, no refund;
+ * «تعديل المبلغ» only with payments.edit_amount (owner 2026-11-02); the admin corrects the rest.
  */
 @ApiTags('sales')
 @ApiBearerAuth()
@@ -88,6 +93,7 @@ export class SalesPaymentsController {
     private readonly money: SalesMoney,
     private readonly receipts: SalesChatReceipts,
     private readonly settings: SalesMoneySettings,
+    private readonly amounts: SalesPaymentAmount,
   ) {}
 
   @Post()
@@ -109,5 +115,16 @@ export class SalesPaymentsController {
   async receiptFromChat(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesReceiptCopied> {
     const input = parseOrThrow(salesChatReceiptCopySchema, body);
     return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
+  }
+
+  /** «تعديل المبلغ» (owner 2026-11-02): its own key, never payments.write. */
+  @Patch(':id/amount')
+  @Permissions('payments.edit_amount')
+  editAmount(
+    @ZodParam('id', z.uuid()) id: string,
+    @ZodBody(paymentAmountSchema) body: PaymentAmount,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesPaymentView> {
+    return this.amounts.edit(id, body, user.id);
   }
 }

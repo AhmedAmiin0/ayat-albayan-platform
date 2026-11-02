@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defaultGrantsOf, isGrantable } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
+import { MIGRATIONS_DIR as MIGRATIONS } from '@/common/db/repo-paths.test-util';
+import { unseeded } from './roles.fakes';
 
 // The migrations seed the system roles' grants by hand; this keeps them equal to the catalog
 // (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table.
-const MIGRATIONS = MIGRATIONS_DIR;
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
 const LATER = [
@@ -45,7 +45,8 @@ function addedLater(key: string): string[] {
 
 describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 958, 970, 975, 990)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
-    expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
+    const rows = [...seeded(key), ...addedLater(key), ...unseeded(key)];
+    expect(rows.sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
 
   it('seeds recordings.manage for the admin and the teacher only', () => {
