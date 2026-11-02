@@ -11,7 +11,7 @@ import { ReviewNotices } from './ReviewNotices';
 import type { TrialDateBody, TrialDateDraft } from '../lib/trial-date-body';
 import { effectLine } from '../lib/trial-date-text';
 import { TrialDateWarn } from './TrialDateWarn';
-import { TrialLinkField } from './TrialLinkField';
+import { TrialLinkField } from '@/trial-date/fields/TrialLinkField';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface TrialDateReviewProps {

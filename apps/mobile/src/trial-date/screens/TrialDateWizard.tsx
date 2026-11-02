@@ -14,7 +14,7 @@ import { TrialDateDone } from '@/trial-date/components/TrialDateDone';
 import { TrialDateReview } from '@/trial-date/components/TrialDateReview';
 import { TrialHistoryList } from '@/trial-date/components/TrialHistoryList';
 import { TrialTeacherPick } from '@/trial-date/components/TrialTeacherPick';
-import { TrialSlotStep } from '@/trial-date/components/TrialSlotStep';
+import { TrialSlotStep } from '@/trial-date/fields/TrialSlotStep';
 
 type Step = 'teacher' | 'slot' | 'confirm';
 const STEPS: readonly Step[] = ['teacher', 'slot', 'confirm'];
