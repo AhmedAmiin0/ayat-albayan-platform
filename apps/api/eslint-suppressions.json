@@ -110,7 +110,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/common/auth/parity/route-walk.test-util.ts": {
@@ -3248,11 +3248,6 @@
   "src/modules/finance/subscriptions/trial/student-trial.repo.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/used-before.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/finance/subscriptions/used-before.ts": {
@@ -12638,7 +12633,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/booking/plan/conflict-context.ts": {

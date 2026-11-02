@@ -8220,7 +8220,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {
@@ -8725,7 +8725,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.en.test.tsx": {
@@ -8753,7 +8753,7 @@
   },
   "src/features/sales/sales/subscriptions/SubscriptionHistory.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/history-column.tsx": {

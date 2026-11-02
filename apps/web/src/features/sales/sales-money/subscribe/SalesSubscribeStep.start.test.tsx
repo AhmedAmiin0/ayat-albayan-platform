@@ -37,7 +37,10 @@ describe('the start day with subscriptions.set_start_date (docs/16 row 24)', () 
 
   it('shows the date (min today) and «بدأ الاشتراك سابقًا»; a later day is sent without alreadyStarted', async () => {
     const { dialog, date, box, save } = open();
+    expect(date.type).toBe('date');
     expect(date.min).toBe(today);
+    expect(date.max).toBe('');
+    expect(dialog.getByText(new RegExp(t.datePicker.earliest.split(':')[0] ?? ''))).toBeTruthy();
     expect(box.checked).toBe(false);
     expect(dialog.getByText(t.salesMoney.alreadyStartedHint)).toBeTruthy();
     fireEvent.change(date, { target: { value: '2099-01-01' } });

@@ -11,7 +11,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 interface UsedBeforeFieldProps {
   /** Already clamped to the package (usedBefore). */
   value: number;
-  /** The picked package's lessons (the quote's): the stepper stops one lesson per course day short of it (usedBeforeMax). */
+  /** The picked package's lessons (the quote's): the stepper stops one lesson short of it (usedBeforeMax). */
   lessonsTotal: number;
   onChange: (value: number) => void;
 }
@@ -24,7 +24,7 @@ export const usedBefore = (value: number, lessonsTotal: number): number => Math.
 
 /**
  * «حلقات مستخدمة من الباقة» (owner 2026-10-28): lessons a package that already started had before the
- * platform. − / + only (rule 6, never typed), 0 … usedBeforeMax (one lesson left per course day); counted as used, the course books the rest.
+ * platform. − / + only (rule 6, never typed), 0 … usedBeforeMax (every lesson but one); counted as used, the course books the rest.
  */
 export function UsedBeforeField({ value, lessonsTotal, onChange }: UsedBeforeFieldProps) {
   const { color } = useTheme();
