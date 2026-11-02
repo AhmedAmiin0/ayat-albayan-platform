@@ -1,10 +1,10 @@
 import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { CACHE_KEYS } from '../cache/cache-keys';
-import { SharedCache } from '../cache/shared-cache';
-import { ConfigStore } from '../config-store/store/config-store.service';
-import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../config-store/config-store.types';
-import { DB, type Db } from '../db/db.module';
+import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
+import { SharedCache } from '@/common/infra/cache/shared-cache';
+import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
+import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
+import { DB, type Db } from '@/common/db/db.module';
 import { writeLatest } from './settings-write';
 
 /** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS), provided by ConfigStoreModule. */

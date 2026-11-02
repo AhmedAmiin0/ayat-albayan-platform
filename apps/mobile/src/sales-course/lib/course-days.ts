@@ -1,5 +1,6 @@
-import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type ClockCycle, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
+import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
 import { dayAtText } from '@/booking/shared/picks';
+import type { ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 
 // A booked course's weekdays as text (owner 2026-10-18): «تابِع بنفس الأيام» names the previous
@@ -10,9 +11,9 @@ const weekdays: Record<string, string | undefined> = t.enums.weekday;
 export const weekdayName = (weekday: number): string => weekdays[String(weekday)] ?? '';
 
 /** «السبت الساعة 9:00، الأحد الساعة 17:00»: each day with its time in `tz`, السبت → الجمعة. */
-export function daysText(days: readonly DayTime[], tz: string, cycle: ClockCycle): string {
+export function daysText(days: readonly DayTime[], tz: string, viewer: ViewerClock): string {
   return inWeekOrder(days)
-    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, tz, cycle))
+    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, tz, viewer))
     .join(t.common.listSeparator);
 }
 

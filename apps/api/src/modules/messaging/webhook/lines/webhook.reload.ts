@@ -1,7 +1,7 @@
 import { Injectable, Logger, type Type } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { IntegrationConfigService } from '../../../../common/integrations/integration-config.service';
-import { NumbersConfig } from '../../numbers';
+import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
+import { NumbersConfig } from '@/modules/messaging/numbers';
 
 /** At most one reload per this gap: a stream of webhooks for a foreign number never hammers the database. */
 export const RELOAD_GAP_MS = 5_000;

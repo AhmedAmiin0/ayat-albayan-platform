@@ -9,7 +9,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: jest.fn(jest.requireActual('@/test/account').fetchWithProfile({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] })),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
-jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 test('R-ACC-01/05: the teacher’s More has «حسابي» and the avatar in its header', async () => {
   await renderWithQuery(<TeacherMoreScreen />);

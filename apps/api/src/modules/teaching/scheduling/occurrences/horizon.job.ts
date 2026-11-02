@@ -4,17 +4,23 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import { addDays } from './horizon';
+import { addDays } from '@ab/shared';
 import { OccurrenceGenerator } from './occurrence-generator';
-import { ScheduleQueries } from '../schedule.queries';
-import { SchedulingSettings } from '../scheduling.settings';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
+import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
+import { Ticker } from '@/common/jobs';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 5 * 60_000;
 
-export type RunSummary = { rules: number; inserted: number; failed: number; ended: number };
+export interface RunSummary {
+  rules: number;
+  inserted: number;
+  failed: number;
+  ended: number;
+}
 
 /**
  * Daily horizon refresh (R-SCH-02): ends the rules whose end date has passed (R-SCH-07), then
@@ -27,21 +33,25 @@ export type RunSummary = { rules: number; inserted: number; failed: number; ende
 @Injectable()
 export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(HorizonJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: HorizonJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: DAY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
-    private readonly rules: ScheduleQueries,
+    private readonly rules: ScheduleRepo,
     private readonly generator: OccurrenceGenerator,
     private readonly settings: SchedulingSettings,
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, DAY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** One pass over the active rules. Never throws: one bad rule doesn't stop the others. */
@@ -54,20 +64,28 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
       summary.ended = await this.rules.endExpired(today);
       for (const { id } of await this.rules.activeRuleIds(today)) {
         summary.rules += 1;
-        try {
-          const rule = await this.rules.rule(id);
-          if (rule?.status !== 'active') continue;
-          const { lessons } = await this.generator.topUp(rule, { weeks, actorId: null, now });
-          summary.inserted += lessons.length;
-        } catch (e) {
-          summary.failed += 1;
-          this.log.warn(`horizon refresh failed for rule ${id}: ${String(e)}`);
-        }
+        const inserted = await this.refresh(id, { weeks, now });
+        summary.inserted += inserted ?? 0;
+        summary.failed += Number(inserted === null);
       }
     } catch (e) {
       this.log.error(`horizon refresh aborted: ${String(e)}`);
     }
     this.log.log(`horizon refresh: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  /** One rule topped up: lessons inserted (0 once it is not active), null when it failed. */
+  private async refresh(id: string, o: { weeks: number; now: Date }): Promise<number | null> {
+    try {
+      const rule = await this.rules.rule(id);
+      if (rule?.status !== 'active') return 0;
+      const options = { weeks: o.weeks, actorId: null, now: o.now };
+      const { lessons } = await this.generator.topUp(rule, options);
+      return lessons.length;
+    } catch (e) {
+      this.log.warn(`horizon refresh failed for rule ${id}: ${String(e)}`);
+      return null;
+    }
   }
 }

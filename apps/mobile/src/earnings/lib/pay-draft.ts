@@ -1,7 +1,7 @@
 import { amountProblem, parseAmount, type PaymentMethod } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { paidAtFor } from '@/payments/lib/paid-day';
-import type { Receipt } from '@/payments/receipt';
+import { paidAtFor } from '@/core/lib/money/paid-day';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 import { egp } from './format';
 
 /** What the admin has entered in «سجّل دفعة». The method is not preselected: the receipt says which. */

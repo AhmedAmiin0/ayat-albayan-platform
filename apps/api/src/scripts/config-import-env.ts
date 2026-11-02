@@ -1,8 +1,8 @@
 import type { Database } from '@ab/db';
 import { isIntegrationSecretKey } from '@ab/shared';
 import { createClient } from '@supabase/supabase-js';
-import { IntegrationConfigQueries } from '../common/integrations/integration-config.queries';
-import { loadEnv } from '../config/env/env';
+import { IntegrationConfigRepo } from '@/common/configuration/integrations/integration-config.repo';
+import { loadEnv } from '@/config/env/env';
 import { importEnv, type ImportStore } from './import-env';
 
 // `pnpm --filter api config:import-env` (local), or inside the API container:
@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   const db = createClient<Database>(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const queries = new IntegrationConfigQueries(db);
+  const queries = new IntegrationConfigRepo(db);
   const store: ImportStore = {
     existing: async () => {
       const [plain, secrets] = await Promise.all([queries.plainRows(), queries.secretStatus()]);

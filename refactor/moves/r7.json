@@ -1,0 +1,108 @@
+{
+  "id": "r7",
+  "seq": 220,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teaching/classroom/moderation/moderation.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/moderation/moderation.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/recordings/recording.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/recordings/recording.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/meetings/schedule/meeting-list.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/meetings/schedule/meeting-list.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/classroom.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/classroom.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/internal-meetings/internal-meetings.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/internal-meetings/internal-meetings.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/student-link/student-link.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/student-link/student-link.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/classroom/assistants/assistants.queries.ts",
+      "to": "apps/api/src/modules/teaching/classroom/assistants/assistants.repo.ts"
+    }
+  ],
+  "renames": {
+    "ModerationQueries": "ModerationRepo",
+    "RecordingQueries": "RecordingRepo",
+    "MeetingListQueries": "MeetingListRepo",
+    "MeetingInviteeQueries": "MeetingInviteeRepo",
+    "MeetingInviteesQueries": "MeetingInviteesRepo",
+    "ClassroomQueries": "ClassroomRepo",
+    "InternalMeetingsQueries": "InternalMeetingsRepo",
+    "StudentLinkQueries": "StudentLinkRepo",
+    "AssistantLessonsQueries": "AssistantLessonsRepo",
+    "AssistantsQueries": "AssistantsRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/teaching/classroom/assistants/assistants.queries.ts",
+      "apps/api/src/modules/teaching/classroom/assistants/assistants.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/classroom.queries.ts",
+      "apps/api/src/modules/teaching/classroom/classroom.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/internal-meetings/internal-meetings.queries.ts",
+      "apps/api/src/modules/teaching/classroom/internal-meetings/internal-meetings.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.test.ts",
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.ts",
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitee.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.test.ts",
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.ts",
+      "apps/api/src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/meetings/schedule/meeting-list.queries.ts",
+      "apps/api/src/modules/teaching/classroom/meetings/schedule/meeting-list.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/moderation/moderation.queries.test.ts",
+      "apps/api/src/modules/teaching/classroom/moderation/moderation.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/moderation/moderation.queries.ts",
+      "apps/api/src/modules/teaching/classroom/moderation/moderation.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/recordings/recording.queries.test.ts",
+      "apps/api/src/modules/teaching/classroom/recordings/recording.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/recordings/recording.queries.ts",
+      "apps/api/src/modules/teaching/classroom/recordings/recording.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/classroom/student-link/student-link.queries.ts",
+      "apps/api/src/modules/teaching/classroom/student-link/student-link.repo.ts"
+    ]
+  ]
+}

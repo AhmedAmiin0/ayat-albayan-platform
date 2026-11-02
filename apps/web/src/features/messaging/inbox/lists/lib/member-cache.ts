@@ -1,6 +1,6 @@
 import type { ChatList, ChatListRef } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { threadQuery } from '../../api/api';
+import { threadQuery } from '@/features/messaging/inbox/api/api';
 import { CHAT_LISTS_KEY } from './api';
 import type { MemberIntent } from './member-queue';
 

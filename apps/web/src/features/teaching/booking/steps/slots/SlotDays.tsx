@@ -2,10 +2,10 @@ import { counted, pickProgress } from '@ab/shared';
 import { useId } from 'react';
 import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n/i18n';
-import { dayPicks, draftPicks, withPicks } from '../../draft/draft.days';
-import type { BookingDraft } from '../../draft/draft';
+import { dayPicks, draftPicks, withPicks } from '@/features/teaching/booking/draft/draft.days';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { DayTimesList } from './DayTimesList';
-import { PACKAGE_NOTE_CLASS, packageDaysNote } from '../package/package-days';
+import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 
 export interface SlotDaysProps {
   draft: BookingDraft;

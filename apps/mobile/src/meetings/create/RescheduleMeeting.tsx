@@ -2,13 +2,13 @@ import type { MeetingView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { rescheduleBody } from './create-body';
-import { updateMeeting } from '../invite/invite-api';
-import { inviteError } from '../invite/invite-text';
+import { updateMeeting } from '@/meetings/invite/invite-api';
+import { inviteError } from '@/meetings/invite/invite-text';
 import { ScheduleFields } from './ScheduleFields';
 import { slotOf, type Slot } from './schedule-time';
 

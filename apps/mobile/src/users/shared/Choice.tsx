@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 
 interface ChoiceProps<V extends string> {

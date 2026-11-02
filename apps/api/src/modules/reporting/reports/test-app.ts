@@ -4,15 +4,15 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { LessonEvents } from '../../../common/events/lesson-events';
-import { PushService } from '../../../common/push/push.service';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { StorageService } from '../../../common/storage/storage.service';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
+import { PushService } from '@/common/push/push.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ReportAttachmentsQueries } from './files/report-attachments.queries';
 import { ReportHistoryQueries } from './history/report-history.queries';
 import { ReportLessonQueries } from './report-lesson.queries';
@@ -44,7 +44,7 @@ function mocks() {
     teachers: { idByProfile: vi.fn() },
     mine: { page: vi.fn(), students: vi.fn() },
     settings: fakeSettings(),
-    events: { changed: vi.fn(), onChanged: vi.fn() },
+    events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
     pdf: { enqueue: vi.fn() },
     push: { notifyAdmins: vi.fn() },
   };
@@ -61,7 +61,7 @@ export async function reportsApp() {
     .overrideProvider(TeacherReportsQueries).useValue(m.mine)
     .overrideProvider(ReportAttachmentsQueries).useValue(m.files)
     .overrideProvider(StorageService).useValue(m.storage)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(LessonEvents).useValue(m.events)
     .overrideProvider(ReportPdfQueue).useValue(m.pdf)

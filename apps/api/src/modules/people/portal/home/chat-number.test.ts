@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { fakeDb } from '../../guardians/fake-db';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { ChatNumber } from './chat-number';
 
 describe('ChatNumber: the academy chat line from the configured numbers', () => {

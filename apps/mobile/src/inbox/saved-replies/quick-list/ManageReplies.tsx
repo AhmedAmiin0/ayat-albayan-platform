@@ -2,12 +2,12 @@ import type { SavedReply } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { DeleteConfirm } from '../components/DeleteConfirm';
-import { EditDelete } from '../components/MineActions';
-import { ReplyEditor } from '../editor/ReplyEditor';
-import { ReplyRow } from '../components/ReplyRow';
+import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
+import { EditDelete } from '@/inbox/saved-replies/components/MineActions';
+import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';
+import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
 
 /**
  * «إدارة» in the quick-replies sheet (owner 2026-10-26): her own replies with «رد جديد» and each row's

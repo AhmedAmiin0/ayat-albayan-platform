@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { TileSlots } from './ParticipantGrid';
 import { RoomButton } from './RoomButton';
 import type { TileView } from './room-types';
-import { StageScreen } from '../../stage/StageScreen';
+import { StageScreen } from '@/features/teaching/classroom/stage/StageScreen';
 import { VideoTile } from './VideoTile';
 
 interface Props extends TileSlots {

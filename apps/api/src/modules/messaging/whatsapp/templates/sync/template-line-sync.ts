@@ -1,19 +1,19 @@
 import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
-import { lineFacts, readError } from '../catalog/template-env';
+import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import { findMeta, syncPatch } from './template-sync';
-import { CRM_MANAGED } from '../catalog/template.mapper';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.types';
+import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One number's sync with Meta (owner 2026-10-18: «more options to sync it with meta for each number»):
 // only that line's rows, against only that line's WABA list, then that WABA's new templates imported.
 // A row is never matched against (nor marked missing from) the other WABA's list.
 
-type Warn = { warn: (message: string) => void };
+interface Warn { warn: (message: string) => void }
 
 export interface LineSyncDeps {
-  queries: Pick<TemplatesQueries, 'all' | 'update' | 'insert'>;
+  queries: Pick<TemplatesRepo, 'all' | 'update' | 'insert'>;
   lines: WhatsappLines;
   log: Warn;
 }
@@ -52,4 +52,14 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
   const saved = await Promise.all(plan.rows.map((row) => deps.queries.insert(row)));
   const imported = saved.flatMap((row) => (row ? [row.key] : []));
   return { ...facts, ok: true, checked_at: now.toISOString(), meta_count: list.length, synced, imported, skipped: plan.skipped };
+}
+
+/** A line's sync result for lineViews(); a failed write only logs (the sync itself is done). */
+export async function rememberSync(
+  deps: { queries: Pick<TemplatesRepo, 'saveLineSync'>; log: Warn },
+  sync: TemplateLineSync,
+): Promise<void> {
+  await deps.queries.saveLineSync(sync).catch((e: unknown) => {
+    deps.log.warn(`template line sync not stored: ${e instanceof Error ? e.message : String(e)}`);
+  });
 }

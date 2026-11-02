@@ -1,31 +1,34 @@
 import {
+  DAY_MS,
   RIYADH_TZ,
-  teacherLessonTotals,
-  wallParts,
   type SalesOverviewStudent,
   type SalesTeacherOverview,
   type SalesTeacherSlot,
+  teacherLessonTotals,
+  wallParts,
 } from '@ab/shared';
-import { DAY } from '../../../people/teachers';
-import { nextStarts } from '../details/sales-student-schedule.mapper';
-import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.queries';
+import { nextStarts } from '@/modules/sales/sales';
+import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.repo';
 
 /** «الحضور» covers the last 30 days and lists the latest 20 lessons. */
 const OVERVIEW_DAYS = 30;
 const LATEST = 20;
 
-export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: new Date(now.getTime() - OVERVIEW_DAYS * DAY), to: now });
+export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: new Date(now.getTime() - OVERVIEW_DAYS * DAY_MS), to: now });
 
 const namesOf = (rows: TeacherLessonRow['lesson_students']): SalesOverviewStudent[] =>
   rows.flatMap((r) => (r.student ? [{ name: r.student.name, code: r.student.code ?? '' }] : []));
 
-/** One row per weekday of a weekly rule, read in Riyadh from its next start (DST-safe); a trial's one-lesson rule is left out. */
+/**
+ * One row per weekday of a weekly rule from its next start (DST-safe); a trial's one-lesson rule is
+ * left out. weekday/time stay Riyadh's for old clients; `at` lets the viewer's zone apply (docs/34).
+ */
 function slotsOf(rule: TeacherRuleRow, now: Date): SalesTeacherSlot[] {
   if (rule.package === 'trial') return [];
   const students = namesOf(rule.students);
   return nextStarts(rule, now).map((at) => {
     const wall = wallParts(at, RIYADH_TZ);
-    return { rule_id: rule.id, weekday: wall.weekday, time: wall.time, duration_min: rule.duration_min, students };
+    return { rule_id: rule.id, weekday: wall.weekday, time: wall.time, at, duration_min: rule.duration_min, students };
   });
 }
 

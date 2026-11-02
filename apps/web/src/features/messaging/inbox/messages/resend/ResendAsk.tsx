@@ -2,7 +2,7 @@ import { isUnavailableMessage, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { useChatActions } from '../../shared/chat-actions';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { ResendDialog } from './ResendDialog';
 
 /**

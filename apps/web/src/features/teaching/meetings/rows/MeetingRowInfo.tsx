@@ -1,6 +1,6 @@
 import type { MeetingView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { opensLine, scheduleLine } from '../scheduled/meeting-when';
+import { opensLine, scheduleLine } from '@/features/teaching/meetings/scheduled/meeting-when';
 import { useClock } from '@/lib/clock';
 
 const L = t.meetingInvites.list;

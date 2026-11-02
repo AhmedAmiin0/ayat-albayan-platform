@@ -1,8 +1,8 @@
 export {
   type PathOwner,
   type PaymentAttachmentRow,
-  PaymentAttachmentsQueries,
-} from './attachments/payment-attachments.queries';
+  PaymentAttachmentsRepo,
+} from './attachments/payment-attachments.repo';
 export {
   type AttachmentCheck,
   type CheckedAttachment,
@@ -15,9 +15,9 @@ export { PaymentsModule } from './payments.module';
 export {
   type PaymentFilter,
   type PaymentRow,
-  PaymentsQueries,
+  PaymentsRepo,
   type PaymentSubscription,
   type PeriodTotal,
-} from './payments.queries';
+} from './payments.repo';
 export { PaymentsService } from './payments.service';
 export { PaymentsSettings, type PaymentsSettingsValues } from './payments.settings';

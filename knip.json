@@ -18,7 +18,7 @@
       "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/routeTree.gen.ts"],
-      "ignoreDependencies": ["babel-plugin-react-compiler"]
+      "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
     "apps/mobile": {
       "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
@@ -28,11 +28,15 @@
         "expo-system-ui",
         "expo-blur",
         "expo-clipboard",
-        "expo-sharing"
+        "expo-sharing",
+        "zod"
       ]
     },
     "packages/db": {
       "ignore": ["src/types.ts", "supabase/**"]
+    },
+    "packages/client-core": {
+      "ignoreDependencies": ["zod"]
     },
     "tools/scripts": {
       "entry": ["**/*.{mjs,ts}", "!**/*.test.*"],

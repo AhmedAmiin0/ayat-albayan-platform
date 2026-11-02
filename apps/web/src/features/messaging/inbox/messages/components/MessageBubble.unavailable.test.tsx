@@ -2,10 +2,10 @@ import type { MessageView } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message } from '../../testing/inbox-fixture';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from './MessageBubble';
 import { emptyText } from './MessageContent';
-import { renderWithClient } from '../../testing/test-utils';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 

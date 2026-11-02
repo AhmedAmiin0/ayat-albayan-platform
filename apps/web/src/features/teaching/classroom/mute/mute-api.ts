@@ -1,6 +1,6 @@
 import type { MuteSource } from '@ab/shared';
 import { apiSend } from '@/lib/http/api';
-import { participantsBase } from '../share/share-api';
+import { participantsBase } from '@/features/teaching/classroom/share/share-api';
 
 /** «كتم الميكروفون» / «إيقاف الكاميرا» for one participant: 204, or an ApiError. */
 export type MuteCall = (input: { identity: string; source: MuteSource }) => Promise<void>;

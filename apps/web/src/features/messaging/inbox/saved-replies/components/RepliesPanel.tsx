@@ -3,10 +3,10 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { MineActions } from './MineActions';
-import { PanelHead } from '../panel/PanelHead';
+import { PanelHead } from '@/features/messaging/inbox/saved-replies/panel/PanelHead';
 import { ReplyOptions } from './ReplyOptions';
-import { useOutsideClose } from '../panel/use-outside-close';
-import type { RepliesPicker } from '../hooks/use-replies-picker';
+import { useOutsideClose } from '@/features/messaging/inbox/saved-replies/panel/use-outside-close';
+import type { RepliesPicker } from '@/features/messaging/inbox/saved-replies/hooks/use-replies-picker';
 
 const S = t.savedReplies;
 

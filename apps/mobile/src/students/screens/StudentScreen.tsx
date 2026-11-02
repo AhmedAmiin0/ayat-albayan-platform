@@ -14,6 +14,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CoursePauseSection } from '../course-pause/CoursePauseSection';
+import { CourseActionsSection } from '@/students/course-actions/CourseActionsSection';
 import { BalanceCard } from '../profile/BalanceCard';
 import { GuardianCard } from '../profile/GuardianCard';
 import { RenewButton } from '../profile/RenewButton';
@@ -70,6 +71,7 @@ export function StudentScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />
         <CoursePauseSection studentId={student.id} />
+        <CourseActionsSection studentId={student.id} />
         <RenewButton student={student} />
         <Button
           variant="secondary"

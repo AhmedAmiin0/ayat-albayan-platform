@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { copyJoinLinkUrl } from '../api/api';
-import { classroomErrorText } from '../room/livekit/errors';
+import { copyJoinLinkUrl } from '@/features/teaching/classroom/api/api';
+import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
 
 async function copy(lessonId: string): Promise<string> {
   const { url } = await copyJoinLinkUrl(lessonId);

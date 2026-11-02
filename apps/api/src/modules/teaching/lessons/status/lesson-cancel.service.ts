@@ -1,20 +1,19 @@
-import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
+import { isOpenLesson, type CancelRequest, type RuleCancelRequest, addDays, localDateOf, startOfLocalDay } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { ScheduleQueries, type RuleWithLinks } from '../../scheduling/schedule.queries';
-import { LessonStore } from '../store/lesson-store';
-import { LessonsSettings } from '../lessons.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict } from '@/common/http/errors';
+import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
-type CancelInput = { lessonId: string; body: CancelBody; actor: AuthUser };
-type RuleCancelInput = { ruleId: string; body: RuleCancelRequest; actor: AuthUser };
+interface CancelInput { lessonId: string; body: CancelBody; actor: AuthUser }
+interface RuleCancelInput { ruleId: string; body: RuleCancelRequest; actor: AuthUser }
 
-type Cancel = { by: CancelRequest['by']; reason: string | null };
-type EndRule = {
+interface Cancel { by: CancelRequest['by']; reason: string | null }
+interface EndRule {
   rule: RuleWithLinks;
   /** First local day without lessons; the rule's ends_on becomes the day before. */
   from: string;
@@ -22,17 +21,18 @@ type EndRule = {
   cutoff: Date;
   body: Cancel;
   actor: AuthUser;
-};
+}
 
 /**
  * Cancel one occurrence, or this one and the rest of its rule (R-SCH-07). Returns the ids of
- * every cancelled lesson. No WhatsApp message: no approved cancellation template yet (TODO(R-MSG-01)).
+ * every cancelled lesson. One lesson: its teacher and family hear it (lesson_cancelled, owner
+ * 2026-10-30). Ending a series is a course end, not a lesson's cancellation: no notice.
  */
 @Injectable()
 export class LessonCancelService {
   constructor(
     private readonly store: LessonStore,
-    private readonly rules: ScheduleQueries,
+    private readonly rules: ScheduleRepo,
     private readonly settings: LessonsSettings,
   ) {}
 
@@ -58,6 +58,7 @@ export class LessonCancelService {
         after: { status: change.to_status, by: body.by, reason: body.reason, chargeable: change.chargeable },
       },
       transition: { from: lesson.status, event },
+      notice: { kind: 'lesson_cancelled', lessonId: lesson.id, actorId: actor.id },
     });
     return [lesson.id];
   }

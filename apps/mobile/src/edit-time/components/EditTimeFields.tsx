@@ -1,16 +1,16 @@
 import { DURATIONS, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { SlotPicker } from '@/teaching/reschedule/SlotPicker';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { CorrectTimes } from './CorrectTimes';
-import { isBookable, REASON_MAX, type EditState } from '../lib/edit-time-body';
-import { lengthText } from '../lib/edit-time-text';
-import type { TimeEditMode } from '../lib/types';
+import { isBookable, REASON_MAX, type EditState } from '@/edit-time/lib/edit-time-body';
+import { lengthText } from '@/edit-time/lib/edit-time-text';
+import type { TimeEditMode } from '@/edit-time/lib/types';
 
 const pills = DURATIONS.map((d) => ({ value: String(d), label: lengthText(d) }));
 

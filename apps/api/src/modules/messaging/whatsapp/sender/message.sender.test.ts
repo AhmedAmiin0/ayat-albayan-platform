@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
-import type { SendGate } from '../gate/send-gate';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { dueMessage, fakeSwitches } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const gate = fakeSwitches();
 const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn() };
@@ -14,7 +14,7 @@ const booking = templateRow();
 const reminder = templateRow({ key: 'lesson_reminder', meta_name: 'lesson_reminder_v2' });
 
 const sender = () =>
-  new MessageSender(gate as unknown as SendGate, queries as unknown as SenderQueries, worker as unknown as MessageWorker);
+  new MessageSender(gate as unknown as SendGate, queries as unknown as SenderRepo, worker as unknown as MessageWorker);
 
 describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () => {
   beforeEach(() => {

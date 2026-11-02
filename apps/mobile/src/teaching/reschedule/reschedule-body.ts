@@ -17,6 +17,7 @@ const MINUTE = 60_000;
 
 /** The family's zone: the first student's, so their wall clock is what stays fixed. */
 export function familyTz(lesson: Pick<LessonView, 'students'>): string {
+  // docs/34 b: the family's zone; a missing one reads as the academy's (data default).
   return lesson.students[0]?.tz ?? RIYADH_TZ;
 }
 

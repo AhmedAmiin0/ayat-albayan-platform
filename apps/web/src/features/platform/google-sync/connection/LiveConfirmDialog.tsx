@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { fill, listOf } from '../google-format';
+import { fill, listOf } from '@/features/platform/google-sync/google-format';
 
 const c = t.googleSync.confirm;
 

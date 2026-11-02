@@ -139,6 +139,8 @@ export class WaError extends Error {
       retryAfterMs?: number;
       /** The call is not supported by this line's driver (the crm driver: template list / submit / samples / media). */
       unsupported?: 'crm';
+      /** The crm driver: the template name sent (a 132001 marks only the key's own name). */
+      template?: string;
     },
   ) {
     super(message);

@@ -12,7 +12,7 @@ import {
   type ServerListPatch,
   type ServerListSearch,
 } from '@/lib/list/server-list-search';
-import { myReportsQuery } from '../api';
+import { myReportsQuery } from '@/features/teaching/teacher/api';
 import { submittedReportColumns } from './submitted-report-columns';
 import { useClock } from '@/lib/clock';
 

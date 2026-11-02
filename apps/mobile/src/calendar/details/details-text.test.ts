@@ -7,22 +7,30 @@ import { clockLines, inCity, lengthLine, reportHref, reportState, seriesLine, st
 const AFTER = new Date('2026-10-01T14:00:00Z');
 const BEFORE = new Date('2026-10-01T12:00:00Z');
 
-test('whenLine: the Riyadh day and time, named as Riyadh', () => {
-  expect(whenLine(pending, '24')).toContain('16:00');
-  expect(whenLine(pending, '24')).toContain(t.schedule.riyadhTime);
+const R = 'Asia/Riyadh';
+
+test('whenLine: the viewer’s day and time, named as theirs', () => {
+  expect(whenLine(pending, '24', R)).toContain('16:00');
+  expect(whenLine(pending, '24', R)).toContain(t.schedule.viewerTime);
+  expect(whenLine(pending, '24', 'Asia/Muscat')).toContain('17:00');
 });
 
-test('clockLines: each student zone and the teacher’s, only when not Riyadh, in the web wording', () => {
-  const cairo = inCity(pending.starts_at, 'Africa/Cairo', '24');
-  expect(clockLines(pending, '24')).toEqual([t.schedule.teacherTime.replace('{time}', cairo)]);
+test('clockLines: each student zone and the teacher’s, only when their clock differs', () => {
+  // 5 Nov (winter): Cairo reads an hour behind Riyadh; on 1 Oct (summer) the same clock.
+  const winter = lesson({ id: 'w', starts_at: '2026-11-05T15:00:00.000Z' });
+  const cairo = inCity(winter.starts_at, 'Africa/Cairo', '24');
+  expect(clockLines(winter, '24', R)).toEqual([t.schedule.teacherTime.replace('{time}', cairo)]);
+  expect(clockLines(pending, '24', R)).toEqual([]);
   const group = lesson({ id: 'g', students: [yusuf, jana, { ...jana, id: 's9' }] });
-  expect(clockLines(group, '24')).toEqual([
+  expect(clockLines(group, '24', R)).toEqual([
     t.schedule.studentTime.replace('{time}', inCity(group.starts_at, 'Asia/Muscat', '24')),
-    t.schedule.teacherTime.replace('{time}', cairo),
   ]);
-  expect(clockLines({ ...pending, teacher: { display_name_ar: 'ب', tz: 'Asia/Riyadh' } }, '24')).toEqual([]);
+  const riyadhTeacher = { ...winter, teacher: { display_name_ar: 'ب', tz: R } };
+  expect(clockLines(riyadhTeacher, '24', R)).toEqual([]);
   // Sales’ old cache: no zones at all reads as Riyadh.
-  expect(clockLines({ starts_at: pending.starts_at, teacher: { display_name_ar: 'ب' }, students: [{ id: 's', code: 'AB-1', name: 'ن' }] }, '24')).toEqual([]);
+  const bare = { starts_at: winter.starts_at, teacher: { display_name_ar: 'ب' } };
+  const students = [{ id: 's', code: 'AB-1', name: 'ن' }];
+  expect(clockLines({ ...bare, students }, '24', R)).toEqual([]);
 });
 
 test('inCity keeps an unknown zone’s id, isolated', () => {

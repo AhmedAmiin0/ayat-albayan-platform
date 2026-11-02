@@ -1,6 +1,6 @@
 import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n/i18n';
-import type { FeedbackKind } from '../types';
+import type { FeedbackKind } from '@/features/teaching/feedback/types';
 
 /**
  * «نوع الحلقة *» is the lesson's own (the server derives it), so the family sees it as a fixed

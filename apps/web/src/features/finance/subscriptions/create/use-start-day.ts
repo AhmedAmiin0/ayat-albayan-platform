@@ -9,6 +9,7 @@ import { usePermissions } from '@/features/people/auth';
  */
 export function useStartDay(lessonsTotal: number) {
   const canSet = usePermissions().can('subscriptions.set_start_date');
+  // academy day (docs/34 b): the API checks starts_on / used-before against the Riyadh day
   const [today] = useState(() => riyadhToday());
   const [startsOn, setStartsOn] = useState(today);
   const [count, setCount] = useState(0);

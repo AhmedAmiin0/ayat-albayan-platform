@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { OVERRIDES_REFRESH, type OverridesRefresh } from '../../../common/config-store/config-store.types';
+import { OVERRIDES_REFRESH, type OverridesRefresh } from '@/common/configuration/config-store/config-store.types';
 import { TranslationsController } from './translations.controller';
 import { TranslationsQueries } from './translations.queries';
 import { TranslationsService } from './translations.service';

@@ -43,7 +43,7 @@ TextComposer must stay ≤ 150 lines; deleting the branch frees about 15.
 
 ### W3 (major) One-row thread header: secondary sales actions go in «المزيد», and sales sees which children the chat is about — ✅ done
 
-Files: `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/messaging/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/messaging/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/messaging/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/messaging/inbox/sales/SalesFamilyLine.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/sales/sales-money/SalesChatActions.tsx`, `apps/web/src/features/sales/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/sales/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/messaging/inbox/sales/SalesFamilyLine.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (0) Line budget first. ThreadPane.tsx is exactly 150 lines, so move its wide return block (:128-149) into ThreadPaneWide.tsx, which takes one props object: header, log, reply, aside, side, toast. W4, W5 and W12 build on this split.
 

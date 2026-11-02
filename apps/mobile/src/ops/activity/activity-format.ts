@@ -1,17 +1,17 @@
-import { intlLocale, RIYADH_TZ } from '@ab/shared';
+import { dateText } from '@ab/shared';
 import type { ActivityView, ClockCycle, StatusStyle } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { isolate } from '@/core/ui/primitives/Ltr';
 
-// The log is the academy's: times read in Asia/Riyadh, 12 or 24 h as the viewer chose, Western digits.
+// The log's times read in the viewer's zone (docs/34), 12 or 24 h as they chose, Western digits.
 
-const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: RIYADH_TZ });
-
-/** «03/10/2026، 16:30» / «… 4:30 م» on the Riyadh clock. */
-export const formatAt = (iso: string, cycle: ClockCycle): string =>
-  dateWithClock(DAY.format(new Date(iso)), clockIn(new Date(iso), RIYADH_TZ, cycle));
+/** «03/10/2026، 16:30» / «… 4:30 م» on the clock of the viewer's `tz`. */
+export function formatAt(iso: string, cycle: ClockCycle, tz: string): string {
+  const day = dateText(new Date(iso), { tz, locale }, { dateStyle: 'medium' });
+  return dateWithClock(day, clockIn(new Date(iso), tz, cycle));
+}
 
 const lookup = (dict: object, key: string): string | undefined =>
   (dict as Record<string, string | undefined>)[key];
@@ -44,8 +44,8 @@ export function actorLine(row: Pick<ActivityView, 'actor_name' | 'actor_role'>):
 }
 
 /** «الإدارة · طالب · 3 أكتوبر 2026 16:30»: the second line of a row. */
-export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle): string {
-  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle)]
+export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle, tz: string): string {
+  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle, tz)]
     .filter((p): p is string => p !== null)
     .join(' · ');
 }

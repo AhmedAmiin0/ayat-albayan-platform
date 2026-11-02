@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { familyKey } from '../lib/family';
-import { familyOf, KID, KID2, kid, openSub, PHONE, salesQuote, SUB } from '../testing/fixtures';
+import { familyKey } from '@/sales-subscribe/lib/family';
+import { familyOf, KID, KID2, kid, openSub, PHONE, salesQuote, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();

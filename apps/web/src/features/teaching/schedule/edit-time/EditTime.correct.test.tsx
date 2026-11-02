@@ -70,6 +70,7 @@ describe('«عدّل الوقت» on a held lesson: correct what was recorded (R
     expect(await screen.findByText(t.lessons.timeEdit.payoutDraft)).toBeTruthy();
     expect(screen.getByText(t.lessons.timeEdit.pdfRefresh)).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe(t.lessons.timeEdit.saved);
+    expect(document.activeElement).toBe(screen.getByRole('status')); // focus lands on what was saved
     expect(screen.getByText(/الموعد الجديد: .*4 أكتوبر/)).toBeTruthy(); // what was saved: the lesson as the API returned it
     expect(screen.getByRole('link', { name: t.lessons.timeEdit.payoutLink }).getAttribute('href')).toBe('/admin/payouts?month=2026-10');
     expect(onDone).not.toHaveBeenCalled();

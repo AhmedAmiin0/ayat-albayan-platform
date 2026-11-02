@@ -4,11 +4,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { StudentProfileForm } from './StudentProfileForm';
-import type { StudentProfile } from '../types';
+import type { StudentProfile } from '@/features/people/students/types';
 
 const TEACHER_ID = vi.hoisted(() => '11111111-1111-4111-8111-111111111111');
 const api = vi.hoisted(() => ({ updateStudent: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({
+vi.mock('@/features/people/students/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   ...api,
   teacherOptionsQuery: queryOptions({

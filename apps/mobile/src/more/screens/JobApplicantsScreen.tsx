@@ -8,9 +8,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { ApplicantRow } from '../applicants/ApplicantRow';
-import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '../applicants/applicant-params';
-import type { JobApplicant } from '../types';
+import { ApplicantRow } from '@/more/applicants/ApplicantRow';
+import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '@/more/applicants/applicant-params';
+import type { JobApplicant } from '@/core/lib/staff/types';
 import { LazyList } from '@/core/ui/lists/LazyList';
 
 const statusPills = (): FilterPill<ApplicantStatusFilter>[] => [

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUSH_KINDS } from '../enums/index.js';
+import { PUSH_KINDS } from '@ab/catalog';
 import { notificationKind, webNotificationPath } from './web-path.js';
 
 const STUDENT = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
@@ -21,6 +21,15 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath(data, 'teacher')).toBe('/teacher/calendar');
     expect(webNotificationPath(data, 'admin')).toBe(`/admin/students/${STUDENT}`);
     expect(webNotificationPath(data, 'sales')).toBe('/sales/students');
+  });
+
+  it('a schedule change: the teacher calendar for teachers, the student else; a family the portal', () => {
+    for (const kind of ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed']) {
+      const data = { kind, studentId: STUDENT, lessonId: MEETING };
+      expect(webNotificationPath(data, 'teacher')).toBe('/teacher/calendar');
+      expect(webNotificationPath(data, 'admin')).toBe(`/admin/students/${STUDENT}`);
+      expect(webNotificationPath(data, 'guardian')).toBe('/portal');
+    }
   });
 
   it('meeting_invite: the meeting room, or each portal’s meetings list without a valid id', () => {

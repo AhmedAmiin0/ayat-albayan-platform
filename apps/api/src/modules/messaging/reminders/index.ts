@@ -18,6 +18,7 @@ export {
   staffStale,
   staffTeacherId,
 } from './plan/staff-reachable';
+export { teacherLessonCrm } from './plan/teacher-lesson.crm';
 export {
   type QueuedMessage,
   type QueuedParams,
@@ -30,7 +31,6 @@ export {
   approvedTemplates,
   queueMessages,
   REMINDER_KEYS,
-  RemindersQueries,
-} from './reminders.queries';
+  RemindersRepo,
+} from './reminders.repo';
 export { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
-export { Ticker, type TickerOptions } from './ticker';

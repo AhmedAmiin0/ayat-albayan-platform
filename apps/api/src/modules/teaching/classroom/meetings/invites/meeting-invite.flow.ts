@@ -6,14 +6,14 @@ import {
   type MeetingInviteResult,
 } from '@ab/shared';
 import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
-import { CLASSROOM_WEB_ORIGIN } from '../../classroom.config';
-import type { MeetingRow } from '../../internal-meetings/internal-meetings.queries';
-import { hashMeetingToken, newMeetingToken } from '../../internal-meetings/internal-meetings.token';
+import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.config';
+import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { hashMeetingToken, newMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { CHAT_NOT_ALLOWED, visibleCode, type InvitePolicy } from './meeting-invite.policy';
 import { MeetingInviteSender, type DeliveryOutcome } from './meeting-invite.sender';
 import { inviteDedupKey, invitationText, inviteeWhen, inviteSubject } from './meeting-invite.text';
 import type { ResolvedInvitee } from './meeting-invitee.resolver';
-import { MeetingInviteesQueries, type StoredInvitee } from './meeting-invitees.queries';
+import { MeetingInviteesRepo, type StoredInvitee } from './meeting-invitees.repo';
 import { toInviteeView } from './meeting-invites.mapper';
 
 const DAY_MS = 86_400_000;
@@ -51,7 +51,7 @@ interface PersonalSend {
 @Injectable()
 export class MeetingInviteFlow {
   constructor(
-    private readonly invitees: MeetingInviteesQueries,
+    private readonly invitees: MeetingInviteesRepo,
     private readonly sender: MeetingInviteSender,
     @Inject(CLASSROOM_WEB_ORIGIN) private readonly origin: string,
   ) {}

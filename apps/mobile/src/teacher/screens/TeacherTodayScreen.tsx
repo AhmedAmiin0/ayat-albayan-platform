@@ -1,15 +1,14 @@
-import { counted, formatRunningHead, RIYADH_TZ } from '@ab/shared';
+import { counted, formatRunningHead } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import { LiveSessions } from '@/live/LiveSessions';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/components/Notice';
-import { localDate } from '@/today/lib/timeline';
-import { useGreeting } from '@/today';
+import { localDate, useGreeting } from '@/today';
 import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
@@ -19,10 +18,10 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { dayWindow, lessonsOn, reportAction } from '../lib/day';
-import { useMyLessons, usePendingReports, useTeacherMe } from '../lib/queries';
-import { TeacherLessonCard } from '../components/TeacherLessonCard';
-import { useClockCycle } from '@/core/lib/clock';
+import { dayWindow, lessonsOn, reportAction } from '@/teacher/lib/day';
+import { useMyLessons, usePendingReports } from '@/teacher/lib/queries';
+import { TeacherLessonCard } from '@/teacher/components/TeacherLessonCard';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
@@ -50,7 +49,7 @@ function PendingBanner({ count }: { count: number }) {
 export function TeacherTodayScreen() {
   const cycle = useClockCycle();
   const now = useNow();
-  const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const today = localDate(now, tz);
   const day = useMyLessons(dayWindow(today));
   const pending = usePendingReports();
@@ -69,7 +68,7 @@ export function TeacherTodayScreen() {
         size="h2"
         connecting
         trailing={<BellButton tree="teacher" />}
-        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
+        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle, tz))}` : dateLine}
       />
       <LiveSessions lessons={lessons} />
       <PendingBanner count={pending.data?.length ?? 0} />

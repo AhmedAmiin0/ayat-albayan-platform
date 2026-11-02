@@ -4,7 +4,7 @@ import { fakeSettings, readerOf } from '../../../../common/settings/settings.fak
 import { AssistantPaySettings, type AssistantPaySettingsValues } from './assistant-pay.settings';
 
 /** Pinned by hand: every key TermsQueries reads. */
-const EXPECTED = ['renewal_commission_percent'] as const;
+const EXPECTED = ['renewal_commission_enabled', 'renewal_commission_percent'] as const;
 
 describe('AssistantPaySettings', () => {
   it('reads exactly the keys its consumers use, with the registry defaults', async () => {

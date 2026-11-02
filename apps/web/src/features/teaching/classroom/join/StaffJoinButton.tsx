@@ -3,12 +3,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
-import { classroomErrorText } from '../room/livekit/errors';
+import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
 import { EnterButton, type JoinableLesson } from './JoinButton';
-import { openRoom } from '../api/meetings-api';
+import { openRoom } from '@/features/teaching/classroom/api/meetings-api';
 import { useNow } from '@/lib/time/use-now';
 
 interface Props {

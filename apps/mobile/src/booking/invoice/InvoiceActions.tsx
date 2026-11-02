@@ -1,4 +1,4 @@
-import type { ReceiptSource } from '@/payments/receipt';
+import type { ReceiptSource } from '@/core/lib/receipts/receipt';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';

@@ -1,8 +1,9 @@
-import { RIYADH_TZ, type TeacherReportView } from '@ab/shared';
+import type { TeacherReportView } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { useState, type ReactElement } from 'react';
 
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -10,8 +11,8 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { usePendingReports, useTeacherMe } from '../lib/queries';
-import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '../components/ReportRows';
+import { usePendingReports, useTeacherMe } from '@/teacher/lib/queries';
+import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '@/teacher/components/ReportRows';
 
 type View = 'pending' | 'submitted' | 'students';
 
@@ -49,7 +50,7 @@ interface Rows {
 export function TeacherReportsScreen() {
   const [view, setView] = useState<View>('pending');
   const me = useTeacherMe();
-  const tz = me.data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const pending = usePendingReports();
   const sent = usePagedList<TeacherReportView>({ path: '/teachers/me/reports' });
   const rows: Record<View, Rows> = {

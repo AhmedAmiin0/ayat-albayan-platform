@@ -1,5 +1,5 @@
 import type { PortalReport } from '@ab/shared';
-import type { PortalRecordingRow, PortalReportRow } from './portal-reports.queries';
+import type { PortalRecordingRow, PortalReportRow } from './portal-reports.repo';
 
 /** The newest visible recording per lesson (rows come newest first). */
 export function recordingByLesson(rows: readonly PortalRecordingRow[]): Map<string, string> {

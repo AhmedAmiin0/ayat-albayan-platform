@@ -1,17 +1,19 @@
 import { payoutStatusStyle, type AssistantStatementView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { CardTitle } from './CardTitle';
 import { CurrencyTotalsBlock } from './CurrencyTotalsBlock';
 import { LinesToggle } from './LinesToggle';
 import { MoneyCard } from './MoneyCard';
-import { statementMonth, statementWhen } from '../lib/money-text';
+import { statementMonth, statementWhen } from '@/sales-money/lib/money-text';
+import { useViewerTz } from '@/core/lib/clock';
 
 /** One month's statement of mine (web StatementCard): status, when, the totals per currency, its lines. */
 export function MyStatementCard({ statement: s }: { statement: AssistantStatementView }) {
-  const when = statementWhen(s);
+  const tz = useViewerTz();
+  const when = statementWhen(s, tz);
   return (
     <MoneyCard>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>

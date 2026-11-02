@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { downloadCsv, exportErrorCode, type ExportKind, type ExportRequest } from './api';
 

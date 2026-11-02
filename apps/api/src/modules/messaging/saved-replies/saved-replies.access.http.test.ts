@@ -1,6 +1,6 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import type { PermissionResolver } from '../../../common/auth/permissions';
+import type { PermissionResolver } from '@/common/auth/permissions';
 import { replyId, repliesApp, row } from './saved-replies.fakes';
 
 type App = Awaited<ReturnType<typeof repliesApp>>;
@@ -37,6 +37,20 @@ describe('an assistant without saved_replies.manage', () => {
     expect(list.json<{ id: string }[]>().map((r) => r.id)).not.toContain(HERS);
   });
 
+  it('PATCH with a malformed :id is 404 before the body is parsed', async () => {
+    const res = await t.call({ method: 'PATCH', url: '/saved-replies/nope', body: { title: 7 } });
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
+  });
+
+  it('move / stage / DELETE: a malformed :id is 404; a bad body still wins over it (400)', async () => {
+    for (const url of ['/saved-replies/nope/move', '/saved-replies/nope/stage']) {
+      const both = await t.call({ method: 'POST', url, body: {} });
+      expect([both.statusCode, both.json<{ message: string }>().message]).toEqual([400, 'validation_failed']);
+    }
+    const gone = await t.call({ method: 'DELETE', url: '/saved-replies/nope' });
+    expect([gone.statusCode, gone.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
+  });
+
   it('even the admin cannot reach an assistant\'s personal reply', async () => {
     const res = await t.call({ method: 'PATCH', url: `/saved-replies/${HERS}`, body: { title: 'ج' } });
     expect(res.statusCode).toBe(404);
@@ -45,6 +59,11 @@ describe('an assistant without saved_replies.manage', () => {
   it('a teacher granted the permission still gets 403 on every route', async () => {
     const res = await t.call({ method: 'POST', url: '/saved-replies', token: 'teacher', body: { scope: 'mine', title: 'ع', body: 'ب' } });
     expect(res.statusCode).toBe(403);
+  });
+
+  it('answers 403 saved_replies_forbidden before the body is parsed (an invalid body is not a 400)', async () => {
+    const res = await t.call({ method: 'POST', url: `/saved-replies/${SHARED}/move`, token: 'teacher', body: {} });
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([403, 'saved_replies_forbidden']);
   });
 });
 

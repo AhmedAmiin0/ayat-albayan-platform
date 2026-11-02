@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { PHONE, threadRow } from '../inbox.fakes';
-import type { InboxSettings } from '../inbox.settings';
-import type { Outbox } from '../send/outbox';
+import type { StorageService } from '@/common/storage/storage.service';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import type { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadFileSender } from './thread-file-send.service';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const ACTOR = 's0000000-0000-4000-8000-000000000001';
@@ -18,7 +18,7 @@ const queries = { thread: vi.fn() };
 const outbox = { queue: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), signedUpload: vi.fn() };
 const sender = (maxMb?: number) => {
-  const s = new ThreadFileSender(queries as unknown as ThreadsQueries, outbox as unknown as Outbox, storage as unknown as StorageService);
+  const s = new ThreadFileSender(queries as unknown as ThreadsRepo, outbox as unknown as Outbox, storage as unknown as StorageService);
   if (maxMb !== undefined) Object.assign(s, { settings: { read: async () => ({ upload_max_mb: maxMb }) } satisfies Pick<InboxSettings, 'read'> });
   return s;
 };

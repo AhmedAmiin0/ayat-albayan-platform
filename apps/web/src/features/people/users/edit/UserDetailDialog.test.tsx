@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { UserDetailDialog } from './UserDetailDialog';
-import { fakeApi, renderWithClient } from '../users-test-kit';
+import { fakeApi, renderWithClient } from '@/features/people/users/users-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

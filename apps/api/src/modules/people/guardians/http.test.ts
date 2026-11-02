@@ -6,17 +6,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { blankToNull, dbError, listQuerySchema, orSafe, pageRange, parse } from './http';
+import { z } from 'zod';
+import { parseOrThrow } from '@/common/http/http';
+import { blankToNull, blanksToNull, dbError, listQuerySchema, orSafe, pageRange } from './http';
 
-describe('parse', () => {
+const createBody = blanksToNull(guardianCreateSchema);
+
+describe('the guardian create body (parseOrThrow + blanksToNull)', () => {
   it('returns the parsed value; phones come out E.164 (R-STU-02)', () => {
-    const dto = parse(guardianCreateSchema, { name: 'ام جود', phone_e164: '0501234567', tz: 'Asia/Riyadh' });
+    const dto = parseOrThrow(createBody, {
+      name: 'ام جود',
+      phone_e164: '0501234567',
+      tz: 'Asia/Riyadh',
+    });
     expect(dto.phone_e164).toBe('+966501234567');
   });
 
   it('throws 400 validation_failed with the issue path and reason', () => {
     try {
-      parse(guardianCreateSchema, { name: 'x', phone_e164: '@handle', tz: 'Asia/Riyadh' });
+      parseOrThrow(createBody, { name: 'x', phone_e164: '@handle', tz: 'Asia/Riyadh' });
       expect.unreachable();
     } catch (e) {
       expect(e).toBeInstanceOf(BadRequestException);
@@ -30,13 +38,24 @@ describe('parse', () => {
 
 describe('blankToNull', () => {
   it("turns '' into null, recursing into nested objects", () => {
-    expect(blankToNull({ a: '', b: 'x', c: { d: '' }, e: 0 })).toEqual({ a: null, b: 'x', c: { d: null }, e: 0 });
+    expect(blankToNull({ a: '', b: 'x', c: { d: '' }, e: 0 })).toEqual({
+      a: null,
+      b: 'x',
+      c: { d: null },
+      e: 0,
+    });
   });
 
   it('leaves non-objects and arrays alone', () => {
     expect(blankToNull('x')).toBe('x');
     expect(blankToNull(['', 'a'])).toEqual(['', 'a']);
     expect(blankToNull(undefined)).toBeUndefined();
+  });
+
+  it('blanksToNull runs it before the schema', () => {
+    expect(blanksToNull(z.object({ a: z.string().nullable() })).parse({ a: '' })).toEqual({
+      a: null,
+    });
   });
 });
 

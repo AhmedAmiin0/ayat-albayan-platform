@@ -1,12 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { createStudent, duplicateCandidates, mergeStudents, STUDENTS_KEY } from '../api';
+import { createStudent, duplicateCandidates, mergeStudents, STUDENTS_KEY } from '@/features/people/students/api';
 import { toCreateBody, type CreateStudentValues } from './create-student';
 import { CreateStudentForm } from './CreateStudentForm';
-import { DuplicateDialog } from '../duplicates/DuplicateDialog';
-import { MergeDialog } from '../duplicates/MergeDialog';
-import type { StudentRef } from '../types';
+import { DuplicateDialog } from '@/features/people/students/duplicates/DuplicateDialog';
+import { MergeDialog } from '@/features/people/students/duplicates/MergeDialog';
+import type { StudentRef } from '@/features/people/students/types';
 
 type CreateStudentDialogProps = {
   onClose: () => void;

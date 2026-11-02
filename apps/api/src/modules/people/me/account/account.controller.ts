@@ -7,11 +7,12 @@ import {
   type AccountProfile,
   type SignedUpload,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Patch, Post, Put } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Patch, Post, Put } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, SignedIn } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { CurrentUser, SignedIn } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
 
@@ -36,29 +37,44 @@ export class AccountController {
   }
 
   @Patch('profile')
-  updateProfile(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AccountProfile> {
-    return this.account.updateProfile(user, parseOrThrow(profileUpdateSchema, body));
+  updateProfile(
+    @ZodBody(profileUpdateSchema) body: z.output<typeof profileUpdateSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<AccountProfile> {
+    return this.account.updateProfile(user, body);
   }
 
   @Put('email')
-  changeEmail(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AccountProfile> {
-    return this.account.changeEmail(user, parseOrThrow(emailChangeSchema, body));
+  changeEmail(
+    @ZodBody(emailChangeSchema) body: z.output<typeof emailChangeSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<AccountProfile> {
+    return this.account.changeEmail(user, body);
   }
 
   @Put('password')
   @HttpCode(204)
-  changePassword(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.account.changePassword(user, parseOrThrow(passwordChangeSchema, body));
+  changePassword(
+    @ZodBody(passwordChangeSchema) body: z.output<typeof passwordChangeSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.account.changePassword(user, body);
   }
 
   @Post('avatar/upload-url')
-  avatarUploadUrl(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SignedUpload> {
-    return this.avatar.uploadUrl(user, parseOrThrow(avatarUploadSchema, body));
+  avatarUploadUrl(
+    @ZodBody(avatarUploadSchema) body: z.output<typeof avatarUploadSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SignedUpload> {
+    return this.avatar.uploadUrl(user, body);
   }
 
   @Put('avatar')
-  setAvatar(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AccountProfile> {
-    return this.avatar.set(user, parseOrThrow(avatarSetSchema, body).path);
+  setAvatar(
+    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<AccountProfile> {
+    return this.avatar.set(user, body.path);
   }
 
   @Delete('avatar')

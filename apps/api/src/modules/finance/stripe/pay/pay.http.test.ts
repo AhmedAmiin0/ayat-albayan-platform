@@ -31,7 +31,7 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
   it('no login; the first name, the amount and the package only; rate-limited per IP and link', async () => {
     const res = await json(`/pay/${TOKEN}`);
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ status: 'open', first_name: 'سهيلة', amount: 120, currency: 'SAR', package: '4', lessons: 4 });
+    expect(res.json()).toEqual({ status: 'open', first_name: 'سهيلة', amount: 120, currency: 'SAR', package: '4', lessons: 4, sandbox: true });
     expect(s.limit.check).toHaveBeenCalledWith(expect.any(String), TOKEN);
     s.links.byToken.mockResolvedValue(linkRow({ expires_at: '2020-01-01T00:00:00Z' }));
     expect((await json(`/pay/${TOKEN}`)).json().status).toBe('expired');
@@ -57,8 +57,8 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
   });
 
   it('an open session is reused; a lost race expires its own session and follows the winner', async () => {
-    s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_old' }));
-    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_old', status: 'open', url: 'https://checkout.stripe.com/old' });
+    s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_test_old' }));
+    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_test_old', status: 'open', url: 'https://checkout.stripe.com/old' });
     expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe('https://checkout.stripe.com/old');
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
     s.links.byToken.mockResolvedValue(linkRow());
@@ -91,10 +91,8 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });
 
-  it('a live key in Vault is refused, as is a missing key: back to the API’s page, never a session', async () => {
-    s.settings.secret.mockResolvedValue('rk_live_abc');
-    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
-    s.settings.secret.mockResolvedValue(null);
+  it('no key saved in «التكاملات»: back to the API’s page, never a session (a live key never loads)', async () => {
+    vi.stubEnv('STRIPE_API_KEY', '');
     expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });

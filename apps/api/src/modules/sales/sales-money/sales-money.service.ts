@@ -20,7 +20,7 @@ import { salesStartsOn } from './sales-start';
 
 /**
  * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one
- * checks the student is hers (403 not_your_student; any of the chat's family with sales.renew_any, row 38), then REUSES the admin's services with her as the actor
+ * checks the student is hers (403 not_your_student; ANY student with sales.renew_any, row 38), then REUSES the admin's services with her as the actor
  * (SubscriptionCreator: catalog quote, replay, audit, lead conversion; PaymentsService: replay, receipt
  * path, audit, recompute, trial → «مشترك»). It counts at once: no admin confirmation. Whitelisted views.
  * Narrower than the admin (owner 2026-10-12): only the site's discount pills, and the transfer in the package
@@ -35,14 +35,14 @@ export class SalesMoney {
   ) {}
 
   async quote(input: SalesQuote, user: AuthUser): Promise<SalesQuoteView> {
-    await this.scope.assertOwns(user, input.studentId, input.phone);
+    await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
     return toSalesQuote(await this.services.creator.quote({ studentId: input.studentId, pricing: input.pricing }));
   }
 
   /** The start day: salesStartsOn (docs/16 row 24). */
   async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
-    await this.scope.assertOwns(user, input.studentId, input.phone);
+    await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
     const startsOn = salesStartsOn(input, user, now);
     const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input; // alreadyStarted is not a column
@@ -58,9 +58,9 @@ export class SalesMoney {
    * package's, uploaded files; the currency must be the package's (400 currency_mismatch; the field stays).
    */
   async pay(input: SalesPaymentCreate, user: AuthUser): Promise<SalesPaymentView> {
-    const { phone, ...payment } = input; // the chat's phone is the scope's, never a payment column
+    const { phone, ...payment } = input; // the chat's phone is never a payment column
     const sub = await this.services.receipts.subscription(input.subscriptionId);
-    await this.scope.assertOwns(user, sub.student_id, phone);
+    await this.scope.assertRenews(user, sub.student_id);
     if (input.currency !== sub.currency) throw badRequest('currency_mismatch', { currency: sub.currency });
     const view = await this.services.payments.create({ ...payment, kind: 'payment', method: 'bank' }, user.id);
     if (view.subscription_id !== sub.id) throw conflict('client_request_reused');
@@ -68,9 +68,9 @@ export class SalesMoney {
   }
 
   async uploadUrl(input: SalesReceiptUpload, ctx: { user: AuthUser; maxBytes: number }): Promise<SignedUpload> {
-    const { phone, ...upload } = input;
+    const { phone, ...upload } = input; // the chat's phone is never an upload field
     const sub = await this.services.receipts.subscription(input.subscriptionId);
-    await this.scope.assertOwns(ctx.user, sub.student_id, phone);
+    await this.scope.assertRenews(ctx.user, sub.student_id);
     return this.services.receipts.uploadUrl(upload, ctx.maxBytes);
   }
 

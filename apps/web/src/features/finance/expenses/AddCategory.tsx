@@ -5,7 +5,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { addCategory } from './api';
 

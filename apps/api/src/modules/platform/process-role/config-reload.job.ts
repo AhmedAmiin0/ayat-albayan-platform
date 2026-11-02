@@ -1,11 +1,11 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type Type } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { IntegrationConfigService } from '../../../common/integrations/integration-config.service';
-import { BackgroundJob } from '../../../config/role/background-job';
-import { DbRulesReader } from '../../messaging/notification-rules';
-import { NumbersConfig, OwnNumbers } from '../../messaging/numbers';
-import { GoogleConnection, GoogleSettings } from '../google-sync';
-import { TranslationsService } from '../translations';
+import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
+import { BackgroundJob } from '@/config/role/background-job';
+import { DbRulesReader } from '@/modules/messaging/notification-rules';
+import { NumbersConfig, OwnNumbers } from '@/modules/messaging/numbers';
+import { GoogleConnection, GoogleSettings } from '@/modules/platform/google-sync';
+import { TranslationsService } from '@/modules/platform/translations';
 
 /**
  * The worker's and the other API copies' copy of the config an admin saves on one API copy (docs/09 «Known

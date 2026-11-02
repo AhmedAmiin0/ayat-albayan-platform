@@ -1,11 +1,11 @@
 import type { ThreadReopenView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import type { SalesScope } from '../../../sales/sales/sales-scope';
-import { assertCanSend, type TeacherScope } from '../teacher-threads/teacher-scope';
-import { messagingWindowOpen } from '../threads/threads.mapper';
-import { ThreadsQueries } from '../threads/threads.queries';
+import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { messagingWindowOpen } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { KapsoReopener, last4 } from './kapso-reopener';
-import type { Sent } from '../send/outbox';
+import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { ReopenTemplate, type Queued } from './reopen-template';
 
 interface ReopenRequest {
@@ -33,7 +33,7 @@ export class ThreadReopenService {
   private readonly log = new Logger('ThreadReopen');
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly kapso: KapsoReopener,
     private readonly template: ReopenTemplate,
   ) {}

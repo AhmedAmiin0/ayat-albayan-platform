@@ -10,10 +10,11 @@ import {
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest } from '../../../common/http/errors';
-import { parseOrThrow } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { PayoutsGenerator } from './payouts.generate';
 import { PayoutsLedger } from './payouts.ledger';
 import { PayoutsPayment } from './payouts.payment';
@@ -39,30 +40,45 @@ export class PayoutsController {
 
   @Post(':month/generate')
   @HttpCode(200)
-  generate(@Param('month') month: string, @CurrentUser() user: AuthUser): Promise<PayoutGenerateResult> {
-    if (!monthParam.safeParse(month).success) throw badRequest('invalid_month');
+  generate(
+    @ZodParam('month', monthParam, () => badRequest('invalid_month')) month: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PayoutGenerateResult> {
     return this.generator.generate(month, user.id);
   }
 
   @Post(':id/approve')
   @HttpCode(200)
   @Permissions('payouts.approve')
-  approve(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+  approve(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PayoutView> {
     return this.payouts.approve(id, user.id);
   }
 
   /** approved → draft («إعادة فتح»): only while not paid. */
   @Post(':id/reopen')
   @HttpCode(200)
-  reopen(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+  reopen(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PayoutView> {
     return this.ledger.reopen(id, user.id);
   }
 
   /** paid → approved («إلغاء الدفع»): voids the settlement payment, with a reason. */
   @Post(':id/unpay')
   @HttpCode(200)
-  unpay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView> {
-    return this.ledger.unpay(id, { ...parseOrThrow(voidReasonSchema, body ?? {}), actorId: user.id });
+  unpay(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PayoutView> {
+    return this.ledger.unpay(id, {
+      ...parseOrThrow(voidReasonSchema, body ?? {}),
+      actorId: user.id,
+    });
   }
 }
 
@@ -82,7 +98,11 @@ export class PayoutPaymentController {
   @Post(':id/pay')
   @HttpCode(200)
   @Permissions('payouts.write')
-  pay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+  pay(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PayoutView> {
     return this.payment.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
   }
 }
@@ -102,6 +122,8 @@ export class TeacherPayoutsController {
 
   @Get()
   async mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView[]> {
-    return this.ledger.annotate(await this.payouts.mine(user.id, parseOrThrow(mineQuery, query).month));
+    return this.ledger.annotate(
+      await this.payouts.mine(user.id, parseOrThrow(mineQuery, query).month),
+    );
   }
 }

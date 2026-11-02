@@ -5,7 +5,7 @@ import { salesPeopleQuery } from '@/features/sales/sales/api';
 import { t } from '@/lib/i18n/i18n';
 import { LeadFilterFields } from './LeadFilterFields';
 import { CLEAR_LEAD_FILTERS, leadFilterChips } from './lead-filters';
-import type { LeadSearch } from '../types';
+import type { LeadSearch } from '@/features/sales/leads/types';
 
 export interface LeadsToolbarProps {
   search: LeadSearch;

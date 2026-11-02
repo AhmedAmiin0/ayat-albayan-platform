@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { Composer } from './Composer';
-import { message, PHONE, thread } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

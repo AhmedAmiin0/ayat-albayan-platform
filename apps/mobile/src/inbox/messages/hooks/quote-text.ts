@@ -1,10 +1,4 @@
-import {
-  mediaKindOf,
-  type MessageQuote,
-  type MessageView,
-  QUOTE_BODY_MAX,
-  quoteLine,
-} from '@ab/shared';
+import { type MessageQuote, type MessageView, QUOTE_BODY_MAX, quoteSnippet } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 
 // The words of a quote (owner 2026-10-25 «رد»): over a bubble that answers one, and in the composer's strip.
@@ -27,10 +21,10 @@ export function quoteSender(q: MessageQuote, threadName: string | null): string 
   return q.sender_name ?? t.inbox.reply.you;
 }
 
-/** Its first line; a file says its kind (before the caption); a template says so. */
+/**
+ * Its first line, as WhatsApp (owner 2026-10-31): a file without a caption says its kind («ملف PDF»
+ * apart; quoteIcon stands before either); a template says so.
+ */
 export function quoteText(q: MessageQuote): string {
-  const kind = mediaKindOf(q.media_mime);
-  const parts = [kind ? t.inbox.media[kind] : '', quoteLine(q.body)].filter(Boolean);
-  if (parts.length) return parts.join(' · ');
-  return q.template_key ? t.inbox.reply.template : t.inbox.media.other;
+  return quoteSnippet(q, { media: t.inbox.media, template: t.inbox.reply.template });
 }

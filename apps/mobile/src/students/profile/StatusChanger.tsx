@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useOptimisticStatus, type StatusChange, type StatusRequest } from '@/core/lib/query/use-optimistic-status';
 import { type, useTheme } from '@/theme';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { SectionLabel } from '../list/SectionLabel';
-import type { StudentRef } from '../shared/types';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
+import type { StudentRef } from '@/students/shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Students have no /status route: PATCH /students/:id, a compare-and-set on the status shown (R-STU-05). */

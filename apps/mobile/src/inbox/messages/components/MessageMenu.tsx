@@ -1,17 +1,20 @@
 import type { MessageView } from '@ab/shared';
 import { Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { type, useTheme } from '@/theme';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
-import { useChatActions } from '../../thread/hooks/chat-actions';
-import { quoteOf, quoteText } from '../hooks/quote-text';
-import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
-import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
-import { ReactionBar } from '../reactions/ReactionBar';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
+import { bubbleOffers, downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
+import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-download/chat-tools';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
+import { useHideRights } from '@/core/auth';
+import { HideActions } from '@/inbox/messages/components/hide/HideActions';
+import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -31,13 +34,16 @@ interface MessageMenuProps {
 /**
  * A long press on a bubble, at the bottom of the screen as the attach sheet, in WhatsApp's order: «رد»,
  * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
- * after the 24 h window (only a template can go then), with the reason under it.
+ * where no text can go (canSend: the text rule), with the reason under it.
  */
 export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();
   const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
-  const offers = m ? bubbleOffers(m, { enabled, teacher, react: reactable(m) }) : null;
+  const rights = useHideRights();
+  const offers = m
+    ? bubbleOffers(m, { enabled, teacher, react: reactable(m), ...rights })
+    : null;
   const reply = offers?.reply === true;
   const forward = offers?.forward === true;
   // After the menu has closed (iOS shows one modal at a time).
@@ -102,6 +108,10 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
             downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
           }}
         />
+      ) : null}
+      {m ? <StickerFavourite message={m} onClose={onClose} /> : null}
+      {m && offers ? (
+        <HideActions key={m.id} message={m} offers={offers} phone={phone} onClose={onClose} />
       ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </MenuSheet>

@@ -1,10 +1,10 @@
 import type { LessonStatus, SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict, notFound } from '../../../../common/http/errors';
-import { LessonCancelService, LessonStatusService, RescheduleOneService } from '../../../teaching/lessons';
-import { SalesStudentQueries } from '../details/sales-student.queries';
-import { SalesStudentScope } from '../sales-student-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { LessonCancelService, LessonStatusService, RescheduleOneService } from '@/modules/teaching/lessons';
+import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
+import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
@@ -31,7 +31,7 @@ export class LessonServices {
 export class SalesLessonActions {
   constructor(
     private readonly scope: SalesStudentScope,
-    private readonly queries: SalesStudentQueries,
+    private readonly queries: SalesStudentRepo,
     private readonly lessons: LessonServices,
   ) {}
 

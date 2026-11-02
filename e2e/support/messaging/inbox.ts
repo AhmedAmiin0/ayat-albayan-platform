@@ -40,13 +40,14 @@ export async function backdateInbound(input: { phone: string; hoursAgo: number }
 
 interface InboundRow {
   media_mime: string | null;
+  media_name: string | null;
   body: string | null;
 }
 
 /** Inbound rows of a phone (E.164), oldest first. */
 export async function inboundRows(phone: string): Promise<InboundRow[]> {
   return withSql((sql) => sql<InboundRow[]>`
-    select media_mime, body from public.messages
+    select media_mime, media_name, body from public.messages
     where phone_e164 = ${phone} and direction = 'inbound' order by created_at`);
 }
 

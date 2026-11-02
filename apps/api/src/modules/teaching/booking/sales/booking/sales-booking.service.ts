@@ -8,16 +8,16 @@ import type { SlotsQuery, TeacherOptionsQuery } from '../../booking.dto';
 import { BookingService } from '../../core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from '../course/sales-course.service';
-import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership } from './sales-booking.scope';
+import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership, type CourseGrant } from './sales-booking.scope';
 import { SlotsService } from '../../plan/slots.service';
 import { TeacherOptionsService } from '../../teacher/teacher-options.service';
 
 /**
  * The booking wizard for an assistant (R-ASST-01): the same planner, conflict check and create_booking
  * transaction as the admin's, with the assistant as the actor, so the new student's created_by is her and
- * the students trigger (migration 270) records brought_by / brought_at. Scope: sales-booking.scope.ts; for a
- * trial the ownership part only while settings.sales_auto_assign is ON (sales-booking.ownership.ts). A course
- * (kind 'package', self.sales_money, owner 2026-10-18) is always her own student's and passes SalesCourse: it
+ * the students trigger (migration 270) records brought_by / brought_at. Scope: sales-booking.scope.ts; the
+ * ownership part only while SalesOwnershipRule enforces it (sales-booking.ownership.ts). A course
+ * (kind 'package', self.sales_money, owner 2026-10-18) is one student's (hers while enforced, ANY with sales.renew_any) and passes SalesCourse: it
  * is booked with no invoice and ends on its N-th lesson; the rules' created_by is her.
  */
 @Injectable()
@@ -34,7 +34,7 @@ export class SalesBookingService {
   }
 
   /**
-   * 201 BookingResult; 409 conflict (never overridden) or duplicate_student; 403 (ON only, always for a course)
+   * 201 BookingResult; 409 conflict (never overridden) or duplicate_student; 403 (while the rule enforces)
    * not_your_lead / not_your_student / not_your_family; 400 date_in_past (a trial whose first lesson
    * already passed: the planner would book next week's occurrence instead, review M3); a course's codes: SalesCourse.options.
    */
@@ -56,8 +56,8 @@ export class SalesBookingService {
   }
 
   private async ownership(req: BookingRequest, user: AuthUser): Promise<BookingOwnership> {
-    const own = await this.scope.forRequest(req, user);
-    assertBookingScope(req, own, can(user, 'self.sales_money'));
+    const own = await this.scope.of(user);
+    assertBookingScope(req, own, courseGrant(user));
     return own;
   }
 
@@ -74,7 +74,13 @@ export class SalesBookingService {
   }
 }
 
-/** The wizard's two reads for an assistant: the same teachers and slots as the admin's, naming only her own students (any while auto-assign is OFF). */
+/** self.sales_money: a course of hers; with sales.renew_any of ANY student (docs/16 row 38). */
+function courseGrant(user: AuthUser): CourseGrant {
+  if (!can(user, 'self.sales_money')) return false;
+  return can(user, 'sales.renew_any') ? 'any' : true;
+}
+
+/** The wizard's two reads for an assistant: the same teachers and slots as the admin's, naming only her own students (any while the rule does not enforce). */
 @Injectable()
 export class SalesBookingOptions {
   constructor(
@@ -92,16 +98,23 @@ export class SalesBookingOptions {
   /**
    * `excludeLessonId` is kept only for a lesson of the grid's own students (her student's trial that
    * «موعد تجريبي جديد» moves); any other is dropped. `excludeCourse` («تغيير أيام الحلقات») frees only
-   * her own students' course lessons: those students must be hers whatever the switch. `lessonId` (her
+   * her own students' course lessons (any while the rule does not enforce). `lessonId` (her
    * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's they are,
    * since she may move ANY lesson (owner 2026-10-28, docs/16 row 37); a read of free slots, nothing booked.
+   * sales.renew_any: ANY student's grid (its course wizard, «تغيير أيام الحلقات»; docs/16 row 38).
    */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
     const ids = q.studentIds ?? [];
-    if (ids.length && !(await this.moving(q, user))) assertOwnStudents(ids, await this.scope.of(user));
-    if (q.excludeCourse) assertOwnStudents(ids, await this.scope.owned(user));
+    if (!can(user, 'sales.renew_any')) await this.assertOwnGrid(q, user);
     const keep = !!q.excludeLessonId && ids.length > 0 && (await this.scope.ownLesson(q.excludeLessonId, ids));
     return this.slotsService.slots({ ...q, excludeLessonId: keep ? q.excludeLessonId : undefined });
+  }
+
+  /** Hers while the rule enforces it (any otherwise), or the lesson she moves; a course's always hers then. */
+  private async assertOwnGrid(q: SlotsQuery, user: AuthUser): Promise<void> {
+    const ids = q.studentIds ?? [];
+    const free = !q.excludeCourse && (await this.moving(q, user));
+    if (ids.length && !free) assertOwnStudents(ids, await this.scope.of(user));
   }
 
   private async moving(q: SlotsQuery, user: AuthUser): Promise<boolean> {

@@ -2,13 +2,15 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { daysText, weekdayName } from '../lib/course-days';
-import { fakeCourseApi, isDisabled, press, pressEnabled } from '../testing/course-test-utils';
-import { CourseScreen } from '../screens/CourseScreen';
-import { bookedCourse, courseView, PREV_SUB_ID, STUDENT_ID } from '../testing/fixtures';
+import { daysText, weekdayName } from '@/sales-course/lib/course-days';
+import { fakeCourseApi, isDisabled, press, pressEnabled } from '@/sales-course/testing/course-test-utils';
+import { CourseScreen } from '@/sales-course/screens/CourseScreen';
+import { bookedCourse, courseView, PREV_SUB_ID, STUDENT_ID } from '@/sales-course/testing/fixtures';
+
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -43,7 +45,7 @@ afterEach(() => jest.useRealTimers());
 test('a renewal offers the previous days from the day after its last lesson', async () => {
   await renderWithQuery(<CourseScreen />);
   const hint = t.booking.courseChange.continueHint
-    .replace('{days}', daysText(previous.days, TZ, '24'))
+    .replace('{days}', daysText(previous.days, TZ, R24))
     .replace('{date}', localDay('2026-10-11'));
   expect(await screen.findByText(hint)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.courseChange.pickOtherDays })).toBeTruthy();
@@ -53,8 +55,8 @@ test('a renewal offers the previous days from the day after its last lesson', as
 test('«تابِع بنفس الأيام»: the same teacher and days, prefilled, checked and booked on the new subscription', async () => {
   await renderWithQuery(<CourseScreen />);
   await pressEnabled(t.booking.courseChange.continueSameDays);
-  expect(await screen.findByText(dayLine(SUN_11, TZ, '24'))).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_15, TZ, '24'))).toBeTruthy();
+  expect(await screen.findByText(dayLine(SUN_11, TZ, R24))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_15, TZ, R24))).toBeTruthy();
   expect(await screen.findByText(maryam.display_name_ar)).toBeTruthy(); // the summary's teacher, once loaded
   expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
   const body = {
@@ -90,8 +92,8 @@ test('a prefilled day taken since: its day is named, «اختر موعدًا آ�
   expect(isDisabled(t.booking.submit)).toBe(true);
   await press('button', t.booking.changeSlot);
   await screen.findAllByRole('checkbox', { name: '17:00' });
-  expect(screen.getByText(dayLine(SUN_11, TZ, '24'))).toBeTruthy(); // the picks stay
-  expect(screen.getByText(dayLine(THU_15, TZ, '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(SUN_11, TZ, R24))).toBeTruthy(); // the picks stay
+  expect(screen.getByText(dayLine(THU_15, TZ, R24))).toBeTruthy();
   const [slots] = reads('/sales/booking/slots');
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain(`from=${encodeURIComponent('2026-10-10T21:00:00.000Z')}`); // midnight 11 Oct, Riyadh

@@ -4,16 +4,16 @@ import { t } from '@/core/lib/i18n/i18n';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import MakeupRoute from '../../../app/(tabs)/students/makeup/[lessonId]';
-import { makeupParams } from '../makeup/makeup-draft';
+import { makeupParams } from '@/booking/makeup/makeup-draft';
 import { lesson, yusuf } from '@/today/testing/fixtures';
 
 // The makeup wizard is a screen of the Students tab's stack, so the root stack's admin gate
 // (Stack.Protected on (tabs)) covers it: a teacher never reaches it.
 // The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
-jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
+jest.mock('@/core/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
-jest.mock('../makeup/MakeupWizard', () => ({
+jest.mock('@/booking/makeup/MakeupWizard', () => ({
   MakeupWizard: ({ source }: { source: { studentName: string; durationMin: number } }) => {
     const { Text: T } = jest.requireActual('react-native');
     return <T>{`wizard:${source.studentName}:${source.durationMin}`}</T>;

@@ -1,6 +1,6 @@
 // «الجدول» rows of «تفاصيل الطالب» as the database could return them, secrets present (test-only, *.fakes.ts).
 import type { SalesScheduleRow } from '../sales';
-import type { WeeklyRuleRow } from './details/sales-student.queries';
+import type { WeeklyRuleRow } from '@/modules/sales/sales';
 
 /** An imported-style weekly rule (Sun, Tue, Thu 19:00 Riyadh) carrying a link the payload must never show. */
 export const ruleRow = (): WeeklyRuleRow & { meeting_link: string } => ({

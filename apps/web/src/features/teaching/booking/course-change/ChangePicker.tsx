@@ -2,11 +2,12 @@ import { counted, pickProgress, togglePick, type CourseChangeView } from '@ab/sh
 import { Button } from '@/components/ui/form/button';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
 import { t } from '@/lib/i18n/i18n';
-import { DayTimesList } from '../steps/slots/DayTimesList';
-import { dayPicks, withPicks } from '../draft/draft.days';
+import { DayTimesList } from '@/features/teaching/booking/steps/slots/DayTimesList';
+import { dayPicks, withPicks } from '@/features/teaching/booking/draft/draft.days';
 import { picksReady } from './change-body';
 import { currentDaysText } from './change-text';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface ChangePickerProps {
   view: CourseChangeView;
@@ -28,7 +29,7 @@ export interface ChangePickerProps {
  * before its startsOn stay reachable.
  */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { course, student } = view;
   const zoned = { ...withPicks(picks), kind: 'package' as const, tz: course.tz };
   const listed = dayPicks(zoned);

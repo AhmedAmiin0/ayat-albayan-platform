@@ -11,6 +11,8 @@ const msg = (over: Partial<ChannelMessageView>): ChannelMessageView => ({
   sender_name: 'أبرار',
   mine: true,
   created_at: '2026-10-27T10:05:00.000Z',
+  edited: false,
+  deleted: false,
   ...over,
 });
 const styleOf = (id: string) => StyleSheet.flatten(screen.getByTestId(`channel-bubble-${id}`).props.style);

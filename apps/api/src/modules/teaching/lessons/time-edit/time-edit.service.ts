@@ -1,14 +1,15 @@
 import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { TimeEditChange } from '../../scheduling/change-set';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { conflict, errorCode } from '../../../../common/http/errors';
-import { studentIdsOf, type LessonRow } from '../store/lesson-row';
-import { LessonStore } from '../store/lesson-store';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { ScheduleChange } from '@/common/infra/events/lesson-events';
+import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { conflict, errorCode } from '@/common/http/errors';
+import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { TimeEditPayout } from './time-edit.payout';
 import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from './time-edit.plan';
-import { forMessages } from '../status/confirmation-messages';
+import { forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
 type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };
@@ -44,7 +45,8 @@ export class LessonTimeService {
     const messages = plan.notify ? await this.notices(row, plan) : [];
     const overrideReason = clashes.length > 0 ? (body.override?.reason ?? null) : null;
     try {
-      await this.store.retime(changeOf({ row, plan, actor, messages, overrideReason }));
+      const change = changeOf({ row, plan, actor, messages, overrideReason });
+      await this.store.retime(change, movedNotice({ row, plan, actor }));
     } catch (e) {
       // Two identical requests at once: the loser finds the edit it asked for already in place.
       if (errorCode(e) === 'stale_time' && (await this.alreadyHolds(lessonId, body))) return NOTHING;
@@ -98,6 +100,22 @@ function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
   }
   const zones = [row.teacher?.tz ?? 'UTC', ...row.lesson_students.map((s) => s.student?.tz ?? 'UTC')];
   return { mode, now: new Date(), current, request, zones };
+}
+
+interface NoticeInput {
+  row: LessonRow;
+  plan: TimeEditPlan;
+  actor: AuthUser;
+}
+
+/**
+ * The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody), only when
+ * the admin left «notify» on AND the start moved: a length-only edit or notify:false tells nobody.
+ */
+function movedNotice({ row, plan, actor }: NoticeInput): ScheduleChange | undefined {
+  if (!plan.notify || !plan.startChanged) return undefined;
+  const fromStartsAt = row.starts_at;
+  return { kind: 'lesson_rescheduled', lessonId: row.id, fromStartsAt, actorId: actor.id };
 }
 
 type ChangeInput = {

@@ -1,15 +1,15 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TeacherScopes } from '../../../../messaging/inbox/teacher-threads/teacher-scope';
-import { ADMIN, ASSISTANT, SALES, TEACHER } from '../../classroom.fakes';
+import type { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { ADMIN, ASSISTANT, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MeetingInvitePolicies } from './meeting-invite.policy';
-import type { MeetingInviteeQueries } from './meeting-invitee.queries';
+import type { MeetingInviteeRepo } from './meeting-invitee.repo';
 import { dedupeInvitees, MeetingInviteeResolver } from './meeting-invitee.resolver';
 import { OPEN_PHONE, pickQueries, STAFF_ID, STUDENT_A, teacherScopesFake } from './meeting-invites.fakes';
 
 let picks: ReturnType<typeof pickQueries>;
 const resolver = () =>
-  new MeetingInviteeResolver(picks as unknown as MeetingInviteeQueries, new MeetingInvitePolicies(teacherScopesFake() as unknown as TeacherScopes));
+  new MeetingInviteeResolver(picks as unknown as MeetingInviteeRepo, new MeetingInvitePolicies(teacherScopesFake() as unknown as TeacherScopes));
 const typed = [{ kind: 'phone' as const, phone: OPEN_PHONE }];
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const student = { id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: OPEN_PHONE, tz: 'Asia/Riyadh' } };

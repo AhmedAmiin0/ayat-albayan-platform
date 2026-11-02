@@ -34,7 +34,7 @@ test('a tap on the row opens «تفاصيل الحلقة» with the admin’s ac
   await fireEvent.press(await openRow('يوسف أحمد'));
   expect(screen.getByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   expect(screen.getByText(t.lessons.sheet.about)).toBeTruthy();
-  expect(screen.getByText(new RegExp(`16:00 ${t.schedule.riyadhTime}$`))).toBeTruthy();
+  expect(screen.getByText(new RegExp(`16:00 ${t.schedule.viewerTime}$`))).toBeTruthy();
   // Row and sheet both offer them now: the sheet is a full lesson view.
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit]) {
     expect(screen.getAllByRole('button', { name: `${label} — يوسف أحمد` })).toHaveLength(2);

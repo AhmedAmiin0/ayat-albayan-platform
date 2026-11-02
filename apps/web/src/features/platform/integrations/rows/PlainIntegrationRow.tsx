@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
 import { DeveloperKey } from './DeveloperKey';
-import { enumEmptyLabel, integrationText, optionText } from '../integrations-form';
-import { IntegrationSourceNote } from '../IntegrationSourceNote';
+import { enumEmptyLabel, integrationText, optionText } from '@/features/platform/integrations/integrations-form';
+import { IntegrationSourceNote } from '@/features/platform/integrations/IntegrationSourceNote';
 
 interface Props {
   item: IntegrationConfigItem;

@@ -1,8 +1,8 @@
 import type { JoinRole, RoomJoinResult } from '@ab/shared';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ClassroomRoom } from '../room/components/ClassroomRoom';
-import { fakeClient, tile, type FakeClient } from '../room/livekit/fake-client';
+import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
+import { fakeClient, tile, type FakeClient } from '@/features/teaching/classroom/room/livekit/fake-client';
 import { BOARD_TOPIC, decodeMessage, encodeMessage, type BoardMessage } from './model/messages';
 
 // Test data only: a room with the board, driven through the fake client's data channel.

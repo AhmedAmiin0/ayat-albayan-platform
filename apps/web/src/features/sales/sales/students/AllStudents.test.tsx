@@ -2,8 +2,8 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { student } from '../academy.fixtures';
-import { renderWithQuery } from '../academy.test-utils';
+import { student } from '@/features/sales/sales/academy.fixtures';
+import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { AllStudents } from './AllStudents';
 
 const apiFetch = vi.hoisted(() => vi.fn());

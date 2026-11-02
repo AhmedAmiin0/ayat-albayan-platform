@@ -2,9 +2,9 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SearchInput } from '@/components/ui/form/search-input';
 import { t } from '@/lib/i18n/i18n';
-import { useDebounced } from '../../../finance/pricing/use-debounced';
-import { BlockSkeleton, GoogleBlock, LoadError } from '../GoogleBlock';
-import { googleStudentsQuery } from '../google-api';
+import { useDebounced } from '@/features/finance/pricing/use-debounced';
+import { BlockSkeleton, GoogleBlock, LoadError } from '@/features/platform/google-sync/GoogleBlock';
+import { googleStudentsQuery } from '@/features/platform/google-sync/google-api';
 import { StudentRow } from './StudentRow';
 
 const s = t.googleSync.students;

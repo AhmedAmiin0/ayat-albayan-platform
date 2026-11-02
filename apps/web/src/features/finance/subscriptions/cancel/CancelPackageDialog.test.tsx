@@ -3,8 +3,8 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { BalanceCard } from '../balance/BalanceCard';
-import { balanceOf, WEEKLY } from '../money-fixture';
+import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
+import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 // «إلغاء الباقة» on the profile's package card (owner 2026-10-28): a confirm with an optional reason.
 

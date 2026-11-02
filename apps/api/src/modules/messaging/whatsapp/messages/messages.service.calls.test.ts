@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { MessageSender } from '../sender/message.sender';
-import { messageRow } from '../sender/sender.fakes';
+import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { MessageViews } from './message.views';
 import { MessagesService } from './messages.service';
-import type { MessagesQueries } from './messages.queries';
+import type { MessagesRepo } from './messages.repo';
 
 // A failed request from the calls number (docs/28 §10) is never re-queued: staff tap again instead.
 
@@ -13,7 +13,7 @@ describe('MessagesService.retry and the calls number', () => {
     const queries = { get: vi.fn().mockResolvedValue(row), requeue: vi.fn() };
     const sender = { kick: vi.fn() };
     const svc = new MessagesService(
-      queries as unknown as MessagesQueries,
+      queries as unknown as MessagesRepo,
       {} as MessageViews,
       sender as unknown as MessageSender,
     );

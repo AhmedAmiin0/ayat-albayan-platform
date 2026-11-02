@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
-import { JobApplicantsQueries, type ApplicantListFilter } from './job-applicants.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { JobApplicantsRepo, type ApplicantListFilter } from './job-applicants.repo';
 
 const page = { page: 1, pageSize: 25 };
 
 async function list(f: ApplicantListFilter) {
   const fake = fakeDb({ job_applicants: [{ data: [], count: 0 }] });
-  await new JobApplicantsQueries(fake.db).list(f);
+  await new JobApplicantsRepo(fake.db).list(f);
   return (method: string) => fake.calls.filter((c) => c.method === method).map((c) => c.args);
 }
 

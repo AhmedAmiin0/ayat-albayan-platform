@@ -13,6 +13,12 @@ export interface Actor {
   permissions: readonly Permission[];
 }
 
+/** The signed-in user (AuthUser) as an Actor; no permissions claim = none. */
+export const actorOf = (user: { id: string; permissions?: readonly Permission[] }): Actor => ({
+  id: user.id,
+  permissions: user.permissions ?? [],
+});
+
 /**
  * users.write alone must not reach the record behind a login: a teacher / student / guardian login
  * needs the matching write permission of its table too (create, reset, sign-out, disable, enable,
@@ -29,8 +35,12 @@ interface Refusal {
   details?: Record<string, unknown>;
 }
 
-const lacking = (permission: Permission): Refusal => ({ code: 'permission_not_held', details: { permission } });
-const myProfile = (state: UserState, actor: Actor): StaffProfile | undefined => state.profiles.find((p) => p.id === actor.id);
+const lacking = (permission: Permission): Refusal => ({
+  code: 'permission_not_held',
+  details: { permission },
+});
+const myProfile = (state: UserState, actor: Actor): StaffProfile | undefined =>
+  state.profiles.find((p) => p.id === actor.id);
 const isSystemAdminActor = (state: UserState, actor: Actor): boolean => {
   const me = myProfile(state, actor);
   return me !== undefined && isSystemAdminProfile(state, me);
@@ -47,8 +57,10 @@ function recordRefusal(actor: Actor, role: UserRole): Refusal | null {
  * "no role beyond your own grants".
  */
 function assignRefusal(actor: Actor, state: UserState, role: RoleRecord): Refusal | null {
-  if (role.base_role === 'admin' && myProfile(state, actor)?.role !== 'admin') return { code: 'admin_role_only' };
-  if (isSystemAdmin(role) && !isSystemAdminActor(state, actor)) return { code: 'system_admin_only' };
+  if (role.base_role === 'admin' && myProfile(state, actor)?.role !== 'admin')
+    return { code: 'admin_role_only' };
+  if (isSystemAdmin(role) && !isSystemAdminActor(state, actor))
+    return { code: 'system_admin_only' };
   const gap = missingFor(actor.permissions, roleView(state, role).permissions);
   return recordRefusal(actor, role.base_role) ?? (gap ? lacking(gap) : null);
 }
@@ -58,11 +70,13 @@ export function assertMayAssign(actor: Actor, state: UserState, role: RoleRecord
   if (refusal) throw forbidden(refusal.code, refusal.details);
 }
 
-export const canAssign = (actor: Actor, state: UserState, role: RoleRecord): boolean => assignRefusal(actor, state, role) === null;
+export const canAssign = (actor: Actor, state: UserState, role: RoleRecord): boolean =>
+  assignRefusal(actor, state, role) === null;
 
 /** 403 unless the actor may change this existing login: only a system admin touches a system admin. */
 export function assertMayTouch(actor: Actor, state: UserState, target: StaffProfile): void {
-  if (isSystemAdminProfile(state, target) && !isSystemAdminActor(state, actor)) throw forbidden('system_admin_only');
+  if (isSystemAdminProfile(state, target) && !isSystemAdminActor(state, actor))
+    throw forbidden('system_admin_only');
   const refusal = recordRefusal(actor, target.role);
   if (refusal) throw forbidden(refusal.code, refusal.details);
   assertOutranks(actor.permissions, state, target);

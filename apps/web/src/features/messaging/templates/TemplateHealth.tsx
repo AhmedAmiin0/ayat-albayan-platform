@@ -6,6 +6,7 @@ import { DataTable } from '@/components/data-table/DataTable';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { otherLine, templatesQuery } from './api';
+import { NewTemplate } from './create/NewTemplate';
 import { CrmNameDialog } from './crm/CrmNameDialog';
 import { MoveLineDialog } from './lines/MoveLineDialog';
 import { SubmitTemplateDialog } from './numbers/SubmitTemplateDialog';
@@ -26,6 +27,7 @@ import { useTemplateNumber } from './numbers/use-template-number';
  * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
  * A template on a crm line has its status and its CRM name set by hand (docs/19): the CRM holds it, nothing syncs it.
+ * «قالب جديد» (owner 2026-10-31) adds a row; once saved, its «إرسال إلى ميتا» dialog opens.
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const templates = useQuery(templatesQuery);
@@ -59,9 +61,17 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
 
   return (
     <>
-      <h2 id={headingId} className="mb-2 font-display text-h4 font-bold">
-        {t.templates.title}
-      </h2>
+      <div className="mb-2 flex flex-wrap items-center gap-3">
+        <h2 id={headingId} className="font-display text-h4 font-bold">
+          {t.templates.title}
+        </h2>
+        <NewTemplate
+          manage={manage}
+          factsOf={factsOf}
+          onNotice={a.setNotice}
+          onSubmit={setSubmitting}
+        />
+      </div>
       <p className="mb-1 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
       <p className="mb-3 max-w-[70ch] text-sm text-ink-2">{t.templates.salesStarterIntro}</p>
       <TemplateLines lines={lines} onNotice={a.setNotice} />

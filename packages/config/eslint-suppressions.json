@@ -9,12 +9,20 @@
       "count": 5
     }
   },
+  "eslint-parent-imports.js": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "eslint-react.js": {
     "max-len": {
       "count": 4
     }
   },
   "eslint.js": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
     "max-len": {
       "count": 9
     }

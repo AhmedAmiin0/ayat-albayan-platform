@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { Field } from '../form/field';
-import { FormAlert } from '../form/form-alert';
-import { Input } from '../form/input';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { isolateLtr } from './ltr';
 
 const CODES = t.common.phoneErrors.missing_country_code; // «… مثلًا +966 أو +20»

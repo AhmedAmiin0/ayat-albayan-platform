@@ -1,14 +1,14 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from '../classroom.fakes';
-import { recordingQueries, recordingRow, rolesOf } from '../moderation/moderation.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
+import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { recordingQueries, recordingRow, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RecordingListService, recordingView, RecordingViews } from './recording-list.service';
-import type { RecordingQueries } from './recording.queries';
+import type { RecordingRepo } from './recording.repo';
 
 let rq: ReturnType<typeof recordingQueries>;
 const storage = { signedDownload: vi.fn() };
-const views = () => new RecordingViews(rq as unknown as RecordingQueries, storage as unknown as StorageService);
+const views = () => new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
 const service = () => new RecordingListService(rolesOf({ q: queries() }), views());
 const list = (user = ADMIN) => service().list({ user, lessonId: LESSON_ID });
 

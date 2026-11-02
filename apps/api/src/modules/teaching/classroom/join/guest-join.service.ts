@@ -1,8 +1,8 @@
 import { guestJoinSchema, joinWindow, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { ClassroomQueries } from '../classroom.queries';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { assertWindowOpen } from './join-gate';
 import { PublicJoinLimit } from './join-limit';
 import { checkLink, hashLinkToken, looksLikeLinkToken } from './join-link.token';
@@ -19,7 +19,7 @@ const ONE_DAY_S = 86_400;
 @Injectable()
 export class GuestJoinService {
   constructor(
-    private readonly queries: ClassroomQueries,
+    private readonly queries: ClassroomRepo,
     private readonly limit: PublicJoinLimit,
     private readonly admission: RoomAdmission,
   ) {}

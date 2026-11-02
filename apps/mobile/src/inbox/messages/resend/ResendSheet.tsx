@@ -6,10 +6,10 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '../../ErrorLine';
-import { useChatActions } from '../../thread/hooks/chat-actions';
-import { useSendMessage } from '../../thread/hooks/use-thread';
-import { sendError } from '../hooks/message-text';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
+import { sendError } from '@/inbox/messages/hooks/message-text';
 
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;

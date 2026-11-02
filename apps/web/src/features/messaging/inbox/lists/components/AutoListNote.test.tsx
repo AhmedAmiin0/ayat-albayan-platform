@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ChatListsBar } from './ChatListsBar';
 import { DeleteListDialog } from './DeleteListDialog';
 import { EditListDialog } from './EditListDialog';

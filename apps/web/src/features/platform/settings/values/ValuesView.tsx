@@ -9,7 +9,7 @@ import { useCustomValues } from '@/features/platform/custom-config/use-custom-va
 import { t } from '@/lib/i18n/i18n';
 import { useConfigEntries } from '@/lib/settings/config-entries-api';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import { settingsMetaQuery } from '../settings-meta-api';
+import { settingsMetaQuery } from '@/features/platform/settings/settings-meta-api';
 import { ConfirmValueDialog } from './sheet/ConfirmValueDialog';
 import type { DescribeTarget } from './description/describe-target';
 import { DescriptionDialog } from './description/DescriptionDialog';

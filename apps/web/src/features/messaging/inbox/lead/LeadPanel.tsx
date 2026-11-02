@@ -4,11 +4,11 @@ import { railXl } from '@/components/ui/layout/rail';
 import { cn } from '@/lib/utils';
 import { Toast, type ToastProps } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
-import { leadByPhoneQuery } from '../api/api';
+import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
 import { FollowUpLine } from './FollowUpLine';
 import { LeadDataActions } from './LeadDataActions';
 import { LeadSummary } from './LeadSummary';
-import { QuickActions } from '../composer/components/QuickActions';
+import { QuickActions } from '@/features/messaging/inbox/composer/components/QuickActions';
 
 export type LeadNotice = Pick<ToastProps, 'message' | 'tone'>;
 

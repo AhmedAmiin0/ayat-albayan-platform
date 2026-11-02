@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import type { CrmLineEnv } from '../../../../../config/env/env';
-import { mayHaveReachedMeta, type FetchLike } from '../meta/graph';
-import { WaError } from '../../whatsapp.types';
+import type { CrmLineEnv } from '@/config/env/env';
+import { mayHaveReached, type FetchLike } from '@/common/infra/http/failure';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout, and the
 // CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency key, so an answer
@@ -16,7 +16,7 @@ export interface CrmConn {
 interface CrmRequest {
   /** Relative to the base («messages», «me»). */
   path: string;
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
 }
 
@@ -83,7 +83,7 @@ export async function crmJson(conn: CrmConn, req: CrmRequest): Promise<unknown> 
     });
   } catch (e) {
     const message = `CRM request failed: ${e instanceof Error ? e.message : String(e)}`;
-    throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReachedMeta(e) });
+    throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReached(e) });
   }
   const text = await res.text().catch(() => '');
   if (!res.ok) throw crmErrorFrom({ status: res.status, text, retryAfter: res.headers.get('retry-after') });

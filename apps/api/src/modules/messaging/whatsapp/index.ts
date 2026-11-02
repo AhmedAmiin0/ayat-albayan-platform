@@ -1,25 +1,29 @@
 export { CodeSend } from './direct/code-send';
 export { isCrmHistoryRow, looksCrmHistory } from './messages/crm-history/crm-history-url';
+export { crmFetch } from './drivers/crm/crm.client';
+export { type CrmConn, crmJson } from './drivers/crm/crm-http';
+export type { FetchLike } from './drivers/meta/graph';
 export { SendGate } from './gate/send-gate';
+export { WaError } from './whatsapp.types';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
 export {
   type CachedMedia,
-  InboundMediaQueries,
+  InboundMediaRepo,
   type MediaMessage,
   PLAYABLE_FILTER,
-} from './messages/inbound-media.queries';
+} from './messages/inbound-media.repo';
 export {
   baseMime,
   CRM_NO_MEDIA,
   type InboundFile,
   InboundMedia,
-  isInvoiceMime,
   MEDIA_FETCH_DAYS,
   mediaExpired,
   servable,
 } from './messages/inbound-media.service';
 export {
   MESSAGE_SELECT,
+  NOT_A_REACTION,
   type MessageRow,
   type MessageViewInput,
   needsManualSend,
@@ -27,6 +31,8 @@ export {
   toMessageView,
 } from './messages/message.mapper';
 export { MessageViews } from './messages/message.views';
+export { ScriptRelayModule } from './relay/relay.module';
+export { receiptMime, receiptName } from './messages/receipts/receipt-candidates';
 export { CALL_PERMISSION_PAYLOAD, callPermissionMessage } from './messages/wa-call-permission';
 export { type GraphBody, waTo } from './messages/wa-components';
 export {
@@ -77,10 +83,11 @@ export {
   withNumbers,
 } from './templates/catalog/template.mapper';
 export { TemplateRegistry } from './templates/catalog/template.registry';
+export { sendableTemplates } from './templates/gate/template-gate.repo';
 export {
   type ApprovalRow,
   type ApprovalWrite,
   type NumberRef,
-  TemplatesQueries,
-} from './templates/catalog/templates.queries';
+  TemplatesRepo,
+} from './templates/catalog/templates.repo';
 export { WhatsappModule } from './whatsapp.module';

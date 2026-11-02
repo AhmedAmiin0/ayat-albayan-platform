@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
  * Who may touch which lesson (rule 9). The API (service role) is the only writer of lessons —
@@ -10,7 +10,7 @@ import { TeachersQueries } from '../../../people/teachers/teachers.queries';
  */
 @Injectable()
 export class LessonAccess {
-  constructor(private readonly teachers: TeachersQueries) {}
+  constructor(private readonly teachers: TeachersRepo) {}
 
   /** teachers.id of a signed-in teacher; 404 teacher_not_linked when no row has their profile. */
   async teacherId(user: AuthUser): Promise<string> {

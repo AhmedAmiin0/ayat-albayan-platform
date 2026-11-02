@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import type { ConflictChecker } from '../../../teaching/scheduling/conflicts/conflict-checker';
-import type { ScheduleQueries } from '../../../teaching/scheduling/schedule.queries';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '../../../teaching/lessons/lessons.fakes';
-import { LessonsSettings } from '../../../teaching/lessons/lessons.settings';
-import { LessonCancelService, RescheduleOneService } from '../../../teaching/lessons';
-import type { SalesStudentQueries } from '../details/sales-student.queries';
-import type { SalesStudentScope } from '../sales-student-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
+import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/lessons';
+import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
+import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
 
 // The owner's rule (docs/16 row 37): a salesperson's move / cancel has the admin's side effects exactly —
@@ -21,12 +21,12 @@ const checker = { check: vi.fn() };
 
 function rig() {
   const deps = fakeStore(lessonRow());
-  const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersQueries, checker as unknown as ConflictChecker);
+  const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleQueries, settings);
+  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings);
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
   const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
-  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentQueries, { one, cancels } as LessonServices);
+  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);
   return { ...deps, one, cancels, actions };
 }
 

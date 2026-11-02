@@ -1,0 +1,104 @@
+{
+  "id": "c12d",
+  "seq": 218,
+  "moves": [
+    {
+      "from": "apps/mobile/src/payments/FormLabel.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/payments/ReceiptPicker.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/payments/components/PaidDayPicker.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/payments/components/PaidDayPicker.buttons.test.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/payments/lib/paid-day.ts",
+      "to": "apps/mobile/src/core/lib/money/"
+    },
+    {
+      "from": "apps/mobile/src/payments/lib/paid-day.golden.test.ts",
+      "to": "apps/mobile/src/core/lib/money/"
+    },
+    {
+      "from": "apps/mobile/src/payments/lib/payment-errors.ts",
+      "to": "apps/mobile/src/core/lib/money/"
+    },
+    {
+      "from": "apps/mobile/src/more/sign-out.ts",
+      "to": "apps/mobile/src/core/lib/session/"
+    },
+    {
+      "from": "apps/mobile/src/more/types.ts",
+      "to": "apps/mobile/src/core/lib/staff/"
+    },
+    {
+      "from": "apps/mobile/src/students/list/SectionLabel.tsx",
+      "to": "apps/mobile/src/core/ui/surface/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/more/sign-out.test.ts",
+      "apps/mobile/src/core/lib/session/sign-out.test.ts"
+    ],
+    [
+      "apps/mobile/src/more/sign-out.ts",
+      "apps/mobile/src/core/lib/session/sign-out.ts"
+    ],
+    [
+      "apps/mobile/src/more/types.ts",
+      "apps/mobile/src/core/lib/staff/types.ts"
+    ],
+    [
+      "apps/mobile/src/payments/components/PaidDayPicker.buttons.test.tsx",
+      "apps/mobile/src/core/ui/form/PaidDayPicker.buttons.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/PaidDayPicker.tsx",
+      "apps/mobile/src/core/ui/form/PaidDayPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/FormLabel.tsx",
+      "apps/mobile/src/core/ui/form/FormLabel.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/lib/paid-day.golden.test.ts",
+      "apps/mobile/src/core/lib/money/paid-day.golden.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/paid-day.test.ts",
+      "apps/mobile/src/core/lib/money/paid-day.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/paid-day.ts",
+      "apps/mobile/src/core/lib/money/paid-day.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/payment-errors.test.ts",
+      "apps/mobile/src/core/lib/money/payment-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/payment-errors.ts",
+      "apps/mobile/src/core/lib/money/payment-errors.ts"
+    ],
+    [
+      "apps/mobile/src/payments/ReceiptPicker.test.tsx",
+      "apps/mobile/src/core/ui/form/ReceiptPicker.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/ReceiptPicker.tsx",
+      "apps/mobile/src/core/ui/form/ReceiptPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/students/list/SectionLabel.tsx",
+      "apps/mobile/src/core/ui/surface/SectionLabel.tsx"
+    ]
+  ]
+}

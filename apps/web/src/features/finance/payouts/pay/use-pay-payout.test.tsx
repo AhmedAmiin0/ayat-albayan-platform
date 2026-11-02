@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import type { PayoutView } from '../api';
+import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';
 
 const upload = vi.hoisted(() => vi.fn(async () => 'receipts/t1/a.jpg'));
 const pay = vi.hoisted(() => vi.fn());
 vi.mock('@/features/finance/teacher-earnings/api', () => ({ uploadTeacherReceipt: upload }));
-vi.mock('../api', () => ({ payPayout: pay }));
+vi.mock('@/features/finance/payouts/api', () => ({ payPayout: pay }));
 vi.mock('@/features/finance/payments/api', () => ({ paidAtFor: (day: string) => `${day}T09:00:00.000Z` }));
 vi.mock('@/features/finance/subscriptions/api', () => ({ MONEY_KEY: ['money'] }));
 

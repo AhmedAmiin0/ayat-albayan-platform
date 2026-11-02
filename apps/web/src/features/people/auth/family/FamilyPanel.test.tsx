@@ -10,7 +10,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
-vi.mock('../session-activity', () => ({ reportSession: vi.fn() }));
+vi.mock('@/features/people/auth/session-activity', () => ({ reportSession: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
 
 const F = t.familyAuth;

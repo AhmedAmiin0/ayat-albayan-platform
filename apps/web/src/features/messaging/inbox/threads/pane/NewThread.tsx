@@ -2,9 +2,9 @@ import { formatPhone, type ThreadLesson } from '@ab/shared';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { noneAllowedText, useNoneAllowed } from '../../composer/lib/allowed-templates';
-import { useInboxMode } from '../../shared/mode';
-import { TemplateComposer } from '../../composer/components/TemplateComposer';
+import { noneAllowedText, useNoneAllowed } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { TemplateComposer } from '@/features/messaging/inbox/composer/components/TemplateComposer';
 
 /**
  * A number with no message yet: opened from a lead, a booking or «محادثة جديدة» (admin and sales, same

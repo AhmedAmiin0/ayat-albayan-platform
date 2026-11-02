@@ -1,11 +1,11 @@
 import type { WeeklyRule } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { localDateOf } from '../../scheduling/occurrences/horizon';
-import { ScheduleQueries, type RuleWithLinks } from '../../scheduling/schedule.queries';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import type { LessonRow } from '../store/lesson-row';
-import { LessonsSettings } from '../lessons.settings';
+import { badRequest, conflict } from '@/common/http/errors';
+import { localDateOf } from '@ab/shared';
+import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { planNewRule, type RulePlan } from './rule-plan';
 
 type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | null };
@@ -14,8 +14,8 @@ type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | n
 @Injectable()
 export class RulePlanner {
   constructor(
-    private readonly rules: ScheduleQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly rules: ScheduleRepo,
+    private readonly teachers: TeachersRepo,
     private readonly settings: LessonsSettings,
   ) {}
 

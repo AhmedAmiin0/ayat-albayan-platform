@@ -1,5 +1,5 @@
 import type { NumberUpdate } from '@ab/shared';
-import type { NumberRow } from './numbers.queries';
+import type { NumberRow } from './numbers.repo';
 
 /** A plain PATCH of wa_numbers (is_default true goes through wa_number_make_default instead). */
 export type NumberPatch = Omit<NumberUpdate, 'is_default'> & { is_default?: false } & Partial<

@@ -1,8 +1,8 @@
 import type { TemplateLineSync } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { syncFailedText } from '../api';
-import { skipReasonText } from '../skip-reasons';
+import { syncFailedText } from '@/features/messaging/templates/api';
+import { skipReasonText } from '@/features/messaging/templates/skip-reasons';
 
 /** Imported keys and skipped names are Meta's own (English) words: LTR islands that may wrap; the reasons are ours. */
 const WRAP = 'whitespace-normal break-all';

@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { domainError, PROFILE, renderWithClient, section } from '../account-test-kit';
-import { AccountPage } from '../AccountPage';
+import { domainError, PROFILE, renderWithClient, section } from '@/features/people/account/account-test-kit';
+import { AccountPage } from '@/features/people/account/AccountPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

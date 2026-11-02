@@ -2,41 +2,41 @@
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { StorageService } from '../../../common/storage/storage.service';
-import { ExpensesQueries } from '../expenses/expenses.queries';
-import { FxService } from '../fx/fx.service';
-import { InvoicesQueries } from '../invoices/invoices.queries';
-import { PaymentAttachmentsQueries } from '../payments/attachments/payment-attachments.queries';
-import { PaymentsQueries } from '../payments/payments.queries';
-import { PayoutsQueries } from '../payouts/payouts.queries';
-import { CorrectionsQueries } from '../teacher-earnings/summary/corrections.queries';
-import { EarningsQueries } from '../teacher-earnings/earnings.queries';
-import { PricingService } from '../pricing/pricing.service';
-import { SalesQueries } from '../../sales/sales/sales.queries';
-import { SalesFamilyQueries } from '../../sales/sales-money/reads/sales-family.queries';
-import { InboundMedia } from '../../messaging/whatsapp/messages/inbound-media.service';
-import { InboundMediaQueries } from '../../messaging/whatsapp/messages/inbound-media.queries';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
-import { AdminTasksQueries } from './alerts/admin-tasks.queries';
-import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
-import { AlertsQueries } from './alerts/alerts.queries';
-import { BalanceQueries } from './money/balance.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { ExpensesRepo } from '@/modules/finance/expenses/expenses.repo';
+import { FxService } from '@/modules/finance/fx/fx.service';
+import { InvoicesRepo } from '@/modules/finance/invoices/invoices.repo';
+import { PaymentAttachmentsRepo } from '@/modules/finance/payments/attachments/payment-attachments.repo';
+import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
+import { PayoutsRepo } from '@/modules/finance/payouts/payouts.repo';
+import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
+import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
+import { PricingService } from '@/modules/finance/pricing/pricing.service';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesFamilyRepo } from '@/modules/sales/sales-money/reads/sales-family.repo';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { AdminTasksRepo } from './alerts/admin-tasks.repo';
+import { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
+import { AlertsRepo } from './alerts/alerts.repo';
+import { BalanceRepo } from './money/balance.repo';
 import { CommissionBell } from './money/commission-bell';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentActivation } from './student-lifecycle/student-activation';
-import { StudentStatusQueries } from './student-lifecycle/student-status.queries';
-import { StudentTrialQueries } from './trial/student-trial.queries';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { StudentStatusRepo } from './student-lifecycle/student-status.repo';
+import { StudentTrialRepo } from './trial/student-trial.repo';
+import { SubscriptionsRepo } from './subscriptions.repo';
 import { mocks } from './test-app.fakes';
 
-export { resetMocks, type Mocks } from './test-app.fakes';
+export { ENFORCED_SETTINGS, resetMocks, type Mocks } from './test-app.fakes';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 export const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
@@ -54,40 +54,40 @@ export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teach
 
 /**
  * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
- * `more`: a module's own overrides on top (the Stripe test build's queries and client).
+ * `more`: a module's own overrides on top (the Stripe module's queries and client).
  */
 export async function moneyApp(resolver: PermissionResolver = systemResolver, more: (b: TestingModuleBuilder) => TestingModuleBuilder = (b) => b) {
   const m = mocks();
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SubscriptionsQueries).useValue(m.subs)
-    .overrideProvider(SubscriptionCancelQueries).useValue(m.cancels)
-    .overrideProvider(BalanceQueries).useValue(m.balances)
+    .overrideProvider(SubscriptionsRepo).useValue(m.subs)
+    .overrideProvider(SubscriptionCancelRepo).useValue(m.cancels)
+    .overrideProvider(BalanceRepo).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
     .overrideProvider(CommissionBell).useValue(m.commissionBell)
-    .overrideProvider(StudentStatusQueries).useValue(m.statuses)
-    .overrideProvider(StudentTrialQueries).useValue(m.trials)
-    .overrideProvider(AlertsQueries).useValue(m.alerts)
-    .overrideProvider(AdminTasksQueries).useValue(m.tasks)
-    .overrideProvider(PaymentsQueries).useValue(m.payments)
-    .overrideProvider(PaymentAttachmentsQueries).useValue(m.attachments)
-    .overrideProvider(PayoutsQueries).useValue(m.payouts)
-    .overrideProvider(EarningsQueries).useValue(m.earnings)
-    .overrideProvider(CorrectionsQueries).useValue(m.corrections)
-    .overrideProvider(ExpensesQueries).useValue(m.expenses)
+    .overrideProvider(StudentStatusRepo).useValue(m.statuses)
+    .overrideProvider(StudentTrialRepo).useValue(m.trials)
+    .overrideProvider(AlertsRepo).useValue(m.alerts)
+    .overrideProvider(AdminTasksRepo).useValue(m.tasks)
+    .overrideProvider(PaymentsRepo).useValue(m.payments)
+    .overrideProvider(PaymentAttachmentsRepo).useValue(m.attachments)
+    .overrideProvider(PayoutsRepo).useValue(m.payouts)
+    .overrideProvider(EarningsRepo).useValue(m.earnings)
+    .overrideProvider(CorrectionsRepo).useValue(m.corrections)
+    .overrideProvider(ExpensesRepo).useValue(m.expenses)
     .overrideProvider(FxService).useValue(m.fx)
-    .overrideProvider(InvoicesQueries).useValue(m.invoices)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(InvoicesRepo).useValue(m.invoices)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(StudentAccess).useValue(m.access)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(PricingService).useValue(m.pricing)
-    .overrideProvider(SalesQueries).useValue(m.sales)
-    .overrideProvider(SalesFamilyQueries).useValue(m.family)
+    .overrideProvider(SalesRepo).useValue(m.sales)
+    .overrideProvider(SalesFamilyRepo).useValue(m.family)
     .overrideProvider(InboundMedia).useValue(m.media)
-    .overrideProvider(InboundMediaQueries).useValue(m.mediaQueries);
+    .overrideProvider(InboundMediaRepo).useValue(m.mediaQueries);
   const mod = await more(builder).compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true }); // as main.ts
   await app.init();

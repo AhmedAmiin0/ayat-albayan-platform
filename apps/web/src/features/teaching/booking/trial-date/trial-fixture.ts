@@ -1,6 +1,6 @@
 import type { TrialDateRow, TrialHistory } from '@ab/shared';
 import type { Mock } from 'vitest';
-import { ABRAR, SLOT, STUDENT_ID, WED_SLOT } from '../wizard-fixture';
+import { ABRAR, SLOT, STUDENT_ID, WED_SLOT } from '@/features/teaching/booking/wizard-fixture';
 
 // Test data only (imported by the trial-date *.test.tsx).
 

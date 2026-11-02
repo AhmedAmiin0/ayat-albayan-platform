@@ -1,10 +1,9 @@
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { conflict } from '../../../../common/http/errors';
-import { AvatarWriter } from '../../../../common/storage/avatars/avatar-writer';
-import { FakeAvatarFiles } from '../../../../common/storage/avatars/avatars.fakes';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict } from '@/common/http/errors';
+import { AvatarWriter } from '@/common/storage/avatars/avatar-writer';
+import { FakeAvatarFiles } from '@/common/storage/avatars/avatars.fakes';
 import { AccountAvatarService } from './account.avatar.service';
 import type { AccountAuth, AccountRow, AccountStore, SelfPatch } from './account.ports';
-import { AccountPorts } from './account.ports.provider';
 import { AccountService } from './account.service';
 
 // Test helper (not a test): in-memory ports of the account services.
@@ -62,9 +61,8 @@ export function accountKit(min = 8) {
   const store = new FakeAccountStore();
   const auth = new FakeAccountAuth();
   const files = new FakeAvatarFiles();
-  const ports = new AccountPorts(store, auth, files);
   const config = { passwordMinLength: min, supabaseUrl: 'http://supabase.test', signInKey: 'test-key' };
-  const account = new AccountService(ports, config);
-  const avatar = new AccountAvatarService(ports, account, new AvatarWriter(files));
+  const account = new AccountService(store, auth, files, config);
+  const avatar = new AccountAvatarService(store, files, account, new AvatarWriter(files));
   return { store, auth, files, account, avatar };
 }

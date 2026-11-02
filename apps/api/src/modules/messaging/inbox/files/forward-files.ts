@@ -1,14 +1,16 @@
-import { baseMime, isChatViewMime } from '@ab/shared';
+import type { Json } from '@ab/db';
+import { baseMime, isChatViewMime, isStickerMessage, stickerPayloadOf } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, forwardOutPath } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { isCrmHistoryRow } from '../../whatsapp';
-import { InboundMedia } from '../../whatsapp/messages/inbound-media.service';
-import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import { Outbox, type Sent } from '../send/outbox';
-import { dedupKey, outboundBase, sendLine, type ThreadSend } from '../send/thread-send.service';
-import { ThreadsQueries } from '../threads/threads.queries';
+import { BUCKETS, forwardOutPath } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { chatLine, dedupKey, outboundBase, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
+import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /** Our copy of a forwarded file in wa-media/out/… (the sender signs it again on every try). */
 export interface ForwardFile {
@@ -16,7 +18,13 @@ export interface ForwardFile {
   mime: string;
   name: string;
   caption: string | null;
+  /** The copy's interactive_payload: a sticker keeps its sha256 (owner 2026-11-01). */
+  payload?: Json;
 }
+
+/** A sticker's copy keeps its sha256, so the panel lists it once (owner 2026-11-01). */
+const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
+  isStickerMessage(row) ? { payload: stickerPayloadOf(row.interactive_payload) } : {};
 
 const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
 
@@ -42,9 +50,11 @@ const caption = (row: ThreadMessageRow): string | null => {
 export class ForwardFiles {
   /** Property-injected (the constructor is at the 3-parameter limit). */
   @Inject(InboundMedia) private readonly inbound?: InboundMedia;
+  /** Kapso's conversation record, for a copy tried after the window as a text is (chatLine). */
+  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly outbox: Outbox,
     private readonly storage: StorageService,
   ) {}
@@ -55,14 +65,15 @@ export class ForwardFiles {
     const mime = baseMime(from.mime);
     const path = forwardOutPath({ ...at, messageId: row.id, mime });
     await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to: { bucket: BUCKETS.waMedia, path } });
-    return { path, mime, name: fileName(row, path), caption: caption(row) };
+    return { path, mime, name: fileName(row, path), caption: caption(row), ...stickerOf(row) };
   }
 
-  /** One target: 409 session_closed / 503 line_not_configured as a file sent from the chat. */
+  /** One target, on a text's line (chatLine: 409 session_closed / 503 line_not_configured). */
   async send(s: ThreadSend<{ clientRequestId: string }>, file: ForwardFile, now = new Date()): Promise<Sent> {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    const line = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
+    const windows = () => this.queries.numberWindows(s.phone);
+    const line = await chatLine(thread, { now, windows, phone: s.phone, kapso: this.kapso, teacher: !!s.scope });
     return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
@@ -70,6 +81,7 @@ export class ForwardFiles {
       media_path: file.path,
       media_mime: file.mime,
       media_name: file.name,
+      ...(file.payload === undefined ? {} : { interactive_payload: file.payload }),
       ...line,
     });
   }

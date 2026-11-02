@@ -3,7 +3,7 @@ import type { ReactionResult, ThreadDetail } from '@ab/shared';
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { ApiError, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { threadQuery } from '../../api/api';
+import { threadQuery } from '@/features/messaging/inbox/api/api';
 
 /** The 409 of a chat on the CRM line (no reaction call there) in words; anything else: try again. */
 export function reactionProblem(e: unknown): string {

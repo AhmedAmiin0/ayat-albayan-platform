@@ -52,7 +52,7 @@ describe('InboundService: the assistants an inbound alert goes to (docs/21 §6)'
     const s = services();
     s.queries.identify.mockResolvedValue(guardian);
     s.queries.guardianOwners.mockRejectedValue(new Error('db down'));
-    await expect(s.inbound.handle(event())).resolves.toBeUndefined();
+    await expect(s.inbound.handle(event())).resolves.toBe(true);
     expect(s.push.notifyAdmins).toHaveBeenCalled();
     expect(s.push.notifySales).not.toHaveBeenCalled();
     expect(s.queries.stored).toHaveLength(1);

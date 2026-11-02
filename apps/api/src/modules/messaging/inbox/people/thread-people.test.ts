@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import type { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { threadRow } from '../inbox.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
+import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { familyTagsOf, threadPeople } from './thread-people';
 
 function deps(results: Parameters<typeof fakeDb>[0]) {
   const { db, calls, argsOf } = fakeDb(results);
   const empty = (id: string) => ({ student_id: id, remaining: 0, current: null, packages: [] });
   const packages = { studentBalance: vi.fn(async (id: string) => empty(id)) } as unknown as PackagesService;
-  const balances = { forStudents: vi.fn(async () => []) } as unknown as BalanceQueries;
+  const balances = { forStudents: vi.fn(async () => []) } as unknown as BalanceRepo;
   return { deps: { db, packages, balances }, calls, argsOf, packages, balances };
 }
 

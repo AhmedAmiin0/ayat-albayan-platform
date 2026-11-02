@@ -1,7 +1,7 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
-import { draftFromLead } from '../../BookingPage';
+import { draftFromLead } from '@/features/teaching/booking/BookingPage';
 import { leadParts, newStudentFromLead, newStudentReady } from './new-student';
 
 const LEAD_ID = '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d';

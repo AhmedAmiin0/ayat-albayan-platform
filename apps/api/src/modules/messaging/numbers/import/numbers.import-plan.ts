@@ -2,10 +2,10 @@ import {
   IMPORT_FIELDS, META_ID_RE, NUMBER_SECRET_NAMES, WA_LINES, type ImportField, type ImportFieldView, type ImportRoleView,
   type IntegrationKey, type IntegrationSource, type NumberSecretName, type WaLine,
 } from '@ab/shared';
-import { lineNumbers, lineProvider, type Env } from '../../../../config/env/env';
-import { ROLE_KEYS } from '../lines/numbers.lines';
-import type { NumberRow } from '../numbers.queries';
-import type { SecretStatus } from '../config/numbers.secrets';
+import { lineNumbers, lineProvider, type Env } from '@/config/env/env';
+import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
+import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
+import type { SecretStatus } from '@/modules/messaging/numbers/config/numbers.secrets';
 
 // The import's plan (docs/23 §2e step 2), pure: per role, today's effective values and where each comes
 // from (DB = «التكاملات», env = the server), never a secret value. A role is imported when the legacy

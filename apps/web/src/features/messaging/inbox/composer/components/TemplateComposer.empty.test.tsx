@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { PHONE } from '../../testing/inbox-fixture';
-import { InboxModeContext } from '../../shared/mode';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { TemplateComposer } from './TemplateComposer';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

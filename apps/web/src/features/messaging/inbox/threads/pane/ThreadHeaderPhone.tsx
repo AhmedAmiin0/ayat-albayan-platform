@@ -6,15 +6,15 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { threadKind, threadTitle, timesInText } from '../../format';
-import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
-import { ThreadListChips } from '../../lists/components/ThreadListChips';
-import { leadChip } from '../../sales/subscription';
-import { SubscriptionChip } from '../../sales/SubscriptionChip';
+import { threadKind, threadTitle, timesInText } from '@/features/messaging/inbox/format';
+import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { ThreadListChips } from '@/features/messaging/inbox/lists/components/ThreadListChips';
+import { leadChip } from '@/features/messaging/inbox/sales/subscription';
+import { SubscriptionChip } from '@/features/messaging/inbox/sales/SubscriptionChip';
 import type { ThreadHeaderProps } from './ThreadHeader';
 import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
-import { CallButton } from '../../calls/header/CallButton';
+import { CallButton } from '@/features/messaging/calls';
 
 /**
  * The full-screen chat's header below 900px (owner 2026-10-05): one compact row (back to

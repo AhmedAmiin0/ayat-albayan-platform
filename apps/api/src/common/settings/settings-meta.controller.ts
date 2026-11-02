@@ -1,8 +1,8 @@
 import type { SettingsMetaResponse } from '@ab/shared';
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../auth/decorators';
-import { SettingsMetaQueries } from './settings-meta.queries';
+import { Permissions } from '@/common/auth/decorators';
+import { SettingsMetaRepo } from './settings-meta.repo';
 
 /**
  * GET /config/meta: who last changed each stored setting and when (rows never written have no
@@ -13,7 +13,7 @@ import { SettingsMetaQueries } from './settings-meta.queries';
 @Permissions('settings.read')
 @Controller('config/meta')
 export class SettingsMetaController {
-  constructor(private readonly queries: SettingsMetaQueries) {}
+  constructor(private readonly queries: SettingsMetaRepo) {}
 
   @Get()
   async get(): Promise<SettingsMetaResponse> {

@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { ClassroomRoom } from './ClassroomRoom';
-import { fakeClient, tile } from '../livekit/fake-client';
+import { fakeClient, tile } from '@/features/teaching/classroom/room/livekit/fake-client';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));

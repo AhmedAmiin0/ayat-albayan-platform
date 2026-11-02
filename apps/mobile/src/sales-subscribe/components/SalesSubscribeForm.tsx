@@ -1,28 +1,29 @@
 import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useHolds } from '@/auth/use-permissions';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { useHolds } from '@/core/auth/use-permissions';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { quoteLessons, renewalForm } from '@/subscribe';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
-import { localDate } from '@/today/lib/timeline';
+import { localDate } from '@/today';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChildPills } from './ChildPills';
 import { PayMethodPills, type PayMethod } from './PayMethodPills';
 import { SalesPriceSection } from './SalesPriceSection';
-import { salesErrorText } from '../lib/sales-errors';
-import { checkStart, type StartDraft } from '../lib/start-date';
+import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
+import { checkStart, type StartDraft } from '@/sales-subscribe/lib/start-date';
 import { StartDateField } from './StartDateField';
 import { SalesTeacherPills, useTeacherPick } from './SalesTeacherPills';
-import { useSalesCreateSubscription, useSalesQuote } from '../hooks/use-sales-subscribe';
-import { LinkCreated } from '../payment-link/LinkCreated';
-import { linkErrorText } from '../payment-link/link-text';
-import { OnlinePrice } from '../payment-link/OnlinePrice';
-import { useLinkPay } from '../payment-link/use-link-pay';
-import { useStripeOn } from '../payment-link/use-stripe';
+import { useSalesCreateSubscription, useSalesQuote } from '@/sales-subscribe/hooks/use-sales-subscribe';
+import { CustomAmountPill } from '@/sales-subscribe/payment-link/CustomAmountPill';
+import { LinkCreated } from '@/sales-subscribe/payment-link/LinkCreated';
+import { linkErrorText } from '@/sales-subscribe/payment-link/link-text';
+import { OnlinePrice } from '@/sales-subscribe/payment-link/OnlinePrice';
+import { useLinkPay } from '@/sales-subscribe/payment-link/use-link-pay';
+import { useStripeOn } from '@/sales-subscribe/payment-link/use-stripe';
 
 interface SalesSubscribeFormProps {
   phone: string;
@@ -43,7 +44,7 @@ const pl = t.paymentLinks;
  * The child, the admin's calculator inputs, the API's price, the first day (only with subscriptions.set_start_date),
  * «المعلم/ة» (the trial's unless she picks another; teacherId). «طريقة الدفع» (owner 2026-10-29) where both exist:
  * «تحويل بنكي» saves the package (on to its weekly days, then the transfer; the screen is replaced), «دفع إلكتروني»
- * (the Stripe test build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
+ * (a Stripe build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
  */
 export function SalesSubscribeForm({ phone, students, studentId, onPick, renew = false, onDone }: SalesSubscribeFormProps) {
   const child = students.find((s) => s.id === studentId);
@@ -60,13 +61,14 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   };
   const [now] = useState(() => new Date());
   // The academy's (Riyadh) day everywhere: the API checks the start against it, whatever the family's zone.
+  // academy day (docs/34 b): a subscription starts on an academy day.
   const academyToday = localDate(now, RIYADH_TZ);
   const canSet = useHolds('subscriptions.set_start_date');
   const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday, usedBefore: 0 });
   const [tried, setTried] = useState(false);
   const base = useTreeBase();
   const pricing = pricingOf(form);
-  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; the link and «أيام الحلقات» stay hers.
+  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; the payment link stays hers.
   const bind = chatBinding(students, { studentId, phone });
   const quote = useSalesQuote(studentId, pricing, bind);
   const lessonsTotal = quoteLessons(quote.data);
@@ -87,15 +89,9 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
     else save.mutate(
       { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
       {
+        // Its weekly days next, then the transfer; a child not hers too (owner 2026-11-01).
         onSuccess: (sub) =>
-          router.replace(
-            inTree(
-              base,
-              bind.phone
-                ? { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId: sub.id } }
-                : { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } },
-            ),
-          ),
+          router.replace(inTree(base, { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } })),
       },
     );
   };
@@ -105,7 +101,12 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   return (
     <>
       <ChildPills students={students} value={studentId} onChange={pick} />
-      <PricingInputs form={form} freeDiscount={false} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+      <PricingInputs
+        form={form}
+        freeDiscount={false}
+        onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+        discountExtra={online ? <CustomAmountPill pay={pay} /> : null}
+      />
       {canOnline ? <PayMethodPills value={method} onChange={setMethod} /> : null}
       {online ? <OnlinePrice pay={pay} /> : <SalesPriceSection quote={quote} />}
       <SalesTeacherPills hidden={studentId === ''} value={teacher.teacherId} onChange={teacher.setTeacher} />

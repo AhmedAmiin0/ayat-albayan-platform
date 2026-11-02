@@ -5,7 +5,7 @@ import { studentListQuery } from '@/features/people/students/api';
 import { StudentSearch } from '@/features/people/students/list/StudentSearch';
 import type { StudentRef } from '@/features/people/students/types';
 import { t } from '@/lib/i18n/i18n';
-import type { PickedStudent } from '../../draft/draft';
+import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
 
 export interface StudentStepProps {
   /** The student the wizard opened for; null when it opened without one. */

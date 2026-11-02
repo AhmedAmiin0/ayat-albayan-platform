@@ -4,18 +4,23 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
+import { otherDayNote } from './other-day';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 
 /**
- * One lesson in sales' read-only day: the admin's chip (time in Riyadh, students, status, «تجريبية» /
+ * One lesson in sales' read-only day: the admin's chip (the viewer's time, students, status, «تجريبية» /
  * «تعويضية») opening the read-only lesson drawer, and on a running lesson «جارية الآن» with «ادخل
  * الحلقة» (she joins as the classroom assistant, docs/16). No edit, cancel, move, book or report action.
  */
 export function ScheduleLessonItem({ lesson, now }: { lesson: SalesScheduleLesson; now: Date }) {
   const running = isRunningLesson(lesson, now);
   const [open, setOpen] = useState(false);
+  const tz = useViewerTz();
+  const other = otherDayNote(lesson.starts_at, tz);
   return (
     <li className="grid content-start gap-2 sm:w-56">
+      {other && <span className="text-xs text-ink-3">{other}</span>}
       <LessonChip lesson={lesson} onOpen={() => setOpen(true)} />
       {open && <SalesLessonDrawer lesson={lesson} now={now} onClose={() => setOpen(false)} />}
       {running && (

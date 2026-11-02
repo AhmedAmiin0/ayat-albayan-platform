@@ -29,6 +29,13 @@ export const HangUpIcon = (p: IconProps) => <Line {...p} d={[HANDSET]} rotate={1
 export const MicIcon = (p: IconProps) => <Line {...p} d={['M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z', 'M6 11a6 6 0 0 0 12 0M12 17v4']} />;
 export const MicOffIcon = (p: IconProps) => <Line {...p} d={['M15 10V6a3 3 0 0 0-5.7-1.3M9 9v2a3 3 0 0 0 4.6 2.5', 'M6 11a6 6 0 0 0 9.6 4.8M18 11a6 6 0 0 1-.4 2.2M12 17v4M4 4l16 16']} />;
 export const SpeakerIcon = (p: IconProps) => <Line {...p} d={['M4 9.5h3.5L12 5.5v13l-4.5-4H4z', 'M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11']} />;
+const LENS = 'M3.5 7.5h10a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 2 15V9a1.5 1.5 0 0 1 1.5-1.5Z';
+/** The room's camera (docs/35): on, off (struck through), and «بدّل الكاميرا» (the two arrows). */
+export const CameraIcon = (p: IconProps) => <Line {...p} d={[LENS, 'm15 10.5 6-3v9l-6-3']} />;
+export const CameraOffIcon = (p: IconProps) => <Line {...p} d={[LENS, 'm15 10.5 6-3v9l-6-3', 'M3 4l17 16']} />;
+export const SwitchCameraIcon = (p: IconProps) => (
+  <Line {...p} d={['M4 9a8 8 0 0 1 14.5-3M20 4v4h-4', 'M20 15a8 8 0 0 1-14.5 3M4 20v-4h4']} />
+);
 /** «تصغير»: points down in both directions (never mirrored). */
 export const ChevronDownIcon = (p: IconProps) => <Line {...p} d={['m6 9 6 6 6-6']} />;
 

@@ -1,10 +1,18 @@
-import { reportBlock, RIYADH_TZ, type ClockCycle, type LessonStudentView, type LessonView } from '@ab/shared';
+import {
+  otherZoneClock,
+  reportBlock,
+  RIYADH_TZ,
+  type ClockCycle,
+  type LessonStudentView,
+  type LessonView,
+} from '@ab/shared';
 import { clockIn, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import type { TreeBase } from '@/core/nav/tree-base';
 import { ltr } from '@/core/ui/primitives/Ltr';
 
-// What the lesson details sheet says (R-SCH-01): the Riyadh time with every student's and the
+// What the lesson details sheet says (R-SCH-01): the viewer's time with every student's and the
 // teacher's own clock (the web drawer's wording), the length, the weekly series, each student's
 // report state and where a tap may go for the viewer's role. Pure, unit-tested.
 
@@ -54,17 +62,33 @@ export function inCity(iso: string, tz: string, cycle: ClockCycle): string {
   return t.schedule.inCity.replace('{time}', clockIn(new Date(iso), tz, cycle)).replace('{city}', cities[tz] ?? ltr(tz));
 }
 
-/** «الخميس 1 أكتوبر 16:00 بتوقيت الرياض». */
-export function whenLine(lesson: Pick<DetailsLesson, 'starts_at'>, cycle: ClockCycle): string {
-  return `${whenIn(new Date(lesson.starts_at), RIYADH_TZ, cycle)} ${t.schedule.riyadhTime}`;
+/** «الخميس 1 أكتوبر 16:00 بتوقيتك»: on the viewer's clock `tz` (docs/34). */
+export function whenLine(
+  lesson: Pick<DetailsLesson, 'starts_at'>,
+  cycle: ClockCycle,
+  tz: string,
+): string {
+  return `${whenIn(new Date(lesson.starts_at), tz, cycle)} ${t.schedule.viewerTime}`;
 }
 
-/** «عند الطالب 16:00 بتوقيت مسقط» once per student zone, then «عند المعلم/ة …», each only when it is not Riyadh. */
-export function clockLines(lesson: Pick<DetailsLesson, 'starts_at' | 'students' | 'teacher'>, cycle: ClockCycle): string[] {
-  const zones = [...new Set(lesson.students.map((s) => s.tz ?? RIYADH_TZ))].filter((tz) => tz !== RIYADH_TZ);
-  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', inCity(lesson.starts_at, tz, cycle)));
+type ClockLesson = Pick<DetailsLesson, 'starts_at' | 'students' | 'teacher'>;
+
+/**
+ * «عند الطالب 16:00 بتوقيت مسقط» once per student zone, then «عند المعلم/ة …», each only when its
+ * clock differs from the viewer's `tz` at the start (Cairo = Riyadh in summer: no line).
+ */
+export function clockLines(lesson: ClockLesson, cycle: ClockCycle, tz: string): string[] {
+  const at = new Date(lesson.starts_at);
+  const differs = (zone: string) => otherZoneClock(at, zone, { tz, cycle, locale }) !== null;
+  const zones = [...new Set(lesson.students.map((s) => s.tz ?? RIYADH_TZ))].filter(differs);
+  const lines = zones.map((zone) =>
+    t.schedule.studentTime.replace('{time}', inCity(lesson.starts_at, zone, cycle)),
+  );
   const teacherTz = lesson.teacher.tz;
-  if (teacherTz && teacherTz !== RIYADH_TZ) lines.push(t.schedule.teacherTime.replace('{time}', inCity(lesson.starts_at, teacherTz, cycle)));
+  if (teacherTz && differs(teacherTz)) {
+    const time = inCity(lesson.starts_at, teacherTz, cycle);
+    lines.push(t.schedule.teacherTime.replace('{time}', time));
+  }
   return lines;
 }
 

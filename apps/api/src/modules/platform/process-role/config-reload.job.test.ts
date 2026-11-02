@@ -1,13 +1,13 @@
 import type { ModuleRef } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { asQueries, fakeQueries } from '../../../common/integrations/integration-config.fakes';
-import { IntegrationConfigService } from '../../../common/integrations/integration-config.service';
-import { setIntegrationOverlay } from '../../../common/integrations/integration-overlay';
-import { DbRulesReader } from '../../messaging/notification-rules';
-import { NumbersConfig, OwnNumbers } from '../../messaging/numbers';
-import { GoogleConnection, GoogleSettings } from '../google-sync';
-import { TranslationsService } from '../translations';
+import { asQueries, fakeQueries } from '@/common/configuration/integrations/integration-config.fakes';
+import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
+import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import { DbRulesReader } from '@/modules/messaging/notification-rules';
+import { NumbersConfig, OwnNumbers } from '@/modules/messaging/numbers';
+import { GoogleConnection, GoogleSettings } from '@/modules/platform/google-sync';
+import { TranslationsService } from '@/modules/platform/translations';
 import { ConfigReloadJob } from './config-reload.job';
 
 /** The worker's services, each one fake method; `missing` ones are not in the app (ModuleRef throws). */

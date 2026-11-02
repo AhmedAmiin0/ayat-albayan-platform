@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import { setFollowUpPaused, type InboxLead } from '../api/api';
-import { fullTime } from '../format';
+import { setFollowUpPaused, type InboxLead } from '@/features/messaging/inbox/api/api';
+import { fullTime } from '@/features/messaging/inbox/format';
 import { useClock, type Clock } from '@/lib/clock';
 
 export interface FollowUpLineProps {

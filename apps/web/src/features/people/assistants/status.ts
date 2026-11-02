@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n/i18n';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 
 /** Earned is settled money (fill); voided is struck, in the danger tone: @ab/shared since docs/27 E6. */
 export { commissionStatusStyle } from '@ab/shared';

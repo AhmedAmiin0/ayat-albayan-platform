@@ -41,7 +41,7 @@ test('each recording shows its time and status chip; only a finished one has Â«Ø
 test('a tap refetches the list and opens the FRESH signed url; the list is never persisted', async () => {
   serve([done]);
   const { client } = await renderWithQuery(<RecordingsList source={lessonSource} />);
-  const play = await screen.findByRole('button', { name: t.mobileClassroom.playOf.replace('{time}', recordingTime(done.started_at, '24')) });
+  const play = await screen.findByRole('button', { name: t.mobileClassroom.playOf.replace('{time}', recordingTime(done.started_at, '24', 'Asia/Riyadh')) });
   serve([{ ...done, url: 'https://signed/2' }]);
   await fireEvent.press(play);
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://signed/2'));

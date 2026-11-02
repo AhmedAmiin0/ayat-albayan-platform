@@ -1,11 +1,11 @@
 import type { AssistantTermsView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { CardTitle } from './CardTitle';
 import { MoneyCard } from './MoneyCard';
-import { commissionNote, myCommissionText, salaryFrom } from '../lib/money-text';
+import { commissionNote, myCommissionText, salaryFrom } from '@/sales-money/lib/money-text';
 
 const p = t.assistantPortal.earnings;
 

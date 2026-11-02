@@ -1,13 +1,13 @@
 import { isChatViewMime } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
 import { CrmHistoryMedia } from './crm-history/crm-history-media';
 import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from './crm-history/crm-history.fakes';
 import { CrmMediaSettings } from './crm-history/crm-media.settings';
-import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
+import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
 import { InboundMedia } from './inbound-media.service';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-27: photos and voice notes imported from the old CRM (no media id, the body is only
 // the CRM storage link) are fetched once from the configured host and cached in wa-media.
@@ -21,7 +21,7 @@ function setup(msg: MediaMessage, host = CRM_HOST) {
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
-  const media = new InboundMedia(queries as unknown as InboundMediaQueries, lines, storage as unknown as StorageService);
+  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
   Object.assign(media, { crm: new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host })) });
   return { media, queries, storage, client };
 }
@@ -96,7 +96,7 @@ describe('InboundMedia: files imported from the old CRM', () => {
 
   it('without the CRM provider (a bare InboundMedia) such a row is 410', async () => {
     const queries = { message: vi.fn().mockResolvedValue(crmRow()), setPath: vi.fn() };
-    const media = new InboundMedia(queries as unknown as InboundMediaQueries, {} as WhatsappLines, {} as StorageService);
+    const media = new InboundMedia(queries as unknown as InboundMediaRepo, {} as WhatsappLines, {} as StorageService);
     await expect(media.cache(await media.loadChat('m-crm-1'))).rejects.toMatchObject({ status: 410 });
   });
 });

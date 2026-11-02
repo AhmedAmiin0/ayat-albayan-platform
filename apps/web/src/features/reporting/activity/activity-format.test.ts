@@ -30,7 +30,12 @@ describe('activity labels', () => {
 
 describe('formatAt / entityLink', () => {
   it('shows the time in the academy zone (Riyadh, UTC+3), 24h', () => {
-    expect(formatAt('2026-10-05T21:30:00Z', C24)).toMatch(/00:30/);
+    expect(formatAt('2026-10-05T21:30:00Z', { ...C24, tz: 'Asia/Riyadh' })).toMatch(/00:30/);
+  });
+
+  it('reads in the zone it is given, not a stored one', () => {
+    expect(formatAt('2026-10-05T21:30:00Z', { ...C24, tz: 'Africa/Cairo' })).toMatch(/00:30/);
+    expect(formatAt('2026-10-05T21:30:00Z', { ...C24, tz: 'UTC' })).toMatch(/21:30/);
   });
 
   it('links students and teachers to their profiles only', () => {

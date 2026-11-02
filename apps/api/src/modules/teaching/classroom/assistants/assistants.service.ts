@@ -1,10 +1,10 @@
 import { assignAssistantSchema, type AssistantLessonView, type AssistantView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
-import { badRequest, notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { AssistantLessonsQueries } from './assistants.lessons';
-import { AssistantsQueries } from './assistants.queries';
+import { badRequest, notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { AssistantLessonsRepo } from './assistants.lessons';
+import { AssistantsRepo } from './assistants.repo';
 
 const rangeSchema = z.object({ from: z.iso.datetime(), to: z.iso.datetime() });
 
@@ -12,8 +12,8 @@ const rangeSchema = z.object({ from: z.iso.datetime(), to: z.iso.datetime() });
 @Injectable()
 export class AssistantsService {
   constructor(
-    private readonly queries: AssistantsQueries,
-    private readonly lessons: AssistantLessonsQueries,
+    private readonly queries: AssistantsRepo,
+    private readonly lessons: AssistantLessonsRepo,
   ) {}
 
   all(): Promise<AssistantView[]> {

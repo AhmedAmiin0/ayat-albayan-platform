@@ -1,12 +1,5 @@
+import { DAY_MS, dayInZone, dayWallToUtc, offsetMs, ruleOccurrences, type Occurrence, type OccurrenceTiming, type UtcWindow } from '@ab/shared';
 import type { BookingRequest } from '@ab/shared';
-import {
-  ruleOccurrences,
-  type Occurrence,
-  type RuleTiming,
-  type UtcWindow,
-} from '../../scheduling/occurrences/occurrences';
-import { DAY, localDay, offsetMs, zonedToUtc } from '../../../people/teachers/availability/zoned-time';
-
 export type PlanRule = Pick<
   BookingRequest,
   'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'startsAt'
@@ -15,16 +8,16 @@ export type PlanRule = Pick<
   single: boolean;
 };
 export type PlanInput = { rule: PlanRule; now: Date; horizonWeeks: number };
-export type Plan = { timing: RuleTiming; occurrences: Occurrence[] };
+export type Plan = { timing: OccurrenceTiming; occurrences: Occurrence[] };
 
 /** [max(now, startsOn 00:00 in tz), now + horizon weeks) — docs/10 §3 (R-SCH-02). */
 export function horizonWindow(input: PlanInput): UtcWindow {
   const { rule } = input;
-  const startsOn = zonedToUtc(Date.parse(`${rule.startsOn}T00:00:00Z`), 0, rule.tz);
+  const startsOn = dayWallToUtc(Date.parse(`${rule.startsOn}T00:00:00Z`), 0, rule.tz);
   const now = input.now.getTime();
   return {
     from: new Date(Math.max(now, startsOn)),
-    to: new Date(now + input.horizonWeeks * 7 * DAY),
+    to: new Date(now + input.horizonWeeks * 7 * DAY_MS),
   };
 }
 
@@ -33,7 +26,7 @@ const wall = (instant: number, tz: string) => instant + offsetMs(instant, tz);
 
 /**
  * The slot the admin clicked, when it is the other instance of the first lesson's wall time (DST
- * fall-back repeats an hour; zonedToUtc picks the later one). Otherwise the occurrences as is.
+ * fall-back repeats an hour; dayWallToUtc picks the later one). Otherwise the occurrences as is.
  */
 function pinFirst(all: Occurrence[], rule: PlanRule): Occurrence[] {
   const [first, ...rest] = all;
@@ -52,7 +45,7 @@ function pinFirst(all: Occurrence[], rule: PlanRule): Occurrence[] {
  */
 export function planBooking(input: PlanInput): Plan {
   const { rule } = input;
-  const timing: RuleTiming = {
+  const timing: OccurrenceTiming = {
     byday: rule.byday,
     start_time_local: rule.startTimeLocal,
     duration_min: rule.durationMin,
@@ -63,6 +56,6 @@ export function planBooking(input: PlanInput): Plan {
   const all = pinFirst(ruleOccurrences(timing, horizonWindow(input)), rule);
   const [first] = all;
   if (!rule.single || !first) return { timing, occurrences: all };
-  const endsOn = isoDay(localDay(first.starts_at.getTime(), rule.tz));
+  const endsOn = isoDay(dayInZone(first.starts_at.getTime(), rule.tz));
   return { timing: { ...timing, ends_on: endsOn }, occurrences: [first] };
 }

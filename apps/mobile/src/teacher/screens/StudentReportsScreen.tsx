@@ -1,9 +1,10 @@
-import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
+import type { ReportSummaryView, TeacherMe } from '@ab/shared';
+import { useViewerTz } from '@/core/lib/clock';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useStudentHref } from '@/core/nav/tree-base';
 
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
@@ -14,10 +15,10 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
-import { useTeacherMe } from '../lib/queries';
-import { openSigned } from '../report/hooks/api';
-import { ReportHistoryRow, reportFormHref } from '../components/ReportRows';
-import { TrialChatNote } from '../components/TrialChatNote';
+import { useTeacherMe } from '@/teacher/lib/queries';
+import { openSigned } from '@/teacher/report/hooks/api';
+import { ReportHistoryRow, reportFormHref } from '@/teacher/components/ReportRows';
+import { TrialChatNote } from '@/teacher/components/TrialChatNote';
 
 const teacherStudent = (me: TeacherMe | undefined, id: string) => me?.students.find((s) => s.id === id);
 const teacherStudentName = (me: TeacherMe | undefined, id: string): string => teacherStudent(me, id)?.name ?? t.reports.history;
@@ -56,7 +57,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const me = useTeacherMe(!admin);
   const adminName = useStudentName(id, admin);
-  const tz = me.data?.tz ?? RIYADH_TZ;
+  const tz = useViewerTz();
   const name = adminName ?? teacherStudentName(me.data, id);
   const list = usePagedList<ReportSummaryView>({ path: `/students/${id}/reports`, pageSize: 10 });
   const [error, setError] = useState(false);

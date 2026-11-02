@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import type { PayoutView } from '../api';
+import type { PayoutView } from '@/features/finance/payouts/api';
 import type { PayoutAction } from './payout-columns';
 
 type Props = { payout: PayoutView; onAction: (action: PayoutAction) => void };

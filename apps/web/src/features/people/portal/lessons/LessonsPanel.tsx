@@ -7,10 +7,10 @@ import { ClassroomRoom } from '@/features/teaching/classroom';
 import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { PORTAL_REFRESH_MS, portalLessonsQuery } from '../api';
+import { PORTAL_REFRESH_MS, portalLessonsQuery } from '@/features/people/portal/api';
 import { LessonAction } from './LessonAction';
 import { LessonWhen } from './LessonWhen';
-import { LoadState } from '../LoadState';
+import { LoadState } from '@/features/people/portal/LoadState';
 
 /**
  * «الحلقات القادمة»: the next 14 days, one card per lesson, re-read every 30 seconds. Once admitted, the

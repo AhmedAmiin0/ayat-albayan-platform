@@ -2,9 +2,9 @@ import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { BookingModeContext } from '../mode';
+import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { ApiError } from '@/lib/http/api';
 import { CHANGE_VIEW, changeBodies, CHECK, COURSE, MON, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { currentDaysText, newDaysText } from './change-text';
@@ -12,7 +12,7 @@ import { CourseChangeForm } from './CourseChangeForm';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

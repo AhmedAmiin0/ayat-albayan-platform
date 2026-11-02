@@ -1,8 +1,8 @@
 import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { Choice } from '../shared/Choice';
-import { roleOptionName, roleText } from '../shared/format';
+import { Note } from '@/core/ui/feedback/Note';
+import { Choice } from '@/users/shared/Choice';
+import { roleOptionName, roleText } from '@/users/shared/format';
 
 export interface RolePickerProps {
   role: UserRole;

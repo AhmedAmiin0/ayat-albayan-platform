@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
-import { WEEKLY } from '../money-fixture';
+import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
@@ -35,7 +35,8 @@ describe('CreateSubscriptionDialog retries (rule 8: never two packages for one s
     expect(retry?.clientRequestId).toBe(first?.clientRequestId);
 
     fail = false;
-    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.startsOn), { target: { value: '2026-11-01' } });
+    // a day that is never the default (today, Riyadh): a fixed date became today on 2026-11-01
+    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.startsOn), { target: { value: '2099-01-01' } });
     save();
     await vi.waitFor(() => expect(posts()).toHaveLength(3));
     expect(posts()[2]?.clientRequestId).not.toBe(first?.clientRequestId);

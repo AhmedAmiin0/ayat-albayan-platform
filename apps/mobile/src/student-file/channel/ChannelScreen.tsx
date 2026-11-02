@@ -4,6 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
+import { ChannelPresenceLine } from './ChannelPresenceLine';
 import { ChannelThread } from './ChannelThread';
 import { useChannel } from './channel-queries';
 
@@ -20,6 +21,7 @@ function ChannelScreen({ audience }: { audience: ChannelAudience }) {
   return (
     <Screen chat>
       <ScreenHeader title={title} subtitle={name} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
+      <ChannelPresenceLine refs={{ audience, studentId }} />
       <ChannelThread refs={{ audience, studentId }} />
     </Screen>
   );

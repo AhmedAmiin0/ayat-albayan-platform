@@ -4,7 +4,7 @@ import { nextLessonText } from './next-lesson';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 describe('nextLessonText', () => {
   it('names the academy-clock (Riyadh) day and time with Western digits', () => {
@@ -16,5 +16,9 @@ describe('nextLessonText', () => {
 
   it('says there is none when null', () => {
     expect(nextLessonText(null, C24)).toBe(t.teacherStudents.noNextLesson);
+  });
+
+  it('reads in the zone it is given', () => {
+    expect(nextLessonText('2026-10-05T14:00:00.000Z', { ...C24, tz: 'UTC' })).toContain('14:00');
   });
 });

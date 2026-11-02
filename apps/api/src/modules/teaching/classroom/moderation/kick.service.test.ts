@@ -1,15 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '../classroom.fakes';
+import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { KickService } from './kick.service';
-import { LivekitApi } from '../livekit/livekit-api';
+import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http, moderation, participantRow, rolesOf } from './moderation.fakes';
-import type { ModerationQueries } from './moderation.queries';
+import type { ModerationRepo } from './moderation.repo';
 
 let mod: ReturnType<typeof moderation>;
 let h: ReturnType<typeof http>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationQueries, new LivekitApi(config, h));
+  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(config, h));
 const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) => svc.remove({ user, lessonId: LESSON_ID, identity });
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 
@@ -30,7 +31,7 @@ describe('removing someone from the room', () => {
     });
     const [url, init] = h.mock.calls[0] ?? [];
     expect(url).toMatch(/\/twirp\/livekit\.RoomService\/RemoveParticipant$/);
-    expect(JSON.parse(init?.body ?? '{}')).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
+    expect(sentBody(init)).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
   });
 
   it('the lesson teacher removes an assistant: their login is blocked', async () => {

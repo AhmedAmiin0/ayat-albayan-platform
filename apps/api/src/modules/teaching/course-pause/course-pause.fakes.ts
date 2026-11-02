@@ -2,14 +2,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import type { PauseRow, RpcOut } from './course-pause.mapper';
-import { CoursePauseQueries } from './course-pause.queries';
+import { CoursePauseRepo } from './course-pause.repo';
 
 export const STUDENT = '5a000000-0000-4000-8000-0000000000a1';
 export const PAUSE = 'c0000000-0000-4000-8000-0000000000c1';
@@ -24,7 +24,7 @@ const USERS: Record<string, AuthUser> = {
   teacher: { id: 't1', email: null, role: 'teacher' },
   assistant: { id: 'as000000-0000-4000-8000-0000000000a5', email: null, role: 'assistant' },
 };
-const verify: TokenVerifier = async (token) => {
+export const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
   return user;
@@ -44,7 +44,7 @@ export function pauseMocks() {
     queries: {
       call: vi.fn(), studentExists: vi.fn(), pauses: vi.fn(), pause: vi.fn(), openPause: vi.fn(), due: vi.fn(), dueStarts: vi.fn(), previewCount: vi.fn(), lessons: vi.fn(), liftLegacyPause: vi.fn(),
     },
-    follow: { after: vi.fn(), liftedLegacy: vi.fn() },
+    follow: { after: vi.fn(), liftedLegacy: vi.fn(), paused: vi.fn(), resumed: vi.fn() },
   };
 }
 type PauseMocks = ReturnType<typeof pauseMocks>;
@@ -67,7 +67,7 @@ export async function pauseApp() {
   const m = pauseMocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CoursePauseQueries).useValue(m.queries)
+    .overrideProvider(CoursePauseRepo).useValue(m.queries)
     .overrideProvider(CoursePauseFollowUps).useValue(m.follow)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();

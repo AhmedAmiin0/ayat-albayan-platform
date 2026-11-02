@@ -1,10 +1,10 @@
 import type { QuoteResponse, SubscriptionCreate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { PricingService } from '../pricing/pricing.service';
-import { notFound } from '../../../common/http/errors';
+import { PricingService } from '@/modules/finance/pricing/pricing.service';
+import { notFound } from '@/common/http/errors';
 import { subscriptionRow } from './list/subscription-row';
 import { quoteQueryFor, type SubscriptionQuote } from './subscriptions.dto';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsRepo } from './subscriptions.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { assertUsedBeforeFits } from './used-before';
 
@@ -13,12 +13,12 @@ import { assertUsedBeforeFits } from './used-before';
  * same form (clientRequestId, rule 8) returns the package it already created; only a new one is
  * audited and converts the family's lead (MoneyWrites). The callers gate lessonsUsedBefore
  * (assertUsedBefore); its bound needs the quote's size. `price`: only a Stripe payment link's agreed amount
- * (owner 2026-10-28, docs/30, test build), so paying the link in full makes the package paid.
+ * (owner 2026-10-28, docs/30), so paying the link in full makes the package paid.
  */
 @Injectable()
 export class SubscriptionCreator {
   constructor(
-    private readonly subs: SubscriptionsQueries,
+    private readonly subs: SubscriptionsRepo,
     private readonly pricing: PricingService,
     private readonly service: SubscriptionsService,
   ) {}

@@ -1,0 +1,40 @@
+{
+  "id": "r0",
+  "seq": 212,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teaching/scheduling/read-all.ts",
+      "to": "apps/api/src/common/db/read-all.ts"
+    },
+    {
+      "from": "apps/api/src/common/list-sort.ts",
+      "to": "apps/api/src/common/db/list-sort.ts"
+    },
+    {
+      "from": "apps/api/src/common/list-sort.builder.test.ts",
+      "to": "apps/api/src/common/db/list-sort.builder.test.ts"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/common/list-sort.builder.test.ts",
+      "apps/api/src/common/db/list-sort.builder.test.ts"
+    ],
+    [
+      "apps/api/src/common/list-sort.test.ts",
+      "apps/api/src/common/db/list-sort.test.ts"
+    ],
+    [
+      "apps/api/src/common/list-sort.ts",
+      "apps/api/src/common/db/list-sort.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/read-all.test.ts",
+      "apps/api/src/common/db/read-all.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/read-all.ts",
+      "apps/api/src/common/db/read-all.ts"
+    ]
+  ]
+}

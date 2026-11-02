@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { PHONE } from '../../testing/inbox-fixture';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { CopyPhoneButton } from './CopyPhoneButton';
 
 describe('«نسخ الرقم» in the chat header', () => {

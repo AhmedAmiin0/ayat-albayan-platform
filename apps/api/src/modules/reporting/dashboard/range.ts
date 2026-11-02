@@ -1,6 +1,5 @@
-import { dateRangeQuery, RIYADH_TZ, type DateRangeQuery } from '@ab/shared';
+import { addCalendarMonths, dateRangeQuery, type DateRangeQuery, dayRangeIn, localDateIn, RIYADH_TZ } from '@ab/shared';
 import { badRequest } from '../../../common/http/errors';
-import { DAY, localDay, zonedToUtc } from '../../people/teachers/availability/zoned-time';
 import { parseOrThrow } from '../../../common/http/http';
 
 // `?from&to` (docs/11 §3): local days in Asia/Riyadh, inclusive, at most a year.
@@ -18,15 +17,12 @@ export function parseRange(query: unknown): DateRangeQuery {
 
 /** The UTC half-open window [from 00:00, to + 1 day 00:00) in Riyadh. */
 export function rangeWindow(r: DateRangeQuery): { from: Date; to: Date } {
-  return {
-    from: new Date(zonedToUtc(Date.parse(r.from), 0, RIYADH_TZ)),
-    to: new Date(zonedToUtc(Date.parse(r.to) + DAY, 0, RIYADH_TZ)),
-  };
+  return dayRangeIn(r, RIYADH_TZ);
 }
 
 /** Riyadh calendar day of an instant, "YYYY-MM-DD". */
 export function riyadhDate(iso: string): string {
-  return new Date(localDay(Date.parse(iso), RIYADH_TZ)).toISOString().slice(0, 10);
+  return localDateIn(new Date(iso), RIYADH_TZ);
 }
 
 /** Riyadh month of an instant, "YYYY-MM". */
@@ -51,6 +47,5 @@ export function monthsOf(r: DateRangeQuery): string[] {
 
 /** "YYYY-MM" moved by `by` months → its first day, "YYYY-MM-01". */
 export function monthShift(month: string, by: number): string {
-  const first = Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5, 7)) - 1 + by, 1);
-  return new Date(first).toISOString().slice(0, 10);
+  return addCalendarMonths(month, by);
 }

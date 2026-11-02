@@ -1,13 +1,13 @@
 import { memo } from 'react';
-import { cancelOffered, isCancelled, packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
+import { cancelOffered, countsForMoney, isCancelled, packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { useTabOpen } from '@/auth/use-tab-open';
+import { useTabOpen } from '@/core/auth/use-tab-open';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { CancelPackage } from '@/payments';
 import { t } from '@/core/lib/i18n/i18n';
-import { money, packageName, paidLine } from '@/payments/format';
+import { money, packageName, paidLine } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
@@ -61,7 +61,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
   const progress = subscriptionProgress(sub, threshold);
   const gone = isCancelled(sub);
   const due = !gone && progress.tone === 'act' && sub.status !== 'paused' && sub.status !== 'trial';
-  const partial = !gone && paymentState(sub) !== 'full';
+  const partial = countsForMoney(sub) && paymentState(sub) !== 'full';
   return (
     <ListRow
       title={sub.student.name}

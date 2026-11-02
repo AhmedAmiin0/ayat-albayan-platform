@@ -3,7 +3,6 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { AttachIcon } from '../shared/chat-icons';
-import { CameraIcon } from '../shared/composer-icons';
 import { AttachSheet } from './attach/AttachSheet';
 import { usePickSend } from './attach/use-pick-send';
 import { useThreadMode } from '../thread/hooks/thread-mode';
@@ -16,8 +15,6 @@ interface AttachFileProps {
   onReplies?: (() => void) | undefined;
   /** «الرموز التعبيرية»: the pill opens its emoji sheet (insert at the caret). */
   onEmoji: () => void;
-  /** The camera beside the paperclip, as WhatsApp (shown while the box is empty). */
-  camera?: boolean;
 }
 
 /**
@@ -25,9 +22,9 @@ interface AttachFileProps {
  * photo (gallery or camera) or a PDF at once, and holds «قالب», «الردود السريعة» and the emoji
  * (owner 2026-10-27: only the price tag and the paperclip stay in the bar). Never in teacher mode
  * (teachers do not send files: the API answers 403 files_forbidden); the composer shows it only
- * while the 24 h window is open.
+ * while the 24 h window is open. Owner 2026-11-01: no camera in the bar; the sheet keeps its tile.
  */
-export function AttachFile({ phone, onError, camera = false, ...actions }: AttachFileProps) {
+export function AttachFile({ phone, onError, ...actions }: AttachFileProps) {
   const { color } = useTheme();
   const teacher = useThreadMode().kind === 'teacher';
   const { pick, pending } = usePickSend(phone, onError);
@@ -38,11 +35,6 @@ export function AttachFile({ phone, onError, camera = false, ...actions }: Attac
       <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)} compact>
         <AttachIcon color={color.lapis} />
       </IconButton>
-      {camera ? (
-        <IconButton label={t.inbox.composer.camera} disabled={pending} onPress={() => void pick('camera')} compact>
-          <CameraIcon color={color.lapis} />
-        </IconButton>
-      ) : null}
       <AttachSheet
         visible={choosing}
         onPick={(source) => void pick(source)}

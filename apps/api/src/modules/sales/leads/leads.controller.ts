@@ -2,9 +2,10 @@ import { LEAD_SOURCES, LEAD_STATUSES, leadColumnQueryShape, leadFollowUpSchema, 
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { pageQueryShape, parseOr400 } from './http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { pageQueryShape } from './http';
 import { LeadProfileService } from './lead-profile.service';
 import { LeadsService } from './leads.service';
 
@@ -31,7 +32,7 @@ export class LeadsController {
   @Get()
   @Permissions('leads.read')
   list(@Query() query: unknown) {
-    return this.leads.list(parseOr400(listQuery, query));
+    return this.leads.list(parseOrThrow(listQuery, query));
   }
 
   @Patch(':id/status')
@@ -40,7 +41,7 @@ export class LeadsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ) {
-    const { status } = parseOr400(statusBody, body);
+    const { status } = parseOrThrow(statusBody, body);
     return this.leads.changeStatus({ id, to: status, actorId: user.id });
   }
 
@@ -53,14 +54,14 @@ export class LeadsController {
   /** L1: merge into leads.qualification; null clears a field (R-LEAD-03). */
   @Patch(':id/qualification')
   qualification(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const patch = parseOr400(leadQualificationPatchSchema, body);
+    const patch = parseOrThrow(leadQualificationPatchSchema, body);
     return this.profile.qualification({ id, patch, actorId: user.id });
   }
 
   /** L2: the admin's per-lead follow-up pause (R-LEAD-05). */
   @Patch(':id/follow-up')
   followUp(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const patch = parseOr400(leadFollowUpSchema, body);
+    const patch = parseOrThrow(leadFollowUpSchema, body);
     return this.profile.followUp({ id, patch, actorId: user.id });
   }
 }

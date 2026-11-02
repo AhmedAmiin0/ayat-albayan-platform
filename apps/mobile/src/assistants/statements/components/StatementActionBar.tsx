@@ -1,15 +1,15 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { assistantsErrorText } from '../../api/errors';
-import { useStatementMove } from '../../api/mutations';
+import { assistantsErrorText } from '@/assistants/api/errors';
+import { useStatementMove } from '@/assistants/api/mutations';
 import { ReasonConfirm } from './ReasonConfirm';
 import { StatementButtons } from './StatementButtons';
-import type { StatementCan } from '../hooks/statement-can';
+import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 
 type Move = 'approve' | 'reopen' | 'unpay';
 interface StatementActionBarProps {

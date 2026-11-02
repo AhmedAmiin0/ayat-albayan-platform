@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { FX_FETCHER, OpenErApiFetcher, type FxFetcher } from './fx.fetcher';
-import { FxQueries } from './fx.queries';
+import { FxRepo } from './fx.repo';
 import { FxService } from './fx.service';
 import { FxSettings } from './fx.settings';
 
@@ -10,7 +10,7 @@ import { FxSettings } from './fx.settings';
   providers: [
     FxSettings,
     FxService,
-    FxQueries,
+    FxRepo,
     // FX_API_URL read per fetch: the admin may change it in «التكاملات» (no restart).
     { provide: FX_FETCHER, useFactory: (): FxFetcher => ({ latest: () => new OpenErApiFetcher(loadEnv().FX_API_URL).latest() }) },
   ],

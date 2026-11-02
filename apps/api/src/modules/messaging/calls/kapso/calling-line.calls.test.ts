@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { isCallsPhoneId, setCallsNumber } from '../../../../common/integrations/calls-number';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { isCallsPhoneId, setCallsNumber } from '@/common/configuration/integrations/calls-number';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { callingLine } from './calling-line';
 
 const { lineEnvs } = vi.hoisted(() => ({ lineEnvs: vi.fn() }));
-vi.mock('../../../../config/env/env', () => ({ loadEnv: () => ({}), lineEnvs: () => lineEnvs() }));
+vi.mock('@/config/env/env', () => ({ loadEnv: () => ({}), lineEnvs: () => lineEnvs() }));
 
 const kapso = { provider: 'kapso' as const, base: 'http://stub', version: 'v24.0', phoneNumberId: 'chat-pn', wabaId: 'w', apiKey: 'k' };
 const callsEnv = { ...kapso, phoneNumberId: 'calls-pn' };

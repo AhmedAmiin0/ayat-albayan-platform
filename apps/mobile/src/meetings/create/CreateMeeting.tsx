@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { CreateMeetingDone } from './CreateMeetingDone';
 import { CreateMeetingForm } from './CreateMeetingForm';
-import { createMeetingWith } from '../invite/invite-api';
-import { inviteError } from '../invite/invite-text';
-import { useViewerTz } from '../manage/use-viewer-tz';
+import { createMeetingWith } from '@/meetings/invite/invite-api';
+import { inviteError } from '@/meetings/invite/invite-text';
+import { useViewerTz } from '@/core/lib/clock';
 
 type Mode = 'instant' | 'scheduled' | null;
 

@@ -1,16 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { ADMIN, STUDENT_ID } from '../classroom.fakes';
-import { hashLinkToken, looksLikeLinkToken } from '../join/join-link.token';
+import type { AuditService } from '@/common/audit/audit.service';
+import { ADMIN, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
+import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import { StudentLinkAdminService } from './student-link.admin.service';
 import { studentLinkQueries } from './student-link.fakes';
-import type { StudentLinkQueries } from './student-link.queries';
+import type { StudentLinkRepo } from './student-link.repo';
 
 let q: ReturnType<typeof studentLinkQueries>;
 let audit: { record: ReturnType<typeof vi.fn> };
 const issue = () =>
-  new StudentLinkAdminService(q as unknown as StudentLinkQueries, audit as unknown as AuditService, 'https://app.example.test').issue({
+  new StudentLinkAdminService(q as unknown as StudentLinkRepo, audit as unknown as AuditService, 'https://app.example.test').issue({
     studentId: STUDENT_ID,
     actorId: ADMIN.id,
   });

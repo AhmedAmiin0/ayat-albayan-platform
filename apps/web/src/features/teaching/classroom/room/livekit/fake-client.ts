@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { EMPTY_SNAPSHOT, type DataPacketIn, type MediaFailure, type ModeratedEvent, type RoomClient, type RoomSnapshot, type TileView } from '../components/room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type MediaFailure, type ModeratedEvent, type RoomClient, type RoomSnapshot, type TileView } from '@/features/teaching/classroom/room/components/room-types';
 
 // Test data only: a RoomClient whose state the test drives (livekit-client does not run in jsdom).
 

@@ -1,0 +1,36 @@
+{
+  "id": "r2",
+  "seq": 214,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/people/teachers/teachers.queries.ts",
+      "to": "apps/api/src/modules/people/teachers/teachers.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/people/teachers/availability/availability.queries.ts",
+      "to": "apps/api/src/modules/people/teachers/availability/availability.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/people/teachers/availability/availability.queries.bookable.test.ts",
+      "to": "apps/api/src/modules/people/teachers/availability/availability.repo.bookable.test.ts"
+    }
+  ],
+  "renames": {
+    "TeachersQueries": "TeachersRepo",
+    "AvailabilityQueries": "AvailabilityRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/people/teachers/availability/availability.queries.bookable.test.ts",
+      "apps/api/src/modules/people/teachers/availability/availability.repo.bookable.test.ts"
+    ],
+    [
+      "apps/api/src/modules/people/teachers/availability/availability.queries.ts",
+      "apps/api/src/modules/people/teachers/availability/availability.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/people/teachers/teachers.queries.ts",
+      "apps/api/src/modules/people/teachers/teachers.repo.ts"
+    ]
+  ]
+}

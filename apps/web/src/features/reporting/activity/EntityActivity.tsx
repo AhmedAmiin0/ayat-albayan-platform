@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { activityQuery, type ActivityScope } from './activity.api';
 import { actionLabel, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface EntityActivityProps extends ActivityScope {
   /** Hide the section while nothing is logged (the student profile); a tab shows the empty text. */
@@ -17,7 +18,7 @@ export interface EntityActivityProps extends ActivityScope {
  * The page lives in local state (the profile's URL stays the profile's).
  */
 export function EntityActivity({ entity, entityId, hideEmpty = false }: EntityActivityProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const [page, setPage] = useState(1);
   const headingId = useId();
   const list = useQuery(activityQuery({ page, sort: {}, filters: {} }, { entity, entityId }));

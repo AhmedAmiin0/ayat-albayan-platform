@@ -1,10 +1,10 @@
 import { DEFAULT_RENEWAL_PRICING, type SalesFamilyView, type SalesMoneySubscriptionView, type StudentStatus } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { SalesOwnership } from '../../sales/sales-ownership';
-import { SubscriptionsService } from '../../../finance/subscriptions/subscriptions.service';
-import { SalesFamilyQueries } from './sales-family.queries';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SalesFamilyRepo } from './sales-family.repo';
 import { SalesRenewals } from './sales-renewals';
-import { toSalesSubscription } from '../sales-money.mapper';
+import { toSalesSubscription } from '@/modules/sales/sales-money/sales-money.mapper';
 
 /** A family has a handful of children, each with one or two packages owed. */
 const OPEN_PAGE = { page: 1, pageSize: 20 } as const;
@@ -14,7 +14,7 @@ const NOT_DUE = { renew_due: false, renewal: DEFAULT_RENEWAL_PRICING } as const;
 @Injectable()
 export class SalesMoneyReads {
   constructor(
-    private readonly family: SalesFamilyQueries,
+    private readonly family: SalesFamilyRepo,
     private readonly subs: SubscriptionsService,
     private readonly renewals: SalesRenewals,
   ) {}
@@ -26,10 +26,12 @@ export class SalesMoneyReads {
   /**
    * Only the children she owns, or every child with `all` (sales.renew_any, docs/16 row 38; `mine` says which are
    * hers); each with its unpaid packages that still have money due, and its renewal (SalesRenewals).
+   * `own` null (SalesOwnershipRule not enforcing, owner 2026-11-02): every child, each `mine`
+   * (she may act on it).
    */
-  async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'>; all: boolean }): Promise<SalesFamilyView> {
+  async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'> | null; all: boolean }): Promise<SalesFamilyView> {
     const rows = await this.family.studentsOfPhone(phone);
-    const isMine = (id: string) => scope.own.studentIds.includes(id);
+    const isMine = (id: string) => !scope.own || scope.own.studentIds.includes(id);
     const listed = scope.all ? rows : rows.filter((s) => isMine(s.id));
     const renewals = await this.renewals.of(listed);
     const students = await Promise.all(

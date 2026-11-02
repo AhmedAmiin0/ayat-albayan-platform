@@ -2,7 +2,7 @@ import type { NumberView } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { formatDateTime } from '../../../sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads/format';
 import { useClock } from '@/lib/clock';
 
 const c = t.numbers.chips;

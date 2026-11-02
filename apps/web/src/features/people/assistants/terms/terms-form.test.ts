@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ASSISTANT } from '../fixtures';
+import { ASSISTANT } from '@/features/people/assistants/fixtures';
 import { formOf, startMins, toInput, type TermsForm } from './terms-form';
 
 const TODAY = '2026-10-06';

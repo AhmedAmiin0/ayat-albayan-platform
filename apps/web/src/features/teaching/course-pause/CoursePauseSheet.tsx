@@ -24,7 +24,7 @@ interface CoursePauseSheetProps {
  */
 export function CoursePauseSheet({ studentId, onClose, onDone }: CoursePauseSheetProps) {
   const formId = useId();
-  const today = riyadhToday();
+  const today = riyadhToday(); // academy day (docs/34 b): the API's pause days are Riyadh days
   const [draft, setDraft] = useState<PauseDraft>(() => draftOn(today));
   const invalidate = useInvalidatePause(studentId);
   const start = useMutation({

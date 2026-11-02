@@ -1,11 +1,11 @@
 import { ForbiddenException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../../../../common/http/errors';
-import type { LessonAccess } from '../store/lesson-access';
-import type { LessonProposalQueries } from './lesson-proposals.queries';
+import { conflict } from '@/common/http/errors';
+import type { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
+import type { LessonProposalRepo } from './lesson-proposals.repo';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
-import { ADMIN, fakeStore, LESSON_ID, lessonRow, TEACHER, TEACHER_ID } from '../lessons.fakes';
-import type { RescheduleOneService } from '../reschedule/reschedule-one.service';
+import { ADMIN, fakeStore, LESSON_ID, lessonRow, TEACHER, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import type { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
 
 const proposals = { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() };
 const access = { assertCanTouch: vi.fn() };
@@ -16,12 +16,12 @@ const PROPOSAL = { id: 'p1', lesson_id: LESSON_ID, proposed_starts_at: '2026-10-
 
 const proposer = (row = lessonRow()) =>
   new LessonProposeService(
-    proposals as unknown as LessonProposalQueries,
+    proposals as unknown as LessonProposalRepo,
     fakeStore(row).store,
     access as unknown as LessonAccess,
   );
 const decider = new ProposalDecisionService(
-  proposals as unknown as LessonProposalQueries,
+  proposals as unknown as LessonProposalRepo,
   rescheduler as unknown as RescheduleOneService,
 );
 

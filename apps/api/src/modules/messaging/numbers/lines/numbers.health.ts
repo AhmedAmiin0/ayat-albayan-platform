@@ -1,8 +1,8 @@
 import type { LineCheckView } from '@ab/shared';
 import { Injectable, Logger, Optional } from '@nestjs/common';
-import { healthFromCheck, healthJson } from '../numbers.mapper';
-import { NumbersQueries } from '../numbers.queries';
-import { OwnNumbers } from '../own/own-numbers';
+import { healthFromCheck, healthJson } from '@/modules/messaging/numbers/numbers.mapper';
+import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
+import { OwnNumbers } from '@/modules/messaging/numbers/own/own-numbers';
 
 /**
  * «افحص الخطوط» per number (#134 item 9): each configured line's result is kept on the rows of the
@@ -15,7 +15,7 @@ export class NumbersHealth {
   private readonly log = new Logger(NumbersHealth.name);
 
   constructor(
-    private readonly queries: NumbersQueries,
+    private readonly queries: NumbersRepo,
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 

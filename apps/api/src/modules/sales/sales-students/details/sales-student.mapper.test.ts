@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { HistoryBundle } from '../../sales';
+import type { HistoryBundle } from '@/modules/sales/sales';
 import { toStudentDetails } from './sales-student.mapper';
-import type { DetailsStudentRow } from './sales-student.queries';
+import type { DetailsStudentRow } from './sales-student.repo';
 
 const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', program: 'quran', teacher: null, guardian: null } as DetailsStudentRow;
 const sub = (id: string, status: string, starts_on: string) => ({ id, package: '8', status, starts_on, renews_on: null, lessons_total: 8, created_at: `${starts_on}T00:00:00Z` });
@@ -37,11 +37,11 @@ describe('toStudentDetails', () => {
     expect(toStudentDetails(parts(history([sub('a', 'active', '2026-08-01')]))).subscriptions[0]).toMatchObject({ lessons_used: 0, lessons_remaining: 8 });
   });
 
-  it('not hers: no subscription, no current, no report, whatever was read; the trial and attendance stay', () => {
+  it('not hers: the same subscriptions, current and reports as hers (owner 2026-10-30), `mine` false', () => {
     const report = { id: 'r1' } as never;
     const trial = [{ lesson_id: 't1', starts_at: '2026-10-20T15:00:00.000Z', status: 'completed' as const, outcome: 'attended' as const, teacher_name: null }];
     const d = toStudentDetails({ ...parts(history([sub('a', 'active', '2026-08-01')])), reports: { items: [report], total: 1 }, trial, mine: false });
-    expect(d).toMatchObject({ mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 }, trial });
+    expect(d).toMatchObject({ mine: false, subscriptions: [{ id: 'a' }], current_id: 'a', reports: { items: [report], total: 1 }, trial });
     expect(toStudentDetails(parts(null)).mine).toBe(true);
   });
 });

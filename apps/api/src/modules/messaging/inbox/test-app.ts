@@ -12,19 +12,22 @@ import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
-import { SalesQueries } from '../../sales/sales/sales.queries';
-import { MessageSender } from '../whatsapp/sender/message.sender';
-import { SendGate } from '../whatsapp/gate/send-gate';
-import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates/catalog/templates.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
+import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
-import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries';
-import { ThreadsQueries } from './threads/threads.queries';
+import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
+import { ThreadsRepo } from './threads/threads.repo';
+import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
 import { KapsoReopener } from './reopen/kapso-reopener';
-import { ReopenQueries } from './reopen/reopen.queries';
-import { DeltaQueries } from './delta/delta.queries';
+import { ReopenRepo } from './reopen/reopen.repo';
+import { DeltaRepo } from './delta/delta.repo';
+import { MessageHideRepo } from './hide/message-hide.repo';
+import { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -73,7 +76,12 @@ function mocks() {
     audit: { record: vi.fn() },
     reopens: { requestedSince: vi.fn(async () => false), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
+    hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
+    stickers: {
+      ...{ recent: vi.fn(), messages: vi.fn(), favourites: vi.fn() },
+      ...{ save: vi.fn(), drop: vi.fn() },
+    },
   };
 }
 
@@ -84,19 +92,23 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(ThreadsQueries).useValue(m.queries)
-    .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
-    .overrideProvider(SalesQueries).useValue(m.sales)
-    .overrideProvider(ChatListsQueries).useValue(m.lists)
-    .overrideProvider(TemplatesQueries).useValue(templates)
+    .overrideProvider(ThreadsRepo).useValue(m.queries)
+    .overrideProvider(ThreadMessagesRepo).useValue(m.queries)
+    .overrideProvider(ThreadReadsRepo).useValue(m.queries)
+    .overrideProvider(TeacherThreadsRepo).useValue(m.teacher)
+    .overrideProvider(SalesRepo).useValue(m.sales)
+    .overrideProvider(ChatListsRepo).useValue(m.lists)
+    .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(ReopenQueries).useValue(m.reopens)
+    .overrideProvider(ReopenRepo).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
-    .overrideProvider(DeltaQueries).useValue(m.delta)
+    .overrideProvider(MessageHideRepo).useValue(m.hides)
+    .overrideProvider(DeltaRepo).useValue(m.delta)
+    .overrideProvider(StickerRepo).useValue(m.stickers)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

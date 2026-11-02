@@ -17,7 +17,7 @@ test.each([
   ['2026-10-01T18:59:00Z', 'evening'], // 21:59
   ['2026-10-01T19:00:00Z', 'night'], // 22:00
 ] as const)('the greeting at %s follows the Riyadh clock: %s', (iso, part) => {
-  expect(greetingPart(at(iso))).toBe(part);
+  expect(greetingPart(at(iso), 'Asia/Riyadh')).toBe(part);
 });
 
 test('firstName: the first word of the full name, null when missing or blank', () => {

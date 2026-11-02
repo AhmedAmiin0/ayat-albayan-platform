@@ -6,8 +6,8 @@ import { useStudentHref } from '@/core/nav/tree-base';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { InsetGroup } from '@/core/ui/surface/inset';
-import { SectionLabel } from '../list/SectionLabel';
-import type { StudentRef } from '../shared/types';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
+import type { StudentRef } from '@/students/shared/types';
 
 /** Other students on the same guardian phone; a tap opens that student's quick view. */
 export function SiblingsList({ siblings }: { siblings: StudentRef[] }) {

@@ -1,15 +1,15 @@
 import type { Gender, LeadSource } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { FormLabel } from '@/payments/FormLabel';
+import { Note } from '@/core/ui/feedback/Note';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { GENDER_PILLS, sourcePills, TZ_PILLS } from '../lib/contact-pills';
-import { ageValid, contactReady, phoneProblem, type TrialDraft } from '../lib/draft';
+import { GENDER_PILLS, sourcePills, TZ_PILLS } from '@/booking/trial/lib/contact-pills';
+import { ageValid, contactReady, phoneProblem, type TrialDraft } from '@/booking/trial/lib/draft';
 import { DurationPills } from './DurationPills';
 import { ContactIsSelfPills } from '@/student-file';
 

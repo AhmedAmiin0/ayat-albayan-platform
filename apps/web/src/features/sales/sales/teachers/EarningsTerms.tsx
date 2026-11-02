@@ -1,6 +1,6 @@
 import type { AssistantTermsView } from '@ab/shared';
-import { formatDate } from '@/features/sales/leads/format';
-import { moneyText } from '@/features/finance/subscriptions/format';
+import { formatDate } from '@/features/sales/leads';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 const p = t.assistantPortal.earnings;
@@ -27,7 +27,9 @@ export function EarningsTerms({ terms }: { terms: AssistantTermsView | null }) {
             ? p.commissionPercent.replace('{value}', String(commission.value))
             : p.commissionFixed.replace('{amount}', moneyText(commission.value, commission.currency ?? ''))}
           <span className="mt-0.5 block text-xs text-ink-3">
-            {p.commissionNote.replace('{n}', String(terms?.renewal_share_percent ?? '')).replace('{date}', formatDate(commission.starts_on))}
+            {(terms?.renewal_share_percent ? p.commissionNote : p.commissionNoteRenewalOff)
+              .replace('{n}', String(terms?.renewal_share_percent ?? ''))
+              .replace('{date}', formatDate(commission.starts_on))}
           </span>
         </p>
       )}

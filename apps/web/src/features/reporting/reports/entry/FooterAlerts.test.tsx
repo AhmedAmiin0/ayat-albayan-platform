@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { reportView } from '../report-fixture';
+import { reportView } from '@/features/reporting/reports/report-fixture';
 import { FooterAlerts } from './FooterAlerts';
 
 describe('FooterAlerts', () => {

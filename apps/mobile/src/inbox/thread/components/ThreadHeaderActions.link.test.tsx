@@ -4,9 +4,9 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider, type TreeBase } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { answer } from '../../lists/list-fixtures';
-import { ThreadScreen } from '../../screens/ThreadScreen';
-import { detail, inbound, PHONE, thread } from '../../shared/thread-fixtures';
+import { answer } from '@/inbox/lists/lib/list-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
+import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // «ربط بطالب موجود» (owner 2026-10-29) in the chat's «⋮»: leads.link_family, a lead's chat with no family.
 const mockApiFetch = jest.fn();

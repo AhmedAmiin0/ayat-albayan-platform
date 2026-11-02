@@ -11,12 +11,12 @@ const CHANGE = '/sales/booking/course/change';
  * Dropped once unmounted (gcTime 0): the course refetch after a save does not reach it, so a kept answer
  * would show the old summary when the same days are picked again.
  */
-export function useCourseChangeCheck(body: CourseChangeRequest | null) {
+export function useCourseChangeCheck(body: CourseChangeRequest | null, path = CHANGE) {
   const key: Partial<CourseChangeRequest> = { ...body };
   delete key.clientRequestId;
   return useQuery({
-    queryKey: ['sales', 'booking', 'course-change', 'check', JSON.stringify(key)],
-    queryFn: () => apiSend<CourseChangeCheck>('POST', `${CHANGE}/check`, body),
+    queryKey: ['sales', 'booking', 'course-change', 'check', path, JSON.stringify(key)],
+    queryFn: () => apiSend<CourseChangeCheck>('POST', `${path}/check`, body),
     enabled: body !== null,
     retry: false,
     gcTime: 0,
@@ -25,15 +25,17 @@ export function useCourseChangeCheck(body: CourseChangeRequest | null) {
 
 /**
  * «احفظ الأيام الجديدة»: POST …/course/change, re-sent with the flow's one clientRequestId on every
- * retry (rule 8). The schedule and the course refetch, as after «احجز».
+ * retry (rule 8). The schedule and the course refetch, as after «احجز». `path`: the student
+ * profile's …/course-teacher|course-times/change (owner 2026-10-30), not the assistant's own.
  */
-export function useChangeCourse() {
+export function useChangeCourse(path = CHANGE) {
   const client = useQueryClient();
   return useMutation({
     mutationKey: ['sales', 'booking', 'course-change'],
-    mutationFn: (body: CourseChangeRequest) => apiSend<CourseChangeResult>('POST', CHANGE, body),
+    mutationFn: (body: CourseChangeRequest) => apiSend<CourseChangeResult>('POST', path, body),
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: ['lessons'] });
+      void client.invalidateQueries({ queryKey: pathKey('/students') });
       void client.invalidateQueries({ queryKey: pathKey('/sales/booking/course') });
     },
   });

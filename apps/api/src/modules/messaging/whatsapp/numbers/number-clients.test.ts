@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { NumberClients } from './number-clients';
 import { N1, N2, overlayNum } from './number-route.fakes';
-import { STUB_ENV } from '../whatsapp.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23c: one client per number, from that number's own config only; nothing here reaches a network.
 

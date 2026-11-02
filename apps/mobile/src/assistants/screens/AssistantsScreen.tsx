@@ -1,16 +1,16 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useAssistants } from '../api/api';
-import { AssistantsList } from '../list/AssistantsList';
-import { CommissionLedger } from '../commission/CommissionLedger';
-import { useStatementCan } from '../statements/hooks/statement-can';
-import { StatementsPanel } from '../statements/components/StatementsPanel';
+import { useAssistants } from '@/assistants/api/api';
+import { AssistantsList } from '@/assistants/list/AssistantsList';
+import { CommissionLedger } from '@/assistants/commission/CommissionLedger';
+import { useStatementCan } from '@/assistants/statements/hooks/statement-can';
+import { StatementsPanel } from '@/assistants/statements/components/StatementsPanel';
 
 type Tab = 'list' | 'commissions' | 'statements';
 

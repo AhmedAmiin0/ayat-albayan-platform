@@ -11,7 +11,17 @@ describe('«ماذا يُرسل ومتى» audience tabs', () => {
     const tabs = audienceTabs(ENTRIES);
     expect(tabs.map((tab) => tab.value)).toEqual(['guardian', 'teacher', 'lead', 'staff', 'manual']);
     expect(tabs.map((tab) => tab.label)).toEqual([c.audience.guardian, c.audience.teacher, c.audience.lead, c.audience.staff, c.states.manual]);
-    expect(tabs.reduce((n, tab) => n + tab.count, 0)).toBe(ENTRIES.length);
+    // A row that also reaches the teacher (a schedule change) counts under both tabs.
+    const twice = ENTRIES.filter((e) => e.also_to?.length).length;
+    expect(tabs.reduce((n, tab) => n + tab.count, 0)).toBe(ENTRIES.length + twice);
+  });
+
+  it('a schedule change is listed under the guardian AND the teacher (owner 2026-10-30)', () => {
+    for (const tab of ['guardian', 'teacher'] as const) {
+      const keys = rowsOf(ENTRIES, tab).map((e) => e.key);
+      expect(keys).toEqual(expect.arrayContaining(['lesson_rescheduled', 'course_paused']));
+    }
+    expect(rowsOf(ENTRIES, 'lead').map((e) => e.key)).not.toContain('lesson_cancelled');
   });
 
   it('report_ready is a guardian row; manual rows sit only under «يدوي»', () => {

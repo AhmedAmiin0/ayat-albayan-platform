@@ -1,4 +1,4 @@
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 

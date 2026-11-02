@@ -8,10 +8,11 @@ import {
   type CodeStatus,
   type PasswordSession,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Ip, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Ip, Post } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../common/auth/decorators';
-import { parseOrThrow } from '../../../common/http/http';
+import { Public } from '@/common/auth/decorators';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
 import { SignInSettings } from './sign-in.settings';
@@ -38,31 +39,46 @@ export class SignInController {
 
   @Post('code/request')
   @HttpCode(202)
-  request(@Body() body: unknown, @Ip() ip: string): Promise<void> {
-    return this.family.request(parseOrThrow(codeRequestSchema, body), ip);
+  request(
+    @ZodBody(codeRequestSchema) body: z.output<typeof codeRequestSchema>,
+    @Ip() ip: string,
+  ): Promise<void> {
+    return this.family.request(body, ip);
   }
 
   @Post('code/verify')
   @HttpCode(200)
-  verify(@Body() body: unknown, @Ip() ip: string): Promise<CodeSession> {
-    return this.family.verify(parseOrThrow(codeVerifySchema, body), ip);
+  verify(
+    @ZodBody(codeVerifySchema) body: z.output<typeof codeVerifySchema>,
+    @Ip() ip: string,
+  ): Promise<CodeSession> {
+    return this.family.verify(body, ip);
   }
 
   @Post('login')
   @HttpCode(200)
-  login(@Body() body: unknown, @Ip() ip: string): Promise<PasswordSession> {
-    return this.passwords.login(parseOrThrow(loginSchema, body), ip);
+  login(
+    @ZodBody(loginSchema) body: z.output<typeof loginSchema>,
+    @Ip() ip: string,
+  ): Promise<PasswordSession> {
+    return this.passwords.login(body, ip);
   }
 
   @Post('password/forgot')
   @HttpCode(202)
-  forgot(@Body() body: unknown, @Ip() ip: string): Promise<void> {
-    return this.passwords.forgot(parseOrThrow(forgotSchema, body), ip);
+  forgot(
+    @ZodBody(forgotSchema) body: z.output<typeof forgotSchema>,
+    @Ip() ip: string,
+  ): Promise<void> {
+    return this.passwords.forgot(body, ip);
   }
 
   @Post('password/reset')
   @HttpCode(204)
-  async reset(@Body() body: unknown, @Ip() ip: string): Promise<void> {
-    await this.passwords.reset(parseOrThrow(resetSchema, body), ip, this.settings.config.passwordMinLength);
+  async reset(
+    @ZodBody(resetSchema) body: z.output<typeof resetSchema>,
+    @Ip() ip: string,
+  ): Promise<void> {
+    await this.passwords.reset(body, ip, this.settings.config.passwordMinLength);
   }
 }

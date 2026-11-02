@@ -1,9 +1,9 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { numberView } from '../numbers.fixture';
-import { numbersQuery } from '../numbers-api';
-import { renderPanel } from '../numbers-test-kit';
+import { numberView } from '@/features/messaging/numbers/numbers.fixture';
+import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
+import { renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

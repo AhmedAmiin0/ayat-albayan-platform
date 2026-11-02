@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { base64UrlToBytes, FORGET_TIMEOUT_MS, forgetWebPush, rebindWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
 
 const api = vi.hoisted(() => ({ saveWebPush: vi.fn(), deleteWebPush: vi.fn() }));
-vi.mock('../api', () => api);
+vi.mock('@/features/messaging/notifications/api', () => api);
 
 const JSON_SUB = { endpoint: 'https://push.example/abc', expirationTime: null, keys: { p256dh: 'p', auth: 'a' } };
 const sub = { endpoint: JSON_SUB.endpoint, toJSON: () => JSON_SUB, unsubscribe: vi.fn() };

@@ -1,12 +1,12 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import { stateChip } from '../../notification-catalogue/catalogue-text';
-import { NamePart } from '../cells/NamePart';
-import { editableRule } from '../table/RuleRow';
-import { fillText, shortReasonText } from '../rule-text';
-import { useRules } from '../rules-context';
-import { onOffWord } from '../switch/RuleSwitchInput';
+import { stateChip } from '@/features/messaging/notification-catalogue/catalogue-text';
+import { NamePart } from '@/features/messaging/notification-rules/cells/NamePart';
+import { editableRule } from '@/features/messaging/notification-rules/table/RuleRow';
+import { fillText, shortReasonText } from '@/features/messaging/notification-rules/rule-text';
+import { useRules } from '@/features/messaging/notification-rules/rules-context';
+import { onOffWord } from '@/features/messaging/notification-rules/switch/RuleSwitchInput';
 
 const r = t.notificationRules;
 const cell = 'border-b border-rule px-2 py-2.5 text-start align-top';

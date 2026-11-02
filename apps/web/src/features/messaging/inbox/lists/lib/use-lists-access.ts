@@ -1,5 +1,5 @@
 import { usePermissions } from '@/features/people/auth/use-permissions';
-import { useInboxMode } from '../../shared/mode';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 
 /** «القوائم» shows with inbox.lists, never in teacher mode (owner 2026-10-20: teachers get no lists). */
 export function useListsAccess(): boolean {

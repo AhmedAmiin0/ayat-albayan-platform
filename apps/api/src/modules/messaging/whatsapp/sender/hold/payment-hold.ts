@@ -1,4 +1,4 @@
-import { isWaPaymentHold, type WaLine } from '@ab/shared';
+import { isWaPaymentHold, WA_ERROR, type WaLine } from '@ab/shared';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -34,7 +34,7 @@ interface PaymentInput {
 /** A line-held row that reached the 48 h stop untried: failed as Meta's 131042, as before. */
 export const PAYMENT_HOLD_EXPIRED = new WaError(
   '(#131042) not sent within 48 h: the WhatsApp Business account has a payment issue',
-  { code: 131042, status: 400 },
+  { code: WA_ERROR.paymentIssue, status: 400 },
 );
 
 /** When the row was due (scheduled_for, else created_at); NaN when unknown. */

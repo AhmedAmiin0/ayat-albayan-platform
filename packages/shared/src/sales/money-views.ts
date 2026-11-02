@@ -1,6 +1,6 @@
-import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '../enums/index.js';
-import type { Quote } from '../money/pricing/quote.js';
-import type { RenewalPricing } from '../money/pricing/index.js';
+import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '@ab/catalog';
+import type { Quote } from '@ab/money';
+import type { RenewalPricing } from '@ab/money';
 
 // Whitelisted responses of the salesperson's money endpoints (docs/16): only her student and the package
 // she is creating or paying, never the fx internals (rate, provider, date), the quote source, notes or
@@ -52,7 +52,10 @@ export interface SalesPaymentView {
 /** GET /sales/money/family: her students of this chat's family (all of them with sales.renew_any), each with its packages owed. */
 export interface SalesFamilyStudent extends SalesStudentRef {
   status: StudentStatus;
-  /** false: not hers, listed through sales.renew_any (subscribe / renew / transfer only). Absent from old APIs = hers. */
+  /**
+   * false: not hers, listed through sales.renew_any (subscribe / renew / transfer / course days). Absent from old APIs = hers.
+   * true for every child while SalesOwnershipRule does not enforce ownership (owner 2026-11-02).
+   */
   mine?: boolean;
   open: SalesMoneySubscriptionView[];
   /** «جدّد الاشتراك» is her primary action: the package ended, or an active one is down to the renewal alert. */

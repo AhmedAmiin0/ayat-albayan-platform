@@ -1,15 +1,15 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { CONFIG, queries, SALES, TEACHER } from '../classroom.fakes';
+import { CONFIG, queries, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID, MEETING_TOKEN, meetingQueries, NOW, scheduledRow } from './internal-meetings.fakes';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
-import type { InternalMeetingsQueries } from './internal-meetings.queries';
+import type { InternalMeetingsRepo } from './internal-meetings.repo';
 import { hashMeetingToken } from './internal-meetings.token';
-import { PublicJoinLimit } from '../join/join-limit';
-import { admissionOf } from '../moderation/moderation.fakes';
+import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
+import { admissionOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
-const service = () => new InternalMeetingJoinService(mq as unknown as InternalMeetingsQueries, new PublicJoinLimit(), admissionOf({ q: queries(), config: CONFIG }));
+const service = () => new InternalMeetingJoinService(mq as unknown as InternalMeetingsRepo, new PublicJoinLimit(), admissionOf({ q: queries(), config: CONFIG }));
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const at = (iso: string) => new Date(iso);
 let ip = 0;

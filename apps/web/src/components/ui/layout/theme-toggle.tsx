@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { readThemePref, setThemePref, type ThemePref } from '@/lib/theme';
-import { SegmentedControl } from '../form/segmented-control';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 
 const OPTIONS: { value: ThemePref; label: string }[] = [
   { value: 'auto', label: t.theme.auto },

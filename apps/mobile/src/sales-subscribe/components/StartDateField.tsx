@@ -1,16 +1,16 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
-import { dayLabel } from '@/booking/shared/slots';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { dayLabel } from '@/booking';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { Section } from '@/more/Section';
+import { Note } from '@/core/ui/feedback/Note';
+import { Section } from '@/core/ui/surface/Section';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { type StartDraft, usedBeforeOf } from '../lib/start-date';
+import { type StartDraft, usedBeforeOf } from '@/sales-subscribe/lib/start-date';
 
 interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */
@@ -37,7 +37,7 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
   if (!canSet) {
     return (
       <Section title={m.startsOn}>
-        <Note>{m.startsOnDefault.replace('{date}', dayLabel(new Date(`${academyToday}T12:00:00Z`)))}</Note>
+        <Note>{m.startsOnDefault.replace('{date}', dayLabel(new Date(`${academyToday}T12:00:00Z`), 'UTC'))}</Note>
       </Section>
     );
   }

@@ -5,7 +5,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { fillText } from '../rule-text';
+import { fillText } from '@/features/messaging/notification-rules/rule-text';
 
 const e = t.notificationRules.essentialOff;
 

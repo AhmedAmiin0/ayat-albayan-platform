@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '../api';
-import { RATE_FIELDS } from '../form/teacher-form';
+import type { Teacher } from '@/features/people/teachers/api';
+import { RATE_FIELDS } from '@/features/people/teachers/form/teacher-form';
 
 /** «سعر الحلقة (جنيه)»: one row per duration that has a rate, Western tabular digits. R-TCH-01. */
 export function RatesTable({ teacher }: { teacher: Teacher }) {

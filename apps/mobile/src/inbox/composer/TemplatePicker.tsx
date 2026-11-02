@@ -2,11 +2,11 @@ import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } fr
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, Modal, View } from 'react-native';
-import { useSendsAllTemplates } from '@/auth/use-permissions';
+import { useSendsAllTemplates } from '@/core/auth/use-permissions';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -15,7 +15,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { TemplateForm } from './TemplateForm';
-import type { Outgoing } from '../thread/hooks/use-thread';
+import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
 
 const PATH = '/messaging/templates';
 

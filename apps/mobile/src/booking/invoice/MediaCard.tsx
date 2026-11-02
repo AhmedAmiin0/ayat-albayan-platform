@@ -1,4 +1,3 @@
-import { RIYADH_TZ } from '@ab/shared';
 import { ActivityIndicator, Image, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -6,7 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import type { ThreadMediaItem } from '../shared/contract';
 import { useMediaUrl } from './invoice-queries';
 import { ReceiptIcon } from './ReceiptIcon';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 
 interface MediaCardProps {
   phone: string;
@@ -24,12 +23,13 @@ interface MediaCardProps {
  */
 export function MediaCard({ phone, item, onPick }: MediaCardProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const image = item.mime.startsWith('image/');
   const file = useMediaUrl(phone, item.message_id, image && !item.expired);
   const uri = file.data?.url ?? null;
   const failed = image && !item.expired && file.isError;
-  const when = whenIn(new Date(item.created_at), RIYADH_TZ, cycle);
+  const when = whenIn(new Date(item.created_at), tz, cycle);
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
   return (
     <Pressable

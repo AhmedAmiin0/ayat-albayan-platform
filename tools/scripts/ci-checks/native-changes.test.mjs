@@ -31,10 +31,11 @@ test('images in an assets sub-folder are imported from JS and ship by OTA', () =
   assert.deepEqual(nativeChanges(snap(base), snap(base), { files }), ['apps/mobile/assets/splash-icon.png changed']);
 });
 
-test('pure-JS packages (google fonts, tanstack, supabase-js, workspace) are not native', () => {
+test('pure-JS packages (google fonts, tanstack, supabase-js, zod, workspace) are not native', () => {
   const before = snap(base, { '@expo-google-fonts/amiri': '^0.4.1', '@tanstack/react-query': '5.1', '@ab/shared': 'workspace:*' });
   const after = snap(base, { '@expo-google-fonts/noto-sans-arabic': '^0.4.3', '@tanstack/react-query': '5.2', '@supabase/supabase-js': '2' });
   assert.deepEqual(nativeChanges(before, after), []);
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { zod: '^4.6.5' })), []);
   assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { 'expo-camera': '1' })), ['dependency expo-camera: (none) -> 1']);
 });
 
@@ -79,6 +80,13 @@ test('eas.json: a side profile (the Stripe test app, docs/30) is not native; a n
   assert.deepEqual(nativeChanges(before, side, { files: ['apps/mobile/eas.json'] }), []);
   const preview = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
   assert.deepEqual(nativeChanges(before, preview, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
+});
+
+test('eas.json: an EXPO_PUBLIC_* env value is bundled JS, not native (docs/30: the Stripe flag on preview)', () => {
+  const before = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
+  const flagged = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1', EXPO_PUBLIC_FEATURE_STRIPE: '1' } } }) };
+  assert.deepEqual(nativeChanges(before, flagged, { files: ['apps/mobile/eas.json'] }), []);
+  assert.deepEqual(nativeChanges({ ...snap(base), eas: eas(PROFILES) }, flagged, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
 });
 
 const CONFIG = `import type { ConfigContext, ExpoConfig } from 'expo/config';

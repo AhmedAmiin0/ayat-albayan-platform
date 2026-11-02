@@ -1,4 +1,4 @@
-import { clockOf, intlLocale } from '@ab/shared';
+import { clockOf, dateText, intlLocale, localDateIn } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { locale } from '@/lib/i18n/locale';
@@ -8,8 +8,7 @@ import { locale } from '@/lib/i18n/locale';
 
 const LOCALE = intlLocale(locale);
 const relative = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'auto' });
-const dayMonth = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
-const day = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
+const DAY_MONTH = { day: 'numeric', month: 'short' } as const;
 
 const MINUTE = 60_000;
 
@@ -18,10 +17,11 @@ export function notificationTime(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   const minutes = Math.max(0, Math.floor((now.getTime() - at.getTime()) / MINUTE));
   if (minutes < 60) return relative.format(-minutes, 'minute');
-  const time = clockOf(at, { ...clock, tz: viewerZone() });
-  if (at.toDateString() === now.toDateString()) return time;
-  return `${dayMonth.format(at)} ${time}`;
+  const tz = viewerZone();
+  const time = clockOf(at, { ...clock, tz });
+  if (localDateIn(at, tz) === localDateIn(now, tz)) return time;
+  return `${dateText(at, { tz, locale }, DAY_MONTH)} ${time}`;
 }
 
 /** The whole stamp (tooltip). */
-export const notificationStamp = (iso: string, clock: Clock): string => dateAndClock(day, new Date(iso), { ...clock, tz: viewerZone() });
+export const notificationStamp = (iso: string, clock: Clock): string => dateAndClock(new Date(iso), { ...clock, tz: viewerZone() }, { dateStyle: 'medium' });

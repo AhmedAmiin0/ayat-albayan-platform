@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message, PHONE } from '../../testing/inbox-fixture';
+import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { quoteOf, quoteSender, quoteText } from './quote';
 
 const chat = { name: 'أم سهيلة', phone: PHONE };
@@ -21,10 +21,11 @@ describe('quote: what a reply shows', () => {
     expect(quoteSender({ ...ours, sender_name: null }, chat)).toBe(t.inbox.reply.you);
   });
 
-  it('the first line, else the file kind, else the template label', () => {
+  it('the first line, else the file kind (a PDF apart), else the template label', () => {
     expect(quoteText(quoteOf(message({ body: ' السطر الأول \nالثاني' })))).toBe('السطر الأول');
     expect(quoteText(quoteOf(message({ body: null, media_mime: 'image/jpeg' })))).toBe(t.inbox.media.image);
-    expect(quoteText(quoteOf(message({ body: null, media_mime: 'application/pdf' })))).toBe(t.inbox.media.document);
+    expect(quoteText(quoteOf(message({ body: null, media_mime: 'application/pdf' })))).toBe(t.inbox.media.pdf);
+    expect(quoteText(quoteOf(message({ body: null, media_mime: 'application/zip' })))).toBe(t.inbox.media.document);
     expect(quoteText(quoteOf(message({ body: null, template_key: 'renewal_due' })))).toBe(t.inbox.reply.template);
     expect(quoteText(quoteOf(message({ body: null })))).toBe(t.inbox.media.other);
   });

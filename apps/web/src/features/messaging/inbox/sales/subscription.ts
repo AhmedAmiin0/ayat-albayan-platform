@@ -8,7 +8,7 @@ import {
   type SubscriptionBadge,
   type ThreadSubscriptionView,
 } from '@ab/shared';
-import { moneyText, progressOf } from '@/features/finance/subscriptions/format';
+import { moneyText, progressOf } from '@/features/finance/subscriptions';
 import { partPaidText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 

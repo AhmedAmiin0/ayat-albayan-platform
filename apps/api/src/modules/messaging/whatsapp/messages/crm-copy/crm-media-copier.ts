@@ -1,9 +1,9 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { allowedCrmUrl, isCrmHistoryRow } from '../crm-history/crm-history-url';
-import { CRM_UNREACHABLE } from '../crm-history/crm-media.fetch';
-import type { MediaMessage } from '../inbound-media.queries';
-import { InboundMedia } from '../inbound-media.service';
-import { CrmMediaCopyQueries } from './crm-media-copy.queries';
+import { allowedCrmUrl, isCrmHistoryRow } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
+import { CRM_UNREACHABLE } from '@/modules/messaging/whatsapp/messages/crm-history/crm-media.fetch';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { CrmMediaCopyRepo } from './crm-media-copy.repo';
 
 /** Per tick: small, so a tick stays short and the old CRM's storage is never hammered. */
 export const BATCH = 20;
@@ -50,7 +50,7 @@ export class CrmMediaCopier {
 
   constructor(
     private readonly media: InboundMedia,
-    private readonly queries: CrmMediaCopyQueries,
+    private readonly queries: CrmMediaCopyRepo,
   ) {}
 
   next(host: string): Promise<string[]> {

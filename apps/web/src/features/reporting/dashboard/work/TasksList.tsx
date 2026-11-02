@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
-import { DASHBOARD_KEY, markTaskDone } from '../api';
-import { workItem, workLink } from '../today/PendingReportsList';
-import type { TaskRow } from '../types';
+import { DASHBOARD_KEY, markTaskDone } from '@/features/reporting/dashboard/api';
+import { workItem, workLink } from '@/features/reporting/dashboard/today/PendingReportsList';
+import type { TaskRow } from '@/features/reporting/dashboard/types';
 import { taskText } from './work-text';
 
 /** Open admin tasks (renewal due, unpaid) with «خلصت» (POST /admin-tasks/:id/done, docs/11 S8). */

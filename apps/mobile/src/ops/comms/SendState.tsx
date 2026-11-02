@@ -4,11 +4,11 @@ import { View } from 'react-native';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ReadOnlySettings } from '../settings/ReadOnlySettings';
-import { useSettings } from '../settings/use-settings';
+import { ReadOnlySettings } from '@/ops/settings/ReadOnlySettings';
+import { useSettings } from '@/ops/settings/use-settings';
 import { gateChip, gateLine } from './gate-words';
 
 const GATE_PATH = '/messages/gate';

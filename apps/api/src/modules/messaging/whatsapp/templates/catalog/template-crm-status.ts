@@ -1,9 +1,9 @@
 import type { CRM_TEMPLATE_STATUSES, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
-import type { AuditService } from '../../../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { onCrm } from './template-env';
 import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
-import type { TemplatesQueries } from './templates.queries';
+import type { TemplatesRepo } from './templates.repo';
 
 /** «معتمد في نظام CRM» (approved) or «غير متاح في نظام CRM» (missing). */
 export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
@@ -16,7 +16,7 @@ export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
  * overwrites it while that line stays on crm (template-line-sync.ts answers crm_managed, touching no row).
  */
 export interface CrmStatusDeps {
-  queries: Pick<TemplatesQueries, 'get' | 'update'>;
+  queries: Pick<TemplatesRepo, 'get' | 'update'>;
   audit: Pick<AuditService, 'record'>;
 }
 

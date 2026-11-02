@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../../../config/env/env';
-import type { SendGate } from '../gate/send-gate';
-import type { MessageDispatch } from '../sender/message.dispatch';
-import type { SenderQueries } from '../sender/sender.queries';
-import { messagingNumbers, routable } from '../numbers/number-route';
-import type { NumberRoutes } from '../numbers/number-routes';
-import { templateRow } from '../whatsapp.fakes';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { WhatsappEnv } from '@/config/env/env';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dispatch';
+import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
+import { messagingNumbers, routable } from '@/modules/messaging/whatsapp/numbers/number-route';
+import type { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { CodeSend } from './code-send';
 
 // Owner 2026-10-29 («For login make it with chat number»): codes leave from the CHAT line only. A crm
@@ -22,11 +22,13 @@ const routes = {
     templates: [],
   })),
 };
-const make = () => {
-  const s = new CodeSend(gate as unknown as SendGate, queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch);
-  Object.assign(s, { routes: routes as unknown as NumberRoutes });
-  return s;
-};
+const make = () =>
+  new CodeSend(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    routes as unknown as NumberRoutes,
+  );
 const send = () => make().send({ phone: '+966500000001', code: '123456' });
 const via = () => dispatch.send.mock.calls[0]?.[2];
 

@@ -2,9 +2,9 @@ import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { setCrmName, templateErrorText, templatesQuery } from '../api';
-import { templateName } from '../template-cells';
-import type { Notice } from '../use-template-actions';
+import { setCrmName, templateErrorText, templatesQuery } from '@/features/messaging/templates/api';
+import { templateName } from '@/features/messaging/templates/template-cells';
+import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
 /**
  * A crm line's template name / language in the CRM (docs/19): `editing` opens CrmNameDialog; the saved row

@@ -10,7 +10,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useMeetings } from '../manage/api';
 import { CreateMeeting } from '../create/CreateMeeting';
 import { MeetingRow } from '../manage/MeetingRow';
-import { useViewerTz } from '../manage/use-viewer-tz';
+import { useViewerTz } from '@/core/lib/clock';
 
 /**
  * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,

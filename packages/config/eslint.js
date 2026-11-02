@@ -9,15 +9,19 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { boundariesPlugin, TESTS } from './eslint-boundaries.js';
+import { dateRestrictions } from './eslint-dates.js';
+import { flowBlocks, flowRules } from './eslint-flow.js';
+import { syntaxBlocks } from './eslint-syntax.js';
 
 // Oxlint runs the rules of the root .oxlintrc.json first (`pnpm lint:ox`, a CI step before ESLint); ESLint turns
 // them off and keeps the type-aware, custom and react-hooks rules. Oxlint has no bulk suppressions, so only a rule
 // with no entry in any eslint-suppressions.json can move there (`pnpm guard:lint` checks it).
 const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.meta.url), 'utf8'));
 
-export { boundaries, forbiddenImports, noParentImports, TESTS } from './eslint-boundaries.js';
+export { boundaries, forbiddenImports, noParentImports, TESTS, zodInputs } from './eslint-boundaries.js';
 export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
+export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
 
 export const hardRules = {
   'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
@@ -42,8 +46,6 @@ export const hardRules = {
   'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
   '@typescript-eslint/no-explicit-any': 'error',
   '@typescript-eslint/no-non-null-assertion': 'error',
-  complexity: ['error', 10],
-  'max-depth': ['error', 3],
   'no-console': 'error',
   eqeqeq: ['error', 'always', { null: 'ignore' }],
   // Nest @Module() classes are empty by design.
@@ -111,9 +113,13 @@ export function config(root, ...extra) {
         // *.mts: vitest configs that no tsconfig includes.
         parserOptions: { projectService: { allowDefaultProject: ['*.mts'] }, tsconfigRootDir: root },
       },
-      rules: { ...hardRules, ...typedRules },
+      rules: { ...hardRules, ...flowRules, ...typedRules },
     },
+    ...flowBlocks,
+    { rules: { 'no-restricted-properties': ['error', ...dateRestrictions] } },
+    ...syntaxBlocks(TESTS),
     { files: TESTS, rules: testRules },
+    { files: [...TESTS, 'src/time/**'], rules: { 'no-restricted-properties': 'off' } },
     ...extra,
     ...oxlint.buildFromOxlintConfig(oxlintrc),
     // Last, so no block above turns a type-aware rule back on for plain JS (eslint and jest configs, .mjs scripts).

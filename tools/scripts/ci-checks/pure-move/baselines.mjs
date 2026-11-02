@@ -45,9 +45,10 @@ function rekey(base, table) {
 }
 
 // docs/32 R12: a move writes `@/` for the `../` paths of the files it touches, and a move into a
-// shared folder (docs/32 c12a–e: mobile `core/`) ends deep imports, so the entries of these rules
-// may shrink or go (never grow, never appear); every other rule keeps its count.
-const SHRINKS = ['ab/no-parent-imports', 'ab/module-boundaries'];
+// shared folder (docs/32 c12a–e: mobile `core/`) ends deep imports; both shorten lines, as does a
+// D2 rename (`XQueries` → `XRepo`). So the entries of these rules may shrink or go (never grow,
+// never appear); every other rule keeps its count.
+const SHRINKS = ['ab/no-parent-imports', 'ab/module-boundaries', 'max-len'];
 const lowered = (was, now) =>
   Number.isInteger(now?.count) && now.count >= 1 && now.count <= was.count;
 

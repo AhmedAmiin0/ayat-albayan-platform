@@ -13,3 +13,25 @@ export {
   coursePauseUntilPath,
   type PreviewWords,
 } from './course-pause.js';
+export {
+  courseActionsKey,
+  courseMoveBase,
+  type CourseMoveErrorCode,
+  courseMoveErrorCode,
+  type CourseMoveKind,
+  courseMoveViewPath,
+  type CourseStopErrorCode,
+  courseStopErrorCode,
+  courseStopLessonsText,
+  courseStopPath,
+  courseStopPreviewPath,
+  courseTeacherOptionsPath,
+  type StopWords,
+} from './course-actions.js';
+export {
+  packageCancelOffered,
+  parsePackageCancelCheck,
+  postPackageCancel,
+  salesPackageCancelKey,
+  salesPackageCancelPath,
+} from './package-cancel.js';

@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { formatDateTime } from '../../sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads/format';
 import { useClock } from '@/lib/clock';
 
 /** Under a plain field's hint: where the value in use comes from (settings, the server, nowhere). */

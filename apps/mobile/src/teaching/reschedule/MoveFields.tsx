@@ -1,12 +1,11 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ConflictNotice } from '@/booking/shared/ConflictNotice';
-import { ruleFromSlot } from '@/booking/shared/slots';
-import { ErrorLine } from '@/inbox/ErrorLine';
-import { DayChips } from '@/inbox/qualification/DayChips';
+import { ConflictNotice, ruleFromSlot } from '@/booking';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { DayChips } from '@/inbox/qualification/components/DayChips';
 import { t } from '@/core/lib/i18n/i18n';
-import { FormLabel } from '@/payments/FormLabel';
+import { FormLabel } from '@/core/ui/form/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { useReschedule } from './queries';

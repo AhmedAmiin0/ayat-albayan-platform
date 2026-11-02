@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { tile } from '../livekit/fake-client';
+import { tile } from '@/features/teaching/classroom/room/livekit/fake-client';
 import { RoomStage } from './RoomStage';
 
 const S = t.classroom.stage;

@@ -1,6 +1,6 @@
 import type { SettingKey } from '@ab/shared';
 import { ConflictNotice } from './ConflictNotice';
-import { useValues } from '../values-context';
+import { useValues } from '@/features/platform/settings/values/values-context';
 
 /** The conflict under its row on the desktop table: one cell spanning every column. */
 export function ConflictRow({ settingKey, cols }: { settingKey: SettingKey; cols: number }) {

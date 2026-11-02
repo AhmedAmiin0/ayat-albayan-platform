@@ -1,13 +1,13 @@
 import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner, type TeacherCalendarView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Note } from '../Note';
-import { Section } from '../Section';
+import { Note } from '@/core/ui/feedback/Note';
+import { Section } from '@/core/ui/surface/Section';
 
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
 

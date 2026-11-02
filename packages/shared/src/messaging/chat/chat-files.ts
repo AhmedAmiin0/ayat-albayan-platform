@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '../../core/format/index.js';
+import { counted, type PluralForm } from '@ab/core';
 import type { SignedDownload } from '../../reports/index.js';
 import { baseMime } from '../../schemas/chat-media.js';
 
@@ -26,10 +26,14 @@ export type WaMediaKind = 'image' | 'document';
 export const waMediaKind = (mime: string | null): WaMediaKind =>
   baseMime(mime).startsWith('image/') ? 'image' : 'document';
 
-/** Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats). */
-const SEND_KINDS: Record<string, 'image' | 'audio' | 'video'> = {
+/**
+ * Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats;
+ * a WebP is WhatsApp's sticker, owner 2026-11-01).
+ */
+const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
   'image/jpeg': 'image',
   'image/png': 'image',
+  'image/webp': 'sticker',
   'audio/aac': 'audio',
   'audio/amr': 'audio',
   'audio/mpeg': 'audio',
@@ -38,7 +42,7 @@ const SEND_KINDS: Record<string, 'image' | 'audio' | 'video'> = {
   'video/mp4': 'video',
   'video/3gpp': 'video',
 };
-export type WaSendKind = 'image' | 'audio' | 'video' | 'document';
+export type WaSendKind = 'image' | 'audio' | 'video' | 'sticker' | 'document';
 
 /** The type a stored file travels as (a forwarded voice note or video too); anything else goes as a document. */
 export const waSendKind = (mime: string | null): WaSendKind => SEND_KINDS[baseMime(mime)] ?? 'document';
@@ -90,4 +94,49 @@ function fileSizeText(bytes: number, s: PdfMetaStrings): string {
 /** «12 صفحة · PDF · 1.2 ميغابايت», each part isolated so the line reads right in Arabic and English. */
 export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStrings): string {
   return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
+}
+
+/** Control characters and the bidi marks and overrides a name may carry (U+200E, U+202E «‮»…). */
+const UNSEEN = /[\p{Cc}‎‏‪-‮⁦-⁩]/gu;
+
+/**
+ * A file name as a person gave it, fit to show and to store (messages.media_name: 1–200
+ * characters): no control or bidi characters (a spoofed «‮fdp.exe»), trimmed, at most `max` code
+ * points (never half an emoji); '' when nothing is left.
+ */
+export function cleanFileName(raw: string | null | undefined, max = 200): string {
+  const name = (raw ?? '').replace(UNSEEN, '').trim();
+  return Array.from(name).slice(0, max).join('').trim();
+}
+
+/** A caption line that reads as a PDF's file name («خطة الحفظ.pdf»): no path, ≤ 200 characters. */
+const PDF_FILE_NAME = /^[^/\\]{1,196}\.pdf$/i;
+
+interface Named {
+  media_name?: string | null;
+  body?: string | null;
+}
+
+/** The caption's first line when it reads as a PDF's file name, else ''. */
+const captionName = (m: Named): string => {
+  const line = cleanFileName((m.body ?? '').split('\n', 1)[0]);
+  return PDF_FILE_NAME.test(line) ? line : '';
+};
+
+/**
+ * A PDF bubble's name, as WhatsApp's: the file's own name (media_name); else the caption's first
+ * line when it reads as a file name (some senders put it there); else `untitled` («ملف PDF»).
+ */
+export function pdfBubbleName(m: Named, untitled: string): string {
+  return [cleanFileName(m.media_name), captionName(m)].find((name) => name.length > 0) ?? untitled;
+}
+
+/**
+ * The caption is only the PDF's name, which its card already shows (pdfBubbleName): the bubble
+ * leaves it out, so the name never shows twice.
+ */
+export function pdfCaptionIsName(m: Named & { media_mime: string | null }): boolean {
+  const body = (m.body ?? '').trim();
+  const single = body.length > 0 && !body.includes('\n');
+  return isPdfMime(m.media_mime) && !cleanFileName(m.media_name) && single && captionName(m) !== '';
 }

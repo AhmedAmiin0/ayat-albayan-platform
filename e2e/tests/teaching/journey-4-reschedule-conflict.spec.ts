@@ -37,7 +37,7 @@ test.describe('journey 4 — reschedule into a busy slot (R-SCH-07, R-SCH-04)', 
     const grid = page.getByRole('table', { name: ar.schedule.grid }).or(page.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
     await grid.getByRole('button', { name: /ريم/ }).click();
     const drawer = page.getByRole('dialog', { name: 'ريم' });
-    await expect(drawer).toContainText(ar.schedule.riyadhTime);
+    await expect(drawer).toContainText(ar.schedule.viewerTime);
     await drawer.getByRole('button', { name: ar.lessons.event.reschedule }).click();
 
     // Monday 14:00 is Leen's lesson: still pickable, refused with the reason in Arabic.

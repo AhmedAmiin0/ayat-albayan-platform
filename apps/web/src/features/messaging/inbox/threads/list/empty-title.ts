@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n/i18n';
-import type { InboxSearch } from '../../shared/search';
+import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
 /**
  * The thread list's empty title. «لا محادثات في هذه القائمة بعد…» (docs/22 §4) only when the active

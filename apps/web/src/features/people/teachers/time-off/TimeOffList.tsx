@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { timeOffQuery } from '../api';
+import { timeOffQuery } from '@/features/people/teachers/api';
 import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
 import { useClock } from '@/lib/clock';

@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { MessageSender } from '../sender/message.sender';
+import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import type { MessageViews } from './message.views';
 import { MessagesService } from './messages.service';
-import type { MessagesQueries } from './messages.queries';
-import { messageRow } from '../sender/sender.fakes';
+import type { MessagesRepo } from './messages.repo';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
 // M3 hand-off of a file staff sent from the chat (owner 2026-10-19 #2): wa.me cannot carry it.
 
@@ -18,7 +18,7 @@ function service(row: ReturnType<typeof messageRow>) {
   const views = { view: vi.fn(async (r: unknown) => r) };
   const sender = { kick: vi.fn().mockResolvedValue(undefined) };
   const svc = new MessagesService(
-    queries as unknown as MessagesQueries,
+    queries as unknown as MessagesRepo,
     views as unknown as MessageViews,
     sender as unknown as MessageSender,
   );

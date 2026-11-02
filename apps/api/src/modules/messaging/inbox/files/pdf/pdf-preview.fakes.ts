@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { vi } from 'vitest';
-import type { StorageService } from '../../../../../common/storage/storage.service';
-import type { MediaMessage } from '../../../whatsapp';
-import type { ThreadMediaService } from '../thread-media.service';
-import type { PdfDoc, PdfPreviewQueries } from './pdf-preview.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { MediaMessage } from '@/modules/messaging/whatsapp';
+import type { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
+import type { PdfDoc, PdfPreviewRepo } from './pdf-preview.repo';
 import { PdfPreviewService } from './pdf-preview.service';
 
 // Test helper (not a test): PdfPreviewService over an in-memory bucket and messages table. The tests
@@ -39,7 +39,7 @@ export function setup() {
   const service = new PdfPreviewService(
     media as unknown as ThreadMediaService,
     storage as unknown as StorageService,
-    queries as unknown as PdfPreviewQueries,
+    queries as unknown as PdfPreviewRepo,
   );
   return { service, media, storage, queries, objects, docs };
 }

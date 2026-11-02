@@ -3,7 +3,7 @@ import { clickToChatLink } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
-import type { StudentListItem } from '../types';
+import type { StudentListItem } from '@/features/people/students/types';
 
 type StudentRowActionsProps = { row: StudentListItem; onOpen: (studentId: string) => void };
 

@@ -31,5 +31,5 @@ export function salesDefaults(m: Mocks): void {
   m.activation.afterPayment.mockResolvedValue(true);
 }
 
-/** settings.sales_auto_assign OFF: bookings skip the ownership check (row 13), money never does. */
+/** settings.sales_auto_assign OFF: no ownership check at all (SalesOwnershipRule, row 39). */
 export const AUTO_ASSIGN_OFF = { ...SETTING_DEFAULTS, sales_auto_assign: false };

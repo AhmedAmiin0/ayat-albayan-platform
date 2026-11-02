@@ -1,4 +1,4 @@
-import { normalizeArabic } from '../../core/format/index.js';
+import { normalizeArabic } from '@ab/core';
 import { JUZ_STARTS, PAGE_STARTS, SURAHS } from './quran-data.js';
 
 // Lookups over the mushaf metadata (quran-data.ts): the v2 lesson report's surah/ayah picker,

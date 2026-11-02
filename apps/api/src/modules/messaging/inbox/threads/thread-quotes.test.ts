@@ -1,4 +1,4 @@
-import { QUOTE_BODY_MAX, type MessageView } from '@ab/shared';
+import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../../../../common/db/db.module';
 import { quoteOf, sameNumber, ThreadQuotes, withQuotes, type QuotedRow } from './thread-quotes';
@@ -33,6 +33,11 @@ describe('quoteOf', () => {
     expect(quoteOf(row({ sender: { full_name: 'سارة' } })).sender_name).toBeNull();
   });
 
+  it('a message deleted for everyone (migration 992) quotes nothing of itself', () => {
+    const gone = row({ body: 'سر', media_mime: 'image/jpeg', deleted_at: '2026-10-30T10:00:00Z' });
+    expect(quoteOf(gone)).toMatchObject({ body: null, media_mime: null });
+  });
+
   it('never quotes an old-CRM file\'s body (only its storage link, owner 2026-10-27): the media is named', () => {
     const link = 'https://files.crm.example/storage/v1/object/public/chat-media/account-test/inbound/1-image-1.webp';
     expect(quoteOf(row({ body: link, media_mime: 'image/webp' }))).toMatchObject({ body: null, media_mime: 'image/webp' });
@@ -41,10 +46,17 @@ describe('quoteOf', () => {
 });
 
 describe('withQuotes', () => {
-  it('attaches the quote of each answering view; an unknown one becomes null', () => {
+  it('attaches the quote of each answering view; one we cannot read is «unavailable»', () => {
     const views = [{ id: 'a', reply_to_message_id: 'q1' }, { id: 'b', reply_to_message_id: 'gone' }, { id: 'c' }] as MessageView[];
     const out = withQuotes(views, new Map([['q1', quoteOf(row())]]));
-    expect(out.map((v) => v.reply_to?.id ?? v.reply_to)).toEqual(['q1', null, undefined]);
+    expect(out.map((v) => v.reply_to)).toEqual([quoteOf(row()), UNAVAILABLE_QUOTE, undefined]);
+  });
+
+  it('a reply naming a wamid we never stored (owner 2026-10-31) gets the marker; a hidden one does not', () => {
+    const never = { id: 'a', reply_to_wa_id: 'wamid.N', reply_to_message_id: null, reply_to: null } as MessageView;
+    const hidden = { ...never, id: 'h', hidden: { by_name: null, at: '2026-10-31T08:00:00Z' } } as MessageView;
+    const out = withQuotes([never, hidden, { id: 'c', reply_to_wa_id: null } as MessageView], new Map());
+    expect(out.map((v) => v.reply_to)).toEqual([UNAVAILABLE_QUOTE, null, undefined]);
   });
 });
 
@@ -71,10 +83,12 @@ describe('ThreadQuotes', () => {
     }
   });
 
-  it('attach: no read when nothing on the page answers anything', async () => {
+  it('attach: no read when nothing on the page answers a row we hold; the unknown wamid is still marked', async () => {
     const f = fakeDb({ data: [], error: null });
-    await new ThreadQuotes(f.db).attach([{ id: 'a' } as MessageView], '+966501234567');
+    const views = [{ id: 'a' }, { id: 'b', reply_to_wa_id: 'wamid.N' }] as MessageView[];
+    const out = await new ThreadQuotes(f.db).attach(views, '+966501234567');
     expect(f.from).not.toHaveBeenCalled();
+    expect(out.map((v) => v.reply_to)).toEqual([undefined, UNAVAILABLE_QUOTE]);
   });
 
   it('attach: one read of the quoted ids in this chat', async () => {

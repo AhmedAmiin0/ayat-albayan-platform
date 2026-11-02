@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { numberErrorText } from '../form/number-errors';
-import { importNumbers } from '../numbers-api';
+import { numberErrorText } from '@/features/messaging/numbers/form/number-errors';
+import { importNumbers } from '@/features/messaging/numbers/numbers-api';
 import { ImportRoles } from './ImportRoles';
-import { useNumbersMutation } from '../use-numbers-mutation';
+import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 
 const im = t.numbers.import;
 

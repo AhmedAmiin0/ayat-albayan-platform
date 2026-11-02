@@ -11,7 +11,7 @@ import { downloadCsv } from '@/features/reporting/exports/api';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { apiErrorText } from '@/features/finance/subscriptions/format';
+import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import {
   approvePayout,
@@ -21,11 +21,11 @@ import {
   payoutReceiptUrl,
   payoutsQuery,
   type PayoutGenerateResult,
-} from '../api';
+} from '@/features/finance/payouts/api';
 import { MissingRates } from './MissingRates';
-import { MonthSelect } from '../shared/MonthSelect';
+import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
 import { payoutColumns } from './payout-columns';
-import { PayoutDialogs, type PayoutDialog } from '../pay/PayoutDialogs';
+import { PayoutDialogs, type PayoutDialog } from '@/features/finance/payouts/pay/PayoutDialogs';
 import { TeacherDuesSummary } from './TeacherDuesSummary';
 
 type Props = { month: string; onMonth: (month: string) => void };

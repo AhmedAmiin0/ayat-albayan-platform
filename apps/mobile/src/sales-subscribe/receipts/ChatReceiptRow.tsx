@@ -1,10 +1,11 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ChatReceiptThumb } from './ChatReceiptThumb';
+import { useViewerTz } from '@/core/lib/clock';
 
 interface ChatReceiptRowProps {
   studentId: string;
@@ -18,8 +19,9 @@ interface ChatReceiptRowProps {
 
 /** One image / PDF of the family's chat: its thumbnail, day and caption; an expired one is off. */
 export function ChatReceiptRow({ studentId, bind, item, busy, onPick }: ChatReceiptRowProps) {
+  const tz = useViewerTz();
   const { color } = useTheme();
-  const name = [instantDay(item.created_at), item.caption].filter(Boolean).join(' · ');
+  const name = [instantDay(item.created_at, tz), item.caption].filter(Boolean).join(' · ');
   const off = item.expired || busy;
   return (
     <Pressable

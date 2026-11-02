@@ -2,7 +2,7 @@ import type { ClockCycle } from '@ab/shared';
 import { bookFailure, type BookFailure } from '@/booking/shared/booking-errors';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { isOffline } from '@/payments/lib/payment-errors';
+import { isOffline } from '@/core/lib/money/payment-errors';
 
 // What a failed PATCH /lessons/:id/time means (docs/10 §3: clients switch on `code`).
 
@@ -28,9 +28,9 @@ export const isStale = (error: unknown): boolean =>
  * stale_time, payout_locked, date_in_future, correction_cross_day… → editTime.error; the older
  * codes (date_in_past, invalid_transition…) → lessons.error; anything else → the general error.
  */
-export function editTimeFailure(error: unknown, cycle: ClockCycle): EditTimeFailure {
+export function editTimeFailure(error: unknown, cycle: ClockCycle, tz: string): EditTimeFailure {
   if (isOffline(error)) return { kind: 'error', text: t.editTime.offline };
-  const booked = bookFailure(error, cycle);
+  const booked = bookFailure(error, cycle, tz);
   if (booked.kind === 'conflict') return booked;
   const code = failureCode(error);
   return { kind: 'error', text: (code && (own[code] ?? shared[code])) || t.common.error };

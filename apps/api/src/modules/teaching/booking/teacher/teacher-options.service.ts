@@ -1,10 +1,10 @@
 import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { domainError } from '../booking.errors';
-import { BookingQueries } from '../core/booking.queries';
-import type { TeacherOptionsQuery } from '../booking.dto';
-import { TeacherOptionsQueries, type TeacherFilter } from './teacher-options.queries';
-import { TeachersQueries } from '../../../people/teachers/teachers.queries';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import type { TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
+import { TeacherOptionsRepo, type TeacherFilter } from './teacher-options.repo';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
  * GET /booking/teachers (R-SCH-06): active teachers of the program, filtered by gender — the
@@ -14,9 +14,9 @@ import { TeachersQueries } from '../../../people/teachers/teachers.queries';
 @Injectable()
 export class TeacherOptionsService {
   constructor(
-    private readonly options: TeacherOptionsQueries,
-    private readonly queries: BookingQueries,
-    private readonly teachers: TeachersQueries,
+    private readonly options: TeacherOptionsRepo,
+    private readonly queries: BookingRepo,
+    private readonly teachers: TeachersRepo,
   ) {}
 
   async list(q: TeacherOptionsQuery): Promise<BookingTeacherOption[]> {

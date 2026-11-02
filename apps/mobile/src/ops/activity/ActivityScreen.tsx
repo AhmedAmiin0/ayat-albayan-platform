@@ -12,7 +12,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ActivityFilterBar } from './ActivityFilterBar';
 import { ActivityRow } from './ActivityRow';
 import { filterParams, isFiltered, NO_FILTERS, type ActivityFilters } from './activity-filters';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (r: ActivityView) => r.id;
@@ -26,10 +26,11 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/more')
  */
 export function ActivityScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const [filters, setFilters] = useState<ActivityFilters>(NO_FILTERS);
   const list = usePagedList<ActivityView>({ path: '/activity', params: filterParams(filters) });
   const stale = list.isError && list.data !== undefined;
-  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
+  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle, tz)) : undefined;
   return (
     <Screen list>
       <ScreenHeader

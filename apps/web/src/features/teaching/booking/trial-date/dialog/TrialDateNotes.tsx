@@ -1,9 +1,10 @@
 import { warnsTrialDate } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import type { TrialDateDraft } from '../../draft/draft';
-import { pickedText } from '../../steps/slots/SlotStep';
+import type { TrialDateDraft } from '@/features/teaching/booking/draft/draft';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface TrialDateNotesProps {
   trial: TrialDateDraft;
@@ -16,7 +17,7 @@ export interface TrialDateNotesProps {
  * history as «نُقلت»), or books a new trial lesson; from the 3rd date on, a warning (never a block).
  */
 export function TrialDateNotes({ trial, tz }: TrialDateNotesProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const moves = trial.upcomingId !== null;
   const when = trial.upcomingAt ? pickedText(trial.upcomingAt, tz, clock) : '—';
   return (

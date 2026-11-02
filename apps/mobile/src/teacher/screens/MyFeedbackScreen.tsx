@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';
 import { useMyFeedback } from '@/feedback/queries';

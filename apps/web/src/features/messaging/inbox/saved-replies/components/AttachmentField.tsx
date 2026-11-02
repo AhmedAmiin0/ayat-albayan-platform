@@ -7,9 +7,9 @@ import { Icon } from '@/components/ui/display/icon';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import { chatSendMime } from '../../api/api.files';
-import { replyErrorText, uploadReplyFile } from '../lib/api';
-import { fileName, type DraftFile } from '../lib/reply-draft';
+import { chatSendMime } from '@/features/messaging/inbox/api/api.files';
+import { replyErrorText, uploadReplyFile } from '@/features/messaging/inbox/saved-replies/lib/api';
+import { fileName, type DraftFile } from '@/features/messaging/inbox/saved-replies/lib/reply-draft';
 
 const S = t.savedReplies;
 

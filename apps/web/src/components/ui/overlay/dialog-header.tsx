@@ -2,10 +2,10 @@ import type { Glyph, Tone } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { Icon } from '../display/icon';
-import { IconButton } from '../form/icon-button';
-import { NuqtaGlyph } from '../display/nuqta-glyph';
-import { toneClass } from '../display/status-chip';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { toneClass } from '@/components/ui/display/status-chip';
 
 export interface DialogHeaderProps {
   title: string;

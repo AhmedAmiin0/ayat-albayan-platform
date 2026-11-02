@@ -1,27 +1,38 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../../config/env/env';
-import { CallsModule } from '../calls/calls.module';
-import { LeadsModule } from '../../sales/leads/leads.module';
-import { LessonRatingModule } from '../../teaching/lesson-rating/lesson-rating.module';
-import { LessonsModule } from '../../teaching/lessons/lessons.module';
+import { loadEnv } from '@/config/env/env';
+import { CallsModule } from '@/modules/messaging/calls/calls.module';
+import { LeadsModule } from '@/modules/sales/leads/leads.module';
+import { LessonRatingModule } from '@/modules/teaching/lesson-rating/lesson-rating.module';
+import { LessonsModule } from '@/modules/teaching/lessons/lessons.module';
 import { liveWebhookConfig } from './webhook.config';
 import { WebhookConfigReload } from './lines/webhook.reload';
 import { WebhookController } from './webhook.controller';
 import { KapsoWebhookController } from './providers/webhook.kapso.controller';
 import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
+import { CrmWebhookController } from './crm-register/crm-webhook.controller';
+import {
+  CRM_WEBHOOK_SOURCE,
+  CrmWebhookRegistrar,
+  liveCrmWebhookSource,
+} from './crm-register/crm-webhook.service';
 import { InboundService } from './inbound/webhook.inbound.service';
 import { InboundStore } from './inbound/webhook.inbound.store';
 import { InboundReactions } from './inbound/webhook.reaction';
-import { WebhookQueries } from './webhook.queries';
+import { WebhookRepo } from './webhook.repo';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { WEBHOOK_CONFIG, WebhookService, type WebhookConfig } from './webhook.service';
 import { WebhookSettings } from './webhook.settings';
 import { StatusService } from './status/webhook.status.service';
 import { ExternalCatchUpJob } from './external/external-catchup.job';
 import { ExternalStatus, KAPSO_HISTORY } from './external/external-status';
-import { ExternalQueries } from './external/external.queries';
+import { ExternalRepo } from './external/external.repo';
 import { ExternalStore } from './external/external.store';
 import { KapsoHistory } from './external/kapso-history';
+import { InboundCatchUpJob } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.job';
+import { InboundCatchUpRepo } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.repo';
+import { InboundCatchUp } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.service';
+import { InboundGapAlert } from '@/modules/messaging/webhook/external/inbound/inbound-gap.alert';
+import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inbound-listing';
 
 /**
  * GET/POST /webhooks/whatsapp (docs/12 §3.5, routes W1–W2), POST /webhooks/kapso and /webhooks/wacrm (docs/19). Inbound processing does not depend on
@@ -29,7 +40,12 @@ import { KapsoHistory } from './external/kapso-history';
  */
 @Module({
   imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule],
-  controllers: [WebhookController, KapsoWebhookController, WacrmWebhookController],
+  controllers: [
+    WebhookController,
+    KapsoWebhookController,
+    WacrmWebhookController,
+    CrmWebhookController,
+  ],
   providers: [
     {
       provide: WEBHOOK_CONFIG,
@@ -43,13 +59,22 @@ import { KapsoHistory } from './external/kapso-history';
     StatusService,
     QuickReplies,
     WebhookSettings,
-    WebhookQueries,
+    WebhookRepo,
     // Messages staff send outside the app (Kapso's inbox, WhatsApp Business app echoes).
     { provide: KAPSO_HISTORY, useFactory: () => new KapsoHistory() },
-    ExternalQueries,
+    ExternalRepo,
     ExternalStore,
     ExternalStatus,
     ExternalCatchUpJob,
+    // Families' messages the webhook missed (Kapso's inbound history, incident 2026-10-30).
+    InboundCatchUpRepo,
+    InboundListing,
+    InboundCatchUp,
+    InboundGapAlert,
+    InboundCatchUpJob,
+    // «التكاملات» › the CRM's delivery-ticks webhook in one click (docs/19 «crm driver»).
+    { provide: CRM_WEBHOOK_SOURCE, useFactory: liveCrmWebhookSource },
+    CrmWebhookRegistrar,
   ],
 })
 export class WebhookModule {}

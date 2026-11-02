@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { parseRank, RANK_MAX, RANK_MIN } from './fallback-rank';
 import { numberErrorText } from './number-errors';
-import { updateNumber } from '../numbers-api';
-import { useNumbersMutation } from '../use-numbers-mutation';
+import { updateNumber } from '@/features/messaging/numbers/numbers-api';
+import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 
 const r = t.numbers.fallbackRank;
 

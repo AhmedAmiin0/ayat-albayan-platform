@@ -9,7 +9,9 @@ import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 const SESSION = ['AuthController.me', 'AuthSessionController.login', 'AuthSessionController.logout'];
 /** «حسابي» (R-ACC-01..05): every login edits its own account, whatever its role. */
 const ACCOUNT = ['avatarUploadUrl', 'changeEmail', 'changePassword', 'profile', 'removeAvatar', 'setAvatar', 'updateProfile'].map((h) => `AccountController.${h}`);
-const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT];
+/** docs/33: may this login track its own online status (every login, whatever its role). */
+const PRESENCE = ['PresenceController.me'];
+const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT, ...PRESENCE];
 
 describe('permission coverage', () => {
   let routes: RouteAccess[];

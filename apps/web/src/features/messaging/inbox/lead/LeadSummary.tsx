@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../api/api';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { leadSummary } from './lead-summary';
 
 /** «بيانات الطالب» at a glance in the aside: only what is filled (R-LEAD-03). Read-only. */

@@ -1,5 +1,5 @@
 import { useEffect, useRef, type RefObject } from 'react';
-import type { RoomController } from '../room/livekit/use-room';
+import type { RoomController } from '@/features/teaching/classroom/room/livekit/use-room';
 import { keepFrames } from './model/board-frames';
 
 /** Frames per second of the shared-board video (enough for handwriting, cheap to encode). */

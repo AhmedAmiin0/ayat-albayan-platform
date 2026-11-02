@@ -1,7 +1,7 @@
 // Test fixtures for the student recordings tests (not shipped; excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import type { RecordingRow } from '../classroom/recordings/recording.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { RecordingJoinRow } from './student-recordings.mapper';
 
 export const STUDENT = '00000000-0000-4000-8000-0000000000c1';

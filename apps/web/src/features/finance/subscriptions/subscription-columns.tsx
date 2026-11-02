@@ -1,4 +1,4 @@
-import { cancelOffered, isCancelled, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, countsForMoney, isCancelled, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
@@ -59,7 +59,7 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
         return (
           <div className="grid">
             <Amount amount={s.price} currency={s.currency} className="font-semibold" />
-            {s.paid < s.price && !isCancelled(s) && (
+            {s.paid < s.price && countsForMoney(s) && (
               <span className="text-2xs text-ink-3">
                 {t.payments.paidOf
                   .replace('{paid}', moneyText(s.paid, s.currency))
@@ -74,7 +74,7 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
     col.accessor('balance', {
       header: () => t.subscriptions.balance,
       cell: (c) => {
-        if (isCancelled(c.row.original)) return <span className="text-sm text-ink-3">—</span>;
+        if (!countsForMoney(c.row.original)) return <span className="text-sm text-ink-3">—</span>;
         const p = progressOf(c.getValue());
         return <span className={cn('text-sm', p.tone === 'act' ? 'font-semibold text-act' : 'text-ink-2')}>{p.remainingLabel}</span>;
       },
@@ -99,8 +99,9 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
       header: () => t.common.actions,
       cell: (c) => {
         const s = c.row.original;
-        // A cancelled package (owner 2026-10-28) takes no payment, refund or pause: it is history only.
-        if (isCancelled(s)) return null;
+        // An unused cancel (owner 2026-10-28) is history only; a stopped one (991) still takes payments
+        // and refunds (countsForMoney), never a pause.
+        if (!countsForMoney(s)) return null;
         return (
           <div className="flex gap-2">
             {s.paid < s.price && (
@@ -113,7 +114,7 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
                 {t.finance.refund}
               </Button>
             )}
-            {canPause && (
+            {canPause && !isCancelled(s) && (
               <Button type="button" variant="ghost" size="sm" onClick={() => (s.status === 'paused' ? onResume(s) : onPause(s))}>
                 {s.status === 'paused' ? t.coursePause.resume : t.coursePause.action}
               </Button>

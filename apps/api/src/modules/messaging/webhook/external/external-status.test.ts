@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import type { StatusEvent } from '../webhook.events';
-import { outbound, services } from '../webhook.fakes';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { outbound, services } from '@/modules/messaging/webhook/webhook.fakes';
 import { KAPSO_NUMBER_ID, KAPSO_PHONE_ID, kapsoEnv, kapsoOverlay, kapsoText, SENT_AT } from './external.fakes';
 
 // A status for a wamid we hold no row for (staff sent it from Kapso's inbox): read back and stored.

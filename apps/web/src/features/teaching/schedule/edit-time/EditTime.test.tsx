@@ -3,9 +3,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { confirmLine, fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
-import { lesson } from '../lesson/lesson-fixture';
-import { LessonDetails } from '../lesson/LessonDetails';
-import { LessonDrawer } from '../lesson/LessonDrawer';
+import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { LessonDetails } from '@/features/teaching/schedule/lesson/LessonDetails';
+import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -60,7 +60,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     pick.time('18:00');
     pick.duration(60);
     const line = confirmLine(/الأحد 4 أكتوبر 17:00 \(45 دقيقة\).*5 أكتوبر 18:00 \(60 دقيقة\)/);
-    expect(line.textContent).toContain(t.schedule.riyadhTime);
+    expect(line.textContent).toContain(t.schedule.viewerTime);
     expect(screen.getByText(t.lessons.timeEdit.sameLesson)).toBeTruthy();
     expect((screen.getByLabelText(t.lessons.timeEdit.notify) as HTMLInputElement).checked).toBe(true);
     expect(screen.queryByText(t.lessons.timeEdit.payoutWarn)).toBeNull(); // only a held lesson's payout moves

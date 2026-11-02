@@ -7,7 +7,7 @@ import { Amount } from '@/features/finance/subscriptions';
 import { formatDate } from '@/features/sales/leads';
 import { fillText } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
-import { StudentCell } from '../StudentCell';
+import { StudentCell } from '@/features/sales/sales/money/StudentCell';
 
 const P = t.paymentLinks;
 const col = createColumnHelper<DataTableFeatures, PaymentLinkView>();

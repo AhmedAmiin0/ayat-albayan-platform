@@ -1,16 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { lessonErrorText } from '@/features/teaching/schedule/api';
+import { lessonErrorText } from '@/features/teaching/schedule';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
-import { bookingCheckQuery } from '../../api';
+import { bookingCheckQuery } from '@/features/teaching/booking/api';
 import { takenTexts } from './course-taken';
-import type { BookingBody } from '../../draft/contract';
-import { days, toBookingRequest, type BookingDraft } from '../../draft/draft';
-import { useBookingMode } from '../../mode';
-import { trialDateCheckQuery } from '../../trial-date/api';
+import type { BookingBody } from '@/features/teaching/booking/draft/contract';
+import { days, toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { useBookingMode } from '@/features/teaching/booking/mode';
+import { trialDateCheckQuery } from '@/features/teaching/booking/trial-date/api';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;
@@ -50,7 +51,7 @@ export function useCourseClean(draft: BookingDraft): boolean {
  * A renewal's prefilled day that clashes is named («موعد الأحد لم يعد متاحًا…», takenTexts).
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const { body, check } = useSeriesCheck(draft);
   if (!body) return null;
   if (check.isError) return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
@@ -87,7 +88,7 @@ const emptyBody: BookingBody = {
   teacherId: '',
   byday: [0],
   startTimeLocal: '00:00',
-  tz: 'Asia/Riyadh',
+  tz: 'Asia/Riyadh', // placeholder (docs/34 —): this body is never sent
   durationMin: 45,
   startsOn: '2026-01-01',
   package: 'trial',

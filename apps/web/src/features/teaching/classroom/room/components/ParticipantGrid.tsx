@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { TileView } from './room-types';
-import { gridColumns } from '../livekit/stage';
+import { gridColumns } from '@/features/teaching/classroom/room/livekit/stage';
 import { VideoTile } from './VideoTile';
 
 export interface TileSlots {

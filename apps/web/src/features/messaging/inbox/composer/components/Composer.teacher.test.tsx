@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { forgetReopens } from '../lib/use-thread-reopen';
+import { forgetReopens } from '@/features/messaging/inbox/composer/lib/use-thread-reopen';
 import { Composer } from './Composer';
 
 const apiFetch = vi.hoisted(() => vi.fn());

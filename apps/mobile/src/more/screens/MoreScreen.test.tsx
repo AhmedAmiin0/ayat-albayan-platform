@@ -3,12 +3,12 @@ import { fireEvent, render, screen, within } from '@testing-library/react-native
 import { router } from 'expo-router';
 import { Appearance } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { APPEARANCE_KEY } from '../appearance/appearance';
+import { APPEARANCE_KEY } from '@/more/appearance/appearance';
 import { MoreScreen } from './MoreScreen';
-import { signOutDevice } from '../sign-out';
+import { signOutDevice } from '@/core/lib/session/sign-out';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('../sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 let setScheme: jest.SpyInstance;
 

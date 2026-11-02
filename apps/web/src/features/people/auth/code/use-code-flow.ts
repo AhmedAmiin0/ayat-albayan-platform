@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signInErrorText } from '../login/auth-api';
+import { signInErrorText } from '@/features/people/auth/login/auth-api';
 import { emptyCode } from './code-boxes';
 import { useCountdown } from './use-countdown';
 

@@ -9,7 +9,7 @@ import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { lastSignIn, recordText, roleText, statusStyle } from '../shared/format';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface UserItemProps {
   user: UserView;
@@ -21,6 +21,7 @@ interface UserItemProps {
 export const UserItem = memo(function UserItem({ user, onOpen }: UserItemProps) {
   const open = useCallback(() => onOpen(user.id), [onOpen, user.id]);
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const quiet = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   const parts = [roleText(user.role), user.linked ? recordText(user.linked) : null];
@@ -35,7 +36,7 @@ export const UserItem = memo(function UserItem({ user, onOpen }: UserItemProps) 
           {user.email ? <Ltr style={quiet}>{user.email}</Ltr> : null}
           {user.username ? <AppText style={quiet}>{`${t.familyAuth.usersColumn}: ${ltr(user.username)}`}</AppText> : null}
           {user.phone_e164 ? <Ltr style={quiet}>{formatPhone(user.phone_e164)}</Ltr> : null}
-          <AppText style={quiet}>{`${t.users.cols.lastSignIn}: ${lastSignIn(user.last_sign_in_at, cycle)}`}</AppText>
+          <AppText style={quiet}>{`${t.users.cols.lastSignIn}: ${lastSignIn(user.last_sign_in_at, cycle, tz)}`}</AppText>
         </View>
       }
       onPress={open}

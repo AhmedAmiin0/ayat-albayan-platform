@@ -5,10 +5,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { Field } from '@/core/ui/form/Field';
-import { ErrorLine } from '../../ErrorLine';
-import { type ReplySave, useSaveReply } from '../hooks/api';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { type ReplySave, useSaveReply } from '@/inbox/saved-replies/hooks/api';
 import { insertToken, PlaceholderChips } from './PlaceholderChips';
-import { replyError } from '../lib/reply-error';
+import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 import { type EditorFile, ReplyFileField } from './ReplyFileField';
 
 interface ReplyEditorProps {

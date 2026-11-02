@@ -51,12 +51,18 @@ export function mocks() {
     sales: { ownership: vi.fn() },
     family: { studentsOfPhone: vi.fn(), familyPhone: vi.fn(), phoneOf: vi.fn(), phonesOf: vi.fn(), studentStatus: vi.fn(), linkPackages: vi.fn() },
     media: { load: vi.fn(), cache: vi.fn(), ensure: vi.fn() },
-    mediaQueries: { recent: vi.fn(), message: vi.fn(), setPath: vi.fn() },
+    mediaQueries: { receipts: vi.fn(), message: vi.fn(), setPath: vi.fn() },
   };
 }
 export type Mocks = ReturnType<typeof mocks>;
 
-/** Defaults: an empty student, no payments, default settings. Call in beforeEach. */
+/**
+ * The registry defaults with «اشتراط التعيين» ON: the assistant ownership rule enforces
+ * (SalesOwnershipRule), as every money test before 2026-11-02 assumed; rule-off cases override it.
+ */
+export const ENFORCED_SETTINGS = { ...SETTING_DEFAULTS, sales_require_assignee: true };
+
+/** Defaults: an empty student, no payments, ENFORCED_SETTINGS. Call in beforeEach. */
 export function resetMocks(m: Mocks): void {
   for (const group of Object.values(m)) for (const fn of Object.values(group)) fn.mockReset();
   m.subs.forStudent.mockResolvedValue([]);
@@ -77,7 +83,7 @@ export function resetMocks(m: Mocks): void {
   m.subs.byRequest.mockResolvedValue(null);
   m.cancels.linkedLessons.mockResolvedValue(0);
   m.cancels.laterCommission.mockResolvedValue(false);
-  m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
+  m.settings.all.mockResolvedValue(ENFORCED_SETTINGS);
   m.storage.remove.mockResolvedValue(undefined);
   m.attachments.forPayment.mockResolvedValue([]);
   m.attachments.owners.mockResolvedValue([]); // no path held by another payment

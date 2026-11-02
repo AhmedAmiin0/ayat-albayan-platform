@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../api/api';
+import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { registerInitial } from './lead-summary';
 import { QualificationForm } from './qualification/QualificationForm';
 

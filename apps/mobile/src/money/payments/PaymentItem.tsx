@@ -2,13 +2,14 @@ import { memo } from 'react';
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay, money } from '@/payments/format';
+import { instantDay, money } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Ltr } from '@/core/ui/primitives/Ltr';
-import { AttachmentsViewer } from '../attachments/AttachmentsViewer';
-import { hasAttachments } from '../attachments/receipt-file';
-import { ReceiptViewer } from '../attachments/ReceiptViewer';
+import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
+import { hasAttachments } from '@/money/attachments/receipt-file';
+import { ReceiptViewer } from '@/money/attachments/ReceiptViewer';
+import { useViewerTz } from '@/core/lib/clock';
 
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
@@ -16,6 +17,7 @@ import { ReceiptViewer } from '../attachments/ReceiptViewer';
  * The list's inset card draws the fill and the rule between payments (owner 2026-10-28).
  */
 export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
   // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
@@ -23,7 +25,7 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Pay
   const files = hasAttachments(payment);
   const line = [
     t.enums.paymentMethod[payment.method],
-    instantDay(payment.paid_at),
+    instantDay(payment.paid_at, tz),
     payment.recorded_by ? t.payments.recordedBy.replace('{name}', payment.recorded_by.full_name) : null,
   ]
     .filter(Boolean)

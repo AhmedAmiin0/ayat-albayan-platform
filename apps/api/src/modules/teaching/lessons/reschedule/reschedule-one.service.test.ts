@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { conflict } from '../../../../common/http/errors';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, RULE_ID, STUDENT_ID, TEACHER_ID } from '../lessons.fakes';
-import type { LessonRow } from '../store/lesson-row';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { conflict } from '@/common/http/errors';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, RULE_ID, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { RescheduleOneService } from './reschedule-one.service';
 
 const teachers = { get: vi.fn() };
@@ -13,7 +13,7 @@ const CLASH = { kind: 'teacher_busy', startsAt: '2026-10-05T14:00:00.000Z', ends
 
 function setup(row: LessonRow = lessonRow()) {
   const deps = fakeStore(row);
-  const service = new RescheduleOneService(deps.store, teachers as unknown as TeachersQueries, checker as unknown as ConflictChecker);
+  const service = new RescheduleOneService(deps.store, teachers as unknown as TeachersRepo, checker as unknown as ConflictChecker);
   return { ...deps, service };
 }
 const one = (over: object = {}) => ({ scope: 'one' as const, startsAt: NEW_START, ...over });

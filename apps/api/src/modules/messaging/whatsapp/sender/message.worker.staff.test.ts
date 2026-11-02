@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
+import type { PushService } from '@/common/push/push.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
-import type { DueMessage, SenderQueries } from './sender.queries';
+import type { DueMessage, SenderRepo } from './sender.repo';
 import { staffAtSend } from './staff-at-send';
-import { templateRow } from '../whatsapp.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Review of #172 (PR #175 «Not fixed»): a staff alert queued while the send gate was closed is
 // checked again when sent; the teacher made inactive or disabled meanwhile hears nothing.
@@ -21,7 +21,7 @@ const teacherRow = (over: Partial<DueMessage> = {}) =>
 function run(row: DueMessage, teachers: FakeResult) {
   const { db, calls } = fakeDb({ teachers: [teachers] });
   queries.staffAtSend.mockImplementation((r: DueMessage) => staffAtSend(db, r));
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, {} as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, {} as PushService);
   return { calls, outcome: w.process({ row, template: templateRow({ key: row.template_key ?? '' }), now: NOW, autoOn: true }) };
 }
 

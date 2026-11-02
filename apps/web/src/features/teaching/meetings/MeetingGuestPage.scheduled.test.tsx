@@ -44,7 +44,8 @@ describe('MeetingGuestPage — a scheduled meeting', () => {
     expect(intro.textContent).toContain(M.opensAt.replace(' {when}', ''));
     fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), { target: { value: 'ضيف' } });
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
-    const refusal = meetingJoinProblem(new ApiError(403, { code: 'join_not_open_yet', opens_at: VIEW.opens_at }), C24);
+    const early = new ApiError(403, { code: 'join_not_open_yet', opens_at: VIEW.opens_at });
+    const refusal = meetingJoinProblem(early, C24, 'Asia/Riyadh');
     await waitFor(() => expect(screen.getByText(refusal)).toBeTruthy());
     expect(refusal).not.toContain('الحلقة');
   });

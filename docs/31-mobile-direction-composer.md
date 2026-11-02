@@ -315,7 +315,7 @@ Rewrite these tests and add these new ones next to the code:
 (2) @config-plugins/react-native-webrtc (expo/config-plugins packages/react-native-webrtc/src/withWebRTC.ts) adds RECORD_AUDIO through withPermissions, and it is in app.json:58-64.
 (3) The only blocked permission is SYSTEM_ALERT_WINDOW (app.json:23; asserted by apps/mobile/src/app-config.test.ts:23-25). So the merged 0.3.0 manifest declares RECORD_AUDIO.
 (4) The recorder native code (sdk-57 android/.../AudioRecorder.kt, AudioRecords.kt, AudioModule.kt) is compiled into the expo-audio ~57.0.5 module whatever the plugin props are. useAudioRecorder, useAudioRecorderState, RecordingPresets and requestRecordingPermissionsAsync are plain JS over that module (ExpoAudio.ts). On Android, requestRecordingPermissionsAsync requests RECORD_AUDIO.
-(5) The camera works the same way: expo-image-picker (app.json:41-48) and the webrtc plugin declare CAMERA, and pickReceipt('camera') already uses it (apps/mobile/src/payments/receipt.ts:53-60).
+(5) The camera works the same way: expo-image-picker (app.json:41-48) and the webrtc plugin declare CAMERA, and pickReceipt('camera') already uses it (apps/mobile/src/core/lib/receipts/receipt.ts:53-60).
 
 Runtime traps from AudioRecorder.kt:
 - setRecordingOptions() RETURNS EARLY when hasRecordingPermissions() is false. The MediaRecorder is then left unconfigured, record() does nothing useful and stop() has no url. So await requestRecordingPermissionsAsync() (or the PermissionsAndroid path of apps/mobile/src/inbox/thread/calls/rtc/native-rtc.ts:8-13) BEFORE prepareToRecordAsync(), then check status.canRecord before record().

@@ -2,8 +2,8 @@ import { FX_ATTRIBUTION_URL } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { FxRate } from '../api';
-import { fxLine } from '../format';
+import type { FxRate } from '@/features/finance/pricing/api';
+import { fxLine } from '@/features/finance/pricing/format';
 
 /**
  * Under a USD price (docs/08 §4): the rate's date and the attribution the open API requires; a

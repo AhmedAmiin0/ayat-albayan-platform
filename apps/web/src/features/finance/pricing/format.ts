@@ -1,5 +1,5 @@
 import { counted, formatAmount, type Quote } from '@ab/shared';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import type { FxRate } from './api';
 

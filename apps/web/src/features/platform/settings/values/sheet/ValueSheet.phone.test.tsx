@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { SETTINGS } from '@/test/settings-fixture';
-import { findRow, renderValues } from '../values-test-utils';
+import { findRow, renderValues } from '@/features/platform/settings/values/values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '../../notification-catalogue/catalogue-api';
-import { fetchCount, renderPanel } from '../numbers-test-kit';
+import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
+import { fetchCount, renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

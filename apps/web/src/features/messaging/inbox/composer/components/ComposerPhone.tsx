@@ -4,20 +4,21 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { noneAllowedText, useNoneAllowed, type NoneReason } from '../lib/allowed-templates';
+import { noneAllowedText, useNoneAllowed, type NoneReason } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { AttachButton } from './AttachButton';
 import { FileComposer } from './FileComposer';
-import { sessionUntil } from '../../format';
-import { useInboxMode } from '../../shared/mode';
-import { QuoteButton } from '../quote/QuoteButton';
-import { replyFromText } from '../lib/reply-from';
-import { ReplyComposer } from '../../saved-replies/components/ReplyComposer';
-import { SavedRepliesButton } from '../../saved-replies/components/SavedRepliesButton';
-import { SendRatingButton } from '../../sales/SendRatingButton';
+import { sessionUntil } from '@/features/messaging/inbox/format';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { QuoteButton } from '@/features/messaging/inbox/composer/quote/QuoteButton';
+import { replyFromText } from '@/features/messaging/inbox/composer/lib/reply-from';
+import { ReplyComposer } from '@/features/messaging/inbox/saved-replies/components/ReplyComposer';
+import { SavedRepliesButton } from '@/features/messaging/inbox/saved-replies/components/SavedRepliesButton';
+import { SendRatingButton } from '@/features/messaging/inbox/sales/SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
-import type { PrefillContext } from '../lib/template-params';
-import { useChatAccess } from '../../shared/use-chat-access';
+import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
+import { useChatAccess } from '@/features/messaging/inbox/shared/use-chat-access';
+import { useTriesAfterWindow } from '@/features/messaging/inbox/shared/may-send';
 import { useClock, type Clock } from '@/lib/clock';
 
 export type ComposerMode = 'text' | 'template';
@@ -60,11 +61,12 @@ function Notices({ notes }: { notes: string[] }) {
  * reply_line: no reply line in template mode. With no template allowed the help line replaces
  * «فأرسل قالبًا».
  */
-function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock }): string[] {
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock; trying: boolean }): string[] {
   const { thread, gateNote, mode, noneAllowed, clock } = input;
   const open = thread.session_open;
   const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at, clock) : null;
-  const closedNote = open || noneAllowed ? null : t.inbox.sessionClosed;
+  const shut = open || noneAllowed ? null : t.inbox.sessionClosed;
+  const closedNote = input.trying ? t.inbox.tryAfterWindow : shut;
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
   return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
 }
@@ -74,22 +76,27 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  * log: the notices in one line, then a one-line growing message box with the template toggle
  * before it and a round «أرسل» after it. Outside the 24 h window: templates only. Teacher and sales
  * with no template allowed get no toggle, and after the window one line on what they can do.
- * Staff (not teachers) also get a paperclip inside the window (D2): a picked file swaps the box for
- * FileComposer. The File lives here only (never in the draft store), for this chat only.
- * Staff also get «الردود السريعة» (ReplyComposer); after the window its button shows locked.
+ * Staff (not teachers) also get a paperclip wherever a text goes (D2; after the window too on a
+ * Kapso chat line, owner 2026-11-01): a picked file swaps the box for FileComposer. The File lives
+ * here only (never in the draft store), for this chat only. Staff also get «الردود السريعة»
+ * (ReplyComposer) wherever a text goes; where none can, its button shows locked.
  * «عرض سعر» (owner 2026-10-26, staff with pricing.read) sits beside them at every window (copy still works).
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
+  const inbox = useInboxMode();
+  // Owner 2026-10-31 / 2026-11-01: on a Kapso chat line staff try every send after the window.
+  const trying = useTriesAfterWindow(thread);
+  const typing = open || trying;
   const noneAllowed = useNoneAllowed(teacher);
-  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock() });
-  const access = useChatAccess(useInboxMode());
+  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock(), trying });
+  const access = useChatAccess(inbox);
   const { files, replies } = access;
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
   const [problem, setProblem] = useState<ChatFileProblem | null>(null);
   const file = picked?.phone === thread.phone_e164 ? picked.file : null;
-  const template = !open || (mode === 'template' && !noneAllowed);
-  const toggle = open && !noneAllowed && (
+  const template = !typing || (mode === 'template' && !noneAllowed);
+  const toggle = typing && !noneAllowed && (
     <IconButton
       label={t.inbox.composer.modeTemplate}
       aria-pressed={mode === 'template'}
@@ -99,10 +106,10 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Icon name="template" className="size-5" />
     </IconButton>
   );
-  // «الردود السريعة» after the window: shown locked with why (session messages only).
-  const locked = !open && replies && <SavedRepliesButton locked />;
+  // «الردود السريعة» where no text can go: shown locked with why (session messages only).
+  const locked = !typing && replies && <SavedRepliesButton locked />;
   const quote = access.quote && <QuoteButton thread={thread} onFilled={() => onMode('text')} />;
-  const attach = open && files && (
+  const attach = typing && files && (
     <AttachButton
       onPick={(next) => {
         setProblem(null);
@@ -117,7 +124,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Notices notes={notes} />
       {!open && <SendRatingButton thread={thread} />}
       {template && (toggle || locked || quote) && <div className="flex gap-1.5">{toggle}{locked}{quote}</div>}
-      {!open && noneAllowed ? (
+      {!typing && noneAllowed ? (
         <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />

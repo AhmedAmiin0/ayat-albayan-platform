@@ -11,11 +11,11 @@ import { LeadsService } from '../../sales/leads/leads.service';
 import { LessonStatusService } from '../../teaching/lessons/status/lesson-status.service';
 import { fakeExternalQueries, fakeKapso } from './external/external.fakes';
 import { KAPSO_HISTORY } from './external/external-status';
-import { ExternalQueries } from './external/external.queries';
+import { ExternalRepo } from './external/external.repo';
 import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';
-import { WebhookQueries } from './webhook.queries';
+import { WebhookRepo } from './webhook.repo';
 import { WEBHOOK_CONFIG, type WebhookConfig } from './webhook.service';
 
 export const SECRET = 'stub-app-secret';
@@ -47,7 +47,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     })
     .overrideProvider(WEBHOOK_CONFIG)
     .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, wacrmSecret: WACRM_SECRET, ...config })
-    .overrideProvider(WebhookQueries)
+    .overrideProvider(WebhookRepo)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)
     .useValue(deps.leads)
@@ -57,7 +57,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .useValue(deps.push)
     .overrideProvider(AuditService)
     .useValue(deps.audit)
-    .overrideProvider(ExternalQueries)
+    .overrideProvider(ExternalRepo)
     .useValue(external)
     .overrideProvider(KAPSO_HISTORY)
     .useValue(kapso)

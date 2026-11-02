@@ -13,7 +13,8 @@ export interface AudienceCount {
 /**
  * Counts per audience, in the order and with the names of «الإشعارات»' audience tabs (manual rows,
  * which a person sends, are not counted). «تُرسل الآن» is the row's own effective state from GET
- * /admin/notifications (`state: 'on'`); every other automatic row counts as «لا تُرسل».
+ * /admin/notifications (`state: 'on'`); every other automatic row counts as «لا تُرسل». A row that
+ * reaches two audiences (a schedule change: the guardian and the teacher) counts under each.
  */
 export function audienceCounts(entries: readonly NotificationEntryView[]): AudienceCount[] {
   return NOTIFICATION_AUDIENCES.map((audience) => {

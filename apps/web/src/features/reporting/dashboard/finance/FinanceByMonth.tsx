@@ -1,10 +1,10 @@
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { t } from '@/lib/i18n/i18n';
-import { Bar } from '../shared/Bar';
-import { amount, monthLabel } from '../shared/format';
-import { useHandSort } from '../shared/hand-sort';
-import { SortableTh } from '../shared/SortableTh';
-import type { MonthFinance } from '../types';
+import { Bar } from '@/features/reporting/dashboard/shared/Bar';
+import { amount, monthLabel } from '@/features/reporting/dashboard/shared/format';
+import { useHandSort } from '@/features/reporting/dashboard/shared/hand-sort';
+import { SortableTh } from '@/features/reporting/dashboard/shared/SortableTh';
+import type { MonthFinance } from '@/features/reporting/dashboard/types';
 
 type Measure = 'revenue' | 'teacher_cost' | 'expenses';
 const MEASURES: { key: Measure; label: string }[] = [

@@ -12,7 +12,8 @@ export const roleText = (role: UserRole): string => t.activity.roles[role];
 export const statusStyle = (status: UserStatus) =>
   status === 'active' ? ({ tone: 'ok', glyph: 'fill' } as const) : ({ tone: 'bad', glyph: 'struck' } as const);
 
-export const lastSignIn = (iso: string | null, cycle: ClockCycle): string => (iso ? formatAt(iso, cycle) : t.users.never);
+export const lastSignIn = (iso: string | null, cycle: ClockCycle, tz: string): string =>
+  iso ? formatAt(iso, cycle, tz) : t.users.never;
 
 /** «يوسف علي AB-0007»: the name, then the student code as an LTR island. */
 export const recordText = (r: Pick<LinkCandidate, 'name' | 'code'>): string => (r.code ? `${r.name} ${ltr(r.code)}` : r.name);

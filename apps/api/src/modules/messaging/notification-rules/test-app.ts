@@ -5,15 +5,15 @@ import { publicSettings, SETTING_DEFAULTS, systemPermissionsOf, type AcademySett
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { ActivityWriter } from '../../../common/activity/activity.writer';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SETTINGS_CACHE_MS, SettingsService } from '../../../common/settings/settings.service';
-import { SendGate } from '../whatsapp/gate/send-gate';
-import { RulesQueries } from './rules.queries';
+import { AppModule } from '@/app.module';
+import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SETTINGS_CACHE_MS, SettingsService } from '@/common/settings/settings.service';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { RulesRepo } from './rules.repo';
 import { RulesTable, type RuleRowWrite } from './store/rules.table';
 
 export const ADMIN_ID = 'a0000000-0000-4000-8000-000000000001';
@@ -86,7 +86,7 @@ export async function rulesApp(initial: Partial<AcademySettings> = {}) {
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(SETTINGS_CACHE_MS).useValue(0)
     .overrideProvider(SendGate).useValue(m.gate)
-    .overrideProvider(RulesQueries).useValue(m.queries)
+    .overrideProvider(RulesRepo).useValue(m.queries)
     .overrideProvider(RulesTable).useValue(table.fake)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ActivityWriter).useValue(m.activity)

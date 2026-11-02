@@ -1,11 +1,11 @@
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { shape, useTheme } from '@/theme';
-import { useSavedReplies } from '../hooks/api';
+import { useSavedReplies } from '@/inbox/saved-replies/hooks/api';
 import { QuickReplyRow } from './QuickReplyRow';
-import { matchReplies } from '../lib/reply-text';
-import type { ReplyFill } from '../hooks/use-saved-reply';
+import { matchReplies } from '@/inbox/saved-replies/lib/reply-text';
+import type { ReplyFill } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { type ReplyContact, useFillReply } from './use-fill-reply';
 
 interface SlashSuggestionsProps {

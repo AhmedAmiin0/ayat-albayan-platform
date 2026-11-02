@@ -1,11 +1,11 @@
 import { isOpenLesson, joinWindowConfig, PORTAL_LESSON_DAYS, type PortalLessons, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { StudentLinkService } from '../../../teaching/classroom';
-import { PortalScopes } from '../scope/portal-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { StudentLinkService } from '@/modules/teaching/classroom';
+import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { toPortalLesson, wayIn } from './portal-lessons.mapper';
-import { PortalLessonsQueries } from './portal-lessons.queries';
+import { PortalLessonsRepo } from './portal-lessons.repo';
 
 const DAY_MS = 86_400_000;
 const MIN_MS = 60_000;
@@ -24,7 +24,7 @@ interface LessonCall {
 export class PortalLessonsService {
   constructor(
     private readonly scopes: PortalScopes,
-    private readonly queries: PortalLessonsQueries,
+    private readonly queries: PortalLessonsRepo,
     private readonly rooms: StudentLinkService,
   ) {}
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { duplicateCandidates } from '../api';
+import { duplicateCandidates } from '@/features/people/students/api';
 import { ageError, EMPTY_STUDENT, parseAge, phoneError, requiredError, toCreateBody } from './create-student';
 
 describe('create student helpers (R-STU-02, R-STU-03)', () => {

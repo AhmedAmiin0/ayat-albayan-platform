@@ -1,16 +1,16 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useAssistants } from '../api/api';
-import { AssistantTabBody, type AssistantTab as Tab } from '../list/AssistantTabBody';
-import { useStatementCan } from '../statements/hooks/statement-can';
+import { useAssistants } from '@/assistants/api/api';
+import { AssistantTabBody, type AssistantTab as Tab } from '@/assistants/list/AssistantTabBody';
+import { useStatementCan } from '@/assistants/statements/hooks/statement-can';
 
 const TABS = (): { value: Tab; label: string }[] => [
   { value: 'terms', label: t.mobileSalesMoney.tabs.terms },

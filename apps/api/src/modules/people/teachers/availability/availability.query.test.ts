@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AvailabilityQueries } from './availability.queries';
+import type { AvailabilityRepo } from './availability.repo';
 import { AvailabilityQuery } from './availability.query';
 
 const TEACHER = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
@@ -20,7 +20,7 @@ function setup() {
       },
     ]),
   };
-  return { queries, query: new AvailabilityQuery(queries as unknown as AvailabilityQueries) };
+  return { queries, query: new AvailabilityQuery(queries as unknown as AvailabilityRepo) };
 }
 
 describe('AvailabilityQuery.freeSlots (R-TCH-02, R-SCH-04)', () => {

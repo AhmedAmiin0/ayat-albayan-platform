@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { reportFormHref, reportOpen } from '../paths';
+import { reportFormHref, reportOpen } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 
 export interface LessonReportLinksProps {

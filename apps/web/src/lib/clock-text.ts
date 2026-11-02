@@ -1,4 +1,12 @@
-import { clockOf, clockOfHhmm } from '@ab/shared';
+import {
+  clockOf,
+  clockOfHhmm,
+  dateText,
+  engineTimeZone,
+  zonedFieldsIn,
+  type DateFields,
+} from '@ab/shared';
+import { locale } from '@/lib/i18n/locale';
 import type { Clock } from './clock';
 
 // Date + clock on screens: the date from Intl, the clock from the shared formatter (our own ص / م and
@@ -7,26 +15,20 @@ import type { Clock } from './clock';
 const JOIN = { ar: '، ', en: ', ' } as const;
 
 /** The browser's zone: the inbox, bell and logs show times where the viewer is. */
-export const viewerZone = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone;
+export const viewerZone = (): string => engineTimeZone() ?? 'UTC';
 
-/** «03/10/2026، 2:05 م»: `date` formats the day (no hour in its options), then the clock in `tz`. */
-export function dateAndClock(date: Intl.DateTimeFormat, at: Date, clock: Clock & { tz: string }): string {
-  return `${date.format(at)}${JOIN[clock.locale]}${clockOf(at, clock)}`;
+/** «03/10/2026، 2:05 م»: the day's `fields` (no hour) in the UI language, then the clock in `tz`. */
+export function dateAndClock(at: Date, clock: Clock & { tz: string }, fields: DateFields): string {
+  const day = dateText(at, { tz: clock.tz, locale }, fields);
+  return `${day}${JOIN[clock.locale]}${clockOf(at, clock)}`;
 }
 
 /** The direction of a clock island: LTR as before, RTL for Arabic 12 h («5:30 م» reads right to left). */
 export const clockDir = (clock: Clock): 'ltr' | 'rtl' => (clock.locale === 'ar' && clock.cycle === '12' ? 'rtl' : 'ltr');
 
-const seconds = new Map<string, Intl.DateTimeFormat>();
-
 /** «14:05:33» / «2:05:33 م»: the clock with seconds (the activity log). */
 export function clockWithSeconds(at: Date, clock: Clock & { tz: string }): string {
-  let f = seconds.get(clock.tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-GB', { second: '2-digit', timeZone: clock.tz });
-    seconds.set(clock.tz, f);
-  }
-  const ss = (f.formatToParts(at).find((p) => p.type === 'second')?.value ?? '0').padStart(2, '0');
+  const ss = String(zonedFieldsIn(at, clock.tz).second).padStart(2, '0');
   return clockOf(at, clock).replace(/^(\d{1,2}:\d{2})/, `$1:${ss}`);
 }
 

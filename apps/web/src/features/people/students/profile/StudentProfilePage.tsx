@@ -15,21 +15,22 @@ import { StudentJoinLink } from '@/features/teaching/classroom/student-link/Stud
 import { GuardianEditDialog } from '@/features/people/guardians/GuardianEditForm';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { studentQuery } from '../api';
+import { studentQuery } from '@/features/people/students/api';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
 import { RenewSubscriptionButton } from '@/features/finance/subscriptions/create/RenewSubscriptionButton';
-import { SiblingMerge } from '../duplicates/SiblingMerge';
+import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge';
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/layout/head-actions';
-import { StudentRecordings } from '../recordings/StudentRecordings';
+import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
 import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
 import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
+import { ProfileCourseActions } from '@/features/teaching/course-actions';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -95,6 +96,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               </Button>
               <CreateAccountButton student={student} />
               <CoursePauseAction studentId={student.id} onDone={setNotice} />
+              <ProfileCourseActions studentId={student.id} onDone={setNotice} />
             </>
           }
         />

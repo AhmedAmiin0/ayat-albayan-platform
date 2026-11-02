@@ -3,12 +3,12 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
-import { errorCode } from '@/features/teaching/schedule/api';
-import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import type { ServerListPatch, ServerListSearch } from '@/lib/list/server-list-search';
-import { teacherMeQuery } from '../api';
-import { MyStudents } from '../MyStudents';
+import { teacherMeQuery } from '@/features/teaching/teacher/api';
+import { MyStudents } from '@/features/teaching/teacher/MyStudents';
 import { SubmittedReports } from './SubmittedReports';
 
 /**
@@ -23,7 +23,8 @@ export interface MyReportsProps {
 
 export function MyReports({ search, onSearch }: MyReportsProps) {
   const me = useQuery(teacherMeQuery);
-  const tz = me.data?.tz ?? RIYADH_TZ;
+  const viewer = useViewerTz();
+  const tz = me.data?.tz ?? viewer;
   return (
     <>
       <PageHead>

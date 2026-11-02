@@ -1,5 +1,5 @@
 import { DetailsLine } from './DetailsGroup';
-import { packageName, usedOf } from '@/payments/format';
+import { packageName, usedOf } from '@/core/lib/money/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 

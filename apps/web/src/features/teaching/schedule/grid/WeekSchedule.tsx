@@ -1,3 +1,4 @@
+import { weekWindowIn, zonedPartsIn } from '@ab/shared';
 import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -11,21 +12,21 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
-import { overviewQuery, proposalsQuery } from '../api';
+import { overviewQuery, proposalsQuery } from '@/features/teaching/schedule/api';
 import { DayBoard } from './DayBoard';
-import { LessonDrawer } from '../lesson/LessonDrawer';
-import { filterLessons } from '../lesson/lessons';
-import { boardRows, dayWindow, filterTeachers, type BoardRow } from '../overview';
-import { ProposalsPanel } from '../reschedule/ProposalsPanel';
-import { ScheduleCounts } from '../ScheduleCounts';
-import { ScheduleFilters } from '../filters/ScheduleFilters';
-import { ScheduleNav } from '../ScheduleNav';
-import { SyncScheduleButton } from '../SyncScheduleButton';
-import type { ScheduleSearch } from '../filters/search';
-import { currentWeekStart } from '../reschedule/slots';
-import { RIYADH_TZ, weekWindow, zonedParts } from '../tz';
+import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
+import { filterLessons } from '@/features/teaching/schedule/lesson/lessons';
+import { boardRows, dayWindow, filterTeachers, type BoardRow } from '@/features/teaching/schedule/overview';
+import { ProposalsPanel } from '@/features/teaching/schedule/reschedule/ProposalsPanel';
+import { ScheduleCounts } from '@/features/teaching/schedule/ScheduleCounts';
+import { ScheduleFilters } from '@/features/teaching/schedule/filters/ScheduleFilters';
+import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
+import { SyncScheduleButton } from '@/features/teaching/schedule/SyncScheduleButton';
+import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
+import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
 import { WeekGrid } from './WeekGrid';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 
@@ -36,15 +37,17 @@ export interface WeekScheduleProps {
 
 /**
  * /admin/schedule (R-SCH-01, R-SCH-03, R-SCH-08): the teachers' pending proposals, then every
- * teacher's Riyadh week (or one day) with hours, time off, load and free time, filters in the URL,
- * one GET /lessons/overview per window. A chip opens its drawer; writes refresh the calendar.
+ * teacher's week (or one day) in the viewer's zone (docs/34) with hours, time off, load and free
+ * time, filters in the URL, one GET /lessons/overview per window. A chip opens its drawer;
+ * writes refresh the calendar.
  */
 export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const now = useNow();
-  const today = zonedParts(now, RIYADH_TZ).date;
+  const tz = useViewerTz();
+  const today = zonedPartsIn(now, tz).date;
   const day = search.view === 'day' ? (search.day ?? today) : null;
-  const week = search.week ?? currentWeekStart(now);
-  const overview = useQuery(overviewQuery(day ? dayWindow(day) : weekWindow(week, RIYADH_TZ)));
+  const week = search.week ?? currentWeekStart(now, tz);
+  const overview = useQuery(overviewQuery(day ? dayWindow(day, tz) : weekWindowIn(week, tz)));
   const proposals = useQuery(proposalsQuery);
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -85,7 +88,7 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <ScheduleFilters search={search} teachers={all} onSearch={patch} resultCount={overview.data ? shown.length : undefined} />
       <Body
         query={overview}
-        rows={boardRows(teachers, shown)}
+        rows={boardRows(teachers, shown, tz)}
         view={{ day, week, today, now }}
         onOpen={(l) => setOpenId(l.id)}
       />

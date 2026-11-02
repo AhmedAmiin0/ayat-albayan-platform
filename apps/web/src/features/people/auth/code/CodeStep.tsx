@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { StatusNote } from '../login/StatusNote';
+import { StatusNote } from '@/features/people/auth/login/StatusNote';
 import { CodeBoxes } from './CodeBoxes';
 import type { CodeFlow } from './use-code-flow';
 

@@ -2,13 +2,13 @@ import { DEFAULT_PASSWORD_MIN } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { passwordErrors, type PasswordForm } from '../account-validation';
+import { passwordErrors, type PasswordForm } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
-import { changePassword } from '../api';
+import { changePassword } from '@/features/people/account/api';
 import { PasswordField } from './PasswordField';
-import { SaveButton } from '../SaveButton';
+import { SaveButton } from '@/features/people/account/SaveButton';
 import type { SectionProps } from './section-props';
-import { useAccountSave } from '../use-account-save';
+import { useAccountSave } from '@/features/people/account/use-account-save';
 
 const W = t.account.password;
 const EMPTY: PasswordForm = { current: '', next: '', confirm: '' };

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { CommissionLedger } from './CommissionLedger';
-import { ASSISTANT, COMMISSION } from '../fixtures';
+import { ASSISTANT, COMMISSION } from '@/features/people/assistants/fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

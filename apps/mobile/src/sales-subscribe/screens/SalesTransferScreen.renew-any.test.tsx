@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '../testing/fixtures';
+import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
 // sales.renew_any (owner 2026-10-29, docs/16 row 38): a child of the chat's family that is not hers (mine: false).
@@ -41,10 +41,13 @@ test('not hers: the transfer and the chat receipts carry the chat phone; «إل�
   expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: m.receiptFromChat }));
   expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${KID}&phone=${encodeURIComponent(CHAT)}`);
-  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}` }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}` }));
   await waitFor(() => expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG, phone: CHAT }));
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }));
+  // Done: «احجز أيام الحلقات الآن» for it too (owner 2026-11-01, docs/16 row 38).
+  expect(await screen.findByRole('button', { name: m.openMyPayments })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
 });
 
 test('hers (mine: true): the bodies stay as they were (no phone) and «إلغاء الباقة» is offered', async () => {
@@ -56,4 +59,5 @@ test('hers (mine: true): the bodies stay as they were (no phone) and «إلغا�
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')).toHaveLength(1));
   expect(sent('/sales/payments')[0]?.[2]).not.toHaveProperty('phone');
+  expect(await screen.findByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
 });

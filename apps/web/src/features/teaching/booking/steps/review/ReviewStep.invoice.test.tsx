@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { emptyDraft, type BookingDraft } from '../../draft/draft';
+import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { ReviewStep } from './ReviewStep';
-import { ABRAR, SLOT, STUDENT_ID } from '../../wizard-fixture';
+import { ABRAR, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));

@@ -1,6 +1,6 @@
 import type { AcademySettings, SettingsUpdate } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '../http/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 
 /** GET /settings (admin): every academy setting with its default filled in. */

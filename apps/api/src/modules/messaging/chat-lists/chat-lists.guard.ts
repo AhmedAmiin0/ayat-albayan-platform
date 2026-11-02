@@ -1,8 +1,14 @@
 import { chatListPhone } from '@ab/shared';
+import {
+  Injectable,
+  type CanActivate,
+  type ExecutionContext,
+  type HttpException,
+} from '@nestjs/common';
 import { z } from 'zod';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest, forbidden, notFound } from '../../../common/http/errors';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, forbidden, notFound } from '@/common/http/errors';
 
 /**
  * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the
@@ -11,7 +17,17 @@ import { badRequest, forbidden, notFound } from '../../../common/http/errors';
  */
 export function assertListsUser(user: AuthUser): void {
   const staff = user.role === 'admin' || user.role === 'sales';
-  if (!staff || !can(user, 'inbox.read') || !can(user, 'inbox.lists')) throw forbidden('lists_forbidden');
+  if (!staff || !can(user, 'inbox.read') || !can(user, 'inbox.lists'))
+    throw forbidden('lists_forbidden');
+}
+
+/** `assertListsUser` as a guard: it runs before the body pipe, so a teacher still gets 403. */
+@Injectable()
+export class ListsUserGuard implements CanActivate {
+  canActivate(ctx: ExecutionContext): boolean {
+    assertListsUser(ctx.switchToHttp().getRequest<{ user: AuthUser }>().user);
+    return true;
+  }
 }
 
 /** May this caller see a chat's lists and filter by one (GET /threads, /threads/:phone)? */
@@ -19,20 +35,13 @@ export function seesLists(user: AuthUser): boolean {
   return (user.role === 'admin' || user.role === 'sales') && can(user, 'inbox.lists');
 }
 
-const uuid = z.uuid();
-
 /** `:id` that is not a uuid cannot name a list: 404 list_not_found (never a 500 from Postgres). */
-export function listIdParam(raw: string): string {
-  if (!uuid.safeParse(raw).success) throw notFound('list_not_found');
-  return raw;
-}
+export const listIdSchema = z.uuid();
+export const listNotFound = (): HttpException => notFound('list_not_found');
 
 /** True when `raw` can be a list id (GET /threads?list=: anything else is an empty page). */
-export const isListId = (raw: string): boolean => uuid.safeParse(raw).success;
+export const isListId = (raw: string): boolean => listIdSchema.safeParse(raw).success;
 
 /** `:phone` is url-encoded E.164 («%2B9665…»); anything else is 400 invalid_phone. */
-export function listPhoneParam(raw: string): string {
-  const phone = chatListPhone(raw);
-  if (!phone) throw badRequest('invalid_phone');
-  return phone;
-}
+export const listPhoneSchema = z.string().transform(chatListPhone).pipe(z.string());
+export const listInvalidPhone = (): HttpException => badRequest('invalid_phone');

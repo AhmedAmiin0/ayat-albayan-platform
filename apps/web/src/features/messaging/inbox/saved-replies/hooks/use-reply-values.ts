@@ -1,7 +1,7 @@
 import type { SavedReplyValues, ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { profileQuery } from '@/features/people/account/api';
-import type { PrefillContext } from '../../composer/lib/template-params';
+import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 
 /**
  * What a saved reply's placeholders become in this chat: {name} the name the header shows (guardian

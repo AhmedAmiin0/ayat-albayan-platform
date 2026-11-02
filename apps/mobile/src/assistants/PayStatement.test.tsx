@@ -17,7 +17,7 @@ jest.mock('@/core/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
 }));
 const mockPicked = { uri: 'file://r.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(4), size: 4 };
-jest.mock('@/payments/ReceiptPicker', () => {
+jest.mock('@/core/ui/form/ReceiptPicker', () => {
   const { Pressable, View } = jest.requireActual('react-native');
   return {
     ReceiptPicker: ({ onChange }: { onChange: (r: unknown) => void }) => (

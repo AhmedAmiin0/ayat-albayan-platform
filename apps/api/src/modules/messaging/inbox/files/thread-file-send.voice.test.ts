@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { PHONE, threadRow } from '../inbox.fakes';
-import type { Outbox } from '../send/outbox';
+import type { StorageService } from '@/common/storage/storage.service';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadFileSender } from './thread-file-send.service';
-import type { ThreadsQueries } from '../threads/threads.queries';
+import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 // A voice note recorded in the app (owner 2026-10-27): m4a in, a WhatsApp ogg/opus voice note out.
 const NOW = new Date('2026-10-02T09:00:00Z');
@@ -19,7 +19,7 @@ const outbox = { queue: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), download: vi.fn(), upload: vi.fn() };
 const toOgg = vi.fn();
 const sender = () => {
-  const s = new ThreadFileSender(queries as unknown as ThreadsQueries, outbox as unknown as Outbox, storage as unknown as StorageService);
+  const s = new ThreadFileSender(queries as unknown as ThreadsRepo, outbox as unknown as Outbox, storage as unknown as StorageService);
   Object.assign(s, { toOgg });
   return s;
 };

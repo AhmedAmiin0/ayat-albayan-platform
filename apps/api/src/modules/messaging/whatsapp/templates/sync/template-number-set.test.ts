@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { approvedOn, setTemplateNumber, type NumberSetDeps } from './template-number-set';
-import type { ApprovalRow, NumberRef } from '../catalog/templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
-import type { TemplateRow } from '../../whatsapp.types';
+import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // PUT /messaging/templates/:key/number (docs/23c decisions 4, 9): the template's own number, audited, never blocked.
 

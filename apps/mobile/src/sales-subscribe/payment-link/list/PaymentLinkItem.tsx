@@ -8,9 +8,10 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { instantDay, money } from '@/payments';
-import { fill } from '@/sales';
-import { useCancelLink } from '../link-api';
-import { linkErrorText, linkStatusStyle } from '../link-text';
+import { fill } from '@/sales/sales';
+import { useCancelLink } from '@/sales-subscribe/payment-link/link-api';
+import { linkErrorText, linkStatusStyle } from '@/sales-subscribe/payment-link/link-text';
+import { useViewerTz } from '@/core/lib/clock';
 
 const pl = t.paymentLinks;
 
@@ -23,12 +24,13 @@ interface PaymentLinkItemProps {
 
 /** «يوسف · 250 ر.س · ينتهي 1 نوفمبر 2026» with its status (an open link past its expiry reads expired). */
 export function PaymentLinkItem({ link, now, readOnly = false }: PaymentLinkItemProps) {
+  const tz = useViewerTz();
   const status = effectiveLinkStatus(link, now);
   const cancel = useCancelLink();
   const [asking, setAsking] = useState(false);
   const when = link.paid_at
-    ? fill(pl.paidAt, { when: instantDay(link.paid_at) })
-    : fill(pl.expiresAt, { when: instantDay(link.expires_at) });
+    ? fill(pl.paidAt, { when: instantDay(link.paid_at, tz) })
+    : fill(pl.expiresAt, { when: instantDay(link.expires_at, tz) });
   return (
     <View>
       <ListRow

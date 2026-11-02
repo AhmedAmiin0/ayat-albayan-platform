@@ -81,12 +81,14 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     }
   });
 
-  it('report PDF: signed for her student\'s report; another student is 404 before any signing', async () => {
+  it('report PDF: signed for her student\'s report and for another\'s (owner 2026-10-30)', async () => {
     const own = await t.call('GET', `/sales/students/${MINE}/reports/${REPORT}/pdf`, { token: 'salesA' });
     expect(own.json()).toEqual({ url: 'https://storage/signed', expires_at: '2026-10-27T16:00:00.000Z' });
     expect(t.files.studentPdfUrl).toHaveBeenCalledWith({ id: REPORT, studentId: MINE });
+    const other = await t.call('GET', `/sales/students/${OTHER}/reports/${REPORT}/pdf`, { token: 'salesA' });
+    expect(other.statusCode).toBe(200);
+    expect(t.files.studentPdfUrl).toHaveBeenCalledWith({ id: REPORT, studentId: OTHER });
     t.files.studentPdfUrl.mockClear();
-    expect((await t.call('GET', `/sales/students/${OTHER}/reports/${REPORT}/pdf`, { token: 'salesA' })).statusCode).toBe(404);
     expect((await t.call('GET', `/sales/students/${MINE}/reports/${REPORT}/pdf`, { token: 'teacher' })).statusCode).toBe(403);
     expect(t.files.studentPdfUrl).not.toHaveBeenCalled();
   });

@@ -1,16 +1,16 @@
 import { baseMime, isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, SIGNED_URL_SECONDS } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { allowedRecipients, loadEnv, recipientAllowed } from '../../../../config/env/env';
-import { whatsappClient } from '../client-factory';
-import { NumberClients } from '../numbers/number-clients';
-import type { NumberRoute } from '../numbers/number-route';
+import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
+import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
+import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
+import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { quickReplyPayloads } from './send-plan';
-import type { DueMessage } from './sender.queries';
-import { isCallPermissionRequest } from '../messages/wa-call-permission';
-import { templateButtons, templateParams } from '../messages/wa-json';
-import { WaError, WHATSAPP_LINES, type TemplateRow, type WaSent, type WhatsappClient, type WhatsappLines } from '../whatsapp.types';
+import type { DueMessage } from './sender.repo';
+import { isCallPermissionRequest } from '@/modules/messaging/whatsapp/messages/wa-call-permission';
+import { templateButtons, templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
+import { WaError, WHATSAPP_LINES, type TemplateRow, type WaSent, type WhatsappClient, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** Refuses every call before any request (WaError code null, status 0). */
 const UNCONFIGURED = whatsappClient(null);

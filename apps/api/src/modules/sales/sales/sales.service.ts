@@ -1,15 +1,15 @@
 import { joinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { KIND_STATUSES, toSalesMeeting, toSalesSubscription } from './sales.mapper';
-import { SalesQueries } from './sales.queries';
+import { SalesRepo } from './sales.repo';
 import { SalesSettings } from './sales.settings';
 
 /** The sales portal's two lists, scoped by the signed-in profile (the id comes from the login, never a param). */
 @Injectable()
 export class SalesService {
   constructor(
-    private readonly queries: SalesQueries,
+    private readonly queries: SalesRepo,
     private readonly settings: SalesSettings,
   ) {}
 

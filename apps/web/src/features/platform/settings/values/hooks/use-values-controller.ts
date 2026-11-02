@@ -2,13 +2,13 @@ import { isEditableValueKey, settingDef, type AcademySettings, type ConfigEntry,
 import { useCallback, useState } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@/lib/i18n/i18n';
-import { rowForm, rowUpdate } from '../../registry-form/row-form';
-import type { SettingsForm } from '../../registry-form/settings-form';
-import type { DescribeTarget } from '../description/describe-target';
+import { rowForm, rowUpdate } from '@/features/platform/settings/registry-form/row-form';
+import type { SettingsForm } from '@/features/platform/settings/registry-form/settings-form';
+import type { DescribeTarget } from '@/features/platform/settings/values/description/describe-target';
 import { useRowSaves, type RowStatus, type SaveInput } from './use-row-saves';
 import { useTrackedDrafts } from './use-tracked-drafts';
 import type { ValueDrafts } from './use-value-drafts';
-import { confirmKind, type ConfirmKind } from '../sheet/value-confirm';
+import { confirmKind, type ConfirmKind } from '@/features/platform/settings/values/sheet/value-confirm';
 
 export { confirmKind, type ConfirmKind };
 export interface PendingConfirm {

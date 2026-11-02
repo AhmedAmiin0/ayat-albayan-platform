@@ -46,6 +46,7 @@ export function RunningHead({ crumbs, end, className }: { crumbs?: ReactNode; en
           <span className="tabular-nums">{head.hijri}</span>
           <i aria-hidden="true" className="h-3.5 w-px bg-rule-strong" />
           <span>
+            {/* academy clocks (docs/34 b): named cities, each labelled, not «the» time */}
             {t.runningHead.riyadh}
             <b className="ms-1 font-semibold text-ink-2 tabular-nums">{head.riyadhTime}</b>
           </span>

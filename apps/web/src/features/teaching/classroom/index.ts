@@ -49,4 +49,4 @@ export {
 export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
-export { isLessonNow, viewerTz, windowStateAt } from './student-link/student-link';
+export { isLessonNow, windowStateAt } from './student-link/student-link';

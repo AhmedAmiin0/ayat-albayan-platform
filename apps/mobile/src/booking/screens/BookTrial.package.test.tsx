@@ -1,13 +1,15 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { pickReceipt } from '@/payments/receipt';
+import { pickReceipt } from '@/core/lib/receipts/receipt';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
-import { booked, maryam, slot, SUN_17, THU_18 } from '../testing/fixtures';
-import { packageDaysNote } from '../trial/lib/package-choice';
-import { dayLine } from '../shared/picks';
-import { uploadInvoice } from '../invoice/invoice-upload';
-import { fakeBookingApi, PHOTO, PREVIEW } from '../testing/test-utils';
+import { booked, maryam, slot, SUN_17, THU_18 } from '@/booking/testing/fixtures';
+import { packageDaysNote } from '@/booking/trial/lib/package-choice';
+import { dayLine } from '@/booking/shared/picks';
+import { uploadInvoice } from '@/booking/invoice/invoice-upload';
+import { fakeBookingApi, PHOTO, PREVIEW } from '@/booking/testing/test-utils';
+
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -16,8 +18,8 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
-jest.mock('../invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
+jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
+jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 const mockReplace = jest.fn();
 // The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
 jest.mock('expo-router', () => ({
@@ -68,7 +70,7 @@ test('a lead from the chat books a package: size, a time per day, the required i
   await press('checkbox', '17:00');
   await press('checkbox', '18:00');
   expect(screen.getByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   await press('button', t.booking.next);
   const slotsPath = mockApiFetch.mock.calls
     .map((c: unknown[]) => String(c[0]))
@@ -87,8 +89,8 @@ test('a lead from the chat books a package: size, a time per day, the required i
   expect(screen.getByText(t.booking.kind.package)).toBeTruthy();
   expect(screen.getByText(t.enums.packageSize['12'])).toBeTruthy();
   expect(screen.getByText(t.booking.mobile.invoiceUploaded)).toBeTruthy();
-  expect(screen.getByText(dayLine(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(SUN_17, 'Asia/Riyadh', R24))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   expect(screen.getByText(t.booking.perWeek.two)).toBeTruthy();
   // 12 a month = 3 a week: the admin's warning stays (a note, not a block).
   expect(screen.getByText(packageDaysNote('12', 2) ?? '')).toBeTruthy();

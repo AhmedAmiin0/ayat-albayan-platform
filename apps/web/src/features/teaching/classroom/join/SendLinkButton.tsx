@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { sendJoinLink } from '../api/api';
-import { classroomErrorText } from '../room/livekit/errors';
+import { sendJoinLink } from '@/features/teaching/classroom/api/api';
+import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
 
 const TEMPLATE = 'lesson_join_link';
 

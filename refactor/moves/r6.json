@@ -1,0 +1,75 @@
+{
+  "id": "r6",
+  "seq": 219,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/messaging/chat-lists/chat-lists.queries.ts",
+      "to": "apps/api/src/modules/messaging/chat-lists/chat-lists.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/follow-ups/follow-ups.queries.ts",
+      "to": "apps/api/src/modules/messaging/follow-ups/follow-ups.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/notification-rules/rules.queries.ts",
+      "to": "apps/api/src/modules/messaging/notification-rules/rules.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/numbers/numbers.queries.ts",
+      "to": "apps/api/src/modules/messaging/numbers/numbers.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/reminders/reminders.queries.ts",
+      "to": "apps/api/src/modules/messaging/reminders/reminders.repo.ts"
+    }
+  ],
+  "renames": {
+    "ChatListsQueries": "ChatListsRepo",
+    "FollowUpsQueries": "FollowUpsRepo",
+    "RulesQueries": "RulesRepo",
+    "NumbersQueries": "NumbersRepo",
+    "RemindersQueries": "RemindersRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/messaging/chat-lists/chat-lists.queries.test.ts",
+      "apps/api/src/modules/messaging/chat-lists/chat-lists.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/chat-lists/chat-lists.queries.ts",
+      "apps/api/src/modules/messaging/chat-lists/chat-lists.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/follow-ups/follow-ups.queries.test.ts",
+      "apps/api/src/modules/messaging/follow-ups/follow-ups.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/follow-ups/follow-ups.queries.ts",
+      "apps/api/src/modules/messaging/follow-ups/follow-ups.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/notification-rules/rules.queries.test.ts",
+      "apps/api/src/modules/messaging/notification-rules/rules.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/notification-rules/rules.queries.ts",
+      "apps/api/src/modules/messaging/notification-rules/rules.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/numbers/numbers.queries.test.ts",
+      "apps/api/src/modules/messaging/numbers/numbers.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/numbers/numbers.queries.ts",
+      "apps/api/src/modules/messaging/numbers/numbers.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/reminders/reminders.queries.test.ts",
+      "apps/api/src/modules/messaging/reminders/reminders.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/reminders/reminders.queries.ts",
+      "apps/api/src/modules/messaging/reminders/reminders.repo.ts"
+    ]
+  ]
+}

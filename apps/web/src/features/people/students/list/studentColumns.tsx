@@ -7,11 +7,11 @@ import { pickColumn } from '@/features/people/assistants/students/pick-column';
 import type { PickColumn } from '@/features/people/assistants/students/use-student-pick';
 import { t } from '@/lib/i18n/i18n';
 import { stacked } from './stacked-rows';
-import { studentNote } from '../profile/student-note';
-import { StudentNote } from '../profile/StudentNote';
+import { studentNote } from '@/features/people/students/profile/student-note';
+import { StudentNote } from '@/features/people/students/profile/StudentNote';
 import { StudentRowActions } from './StudentRowActions';
 import { TeacherCell } from './TeacherCell';
-import type { StudentListItem } from '../types';
+import type { StudentListItem } from '@/features/people/students/types';
 
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
 const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;

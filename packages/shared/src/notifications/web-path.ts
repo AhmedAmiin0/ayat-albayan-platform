@@ -1,6 +1,5 @@
-import { PUSH_KINDS, type PushKind } from '../enums/index.js';
-import { E164_RE } from '../core/format/phone.js';
-import { HOME_BY_ROLE, type UserRole } from '../catalog/permissions/roles.js';
+import { HOME_BY_ROLE, PUSH_KINDS, type PushKind, type UserRole } from '@ab/catalog';
+import { E164_RE } from '@ab/core';
 
 // Where a bell row opens on the web (R-NOT-01). `data` is PushService's { kind, ...event.data }:
 // untrusted JSON, so every field is checked (E.164 phone, uuid ids) and anything else falls back
@@ -44,6 +43,10 @@ const MEETINGS: Record<Area, string> = {
   assistant: '/assistant',
 };
 
+/** The teacher sees the lesson on their calendar; anyone else opens the student. */
+const lessonPath = (area: Area, data: Data): string =>
+  area === 'teacher' ? '/teacher/calendar' : student(area, data);
+
 const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   new_lead: inbox,
   new_message: inbox,
@@ -51,8 +54,7 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   lesson_needs_confirmation: (area) => HOME_BY_ROLE[area],
   report_submitted: student,
   payment_due: student,
-  // The teacher sees the new lesson on their calendar; anyone else opens the student.
-  new_student: (area, data) => (area === 'teacher' ? '/teacher/calendar' : student(area, data)),
+  new_student: lessonPath,
   meeting_invite: (area, data) => {
     const id = uuid(data, 'meetingId');
     return id ? `/meeting/${id}` : MEETINGS[area];
@@ -67,6 +69,11 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   },
   // «محفظتي» (owner 2026-10-29): the salesperson's wallet; only sales get this kind.
   commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
+  // A schedule change (owner 2026-10-30): the lesson on the teacher's calendar, else the student.
+  lesson_rescheduled: lessonPath,
+  lesson_cancelled: lessonPath,
+  course_paused: lessonPath,
+  course_resumed: lessonPath,
 };
 
 const isArea = (role: UserRole | null): role is Area =>

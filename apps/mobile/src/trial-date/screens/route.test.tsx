@@ -5,7 +5,7 @@ import TabsLayout from '../../../app/(tabs)/_layout';
 import TrialDateRoute from '../../../app/(tabs)/students/trial-date/[studentId]';
 
 // From the admin student file: its own screen in the Students tab's stack (behind the root's admin gate).
-jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
+jest.mock('@/core/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('./TrialDateFlow', () => ({

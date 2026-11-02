@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { ConflictInput } from '../../scheduling/conflicts/conflicts';
-import { BusyQueries } from '../../scheduling/conflicts/busy.queries';
-import { AvailabilityQueries } from '../../../people/teachers/availability/availability.queries';
-import type { Range } from '../core/booking.queries';
+import type { ConflictInput } from '@ab/shared';
+import { BusyRepo } from '@/modules/teaching/scheduling/conflicts/busy.repo';
+import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
+import type { Range } from '@/modules/teaching/booking/core/booking.repo';
 
 type ContextQuery = Range & {
   teacherId: string;
@@ -22,8 +22,8 @@ type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 @Injectable()
 export class ConflictContext {
   constructor(
-    private readonly availability: AvailabilityQueries,
-    private readonly busy: BusyQueries,
+    private readonly availability: AvailabilityRepo,
+    private readonly busy: BusyRepo,
   ) {}
 
   async load(q: ContextQuery): Promise<ConflictContextRows> {

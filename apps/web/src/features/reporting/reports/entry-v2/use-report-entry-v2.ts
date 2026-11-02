@@ -15,8 +15,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { BUNDLES, t } from '@/lib/i18n/i18n';
-import { REPORTS_KEY, saveDraftV2, submitReportV2 } from '../api';
-import { useDraftSave } from '../entry/use-autosave';
+import { REPORTS_KEY, saveDraftV2, submitReportV2 } from '@/features/reporting/reports/api';
+import { useDraftSave } from '@/features/reporting/reports/entry/use-autosave';
 
 const words = () => t.reports.v2.suggest;
 // A sent report stores untouched suggestions in Arabic (the bundle, or its overrides).

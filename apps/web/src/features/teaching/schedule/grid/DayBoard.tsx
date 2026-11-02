@@ -5,11 +5,12 @@ import { AXIS_HOURS } from '@/features/people/teachers/availability/track';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { LessonChip } from '../lesson/LessonChip';
-import { freeText, spanRange, teacherDay, type BoardRow } from '../overview';
+import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
+import { freeText, spanRange, teacherDay, type BoardRow } from '@/features/teaching/schedule/overview';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface DayBoardProps {
   /** Riyadh day, "YYYY-MM-DD". */
@@ -47,7 +48,7 @@ export function DayBoard({ day, rows, now, onOpen }: DayBoardProps) {
 
 function TeacherDay({ row, day, now, onOpen }: { row: BoardRow } & Omit<DayBoardProps, 'rows'>) {
   const lessons = row.days.get(day) ?? [];
-  const facts = teacherDay(row.teacher, { day, lessons, now });
+  const facts = teacherDay(row.teacher, { day, lessons, now, tz: useViewerTz() });
   return (
     <section aria-label={teacherLabel(row.teacher)} className={cn(rowGrid, 'border-b border-rule py-3')}>
       <TeacherCell teacher={row.teacher} now={now} photo={row.photo} />
@@ -86,6 +87,7 @@ interface FreeGapsProps {
 /** «فاضي 17:00 – 19:00»: dashed outline links (never filled, docs/07 rule 1), ≥ 44px on phones. */
 function FreeGaps({ teacherId, gaps, day }: FreeGapsProps) {
   const clock = useClock();
+  const tz = useViewerTz();
   if (gaps.length === 0) return null;
   return (
     <ul aria-label={t.booking.freeSlots} className="flex flex-wrap gap-1.5">
@@ -97,7 +99,7 @@ function FreeGaps({ teacherId, gaps, day }: FreeGapsProps) {
             className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), 'border-dashed border-lapis/60 text-lapis tabular-nums')}
           >
             <span className="sr-only">{`${t.schedule.book}: `}</span>
-            {freeText(spanRange(gap, day), clock)}
+            {freeText(spanRange(gap, day, tz), clock)}
           </Link>
         </li>
       ))}

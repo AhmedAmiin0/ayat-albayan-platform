@@ -1,12 +1,12 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
-import { byDriver, graphFetch } from '../drivers/meta/graph';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
+import { byDriver, graphDownload } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { InboundMedia } from './inbound-media.service';
-import { KAPSO_ENV, kapsoFetch } from '../drivers/kapso/kapso.fakes';
-import { STUB_ENV } from '../whatsapp.fakes';
-import { WaError, type WhatsappLines } from '../whatsapp.types';
+import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/12 §13.4: the media id only works with the RECEIVING line's token.
 const NOW = new Date('2026-10-10T10:00:00Z');
@@ -33,7 +33,7 @@ function setup(row: MediaMessage) {
   const chat = fakeClient();
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
   const media = new InboundMedia(
-    queries as unknown as InboundMediaQueries,
+    queries as unknown as InboundMediaRepo,
     { notifications, chat } as unknown as WhatsappLines,
     storage as unknown as StorageService,
   );
@@ -119,7 +119,8 @@ describe('InboundMedia per line (docs/12 §13.4, R-MSG-06)', () => {
     const { media, notifications } = setup(msg());
     const f = kapsoFetch({ status: 401, body: { error: 'token expired' } });
     const conn = { env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 };
-    notifications.getMedia.mockImplementation(() => graphFetch(conn, { path: 'https://files.example.test/m?token=t', auth: false }));
+    const call = { path: 'https://files.example.test/m?token=t', maxBytes: 10, tooLarge: () => new Error('big') };
+    notifications.getMedia.mockImplementation(async () => ({ ...(await graphDownload(conn).bytes(call)), mime: 'image/jpeg' }));
     expect(await failure(media.ensure('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
   });
 });

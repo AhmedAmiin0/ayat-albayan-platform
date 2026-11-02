@@ -1,11 +1,11 @@
 import { notificationsQuerySchema, notificationsReadSchema, type NotificationsPage, type WebPushKey } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, UnauthorizedException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '../http/http';
-import { loadEnv, webPushEnv } from '../../config/env/env';
-import { CurrentUser, Permissions } from '../auth/decorators';
-import type { AuthUser } from '../auth/verify-token';
-import { NotificationsQueries } from './notifications.queries';
+import { parseOrThrow } from '@/common/http/http';
+import { loadEnv, webPushEnv } from '@/config/env/env';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { NotificationsRepo } from './notifications.repo';
 import { webPushEndpointQuery, webPushSubscriptionSchema } from './web/web-push.endpoint';
 
 /** The bell (R-NOT-01): the caller's own notifications only, never an id from the request. */
@@ -14,7 +14,7 @@ import { webPushEndpointQuery, webPushSubscriptionSchema } from './web/web-push.
 @Permissions('notifications.push')
 @Controller('me/notifications')
 export class NotificationsController {
-  constructor(private readonly queries: NotificationsQueries) {}
+  constructor(private readonly queries: NotificationsRepo) {}
 
   /** Newest first; `unread` is the badge. Superseded rows (a retimed lesson) are hidden. */
   @Get()
@@ -36,7 +36,7 @@ export class NotificationsController {
 @Permissions('notifications.push')
 @Controller('me/web-push')
 export class WebPushController {
-  constructor(private readonly queries: NotificationsQueries) {}
+  constructor(private readonly queries: NotificationsRepo) {}
 
   /** The VAPID public key the browser subscribes with; null = browser push is off on this server. */
   @Get('key')

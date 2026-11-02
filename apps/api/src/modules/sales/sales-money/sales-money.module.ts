@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ThreadMediaService } from '../../messaging/inbox/files/thread-media.service';
-import { PaymentsModule } from '../../finance/payments/payments.module';
-import { SalesModule } from '../sales/sales.module';
-import { SubscriptionsModule } from '../../finance/subscriptions/subscriptions.module';
+import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
+import { PaymentsModule } from '@/modules/finance/payments/payments.module';
+import { SalesModule } from '@/modules/sales/sales/sales.module';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
 import { SalesChatFiles } from './chat/sales-chat-files';
 import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
-import { SalesFamilyQueries } from './reads/sales-family.queries';
+import { SalesFamilyRepo } from './reads/sales-family.repo';
 import { SalesMoneyReadsController } from './reads/sales-money-reads.controller';
 import { SalesPaymentsController, SalesSubscribeController } from './sales-money.controller';
 import { SalesMoneyReads } from './reads/sales-money.reads';
@@ -14,6 +14,8 @@ import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneySettings } from './sales-money.settings';
+import { AnyPackageCancelController } from './package-cancel/any-package-cancel.controller';
+import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
 
@@ -25,12 +27,16 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
  */
 @Module({
   imports: [SubscriptionsModule, PaymentsModule, SalesModule],
-  controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
-  providers: [
-    ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
-    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
+  controllers: [
+    ...[SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
+    AnyPackageCancelController,
   ],
-  // The Stripe test build's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
+  providers: [
+    ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
+    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
+    AnyPackageCancel,
+  ],
+  // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],
 })
 export class SalesMoneyModule {}

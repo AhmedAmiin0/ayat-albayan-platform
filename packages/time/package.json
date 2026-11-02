@@ -1,0 +1,31 @@
+{
+  "name": "@ab/time",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsgo --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "eslint": "^10.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "@ab/core": "workspace:*",
+    "@date-fns/tz": "1.5.0",
+    "@date-fns/utc": "2.1.1",
+    "date-fns": "4.4.0"
+  }
+}

@@ -1,8 +1,8 @@
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { FilterChip } from '@/components/table-toolbar/types';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxMode } from '../../shared/mode';
-import type { InboxSearch } from '../../shared/search';
+import type { InboxMode } from '@/features/messaging/inbox/shared/mode';
+import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
 export interface ThreadFilterOptions {
   search: InboxSearch;

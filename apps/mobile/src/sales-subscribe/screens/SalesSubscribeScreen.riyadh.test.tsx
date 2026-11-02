@@ -1,8 +1,8 @@
 import { screen, waitFor, fireEvent } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
+import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // Regression: the default day and the chips are the academy's (Riyadh) day, the one the API checks,

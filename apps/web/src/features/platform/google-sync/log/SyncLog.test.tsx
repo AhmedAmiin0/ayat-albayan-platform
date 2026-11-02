@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { googleItems } from '../google.fixture';
-import { renderGoogle } from '../google-test-utils';
+import { googleItems } from '@/features/platform/google-sync/google.fixture';
+import { renderGoogle } from '@/features/platform/google-sync/google-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

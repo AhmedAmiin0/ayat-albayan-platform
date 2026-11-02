@@ -17,4 +17,5 @@ export {
   TeacherScopes,
 } from './teacher-threads/teacher-scope';
 export { phoneParam } from './threads/phone-param';
-export { type ThreadListFilter, ThreadsQueries } from './threads/threads.queries';
+export { type ThreadListFilter, ThreadsRepo } from './threads/threads.repo';
+export { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';

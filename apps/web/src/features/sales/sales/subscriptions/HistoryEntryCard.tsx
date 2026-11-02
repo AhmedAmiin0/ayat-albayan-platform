@@ -1,6 +1,6 @@
 import type { SalesHistoryEntry } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';

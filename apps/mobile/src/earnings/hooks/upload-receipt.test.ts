@@ -1,6 +1,6 @@
 import { apiSend } from '@/core/lib/http/api';
-import type { Receipt } from '@/payments/receipt';
-import { ReceiptUploadError } from '@/payments/upload-receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
+import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 import { uploadTeacherReceipt } from './upload-receipt';
 
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));

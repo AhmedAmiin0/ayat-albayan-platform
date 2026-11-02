@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import type { SalesFamilyStudent } from '@ab/shared';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
 import { t } from '@/core/lib/i18n/i18n';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { chatImage, familyOf, kid, MSG, openSub, salesPayment, SUB } from './testing/fixtures';
 
 const m = t.salesMoney;
@@ -54,7 +54,7 @@ test('from a family chat: «اشتراك جديد» → saved → the days (late
   expect(backend.sent('POST /sales/subscriptions')[0]?.body).toMatchObject({ clientRequestId: expect.any(String) });
 
   await press('button', m.receiptFromChat);
-  await press('button', `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`);
+  await press('button', `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`);
   expect(await screen.findByText(m.attachmentN.replace('{n}', '1'))).toBeTruthy();
   await press('button', m.saveTransfer);
   expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();

@@ -1,14 +1,15 @@
-import type {
-  AssistantCommissionView,
-  AssistantStatementView,
-  AssistantTermsInput,
-  AssistantTermsRow,
-  AssistantTermsView,
-  BroughtByInput,
-  PaymentMethod,
-  PayoutStatus,
-  SignedDownload,
-  SignedUpload,
+import {
+  monthRangeIn,
+  type AssistantCommissionView,
+  type AssistantStatementView,
+  type AssistantTermsInput,
+  type AssistantTermsRow,
+  type AssistantTermsView,
+  type BroughtByInput,
+  type PaymentMethod,
+  type PayoutStatus,
+  type SignedDownload,
+  type SignedUpload,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
@@ -44,16 +45,16 @@ const qs = (params: Record<string, string>) => {
 
 // ponytail: the ledger filters by `from`/`to` instants; a month is cut at UTC midnight (statements cut it
 // in the assistant's zone), so a commission at a month's edge can show in the neighbouring month here.
-const monthRange = (month: string): Record<string, string> => {
+export const ledgerMonthRange = (month: string): Record<string, string> => {
   if (!month) return {};
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  return { from: `${month}-01T00:00:00.000Z`, to: new Date(Date.UTC(y, m, 1)).toISOString() };
+  const { from, to } = monthRangeIn(month, 'UTC');
+  return { from: from.toISOString(), to: to.toISOString() };
 };
 
 export const commissionsQuery = (f: LedgerFilter) =>
   queryOptions({
     queryKey: [...ASSISTANTS_KEY, 'commissions', f],
-    queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs({ assistantId: f.assistantId, status: f.status, ...monthRange(f.month) })}`),
+    queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs({ assistantId: f.assistantId, status: f.status, ...ledgerMonthRange(f.month) })}`),
   });
 
 export const voidCommission = (input: { id: string; reason: string }) =>

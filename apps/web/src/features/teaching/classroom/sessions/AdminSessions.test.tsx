@@ -1,7 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { intlLocale } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { AdminSessions } from './AdminSessions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -33,6 +35,15 @@ describe('AdminSessions (/admin/classrooms)', () => {
     const url = apiFetch.mock.calls.find(([p]) => String(p).startsWith('/lessons?'))?.[0] as string;
     expect(url).toMatch(/^\/lessons\?from=.+&to=.+/);
     expect(screen.getByRole('link', { name: t.classroom.enter }).getAttribute('href')).toBe('/classroom/l-open');
+  });
+
+  it('names the day as before: «الخميس، 29 أكتوبر» in the browser zone', async () => {
+    open([]);
+    await screen.findByText(t.classroom.admin.empty);
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const old = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
+    expect(screen.getByText(old.format(start))).toBeTruthy();
   });
 
   it('hides cancelled lessons and says when the day is empty', async () => {

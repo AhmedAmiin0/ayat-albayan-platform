@@ -1,14 +1,13 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { addCalendarMonths, RIYADH_TZ } from '@ab/shared';
 import { localDate } from '@/today/lib/timeline';
 
 /** This month in Riyadh, `YYYY-MM` (the academy's reporting clock, as the web's currentMonth). */
+// academy day (docs/34 b): the finance month is the academy's.
 export const currentMonth = (now: Date = new Date()): string => localDate(now, RIYADH_TZ).slice(0, 7);
 
 /** `2026-12` + 1 → `2027-01`. */
 export function shiftMonth(month: string, delta: number): string {
-  const [y = 0, m = 1] = month.split('-').map(Number);
-  const at = new Date(Date.UTC(y, m - 1 + delta, 1));
-  return `${at.getUTCFullYear()}-${String(at.getUTCMonth() + 1).padStart(2, '0')}`;
+  return addCalendarMonths(month, delta).slice(0, 7);
 }
 
 /** Months after the current one hold nothing yet: the picker stops there. */

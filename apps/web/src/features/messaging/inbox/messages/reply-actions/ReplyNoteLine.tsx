@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';
 
@@ -32,7 +33,8 @@ function ActionButton({ message: m, note }: { message: MessageView; note: ReplyN
  */
 export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
-  const clock = useClock();
+  // The lesson's time in the viewer's zone (docs/34), not the academy's default.
+  const clock = { ...useClock(), tz: useViewerTz() };
   const now = useNow();
   const lesson = replyLesson(m, { lessons: actions.lessons, now });
   const note = replyNote(m, { lesson, rights: actions.rights, now, moved: actions.moved.includes(m.id), clock });

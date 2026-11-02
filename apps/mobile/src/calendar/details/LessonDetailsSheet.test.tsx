@@ -46,7 +46,7 @@ test('admin: status, tags, every clock, length, series, students with code / unp
   expect(screen.getByRole('header', { name: 'جنى وليد' })).toBeTruthy();
   expect(screen.getByText(t.enums.lessonStatus.completed)).toBeTruthy();
   expect(screen.getByText(t.schedule.trialTag)).toBeTruthy();
-  expect(screen.getByText(new RegExp(t.schedule.riyadhTime))).toBeTruthy();
+  expect(screen.getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
   expect(screen.getByText(`${t.schedule.duration}: ${t.enums.duration['60']}`)).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.lessons.sheet.series.split(':')[0]}.*${t.enums.weekday['0']}`))).toBeTruthy();

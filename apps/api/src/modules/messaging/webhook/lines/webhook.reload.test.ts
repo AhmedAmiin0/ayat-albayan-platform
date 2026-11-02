@@ -1,8 +1,8 @@
 import type { ModuleRef } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { IntegrationConfigService } from '../../../../common/integrations/integration-config.service';
-import { NumbersConfig } from '../../numbers';
+import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
+import { NumbersConfig } from '@/modules/messaging/numbers';
 import { RELOAD_GAP_MS, WebhookConfigReload } from './webhook.reload';
 
 function setup(fail = false) {

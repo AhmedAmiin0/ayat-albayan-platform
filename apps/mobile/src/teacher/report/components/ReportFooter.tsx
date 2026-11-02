@@ -1,14 +1,14 @@
 import { pdfStatusStyle, reportStatusStyle, type ClockCycle, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { clockIn, useClockCycle, whenIn } from '@/core/lib/clock';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { reportErrorText } from '../hooks/api';
-import type { SaveState } from '../hooks/use-autosave';
-import type { ReportEntryState } from '../hooks/use-report-entry';
+import { reportErrorText } from '@/teacher/report/hooks/api';
+import type { SaveState } from '@/teacher/report/hooks/use-autosave';
+import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
 
 const ERRORS: Record<string, string> = t.reports.error;
 

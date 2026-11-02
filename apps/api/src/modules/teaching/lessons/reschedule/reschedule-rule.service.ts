@@ -1,16 +1,15 @@
-import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
+import { isOpenLesson, type RescheduleRequest, addDays, localDateOf, startOfLocalDay } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { ruleStudents } from '../../scheduling/schedule.queries';
-import { confirmationMessages, forMessages } from '../status/confirmation-messages';
-import type { LessonRow } from '../store/lesson-row';
-import { LessonStore } from '../store/lesson-store';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { badRequest, conflict } from '@/common/http/errors';
+import { ruleStudents } from '@/modules/teaching/scheduling/schedule.repo';
+import { confirmationMessages, forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { planLessons } from './rule-plan';
 import { RulePlanner } from './rule-planner';
-import { invalidTransition } from '../status/transition';
+import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
 type RuleScope = Extract<RescheduleRequest, { scope: 'rule' }>;
 
@@ -91,6 +90,13 @@ export class RescheduleRuleService {
         },
       },
       transition: { from: lesson.status, event: 'reschedule' },
+      // One notice for the series: the tapped lesson's time → the first new lesson's.
+      notice: {
+        kind: 'lesson_rescheduled',
+        lessonId: first.id,
+        fromStartsAt: lesson.starts_at,
+        actorId: actor.id,
+      },
     });
     return first.id;
   }

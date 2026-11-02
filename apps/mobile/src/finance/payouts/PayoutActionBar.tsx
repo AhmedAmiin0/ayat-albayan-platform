@@ -1,16 +1,16 @@
 import type { PayoutView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { financeErrorText } from '../shared/errors';
-import { amountText } from '../shared/format';
+import { financeErrorText } from '@/finance/shared/errors';
+import { amountText } from '@/finance/shared/format';
 import { payoutActions } from './payout-actions';
 import { monthLabel } from '@/teacher/lib/payout-text';
-import { openPayoutReceipt } from '../shared/receipt-link';
+import { openPayoutReceipt } from '@/finance/shared/receipt-link';
 import { UnpayConfirm } from './UnpayConfirm';
 import { usePayoutMove } from './use-payout-move';
 

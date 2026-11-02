@@ -1,5 +1,5 @@
 import { SETTING_FIELD_OF, type SettingKey } from '@ab/shared';
-import { isSaveOutcome } from '../values/hooks/save-result';
+import { isSaveOutcome } from '@/features/platform/settings/values/hooks/save-result';
 import { fieldIds, isDirty } from './settings-dirty';
 import { FORM_KEYS, type SettingsForm } from './settings-form';
 

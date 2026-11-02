@@ -1,3 +1,4 @@
+import { COUNTS_FOR_MONEY } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '../../people/guardians/fake-db';
 import { ReportPdfSource } from './report-pdf.source';
@@ -63,6 +64,16 @@ describe('ReportPdfSource — one report and everything around it', () => {
     const src = await new ReportPdfSource(db).load('r1', EPOCH);
     expect(src?.seq).toBe(9);
     expect(calls.some((c) => c.table === 'lesson_students')).toBe(false);
+  });
+
+  it('a stopped package keeps its slots (991): every package but an unused cancel', async () => {
+    const stopped = { id: 'p0', lessons_total: 8, lessons_used_at_stop: 3, starts_on: '2026-08-01' };
+    const { db, calls } = fakeDb(tables({ subscriptions: [{ data: [stopped] }] }));
+    const src = await new ReportPdfSource(db).load('r1', EPOCH);
+    expect(src?.packages).toMatchObject([{ id: 'p0', lessonsUsedAtStop: 3 }]);
+    const subs = calls.filter((c) => c.table === 'subscriptions');
+    expect(subs.find((c) => c.method === 'or')?.args).toEqual([COUNTS_FOR_MONEY]);
+    expect(subs.some((c) => c.method === 'neq')).toBe(false);
   });
 
   it('no package unit for this lesson → packageN null', async () => {

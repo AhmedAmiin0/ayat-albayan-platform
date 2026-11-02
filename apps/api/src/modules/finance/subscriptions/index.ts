@@ -1,11 +1,11 @@
 export { SubscriptionAlertsService } from './alerts/alerts.service';
-export { AlertsQueries, type Recipient, type RenewalMessage } from './alerts/alerts.queries';
+export { AlertsRepo, type Recipient, type RenewalMessage } from './alerts/alerts.repo';
 export { UnpaidFlags } from './alerts/unpaid-flags.service';
-export { BalanceQueries, type BalanceRow, emptyBalance, toBalance } from './money/balance.queries';
+export { BalanceRepo, type BalanceRow, emptyBalance, toBalance } from './money/balance.repo';
 export { CommissionBell } from './money/commission-bell';
 export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
-export { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
+export { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
 export { SubscriptionCancel } from './cancel/subscription-cancel.service';
 export { SubscriptionCreator } from './subscription-creator';
 export { assertUsedBefore } from './used-before';
@@ -21,8 +21,8 @@ export {
   type StudentRef,
   type SubListQuery,
   type SubRow,
-  SubscriptionsQueries,
-} from './subscriptions.queries';
+  SubscriptionsRepo,
+} from './subscriptions.repo';
 export { SubscriptionsService } from './subscriptions.service';
 export { StudentTrialStatus } from './trial/student-trial-status';
 export {
@@ -34,4 +34,4 @@ export {
   type TrialLessonRow,
   trialStudentsOf,
 } from './trial/student-trial.plan';
-export { StudentTrialQueries } from './trial/student-trial.queries';
+export { StudentTrialRepo } from './trial/student-trial.repo';

@@ -1,15 +1,15 @@
 import { NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { TemplateStarters } from './template-starters';
-import type { TemplatesQueries } from './templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
+import type { TemplatesRepo } from './templates.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16): the admin's per-template flag, audited.
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
-const starters = () => new TemplateStarters(queries as unknown as TemplatesQueries, audit as unknown as AuditService);
+const starters = () => new TemplateStarters(queries as unknown as TemplatesRepo, audit as unknown as AuditService);
 const welcome = templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true });
 
 describe('TemplateStarters.set', () => {

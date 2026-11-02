@@ -13,9 +13,9 @@ import {
   type MeetingView,
   type MyMeetingInvite,
 } from '@ab/shared';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import type { MeetingRow } from '../../internal-meetings/internal-meetings.queries';
-import { canManageMeeting } from '../../internal-meetings/internal-meetings.token';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 
 // Pure mapping of meetings and invitees (R-MEET-01/02): what the clients see, never a phone or a hash.
 

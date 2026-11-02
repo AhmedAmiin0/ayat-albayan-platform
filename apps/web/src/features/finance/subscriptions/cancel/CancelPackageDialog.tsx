@@ -6,8 +6,8 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
-import { MONEY_KEY } from '../api';
-import { apiErrorText } from '../format';
+import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { apiErrorText } from '@/features/finance/subscriptions/format';
 
 export type CancelBody = { reason?: string };
 

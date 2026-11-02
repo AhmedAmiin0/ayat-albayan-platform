@@ -1,8 +1,8 @@
 import { channelKey, subscribeChannelMessages } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { AppState, type AppStateStatus } from 'react-native';
+import { useEffect } from 'react';
 import { supabase } from '@/core/lib/http/supabase';
+import { useAppActive } from '@/core/lib/presence';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import type { ChannelRef } from './channel-queries';
 
@@ -11,16 +11,6 @@ interface Live {
   channelId: string;
   /** Joined or down: the thread's poll follows it (channelPollMs). */
   onLive: (live: boolean) => void;
-}
-
-/** In the foreground (iOS «inactive» still shows the app: only «background» is away). */
-function useAppActive(): boolean {
-  const [state, setState] = useState<AppStateStatus>(AppState.currentState);
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', setState);
-    return () => sub.remove();
-  }, []);
-  return state !== 'background';
 }
 
 /**

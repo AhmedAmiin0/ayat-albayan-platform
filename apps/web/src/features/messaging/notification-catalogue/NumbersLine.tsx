@@ -1,7 +1,7 @@
 import { formatPhone, WA_LINES, type LineHealthView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { formatDateTime } from '../../sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads/format';
 import { useClock } from '@/lib/clock';
 
 const c = t.notificationCatalogue;

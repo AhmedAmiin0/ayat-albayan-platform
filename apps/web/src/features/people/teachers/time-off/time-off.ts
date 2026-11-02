@@ -1,4 +1,13 @@
-import { intlLocale, timeOffCreateSchema, type TimeOffCreate } from '@ab/shared';
+import {
+  addCalendarDays,
+  dateRangeText,
+  hhmmIn,
+  localDateIn,
+  timeOffCreateSchema,
+  wallInstant,
+  wallToUtc,
+  type TimeOffCreate,
+} from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
@@ -10,21 +19,25 @@ export const emptyTimeOffDraft: TimeOffDraft = { from: '', to: '', reason: '' };
 
 // ponytail: whole days in the browser's zone (usually the teacher's own); converting from
 // teacher.tz needs the API's zoned-time helper moved to @ab/shared.
-/** 'YYYY-MM-DD' → local midnight `days` later, as UTC ISO. `T00:00` keeps the parse local, not UTC. */
-const dayStart = (date: string, days = 0) => {
-  const d = new Date(`${date}T00:00`);
-  if (Number.isNaN(d.getTime())) return date; // blank or bad: the schema reports it
-  d.setDate(d.getDate() + days);
-  return d.toISOString();
+/**
+ * 'YYYY-MM-DD' 00:00 in `tz`, then the same wall clock `days` later, as UTC ISO. A midnight that
+ * does not exist (Cairo 2026-04-24) starts at 01:00 and so does the day after it (time-off.golden).
+ */
+const dayStart = (date: string, at: { days: number; tz: string }) => {
+  if (Number.isNaN(Date.parse(`${date}T00:00:00Z`))) return date; // blank or bad: the schema says
+  const start = wallToUtc(date, 0, at.tz);
+  const later = addCalendarDays(localDateIn(start, at.tz), at.days);
+  return wallInstant(later, hhmmIn(start, at.tz), at.tz).toISOString();
 };
 
 /** Draft → POST body (UTC ISO, rule 6; the end is the day after «إلى») or the Arabic error. R-TCH-02. */
 export function toTimeOffBody(
   draft: TimeOffDraft,
+  tz = viewerZone(),
 ): { ok: true; body: TimeOffCreate } | { ok: false; error: string } {
   const result = timeOffCreateSchema.safeParse({
-    starts_at: dayStart(draft.from),
-    ends_at: dayStart(draft.to, 1),
+    starts_at: dayStart(draft.from, { days: 0, tz }),
+    ends_at: dayStart(draft.to, { days: 1, tz }),
     reason: draft.reason.trim() || null,
   });
   if (result.success) return { ok: true, body: result.data };
@@ -34,8 +47,8 @@ export function toTimeOffBody(
 }
 
 // Western digits (docs/07 §2): intlLocale carries `nu-latn` in both languages.
-const days = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
-const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
+const DAYS = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+const atMidnight = (d: Date, tz: string) => hhmmIn(d, tz) === '00:00';
 
 /**
  * UTC instants → the span in the viewer's zone. Whole days read as days and the end is exclusive
@@ -44,7 +57,11 @@ const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
 export function formatTimeOff(startIso: string, endIso: string, clock: Clock): string {
   const start = new Date(startIso);
   const end = new Date(endIso);
-  if (atMidnight(start) && atMidnight(end)) return days.formatRange(start, new Date(end.getTime() - 60_000));
-  const zoned = { ...clock, tz: viewerZone() };
-  return `${dateAndClock(days, start, zoned)} – ${dateAndClock(days, end, zoned)}`;
+  const tz = viewerZone();
+  if (atMidnight(start, tz) && atMidnight(end, tz)) {
+    const lastDay = new Date(end.getTime() - 60_000);
+    return dateRangeText({ from: start, to: lastDay }, { tz, locale }, DAYS);
+  }
+  const zoned = { ...clock, tz };
+  return `${dateAndClock(start, zoned, DAYS)} – ${dateAndClock(end, zoned, DAYS)}`;
 }

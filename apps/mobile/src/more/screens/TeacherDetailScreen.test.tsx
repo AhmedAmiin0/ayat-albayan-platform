@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherDetailScreen } from './TeacherDetailScreen';
-import type { AvailabilityRow, Teacher, TimeOff } from '../types';
+import type { AvailabilityRow, Teacher, TimeOff } from '@/core/lib/staff/types';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

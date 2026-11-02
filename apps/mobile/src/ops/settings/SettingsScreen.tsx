@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { useHolds, useIsAdmin } from '@/auth/use-permissions';
+import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Chevron } from '@/core/ui/primitives/Chevron';
@@ -11,7 +11,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
-import { StripeSettingsRow } from './stripe/StripeSettingsRow';
+import { StripeSwitchRow } from './stripe/StripeSwitchRow';
 import { useSettings } from './use-settings';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
@@ -89,7 +89,7 @@ export function SettingsScreen() {
             onPress={() => router.push(SETTINGS_HREF.google)}
           />
         ) : null}
-        <StripeSettingsRow />
+        <StripeSwitchRow />
         <ListRow
           title={t.mobileValues.integrations}
           trailing={<Note>{t.mobileValues.integrationsNote}</Note>}

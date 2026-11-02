@@ -2,8 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { WEEKLY } from '../money-fixture';
-import { SubscriptionsPage } from '../SubscriptionsPage';
+import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
+import { SubscriptionsPage } from '@/features/finance/subscriptions/SubscriptionsPage';
 
 // The packages list: a cancelled package (owner 2026-10-28) is history only — «ملغاة», no money action.
 

@@ -1,17 +1,18 @@
 // Test fixtures for classroom moderation and recordings (not shipped; excluded from the build).
 import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
-import type { TeachersQueries } from '../../../people/teachers/teachers.queries';
-import type { ClassroomConfig, RecordingConfig } from '../classroom.config';
-import type { ClassroomQueries } from '../classroom.queries';
-import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '../classroom.fakes';
-import { LessonRoleService } from '../join/lesson-role.service';
-import { signJwt } from '../livekit/livekit-token';
-import type { HttpPost } from '../livekit/livekit-api';
-import type { ModerationQueries, ParticipantRow } from './moderation.queries';
-import type { RecordingRow } from '../recordings/recording.queries';
-import type { RecordingStarter } from '../recordings/recording.starter';
-import { RoomAdmission } from '../join/room-admission';
+import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import type { ClassroomConfig, RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
+import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '@/modules/teaching/classroom/classroom.fakes';
+import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
+import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import type { ModerationRepo, ParticipantRow } from './moderation.repo';
+import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
+import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
+import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
 export const S3: NonNullable<RecordingConfig> = {
   endpoint: 'https://project.storage.example.test/storage/v1/s3',
@@ -74,11 +75,9 @@ export function recordingQueries() {
 
 export const recorder = () => ({ startFor: vi.fn().mockResolvedValue('started'), configured: true });
 
-/** A stub HttpPost answering `status` with `body` (JSON), recording every call. */
+/** A stub LiveKit transport answering `status` with `body` (JSON), recording every call. */
 export function http(answer: { status?: number; body?: object } = {}) {
-  const status = answer.status ?? 200;
-  const fn = vi.fn<HttpPost>(async () => ({ ok: status < 300, status, text: async () => JSON.stringify(answer.body ?? {}) }));
-  return fn;
+  return vi.fn<FetchLike>(async () => twirpAnswer(answer.status ?? 200, answer.body));
 }
 
 const teachersFake = () => ({
@@ -95,13 +94,13 @@ interface JoinDeps {
 
 /** Real LessonRoleService over the mocked queries. */
 export const rolesOf = (d: JoinDeps): LessonRoleService =>
-  new LessonRoleService(d.q as unknown as ClassroomQueries, (d.teachers ?? teachersFake()) as unknown as TeachersQueries);
+  new LessonRoleService(d.q as unknown as ClassroomRepo, (d.teachers ?? teachersFake()) as unknown as TeachersRepo);
 
 /** Real RoomAdmission over the mocked moderation queries and recorder. */
 export const admissionOf = (d: JoinDeps): RoomAdmission =>
   new RoomAdmission(
     d.config === undefined ? CONFIG : d.config,
-    (d.mod ?? moderation()) as unknown as ModerationQueries,
+    (d.mod ?? moderation()) as unknown as ModerationRepo,
     (d.rec ?? recorder()) as unknown as RecordingStarter,
   );
 

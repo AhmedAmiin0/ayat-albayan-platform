@@ -2,8 +2,8 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { history, HISTORY_ID } from '../academy.fixtures';
-import { renderWithQuery } from '../academy.test-utils';
+import { history, HISTORY_ID } from '@/features/sales/sales/academy.fixtures';
+import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());

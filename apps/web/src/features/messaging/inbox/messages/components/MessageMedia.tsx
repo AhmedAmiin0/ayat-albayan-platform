@@ -2,15 +2,16 @@ import { isChatViewMime, isPdfMime, isPlayableMime, type MessageView } from '@ab
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { threadFileQuery, type ThreadFile } from '../../api/api';
-import { mediaKind } from '../../format';
+import { threadFileQuery, type ThreadFile } from '@/features/messaging/inbox/api/api';
+import { mediaKind } from '@/features/messaging/inbox/format';
 import { DownloadButton } from './DownloadButton';
 import { MediaPlayer } from './MediaPlayer';
-import { PdfCard } from '../pdf/PdfCard';
-import { useInboxMode } from '../../shared/mode';
+import { PdfCard } from '@/features/messaging/inbox/messages/pdf/PdfCard';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { StickerMedia, stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 
 /** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
@@ -45,7 +46,7 @@ function Loaded({ file, kind, fileName }: { file: ThreadFile; kind: string; file
   );
 }
 
-/** Asked only after the click: polling the log never signs a URL (W6). */
+/** Asked only after the click: polling the log never signs a URL (W6); a PDF has PdfCard. */
 function FileView({ message: m, kind }: { message: MessageView; kind: string }) {
   const [asked, setAsked] = useState(false);
   const file = useQuery({ ...threadFileQuery(m.phone_e164, m.id), enabled: asked });
@@ -58,11 +59,10 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   }
   // A loaded file stays even when a background refetch fails (the error is only for no file at all).
   if (file.data) {
-    const loaded = <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />;
+    // A PDF reaches here only when its card had no page 1 (PdfCard): today's named link.
     return (
       <div className="grid gap-1">
-        {/* A PDF: page 1 as a card like WhatsApp's (owner 2026-10-29), else today's named link. */}
-        {isPdfMime(file.data.mime) ? <PdfCard message={m} file={file.data} fallback={loaded} /> : loaded}
+        <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />
         <DownloadButton message={m} name={m.media_name ?? kind} />
       </div>
     );
@@ -84,15 +84,19 @@ function fileErrorText(error: unknown): string {
 }
 
 /**
- * The file in a bubble (R-MSG-05, W6), theirs or one we sent (D2). An image or PDF opens on demand:
- * «عرض صورة» fetches a signed URL of our copy, then a thumbnail (full size in a new tab) or a named
- * link; a voice note or video «تشغيل رسالة صوتية» plays in the bubble (D1). Other files (stickers,
- * locations…) keep their label. Teacher mode gets the label only: the API refuses them the file
- * (403 media_forbidden).
+ * The file in a bubble (R-MSG-05, W6), theirs or one we sent (D2). A PDF shows its page 1 card as
+ * it scrolls in (PdfCard). An image opens on demand: «عرض صورة» fetches a signed URL of our copy,
+ * then a thumbnail (full size in a new tab) or a named link; a voice note or video «تشغيل رسالة
+ * صوتية» plays in the bubble (D1); a sticker or a GIF shows itself at once (StickerMedia, owner
+ * 2026-11-01). Other files (locations…) keep their label. Teacher mode gets the label only: the API
+ * refuses them the file (403 media_forbidden).
  */
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
   const teacher = useInboxMode() === 'teacher';
+  // A sticker or a GIF shows itself at once (owner 2026-11-01).
+  const own = stickerOrGif(m, teacher);
+  if (own) return <StickerMedia message={m} kind={own} />;
   if (m.media_url) {
     return (
       <a href={m.media_url} target="_blank" rel="noopener noreferrer" className={LINK}>
@@ -100,6 +104,10 @@ export function MessageMedia({ message: m }: { message: MessageView }) {
       </a>
     );
   }
-  if (!teacher && isChatViewMime(m.media_mime)) return <FileView message={m} kind={kind} />;
+  const view = <FileView message={m} kind={kind} />;
+  // A PDF shows page 1 by itself once on screen, as WhatsApp (owner 2026-11-01); today's «عرض ملف»
+  // if it cannot.
+  if (!teacher && isPdfMime(m.media_mime)) return <PdfCard message={m} fallback={view} />;
+  if (!teacher && isChatViewMime(m.media_mime)) return view;
   return <Label kind={kind} forbidden={teacher} />;
 }

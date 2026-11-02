@@ -1,7 +1,7 @@
 import { CHAT_LIST_LIMIT, chatListNameKey, type ChatList } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../common/http/errors';
-import { ChatListsQueries, type ListName } from './chat-lists.queries';
+import { conflict, notFound } from '@/common/http/errors';
+import { ChatListsRepo, type ListName } from './chat-lists.repo';
 
 const named = (name: string): ListName => ({ name, name_key: chatListNameKey(name) });
 
@@ -12,7 +12,7 @@ const named = (name: string): ListName => ({ name, name_key: chatListNameKey(nam
  */
 @Injectable()
 export class ChatListsService {
-  constructor(private readonly queries: ChatListsQueries) {}
+  constructor(private readonly queries: ChatListsRepo) {}
 
   all(): Promise<ChatList[]> {
     return this.queries.all();

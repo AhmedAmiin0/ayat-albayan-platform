@@ -8,6 +8,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/people/auth/use-permissions';
+import { StaffPresencePanel } from '@/features/platform/presence';
 import { t } from '@/lib/i18n/i18n';
 import { userListQuery, type UsersView } from './api';
 import { CreateUserDialog } from './create/CreateUserDialog';
@@ -51,6 +52,7 @@ export function UsersPage() {
           </div>
         )}
       </PageHead>
+      <StaffPresencePanel />
       {isError && (
         <p role="alert" className="mb-3 text-sm text-danger">
           {t.common.error}

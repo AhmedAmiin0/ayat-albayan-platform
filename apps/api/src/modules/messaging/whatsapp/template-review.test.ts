@@ -49,6 +49,11 @@ describe('the four new templates, as Meta will review them (docs/12 §3.4)', () 
   it('an unknown param name is its own sample', () => {
     expect(bodyExamples(templateRow({ params: ['student_name', 'something_new'] }))).toEqual(['أحمد', 'something_new']);
   });
+
+  it('an admin-made row sends its own samples by position (migration 994), the name map only past them', () => {
+    const row = templateRow({ params: ['student_name', 'var_2', 'student_name'], samples: ['Sara', 'Sunday'] });
+    expect(bodyExamples(row)).toEqual(['Sara', 'Sunday', 'أحمد']);
+  });
 });
 
 describe('templateProblem: what Meta would reject, caught before any call', () => {

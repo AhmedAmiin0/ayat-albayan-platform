@@ -1,19 +1,20 @@
 import {
-  courseBodyPackage,
+  ACADEMY_TZ,
   type BookingTeacherOption,
+  courseBodyPackage,
   type Duration,
   type Gender,
   type PackageSize,
   type Program,
+  zonedPartsIn,
 } from '@ab/shared';
-import { RIYADH_TZ, zonedParts } from '@/features/teaching/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';
 import type { CourseDraft, TrialDateDraft } from './draft.flows';
-import { leadParts, type NewStudentDraft } from '../steps/who/new-student';
+import { leadParts, type NewStudentDraft } from '@/features/teaching/booking/steps/who/new-student';
 
-export type { NewStudentDraft } from '../steps/who/new-student';
+export type { NewStudentDraft } from '@/features/teaching/booking/steps/who/new-student';
 export type { InvoiceDraft, MissedPick } from './draft.invoice';
 export type { CourseDraft, TrialDateDraft } from './draft.flows';
 
@@ -75,7 +76,7 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
     students: [],
     leadId: o.leadId ?? null,
     newStudent: null,
-    tz: RIYADH_TZ,
+    tz: ACADEMY_TZ, // data default (docs/34 —): the family's zone until a guardian is picked
     program: 'quran',
     genderPref: null,
     country: null,
@@ -93,7 +94,7 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
 
 /** The rule fields a picked first slot fixes, in the family's zone. */
 export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; startTimeLocal: string; weekday: number } {
-  const p = zonedParts(new Date(startsAt), tz);
+  const p = zonedPartsIn(new Date(startsAt), tz);
   return { startsOn: p.date, startTimeLocal: p.time, weekday: p.weekday };
 }
 

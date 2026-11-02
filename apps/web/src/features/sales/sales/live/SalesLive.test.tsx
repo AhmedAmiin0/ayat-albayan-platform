@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { liveLesson } from '../academy.fixtures';
-import { renderWithQuery } from '../academy.test-utils';
+import { liveLesson } from '@/features/sales/sales/academy.fixtures';
+import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLive } from './SalesLive';
 import { SalesLiveStrip } from './SalesLiveStrip';
 

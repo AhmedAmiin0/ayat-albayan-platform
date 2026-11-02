@@ -2,7 +2,7 @@ import type { MeetingInviteResult } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { copyText } from '../internal/internal-api';
+import { copyText } from '@/features/teaching/meetings/internal/internal-api';
 import { copyPayload, inviteStatusText, notSentHint } from './invite-status';
 
 const R = t.meetingInvites.results;

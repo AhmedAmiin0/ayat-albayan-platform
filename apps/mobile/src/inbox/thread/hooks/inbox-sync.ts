@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { listsKey } from '../../lists/use-chat-lists';
+import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 

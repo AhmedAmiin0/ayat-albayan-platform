@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ChatListsQueries } from './chat-lists.queries';
+import type { ChatListsRepo } from './chat-lists.repo';
 import { ChatListsService } from './chat-lists.service';
 
 const ID = '0c000000-0000-4000-8000-000000000001';
@@ -16,7 +16,7 @@ function setup() {
     add: vi.fn(async (): Promise<'added' | 'gone'> => 'added'),
     drop: vi.fn(async () => undefined),
   };
-  return { q, service: new ChatListsService(q as unknown as ChatListsQueries) };
+  return { q, service: new ChatListsService(q as unknown as ChatListsRepo) };
 }
 
 const code = (p: Promise<unknown>) => p.then(() => 'ok', (e: { response?: { code?: string } }) => e.response?.code);

@@ -3,8 +3,8 @@ import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@/components/ui/form/button';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { usePublicConfig } from '@/lib/settings/public-config';
-import { RIYADH_TZ } from '../tz';
 import { useClock } from '@/lib/clock';
 
 /**
@@ -15,6 +15,7 @@ import { useClock } from '@/lib/clock';
  */
 export function MakeupAction({ lesson }: { lesson: LessonView }) {
   const clock = useClock();
+  const tz = useViewerTz();
   const { makeup_window_days: days } = usePublicConfig();
   const { open, booked } = makeupOffer(lesson, new Date(), days);
   if (open.length + booked.length === 0) return null;
@@ -40,7 +41,7 @@ export function MakeupAction({ lesson }: { lesson: LessonView }) {
           {booked.map((s) => (
             <span key={s.id} className="rounded-sm border border-rule px-2 py-1 text-xs text-ink-2">
               {group && `${s.name}: `}
-              {t.booking.makeup.bookedChip.replace('{when}', lessonWhenAt(new Date(s.makeup.starts_at), { tz: RIYADH_TZ, ...clock }))}
+              {t.booking.makeup.bookedChip.replace('{when}', lessonWhenAt(new Date(s.makeup.starts_at), { tz, ...clock }))}
             </span>
           ))}
         </div>

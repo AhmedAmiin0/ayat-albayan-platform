@@ -5,7 +5,7 @@ import { dayAtText, DayTimesList } from './DayTimesList';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const SUN = { at: '2026-10-04T14:00:00.000Z', weekday: 0, time: '17:00' };
 const TUE = { at: '2026-10-06T16:30:00.000Z', weekday: 2, time: '19:30' };
@@ -13,8 +13,12 @@ const dayAt = (day: number, time: string) => t.booking.dayAt.replace('{day}', t.
 
 describe('DayTimesList (owner 2026-10-18: a time per day)', () => {
   it('reads «الأحد الساعة 17:00», with the family city when not Riyadh', () => {
-    expect(dayAtText(SUN, C24)).toBe(dayAt(0, '17:00'));
+    expect(dayAtText(SUN, C24, 'Asia/Riyadh')).toBe(dayAt(0, '17:00'));
     expect(dayAtText(SUN, C24, 'Africa/Cairo')).toBe(dayAt(0, t.schedule.inCity.replace('{time}', '17:00').replace('{city}', t.tz['Africa/Cairo'])));
+  });
+
+  it('drops the city when the viewer is in the family zone', () => {
+    expect(dayAtText(SUN, { ...C24, tz: 'Africa/Cairo' }, 'Africa/Cairo')).toBe(dayAt(0, '17:00'));
   });
 
   it('lists each day with its own remove button', () => {

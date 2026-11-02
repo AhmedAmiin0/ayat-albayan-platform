@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ar, BUNDLES } from '../../../common/i18n/server-text';
+import { ar, BUNDLES } from '@/common/infra/i18n/server-text';
 import { BOOT_LOAD_MS, REFRESH_MS, TranslationsService } from './translations.service';
 import type { OverrideRow, TranslationsQueries } from './translations.queries';
 

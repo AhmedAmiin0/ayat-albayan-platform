@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '../api';
+import type { Teacher } from '@/features/people/teachers/api';
 import { settle, showMeetingMode } from './meeting-mode-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());

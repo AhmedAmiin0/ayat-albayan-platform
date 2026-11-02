@@ -1,10 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildOpenApi } from '../../../../openapi';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
-import { kapsoEnv, kapsoOverlay } from '../external/external.fakes';
-import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from '../meta.fakes';
-import { KAPSO_SECRET, kapsoSign, sign, webhookApp } from '../test-app';
+import { buildOpenApi } from '@/openapi';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { kapsoEnv, kapsoOverlay } from '@/modules/messaging/webhook/external/external.fakes';
+import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from '@/modules/messaging/webhook/meta.fakes';
+import { KAPSO_SECRET, kapsoSign, sign, webhookApp } from '@/modules/messaging/webhook/test-app';
 
 // POST /webhooks/kapso (docs/19): Kapso forwards Meta's raw payload; only the Kapso secret signs it.
 

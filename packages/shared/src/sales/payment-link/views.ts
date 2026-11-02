@@ -1,4 +1,4 @@
-import type { Duration, PackageSize } from '../../enums/index.js';
+import type { Duration, PackageSize } from '@ab/catalog';
 import type { SalesQuoteView, SalesStudentRef } from '../money-views.js';
 import type { PaymentLinkKind, PaymentLinkStatus } from './schemas.js';
 
@@ -41,26 +41,11 @@ export interface PublicPaymentLink {
   currency: string;
   package: PackageSize | null;
   lessons: number;
+  /** The server's Stripe key is a sandbox one: the page says it is a test (live: no notice). */
+  sandbox: boolean;
 }
 
 /** GET /stripe/feature: 404 = the build has no Stripe at all. */
 export interface StripeFeature {
   stripe: boolean;
-}
-
-/** A write-only secret: whether it is set, never its value (masked: a prefix and the last 4). */
-export interface StripeSecretState {
-  set: boolean;
-  masked: string | null;
-  updated_at: string | null;
-}
-
-/** GET /admin/stripe/settings: «الدفع الإلكتروني (اختبار)». */
-export interface StripeAdminSettings {
-  enabled: boolean;
-  max_discount_pct: number | null;
-  api_key: StripeSecretState;
-  webhook_secret: StripeSecretState;
-  /** What the owner pastes into the Stripe sandbox's webhook endpoint. */
-  webhook_url: string;
 }

@@ -1,7 +1,7 @@
 import type { Attendance, Grade, Program } from '@ab/shared';
 import { driveFileLink, fileIdIn } from '@ab/shared';
-import { ar } from '../../../../../common/i18n/server-text';
-import type { CellValue, Rows } from '../../google-client.port';
+import { ar } from '@/common/infra/i18n/server-text';
+import type { CellValue, Rows } from '@/modules/platform/google-sync/google-client.port';
 import { sheetDate } from './sheet-dates';
 
 /** One platform report as its attendance row needs it. */

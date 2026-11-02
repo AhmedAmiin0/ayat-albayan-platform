@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ChatListsController } from './chat-lists.controller';
-import { ChatListsQueries } from './chat-lists.queries';
+import { ChatListsRepo } from './chat-lists.repo';
 import { ChatListsService } from './chat-lists.service';
 
 /**
@@ -9,7 +9,7 @@ import { ChatListsService } from './chat-lists.service';
  */
 @Module({
   controllers: [ChatListsController],
-  providers: [ChatListsQueries, ChatListsService],
-  exports: [ChatListsQueries],
+  providers: [ChatListsRepo, ChatListsService],
+  exports: [ChatListsRepo],
 })
 export class ChatListsModule {}

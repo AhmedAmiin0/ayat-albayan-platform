@@ -5,8 +5,8 @@ import { shape, type, useTheme } from '@/theme';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
-import { SectionLabel } from '../list/SectionLabel';
-import type { StudentProfile } from '../shared/types';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
+import type { StudentProfile } from '@/students/shared/types';
 import { SecondPhone } from './SecondPhone';
 import { AppText } from '@/core/ui/primitives/AppText';
 

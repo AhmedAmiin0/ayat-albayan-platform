@@ -1,10 +1,10 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { createLivekitRoom } from '../livekit/livekit-room';
+import { createLivekitRoom } from '@/features/teaching/classroom/room/livekit/livekit-room';
 import { LiveRoom } from './LiveRoom';
 import type { RoomClient } from './room-types';
-import { useRoom } from '../livekit/use-room';
+import { useRoom } from '@/features/teaching/classroom/room/livekit/use-room';
 
 interface Props {
   join: RoomJoinResult;

@@ -2,9 +2,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { currentMonth } from '@/features/finance/payouts/api';
-import { moneyText } from '@/features/finance/subscriptions/format';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANT, STATEMENT } from '../fixtures';
+import { ASSISTANT, STATEMENT } from '@/features/people/assistants/fixtures';
 import { StatementsPanel } from './StatementsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -7,7 +7,7 @@ import {
   type PaymentMethod,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { currencyName, localDay, instantDay, money } from '@/payments/format';
+import { currencyName, localDay, instantDay, money } from '@/core/lib/money/format';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { isolate, ltr } from '@/core/ui/primitives/Ltr';
 
@@ -43,9 +43,12 @@ export const salaryText = (s: AssistantTermsView['salary']): string => (s ? mone
 /** «ابتداءً من 1 أكتوبر 2026» under a term, or null when it is not set. */
 export const sinceText = (day: string | undefined): string | null => (day ? t.assistants.startsOn.replace('{date}', localDay(day)) : null);
 
-/** «تُحسب العمولة كاملة … ولك 50% منها عن كل تجديد … اعتبارًا من …» (owner 2026-10-26: renewals earn a share). */
+/**
+ * «تُحسب العمولة كاملة … ولك 50% منها عن كل تجديد … اعتبارًا من …» (owner 2026-10-26: renewals earn a share);
+ * share 0 (owner 2026-11-01: «عمولة التجديد» off): «… عمولة التجديد موقوفة حاليًا».
+ */
 export const commissionNote = (startsOn: string, renewalShare: number | undefined): string =>
-  p.commissionNote.replace('{n}', String(renewalShare ?? '')).replace('{date}', localDay(startsOn));
+  (renewalShare ? p.commissionNote : p.commissionNoteRenewalOff).replace('{n}', String(renewalShare ?? '')).replace('{date}', localDay(startsOn));
 
 /** One line of a statement: «الراتب», «عمولة يوسف», «عمولة تجديد يوسف», «تسوية: سبب». */
 export function lineText(l: AssistantStatementLineView): string {
@@ -58,9 +61,9 @@ export function lineText(l: AssistantStatementLineView): string {
 }
 
 /** «دُفع 3 نوفمبر 2026» / «اعتُمد …», or null for a draft. */
-export function statementWhen(s: Pick<AssistantStatementView, 'paid_at' | 'approved_at'>): string | null {
-  if (s.paid_at) return p.paidAt.replace('{date}', instantDay(s.paid_at));
-  return s.approved_at ? p.approvedAt.replace('{date}', instantDay(s.approved_at)) : null;
+export function statementWhen(s: Pick<AssistantStatementView, 'paid_at' | 'approved_at'>, tz: string): string | null {
+  if (s.paid_at) return p.paidAt.replace('{date}', instantDay(s.paid_at, tz));
+  return s.approved_at ? p.approvedAt.replace('{date}', instantDay(s.approved_at, tz)) : null;
 }
 
 /** Entries of a per-currency record, sorted by currency (never one number across them). */
@@ -87,7 +90,8 @@ export function commissionLine(c: MyCommissionRow): string {
 }
 
 /** «29 أكتوبر 2026»: the day it was earned, on the entry's first line. */
-export const commissionDay = (c: Pick<MyCommissionRow, 'earned_at'>): string => instantDay(c.earned_at);
+export const commissionDay = (c: Pick<MyCommissionRow, 'earned_at'>, tz: string): string =>
+  instantDay(c.earned_at, tz);
 
 /** The chip: «مستحقة», «في كشف أكتوبر 2026», «مدفوعة» or «ملغاة». */
 export function walletStateText(c: Pick<MyCommissionRow, 'state' | 'statement_month'>): string {

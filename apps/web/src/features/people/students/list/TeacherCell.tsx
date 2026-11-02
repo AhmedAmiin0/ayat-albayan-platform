@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n/i18n';
-import type { StudentListItem } from '../types';
+import type { StudentListItem } from '@/features/people/students/types';
 
 type TeacherCellProps = { row: StudentListItem; onOpen: (studentId: string) => void };
 

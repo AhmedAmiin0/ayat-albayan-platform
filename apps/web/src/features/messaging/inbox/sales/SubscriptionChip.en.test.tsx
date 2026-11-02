@@ -1,10 +1,10 @@
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { pupil } from '../testing/inbox-fixture';
+import { pupil } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { SubscribePanel } from './SubscribePanel';
 import { SubscriptionChip } from './SubscriptionChip';
-import { renderWithClient } from '../testing/test-utils';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 // The chat's subscription in English (LTR): the same chips and buttons, en.json words.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

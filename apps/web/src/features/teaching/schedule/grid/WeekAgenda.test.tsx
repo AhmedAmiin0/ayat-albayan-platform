@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ABRAR, FATMA, lesson } from '../lesson/lesson-fixture';
+import { ABRAR, FATMA, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { WeekAgenda } from './WeekAgenda';
 
 const DAY = '2026-10-04';

@@ -1,15 +1,15 @@
-import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '../../enums/index.js';
+import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '@ab/catalog';
 import type { ChatListRef } from './chat-lists.js';
-import type { MessageQuote } from '../replies/reply-forward.js';
+import type { ReplyQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
+import type { MessageMarks, ThreadNote } from '../markers/marker-notes.js';
 import type { TemplatedMessage } from '../templates/template-block.js';
 import type { TemplateParams } from '../templates/templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
-
 /** GET /threads item: one v_threads row plus the 24 h window at response time. */
-export interface ThreadView {
+export interface ThreadView extends ThreadNote {
   phone_e164: string;
   /** Guardian name ?? lead name ?? teacher name; null = an unknown number (show the phone). */
   display_name: string | null;
@@ -34,8 +34,10 @@ export interface ThreadView {
   guardian_tz: string | null;
   teacher_id: string | null;
   teacher_name: string | null;
-  /** sessionWindowOpen(last_inbound_at, now): free text allowed, else only a template. */
+  /** sessionWindowOpen(last_inbound_at, now): free text allowed, else a template (or a try). */
   session_open: boolean;
+  /** The chat line is on Kapso: after the window free text is still tried (owner 2026-10-31). */
+  try_after_window?: boolean;
   /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
   subscribed: boolean;
   /** Family subscriptionBadge, null without a guardian: «اشتراكه خلص» and «مشترك». Absent in an old cache. */
@@ -55,7 +57,7 @@ export interface ThreadView {
 }
 
 /** One messages row in a thread (R-MSG-05). */
-export interface MessageView extends TemplatedMessage {
+export interface MessageView extends TemplatedMessage, MessageMarks {
   id: string;
   direction: MessageDirection;
   status: MessageStatus;
@@ -73,8 +75,8 @@ export interface MessageView extends TemplatedMessage {
   reply_to_wa_id: string | null;
   /** Our row of the message this one answers (same chat); null when none or not ours. Absent in an old cache. */
   reply_to_message_id?: string | null;
-  /** The message this one answers (same chat), when we hold it (owner 2026-10-25). Absent in an old cache. */
-  reply_to?: MessageQuote | null;
+  /** The message this one answers (same chat), or «unavailable» when we lack it (10-31). Absent in an old cache. */
+  reply_to?: ReplyQuote | null;
   /** WhatsApp knows it (it has a wamid): «رد» may quote it. Absent in an old cache. */
   replyable?: boolean;
   /** A text or a file we can copy: «إعادة توجيه». Absent in an old cache. */
@@ -125,10 +127,7 @@ export interface ThreadDetail {
   has_more: boolean;
   /** First page only: the guardian's / teacher's next open lessons, for the template composer. */
   lessons: ThreadLesson[];
-  /**
-   * First page: the guardian, the lead and the guardian's students with their packages. An older
-   * page (`before`) carries an empty one: clients read pages[0].
-   */
+  /** First page: guardian, lead, students and packages (an older page: empty; read pages[0]). */
   people: ThreadPeople;
   /** The lists the chat is in (docs/22 §3): callers with inbox.lists only; absent otherwise. */
   lists?: ChatListRef[];

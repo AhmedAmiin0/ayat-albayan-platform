@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '../cache/cache.fakes';
-import { FRESH_AFTER_CHANGE_MS } from '../cache/shared-cache';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
+import { FRESH_AFTER_CHANGE_MS } from '@/common/infra/cache/shared-cache';
 import { PermissionCache } from './permission.cache';
 
 const OLD: readonly Permission[] = ['payments.read'];

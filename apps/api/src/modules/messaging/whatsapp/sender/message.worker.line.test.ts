@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { byDriver } from '../drivers/meta/graph';
-import { KAPSO_ENV } from '../drivers/kapso/kapso.fakes';
-import { STUB_ENV, templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import type { SenderRepo } from './sender.repo';
+import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line alert.
 
@@ -20,7 +20,7 @@ const chatText = dueMessage({ template_key: null, template_params: null, body: '
 const authError = new WaError('Error validating access token', { code: 190, status: 401 });
 
 function worker() {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w;
 }

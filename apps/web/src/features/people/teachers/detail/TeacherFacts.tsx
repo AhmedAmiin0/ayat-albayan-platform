@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '../api';
-import { meetingModeText } from '../form/meeting-mode-text';
+import type { Teacher } from '@/features/people/teachers/api';
+import { meetingModeText } from '@/features/people/teachers/form/meeting-mode-text';
 
 /** «البيانات» tab: the teacher record as label / value rows (R-TCH-01). Empty values are left out. */
 export function TeacherFacts({ teacher }: { teacher: Teacher }) {

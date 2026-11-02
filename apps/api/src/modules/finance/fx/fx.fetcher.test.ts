@@ -26,7 +26,8 @@ describe('OpenErApiFetcher (docs/08 §4)', () => {
       updatedAt: new Date(1_790_000_000_000).toISOString(),
       provider: 'open.er-api.com',
     });
-    expect(fetch).toHaveBeenCalledWith(URL_OPEN, { signal: expect.any(AbortSignal) });
+    const signal = expect.any(AbortSignal);
+    expect(fetch).toHaveBeenCalledWith(URL_OPEN, expect.objectContaining({ signal }));
   });
 
   it('accepts the keyed API shape (conversion_rates) and keeps the key out of provider', async () => {

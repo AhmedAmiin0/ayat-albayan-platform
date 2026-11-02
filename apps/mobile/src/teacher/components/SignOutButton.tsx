@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { signOutDevice } from '@/more/sign-out';
+import { signOutDevice } from '@/core/lib/session/sign-out';
 import { Button } from '@/core/ui/primitives/Button';
 
 /** «تسجيل الخروج»: on success the auth gate unmounts the teacher tabs and shows /login. */

@@ -1,11 +1,9 @@
-import { reportBlock, type LessonStatus, type LessonView, type PendingReportView } from '@ab/shared';
+import { isClosedLesson, reportBlock, type LessonView, type PendingReportView } from '@ab/shared';
 import { localDate } from '@/today/lib/timeline';
 
 // «اليوم» for the teacher (R-TCH-03): her own lessons on her own calendar day, in her zone. Pure.
 
 const HOUR = 3_600_000;
-/** No lesson took place: nothing to do or report. An excused lesson stays (its report is due). */
-const GONE: readonly LessonStatus[] = ['rescheduled', 'cancelled_by_teacher', 'cancelled_by_admin'];
 
 /**
  * GET /teachers/me/lessons `from`/`to` sure to hold every lesson that starts on `date` in any zone
@@ -17,10 +15,13 @@ export function dayWindow(date: string): { from: string; to: string } {
   return { from: new Date(midnight - 14 * HOUR).toISOString(), to: new Date(midnight + 36 * HOUR).toISOString() };
 }
 
-/** The lessons starting on `date` in `tz`, earliest first; cancelled and moved ones stay out. */
+/**
+ * The lessons starting on `date` in `tz`, earliest first; cancelled and moved ones stay out (no
+ * lesson took place). An excused lesson stays: its report is due.
+ */
 export function lessonsOn(lessons: readonly LessonView[], date: string, tz: string): LessonView[] {
   return lessons
-    .filter((l) => localDate(new Date(l.starts_at), tz) === date && !GONE.includes(l.status))
+    .filter((l) => localDate(new Date(l.starts_at), tz) === date && !isClosedLesson(l.status))
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 

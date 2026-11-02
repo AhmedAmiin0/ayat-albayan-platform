@@ -130,4 +130,12 @@ describe('submitPayload — a registry row as Meta creates it (docs/12 §3.4)', 
     expect(() => submitPayload(REPORT_READY)).toThrow(WaError);
     expect(submitPayload(REMINDER_24H, '4::h1')['components']).not.toContainEqual(expect.objectContaining({ type: 'HEADER' }));
   });
+
+  it('a text header (display.header, an admin-made template) goes before BODY; never beside a document one', () => {
+    const display = { header: { type: 'text', text: 'Ayat Al-Bayan' }, buttons: [] };
+    expect(submitPayload(templateRow({ display, params: [], body_ar: 'x' }))).toMatchObject({
+      components: [{ type: 'HEADER', format: 'TEXT', text: 'Ayat Al-Bayan' }, { type: 'BODY', text: 'x' }, { type: 'FOOTER' }, { type: 'BUTTONS' }],
+    });
+    expect(submitPayload({ ...REPORT_READY, display }, '4::h1')).toMatchObject({ components: [{ format: 'DOCUMENT' }, { type: 'BODY' }, { type: 'FOOTER' }] });
+  });
 });

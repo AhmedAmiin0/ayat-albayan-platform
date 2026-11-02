@@ -1,8 +1,8 @@
-import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
-import { bodyExamples } from '../template-review';
-import { authSubmitComponents } from '../direct/auth-template';
-import { templateButtons } from './wa-json';
-import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '../whatsapp.types';
+import { BODY_SLOTS, WA_ERROR, type TemplateParams } from '@ab/shared';
+import { bodyExamples } from '@/modules/messaging/whatsapp/template-review';
+import { authSubmitComponents } from '@/modules/messaging/whatsapp/direct/auth-template';
+import { templateButtons, templateDisplay } from './wa-json';
+import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Graph request bodies (docs/12 §3.2): what POST /{phone}/messages and POST /message_templates get.
 
@@ -12,7 +12,7 @@ export type GraphBody = Record<string, unknown>;
 export const waTo = (e164: string): string => e164.replace(/\D/g, '');
 
 /** A send we refuse before Meta does: counts as Meta's 132000 (bad parameters), never retried. */
-export const badParams = (details: string) => new WaError('template parameters do not match', { code: 132000, status: 0, details });
+export const badParams = (details: string) => new WaError('template parameters do not match', { code: WA_ERROR.paramCountMismatch, status: 0, details });
 
 /** Highest {{n}} in the body: Meta's own text after the health check, else the seeded shape. */
 export function bodyVarCount(body: string): number {
@@ -119,9 +119,15 @@ export const readReceipt = (waMessageId: string): GraphBody => ({
   message_id: waMessageId,
 });
 
+/** A fixed text header (display.header: an admin-made template's, or Meta's own after a sync). */
+const textHeader = (row: TemplateRow): GraphBody[] => {
+  const head = row.header_format === 'document' ? null : templateDisplay(row.display)?.header;
+  return head?.type === 'text' && head.text ? [{ type: 'HEADER', format: 'TEXT', text: head.text }] : [];
+};
+
 /**
  * POST /{waba}/message_templates (docs/12 §3.4): a DOCUMENT HEADER with the uploaded sample's
- * handle, BODY with a sample value for every {{n}} (Meta requires them), FOOTER, BUTTONS.
+ * handle or a TEXT one, BODY with a sample for every {{n}} (Meta requires them), FOOTER, BUTTONS.
  */
 export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBody {
   if (row.category === 'authentication') return { name: row.meta_name, language: row.language, category: 'AUTHENTICATION', components: authSubmitComponents(row) };
@@ -131,6 +137,7 @@ export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBod
     if (!headerHandle) throw new WaError('a document header needs a sample upload handle', { code: null, status: 0 });
     components.push({ type: 'HEADER', format: 'DOCUMENT', example: { header_handle: [headerHandle] } });
   }
+  components.push(...textHeader(row));
   components.push({ type: 'BODY', text: row.body_ar, ...(examples.length ? { example: { body_text: [examples] } } : {}) });
   if (row.footer_ar) components.push({ type: 'FOOTER', text: row.footer_ar });
   const buttons = templateButtons(row.buttons).map((b) =>

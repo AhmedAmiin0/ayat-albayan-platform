@@ -4,8 +4,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import type { TimeEditResult } from './edit-time.contract';
-import { lesson } from '../lesson/lesson-fixture';
-import { LessonDrawer } from '../lesson/LessonDrawer';
+import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 
 // Test data only (imported by EditTime*.test.tsx): the drawer opened on «عدّل الوقت».
 

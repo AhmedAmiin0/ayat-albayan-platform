@@ -38,7 +38,7 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
     expect(await send(client(html).c).catch((e: WaError) => e.info)).toMatchObject({ code: null, status: 502 });
     const refused = new TypeError('fetch failed', { cause: Object.assign(new Error('connect'), { code: 'ECONNREFUSED' }) });
     const down = send(client(refused).c);
-    await expect(down).rejects.toMatchObject({ info: { code: null, status: 0, uncertain: false }, message: expect.stringContaining('fetch failed') });
+    await expect(down).rejects.toMatchObject({ info: { code: null, status: 0, uncertain: false }, message: 'WhatsApp request failed' });
   });
 
   it('a timeout or a dropped connection may have reached Meta → flagged uncertain (never resent blindly)', async () => {

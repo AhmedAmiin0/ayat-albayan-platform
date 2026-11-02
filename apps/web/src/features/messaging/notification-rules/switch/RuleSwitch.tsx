@@ -2,9 +2,9 @@ import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { t } from '@/lib/i18n/i18n';
-import { failureText, fillText, isFamilyFacing, reachText } from '../rule-text';
-import { useRules } from '../rules-context';
-import type { RuleRowState } from '../table/use-rule-row';
+import { failureText, fillText, isFamilyFacing, reachText } from '@/features/messaging/notification-rules/rule-text';
+import { useRules } from '@/features/messaging/notification-rules/rules-context';
+import type { RuleRowState } from '@/features/messaging/notification-rules/table/use-rule-row';
 import { EssentialOffDialog } from './EssentialOffDialog';
 import { onOffWord, RuleSwitchInput } from './RuleSwitchInput';
 

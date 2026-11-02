@@ -1,4 +1,4 @@
-import { counted, formatAmount, packageProgress, RIYADH_TZ, type ClockCycle } from '@ab/shared';
+import { counted, formatAmount, packageProgress, type ClockCycle } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
@@ -22,9 +22,13 @@ export function packageText(row: Pick<UnpaidRow, 'package' | 'lessons_total'>): 
     : counted(t.pricing.customSessions, row.lessons_total);
 }
 
-/** «مع المعلمة · الخميس 1 أكتوبر 16:00», in Riyadh time like the web. */
-export function pendingSubtitle(row: Pick<PendingReportRow, 'teacher' | 'starts_at'>, cycle: ClockCycle): string {
-  const when = whenIn(new Date(row.starts_at), RIYADH_TZ, cycle);
+/** «مع المعلمة · الخميس 1 أكتوبر 16:00», on the viewer's clock (docs/34). */
+export function pendingSubtitle(
+  row: Pick<PendingReportRow, 'teacher' | 'starts_at'>,
+  cycle: ClockCycle,
+  tz: string,
+): string {
+  const when = whenIn(new Date(row.starts_at), tz, cycle);
   return `${t.students.withTeacher.replace('{teacher}', row.teacher.display_name_ar)} · ${when}`;
 }
 

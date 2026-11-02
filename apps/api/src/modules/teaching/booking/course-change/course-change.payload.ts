@@ -1,17 +1,17 @@
 import type { Conflict, CourseChangeRequest } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
-import { confirmationMessages, forMessages, type Contact } from '../../lessons/status/confirmation-messages';
-import { planLessons } from '../../lessons/reschedule/rule-plan';
-import type { NewLesson, NewRule } from '../../scheduling/change-set';
-import { addDays } from '../../scheduling/occurrences/horizon';
-import type { Plan } from '../plan/booking.plan';
+import { confirmationMessages, forMessages, type Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
+import { planLessons } from '@/modules/teaching/lessons/reschedule/rule-plan';
+import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
+import { addDays } from '@ab/shared';
+import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import type { ChangePlan, ChangeRole } from './course-change.plan';
-import type { ChangeRule, OpenCourseLesson } from './course-change.queries';
+import type { ChangeRule, OpenCourseLesson } from './course-change.repo';
 
 // change_course's payload (migration 480): pure, so the whole write is unit-tested.
 
 export type PayloadInput = {
-  req: CourseChangeRequest & { clientRequestId: string };
+  req: CourseChangeRequest & { clientRequestId: string; teacherId?: string };
   actor: { id: string; role: ChangeRole };
   subscriptionId: string;
   /** The course's active rules (the first leads): those still reaching the change point end the day before it. */
@@ -25,7 +25,10 @@ export type PayloadInput = {
   counted: number;
 };
 
-/** One new rule per time: the course's teacher, link, package, lead and students; the first leads. */
+const changesTeacher = (input: PayloadInput, head: ChangeRule): boolean =>
+  input.req.teacherId !== undefined && input.req.teacherId !== head.teacher_id;
+
+/** One new rule per time: the course's (or the new) teacher, link, package, lead and students; the first leads. */
 function newRules(input: PayloadInput, head: ChangeRule): (NewRule & { lessons: NewLesson[] })[] {
   const studentIds = head.schedule_rule_students.map((s) => s.student_id);
   const overrides = head.schedule_rule_students.map(
@@ -36,14 +39,15 @@ function newRules(input: PayloadInput, head: ChangeRule): (NewRule & { lessons: 
   return input.plan.plans.map((p: Plan, i) => {
     const rule: NewRule = {
       id: i === 0 ? firstId : randomUUID(),
-      teacher_id: head.teacher_id,
+      teacher_id: input.req.teacherId ?? head.teacher_id,
       duration_min: p.timing.duration_min,
       start_time_local: p.timing.start_time_local,
       tz: p.timing.tz,
       byday: [...p.timing.byday],
       starts_on: p.timing.starts_on,
       ends_on: input.plan.endsOn,
-      meeting_link: head.meeting_link,
+      // A new teacher brings their own room: the old rule's link was the previous teacher's.
+      meeting_link: changesTeacher(input, head) ? null : head.meeting_link,
       package: head.package,
       created_from_lead_id: head.created_from_lead_id,
       subscription_id: input.subscriptionId,
@@ -117,6 +121,7 @@ export function changePayload(input: PayloadInput): Record<string, unknown> {
       before: { rule_ids: input.active.map((r) => r.id), ended_rule_ids: [...ended], ends_on: head.ends_on },
       after: {
         by: input.actor.role,
+        teacher: { from: head.teacher_id, to: input.req.teacherId ?? head.teacher_id },
         new_rule_ids: rules.map((r) => r.id),
         starts_on: input.req.startsOn,
         ends_on: input.plan.endsOn,

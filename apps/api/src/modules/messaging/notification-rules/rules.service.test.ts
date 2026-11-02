@@ -1,13 +1,13 @@
 import { catalogueViews, NOTIFICATION_CATALOGUE, SETTING_DEFAULTS, TEMPLATE_KEYS } from '@ab/shared';
 import type { AcademySettings, TemplateStatus, WaLine } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
-import { AUTOMATIC_KEYS } from '../whatsapp/sender/send-stale';
-import type { SendGate } from '../whatsapp/gate/send-gate';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { AUTOMATIC_KEYS } from '@/modules/messaging/whatsapp/sender/send-stale';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { NotificationRulesSettings } from './notification-rules.settings';
 import { fakePolicy, type FakePolicyInput } from './policy/policy.fakes';
 import { RulesFacts } from './policy/rules.facts';
-import { CATALOGUE_TEMPLATE_KEYS, type RulesQueries } from './rules.queries';
+import { CATALOGUE_TEMPLATE_KEYS, type RulesRepo } from './rules.repo';
 import { RulesService } from './rules.service';
 import { v1Entry } from './rules.views';
 
@@ -34,7 +34,7 @@ function service(opts: Setup = {}) {
     classroom: vi.fn(() => opts.classroom ?? true),
   };
   const gate = { state: vi.fn(async () => ({ open: reason === null, reason })) };
-  const facts = new RulesFacts(readerOf(NotificationRulesSettings, settings), gate as unknown as SendGate, queries as unknown as RulesQueries);
+  const facts = new RulesFacts(readerOf(NotificationRulesSettings, settings), gate as unknown as SendGate, queries as unknown as RulesRepo);
   const rules: FakePolicyInput = { ...opts.rules, settings: { ...settings, ...opts.rules?.settings } };
   return { svc: new RulesService(facts, fakePolicy(rules)), queries };
 }

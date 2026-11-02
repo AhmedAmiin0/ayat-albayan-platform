@@ -1,14 +1,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { AvailabilityQueries } from './availability/availability.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { AvailabilityRepo } from './availability/availability.repo';
 import { TeachersModule } from './teachers.module';
-import { TeachersQueries } from './teachers.queries';
+import { TeachersRepo } from './teachers.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -47,9 +47,9 @@ describe('TeachersController (R-TCH-01)', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule, TeachersModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
-      .overrideProvider(TeachersQueries)
+      .overrideProvider(TeachersRepo)
       .useValue(teachers)
-      .overrideProvider(AvailabilityQueries)
+      .overrideProvider(AvailabilityRepo)
       .useValue({})
       .overrideProvider(SettingsService)
       .useValue(fakeSettings())

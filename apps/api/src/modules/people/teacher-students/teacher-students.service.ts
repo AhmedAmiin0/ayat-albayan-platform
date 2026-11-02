@@ -1,10 +1,10 @@
 import { TEACHER_STUDENT_STATUSES, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { notFound } from '../../../common/http/errors';
-import { TeachersQueries } from '../teachers/teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { nextLessonByStudent, studentIdsOf, toStudentViews } from './teacher-students.mapper';
-import { TeacherStudentsQueries } from './teacher-students.queries';
+import { TeacherStudentsRepo } from './teacher-students.repo';
 
 const DAY = 86_400_000;
 /** Students on a lesson of mine in the last 60 days or later still count as mine. */
@@ -19,8 +19,8 @@ const LOOKBACK_DAYS = 60;
 @Injectable()
 export class TeacherStudentsService {
   constructor(
-    private readonly teachers: TeachersQueries,
-    private readonly queries: TeacherStudentsQueries,
+    private readonly teachers: TeachersRepo,
+    private readonly queries: TeacherStudentsRepo,
   ) {}
 
   async mine(user: AuthUser, kind: TeacherStudentKind, now = new Date()): Promise<TeacherStudentView[]> {

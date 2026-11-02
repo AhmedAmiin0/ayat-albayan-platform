@@ -59,7 +59,8 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   it('today: own time, the student clock, the fixed join link and a confirm', async () => {
     renderDash();
     const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
-    expect(within(card).getByText(/عند الطالب 16:00 بتوقيت الرياض/)).toBeTruthy();
+    // Cairo = Riyadh on 3 October (summer time): the student's clock reads the same, no extra line.
+    expect(within(card).queryByText(/عند الطالب/)).toBeNull();
     expect(within(card).getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(ME.meeting_link);
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
     expect(within(card).queryByRole('button', { name: t.lessons.cancelSubmit })).toBeNull();

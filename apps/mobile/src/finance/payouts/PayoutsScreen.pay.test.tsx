@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { APPROVED, PAID } from '../shared/fixtures';
+import { APPROVED, PAID } from '@/finance/shared/fixtures';
 import { PayoutsScreen } from './PayoutsScreen';
 
 const mockApiFetch = jest.fn();
@@ -15,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 const mockPicked = { uri: 'file://r.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(4), size: 4 };
-jest.mock('@/payments/ReceiptPicker', () => {
+jest.mock('@/core/ui/form/ReceiptPicker', () => {
   const { Pressable, View } = jest.requireActual('react-native');
   return {
     ReceiptPicker: ({ onChange }: { onChange: (r: unknown) => void }) => (

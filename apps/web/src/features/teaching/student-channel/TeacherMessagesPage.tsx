@@ -5,8 +5,8 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
-import { viewerTz } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { teacherChannelsQuery } from './api';
 import { ChannelThread } from './ChannelThread';
 import { TeacherChannelList } from './TeacherChannelList';
@@ -22,6 +22,7 @@ interface Props {
  * a phone the list and the thread take turns («كل الطلاب» goes back); from 900px they sit side by side.
  */
 export function TeacherMessagesPage({ studentId, onPick }: Props) {
+  const tz = useViewerTz();
   const list = useQuery(teacherChannelsQuery);
   const rows = list.data ?? [];
   const picked = rows.some((r) => r.student_id === studentId) ? studentId : null;
@@ -44,7 +45,7 @@ export function TeacherMessagesPage({ studentId, onPick }: Props) {
                 <Button type="button" variant="ghost" size="sm" className="justify-self-start shell:hidden" onClick={() => onPick(null)}>
                   {t.studentChannel.back}
                 </Button>
-                <ChannelThread key={picked} refs={{ audience: 'teacher', studentId: picked }} tz={viewerTz()} named />
+                <ChannelThread key={picked} refs={{ audience: 'teacher', studentId: picked }} tz={tz} named />
               </div>
             ) : (
               <p className="text-sm text-ink-3">{t.studentChannel.pick}</p>

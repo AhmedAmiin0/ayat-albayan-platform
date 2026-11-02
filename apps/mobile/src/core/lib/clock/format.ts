@@ -2,6 +2,7 @@ import {
   clockOf,
   clockOfHhmm,
   clockRange,
+  engineTimeZone,
   isolateClock,
   lessonWhenAt,
   type ClockCycle,
@@ -25,6 +26,9 @@ export const rangeOf = (from: string, to: string, cycle: ClockCycle): string => 
 
 /** One clock isolated inside a sentence the same way as a range. */
 export const isolated = (clock: string, cycle: ClockCycle): string => isolateClock(clock, cycle, locale);
+
+/** The phone's own zone as the engine reports it, UTC when it reports none (the device's clock). */
+export const phoneTz = (): string => engineTimeZone() || 'UTC';
 
 /** «3 أكتوبر، 4:30 م» / «3 Oct, 4:30 PM»: a date and its clock joined as Intl joins them. */
 export const dateWithClock = (date: string, clock: string): string => `${date}${locale === 'ar' ? '،' : ','} ${clock}`;

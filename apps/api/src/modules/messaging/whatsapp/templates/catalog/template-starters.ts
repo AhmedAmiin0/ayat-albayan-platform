@@ -1,8 +1,8 @@
 import type { TemplateView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AuditService } from '../../../../../common/audit/audit.service';
+import { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
-import { TemplatesQueries } from './templates.queries';
+import { TemplatesRepo } from './templates.repo';
 
 /**
  * The restricted allow-list (owner 2026-10-12, docs/16): the admin offers a template to every role
@@ -12,7 +12,7 @@ import { TemplatesQueries } from './templates.queries';
 @Injectable()
 export class TemplateStarters {
   constructor(
-    private readonly queries: TemplatesQueries,
+    private readonly queries: TemplatesRepo,
     private readonly audit: AuditService,
   ) {}
 

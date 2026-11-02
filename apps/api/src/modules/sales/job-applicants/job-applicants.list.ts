@@ -1,5 +1,5 @@
 import { searchDigits, type APPLICANT_SORT_KEYS, type ListSort, type PresenceFilter } from '@ab/shared';
-import { ilikeContains, type SortSpec } from '../../../common/list-sort';
+import { ilikeContains, type SortSpec } from '@/common/db/list-sort';
 
 type ApplicantSortKey = (typeof APPLICANT_SORT_KEYS)[number];
 

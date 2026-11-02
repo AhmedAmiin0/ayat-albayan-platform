@@ -1,4 +1,4 @@
-import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateStatus, WaLine } from '@ab/catalog';
 import { NOTIFICATION_CATALOGUE, type NotificationKey } from './catalogue.js';
 import type { CatalogueSettings } from './catalogue-settings.js';
 import type { NotificationEntry } from './catalogue.types.js';
@@ -65,6 +65,7 @@ export function entryView(entry: NotificationEntry<NotificationKey>, inputs: Cat
   return {
     key: entry.key,
     audience: entry.audience,
+    ...('alsoTo' in entry && entry.alsoTo ? { also_to: [...entry.alsoTo] } : {}),
     channels: [...entry.channels],
     automatic: entry.automatic,
     manual: entry.manual,

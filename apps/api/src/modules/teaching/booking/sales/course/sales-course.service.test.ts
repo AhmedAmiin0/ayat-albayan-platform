@@ -1,9 +1,9 @@
 import { bookingRequestSchema, type CourseSubscription } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { errorCode } from '../../../../../common/http/errors';
-import type { SalesBookingScope } from '../booking/sales-booking.ownership';
-import type { SalesCourseQueries } from './sales-course.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { errorCode } from '@/common/http/errors';
+import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
+import type { SalesCourseRepo } from './sales-course.repo';
 import type { CourseRule } from './sales-course.rules';
 import { SalesCourse } from './sales-course.service';
 
@@ -33,8 +33,8 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     subscriptionBooked: vi.fn().mockResolvedValue(false),
     requested: vi.fn().mockResolvedValue(false),
   };
-  const scope = { owned: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
-  const course = new SalesCourse(queries as unknown as SalesCourseQueries, scope as unknown as SalesBookingScope);
+  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
+  const course = new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope);
   return { queries, scope, course };
 }
 

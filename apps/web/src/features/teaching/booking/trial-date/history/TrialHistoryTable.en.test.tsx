@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { TrialHistoryTable } from './TrialHistoryTable';
-import { history, row } from '../trial-fixture';
+import { history, row } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 // The UI in English: column names, outcome words and the family line read in English.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

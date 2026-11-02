@@ -15,7 +15,7 @@ import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from 
 import { LeadsFilterBar } from './LeadsFilterBar';
 import { LeadRow } from './LeadRow';
 import type { Lead } from '../../shared/types';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 type Filter = 'all' | LeadStatus;
 
@@ -34,6 +34,7 @@ const filterPills = (): FilterPill<Filter>[] => [
  */
 export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
@@ -48,7 +49,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
   // Offline (no NetInfo): the refetch failed but the saved list is on screen; say how old it is.
   const stale = list.isError && loaded;
-  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
+  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle, tz)) : undefined;
 
   return (
     <View style={{ flex: 1, gap: 8 }}>

@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { instantDay } from '@/payments/format';
+import { instantDay } from '@/core/lib/money/format';
 import { MoreScreen } from './MoreScreen';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
@@ -24,5 +24,5 @@ test('an LTR run reads en.json, and «اللغة» offers العربية', async
 });
 
 test('dates follow the UI language, Western digits', () => {
-  expect(instantDay('2026-09-30T22:30:00Z')).toBe('1 October 2026');
+  expect(instantDay('2026-09-30T22:30:00Z', 'Asia/Riyadh')).toBe('1 October 2026');
 });

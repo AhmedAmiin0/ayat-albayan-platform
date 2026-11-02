@@ -5,7 +5,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { publicConfigQuery } from '@/lib/settings/public-config';
-import type { Teacher } from '../api';
+import type { Teacher } from '@/features/people/teachers/api';
 import { TeacherDialog } from './TeacherDialog';
 
 // «اسم المستخدم» of the teacher's login (docs/30 §7).

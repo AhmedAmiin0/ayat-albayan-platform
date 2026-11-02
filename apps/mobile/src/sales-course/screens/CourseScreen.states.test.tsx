@@ -3,11 +3,11 @@ import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { fakeCourseApi, isDisabled, press, walkToReview } from '../testing/course-test-utils';
+import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from './CourseScreen';
-import { courseView, STUDENT_ID, SUB_ID } from '../testing/fixtures';
+import { courseView, STUDENT_ID, SUB_ID } from '@/sales-course/testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

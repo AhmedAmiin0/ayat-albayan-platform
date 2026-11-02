@@ -1,11 +1,10 @@
-import { normalizeArabic, type SavedReply, type SavedReplyScope } from '@ab/shared';
+import { matchesQuery, type SavedReply, type SavedReplyScope } from '@ab/shared';
 
 // The picker's pure parts: which list, the search, and the «/» trigger of the composer.
 
 /** One tab's replies whose title or text holds `query` (case, tashkeel and letter forms ignored), in served order. */
 export function filterReplies(replies: readonly SavedReply[], input: { scope: SavedReplyScope; query: string }): SavedReply[] {
-  const q = normalizeArabic(input.query);
-  return replies.filter((r) => r.scope === input.scope && (!q || normalizeArabic(`${r.title} ${r.body}`).includes(q)));
+  return replies.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));
 }
 
 /** The «/» list (owner 2026-10-26, as WhatsApp): both tabs in one list, the served order kept. */

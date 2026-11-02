@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { AlertsQueries } from './alerts.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
-import type { PackagesService, StudentState } from '../money/packages.service';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const RECIPIENT = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
@@ -34,7 +34,7 @@ function setup(states: Record<string, StudentState | Error>, auto = true) {
   const renewal = { apply: vi.fn(async () => null) };
   const service = new SubscriptionAlertsService(
     packages as unknown as PackagesService,
-    queries as unknown as AlertsQueries,
+    queries as unknown as AlertsRepo,
     { settings, push, renewal } as unknown as AlertsEnv,
   );
   return { service, packages, queries, push, renewal };

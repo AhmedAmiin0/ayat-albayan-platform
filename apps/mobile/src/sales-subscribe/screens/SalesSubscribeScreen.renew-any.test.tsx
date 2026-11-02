@@ -27,13 +27,13 @@ beforeEach(() => {
   mockApiSend.mockImplementation(async (_m: string, path: string) => (path === '/sales/subscriptions/quote' ? salesQuote : openSub()));
 });
 
-test('the quote and the package carry the chat phone; no «أيام الحلقات»; saved → straight to the transfer', async () => {
+// owner 2026-11-01: «أيام الحلقات» for it too, then its transfer (from the course screen).
+test('the quote and the package carry the chat phone; «أيام الحلقات»; saved → its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   await waitFor(() => expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID, phone: PHONE }));
-  expect(screen.queryByRole('button', { name: t.booking.courseDays })).toBeNull();
+  expect(screen.getByRole('button', { name: t.booking.courseDays })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: t.salesMoney.saveSubscription }));
   await waitFor(() => expect(sent('/sales/subscriptions')[0]?.[2]).toMatchObject({ studentId: KID, phone: PHONE }));
-  await waitFor(() =>
-    expect(mockReplace).toHaveBeenCalledWith({ pathname: '/inbox/sales-transfer', params: { phone: PHONE, subscriptionId: openSub().id } }),
-  );
+  const course = { pathname: '/inbox/sales-course', params: { studentId: KID, phone: PHONE, subscriptionId: openSub().id } };
+  await waitFor(() => expect(mockReplace).toHaveBeenCalledWith(course));
 });

@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { SiblingMerge } from './SiblingMerge';
 
 const api = vi.hoisted(() => ({ mergeStudents: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
 
 const ME = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active' as const };
 const SIB = { id: 's2', code: 'AB-0190', name: 'سهيله', status: 'trial' as const };

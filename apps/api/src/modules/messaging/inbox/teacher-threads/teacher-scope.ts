@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import { TeacherThreadsQueries } from './teacher-threads.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { TeacherThreadsRepo } from './teacher-threads.repo';
 
 /**
  * What a signed-in teacher may see in the inbox (owner decision 2026-10-02, R-TCH-03, R-MSG-05):
@@ -33,7 +33,7 @@ export function assertCanSend(scope: TeacherScope, phone: string): void {
 /** Resolves the caller's scope once per request. */
 @Injectable()
 export class TeacherScopes {
-  constructor(private readonly queries: TeacherThreadsQueries) {}
+  constructor(private readonly queries: TeacherThreadsRepo) {}
 
   /** null for an admin (everything); a teacher's scope, 404 teacher_not_linked without a row. */
   async of(user: AuthUser): Promise<TeacherScope | null> {

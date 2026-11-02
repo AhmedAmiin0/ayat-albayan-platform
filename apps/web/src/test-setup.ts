@@ -1,6 +1,7 @@
 import { cleanup, configure } from '@testing-library/react';
+import { setViewerPersonTz } from '@ab/client-core';
 import { CLOCK_STORAGE_KEY } from '@ab/shared';
-import { afterEach } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
 
 // findBy*/waitFor budget: 1s (the default) is too tight when `turbo --force` runs every package's
 // tests at once on one machine; a slow resolve then reads as a missing element.
@@ -10,6 +11,10 @@ afterEach(cleanup);
 
 // Times read 24 h unless a test picks 12 h: jsdom's en-US locale would otherwise mean 12 h («تلقائي»).
 localStorage.setItem(CLOCK_STORAGE_KEY, '24');
+
+// Times read in the viewer's zone (docs/34): pinned to Riyadh before every test so expectations
+// never depend on the machine's zone. A test about another viewer sets its own (Africa/Cairo).
+beforeEach(() => setViewerPersonTz('Asia/Riyadh'));
 
 // jsdom has no screen capture; a desktop browser does. Specs about phones delete it to hide the buttons.
 if (typeof navigator !== 'undefined' && !navigator.mediaDevices) {

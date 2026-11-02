@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import type { Window } from '../dashboard/finance/finance.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import type { Window } from '@/modules/reporting/dashboard/finance/finance.queries';
 import type { SessionIn } from './finance.rows';
-import { readAll } from '../../teaching/scheduling/read-all';
+import { readAll } from '@/common/db/read-all';
 
 const EXPENSE = 'month, paid_on, category, amount, currency, vendor, method, note, recurring, is_draft, cat:expense_categories(label_ar)';
 const SESSION = 'lesson_id, teacher_id, starts_at, minutes, rate, amount, paid_amount, status, teacher:teachers(display_name_ar)';

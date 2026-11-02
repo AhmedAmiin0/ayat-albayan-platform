@@ -7,6 +7,8 @@ import { effectLine } from '../lib/trial-date-text';
 import { TrialDateScreen } from './TrialDateScreen';
 import { fakeTrialApi, fakeTrialSend, walkToReview } from '../testing/test-utils';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -53,7 +55,7 @@ test('admin: history → the last teacher kept → a free slot → review «سي
   const slots = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).find((p) => p.startsWith('/booking/slots'));
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain(`excludeLessonId=${UPCOMING}`);
-  expect(screen.getByText(effectLine(history, '24'))).toBeTruthy();
+  expect(screen.getByText(effectLine(history, R24))).toBeTruthy();
   expect(screen.queryByTestId('trial-date-warn')).toBeNull();
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking/trial-date/check', BODY));
 

@@ -1,15 +1,15 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { LessonEvents } from '../../../../common/events/lesson-events';
-import { fakePolicy, type FakePolicyInput } from '../../../messaging/notification-rules/policy/policy.fakes';
-import type { MessageSender } from '../../../messaging/whatsapp/sender/message.sender';
-import { LessonRatingSettings } from '../lesson-rating.settings';
-import { heldLesson, LESSON_ID, NOW } from '../rating.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
+import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { LessonRatingSettings } from '@/modules/teaching/lesson-rating/lesson-rating.settings';
+import { heldLesson, LESSON_ID, NOW } from '@/modules/teaching/lesson-rating/rating.fakes';
 import { RatingJob } from './rating.job';
-import type { RatingQueries } from '../rating.queries';
+import type { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingQueue } from './rating.queue';
-import { RatingReads } from '../rating.reads';
+import { RatingReads } from '@/modules/teaching/lesson-rating/rating.reads';
 
 // The automatic lesson_rating gates: feedback_mode, the automatic-messages switch, the template.
 
@@ -20,12 +20,12 @@ let rules: FakePolicyInput = {};
 
 function setup() {
   const queue = new RatingQueue(
-    queries as unknown as RatingQueries,
+    queries as unknown as RatingRepo,
     new RatingReads(readerOf(LessonRatingSettings, settings), fakePolicy({ ...rules, settings: { feedback_mode: settings.feedback_mode } })),
     sender as unknown as MessageSender,
   );
   const events = new LessonEvents();
-  const job = new RatingJob(queue, queries as unknown as RatingQueries, events);
+  const job = new RatingJob(queue, queries as unknown as RatingRepo, events);
   job.onModuleInit();
   return { job, events };
 }

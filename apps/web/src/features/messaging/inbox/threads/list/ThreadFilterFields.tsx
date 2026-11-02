@@ -1,7 +1,7 @@
 import { LEAD_STATUSES } from '@ab/shared';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import { t } from '@/lib/i18n/i18n';
-import { THREAD_SORTS } from '../../shared/search';
+import { THREAD_SORTS } from '@/features/messaging/inbox/shared/search';
 import type { ThreadFilterOptions } from './thread-filters';
 
 /**

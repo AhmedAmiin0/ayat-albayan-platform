@@ -1,15 +1,17 @@
+import { weekDates, weekdayOf } from '@ab/shared';
 import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { useNarrow } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { LessonChipList } from '../lesson/LessonChip';
-import { teacherRows } from '../lesson/lessons';
-import { boardRows, hoursText, teacherDay } from '../overview';
+import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
+import { teacherRows } from '@/features/teaching/schedule/lesson/lessons';
+import { boardRows, hoursText, teacherDay } from '@/features/teaching/schedule/overview';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { WeekAgenda } from './WeekAgenda';
-import { dayMonthLabel, weekDays, weekdayOf } from '../tz';
+import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface WeekGridProps {
   /** Saturday of the Riyadh week. */
@@ -37,9 +39,10 @@ interface Row {
   photo: string | null | undefined;
 }
 
-function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeacher[] | undefined): Row[] {
-  if (teachers) return boardRows(teachers, lessons).map((r) => ({ ...r, id: r.teacher.id, name: teacherLabel(r.teacher) }));
-  return teacherRows(lessons).map((r) => ({ id: r.teacher.id, name: teacherLabel(r.teacher), teacher: null, days: r.days, photo: r.teacher.avatar_url }));
+/** The grid's rows; days in `tz`, the viewer's zone. */
+function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeacher[] | undefined, tz: string): Row[] {
+  if (teachers) return boardRows(teachers, lessons, tz).map((r) => ({ ...r, id: r.teacher.id, name: teacherLabel(r.teacher) }));
+  return teacherRows(lessons, tz).map((r) => ({ id: r.teacher.id, name: teacherLabel(r.teacher), teacher: null, days: r.days, photo: r.teacher.avatar_url }));
 }
 
 /**
@@ -47,8 +50,8 @@ function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeach
  * top (docs/07 §5), today tinted. It scrolls sideways inside the page under ~900px.
  */
 export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Date() }: WeekGridProps) {
-  const days = weekDays(week);
-  const rows = rowsOf(lessons, teachers);
+  const days = weekDates(week);
+  const rows = rowsOf(lessons, teachers, useViewerTz());
   if (useNarrow()) return <WeekAgenda days={days} today={today} rows={rows} onOpen={onOpen} />;
   return (
     // Below lg the grid scrolls sideways: the end fade (as on the nav row) says more columns exist.
@@ -103,7 +106,7 @@ interface DayFactsProps {
 
 /** Above a day's chips: the mini 08–24 track and «فاضي 3:30», or one «إجازة» note for a day off. */
 function DayFacts({ teacher, day, lessons, now }: DayFactsProps) {
-  const facts = teacherDay(teacher, { day, lessons, now });
+  const facts = teacherDay(teacher, { day, lessons, now, tz: useViewerTz() });
   if (facts.dayOff) {
     return (
       <p className="mb-1 border-s-2 border-danger ps-1.5 text-2xs text-ink-2">

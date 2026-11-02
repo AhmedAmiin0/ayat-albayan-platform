@@ -6,7 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { CreateStudentDialog } from './CreateStudentDialog';
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
 
 const SUHAILA = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'trial' };
 const duplicate = () => new ApiError(409, { message: 'duplicate_student', guardian_id: 'g1', candidates: [SUHAILA] });

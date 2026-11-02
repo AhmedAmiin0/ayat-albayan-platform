@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { checked } from '@/features/messaging/templates/lines/template-lines-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { linesCheckQuery } from '../api';
+import { linesCheckQuery } from '@/features/messaging/messaging/api';
 import { LinesCard } from './LinesCard';
 
 const apiSend = vi.hoisted(() => vi.fn());

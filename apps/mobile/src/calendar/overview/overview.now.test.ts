@@ -4,7 +4,7 @@ import { OVERVIEW } from './overview-fixtures';
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
 const THU = '2026-10-01';
 const free = (now: Date | undefined) =>
-  teacherAgendas(OVERVIEW, { start: THU, view: 'day', filter: ALL, now })
+  teacherAgendas(OVERVIEW, { start: THU, tz: 'Asia/Riyadh', view: 'day', filter: ALL, now })
     .flatMap((a) => a.items)
     .flatMap((i) => (i.kind === 'free' ? [`${i.span.starts_at}..${i.span.ends_at}`] : []));
 

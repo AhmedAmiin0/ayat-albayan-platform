@@ -1,9 +1,9 @@
-import { clockOf, counted } from '@ab/shared';
+import { clockOf, counted, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { dayMonthLabel, zonedParts } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { pendingReportsQuery } from '../api';
-import { reportFormHref } from '../paths';
+import { pendingReportsQuery } from '@/features/reporting/reports/api';
+import { reportFormHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 import { useClock } from '@/lib/clock';
 
@@ -28,7 +28,7 @@ export function PendingReports({ tz }: { tz: string }) {
           return (
             <li key={`${r.lesson_id}:${r.student.id}`} className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <span className="font-semibold">{r.student.name}</span>
-              <span className="text-xs text-ink-2 tabular-nums">{`${dayMonthLabel(zonedParts(at, tz).date)} ${clockOf(at, { tz, ...clock })}`}</span>
+              <span className="text-xs text-ink-2 tabular-nums">{`${dayMonthLabel(zonedPartsIn(at, tz).date)} ${clockOf(at, { tz, ...clock })}`}</span>
               <ReportLink href={reportFormHref({ role: 'teacher', lessonId: r.lesson_id, studentId: r.student.id })} size="lg" className="ms-auto">
                 {r.report_id ? t.reports.resume : t.reports.open}
               </ReportLink>

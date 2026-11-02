@@ -2,7 +2,7 @@ import { reactionPill, reactorLines } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { useChatActions } from '../../shared/chat-actions';
+import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 
 /**
  * The reactions at the foot of a bubble, on its outer side (physical, as BUBBLE_ROW: ours right, theirs left; owner 2026-10-27): theirs and ours, «👍 2» when both chose it; the

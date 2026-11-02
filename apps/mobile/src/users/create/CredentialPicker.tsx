@@ -1,9 +1,9 @@
 import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { Choice } from '../shared/Choice';
-import { TextField } from '../shared/TextField';
+import { Note } from '@/core/ui/feedback/Note';
+import { Choice } from '@/users/shared/Choice';
+import { TextField } from '@/users/shared/TextField';
 
 export interface CredentialPickerProps {
   mode: CredentialMode;

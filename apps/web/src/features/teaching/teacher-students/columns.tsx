@@ -7,6 +7,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { nextLessonText } from './next-lesson';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const col = createColumnHelper<DataTableFeatures, TeacherStudentView>();
 const ts = t.teacherStudents;
@@ -15,9 +16,10 @@ const text: ColumnFilterDef = { kind: 'text' };
 const programs: ColumnFilterDef = { kind: 'select', options: PROGRAMS.map((p) => ({ value: t.enums.program[p], label: t.enums.program[p] })) };
 const fact = 'text-sm text-ink-2';
 
-/** «الحلقة القادمة: …» in the viewer's cycle (12 or 24 h). */
+/** «الحلقة القادمة: …» in the viewer's zone and cycle (12 or 24 h). */
 function NextLesson({ iso }: { iso: string | null }) {
-  return <>{nextLessonText(iso, useClock())}</>;
+  const clock = { ...useClock(), tz: useViewerTz() };
+  return <>{nextLessonText(iso, clock)}</>;
 }
 
 /**

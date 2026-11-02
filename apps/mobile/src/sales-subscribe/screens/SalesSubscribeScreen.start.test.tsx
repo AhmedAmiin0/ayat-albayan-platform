@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay, money } from '@/payments/format';
+import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
+import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();
@@ -45,7 +45,7 @@ afterEach(() => jest.useRealTimers());
 test('without subscriptions.set_start_date: no day picker, «تبدأ الباقة اليوم», the body has no startsOn', async () => {
   asSales();
   await open();
-  const today = dayLabel(new Date('2026-10-12T12:00:00Z'));
+  const today = dayLabel(new Date('2026-10-12T12:00:00Z'), 'UTC');
   expect(screen.getByText(m.startsOnDefault.replace('{date}', today))).toBeTruthy();
   expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
   expect(screen.queryByRole('switch', { name: m.alreadyStarted })).toBeNull();

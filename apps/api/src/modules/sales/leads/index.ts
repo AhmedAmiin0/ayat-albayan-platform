@@ -3,7 +3,6 @@ export {
   type PageQuery,
   pageQueryShape,
   pageRange,
-  parseOr400,
   searchTerm,
   throwIfDbError,
 } from './http';

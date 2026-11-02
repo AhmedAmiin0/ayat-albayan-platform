@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../../common/audit/audit.service';
-import { SINGLETON_ENTITY_ID } from '../../../../../common/audit/singleton-entity';
-import { CrmMediaCopyQueries, type CrmCopyCounts } from './crm-media-copy.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
+import { CrmMediaCopyRepo, type CrmCopyCounts } from './crm-media-copy.repo';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 
 /**
@@ -12,7 +12,7 @@ import { CrmMediaCopySettings } from './crm-media-copy.settings';
 @Injectable()
 export class CrmMediaCopyDone {
   constructor(
-    private readonly queries: CrmMediaCopyQueries,
+    private readonly queries: CrmMediaCopyRepo,
     private readonly settings: CrmMediaCopySettings,
     private readonly audit: AuditService,
   ) {}

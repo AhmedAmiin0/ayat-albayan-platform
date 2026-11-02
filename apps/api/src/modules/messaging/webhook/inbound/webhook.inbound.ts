@@ -8,12 +8,12 @@ import {
   type PushKind,
   type QuickReplyIntent,
 } from '@ab/shared';
-import { ar } from '../../../../common/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { z } from 'zod';
-import type { PushEvent } from '../../../../common/push/push.service';
-import { fill } from '../../../reporting/report-pdf/render/pdf-text';
-import type { InboundEvent } from '../webhook.events';
-import type { Contact } from '../webhook.queries';
+import type { PushEvent } from '@/common/push/push.service';
+import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
+import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
+import type { Contact } from '@/modules/messaging/webhook/webhook.repo';
 
 // Pure parts of storing an inbound message (R-MSG-04, R-LEAD-01) and the admin push (R-MOB-01).
 
@@ -72,6 +72,8 @@ export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput):
     reply_to_wa_id: m.replyTo,
     media_id: m.mediaId,
     media_mime: m.mediaMime,
+    // Only a document's name (the PDF card's, owner 2026-11-01); none = no key, as today.
+    ...(m.mediaName ? { media_name: m.mediaName } : {}),
     interactive_payload: m.payload,
     created_at: m.at.toISOString(),
     ...(read ? { read_at: m.at.toISOString() } : {}),

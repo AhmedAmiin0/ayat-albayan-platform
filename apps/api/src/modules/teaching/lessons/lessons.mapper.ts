@@ -1,6 +1,7 @@
 import {
   allowedLessonEvents,
   CONFLICT_KINDS,
+  isClosedLesson,
   isOpenLesson,
   meetingModeOf,
   usesPlatform,
@@ -13,9 +14,9 @@ import {
   type LessonView,
 } from '@ab/shared';
 import { z } from 'zod';
-import type { Role } from '../../../common/auth/verify-token';
+import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
-import type { SeqMap } from './lessons.queries';
+import type { SeqMap } from './lessons.repo';
 
 /** What a teacher may do to their own lesson (docs/10 §3 Guards); the rest is admin-only. */
 const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
@@ -105,10 +106,11 @@ function timeEdit(row: LessonRow, role: ViewContext['role']): LessonTimeEditView
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */
 function activeMakeup(row: LessonRow, studentId: string): LessonStudentView['makeup'] {
-  const m = row.makeups?.find((x) => x.makeup_student_id === studentId && !INACTIVE.has(x.status));
+  const m = row.makeups?.find(
+    (x) => x.makeup_student_id === studentId && !isClosedLesson(x.status),
+  );
   return m ? { lesson_id: m.id, starts_at: iso(m.starts_at) } : null;
 }
-const INACTIVE: ReadonlySet<string> = new Set(['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled']);
 
 const conflictList = z.array(
   z.object({

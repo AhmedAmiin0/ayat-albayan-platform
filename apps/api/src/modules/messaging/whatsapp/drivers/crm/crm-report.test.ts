@@ -52,7 +52,7 @@ describe('CrmWhatsappClient: the report flow', () => {
     const f = scriptedFetch(CRM_SENT, crmFailure(429, 'rate_limited'));
     const e = await client(f).sendTemplate(send('regular')).then(() => null, (x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);
-    expect((e as WaError).info).toMatchObject({ uncertain: true, crmCode: 'rate_limited' });
+    expect((e as WaError).info).toMatchObject({ uncertain: true, crmCode: 'rate_limited', template: 'report_session' });
     expect((e as WaError).message).toMatch(/refused its template/);
   });
 

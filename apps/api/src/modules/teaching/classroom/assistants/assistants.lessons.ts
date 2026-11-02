@@ -1,12 +1,12 @@
 import type { AssistantLessonView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import type { LessonRef } from './assistants.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import type { LessonRef } from './assistants.repo';
 
 /** Lesson rows of an assistant's students between two instants, with the names (service role). */
 @Injectable()
-export class AssistantLessonsQueries {
+export class AssistantLessonsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async between(refs: LessonRef[], range: { from: string; to: string }): Promise<AssistantLessonView[]> {

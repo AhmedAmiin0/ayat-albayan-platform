@@ -2,9 +2,9 @@
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { createHmac } from 'node:crypto';
 import { vi } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { ClassroomConfig } from './classroom.config';
-import type { JoinLesson, JoinLinkRow } from './classroom.queries';
+import type { JoinLesson, JoinLinkRow } from './classroom.repo';
 import { hashLinkToken } from './join/join-link.token';
 
 export const CONFIG: NonNullable<ClassroomConfig> = {

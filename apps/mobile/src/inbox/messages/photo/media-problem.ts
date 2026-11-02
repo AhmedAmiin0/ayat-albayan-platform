@@ -1,4 +1,4 @@
-import { baseMime, isChatViewMime } from '@ab/shared';
+import { baseMime, isChatViewMime, STICKER_SIZE } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 
 /** Why a bubble's file cannot be shown (W6): what the bubble says instead of the file. */
@@ -19,10 +19,12 @@ export interface PhotoBox {
   size: number;
   resizeMode: 'cover' | 'contain';
   border: boolean;
+  /** «تنزيل» under it; not under a sticker, as WhatsApp (owner 2026-11-01). */
+  download: boolean;
 }
 
-const PHOTO: PhotoBox = { size: 220, resizeMode: 'cover', border: true };
-const STICKER: PhotoBox = { size: 120, resizeMode: 'contain', border: false };
+const PHOTO: PhotoBox = { size: 220, resizeMode: 'cover', border: true, download: true };
+const STICKER: PhotoBox = { size: STICKER_SIZE, resizeMode: 'contain', border: false, download: false };
 
 /**
  * The box of a photo the bubble previews, or null: not a served image, or HEIC (Android does not

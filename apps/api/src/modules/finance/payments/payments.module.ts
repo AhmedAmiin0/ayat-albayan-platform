@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { FxModule } from '../fx/fx.module';
-import { InvoicesModule } from '../invoices/invoices.module';
-import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
-import { PaymentAttachmentsQueries } from './attachments/payment-attachments.queries';
+import { FxModule } from '@/modules/finance/fx/fx.module';
+import { InvoicesModule } from '@/modules/finance/invoices/invoices.module';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
+import { PaymentAttachmentsRepo } from './attachments/payment-attachments.repo';
 import { PaymentAttachments } from './attachments/payment-attachments.service';
 import { PaymentFiles } from './attachments/payment-files';
 import { PaymentInputs } from './payment-inputs';
 import { PaymentsController } from './payments.controller';
-import { PaymentsQueries } from './payments.queries';
+import { PaymentsRepo } from './payments.repo';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';
@@ -19,9 +19,9 @@ import { ReceiptsService } from './attachments/receipts.service';
 @Module({
   imports: [SubscriptionsModule, FxModule, InvoicesModule],
   controllers: [PaymentsController],
-  providers: [PaymentInputs, PaymentsQueries, PaymentsService, PaymentsSettings, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsQueries],
+  providers: [PaymentInputs, PaymentsRepo, PaymentsService, PaymentsSettings, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsRepo],
   // The salesperson's bank transfer from the chat reuses them (sales-money); her own files (/sales/me, assistant-pay);
-  // the Stripe test build's webhook reads a session's own payment (PaymentsQueries.byRequest).
-  exports: [PaymentsService, ReceiptsService, PaymentAttachments, PaymentsQueries],
+  // the Stripe module's webhook reads a session's own payment (PaymentsQueries.byRequest).
+  exports: [PaymentsService, ReceiptsService, PaymentAttachments, PaymentsRepo],
 })
 export class PaymentsModule {}

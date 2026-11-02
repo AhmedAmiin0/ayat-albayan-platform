@@ -8,8 +8,8 @@ import {
   type TrialDateRow,
   type TrialHistory,
 } from '@ab/shared';
-import { isTrialLesson } from '../../../finance/subscriptions/trial/student-trial.plan';
-import type { TrialStudent } from './trial-date.queries';
+import { isTrialLesson } from '@/modules/finance/subscriptions/trial/student-trial.plan';
+import type { TrialStudent } from './trial-date.repo';
 
 // «مواعيد الحلقة التجريبية» (owner 2026-10-25): every trial time picked for a student, newest pick
 // first, with what became of it. Pure: TrialDateQueries reads, this shapes.

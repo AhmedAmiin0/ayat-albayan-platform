@@ -2,7 +2,7 @@ import type { ChatListRef } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { routeFetch } from '../../testing/test-utils';
+import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());

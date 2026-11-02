@@ -1,4 +1,4 @@
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 

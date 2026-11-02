@@ -1,7 +1,8 @@
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { Global, Inject, Injectable, Module } from '@nestjs/common';
-import { DB, type Db } from '../db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { SIGNED_URL_SECONDS, type Bucket } from './storage.paths';
+import { headBytes } from './storage.head';
 
 interface ObjectRef {
   bucket: Bucket;
@@ -84,9 +85,7 @@ export class StorageService {
   async head(ref: ObjectRef, bytes: number): Promise<Uint8Array | null> {
     const { data, error } = await this.db.storage.from(ref.bucket).createSignedUrl(ref.path, 60);
     if (error) return null;
-    const res = await fetch(data.signedUrl, { headers: { Range: `bytes=0-${bytes - 1}` } });
-    if (!res.ok) return null;
-    return new Uint8Array(await res.arrayBuffer()).slice(0, bytes);
+    return headBytes(data.signedUrl, bytes);
   }
 
   /** Server-side copy, across buckets, never through the client. Idempotent: an existing target stays. */

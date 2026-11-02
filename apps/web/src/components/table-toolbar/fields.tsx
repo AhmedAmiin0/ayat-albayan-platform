@@ -1,7 +1,7 @@
-import { Field } from '../ui/form/field';
-import { Input } from '../ui/form/input';
-import { Select } from '../ui/form/select';
-import type { FilterOption } from '../data-table/data-table-features';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
+import type { FilterOption } from '@/components/data-table/data-table-features';
 import type { FilterChip } from './types';
 
 // Building blocks for a page's own filters in the «تصفية» panel (ExtraFilters): labelled

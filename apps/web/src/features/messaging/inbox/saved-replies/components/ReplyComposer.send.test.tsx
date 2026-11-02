@@ -2,12 +2,12 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { clearDraft } from '../../composer/lib/draft-store';
-import { message, PHONE, thread } from '../../testing/inbox-fixture';
-import { renderWithClient, routeFetch } from '../../testing/test-utils';
-import { PRICES, PROFILE, REPLIES } from '../lib/fixture';
+import { clearDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { PRICES, PROFILE, REPLIES } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { ReplyComposer } from './ReplyComposer';
-import { setStaged } from '../lib/staged-store';
+import { setStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

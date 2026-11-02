@@ -2,9 +2,9 @@ import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { setCrmStatus, templateErrorText, templatesQuery, type CrmTemplateStatus } from '../api';
-import { templateName } from '../template-cells';
-import type { Notice } from '../use-template-actions';
+import { setCrmStatus, templateErrorText, templatesQuery, type CrmTemplateStatus } from '@/features/messaging/templates/api';
+import { templateName } from '@/features/messaging/templates/template-cells';
+import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
 /**
  * A crm line's template status by hand (docs/19): «معتمد في نظام CRM» / «غير متاح في نظام CRM». The saved

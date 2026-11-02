@@ -1,11 +1,11 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import { AuthModule } from '../../../common/auth/auth.module';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import { DB, DbModule } from '../../../common/db/db.module';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { AuthModule } from '@/common/auth/auth.module';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { DB, DbModule } from '@/common/db/db.module';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { LeadFamilyController } from './lead-family.controller';
 import { LeadFamilyService } from './lead-family.service';
 
@@ -56,6 +56,7 @@ describe('POST /leads/:id/link-family «ربط بطالب موجود» (leads.li
     for (const body of [{}, { code: 'AB-12' }, { code: 'AB-0183', guardian_id: 'g1' }]) {
       expect((await call('admin', body)).statusCode).toBe(400);
     }
+    expect((await call('admin', {})).json()).toMatchObject({ message: 'validation_failed', issues: [expect.objectContaining({ path: 'code' })] });
     const res = await app.inject({ method: 'POST', url: '/leads/nope/link-family', headers: { authorization: 'Bearer admin' }, payload: { code: 'AB-0183' } });
     expect(res.statusCode).toBe(400);
     expect(service.link).not.toHaveBeenCalled();

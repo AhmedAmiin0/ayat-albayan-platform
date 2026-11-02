@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
-import { C1, N1, N2, routePass, THREE } from '../numbers/number-route.fakes';
-import type { NumberRoutes } from '../numbers/number-routes';
-import type { SendGate } from '../gate/send-gate';
+import { C1, N1, N2, routePass, THREE } from '@/modules/messaging/whatsapp/numbers/number-route.fakes';
+import type { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
+import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { dueMessage, fakeSwitches } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and pauses per number.
 
@@ -19,8 +19,12 @@ const NOW = new Date('2026-10-02T08:00:00Z');
 const text = (id: string, number_id: string | null) => dueMessage({ id, template_key: null, body: 'نص', number_id });
 
 function sender(withRoutes = true) {
-  const s = new MessageSender(gate as unknown as SendGate, queries as unknown as SenderQueries, worker as unknown as MessageWorker);
-  return withRoutes ? Object.assign(s, { routes: routes as unknown as NumberRoutes }) : s;
+  return new MessageSender(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    worker as unknown as MessageWorker,
+    withRoutes ? (routes as unknown as NumberRoutes) : undefined,
+  );
 }
 const jobs = () => worker.process.mock.calls.map(([j]) => j as { row: { id: string }; route?: unknown });
 const install = () => setNumbersOverlay({ values: {}, numberIds: {}, numbers: THREE });

@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
-import { crmErrorFrom } from '../drivers/crm/crm-http';
-import { crmFailure } from '../drivers/crm/crm.fakes';
+import type { PushService } from '@/common/push/push.service';
+import { crmErrorFrom } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
+import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { CRM_AUTH, CRM_RATE_LIMITED } from './send-plan';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver» in the worker: a 429 waits (line paused this pass) without the token alarm.
 
@@ -19,7 +19,7 @@ const answer = (status: number, code: string, retryAfter: string | null = null) 
   crmErrorFrom({ status, text: JSON.stringify(crmFailure(status, code).body), retryAfter });
 
 function worker() {
-  return new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  return new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
 }
 
 describe('MessageWorker — crm failures', () => {
@@ -41,5 +41,16 @@ describe('MessageWorker — crm failures', () => {
     await expect(worker().process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true })).resolves.toBe('paused');
     expect(queries.failure).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error_code: CRM_AUTH }));
     expect(push.notifyAdmins).toHaveBeenCalledTimes(1);
+  });
+
+  it('a failure is recorded first, then handed to the 132001 check with its key and line', async () => {
+    const error = answer(502, 'meta_error');
+    dispatch.send.mockRejectedValue(error);
+    const w = worker();
+    const check = vi.fn(async () => undefined);
+    Object.assign(w, { missing: { check } });
+    await expect(w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true })).resolves.toBe('failed');
+    expect(queries.failure).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error_code: 'crm_meta_error' }));
+    expect(check).toHaveBeenCalledWith({ key: 'booking_confirmation', line: 'notifications', error, now: NOW });
   });
 });

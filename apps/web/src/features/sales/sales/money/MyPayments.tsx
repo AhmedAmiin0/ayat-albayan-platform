@@ -2,11 +2,11 @@ import type { MyPaymentRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { AttachmentsDialog } from '@/features/finance/payments/attachments/AttachmentsDialog';
-import { studentLabel } from '@/features/finance/subscriptions/format';
+import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import { myPaymentsQuery } from '../api';
+import { myPaymentsQuery } from '@/features/sales/sales/api';
 import { myPaymentColumns } from './my-payment-columns';
-import { PortalList } from '../students/PortalList';
+import { PortalList } from '@/features/sales/sales/students/PortalList';
 
 /** «مدفوعاتي» on /sales/earnings: the payments I recorded and no others (the API answers only for me). */
 export function MyPayments() {

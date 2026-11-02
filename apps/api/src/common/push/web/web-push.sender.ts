@@ -1,7 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
+import type { HttpFailure } from '@/common/infra/http/failure';
+import { createHttp } from '@/common/infra/http/http';
 import { encryptPayload } from './web-push.crypto';
-import { liveSessions } from '../dispatch/push.sessions';
+import { liveSessions } from '@/common/push/dispatch/push.sessions';
 import { pushEndpointAllowed } from './web-push.endpoint';
 import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 
@@ -24,10 +26,25 @@ export interface WebPushPayload {
 const WEB_PUSH_TTL_S = 86_400;
 const WEB_PUSH_BODY_MAX = 240;
 
-/** fetch without following redirects (the allow-list is checked on the URL we were given only). */
+const failed = (f: HttpFailure): Error => new Error(`${f.where}: ${f.kind}`);
+
+/** The endpoint is the base (its path is the browser's token: never in a message), 10 s. */
+const pushHttp = (endpoint: string) =>
+  createHttp({
+    name: 'web-push',
+    base: () => endpoint,
+    headers: () => Promise.resolve({}),
+    timeoutMs: 10_000,
+    // The allow-list is checked on the URL we were given only: never follow a redirect.
+    redirect: 'manual',
+    errorBody: 'omit',
+    errors: { default: failed },
+  });
+
+/** One POST, the status only (GONE below reads it); the Buffer goes as a Uint8Array copy. */
 export const fetchTransport: WebPushTransport = async ({ url, headers, body }) => {
-  const res = await fetch(url, { method: 'POST', headers, body, redirect: 'manual', signal: AbortSignal.timeout(10_000) });
-  return { status: res.status };
+  const raw = new Uint8Array(body);
+  return { status: await pushHttp(url).status({ path: '', method: 'POST', headers, raw }) };
 };
 
 /**

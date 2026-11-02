@@ -1,13 +1,13 @@
 import { ForbiddenException, HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ClassroomQueries } from '../classroom.queries';
-import { ADMIN, ASSISTANT, CLOSED, EARLY, LESSON, LESSON_ID, OTHER_TEACHER, queries, SALES, TEACHER } from '../classroom.fakes';
-import { rolesOf } from '../moderation/moderation.fakes';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
+import { ADMIN, ASSISTANT, CLOSED, EARLY, LESSON, LESSON_ID, OTHER_TEACHER, queries, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomOpenService } from './room-open.service';
 
 let q: ReturnType<typeof queries>;
 const open = (user = TEACHER, now = EARLY) =>
-  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomQueries).open({ user, lessonId: LESSON_ID }, now);
+  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomRepo).open({ user, lessonId: LESSON_ID }, now);
 const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {

@@ -4,13 +4,13 @@ Who runs it: the developer, with the owner for every decision in step 4. How the
 `README.md`. Mapping rules: `docs/06-data-migration.md`.
 
 **Personal data.** The Drive zip, the CRM and everything under `tools/migrate/cache/` and
-`tools/migrate/out/` are real people. They stay on this machine, are git-ignored, and are never
+`tools/migrate/out/` are real people. They stay on the machine that runs the import, are git-ignored, and are never
 committed, pasted into chat, tickets or PRs. Only `out/report.md` (counts) may be shared.
 `out/review.xlsx` goes to the owner only. The CRM is read-only for this tool.
 
-## 0. Once per machine
+## 0. Once per machine (the owner names the machine before anything here runs; a cloud session has none of the git-ignored inputs or credentials below)
 
-1. `pnpm i` at the repo root.
+1. `pnpm i` at the repo root, on that machine.
 2. `cp tools/migrate/.env.example tools/migrate/.env` and fill it from `.claude/artifacts/`
    (CRM: `crm/crm.env`; staging: `staging/supabase.md` + `staging/api.env`). Never commit it.
 3. Teacher directory `tools/migrate/cache/teachers.json` (required; git-ignored):

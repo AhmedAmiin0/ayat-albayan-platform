@@ -1,8 +1,8 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { savedRepliesQuery } from '../lib/api';
-import { filterReplies, matchReplies, slashQuery, slashStart } from '../lib/filter';
+import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/lib/api';
+import { filterReplies, matchReplies, slashQuery, slashStart } from '@/features/messaging/inbox/saved-replies/lib/filter';
 import { usePickerKeys, type PickerKeys } from './use-picker-keys';
 
 export interface RepliesPicker {

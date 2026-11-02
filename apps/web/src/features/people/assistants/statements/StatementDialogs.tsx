@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, reopenStatement, unpayStatement, type AssistantStatementView } from '../api';
+import { ASSISTANTS_KEY, reopenStatement, unpayStatement, type AssistantStatementView } from '@/features/people/assistants/api';
 import { PayStatementDialog } from './PayStatementDialog';
-import { errorText } from '../status';
+import { errorText } from '@/features/people/assistants/status';
 import { StatementLinesDialog } from './StatementLinesDialog';
 
 export type StatementDialog = { statement: AssistantStatementView; kind: 'details' | 'pay' | 'reopen' | 'unpay' };

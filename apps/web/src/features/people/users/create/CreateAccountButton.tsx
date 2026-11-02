@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { t } from '@/lib/i18n/i18n';
-import { candidatesQuery } from '../api';
+import { candidatesQuery } from '@/features/people/users/api';
 import { CreateUserDialog } from './CreateUserDialog';
 
 export interface CreateAccountButtonProps {

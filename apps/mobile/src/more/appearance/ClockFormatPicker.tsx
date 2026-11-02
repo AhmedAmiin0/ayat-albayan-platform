@@ -2,7 +2,7 @@ import type { ClockPref } from '@ab/shared';
 import { useClockPref } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Section } from '../Section';
+import { Section } from '@/core/ui/surface/Section';
 
 const clockPills = (): readonly FilterPill<ClockPref>[] => [
   { value: 'auto', label: t.clock.auto },

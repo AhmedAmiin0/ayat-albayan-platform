@@ -1,15 +1,17 @@
+import { zonedPartsIn } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import { LESSONS_KEY } from '../api';
+import { LESSONS_KEY } from '@/features/teaching/schedule/api';
 import { whenWithLength } from './edit-time-text';
 import type { TimeEditResult } from './edit-time.contract';
-import { durationMin } from '../lesson/lessons';
-import { zonedParts } from '../tz';
+import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
+import { focusOnMount } from '@/lib/dom/mount-refs';
 
 /** Toast line after a save: «اتعدّل» and, when a guardian message was queued, that it was. */
 export const savedMessage = (r: Pick<TimeEditResult, 'notified'>): string =>
@@ -30,10 +32,8 @@ export interface EditTimeDoneProps {
  * another week would drop out of the list (and the drawer with it) before the admin had read this.
  */
 export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const queryClient = useQueryClient();
-  const title = useRef<HTMLParagraphElement>(null);
-  useEffect(() => title.current?.focus(), []);
   useEffect(
     () => () => {
       void queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
@@ -42,13 +42,13 @@ export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
   );
   const message = savedMessage(result);
   const { lesson } = result;
-  const month = zonedParts(new Date(lesson.starts_at), lesson.teacher.tz).date.slice(0, 7);
+  const month = zonedPartsIn(new Date(lesson.starts_at), lesson.teacher.tz).date.slice(0, 7);
   return (
     <section aria-label={t.lessons.timeEdit.saved} className="grid gap-3">
       <div className="flex items-start gap-2 rounded-md bg-sunk px-3.5 py-2.5">
         <NuqtaGlyph shape="fill" className="mt-1.5 text-ok" />
         <div className="grid gap-1">
-          <p ref={title} role="status" tabIndex={-1} className="text-sm font-semibold outline-none">
+          <p ref={focusOnMount} role="status" tabIndex={-1} className="text-sm font-semibold outline-none">
             {message}
           </p>
           <p className="text-sm">{t.lessons.timeEdit.newWhen.replace('{when}', whenWithLength(lesson.starts_at, durationMin(lesson), clock))}</p>

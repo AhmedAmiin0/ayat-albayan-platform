@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ExpoReceipt } from './push-receipts';
 import { PushReceiptsJob } from './push-receipts.job';
-import type { PushReceiptsQueries, TicketRow } from './push-receipts.queries';
+import type { PushReceiptsRepo, TicketRow } from './push-receipts.repo';
 
 const NOW = new Date('2026-10-02T12:00:00Z');
 const gone = (token: string): ExpoReceipt => ({
@@ -17,7 +17,7 @@ function setup(rows: TicketRow[], receipts: Record<string, ExpoReceipt>) {
     prune: vi.fn(async (_id: string, tokens: readonly string[]) => tokens.length),
   };
   const transport = vi.fn(async () => receipts);
-  const job = new PushReceiptsJob(queries as unknown as PushReceiptsQueries, transport);
+  const job = new PushReceiptsJob(queries as unknown as PushReceiptsRepo, transport);
   return { job, queries, transport };
 }
 

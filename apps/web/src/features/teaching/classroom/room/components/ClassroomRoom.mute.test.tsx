@@ -1,9 +1,9 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { joinAs } from '../../board/board-fixture';
+import { joinAs } from '@/features/teaching/classroom/board/board-fixture';
 import { ClassroomRoom } from './ClassroomRoom';
-import { fakeClient, tile } from '../livekit/fake-client';
+import { fakeClient, tile } from '@/features/teaching/classroom/room/livekit/fake-client';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<typeof import('@/lib/http/api')>()), apiSend }));

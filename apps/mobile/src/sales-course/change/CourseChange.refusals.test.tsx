@@ -12,6 +12,8 @@ import { CourseScreen } from '../screens/CourseScreen';
 import { courseView } from '../testing/fixtures';
 import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } from './change-test-setup';
 
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -73,10 +75,10 @@ test('a course booked ahead (a renewal) is changed from its own first week: the 
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
-  expect(await screen.findByText(dayLine('2026-10-11T14:00:00.000Z', TZ, '24'))).toBeTruthy(); // Sunday 11 Oct 17:00
+  expect(await screen.findByText(dayLine('2026-10-11T14:00:00.000Z', TZ, R24))).toBeTruthy(); // Sunday 11 Oct 17:00
   // The picks are seeded once the slots answer, a render after the day lines: wait for the check itself.
   expect(await screen.findByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
-  expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, '24'))).toBeTruthy(); // Thursday 15 Oct 18:00
+  expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, R24))).toBeTruthy(); // Thursday 15 Oct 18:00
   const [read] = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/booking/slots'));
   expect(new URLSearchParams(read?.split('?')[1]).get('from')).toBe('2026-10-10T21:00:00.000Z'); // 11 Oct 00:00 Riyadh
   await changeSundayToMonday(); // on the grid: Sunday 17:00 off, Monday 12 Oct 19:00 on

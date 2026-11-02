@@ -1,21 +1,22 @@
 import { linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict, notFound } from '../../../../common/http/errors';
-import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '../../../sales/sales-money';
-import { SubscriptionCreator } from '../../subscriptions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '@/modules/sales/sales-money';
+import { SubscriptionCreator } from '@/modules/finance/subscriptions';
+import { loadEnv } from '@/config/env/env';
 import { newLinkToken } from './link-ids';
 import { LinkCreateDeps, LinkDeps } from './link-deps';
-import type { LinkRow } from './payment-links.queries';
+import type { LinkRow } from './payment-links.repo';
 
 /**
  * «رابط دفع» (owner 2026-10-28, docs/30): ANY student (the 2026-10-28 any-student decision). The package is
  * created now exactly like «اشتراك جديد» (catalog quote, the site's discount pills, the start-day rules and
  * used lessons, unpaid) except its price, which is the agreed amount, so paying the link in full makes it paid
  * and the commission triggers run on what the family paid. The agreed amount is free (> 0) unless the admin set
- * max_discount_pct. A retry of the same form (clientRequestId) returns the link it already made. The kind is the
+ * STRIPE_MAX_DISCOUNT_PCT («التكاملات»). A retry of the same form (clientRequestId) returns the link it already made. The kind is the
  * server's (owner 2026-10-29): 'renewal' once the student has a priced package, else 'new'. «المعلم/ة» (teacherId,
- * «اشتراك جديد» → «دفع إلكتروني») as POST /sales/subscriptions saves it: her own student only, checked active
+ * «اشتراك جديد» → «دفع إلكتروني») as POST /sales/subscriptions saves it: her own student only while the ownership rule enforces, checked active
  * before the package is made, assigned once the link exists and again on a retry (a no-op once done).
  */
 @Injectable()
@@ -28,7 +29,8 @@ export class LinkCreate {
 
   async quote(input: PaymentLinkQuote): Promise<PaymentLinkQuoteView> {
     assertSalesDiscount(input.pricing);
-    const [quote, { max_discount_pct }] = await Promise.all([this.creator.quote(input), this.extra.settings.read()]);
+    const quote = await this.creator.quote(input);
+    const max_discount_pct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
     return { quote: toSalesQuote(quote), max_discount_pct, min_amount: minLinkAmount(quote.afterDiscount, max_discount_pct) };
   }
 
@@ -42,10 +44,10 @@ export class LinkCreate {
     const student = await this.deps.links.student(input.studentId);
     if (!student) throw notFound('student_not_found');
     if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
-    const { quote, min_amount } = await this.quote(input);
+    const { quote, min_amount, max_discount_pct: maxDiscountPct } = await this.quote(input);
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
-    const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct: (await this.extra.settings.read()).max_discount_pct });
+    const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct });
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
     const { studentId, pricing, clientRequestId, lessonsUsedBefore, teacherId } = input;
     if (teacherId) await this.extra.sales.teachers.ensureActive(teacherId);
@@ -75,8 +77,9 @@ export class LinkCreate {
   }
 
   /**
-   * «المعلم/ة» writes students.teacher_id and opens the teacher-student chat: her own student only, as the bank
-   * path (SalesMoneyScope; no chat phone, so a sales.renew_any child is refused too). The link alone stays any student.
+   * «المعلم/ة» writes students.teacher_id and opens the teacher-student chat: her own student only
+   * while SalesOwnershipRule enforces it (SalesMoneyScope.assertOwns; unlike the bank path, sales.renew_any never widens a link),
+   * any student otherwise. The link alone stays any student.
    */
   private async mayAssign(input: PaymentLinkCreate, user: AuthUser): Promise<void> {
     if (input.teacherId && user.role !== 'admin') await this.extra.sales.scope.assertOwns(user, input.studentId);

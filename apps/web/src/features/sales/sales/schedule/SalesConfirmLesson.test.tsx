@@ -2,8 +2,8 @@ import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { scheduleLesson } from '../academy.fixtures';
-import { renderWithQuery } from '../academy.test-utils';
+import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
+import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());

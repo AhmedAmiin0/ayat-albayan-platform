@@ -1,13 +1,7 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
-import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { readerOf } from '../../../../../common/settings/settings.fakes';
-import type { SalesOwnership } from '../../../../sales/sales/sales-ownership';
-import type { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { errorCode } from '../../../../../common/http/errors';
-import { BookingSettings } from '../../booking.settings';
-import { SalesBookingScope } from './sales-booking.ownership';
-import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
+import { describe, expect, it } from 'vitest';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
+import { errorCode } from '@/common/http/errors';
 import { assertBookingScope } from './sales-booking.scope';
 
 // The assistant's course (owner 2026-10-18): kind 'package' with self.sales_money, one student of hers.
@@ -16,7 +10,6 @@ const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 const LEAD = 'b0000000-0000-4000-8000-000000000001';
 const S1 = 'c0000000-0000-4000-8000-000000000001';
 const S2 = 'c0000000-0000-4000-8000-000000000002';
-const USER: AuthUser = { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' };
 const OWN: SalesOwnership = { leadIds: [LEAD], guardianIds: ['g1'], studentIds: [S1], phones: ['+966551110000'] };
 const RULE = { teacherId: TEACHER, byday: [0, 2], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-10-11' };
 const course = (over: object = {}): BookingRequest => bookingRequestSchema.parse({ ...RULE, package: '8', studentIds: [S1], ...over });
@@ -51,9 +44,17 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
     expect(code(() => assertBookingScope(fresh, OWN, true))).toBe('course_one_student');
   });
 
-  it('another assistant’s student is 403 not_your_student, and null ownership never means «any» for a course', () => {
+  it('another assistant’s student is 403 not_your_student while ownership is checked; null (the rule off) = any', () => {
     expect(code(() => assertBookingScope(course({ studentIds: [S2] }), OWN, true))).toBe('not_your_student');
-    expect(code(() => assertBookingScope(course(), null, true))).toBe('not_your_student');
+    expect(code(() => assertBookingScope(course({ studentIds: [S2] }), null, true))).toBeNull();
+  });
+
+  it("grant 'any' (sales.renew_any, docs/16 row 38): any one student, the other rules still hold", () => {
+    expect(code(() => assertBookingScope(course({ studentIds: [S2] }), OWN, 'any'))).toBeNull();
+    expect(code(() => assertBookingScope(course(), null, 'any'))).toBeNull();
+    expect(code(() => assertBookingScope(course({ studentIds: [S1, S2] }), OWN, 'any'))).toBe('course_one_student');
+    expect(code(() => assertBookingScope(course({ override: { reason: 'سبب' } }), OWN, 'any'))).toBe('override_not_allowed');
+    expect(code(() => assertBookingScope(course({ invoice: { source: 'upload', path: 'x/a.pdf' } }), OWN, 'any'))).toBe('invoice_not_allowed');
   });
 
   it('override, meeting link and invoice stay 403 on a course', () => {
@@ -65,24 +66,5 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
   it('a trial is unchanged by the permission', () => {
     expect(code(() => assertBookingScope(course({ package: 'trial', byday: [0] }), OWN, true))).toBeNull();
     expect(code(() => assertBookingScope(course({ package: 'trial', byday: [0], studentIds: [S2] }), null, true))).toBeNull();
-  });
-});
-
-describe('SalesBookingScope.forRequest — a course always reads her ownership', () => {
-  const scopeWith = (on: boolean) => {
-    const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateQueries) };
-  };
-
-  it('auto-assign OFF: a course gets her ownership, a trial gets null', async () => {
-    const { sales, scope } = scopeWith(false);
-    expect(await scope.forRequest(course(), USER)).toEqual(OWN);
-    expect(await scope.forRequest(course({ package: 'trial', byday: [0] }), USER)).toBeNull();
-    expect(sales.ownership).toHaveBeenCalledTimes(1);
-  });
-
-  it('owned: her ownership whatever the switch', async () => {
-    const { scope } = scopeWith(false);
-    expect(await scope.owned(USER)).toEqual(OWN);
   });
 });

@@ -1,10 +1,10 @@
 import { CURRENT_STUDENT_STATUSES } from '@ab/shared';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { OwnNumbers } from '../../messaging/numbers';
-import { readAll } from '../../teaching/scheduling/read-all';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { OwnNumbers } from '@/modules/messaging/numbers';
+import { readAll } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 import type { Window } from './finance/finance.queries';
 
 const HOURS_48 = 48 * 3_600_000;

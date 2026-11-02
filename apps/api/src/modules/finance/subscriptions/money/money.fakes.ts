@@ -1,9 +1,9 @@
 // Test fixtures for the money modules (test-only, excluded from the build).
 import { quote, type QuoteResponse } from '@ab/shared';
-import type { ExpenseRow } from '../../expenses/expenses.queries';
-import type { PaymentRow } from '../../payments/payments.queries';
-import type { PayoutRow } from '../../payouts/payouts.queries';
-import type { SubRow } from '../subscriptions.queries';
+import type { ExpenseRow } from '@/modules/finance/expenses/expenses.repo';
+import type { PaymentRow } from '@/modules/finance/payments/payments.repo';
+import type { PayoutRow } from '@/modules/finance/payouts/payouts.repo';
+import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 export const STUDENT_ID = '5a000000-0000-4000-8000-000000000001';
 export const SUB_ID = '5b000000-0000-4000-8000-000000000001';
@@ -42,7 +42,10 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     client_request_id: null,
     cancelled_at: null,
     cancelled_by: null,
+    cancel_kind: null,
     cancel_reason: null,
+    stop_request_id: null,
+    lessons_used_at_stop: null,
     ...patch,
   };
 }
@@ -51,7 +54,7 @@ export function paymentRow(patch: Partial<PaymentRow> = {}): PaymentRow {
   return {
     id: PAYMENT_ID,
     subscription_id: SUB_ID,
-    subscription: { student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid', student: { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة' } },
+    subscription: { student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid', cancel_kind: null, student: { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة' } },
     amount: 145,
     currency: 'SAR',
     method: 'bank',

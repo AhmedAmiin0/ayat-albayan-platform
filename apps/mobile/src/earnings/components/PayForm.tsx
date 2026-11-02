@@ -1,20 +1,20 @@
 import { PAYMENT_METHODS, earningIdsOf, payCeiling, type PaymentMethod, type TeacherEarningView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
-import { FormLabel } from '@/payments/FormLabel';
-import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
-import { ReceiptPicker } from '@/payments/ReceiptPicker';
+import { FormLabel } from '@/core/ui/form/FormLabel';
+import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
+import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Note } from '@/more/Note';
-import { earningsErrorText } from '../lib/earnings-errors';
-import { egp } from '../lib/format';
-import { checkPayDraft, type PayDraft } from '../lib/pay-draft';
-import { usePayTeacher } from '../hooks/use-pay-teacher';
+import { Note } from '@/core/ui/feedback/Note';
+import { earningsErrorText } from '@/earnings/lib/earnings-errors';
+import { egp } from '@/earnings/lib/format';
+import { checkPayDraft, type PayDraft } from '@/earnings/lib/pay-draft';
+import { usePayTeacher } from '@/earnings/hooks/use-pay-teacher';
 
 const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 

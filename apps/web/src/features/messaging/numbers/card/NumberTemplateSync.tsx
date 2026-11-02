@@ -2,11 +2,11 @@ import type { NumberView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { usePermissions } from '../../../people/auth/use-permissions';
-import { templatesQuery } from '../../templates/api';
-import { syncResultText } from '../form/fallback-rank';
-import { numberErrorText } from '../form/number-errors';
-import { syncNumberTemplates } from '../numbers-api';
+import { usePermissions } from '@/features/people/auth/use-permissions';
+import { templatesQuery } from '@/features/messaging/templates/api';
+import { syncResultText } from '@/features/messaging/numbers/form/fallback-rank';
+import { numberErrorText } from '@/features/messaging/numbers/form/number-errors';
+import { syncNumberTemplates } from '@/features/messaging/numbers/numbers-api';
 
 const s = t.numbers.templateSync;
 

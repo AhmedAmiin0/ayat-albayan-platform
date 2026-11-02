@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { TeachersQueries } from './teachers.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { TeachersRepo } from './teachers.repo';
 
 interface TeacherRequest {
   user?: AuthUser;
@@ -13,7 +13,7 @@ interface TeacherRequest {
  */
 @Injectable()
 export class OwnTeacherGuard implements CanActivate {
-  constructor(private readonly teachers: TeachersQueries) {}
+  constructor(private readonly teachers: TeachersRepo) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const req = ctx.switchToHttp().getRequest<TeacherRequest>();

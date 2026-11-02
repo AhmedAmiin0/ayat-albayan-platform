@@ -4,9 +4,9 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider, type TreeBase } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { answer } from '../../lists/list-fixtures';
-import { ThreadScreen } from '../../screens/ThreadScreen';
-import { detail, inbound, PHONE, thread } from '../../shared/thread-fixtures';
+import { answer } from '@/inbox/lists/lib/list-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
+import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // «تسجيل طالب جديد» (owner 2026-10-30: «Move the registration to three dots»): FIRST in a salesperson's «⋮»
 // on a lead still in the funnel, in place of the pill over the chat.

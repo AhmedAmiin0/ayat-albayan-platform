@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import type { StudentProfile, StudentRef } from '@/students/shared/types';
-import { localDate } from '@/today/lib/timeline';
+import { localDate } from '@/today';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -39,6 +39,7 @@ function useProfile(id: string) {
 
 /** The child with its siblings (the pills) and the family's zone (the day chips). */
 const familyOf = (p: StudentProfile | undefined) =>
+  // docs/34 b: no family yet reads as the academy's zone (a data default, not a display).
   p ? { family: [p, ...p.siblings], tz: p.tz } : { family: [], tz: RIYADH_TZ };
 
 /** «يوسف · AB-0183». */

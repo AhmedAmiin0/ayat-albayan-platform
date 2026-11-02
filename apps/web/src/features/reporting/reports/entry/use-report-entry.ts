@@ -11,8 +11,8 @@ import {
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
-import { REPORTS_KEY, submitReport } from '../api';
+import { LESSONS_KEY } from '@/features/teaching/schedule';
+import { REPORTS_KEY, submitReport } from '@/features/reporting/reports/api';
 import { useAutosave } from './use-autosave';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */

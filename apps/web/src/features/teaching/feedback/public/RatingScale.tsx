@@ -1,7 +1,7 @@
 import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { RATINGS, type Rating } from '../types';
+import { RATINGS, type Rating } from '@/features/teaching/feedback/types';
 
 export interface RatingScaleProps {
   value: Rating | null;

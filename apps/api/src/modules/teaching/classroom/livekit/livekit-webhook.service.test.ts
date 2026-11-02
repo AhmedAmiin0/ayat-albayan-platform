@@ -1,16 +1,16 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CONFIG } from '../classroom.fakes';
+import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitWebhookService } from './livekit-webhook.service';
-import { recordingQueries, signedWebhook } from '../moderation/moderation.fakes';
-import type { RecordingLifecycle } from '../recordings/recording.lifecycle';
-import type { RecordingQueries } from '../recordings/recording.queries';
+import { recordingQueries, signedWebhook } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import type { RecordingLifecycle } from '@/modules/teaching/classroom/recordings/recording.lifecycle';
+import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 let rq: ReturnType<typeof recordingQueries>;
 let life: { afterLeft: ReturnType<typeof vi.fn>; afterEgressEnded: ReturnType<typeof vi.fn> };
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new LivekitWebhookService(config, rq as unknown as RecordingQueries, life as unknown as RecordingLifecycle);
+  new LivekitWebhookService(config, rq as unknown as RecordingRepo, life as unknown as RecordingLifecycle);
 const post = (event: object) => {
   const rawBody = Buffer.from(JSON.stringify(event));
   return { rawBody, authorization: signedWebhook(rawBody, { now: NOW }) };

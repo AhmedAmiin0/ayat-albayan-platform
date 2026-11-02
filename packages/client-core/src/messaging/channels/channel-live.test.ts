@@ -27,17 +27,19 @@ function fakeRealtime() {
 }
 
 describe('subscribeChannelMessages (owner 2026-10-29: the socket, never WhatsApp)', () => {
-  it('INSERTs of this channel only; live once joined, down on an error; an insert nudges', () => {
+  it('changes of this channel only (sent, edited, deleted); live once joined, down on an error; each nudges', () => {
     const { realtime, raw, fired } = fakeRealtime();
     const onMessage = vi.fn();
     const onLive = vi.fn();
     const leave = subscribeChannelMessages(realtime, { channelId: 'c1', onMessage, onLive });
-    expect(fired.filter).toEqual({ event: 'INSERT', schema: 'public', table: 'channel_messages', filter: 'channel_id=eq.c1' });
+    expect(fired.filter).toEqual({ event: '*', schema: 'public', table: 'channel_messages', filter: 'channel_id=eq.c1' });
     expect(fired.topic).toMatch(/^channel_messages:c1:/);
     fired.status?.('SUBSCRIBED');
     expect(onLive).toHaveBeenLastCalledWith(true);
     fired.insert?.();
-    expect(onMessage).toHaveBeenCalledTimes(1);
+    // An edit or a delete for everyone is an UPDATE of the row: the same nudge re-reads the thread.
+    fired.insert?.();
+    expect(onMessage).toHaveBeenCalledTimes(2);
     fired.status?.('CHANNEL_ERROR');
     expect(onLive).toHaveBeenLastCalledWith(false);
     leave();

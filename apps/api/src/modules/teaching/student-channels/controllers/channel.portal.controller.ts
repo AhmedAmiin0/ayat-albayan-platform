@@ -1,11 +1,18 @@
-import { channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import {
+  channelPostSchema,
+  channelReadSchema,
+  type ChannelMessageView,
+  type ChannelPage,
+  type ChannelUnread,
+} from '@ab/shared';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { ChannelAccess } from '../channel-access';
-import { ChannelService } from '../channel.service';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
+import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
 import { pageFor } from './channel-page';
 
 const UUID = new ParseUUIDPipe();
@@ -22,25 +29,38 @@ export class PortalChannelController {
   ) {}
 
   @Get('messages')
-  async messages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
+  async messages(
+    @Param('id', UUID) studentId: string,
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelPage> {
     return pageFor(this.channels, await this.access.family(user, studentId), query);
   }
 
   @Post('messages')
-  async post(@Param('id', UUID) studentId: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ChannelMessageView> {
-    const { body: text } = parseOrThrow(channelPostSchema, body);
-    return this.channels.post(await this.access.family(user, studentId), text);
+  async post(
+    @Param('id', UUID) studentId: string,
+    @ZodBody(channelPostSchema) body: z.output<typeof channelPostSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelMessageView> {
+    return this.channels.post(await this.access.family(user, studentId), body.body);
   }
 
   @Post('read')
   @HttpCode(204)
-  async read(@Param('id', UUID) studentId: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    const { at } = parseOrThrow(channelReadSchema, body ?? {});
-    await this.channels.read(await this.access.family(user, studentId), at);
+  async read(
+    @Param('id', UUID) studentId: string,
+    @ZodBody(channelReadSchema, { orEmpty: true }) body: z.output<typeof channelReadSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    await this.channels.read(await this.access.family(user, studentId), body.at);
   }
 
   @Get('unread')
-  async unread(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<ChannelUnread> {
+  async unread(
+    @Param('id', UUID) studentId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelUnread> {
     return this.channels.unread(await this.access.family(user, studentId));
   }
 }

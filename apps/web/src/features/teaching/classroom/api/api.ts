@@ -1,7 +1,18 @@
-import type { AssistantLessonView, AssistantView, JoinLinkResult, JoinLinkUrl, LessonView, RoomJoinResult } from '@ab/shared';
+import {
+  addCalendarDays,
+  localDateIn,
+  wallToUtc,
+  type AssistantLessonView,
+  type AssistantView,
+  type JoinLinkResult,
+  type JoinLinkUrl,
+  type LessonView,
+  type RoomJoinResult,
+} from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
+import { viewerZone } from '@/lib/clock-text';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
 
@@ -55,11 +66,15 @@ export const assignAssistant = ({ studentId, profileId }: { studentId: string; p
 export const removeAssistant = ({ studentId, profileId }: { studentId: string; profileId: string }) =>
   apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
 
+/** The local day `date` in `tz` [00:00, next 00:00) as ISO instants (classroom-day.golden). */
+function dayIn(date: string, tz: string): { from: string; to: string } {
+  const to = wallToUtc(addCalendarDays(date, 1), 0, tz);
+  return { from: wallToUtc(date, 0, tz).toISOString(), to: to.toISOString() };
+}
+
 /** The browser-local day [00:00, 24:00) as ISO instants. */
-export function localDay(now: Date): { from: string; to: string } {
-  const from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const to = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  return { from: from.toISOString(), to: to.toISOString() };
+export function localDay(now: Date, tz = viewerZone()): { from: string; to: string } {
+  return dayIn(localDateIn(now, tz), tz);
 }
 
 /** GET /assistants/me/lessons for the local day. */
@@ -70,8 +85,12 @@ export const assistantLessonsQuery = (day: { from: string; to: string }) =>
   });
 
 /** The browser-local day `offset` days from `now`, as ISO instants. */
-export function dayAround(now: Date, offset: number): { from: string; to: string } {
-  return localDay(new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset));
+export function dayAround(
+  now: Date,
+  offset: number,
+  tz = viewerZone(),
+): { from: string; to: string } {
+  return dayIn(addCalendarDays(localDateIn(now, tz), offset), tz);
 }
 
 /** GET /lessons?from&to (admin): every teacher's lessons of one local day. */

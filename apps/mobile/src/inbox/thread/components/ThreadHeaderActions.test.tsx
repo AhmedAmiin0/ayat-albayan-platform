@@ -1,10 +1,10 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { answer, withLists, withoutLists } from '../../lists/list-fixtures';
-import { ThreadScreen } from '../../screens/ThreadScreen';
-import { detail, inbound, PHONE } from '../../shared/thread-fixtures';
-import { ThreadModeProvider } from '../hooks/thread-mode';
+import { answer, withLists, withoutLists } from '@/inbox/lists/lib/list-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
+import { detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
 // Review 2026-10-29 #13 / C5: the call and ONE «⋮» in the header, so the name gets the width.
 const mockApiFetch = jest.fn();

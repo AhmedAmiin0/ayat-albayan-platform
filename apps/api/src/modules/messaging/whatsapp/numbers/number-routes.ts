@@ -1,9 +1,10 @@
+import { gateApprovedKeys } from '@ab/shared';
 import { Injectable, Optional } from '@nestjs/common';
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { RulesReader } from '../../notification-rules/store/rules.reader';
-import { messagingNumbers, routable, ruleNumbers, type RoutePass } from './number-route';
-import { RouteQueries } from './route.queries';
-import type { TemplateRow } from '../whatsapp.types';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { RulesReader } from '@/modules/messaging/notification-rules/store/rules.reader';
+import { messagingNumbers, routable, ruleNumbers, sendableSomewhere, type RoutePass } from './number-route';
+import { RouteRepo } from './route.repo';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
  * Loads what one module-mode send pass routes with (docs/23c): the numbers, every template approval on
@@ -15,16 +16,19 @@ import type { TemplateRow } from '../whatsapp.types';
 @Injectable()
 export class NumberRoutes {
   constructor(
-    private readonly queries: RouteQueries,
+    private readonly queries: RouteRepo,
     @Optional() private readonly rules?: RulesReader,
   ) {}
 
   /** Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail closed). */
   async pass(numbers: readonly OverlayNumber[]): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {
     const approvals = await this.queries.approvals();
-    const [templates, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);
+    const [rows, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);
     const crm = new Set(numbers.filter((n) => n.env?.provider === 'crm').map((n) => n.id));
-    return { pass: { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: rules, approvals, crm }, templates };
+    // A crm number reads a gated key by its CRM template (docs/19); with none, nothing does.
+    const crmApproved = crm.size ? gateApprovedKeys(rows, () => true) : new Set<string>();
+    const routes = { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: rules, approvals, crm, crmApproved };
+    return { pass: routes, templates: rows.filter((t) => sendableSomewhere(routes, t)) };
   }
 
   private async ruleNumbers(): Promise<Map<string, string | null>> {

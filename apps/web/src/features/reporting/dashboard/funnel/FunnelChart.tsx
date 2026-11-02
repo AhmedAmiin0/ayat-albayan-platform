@@ -1,7 +1,7 @@
 import type { LeadStatus } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { Bar } from '../shared/Bar';
-import { percent } from '../shared/format';
+import { Bar } from '@/features/reporting/dashboard/shared/Bar';
+import { percent } from '@/features/reporting/dashboard/shared/format';
 import { funnelSteps, type FunnelStage } from './funnel';
 
 const stageLabel = (s: FunnelStage) => (s === 'new' ? t.dashboard.leadsInRange : t.enums.leadStatus[s]);

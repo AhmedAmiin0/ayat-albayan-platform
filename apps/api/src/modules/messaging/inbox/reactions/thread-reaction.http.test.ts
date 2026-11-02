@@ -1,11 +1,11 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PermissionResolver } from '../../../../common/auth/permissions';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 import { REQ, TARGET_ID, target } from './reaction.fakes';
-import { ReactionQueries } from './reaction.queries';
+import { ReactionRepo } from './reaction.repo';
 
 // PUT /threads/:phone/messages/:id/reaction through the real guards (permissions, scopes, audit). The DB
 // reads and the sender are mocks: no line client is ever called.
@@ -21,10 +21,10 @@ const resolve: PermissionResolver = async (user) => {
 
 describe('PUT …/reaction', () => {
   let t: Awaited<ReturnType<typeof inboxApp>>;
-  let rq: ReactionQueries;
+  let rq: ReactionRepo;
   beforeAll(async () => {
     t = await inboxApp(resolve);
-    rq = t.app.get(ReactionQueries);
+    rq = t.app.get(ReactionRepo);
   });
   afterAll(() => t.app.close());
   beforeEach(() => {

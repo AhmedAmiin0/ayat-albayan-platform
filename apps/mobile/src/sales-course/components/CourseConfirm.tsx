@@ -1,21 +1,20 @@
 import { counted, courseLessonCount, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import type { BookFailure } from '@/booking/shared/booking-errors';
-import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import { type BookFailure, ConflictNotice } from '@/booking';
 import { SummaryList } from '@/booking/trial/components/ConfirmStep';
 import { PicksList } from '@/booking/shared/PicksList';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import { courseEnd } from '../lib/course-body';
-import { takenTexts, type TakenInput } from '../lib/course-days';
-import { courseRows } from '../lib/course-summary';
-import { useCourseCheck } from '../hooks/course-queries';
+import { courseEnd } from '@/sales-course/lib/course-body';
+import { takenTexts, type TakenInput } from '@/sales-course/lib/course-days';
+import { courseRows } from '@/sales-course/lib/course-summary';
+import { useCourseCheck } from '@/sales-course/hooks/course-queries';
 import { CourseCheckNotice } from './CourseCheckNotice';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CourseConfirmProps {
   view: SalesCourseView;
@@ -37,6 +36,8 @@ interface CourseConfirmProps {
  */
 export function CourseConfirm(props: CourseConfirmProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { view, teacherName, picks, body, booking, onChangeSlot, prefilled } = props;
   const { color } = useTheme();
   const check = useCourseCheck(body);
@@ -47,7 +48,7 @@ export function CourseConfirm(props: CourseConfirmProps) {
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={courseRows({ view, teacherName, body, cycle })} />
+      <SummaryList rows={courseRows({ view, teacherName, body, viewer })} />
       <PicksList picks={picks} tz={view.student.tz} />
       {ends ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
       <TakenLines taken={{ picks, prefilled: prefilled ?? [], tz: view.student.tz }} data={check.data} />

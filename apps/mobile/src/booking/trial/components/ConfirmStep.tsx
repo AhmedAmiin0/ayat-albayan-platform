@@ -1,18 +1,18 @@
 import { counted } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { SectionLabel } from '@/students/list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import type { BookFailure } from '../../shared/booking-errors';
-import { summary, type SummaryRow } from '../lib/confirm-summary';
+import type { BookFailure } from '@/booking/shared/booking-errors';
+import { summary, type SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import { FailureNotice, PackageDaysNote } from './ConfirmNotices';
-import type { StudentChoice, TrialDraft } from '../lib/draft';
-import { effectiveByday } from '../lib/package-choice';
-import { picksOf } from '../../shared/picks';
-import { PicksList } from '../../shared/PicksList';
-import { useClockCycle } from '@/core/lib/clock';
+import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';
+import { effectiveByday } from '@/booking/trial/lib/package-choice';
+import { picksOf } from '@/booking/shared/picks';
+import { PicksList } from '@/booking/shared/PicksList';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface ConfirmStepProps {
   draft: TrialDraft;
@@ -48,6 +48,8 @@ export function SummaryList({ rows }: { rows: SummaryRow[] }) {
  */
 export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: ConfirmStepProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const days = effectiveByday(draft);
   const note = {
@@ -58,7 +60,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
   };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={summary(draft, cycle)} />
+      <SummaryList rows={summary(draft, viewer)} />
       {draft.pkg === 'trial' ? (
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (

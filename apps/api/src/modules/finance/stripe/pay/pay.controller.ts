@@ -1,12 +1,13 @@
 import type { PublicPaymentLink } from '@ab/shared';
 import { Controller, Get, Header, Ip, Param, Redirect, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
-import { notFound } from '../../../../common/http/errors';
-import { StripeEnabledGuard } from '../gate/stripe-gate';
-import { apiPublicOrigin } from '../links/link-views';
-import { toPublicLink } from '../links/payment-links.mapper';
-import { PaymentLinksQueries } from '../links/payment-links.queries';
+import { Public } from '@/common/auth/decorators';
+import { notFound } from '@/common/http/errors';
+import { stripeLiveAllowed } from '@/config/env/env.stripe';
+import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
+import { apiPublicOrigin } from '@/modules/finance/stripe/links/link-views';
+import { toPublicLink } from '@/modules/finance/stripe/links/payment-links.mapper';
+import { PaymentLinksRepo } from '@/modules/finance/stripe/links/payment-links.repo';
 import { CheckoutService } from './checkout.service';
 import { notFoundPageHtml, payPageHtml, resultPageHtml } from './pay-html';
 import { PayLimit } from './pay-limit';
@@ -17,7 +18,7 @@ import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from '.
  * The family's payment pages, served by the API (no login, no web build; docs/30): GET /pay/:token is a small
  * Arabic page (the first name, the package, the amount; no other personal data) whose «ادفع الآن» opens
  * GET /pay/:token/checkout (303 to Stripe Checkout); Stripe comes back to /done or /cancelled (text only;
- * a link the test app opened also gets «العودة إلى التطبيق», pay-return.ts).
+ * a link the app opened also gets «العودة إلى التطبيق», pay-return.ts).
  * The web PayPage still reads GET /pay/:token as JSON (Accept: application/json). Rate-limited; 404 while
  * Stripe is off.
  */
@@ -27,7 +28,7 @@ import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from '.
 @Controller('pay')
 export class PayController {
   constructor(
-    private readonly links: PaymentLinksQueries,
+    private readonly links: PaymentLinksRepo,
     private readonly checkout: CheckoutService,
     private readonly limit: PayLimit,
   ) {}
@@ -74,7 +75,8 @@ export class PayController {
     await this.limit.check(r.req.ip, token);
     if (!isLinkToken(token) || !(await this.links.byToken(token))) return html(r.res, { status: 404, body: notFoundPageHtml() });
     const os = fromApp(r.req.headers.cookie);
-    const app = os ? appReturnUrl({ token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android' }) : null;
+    const back = { token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android', live: stripeLiveAllowed() };
+    const app = os ? appReturnUrl(back) : null;
     const auto = r.req.query?.auto !== '0';
     return html(r.res, { status: 200, body: resultPageHtml({ kind: r.kind, token, app, auto }) });
   }

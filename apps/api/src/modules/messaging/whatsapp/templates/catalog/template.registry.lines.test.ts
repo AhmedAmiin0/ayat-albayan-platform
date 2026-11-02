@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { TemplateRegistry } from './template.registry';
-import type { TemplatesQueries } from './templates.queries';
-import { templateRow } from '../../whatsapp.fakes';
-import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.types';
+import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
@@ -20,7 +18,7 @@ let chat = client();
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-12T08:00:00Z');
 const registry = () =>
-  new TemplateRegistry(queries as unknown as TemplatesQueries, { notifications, chat } as unknown as WhatsappLines, audit as unknown as AuditService);
+  templateServices(queries, { notifications, chat }, audit);
 
 const meta = (name: string, over: Partial<MetaTemplate> = {}): MetaTemplate => ({
   id: `id-${name}`, name, language: 'ar', status: 'APPROVED', category: 'MARKETING', quality: 'GREEN',
@@ -45,7 +43,7 @@ describe('TemplateRegistry — per-number sync', () => {
   });
 
   it('both lines: each against its own list; each WABA’s new templates imported on its line, with skip reasons', async () => {
-    const { lines } = await registry().verifyAll({ now: NOW });
+    const { lines } = await registry().verifier.verifyAll({ now: NOW });
     expect(patched('booking_confirmation')).toEqual([expect.objectContaining({ status: 'approved' })]);
     expect(patched('teacher_lesson_v2')).toEqual([expect.objectContaining({ status: 'paused' })]);
     expect(queries.insert).toHaveBeenCalledWith(expect.objectContaining({ key: 'promo_offer', line: 'notifications', sales_starter: false }));
@@ -58,7 +56,7 @@ describe('TemplateRegistry — per-number sync', () => {
   });
 
   it('line=chat: only chat rows, only the chat list; notifications is never read', async () => {
-    const { lines } = await registry().verifyAll({ line: 'chat', now: NOW });
+    const { lines } = await registry().verifier.verifyAll({ line: 'chat', now: NOW });
     expect(notifications.getTemplates).not.toHaveBeenCalled();
     expect(patched('booking_confirmation')).toEqual([]);
     expect(patched('teacher_lesson_v2')).toHaveLength(1);
@@ -67,14 +65,14 @@ describe('TemplateRegistry — per-number sync', () => {
 
   it('chat-only config: syncing chat works (no 503), and syncing both syncs chat alone', async () => {
     notifications.configured.mockReturnValue(false);
-    await expect(registry().verifyAll({ line: 'chat', now: NOW })).resolves.toMatchObject({ lines: [{ line: 'chat', ok: true }] });
-    await expect(registry().verifyAll({ now: NOW })).resolves.toMatchObject({ lines: [{ line: 'chat', ok: true }] });
+    await expect(registry().verifier.verifyAll({ line: 'chat', now: NOW })).resolves.toMatchObject({ lines: [{ line: 'chat', ok: true }] });
+    await expect(registry().verifier.verifyAll({ now: NOW })).resolves.toMatchObject({ lines: [{ line: 'chat', ok: true }] });
     expect(notifications.getTemplates).not.toHaveBeenCalled();
   });
 
   it('a chat read failure reaches the admin as that line’s error; chat rows untouched, notifications still synced', async () => {
     chat.getTemplates.mockRejectedValue(new WaError('(#190) Invalid OAuth access token', { code: 190, status: 401 }));
-    const { lines } = await registry().verifyAll({ now: NOW });
+    const { lines } = await registry().verifier.verifyAll({ now: NOW });
     expect(lines[1]).toMatchObject({ line: 'chat', ok: false, error: 'meta_error', message: '(#190) Invalid OAuth access token', imported: [] });
     expect(lines[0]).toMatchObject({ line: 'notifications', ok: true });
     expect(patched('teacher_lesson_v2')).toEqual([]);
@@ -82,13 +80,13 @@ describe('TemplateRegistry — per-number sync', () => {
 
   it('a Kapso key refusal on the chat line is kapso_auth', async () => {
     chat.getTemplates.mockRejectedValue(new WaError('Invalid API key', { code: null, status: 401, credential: 'kapso' }));
-    const { lines } = await registry().verifyAll({ line: 'chat', now: NOW });
+    const { lines } = await registry().verifier.verifyAll({ line: 'chat', now: NOW });
     expect(lines[0]).toMatchObject({ ok: false, error: 'kapso_auth' });
   });
 
   it('one line: a chat row is never matched against the notifications list (no cross-WABA missing)', async () => {
     chat.configured.mockReturnValue(false);
-    const { lines } = await registry().verifyAll({ now: NOW });
+    const { lines } = await registry().verifier.verifyAll({ now: NOW });
     expect(chat.getTemplates).not.toHaveBeenCalled();
     expect(patched('teacher_lesson_v2')).toEqual([]);
     expect(lines.map((l) => l.line)).toEqual(['notifications']);
@@ -97,20 +95,20 @@ describe('TemplateRegistry — per-number sync', () => {
   it('a notifications row absent from the notifications list goes missing, even when the chat WABA has it', async () => {
     notifications.getTemplates.mockResolvedValue([]);
     chat.getTemplates.mockResolvedValue([meta('booking_confirmation')]);
-    await registry().verifyAll({ now: NOW });
+    await registry().verifier.verifyAll({ now: NOW });
     expect(patched('booking_confirmation')).toEqual([expect.objectContaining({ status: 'missing' })]);
   });
 
   it('line=chat while chat is not configured: 503 not_configured naming the line', async () => {
     chat.configured.mockReturnValue(false);
-    await expect(registry().verifyAll({ line: 'chat' })).rejects.toMatchObject({ response: { code: 'not_configured', line: 'chat' } });
+    await expect(registry().verifier.verifyAll({ line: 'chat' })).rejects.toMatchObject({ response: { code: 'not_configured', line: 'chat' } });
   });
 
   it('GET lines: facts per line, the newest check of its rows, its stored last sync (another API copy sees it)', async () => {
     queries.all.mockResolvedValue([templateRow({ last_checked_at: '2026-10-01T00:00:00Z' }), crm]);
-    await registry().verifyAll({ line: 'chat', now: NOW });
+    await registry().verifier.verifyAll({ line: 'chat', now: NOW });
     expect(queries.saveLineSync).toHaveBeenCalledWith(expect.objectContaining({ line: 'chat', ok: true, checked_at: NOW.toISOString() }));
-    const views = await registry().lineViews();
+    const views = await registry().catalog.lineViews();
     expect(views.map((v) => [v.line, v.configured, v.last_checked_at, v.last_sync?.ok ?? null])).toEqual([
       ['notifications', true, '2026-10-01T00:00:00Z', null],
       ['chat', true, null, true],

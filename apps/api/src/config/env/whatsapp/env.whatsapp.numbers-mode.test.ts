@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setNumbersOverlay } from '../../../common/integrations/numbers-overlay';
-import { envFrom, lineEnvs, lineGaps, lineNumbers, loadEnv } from '../env';
+import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
+import { envFrom, lineEnvs, lineGaps, lineNumbers, loadEnv } from '@/config/env/env';
 
 // PR #142 item 15: in numbers mode (module) the chat line never borrows the notifications token. A chat
 // number without a token is not configured (nothing sends from it), but its phone id still receives.

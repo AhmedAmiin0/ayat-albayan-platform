@@ -6,8 +6,8 @@ import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';
-import { ErrorLine } from '../../ErrorLine';
-import type { Lead } from '../../shared/types';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import type { Lead } from '@/inbox/shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /**

@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiErrorText, studentLabel } from '@/features/finance/subscriptions/format';
+import { apiErrorText, studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
-import { receiptUrl, type PaymentView } from '../api';
+import { receiptUrl, type PaymentView } from '@/features/finance/payments/api';
 
 /** A stored receipt through a 1-hour signed URL (P7): the image inline, a PDF in a frame. */
 export function ReceiptDialog({ payment, onClose }: { payment: PaymentView; onClose: () => void }) {

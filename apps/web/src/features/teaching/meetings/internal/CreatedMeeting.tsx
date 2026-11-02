@@ -1,7 +1,7 @@
 import type { MeetingCreateResult } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { InviteResults } from '../invitees/InviteResults';
-import { MeetingLinkBox } from '../rows/MeetingLinkBox';
+import { InviteResults } from '@/features/teaching/meetings/invitees/InviteResults';
+import { MeetingLinkBox } from '@/features/teaching/meetings/rows/MeetingLinkBox';
 
 /** After «أنشئ»: the shareable link (as before) and, when there were invitees, one result per recipient. */
 export function CreatedMeeting({ made }: { made: MeetingCreateResult }) {

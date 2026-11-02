@@ -1,8 +1,8 @@
 import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { message } from '../../testing/inbox-fixture';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from './MessageBubble';
-import { renderWithClient } from '../../testing/test-utils';
+import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 

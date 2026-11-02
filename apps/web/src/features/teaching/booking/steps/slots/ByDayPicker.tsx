@@ -2,7 +2,7 @@ import { counted, type PackageSize } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { WEEK_ORDER } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
-import { PACKAGE_NOTE_CLASS, packageDaysNote } from '../package/package-days';
+import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 
 export interface ByDayPickerProps {
   /** The first slot's weekday in the family zone: always on, can't be unticked. */

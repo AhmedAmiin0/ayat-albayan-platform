@@ -1,11 +1,11 @@
 // Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a vi.fn().
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import type { KapsoLineEnv } from '../../../../config/env/env';
-import type { WebhookQueries } from '../webhook.queries';
+import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { KapsoLineEnv } from '@/config/env/env';
+import type { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 import { ExternalStatus } from './external-status';
-import type { ExternalQueries } from './external.queries';
+import type { ExternalRepo } from './external.repo';
 import { ExternalStore } from './external.store';
 import type { KapsoHistory } from './kapso-history';
 
@@ -69,16 +69,19 @@ export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
   };
 }
 
+const emptyPage = () => ({ messages: [] as unknown[], after: undefined as string | undefined });
+
 export const fakeKapso = () => ({
   message: vi.fn().mockResolvedValue(kapsoText() as unknown),
-  outbound: vi.fn().mockResolvedValue({ messages: [] as unknown[], after: undefined as string | undefined }),
+  outbound: vi.fn().mockResolvedValue(emptyPage()),
+  inbound: vi.fn().mockResolvedValue(emptyPage()),
 });
 
 /** The real external services over the fakes; `queries` is fakeQueries() (identify, latestInSecond, numberIdFor). */
 export function externalServices(queries: { stored: TablesInsert<'messages'>[] }) {
   const ext = fakeExternalQueries(queries.stored);
   const kapso = fakeKapso();
-  const store = new ExternalStore(ext as unknown as ExternalQueries, queries as unknown as WebhookQueries);
+  const store = new ExternalStore(ext as unknown as ExternalRepo, queries as unknown as WebhookRepo);
   const status = new ExternalStatus(store, kapso as unknown as KapsoHistory);
   return { ext, kapso, store, status };
 }

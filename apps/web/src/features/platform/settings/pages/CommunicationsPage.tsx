@@ -5,7 +5,7 @@ import { SettingsViewContext } from '@/components/settings/settings-view';
 import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import { settingsMetaQuery } from '../settings-meta-api';
+import { settingsMetaQuery } from '@/features/platform/settings/settings-meta-api';
 import { COMMUNICATIONS_TABS_ID, CommunicationsBody } from './communications/CommunicationsBody';
 import { LoadState } from './communications/LoadState';
 import { SendingState } from './communications/SendingState';

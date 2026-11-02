@@ -3,7 +3,7 @@ import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { KAPSO_GROUPS, SAFETY_GUARD_GROUPS, WACRM_GROUPS } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
 import { t } from '@/lib/i18n/i18n';
-import { CrmCutoverCard } from '../CrmCutoverCard';
+import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
 /**
  * «الحماية» (docs/23 §2d tab 5, docs/26b §6a 1.2–1.3, 10.16–10.21): the CRM cut-over in its danger

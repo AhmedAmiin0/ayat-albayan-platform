@@ -21,7 +21,7 @@ interface ChangeUntilDialogProps {
 export function ChangeUntilDialog({ studentId, pause, onClose, onDone }: ChangeUntilDialogProps) {
   const formId = useId();
   const [until, setUntil] = useState(pause.until_date ?? '');
-  const today = riyadhToday();
+  const today = riyadhToday(); // academy day (docs/34 b): the API's pause days are Riyadh days
   const min = pause.from_date > today ? pause.from_date : today;
   const invalidate = useInvalidatePause(studentId);
   const save = useMutation({

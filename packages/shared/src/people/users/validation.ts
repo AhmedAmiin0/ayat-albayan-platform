@@ -1,4 +1,4 @@
-import { USER_ROLES, type UserRole } from '../../catalog/permissions/roles.js';
+import { USER_ROLES, type UserRole } from '@ab/catalog';
 
 // Rules of the user forms shared by the API (authoritative) and the web (early feedback).
 

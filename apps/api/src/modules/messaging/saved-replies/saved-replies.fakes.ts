@@ -3,13 +3,13 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { StorageService } from '../../../common/storage/storage.service';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { StorageService } from '@/common/storage/storage.service';
 import type { SavedReplyRow } from './saved-replies.mapper';
-import { SavedRepliesQueries, type ReplyInsert, type ReplyPatch } from './saved-replies.queries';
+import { SavedRepliesRepo, type ReplyInsert, type ReplyPatch } from './saved-replies.repo';
 import { SavedReplySettings } from './saved-replies.settings';
 
 const USERS: Record<string, AuthUser> = {
@@ -26,7 +26,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 let seq = 0;
-/** A uuid-shaped id per row, so `:id` params pass replyIdParam. */
+/** A uuid-shaped id per row, so `:id` params pass the `replyIdSchema` ZodParam. */
 export const replyId = (n: number) => `5a000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 /** saved_replies in memory: the same reads and writes SavedRepliesQueries makes. */
@@ -105,7 +105,7 @@ export async function repliesApp(input: { rows?: SavedReplyRow[]; resolve?: Perm
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(input.resolve ?? systemResolver)
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SavedRepliesQueries).useValue(replies)
+    .overrideProvider(SavedRepliesRepo).useValue(replies)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(SavedReplySettings).useValue({ read: async () => ({ upload_max_mb: 10 }) })
     .compile();

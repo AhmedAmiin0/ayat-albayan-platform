@@ -2,7 +2,7 @@ import type { CallView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { dayLabel, withDays } from './day-groups';
-import { message } from '../../testing/inbox-fixture';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 
 const NOW = new Date(2026, 9, 5, 15, 0);
 const at = (day: number, hour: number) => new Date(2026, 9, day, hour, 0).toISOString();

@@ -3,16 +3,17 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { ConnectionActions } from './ConnectionActions';
-import { GoogleBlock } from '../GoogleBlock';
-import { accountStyle, errorText, fill, formatAt } from '../google-format';
+import { GoogleBlock } from '@/features/platform/google-sync/GoogleBlock';
+import { accountStyle, errorText, fill, formatAt } from '@/features/platform/google-sync/google-format';
 import { RedirectUri } from './RedirectUri';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const s = t.googleSync.connection;
 
 /** «الحساب المربوط»: status, email, since, last error, the redirect URI and connect / disconnect. */
 export function ConnectionCard({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const c = status.connection;
   const [before, after] = s.email.split('{email}');
   return (

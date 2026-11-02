@@ -1,5 +1,5 @@
 import type { ThreadView } from '@ab/shared';
-import { replyFromText } from '../lib/reply-from';
+import { replyFromText } from '@/features/messaging/inbox/composer/lib/reply-from';
 
 /** The reply-from note beside the window's end in the composer (nothing when not applicable). */
 export function ReplyFromNote({ thread }: { thread: ThreadView }) {

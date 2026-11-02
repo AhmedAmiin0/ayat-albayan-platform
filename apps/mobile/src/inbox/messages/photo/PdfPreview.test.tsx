@@ -7,7 +7,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape } from '@/theme';
 import { MessageFile } from '../components/MessageFile';
 import { PHONE } from '../../shared/thread-fixtures';
-import { pageUrl, pdfPage, pdfPath, staffPdf } from './photo-test-kit';
+import { pageUrl, pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -15,8 +15,9 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// A chat PDF like WhatsApp's (owner 2026-10-29): page 1 as the thumb, the name, «12 صفحة · PDF · 1.2 ميغابايت».
-// One staff sent (PdfPreview.states.test.tsx has a family's, asked on a tap).
+// A chat PDF like WhatsApp's (owner 2026-10-29): page 1 as the thumb, the name, «12 صفحة · PDF ·
+// 1.2 ميغابايت». A family's PDF (PdfPreview.states.test.tsx: the others, the states;
+// PdfPreview.seen.test.tsx: the name, the list).
 const FILE = '/threads/%2B966552147730/messages/d1/file';
 const SIGNED_PDF = 'https://storage.test/wa-media/d1.pdf?token=x';
 const serve = (first: () => Promise<unknown>) =>
@@ -29,7 +30,7 @@ const fail = (status: number, code: string) => serve(async () => { throw new Api
 const calls = (path: string) => mockApiFetch.mock.calls.filter(([p]) => p === path).length;
 const hold = jest.fn();
 const show = (client = createTestQueryClient()) =>
-  renderWithQuery(<MessageFile message={staffPdf()} phone={PHONE} onLongPress={hold} />, client);
+  renderWithQuery(<MessageFile message={pdfDoc()} phone={PHONE} onLongPress={hold} />, client);
 const openURL = jest.spyOn(Linking, 'openURL');
 
 beforeEach(() => {

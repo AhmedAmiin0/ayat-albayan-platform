@@ -2,21 +2,21 @@ import { PAYMENT_METHODS, type AssistantStatementView, type PaymentMethod } from
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payouts/payout-actions';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { money } from '@/payments/format';
-import { FormLabel } from '@/payments/FormLabel';
-import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
-import { ReceiptPicker } from '@/payments/ReceiptPicker';
+import { Note } from '@/core/ui/feedback/Note';
+import { money } from '@/core/lib/money/format';
+import { FormLabel } from '@/core/ui/form/FormLabel';
+import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
+import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { useNow } from '@/core/lib/time/use-now';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { assistantsErrorText } from '../../api/errors';
-import { usePayStatement } from '../hooks/use-pay-statement';
+import { assistantsErrorText } from '@/assistants/api/errors';
+import { usePayStatement } from '@/assistants/statements/hooks/use-pay-statement';
 
 const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 

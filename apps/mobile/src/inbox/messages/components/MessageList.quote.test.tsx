@@ -1,4 +1,4 @@
-import type { MessageView } from '@ab/shared';
+import type { MessageQuote, MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -18,7 +18,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const quoteOf = (m: MessageView, fields: Partial<MessageView['reply_to']> = {}) => ({
+const quoteOf = (m: MessageView, fields: Partial<MessageQuote> = {}) => ({
   id: m.id,
   direction: m.direction,
   body: m.body,

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { byCurrency } from '@/sales-money/lib/money-text';
 

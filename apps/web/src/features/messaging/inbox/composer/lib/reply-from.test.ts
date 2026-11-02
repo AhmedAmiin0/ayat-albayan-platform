@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { thread } from '../../testing/inbox-fixture';
+import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { replyFromText } from './reply-from';
 
 const text = (line: 'chat' | 'notifications') => t.inbox.line.replyFrom.replace('{line}', t.enums.waLine[line]);

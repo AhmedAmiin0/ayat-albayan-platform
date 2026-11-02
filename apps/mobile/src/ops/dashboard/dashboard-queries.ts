@@ -6,6 +6,7 @@ import type { DashboardWork, Summary } from './dashboard-types';
 
 /** The Riyadh week (Saturday → Friday) holding `now`: the range of the web's KPI strip. */
 export function weekRange(now: Date): { from: string; to: string } {
+  // academy day (docs/34 b): the dashboard's `?from&to` week is in Riyadh days.
   const from = weekStart(riyadhToday(now));
   return { from, to: addDays(from, 6) };
 }

@@ -1,9 +1,9 @@
 import type { Json } from '@ab/db';
 import { nextFollowUpAt, SETTING_DEFAULTS, validTiming, type LeadFollowUp, type LeadQualificationPatch } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
-import { LeadsQueries, type LeadRow } from './leads.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { LeadsRepo, type LeadRow } from './leads.repo';
 
 interface LeadPatch<T> {
   id: string;
@@ -26,7 +26,7 @@ export class LeadProfileService {
   private readonly log = new Logger(LeadProfileService.name);
 
   constructor(
-    private readonly leads: LeadsQueries,
+    private readonly leads: LeadsRepo,
     private readonly policy: NotificationPolicy,
     private readonly audit: AuditService,
   ) {}

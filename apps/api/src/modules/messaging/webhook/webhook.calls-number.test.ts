@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setCallsNumber } from '../../../common/integrations/calls-number';
+import { setCallsNumber } from '@/common/configuration/integrations/calls-number';
 import {
   CHAT_PHONE_NUMBER_ID,
   envelope,
@@ -11,7 +11,7 @@ import {
 } from './meta.fakes';
 import { liveWebhookConfig } from './webhook.config';
 import { parseWebhook } from './parse/webhook.parse';
-import { loadEnv } from '../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 
 // The dedicated calls number (docs/28 §10): its changes are kept under legacy too, stamped line
 // `calls`; a family's call_permission_reply is read beside the stored message.

@@ -66,3 +66,15 @@ describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
     expect(sender.kick).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('TeacherAlert.toTeachers («تغيير المعلم», owner 2026-10-30)', () => {
+  it('the same alert for lessons handed to a new teacher, as a course (not «تجريبية»)', async () => {
+    const { alert, push, queries, sender } = fakeTeacherAlert({ lessons: LESSONS });
+    await alert.toTeachers({ lessonIds: ['L1'], studentIds: ['s1'], kind: 'package' });
+    expect(queries.lessons).toHaveBeenCalledWith(['L1']);
+    const bell = expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] });
+    expect(push.notifyProfiles).toHaveBeenCalledWith(bell);
+    expect(queries.queue.mock.calls[0]?.[0][0]).toMatchObject({ template_params: { '3': 'اشتراك' } });
+    expect(sender.kick).toHaveBeenCalledTimes(1);
+  });
+});

@@ -1,9 +1,9 @@
 import type { ReceivableRow } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { useTabOpen } from '@/auth/use-tab-open';
+import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
-import { money, paidOf } from '@/payments/format';
+import { money, paidOf } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ListRow } from '@/core/ui/layout/ListRow';

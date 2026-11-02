@@ -1,9 +1,9 @@
-import { cancelBlock, type SubscriptionCancel as CancelBody, type SubscriptionView } from '@ab/shared';
+import { cancelBlock, type CancelBlock, type SubscriptionCancel as CancelBody, type SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import { MoneyWrites } from '../money/money-writes';
-import { SubscriptionsService } from '../subscriptions.service';
-import { SubscriptionCancelQueries } from './subscription-cancel.queries';
+import { conflict } from '@/common/http/errors';
+import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionCancelRepo } from './subscription-cancel.repo';
 
 type CancelInput = CancelBody & { actorId: string; now?: Date };
 
@@ -19,7 +19,7 @@ type CancelInput = CancelBody & { actorId: string; now?: Date };
 export class SubscriptionCancel {
   constructor(
     private readonly subs: SubscriptionsService,
-    private readonly queries: SubscriptionCancelQueries,
+    private readonly queries: SubscriptionCancelRepo,
     private readonly writes: MoneyWrites,
   ) {}
 
@@ -28,11 +28,16 @@ export class SubscriptionCancel {
     return this.subs.get(id);
   }
 
-  async cancel(before: SubscriptionView, input: CancelInput): Promise<SubscriptionView> {
+  /** Why the package may not be cancelled (the 409 code), or null: the cancel's own check. */
+  async block(before: SubscriptionView): Promise<CancelBlock | null> {
     const lessons = (await this.queries.linkedLessons(before.id)) + before.balance.lessons_used;
     const later = { id: before.id, studentId: before.student.id, createdAt: before.created_at };
     const laterCommission = before.price > 0 && (await this.queries.laterCommission(later));
-    const block = cancelBlock({ status: before.status, paid: before.paid, lessons, laterCommission });
+    return cancelBlock({ status: before.status, paid: before.paid, lessons, laterCommission });
+  }
+
+  async cancel(before: SubscriptionView, input: CancelInput): Promise<SubscriptionView> {
+    const block = await this.block(before);
     if (block) throw conflict(block);
     const write = { id: before.id, actorId: input.actorId, reason: input.reason ?? null, now: input.now ?? new Date() };
     const result = await this.queries.cancel(write);

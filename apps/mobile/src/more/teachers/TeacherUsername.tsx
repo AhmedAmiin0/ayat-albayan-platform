@@ -2,15 +2,15 @@ import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { Field } from '@/core/ui/form/Field';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import { Note } from '../Note';
-import type { Teacher } from '../types';
+import { Note } from '@/core/ui/feedback/Note';
+import type { Teacher } from '@/core/lib/staff/types';
 
 /**
  * «اسم المستخدم» of the teacher's login (docs/30 §7), for teachers.write: LTR, lower-cased on blur and save,

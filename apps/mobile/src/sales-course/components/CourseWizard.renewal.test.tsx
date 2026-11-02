@@ -3,13 +3,15 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { noAvailability } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { daysText } from '../lib/course-days';
-import { fakeCourseApi, isDisabled, pressEnabled } from '../testing/course-test-utils';
-import { CourseScreen } from '../screens/CourseScreen';
-import { bookedCourse, courseView } from '../testing/fixtures';
+import { daysText } from '@/sales-course/lib/course-days';
+import { fakeCourseApi, isDisabled, pressEnabled } from '@/sales-course/testing/course-test-utils';
+import { CourseScreen } from '@/sales-course/screens/CourseScreen';
+import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
+
+const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -39,12 +41,12 @@ test('a previous course and a start weeks in the past: the days land in the comi
   serve({ subscription: sub, previous: bookedCourse({ endsOn: '2026-08-20' }) });
   await renderWithQuery(<CourseScreen />);
   const hint = t.booking.courseChange.continueHint
-    .replace('{days}', daysText(bookedCourse().days, TZ, '24'))
+    .replace('{days}', daysText(bookedCourse().days, TZ, R24))
     .replace('{date}', localDay('2026-10-01'));
   expect(await screen.findByText(hint)).toBeTruthy();
   await pressEnabled(t.booking.courseChange.continueSameDays);
-  expect(await screen.findByText(dayLine('2026-10-01T15:00:00.000Z', TZ, '24'))).toBeTruthy(); // today 18:00
-  expect(screen.getByText(dayLine('2026-10-04T14:00:00.000Z', TZ, '24'))).toBeTruthy(); // Sunday 17:00
+  expect(await screen.findByText(dayLine('2026-10-01T15:00:00.000Z', TZ, R24))).toBeTruthy(); // today 18:00
+  expect(screen.getByText(dayLine('2026-10-04T14:00:00.000Z', TZ, R24))).toBeTruthy(); // Sunday 17:00
   expect(sent('/sales/booking/check')[0]?.[2]).toMatchObject({
     startsOn: '2026-10-01',
     startTimeLocal: '18:00',
@@ -55,13 +57,13 @@ test('a previous course and a start weeks in the past: the days land in the comi
 test('a plan of other days a week: said so, no «تابِع»; «عدّل الأيام السابقة» opens the days, prefilled, to add one', async () => {
   serve({ perWeek: 3, previous: bookedCourse() });
   await renderWithQuery(<CourseScreen />);
-  const adjust = counted(t.booking.courseChange.continueAdjust, 3).replace('{days}', daysText(bookedCourse().days, TZ, '24'));
+  const adjust = counted(t.booking.courseChange.continueAdjust, 3).replace('{days}', daysText(bookedCourse().days, TZ, R24));
   expect(await screen.findByText(adjust)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
   await pressEnabled(t.booking.courseChange.adjustDays);
   await screen.findAllByRole('checkbox', { name: '17:00' });
-  expect(screen.getByText(dayLine('2026-10-11T14:00:00.000Z', TZ, '24'))).toBeTruthy();
-  expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine('2026-10-11T14:00:00.000Z', TZ, R24))).toBeTruthy();
+  expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, R24))).toBeTruthy();
   expect(screen.getByText(pickProgress(t.booking, 2, 3) ?? '')).toBeTruthy();
   expect(isDisabled(t.booking.next)).toBe(true);
   expect(sent('/sales/booking/check')).toHaveLength(0);

@@ -5,8 +5,8 @@ import type {
   PdfStatus,
   Program,
   ReportStatus,
-} from '../enums/index.js';
-import type { BalanceView } from '../money/ledger/views.js';
+} from '@ab/catalog';
+import type { BalanceView } from '@ab/money';
 import type { Rubric } from './rules.js';
 import type { ReportContent } from './v2/content.js';
 import type { MemoryView } from './v2/rules.js';

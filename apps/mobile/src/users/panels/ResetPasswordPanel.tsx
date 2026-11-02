@@ -1,16 +1,16 @@
 import type { CredentialMode, IssuedCredential, UserDetail } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { Section } from '@/more/Section';
-import { resetPassword } from '../shared/api';
-import { CredentialPicker } from '../create/CredentialPicker';
-import { CredentialResult } from '../create/CredentialResult';
-import { userErrorText } from '../shared/errors';
+import { Note } from '@/core/ui/feedback/Note';
+import { Section } from '@/core/ui/surface/Section';
+import { resetPassword } from '@/users/shared/api';
+import { CredentialPicker } from '@/users/create/CredentialPicker';
+import { CredentialResult } from '@/users/create/CredentialResult';
+import { userErrorText } from '@/users/shared/errors';
 import { PanelButtons } from './PanelButtons';
-import { passwordError } from '../shared/validation';
+import { passwordError } from '@/users/shared/validation';
 
 interface ResetPasswordPanelProps {
   user: UserDetail;

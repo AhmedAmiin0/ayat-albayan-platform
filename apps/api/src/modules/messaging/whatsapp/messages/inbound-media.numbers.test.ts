@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
 import { InboundMedia } from './inbound-media.service';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-27: the old CRM number's history (line null) was fetched with the NOTIFICATIONS client.
 const row = (over: Partial<MediaMessage>): MediaMessage => ({
@@ -16,7 +16,7 @@ function setup(msg: MediaMessage) {
   const queries = { message: vi.fn().mockResolvedValue(msg), setPath: vi.fn().mockResolvedValue(undefined) };
   const lines = { notifications: lineClient(), chat: lineClient() };
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
-  const media = new InboundMedia(queries as unknown as InboundMediaQueries, lines as unknown as WhatsappLines, storage as unknown as StorageService);
+  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines as unknown as WhatsappLines, storage as unknown as StorageService);
   return { media, lines, storage, queries };
 }
 

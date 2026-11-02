@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Section } from '@/components/settings/Section';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { usePermissions } from '../../people/auth/use-permissions';
+import { usePermissions } from '@/features/people/auth/use-permissions';
 import { ImportButton } from './import/ImportButton';
 import { NumberFormDialog } from './form/NumberFormDialog';
 import { numbersQuery, parityQuery } from './numbers-api';

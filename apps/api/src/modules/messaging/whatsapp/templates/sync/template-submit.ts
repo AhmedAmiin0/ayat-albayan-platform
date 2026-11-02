@@ -1,13 +1,13 @@
 import type { TemplateStatus, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
-import type { AuditService } from '../../../../../common/audit/audit.service';
-import { lineProvider, loadEnv } from '../../../../../config/env/env';
-import { fromMeta, onCrm, requireLine, requireSync } from '../catalog/template-env';
-import { SAMPLE_REPORT, templateProblem } from '../../template-review';
+import type { AuditService } from '@/common/audit/audit.service';
+import { lineProvider, loadEnv } from '@/config/env/env';
+import { fromMeta, onCrm, requireLine, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
+import { SAMPLE_REPORT, templateProblem } from '@/modules/messaging/whatsapp/template-review';
 import { ourStatus } from './template-sync';
-import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '../catalog/template.mapper';
-import type { TemplatesQueries } from '../catalog/templates.queries';
-import type { WhatsappLines } from '../../whatsapp.types';
+import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Submitting a template (T3, docs/12 §3.4), out of template.registry.ts (150-line cap). It goes to the
 // template's OWN line's WABA (owner 2026-10-18), chat rows included, under that line's driver.
@@ -15,7 +15,7 @@ import type { WhatsappLines } from '../../whatsapp.types';
 const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 
 interface SubmitDeps {
-  queries: Pick<TemplatesQueries, 'get' | 'update'>;
+  queries: Pick<TemplatesRepo, 'get' | 'update'>;
   lines: WhatsappLines;
   audit: Pick<AuditService, 'record'>;
 }

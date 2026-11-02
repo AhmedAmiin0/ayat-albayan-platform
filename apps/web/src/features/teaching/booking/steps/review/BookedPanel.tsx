@@ -1,20 +1,20 @@
-import { counted, type BookingResult } from '@ab/shared';
+import { type BookingResult, counted, weekStart, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { RIYADH_TZ, weekStart, zonedParts } from '@/features/teaching/schedule/tz';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n/i18n';
-import { invoicesQuery } from '../../invoice/api.invoice';
-import type { BookingKind } from '../../draft/contract';
-import type { PickedStudent } from '../../draft/draft';
-import { InvoiceButton } from '../../invoice/InvoiceDialog';
-import { useBookingMode, useChatReturn } from '../../mode';
-import { pickedText } from '../slots/SlotStep';
+import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
+import type { BookingKind } from '@/features/teaching/booking/draft/contract';
+import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
+import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
+import { useBookingMode, useChatReturn } from '@/features/teaching/booking/mode';
+import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface BookedPanelProps {
   result: BookingResult;
@@ -29,10 +29,10 @@ export interface BookedPanelProps {
   chatPhone?: string | null;
 }
 
-/** The first lesson and the Riyadh week it falls in (the «افتح الجدول» link). */
-function firstLesson(result: BookingResult) {
+/** The first lesson and its week in the viewer's zone `viewer`, as the calendar («افتح الجدول»). */
+function firstLesson(result: BookingResult, viewer: string) {
   const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-  return { first, week: first ? weekStart(zonedParts(new Date(first.starts_at), RIYADH_TZ).date) : undefined };
+  return { first, week: first ? weekStart(zonedPartsIn(new Date(first.starts_at), viewer).date) : undefined };
 }
 
 /**
@@ -40,14 +40,14 @@ function firstLesson(result: BookingResult) {
  * regular package, and the way to the week (or back to the chat).
  */
 export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
-  const clock = useClock();
+  const clock = { ...useClock(), tz: useViewerTz() };
   const sales = useBookingMode() === 'sales';
   const backToChat = useChatReturn();
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [paying, setPaying] = useState(false);
   const [paid, setPaid] = useState(false);
-  const { first, week } = firstLesson(result);
+  const { first, week } = firstLesson(result, clock.tz);
   const offer = !!subscribeFor && !subscribed;
   // The assistant never has an invoice (her course follows the subscription she made).
   const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !sales && !!kind && kind !== 'trial' });

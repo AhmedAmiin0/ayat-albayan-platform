@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';

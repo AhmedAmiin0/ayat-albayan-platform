@@ -45,7 +45,7 @@ test('the free slots of the same teacher, the lesson’s week from now, its leng
   expect(mockApiFetch).toHaveBeenLastCalledWith(slotsUrl('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z'));
   await screen.findByRole('radio', { name: '17:00' });
   expect(screen.getByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
-  expect(screen.getByText(t.reschedule.current.replace('{when}', 'الخميس 1 أكتوبر 16:00 بتوقيت الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.reschedule.current.replace('{when}', 'الخميس 1 أكتوبر 16:00 بتوقيتك'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'السبت 3 أكتوبر', checked: true })).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر' })).toBeTruthy();
   expect(screen.getByRole('radio', { name: '18:00' })).toBeTruthy();
@@ -60,12 +60,12 @@ test('«هذه الحلقة فقط»: Sunday 17:00 sends scope one; the guardian
   const { onClose, client } = await openSheet();
   await fireEvent.press(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر' }));
   await fireEvent.press(screen.getByRole('radio', { name: '17:00' }));
-  expect(screen.getByText(t.booking.picked.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.booking.picked.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
 
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/reschedule', { scope: 'one', startsAt: SUN_17 });
   expect(await screen.findByText(t.lessons.rescheduled)).toBeTruthy();
-  expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
+  expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
   expect(screen.getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
   expect(screen.getByText(t.reschedule.guardianNote)).toBeTruthy();
   // Today and the calendars refetch.

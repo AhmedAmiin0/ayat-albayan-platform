@@ -1,14 +1,18 @@
 import { ruleCancelRequestSchema, type LessonView } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { LessonCancelService } from '../status/lesson-cancel.service';
-import { LessonViews } from '../store/lesson-views';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { LessonCancelService } from '@/modules/teaching/lessons/status/lesson-cancel.service';
+import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
 /** docs/10 route 10 response. */
-type RuleCancelResult = { rule_id: string; cancelled: LessonView[] };
+interface RuleCancelResult {
+  rule_id: string;
+  cancelled: LessonView[];
+}
 
 /** POST /schedule-rules/:id/cancel — ends a rule and cancels its open lessons (R-SCH-07). */
 @ApiTags('schedule-rules')
@@ -25,10 +29,9 @@ export class RuleCancelController {
   @HttpCode(200)
   async cancel(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(ruleCancelRequestSchema) req: z.output<typeof ruleCancelRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<RuleCancelResult> {
-    const req = parseOrThrow(ruleCancelRequestSchema, body);
     const ids = await this.cancels.cancelRule({ ruleId: id, body: req, actor: user });
     return { rule_id: id, cancelled: await this.views.many(ids, 'admin') };
   }

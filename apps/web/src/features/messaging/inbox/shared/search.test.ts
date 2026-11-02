@@ -11,6 +11,12 @@ describe('parseInboxSearch', () => {
     });
   });
 
+  it('uses the shared E.164 rule (the DB domain): 8–15 digits after the +', () => {
+    expect(parseInboxSearch({ phone: '+12345678' })).toEqual({ phone: '+12345678', page: 1 });
+    expect(parseInboxSearch({ phone: '+1234567' })).toEqual({ page: 1 });
+    expect(parseInboxSearch({ phone: '+1234567890123456' })).toEqual({ page: 1 });
+  });
+
   it('accepts unread as the string the URL gives back', () => {
     expect(parseInboxSearch({ unread: 'true' })).toEqual({ unread: true, page: 1 });
   });

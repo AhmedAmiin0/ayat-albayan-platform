@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from '../fixtures';
+import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from '@/payments/fixtures';
 import { checkDraft, chosenPackage, defaultPackage, emptyDraft, payablePackages, withMethod } from './payment-form';
-import type { Receipt } from '../receipt';
+import type { Receipt } from '@/core/lib/receipts/receipt';
 
 const now = new Date('2026-10-01T13:20:00Z');
 const paidOld = subscription({ id: OLD_SUB_ID, starts_on: '2026-08-27', paid: 145, status: 'expired' });
@@ -72,4 +72,18 @@ test('a cancelled package (owner 2026-10-28) is never payable nor the default, e
   expect(payablePackages(balanceOf(cancelled, current)).map((p) => p.id)).toEqual([SUB_ID]);
   expect(defaultPackage(balanceOf(cancelled, current))?.id).toBe(SUB_ID);
   expect(chosenPackage(balanceOf(cancelled, current), OLD_SUB_ID)?.id).toBe(SUB_ID);
+});
+
+test('a stopped package (migration 991) still owes: payable and the default', () => {
+  const stopped = subscription({
+    id: OLD_SUB_ID,
+    starts_on: '2026-08-27',
+    paid: 50,
+    status: 'cancelled',
+    cancel_kind: 'stopped',
+  });
+  const ids = (old: typeof stopped) => payablePackages(balanceOf(old, current)).map((p) => p.id);
+  expect(ids(stopped)).toEqual([OLD_SUB_ID, SUB_ID]);
+  expect(defaultPackage(balanceOf(stopped, current))?.id).toBe(OLD_SUB_ID);
+  expect(ids({ ...stopped, cancel_kind: 'unused' })).toEqual([SUB_ID]);
 });

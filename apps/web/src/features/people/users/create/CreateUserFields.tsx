@@ -8,7 +8,7 @@ import { CredentialPicker } from './CredentialPicker';
 import { LinkPicker } from './LinkPicker';
 import { NewTeacherFields } from './NewTeacherFields';
 import { RolePicker } from './RolePicker';
-import type { FormErrors } from '../validation';
+import type { FormErrors } from '@/features/people/users/validation';
 
 const F = t.users.form;
 const L = t.users.link;

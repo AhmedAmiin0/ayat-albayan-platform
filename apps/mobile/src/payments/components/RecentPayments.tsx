@@ -1,19 +1,21 @@
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { SectionLabel } from '@/students/list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { instantDay, money } from '../format';
-import { isPending } from '../lib/optimistic';
-import { useRecentPayments } from '../hooks/queries';
+import { instantDay, money } from '@/core/lib/money/format';
+import { isPending } from '@/payments/lib/optimistic';
+import { useRecentPayments } from '@/payments/hooks/queries';
+import { useViewerTz } from '@/core/lib/clock';
 
 function PaymentRow({ payment }: { payment: PaymentView }) {
+  const tz = useViewerTz();
   const { color } = useTheme();
   const pending = isPending(payment);
   const detail = [
     t.enums.paymentMethod[payment.method],
-    instantDay(payment.paid_at),
+    instantDay(payment.paid_at, tz),
     ...(pending ? [t.common.saving] : []),
   ].join(' · ');
   return (

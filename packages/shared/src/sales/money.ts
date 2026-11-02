@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { localDate } from '../schedule/schemas/scheduling.js';
-import { optionalText, phoneE164 } from '../core/schemas/common.js';
-import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/ledger/schemas.js';
+import { localDate } from '@ab/schedule';
+import { optionalText, phoneE164 } from '@ab/core';
+import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '@ab/money';
 
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
@@ -14,8 +14,8 @@ import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, payment
 // the admin's form has but hers does not (kind, method, invoiceId…) is a 400, never silently dropped.
 
 /**
- * The chat the write comes from (owner 2026-10-29, docs/16 row 38): with sales.renew_any a student she does not
- * own is accepted when this is its family's phone (403 not_your_student otherwise). Ignored for her own students.
+ * The chat the write comes from (owner 2026-10-29, docs/16 row 38). Never an access check (owner 2026-11-01:
+ * sales.renew_any renews ANY student): it only picks which of the student's family chats the receipt files come from.
  */
 const chatPhone = phoneE164.optional();
 

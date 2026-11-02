@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { STUDENTS_KEY } from '../api';
-import { EMPTY_STUDENT } from '../create/create-student';
+import { STUDENTS_KEY } from '@/features/people/students/api';
+import { EMPTY_STUDENT } from '@/features/people/students/create/create-student';
 import { DuplicateDialog } from './DuplicateDialog';
-import type { StudentProfile, StudentRef } from '../types';
+import type { StudentProfile, StudentRef } from '@/features/people/students/types';
 
 const SUHAILA: StudentRef = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active' };
 const TYPED = { ...EMPTY_STUDENT, name: 'سهيله', guardianName: 'ام جود', guardianPhone: '00966501234567' };

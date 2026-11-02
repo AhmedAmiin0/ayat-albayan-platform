@@ -4,12 +4,13 @@ import { dateAndClock } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
-// Display helpers of the Google section. DB times are UTC; the academy reads them in Asia/Riyadh,
-// 12 or 24 h as the viewer chose, Western digits.
+// Display helpers of the Google section. DB times are UTC; they read in the viewer's zone
+// (docs/34), 12 or 24 h as the viewer chose, Western digits.
 
-const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'Asia/Riyadh' });
-
-export const formatAt = (iso: string, clock: Clock): string => dateAndClock(DAY, new Date(iso), { ...clock, tz: 'Asia/Riyadh' });
+/** The time with its date in `clock.tz`, the viewer's zone (useViewerTz()). */
+export function formatAt(iso: string, clock: Clock & { tz: string }): string {
+  return dateAndClock(new Date(iso), clock, { dateStyle: 'medium' });
+}
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });
 

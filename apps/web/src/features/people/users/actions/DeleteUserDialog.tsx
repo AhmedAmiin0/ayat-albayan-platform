@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { deleteUser, disableUser, USERS_KEY } from '../api';
-import { historyReferences, userErrorText } from '../errors';
-import { HistoryReferences } from '../edit/HistoryReferences';
+import { deleteUser, disableUser, USERS_KEY } from '@/features/people/users/api';
+import { historyReferences, userErrorText } from '@/features/people/users/errors';
+import { HistoryReferences } from '@/features/people/users/edit/HistoryReferences';
 
 const D = t.users.delete;
 

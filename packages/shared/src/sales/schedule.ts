@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { LessonStatus } from '../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 
 // The salesperson's read-only academy schedule (owner report 2026-10-12: «it is not seeing the schedule»).
 // Whitelist: who teaches whom and when, the status, the trial/makeup badges and the way in (owner

@@ -1,3 +1,4 @@
+import { addDays, weekWindowIn, zonedPartsIn } from '@ab/shared';
 import type { TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -7,12 +8,12 @@ import { PageHead } from '@/components/ui/layout/page';
 import { Tabs } from '@/components/ui/layout/tabs';
 import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { InternalMeetingButton } from '@/features/teaching/meetings/internal/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
 import { lessonsOnDay } from '@/features/teaching/schedule/lesson/lessons';
-import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
@@ -56,8 +57,8 @@ export function TeacherDashboard() {
 function Dashboard({ me }: { me: TeacherMe }) {
   const now = useNow();
   const platform = usePlatformClassroom(me.platform_classroom);
-  const today = zonedParts(now, me.tz).date;
-  const lessons = useQuery(myLessonsQuery(weekWindow(today, me.tz)));
+  const today = zonedPartsIn(now, me.tz).date;
+  const lessons = useQuery(myLessonsQuery(weekWindowIn(today, me.tz)));
   const range = t.teacherDash.weekRange.replace('{from}', dayMonthLabel(today)).replace('{to}', dayMonthLabel(addDays(today, 6)));
   const [tab, setTab] = useState<Tab>('today');
   const [notice, setNotice] = useState<string | null>(null);

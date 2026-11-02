@@ -12,9 +12,9 @@ test('a refused check (bookFailure) re-words its clash after a 24 → 12 h switc
   const error = new ApiError(409, { code: 'conflict', conflicts: [clash] });
   const check = { isPending: false, error, data: undefined, refetch: jest.fn() };
   await render(<CourseCheckNotice check={check} onChangeSlot={jest.fn()} />);
-  expect(screen.getByText(conflictLine(clash, '24'))).toBeTruthy();
+  expect(screen.getByText(conflictLine(clash, '24', 'Asia/Riyadh'))).toBeTruthy();
 
   await act(async () => setClockPref('12'));
-  expect(screen.getByText(conflictLine(clash, '12'))).toBeTruthy();
-  expect(screen.queryByText(conflictLine(clash, '24'))).toBeNull();
+  expect(screen.getByText(conflictLine(clash, '12', 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.queryByText(conflictLine(clash, '24', 'Asia/Riyadh'))).toBeNull();
 });

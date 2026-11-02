@@ -1,6 +1,6 @@
-import type { PushKind } from '../../enums/index.js';
+import type { PushKind } from '@ab/catalog';
 import type { TemplateKey } from '../../messaging/templates/templates.js';
-import type { SettingKey } from '../../settings/index.js';
+import type { SettingKey } from '@ab/settings';
 import type { CatalogueSettings } from './catalogue-settings.js';
 
 // The notification catalogue (docs/23 §2b): what the academy sends, to whom, through which channel,
@@ -24,6 +24,8 @@ export type TimingKey = Extract<SettingKey, 'reminder_minutes_before' | 'renewal
 export interface NotificationEntry<K extends string = string> {
   key: K;
   audience: NotificationAudience;
+  /** Others it reaches too (a schedule change: the lesson's teacher); listed in their tab too. */
+  alsoTo?: readonly NotificationAudience[];
   channels: readonly NotificationChannel[];
   /** The message_templates keys it may send (a variant is picked in code, e.g. by link host). */
   templates: readonly TemplateKey[];

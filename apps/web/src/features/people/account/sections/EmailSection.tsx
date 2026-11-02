@@ -4,13 +4,13 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { emailErrors } from '../account-validation';
+import { emailErrors } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
-import { changeEmail } from '../api';
+import { changeEmail } from '@/features/people/account/api';
 import { PasswordField } from './PasswordField';
-import { SaveButton } from '../SaveButton';
+import { SaveButton } from '@/features/people/account/SaveButton';
 import type { SectionProps } from './section-props';
-import { useAccountSave } from '../use-account-save';
+import { useAccountSave } from '@/features/people/account/use-account-save';
 
 const M = t.account.email;
 

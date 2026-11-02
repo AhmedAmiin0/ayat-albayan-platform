@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom/links/use-join-classroom';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import type { TodayLesson } from '../lib/today-lesson';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 import { heroPrimary } from './hero-primary';
 
 interface HeroActionsProps {

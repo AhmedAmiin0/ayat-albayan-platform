@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { partPaidLine, paidOf } from '@/payments/format';
+import { partPaidLine, paidOf } from '@/core/lib/money/format';
 import { subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionItem } from './SubscriptionItem';
@@ -25,5 +25,17 @@ test('nothing paid: the plain «دُفع 0 من …» line, no part-paid one', a
 
 test('paid in full: neither line', async () => {
   await renderWithQuery(<SubscriptionItem sub={subscription({ status: 'active', price: 81, paid: 81 })} />);
+  expect(screen.queryByText(/الباقي/)).toBeNull();
+});
+
+test('a stopped package (991) still owes: its part-paid line shows', async () => {
+  const stopped = subscription({ status: 'cancelled', cancel_kind: 'stopped', price: 81, paid: 80 });
+  await renderWithQuery(<SubscriptionItem sub={stopped} />);
+  expect(screen.getByText(partPaidLine(stopped) ?? '')).toBeTruthy();
+});
+
+test('an unused cancel owes nothing: no part-paid line', async () => {
+  const unused = subscription({ status: 'cancelled', cancel_kind: 'unused', price: 81, paid: 80 });
+  await renderWithQuery(<SubscriptionItem sub={unused} />);
   expect(screen.queryByText(/الباقي/)).toBeNull();
 });

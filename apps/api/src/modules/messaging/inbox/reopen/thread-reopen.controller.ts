@@ -1,12 +1,13 @@
-import { sendsAllTemplates, type ThreadReopenView } from '@ab/shared';
-import { Controller, HttpCode, Logger, Param, Post } from '@nestjs/common';
+import { phoneE164, sendsAllTemplates, type ThreadReopenView } from '@ab/shared';
+import { Controller, HttpCode, Logger, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { ThreadReads } from '../reads/thread-reads';
-import { recordSend } from '../send/send-audit';
-import { phoneParam } from '../threads/phone-param';
+import { AuditService } from '@/common/audit/audit.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodParam } from '@/common/http/zod-inputs';
+import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { last4 } from './kapso-reopener';
 import { ThreadReopenService } from './thread-reopen.service';
 
@@ -32,13 +33,28 @@ export class ThreadReopenController {
   @Post(':phone/reopen')
   @HttpCode(200)
   @Permissions('inbox.send')
-  async reopen(@Param('phone') raw: string, @CurrentUser() user: AuthUser): Promise<ThreadReopenView> {
-    const phone = phoneParam(raw);
+  async reopen(
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ThreadReopenView> {
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
-    const { view, sent } = await this.reopens.reopen({ phone, actorId: user.id, scope, sales, restricted: !sendsAllTemplates(user) });
+    const { view, sent } = await this.reopens.reopen({
+      phone,
+      actorId: user.id,
+      scope,
+      sales,
+      restricted: !sendsAllTemplates(user),
+    });
     // The row is queued: a failed audit never turns that into an error (the phone would say «send it by hand»: a second copy).
-    if (sent) await recordSend(this.audit, { sent, action: 'thread_reopen_template', user, scope, sales }).catch(() => this.log.warn(`reopen audit failed for ${last4(phone)}`));
+    if (sent)
+      await recordSend(this.audit, {
+        sent,
+        action: 'thread_reopen_template',
+        user,
+        scope,
+        sales,
+      }).catch(() => this.log.warn(`reopen audit failed for ${last4(phone)}`));
     return view;
   }
 }

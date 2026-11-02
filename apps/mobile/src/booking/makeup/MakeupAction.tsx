@@ -1,4 +1,4 @@
-import { RIYADH_TZ, makeupOffer, type LessonView } from '@ab/shared';
+import { makeupOffer, type LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -7,7 +7,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { makeupParams } from './makeup-draft';
-import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 
 /**
  * «حجز تعويضي» under a missed lesson's row (R-SCH-10): for each student still charged for a
@@ -18,6 +18,7 @@ import { useClockCycle, whenIn } from '@/core/lib/clock';
  */
 export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?: (() => void) | undefined }) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { color } = useTheme();
   const { makeup_window_days: days } = usePublicConfig();
   const { open, booked } = makeupOffer(lesson, new Date(), days);
@@ -49,7 +50,7 @@ export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?
           style={{ fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}
         >
           {group ? `${s.name}: ` : ''}
-          {t.booking.makeup.bookedChip.replace('{when}', whenIn(new Date(s.makeup.starts_at), RIYADH_TZ, cycle))}
+          {t.booking.makeup.bookedChip.replace('{when}', whenIn(new Date(s.makeup.starts_at), tz, cycle))}
         </AppText>
       ))}
     </View>

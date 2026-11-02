@@ -219,11 +219,13 @@ the `lint.json` diff.
 
 ### 5.3 How a count shrinks
 
+Run these in a cloud session, never on the owner's PC (owner, 2026-11-01). A red CI lint job prints the pruned diff
+to commit instead (below).
+
 ```
 eslint . --fix                    # L0 only
 eslint . --prune-suppressions     # drop the entries this PR fixed or whose file it deleted; both fail CI anyway
 pnpm lint:prune                   # the same in every package (turbo, no cache)
-pnpm guard:lint -- --write        # lower refactor/guards/lint.json; the gate fails if this is skipped
 ```
 
 A new rule (docs/32 §1) enters with its one-time `eslint --suppress-rule` baseline: on a PR the gate also gets the
@@ -235,7 +237,8 @@ A conflict in an `eslint-suppressions.json`: take develop's side, then re-run `-
 Since docs/32 g3 (`max-len` 100, `max-lines-per-function` 50, `ab/max-params`, the R8 import bans) most files
 carry an entry, so shortening one baselined line or splitting one long function is enough to need a prune. Nobody
 has to run ESLint by hand for it: when the CI lint job fails, its last step («Suppressions to prune») prints the
-pruned `eslint-suppressions.json` diff. Commit that diff, then `pnpm guard:lint -- --write`.
+pruned `eslint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares
+the totals with the base branch, 20b713d61).
 
 ## 6. Fix lanes
 

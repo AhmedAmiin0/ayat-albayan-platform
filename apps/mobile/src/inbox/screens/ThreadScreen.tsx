@@ -1,31 +1,32 @@
 import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
-import { ChatActionsProvider } from '../thread/components/ChatActionsProvider';
-import { ChatHeader } from '../thread/components/ChatHeader';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { ChatHeader } from '@/inbox/thread/components/ChatHeader';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { ChatNotice } from '../thread/components/ChatNotice';
-import { CallButton } from '../thread/calls/entries/CallButton';
-import { Composer } from '../composer/Composer';
-import { clockAt, kindLabel } from '../shared/format';
-import { MessageList } from '../messages/components/MessageList';
-import { ReplyActionsProvider } from '../messages/reply-actions';
-import { OwnThreadNote } from '../thread/components/OwnThreadNote';
-import { SalesChatActions } from '../leads/sales/SalesChatActions';
-import { SendRating } from '../rating/SendRating';
-import { SubscriptionPanel } from '../subscription/SubscriptionPanel';
-import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
-import { useHeaderStudents } from '../thread/components/HeaderStudents';
-import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
-import { useInboxRead } from '../thread/hooks/inbox-sync';
-import { useThread } from '../thread/hooks/use-thread';
-import { useClockCycle } from '@/core/lib/clock';
+import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
+import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
+import { Composer } from '@/inbox/composer/Composer';
+import { clockAt, kindLabel } from '@/inbox/shared/format';
+import { MessageList } from '@/inbox/messages/components/MessageList';
+import { ReplyActionsProvider } from '@/inbox/messages/reply-actions';
+import { OwnThreadNote } from '@/inbox/thread/components/OwnThreadNote';
+import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
+import { SendRating } from '@/inbox/rating/SendRating';
+import { SubscriptionPanel } from '@/inbox/subscription/SubscriptionPanel';
+import { ThreadHeaderActions } from '@/inbox/thread/components/ThreadHeaderActions';
+import { useHeaderStudents } from '@/inbox/thread/components/HeaderStudents';
+import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { useInboxRead } from '@/inbox/thread/hooks/inbox-sync';
+import { useThread } from '@/inbox/thread/hooks/use-thread';
+import { useLastMessageLine } from '@/inbox/thread/hooks/use-last-message';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -42,10 +43,10 @@ const contactAvatar = (thread: ThreadView | null, phone: string) => (
 );
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
-  const { teacher, cycle } = who;
+function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle; tz: string }): string {
+  const { teacher, cycle, tz } = who;
   if (query.isError && query.data) {
-    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle));
+    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle, tz));
   }
   const thread = query.data?.pages[0]?.thread;
   return thread?.display_name && !teacher
@@ -69,6 +70,7 @@ function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; 
  */
 export function ThreadScreen() {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
@@ -78,6 +80,7 @@ export function ThreadScreen() {
   // Opening the chat reads it on the server: its unread badge leaves the list at once.
   useInboxRead(phone, query);
   const thread = query.data?.pages[0]?.thread ?? null;
+  const lastMessage = useLastMessageLine(thread?.last_inbound_at);
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
   const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
@@ -90,7 +93,8 @@ export function ThreadScreen() {
       <Screen chat>
         <ChatHeader
           title={title}
-          subtitle={subtitleOf(phone, query, { teacher, cycle })}
+          subtitle={subtitleOf(phone, query, { teacher, cycle, tz })}
+          status={lastMessage}
           onBack={back}
           avatar={contactAvatar(thread, phone)}
           onTitlePress={students.onPress}

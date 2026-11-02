@@ -4,29 +4,30 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
-import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
-import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
-import { fakePolicy } from '../../messaging/notification-rules/policy/policy.fakes';
-import { ConflictChecker } from '../scheduling/conflicts/conflict-checker';
-import { LessonWriter } from '../scheduling/occurrences/lesson-writer';
-import { ruleRow } from '../scheduling/scheduling.fakes';
-import { ScheduleQueries } from '../scheduling/schedule.queries';
-import { AlertsQueries } from '../../finance/subscriptions/alerts/alerts.queries';
-import { StudentTrialQueries } from '../../finance/subscriptions/trial/student-trial.queries';
-import { UnpaidFlags } from '../../finance/subscriptions/alerts/unpaid-flags.service';
-import { TeachersQueries } from '../../people/teachers/teachers.queries';
-import { LessonProposalQueries } from './proposals/lesson-proposals.queries';
-import { LessonsQueries } from './lessons.queries';
-import { OverviewQueries } from './overview/overview.queries';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsService } from '@/common/settings/settings.service';
+import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
+import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
+import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
+import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
+import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
+import { LessonsRepo } from './lessons.repo';
+import { OverviewRepo } from './overview/overview.repo';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
-import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
-import { TimeEditQueries } from './time-edit/time-edit.queries';
+import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
+import { TimeEditRepo } from './time-edit/time-edit.repo';
+import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 
 const USERS: Record<string, AuthUser> = {
   admin: ADMIN,
@@ -61,6 +62,11 @@ function mocks() {
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
+    // ScheduleNotices' reads and queue (no DB here); a lesson read as null notifies nobody.
+    notices: {
+      lesson: vi.fn(), student: vi.fn(), lessons: vi.fn(), nextLesson: vi.fn(),
+      approved: vi.fn(), queue: vi.fn(),
+    },
   };
 }
 
@@ -69,25 +75,26 @@ export async function lessonsApp() {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(LessonsQueries).useValue(m.lessons)
+    .overrideProvider(LessonsRepo).useValue(m.lessons)
     .overrideProvider(LessonWriter).useValue(m.writer)
-    .overrideProvider(TeachersQueries).useValue(m.teachers)
+    .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(SettingsService).useValue(m.settings)
-    .overrideProvider(ScheduleQueries).useValue(m.rules)
+    .overrideProvider(ScheduleRepo).useValue(m.rules)
     .overrideProvider(ConflictChecker).useValue(m.checker)
-    .overrideProvider(TeacherMeQueries).useValue(m.me)
-    .overrideProvider(OverviewQueries).useValue(m.overview)
-    .overrideProvider(TimeEditQueries).useValue(m.time)
-    .overrideProvider(LessonProposalQueries).useValue(m.proposals)
+    .overrideProvider(TeacherMeRepo).useValue(m.me)
+    .overrideProvider(OverviewRepo).useValue(m.overview)
+    .overrideProvider(TimeEditRepo).useValue(m.time)
+    .overrideProvider(LessonProposalRepo).useValue(m.proposals)
     // The rules (legacy, no rows): no DB here.
     .overrideProvider(NotificationPolicy).useValue(fakePolicy())
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
-    .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
+    .overrideProvider(AlertsRepo).useValue({ studentsOfLessons: async () => [] })
     // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).
-    .overrideProvider(StudentTrialQueries).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
+    .overrideProvider(StudentTrialRepo).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .overrideProvider(StaffPhotos).useValue(m.photos)
+    .overrideProvider(ScheduleNoticesRepo).useValue(m.notices)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
@@ -114,6 +121,9 @@ export async function lessonsApp() {
     m.unpaid.studentIds.mockResolvedValue(new Set());
     m.teachers.loads.mockResolvedValue(new Map());
     for (const read of Object.values(m.overview)) read.mockResolvedValue([]);
+    m.notices.lesson.mockResolvedValue(null);
+    m.notices.approved.mockResolvedValue(true);
+    m.notices.queue.mockImplementation(async (rows: readonly unknown[]) => rows.length);
   };
   return { ...m, app, call, reset };
 }

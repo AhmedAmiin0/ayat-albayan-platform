@@ -4,7 +4,7 @@ import { buttonVariants, Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { classroomErrorText, windowStateAt } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
-import { portalJoin } from '../api';
+import { portalJoin } from '@/features/people/portal/api';
 import { type Clock, useClock } from '@/lib/clock';
 
 interface Props {

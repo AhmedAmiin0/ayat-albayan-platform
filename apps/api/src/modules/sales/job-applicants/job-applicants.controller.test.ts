@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { applicant, APPLICANT_ID } from '../leads/leads.fakes';
-import { testApp } from '../leads/test-app';
+import { applicant, APPLICANT_ID } from '@/modules/sales/leads/leads.fakes';
+import { testApp } from '@/modules/sales/leads/test-app';
 
 let h: Awaited<ReturnType<typeof testApp>>;
 
@@ -32,6 +32,7 @@ describe('JobApplicantsController HTTP (R-LEAD-04)', () => {
   it('POST with a bad phone is 400; a duplicate phone is 409', async () => {
     const bad = await h.call({ method: 'POST', url: url(), body: { phone_e164: 'abc' } });
     expect(bad.statusCode).toBe(400);
+    expect(bad.json()).toMatchObject({ message: 'validation_failed', issues: [expect.objectContaining({ path: 'phone_e164' })] });
     h.applicants.insert.mockRejectedValue(new ConflictException({ code: 'duplicate_phone' }));
     const dup = await h.call({ method: 'POST', url: url(), body: { phone_e164: '+201001234567' } });
     expect(dup.statusCode).toBe(409);

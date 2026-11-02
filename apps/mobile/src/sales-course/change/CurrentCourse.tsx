@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
 import { daysText } from '../lib/course-days';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CurrentCourseProps {
   course: BookedCourse;
@@ -23,13 +23,15 @@ interface CurrentCourseProps {
  */
 export function CurrentCourse({ course, onChange, secondary, hideDays }: CurrentCourseProps) {
   const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const texts = t.booking.courseChange;
   return (
     <View style={{ gap: 12 }}>
       <AppText style={text}>{course.running ? texts.running : texts.upcoming}</AppText>
-      {hideDays ? null : <AppText style={text}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}</AppText>}
+      {hideDays ? null : <AppText style={text}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}</AppText>}
       <Button variant={secondary ? 'secondary' : 'primary'} label={texts.changeDays} onPress={onChange} />
     </View>
   );

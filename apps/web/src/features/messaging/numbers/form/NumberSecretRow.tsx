@@ -7,9 +7,9 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { numberErrorText } from './number-errors';
-import { clearNumberSecret, putNumberSecret } from '../numbers-api';
+import { clearNumberSecret, putNumberSecret } from '@/features/messaging/numbers/numbers-api';
 import { SecretChip } from './SecretChip';
-import { useNumbersMutation } from '../use-numbers-mutation';
+import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 
 const s = t.numbers.secret;
 

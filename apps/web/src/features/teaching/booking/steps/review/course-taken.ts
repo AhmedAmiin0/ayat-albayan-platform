@@ -1,8 +1,8 @@
 import { wallParts, type Conflict } from '@ab/shared';
 import { WEEK_ORDER } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
-import { draftPicks } from '../../draft/draft.days';
-import type { BookingDraft } from '../../draft/draft';
+import { draftPicks } from '@/features/teaching/booking/draft/draft.days';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 
 // «تابِع بنفس الأيام» (owner 2026-10-18): a renewal opens with the previous course's days picked. When
 // the series check finds a clash on one of those days, the slot step names the day so she picks

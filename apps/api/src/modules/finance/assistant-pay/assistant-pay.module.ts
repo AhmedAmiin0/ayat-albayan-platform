@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
-import { PaymentsModule } from '../payments/payments.module';
-import { SubscriptionsModule } from '../subscriptions';
-import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
+import { PaymentsModule } from '@/modules/finance/payments/payments.module';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions';
+import { TeacherEarningsModule } from '@/modules/finance/teacher-earnings/earnings.module';
 import { AssistantPayController } from './admin/assistant-pay.controller';
 import { AssistantRpc } from './shared/assistant-pay.rpc';
 import { AssistantPaySettings } from './shared/assistant-pay.settings';
 import { AssistantStatementsController } from './statements/assistant-statements.controller';
-import { CommissionsQueries } from './commissions/commissions.queries';
+import { CommissionsRepo } from './commissions/commissions.repo';
 import { CorrectionsService } from './statements/corrections.service';
 import { MyController } from './my/my.controller';
-import { MyQueries } from './my/my.queries';
+import { MyRepo } from './my/my.repo';
 import { MyService } from './my/my.service';
-import { StatementsQueries } from './statements/statements.queries';
+import { StatementsRepo } from './statements/statements.repo';
 import { StatementsService } from './statements/statements.service';
-import { TermsQueries } from './terms/terms.queries';
+import { TermsRepo } from './terms/terms.repo';
 import { TermsEnv, TermsService } from './terms/terms.service';
 
 /**
@@ -29,14 +29,14 @@ import { TermsEnv, TermsService } from './terms/terms.service';
   providers: [
     AssistantPaySettings,
     AssistantRpc,
-    CommissionsQueries,
+    CommissionsRepo,
     CorrectionsService,
-    MyQueries,
+    MyRepo,
     MyService,
-    StatementsQueries,
+    StatementsRepo,
     StatementsService,
     TermsEnv,
-    TermsQueries,
+    TermsRepo,
     TermsService,
   ],
 })

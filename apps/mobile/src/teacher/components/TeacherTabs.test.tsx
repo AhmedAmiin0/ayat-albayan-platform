@@ -11,7 +11,7 @@ jest.mock('@/core/ui/layout/AppNativeTabs', () => {
   const { Text } = jest.requireActual('react-native');
   return { AppNativeTabs: () => <Text>teacher-tabs</Text> };
 });
-jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 beforeEach(() => mockApiFetch.mockReset());
 

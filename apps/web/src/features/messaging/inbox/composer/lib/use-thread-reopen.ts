@@ -3,7 +3,7 @@ import type { ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { reopenThread } from '../../api/api';
+import { reopenThread } from '@/features/messaging/inbox/api/api';
 
 // «إعادة فتح المحادثة» (owner 2026-10-26): opening a thread whose 24 h window is closed asks the
 // server once per thread per app session (it dedupes per day anyway). Lives in the composer, which

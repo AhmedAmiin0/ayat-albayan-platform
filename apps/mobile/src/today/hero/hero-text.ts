@@ -12,12 +12,12 @@ export function heroLead(hero: Hero): string {
 }
 
 /** «مع أ. هدى · 45 دقيقة · 18:00 بتوقيت مسقط». */
-export function heroSubtitle(lesson: TodayLesson, cycle: ClockCycle): string {
+export function heroSubtitle(lesson: TodayLesson, cycle: ClockCycle, tz: string): string {
   const teacher = t.today.withTeacher.replace(
     '{teacher}',
     t.today.teacherTitled.replace('{teacher}', teacherName(lesson.teacher, locale)),
   );
-  return [teacher, durationLabel(lesson), ...studentTimes(lesson, cycle)]
+  return [teacher, durationLabel(lesson), ...studentTimes(lesson, cycle, tz)]
     .filter((part): part is string => part !== undefined)
     .join(' · ');
 }

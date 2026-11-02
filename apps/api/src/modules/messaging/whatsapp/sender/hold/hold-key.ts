@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { overlayNumbers } from '@/common/integrations/numbers-overlay';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, lineProvider, loadEnv, type Env } from '@/config/env/env';
 import type { WhatsappEnv } from '@/config/env/whatsapp/env.whatsapp';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';

@@ -2,7 +2,7 @@ import { avatarTone } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { DETAIL, granted, renderWithClient } from '../users-test-kit';
+import { DETAIL, granted, renderWithClient } from '@/features/people/users/users-test-kit';
 import { UserPhoto } from './UserPhoto';
 
 vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));

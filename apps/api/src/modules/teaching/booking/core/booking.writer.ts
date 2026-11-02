@@ -1,10 +1,10 @@
 import type { BookingRequest, BookingResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { BookingFollowUps } from './booking.follow-ups';
-import { BookingInvoices } from '../invoice/booking.invoice';
+import { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
 import { withInvoice } from './booking.payload';
-import type { Prepared } from '../plan/booking.planner';
-import { BookingQueries } from './booking.queries';
+import type { Prepared } from '@/modules/teaching/booking/plan/booking.planner';
+import { BookingRepo } from './booking.repo';
 
 type BookingWrite = { req: BookingRequest; prepared: Prepared; actorId: string };
 
@@ -18,7 +18,7 @@ type BookingWrite = { req: BookingRequest; prepared: Prepared; actorId: string }
 @Injectable()
 export class BookingWriter {
   constructor(
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
     private readonly invoices: BookingInvoices,
     private readonly after: BookingFollowUps,
   ) {}

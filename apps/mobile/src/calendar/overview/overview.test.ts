@@ -14,7 +14,7 @@ const show = (items: AgendaItem[]) =>
   );
 
 test('a day: every teacher by name, even with nothing booked; lessons and free gaps by time', () => {
-  const day = teacherAgendas(OVERVIEW, { start: THU, view: 'day', filter: ALL });
+  const day = teacherAgendas(OVERVIEW, { start: THU, tz: 'Asia/Riyadh', view: 'day', filter: ALL });
   expect(day.map((a) => a.teacher.display_name_ar)).toEqual(['أبرار', 'سارة', 'عمر']);
   const [a, s, o] = day;
   // The cancelled 16:00 stays hidden; the free gap sits between the held 10:00 and the 16:00.
@@ -39,13 +39,13 @@ test('a day: every teacher by name, even with nothing booked; lessons and free g
 });
 
 test('another day keeps the teachers but not Thursday’s lessons, gaps or time off', () => {
-  const day = teacherAgendas(OVERVIEW, { start: SAT, view: 'day', filter: ALL });
+  const day = teacherAgendas(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh', view: 'day', filter: ALL });
   expect(day.map((a) => show(a.items))).toEqual([['sat'], [], []]);
   expect(day.every((a) => a.windows.length === 0 && a.timeOff.length === 0)).toBe(true);
 });
 
 test('a week: each teacher’s lessons under their Riyadh day, no free gaps', () => {
-  const week = teacherAgendas(OVERVIEW, { start: SAT, view: 'week', filter: ALL });
+  const week = teacherAgendas(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh', view: 'week', filter: ALL });
   expect(show(week[0]?.items ?? [])).toEqual([SAT, 'sat', THU, 'l-done', 'l-pending', 'l-muscat']);
   expect(week[2]?.items).toEqual([]);
   expect(week[1]?.timeOff).toHaveLength(1);
@@ -53,13 +53,13 @@ test('a week: each teacher’s lessons under their Riyadh day, no free gaps', ()
 
 test('program and gender narrow the teachers; the day pills count only theirs', () => {
   const names = (filter: TeacherFilter) =>
-    teacherAgendas(OVERVIEW, { start: THU, view: 'day', filter }).map((a) => a.teacher.id);
+    teacherAgendas(OVERVIEW, { start: THU, tz: 'Asia/Riyadh', view: 'day', filter }).map((a) => a.teacher.id);
   expect(names({ program: 'arabic', gender: 'all' })).toEqual([sara.id]);
   expect(names({ program: 'quran', gender: 'male' })).toEqual([omar.id]);
   expect(names({ program: 'islamic_studies', gender: 'female' })).toEqual([]);
-  expect(dayCounts(OVERVIEW, SAT, ALL).map((d) => d.count)).toEqual([1, 0, 0, 0, 0, 3, 0]);
+  expect(dayCounts(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh' }, ALL).map((d) => d.count)).toEqual([1, 0, 0, 0, 0, 3, 0]);
   expect(
-    dayCounts(OVERVIEW, SAT, { program: 'arabic', gender: 'all' }).every((d) => d.count === 0),
+    dayCounts(OVERVIEW, { start: SAT, tz: 'Asia/Riyadh' }, { program: 'arabic', gender: 'all' }).every((d) => d.count === 0),
   ).toBe(true);
 });
 
@@ -73,11 +73,13 @@ test('the section words: who, load, the city when not Riyadh; windows, gaps, tim
     `${t.teachers.genderLabel.male} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies} · ${t.booking.teacherStudents.replace('{n}', '0')}`,
   );
   const evening = { starts_at: '2026-10-01T17:00:00.000Z', ends_at: '2026-10-01T21:00:00.000Z' };
-  expect(spanClock(evening, '24')).toEqual({ from: '20:00', to: '24:00' });
-  expect(spanClock(evening, '12')).toEqual({ from: '8:00 م', to: '12:00 ص' });
-  expect(windowsLine([evening], '24')).toBe(`متاح ${ltr('20:00 – 24:00')} بتوقيت الرياض`);
-  expect(windowsLine([], '24')).toBeNull();
-  expect(freeLabel(abrar.free[0] ?? evening, '24')).toBe(`متاح ${ltr('10:45 – 16:00')}`);
+  expect(spanClock(evening, '24', 'Asia/Riyadh')).toEqual({ from: '20:00', to: '24:00' });
+  expect(spanClock(evening, '12', 'Asia/Riyadh')).toEqual({ from: '8:00 م', to: '12:00 ص' });
+  const available = `متاح ${ltr('20:00 – 24:00')} بتوقيت الرياض`;
+  expect(windowsLine([evening], '24', 'Asia/Riyadh')).toBe(available);
+  expect(windowsLine([], '24', 'Asia/Riyadh')).toBeNull();
+  const free = abrar.free[0] ?? evening;
+  expect(freeLabel(free, '24', 'Asia/Riyadh')).toBe(`متاح ${ltr('10:45 – 16:00')}`);
   const [off] = sara.time_off;
   if (!off) throw new Error('fixture');
   expect(timeOffLine(off, '24')).toBe(`إجازة · ${formatTimeOff(off, '24')} · سفر`);
@@ -87,5 +89,5 @@ test('the section words: who, load, the city when not Riyadh; windows, gaps, tim
 test('a translation that splits the range keeps each time its own island', () => {
   jest.replaceProperty(t.schedule, 'free', 'متاح من {from} إلى {to}');
   const gap = { starts_at: '2026-10-01T17:00:00.000Z', ends_at: '2026-10-01T19:00:00.000Z' };
-  expect(freeLabel(gap, '24')).toBe(`متاح من ${ltr('20:00')} إلى ${ltr('22:00')}`);
+  expect(freeLabel(gap, '24', 'Asia/Riyadh')).toBe(`متاح من ${ltr('20:00')} إلى ${ltr('22:00')}`);
 });

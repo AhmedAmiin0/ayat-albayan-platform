@@ -1,26 +1,34 @@
-import { intlLocale, mergeChat, type CallView, type MessageView } from '@ab/shared';
+import {
+  calendarDaysBetween,
+  chatDayKey,
+  dateText,
+  mergeChat,
+  type CallView,
+  type MessageView,
+} from '@ab/shared';
+import { viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
 // Date separators in the chat log (phones, owner 2026-10-05): «اليوم», «أمس», else the date.
 // Days are the viewer's local days, like every time on the page.
 
-const dayDate = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
+const DAY_DATE = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 
 export type LogItem =
   | { kind: 'day'; key: string; label: string }
   | { kind: 'message'; message: MessageView }
   | { kind: 'call'; call: CallView };
 
-const dayKey = (at: Date): string => at.toDateString();
+/** «2026-10-01»: the viewer's local day (the browser's zone). */
+const dayKey = (at: Date): string => chatDayKey(at, viewerZone());
 
 /** «اليوم» / «أمس» / «الخميس 1 أكتوبر». */
 export function dayLabel(at: Date, now: Date): string {
-  if (dayKey(at) === dayKey(now)) return t.inbox.dayToday;
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  if (dayKey(at) === dayKey(yesterday)) return t.inbox.dayYesterday;
-  return dayDate.format(at);
+  const ago = calendarDaysBetween(dayKey(at), dayKey(now));
+  if (ago === 0) return t.inbox.dayToday;
+  if (ago === 1) return t.inbox.dayYesterday;
+  return dateText(at, { tz: viewerZone(), locale }, DAY_DATE);
 }
 
 /**

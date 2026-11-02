@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { callsOf, chainDb } from '../../reminders/chain-db.fake';
-import { event, services } from '../webhook.fakes';
-import { WebhookQueries } from '../webhook.queries';
-import { WebhookSettings } from '../webhook.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
+import { event, services } from '@/modules/messaging/webhook/webhook.fakes';
+import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookSettings } from '@/modules/messaging/webhook/webhook.settings';
 import { refillPatch } from './inbound-refill';
 
 // Meta's 131060 (owner 2026-10-27): a new number's first message arrives as `unsupported`. A re-sent
@@ -59,7 +59,7 @@ describe('refillPatch / WebhookQueries.insertInbound', () => {
   it('a replay updates only the inbound row of that wamid whose payload is still unsupported', async () => {
     const { db, log } = chainDb({ messages: [{ data: [] }, { data: [{ id: 'm1' }] }] });
     const row = { phone_e164: '+966501234567', direction: 'inbound' as const, wa_message_id: 'wamid.IN1', body: 'نعم' };
-    await expect(new WebhookQueries(db, readerOf(WebhookSettings)).insertInbound(row)).resolves.toBe(false);
+    await expect(new WebhookRepo(db, readerOf(WebhookSettings)).insertInbound(row)).resolves.toBe(false);
     expect(callsOf(log, 'messages', 1)).toEqual([
       ['update', [expect.objectContaining({ body: 'نعم' })]],
       ['eq', ['wa_message_id', 'wamid.IN1']],
@@ -71,7 +71,7 @@ describe('refillPatch / WebhookQueries.insertInbound', () => {
 
   it('a new wamid is stored and nothing is updated; an unsupported replay reads nothing more', async () => {
     const { db, log } = chainDb({ messages: [{ data: [{ id: 'm1' }] }, { data: [] }] });
-    const q = new WebhookQueries(db, readerOf(WebhookSettings));
+    const q = new WebhookRepo(db, readerOf(WebhookSettings));
     await expect(q.insertInbound({ phone_e164: '+966501234567', direction: 'inbound', wa_message_id: 'w1', body: 'نعم' })).resolves.toBe(true);
     await expect(q.insertInbound({ phone_e164: '+966501234567', direction: 'inbound', wa_message_id: 'w1', interactive_payload: UNAVAILABLE })).resolves.toBe(false);
     expect(log.filter((l) => l.table === 'messages')).toHaveLength(2);

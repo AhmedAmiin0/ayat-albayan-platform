@@ -3,16 +3,16 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/teaching/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { PHONE, thread } from '../testing/inbox-fixture';
-import { InboxModeContext } from '../shared/mode';
+import { PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { registerDrafts } from './register-drafts';
-import { SalesChatActions } from '../sales-money/SalesChatActions';
-import { renderWithClient, routeFetch } from '../testing/test-utils';
+import { SalesChatActions } from '@/features/sales/sales-money/SalesChatActions';
+import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 
 const OTHER = '+966559999999';

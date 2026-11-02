@@ -1,4 +1,4 @@
-import { isEmailIdentifier, signInError } from '@ab/client-core';
+import { isEmailIdentifier, setViewerPersonTz, signInError } from '@ab/client-core';
 import { HOME_BY_ROLE, type PasswordSession } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n/i18n';
@@ -85,6 +85,7 @@ async function finishSignIn(queryClient: QueryClient): Promise<SignInResult> {
 export async function signOut(queryClient: QueryClient): Promise<void> {
   await Promise.all([reportSession('logout'), forgetWebPush()]);
   await supabase.auth.signOut();
+  setViewerPersonTz(null);
   queryClient.clear();
   clearTabMemories();
 }

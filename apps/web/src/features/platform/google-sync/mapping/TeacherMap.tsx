@@ -1,8 +1,8 @@
 import type { GoogleFound } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { t } from '@/lib/i18n/i18n';
-import { BlockSkeleton, GoogleBlock, LoadError } from '../GoogleBlock';
-import { googleTeachersQuery } from '../google-api';
+import { BlockSkeleton, GoogleBlock, LoadError } from '@/features/platform/google-sync/GoogleBlock';
+import { googleTeachersQuery } from '@/features/platform/google-sync/google-api';
 import { TeacherRow } from './TeacherRow';
 
 const s = t.googleSync.teachers;

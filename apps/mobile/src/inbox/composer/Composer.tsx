@@ -1,28 +1,34 @@
-import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/shared';
+import { triesAfterWindow } from '@ab/client-core';
+import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth';
-import { ClosedRow } from '../threads-list/ClosedRow';
+import { usePermissions } from '@/core/auth';
+import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
+import { t } from '@/core/lib/i18n/i18n';
+import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
-import { ErrorLine } from '../ErrorLine';
-import { GateNote } from '../thread/components/GateNote';
-import { OpenRow } from '../threads-list/OpenRow';
-import { QuoteStrip } from '../messages/components/QuoteStrip';
-import { SavedReplyChip } from '../saved-replies/components/SavedReplyChip';
-import { SavedReplyPicker } from '../saved-replies/components/SavedReplyPicker';
-import { SlashSuggestions } from '../saved-replies/quick-list/SlashSuggestions';
-import { useSavedReplyDraft } from '../saved-replies/hooks/use-saved-reply';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { GateNote } from '@/inbox/thread/components/GateNote';
+import { OpenRow } from '@/inbox/threads-list/OpenRow';
+import { QuoteStrip } from '@/inbox/messages/components/QuoteStrip';
+import { SavedReplyChip } from '@/inbox/saved-replies/components/SavedReplyChip';
+import { SavedReplyPicker } from '@/inbox/saved-replies/components/SavedReplyPicker';
+import { SlashSuggestions } from '@/inbox/saved-replies/quick-list/SlashSuggestions';
+import { useSavedReplyDraft } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
-import { useThreadMode } from '../thread/hooks/thread-mode';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { sendState } from '@/inbox/thread/hooks/chat-window';
 import { errorLines, useComposerSend } from './use-composer-send';
 
 /**
  * Reply box (R-MOB-02, R-MSG-03) as WhatsApp Business (owner 2026-10-27): [pill: text · «عرض سعر» ·
  * paperclip] and the round microphone / «أرسل» (OpenRow); everything else is in the paperclip's sheet.
  * Within 24 h of their last message: free text, a photo or PDF, a voice note, plus a template (in the
- * paperclip's sheet). After that WhatsApp allows only an approved template, so a full-width line says why (ClosedNote) over «أرسل قالبًا». The window is checked
+ * paperclip's sheet). After that, on a Kapso chat line, staff still send all of it (tried, owner
+ * 2026-11-01; 131047 shows on the bubble); else only an approved template, so a full-width line says
+ * why (ClosedNote) over «أرسل قالبًا». The window is checked
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  * «الردود السريعة» (owner 2026-10-25/26, staff only, as WhatsApp Business): «/» at a line's start docks
  * the list over the row, its tile in the paperclip's sheet opens the sheet; a pick fills the box and stages its file (the
@@ -55,14 +61,18 @@ export function Composer({
   const [picking, setPicking] = useState(false);
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
-  const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
+  const chat = sendState(thread, new Date());
+  const open = chat.open;
+  // Owner 2026-10-31 / 2026-11-01: a Kapso chat line still tries every staff send after the window.
+  const trying = triesAfterWindow(chat, staff);
+  const may = open || trying;
   const pick = () => setPicking(true);
   const type = (v: string) => {
     replies.typed(v);
     setText(v);
     renew();
   };
-  const lines = errorLines({ errors, fileError, open });
+  const lines = errorLines({ errors, fileError, open: may });
 
   return (
     <View style={{ gap: 4, paddingBottom: 8 }}>
@@ -71,19 +81,21 @@ export function Composer({
       ))}
       <GateNote />
       <ReopenNote phone={phone} closed={thread !== null && !open} />
-      {open ? <QuoteStrip /> : null}
-      {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
-      {open && replies.search !== null ? (
+      {trying ? <ClosedNote known note={t.inbox.tryAfterWindow} /> : null}
+      {may ? <QuoteStrip /> : null}
+      {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
+      {may && replies.search !== null ? (
         <SlashSuggestions search={replies.search} contact={{ thread, student }} onFill={replies.fill} />
       ) : null}
-      {open ? (
+      {may ? (
         <OpenRow
           phone={phone}
           text={text}
           onText={type}
           onLeave={replies.dismiss}
-          staff={staff}
+          staff={staff && may}
           onTemplate={pick}
+          quietTemplate={trying}
           onReplies={replies.open}
           onFileError={setFileError}
           onQuote={quote ? () => setQuoting(true) : undefined}
@@ -104,7 +116,7 @@ export function Composer({
           onFill={replies.fill}
         />
       ) : null}
-      {quoting ? <QuoteSheet phone={phone} open={open} onClose={() => setQuoting(false)} /> : null}
+      {quoting ? <QuoteSheet phone={phone} open={may} onClose={() => setQuoting(false)} /> : null}
       <TemplatePicker
         visible={picking}
         lessons={lessons}

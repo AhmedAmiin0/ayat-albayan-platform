@@ -1,4 +1,4 @@
-import { intlLocale, type ClockCycle, type MeetingInviteResult, type MeetingView } from '@ab/shared';
+import { dateText, type ClockCycle, type MeetingInviteResult, type MeetingView } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { ApiError } from '@/core/lib/http/api';
@@ -52,10 +52,10 @@ export function inviteError(error: unknown, fallback: string = L.error): string 
   return (typeof code === 'string' ? (errors[code] ?? extra[code]) : undefined) ?? fallback;
 }
 
-const chipFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+const CHIP = { weekday: 'short', day: 'numeric', month: 'short' } as const;
 
 /** A date chip: «اليوم» for the first, else «الأحد 4 أكتوبر» (a calendar day, formatted at UTC noon). */
 export function dayChipLabel(date: string, isToday: boolean): string {
   if (isToday) return L.mobile.today;
-  return chipFormat.format(new Date(`${date}T12:00:00Z`)).replace(/[،,]\s*/, ' ');
+  return dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, CHIP).replace(/[،,]\s*/, ' ');
 }

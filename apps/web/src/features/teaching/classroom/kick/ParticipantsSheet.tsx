@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/form/button';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { t } from '@/lib/i18n/i18n';
-import type { MuteController } from '../mute/use-mute';
-import type { TileView } from '../room/components/room-types';
+import type { MuteController } from '@/features/teaching/classroom/mute/use-mute';
+import type { TileView } from '@/features/teaching/classroom/room/components/room-types';
 import type { KickController } from './use-kick';
 
 const M = t.classroom.mute;

@@ -1,12 +1,12 @@
 import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { confirmFailureText } from '@/sales';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { confirmFailureText } from '@/sales/sales';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 
 interface ReplyConfirmButtonProps {
@@ -25,6 +25,7 @@ interface ReplyConfirmButtonProps {
 export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfirmButtonProps) {
   const client = useQueryClient();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const confirm = useMutation({
     mutationFn: () => apiSend('POST', replyConfirmPath(lessonId, route)),
     onSettled: () =>
@@ -41,7 +42,9 @@ export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfi
         busy={confirm.isPending}
         onPress={() => confirm.mutate()}
       />
-      {confirm.isError ? <ErrorLine message={confirmFailureText(confirm.error, cycle)} /> : null}
+      {confirm.isError ? (
+        <ErrorLine message={confirmFailureText(confirm.error, cycle, tz)} />
+      ) : null}
     </>
   );
 }

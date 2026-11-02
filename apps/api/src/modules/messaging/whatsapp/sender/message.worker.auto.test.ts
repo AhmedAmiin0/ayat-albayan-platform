@@ -1,13 +1,13 @@
 import { TEMPLATE_KEYS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { SENDING } from './send-plan';
 import { AUTOMATIC_KEYS, isAutomatic } from './send-stale';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { templateRow } from '../whatsapp.fakes';
+import type { SenderRepo } from './sender.repo';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // The automatic-messages hold (settings.auto_messages_enabled, migration 162, docs/09 cut-over).
 
@@ -23,7 +23,7 @@ const reminder = (over: Parameters<typeof dueMessage>[0] = {}) =>
   dueMessage({ template_key: 'lesson_reminder', dedup_key: 'lesson_reminder:l1:g1', ...over });
 
 function worker() {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w;
 }
@@ -53,7 +53,15 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
     // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي».
     // lesson_join_link is both: the reminders job's (settings.meeting_link_auto) is automatic, the admin's send carries created_by.
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
+    // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
+    onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
+  });
+
+  it('the schedule-change notices are not automatic, even job-made (a resume by the daily job)', () => {
+    for (const key of ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed']) {
+      expect(isAutomatic({ template_key: key, created_by: null }), key).toBe(false);
+    }
   });
 });
 

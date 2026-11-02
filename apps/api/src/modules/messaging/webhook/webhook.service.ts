@@ -108,7 +108,7 @@ export class WebhookService {
   }
 
   /** 1 when the item failed (logged), else 0. */
-  private async safely(waMessageId: string, work: () => Promise<void>): Promise<number> {
+  private async safely(waMessageId: string, work: () => Promise<unknown>): Promise<number> {
     try {
       await work();
       return 0;

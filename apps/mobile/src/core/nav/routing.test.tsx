@@ -19,7 +19,7 @@ jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? jest.requireActual('@/test/staff-me').fullAccessMe('admin') : { total: 0 }),
 }));
-jest.mock('@/auth/use-auth-gate', () => {
+jest.mock('@/core/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
   return {
@@ -31,7 +31,7 @@ jest.mock('@/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock('@/core/auth/use-auth-gate') as {
   mockGate: { initial: string; set: (s: string) => void };
 };
 

@@ -3,7 +3,7 @@ import { at, RIYADH_GUARDIAN, sampleLesson, STARTS_AT } from '../reminders.fakes
 import { planReminders, type ReminderPlanInput } from './reminders.plan';
 
 const plan = (over: Partial<ReminderPlanInput> = {}) =>
-  planReminders({ lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, now: at('2026-10-04T13:00:00Z'), ...over });
+  planReminders({ lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, origin: '', now: at('2026-10-04T13:00:00Z'), ...over });
 const keys = (rows: ReturnType<typeof plan>) => rows.map((r) => r.dedup_key);
 
 describe('planReminders: same-day window (R-MSG-02)', () => {
@@ -114,7 +114,7 @@ describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {
   it('across the Cairo fall-back (30 Oct 2026) the guardian gets it at 17:00 local, 25 h before', () => {
     const cairo = { id: 'g-cairo', phone_e164: '+201000000103', tz: 'Africa/Cairo' };
     const lesson = sampleLesson({ starts_at: '2026-10-30T15:00:00Z', students: [{ id: 's-3', name: 'ياسين', guardian: cairo }] });
-    const run = (now: string) => planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: true, now: at(now) });
+    const run = (now: string) => planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: true, origin: '', now: at(now) });
     expect(run('2026-10-29T13:59:00Z')).toEqual([]);
     const [row] = run('2026-10-29T14:00:00Z');
     expect(row).toMatchObject({ dedup_key: 'lesson_reminder_24h:lesson-1:g-cairo' });

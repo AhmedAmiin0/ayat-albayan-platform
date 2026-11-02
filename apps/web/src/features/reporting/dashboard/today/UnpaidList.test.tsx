@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { WORK } from '../dashboard-fixture';
+import { WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { UnpaidList } from './UnpaidList';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const OWES = WORK.unpaid.items[0];
 if (!OWES) throw new Error('fixture');

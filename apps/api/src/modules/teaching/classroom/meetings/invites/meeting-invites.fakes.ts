@@ -2,14 +2,15 @@
 import type { TablesInsert } from '@ab/db';
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { PushService } from '../../../../../common/push/push.service';
-import { TeacherScopes } from '../../../../messaging/inbox/teacher-threads/teacher-scope';
-import { ThreadsQueries } from '../../../../messaging/inbox/threads/threads.queries';
-import { MessageSender } from '../../../../messaging/whatsapp/sender/message.sender';
-import { meetingRow } from '../../internal-meetings/internal-meetings.fakes';
-import { MeetingInviteeQueries } from './meeting-invitee.queries';
-import { MeetingInviteesQueries, type StoredInvitee } from './meeting-invitees.queries';
-import { MeetingListQueries } from '../schedule/meeting-list.queries';
+import { PushService } from '@/common/push/push.service';
+import { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox';
+import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { meetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { MeetingInviteeRepo } from './meeting-invitee.repo';
+import { MeetingInviteesRepo, type StoredInvitee } from './meeting-invitees.repo';
+import { MeetingListRepo } from '@/modules/teaching/classroom/meetings/schedule/meeting-list.repo';
 
 export const STAFF_ID = 'f0000000-0000-4000-8000-000000000007';
 export const STUDENT_A = '10000000-0000-4000-8000-00000000000a';
@@ -97,10 +98,11 @@ type MeetingInviteMocks = ReturnType<typeof meetingInviteMocks>;
 /** The HTTP harness: every DB-facing piece of the invitations replaced by the mocks. */
 export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInviteMocks): TestingModuleBuilder =>
   b
-    .overrideProvider(MeetingListQueries).useValue(m.lists)
-    .overrideProvider(MeetingInviteesQueries).useValue(m.invitees)
-    .overrideProvider(MeetingInviteeQueries).useValue(m.picks)
-    .overrideProvider(ThreadsQueries).useValue(m.threads)
+    .overrideProvider(MeetingListRepo).useValue(m.lists)
+    .overrideProvider(MeetingInviteesRepo).useValue(m.invitees)
+    .overrideProvider(MeetingInviteeRepo).useValue(m.picks)
+    .overrideProvider(ThreadsRepo).useValue(m.threads)
+    .overrideProvider(ThreadMessagesRepo).useValue(m.threads)
     .overrideProvider(TeacherScopes).useValue(m.teacherScopes)
     .overrideProvider(PushService).useValue(m.push)
     .overrideProvider(MessageSender).useValue(m.sender);

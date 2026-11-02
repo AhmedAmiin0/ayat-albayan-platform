@@ -2,7 +2,7 @@ import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe, TeacherR
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { Page } from '@/features/sales/leads/types';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
-import { LESSONS_KEY, type Window } from '@/features/teaching/schedule/api';
+import { LESSONS_KEY, type Window } from '@/features/teaching/schedule';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';

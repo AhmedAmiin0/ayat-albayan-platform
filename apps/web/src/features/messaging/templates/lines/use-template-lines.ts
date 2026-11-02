@@ -2,7 +2,7 @@ import type { LineCheckView, TemplateLineView, WaLine } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { linesCheckQuery } from '@/features/messaging/messaging/api';
-import { templateLinesQuery } from '../api';
+import { templateLinesQuery } from '@/features/messaging/templates/api';
 
 /** Each number's formatted phone, when a lines check has run in this session. */
 export type PhoneMap = Partial<Record<WaLine, string>>;

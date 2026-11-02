@@ -1,4 +1,4 @@
-import type { MediaMessage } from '../inbound-media.queries';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 
 /** Where the old CRM kept a chat's files: its own storage's public chat-media bucket. */
 export const CRM_MEDIA_PREFIX = '/storage/v1/object/public/chat-media/';

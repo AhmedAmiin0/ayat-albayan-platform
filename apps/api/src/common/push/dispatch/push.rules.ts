@@ -15,6 +15,10 @@ const ROW_OF: Record<PushKind, NotificationKey> = {
   google_sync_alert: 'google_sync_alert',
   channel_message: 'channel_message',
   commission_earned: 'commission_earned',
+  lesson_rescheduled: 'lesson_rescheduled',
+  lesson_cancelled: 'lesson_cancelled',
+  course_paused: 'course_paused',
+  course_resumed: 'course_resumed',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
-import { listStudents } from './students.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { listStudents } from './students.repo';
 
 const page = { search: '', page: 1, pageSize: 20 };
 const empty = () => fakeDb({ v_student_list: [{ data: [], count: 0 }] });

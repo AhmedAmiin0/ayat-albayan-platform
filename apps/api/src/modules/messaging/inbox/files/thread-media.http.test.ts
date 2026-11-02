@@ -1,12 +1,12 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { InboundMediaQueries, type MediaMessage } from '../../whatsapp/messages/inbound-media.queries';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../../whatsapp/whatsapp.types';
-import { ADMIN, TEACHER } from '../test-app';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { StorageService } from '@/common/storage/storage.service';
+import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { ADMIN, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 const PHONE = '+966552147730';
 const URL_PHONE = encodeURIComponent(PHONE);
@@ -33,7 +33,7 @@ const row = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 
 describe('thread media routes (R-MSG-06): admin only', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), receipts: vi.fn(), setPath: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const chatClient = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(), signedDownload: vi.fn() };
@@ -43,7 +43,7 @@ describe('thread media routes (R-MSG-06): admin only', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaQueries).useValue(queries)
+      .overrideProvider(InboundMediaRepo).useValue(queries)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: chatClient })
       .overrideProvider(StorageService).useValue(storage)
@@ -64,7 +64,7 @@ describe('thread media routes (R-MSG-06): admin only', () => {
 
   it('lists the chat\'s images and PDFs (newest first, metadata only); other mimes are left out', async () => {
     const old = new Date(Date.now() - 29.5 * 86_400_000).toISOString();
-    queries.recent.mockResolvedValue([
+    queries.receipts.mockResolvedValue([
       row(),
       row({ id: M_OTHER, media_mime: 'audio/ogg' }),
       row({ id: 'b3333333-3333-4333-8333-333333333333', media_mime: 'application/pdf', created_at: old, body: null }),
@@ -75,20 +75,23 @@ describe('thread media routes (R-MSG-06): admin only', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toMatchObject({ message_id: M1, mime: 'image/jpeg', caption: 'الفاتورة', expired: false });
     expect(items[1]).toMatchObject({ mime: 'application/pdf', caption: null, expired: true });
-    expect(queries.recent).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, limit: 50 }));
+    expect(queries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, limit: 12 }));
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
   it('a teacher gets 403 on both routes, and nothing is read', async () => {
     expect((await call(`/threads/${URL_PHONE}/media`, 'teacher')).statusCode).toBe(403);
     expect((await call(`/threads/${URL_PHONE}/media/${M1}`, 'teacher')).statusCode).toBe(403);
-    expect(queries.recent).not.toHaveBeenCalled();
+    expect(queries.receipts).not.toHaveBeenCalled();
     expect(queries.message).not.toHaveBeenCalled();
   });
 
   it('a bad phone is 400 invalid_phone; a bad message id is 400', async () => {
     expect((await call('/threads/abc/media')).json()).toMatchObject({ code: 'invalid_phone' });
     expect((await call(`/threads/${URL_PHONE}/media/not-a-uuid`)).statusCode).toBe(400);
+    expect((await call(`/threads/abc/media/${M1}`)).json()).toMatchObject({ code: 'invalid_phone' });
+    const both = await call('/threads/abc/media/not-a-uuid');
+    expect(both.json()).toMatchObject({ message: 'Validation failed (uuid is expected)' });
   });
 
   it('a file: downloaded on first use, cached, then a signed URL of our copy', async () => {

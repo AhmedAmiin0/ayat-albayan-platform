@@ -1,11 +1,11 @@
 import type { SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Field } from '@/core/ui/form/Field';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import type { ValueSheetState } from '../hooks/use-value-sheet';
-import { impactOf } from '../lib/value-text';
+import type { ValueSheetState } from '@/ops/values/hooks/use-value-sheet';
+import { impactOf } from '@/ops/values/lib/value-text';
 
 /**
  * The question the sheet asks before acting: the same confirmations as the web (VALUE_CONFIRM: type

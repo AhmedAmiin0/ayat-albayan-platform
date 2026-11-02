@@ -42,12 +42,12 @@ describe('SlotPicker (R-SCH-06, R-SCH-01)', () => {
     expect(url).toContain('durationMin=45&studentIds=s1');
   });
 
-  it('shows Riyadh times big and the student zone small, under the Riyadh day', async () => {
+  it('shows viewer (Riyadh) times big and the student zone small, under the viewer day', async () => {
     renderPicker();
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 4 `) });
     const free = within(sunday).getByRole('button', { name: /17:00/ });
     expect(free.textContent).toContain('10:00'); // New York
-    expect(screen.getByText(t.booking.slotLegend.replace('{city}', t.tz['America/New_York']))).toBeTruthy();
+    expect(screen.getByText(t.booking.slotLegendViewer.replace('{city}', t.tz['America/New_York']))).toBeTruthy();
   });
 
   it('marks a slot with conflicts «غير متاح» but keeps it pickable', async () => {

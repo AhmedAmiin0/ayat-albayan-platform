@@ -1,34 +1,34 @@
 import { Module } from '@nestjs/common';
-import { SubscriptionsModule } from '../../finance/subscriptions';
-import { ClassroomModule } from '../../teaching/classroom';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions';
+import { ClassroomModule } from '@/modules/teaching/classroom';
 import { ChatNumber } from './home/chat-number';
 import { PortalHomeService } from './home/portal-home.service';
-import { PortalLessonsQueries } from './lessons/portal-lessons.queries';
+import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
-import { PortalPackageQueries } from './package/portal-package.queries';
+import { PortalPackageRepo } from './package/portal-package.repo';
 import { PortalPackageService } from './package/portal-package.service';
 import { PortalController, PortalRecordsController } from './portal.controller';
 import { PortalSettings } from './portal.settings';
-import { PortalReportsQueries } from './reports/portal-reports.queries';
+import { PortalReportsRepo } from './reports/portal-reports.repo';
 import { PortalReportsService } from './reports/portal-reports.service';
 import { PortalScopes } from './scope/portal-scope';
-import { PortalScopeQueries } from './scope/portal-scope.queries';
+import { PortalScopeRepo } from './scope/portal-scope.repo';
 
 /** The family portal's API (docs/31): /portal/*, guardian and student logins only. */
 @Module({
   imports: [ClassroomModule, SubscriptionsModule],
   controllers: [PortalController, PortalRecordsController],
   providers: [
-    PortalScopeQueries,
+    PortalScopeRepo,
     PortalScopes,
     PortalSettings,
     ChatNumber,
     PortalHomeService,
-    PortalLessonsQueries,
+    PortalLessonsRepo,
     PortalLessonsService,
-    PortalReportsQueries,
+    PortalReportsRepo,
     PortalReportsService,
-    PortalPackageQueries,
+    PortalPackageRepo,
     PortalPackageService,
   ],
   exports: [PortalScopes],

@@ -10,7 +10,7 @@ import {
   type PublicSettings,
 } from '@ab/shared';
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { apiFetch } from '../http/api';
+import { apiFetch } from '@/lib/http/api';
 
 /**
  * GET /settings/public (no login): the academy settings every screen may read — the classroom join

@@ -6,6 +6,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { actionLabel, entityLabel, entityLink, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
 import { useClock } from '@/lib/clock';
+import { useViewerTz } from '@/lib/viewer-tz';
 
 const col = createColumnHelper<DataTableFeatures, ActivityView>();
 
@@ -40,9 +41,10 @@ function EntityCell({ row }: { row: ActivityView }) {
   );
 }
 
-/** The row's time in the viewer's cycle (12 or 24 h). */
+/** The row's time in the viewer's zone and cycle (12 or 24 h). */
 function AtCell({ iso }: { iso: string }) {
-  return <span className="tabular-nums text-ink-2">{formatAt(iso, useClock())}</span>;
+  const clock = { ...useClock(), tz: useViewerTz() };
+  return <span className="tabular-nums text-ink-2">{formatAt(iso, clock)}</span>;
 }
 
 /**

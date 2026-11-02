@@ -1,13 +1,13 @@
 import { reopenDedupKey, type ReopenTemplateOutcome } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import type { SalesScope } from '../../../sales/sales/sales-scope';
-import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
-import type { TeacherScope } from '../teacher-threads/teacher-scope';
-import type { Sent } from '../send/outbox';
-import { ThreadSendService } from '../send/thread-send.service';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import type { Sent } from '@/modules/messaging/inbox/send/outbox';
+import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { last4 } from './kapso-reopener';
-import { ReopenQueries } from './reopen.queries';
+import { ReopenRepo } from './reopen.repo';
 import { reopenParams } from './reopen-params';
 
 const DAY_MS = 24 * 60 * 60_000;
@@ -43,7 +43,7 @@ export class ReopenTemplate {
   constructor(
     private readonly sends: ThreadSendService,
     private readonly templates: TemplateRegistry,
-    private readonly reopens: ReopenQueries,
+    private readonly reopens: ReopenRepo,
   ) {}
 
   async queue(r: ReopenSend): Promise<Queued> {

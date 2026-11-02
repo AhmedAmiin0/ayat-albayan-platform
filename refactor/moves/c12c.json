@@ -1,0 +1,64 @@
+{
+  "id": "c12c",
+  "seq": 217,
+  "moves": [
+    {
+      "from": "apps/mobile/src/payments/format.ts",
+      "to": "apps/mobile/src/core/lib/money/"
+    },
+    {
+      "from": "apps/mobile/src/payments/format.part-paid.test.ts",
+      "to": "apps/mobile/src/core/lib/money/"
+    },
+    {
+      "from": "apps/mobile/src/payments/receipt.ts",
+      "to": "apps/mobile/src/core/lib/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/upload-receipt.ts",
+      "to": "apps/mobile/src/core/lib/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/receipts/camera-permission.ts",
+      "to": "apps/mobile/src/core/lib/receipts/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/payments/format.part-paid.test.ts",
+      "apps/mobile/src/core/lib/money/format.part-paid.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/format.test.ts",
+      "apps/mobile/src/core/lib/money/format.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/format.ts",
+      "apps/mobile/src/core/lib/money/format.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipt.test.ts",
+      "apps/mobile/src/core/lib/receipts/receipt.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipt.ts",
+      "apps/mobile/src/core/lib/receipts/receipt.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/camera-permission.test.ts",
+      "apps/mobile/src/core/lib/receipts/camera-permission.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/camera-permission.ts",
+      "apps/mobile/src/core/lib/receipts/camera-permission.ts"
+    ],
+    [
+      "apps/mobile/src/payments/upload-receipt.test.ts",
+      "apps/mobile/src/core/lib/receipts/upload-receipt.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/upload-receipt.ts",
+      "apps/mobile/src/core/lib/receipts/upload-receipt.ts"
+    ]
+  ]
+}

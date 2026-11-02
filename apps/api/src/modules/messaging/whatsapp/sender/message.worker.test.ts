@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
-import type { SenderQueries } from './sender.queries';
-import { REPORT_READY, templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import type { SenderRepo } from './sender.repo';
+import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
@@ -15,7 +15,7 @@ const template = templateRow();
 const staleLead = { status: 'no_reply', follow_up_paused: false, last_inbound_at: null, created_at: '2026-10-01T00:00:00Z' } as const;
 
 function worker() {
-  const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
   w.wait = vi.fn(async () => undefined);
   return w;
 }

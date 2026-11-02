@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { ColumnFilterDef } from '../data-table/data-table-features';
+import type { ColumnFilterDef } from '@/components/data-table/data-table-features';
 
 /** One column's filter: its header text, kind, value and setter (`key` = its filter key). */
 export interface ColumnFilterControl {

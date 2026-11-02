@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { dayLabel } from '@/calendar/lib/week';
+import { dayLabel } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

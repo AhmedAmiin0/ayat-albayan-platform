@@ -25,6 +25,13 @@ describe('replyNote: a «نعم» (R-SCH-03, owner 2026-10-28)', () => {
     expect(replyNote(base, ctx({ lesson: lesson('confirmed'), clock: { locale: 'ar', cycle: '12' } }))?.when).toBe('الأحد 4 أكتوبر 5:00 م');
   });
 
+  it('reads in the viewer’s zone when given (docs/34): Cairo in summer time reads Riyadh’s clock', () => {
+    const cairo = ctx({ lesson: lesson('confirmed'), clock: { locale: 'ar', cycle: '24', tz: 'Africa/Cairo' } });
+    expect(replyNote(base, cairo)?.when).toBe(WHEN);
+    const dubai = ctx({ lesson: lesson('confirmed'), clock: { locale: 'ar', cycle: '24', tz: 'Asia/Dubai' } });
+    expect(replyNote(base, dubai)?.when).toBe('الأحد 4 أكتوبر 18:00');
+  });
+
   it('a scheduled lesson (linked or the family’s next): the «تأكيد الحلقة» button alone', () => {
     const l = lesson('scheduled');
     expect(replyNote(base, ctx({ lesson: l }))).toEqual({ key: null, when: WHEN, action: { kind: 'confirm', lesson: l } });

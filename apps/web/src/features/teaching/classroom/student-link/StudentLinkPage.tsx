@@ -4,10 +4,10 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Logo } from '@/components/ui/display/mark';
 import { t } from '@/lib/i18n/i18n';
-import { ClassroomRoom } from '../room/components/ClassroomRoom';
-import { classroomErrorText } from '../room/livekit/errors';
-import { joinByStudentLink, studentLinkView } from '../api/meetings-api';
-import type { RoomClient } from '../room/components/room-types';
+import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
+import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
+import { joinByStudentLink, studentLinkView } from '@/features/teaching/classroom/api/meetings-api';
+import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
 import { StudentLessonPanel } from './StudentLessonPanel';
 import { useNow } from '@/lib/time/use-now';
 

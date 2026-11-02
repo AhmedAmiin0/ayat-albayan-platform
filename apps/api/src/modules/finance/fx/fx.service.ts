@@ -1,7 +1,7 @@
 import { SAR_PER_USD_PEG, type FxRate } from '@ab/shared';
 import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { FX_FETCHER, type FxFetcher, type FxSnapshot } from './fx.fetcher';
-import { FxQueries, type FxRow } from './fx.queries';
+import { FxRepo, type FxRow } from './fx.repo';
 import { FxSettings } from './fx.settings';
 
 const HOUR_MS = 3_600_000;
@@ -23,7 +23,7 @@ export class FxService {
 
   constructor(
     @Inject(FX_FETCHER) private readonly fetcher: FxFetcher,
-    private readonly queries: FxQueries,
+    private readonly queries: FxRepo,
     private readonly settings: FxSettings,
   ) {}
 

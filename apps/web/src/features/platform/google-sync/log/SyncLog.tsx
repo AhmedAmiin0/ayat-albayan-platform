@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { BlockSkeleton, GoogleBlock, LoadError } from '../GoogleBlock';
-import { googleItemsQuery, googleStatusQuery, reconcileGoogle } from '../google-api';
-import { fill } from '../google-format';
+import { BlockSkeleton, GoogleBlock, LoadError } from '@/features/platform/google-sync/GoogleBlock';
+import { googleItemsQuery, googleStatusQuery, reconcileGoogle } from '@/features/platform/google-sync/google-api';
+import { fill } from '@/features/platform/google-sync/google-format';
 import { SyncLogRow } from './SyncLogRow';
 
 const s = t.googleSync.log;

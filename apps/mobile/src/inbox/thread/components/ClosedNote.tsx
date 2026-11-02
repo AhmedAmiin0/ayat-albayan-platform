@@ -7,11 +7,11 @@ import { AppText } from '@/core/ui/primitives/AppText';
  * In the reply box's place once the 24 h window closed: why only a template can go now
  * (inbox.sessionClosed, verbatim; a number with no message yet: the first message is a template).
  * A gold-washed full-width line over the row with «أرسل قالبًا» (ClosedRow). Never cut (owner
- * 2026-10-27): no line limit, it wraps across the whole width.
+ * 2026-10-27): no line limit, it wraps across the whole width. `note` overrides it (the try note).
  */
-export function ClosedNote({ known }: { known: boolean }) {
+export function ClosedNote({ known, note }: { known: boolean; note?: string }) {
   const { color } = useTheme();
-  const text = known ? t.inbox.sessionClosed : t.inbox.newChat.firstTemplate;
+  const text = note ?? (known ? t.inbox.sessionClosed : t.inbox.newChat.firstTemplate);
   return (
     <View
       style={{

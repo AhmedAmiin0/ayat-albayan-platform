@@ -2,15 +2,15 @@ import type { IssuedCredential } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { createUser, roleOptionsQuery, USERS_KEY } from '../shared/api';
+import { createUser, roleOptionsQuery, USERS_KEY } from '@/users/shared/api';
 import { initialCreateForm, type CreateForm, type Prefill } from './create-form';
 import { CreateUserFields } from './CreateUserFields';
 import { CredentialResult } from './CredentialResult';
-import { userErrorText } from '../shared/errors';
-import { PanelButtons } from '../panels/PanelButtons';
-import { createBody, createErrors, type FormErrors } from '../shared/validation';
+import { userErrorText } from '@/users/shared/errors';
+import { PanelButtons } from '@/users/panels/PanelButtons';
+import { createBody, createErrors, type FormErrors } from '@/users/shared/validation';
 
 interface CreateUserFormProps {
   onClose: () => void;

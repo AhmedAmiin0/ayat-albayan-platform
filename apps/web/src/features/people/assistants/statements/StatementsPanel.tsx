@@ -9,13 +9,13 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery, type AssistantRow, type StatementFilter } from '../api';
-import { FilterBar } from '../students/FilterBar';
+import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery, type AssistantRow, type StatementFilter } from '@/features/people/assistants/api';
+import { FilterBar } from '@/features/people/assistants/students/FilterBar';
 import { generateTargets } from './generate-targets';
 import { statementColumns } from './statement-columns';
 import type { StatementCan } from './StatementActions';
 import { StatementDialogs, type StatementDialog } from './StatementDialogs';
-import { errorText } from '../status';
+import { errorText } from '@/features/people/assistants/status';
 
 type Props = {
   assistants: readonly AssistantRow[];

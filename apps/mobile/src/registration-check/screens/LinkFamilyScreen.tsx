@@ -2,7 +2,7 @@ import { formatPhone, type RegistrationMatch } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -16,9 +16,9 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
-import { RegistrationResults } from '../components/RegistrationResults';
-import { linkFamilyErrorText, useLinkFamily } from '../lib/link-family';
-import { type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '../lib/registration-check';
+import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
+import { linkFamilyErrorText, useLinkFamily } from '@/registration-check/lib/link-family';
+import { type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
 
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
 type Params = { phone?: string; leadId?: string };

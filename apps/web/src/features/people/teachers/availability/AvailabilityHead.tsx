@@ -1,4 +1,4 @@
-import { intlLocale, nextDstTransition } from '@ab/shared';
+import { dateText, nextDstTransition } from '@ab/shared';
 import { useId, useMemo } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { Label } from '@/components/ui/form/label';
@@ -21,15 +21,13 @@ function ZoneText({ template, tz }: { template: string; tz: string }) {
   );
 }
 
-const weekday = (tz: string) => new Intl.DateTimeFormat(intlLocale(locale), { timeZone: tz, weekday: 'long' });
-const dayMonth = (tz: string) =>
-  new Intl.DateTimeFormat(intlLocale(locale), { timeZone: tz, day: 'numeric', month: 'long' });
 
 /** «من الجمعة 30 أكتوبر القاهرة بترجع ساعة» when the zone shifts within 30 days (docs/07 §8). */
 function dstTemplate(tz: string): string | null {
   const shift = nextDstTransition(tz, new Date());
   if (!shift) return null;
-  const date = `${weekday(tz).format(shift.day)} ${dayMonth(tz).format(shift.day)}`;
+  const weekday = dateText(shift.day, { tz, locale }, { weekday: 'long' });
+  const date = `${weekday} ${dateText(shift.day, { tz, locale }, { day: 'numeric', month: 'long' })}`;
   return (shift.dir === 'back' ? t.availability.dstBack : t.availability.dstForward).replace('{date}', date);
 }
 

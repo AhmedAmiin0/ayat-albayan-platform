@@ -1,8 +1,8 @@
 import { pickProgress } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { emptyDraft } from '../../draft/draft';
-import { packageDaysNote } from '../package/package-days';
+import { emptyDraft } from '@/features/teaching/booking/draft/draft';
+import { packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 import { daysNote } from './SlotDays';
 import { courseNear } from './SlotStep';
 

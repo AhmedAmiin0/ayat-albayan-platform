@@ -2,7 +2,7 @@ import { useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Input } from '@/components/ui/form/input';
 import { Label } from '@/components/ui/form/label';
-import { dateLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { rangeError } from './search';
 import type { DayRange } from './types';

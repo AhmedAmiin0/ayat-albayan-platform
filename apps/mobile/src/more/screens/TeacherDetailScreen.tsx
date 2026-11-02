@@ -10,16 +10,16 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { TeacherContact } from '../teachers/TeacherContact';
-import { TeacherUsername } from '../teachers/TeacherUsername';
-import { TeacherCalendarOwner } from '../teachers/TeacherCalendarOwner';
-import { TeacherStudentsSection } from '../sections/TeacherStudentsSection';
-import type { Teacher } from '../types';
-import { UpcomingTimeOff } from '../availability/UpcomingTimeOff';
-import { WeeklyAvailability } from '../availability/WeeklyAvailability';
+import { TeacherContact } from '@/more/teachers/TeacherContact';
+import { TeacherUsername } from '@/more/teachers/TeacherUsername';
+import { TeacherCalendarOwner } from '@/more/teachers/TeacherCalendarOwner';
+import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection';
+import type { Teacher } from '@/core/lib/staff/types';
+import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
+import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
 import { locale } from '@/core/lib/i18n/locale';
 import { StaffPhotoControl } from '@/account';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 
 /** The teacher's page and lists, and sales' «المعلمون»: where a new photo must show. */

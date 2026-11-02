@@ -1,4 +1,4 @@
-import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateStatus, WaLine } from '@ab/catalog';
 import type { NotificationKey } from './catalogue.js';
 import type { NotificationAudience, NotificationChannel, TimingKey } from './catalogue.types.js';
 import type { NotificationRuleView } from '../rules.types.js';
@@ -32,6 +32,8 @@ export interface NotificationTemplateView {
 export interface NotificationEntryView {
   key: NotificationKey;
   audience: NotificationAudience;
+  /** v2 only: the others it reaches too (catalogue alsoTo): a schedule change's teacher. */
+  also_to?: NotificationAudience[];
   channels: NotificationChannel[];
   automatic: boolean;
   manual: boolean;

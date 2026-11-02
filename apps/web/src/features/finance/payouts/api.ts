@@ -1,4 +1,11 @@
-import type { PaymentMethod, PayoutGenerateResult, PayoutView, SignedDownload, TeacherEarningsSummaryView } from '@ab/shared';
+import {
+  riyadhToday,
+  type PaymentMethod,
+  type PayoutGenerateResult,
+  type PayoutView,
+  type SignedDownload,
+  type TeacherEarningsSummaryView,
+} from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
@@ -55,5 +62,6 @@ export async function downloadPayoutsCsv(month: string): Promise<void> {
 
 /** This month in Riyadh, YYYY-MM (the academy's reporting clock). */
 export function currentMonth(now = new Date()): string {
-  return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' }).slice(0, 7);
+  // academy day (docs/34 b): the payroll month is a Riyadh month
+  return riyadhToday(now).slice(0, 7);
 }

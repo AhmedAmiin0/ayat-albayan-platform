@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { disconnectGoogle, getConnectUrl, googleStatusQuery } from '../google-api';
+import { disconnectGoogle, getConnectUrl, googleStatusQuery } from '@/features/platform/google-sync/google-api';
 
 const s = t.googleSync.connection;
 

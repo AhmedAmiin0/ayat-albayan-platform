@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { NumbersQueries } from '../numbers.queries';
+import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { OwnNumbers } from './own-numbers';
 
 /**
@@ -8,7 +8,7 @@ import { OwnNumbers } from './own-numbers';
  */
 @Global()
 @Module({
-  providers: [NumbersQueries, OwnNumbers],
+  providers: [NumbersRepo, OwnNumbers],
   exports: [OwnNumbers],
 })
 export class OwnNumbersModule {}

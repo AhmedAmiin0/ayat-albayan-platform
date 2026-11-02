@@ -1,11 +1,11 @@
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { TileSlots } from '../room/components/ParticipantGrid';
-import { RoomButton } from '../room/components/RoomButton';
-import { RoomIcon } from '../room/components/room-icons';
-import type { TileView } from '../room/components/room-types';
-import { VideoTile } from '../room/components/VideoTile';
+import type { TileSlots } from '@/features/teaching/classroom/room/components/ParticipantGrid';
+import { RoomButton } from '@/features/teaching/classroom/room/components/RoomButton';
+import { RoomIcon } from '@/features/teaching/classroom/room/components/room-icons';
+import type { TileView } from '@/features/teaching/classroom/room/components/room-types';
+import { VideoTile } from '@/features/teaching/classroom/room/components/VideoTile';
 import { useMaximize } from './use-maximize';
 
 interface Props extends TileSlots {

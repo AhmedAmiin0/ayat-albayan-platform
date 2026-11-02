@@ -1,12 +1,18 @@
-import { avatarSetSchema, avatarUploadSchema, type SignedUpload, type StaffPhotoView } from '@ab/shared';
-import { Body, Controller, Delete, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import {
+  avatarSetSchema,
+  avatarUploadSchema,
+  type SignedUpload,
+  type StaffPhotoView,
+} from '@ab/shared';
+import { Controller, Delete, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { StaffPhotoAdmin } from '../../../../common/storage/avatars/staff-photo-admin';
-import { UserPorts } from '../users.ports';
-import { assertMayTouch } from '../users.rules';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { StaffPhotoAdmin } from '@/common/storage/avatars/staff-photo-admin';
+import { UserAccess } from '@/modules/people/users/users.access';
+import { assertMayTouch } from '@/modules/people/users/users.rules';
 
 const uuid = new ParseUUIDPipe();
 type Kind = 'teacher' | 'user';
@@ -24,56 +30,78 @@ type Kind = 'teacher' | 'user';
 export class StaffPhotoController {
   constructor(
     private readonly photos: StaffPhotoAdmin,
-    private readonly ports: UserPorts,
+    private readonly access: UserAccess,
   ) {}
 
   @Post('teachers/:id/avatar/upload-url')
   @Permissions('teachers.write')
-  teacherUploadUrl(@Param('id', uuid) id: string, @Body() body: unknown): Promise<SignedUpload> {
-    return this.photos.uploadUrl({ kind: 'teacher', id }, parseOrThrow(avatarUploadSchema, body));
+  teacherUploadUrl(
+    @Param('id', uuid) id: string,
+    @ZodBody(avatarUploadSchema) body: z.output<typeof avatarUploadSchema>,
+  ): Promise<SignedUpload> {
+    return this.photos.uploadUrl({ kind: 'teacher', id }, body);
   }
 
   @Put('teachers/:id/avatar')
   @Permissions('teachers.write')
-  teacherSet(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<StaffPhotoView> {
+  teacherSet(
+    @Param('id', uuid) id: string,
+    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StaffPhotoView> {
     return this.set({ kind: 'teacher', id }, { body, user });
   }
 
   @Delete('teachers/:id/avatar')
   @Permissions('teachers.write')
-  teacherRemove(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser): Promise<StaffPhotoView> {
+  teacherRemove(
+    @Param('id', uuid) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StaffPhotoView> {
     return this.photos.remove({ kind: 'teacher', id }, user.id);
   }
 
   @Post('users/:id/avatar/upload-url')
   @Permissions('users.write')
-  async userUploadUrl(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SignedUpload> {
-    const input = parseOrThrow(avatarUploadSchema, body);
+  async userUploadUrl(
+    @Param('id', uuid) id: string,
+    @ZodBody(avatarUploadSchema) input: z.output<typeof avatarUploadSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SignedUpload> {
     await this.mayTouch(id, user);
     return this.photos.uploadUrl({ kind: 'user', id }, input);
   }
 
   @Put('users/:id/avatar')
   @Permissions('users.write')
-  async userSet(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<StaffPhotoView> {
-    parseOrThrow(avatarSetSchema, body);
+  async userSet(
+    @Param('id', uuid) id: string,
+    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StaffPhotoView> {
     await this.mayTouch(id, user);
     return this.set({ kind: 'user', id }, { body, user });
   }
 
   @Delete('users/:id/avatar')
   @Permissions('users.write')
-  async userRemove(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser): Promise<StaffPhotoView> {
+  async userRemove(
+    @Param('id', uuid) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StaffPhotoView> {
     await this.mayTouch(id, user);
     return this.photos.remove({ kind: 'user', id }, user.id);
   }
 
-  private set(who: { kind: Kind; id: string }, req: { body: unknown; user: AuthUser }): Promise<StaffPhotoView> {
-    return this.photos.set(who, { path: parseOrThrow(avatarSetSchema, req.body).path, actorId: req.user.id });
+  private set(
+    who: { kind: Kind; id: string },
+    req: { body: z.output<typeof avatarSetSchema>; user: AuthUser },
+  ): Promise<StaffPhotoView> {
+    return this.photos.set(who, { path: req.body.path, actorId: req.user.id });
   }
 
   private async mayTouch(id: string, user: AuthUser): Promise<void> {
-    const { state, target } = await this.ports.access.target(id);
+    const { state, target } = await this.access.target(id);
     assertMayTouch({ id: user.id, permissions: user.permissions ?? [] }, state, target);
   }
 }

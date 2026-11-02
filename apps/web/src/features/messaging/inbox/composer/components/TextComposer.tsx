@@ -5,18 +5,18 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
 import { usePhone } from '@/components/ui/layout/use-narrow';
-import { errorCode } from '@/features/teaching/schedule/api';
+import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { sendText } from '../../api/api';
-import type { ComposerExtras } from '../lib/composer-extras';
-import { sendsOnKey } from '../lib/composer-keys';
+import { sendText } from '@/features/messaging/inbox/api/api';
+import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
+import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '../lib/draft-store';
-import { ownSendGeneration, recordOwnSend } from '../lib/own-send';
+import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
-import { sendErrorCode, sendErrorCodeText, sendErrorText } from '../lib/send-error';
-import { useReplyTarget } from '../lib/use-reply-target';
+import { sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
 type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
@@ -87,8 +87,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   }, [text]);
   const tooLong = text.length > WA_TEXT_MAX;
   // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
-  // Not a stored session_closed: this box mounts only while the window is open, and the closed-window
-  // notice replaces it while it is not (round 3).
+  // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
+  // closed-window notice replaces it where none can (round 3).
   const stored = draft.failed?.code === 'session_closed' ? null : draft.failed;
   const failedHere = !pending && stored?.text === text.trim() ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;

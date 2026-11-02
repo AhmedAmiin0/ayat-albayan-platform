@@ -1,6 +1,6 @@
 import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
 import { useMemo } from 'react';
-import { riyadhToday } from '@/calendar/lib/week';
+import { riyadhToday } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { monthLabel, recentMonths } from '../shared/months';
@@ -17,6 +17,7 @@ export function PaymentFilters({ kind, month, onKind, onMonth }: PaymentFiltersP
   const months = useMemo(
     () => [
       { value: 'all', label: t.mobileMoney.allMonths },
+      // academy day (docs/34 b): the finance months are the academy's.
       ...recentMonths(riyadhToday(new Date())).map((m) => ({ value: m, label: monthLabel(m) })),
     ],
     [],

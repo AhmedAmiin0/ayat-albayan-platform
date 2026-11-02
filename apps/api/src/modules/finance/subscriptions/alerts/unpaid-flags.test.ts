@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { AlertsQueries } from './alerts.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { AlertsRepo } from './alerts.repo';
 import { AlertsJob } from './alerts.job';
 import type { SubscriptionAlertsService } from './alerts.service';
-import type { BalanceQueries, BalanceRow } from '../money/balance.queries';
-import { LessonEvents } from '../../../../common/events/lesson-events';
-import { subRow } from '../money/money.fakes';
-import type { SubscriptionsQueries } from '../subscriptions.queries';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import type { BalanceRepo, BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import { LessonEvents } from '@/common/infra/events/lesson-events';
+import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 import { UnpaidFlags } from './unpaid-flags.service';
 
 const bal = (id: string, studentId: string, remaining: number): BalanceRow => ({
@@ -25,8 +25,8 @@ function flags(on: boolean) {
   const balances = { forStudents: vi.fn(async () => [bal('a', 's1', 0), bal('b', 's2', 2), bal('c', 's3', 0)]) };
   const settings = readerOf(SubscriptionsSettings, { flag_future_lessons_when_unpaid: on });
   return new UnpaidFlags(
-    subs as unknown as SubscriptionsQueries,
-    balances as unknown as BalanceQueries,
+    subs as unknown as SubscriptionsRepo,
+    balances as unknown as BalanceRepo,
     settings,
   );
 }
@@ -50,7 +50,7 @@ describe('AlertsJob', () => {
     const queries = { studentsWithPackages: vi.fn(students) };
     const alerts = { evaluateStudents: vi.fn(async () => 1), evaluateLessons: vi.fn(async () => undefined) };
     const events = new LessonEvents();
-    const j = new AlertsJob(queries as unknown as AlertsQueries, alerts as unknown as SubscriptionAlertsService, events);
+    const j = new AlertsJob(queries as unknown as AlertsRepo, alerts as unknown as SubscriptionAlertsService, events);
     return { j, alerts, events };
   }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeConfigStore } from '../config-store/config-store.fakes';
-import type { Db } from '../db/db.module';
+import { fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
+import type { Db } from '@/common/db/db.module';
 import { SettingsService } from './settings.service';
 
 // The gate routes and comms_source write without a version (docs/26 §2f: OFF is always accepted).

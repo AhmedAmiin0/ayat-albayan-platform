@@ -10,20 +10,15 @@ import { z } from 'zod';
 // Request helpers shared by the guardians and students modules.
 // ponytail: lives here until a second feature needs it; then move to common/.
 
-/** Parses a body/query with zod; 400 `validation_failed` with the issues otherwise. */
-export function parse<S extends z.ZodType>(schema: S, input: unknown): z.output<S> {
-  const r = schema.safeParse(input);
-  if (r.success) return r.data;
-  const issues = r.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message }));
-  throw new BadRequestException({ message: 'validation_failed', issues });
-}
-
 /** Forms send '' for "not set"; the shared schemas expect null. Recurses into nested objects. */
 export function blankToNull(input: unknown): unknown {
   if (input === '') return null;
   if (!input || typeof input !== 'object' || Array.isArray(input)) return input;
   return Object.fromEntries(Object.entries(input).map(([k, v]) => [k, blankToNull(v)]));
 }
+
+/** The schema with `blankToNull` applied first: a body for `@ZodBody`. */
+export const blanksToNull = <S extends z.ZodType>(schema: S) => z.preprocess(blankToNull, schema);
 
 /** Every list endpoint is paginated (R-NFR-08). */
 export const listQuerySchema = z.object({

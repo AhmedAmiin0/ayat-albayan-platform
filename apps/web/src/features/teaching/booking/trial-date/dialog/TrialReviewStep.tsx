@@ -2,13 +2,13 @@ import type { TrialDateResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule/api';
+import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
-import { toBookingRequest, type BookingDraft } from '../../draft/draft';
-import { useBookingMode } from '../../mode';
-import { ReviewSummary } from '../../steps/review/ReviewSummary';
-import { createTrialDate, refreshAfterTrialDate, TRIAL_DATES_KEY } from '../api';
+import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { useBookingMode } from '@/features/teaching/booking/mode';
+import { ReviewSummary } from '@/features/teaching/booking/steps/review/ReviewSummary';
+import { createTrialDate, refreshAfterTrialDate, TRIAL_DATES_KEY } from '@/features/teaching/booking/trial-date/api';
 import { TrialDateNotes } from './TrialDateNotes';
 
 export interface TrialReviewStepProps {

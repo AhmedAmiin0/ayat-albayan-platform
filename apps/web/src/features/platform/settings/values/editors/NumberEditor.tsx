@@ -2,10 +2,10 @@ import { SETTING_FIELD_OF, settingDef } from '@ab/shared';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Input } from '@/components/ui/form/input';
 import { cn } from '@/lib/utils';
-import { flag, onKey, str } from '../../registry-form/settings-form';
-import { boundsText } from '../lib/value-format';
-import { unitWord } from '../lib/value-units';
-import { useValues } from '../values-context';
+import { flag, onKey, str } from '@/features/platform/settings/registry-form/settings-form';
+import { boundsText } from '@/features/platform/settings/values/lib/value-format';
+import { unitWord } from '@/features/platform/settings/values/lib/value-units';
+import { useValues } from '@/features/platform/settings/values/values-context';
 import { denseClass, describedBy, type EditorProps } from './editor-props';
 import { ValueSwitch } from './ValueSwitch';
 

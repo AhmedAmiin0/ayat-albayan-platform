@@ -12,7 +12,7 @@ import {
   teacherRows,
   timeInCity,
 } from './lessons';
-import { RIYADH_TZ } from '../tz';
+import { RIYADH_TZ } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
@@ -46,10 +46,15 @@ describe('filterLessons (docs/10 §5.1)', () => {
 describe('teacherRows (R-SCH-01 week grid)', () => {
   it('one row per teacher by Arabic name, lessons in their Riyadh day', () => {
     const late = lesson({ id: 'late', starts_at: '2026-10-03T22:30:00.000Z' }); // 01:30 Sunday in Riyadh
-    const rows = teacherRows([B, A, late]);
+    const rows = teacherRows([B, A, late], RIYADH_TZ);
     expect(rows.map((r) => r.teacher.id)).toEqual([ABRAR.id, FATMA.id]);
     expect(rows[0]?.days.get('2026-10-04')?.map((l) => l.id)).toEqual(['late', 'a']);
     expect(rows[1]?.days.get('2026-10-05')?.map((l) => l.id)).toEqual(['b']);
+  });
+
+  it('buckets by the day of the zone it is given', () => {
+    const late = lesson({ id: 'late', starts_at: '2026-10-03T22:30:00.000Z' }); // Saturday in UTC
+    expect([...(teacherRows([late], 'UTC')[0]?.days.keys() ?? [])]).toEqual(['2026-10-03']);
   });
 });
 
@@ -68,11 +73,16 @@ describe('times with their zone (R-SCH-01)', () => {
     expect(timeInCity('2026-10-04T14:00:00.000Z', 'Pacific/Fiji', C24)).toContain('Pacific/Fiji');
   });
 
-  it('studentTimes lists each other zone once', () => {
-    const group = lesson({ students: [SUHAILA, { ...SUHAILA, id: 's-9' }, JOUD] });
+  it('studentTimes lists each other zone once (Cairo in winter, UTC+2)', () => {
+    const students = [SUHAILA, { ...SUHAILA, id: 's-9' }, JOUD];
+    const group = lesson({ starts_at: '2026-12-06T14:00:00.000Z', students });
     const cairo = t.schedule.studentTime.replace('{time}', timeInCity(group.starts_at, 'Africa/Cairo', C24));
     expect(studentTimes(group, RIYADH_TZ, C24)).toEqual([cairo]);
     expect(studentTimes(lesson({ students: [JOUD] }), RIYADH_TZ, C24)).toEqual([]);
+  });
+
+  it('studentTimes skips a zone on the same clock at that instant (Cairo summer time)', () => {
+    expect(studentTimes(lesson({ students: [SUHAILA] }), RIYADH_TZ, C24)).toEqual([]);
   });
 });
 

@@ -1,8 +1,8 @@
 import { suggestOverall } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { ReportTextField } from '../../entry/ReportTextField';
-import type { ReportEntryV2State } from '../use-report-entry-v2';
-import { CARD } from '../v2-classes';
+import { ReportTextField } from '@/features/reporting/reports/entry/ReportTextField';
+import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
+import { CARD } from '@/features/reporting/reports/entry-v2/v2-classes';
 import { NextPlanCard } from './NextPlanCard';
 import { NoteCard } from './NoteCard';
 import { OverallCard } from './OverallCard';

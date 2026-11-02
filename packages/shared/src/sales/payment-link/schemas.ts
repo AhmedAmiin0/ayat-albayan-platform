@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { localDate } from '../../schemas/index.js';
-import type { PaymentMethod } from '../../enums/index.js';
-import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '../../money/ledger/index.js';
+import type { PaymentMethod } from '@ab/catalog';
+import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
 
-// «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; TEST BUILD ONLY): the assistant agrees an amount with
+// «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with
 // the family in the chat and sends a Stripe Checkout link; the verified webhook records the payment. Strict
 // objects, like the sales money commands: an unknown field is a 400, never silently dropped.
 
@@ -41,19 +41,8 @@ export const paymentLinkCreateSchema = z.strictObject({
 /** GET /sales/payment-links?status=: her links, newest first. */
 export const paymentLinkListSchema = z.object({ status: z.enum(PAYMENT_LINK_STATUSES).optional() });
 
-const secretInput = z.string().trim().min(1).max(512);
-
-/** PATCH /admin/stripe/settings: a key / secret is write-only; null clears it. */
-export const stripeSettingsPatchSchema = z.strictObject({
-  enabled: z.boolean().optional(),
-  maxDiscountPct: z.number().min(0).max(100).nullable().optional(),
-  apiKey: secretInput.nullable().optional(),
-  webhookSecret: secretInput.nullable().optional(),
-});
-
 export type PaymentLinkQuote = z.output<typeof paymentLinkQuoteSchema>;
 export type PaymentLinkCreate = z.output<typeof paymentLinkCreateSchema>;
-export type StripeSettingsPatch = z.output<typeof stripeSettingsPatchSchema>;
 
 /** What PaymentsService records: a form's payment, or one only the platform writes (method 'card'). */
 export type PaymentWrite = Omit<PaymentCreate, 'method'> & { method: PaymentMethod };

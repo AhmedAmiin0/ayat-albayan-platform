@@ -12,8 +12,8 @@ import {
   type ThreadStudentView,
   type ThreadSubscriptionView,
 } from '@ab/shared';
-import type { BalanceRow } from '../../../finance/subscriptions/money/balance.queries';
-import { cents } from '../../../finance/subscriptions/subscriptions.queries';
+import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import { cents } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 export interface PeopleStudentRow {
   id: string;

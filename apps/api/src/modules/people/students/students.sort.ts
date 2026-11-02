@@ -1,5 +1,5 @@
 import { normalizeArabic, type ListSort, type StudentSortKey } from '@ab/shared';
-import { ilikeContains, type SortSpec } from '../../../common/list-sort';
+import { ilikeContains, type SortSpec } from '@/common/db/list-sort';
 
 /** Column text filters of GET /students (R-NFR-08), beside the select filters of R-STU-01. */
 export type StudentColumnFilters = { code?: string | undefined; name?: string | undefined; guardian?: string | undefined };

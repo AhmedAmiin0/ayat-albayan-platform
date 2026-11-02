@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeRedis, settle } from '../../../common/cache/cache.fakes';
-import type { Db } from '../../../common/db/db.module';
+import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
+import type { Db } from '@/common/db/db.module';
 import { GoogleSettings } from './google-settings';
 
 /** settings rows: select('key, value').in(...) answers `rows()`; upsert succeeds. */

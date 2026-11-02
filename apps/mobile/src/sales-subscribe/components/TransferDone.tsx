@@ -3,12 +3,17 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { money } from '@/payments/format';
+import { money } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+
+interface TransferDoneProps {
+  payment: SalesPaymentView;
+  onDone: () => void;
+}
 
 /**
  * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),
@@ -17,7 +22,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
  * «مدفوعاتي» (her recorded payments: a tab's screen, so dismissTo pops the chat group back to the
  * tabs; a push would stack a second tab host).
  */
-export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; onDone: () => void }) {
+export function TransferDone({ payment, onDone }: TransferDoneProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
   const base = useTreeBase();

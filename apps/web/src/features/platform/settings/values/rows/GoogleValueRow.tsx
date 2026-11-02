@@ -1,13 +1,13 @@
 import type { GoogleSyncSettings } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { DefaultCell, LastCell } from '../cells/InfoCells';
-import { keyItem } from '../cells/key-item';
-import { NameCell } from '../cells/NameCell';
-import { useRowIds } from '../editors/editor-props';
-import { describeItem, rowDescription } from '../description/row-description';
-import { RowMenu } from '../sheet/RowMenu';
-import { GOOGLE_DEFAULTS, rowKey, rowWords, type GoogleField } from '../lib/value-rows';
-import { useValues } from '../values-context';
+import { DefaultCell, LastCell } from '@/features/platform/settings/values/cells/InfoCells';
+import { keyItem } from '@/features/platform/settings/values/cells/key-item';
+import { NameCell } from '@/features/platform/settings/values/cells/NameCell';
+import { useRowIds } from '@/features/platform/settings/values/editors/editor-props';
+import { describeItem, rowDescription } from '@/features/platform/settings/values/description/row-description';
+import { RowMenu } from '@/features/platform/settings/values/sheet/RowMenu';
+import { GOOGLE_DEFAULTS, rowKey, rowWords, type GoogleField } from '@/features/platform/settings/values/lib/value-rows';
+import { useValues } from '@/features/platform/settings/values/values-context';
 import { OwnedValue } from './OwnedValue';
 import { cellClass, headClass, rowClass } from './row-classes';
 

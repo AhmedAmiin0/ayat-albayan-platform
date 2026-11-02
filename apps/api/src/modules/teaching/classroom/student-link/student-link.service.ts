@@ -8,13 +8,13 @@ import {
   type StudentLinkView,
 } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { notFound } from '../../../../common/http/errors';
-import { parseOrThrow } from '../../../../common/http/http';
-import { assertWindowOpen } from '../join/join-gate';
-import { PublicJoinLimit } from '../join/join-limit';
-import { hashLinkToken, looksLikeLinkToken } from '../join/join-link.token';
-import { RoomAdmission } from '../join/room-admission';
-import { StudentLinkQueries, type StudentLesson } from './student-link.queries';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
+import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
+import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
+import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
@@ -32,7 +32,7 @@ type Resolved = { student: { id: string; name: string }; lesson: StudentLesson |
 @Injectable()
 export class StudentLinkService {
   constructor(
-    private readonly queries: StudentLinkQueries,
+    private readonly queries: StudentLinkRepo,
     private readonly limit: PublicJoinLimit,
     private readonly admission: RoomAdmission,
   ) {}

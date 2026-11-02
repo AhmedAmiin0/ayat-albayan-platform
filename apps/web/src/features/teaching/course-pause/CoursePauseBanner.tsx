@@ -20,6 +20,7 @@ interface CoursePauseBannerProps {
 /** «الدورة موقوفة مؤقتًا حتى …» / «حتى الاستئناف», «يبدأ الإيقاف في …» before it starts, the reason, the actions. */
 export function CoursePauseBanner({ studentId, pause, canEdit, onDone }: CoursePauseBannerProps) {
   const [open, setOpen] = useState<'resume' | 'until' | null>(null);
+  // academy day (docs/34 b): the API's pause days are Riyadh days
   const lines = coursePauseBanner({ pause, today: riyadhToday(), words: t.coursePause, formatDate: dateLabel });
   const done = (message: string) => {
     setOpen(null);

@@ -7,7 +7,7 @@ import { quoteQuery } from '@/features/finance/pricing/api';
 import { Money } from '@/features/finance/pricing/Money';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { BookingDraft } from '../../draft/draft';
+import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { quoteSelection, type PriceInput } from './price';
 
 export interface PackageStepProps {

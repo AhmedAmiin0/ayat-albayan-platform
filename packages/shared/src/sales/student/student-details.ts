@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
+import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
-import { CANCEL_BY } from '../../schedule/lessons/index.js';
+import { CANCEL_BY, isCancelledLesson } from '@ab/schedule';
 import type { SalesHistoryEntry } from '../academy.js';
+import type { SalesPackageSummary } from './student-package.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
 import type { TrialOutcome } from '../../people/students/index.js';
 
 // «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28), its trial,
-// «الجدول» and attendance; subscriptions and sent reports only for HER students (`mine`). Never a price or payment.
+// «الجدول», attendance, subscriptions and sent reports (owner 2026-10-30: «Make all assistants see all»).
 
 /** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
 /**
@@ -46,7 +47,7 @@ export interface SalesTrialLesson {
 
 /** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
 export interface SalesStudentDetails {
-  /** Hers (SalesQueries.ownership). Not hers: no subscriptions, no reports, no lesson actions. Absent in an old cache (= hers). */
+  /** Hers, or any while SalesOwnershipRule does not enforce (owner 2026-11-02): the money actions. Every student reads the same (owner 2026-10-30). Absent: old cache (= hers). */
   mine?: boolean;
   student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
@@ -60,6 +61,11 @@ export interface SalesStudentDetails {
   schedule?: SalesStudentSchedule;
   /** «الحلقة التجريبية»: the trial lessons newest first ([] without one). Absent in an old cache. */
   trial?: SalesTrialLesson[];
+  /**
+   * The current package of ANY student (owner 2026-10-30): size, status, dates, lessons used /
+   * left; never a price or payment. null: none. Absent in an old cache.
+   */
+  package?: SalesPackageSummary | null;
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
@@ -84,7 +90,6 @@ export interface SalesLessonMoved {
 }
 
 const HELD: readonly LessonStatus[] = ['completed', 'late'];
-const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_by_admin'];
 
 /**
  * The student's own attendance wins (on time / late = حضر, absent = غاب, excused); without it the lesson's
@@ -93,7 +98,7 @@ const CANCELLED: readonly LessonStatus[] = ['cancelled_by_teacher', 'cancelled_b
  */
 export function attendanceKind(status: LessonStatus, attendance: Attendance | null): AttendanceKind | null {
   if (status === 'rescheduled') return null;
-  if (CANCELLED.includes(status)) return 'cancelled';
+  if (isCancelledLesson(status)) return 'cancelled';
   if (attendance === 'on_time' || attendance === 'late') return 'present';
   if (attendance === 'absent') return 'absent';
   if (attendance === 'excused') return 'excused';

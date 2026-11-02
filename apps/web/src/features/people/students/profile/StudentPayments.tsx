@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { paymentsQuery } from '@/features/finance/payments/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { moneyText } from '@/features/finance/subscriptions/format';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 /**

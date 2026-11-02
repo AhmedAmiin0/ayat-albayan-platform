@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
-import { ActivityModule } from '../../../common/activity/activity.module';
-import { SettingsRulesPort } from '../../../common/settings/settings-rules.port';
-import { livekitEnv } from '../../../config/env/env.livekit';
-import { loadEnv } from '../../../config/env/env';
+import { ActivityModule } from '@/common/telemetry/activity/activity.module';
+import { SettingsRulesPort } from '@/common/settings/settings-rules.port';
+import { livekitEnv } from '@/config/env/env.livekit';
+import { loadEnv } from '@/config/env/env';
 import { NotificationRulesSettings } from './notification-rules.settings';
 import { NotificationPolicy } from './policy/policy';
 import { RulesSourceSettings } from './rules-source.settings';
@@ -12,7 +12,7 @@ import { RulesFacts } from './policy/rules.facts';
 import { RulesJournal } from './store/rules.journal';
 import { RulesParity } from './sync/rules.parity';
 import { RulesPersist } from './store/rules.persist';
-import { RULES_CLASSROOM, RulesQueries, type ClassroomOn } from './rules.queries';
+import { RULES_CLASSROOM, RulesRepo, type ClassroomOn } from './rules.repo';
 import { RulesReader } from './store/rules.reader';
 import { RulesService } from './rules.service';
 import { DbRulesReader } from './store/rules.store';
@@ -34,7 +34,7 @@ import { RulesWriter } from './store/rules.writer';
     { provide: RULES_CLASSROOM, useFactory: (): ClassroomOn => () => livekitEnv(loadEnv()) !== null },
     NotificationRulesSettings,
     RulesSourceSettings,
-    RulesQueries,
+    RulesRepo,
     RulesFacts,
     RulesTable,
     DbRulesReader,

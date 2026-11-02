@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import { Button } from '../ui/form/button';
-import { Icon } from '../ui/display/icon';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import type { FilterChip } from './types';
 
 export interface ActiveFilterChipsProps {

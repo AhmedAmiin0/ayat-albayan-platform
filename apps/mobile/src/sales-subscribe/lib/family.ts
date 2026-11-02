@@ -21,7 +21,7 @@ export function useSalesFamily(phone: string, enabled = true) {
 
 /**
  * Her own students of the family: with sales.renew_any the view also lists the others (`mine: false`, docs/16
- * row 38) for subscribe / renew / transfer only; the trial date, «دفع إلكتروني» and «إلغاء الباقة» stay hers.
+ * row 38) for subscribe / renew / transfer / «أيام الحلقات»; the trial date, «دفع إلكتروني» and «إلغاء الباقة» stay hers.
  */
 export function ownStudents<S extends { mine?: boolean }>(students: readonly S[]): S[] {
   return students.filter((s) => s.mine !== false);

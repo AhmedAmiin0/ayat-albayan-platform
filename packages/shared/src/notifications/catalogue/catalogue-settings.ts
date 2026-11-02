@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '../../settings/index.js';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 
 /**
  * The only settings the notification catalogue reads: the two sending gates, the rows' own

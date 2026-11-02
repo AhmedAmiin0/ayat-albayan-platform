@@ -1,8 +1,8 @@
 import type { PortalStudent } from '@ab/shared';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { PortalScopeQueries } from './portal-scope.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { PortalScopeRepo } from './portal-scope.repo';
 
 interface PortalScope {
   kind: 'guardian' | 'student';
@@ -16,7 +16,7 @@ interface PortalScope {
  */
 @Injectable()
 export class PortalScopes {
-  constructor(private readonly queries: PortalScopeQueries) {}
+  constructor(private readonly queries: PortalScopeRepo) {}
 
   async of(user: AuthUser): Promise<PortalScope> {
     if (user.role !== 'guardian' && user.role !== 'student') throw new ForbiddenException();

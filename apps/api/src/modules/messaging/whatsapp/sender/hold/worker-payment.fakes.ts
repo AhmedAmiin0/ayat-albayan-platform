@@ -7,7 +7,7 @@ import { PaymentHolds } from './payment-holds';
 import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import { MessageWorker, type SendJob } from '@/modules/messaging/whatsapp/sender/message.worker';
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
-import type { SenderQueries } from '@/modules/messaging/whatsapp/sender/sender.queries';
+import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 
 // Test-only (excluded from the build): a worker with the real 131042 line hold over fakes.
 
@@ -56,7 +56,7 @@ export function resetPaymentFakes(): void {
 
 export function worker(): MessageWorker {
   const w = new MessageWorker(
-    queries as unknown as SenderQueries,
+    queries as unknown as SenderRepo,
     dispatch as unknown as MessageDispatch,
     push as unknown as PushService,
     new PaymentHolds(repo as unknown as PaymentHoldRepo),

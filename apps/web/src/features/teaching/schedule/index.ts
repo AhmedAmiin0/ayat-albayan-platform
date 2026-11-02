@@ -41,18 +41,6 @@ export {
 } from './reschedule/ConflictNotice';
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
 export { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './reschedule/slots';
-export {
-  addDays,
-  dateLabel,
-  dayMonthLabel,
-  type RIYADH_TZ,
-  weekdayOf,
-  weekDays,
-  weekStart,
-  weekWindow,
-  zonedParts,
-  type ZonedParts,
-  zonedToUtc,
-} from './tz';
+export { dateLabel, dayMonthLabel } from './tz';
 export { CancelForm, type CancelFormProps, type CancelRoute } from './reschedule/CancelForm';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';

@@ -1,4 +1,4 @@
-import { intlLocale, WEEKDAYS, type Weekday } from '@ab/shared';
+import { intlLocale, WEEKDAYS, weekdayIn, zonedFieldsIn, type Weekday } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { toMin, type Grid, type Range } from './grid';
@@ -60,21 +60,9 @@ export function weeklyHoursLabel(hours: number): string {
   return text.replace('{n}', String(n));
 }
 
-const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 /** Weekday (0 = الأحد) and minute of the day at `now` in `tz`: today's row and the now-marker. */
 export function wallClock(now: Date, tz: string): { weekday: Weekday | undefined; minute: number } {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: tz,
-    weekday: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(now);
-  const part = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
-  const index = SHORT_DAYS.indexOf(part('weekday'));
-  return {
-    weekday: WEEKDAYS.find((d) => d === index),
-    minute: Number(part('hour')) * 60 + Number(part('minute')),
-  };
+  const { hour, minute } = zonedFieldsIn(now, tz);
+  const index = weekdayIn(now, tz);
+  return { weekday: WEEKDAYS.find((d) => d === index), minute: hour * 60 + minute };
 }

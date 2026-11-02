@@ -4,9 +4,9 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { nameMatch, textMatch } from './compare';
-import type { CreateStudentValues } from '../create/create-student';
+import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { CompareRow, cell } from './CompareRow';
-import type { StudentProfile, StudentRef } from '../types';
+import type { StudentProfile, StudentRef } from '@/features/people/students/types';
 
 type DuplicateCompareProps = {
   typed: CreateStudentValues;

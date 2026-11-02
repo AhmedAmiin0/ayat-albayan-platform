@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Section } from '@/more/Section';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { Section } from '@/core/ui/surface/Section';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';

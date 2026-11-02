@@ -1,3 +1,4 @@
+import { zonedPartsIn } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -5,16 +6,15 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
-import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from '../api';
-import { ConflictNotice } from '../reschedule/ConflictNotice';
+import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { changeOf, editBody, moveDays, startsAtOf, timesFor, validLength, willNotify } from './edit-time';
 import { lengthText, lockedText, payoutLock } from './edit-time-text';
 import { timeEditMode, type TimeEditResult } from './edit-time.contract';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone, needsFollowUp, savedMessage } from './EditTimeDone';
 import { EditTimeFields, type FieldState } from './EditTimeFields';
-import { durationMin } from '../lesson/lessons';
-import { zonedParts } from '../tz';
+import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
 
 export interface EditTimeFormProps {
   lesson: LessonView;
@@ -36,7 +36,7 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
   const mode = timeEditMode(lesson) ?? 'move';
   const tz = lesson.teacher.tz;
   const was = { startsAt: lesson.starts_at, durationMin: durationMin(lesson) };
-  const start = zonedParts(new Date(lesson.starts_at), tz);
+  const start = zonedPartsIn(new Date(lesson.starts_at), tz);
   const [now] = useState(() => new Date());
   const [value, setValue] = useState<FieldState>({ date: start.date, time: start.time, durationMin: was.durationMin, reason: '' });
   const [notify, setNotify] = useState(true);
@@ -48,7 +48,7 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
   const choice = { ...value, tz };
   const change = changeOf(was, choice);
   const changed = change.start || change.duration;
-  const sameDay = [...new Set([tz, ...lesson.students.map((s) => s.tz)])].map((z) => ({ tz: z, date: zonedParts(new Date(lesson.starts_at), z).date }));
+  const sameDay = [...new Set([tz, ...lesson.students.map((s) => s.tz)])].map((z) => ({ tz: z, date: zonedPartsIn(new Date(lesson.starts_at), z).date }));
 
   const save = useMutation({
     mutationFn: (override?: string) =>

@@ -8,7 +8,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { formatDate } from '@/features/sales/leads/format';
+import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { breakdownLines, payoutStatusOptions } from '@/features/finance/payouts/list/payout-columns';
 import { LedgerPaid } from '@/features/finance/payouts/shared/LedgerPaid';

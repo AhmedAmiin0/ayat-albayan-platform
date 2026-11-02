@@ -41,4 +41,18 @@ describe('MyEarnings «الكشوف»: renewal commissions (owner 2026-10-26)', 
     expect(screen.getByText(p.line.commission.replace('{student}', 'يوسف'))).toBeTruthy();
     expect(screen.getByText(p.line.commissionRenewal.replace('{student}', 'جود'))).toBeTruthy();
   });
+
+  it('share 0 («عمولة التجديد» off, owner 2026-11-01): the note says it is paused, never «0%»', async () => {
+    const terms = EARNINGS.terms && { ...EARNINGS.terms, renewal_share_percent: 0 };
+    apiFetch.mockResolvedValue({ ...EARNINGS, terms });
+    const noRetry = { defaultOptions: { queries: { retry: false } } };
+    render(
+      <QueryClientProvider client={new QueryClient(noRetry)}>
+        <MyEarnings />
+      </QueryClientProvider>,
+    );
+    const off = p.commissionNoteRenewalOff.split('{date}')[0] ?? '-';
+    expect(await screen.findByText((text) => text.startsWith(off))).toBeTruthy();
+    expect(screen.queryByText((text) => text.startsWith(p.commissionNote.split('{n}')[0] ?? '-') && text.includes('0%'))).toBeNull();
+  });
 });

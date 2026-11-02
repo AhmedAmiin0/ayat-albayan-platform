@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setIntegrationOverlay } from '../../common/integrations/integration-overlay';
-import { activeNumberId, setNumbersOverlay } from '../../common/integrations/numbers-overlay';
+import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import { activeNumberId, setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { appSecrets, envFrom, lineEnvs, lineNumbers, loadEnv } from './env';
 import { envCandidates } from './env.sources';
 

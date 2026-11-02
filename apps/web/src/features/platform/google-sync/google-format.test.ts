@@ -1,7 +1,8 @@
 import { GOOGLE_SKIP_REASONS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { errorText, fill, listOf, oauthReturnNote, RETRYABLE, skipLabel } from './google-format';
+import { locale } from '@/lib/i18n/locale';
+import { errorText, fill, formatAt, listOf, oauthReturnNote, RETRYABLE, skipLabel } from './google-format';
 
 describe('Google display helpers', () => {
   it('fill replaces every known {key} and keeps unknown ones', () => {
@@ -33,5 +34,13 @@ describe('Google display helpers', () => {
     expect(errorText('429 rateLimitExceeded')).toBe(t.googleSync.errors.other.replace('{code}', '429 rateLimitExceeded'));
     expect(oauthReturnNote('')).toBeNull();
     expect(oauthReturnNote('?google=other')).toBeNull();
+  });
+});
+
+describe('formatAt', () => {
+  it('reads in the zone it is given, never a stored one', () => {
+    const c = { cycle: '24', locale } as const;
+    expect(formatAt('2026-10-05T21:30:00Z', { ...c, tz: 'Asia/Riyadh' })).toMatch(/00:30/);
+    expect(formatAt('2026-10-05T21:30:00Z', { ...c, tz: 'UTC' })).toMatch(/21:30/);
   });
 });

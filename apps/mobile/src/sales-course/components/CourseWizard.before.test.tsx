@@ -2,11 +2,11 @@ import { counted } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments/format';
+import { localDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { isDisabled, fakeCourseApi, press, walkToReview } from '../testing/course-test-utils';
-import { CourseScreen } from '../screens/CourseScreen';
-import { courseView, SUB_ID } from '../testing/fixtures';
+import { isDisabled, fakeCourseApi, press, walkToReview } from '@/sales-course/testing/course-test-utils';
+import { CourseScreen } from '@/sales-course/screens/CourseScreen';
+import { courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 
 // Owner 2026-10-28: 1 of the 8 lessons was taken before the platform → the course books 7.
 const mockApiFetch = jest.fn();

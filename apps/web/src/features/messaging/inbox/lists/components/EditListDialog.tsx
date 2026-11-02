@@ -4,7 +4,7 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
-import { listErrorText, refreshLists, renameList } from '../lib/api';
+import { listErrorText, refreshLists, renameList } from '@/features/messaging/inbox/lists/lib/api';
 import { AutoListNote } from './AutoListNote';
 import { DeleteListDialog } from './DeleteListDialog';
 import { ListNameForm } from './ListNameForm';

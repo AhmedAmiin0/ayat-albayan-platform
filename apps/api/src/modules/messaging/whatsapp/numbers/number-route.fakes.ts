@@ -1,6 +1,6 @@
-import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { messagingNumbers, routable, type Approvals, type RoutePass } from './number-route';
-import { STUB_ENV } from '../whatsapp.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Test-only (excluded from the build): numbers as the overlay carries them, and one pass's routing input.
 

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from '../api';
-import { errorText } from '../status';
+import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from '@/features/people/assistants/api';
+import { errorText } from '@/features/people/assistants/status';
 import { TermsFields } from './TermsFields';
 import { formOf, startMins, toInput, type TermsErrors, type TermsForm } from './terms-form';
 
@@ -41,7 +41,11 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
     <form className="mb-8 grid max-w-3xl gap-6" onSubmit={submit} noValidate aria-label={t.assistants.terms.title}>
       <h2 className="font-display text-h4 font-bold">{t.assistants.terms.title}</h2>
       <TermsFields form={form} errors={errors} set={set} mins={startMins(rules)} />
-      <p className="text-xs text-ink-3">{t.assistants.terms.hint.replace('{n}', String(assistant.terms.renewal_share_percent))}</p>
+      <p className="text-xs text-ink-3">
+        {assistant.terms.renewal_share_percent > 0
+          ? t.assistants.terms.hint.replace('{n}', String(assistant.terms.renewal_share_percent))
+          : t.assistants.terms.hintRenewalOff}
+      </p>
       {save.isError && <FormAlert>{errorText(save.error)}</FormAlert>}
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={save.isPending}>

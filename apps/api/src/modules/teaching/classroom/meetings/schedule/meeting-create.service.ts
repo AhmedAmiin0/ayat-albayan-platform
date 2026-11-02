@@ -1,14 +1,14 @@
 import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../../common/http/http';
-import { InternalMeetingsQueries, type MeetingRow } from '../../internal-meetings/internal-meetings.queries';
-import { hashMeetingToken, newMeetingToken } from '../../internal-meetings/internal-meetings.token';
-import { chatCount, MeetingInviteFlow } from '../invites/meeting-invite.flow';
-import { visibleView } from '../invites/meeting-invite.policy';
-import { MeetingInviteeResolver } from '../invites/meeting-invitee.resolver';
-import { MeetingInviteesQueries } from '../invites/meeting-invitees.queries';
-import { toInviteeView } from '../invites/meeting-invites.mapper';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { InternalMeetingsRepo, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import { hashMeetingToken, newMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import { chatCount, MeetingInviteFlow } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
+import { visibleView } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
+import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
+import { MeetingInviteesRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
+import { toInviteeView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
 import { scheduleTimes } from './meeting-schedule.rules';
 
 /** The services MeetingCreateService talks to (one injectable, so constructors stay at ≤ 3 params). */
@@ -17,7 +17,7 @@ export class MeetingCreateDeps {
   constructor(
     readonly resolver: MeetingInviteeResolver,
     readonly flow: MeetingInviteFlow,
-    readonly invitees: MeetingInviteesQueries,
+    readonly invitees: MeetingInviteesRepo,
   ) {}
 }
 
@@ -30,7 +30,7 @@ export class MeetingCreateDeps {
 @Injectable()
 export class MeetingCreateService {
   constructor(
-    private readonly queries: InternalMeetingsQueries,
+    private readonly queries: InternalMeetingsRepo,
     private readonly deps: MeetingCreateDeps,
   ) {}
 

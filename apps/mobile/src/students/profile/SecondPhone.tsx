@@ -2,7 +2,7 @@ import { type FamilyPhone, formatPhone, secondPhoneOf } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -12,7 +12,7 @@ import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
-import { SectionLabel } from '../list/SectionLabel';
+import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /** DELETE /guardians/:id/phones/:phone (204): only the second number; then the file, the families and the chats refetch. */
 function useRemoveSecondPhone(guardianId: string) {

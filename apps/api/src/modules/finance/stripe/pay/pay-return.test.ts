@@ -4,17 +4,20 @@ import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 const T = 'a'.repeat(32);
 const ORIGIN = 'https://api.test.example';
 
-describe('back into the test app after Stripe (pay-return)', () => {
-  it('Android: an intent naming the test app, falling back to the same page with no automatic try', () => {
+describe('back into the app after Stripe (pay-return)', () => {
+  it.each([
+    [false, 'com.ayatalbayan.admin.stripetest'],
+    [true, 'com.ayatalbayan.admin'],
+  ])('Android (live %o): an intent naming %s, falling back to the same page with no automatic try', (live, pkg) => {
     const fallback = encodeURIComponent(`${ORIGIN}/pay/${T}/done?auto=0`);
-    expect(appReturnUrl({ token: T, kind: 'done', payOrigin: ORIGIN, android: true })).toBe(
-      `intent://pay-done?token=${T}&r=done#Intent;scheme=ayatalbayan;package=com.ayatalbayan.admin.stripetest;S.browser_fallback_url=${fallback};end`,
+    expect(appReturnUrl({ token: T, kind: 'done', payOrigin: ORIGIN, android: true, live })).toBe(
+      `intent://pay-done?token=${T}&r=done#Intent;scheme=ayatalbayan;package=${pkg};S.browser_fallback_url=${fallback};end`,
     );
     expect(fallback).toBe(`https%3A%2F%2Fapi.test.example%2Fpay%2F${T}%2Fdone%3Fauto%3D0`);
   });
 
-  it('iOS: the bare scheme, the kind carried', () => {
-    expect(appReturnUrl({ token: T, kind: 'cancelled', payOrigin: ORIGIN, android: false })).toBe(`ayatalbayan://pay-done?token=${T}&r=cancelled`);
+  it.each([false, true])('iOS (live %o): the bare scheme, the kind carried', (live) => {
+    expect(appReturnUrl({ token: T, kind: 'cancelled', payOrigin: ORIGIN, android: false, live })).toBe(`ayatalbayan://pay-done?token=${T}&r=cancelled`);
   });
 
   it('the cookie: the platform, this link’s pages only, a day (a session lasts 23 h at most), HttpOnly, Secure, SameSite=Lax', () => {

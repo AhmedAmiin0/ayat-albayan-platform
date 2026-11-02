@@ -3,7 +3,7 @@ import type { ExpenseView } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -11,10 +11,10 @@ import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { ExpenseForm } from './ExpenseForm';
 import { ExpenseRow } from './ExpenseRow';
 import { ExpenseTotals } from './ExpenseTotals';
-import { currentMonth } from '../shared/month';
-import { MonthPicker } from '../shared/MonthPicker';
-import { useExpenseCategories, useExpenses } from '../shared/queries';
-import { StaleNote, StateNote } from '../shared/StateNote';
+import { currentMonth } from '@/finance/shared/month';
+import { MonthPicker } from '@/finance/shared/MonthPicker';
+import { useExpenseCategories, useExpenses } from '@/finance/shared/queries';
+import { StaleNote, StateNote } from '@/finance/shared/StateNote';
 
 /**
  * «المصروفات» (admin; web /admin/expenses): the month's expenses with totals per category, and

@@ -1,11 +1,11 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
-import type { OverlayNumber } from '../../../../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../../../../config/env/env';
-import { readError, requireSync } from '../catalog/template-env';
+import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import type { WhatsappEnv } from '@/config/env/env';
+import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { findMeta, syncPatch } from './template-sync';
-import { CRM_MANAGED, waHttpError } from '../catalog/template.mapper';
-import type { ApprovalRow, ApprovalWrite, TemplatesQueries } from '../catalog/templates.queries';
-import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '../../whatsapp.types';
+import { CRM_MANAGED, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import type { ApprovalRow, ApprovalWrite, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One number's template sync (docs/23 phase 5, docs/23c decision 4): read THAT number's WABA list with a
 // client built from its own row + Vault secrets (the numbers overlay, module mode only) and write the
@@ -13,7 +13,7 @@ import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } fro
 // per WABA). Read-only on Meta; never inserts a message_templates row, never sends.
 
 export interface NumberSyncDeps {
-  queries: Pick<TemplatesQueries, 'all' | 'approvals' | 'upsertApprovals'>;
+  queries: Pick<TemplatesRepo, 'all' | 'approvals' | 'upsertApprovals'>;
   /** overlayNumbers(): null under legacy. */
   numbers: () => readonly OverlayNumber[] | null;
   clientOf: (env: WhatsappEnv) => Pick<WhatsappClient, 'getTemplates'>;

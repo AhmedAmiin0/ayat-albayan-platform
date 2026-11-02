@@ -4,8 +4,8 @@ import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import type { DescribeTarget } from './describe-target';
 import { shownDescription } from './description';
-import type { ValuesApi } from '../hooks/use-values-controller';
-import type { RowMenuItem } from '../sheet/RowMenu';
+import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller';
+import type { RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 
 /** A settings row's dialog target: its key, label and registry hint key. */
 export const settingTarget = (key: SettingKey): DescribeTarget => ({

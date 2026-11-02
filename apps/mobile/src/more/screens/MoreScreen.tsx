@@ -5,19 +5,19 @@ import { View } from 'react-native';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
-import { SalesSection } from '@/sales/components/SalesSection';
+import { SalesSection } from '@/sales/sales/components/SalesSection';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { AdminOpsSection } from '../sections/AdminOpsSection';
-import { AppearancePicker } from '../appearance/AppearancePicker';
-import { ClockFormatPicker } from '../appearance/ClockFormatPicker';
-import { ClassroomSection } from '../sections/ClassroomSection';
-import { FinanceSection } from '../sections/FinanceSection';
-import { LanguageRow } from '../appearance/LanguageRow';
-import { MoneySection } from '../sections/MoneySection';
-import { signOutDevice } from '../sign-out';
+import { AdminOpsSection } from '@/more/sections/AdminOpsSection';
+import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { ClockFormatPicker } from '@/more/appearance/ClockFormatPicker';
+import { ClassroomSection } from '@/more/sections/ClassroomSection';
+import { FinanceSection } from '@/more/sections/FinanceSection';
+import { LanguageRow } from '@/more/appearance/LanguageRow';
+import { MoneySection } from '@/more/sections/MoneySection';
+import { signOutDevice } from '@/core/lib/session/sign-out';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**

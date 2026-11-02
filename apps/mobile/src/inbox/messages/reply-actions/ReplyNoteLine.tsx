@@ -1,6 +1,6 @@
 import { type MessageView, replyLesson, replyNote, type ReplyNote } from '@ab/shared';
 import { View } from 'react-native';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { useNow } from '@/core/lib/time/use-now';
@@ -33,9 +33,10 @@ export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
   const small = useSmall();
   const cycle = useClockCycle();
+  const tz = useViewerTz();
   const now = useNow();
   const lesson = replyLesson(m, { lessons: actions.lessons, now });
-  const note = replyNote(m, { lesson, rights: actions.rights, now, moved: actions.moved.includes(m.id), clock: { locale, cycle } });
+  const note = replyNote(m, { lesson, rights: actions.rights, now, moved: actions.moved.includes(m.id), clock: { locale, cycle, tz } });
   if (!note) return null;
   return (
     <View style={{ gap: 6, alignItems: 'flex-start' }}>

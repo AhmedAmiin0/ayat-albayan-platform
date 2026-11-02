@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setIntegrationOverlay } from '../../../../common/integrations/integration-overlay';
-import type { NumbersEffects } from '../numbers.effects';
-import { numberRow } from '../numbers.fakes';
+import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
+import type { NumbersEffects } from '@/modules/messaging/numbers/numbers.effects';
+import { numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 import { NumbersImport } from './numbers.import';
-import type { NumbersQueries } from '../numbers.queries';
-import type { NumbersSecrets } from '../config/numbers.secrets';
+import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
+import type { NumbersSecrets } from '@/modules/messaging/numbers/config/numbers.secrets';
 
 const ENV = { WA_API_BASE: 'http://localhost:4010', WA_PHONE_NUMBER_ID: '1000000001', WA_WABA_ID: '2000000001', WA_APP_SECRET: 'env-secret-fake' };
 
@@ -27,7 +27,7 @@ function setup() {
     set: vi.fn(async (t: { id: string; name: string }) => mark(t.id, t.name)),
   };
   const effects = { after: vi.fn(async () => undefined) };
-  const importer = new NumbersImport(queries as unknown as NumbersQueries, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects);
+  const importer = new NumbersImport(queries as unknown as NumbersRepo, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects);
   return { importer, queries, secrets, effects };
 }
 

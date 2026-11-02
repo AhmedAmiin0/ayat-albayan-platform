@@ -1,6 +1,6 @@
 import { PACKAGE_IDS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fxRow, hoursAgo, NOW } from '../fx/fx.fakes';
+import { fxRow, hoursAgo, NOW } from '@/modules/finance/fx/fx.fakes';
 import { pricingApp } from './pricing.test-app';
 
 let h: Awaited<ReturnType<typeof pricingApp>>;
@@ -46,6 +46,11 @@ describe('/pricing access and validation', () => {
     'tier=starter&duration=50',
   ])('quote ?%s is 400', async (qs) => {
     expect((await h.get(`/pricing/quote?${qs}`)).statusCode).toBe(400);
+  });
+
+  it('a 400 is the one validation envelope (z1a)', async () => {
+    const res = await h.get('/pricing/catalog?country=SAU');
+    expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [expect.objectContaining({ path: 'country' })] });
   });
 });
 

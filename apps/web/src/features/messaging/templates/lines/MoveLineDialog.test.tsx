@@ -5,7 +5,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { LINES, lineView } from './template-lines-fixture';
-import { TemplateHealth } from '../TemplateHealth';
+import { TemplateHealth } from '@/features/messaging/templates/TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

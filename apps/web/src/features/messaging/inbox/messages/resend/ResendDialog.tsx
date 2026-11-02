@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
-import { sendText } from '../../api/api';
-import { sendErrorText } from '../../composer/lib/send-error';
+import { sendText } from '@/features/messaging/inbox/api/api';
+import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;

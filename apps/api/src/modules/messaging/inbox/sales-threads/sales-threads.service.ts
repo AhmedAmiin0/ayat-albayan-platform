@@ -1,13 +1,14 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { Page } from '../../../../common/http/http';
-import { MessageViews } from '../../whatsapp/messages/message.views';
-import { ReadReceipts } from '../reads/read-receipts';
+import type { Page } from '@/common/http/http';
+import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
-import { toThreadView, type ThreadRow } from '../threads/threads.mapper';
-import type { PeopleOf } from '../people/thread-people';
-import { ThreadsQueries, type ThreadListFilter } from '../threads/threads.queries';
-import { asRead, pageRows, stampRead, type ThreadPageQuery } from '../reads/thread-page';
+import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
+import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
+import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
+import { asRead, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
 
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 
@@ -19,9 +20,10 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 @Injectable()
 export class SalesThreadsService {
   constructor(
-    private readonly queries: ThreadsQueries,
+    private readonly queries: ThreadsRepo,
     private readonly views: MessageViews,
     private readonly receipts: ReadReceipts,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
@@ -35,7 +37,7 @@ export class SalesThreadsService {
   /** One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts). */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = !q.before;
-    const at = await pageRows(this.queries, q);
+    const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse().filter(visibleToSales);
     const [people, lessons, messages, read] = await Promise.all([
       first ? this.people(at.who) : NO_ONE,

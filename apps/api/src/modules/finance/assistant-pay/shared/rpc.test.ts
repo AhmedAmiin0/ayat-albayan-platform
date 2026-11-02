@@ -1,12 +1,12 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
+import { fakeSettings } from '@/common/settings/settings.fakes';
 import { AssistantPaySettings } from './assistant-pay.settings';
-import { TermsQueries } from '../terms/terms.queries';
+import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
 const thrown = (p: Promise<unknown>): Promise<Error> => p.then(() => new Error('did not throw'), (e: Error) => e);
@@ -69,10 +69,12 @@ describe('TermsQueries.uncommissioned', () => {
       subscriptions: [{ data: [{ id: 'x1' }, { id: 'x2' }, { id: 'y1' }, { id: 'y2' }, { id: 'z1' }] }],
     });
     const settings = new AssistantPaySettings(fakeSettings());
-    expect(await new TermsQueries(t.db, settings).uncommissioned('a')).toEqual(['x1', 'x2', 'y2', 'z1']);
+    expect(await new TermsRepo(t.db, settings).uncommissioned('a')).toEqual(['x1', 'x2', 'y2', 'z1']);
     expect(t.argsOf('subscriptions', 'gt')).toEqual(['price', 0]); // a trial (price 0) never counts
+    // An unused cancel never counts; a stopped package keeps its commission (migration 991).
+    expect(t.argsOf('subscriptions', 'or')).toEqual(['status.neq.cancelled,cancel_kind.eq.stopped']);
     const none = fakeDb({ students: [{ data: [] }] });
-    expect(await new TermsQueries(none.db, settings).uncommissioned('a')).toEqual([]);
+    expect(await new TermsRepo(none.db, settings).uncommissioned('a')).toEqual([]);
     expect(none.calls.map((c) => c.table)).not.toContain('subscriptions');
   });
 });

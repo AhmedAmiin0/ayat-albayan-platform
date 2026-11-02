@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { emptyDraft, type BookingDraft } from '../../draft/draft';
-import { packageDaysNote } from '../package/package-days';
+import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 import { ReviewSummary } from './ReviewSummary';
 
 const apiFetch = vi.hoisted(() => vi.fn(() => Promise.resolve({ total: 1080, currency: 'SAR', fx: null })));

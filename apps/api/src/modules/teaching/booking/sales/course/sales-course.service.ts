@@ -1,13 +1,14 @@
 import { addLocalDays, courseDaysPerWeek, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { plannedCourseEnd } from '../../core/booking.course-end';
-import { courseFacts } from '../../core/course-read';
-import { domainError } from '../../booking.errors';
-import type { PrepareOptions } from '../../plan/booking.planner';
-import { SalesBookingScope } from '../booking/sales-booking.ownership';
-import { assertOwnStudents } from '../booking/sales-booking.scope';
-import { SalesCourseQueries } from './sales-course.queries';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
+import { courseFacts } from '@/modules/teaching/booking/core/course-read';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
+import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
+import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
+import { SalesCourseRepo } from './sales-course.repo';
 import { courseBlock, courseProblem } from './sales-course.rules';
 
 /**
@@ -21,7 +22,7 @@ import { courseBlock, courseProblem } from './sales-course.rules';
 @Injectable()
 export class SalesCourse {
   constructor(
-    private readonly queries: SalesCourseQueries,
+    private readonly queries: SalesCourseRepo,
     private readonly scope: SalesBookingScope,
   ) {}
 
@@ -60,10 +61,11 @@ export class SalesCourse {
    * GET /sales/booking/course: the student, the subscription to book, its days a week, why not (blocked),
    * the previous course a renewal may continue (owner 2026-10-18) and the running course she may change.
    * A previous course still running does not block: the new one starts after its last day (the guard's
-   * rule). 403 not_your_student unless the student is hers, whatever sales_auto_assign says.
+   * rule). 403 not_your_student unless the student is hers while SalesOwnershipRule enforces
+   * it; ANY student with sales.renew_any (owner 2026-11-01, docs/16 row 38) or while it does not.
    */
   async view(studentId: string, user: AuthUser): Promise<SalesCourseView> {
-    assertOwnStudents([studentId], await this.scope.owned(user));
+    if (!can(user, 'sales.renew_any')) assertOwnStudents([studentId], await this.scope.of(user));
     const student = await this.queries.student(studentId);
     const [sub, rules, rows] = await Promise.all([
       this.queries.subscription(studentId),

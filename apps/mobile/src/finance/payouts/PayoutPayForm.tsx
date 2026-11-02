@@ -1,18 +1,18 @@
 import { PAYMENT_METHODS, type PayoutView, type PaymentMethod } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox/ErrorLine';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
-import { FormLabel } from '@/payments/FormLabel';
-import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
-import { ReceiptPicker } from '@/payments/ReceiptPicker';
+import { Note } from '@/core/ui/feedback/Note';
+import { FormLabel } from '@/core/ui/form/FormLabel';
+import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
+import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { financeErrorText } from '../shared/errors';
-import { amountText } from '../shared/format';
+import { financeErrorText } from '@/finance/shared/errors';
+import { amountText } from '@/finance/shared/format';
 import { dueOf, type PayDraft } from './payout-actions';
 import { usePayPayout } from './use-payout-move';
 

@@ -5,8 +5,8 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { deleteStudentFolder, putStudentFolder } from '../google-api';
-import { fill } from '../google-format';
+import { deleteStudentFolder, putStudentFolder } from '@/features/platform/google-sync/google-api';
+import { fill } from '@/features/platform/google-sync/google-format';
 import { StudentActions } from './StudentActions';
 import { StudentManualLink } from './StudentManualLink';
 

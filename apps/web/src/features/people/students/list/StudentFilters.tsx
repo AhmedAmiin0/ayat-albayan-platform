@@ -4,7 +4,7 @@ import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
-import { teacherOptionsQuery } from '../api';
+import { teacherOptionsQuery } from '@/features/people/students/api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';
 import { StatusChips } from './StatusChips';
 import { teacherLabel } from '@/lib/i18n/teacher-label';

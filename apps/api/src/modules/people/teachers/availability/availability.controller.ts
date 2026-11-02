@@ -1,6 +1,5 @@
 import { availabilityReplaceSchema, timeOffCreateSchema } from '@ab/shared';
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -12,12 +11,14 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { orNotFound, parseOrThrow } from '../../../../common/http/http';
-import { OwnTeacherGuard } from '../own-teacher.guard';
-import { AvailabilityQueries, type AvailabilityRow, type TimeOff } from './availability.queries';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { orNotFound } from '@/common/http/http';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { OwnTeacherGuard } from '@/modules/people/teachers/own-teacher.guard';
+import { AvailabilityRepo, type AvailabilityRow, type TimeOff } from './availability.repo';
 
 const uuid = new ParseUUIDPipe();
 
@@ -28,7 +29,7 @@ const uuid = new ParseUUIDPipe();
 @Permissions('availability.write')
 @Controller('teachers/:id')
 export class AvailabilityController {
-  constructor(private readonly availability: AvailabilityQueries) {}
+  constructor(private readonly availability: AvailabilityRepo) {}
 
   @Get('availability')
   @Permissions('availability.read')
@@ -40,10 +41,10 @@ export class AvailabilityController {
   @Put('availability')
   replaceGrid(
     @Param('id', uuid) id: string,
-    @Body() body: unknown,
+    @ZodBody(availabilityReplaceSchema) body: z.output<typeof availabilityReplaceSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<AvailabilityRow[]> {
-    const { slots } = parseOrThrow(availabilityReplaceSchema, body);
+    const { slots } = body;
     return this.availability.replaceSlots({ teacherId: id, actorId: user.id, slots });
   }
 
@@ -56,21 +57,21 @@ export class AvailabilityController {
   @Post('time-off')
   addTimeOff(
     @Param('id', uuid) id: string,
-    @Body() body: unknown,
+    @ZodBody(timeOffCreateSchema) body: z.output<typeof timeOffCreateSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TimeOff> {
-    const parsed = parseOrThrow(timeOffCreateSchema, body);
-    return this.availability.insertTimeOff({ teacherId: id, actorId: user.id, body: parsed });
+    return this.availability.insertTimeOff({ teacherId: id, actorId: user.id, body });
   }
 
   @Put('time-off/:timeOffId')
   async editTimeOff(
     @Param('id', uuid) id: string,
     @Param('timeOffId', uuid) timeOffId: string,
-    @Body() body: unknown,
+    @ZodBody(timeOffCreateSchema) body: z.output<typeof timeOffCreateSchema>,
   ): Promise<TimeOff> {
-    const parsed = parseOrThrow(timeOffCreateSchema, body);
-    return orNotFound(await this.availability.updateTimeOff({ teacherId: id, id: timeOffId, body: parsed }));
+    return orNotFound(
+      await this.availability.updateTimeOff({ teacherId: id, id: timeOffId, body }),
+    );
   }
 
   @Delete('time-off/:timeOffId')

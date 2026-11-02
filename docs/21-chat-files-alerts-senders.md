@@ -261,7 +261,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
    - `StorageService` gains `removeMany({ bucket, paths })`: one Supabase `remove(paths)` call. Removing a path that does not exist is a no-op.
    - `InboundMediaQueries` gains `cachedBefore({ before, limit })`: id and media_path of inbound rows with `media_path` set and `created_at < before`, oldest first.
    - It also gains `clearPaths(ids)`: `update media_path = null where id in ids and direction = 'inbound'`.
-   - New `apps/api/src/modules/messaging/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
+   - New `apps/api/src/modules/messaging/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/telemetry/activity/activity.retention.job.ts`:
      - first run 15 min after boot, then every 24 h;
      - `runOnce()` loops batches of 100 until a batch is empty, with a cap of 50 batches per run (the staging backlog);
      - each batch calls `removeMany`, then `clearPaths`;
@@ -406,7 +406,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 ### Mobile (JS-only, OTA): images only
 
 15. **`apps/mobile/src/inbox/composer/send-file.ts`** (new)
-    - It reuses `pickReceipt` from `apps/mobile/src/payments/receipt.ts` (JPEG, quality 0.6, no EXIF; `expo-image-picker` is already in the APK).
+    - It reuses `pickReceipt` from `apps/mobile/src/core/lib/receipts/receipt.ts` (JPEG, quality 0.6, no EXIF; `expo-image-picker` is already in the APK).
     - Then `POST file-upload-url` and `uploadToSignedUrl`, following the `apps/mobile/src/assistants/statements/hooks/upload-receipt.ts` pattern.
     - Then `POST /file` with no caption. The `clientRequestId` comes from the same helper the mobile text send uses.
 16. **`apps/mobile/src/inbox/AttachImage.tsx`** (new): an IconButton in the open-window row of `Composer.tsx` (106 lines; the button lives in its own file). It is hidden in teacher mode and when the window is closed.
@@ -591,6 +591,8 @@ The only things that need a new APK are inline audio and video playback (`expo-a
 ## 14. Reply «رد» and forward «إعادة توجيه» (owner 2026-10-25, migration 20261025000690)
 
 **Reply.** Any bubble WhatsApp knows (it has a wamid, `MessageView.replyable`) can be quoted. The composer shows one quoted strip; a session text or file sends `replyToMessageId`, which the API resolves to the wamid of a message of the **same chat** (`ThreadQuotes.target`, else 400 `reply_not_in_thread`). Our row keeps `reply_to_message_id` and `reply_to_wa_id`; the sender passes the wamid as Meta's / Kapso's `context.message_id` on texts and files. An inbound reply is linked by the trigger `messages_link_reply` (same phone only). A thread page carries each bubble's quote (`MessageView.reply_to`, one read per page; a template's text is never quoted). Outside the 24 h window the composer is in template mode and reply is off, with the usual hint.
+
+**WhatsApp's look (owner 2026-10-31, migration 20261031000995).** A reply can arrive before the message it quotes (the WhatsApp Business app's echo or Kapso's history stores ours later): `messages_link_waiting_replies` links it when the quoted row, or its wamid, lands (same phone, only `reply_to_message_id`, never re-pointed). A reply that names a wamid we never stored gets `reply_to: { unavailable: true }` and shows «رسالة غير متاحة», greyed and not tappable. The quote block (web and mobile) shows who wrote it («أنت», the staff name, or the chat's name), the first line or a file's icon and kind (📷 صورة, 📄 ملف PDF, 🎤 رسالة صوتية, 🎥 فيديو) and a thumb from the bubble's own queries: on mobile a photo is signed as its bubble is; a PDF's page 1, and on the web any file, only from the cache (W6, and the API never parses a family's PDF for a quote). A late link changes only `reply_to_message_id`: the web re-reads the open chat on its live event (or the full refresh) and shows it; the mobile chat's delta poll does not read that column, so there it shows when the chat is opened again.
 
 **Forward.** `POST /threads/forward {messageId, targets[1–5], clientRequestId}` copies a text or a file (never a template) to each target through the normal session send path: the actor's scope (a teacher only to their families, never a file), the 24 h window and the line, and then the sender's gates as for any send (messaging switch, `WA_ALLOWED_RECIPIENTS`, the line's driver). A file is copied once per forward to `wa-media/out/{actor}/{request}/fwd-{message}.{ext}` (theirs is fetched into our cache first) and re-sent by signed URL. Per target the answer is «sent» (the new message id) or «skipped» with the send path's reason (`session_closed`, `not_your_thread`, …). The request id is reused per target (the dedup key carries the phone), so a retry returns the same rows. One audit row `thread_forward` per forward, on the source message. The copy stores `forwarded_from_id`; our inbox labels it «مُعاد توجيهها».
 

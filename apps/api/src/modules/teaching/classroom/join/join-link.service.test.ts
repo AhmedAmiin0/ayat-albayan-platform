@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Outbox } from '../../../messaging/inbox/send/outbox';
-import type { TemplateRegistry } from '../../../messaging/whatsapp/templates/catalog/template.registry';
-import type { ClassroomQueries } from '../classroom.queries';
-import { ADMIN, LESSON_ID, OPEN, queries, STUDENT_ID } from '../classroom.fakes';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
+import { ADMIN, LESSON_ID, OPEN, queries, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import { hashLinkToken } from './join-link.token';
 import { JoinLinkService } from './join-link.service';
 
@@ -11,7 +11,7 @@ let q: ReturnType<typeof queries>;
 let outbox: { send: ReturnType<typeof vi.fn> };
 let templates: { approved: ReturnType<typeof vi.fn> };
 const send = () =>
-  new JoinLinkService(q as unknown as ClassroomQueries, templates as unknown as TemplateRegistry, outbox as unknown as Outbox).send(
+  new JoinLinkService(q as unknown as ClassroomRepo, templates as unknown as TemplateRegistry, outbox as unknown as Outbox).send(
     { lessonId: LESSON_ID, body: { studentId: STUDENT_ID }, actorId: ADMIN.id },
     OPEN,
   );

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromOption, fromPhone } from '../invitees/invitee-list';
+import { fromOption, fromPhone } from '@/features/teaching/meetings/invitees/invitee-list';
 import { createBody, defaultSchedule, DURATION_OPTIONS, quarterTimes, scheduleIssue, scheduleOf, startsAtOf } from './schedule-form';
 
 const NOW = new Date('2026-10-12T08:00:00.000Z');

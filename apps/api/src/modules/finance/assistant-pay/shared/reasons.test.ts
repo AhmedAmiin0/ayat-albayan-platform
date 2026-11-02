@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { ar } from '../../../../common/i18n/server-text';
-import { toCommissionView, type CommissionRow } from '../commissions/commissions.mapper';
+import { ar } from '@/common/infra/i18n/server-text';
+import { toCommissionView, type CommissionRow } from '@/modules/finance/assistant-pay/commissions/commissions.mapper';
 import { reasonText } from './reasons';
 import { statementRow } from './rows.fakes';
-import { toStatementView } from '../statements/statements.mapper';
+import { toStatementView } from '@/modules/finance/assistant-pay/statements/statements.mapper';
 
 describe('reasonText: the codes the database writes never reach a reader as raw strings', () => {
   it('payment_voided and student_merged become the academy text', () => {

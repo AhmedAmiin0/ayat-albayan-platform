@@ -7,8 +7,8 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { PasswordInput } from '../PasswordInput';
-import { signIn } from '../sign-in';
+import { PasswordInput } from '@/features/people/auth/PasswordInput';
+import { signIn } from '@/features/people/auth/sign-in';
 
 const required = ({ value }: { value: string }) => (value.trim() ? undefined : t.common.required);
 

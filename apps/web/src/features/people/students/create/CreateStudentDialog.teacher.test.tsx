@@ -6,7 +6,7 @@ import { CreateStudentDialog } from './CreateStudentDialog';
 import { EMPTY_STUDENT, toCreateBody } from './create-student';
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
-vi.mock('../api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
 vi.mock('@/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(async () => [{ id: 't-abrar', display_name_ar: 'أبرار', meeting_link: null }]),

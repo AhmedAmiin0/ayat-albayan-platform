@@ -9,11 +9,11 @@ import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { moneyText } from '@/features/finance/subscriptions/format';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import type { AssistantStatementView } from '../api';
-import { errorText } from '../status';
+import type { AssistantStatementView } from '@/features/people/assistants/api';
+import { errorText } from '@/features/people/assistants/status';
 import { usePayStatement } from './use-pay-statement';
 
 type Props = { statement: AssistantStatementView; onClose: () => void };

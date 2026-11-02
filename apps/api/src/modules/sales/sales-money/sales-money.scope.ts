@@ -1,11 +1,11 @@
 import { DISCOUNTS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { forbidden } from '../../../common/http/errors';
-import { SalesQueries } from '../sales/sales.queries';
-import { SalesFamilyQueries } from './reads/sales-family.queries';
-import type { SalesOwnership } from '../sales/sales-ownership';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden } from '@/common/http/errors';
+import { SalesOwnershipRule } from '@/modules/sales/sales';
+import { SalesFamilyRepo } from './reads/sales-family.repo';
+import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** 403 not_your_student unless the student is one of hers. */
 export function assertOwnStudent(own: Pick<SalesOwnership, 'studentIds'>, studentId: string): void {
@@ -22,34 +22,39 @@ export function assertSalesDiscount(pricing: { discount?: number }): void {
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
 }
 
-/** sales.renew_any (owner 2026-10-29, docs/16 row 38): any student of the chat's family, not only hers. */
+/** sales.renew_any (owner 2026-10-29/11-01, docs/16 row 38): the renew flow for ANY student, not only hers. */
 export function renewsAny(user: AuthUser): boolean {
   return can(user, 'sales.renew_any');
 }
 
 /**
- * Whose money a salesperson may write (docs/16 row 17): ownershipOf(...).studentIds, i.e. the students of
- * her leads' families and the students she brought (students.brought_by), whatever settings.sales_auto_assign
- * says. Never SalesBookingScope: its OFF rule (no ownership check, row 13) is for trial bookings only.
- * With sales.renew_any (row 38) also a student one of whose family numbers (main or second) is the chat's `phone`
- * the client sent: another family's student, or no phone, stays 403 not_your_student.
+ * Whose money a salesperson may write (docs/16 row 17): while SalesOwnershipRule enforces ownership
+ * (sales_require_assignee AND sales_auto_assign ON) ownershipOf(...).studentIds, i.e. the students of
+ * her leads' families and the students she brought (students.brought_by); otherwise ANY student
+ * (owner 2026-11-02). With sales.renew_any (row 38; owner 2026-11-01: «renew any one without checking if it was the
+ * creator») the renew flow takes ANY student: no owner, brought_by, lead or family-chat check.
  */
 @Injectable()
 export class SalesMoneyScope {
   constructor(
-    private readonly sales: SalesQueries,
-    private readonly family: SalesFamilyQueries,
+    private readonly rule: SalesOwnershipRule,
+    private readonly family: SalesFamilyRepo,
   ) {}
 
-  ownership(user: AuthUser): Promise<SalesOwnership> {
-    return this.sales.ownership(user.id);
+  /** Her ownership while the rule enforces it; null = any student (SalesOwnershipRule). */
+  ownership(user: AuthUser): Promise<SalesOwnership | null> {
+    return this.rule.scope(user);
   }
 
-  async assertOwns(user: AuthUser, studentId: string, phone?: string): Promise<void> {
+  /** 403 not_your_student unless hers (while enforced), whatever the key («إلغاء الباقة», a link's teacher). */
+  async assertOwns(user: AuthUser, studentId: string): Promise<void> {
     const own = await this.ownership(user);
-    if (own.studentIds.includes(studentId)) return;
-    if (phone && renewsAny(user) && (await this.family.phonesOf(studentId)).includes(phone)) return;
-    assertOwnStudent(own, studentId);
+    if (own) assertOwnStudent(own, studentId);
+  }
+
+  /** The renew flow (quote, create, transfer, its receipts): hers, or ANY student with the key. */
+  async assertRenews(user: AuthUser, studentId: string): Promise<void> {
+    if (!renewsAny(user)) await this.assertOwns(user, studentId);
   }
 
   /**
@@ -57,7 +62,7 @@ export class SalesMoneyScope {
    * numbers (main or second, owner 2026-10-29), else the family's main chat.
    */
   async familyChat(user: AuthUser, studentId: string, phone?: string): Promise<string> {
-    await this.assertOwns(user, studentId, phone);
+    await this.assertRenews(user, studentId);
     if (phone && (await this.family.phonesOf(studentId)).includes(phone)) return phone;
     return this.family.familyPhone(studentId);
   }

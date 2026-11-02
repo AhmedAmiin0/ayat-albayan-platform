@@ -1,15 +1,24 @@
-import { isUnavailableMessage, isUnsupportedMessage, reactionText, senderLine, type MessageView } from '@ab/shared';
+import {
+  isUnavailableMessage,
+  isUnsupportedMessage,
+  messageNote,
+  pdfCaptionIsName,
+  reactionText,
+  senderLine,
+  type MessageView,
+} from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import { templateLine } from '../../format';
+import { templateLine } from '@/features/messaging/inbox/format';
 import { MessageMedia } from './MessageMedia';
 import { LinkedBody } from '@/components/ui/display/linked-body';
 import { QuoteBlock } from './QuoteBlock';
-import { ResendAsk } from '../resend/ResendAsk';
-import { RatingChip } from '../../sales/RatingChip';
-import { ReplyNoteLine } from '../reply-actions';
-import { TappedLabel } from '../template/TappedLabel';
-import { TemplateFrame } from '../template/TemplateFrame';
+import { NoteLine } from '@/features/messaging/inbox/messages/notes/NoteLine';
+import { ResendAsk } from '@/features/messaging/inbox/messages/resend/ResendAsk';
+import { RatingChip } from '@/features/messaging/inbox/sales/RatingChip';
+import { ReplyNoteLine } from '@/features/messaging/inbox/messages/reply-actions';
+import { TappedLabel } from '@/features/messaging/inbox/messages/template/TappedLabel';
+import { TemplateFrame } from '@/features/messaging/inbox/messages/template/TemplateFrame';
 
 // The inside of a MessageBubble: what was said, and who sent ours.
 
@@ -53,13 +62,23 @@ function EmptyLine({ message: m }: { message: MessageView }) {
   );
 }
 
+const isEmpty = (m: MessageView): boolean => !m.body && !m.media_mime && !m.template_key;
+const hasMedia = (m: MessageView): boolean => Boolean(m.media_mime || m.media_url);
+
 /**
  * What was said: «مُعاد توجيهها», the quote it answers, the template's name, «ضغطة زرّ» on a tapped button,
  * a template's header, the media, the text, its footer, what a quick reply did and what to do now.
+ * A message deleted for everyone shows only that; an edited one «تم التعديل» (owner 2026-10-30).
  */
+/** The caption under the media; none when it is only a PDF's name (on its card, 2026-11-01). */
+const shownCaption = (m: MessageView): string | null => (pdfCaptionIsName(m) ? null : m.body);
+
 export function Content({ message: m }: { message: MessageView }) {
-  const empty = !m.body && !m.media_mime && !m.template_key;
-  const media = Boolean(m.media_mime || m.media_url);
+  const caption = shownCaption(m);
+  if (m.deleted) return <NoteLine message={m} />;
+  const empty = isEmpty(m);
+  const noted = messageNote(m) !== null;
+  const media = hasMedia(m);
   return (
     <>
       {m.forwarded && <ForwardedLabel />}
@@ -68,9 +87,10 @@ export function Content({ message: m }: { message: MessageView }) {
       <TappedLabel message={m} />
       <TemplateFrame block={m.template} hasMedia={media}>
         {media && <MessageMedia message={m} />}
-        {m.body && <LinkedBody text={m.body} />}
+        {caption && <LinkedBody text={caption} />}
       </TemplateFrame>
-      {empty && <EmptyLine message={m} />}
+      {empty && (noted ? <NoteLine message={m} /> : <EmptyLine message={m} />)}
+      {m.edited && <p className="mt-0.5 text-2xs text-ink-3">{t.inbox.edited}</p>}
       <ReplyNoteLine message={m} />
       <RatingChip message={m} />
     </>

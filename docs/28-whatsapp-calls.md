@@ -162,6 +162,7 @@ migration text. `tools/wa-stub` serves `…/calls` and `…/call_permissions` un
 
 - **Native change (intentional):**
   - Adds `react-native-webrtc` `124.0.8` and `@config-plugins/react-native-webrtc` `15.0.2`, both pinned exactly. The plugin's 15.x line targets Expo ≥ 56; this app is on SDK 57 / RN 0.86. The newer react-native-webrtc 155.x is under two weeks old.
+  - **Since docs/35 (APK 0.4.0)** the calls load LiveKit's fork `@livekit/react-native-webrtc` `144.2.0` instead (the same `RTCPeerConnection` / `mediaDevices` API), because the in-app meetings room needs it. The config plugin above stays: it only writes the permissions.
   - `android.permission.RECORD_AUDIO` is no longer blocked.
   - Every plugin that names the microphone (webrtc, expo-image-picker, expo-audio) carries the MSA rationale `calls.mic.rationale`. A `false` there would block RECORD_AUDIO again (image-picker) or delete the iOS text (expo-audio).
   - `android.permission.SYSTEM_ALERT_WINDOW`, which the webrtc plugin adds, is blocked: voice calls don't draw over other apps.

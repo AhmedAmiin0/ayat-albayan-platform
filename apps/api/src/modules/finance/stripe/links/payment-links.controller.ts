@@ -10,8 +10,8 @@ import { LinkCreate } from './link-create';
 import { LinkDeps } from './link-deps';
 
 /**
- * «رابط دفع» from the sales chat (owner 2026-10-28, docs/30; test build only: mounted with FEATURE_STRIPE=test,
- * 404 while stripe_settings.stripe_enabled is off). self.sales_money, like «اشتراك جديد». Her links only; an
+ * «رابط دفع» from the sales chat (owner 2026-10-28, docs/30; mounted with FEATURE_STRIPE (test or live),
+ * 404 while «الدفع الإلكتروني» (STRIPE_ENABLED) is off). self.sales_money, like «اشتراك جديد». Her links only; an
  * admin sees every link.
  */
 @ApiTags('sales')

@@ -1,19 +1,20 @@
+import { wallInstant, zonedPartsIn } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
-import { lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule/api';
-import { zonedParts, zonedToUtc } from '@/features/teaching/schedule/tz';
+import { lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
 import { timeOptions } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
-import { proposeLesson } from '../api';
+import { proposeLesson } from '@/features/teaching/teacher/api';
 import { ClockOptions } from '@/lib/clock-options';
 import { clockDir } from '@/lib/clock-text';
 import { useClock } from '@/lib/clock';
+import { focusOnMount } from '@/lib/dom/mount-refs';
 
 export interface ProposeFormProps {
   lesson: LessonView;
@@ -32,24 +33,22 @@ export interface ProposeFormProps {
 export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
   const clock = useClock();
-  const start = zonedParts(new Date(lesson.starts_at), tz);
+  const start = zonedPartsIn(new Date(lesson.starts_at), tz);
   const [date, setDate] = useState(start.date);
   const [time, setTime] = useState(start.time);
   const [note, setNote] = useState('');
-  const title = useRef<HTMLHeadingElement>(null);
-  useEffect(() => title.current?.focus(), []);
   const send = useMutation({
     mutationFn: () =>
       proposeLesson({
         id: lesson.id,
-        body: { startsAt: zonedToUtc(date, time, tz).toISOString(), ...(note.trim() ? { note: note.trim() } : {}) },
+        body: { startsAt: wallInstant(date, time, tz).toISOString(), ...(note.trim() ? { note: note.trim() } : {}) },
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(t.teacherDash.propose.sent);
     },
   });
-  const today = zonedParts(new Date(), tz).date;
+  const today = zonedPartsIn(new Date(), tz).date;
 
   return (
     <form
@@ -61,7 +60,7 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
         send.mutate();
       }}
     >
-      {!bare && <h4 ref={title} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
+      {!bare && <h4 ref={focusOnMount} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label={t.teacherDash.propose.date}>
           {(p) => <Input {...p} type="date" dir="ltr" min={today} value={date} onChange={(e) => setDate(e.target.value)} />}

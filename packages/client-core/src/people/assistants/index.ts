@@ -8,3 +8,8 @@ export {
   type TermsForm,
   type TermsRules,
 } from './terms-form.js';
+export {
+  statementActions,
+  type StatementAction,
+  type StatementCan,
+} from './statement-actions.js';

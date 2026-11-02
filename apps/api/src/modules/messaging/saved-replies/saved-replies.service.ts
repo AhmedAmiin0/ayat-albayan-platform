@@ -1,11 +1,11 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyStaged, SavedReplyUpdate, SignedUpload, SavedReplyUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { forbidden, notFound } from '../../../common/http/errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden, notFound } from '@/common/http/errors';
 import { managesShared } from './saved-replies.guard';
 import { inListOrder, toSavedReply, type SavedReplyRow } from './saved-replies.mapper';
 import { SavedReplyFiles, type StoredFile } from './saved-replies.files';
-import { SavedRepliesQueries, type ReplyPatch } from './saved-replies.queries';
+import { SavedRepliesRepo, type ReplyPatch } from './saved-replies.repo';
 import { movedOrder } from './saved-replies.order';
 
 type Attachment = SavedReplyCreate['attachment'];
@@ -29,7 +29,7 @@ const attachmentColumns = (file: StoredFile | null, name: string | null) => ({
 @Injectable()
 export class SavedRepliesService {
   constructor(
-    private readonly queries: SavedRepliesQueries,
+    private readonly queries: SavedRepliesRepo,
     private readonly files: SavedReplyFiles,
   ) {}
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { message } from '../../testing/inbox-fixture';
+import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { bubbleOffers, offersAny } from './bubble-offers';
 
 const text = message({ id: 'm1', body: 'السلام عليكم', replyable: true, forwardable: true });

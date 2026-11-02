@@ -1,10 +1,19 @@
 import { z } from 'zod';
 
 // The crm driver's template names (docs/19 «crm driver»). The academy CRM holds the templates of the old
-// Google Apps Script («نظام تسجيل الطلاب»): most share our meta_name, two flows use the CRM's own names.
+// Google Apps Script («نظام تسجيل الطلاب»): most share our meta_name, three flows use the CRM's own names.
 
-/** The CRM's name for a template when it is not its meta_name (teacher_new_student → the old script's alert). */
-export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = { teacher_new_student: 'teacher_lesson_v2' };
+/**
+ * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert
+ * goes as the old script's teacher_lesson_v2, both same-day teacher reminders as its
+ * teacher_lesson_reminder ({{1}} the teacher, {{2}} one line, no buttons; the CRM's account has
+ * no teacher_lesson_reminder_meet: Meta #132001 on 2026-10-31).
+ */
+export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = {
+  teacher_new_student: 'teacher_lesson_v2',
+  teacher_lesson_reminder: 'teacher_lesson_reminder',
+  teacher_lesson_reminder_meet: 'teacher_lesson_reminder',
+};
 
 /** The old script's report templates: the PDF goes as a document, then one of these by the lesson's kind. */
 export const CRM_REPORT_TEMPLATES = { trial: 'report_trial_session', regular: 'report_session' } as const;
@@ -21,6 +30,41 @@ export interface CrmNamed {
 
 /** The name the CRM resolves: the admin's crm_name, else the old script's name, else meta_name. Only on a crm line. */
 export const crmTemplateName = (t: CrmNamed): string => t.crm_name || CRM_DEFAULT_NAMES[t.key] || t.meta_name;
+
+/**
+ * Keys that, on a crm line, are also approved by the CRM template they go as (crmTemplateName),
+ * not only by their own row (owner 2026-11-02: the teacher's alert waited on teacher_new_student
+ * while the CRM held teacher_lesson_v2 approved). The same-day reminders keep their own status.
+ */
+export const CRM_GATED_KEYS: readonly string[] = ['teacher_new_student'];
+
+/** A registry row as the approval gate reads it. */
+export interface CrmGateRow extends CrmNamed {
+  status: string;
+}
+
+const isApproved = (row: CrmGateRow): boolean => row.status === 'approved';
+
+/** A gated key's CRM template row (by key or meta_name) is approved; false for any other key. */
+function crmTemplateApproved<R extends CrmGateRow>(row: R, rows: readonly R[]): boolean {
+  if (!CRM_GATED_KEYS.includes(row.key)) return false;
+  const name = crmTemplateName(row);
+  const named = (r: R): boolean => r !== row && (r.key === name || r.meta_name === name);
+  return rows.filter(named).some(isApproved);
+}
+
+/**
+ * The keys a send may use: its own row approved, or (a gated key on a crm line, `onCrm`) the CRM
+ * template it goes as approved. Same answer whichever extra rows a read brought along.
+ */
+export function gateApprovedKeys<R extends CrmGateRow>(
+  rows: readonly R[],
+  onCrm: (row: R) => boolean,
+): Set<string> {
+  const approved = (row: R): boolean =>
+    isApproved(row) || (onCrm(row) && crmTemplateApproved(row, rows));
+  return new Set(rows.filter(approved).map((r) => r.key));
+}
 
 /** The CRM template's language: the admin's crm_language, else the template's own. */
 export const crmTemplateLanguage = (t: CrmNamed): string => t.crm_language || t.language;

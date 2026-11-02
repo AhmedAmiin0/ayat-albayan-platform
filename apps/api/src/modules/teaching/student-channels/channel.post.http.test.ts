@@ -21,7 +21,7 @@ describe('student channel messages over HTTP', () => {
     expect(t.push.notifyProfiles).toHaveBeenCalledWith({
       kind: 'channel_message', profileIds: ['p-t1'], subject: 'm2', vars: { student: 'سلمى', text: 'متى الحلقة القادمة؟' }, data: { studentId: ST },
     });
-    expect(res.json()).toEqual({ id: 'm2', body: 'متى الحلقة القادمة؟', sender_role: 'guardian', sender_name: 'أم سلمى', mine: true, created_at: '2026-10-27T10:00:00.000Z' });
+    expect(res.json()).toEqual({ id: 'm2', body: 'متى الحلقة القادمة؟', sender_role: 'guardian', sender_name: 'أم سلمى', mine: true, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false });
   });
 
   it('a teacher message notifies nobody; a student login writes as student', async () => {
@@ -62,7 +62,7 @@ describe('student channel messages over HTTP', () => {
 
   it('the teacher list: current students with the last message and their own unread count', async () => {
     const res = await t.call('GET', '/teachers/me/channels', 'teacher');
-    expect(res.json()).toEqual([{ student_id: ST, student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'السلام عليكم', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z' } }]);
+    expect(res.json()).toEqual([{ student_id: ST, student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'السلام عليكم', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z', deleted: false } }]);
     expect(t.queries.teacherStudentIds).toHaveBeenCalledWith('t1');
     expect(t.queries.summaries).toHaveBeenCalledWith({ profileId: 'p-t1', studentIds: [ST], countRoles: ['guardian', 'student'] });
   });

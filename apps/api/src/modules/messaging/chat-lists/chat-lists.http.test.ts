@@ -1,7 +1,7 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import { inboxApp } from '../inbox/test-app';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const ID = '0c000000-0000-4000-8000-000000000001';
@@ -75,6 +75,10 @@ describe('/chat-lists (docs/22 §3): the academy\'s shared lists, admin and sale
     expect(t.lists.drop).toHaveBeenCalledWith(ID, '+966501234567');
     const bad = await t.call({ method: 'PUT', url: `/chat-lists/${ID}/threads/abc` });
     expect([bad.statusCode, bad.json().code]).toEqual([400, 'invalid_phone']);
+    for (const method of ['PUT', 'DELETE'] as const) {
+      const both = await t.call({ method, url: '/chat-lists/nope/threads/abc' });
+      expect([both.statusCode, both.json().code]).toEqual([404, 'list_not_found']);
+    }
     t.lists.one.mockResolvedValue(null);
     expect((await t.call({ method: 'PUT', url: `/chat-lists/${ID}/threads/${PHONE}` })).statusCode).toBe(404);
     expect((await t.call({ method: 'DELETE', url: `/chat-lists/${ID}/threads/${PHONE}` })).statusCode).toBe(404);
@@ -110,5 +114,11 @@ describe('/chat-lists without inbox.lists, or with lists but no inbox.read', () 
       expect((await t.call({ method: 'POST', url: '/chat-lists', token, body: { name: 'س' } })).statusCode).toBe(403);
     }
     expect(t.lists.all).not.toHaveBeenCalled();
+  });
+
+  it('answers 403 lists_forbidden before the body is parsed (an invalid body is not a 400)', async () => {
+    const post = await t.call({ method: 'POST', url: '/chat-lists', token: 'teacher', body: {} });
+    const patch = await t.call({ method: 'PATCH', url: `/chat-lists/${ID}`, token: 'teacher', body: { name: '' } });
+    for (const res of [post, patch]) expect([res.statusCode, res.json().code]).toEqual([403, 'lists_forbidden']);
   });
 });

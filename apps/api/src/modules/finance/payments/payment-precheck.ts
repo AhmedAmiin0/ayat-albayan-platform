@@ -1,12 +1,17 @@
-import type { PaymentWrite } from '@ab/shared';
-import { conflict } from '../../../common/http/errors';
+import { countsForMoney, type PaymentWrite } from '@ab/shared';
+import { conflict } from '@/common/http/errors';
 import type { CheckedAttachment } from './attachments/payment-attachments.service';
 import type { Converted, PaymentInputs } from './payment-inputs';
-import type { PaymentRow, PaymentsQueries, PaymentSubscription } from './payments.queries';
+import type { PaymentRow, PaymentsRepo, PaymentSubscription } from './payments.repo';
 
-/** A cancelled package's money is frozen (owner 2026-10-28: it stays net 0; migration 934 refuses it too). */
+/**
+ * An unused-cancelled package's money is frozen (owner 2026-10-28: it stays net 0; migration 934
+ * refuses it too). A stopped one keeps its money (owner 2026-10-30, migration 991): its payments
+ * stay editable.
+ */
 export function notCancelled(row: PaymentRow): PaymentRow {
-  if (row.subscription?.status === 'cancelled') throw conflict('subscription_cancelled');
+  if (row.subscription && !countsForMoney(row.subscription))
+    throw conflict('subscription_cancelled');
   return row;
 }
 
@@ -18,12 +23,13 @@ export type Prechecked = { files: CheckedAttachment[]; converted: Converted };
  * here may only mean a racing send of the same form booked it first, so it replays when that payment exists.
  */
 export async function precheckPayment(
-  deps: { payments: PaymentsQueries; inputs: PaymentInputs },
+  deps: { payments: PaymentsRepo; inputs: PaymentInputs },
   v: { input: PaymentWrite; sub: PaymentSubscription },
 ): Promise<Prechecked> {
   const { input, sub } = v;
-  // A cancelled package (owner 2026-10-28) takes no money; migration 934 refuses the row too.
-  if (sub.status === 'cancelled') throw conflict('subscription_cancelled');
+  // An unused-cancelled package (owner 2026-10-28) takes no money; migration 934 refuses the row
+  // too. A stopped one still does: the family settles what it owes (migration 991).
+  if (!countsForMoney(sub)) throw conflict('subscription_cancelled');
   const files = await deps.inputs.files.check(sub.id, input);
   if (input.invoiceId) await deps.inputs.checkInvoice(input.invoiceId, sub.student_id);
   if (input.invoiceId && (await deps.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');

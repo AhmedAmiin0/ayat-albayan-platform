@@ -1,10 +1,10 @@
 import type { JoinLinkRequest, JoinLinkResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { Outbox } from '../../../messaging/inbox/send/outbox';
-import { notFound } from '../../../../common/http/errors';
-import { waHttpError } from '../../../messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplateRegistry } from '../../../messaging/whatsapp/templates/catalog/template.registry';
-import { ClassroomQueries } from '../classroom.queries';
+import { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import { notFound } from '@/common/http/errors';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
 export const JOIN_LINK_TEMPLATE = 'lesson_join_link';
@@ -19,7 +19,7 @@ const BUCKET_MS = 5 * 60_000;
 @Injectable()
 export class JoinLinkService {
   constructor(
-    private readonly queries: ClassroomQueries,
+    private readonly queries: ClassroomRepo,
     private readonly templates: TemplateRegistry,
     private readonly outbox: Outbox,
   ) {}

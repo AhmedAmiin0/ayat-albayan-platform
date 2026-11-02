@@ -1,6 +1,6 @@
-import type { Duration, Gender, PackageSize, Program } from '../../enums/index.js';
-import { packagePerWeek } from '../../money/ledger/usage/tiers.js';
-import { wallParts } from '../../schedule/lessons/series/day-times.js';
+import type { Duration, Gender, PackageSize, Program } from '@ab/catalog';
+import { packagePerWeek } from '@ab/money';
+import { wallParts } from '@ab/schedule';
 import { continueFrom, type BookedCourse } from './course-follow.js';
 
 // The assistant books the weekly course of a subscription she sold (owner 2026-10-18, R-ASST-01):

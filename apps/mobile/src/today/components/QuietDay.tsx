@@ -1,18 +1,16 @@
-import { counted, RIYADH_TZ } from '@ab/shared';
+import { addCalendarDays, addDaysIn, counted, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { useClockCycle } from '@/core/lib/clock';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { riyadhTime } from '../lib/lesson-text';
+import { lessonClock } from '../lib/lesson-text';
 import { raisedCard } from '@/core/ui/surface/surface';
 import { localDate, visibleLessons } from '../lib/timeline';
 import type { TodayLesson } from '../lib/today-lesson';
 import type { TodaySource } from '../lib/today-source';
-
-const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24 h away.
 
 /**
  * Nothing left today (docs/29 §6): a check in a lapis-wash circle, «انتهت حلقات اليوم», tomorrow's
@@ -22,10 +20,15 @@ const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24
 export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
-  const tomorrow = new Date(now.getTime() + DAY);
+  const tz = useViewerTz();
+  // academy day (docs/34 b): tomorrow on the Riyadh calendar (no daylight saving: 24 h on).
+  const tomorrow = addDaysIn(now, 1, RIYADH_TZ);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
-  const date = localDate(tomorrow, RIYADH_TZ);
+  // The schedule's `date` param is tomorrow on the calendar it pages by: the admin's «الجدول» by
+  // viewer days (docs/34), the salesperson's «جدول الحلقات» by Riyadh days (docs/34 b). Calendar
+  // days, not now + 24 h: a day the viewer's clock changes is 23 or 25 h long.
+  const date = addCalendarDays(localDate(now, source.schedule === '/schedule' ? tz : RIYADH_TZ), 1);
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingVertical: 24 }}>
       <View style={{ width: 88, height: 88, borderRadius: 44, alignItems: 'center', justifyContent: 'center', backgroundColor: color.lapisWash }}>
@@ -38,7 +41,7 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
       </AppText>
       {first ? (
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: 24, color: color.ink3, textAlign: 'center', fontVariant: ['tabular-nums'] }}>
-          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', riyadhTime(first.starts_at, cycle))}
+          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', lessonClock(first.starts_at, tz, cycle))}
         </AppText>
       ) : null}
       <Pressable

@@ -1,5 +1,5 @@
-import { usePermissions } from '@/auth';
-import { SalesMoreScreen } from '@/sales-app';
+import { usePermissions } from '@/core/auth';
+import { SalesMoreScreen } from '@/sales/app';
 
 export default function SalesMoreRoute() {
   return <SalesMoreScreen can={usePermissions()} />;

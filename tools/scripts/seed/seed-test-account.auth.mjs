@@ -4,6 +4,8 @@
 // - 'sql': auth.users + auth.identities written directly, as Supabase's own SQL seeds do (bcrypt via
 //   pgcrypto, email confirmed, token columns '' — GoTrue fails sign-in on NULL there).
 // Nothing here logs the email, the password or a response body.
+import { z } from 'zod';
+import { httpJson } from '../http/http-json.mjs';
 import { accountMetadata, adminUsersUrl, isTestAccount } from './seed-test-account.plan.mjs';
 
 /** The login with this email: { id, ours } or null. `ours` = stamped by this script. */
@@ -13,22 +15,19 @@ export async function findAccount(sql, email) {
   return row ? { id: row.id, ours: isTestAccount(row.meta) } : null;
 }
 
-async function admin(ctx, req) {
-  const res = await fetch(adminUsersUrl(ctx.url, req.id), {
-    method: req.method,
-    headers: {
-      apikey: ctx.key,
-      authorization: `Bearer ${ctx.key}`,
-      'content-type': 'application/json',
-    },
-    body: req.body ? JSON.stringify(req.body) : undefined,
-  });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const code = json.error_code ?? json.code ?? 'unknown';
-    throw new Error(`Auth Admin API ${req.method} failed: HTTP ${res.status} (${code})`);
-  }
-  return json;
+const userSchema = z.looseObject({ id: z.string() });
+/** PUT and DELETE answers are not read (DELETE may have no body). */
+const ignored = z.unknown();
+
+/** Supabase Auth Admin REST; an error names the method, the path, the status and its code only. */
+function admin(ctx, req) {
+  const headers = {
+    apikey: ctx.key,
+    authorization: `Bearer ${ctx.key}`,
+    'content-type': 'application/json',
+  };
+  const call = { url: adminUsersUrl(ctx.url, req.id), method: req.method, json: req.body };
+  return httpJson({ name: 'Auth Admin API', headers }, { ...call, schema: req.schema ?? ignored });
 }
 
 /** Creates or updates the login through the Admin API; returns its id. */
@@ -38,7 +37,8 @@ export async function upsertViaAdminApi(ctx, { creds, existing }) {
     await admin(ctx, { method: 'PUT', id: existing.id, body });
     return existing.id;
   }
-  const user = await admin(ctx, { method: 'POST', body: { ...body, email: creds.email } });
+  const post = { method: 'POST', body: { ...body, email: creds.email }, schema: userSchema };
+  const user = await admin(ctx, post);
   return user.id;
 }
 

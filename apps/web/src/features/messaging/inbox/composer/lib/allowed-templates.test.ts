@@ -2,7 +2,7 @@ import { RATING_TEMPLATE } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { FEEDBACK_TEMPLATE } from '@/features/teaching/feedback/types';
 import { allowedTemplates } from './allowed-templates';
-import { template } from '../../testing/inbox-fixture';
+import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 
 describe('the templates a thread offers', () => {
   it('approved only; never the feedback request or the lesson rating', () => {
