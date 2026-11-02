@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { TeacherMeQueries } from '@/modules/teaching/lessons/teacher-me/teacher-me.queries';
+import { TeacherMeRepo } from '@/modules/teaching/lessons/teacher-me/teacher-me.repo';
 import { dbError } from '@/common/http/http';
 import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
@@ -18,7 +18,7 @@ interface ScopeTeacher {
 export class TeacherThreadsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly me: TeacherMeQueries,
+    private readonly me: TeacherMeRepo,
   ) {}
 
   /** The signed-in teacher's row (JWT sub = teachers.profile_id); null when not linked. */

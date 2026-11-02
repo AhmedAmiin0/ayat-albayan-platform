@@ -2,16 +2,16 @@ import { formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { type CheckBy, type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '../lib/registration-check';
-import { RegistrationForm } from '../components/RegistrationForm';
-import { RegistrationResults } from '../components/RegistrationResults';
+import { type CheckBy, type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
+import { RegistrationForm } from '@/registration-check/components/RegistrationForm';
+import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 
 /** The chat's number (from the thread header), checked at once. */
 type Params = { phone?: string };

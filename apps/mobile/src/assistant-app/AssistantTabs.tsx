@@ -1,4 +1,4 @@
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';

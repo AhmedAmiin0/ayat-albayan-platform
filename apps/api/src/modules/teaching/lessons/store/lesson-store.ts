@@ -6,7 +6,7 @@ import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teachin
 import { errorCode } from '@/common/http/errors';
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import type { LessonRow } from './lesson-row';
-import { LessonsQueries } from '@/modules/teaching/lessons/lessons.queries';
+import { LessonsRepo } from '@/modules/teaching/lessons/lessons.repo';
 import { FamilyMoveNotice } from '@/modules/teaching/schedule-notices';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
@@ -27,7 +27,7 @@ export type Commit = {
 @Injectable()
 export class LessonStore {
   constructor(
-    readonly queries: LessonsQueries,
+    readonly queries: LessonsRepo,
     private readonly writer: LessonWriter,
     private readonly events: LessonEvents,
     private readonly move: FamilyMoveNotice,

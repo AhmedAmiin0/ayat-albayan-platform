@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PROGRAMS, STUDENT_STATUSES, type StudentStatus } from '../../enums/index.js';
+import { PROGRAMS, STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 
 /** «الباقة» filter: a valid package, none (or exhausted), low balance, newest package unpaid. */
 export const STUDENT_PACKAGE_FILTERS = ['active', 'none', 'low', 'unpaid'] as const;

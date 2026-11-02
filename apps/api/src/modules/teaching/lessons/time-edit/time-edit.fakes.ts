@@ -1,15 +1,15 @@
 // Fixtures for the «عدّل الوقت» service tests (not shipped; excluded from the build by *.fakes.ts).
 import type { AcademySettings, LessonTimeEdit } from '@ab/shared';
 import { vi } from 'vitest';
-import type { TimeEditChange } from '../../scheduling/change-set';
-import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import type { LessonRow } from '../store/lesson-row';
-import { ADMIN, fakeStore, LESSON_ID, lessonRow } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { ADMIN, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonTimeService } from './time-edit.service';
 import { TimeEditPayout } from './time-edit.payout';
-import type { TimeEditQueries } from './time-edit.queries';
+import type { TimeEditRepo } from './time-edit.repo';
 
 export { ADMIN, LESSON_ID, lessonRow };
 /** The clock of every test: Fri 2026-10-02 10:00Z (no DST change near it in Cairo or Riyadh). */
@@ -42,7 +42,7 @@ export function timeSetup(row: LessonRow | null = lessonRow(), over: Partial<Aca
   const checker = { check: vi.fn().mockResolvedValue([]) };
   const settings = fakeSettings(over);
   const payouts = { payoutStatus: vi.fn().mockResolvedValue(null) };
-  const payout = new TimeEditPayout(new LessonsSettings(settings), payouts as unknown as TimeEditQueries);
+  const payout = new TimeEditPayout(new LessonsSettings(settings), payouts as unknown as TimeEditRepo);
   const service = new LessonTimeService(deps.store, checker as unknown as ConflictChecker, payout);
   const run = (b: LessonTimeEdit) => service.edit({ lessonId: LESSON_ID, body: b, actor: ADMIN });
   return { ...deps, checker, settings, payouts, service, run };

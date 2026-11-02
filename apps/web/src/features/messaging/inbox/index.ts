@@ -71,6 +71,7 @@ export { clearTabMemories } from './shared/tab-memory';
 export { BUBBLE_ROW } from './messages/lib/bubble-side';
 export { getDraft, setDraft } from './composer/lib/draft-store';
 export { fillComposer } from './saved-replies/lib/filter';
+export { useMaySend } from './shared/may-send';
 export { LinkFamilyDialog } from './lead/LinkFamilyDialog';
 export { SalesRegisterButton, SalesRegisterDialog } from './sales/SalesRegisterAction';
 export { canRegisterFrom } from './sales/sales-register';

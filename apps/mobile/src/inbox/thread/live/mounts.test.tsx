@@ -27,7 +27,7 @@ function codeFiles(dir: string): string[] {
 const mockRealtime = jest.fn();
 let mockInbox = true;
 jest.mock('@/inbox', () => ({ useInboxRealtime: (on: boolean) => mockRealtime(on) }));
-jest.mock('@/auth', () => ({
+jest.mock('@/core/auth', () => ({
   usePermissions: () => ({}),
   canOpen: (_can: unknown, area: string) => area === 'inbox' && mockInbox,
   tabOpen: () => true,

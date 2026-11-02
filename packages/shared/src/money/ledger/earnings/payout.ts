@@ -1,4 +1,4 @@
-import type { LessonStatus, PayoutStatus } from '../../../enums/index.js';
+import type { LessonStatus, PayoutStatus } from '@ab/catalog';
 
 // Teacher payouts (R-PAY-02, R-TCH-04, issue E3): counted lessons × their ledger amount (the
 // teacher's per-lesson rate for that length, pay-rule.ts, EGP). One amount per lesson, however

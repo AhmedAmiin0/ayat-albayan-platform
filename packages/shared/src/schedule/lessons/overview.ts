@@ -1,4 +1,4 @@
-import type { Gender, Program, TeacherStatus } from '../../enums/index.js';
+import type { Gender, Program, TeacherStatus } from '@ab/catalog';
 import type { LessonView } from './views.js';
 
 // GET /lessons/overview (R-SCH-09 all-teachers calendar): every teacher with their weekly windows,

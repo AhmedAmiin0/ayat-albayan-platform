@@ -1,8 +1,14 @@
-import { clockOf, joinNames, sameClockAt, type LessonStatus, type LessonView } from '@ab/shared';
+import {
+  clockOf,
+  joinNames,
+  type LessonStatus,
+  type LessonView,
+  sameClockAt,
+  zonedPartsIn,
+} from '@ab/shared';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
-import { zonedParts } from '@/features/teaching/schedule/tz';
 import type { Clock } from '@/lib/clock';
 
 // Pure view logic for lesson lists (R-SCH-01, R-SCH-03). No React, unit-tested.
@@ -48,7 +54,7 @@ export function teacherRows(lessons: readonly LessonView[], tz: string): Teacher
   for (const lesson of sorted) {
     const row = rows.get(lesson.teacher.id) ?? { teacher: lesson.teacher, days: new Map() };
     rows.set(lesson.teacher.id, row);
-    const day = zonedParts(new Date(lesson.starts_at), tz).date;
+    const day = zonedPartsIn(new Date(lesson.starts_at), tz).date;
     row.days.set(day, [...(row.days.get(day) ?? []), lesson]);
   }
   return [...rows.values()].sort((a, b) => a.teacher.display_name_ar.localeCompare(b.teacher.display_name_ar, 'ar'));
@@ -57,7 +63,7 @@ export function teacherRows(lessons: readonly LessonView[], tz: string): Teacher
 /** Lessons on one local day of `tz`, by start time. */
 export function lessonsOnDay(lessons: readonly LessonView[], day: { date: string; tz: string }): LessonView[] {
   return lessons
-    .filter((l) => zonedParts(new Date(l.starts_at), day.tz).date === day.date)
+    .filter((l) => zonedPartsIn(new Date(l.starts_at), day.tz).date === day.date)
     .toSorted((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 

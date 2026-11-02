@@ -1,5 +1,5 @@
 import type { CourseMoveKind } from '@ab/client-core';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 

@@ -1,7 +1,7 @@
 // Test fixtures for the feedback tests (not shipped; excluded from the build by *.fakes.ts).
-import type { AuthUser } from '../../../common/auth/verify-token';
-import type { FeedbackRow, PublicContext, RequestContext } from './feedback.queries';
-import type { FeedbackListRow } from './read/feedback.read.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { FeedbackRow, PublicContext, RequestContext } from './feedback.repo';
+import type { FeedbackListRow } from './read/feedback.read.repo';
 import { hashToken, signToken } from './public/feedback.token';
 
 export const SECRET = 's'.repeat(40);

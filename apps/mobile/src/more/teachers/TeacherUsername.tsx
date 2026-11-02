@@ -2,7 +2,7 @@ import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { Field } from '@/core/ui/form/Field';

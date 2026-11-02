@@ -1,4 +1,4 @@
-import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateStatus, WaLine } from '@ab/catalog';
 import type { NotificationKey } from './catalogue.js';
 import type { NotificationAudience, NotificationChannel, TimingKey } from './catalogue.types.js';
 import type { NotificationRuleView } from '../rules.types.js';

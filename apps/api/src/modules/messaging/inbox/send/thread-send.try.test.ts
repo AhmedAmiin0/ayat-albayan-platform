@@ -4,6 +4,7 @@ import { ThreadForwardService } from '@/modules/messaging/inbox/files/thread-for
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { Outbox } from './outbox';
@@ -91,17 +92,29 @@ describe('ThreadSendService.text after the window', () => {
     expect(outbox.queue).not.toHaveBeenCalled();
   });
 
-  it('a text forward to a closed chat: skipped session_closed, no reopen, no row', async () => {
+  it('a text forward to a closed chat (owner 2026-11-01): Kapso reopened, queued as a text', async () => {
     chatOn('kapso');
+    kapso.reopen.mockResolvedValue(true);
     const src = { id: 'f1', direction: 'inbound' as const, body: 'نص', template_key: null };
     queries.get.mockResolvedValue(messageRow({ ...src, media_mime: null }));
-    const q = queries as unknown as ThreadsRepo;
+    const q = queries as unknown as ThreadMessagesRepo;
     const forwards = new ThreadForwardService(q, service(), {} as ForwardFiles);
     const fwd = { messageId: 'f1', targets: [PHONE], clientRequestId: REQ };
     const f = { input: fwd, actorId: ACTOR, scope: null, sales: null };
     const { results } = await forwards.forward(f);
-    expect(results).toEqual([{ phone: PHONE, sent: false, reason: 'session_closed' }]);
-    expect(kapso.reopen).not.toHaveBeenCalled();
-    expect(outbox.queue).not.toHaveBeenCalled();
+    expect(results).toEqual([{ phone: PHONE, sent: true, message_id: 'm1', replayed: false }]);
+    expect(kapso.reopen).toHaveBeenCalledExactlyOnceWith(PHONE);
+    expect(outbox.queue).toHaveBeenCalledWith(expect.objectContaining({ body: 'نص', line: 'chat' }));
+  });
+
+  it('a payment link typed into the box (owner 2026-11-01): the text path, one row', async () => {
+    chatOn('kapso');
+    const link = 'ادفع هنا: https://app.example.test/pay/tok_1';
+    const s = service();
+    const input = { text: link, clientRequestId: REQ };
+    await s.text({ phone: PHONE, input, actorId: ACTOR }, NOW);
+    expect(outbox.queue).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ body: link, line: 'chat', dedup_key: `admin:${PHONE}:${REQ}` }),
+    );
   });
 });

@@ -9,7 +9,7 @@ import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson
 import { RemindersRepo } from './reminders.repo';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
-import { Ticker } from './ticker';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const MINUTE = 60_000;

@@ -3,7 +3,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { RecordingAdminQueries, type RecordingWithTeacher } from './recording-admin.queries';
+import { RecordingAdminRepo, type RecordingWithTeacher } from './recording-admin.repo';
 
 /**
  * PATCH /recordings/:id/visibility: admin any recording; a teacher only their own lessons'. A group
@@ -12,7 +12,7 @@ import { RecordingAdminQueries, type RecordingWithTeacher } from './recording-ad
 @Injectable()
 export class RecordingVisibilityService {
   constructor(
-    private readonly queries: RecordingAdminQueries,
+    private readonly queries: RecordingAdminRepo,
     private readonly teachers: TeachersRepo,
     private readonly audit: AuditService,
   ) {}

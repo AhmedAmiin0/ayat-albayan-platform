@@ -3,13 +3,13 @@ import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-
 import { PAUSE, pauseMocks, resetPauseMocks, rpcOut, STUDENT } from './course-pause.fakes';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import type { CoursePauseLessonsBack } from './course-pause.lessons-back';
-import type { CoursePauseQueries } from './course-pause.queries';
+import type { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
 
 function service() {
   const m = pauseMocks();
   resetPauseMocks(m);
-  const queries = m.queries as unknown as CoursePauseQueries;
+  const queries = m.queries as unknown as CoursePauseRepo;
   return { m, svc: new CoursePauseService(queries, m.follow as unknown as CoursePauseFollowUps) };
 }
 

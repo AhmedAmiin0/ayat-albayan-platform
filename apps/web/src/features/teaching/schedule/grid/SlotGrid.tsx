@@ -1,9 +1,9 @@
-import { clockOf, type SlotView } from '@ab/shared';
+import { clockOf, type SlotView, weekDates, weekdayOf } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { byLocalDay, zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
-import { dayMonthLabel, weekDays, weekdayOf } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule/tz';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { clockDir } from '@/lib/clock-text';
@@ -34,7 +34,7 @@ export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: S
   return (
     <div role="group" aria-label={t.booking.freeSlots} className="@container">
       <div className="grid gap-x-2 gap-y-3 border-t border-rule pt-3 @[640px]:grid-cols-7">
-        {weekDays(week).map((day) => {
+        {weekDates(week).map((day) => {
           const daySlots = days.get(day) ?? [];
           const label = `${weekday[String(weekdayOf(day))] ?? ''} ${dayMonthLabel(day)}`;
           return (

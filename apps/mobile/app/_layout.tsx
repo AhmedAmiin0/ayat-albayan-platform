@@ -8,7 +8,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { type GateStatus, retryGate, useAuthGate, useMeId, useMeReady } from '@/auth';
+import { type GateStatus, retryGate, useAuthGate, useMeId, useMeReady } from '@/core/auth';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { usePresenceSelf } from '@/core/lib/presence';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';

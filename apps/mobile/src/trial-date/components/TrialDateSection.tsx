@@ -1,15 +1,15 @@
 import { canPickTrialDate } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useStudentHref } from '@/core/nav/tree-base';
 import type { StudentProfile } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { useTrialHistory } from '../lib/queries';
-import { studentFileTrialHref } from '../lib/trial-href';
+import { useTrialHistory } from '@/trial-date/lib/queries';
+import { studentFileTrialHref } from '@/trial-date/lib/trial-href';
 import { TrialHistoryList } from './TrialHistoryList';
 
 /**

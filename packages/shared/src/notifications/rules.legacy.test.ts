@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_DEFAULTS } from '../settings/index.js';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { NOTIFICATION_KEYS } from './catalogue/catalogue.js';
 import { defaultTiming } from './rules.effective.js';
 import {

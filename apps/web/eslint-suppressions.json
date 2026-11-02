@@ -1991,7 +1991,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     },
     "max-lines-per-function": {
       "count": 1
@@ -2063,7 +2063,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -7708,9 +7708,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "max-len": {
-      "count": 2
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -10414,11 +10411,6 @@
     }
   },
   "src/features/teaching/schedule/schedule.en.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/schedule/tz.ts": {
     "max-len": {
       "count": 1
     }

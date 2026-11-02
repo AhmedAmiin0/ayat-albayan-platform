@@ -25,8 +25,8 @@ type Props = {
   students: SalesFamilyStudent[];
   /** The chat's phone (chatBinding: sent only for a child not hers, sales.renew_any). */
   phone?: string | undefined;
-  /** The chat's 24 h window: a payment link's text goes into its box only while it is open. */
-  sessionOpen?: boolean | undefined;
+  /** A text may go in the chat now (useMaySend): a payment link's text goes into its box. */
+  canSend?: boolean | undefined;
   onClose: () => void;
 };
 
@@ -40,13 +40,13 @@ export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscrip
  * Right after «اشتراك جديد» (and after the transfer) «احجز أيام الحلقات الآن» opens the course wizard
  * (owner 2026-10-18: before the transfer is fine) on top of the step; closing it comes back to it as left.
  */
-export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', sessionOpen = false, onClose }: Props) {
+export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', canSend = false, onClose }: Props) {
   const [step, setStep] = useState<Step>(start === 'subscribe' ? { kind: 'subscribe' } : { kind: 'transfer', sub: null });
   const [course, setCourse] = useState<string | null>(null);
   // The course opens on top: the step under it stays mounted, so a typed transfer survives it.
   return (
     <>
-      <FlowStep step={step} setStep={setStep} onCourse={setCourse} {...{ studentId, renew, students, phone, sessionOpen, onClose }} />
+      <FlowStep step={step} setStep={setStep} onCourse={setCourse} {...{ studentId, renew, students, phone, canSend, onClose }} />
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
     </>
   );
@@ -54,7 +54,7 @@ export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', 
 
 type FlowStepProps = Omit<Props, 'start'> & { step: Step; setStep: (s: Step) => void; onCourse: (studentId: string) => void };
 
-function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone = '', sessionOpen = false, onClose }: FlowStepProps) {
+function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone = '', canSend = false, onClose }: FlowStepProps) {
   // A child not hers (sales.renew_any, docs/16 row 38): its writes carry the chat phone; «أيام الحلقات» too
   // (owner 2026-11-01).
   const bindOf = (id: string) => chatBinding(students, { studentId: id, phone });
@@ -64,7 +64,7 @@ function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone =
     const onLinked = (link: PaymentLinkView) => setStep({ kind: 'link', link });
     return <SalesSubscribeStep {...{ students, phone, renew, onClose, onSaved, onLinked }} picked={studentId} />;
   }
-  if (step.kind === 'link') return <CreatedLink link={step.link} thread={{ phone_e164: phone, session_open: sessionOpen }} onClose={onClose} />;
+  if (step.kind === 'link') return <CreatedLink link={step.link} phone={phone} canSend={canSend} onClose={onClose} />;
   if (step.kind === 'transfer') {
     const sub = step.sub;
     return (

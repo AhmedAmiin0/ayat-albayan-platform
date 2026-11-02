@@ -57,3 +57,18 @@ export async function textLine(thread: ThreadRow | null, at: TextLineAt): Promis
   const numberId = activeNumberId('chat');
   return { line: 'chat', ...(numberId ? { number_id: numberId } : {}) };
 }
+
+interface ChatLineAt extends TextLineAt {
+  /** Teacher mode (docs/19): the window still refuses (409), as for a teacher's text. */
+  teacher: boolean;
+}
+
+/**
+ * The line of every staff send from a chat (owner 2026-11-01, «do the same as the messages»): a
+ * text, a reply, a payment link typed into the box, a file or receipt, a sticker, a GIF and a
+ * forward all leave as a text does: textLine (tried after the window on a Kapso chat line), and
+ * sendLine in teacher mode. Templates and automatic notifications never come here.
+ */
+export function chatLine(thread: ThreadRow | null, at: ChatLineAt): Promise<SendFromLine> {
+  return at.teacher ? sendLine(thread, at) : textLine(thread, at);
+}

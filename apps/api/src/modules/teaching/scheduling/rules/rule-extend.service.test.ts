@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { OccurrenceGenerator } from '../occurrences/occurrence-generator';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { OccurrenceGenerator } from '@/modules/teaching/scheduling/occurrences/occurrence-generator';
 import { RuleExtendService } from './rule-extend.service';
-import { ruleRow } from '../scheduling.fakes';
-import { SchedulingSettings } from '../scheduling.settings';
-import type { ScheduleQueries } from '../schedule.queries';
+import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
+import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
+import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 
 const rules = { rule: vi.fn() };
 const generator = { topUp: vi.fn() };
 const service = new RuleExtendService(
-  rules as unknown as ScheduleQueries,
+  rules as unknown as ScheduleRepo,
   generator as unknown as OccurrenceGenerator,
   readerOf(SchedulingSettings, { booking_horizon_weeks: 5 }),
 );

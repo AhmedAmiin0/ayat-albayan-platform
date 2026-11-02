@@ -1,7 +1,7 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { useJoinOpen } from '@/classroom';
 import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';

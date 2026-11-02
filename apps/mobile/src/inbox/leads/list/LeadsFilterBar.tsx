@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { LeadFilterSheet } from './LeadFilterSheet';
 import { activeFilterCount, type LeadFilters } from './lead-filters';
-import { useSalesPeople } from '../detail/use-sales-people';
+import { useSalesPeople } from '@/inbox/leads/detail/use-sales-people';
 
 interface LeadsFilterBarProps {
   filters: LeadFilters;
