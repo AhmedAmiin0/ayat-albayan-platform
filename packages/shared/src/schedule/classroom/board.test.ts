@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { boardMessageSchema, boardStrokeSchema, PEN_COLORS, type BoardStroke } from './board.js';
+import { boardMessageSchema, boardStrokeSchema, PEN_COLORS, type BoardStroke } from '@ab/schedule';
 
 const stroke: BoardStroke = {
   id: 's1', by: 'me', color: 'lapis', width: 0.004, erase: false, pts: [0, 0.5, 1, 1],
