@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { FinanceSection } from '@/more/sections/FinanceSection';
 import { MoreScreen } from '@/more/screens/MoreScreen';
-import { SalesSection } from '@/sales/components/SalesSection';
+import { SalesSection } from '@/sales/sales/components/SalesSection';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
