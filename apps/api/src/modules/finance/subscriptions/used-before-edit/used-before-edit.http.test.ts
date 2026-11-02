@@ -30,7 +30,7 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
   const edit = (body: object, token: 'admin' | 'salesA' | 'teacher' = 'salesA') =>
     call({ method: 'PATCH', url: URL, token, body });
 
-  it('an assistant sets 2: stored only if still 0, audited before / after, the new balance answered', async () => {
+  it('the special assistant (edit_terms) sets 2: stored only if still 0, audited before / after, the new balance answered', async () => {
     m.balances.forSubscriptions.mockResolvedValueOnce(balanceOf(0)).mockResolvedValue(balanceOf(2));
     const res = await edit({ lessonsUsedBefore: 2 });
     expect(res.statusCode).toBe(200);

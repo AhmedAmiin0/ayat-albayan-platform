@@ -1,5 +1,6 @@
 import { screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient } from '@/test/query';
 import { press, show, stateOf, SUB } from './test-util';
 
@@ -16,8 +17,10 @@ beforeEach(() => mockApiFetch.mockReset());
 
 test('a normal assistant (subscriptions.set_start_date, no edit_terms): no action', async () => {
   mockApiFetch.mockResolvedValue({ permissions: ['self.sales', 'subscriptions.set_start_date'] });
-  await show(SUB, createTestQueryClient({ meFromApi: true }));
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
+  const client = createTestQueryClient({ meFromApi: true });
+  await show(SUB, client);
+  // /auth/me has ANSWERED (useHolds is false until then), so the hidden button proves the gate.
+  await waitFor(() => expect(client.getQueryData(pathKey('/auth/me'))).toBeTruthy());
   expect(screen.queryByRole('button', { name: e.action })).toBeNull();
 });
 

@@ -15,7 +15,10 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 const e = t.salesMoney.usedBeforeEdit;
 const STATE = `/subscriptions/${SUB_ID}/lessons-used-before`;
 const STATE_BODY = { subscription_id: SUB_ID, lessons_used_before: 0, max: 3, blocked: null };
-const ME = { role: 'admin', permissions: ['students.read', 'subscriptions.read'] };
+const ME = {
+  role: 'admin',
+  permissions: ['students.read', 'subscriptions.read', 'subscriptions.set_start_date'],
+};
 
 function serve(me?: object) {
   mockApiFetch.mockImplementation(async (path: string) => {
