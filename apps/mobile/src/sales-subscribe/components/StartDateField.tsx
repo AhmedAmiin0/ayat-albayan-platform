@@ -1,11 +1,11 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
-import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
 import { dayLabel } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
+import { DatePickerField } from '@/core/ui/form/date-picker';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
@@ -27,7 +27,7 @@ interface StartDateFieldProps {
 
 /**
  * «يوم البدء» of the sales subscribe (docs/16 row 24). Without the permission only «تبدأ الباقة اليوم
- * (…)». With it the day chips and «بدأ الاشتراك سابقًا»: on, a past day picked with steppers (rule 6, never
+ * (…)». With it the day chips and «بدأ الاشتراك سابقًا»: on, a past day picked on the calendar (rule 6, never
  * typed) replaces the chips, from a year back up to today, with «حلقات مستخدمة من الباقة» (owner 2026-10-28);
  * off again resets it to 0.
  */
@@ -59,11 +59,14 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
       <Note>{m.alreadyStartedHint}</Note>
       {draft.alreadyStarted ? (
         <>
-          <StartDayPicker
+          <DatePickerField
             label={m.startedOn}
             day={draft.past}
-            min={daysBefore(academyToday, SALES_START_BACK_DAYS)}
-            max={academyToday}
+            range={{
+              min: daysBefore(academyToday, SALES_START_BACK_DAYS),
+              max: academyToday,
+              today: academyToday,
+            }}
             onChange={(past) => onChange({ past })}
           />
           <NoCommissionNote startsOn={draft.past} usedBefore={usedBeforeOf(draft, lessonsTotal)} now={new Date()} />

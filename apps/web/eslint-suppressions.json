@@ -8220,7 +8220,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {

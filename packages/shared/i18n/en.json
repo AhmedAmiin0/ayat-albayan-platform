@@ -7668,5 +7668,18 @@
     "staffEmpty": "No team members yet",
     "off": "Online status is turned off in Values",
     "loadError": "Could not load the team status"
+  },
+  "datePicker": {
+    "title": "Choose a date",
+    "weekdaysShort": {
+      "sat": "Sa",
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr"
+    },
+    "earliest": "Earliest allowed date: {date}"
   }
 }
