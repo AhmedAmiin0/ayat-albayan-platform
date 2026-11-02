@@ -3077,6 +3077,17 @@
     "sticker": {
       "favourite": "أضف إلى المفضلة",
       "unfavourite": "أزل من المفضلة"
+    },
+    "chatSearch": {
+      "open": "بحث",
+      "label": "ابحث في هذه المحادثة",
+      "placeholder": "بحث في المحادثة…",
+      "older": "النتيجة الأقدم",
+      "newer": "النتيجة الأحدث",
+      "close": "إغلاق البحث",
+      "counter": "{n} من {m}",
+      "empty": "لا توجد نتائج",
+      "searching": "جارٍ البحث…"
     }
   },
   "mobileFinance": {
