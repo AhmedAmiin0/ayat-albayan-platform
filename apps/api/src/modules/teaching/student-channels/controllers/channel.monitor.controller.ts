@@ -1,13 +1,12 @@
 import type { ChannelPage } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { ChannelAccess } from '../channel-access';
-import { ChannelService } from '../channel.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
+import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
 import { pageFor } from './channel-page';
-
-const UUID = new ParseUUIDPipe();
+import { UuidParam } from '@/common/http/uuid-param';
 
 /**
  * Monitors' read-only views (docs/31 §2): any student's channel with student_channels.monitor, and the
@@ -24,13 +23,13 @@ export class MonitorChannelController {
 
   @Get('students/:id/channel/messages')
   @Permissions('student_channels.monitor')
-  async messages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
+  async messages(@UuidParam('id') studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
     return pageFor(this.channels, await this.access.monitor(user, studentId), query);
   }
 
   @Get('sales/students/:id/channel/messages')
   @Permissions('self.sales')
-  async salesMessages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
+  async salesMessages(@UuidParam('id') studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
     return pageFor(this.channels, await this.access.owner(user, studentId), query);
   }
 }

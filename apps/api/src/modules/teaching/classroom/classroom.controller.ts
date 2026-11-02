@@ -5,7 +5,7 @@ import {
   type JoinLinkUrl,
   type RoomJoinResult,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -14,6 +14,7 @@ import { JoinLinkCopyService } from './join/join-link.copy.service';
 import { JoinLinkService } from './join/join-link.service';
 import { JoinLinkStaffService } from './join/join-link.staff.service';
 import { RoomJoinService } from './join/room-join.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** Online classroom, staff side. The service decides who may enter (admin, the lesson's teacher, an assigned assistant). */
 @ApiTags('classroom')
@@ -31,7 +32,7 @@ export class ClassroomController {
   @Post('room/join')
   @HttpCode(200)
   join(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<RoomJoinResult> {
     return this.rooms.join({ user, lessonId: id });
@@ -42,7 +43,7 @@ export class ClassroomController {
   @HttpCode(200)
   @Permissions('classroom.links')
   sendLink(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(joinLinkRequestSchema) body: JoinLinkRequest,
     @CurrentUser() user: AuthUser,
   ): Promise<JoinLinkResult> {
@@ -54,7 +55,7 @@ export class ClassroomController {
   @HttpCode(200)
   @Permissions('classroom.host')
   linkUrl(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<JoinLinkUrl> {
     return this.copies.url({ lessonId: id, user });

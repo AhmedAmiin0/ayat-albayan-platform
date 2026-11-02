@@ -1,5 +1,5 @@
 import { ruleExtendRequestSchema } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -7,6 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { HorizonJob, type RunSummary } from '@/modules/teaching/scheduling/occurrences/horizon.job';
 import { RuleExtendService, type ExtendResult } from './rule-extend.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02) and /refresh. Admin only. */
 @ApiTags('schedule-rules')
@@ -32,7 +33,7 @@ export class ScheduleRulesController {
   @Post(':id/extend')
   @HttpCode(200)
   extend(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(ruleExtendRequestSchema, { orEmpty: true })
     body: z.output<typeof ruleExtendRequestSchema>,
     @CurrentUser() user: AuthUser,

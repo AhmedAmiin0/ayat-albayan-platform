@@ -1,5 +1,5 @@
 import type { LessonRecordingView } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -8,6 +8,7 @@ import { notFound } from '@/common/http/errors';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { KickService } from './kick.service';
 import { RecordingListService } from '@/modules/teaching/classroom/recordings/recording-list.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
@@ -32,7 +33,7 @@ export class ModerationController {
   @Post('room/participants/:identity/remove')
   @HttpCode(204)
   async remove(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodParam('identity', identitySchema, participantNotFound) identity: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
@@ -43,7 +44,7 @@ export class ModerationController {
   @Get('recordings')
   @Permissions('recordings.read')
   recordingsOf(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonRecordingView[]> {
     return this.recordings.list({ user, lessonId: id });

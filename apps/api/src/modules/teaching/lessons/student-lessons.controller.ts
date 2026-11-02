@@ -1,11 +1,12 @@
 import type { LessonView } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
 import { pageQuerySchema, type Page } from '@/common/http/http';
 import { ZodQuery } from '@/common/http/zod-inputs';
 import { LessonViews } from './store/lesson-views';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** GET /students/:id/lessons — newest first with the lesson number (R-LES-03). Admin only. */
 @ApiTags('students')
@@ -17,7 +18,7 @@ export class StudentLessonsController {
 
   @Get()
   list(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodQuery(pageQuerySchema) page: z.output<typeof pageQuerySchema>,
   ): Promise<Page<LessonView>> {
     return this.views.student(id, page);

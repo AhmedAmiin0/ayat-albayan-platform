@@ -1,5 +1,5 @@
 import { ruleCancelRequestSchema, type LessonView } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -7,6 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonCancelService } from '@/modules/teaching/lessons/status/lesson-cancel.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** docs/10 route 10 response. */
 interface RuleCancelResult {
@@ -28,7 +29,7 @@ export class RuleCancelController {
   @Post(':id/cancel')
   @HttpCode(200)
   async cancel(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(ruleCancelRequestSchema) req: z.output<typeof ruleCancelRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<RuleCancelResult> {

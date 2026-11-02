@@ -5,7 +5,7 @@ import {
   type ChannelPage,
   type TeacherChannelRow,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ZodBody } from '@/common/http/zod-inputs';
@@ -17,8 +17,7 @@ import {
   TeacherChannelList,
 } from '@/modules/teaching/student-channels/channel.service';
 import { pageFor } from './channel-page';
-
-const UUID = new ParseUUIDPipe();
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** «رسائل الطلاب» (docs/31 §2): the teacher's channels with the families of their current students. */
 @ApiTags('student-channels')
@@ -40,7 +39,7 @@ export class TeacherChannelsController {
   /** 404 student_not_found when the student is not (or no longer) one of mine. */
   @Get(':studentId/messages')
   async messages(
-    @Param('studentId', UUID) studentId: string,
+    @UuidParam('studentId') studentId: string,
     @Query() query: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPage> {
@@ -49,7 +48,7 @@ export class TeacherChannelsController {
 
   @Post(':studentId/messages')
   async post(
-    @Param('studentId', UUID) studentId: string,
+    @UuidParam('studentId') studentId: string,
     @ZodBody(channelPostSchema) body: z.output<typeof channelPostSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
@@ -59,7 +58,7 @@ export class TeacherChannelsController {
   @Post(':studentId/read')
   @HttpCode(204)
   async read(
-    @Param('studentId', UUID) studentId: string,
+    @UuidParam('studentId') studentId: string,
     @ZodBody(channelReadSchema, { orEmpty: true }) body: z.output<typeof channelReadSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {

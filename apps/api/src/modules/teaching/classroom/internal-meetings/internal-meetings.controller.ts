@@ -5,17 +5,7 @@ import type {
   PublicMeetingView,
   RoomJoinResult,
 } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Injectable,
-  Ip,
-  Param,
-  ParseUUIDPipe,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Injectable, Ip, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
@@ -27,6 +17,7 @@ import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { MeetingCreateService } from '@/modules/teaching/classroom/meetings/schedule/meeting-create.service';
 import { MeetingListService } from '@/modules/teaching/classroom/meetings/schedule/meeting-list.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** The staff routes' services (one injectable, so the controller stays at ≤ 3 params). */
 @Injectable()
@@ -85,7 +76,7 @@ export class InternalMeetingsController {
   /** 204; 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started (scheduled, window not open). */
   @Post(':id/end')
   @HttpCode(204)
-  async end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
+  async end(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<void> {
     await this.routes.meetings.end({ user, id });
   }
 
@@ -93,7 +84,7 @@ export class InternalMeetingsController {
   @Post(':id/link')
   @HttpCode(200)
   link(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<MeetingCreated> {
     return this.routes.meetings.newLink({ user, id });
@@ -103,7 +94,7 @@ export class InternalMeetingsController {
   @Post(':id/join')
   @HttpCode(200)
   join(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<RoomJoinResult> {
     return this.joins.staff({ user, id });
@@ -113,7 +104,7 @@ export class InternalMeetingsController {
   @Post(':id/participants/:identity/remove')
   @HttpCode(204)
   async remove(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodParam('identity', identitySchema, participantNotFound) identity: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {

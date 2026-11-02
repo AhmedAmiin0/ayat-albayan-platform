@@ -1,10 +1,11 @@
 import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { MeetingRecordingListService } from './recording-list.service';
 import { RecordingStarter } from './recording.starter';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** «التسجيلات» of an internal meeting: the admin and the creator; 1-hour links to finished files. */
 @ApiTags('classroom')
@@ -16,7 +17,7 @@ export class MeetingRecordingsController {
 
   /** Newest first; 404 meeting_not_found, 403 anyone but an admin or the creator. */
   @Get()
-  list(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonRecordingView[]> {
+  list(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<LessonRecordingView[]> {
     return this.recordings.list({ user, id });
   }
 }

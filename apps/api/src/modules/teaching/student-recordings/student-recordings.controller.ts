@@ -3,7 +3,7 @@ import {
   studentRecordingsQuerySchema,
   type StudentRecordingsPage,
 } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -12,6 +12,7 @@ import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** «تسجيلات الحلقات» on the teacher-student file. The permission is the coarse gate (recordings.read for the reads, recordings.manage for show/hide and delete: admin and teacher by default); the services decide who may see which student, and DELETE stays admin-only there. */
 @ApiTags('classroom')
@@ -28,7 +29,7 @@ export class StudentRecordingsController {
   /** Newest first, paginated; admin, the teacher (own lessons or assigned student), an assigned assistant. */
   @Get('students/:id/recordings')
   list(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodQuery(studentRecordingsQuerySchema) query: z.output<typeof studentRecordingsQuerySchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<StudentRecordingsPage> {
@@ -38,7 +39,7 @@ export class StudentRecordingsController {
   /** Lesson ids with a finished recording, for the report history's links: no signed URLs. Same access as the list. */
   @Get('students/:id/recorded-lesson-ids')
   recordedLessonIds(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<string[]> {
     return this.recordings.recordedLessonIds({ user, studentId: id });
@@ -48,7 +49,7 @@ export class StudentRecordingsController {
   @Patch('recordings/:id/visibility')
   @Permissions('recordings.manage')
   visibility(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(recordingVisibilitySchema) body: z.output<typeof recordingVisibilitySchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string; visible_to_student: boolean }> {
@@ -60,7 +61,7 @@ export class StudentRecordingsController {
   @Permissions('recordings.manage')
   @HttpCode(204)
   async remove(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     await this.deletion.remove({ user, id });

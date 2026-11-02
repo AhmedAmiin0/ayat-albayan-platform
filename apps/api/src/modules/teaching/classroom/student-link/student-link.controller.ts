@@ -1,10 +1,11 @@
 import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Ip, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { StudentLinkAdminService } from './student-link.admin.service';
 import { StudentLinkService } from './student-link.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** The student's own door (no login): the token in the path is the whole credential. */
 @ApiTags('classroom')
@@ -37,7 +38,7 @@ export class StudentLinkAdminController {
 
   @Post()
   @HttpCode(200)
-  issue(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<StudentJoinLinkUrl> {
+  issue(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<StudentJoinLinkUrl> {
     return this.links.issue({ studentId: id, actorId: user.id });
   }
 }

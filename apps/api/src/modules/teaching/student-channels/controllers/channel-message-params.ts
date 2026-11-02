@@ -1,21 +1,14 @@
-import { ParseUUIDPipe } from '@nestjs/common';
-
-const UUID = new ParseUUIDPipe();
+import { uuidOf } from '@/common/http/uuid-param';
 
 /**
  * The student and message ids of …/messages/:messageId routes, one @Param() object (max-params).
+ * A bad id is the 400 `validation_failed` envelope (docs/36 z2b), the student's checked first.
  */
-export async function messageParams(
+export function messageParams(
   params: Record<string, string | undefined>,
   studentKey: 'id' | 'studentId',
-): Promise<{ studentId: string; messageId: string }> {
-  const studentId = await UUID.transform(params[studentKey] ?? '', {
-    type: 'param',
-    data: studentKey,
-  });
-  const messageId = await UUID.transform(params.messageId ?? '', {
-    type: 'param',
-    data: 'messageId',
-  });
+): { studentId: string; messageId: string } {
+  const studentId = uuidOf(studentKey, params[studentKey]);
+  const messageId = uuidOf('messageId', params.messageId);
   return { studentId, messageId };
 }

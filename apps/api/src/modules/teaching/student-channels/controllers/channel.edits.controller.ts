@@ -31,7 +31,7 @@ export class ChannelEditsController {
   @Patch(TEACHER)
   @Permissions('self.teacher')
   async teacherEdit(@Param() p: Params, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const { studentId, messageId } = await messageParams(p, 'studentId');
+    const { studentId, messageId } = messageParams(p, 'studentId');
     const actor = await this.access.teacher(user, studentId);
     return this.edits.edit({ actor, messageId, body: textOf(body) });
   }
@@ -39,14 +39,14 @@ export class ChannelEditsController {
   @Delete(TEACHER)
   @Permissions('self.teacher')
   async teacherDelete(@Param() p: Params, @CurrentUser() user: AuthUser) {
-    const { studentId, messageId } = await messageParams(p, 'studentId');
+    const { studentId, messageId } = messageParams(p, 'studentId');
     return this.edits.remove({ actor: await this.access.teacher(user, studentId), messageId });
   }
 
   @Patch(PORTAL)
   @Permissions('self.portal')
   async familyEdit(@Param() p: Params, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const { studentId, messageId } = await messageParams(p, 'id');
+    const { studentId, messageId } = messageParams(p, 'id');
     const actor = await this.access.family(user, studentId);
     return this.edits.edit({ actor, messageId, body: textOf(body) });
   }
@@ -54,7 +54,7 @@ export class ChannelEditsController {
   @Delete(PORTAL)
   @Permissions('self.portal')
   async familyDelete(@Param() p: Params, @CurrentUser() user: AuthUser) {
-    const { studentId, messageId } = await messageParams(p, 'id');
+    const { studentId, messageId } = messageParams(p, 'id');
     return this.edits.remove({ actor: await this.access.family(user, studentId), messageId });
   }
 
@@ -63,7 +63,7 @@ export class ChannelEditsController {
   @Permissions('student_channels.monitor')
   async moderate(@Param() p: Params, @CurrentUser() user: AuthUser): Promise<ChannelMessageView> {
     if (user.role !== 'admin') throw forbidden('moderation_admin_only');
-    const { studentId, messageId } = await messageParams(p, 'id');
+    const { studentId, messageId } = messageParams(p, 'id');
     const actor = await this.access.monitor(user, studentId);
     return this.edits.remove({ actor, messageId, moderator: true });
   }

@@ -1,5 +1,5 @@
 import { rescheduleRequestSchema, type LessonView } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -8,6 +8,7 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** POST /lessons/:id/reschedule (docs/10 route 8, R-SCH-07): one occurrence or the whole rule. */
 @ApiTags('lessons')
@@ -25,7 +26,7 @@ export class LessonRescheduleController {
   @Post(':id/reschedule')
   @HttpCode(200)
   async reschedule(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(rescheduleRequestSchema) req: z.output<typeof rescheduleRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {

@@ -1,9 +1,10 @@
 import type { AssistantLessonView, AssistantView } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { AssistantsService } from './assistants.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** Teaching assistants: the admin assigns them per student; an assistant reads only their own sessions. */
 @ApiTags('classroom')
@@ -27,20 +28,20 @@ export class AssistantsController {
   }
 
   @Get('students/:id/assistants')
-  forStudent(@Param('id', ParseUUIDPipe) id: string): Promise<AssistantView[]> {
+  forStudent(@UuidParam('id') id: string): Promise<AssistantView[]> {
     return this.assistants.forStudent(id);
   }
 
   @Post('students/:id/assistants')
   @HttpCode(200)
   @Permissions('assistants.write')
-  assign(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantView[]> {
+  assign(@UuidParam('id') id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantView[]> {
     return this.assistants.assign({ studentId: id, body, actorId: user.id });
   }
 
   @Delete('students/:id/assistants/:profileId')
   @Permissions('assistants.write')
-  remove(@Param('id', ParseUUIDPipe) id: string, @Param('profileId', ParseUUIDPipe) profileId: string): Promise<AssistantView[]> {
+  remove(@UuidParam('id') id: string, @UuidParam('profileId') profileId: string): Promise<AssistantView[]> {
     return this.assistants.remove(id, profileId);
   }
 }

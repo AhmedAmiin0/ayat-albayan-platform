@@ -1,9 +1,10 @@
 import type { RoomOpenResult } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { RoomOpenService } from './room-open.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** «افتح الحلقة الآن»: the admin or the lesson's teacher opens the room before the usual 15 minutes. */
 @ApiTags('classroom')
@@ -16,7 +17,7 @@ export class RoomOpenController {
   /** 200 the new window; 403 not yours, 409 lesson_not_open, 410 join_closed. */
   @Post('open')
   @HttpCode(200)
-  open(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoomOpenResult> {
+  open(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<RoomOpenResult> {
     return this.opener.open({ user, lessonId: id });
   }
 }

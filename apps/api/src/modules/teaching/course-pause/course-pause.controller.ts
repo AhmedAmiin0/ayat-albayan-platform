@@ -7,13 +7,14 @@ import {
   type CoursePauseResult,
   type CoursePauseState,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CoursePauseService } from './course-pause.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /**
  * «إيقاف مؤقت» / «استئناف» of a student's course (owner 2026-10-28, docs/11 §7b, docs/16 row 37c). One narrow key,
@@ -30,7 +31,7 @@ export class CoursePauseController {
   /** The open pause (banner) and the past ones. */
   @Get()
   @Permissions('courses.pause')
-  state(@Param('id', ParseUUIDPipe) id: string): Promise<CoursePauseState> {
+  state(@UuidParam('id') id: string): Promise<CoursePauseState> {
     return this.pauses.state(id);
   }
 
@@ -38,7 +39,7 @@ export class CoursePauseController {
   @Get('preview')
   @Permissions('courses.pause')
   preview(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodQuery(coursePausePreviewQuery) query: z.output<typeof coursePausePreviewQuery>,
   ): Promise<CoursePausePreview> {
     return this.pauses.preview(id, query);
@@ -49,7 +50,7 @@ export class CoursePauseController {
   @HttpCode(201)
   @Permissions('courses.pause')
   start(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(coursePauseStartSchema, { orEmpty: true })
     body: z.output<typeof coursePauseStartSchema>,
     @CurrentUser() user: AuthUser,
@@ -61,7 +62,7 @@ export class CoursePauseController {
   @Patch('until')
   @Permissions('courses.pause')
   until(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(coursePauseUntilSchema, { orEmpty: true })
     body: z.output<typeof coursePauseUntilSchema>,
     @CurrentUser() user: AuthUser,
@@ -74,7 +75,7 @@ export class CoursePauseController {
   @HttpCode(200)
   @Permissions('courses.pause')
   resume(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(coursePauseResumeSchema, { orEmpty: true })
     body: z.output<typeof coursePauseResumeSchema>,
     @CurrentUser() user: AuthUser,

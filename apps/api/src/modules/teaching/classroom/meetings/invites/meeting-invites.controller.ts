@@ -1,12 +1,13 @@
 import type { MeetingInviteeOption, MeetingInviteeView, MeetingInviteResult } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
 import { MeetingInvitesService } from './meeting-invites.service';
-import { MeetingScheduleService } from '../schedule/meeting-schedule.service';
+import { MeetingScheduleService } from '@/modules/teaching/classroom/meetings/schedule/meeting-schedule.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 const RESEND_PARAMS = z.object({ id: z.uuid(), inviteeId: z.uuid() });
 
@@ -34,26 +35,26 @@ export class MeetingInvitesController {
   /** 204: a new title and/or time (400 starts_in_past | too_far_ahead | not_scheduled); staff are told again. */
   @Patch(':id')
   @HttpCode(204)
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+  async update(@UuidParam('id') id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
     await this.schedule.update({ user, id, body });
   }
 
   /** 204: nobody joins any more, personal links stop working; staff and reached families are told. Twice: a no-op; 410 meeting_ended once ended. */
   @Post(':id/cancel')
   @HttpCode(204)
-  async cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
+  async cancel(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<void> {
     await this.schedule.cancel({ user, id });
   }
 
   @Get(':id/invitees')
-  invitees(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MeetingInviteeView[]> {
+  invitees(@UuidParam('id') id: string, @CurrentUser() user: AuthUser): Promise<MeetingInviteeView[]> {
     return this.invites.list({ user, id });
   }
 
   /** One result per new invitee (personal links once; a recipient the race-safe cap stops: failed / invite_limit); 400 too_many_invitees, 409 invite_limit. */
   @Post(':id/invitees')
   @HttpCode(200)
-  add(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult[]> {
+  add(@UuidParam('id') id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult[]> {
     return this.invites.add({ user, id, body });
   }
 

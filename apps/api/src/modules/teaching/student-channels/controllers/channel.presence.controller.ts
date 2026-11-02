@@ -1,5 +1,5 @@
 import type { ChannelPresence } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -9,8 +9,7 @@ import {
   ChannelAccess,
   type ChannelActor,
 } from '@/modules/teaching/student-channels/channel-access';
-
-const UUID = new ParseUUIDPipe();
+import { UuidParam } from '@/common/http/uuid-param';
 
 /**
  * «متصل الآن» / «آخر ظهور» in the chat header (docs/33 §2): each audience's route runs the same
@@ -30,7 +29,7 @@ export class ChannelPresenceController {
   @Get('teachers/me/channels/:id/presence')
   @Permissions('self.teacher')
   async teacher(
-    @Param('id', UUID) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     return this.of(user, await this.access.teacher(user, id));
@@ -39,7 +38,7 @@ export class ChannelPresenceController {
   @Get('portal/students/:id/channel/presence')
   @Permissions('self.portal')
   async portal(
-    @Param('id', UUID) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     return this.of(user, await this.access.family(user, id));
@@ -48,7 +47,7 @@ export class ChannelPresenceController {
   @Get('students/:id/channel/presence')
   @Permissions('student_channels.monitor')
   async monitor(
-    @Param('id', UUID) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     const actor = await this.access.monitor(user, id);
@@ -59,7 +58,7 @@ export class ChannelPresenceController {
   @Get('sales/students/:id/channel/presence')
   @Permissions('self.sales')
   async sales(
-    @Param('id', UUID) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     return this.of(user, await this.access.owner(user, id));

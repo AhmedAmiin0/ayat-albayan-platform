@@ -1,5 +1,5 @@
 import { lessonProposalRequestSchema, proposalApproveSchema, type LessonView } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -7,6 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /**
  * Teacher self-service «اقترح ميعاد تاني» and the admin's answer (R-SCH-08). Every route returns
@@ -27,7 +28,7 @@ export class LessonProposalsController {
   @Post('lessons/:id/propose')
   @Permissions('self.teacher')
   async propose(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(lessonProposalRequestSchema) req: z.output<typeof lessonProposalRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
@@ -46,7 +47,7 @@ export class LessonProposalsController {
   @Post('lesson-proposals/:id/approve')
   @HttpCode(200)
   async approve(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(proposalApproveSchema, { orEmpty: true }) req: z.output<typeof proposalApproveSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
@@ -57,7 +58,7 @@ export class LessonProposalsController {
   @Post('lesson-proposals/:id/reject')
   @HttpCode(200)
   async reject(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
     return this.views.one(await this.deciding.reject({ proposalId: id, actor: user }), 'admin');

@@ -5,7 +5,7 @@ import {
   type ChannelPage,
   type ChannelUnread,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -14,8 +14,7 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
 import { pageFor } from './channel-page';
-
-const UUID = new ParseUUIDPipe();
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** The portal's «المحادثة مع المعلم/ة» (docs/31 §2): the guardian or the student, for their own student only. */
 @ApiTags('student-channels')
@@ -30,7 +29,7 @@ export class PortalChannelController {
 
   @Get('messages')
   async messages(
-    @Param('id', UUID) studentId: string,
+    @UuidParam('id') studentId: string,
     @Query() query: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPage> {
@@ -39,7 +38,7 @@ export class PortalChannelController {
 
   @Post('messages')
   async post(
-    @Param('id', UUID) studentId: string,
+    @UuidParam('id') studentId: string,
     @ZodBody(channelPostSchema) body: z.output<typeof channelPostSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
@@ -49,7 +48,7 @@ export class PortalChannelController {
   @Post('read')
   @HttpCode(204)
   async read(
-    @Param('id', UUID) studentId: string,
+    @UuidParam('id') studentId: string,
     @ZodBody(channelReadSchema, { orEmpty: true }) body: z.output<typeof channelReadSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
@@ -58,7 +57,7 @@ export class PortalChannelController {
 
   @Get('unread')
   async unread(
-    @Param('id', UUID) studentId: string,
+    @UuidParam('id') studentId: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelUnread> {
     return this.channels.unread(await this.access.family(user, studentId));

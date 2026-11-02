@@ -1,12 +1,13 @@
 import { profileCourseQuerySchema, type ProfileCourseView } from '@ab/shared';
 import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
-import { Body, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Body, Get, HttpCode, Post, Query } from '@nestjs/common';
 import type { z } from 'zod';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import type { CourseMove } from '@/modules/teaching/booking/course-change/course-change.service';
 import type { ProfileCourse } from './profile-course.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** The check's and the change's bodies of one profile action (times, or teacher). */
 interface MoveSchemas {
@@ -26,7 +27,7 @@ export abstract class CourseMoveRoutes {
 
   /** `?subscriptionId=` (absent = the current package): the course and «من تاريخ»'s default. */
   @Get('change')
-  view(@Param('id', ParseUUIDPipe) id: string, @Query() query: unknown): Promise<ProfileCourseView> {
+  view(@UuidParam('id') id: string, @Query() query: unknown): Promise<ProfileCourseView> {
     return this.course.view(id, parseOrThrow(profileCourseQuerySchema, query).subscriptionId);
   }
 
@@ -34,7 +35,7 @@ export abstract class CourseMoveRoutes {
   @Post('change/check')
   @HttpCode(200)
   check(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseChangeCheck> {
@@ -44,7 +45,7 @@ export abstract class CourseMoveRoutes {
   /** 201 CourseChangeResult; a retry with the same clientRequestId returns the first change. */
   @Post('change')
   change(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseChangeResult> {

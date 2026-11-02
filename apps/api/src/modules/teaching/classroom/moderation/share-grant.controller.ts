@@ -1,23 +1,22 @@
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { uuidOf } from '@/common/http/uuid-param';
 import { MeetingShareGrantService, ShareGrantService } from './share-grant.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
-const uuid = new ParseUUIDPipe();
-
 interface Target {
   id: string;
   identity: string;
 }
 
 /** 400 for an id that is not a uuid, 404 participant_not_found for an identity we never minted. */
-export async function targetOf(params: Record<string, string | undefined>): Promise<Target> {
-  const id = await uuid.transform(params['id'] ?? '', { type: 'param', data: 'id' });
-  const identity = params['identity'] ?? '';
+export function targetOf(params: Record<string, string | undefined>): Target {
+  const id = uuidOf('id', params.id);
+  const identity = params.identity ?? '';
   if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
   return { id, identity };
 }
@@ -33,7 +32,7 @@ export class LessonShareController {
   @Post()
   @HttpCode(204)
   async share(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.shares.lesson({ user, body, ...(await targetOf(params)) });
+    await this.shares.lesson({ user, body, ...targetOf(params) });
   }
 }
 
@@ -48,6 +47,6 @@ export class MeetingShareController {
   @Post()
   @HttpCode(204)
   async share(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.shares.meeting({ user, body, ...(await targetOf(params)) });
+    await this.shares.meeting({ user, body, ...targetOf(params) });
   }
 }

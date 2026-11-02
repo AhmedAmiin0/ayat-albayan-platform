@@ -13049,9 +13049,6 @@
     }
   },
   "src/modules/teaching/classroom/assistants/assistants.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -13401,9 +13398,6 @@
     }
   },
   "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -13658,9 +13652,6 @@
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 6
     }
@@ -13886,9 +13877,6 @@
     }
   },
   "src/modules/teaching/classroom/moderation/mute.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -13904,12 +13892,6 @@
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.controller.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -13958,9 +13940,6 @@
     }
   },
   "src/modules/teaching/classroom/recordings/recordings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
@@ -13986,11 +13965,6 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.admin.service.ts": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
-    "ab/no-parent-imports": {
       "count": 2
     }
   },
@@ -15309,9 +15283,6 @@
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 1
     }

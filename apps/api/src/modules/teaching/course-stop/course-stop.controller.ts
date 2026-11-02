@@ -4,13 +4,14 @@ import {
   type CourseStopPreview,
   type CourseStopResult,
 } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseStop } from './course-stop.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): subscriptions.stop (system admin and sales by default,
@@ -30,7 +31,7 @@ export class CourseStopController {
    */
   @Get()
   preview(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodQuery(courseStopQuerySchema) query: z.output<typeof courseStopQuerySchema>,
   ): Promise<CourseStopPreview> {
     return this.stops.preview(id, query.subscriptionId);
@@ -39,7 +40,7 @@ export class CourseStopController {
   /** 201 CourseStopResult (a retry with the same clientRequestId answers the first stop). */
   @Post()
   stop(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(courseStopSchema) body: z.output<typeof courseStopSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseStopResult> {

@@ -1,5 +1,5 @@
 import { lessonTimeEditSchema, type TimeEditResult } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
+import { Controller, HttpCode, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -7,6 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { LessonTimeService } from './time-edit.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 /** PATCH /lessons/:id/time (docs/10 route 22, R-SCH-11 «عدّل الوقت»): admin only; teachers propose. */
 @ApiTags('lessons')
@@ -23,7 +24,7 @@ export class LessonTimeController {
   @Patch(':id/time')
   @HttpCode(200)
   async edit(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(lessonTimeEditSchema) body: z.output<typeof lessonTimeEditSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TimeEditResult> {

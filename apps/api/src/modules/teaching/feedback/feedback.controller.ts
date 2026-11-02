@@ -6,7 +6,7 @@ import {
   type TeacherFeedbackSummary,
   type TeacherFeedbackView,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -15,6 +15,7 @@ import { pageQuerySchema, parseOrThrow, type Page } from '@/common/http/http';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
+import { UuidParam } from '@/common/http/uuid-param';
 
 type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 type PageQuery = z.output<typeof pageQuerySchema>;
@@ -47,7 +48,7 @@ export class FeedbackController {
   @HttpCode(200)
   @Permissions('feedback.write')
   request(
-    @Param('id', ParseUUIDPipe) id: string,
+    @UuidParam('id') id: string,
     @ZodBody(feedbackRequestSchema) body: z.output<typeof feedbackRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<FeedbackRequestResult> {
