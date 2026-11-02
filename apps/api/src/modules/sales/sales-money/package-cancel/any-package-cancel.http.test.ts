@@ -1,7 +1,12 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import {
+  moneyApp,
+  resetMocks,
+  SALES_B,
+  type Mocks,
+} from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 
 // POST /sales/packages/:id/cancel «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student,
@@ -29,9 +34,19 @@ describe('POST /sales/packages/:id/cancel', () => {
     const res = await call({ method: 'POST', url, token: 'salesB', body });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ id: SUB_ID, status: 'cancelled' });
-    const write = { id: SUB_ID, actorId: SALES_B.id, reason: 'أُنشئت بالخطأ', now: expect.any(Date) };
+    const write = {
+      id: SUB_ID,
+      actorId: SALES_B.id,
+      reason: 'أُنشئت بالخطأ',
+      now: expect.any(Date),
+    };
     expect(m.cancels.cancel).toHaveBeenCalledWith(write);
-    const audit = { actorId: SALES_B.id, entity: 'subscriptions', entityId: SUB_ID, action: 'cancel' };
+    const audit = {
+      actorId: SALES_B.id,
+      entity: 'subscriptions',
+      entityId: SUB_ID,
+      action: 'cancel',
+    };
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining(audit));
     const tasks = expect.objectContaining({ subjectIds: [SUB_ID] });
     expect(m.alerts.closeTasks).toHaveBeenCalledWith(tasks);
@@ -68,7 +83,9 @@ describe('POST /sales/packages/:id/cancel', () => {
 
   it('409 already_cancelled: as read, or lost to a racing cancel', async () => {
     m.subs.get.mockReset().mockResolvedValue(cancelled);
-    expect((await call({ method: 'POST', url, token: 'salesA' })).json().code).toBe('already_cancelled');
+    expect((await call({ method: 'POST', url, token: 'salesA' })).json().code).toBe(
+      'already_cancelled',
+    );
     m.subs.get.mockReset().mockResolvedValue(subRow());
     m.cancels.cancel.mockResolvedValue({ row: null, block: 'already_cancelled' });
     const res = await call({ method: 'POST', url, token: 'salesA' });

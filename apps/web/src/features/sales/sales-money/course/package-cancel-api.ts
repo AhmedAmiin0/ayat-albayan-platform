@@ -1,10 +1,10 @@
 import {
   courseActionsKey,
   parsePackageCancelCheck,
+  postPackageCancel,
   salesPackageCancelKey,
   salesPackageCancelPath,
 } from '@ab/client-core';
-import { salesPackageCancelledSchema } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import type { CancelBody } from '@/features/finance/subscriptions';
 import { apiFetch } from '@/lib/http/api';
@@ -20,15 +20,9 @@ export const salesPackageCancelQuery = (subscriptionId: string) =>
     retry: false,
   });
 
-/** POST: 409 already_cancelled, has_payments, has_lessons or has_commission (in the dialog). */
-export async function cancelAnyPackage(subscriptionId: string, body: CancelBody) {
-  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
-  const answer = await apiFetch(salesPackageCancelPath(subscriptionId), {
-    ...init,
-    body: JSON.stringify(body),
-  });
-  return salesPackageCancelledSchema.parse(answer);
-}
+/** POST: the 409s are said by the dialog. */
+export const cancelAnyPackage = (subscriptionId: string, body: CancelBody) =>
+  postPackageCancel(apiFetch, subscriptionId, body);
 
 /** After a cancel: what «إلغاء الاشتراك» refreshes (the student, lists, money, lessons, sales). */
 export function useRefreshAfterPackageCancel(studentId: string): () => Promise<void> {

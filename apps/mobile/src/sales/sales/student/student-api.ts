@@ -1,10 +1,11 @@
 import {
   courseActionsKey,
   parsePackageCancelCheck,
+  postPackageCancel,
   salesPackageCancelKey,
   salesPackageCancelPath,
 } from '@ab/client-core';
-import { salesPackageCancelledSchema, type SalesStudentDetails } from '@ab/shared';
+import type { SalesStudentDetails } from '@ab/shared';
 import { useQuery, type QueryKey } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -36,15 +37,9 @@ export const usePackageCancelCheck = (input: {
   });
 };
 
-/** POST { reason? }: 409 already_cancelled, has_payments, has_lessons or has_commission. */
-export async function cancelAnyPackage(subscriptionId: string, body: { reason?: string }) {
-  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
-  const answer = await apiFetch(salesPackageCancelPath(subscriptionId), {
-    ...init,
-    body: JSON.stringify(body),
-  });
-  return salesPackageCancelledSchema.parse(answer);
-}
+/** POST { reason? }: the 409s are said by CancelPackage. */
+export const cancelAnyPackage = (subscriptionId: string, body: { reason?: string }) =>
+  postPackageCancel(apiFetch, subscriptionId, body);
 
 /** What a cancel makes stale: as «إلغاء الاشتراك» (actions, student, sales, lessons, money). */
 export const packageCancelStale = (studentId: string): QueryKey[] => [

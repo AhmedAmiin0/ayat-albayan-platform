@@ -31,6 +31,7 @@ export {
 export {
   packageCancelOffered,
   parsePackageCancelCheck,
+  postPackageCancel,
   salesPackageCancelKey,
   salesPackageCancelPath,
 } from './package-cancel.js';

@@ -1,4 +1,10 @@
-import { salesPackageCancelCheckSchema, type SalesPackageCancelCheck } from '@ab/shared';
+import {
+  salesPackageCancelCheckSchema,
+  salesPackageCancelledSchema,
+  type SalesPackageCancelCheck,
+  type SalesPackageCancelled,
+  type SubscriptionCancel,
+} from '@ab/shared';
 
 // «إلغاء الباقة» in the assistant's «تفاصيل الطالب» (owner 2026-11-02), web and mobile: the
 // route (GET the check, POST the cancel), the query key, and whether the button shows.
@@ -22,3 +28,19 @@ export const parsePackageCancelCheck = (body: unknown): SalesPackageCancelCheck 
  */
 export const packageCancelOffered = (check: SalesPackageCancelCheck | undefined): boolean =>
   check?.block === null;
+
+/** An app's untyped apiFetch (web and mobile each inject theirs). */
+type Fetch = (path: string, init?: RequestInit) => Promise<unknown>;
+
+/** POST { reason? }: 409 already_cancelled, has_payments, has_lessons or has_commission. */
+export async function postPackageCancel(
+  fetch: Fetch,
+  subscriptionId: string,
+  body: SubscriptionCancel,
+): Promise<SalesPackageCancelled> {
+  const headers = { 'Content-Type': 'application/json' };
+  const init = { method: 'POST', headers, body: JSON.stringify(body) };
+  return salesPackageCancelledSchema.parse(
+    await fetch(salesPackageCancelPath(subscriptionId), init),
+  );
+}

@@ -11,6 +11,9 @@ const BLOCKS = [
   'has_commission',
 ] as const satisfies readonly CancelBlock[];
 
+/** The `:id` of /sales/packages/:id/cancel (the subscription). */
+export const salesPackageIdSchema = z.uuid();
+
 /** GET /sales/packages/:id/cancel: why the POST would answer 409 (its code), or null. */
 export const salesPackageCancelCheckSchema = z.object({
   subscriptionId: z.string(),
