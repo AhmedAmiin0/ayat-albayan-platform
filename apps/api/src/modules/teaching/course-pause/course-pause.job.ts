@@ -52,21 +52,25 @@ export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
     const summary: ResumeSummary = { begun: 0, due: 0, resumed: 0, failed: 0 };
     const today = riyadhToday(now);
     try {
-      for (const id of await this.queries.dueStarts(today)) {
-        if (await this.step(() => this.pauses.beginPause(id), id)) summary.begun += 1;
-        else summary.failed += 1;
-      }
+      const starts = await this.queries.dueStarts(today);
+      const begun = await this.steps(starts, (id) => this.pauses.beginPause(id));
+      Object.assign(summary, { begun, failed: starts.length - begun });
       const due = await this.queries.due(today);
       summary.due = due.length;
-      for (const id of due) {
-        if (await this.step(() => this.pauses.resumePause(id, null), id)) summary.resumed += 1;
-        else summary.failed += 1;
-      }
+      const resumed = await this.steps(due, (id) => this.pauses.resumePause(id, null));
+      Object.assign(summary, { resumed, failed: summary.failed + due.length - resumed });
     } catch (e) {
       this.log.error(`course pause pass aborted: ${String(e)}`);
     }
     if (summary.begun + summary.due > 0) this.log.log(`course pause pass: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  /** Runs `run` for each id in turn; how many succeeded (a failure is logged, never thrown). */
+  private async steps(ids: string[], run: (id: string) => Promise<unknown>): Promise<number> {
+    let ok = 0;
+    for (const id of ids) ok += Number(await this.step(() => run(id), id));
+    return ok;
   }
 
   private async step(run: () => Promise<unknown>, id: string): Promise<boolean> {

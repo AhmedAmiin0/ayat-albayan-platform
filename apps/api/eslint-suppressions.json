@@ -14358,14 +14358,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/course-pause/course-pause.job.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/course-pause/course-pause.lessons-back.test.ts": {
     "max-len": {
       "count": 3
