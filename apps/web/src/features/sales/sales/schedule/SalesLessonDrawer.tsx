@@ -21,6 +21,9 @@ export interface SalesLessonDrawerProps {
   onClose: () => void;
 }
 
+/** «للاطلاع فقط»: nothing offered here and nothing just done (confirm, move, cancel). */
+const viewOnly = (flags: readonly boolean[]): boolean => !flags.some(Boolean);
+
 /**
  * The admin lesson drawer for sales (owner 2026-10-26): the same panel and details, and on a
  * running lesson «جارية الآن» with «ادخل الحلقة» (she joins as the classroom assistant, docs/16).
@@ -32,42 +35,36 @@ export interface SalesLessonDrawerProps {
  */
 export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerProps) {
   const { can } = usePermissions();
-  const holds = can('lessons.confirm');
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
+  const [changed, setChanged] = useState(false);
   const justConfirmed = confirmedId === lesson.id;
   const shown = justConfirmed ? { ...lesson, status: 'confirmed' as const } : lesson;
-  const confirmable = canSalesConfirm(shown, { now, holds });
+  const live = isRunningLesson(lesson, now);
+  const confirmable = canSalesConfirm(shown, { now, holds: can('lessons.confirm') });
   const allowed = canSalesChangeLesson(shown, { now, can });
-  const readOnly = !confirmable && !justConfirmed && !allowed.reschedule && !allowed.cancel;
+  const offered = [confirmable, allowed.reschedule, allowed.cancel];
+  const readOnly = viewOnly([...offered, justConfirmed, changed]);
+  const onConfirmed = () => setConfirmedId(lesson.id);
   const confirm = confirmable && (
-    <SalesConfirmLesson
-      lessonId={lesson.id}
-      secondary={isRunningLesson(lesson, now)}
-      onConfirmed={() => setConfirmedId(lesson.id)}
-    />
+    <SalesConfirmLesson lessonId={lesson.id} secondary={live} onConfirmed={onConfirmed} />
   );
   return (
     <Drawer title={studentNames(lesson) || t.lessons.details} onClose={onClose}>
       <div role="group" aria-label={t.lessons.details} className="grid gap-5">
         <SalesLessonDetails lesson={shown} />
-        {isRunningLesson(lesson, now) && (
+        {live && (
           <div className="grid gap-1.5">
-            <StatusChip
-              tone="ok"
-              glyph="fill"
-              size="sm"
-              label={t.sales.academySchedule.liveNow}
-              className="justify-self-start"
-            />
+            <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.academySchedule.liveNow} className="justify-self-start" />
             <EnterButton lesson={lesson} className="justify-items-stretch" />
           </div>
         )}
-        {justConfirmed && (
-          <p role="status" className="text-sm text-ink-2">
-            {t.sales.lessonActions.confirmed}
-          </p>
-        )}
-        <SalesLessonActions lesson={shown} allowed={allowed} confirm={confirm} />
+        {justConfirmed && <p role="status" className="text-sm text-ink-2">{t.sales.lessonActions.confirmed}</p>}
+        <SalesLessonActions
+          lesson={shown}
+          allowed={allowed}
+          confirm={confirm}
+          onChanged={() => setChanged(true)}
+        />
         {readOnly && <p className="text-xs text-ink-3">{t.lessons.sheet.readOnly}</p>}
       </div>
     </Drawer>
