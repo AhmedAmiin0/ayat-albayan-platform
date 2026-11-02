@@ -23,17 +23,17 @@ import { SalesFamilyQueries } from '@/modules/sales/sales-money/reads/sales-fami
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
 import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { AdminTasksQueries } from './alerts/admin-tasks.queries';
-import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
-import { AlertsQueries } from './alerts/alerts.queries';
-import { BalanceQueries } from './money/balance.queries';
+import { AdminTasksRepo } from './alerts/admin-tasks.repo';
+import { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
+import { AlertsRepo } from './alerts/alerts.repo';
+import { BalanceRepo } from './money/balance.repo';
 import { CommissionBell } from './money/commission-bell';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentActivation } from './student-lifecycle/student-activation';
-import { StudentStatusQueries } from './student-lifecycle/student-status.queries';
-import { StudentTrialQueries } from './trial/student-trial.queries';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { StudentStatusRepo } from './student-lifecycle/student-status.repo';
+import { StudentTrialRepo } from './trial/student-trial.repo';
+import { SubscriptionsRepo } from './subscriptions.repo';
 import { mocks } from './test-app.fakes';
 
 export { resetMocks, type Mocks } from './test-app.fakes';
@@ -60,16 +60,16 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
   const m = mocks();
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SubscriptionsQueries).useValue(m.subs)
-    .overrideProvider(SubscriptionCancelQueries).useValue(m.cancels)
-    .overrideProvider(BalanceQueries).useValue(m.balances)
+    .overrideProvider(SubscriptionsRepo).useValue(m.subs)
+    .overrideProvider(SubscriptionCancelRepo).useValue(m.cancels)
+    .overrideProvider(BalanceRepo).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
     .overrideProvider(CommissionBell).useValue(m.commissionBell)
-    .overrideProvider(StudentStatusQueries).useValue(m.statuses)
-    .overrideProvider(StudentTrialQueries).useValue(m.trials)
-    .overrideProvider(AlertsQueries).useValue(m.alerts)
-    .overrideProvider(AdminTasksQueries).useValue(m.tasks)
+    .overrideProvider(StudentStatusRepo).useValue(m.statuses)
+    .overrideProvider(StudentTrialRepo).useValue(m.trials)
+    .overrideProvider(AlertsRepo).useValue(m.alerts)
+    .overrideProvider(AdminTasksRepo).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)
     .overrideProvider(PaymentAttachmentsQueries).useValue(m.attachments)
     .overrideProvider(PayoutsQueries).useValue(m.payouts)

@@ -1,9 +1,9 @@
 import { cancelBlock, type SubscriptionCancel as CancelBody, type SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import { MoneyWrites } from '../money/money-writes';
-import { SubscriptionsService } from '../subscriptions.service';
-import { SubscriptionCancelQueries } from './subscription-cancel.queries';
+import { conflict } from '@/common/http/errors';
+import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionCancelRepo } from './subscription-cancel.repo';
 
 type CancelInput = CancelBody & { actorId: string; now?: Date };
 
@@ -19,7 +19,7 @@ type CancelInput = CancelBody & { actorId: string; now?: Date };
 export class SubscriptionCancel {
   constructor(
     private readonly subs: SubscriptionsService,
-    private readonly queries: SubscriptionCancelQueries,
+    private readonly queries: SubscriptionCancelRepo,
     private readonly writes: MoneyWrites,
   ) {}
 

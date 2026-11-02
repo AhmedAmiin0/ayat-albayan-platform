@@ -1,3 +1,4 @@
+import { shapeParts, valueTextBy, type ValueTextTable } from '@ab/client-core';
 import { settingDef, tzOptionLabel, type SettingKey } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -8,7 +9,10 @@ import { t } from '@/core/lib/i18n/i18n';
 export function textAt(path: string): string | undefined {
   const v = path
     .split('.')
-    .reduce<unknown>((node, k) => (node && typeof node === 'object' ? Reflect.get(node, k) : undefined), t);
+    .reduce<unknown>(
+      (node, k) => (node && typeof node === 'object' ? Reflect.get(node, k) : undefined),
+      t,
+    );
   return typeof v === 'string' ? v : undefined;
 }
 
@@ -29,7 +33,7 @@ export function impactOf(key: SettingKey): string | undefined {
   return toggle ?? (def.hintKey ? textAt(def.hintKey) : undefined);
 }
 
-const city =(id: string): string | undefined => textAt(`tz.${id}`);
+const city = (id: string): string | undefined => textAt(`tz.${id}`);
 
 /** An enum option's label: the field's label key + the option ('feedbackMode' + 'Buttons'). */
 export function optionLabel(key: SettingKey, option: string): string {
@@ -40,20 +44,34 @@ export function optionLabel(key: SettingKey, option: string): string {
   return textAt(`${def.labelKey}${word}`) ?? option;
 }
 
+const emptyText = (key: SettingKey): string =>
+  settingDef(key).type === 'int' ? t.mobileAdmin.settings.off : t.mobileValues.empty;
+
+function shapeText(_key: SettingKey, value: unknown): string {
+  const parts = shapeParts(value);
+  return parts.length ? parts.join(' · ') : t.mobileValues.empty;
+}
+
+const listText = (_key: SettingKey, value: unknown): string =>
+  (Array.isArray(value) ? (value as unknown[]) : []).join(t.common.listSeparator);
+
+const labelText = (key: SettingKey, value: unknown): string => optionLabel(key, String(value));
+
+/** The phone's words per value kind (docs/36 f5; the classifier is client-core's). */
+const VALUE_TEXT: ValueTextTable = {
+  shape: shapeText,
+  flag: (_key, value) => (value === true ? t.mobileAdmin.settings.on : t.mobileAdmin.settings.off),
+  empty: emptyText,
+  number: (_key, value) => String(value),
+  list: listText,
+  choice: labelText,
+  zone: labelText,
+  text: labelText,
+};
+
 /** The value as the table shows it: numbers as digits, on/off, lists joined, objects' parts. */
 export function valueText(key: SettingKey, value: unknown): string {
-  const m = t.mobileAdmin.settings;
-  if (value === null || value === undefined) {
-    return settingDef(key).type === 'int' ? m.off : t.mobileValues.empty;
-  }
-  if (typeof value === 'boolean') return value ? m.on : m.off;
-  if (Array.isArray(value)) return value.join(t.common.listSeparator);
-  if (typeof value === 'object') {
-    const parts = Object.values(value).filter((v): v is string => typeof v === 'string' && v !== '');
-    return parts.length ? parts.join(' · ') : t.mobileValues.empty;
-  }
-  if (typeof value === 'string') return optionLabel(key, value);
-  return String(value);
+  return valueTextBy(VALUE_TEXT, key, value);
 }
 
 /** «من 1 إلى 12» for a number; nothing for other kinds. */

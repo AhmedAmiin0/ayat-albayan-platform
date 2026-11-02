@@ -1,10 +1,10 @@
 import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { BalanceQueries } from './balance.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { BalanceRepo } from './balance.repo';
 import { statusChanges, withChanges } from './packages.plan';
-import { toStudentBalance, toSubscriptionView, type SubContext } from '../subscriptions.mapper';
-import { SubscriptionsQueries, type SubRow } from '../subscriptions.queries';
+import { toStudentBalance, toSubscriptionView, type SubContext } from '@/modules/finance/subscriptions/subscriptions.mapper';
+import { SubscriptionsRepo, type SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 export interface StudentState {
   /** FIFO order, statuses as stored after the recompute. */
@@ -19,8 +19,8 @@ export interface StudentState {
 @Injectable()
 export class PackagesService {
   constructor(
-    private readonly subs: SubscriptionsQueries,
-    private readonly balances: BalanceQueries,
+    private readonly subs: SubscriptionsRepo,
+    private readonly balances: BalanceRepo,
     private readonly audit: AuditService,
   ) {}
 

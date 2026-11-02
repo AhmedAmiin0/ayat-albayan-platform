@@ -1,8 +1,8 @@
 import { expiryMove } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { pendingSince } from './student-renewal.plan';
-import { StudentExpiryQueries } from './student-expiry.queries';
-import { StudentStatusQueries } from './student-status.queries';
+import { StudentExpiryRepo } from './student-expiry.repo';
+import { StudentStatusRepo } from './student-status.repo';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -33,8 +33,8 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly queries: StudentExpiryQueries,
-    private readonly statuses: StudentStatusQueries,
+    private readonly queries: StudentExpiryRepo,
+    private readonly statuses: StudentStatusRepo,
     private readonly settings: SubscriptionsSettings,
   ) {}
 

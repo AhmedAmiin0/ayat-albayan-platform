@@ -1,7 +1,7 @@
 import type { BalanceView, Duration, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
 import { countsForMoney, livePackages, studentRemaining } from '@ab/shared';
-import { emptyBalance, type BalanceRow } from './money/balance.queries';
-import type { StudentRef, SubRow } from './subscriptions.queries';
+import { emptyBalance, type BalanceRow } from './money/balance.repo';
+import type { StudentRef, SubRow } from './subscriptions.repo';
 
 export function studentRef(s: StudentRef | null, fallbackId: string): SubscriptionView['student'] {
   return { id: s?.id ?? fallbackId, code: s?.code ?? '', name: s?.name ?? '' };

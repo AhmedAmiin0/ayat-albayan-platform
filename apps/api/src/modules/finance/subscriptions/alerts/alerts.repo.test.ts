@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { fakePolicy } from '../../../messaging/notification-rules/policy/policy.fakes';
-import { AlertsQueries } from './alerts.queries';
-import { toBalance } from '../money/balance.queries';
-import { cents, SubscriptionsQueries } from '../subscriptions.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { AlertsRepo } from './alerts.repo';
+import { toBalance } from '@/modules/finance/subscriptions/money/balance.repo';
+import { cents, SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 describe('AlertsQueries: idempotent writes (rule 8)', () => {
   it('a task is insert … on conflict (dedup_key) do nothing', async () => {
     const { db, argsOf } = fakeDb({ admin_tasks: [{}] });
     const task = { kind: 'renewal_due' as const, subjectId: 'sub-1', dedupKey: 'renewal_due:sub-1', title: 'بقيت حلقتان' };
-    await new AlertsQueries(db, fakePolicy()).raiseTask(task);
+    await new AlertsRepo(db, fakePolicy()).raiseTask(task);
     expect(argsOf('admin_tasks', 'upsert')).toEqual([
       {
         kind: 'renewal_due',
@@ -25,7 +25,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
   it('stale tasks: open ones about the packages, except the keys still called for, are closed by the system', async () => {
     const { db, argsOf } = fakeDb({ admin_tasks: [{ data: [] }] });
     const now = new Date('2026-10-02T09:00:00Z');
-    await new AlertsQueries(db, fakePolicy()).closeTasks({ subjectIds: ['sub-1', 'sub-2'], keep: ['renewal_due:sub-2'], now });
+    await new AlertsRepo(db, fakePolicy()).closeTasks({ subjectIds: ['sub-1', 'sub-2'], keep: ['renewal_due:sub-2'], now });
     expect(argsOf('admin_tasks', 'update')).toEqual([{ done_at: '2026-10-02T09:00:00.000Z', done_by: null }]);
     expect(argsOf('admin_tasks', 'in')).toEqual(['subject_id', ['sub-1', 'sub-2']]);
     expect(argsOf('admin_tasks', 'is')).toEqual(['done_at', null]);
@@ -34,7 +34,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
 
   it('a renewal message still queued (or held auto_off) under a closed task is failed as stale (renewed meanwhile)', async () => {
     const { db, argsOf } = fakeDb({ admin_tasks: [{ data: [{ dedup_key: 'renewal_due:sub-1' }] }], messages: [{}] });
-    await new AlertsQueries(db, fakePolicy()).closeTasks({ subjectIds: ['sub-1'], keep: [], now: new Date('2026-10-02T09:00:00Z') });
+    await new AlertsRepo(db, fakePolicy()).closeTasks({ subjectIds: ['sub-1'], keep: [], now: new Date('2026-10-02T09:00:00Z') });
     expect(argsOf('messages', 'update')).toEqual([expect.objectContaining({ status: 'failed', error_code: 'stale' })]);
     expect(argsOf('messages', 'in')).toEqual(['dedup_key', ['renewal_due:sub-1']]);
     expect(argsOf('messages', 'or')).toEqual(['status.eq.queued,error_code.eq.auto_off']);
@@ -46,7 +46,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
   ])('%s: no renewal message queued', async (_name, policy) => {
     const { db, argsOf } = fakeDb({ messages: [{}] });
     const recipient = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
-    await new AlertsQueries(db, policy).queueRenewal({ recipient, params: {}, dedupKey: 'renewal_due:sub-1', now: new Date() });
+    await new AlertsRepo(db, policy).queueRenewal({ recipient, params: {}, dedupKey: 'renewal_due:sub-1', now: new Date() });
     expect(argsOf('messages', 'upsert')).toBeUndefined();
   });
 
@@ -54,7 +54,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
     const { db, argsOf } = fakeDb({ messages: [{}] });
     const recipient = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
     const now = new Date('2026-10-02T09:00:00Z');
-    await new AlertsQueries(db, fakePolicy()).queueRenewal({ recipient, params: { '1': 'سهيلة' }, dedupKey: 'renewal_due:sub-1', now });
+    await new AlertsRepo(db, fakePolicy()).queueRenewal({ recipient, params: { '1': 'سهيلة' }, dedupKey: 'renewal_due:sub-1', now });
     expect(argsOf('messages', 'upsert')).toEqual([
       {
         direction: 'outbound',
@@ -74,7 +74,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
     const { db } = fakeDb({
       students: [{ data: { name: 'سهيلة', guardian: { id: 'g1', phone_e164: '+966500000001' } } }, { data: null }],
     });
-    const q = new AlertsQueries(db, fakePolicy());
+    const q = new AlertsRepo(db, fakePolicy());
     expect(await q.recipient('s1')).toEqual({ studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' });
     expect(await q.recipient('s2')).toBeNull();
   });
@@ -84,7 +84,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
       lesson_students: [{ data: [{ student_id: 'a' }, { student_id: 'a' }, { student_id: 'b' }] }],
       subscriptions: [{ data: [{ student_id: 'a' }, { student_id: 'a' }] }],
     });
-    const q = new AlertsQueries(db, fakePolicy());
+    const q = new AlertsRepo(db, fakePolicy());
     expect(await q.studentsOfLessons([])).toEqual([]);
     expect(calls).toHaveLength(0);
     expect(await q.studentsOfLessons(['l1'])).toEqual(['a', 'b']);
@@ -114,7 +114,7 @@ describe('balances and payments sums', () => {
         },
       ],
     });
-    const paid = await new SubscriptionsQueries(db).paid([{ id: 'a', currency: 'SAR' }, { id: 'b', currency: 'EGP' }]);
+    const paid = await new SubscriptionsRepo(db).paid([{ id: 'a', currency: 'SAR' }, { id: 'b', currency: 'EGP' }]);
     expect(paid).toEqual(new Map([['a', 0.3], ['b', 0]]));
     expect(cents(0.1, 0.2)).toBe(0.3);
   });

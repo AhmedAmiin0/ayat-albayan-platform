@@ -1,9 +1,9 @@
 import type { Json } from '@ab/db';
 import type { StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { AuditService } from '@/common/audit/audit.service';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import type { StatusChangeRow } from './student-renewal.plan';
 
 type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
@@ -11,7 +11,7 @@ type MoveAudit = { actorId: string | null; after: Record<string, Json> };
 
 /** The reads and the compare-and-set writes of the automatic student status changes (docs/11 §7). */
 @Injectable()
-export class StudentStatusQueries {
+export class StudentStatusRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly audit: AuditService,
