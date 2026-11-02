@@ -4,6 +4,7 @@ import {
   NOTIFICATION_CHANNELS,
   type NotificationChannel,
   type NotificationEntryView,
+  type NotificationKey,
   type NotificationsOverview,
 } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
@@ -53,7 +54,7 @@ const TIMING_TEXT: Readonly<Record<string, TimingWords>> = {
   teacher_lesson_reminder: (timing, clock) => minutesText(r().timing.sameAsFamily)(timing, clock),
   lesson_reminder_24h: dayBeforeText,
   follow_up_slots: followUpText,
-};
+} satisfies Partial<Record<NotificationKey, TimingWords>>;
 
 /** A stored timing in words («قبل الحلقة بـ60 دقيقة»), clocks in the viewer's cycle (useClock); null without its own timing. */
 export function timingText(key: string, timing: unknown, clock: Clock): string | null {

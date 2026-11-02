@@ -74,7 +74,7 @@ function toggleLabel(key: SettingKey): string {
   return (path ? textAt(path) : undefined) ?? labelOf(key);
 }
 
-function Switch({ valueKey, draft, setDraft }: ValueEditorProps) {
+function BoolSwitch({ valueKey, draft, setDraft }: ValueEditorProps) {
   return <OnOff label={labelOf(valueKey)} on={draft.on} set={(on) => setDraft({ on })} />;
 }
 
@@ -91,7 +91,7 @@ function NullableInt(props: ValueEditorProps) {
 
 /** The editor per kind (docs/36 f5); read-only keys never open the sheet's editor. */
 const EDITORS = {
-  bool: Switch,
+  bool: BoolSwitch,
   choice: Choice,
   nullableInt: NullableInt,
   int: Box,

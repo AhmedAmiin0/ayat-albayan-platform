@@ -126,6 +126,7 @@ export type SettingTypeTable<R> = { [K in SettingType]: (def: SettingDefOf<K>) =
 
 /** Runs the entry's own handler from a per-type table (no switch over def.type). */
 export function byType<R>(table: SettingTypeTable<R>, def: SettingDef): R {
+  // Safe: table[K] is only ever called with a def whose type is K (TS cannot correlate the two).
   const handler = table[def.type] as (d: SettingDef) => R;
   return handler(def);
 }
