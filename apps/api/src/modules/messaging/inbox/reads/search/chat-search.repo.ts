@@ -15,7 +15,7 @@ export interface SearchRow {
 /** One read's rows (PostgREST's own cap is 1000). */
 export const SCAN_BATCH = 1000;
 /** Rows one search reads at most, newest first (a chat has far fewer; pg_trgm is the later fix). */
-export const SCAN_MAX = 20_000;
+const SCAN_MAX = 20_000;
 
 const SELECT = 'id, created_at, body, media_name, template_key' as const;
 

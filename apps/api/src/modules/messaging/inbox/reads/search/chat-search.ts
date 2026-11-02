@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import type { SearchRow } from './chat-search.repo';
 
-export interface SearchInput {
+interface SearchInput {
   q: string;
   cursor?: string | undefined;
   limit: number;

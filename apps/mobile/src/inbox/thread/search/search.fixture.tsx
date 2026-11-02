@@ -10,7 +10,7 @@ import { ChatSearchButton } from './ChatSearchButton';
 // The chat search tests' chat (test-only): the header with «بحث», the list, the notice.
 
 type ThreadQuery = ReturnType<typeof useThread>;
-export const id = (n: number) => `b0000000-0000-4000-8000-00000000000${n}`;
+const id = (n: number) => `b0000000-0000-4000-8000-00000000000${n}`;
 export const NEW = message({ id: id(2), body: 'درس الإسلام اليوم', created_at: '2026-10-01T10:00:00Z' });
 export const MID = message({ id: id(3), body: 'شكرًا', created_at: '2026-10-01T11:00:00Z' });
 export const OLD = message({ id: id(1), body: 'بداية الاسلام', created_at: '2026-09-01T10:00:00Z' });
