@@ -14,6 +14,9 @@
     "ab/no-shape-checks": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 4
     }
