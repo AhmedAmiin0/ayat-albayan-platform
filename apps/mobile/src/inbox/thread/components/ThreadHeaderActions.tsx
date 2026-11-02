@@ -13,6 +13,7 @@ import { MoreIcon } from '@/inbox/shared/chat-icons';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
 import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { type ThreadMenuItem, ThreadMenu } from './ThreadMenu';
+import { useChatSearch } from '@/inbox/thread/search';
 
 interface ThreadHeaderActionsProps {
   phone: string;
@@ -37,13 +38,14 @@ function registerItem(base: TreeBase, thread: ThreadView | null): ThreadMenuItem
 
 /**
  * The menu's actions, each behind its own key: a salesperson's «تسجيل طالب جديد» FIRST on a lead still in
- * the funnel (owner 2026-10-30: out of the pill strip; registerHref), «نسخ الرقم», «القوائم» (inbox.lists),
+ * the funnel (owner 2026-10-30: out of the pill strip; registerHref), «بحث» (2026-11-02), «نسخ الرقم», «القوائم» (inbox.lists),
  * «تحقق من التسجيل», and «ربط بطالب موجود» (leads.link_family, owner 2026-10-29) on a lead's chat with no
  * family and no teacher.
  */
 function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   const base = useTreeBase();
   const { showCopy } = useBubbleChatActions();
+  const search = useChatSearch();
   const lists = useHolds('inbox.lists');
   const checks = useHolds('students.check_registration');
   const check = checks && sales;
@@ -51,6 +53,7 @@ function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   const linkLead = useHolds('leads.link_family') && checks && thread && canLinkFamily(thread) ? thread.lead_id : null;
   const items: ThreadMenuItem[] = [
     ...registerItem(base, sales ? thread : null),
+    ...(search ? [{ label: t.inbox.chatSearch.open, onPress: search.open }] : []),
     { label: t.inbox.copy.phone, onPress: () => copyText({ title: t.inbox.copy.phoneTitle, text: phone }, showCopy) },
   ];
   if (lists) items.push({ label: t.inbox.lists.title, onPress: openLists });

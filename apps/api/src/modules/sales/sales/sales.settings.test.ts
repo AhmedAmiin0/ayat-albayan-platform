@@ -3,9 +3,13 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
 import { SalesSettings, type SalesSettingsValues } from './sales.settings';
 
-/** Pinned by hand: every key SalesAssignService, SalesScheduleService and SalesService read. */
+/**
+ * Pinned by hand: every key SalesAssignService, SalesOwnershipRule, SalesScheduleService and
+ * SalesService read.
+ */
 const EXPECTED = [
   'sales_auto_assign',
+  'sales_require_assignee',
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',

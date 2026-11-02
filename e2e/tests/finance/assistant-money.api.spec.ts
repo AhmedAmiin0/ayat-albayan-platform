@@ -3,6 +3,7 @@ import type { AssistantCommissionView, BookingResult } from '@ab/shared';
 import { call, dayOffset, freshPhone, leadOf, makeAssistant, tokenOf, trialBody, type Assistant } from '../../support/sales/assistant-api';
 import { cents, money } from '../../support/finance/assistant-money';
 import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
+import { setSetting } from '../../support/core/messages';
 import { USERS } from '../../support/core/users';
 
 // The money journey of an assistant through the REAL API and database (R-ASST-01, R-ASST-02): she
@@ -28,11 +29,13 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
 
   test.beforeAll(async () => {
     admin = await tokenOf(USERS.admin.email, USERS.admin.password);
+    await setSetting('sales_require_assignee', true); // not_your_lead / not_your_family: «اشتراط التعيين» ON (docs/16 row 39)
     teacher = await resetAbrar();
     await setAvailability(teacher, [[6, '08:00', '22:00']]);
     a = await makeAssistant('a');
     c = await makeAssistant('c');
   });
+  test.afterAll(() => setSetting('sales_require_assignee', false));
 
   const register = async (request: Parameters<typeof call>[0], who: Assistant, time: string): Promise<Reg> => {
     const phone = freshPhone();

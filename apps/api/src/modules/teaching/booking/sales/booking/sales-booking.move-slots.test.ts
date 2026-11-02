@@ -7,8 +7,7 @@ import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import type { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import type { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import type { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import type { SalesOwnershipRule } from '@/modules/sales/sales/rule/sales-ownership-rule';
 import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { SalesBookingOptions } from './sales-booking.service';
 
@@ -27,7 +26,6 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
 function rig(lessonStudents: string[]) {
   const scope = {
     of: vi.fn(async () => OWN),
-    owned: vi.fn(async () => OWN),
     ownLesson: vi.fn(async () => false),
     isLessonOf: vi.fn(async (_id: string, ids: readonly string[]) => ids.length === lessonStudents.length && ids.every((i) => lessonStudents.includes(i))),
   };
@@ -69,7 +67,7 @@ describe('GET /sales/booking/slots for «تغيير الموعد» of any lesson
 
 describe('SalesBookingScope.isLessonOf', () => {
   const scopeOver = (students: string[]) =>
-    new SalesBookingScope({} as SalesRepo, {} as BookingSettings, { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateRepo);
+    new SalesBookingScope({} as SalesOwnershipRule, { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateRepo);
   it('true only for exactly the lesson\'s students (any order); never for a lesson with none', async () => {
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER, MINE])).toBe(true);
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER])).toBe(false);

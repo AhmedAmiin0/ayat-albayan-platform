@@ -9,6 +9,7 @@ export {
   ownershipOf,
   type SalesOwnership,
 } from './sales-ownership';
+export { enforcesOwnership, SalesOwnershipRule } from './rule/sales-ownership-rule';
 export { type SalesScope, SalesScopes } from './sales-scope';
 export { SalesModule } from './sales.module';
 export { SalesRepo, type SalesSubscriptionRow } from './sales.repo';

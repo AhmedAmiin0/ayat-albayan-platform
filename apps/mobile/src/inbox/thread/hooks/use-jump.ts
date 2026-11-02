@@ -37,8 +37,10 @@ export function useJump<T extends { id: string }>(
   const [, rerender] = useReducer((n: number) => n + 1, 0);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const retried = useRef(false);
+  // Each jump (and a cancel) starts a new generation: an older seek still paging stops quietly.
+  const generation = useRef(0);
   useEffect(() => () => clearTimeout(timer.current), []);
-  const missing = () => say({ text: t.inbox.reply.notFound });
+  const missing = (text: string = t.inbox.reply.notFound) => say({ text });
 
   const go = (index: number, id: string) => {
     retried.current = false;
@@ -56,10 +58,11 @@ export function useJump<T extends { id: string }>(
   });
   useEffect(() => reach(), [rows]);
 
-  const seek = async (id: string) => {
+  const seek = async (id: string, notFound: string, gen: number) => {
     for (let n = 0; n < JUMP_PAGES; n += 1) {
       // Shares a page already loading (the top of the list) instead of cancelling it.
       const page = await older.fetchNextPage({ cancelRefetch: false });
+      if (generation.current !== gen) return undefined;
       // A page that failed (fetchNextPage does not throw): stop, it is not «not found».
       if (page.isFetchNextPageError) return say({ text: t.common.error });
       if (threadMessages(page.data).some((m) => m.id === id)) {
@@ -68,14 +71,18 @@ export function useJump<T extends { id: string }>(
       }
       if (!page.hasNextPage) break;
     }
-    missing();
+    missing(notFound);
   };
 
-  const jump = (id: string) => {
+  /** `notFound`: what the chat says when it is not there (a quote's original by default). */
+  const jump = (id: string, notFound?: string) => {
+    generation.current += 1;
+    pending.current = null;
+    const gen = generation.current;
     const index = rows.findIndex((r) => r.id === id);
     if (index >= 0) return go(index, id);
-    if (!older.hasNextPage) return missing();
-    void seek(id).catch(missing);
+    if (!older.hasNextPage) return missing(notFound);
+    void seek(id, notFound ?? t.inbox.reply.notFound, gen).catch(() => missing(notFound));
   };
 
   const onScrollToIndexFailed = ({ index, averageItemLength }: IndexFailed) => {
@@ -88,5 +95,11 @@ export function useJump<T extends { id: string }>(
     );
   };
 
-  return { lit, jump, onScrollToIndexFailed };
+  /** Stops a seek still paging (the chat search closed): it never scrolls away afterwards. */
+  const cancel = () => {
+    generation.current += 1;
+    pending.current = null;
+  };
+
+  return { lit, jump, cancel, onScrollToIndexFailed };
 }

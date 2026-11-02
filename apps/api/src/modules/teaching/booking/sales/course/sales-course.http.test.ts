@@ -12,8 +12,9 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SalesCourseRepo } from './sales-course.repo';
 
-// The assistant's course over HTTP (owner 2026-10-18): sales_auto_assign OFF here, so every 403
-// not_your_student below proves a course checks her ownership whatever the switch says.
+// The assistant's course over HTTP (owner 2026-10-18): «اشتراط التعيين» and auto-assign ON
+// here, so the ownership rule enforces (docs/16 row 39): every 403 not_your_student below is
+// the course's check.
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
 const C = 'c1000000-0000-4000-8000-00000000000c';
@@ -54,7 +55,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
+      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_require_assignee: true }))
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SalesCourseRepo).useValue(course)
       .compile();
@@ -110,7 +111,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
     expect(booking.check).toHaveBeenCalledWith(expect.anything(), OPTS);
   });
 
-  it('403: no self.sales_money (kind_not_allowed), another assistant’s student even with auto-assign OFF', async () => {
+  it('403: no self.sales_money (kind_not_allowed), another assistant’s student while the rule enforces', async () => {
     expect((await post('noMoney', COURSE)).json().code).toBe('kind_not_allowed');
     expect((await post('salesB', COURSE)).json().code).toBe('not_your_student');
     expect((await post('salesA', { ...COURSE, meetingLink: 'https://meet.example/x' })).json().code).toBe('meeting_link_not_allowed');
