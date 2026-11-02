@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/core';
+import { searchFold } from '../message-actions/chat-search.js';
 
 // Placeholders of a saved reply «الردود السريعة» (owner 2026-10-25), filled on the client when the reply
 // goes into the composer (still editable before sending). A placeholder with no value is removed with
@@ -60,7 +60,7 @@ export interface MatchPart {
 /** One character as the search sees it: tashkeel gone, letter forms unified, spaces as one. */
 function fold(c: string, prev: string): string {
   if (/\s/.test(c)) return prev === '' || prev.endsWith(' ') ? '' : ' ';
-  return normalizeArabic(c);
+  return searchFold(c);
 }
 
 /** The text as the search sees it, and for each of its characters the original index. */
@@ -93,7 +93,7 @@ function hits(text: string, q: string): boolean[] {
  * in «أهلًا» for «اهلا» keeps its hamza and tanween on screen.
  */
 export function highlightParts(text: string, query: string): MatchPart[] {
-  const q = normalizeArabic(query);
+  const q = searchFold(query);
   if (!q) return [{ text, match: false }];
   const hit = hits(text, q);
   const parts: MatchPart[] = [];
