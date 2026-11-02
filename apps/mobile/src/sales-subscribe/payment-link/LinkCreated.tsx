@@ -11,7 +11,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { appendComposerText, chatWindowOpen, ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { instantDay } from '@/payments';
-import { fill } from '@/sales';
+import { fill } from '@/sales/sales';
 import { type, useTheme } from '@/theme';
 import { STRIPE_FEATURE } from './flag';
 import { agreedLine, linkMessage, referenceLine } from './link-text';

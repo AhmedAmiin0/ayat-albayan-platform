@@ -1,7 +1,7 @@
 import type { ReplyLesson } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { SalesRescheduleSheet } from '@/sales';
+import { SalesRescheduleSheet } from '@/sales/sales';
 import { RescheduleFrame, RescheduleSheet } from '@/teaching';
 import { useAdminReplyLesson, useSalesReplyLesson } from './reply-lesson-read';
 import type { ReplyMove } from './reply-actions-context';
