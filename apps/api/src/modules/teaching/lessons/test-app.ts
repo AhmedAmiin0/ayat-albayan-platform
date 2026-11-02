@@ -21,6 +21,7 @@ import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { AutoHeldRepo } from './auto-held/auto-held.repo';
 import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
 import { LessonsRepo } from './lessons.repo';
 import { OverviewRepo } from './overview/overview.repo';
@@ -62,6 +63,7 @@ function mocks() {
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
+    autoHeld: { openEnded: vi.fn(), packages: vi.fn(), correctable: vi.fn() },
     // ScheduleNotices' reads and queue (no DB here); a lesson read as null notifies nobody.
     notices: {
       lesson: vi.fn(), student: vi.fn(), lessons: vi.fn(), nextLesson: vi.fn(),
@@ -86,6 +88,7 @@ export async function lessonsApp() {
     .overrideProvider(OverviewRepo).useValue(m.overview)
     .overrideProvider(TimeEditRepo).useValue(m.time)
     .overrideProvider(LessonProposalRepo).useValue(m.proposals)
+    .overrideProvider(AutoHeldRepo).useValue(m.autoHeld)
     // The rules (legacy, no rows): no DB here.
     .overrideProvider(NotificationPolicy).useValue(fakePolicy())
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
@@ -118,6 +121,7 @@ export async function lessonsApp() {
     m.checker.check.mockResolvedValue([]);
     m.proposals.decide.mockResolvedValue(true);
     m.proposals.pendingLessonIds.mockResolvedValue([]);
+    m.autoHeld.correctable.mockResolvedValue(new Set());
     m.unpaid.studentIds.mockResolvedValue(new Set());
     m.teachers.loads.mockResolvedValue(new Map());
     for (const read of Object.values(m.overview)) read.mockResolvedValue([]);

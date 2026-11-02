@@ -31,12 +31,16 @@ export interface RatingLesson {
 export const ratingDedupKey = (lessonId: string, guardianId: string): string =>
   `${RATING_TEMPLATE}:${lessonId}:${guardianId}`;
 
+/** Attendance recorded (a report, staff «تم»), never on a lesson only held automatically. */
+const recorded = (ls: RatingLessonStudent): boolean => ls.attendance !== null;
+
 /** The guardians of the students who attended (feedbackEligible), each with their children's names. */
 export function ratingFamilies(lesson: RatingLesson): { guardian: RatingGuardian; names: string[] }[] {
   const byGuardian = new Map<string, { guardian: RatingGuardian; names: string[] }>();
   for (const ls of lesson.lesson_students) {
     const guardian = ls.student?.guardian;
-    if (!ls.student || !guardian || !feedbackEligible(lesson.status, ls.attendance)) continue;
+    const asked = recorded(ls) && feedbackEligible(lesson.status, ls.attendance);
+    if (!ls.student || !guardian || !asked) continue;
     const family = byGuardian.get(guardian.id) ?? { guardian, names: [] };
     family.names.push(ls.student.name);
     byGuardian.set(guardian.id, family);

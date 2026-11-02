@@ -19,6 +19,8 @@ export {
   type Window,
 } from './api';
 export { WeekGrid, type WeekGridProps } from './grid/WeekGrid';
+export { CORRECT_BY_LABEL, type CorrectBy } from './correct/correct-by';
+export { CorrectLessonChoice } from './correct/CorrectLessonChoice';
 export { LessonActions, type LessonActionsProps } from './lesson/LessonActions';
 export { type ChipLesson, LessonChip, type LessonChipProps } from './lesson/LessonChip';
 export {

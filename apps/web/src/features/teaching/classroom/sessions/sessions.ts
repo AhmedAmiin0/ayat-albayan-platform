@@ -1,5 +1,6 @@
-import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, lessonStatusStyle, type JoinWindowConfig, type LessonView, type Tone, type Glyph } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
+import { lessonStatusText, type LessonStatusChip } from '@/lib/settings/lesson-status-text';
 
 /** The three groups of /admin/classrooms, in reading order. */
 export const SESSION_GROUPS = ['now', 'upcoming', 'ended'] as const;
@@ -19,9 +20,12 @@ export function groupSessions(lessons: LessonView[], now: Date, win: JoinWindowC
   return out;
 }
 
-/** The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status (مؤكدة, يحتاج تأكيد). */
-export function sessionChip(lesson: LessonView, group: SessionGroup): { tone: Tone; glyph: Glyph; label: string } {
+/**
+ * The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status (مؤكدة, يحتاج تأكيد
+ * while the academy requires a confirmation, `required`; else «مجدولة»).
+ */
+export function sessionChip(lesson: LessonView, group: SessionGroup, required: boolean): LessonStatusChip {
   if (group === 'now') return { tone: 'ok', glyph: 'fill', label: t.classroom.admin.live };
   if (group === 'ended') return { tone: 'neutral', glyph: 'struck', label: t.classroom.admin.ended };
-  return { ...lessonStatusStyle[lesson.status], label: t.enums.lessonStatus[lesson.status] };
+  return lessonStatusText(required).chip(lesson.status);
 }

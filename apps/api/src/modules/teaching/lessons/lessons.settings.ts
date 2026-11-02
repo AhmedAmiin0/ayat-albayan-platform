@@ -6,7 +6,8 @@ import { SettingsService } from '../../../common/settings/settings.service';
 /**
  * RulePlanner (horizon), LessonCancelService and LessonStatusService (late cancel, R-SCH-07),
  * OverviewQueries (24/7 grid), TeacherMeQueries and LessonsQueries (meeting mode), LessonsController
- * (day view zone) and TimeEditPayout (which statuses are paid, R-PAY-02).
+ * (day view zone), TimeEditPayout (which statuses are paid, R-PAY-02) and AutoHeldService (whether
+ * a lesson needs a confirmation, owner 2026-11-02).
  */
 const KEYS = [
   'booking_horizon_weeks',
@@ -16,6 +17,7 @@ const KEYS = [
   'academy_timezone',
   'payout_count_late',
   'payout_count_no_show',
+  'lesson_confirmation_required',
 ] as const satisfies readonly SettingKey[];
 export type LessonsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

@@ -28,8 +28,14 @@ describe('sessions (/admin/classrooms groups)', () => {
 
   it('the chip says «بدأت» / «انتهت» by the room, else the lesson status', () => {
     const l = at('a', '2026-10-05T12:00:00.000Z', 'scheduled');
-    expect(sessionChip(l, 'now').label).toBe(t.classroom.admin.live);
-    expect(sessionChip(l, 'ended').label).toBe(t.classroom.admin.ended);
-    expect(sessionChip(l, 'upcoming')).toMatchObject({ tone: 'act', label: t.enums.lessonStatus.scheduled });
+    expect(sessionChip(l, 'now', true).label).toBe(t.classroom.admin.live);
+    expect(sessionChip(l, 'ended', true).label).toBe(t.classroom.admin.ended);
+    expect(sessionChip(l, 'upcoming', true)).toMatchObject({ tone: 'act', label: t.enums.lessonStatus.scheduled });
+  });
+
+  it('no confirmation required: an upcoming scheduled lesson is «مجدولة», neutral, never «يحتاج تأكيد»', () => {
+    const l = at('a', '2026-10-05T12:00:00.000Z', 'scheduled');
+    expect(sessionChip(l, 'upcoming', false)).toEqual({ tone: 'neutral', glyph: 'hollow', label: t.lessons.noConfirm.scheduled });
+    expect(sessionChip(at('b', '2026-10-05T12:00:00.000Z'), 'upcoming', false).label).toBe(t.enums.lessonStatus.confirmed);
   });
 });

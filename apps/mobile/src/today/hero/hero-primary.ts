@@ -8,15 +8,23 @@ interface HeroState {
   readOnly: boolean;
   /** «ادخل الحلقة» is inside the join window now. */
   joinOpen: boolean;
+  /** settings.lesson_confirmation_required: OFF, a scheduled lesson is upcoming (no «تأكيد»). */
+  required: boolean;
 }
 
+const offersConfirm = (lesson: TodayLesson, state: HeroState): boolean =>
+  state.required &&
+  !state.readOnly &&
+  (lesson.allowed_events?.includes('confirm') ?? false) &&
+  applyLessonEvent(lesson.status, 'confirm') !== null;
+
 /**
- * The hero's filled button (docs/29 §3): «تأكيد الحلقة» when the API offers confirm and the status
- * on screen still allows it, else «ادخل الحلقة» inside the join window, else none. Read-only (sales,
- * docs/16), never a confirm and «ادخل الحلقة» only once the lesson runs, as her schedule.
+ * The hero's filled button (docs/29 §3): «تأكيد الحلقة» when the academy requires one, the
+ * API offers confirm and the status on screen still allows it, else «ادخل الحلقة» inside the
+ * join window, else none. Read-only (sales, docs/16): never a confirm, and «ادخل الحلقة»
+ * only once the lesson runs, as her schedule.
  */
 export function heroPrimary(lesson: TodayLesson, state: HeroState): 'confirm' | 'join' | null {
-  const offered = lesson.allowed_events?.includes('confirm') ?? false;
-  if (!state.readOnly && offered && applyLessonEvent(lesson.status, 'confirm') !== null) return 'confirm';
+  if (offersConfirm(lesson, state)) return 'confirm';
   return state.joinOpen && (state.running || !state.readOnly) ? 'join' : null;
 }

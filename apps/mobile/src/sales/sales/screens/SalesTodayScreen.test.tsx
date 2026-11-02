@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import SalesTodayRoute from '../../../../app/sales/today';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
 
@@ -39,7 +39,7 @@ afterEach(() => jest.useRealTimers());
 
 test('the calm header and the academy day of «جدول الحلقات»: the sales API only, never /lessons/day', async () => {
   answer([held, running, later]);
-  await renderWithQuery(<SalesTodayRoute />);
+  await renderWithQuery(<SalesTodayRoute />, confirmingQueryClient());
   expect(await screen.findByText(t.today.running)).toBeTruthy();
   // No «اليوم» title (the tab says it): the greeting is the header line.
   expect(screen.getByRole('header', { name: new RegExp(`^${t.today.greeting.evening}`) })).toBeTruthy();
@@ -55,7 +55,7 @@ test('the calm header and the academy day of «جدول الحلقات»: the sa
 
 test('«تحتاج تأكيد» stays a filter: it shows the waiting lessons, it confirms nothing', async () => {
   answer([held, running, later]);
-  await renderWithQuery(<SalesTodayRoute />);
+  await renderWithQuery(<SalesTodayRoute />, confirmingQueryClient());
   await screen.findByText(t.today.running);
   const column = t.today.summaryFilter.replace('{n}', '1').replace('{label}', t.today.summary.scheduled);
   await fireEvent.press(screen.getByRole('button', { name: column }));
@@ -67,7 +67,7 @@ test('«تحتاج تأكيد» stays a filter: it shows the waiting lessons, it
 test('a quiet day: tomorrow from the sales schedule, and «جدول الغد» opens her schedule tab on it', async () => {
   fakeNow(new Date('2026-10-12T18:00:00.000Z'));
   answer([held, running], [{ ...later, starts_at: '2026-10-13T05:00:00.000Z', ends_at: '2026-10-13T05:30:00.000Z' }]);
-  await renderWithQuery(<SalesTodayRoute />);
+  await renderWithQuery(<SalesTodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.quietTitle })).toBeTruthy();
   expect(await screen.findByText('غدًا حلقة واحدة، أولها الساعة 08:00.')).toBeTruthy();
   expect(paths()).toContain('/sales/schedule?date=2026-10-13');
@@ -77,6 +77,6 @@ test('a quiet day: tomorrow from the sales schedule, and «جدول الغد» o
 
 test('no lessons today: the Today empty state', async () => {
   answer([]);
-  await renderWithQuery(<SalesTodayRoute />);
+  await renderWithQuery(<SalesTodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.empty })).toBeTruthy();
 });

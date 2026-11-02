@@ -4,6 +4,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import { heroPrimary } from './hero-primary';
 
@@ -23,7 +24,10 @@ interface HeroActionsProps {
  */
 export function HeroActions({ lesson, running, busy, onConfirm, onDetails }: HeroActionsProps) {
   const join = useJoinClassroom(lesson);
-  const primary = heroPrimary(lesson, { running, readOnly: onConfirm === undefined, joinOpen: join.win?.state === 'open' });
+  const { required } = useLessonStatusText();
+  const joinOpen = join.win?.state === 'open';
+  const readOnly = onConfirm === undefined;
+  const primary = heroPrimary(lesson, { running, readOnly, joinOpen, required });
   return (
     <View style={{ gap: 4 }}>
       <ButtonRow testID="hero-actions">

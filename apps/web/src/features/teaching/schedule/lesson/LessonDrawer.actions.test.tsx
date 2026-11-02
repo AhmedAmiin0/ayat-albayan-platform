@@ -6,6 +6,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
@@ -13,7 +14,7 @@ vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<
 function renderDrawer(l: LessonView) {
   const onDone = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient(), true)}>
       <LessonDrawer lesson={l} onClose={vi.fn()} onDone={onDone} />
     </QueryClientProvider>,
   );

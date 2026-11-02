@@ -1,4 +1,6 @@
-import { isCancelledLesson, type LessonStatus } from '@ab/shared';
+import { isCancelledLesson, type LessonStatus, type StatusStyle } from '@ab/shared';
+import { t } from '@/core/lib/i18n/i18n';
+import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 // «جدول الحلقات» status pills (UX review 2026-10-29 #6): the same shape as Today's summary filter
 // (today/lib/timeline.ts), over the day the API returned. Pure, so the screen only lays it out.
@@ -24,4 +26,26 @@ export function scheduleStatusCounts(lessons: readonly { status: LessonStatus }[
     if (s) counts[s] += 1;
   }
   return counts;
+}
+
+const WORDS = t.sales.academySchedule.status;
+/** The pill words: «للتأكيد» only while one is required, else «قادمة» (owner 2026-11-02). */
+const PILL_WORDS: Record<'on' | 'off', Record<ScheduleStatus, string>> = {
+  on: WORDS,
+  off: { ...WORDS, scheduled: t.lessons.noConfirm.scheduledShort },
+};
+/** The status a pill takes its dot from («ملغاة»: the academy's). */
+const PILL_STATUS: Record<Exclude<ScheduleStatus, 'all'>, LessonStatus> = {
+  scheduled: 'scheduled',
+  confirmed: 'confirmed',
+  cancelled: 'cancelled_by_admin',
+};
+
+/** A status pill's word and dot; «الكل» has no dot. */
+export function statusPill(
+  value: ScheduleStatus,
+  text: Pick<LessonStatusText, 'required' | 'look'>,
+): { label: string } & Partial<StatusStyle> {
+  const label = PILL_WORDS[text.required ? 'on' : 'off'][value];
+  return value === 'all' ? { label } : { label, ...text.look(PILL_STATUS[value]) };
 }

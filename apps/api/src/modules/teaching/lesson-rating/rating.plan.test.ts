@@ -60,4 +60,9 @@ describe('ratingDue', () => {
   ] as const)('%s starting %s → %s', (status, starts_at, due) => {
     expect(ratingDue({ status, starts_at }, NOW)).toBe(due);
   });
+
+  it('a lesson held automatically (no attendance recorded) asks no family (owner 2026-11-02)', () => {
+    const lesson = heldLesson({ lesson_students: [child('سهيلة', { attendance: null })] });
+    expect(planRatings({ lessons: [lesson], now: NOW })).toEqual([]);
+  });
 });

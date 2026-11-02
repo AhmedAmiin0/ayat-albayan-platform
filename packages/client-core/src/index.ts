@@ -15,4 +15,5 @@ export * from './messaging/inbox/index.js';
 export * from './platform/settings/index.js';
 export * from './messaging/chat-send/index.js';
 export * from './people/people-edit/index.js';
+export * from './teaching/lessons/index.js';
 export * from './messaging/chat-search/index.js';
