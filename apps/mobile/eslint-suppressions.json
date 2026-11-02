@@ -3658,6 +3658,153 @@
       "count": 1
     }
   },
+  "src/finance/payments/components/AmountField.tsx": {
+    "max-len": {
+      "count": 3
+    },
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/components/CancelPackage.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/finance/payments/components/PaymentForm.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    },
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/components/ShortfallNote.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/hooks/queries.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/hooks/use-record-payment.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/finance/payments/hooks/use-record-payment.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/index.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/finance/payments/lib/optimistic.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/lib/package-line.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/lib/payment-form.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/finance/payments/lib/payment-form.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/receipts/AttachmentRow.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/receipts/AttachmentsField.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/receipts/attachments.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/finance/payments/receipts/receipt-buttons.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/screens/PaymentScreen.shortfall.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/screens/PaymentScreen.submit.test.tsx": {
+    "@typescript-eslint/no-unsafe-enum-assignment": {
+      "count": 1
+    }
+  },
+  "src/finance/payments/screens/PaymentScreen.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 2
+    }
+  },
+  "src/finance/payments/student-payment.flow.test.tsx": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/finance/payments/testing/flow-backend.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/fonts.test.tsx": {
     "max-len": {
       "count": 2
@@ -3985,9 +4132,6 @@
     }
   },
   "src/inbox/composer/send-file.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
     },
@@ -7409,9 +7553,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     },
@@ -7428,9 +7569,6 @@
     }
   },
   "src/money/subscriptions/SubscriptionsScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -8531,180 +8669,6 @@
       "count": 1
     },
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/components/AmountField.tsx": {
-    "max-len": {
-      "count": 3
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/components/CancelPackage.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/finance/payments/components/PaymentForm.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/components/ShortfallNote.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/hooks/queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/hooks/use-record-payment.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/finance/payments/hooks/use-record-payment.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/index.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/finance/payments/lib/optimistic.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/lib/optimistic.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/lib/package-line.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/lib/payment-form.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/finance/payments/lib/payment-form.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/receipts/AttachmentRow.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/receipts/AttachmentsField.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/receipts/attachments.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/finance/payments/receipts/receipt-buttons.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/screens/PaymentScreen.attachments.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/screens/PaymentScreen.shortfall.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/screens/PaymentScreen.states.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/screens/PaymentScreen.submit.test.tsx": {
-    "@typescript-eslint/no-unsafe-enum-assignment": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/finance/payments/screens/PaymentScreen.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 2
-    }
-  },
-  "src/finance/payments/student-payment.flow.test.tsx": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/finance/payments/testing/flow-backend.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -10795,9 +10759,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -10871,24 +10832,13 @@
     }
   },
   "src/students/screens/StudentScreen.pause.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/students/screens/StudentScreen.renew.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/students/screens/StudentScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/students/screens/StudentScreen.tsx": {
