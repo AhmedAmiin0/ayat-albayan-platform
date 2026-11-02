@@ -15,10 +15,8 @@ import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { integrationKeyAvailable, stripeServerKey } from '@/config/env/env.stripe';
-import { IntegrationConfigService } from './integration-config.service';
+import { IntegrationConfigService, INTEGRATIONS_ENTITY_ID } from './integration-config.service';
 
-/** audit_log.entity_id of the integration config (one entity; the key names go in action / after). */
-const INTEGRATIONS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 // A key this server does not offer (a Stripe one without FEATURE_STRIPE) is an unknown key: 400.
 const secretKey = z.enum(INTEGRATION_SECRET_KEYS).refine((k) => integrationKeyAvailable(k), 'unknown_key');
 const valuesBody = integrationValuesSchema.superRefine(({ values }, ctx) => {

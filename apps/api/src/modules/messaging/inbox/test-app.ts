@@ -22,6 +22,7 @@ import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
 import { ThreadsRepo } from './threads/threads.repo';
+import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenRepo } from './reopen/reopen.repo';
 import { DeltaRepo } from './delta/delta.repo';
@@ -92,6 +93,8 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsRepo).useValue(m.queries)
+    .overrideProvider(ThreadMessagesRepo).useValue(m.queries)
+    .overrideProvider(ThreadReadsRepo).useValue(m.queries)
     .overrideProvider(TeacherThreadsRepo).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(ChatListsRepo).useValue(m.lists)

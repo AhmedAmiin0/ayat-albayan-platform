@@ -1,8 +1,7 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
-import { pickSend } from '@/modules/messaging/inbox/send/send-number';
-import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { pickSend, ThreadMessagesRepo, ThreadsRepo } from '@/modules/messaging/inbox';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import type { StoredInvitee } from './meeting-invitees.repo';
 import { whenText } from './meeting-invite.text';
@@ -52,6 +51,7 @@ export class MeetingInviteSender {
     private readonly push: PushService,
     private readonly threads: ThreadsRepo,
     private readonly sender: MessageSender,
+    private readonly messages: ThreadMessagesRepo,
   ) {}
 
   async staff(n: StaffNotice): Promise<DeliveryOutcome> {
@@ -73,7 +73,7 @@ export class MeetingInviteSender {
       const thread = await this.threads.thread(s.phone);
       const picked = await pickSend({ thread, now: s.now, windows: () => this.threads.numberWindows(s.phone) });
       if ('code' in picked) return { status: 'window_closed', channel: 'link', error_code: picked.code };
-      await this.threads.enqueue({
+      await this.messages.enqueue({
         direction: 'outbound',
         status: 'queued',
         phone_e164: s.phone,

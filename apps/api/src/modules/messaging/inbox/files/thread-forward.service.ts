@@ -8,7 +8,7 @@ import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
-import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
 interface ForwardInput {
   input: ThreadForward;
@@ -62,7 +62,7 @@ export class ThreadForwardService {
   private readonly log = new Logger(ThreadForwardService.name);
 
   constructor(
-    private readonly queries: ThreadsRepo,
+    private readonly queries: ThreadMessagesRepo,
     private readonly sends: ThreadSendService,
     private readonly files: ForwardFiles,
   ) {}

@@ -1,7 +1,6 @@
-import { clockOf } from '@ab/shared';
+import { clockOf, weekStart, weekWindowIn, zonedPartsIn } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import type { Window } from '@/features/teaching/schedule/api';
-import { weekStart, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import type { Clock } from '@/lib/clock';
 
 // Slot grid helpers (R-SCH-06): weeks run السبت → الجمعة in the viewer's zone (docs/34), the grid's
@@ -11,7 +10,7 @@ import type { Clock } from '@/lib/clock';
 export function byLocalDay<T extends { starts_at: string }>(items: readonly T[], tz: string): Map<string, T[]> {
   const days = new Map<string, T[]>();
   for (const item of items.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))) {
-    const day = zonedParts(new Date(item.starts_at), tz).date;
+    const day = zonedPartsIn(new Date(item.starts_at), tz).date;
     days.set(day, [...(days.get(day) ?? []), item]);
   }
   return days;
@@ -19,12 +18,12 @@ export function byLocalDay<T extends { starts_at: string }>(items: readonly T[],
 
 /** The Saturday that starts the current week in `tz` (the viewer's). */
 export function currentWeekStart(now: Date, tz: string): string {
-  return weekStart(zonedParts(now, tz).date);
+  return weekStart(zonedPartsIn(now, tz).date);
 }
 
 /** The bookable part of a week in `tz`: from now on; null once the whole week is past. */
 export function bookableWindow(start: string, now: Date, tz: string): Window | null {
-  const week = weekWindow(start, tz);
+  const week = weekWindowIn(start, tz);
   if (week.to <= now) return null;
   return { from: week.from > now ? week.from : now, to: week.to };
 }
@@ -37,8 +36,8 @@ export function bookableWindow(start: string, now: Date, tz: string): Window | n
 export function zoneLabel(instant: string, zones: { tz: string; base: string }, clock: Clock): string | null {
   if (zones.tz === zones.base) return null;
   const at = new Date(instant);
-  const local = zonedParts(at, zones.tz);
-  const base = zonedParts(at, zones.base);
+  const local = zonedPartsIn(at, zones.tz);
+  const base = zonedPartsIn(at, zones.base);
   const time = clockOf(at, { ...clock, tz: zones.tz });
   // Compared as 24 h keys; shown in the viewer's cycle.
   if (local.date === base.date) return local.time === base.time ? null : time;

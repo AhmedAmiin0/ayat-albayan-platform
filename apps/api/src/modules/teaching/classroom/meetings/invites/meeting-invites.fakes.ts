@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { PushService } from '@/common/push/push.service';
 import { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { ThreadMessagesRepo } from '@/modules/messaging/inbox';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { meetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { MeetingInviteeRepo } from './meeting-invitee.repo';
@@ -101,6 +102,7 @@ export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInvite
     .overrideProvider(MeetingInviteesRepo).useValue(m.invitees)
     .overrideProvider(MeetingInviteeRepo).useValue(m.picks)
     .overrideProvider(ThreadsRepo).useValue(m.threads)
+    .overrideProvider(ThreadMessagesRepo).useValue(m.threads)
     .overrideProvider(TeacherScopes).useValue(m.teacherScopes)
     .overrideProvider(PushService).useValue(m.push)
     .overrideProvider(MessageSender).useValue(m.sender);

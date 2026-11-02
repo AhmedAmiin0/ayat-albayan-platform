@@ -1,6 +1,7 @@
+import { addDays, weekdayOf } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
-import { addDays, dayMonthLabel, weekdayOf } from '@/features/teaching/schedule';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 
 export interface SalesDayNavProps {
