@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
-import type { GateStatus } from '@/auth';
-import { applyPlaybackMode } from '../rtc/audio-route';
+import type { GateStatus } from '@/core/auth';
+import { applyPlaybackMode } from '@/inbox/thread/calls/rtc/audio-route';
 import { CallProvider } from './CallProvider';
 
 /** The staff trees that may call from the chat (docs/28): the admin's, the salesperson's and the teacher's. */

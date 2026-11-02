@@ -2,7 +2,7 @@ import type { NotificationItem } from '@ab/shared';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { routeIn, type PushTree } from '@/core/push/notification-route';

@@ -23,7 +23,7 @@ const mockApiFetch = jest.fn(async (path: string) => {
   return { total: 0 };
 });
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
-jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
+jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
 
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {

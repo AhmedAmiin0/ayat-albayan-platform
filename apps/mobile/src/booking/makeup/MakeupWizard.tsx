@@ -2,7 +2,7 @@ import { teacherName } from '@ab/shared';
 import type { Gender, Program } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useTabOpen } from '@/auth/use-tab-open';
+import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

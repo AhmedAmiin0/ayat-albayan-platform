@@ -1,6 +1,6 @@
 import type { PushKind } from '@ab/shared';
-import { canOpen, tabOpen, type TabRoute } from '@/auth/route-permissions';
-import type { Can } from '@/auth/use-permissions';
+import { canOpen, tabOpen, type TabRoute } from '@/core/auth/route-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { threadHref } from '@/inbox/thread/hooks/thread-cache';
 import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
 import { pushField, pushKind, pushPhone } from './push-data';

@@ -2,13 +2,13 @@ import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/
 import { useState } from 'react';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
-import { useHolds, usePermissions } from '@/auth';
+import { useHolds, usePermissions } from '@/core/auth';
 import { Note } from '@/more';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
-import { canChangeLesson } from '../lesson-actions/lesson-actions-api';
-import { SalesLessonActions } from '../lesson-actions/SalesLessonActions';
-import { SalesRescheduleSheet } from '../lesson-actions/SalesRescheduleSheet';
+import { canChangeLesson } from '@/sales/lesson-actions/lesson-actions-api';
+import { SalesLessonActions } from '@/sales/lesson-actions/SalesLessonActions';
+import { SalesRescheduleSheet } from '@/sales/lesson-actions/SalesRescheduleSheet';
 
 interface SalesLessonSheetProps {
   lesson: SalesScheduleLesson | null;

@@ -1,10 +1,10 @@
-import { canOpen, usePermissions } from '@/auth';
+import { canOpen, usePermissions } from '@/core/auth';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 import { useInboxRealtime } from '@/inbox';
-import { salesTabItems } from '../lib/sales-tabs';
+import { salesTabItems } from '@/sales-app/lib/sales-tabs';
 
 /**
  * The phone app of the base role sales («المبيعات», owner 2026-10-12): its own tree under /sales,

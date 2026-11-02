@@ -1,4 +1,4 @@
-import { canOpen, type Can, tabOpen, usePermissions } from '@/auth';
+import { canOpen, type Can, tabOpen, usePermissions } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
