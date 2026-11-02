@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import type { BalanceQueries, BalanceRow } from './balance.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { BalanceRepo, BalanceRow } from './balance.repo';
 import { PackagesService } from './packages.service';
-import type { SubRow, SubscriptionsQueries } from '../subscriptions.queries';
+import type { SubRow, SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 const sub = (id: string, patch: Partial<SubRow> = {}): SubRow =>
   ({
@@ -44,8 +44,8 @@ function setup(rows: SubRow[], paid: Map<string, number>) {
   const balances = { forSubscriptions: vi.fn(async () => new Map(rows.map((r) => [r.id, balance(r.id, 1)]))) };
   const audit = { record: vi.fn(async () => undefined) };
   const service = new PackagesService(
-    subs as unknown as SubscriptionsQueries,
-    balances as unknown as BalanceQueries,
+    subs as unknown as SubscriptionsRepo,
+    balances as unknown as BalanceRepo,
     audit as unknown as AuditService,
   );
   return { service, subs, audit };

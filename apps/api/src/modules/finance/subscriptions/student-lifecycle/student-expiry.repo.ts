@@ -5,7 +5,7 @@ import { dbError } from '@/common/http/http';
 
 /** The reads of StudentExpiryJob (owner 2026-10-15, docs/11 §7): pending_renewal students, payments since. */
 @Injectable()
-export class StudentExpiryQueries {
+export class StudentExpiryRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every student whose status is pending_renewal, page by page (never cut at max_rows). */

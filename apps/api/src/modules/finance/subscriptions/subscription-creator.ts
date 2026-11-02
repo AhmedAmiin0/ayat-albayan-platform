@@ -1,10 +1,10 @@
 import type { QuoteResponse, SubscriptionCreate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { PricingService } from '../pricing/pricing.service';
-import { notFound } from '../../../common/http/errors';
+import { PricingService } from '@/modules/finance/pricing/pricing.service';
+import { notFound } from '@/common/http/errors';
 import { subscriptionRow } from './list/subscription-row';
 import { quoteQueryFor, type SubscriptionQuote } from './subscriptions.dto';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsRepo } from './subscriptions.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { assertUsedBeforeFits } from './used-before';
 
@@ -18,7 +18,7 @@ import { assertUsedBeforeFits } from './used-before';
 @Injectable()
 export class SubscriptionCreator {
   constructor(
-    private readonly subs: SubscriptionsQueries,
+    private readonly subs: SubscriptionsRepo,
     private readonly pricing: PricingService,
     private readonly service: SubscriptionsService,
   ) {}
