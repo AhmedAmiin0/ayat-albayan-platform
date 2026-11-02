@@ -18,8 +18,3 @@ function fieldZod(f: ShapeField): z.ZodType {
 export function shapeZod(shape: readonly ShapeField[]): z.ZodType {
   return z.strictObject(Object.fromEntries(shape.map((f) => [f.name, fieldZod(f)])));
 }
-
-/** The same rule for a stored value (read side). */
-export function shapeValid(shape: readonly ShapeField[], v: unknown): boolean {
-  return shapeZod(shape).safeParse(v).success;
-}
