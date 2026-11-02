@@ -1,9 +1,10 @@
 import type { RuleParityDiff } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { CommunicationsDeps } from './communications.deps';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { RulesParity } from '@/modules/messaging/notification-rules/sync/rules.parity';
 import { CommunicationsService } from './communications.service';
-import type { NumbersConfig } from '../config/numbers.config';
-import type { NumbersSettings } from '../numbers.settings';
+import type { NumbersConfig } from '@/modules/messaging/numbers/config/numbers.config';
+import type { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 // The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or the
 // rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
@@ -31,8 +32,12 @@ function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string,
     }),
     invalidate: vi.fn(),
   };
-  const deps = { audit, rules } as unknown as CommunicationsDeps;
-  const svc = new CommunicationsService(settings as unknown as NumbersSettings, config as unknown as NumbersConfig, deps);
+  const svc = new CommunicationsService(
+    settings as unknown as NumbersSettings,
+    config as unknown as NumbersConfig,
+    audit as unknown as AuditService,
+    rules as unknown as RulesParity,
+  );
   return { svc, settings, config, audit, rules, order };
 }
 

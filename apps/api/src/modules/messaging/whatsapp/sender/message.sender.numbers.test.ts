@@ -19,8 +19,12 @@ const NOW = new Date('2026-10-02T08:00:00Z');
 const text = (id: string, number_id: string | null) => dueMessage({ id, template_key: null, body: 'نص', number_id });
 
 function sender(withRoutes = true) {
-  const s = new MessageSender(gate as unknown as SendGate, queries as unknown as SenderRepo, worker as unknown as MessageWorker);
-  return withRoutes ? Object.assign(s, { routes: routes as unknown as NumberRoutes }) : s;
+  return new MessageSender(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    worker as unknown as MessageWorker,
+    withRoutes ? (routes as unknown as NumberRoutes) : undefined,
+  );
 }
 const jobs = () => worker.process.mock.calls.map(([j]) => j as { row: { id: string }; route?: unknown });
 const install = () => setNumbersOverlay({ values: {}, numberIds: {}, numbers: THREE });

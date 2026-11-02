@@ -5,7 +5,6 @@ import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { QueuedMessage } from './queued-row';
-import { RemindersDeps } from './reminders.deps';
 import { RemindersJob } from './reminders.job';
 import type { RoomCandidate } from './plan/reminders.links';
 import type { ReminderLesson } from './plan/reminders.plan';
@@ -68,7 +67,8 @@ export function fakeJob(opts: JobOpts = {}) {
   const job = new RemindersJob(
     queries as unknown as RemindersRepo,
     settings,
-    new RemindersDeps(push as unknown as PushService, fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) })),
+    push as unknown as PushService,
+    fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) }),
   );
   return { job, queries, queued, push };
 }
