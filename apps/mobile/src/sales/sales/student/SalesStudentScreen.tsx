@@ -36,6 +36,8 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
  * sees them. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that family's chat;
  * under it (it loads after the page: nothing shifts) the one money action, on HER students only (`mine`,
  * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»), ANY with sales.renew_any.
+ * «تغيير المعلم» / «تغيير موعد الحلقات» like the money action; «تعديل الموعد التجريبي» on her
+ * trial.
  * An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
  * for ANY student.
  */
@@ -47,6 +49,9 @@ export function SalesStudentScreen() {
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
   const mine = data.mine !== false;
+  // Money and the course's teacher / times (owner 2026-11-02): her student (`mine` follows the
+  // ownership rule), ANY with sales.renew_any, as the API's own check.
+  const acts = mine || renewsAny;
   const phone = data.student.guardian_phone;
   const status = data.student.status;
   const { about, subtitle } = headLines(data.student);
@@ -66,9 +71,13 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          {mine || renewsAny ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
+          {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <CoursePauseSection studentId={data.student.id} />
-          <CourseActionsSection studentId={data.student.id} subscriptionId={data.current_id} />
+          <CourseActionsSection
+            studentId={data.student.id}
+            subscriptionId={data.current_id}
+            moves={acts}
+          />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />

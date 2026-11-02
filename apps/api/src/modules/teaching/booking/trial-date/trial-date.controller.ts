@@ -76,7 +76,7 @@ export class SalesTrialDateController {
     return { conflicts: await this.dates.check(req, user) };
   }
 
-  /** 403 not_your_student | override_not_allowed | meeting_link_not_allowed; 400 date_in_past. */
+  /** 403 not_your_student | override_not_allowed; 400 date_in_past | meeting_link_invalid. */
   @Post('trial-date')
   pick(
     @ZodBody(bookingBodySchema) req: BookingRequest,

@@ -108,9 +108,11 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
     const refused = async (over: object) => (await post('/sales/booking/trial-date', 'sales', { ...TRIAL, ...over })).json().code;
     expect(await refused({ studentIds: [S2] })).toBe('not_your_student');
     expect(await refused({ override: { reason: 'سبب' } })).toBe('override_not_allowed');
-    expect(await refused({ meetingLink: 'https://meet.example/x' })).toBe('meeting_link_not_allowed');
+    expect(await refused({ meetingLink: 'http://meet.example/x' })).toBe('meeting_link_invalid');
     expect(await refused({ startsAt: '2020-01-05T14:00:00Z' })).toBe('date_in_past');
-    expect(dates.pick).toHaveBeenCalledTimes(1);
+    const link = { ...TRIAL, meetingLink: 'https://meet.jit.si/ab-trial' }; // her https link (2026-11-02)
+    expect((await post('/sales/booking/trial-date', 'sales', link)).statusCode).toBe(201);
+    expect(dates.pick.mock.calls).toEqual([[TARGET, A], [{ req: link, old: null }, A]]);
   });
 
   it('assistant: a move books the trial’s own students: a sibling who is not hers is 403', async () => {

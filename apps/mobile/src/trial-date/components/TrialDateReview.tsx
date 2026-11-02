@@ -11,6 +11,7 @@ import { ReviewNotices } from './ReviewNotices';
 import type { TrialDateBody, TrialDateDraft } from '../lib/trial-date-body';
 import { effectLine } from '../lib/trial-date-text';
 import { TrialDateWarn } from './TrialDateWarn';
+import { TrialLinkField } from './TrialLinkField';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface TrialDateReviewProps {
@@ -18,6 +19,8 @@ interface TrialDateReviewProps {
   history: TrialHistory;
   /** The body «احجز» sends (null until a teacher and a time are picked). */
   body: TrialDateBody | null;
+  /** «رابط الحلقة» typed (draft.meetingLink). */
+  onLink: (link: string) => void;
   submit: { busy: boolean; failure: BookFailure | null; onSubmit: () => void };
   /** «اختر موعدًا آخر»: back to the free slots, fetched afresh. */
   onChangeSlot: () => void;
@@ -25,10 +28,12 @@ interface TrialDateReviewProps {
 
 /**
  * «المراجعة»: the new time and the teacher, what it does (moves the upcoming trial, or books a new
- * one), the warning from the 3rd date on, and the clashes POST …/trial-date/check finds (as the
- * booking shows them; the way out is another slot, mobile has no override).
+ * one), the warning from the 3rd date on, the optional meeting link, and the clashes
+ * POST …/trial-date/check finds (as the booking shows them; the way out is another slot, mobile has
+ * no override).
  */
-export function TrialDateReview({ draft, history, body, submit, onChangeSlot }: TrialDateReviewProps) {
+export function TrialDateReview(props: TrialDateReviewProps) {
+  const { draft, history, body, onLink, submit, onChangeSlot } = props;
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();
@@ -41,6 +46,7 @@ export function TrialDateReview({ draft, history, body, submit, onChangeSlot }: 
       <PickedLines draft={draft} />
       <AppText style={note}>{effectLine(history, { tz, cycle })}</AppText>
       <TrialDateWarn count={history.count} />
+      <TrialLinkField value={draft.meetingLink} onChange={onLink} />
       {check.isFetching ? <AppText style={note}>{t.common.loading}</AppText> : null}
       <ReviewNotices clashes={clashes} failure={submit.failure} onChangeSlot={onChangeSlot} />
       {blocked ? null : (

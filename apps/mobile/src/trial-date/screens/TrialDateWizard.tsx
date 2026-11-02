@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { bookFailure } from '@/booking';
-import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
@@ -15,6 +14,7 @@ import { TrialDateDone } from '@/trial-date/components/TrialDateDone';
 import { TrialDateReview } from '@/trial-date/components/TrialDateReview';
 import { TrialHistoryList } from '@/trial-date/components/TrialHistoryList';
 import { TrialTeacherPick } from '@/trial-date/components/TrialTeacherPick';
+import { TrialSlotStep } from '@/trial-date/components/TrialSlotStep';
 
 type Step = 'teacher' | 'slot' | 'confirm';
 const STEPS: readonly Step[] = ['teacher', 'slot', 'confirm'];
@@ -29,8 +29,9 @@ interface TrialDateWizardProps {
 }
 
 /**
- * «موعد تجريبي جديد» (R-SCH-06/07): المعلم/ة (the last trial's, or another) → الموعد (the booking's
- * slot grid, the next 7 days, the upcoming trial not busy) → المراجعة → POST …/trial-date with one
+ * «موعد تجريبي جديد» (R-SCH-06/07): المعلم/ة (the last trial's, or another) → الموعد (the length,
+ * then the booking's slot grid, the next 7 days, the upcoming trial not busy) → المراجعة (with the
+ * optional meeting link, owner 2026-11-02) → POST …/trial-date with one
  * request id per wizard (rule 8). The history sits over the first step.
  */
 export function TrialDateWizard({ history, title, program, fallback }: TrialDateWizardProps) {
@@ -75,11 +76,12 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
             />
           </View>
         ) : step === 'slot' && draft.teacher ? (
-          <SlotStep
+          <TrialSlotStep
             teacherId={draft.teacher.id}
             tz={draft.tz}
             durationMin={draft.durationMin}
             excludeLessonId={history.upcoming_id ?? undefined}
+            onLength={(durationMin) => patch({ durationMin, startsAt: null })}
             onPick={(startsAt) => {
               patch({ startsAt });
               go('confirm');
@@ -90,6 +92,7 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
             draft={draft}
             history={history}
             body={body}
+            onLink={(meetingLink) => patch({ meetingLink })}
             submit={{ busy: book.isPending, failure: book.isError ? bookFailure(book.error, cycle, tz) : null, onSubmit: () => body && book.mutate(body) }}
             onChangeSlot={() => {
               patch({ startsAt: null });
