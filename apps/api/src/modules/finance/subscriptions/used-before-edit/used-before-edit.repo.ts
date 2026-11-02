@@ -18,13 +18,12 @@ export class UsedBeforeEditRepo {
 
   /** A course rule tied to the package, any status (SalesCourseRepo.subscriptionBooked's rule). */
   async courseBooked(subscriptionId: string): Promise<boolean> {
-    const { data, error } = await this.db
+    const { count, error } = await this.db
       .from('schedule_rules')
-      .select('id')
-      .eq('subscription_id', subscriptionId)
-      .limit(1);
+      .select('id', { count: 'exact', head: true })
+      .eq('subscription_id', subscriptionId);
     if (error) throw dbError(error);
-    return data.length > 0;
+    return (count ?? 0) > 0;
   }
 
   /** null: another write changed the number (or cancelled the package) since it was read. */
