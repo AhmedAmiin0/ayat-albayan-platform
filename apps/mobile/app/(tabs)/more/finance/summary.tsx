@@ -1,1 +1,1 @@
-export { SummaryScreen as default } from '@/finance';
+export { SummaryScreen as default } from '@/finance/finance';

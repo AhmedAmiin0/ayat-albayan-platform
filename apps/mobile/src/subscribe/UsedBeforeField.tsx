@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useHolds } from '@/core/auth';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Stepper } from '@/finance';
+import { Stepper } from '@/finance/finance';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

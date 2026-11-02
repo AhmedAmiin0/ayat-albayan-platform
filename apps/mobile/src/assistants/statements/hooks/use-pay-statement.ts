@@ -2,9 +2,9 @@ import { uploadOnce } from '@ab/client-core';
 import type { AssistantStatementView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { payBody, type PayDraft } from '@/finance/payouts/payout-actions';
+import { payBody, type PayDraft } from '@/finance/finance/payouts/payout-actions';
 import { apiSend } from '@/core/lib/http/api';
-import { ASSISTANTS_KEY } from '../../api/api';
+import { ASSISTANTS_KEY } from '@/assistants/api/api';
 import { uploadStatementReceipt } from './upload-receipt';
 
 /**

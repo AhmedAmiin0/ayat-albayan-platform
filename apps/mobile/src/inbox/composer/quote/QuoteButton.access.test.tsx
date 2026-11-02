@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { bulkSa } from '@/finance/pricing/fixtures';
+import { bulkSa } from '@/finance/finance/pricing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { fullAccessMe } from '@/test/staff-me';
-import { detail, inbound, thread } from '../../shared/thread-fixtures';
-import { ThreadModeProvider } from '../../thread/hooks/thread-mode';
-import { ThreadScreen } from '../../screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

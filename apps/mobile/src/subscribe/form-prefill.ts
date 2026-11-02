@@ -8,7 +8,7 @@ import {
   SITE_COUNTRIES,
   type RenewalPricing,
 } from '@ab/shared';
-import type { PlanChoice } from '@/finance/pricing/selection';
+import type { PlanChoice } from '@/finance/finance/pricing/selection';
 import { INITIAL_FORM, type SubscribeForm } from './subscribe-form';
 
 // The subscribe screen's route params → its first form (R-SUB-01). Route params are untrusted

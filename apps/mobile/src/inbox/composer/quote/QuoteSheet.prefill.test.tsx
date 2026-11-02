@@ -2,7 +2,7 @@ import { offerText } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { bulkSa } from '@/finance/pricing/fixtures';
+import { bulkSa } from '@/finance/finance/pricing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { QuoteSheet } from './QuoteSheet';
 

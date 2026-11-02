@@ -49,7 +49,7 @@
   "apps/mobile/src/earnings/hooks/queries.ts",
   "apps/mobile/src/edit-time/lib/queries.ts",
   "apps/mobile/src/feedback/queries.ts",
-  "apps/mobile/src/finance/shared/queries.ts",
+  "apps/mobile/src/finance/finance/shared/queries.ts",
   "apps/mobile/src/inbox/qualification/lib/queries.ts",
   "apps/mobile/src/money/shared/queries.ts",
   "apps/mobile/src/ops/dashboard/dashboard-queries.ts",

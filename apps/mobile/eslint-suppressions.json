@@ -3359,7 +3359,7 @@
       "count": 1
     }
   },
-  "src/finance/expenses/ExpenseForm.tsx": {
+  "src/finance/finance/expenses/ExpenseForm.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3370,17 +3370,17 @@
       "count": 1
     }
   },
-  "src/finance/expenses/ExpenseRow.tsx": {
+  "src/finance/finance/expenses/ExpenseRow.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/expenses/ExpenseTotals.tsx": {
+  "src/finance/finance/expenses/ExpenseTotals.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/finance/expenses/ExpensesScreen.tsx": {
+  "src/finance/finance/expenses/ExpensesScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -3388,12 +3388,12 @@
       "count": 1
     }
   },
-  "src/finance/expenses/categories.test.ts": {
+  "src/finance/finance/expenses/categories.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/expenses/categories.ts": {
+  "src/finance/finance/expenses/categories.ts": {
     "complexity": {
       "count": 1
     },
@@ -3401,7 +3401,7 @@
       "count": 4
     }
   },
-  "src/finance/expenses/expense-draft.ts": {
+  "src/finance/finance/expenses/expense-draft.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3409,22 +3409,22 @@
       "count": 2
     }
   },
-  "src/finance/expenses/expense-math.test.ts": {
+  "src/finance/finance/expenses/expense-math.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/expenses/expense-math.ts": {
+  "src/finance/finance/expenses/expense-math.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/expenses/upload-expense-receipt.ts": {
+  "src/finance/finance/expenses/upload-expense-receipt.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
-  "src/finance/expenses/use-add-expense.ts": {
+  "src/finance/finance/expenses/use-add-expense.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -3432,12 +3432,12 @@
       "count": 1
     }
   },
-  "src/finance/finance.en.test.tsx": {
+  "src/finance/finance/finance.en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/invoices/InvoiceRow.tsx": {
+  "src/finance/finance/invoices/InvoiceRow.tsx": {
     "max-len": {
       "count": 1
     },
@@ -3445,7 +3445,7 @@
       "count": 1
     }
   },
-  "src/finance/invoices/InvoicesScreen.test.tsx": {
+  "src/finance/finance/invoices/InvoicesScreen.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
@@ -3453,22 +3453,22 @@
       "count": 1
     }
   },
-  "src/finance/invoices/InvoicesScreen.tsx": {
+  "src/finance/finance/invoices/InvoicesScreen.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/finance/invoices/invoice-text.test.ts": {
+  "src/finance/finance/invoices/invoice-text.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutActionBar.buttons.test.tsx": {
+  "src/finance/finance/payouts/PayoutActionBar.buttons.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutActionBar.tsx": {
+  "src/finance/finance/payouts/PayoutActionBar.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3479,17 +3479,17 @@
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutDetail.tsx": {
+  "src/finance/finance/payouts/PayoutDetail.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutFacts.en.test.tsx": {
+  "src/finance/finance/payouts/PayoutFacts.en.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutFacts.tsx": {
+  "src/finance/finance/payouts/PayoutFacts.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3497,12 +3497,12 @@
       "count": 3
     }
   },
-  "src/finance/payouts/PayoutPayForm.tsx": {
+  "src/finance/finance/payouts/PayoutPayForm.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/finance/payouts/PayoutRow.tsx": {
+  "src/finance/finance/payouts/PayoutRow.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3510,7 +3510,7 @@
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutsScreen.tsx": {
+  "src/finance/finance/payouts/PayoutsScreen.tsx": {
     "complexity": {
       "count": 1
     },
@@ -3521,22 +3521,22 @@
       "count": 1
     }
   },
-  "src/finance/payouts/UnpayConfirm.tsx": {
+  "src/finance/finance/payouts/UnpayConfirm.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/finance/payouts/payout-actions.test.ts": {
+  "src/finance/finance/payouts/payout-actions.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/finance/payouts/payout-actions.ts": {
+  "src/finance/finance/payouts/payout-actions.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/finance/payouts/use-payout-move.ts": {
+  "src/finance/finance/payouts/use-payout-move.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3547,17 +3547,17 @@
       "count": 3
     }
   },
-  "src/finance/pricing/DiscountField.tsx": {
+  "src/finance/finance/pricing/DiscountField.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/pricing/PricingScreen.tsx": {
+  "src/finance/finance/pricing/PricingScreen.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/finance/pricing/PricingSteps.tsx": {
+  "src/finance/finance/pricing/PricingSteps.tsx": {
     "max-len": {
       "count": 2
     },
@@ -3565,12 +3565,12 @@
       "count": 1
     }
   },
-  "src/finance/pricing/QuoteCard.tsx": {
+  "src/finance/finance/pricing/QuoteCard.tsx": {
     "max-lines-per-function": {
       "count": 1
     }
   },
-  "src/finance/pricing/Stepper.tsx": {
+  "src/finance/finance/pricing/Stepper.tsx": {
     "complexity": {
       "count": 1
     },
@@ -3578,27 +3578,27 @@
       "count": 1
     }
   },
-  "src/finance/pricing/use-quote.ts": {
+  "src/finance/finance/pricing/use-quote.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
-  "src/finance/shared/MonthPicker.tsx": {
+  "src/finance/finance/shared/MonthPicker.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/finance/shared/StateNote.tsx": {
+  "src/finance/finance/shared/StateNote.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/finance/shared/errors.test.ts": {
+  "src/finance/finance/shared/errors.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/shared/errors.ts": {
+  "src/finance/finance/shared/errors.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
     },
@@ -3606,12 +3606,12 @@
       "count": 2
     }
   },
-  "src/finance/shared/format.ts": {
+  "src/finance/finance/shared/format.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/finance/shared/month.ts": {
+  "src/finance/finance/shared/month.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3619,7 +3619,7 @@
       "count": 2
     }
   },
-  "src/finance/shared/queries.ts": {
+  "src/finance/finance/shared/queries.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3630,7 +3630,7 @@
       "count": 2
     }
   },
-  "src/finance/shared/receipt-link.ts": {
+  "src/finance/finance/shared/receipt-link.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -3638,12 +3638,12 @@
       "count": 1
     }
   },
-  "src/finance/summary/KpiCard.tsx": {
+  "src/finance/finance/summary/KpiCard.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/summary/MonthRow.tsx": {
+  "src/finance/finance/summary/MonthRow.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3654,7 +3654,7 @@
       "count": 3
     }
   },
-  "src/finance/summary/SummaryCards.tsx": {
+  "src/finance/finance/summary/SummaryCards.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3662,12 +3662,12 @@
       "count": 1
     }
   },
-  "src/finance/summary/SummaryMonths.tsx": {
+  "src/finance/finance/summary/SummaryMonths.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/summary/SummaryScreen.test.tsx": {
+  "src/finance/finance/summary/SummaryScreen.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3675,12 +3675,12 @@
       "count": 1
     }
   },
-  "src/finance/summary/SummaryScreen.tsx": {
+  "src/finance/finance/summary/SummaryScreen.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/finance/summary/summary-cards.ts": {
+  "src/finance/finance/summary/summary-cards.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3691,17 +3691,17 @@
       "count": 2
     }
   },
-  "src/finance/summary/summary-lines.test.ts": {
+  "src/finance/finance/summary/summary-lines.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/finance/summary/summary-lines.ts": {
+  "src/finance/finance/summary/summary-lines.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/finance/summary/summary-types.ts": {
+  "src/finance/finance/summary/summary-types.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },

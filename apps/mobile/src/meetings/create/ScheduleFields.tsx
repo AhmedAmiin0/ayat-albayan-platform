@@ -4,7 +4,7 @@ import { locale } from '@/core/lib/i18n/locale';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
-import { Stepper } from '@/finance/pricing/Stepper';
+import { Stepper } from '@/finance/finance/pricing/Stepper';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

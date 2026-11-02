@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { PricingSteps } from '@/finance';
+import { PricingSteps } from '@/finance/finance';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
