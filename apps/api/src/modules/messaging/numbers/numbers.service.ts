@@ -19,6 +19,16 @@ function assertKapsoCalls(next: { purpose: string; provider: string }): void {
   if (callsNeedKapso(next)) throw new ConflictException({ message: 'calls_need_kapso' });
 }
 
+interface DefaultStep {
+  id: string;
+  actorId: string;
+  isDefault?: boolean | undefined;
+}
+
+const refuse = (message: string): never => {
+  throw new ConflictException({ message });
+};
+
 const missing = (): never => {
   throw new NotFoundException({ message: 'number_not_found' });
 };
@@ -61,18 +71,23 @@ export class NumbersService {
     const { is_default: isDefault, ...rest } = body;
     if (isDefault === true && !(rest.enabled ?? before.enabled)) throw new ConflictException({ message: 'not_enabled' });
     assertKapsoCalls({ ...before, ...rest });
-    const patch = { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false as const } : {}) };
+    const unset = isDefault === false ? { is_default: false as const } : {};
+    const patch = { ...numberPatch(before, rest), ...unset };
     let wrote = Object.keys(patch).length > 0;
     if (wrote && !(await this.queries.update(id, { patch, actorId }))) missing();
     try {
-      if (isDefault === true) {
-        if (!(await this.queries.makeDefault(id, actorId))) throw new ConflictException({ message: 'not_enabled' });
-        wrote = true;
-      }
+      wrote = (await this.defaultStep({ id, actorId, isDefault })) || wrote;
     } finally {
       if (wrote) await this.updated({ id, before, actorId });
     }
     return this.view(id);
+  }
+
+  /** is_default true → wa_number_make_default (409 not_enabled if it refuses); true = it wrote. */
+  private async defaultStep(input: DefaultStep): Promise<boolean> {
+    if (input.isDefault !== true) return false;
+    const made = await this.queries.makeDefault(input.id, input.actorId);
+    return made || refuse('not_enabled');
   }
 
   private async updated(input: { id: string; before: NumberRow; actorId: string }): Promise<void> {

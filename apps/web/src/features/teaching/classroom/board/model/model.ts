@@ -1,24 +1,13 @@
-import type { JoinRole } from '@ab/shared';
+import type { BoardStroke, JoinRole } from '@ab/shared';
 
 /**
  * The shared whiteboard, as data. Coordinates are normalised to 0..1 of a fixed 16:9 board, so a
  * phone and a laptop draw the same picture. `pts` is flat: [x0, y0, x1, y1, …].
  */
 
-/** Pen colours are theme token names (`--ink`, `--lapis`, …): each viewer resolves its own theme. */
-export const PEN_COLORS = ['ink', 'lapis', 'cinnabar', 'saffron', 'gold'] as const;
-export type PenColor = (typeof PEN_COLORS)[number];
-
-export interface Stroke {
-  id: string;
-  /** The author's identity: only they may undo it. */
-  by: string;
-  color: PenColor;
-  /** Line width as a fraction of the board width. */
-  width: number;
-  erase: boolean;
-  pts: number[];
-}
+export { PEN_COLORS, type PenColor } from '@ab/shared';
+/** One stroke (its schema is shared: `boardStrokeSchema`). */
+export type Stroke = BoardStroke;
 
 export interface BoardState {
   strokes: Stroke[];

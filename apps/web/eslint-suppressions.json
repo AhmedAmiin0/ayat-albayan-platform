@@ -9626,14 +9626,11 @@
     }
   },
   "src/features/teaching/classroom/board/model/messages.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
+    "ab/no-shape-checks": {
       "count": 1
     },
-    "ab/no-shape-checks": {
-      "count": 3
-    },
     "complexity": {
-      "count": 3
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -9644,21 +9641,15 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/classroom/board/model/reducer.ts": {
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
     },
-    "@typescript-eslint/switch-exhaustiveness-check": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/classroom/board/use-board-share.test.ts": {

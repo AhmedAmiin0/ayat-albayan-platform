@@ -4753,10 +4753,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 12
-    },
-    "no-nested-ternary": {
-      "count": 1
+      "count": 10
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.test.ts": {
@@ -5625,11 +5622,8 @@
     "complexity": {
       "count": 1
     },
-    "max-depth": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/numbers/numbers.settings.test.ts": {

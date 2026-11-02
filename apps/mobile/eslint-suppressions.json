@@ -4222,7 +4222,7 @@
   },
   "src/inbox/composer/voice/voice-machine.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/composer/voice/voice-support.test.ts": {
