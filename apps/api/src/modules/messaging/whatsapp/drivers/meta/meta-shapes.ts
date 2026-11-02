@@ -1,14 +1,9 @@
 import { z } from 'zod';
-import { WaError, type MetaTemplate } from '../../whatsapp.types';
+import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Graph response bodies the client reads, validated (Meta's spelling, docs/12 §3.2).
 
-/** A body that fails its schema → WaError (code null, status 200: Meta answered, but not as expected). */
-export function parsed<S extends z.ZodType>(schema: S, json: unknown): z.output<S> {
-  const r = schema.safeParse(json);
-  if (!r.success) throw new WaError('Unexpected WhatsApp response', { code: null, status: 200, details: r.error.message.slice(0, 300) });
-  return r.data;
-}
+// A body that fails its schema is WaError (code null, status 200): graph.ts's `shape` entry.
 
 export const sentSchema = z.object({ messages: z.array(z.object({ id: z.string().min(1) })).min(1) });
 

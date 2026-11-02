@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { WaError } from '../../whatsapp.types';
-import { authHeaders, byDriver, graphFetch } from '../meta/graph';
-import { failurePlan } from '../../sender/send-plan';
+import { z } from 'zod';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { authHeaders, byDriver, graphDownload, graphHttp } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { nextTemplateCursor, templateEditPath } from './kapso';
 import { KAPSO_ENV, kapsoFetch } from './kapso.fakes';
-import { STUB_ENV } from '../../whatsapp.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19: the per-driver pieces, pure.
 
@@ -15,10 +16,11 @@ describe('authHeaders per driver', () => {
     expect(authHeaders(KAPSO_ENV)).toEqual({ 'x-api-key': 'fake-kapso-key' });
   });
 
-  it('graphFetch with auth:false sends no credential at all, on either driver', async () => {
+  it('graphDownload sends no credential at all, on either driver', async () => {
     for (const env of [STUB_ENV, KAPSO_ENV]) {
       const f = kapsoFetch({ bytes: new Uint8Array([7]) });
-      await graphFetch({ env, fetch: f.fetch, timeoutMs: 1_000 }, { path: 'https://files.example.test/x?token=t', auth: false });
+      const call = { path: 'https://files.example.test/x?token=t', maxBytes: 10, tooLarge: () => new Error('big') };
+      await graphDownload({ env, fetch: f.fetch, timeoutMs: 1_000 }).bytes(call);
       expect(f.requests[0]?.headers).toEqual({});
     }
   });
@@ -72,14 +74,15 @@ describe('byDriver: Kapso refusing its key is the credential class', () => {
     for (const e of [err(400, 131047), err(404, null), err(403, 10), err(401, 190), err(403, 131031)]) expect(byDriver(KAPSO_ENV, e)).toBe(e);
   });
 
-  it('graphFetch applies it to a keyed Kapso 401, never to the credential-free download_url', async () => {
+  it('graphHttp applies it to a keyed Kapso 401, graphDownload never (the credential-free download_url)', async () => {
     const conn = (f: ReturnType<typeof kapsoFetch>) => ({ env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 });
     const keyed = kapsoFetch({ status: 401, body: { error: 'Unauthorized' } });
-    const e = await graphFetch(conn(keyed), { path: 'x' }).catch((x: unknown) => x);
+    const e = await graphHttp(conn(keyed)).json({ path: 'x', schema: z.unknown() }).catch((x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);
     expect((e as WaError).info).toMatchObject({ credential: 'kapso', code: null, status: 401 });
     const download = kapsoFetch({ status: 403, body: { error: 'token expired' } });
-    const d = await graphFetch(conn(download), { path: 'https://files.example.test/m?token=t', auth: false }).catch((x: unknown) => x);
+    const at = { path: 'https://files.example.test/m?token=t', schema: z.unknown() };
+    const d = await graphDownload(conn(download)).json(at).catch((x: unknown) => x);
     expect((d as WaError).info).toMatchObject({ code: null, status: 403 });
     expect((d as WaError).info.credential).toBeUndefined();
   });
