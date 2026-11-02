@@ -15,7 +15,7 @@ export interface AttachButtonProps {
 /**
  * The paperclip before the message box (D2): picks one image or PDF. The academy's upload limit
  * (settings.upload_max_mb) and Meta's 5 MB image cap are checked here, before any upload.
- * ComposerPhone shows it only inside the 24 h window, and never to a teacher.
+ * ComposerPhone shows it wherever a text goes (useTriesAfterWindow too), never to a teacher.
  */
 export function AttachButton({ onPick, onProblem }: AttachButtonProps) {
   const input = useRef<HTMLInputElement>(null);
