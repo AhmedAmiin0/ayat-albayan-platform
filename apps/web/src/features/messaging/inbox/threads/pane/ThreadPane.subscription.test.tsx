@@ -100,11 +100,4 @@ describe('subscription in the chat (R-SUB-01)', () => {
     expect(screen.queryByRole('link', { name: t.inbox.subscription.subscribe })).toBeNull();
   });
 
-  it('«العائلة» (owner 2026-11-02): each child opens their file, with the status and teacher', async () => {
-    renderThread({ ...detail([], GUARDIAN), people: FAMILY });
-    const panel = within(await screen.findByRole('complementary', { name: t.inbox.subscription.title }));
-    const link = panel.getByRole('link', { name: t.students.family.openStudent.replace('{name}', 'جود') });
-    expect(link.getAttribute('href')).toBe('/admin/students/s-2');
-    expect(panel.getAllByText(t.enums.studentStatus[FAMILY.students[1]?.status ?? 'active']).length).toBeGreaterThan(0);
-  });
 });

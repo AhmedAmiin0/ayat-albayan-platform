@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Linking, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
+import { InChatProvider } from '@/core/nav/tree-base';
 import { GuardianCard } from './GuardianCard';
 
 const guardian = { id: 'g1', name: 'أم يوسف', phone_e164: '+966552147730' };
@@ -33,4 +34,14 @@ test('«العائلة» (owner 2026-11-02): the guardian name opens the family 
   await render(<GuardianCard guardian={guardian} />);
   await fireEvent.press(screen.getByRole('link', { name: 'أم يوسف' }));
   expect(router.push).toHaveBeenCalledWith(`/inbox/thread/${encodeURIComponent('+966552147730')}`);
+});
+
+test('above a chat the name is plain text: the chat is one «رجوع» away', async () => {
+  await render(
+    <InChatProvider>
+      <GuardianCard guardian={guardian} />
+    </InChatProvider>,
+  );
+  expect(screen.queryByRole('link', { name: 'أم يوسف' })).toBeNull();
+  expect(screen.getByText('أم يوسف')).toBeTruthy();
 });

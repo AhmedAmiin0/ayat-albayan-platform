@@ -1,7 +1,7 @@
 import { clickToChatLink, formatPhone, secondPhoneOf } from '@ab/shared';
 import { router } from 'expo-router';
 import { Linking, Pressable, View } from 'react-native';
-import { inTree, useTreeBase } from '@/core/nav/tree-base';
+import { inTree, useInChat, useTreeBase } from '@/core/nav/tree-base';
 import { threadHref } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -34,7 +34,8 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       }}
     >
       <SectionLabel>{t.students.guardian}</SectionLabel>
-      <GuardianName name={guardian.name} phone={phone} />
+      {/* Opened above a chat, the chat is one «رجوع» away: a link would stack it twice. */}
+      <GuardianName name={guardian.name} phone={useInChat() ? null : phone} />
       {secondPhoneOf(guardian.phones) ? <SectionLabel>{t.guardians.mainPhone}</SectionLabel> : null}
       <Ltr
         style={{
@@ -56,14 +57,16 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
 }
 
 /** The guardian's name, a link to the family's chat in the app (owner 2026-11-02, «العائلة»). */
-function GuardianName({ name, phone }: { name: string; phone: string }) {
+function GuardianName({ name, phone }: { name: string; phone: string | null }) {
   const { color } = useTheme();
   const base = useTreeBase();
+  const open = phone ? () => router.push(inTree(base, threadHref(phone))) : undefined;
   return (
     <Pressable
-      accessibilityRole="link"
-      accessibilityHint={t.students.family.openChat}
-      onPress={() => router.push(inTree(base, threadHref(phone)))}
+      accessibilityRole={open ? 'link' : undefined}
+      accessibilityHint={open ? t.students.family.openChat : undefined}
+      disabled={!open}
+      onPress={open}
       hitSlop={{ top: 8, bottom: 8 }}
       style={{ alignSelf: 'flex-start' }}
     >
@@ -72,7 +75,7 @@ function GuardianName({ name, phone }: { name: string; phone: string }) {
           fontFamily: type.ui[600],
           fontSize: type.size.body,
           lineHeight: type.lineHeight(type.size.body),
-          color: color.lapis,
+          color: open ? color.lapis : color.ink,
         }}
       >
         {name}

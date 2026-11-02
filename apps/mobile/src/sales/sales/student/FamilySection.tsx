@@ -1,4 +1,10 @@
-import { formatPhone, parseSalesFamily, studentStatusStyle, type FamilySibling } from '@ab/shared';
+import {
+  formatPhone,
+  parseSalesFamily,
+  studentStatusStyle,
+  type FamilySibling,
+  type SalesStudentFamily,
+} from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -9,6 +15,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { InsetGroup } from '@/core/ui/surface/inset';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
+import { fill } from '@/sales/sales/lib/sales-text';
 
 interface FamilySectionProps {
   /** GET /sales/students/:id `family` (absent in an old cache: no section). */
@@ -17,7 +24,9 @@ interface FamilySectionProps {
   phone: string | null;
 }
 
-const fill = (text: string, name: string) => text.replace('{name}', name);
+/** Something to say: a guardian to name or reach, a sibling, or «صاحب الرقم». */
+const hasFamily = (f: SalesStudentFamily, phone: string | null): boolean =>
+  [f.guardian_name, phone].some(Boolean) || f.siblings.length > 0 || f.contact_is_self;
 
 /**
  * «العائلة» of «تفاصيل الطالب» (owner 2026-11-02), compact: the guardian (name, LTR phone; a tap
@@ -28,21 +37,14 @@ export function FamilySection({ family: raw, phone }: FamilySectionProps) {
   const base = useTreeBase();
   const to = useStudentHref();
   const family = parseSalesFamily(raw);
-  if (!family) return null;
+  if (!family || !hasFamily(family, phone)) return null;
   const f = t.students.family;
-  const openChat = phone ? () => router.push(familyChatHref(base, phone)) : undefined;
   const open = (s: FamilySibling) => router.push(to(studentDetailsHref(base, s.id)));
   return (
     <View style={{ gap: 8 }}>
       <SectionLabel>{f.title}</SectionLabel>
       <InsetGroup>
-        <ListRow
-          title={family.guardian_name ?? f.noGuardianName}
-          meta={phone ? formatPhone(phone) : undefined}
-          subtitle={family.guardian_name ? t.students.guardian : undefined}
-          onPress={openChat}
-          accessibilityHint={openChat ? f.openChat : undefined}
-        />
+        <GuardianRow name={family.guardian_name} phone={phone} />
         {family.siblings.map((s) => (
           <ListRow
             key={s.id}
@@ -50,12 +52,29 @@ export function FamilySection({ family: raw, phone }: FamilySectionProps) {
             meta={s.code ?? undefined}
             subtitle={f.siblings}
             onPress={() => open(s)}
-            accessibilityHint={fill(f.openStudent, s.name)}
-            trailing={<StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />}
+            accessibilityHint={fill(f.openStudent, { name: s.name })}
+            trailing={
+              <StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />
+            }
           />
         ))}
       </InsetGroup>
       {family.contact_is_self ? <Note>{f.contactIsSelf}</Note> : null}
     </View>
+  );
+}
+
+/** The guardian: name (or «ولي الأمر») and LTR phone; a tap opens the family chat if any. */
+function GuardianRow({ name, phone }: { name: string | null; phone: string | null }) {
+  const base = useTreeBase();
+  const openChat = phone ? () => router.push(familyChatHref(base, phone)) : undefined;
+  return (
+    <ListRow
+      title={name ?? t.students.family.noGuardianName}
+      meta={phone ? formatPhone(phone) : undefined}
+      subtitle={name ? t.students.guardian : undefined}
+      onPress={openChat}
+      accessibilityHint={openChat ? t.students.family.openChat : undefined}
+    />
   );
 }
