@@ -4274,7 +4274,7 @@
   },
   "src/inbox/composer/voice/voice-machine.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     }
   },
   "src/inbox/composer/voice/voice-support.test.ts": {
@@ -5282,7 +5282,7 @@
       "count": 1
     },
     "no-nested-ternary": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/messages/photo/PdfStrip.tsx": {
