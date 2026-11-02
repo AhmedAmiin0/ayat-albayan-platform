@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LESSONS_USED_BEFORE_MAX } from '@ab/money';
-import { usedBeforeMax } from './start-date.js';
+import { usedBeforeMax } from '../start-date.js';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02: «i want the ability to change the number of
 // attended sessions as assistant»): PATCH /subscriptions/:id/lessons-used-before, admins and

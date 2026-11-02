@@ -8,7 +8,7 @@ import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHead
 import { fill } from '@/sales/sales/lib/sales-text';
 import { HistoryEntryCard } from '@/sales/sales/components/HistoryEntryCard';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { UsedBeforeEdit } from '@/used-before-edit';
+import { UsedBeforeEdit } from '@/subscribe';
 
 /** «الاشتراك»: the current one outlined (the history's card, no money); the past ones collapsed behind «الاشتراكات السابقة (n)». */
 export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 'subscriptions' | 'current_id'> }) {
