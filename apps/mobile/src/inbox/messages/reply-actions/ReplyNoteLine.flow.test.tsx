@@ -47,7 +47,8 @@ async function renderNote(m: typeof ASK, permissions?: Permission[]) {
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   // «تأكيد الحلقة» only while the academy requires a confirmation (#619).
   const config = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false };
-  client.setQueryData(publicConfigQuery.queryKey, { ...config, lesson_confirmation_required: true });
+  const required = { ...config, lesson_confirmation_required: true };
+  client.setQueryData(publicConfigQuery.queryKey, required);
   await renderWithQuery(
     <ReplyActionsProvider phone={PHONE} lessons={[LESSON]}>
       <ReplyNoteLine message={m} />
