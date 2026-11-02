@@ -15,17 +15,42 @@ const REPLACEMENTS = {
 };
 
 const importedName = (spec) => spec.imported?.name ?? spec.imported?.value;
-const isRawInput = (spec) => spec.type === 'ImportSpecifier' && Object.hasOwn(REPLACEMENTS, importedName(spec));
-const PARAMETERS = ['Identifier', 'AssignmentPattern', 'ObjectPattern', 'ArrayPattern', 'TSParameterProperty'];
+const isRaw = (name) => Object.hasOwn(REPLACEMENTS, name);
+const PARAMETERS = [
+  'Identifier',
+  'AssignmentPattern',
+  'ObjectPattern',
+  'ArrayPattern',
+  'RestElement',
+  'TSParameterProperty',
+];
 const isParameter = (node) => PARAMETERS.includes(node.parent?.type ?? '');
 
-/** The callee name of `@X(...)` or `@X`, or undefined for member and other expressions. */
-const calleeOf = (expression) => (expression.type === 'CallExpression' ? expression.callee : expression).name;
+/** Local binding → imported name: `{ Body as B }` → B: Body; `* as N` → `N.Body`: Body. */
+const BINDINGS = {
+  ImportSpecifier: (spec) => [[spec.local.name, importedName(spec)]],
+  ImportNamespaceSpecifier: (spec) =>
+    Object.keys(REPLACEMENTS).map((name) => [`${spec.local.name}.${name}`, name]),
+};
+const bindingsOf = (spec) => (BINDINGS[spec.type]?.(spec) ?? []).filter(([, name]) => isRaw(name));
+
+/** `X` or `N.X` of `@X(...)` / `@N.X(...)` / `@X`; undefined for other expressions. */
+const KEYS = {
+  Identifier: (node) => node.name,
+  MemberExpression: (node) => `${node.object.name}.${node.property.name}`,
+};
+const keyOf = (expression) => {
+  const callee = expression.type === 'CallExpression' ? expression.callee : expression;
+  return KEYS[callee.type]?.(callee);
+};
 
 export const zodInputsRule = {
   meta: {
     type: 'problem',
-    docs: { description: 'Nest inputs go through a zod decorator, never raw @Body/@Query/@Param/@Headers (docs/36 Z-1).' },
+    docs: {
+      description:
+        'Nest inputs go through a zod decorator, never raw @Body/@Query/@Param/@Headers (docs/36 Z-1).',
+    },
     schema: [],
     messages: { raw: '@{{name}} reads an unparsed input: use @{{replacement}} (docs/36 Z-1).' },
   },
@@ -34,11 +59,11 @@ export const zodInputsRule = {
     const locals = new Map();
     return {
       ImportDeclaration(node) {
-        const specs = node.source.value === NEST ? node.specifiers.filter(isRawInput) : [];
-        for (const spec of specs) locals.set(spec.local.name, importedName(spec));
+        const specs = node.source.value === NEST ? node.specifiers : [];
+        for (const [local, name] of specs.flatMap(bindingsOf)) locals.set(local, name);
       },
       Decorator(node) {
-        const name = locals.get(calleeOf(node.expression));
+        const name = locals.get(keyOf(node.expression));
         if (name === undefined || !isParameter(node)) return;
         context.report({ node, messageId: 'raw', data: { name, replacement: REPLACEMENTS[name] } });
       },

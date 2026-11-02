@@ -18,17 +18,31 @@ tester.run('zod-inputs', zodInputsRule, {
     `import { Body } from './body';\nclass C { m(@Body() b) {} }`,
     // A class, method or property decorator named like an input is not a parameter decorator.
     `${nest('Headers')}class C { @Headers() m() {} }`,
+    `${nest('Body')}class C { @Body() p; }`,
+    // A namespace import's other members.
+    `import * as N from '@nestjs/common';\nclass C { m(@N.Req() r) {} }`,
   ],
   invalid: [
-    { code: `${nest('Body')}class C { m(@Body() body: unknown) {} }`, errors: [raw('Body', 'ZodBody(schema)')] },
+    {
+      code: `${nest('Body')}class C { m(@Body() body: unknown) {} }`,
+      errors: [raw('Body', 'ZodBody(schema)')],
+    },
     { code: `${nest('Query')}class C { m(@Query() q) {} }`, errors: [raw('Query', 'ZodQuery(schema)')] },
     {
       code: `${nest('Param, ParseUUIDPipe')}class C { m(@Param('id', ParseUUIDPipe) id: string) {} }`,
       errors: [raw('Param', 'ZodParam(name, schema)')],
     },
-    { code: `${nest('Headers')}class C { m(@Headers('x') h?: string) {} }`, errors: [raw('Headers', 'ZodHeaders(schema)')] },
+    {
+      code: `${nest('Headers')}class C { m(@Headers('x') h?: string) {} }`,
+      errors: [raw('Headers', 'ZodHeaders(schema)')],
+    },
     { code: `${nest('Body as B')}class C { m(@B() b) {} }`, errors: [raw('Body', 'ZodBody(schema)')] },
     { code: `${nest('Query')}class C { m(@Query q = {}) {} }`, errors: [raw('Query', 'ZodQuery(schema)')] },
+    {
+      code: `import * as N from '@nestjs/common';\nclass C { m(@N.Body() b) {} }`,
+      errors: [raw('Body', 'ZodBody(schema)')],
+    },
+    { code: `${nest('Body')}class C { m(@Body() ...b) {} }`, errors: [raw('Body', 'ZodBody(schema)')] },
     {
       code: `${nest('Param')}class C { constructor(@Param('a') private readonly a: string) {} }`,
       errors: [raw('Param', 'ZodParam(name, schema)')],
