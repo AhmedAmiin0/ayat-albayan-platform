@@ -12,7 +12,11 @@ export type PaymentAmount = z.output<typeof paymentAmountSchema>;
 
 export type AmountEditProblem = 'stripe_amount_locked' | 'refund_exceeds_paid';
 
-type Recorded = { method: PaymentMethod; kind: PaymentKind; amount: number };
+interface Recorded {
+  method: PaymentMethod;
+  kind: PaymentKind;
+  amount: number;
+}
 
 /** A card payment's amount is what Stripe charged or refunded: never typed by hand. */
 const FROM_STRIPE: ReadonlySet<PaymentMethod> = new Set<PaymentMethod>(['card']);

@@ -19,7 +19,7 @@ describe('«تعديل المبلغ» (owner 2026-11-02)', () => {
     );
   });
 
-  it('may not take the net paid below 0: a payment under its refunds, a refund over the paid', () => {
+  it('keeps the net paid ≥ 0: a payment under its refunds, a refund over the paid', () => {
     // 300 paid, 200 refunded: net 100.
     expect(amountEditProblem(bank, { amount: 150, netPaid: 100 })).toBe('refund_exceeds_paid');
     expect(amountEditProblem(bank, { amount: 200, netPaid: 100 })).toBeNull();
@@ -30,7 +30,9 @@ describe('«تعديل المبلغ» (owner 2026-11-02)', () => {
 
   it('the body is the amount only: positive, 2 decimals, nothing else', () => {
     expect(paymentAmountSchema.parse({ amount: 120.5 })).toEqual({ amount: 120.5 });
-    for (const amount of [0, -1, 1.234]) expect(paymentAmountSchema.safeParse({ amount }).success).toBe(false);
+    for (const amount of [0, -1, 1.234]) {
+      expect(paymentAmountSchema.safeParse({ amount }).success).toBe(false);
+    }
     expect(paymentAmountSchema.safeParse({ amount: 1, method: 'cash' }).success).toBe(false);
   });
 });

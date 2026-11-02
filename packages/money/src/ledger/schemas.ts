@@ -59,7 +59,7 @@ export const subscriptionCreateSchema = z.object({
   /** Lessons taken before the platform (owner 2026-10-28): only with a past startsOn (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
-  /** «مبلغ مخصص» (owner 2026-11-02): the price in the quote's currency; the quote stays in price_source. */
+  /** «مبلغ مخصص» (owner 2026-11-02): the price, in the quote's currency (kept in price_source). */
   customPrice: moneyAmount.optional(),
 });
 
