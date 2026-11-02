@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
+import type { StopRefund } from './stop-refund.js';
 
 // «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
 // Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
@@ -13,11 +14,14 @@ export const COURSE_STOP_REASON_MAX = 300;
 
 /**
  * POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required.
+ * `refund` (owner 2026-11-02, subscriptions.refund): «إلغاء مع استرداد», at most the preview's
+ * refund; absent = «إلغاء فقط».
  */
 export const courseStopSchema = z.strictObject({
   subscriptionId: z.uuid(),
   reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
   clientRequestId: z.uuid(),
+  refund: z.strictObject({ amount: z.number().positive().max(10_000_000) }).optional(),
 });
 export type CourseStopRequest = z.infer<typeof courseStopSchema>;
 
@@ -39,9 +43,11 @@ export interface CourseStopPreview {
   futureLessons: number;
   /** Weekly rules of the course that still run: each ends on the cancel date. */
   activeRules: number;
-  /** Net paid, kept as it is (no refund). */
+  /** Net paid, kept as it is with «إلغاء فقط». */
   paid: number;
   currency: string;
+  /** «إلغاء مع استرداد»'s lines (owner 2026-11-02): paid, attended × price × rate, refund. */
+  refund: StopRefund;
   /** Set once the package is cancelled (either kind): the sheet shows it instead of the button. */
   stopped: CourseStopped | null;
 }
@@ -53,6 +59,14 @@ export interface CourseStopResult {
   /** The student's status after the stop (churned, or what it was when already churned). */
   studentStatus: StudentStatus;
   stoppedAt: string;
+  /** «إلغاء مع استرداد»: the amount, its card part (Stripe) and its manual part; null = none. */
+  refund: CourseStopRefunded | null;
+}
+
+export interface CourseStopRefunded {
+  amount: number;
+  card: number;
+  manual: number;
 }
 
 /** 409 already_cancelled: the package is cancelled already (unused or stopped). */

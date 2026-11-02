@@ -21,6 +21,11 @@ describe('GET /students/:id/course-stop', () => {
       activeRules: 2,
       paid: 290,
       currency: 'SAR',
+      // owner 2026-11-02: 290 − 3 × 50 × 100 % (the setting's default).
+      refund: {
+        ...{ paid: 290, perLesson: 50, attended: 3 },
+        ...{ ratePercent: 100, charged: 150, refund: 140 },
+      },
       stopped: null,
     });
   });

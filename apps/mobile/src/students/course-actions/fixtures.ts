@@ -15,6 +15,11 @@ export const stopPreview = (over: Partial<CourseStopPreview> = {}): CourseStopPr
   activeRules: 1,
   paid: 300,
   currency: 'SAR',
+  // 300 SAR / 8 lessons, 3 attended at 100 % → 300 − 3 × 37.5 = 187.5.
+  refund: {
+    ...{ paid: 300, perLesson: 37.5, attended: 3 },
+    ...{ ratePercent: 100, charged: 112.5, refund: 187.5 },
+  },
   stopped: null,
   ...over,
 });

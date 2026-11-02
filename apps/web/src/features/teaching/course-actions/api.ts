@@ -1,5 +1,6 @@
 import {
   courseActionsKey,
+  courseStopBody,
   courseMoveBase,
   courseMoveErrorCode,
   courseMoveViewPath,
@@ -16,6 +17,7 @@ import type {
   ProfileCourseView,
 } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { useState } from 'react';
 import { apiFetch, apiSend } from '@/lib/http/api';
@@ -103,18 +105,38 @@ export function useInvalidateCourseActions(studentId: string): () => Promise<voi
   };
 }
 
-type StopInput = Course & { reason: string; onDone: (message: string) => void };
+type StopInput = Course & {
+  reason: string;
+  /** null = «إلغاء فقط»; else «إلغاء مع استرداد» of this amount. */
+  refund: number | null;
+  onDone: (message: string) => void;
+};
+
+/** The toast: «أُلغي الاشتراك…», with the refund's amount when there was one. */
+function doneText(result: CourseStopResult, currency: string): string {
+  const words = t.courseActions.stop;
+  const refund = result.refund;
+  return refund
+    ? words.doneRefund.replace('{amount}', moneyText(refund.amount, currency))
+    : words.done;
+}
 
 /** POST the stop with one idempotency key per dialog (rule 8), then re-read and the toast. */
-export function useStopCourse({ studentId, subscriptionId, reason, onDone }: StopInput) {
+export function useStopCourse(input: StopInput & { currency: string }) {
+  const { studentId, subscriptionId, onDone } = input;
   const [requestId] = useState(() => crypto.randomUUID());
   const invalidate = useInvalidateCourseActions(studentId);
+  const body = {
+    subscriptionId,
+    reason: input.reason,
+    clientRequestId: requestId,
+    refund: input.refund,
+  };
   return useMutation({
-    mutationFn: () =>
-      stopCourse(studentId, { subscriptionId, reason: reason.trim(), clientRequestId: requestId }),
-    onSuccess: async () => {
+    mutationFn: () => stopCourse(studentId, courseStopBody(body)),
+    onSuccess: async (result) => {
       await invalidate();
-      onDone(t.courseActions.stop.done);
+      onDone(doneText(result, input.currency));
     },
   });
 }

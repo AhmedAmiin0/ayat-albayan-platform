@@ -7,6 +7,11 @@ import { t } from '@/lib/i18n/i18n';
 import { SUB } from './course-actions-fixture';
 import { StopCourseDialog } from './StopCourseDialog';
 
+const perms = vi.hoisted(() => ({ list: ['subscriptions.stop'] as string[] }));
+vi.mock('@/features/people/auth', async (orig) => ({
+  ...(await orig<object>()),
+  usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
+}));
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
@@ -18,6 +23,7 @@ const PREVIEW = {
   activeRules: 1,
   paid: 290,
   currency: 'SAR',
+  refund: { paid: 290, perLesson: 50, attended: 3, ratePercent: 100, charged: 150, refund: 140 },
 };
 
 function open(stopped: unknown = null) {

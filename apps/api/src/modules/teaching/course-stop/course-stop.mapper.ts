@@ -1,4 +1,9 @@
-import { STUDENT_STATUSES, type CourseStopped, type CourseStopResult } from '@ab/shared';
+import {
+  STUDENT_STATUSES,
+  type CourseStopped,
+  type CourseStopRefunded,
+  type CourseStopResult,
+} from '@ab/shared';
 import { z } from 'zod';
 import type { StopSub } from './course-stop.repo';
 
@@ -29,12 +34,17 @@ export function toStopped(sub: StopSub): CourseStopped | null {
 }
 
 /** The answer of a stop (a replay answers the first stop). */
-export function toResult(subscriptionId: string, row: StopRow): CourseStopResult {
+export function toResult(
+  subscriptionId: string,
+  row: StopRow,
+  refund: CourseStopRefunded | null,
+): CourseStopResult {
   return {
     subscriptionId,
     cancelledLessons: row.cancelled_lessons.length,
     endedRules: row.ended_rules.length,
     studentStatus: row.student_status,
     stoppedAt: new Date(row.stopped_at).toISOString(),
+    refund,
   };
 }

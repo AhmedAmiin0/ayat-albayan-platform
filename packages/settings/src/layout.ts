@@ -49,6 +49,7 @@ export const SETTINGS_LAYOUT = {
     'renewal_alert_remaining',
     'subscription_expiry_days',
     'flag_future_lessons_when_unpaid',
+    'refund_attended_rate_percent',
     'payout_count_late',
     'payout_count_no_show',
     'payout_count_trials',

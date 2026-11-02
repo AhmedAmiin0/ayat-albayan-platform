@@ -49,7 +49,7 @@ export function CourseActionsSection({ studentId, subscriptionId }: CourseAction
         <CourseStopForm
           sub={{ studentId, subscriptionId: sub }}
           onClose={close}
-          onDone={() => done(c.stop.done)}
+          onDone={done}
         />
       </PauseSheetFrame>
       {isMove(open) ? (

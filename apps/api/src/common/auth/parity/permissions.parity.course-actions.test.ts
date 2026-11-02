@@ -39,4 +39,12 @@ describe('the student profile course actions', () => {
       ]);
     },
   );
+
+  // Owner 2026-11-02 «إلغاء مع استرداد»: an inline check of the stop (CourseStop), never a route
+  // gate; the system admin's only by default (never sales; prod roles get it from «الأدوار»).
+  it('subscriptions.refund gates no route and is held by the system admin only', () => {
+    expect(gated('subscriptions.refund')).toEqual([]);
+    const holders = USER_ROLES.filter((who) => systemPermissionsOf(who).includes('subscriptions.refund'));
+    expect(holders).toEqual(['admin']);
+  });
 });

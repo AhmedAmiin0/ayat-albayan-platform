@@ -48,6 +48,9 @@ export const PERMISSION_ROWS = [
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
   // The profile's course actions (owner 2026-10-30, migration 990): ANY student, audited.
   { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
+  // «إلغاء مع استرداد» (owner 2026-11-02): an inline check of the stop (CourseStop); the admin's
+  // only by default, never sales (grant it to a role from «الأدوار»). No route of its own.
+  { key: 'subscriptions.refund', area: 'finance', grants: [] },
   { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
   { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },
   // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).

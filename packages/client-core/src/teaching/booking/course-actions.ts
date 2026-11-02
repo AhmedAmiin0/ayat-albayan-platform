@@ -61,6 +61,9 @@ const STOP_CODES = [
   'course_unattributed',
   'has_future_lessons',
   'subscription_not_found',
+  'refund_exceeds_allowed',
+  'refund_not_allowed',
+  'stripe_not_configured',
 ] as const;
 export type CourseStopErrorCode = (typeof STOP_CODES)[number] | 'generic';
 
