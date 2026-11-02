@@ -11214,7 +11214,7 @@
       "count": 7
     },
     "max-len": {
-      "count": 14
+      "count": 13
     }
   },
   "src/modules/sales/sales-money/sales-money.fakes.ts": {
@@ -11348,14 +11348,11 @@
     }
   },
   "src/modules/sales/sales-money/sales-money.service.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
     "ab/no-parent-imports": {
       "count": 2
     },
     "max-len": {
-      "count": 14
+      "count": 13
     }
   },
   "src/modules/sales/sales-money/sales-money.services.ts": {
