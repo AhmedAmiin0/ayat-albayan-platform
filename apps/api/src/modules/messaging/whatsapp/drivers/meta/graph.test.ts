@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
+import type { GraphEnv } from '@/config/env/env';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -7,10 +8,10 @@ import { graphDownload, graphHttp, type FetchLike } from './graph';
 
 // docs/36 h8: graph.ts's error table, one test per key, replaying what graphFetch/graphJson did.
 
-const conn = (fetch: FetchLike, env = STUB_ENV) => ({ env, fetch, timeoutMs: 1_000 });
+const conn = (fetch: FetchLike, env: GraphEnv = STUB_ENV) => ({ env, fetch, timeoutMs: 1_000 });
 const ANY = z.unknown();
 
-async function failure(fetch: FetchLike, env = STUB_ENV): Promise<WaError> {
+async function failure(fetch: FetchLike, env: GraphEnv = STUB_ENV): Promise<WaError> {
   const e = await graphHttp(conn(fetch, env))
     .json({ path: 'x', schema: ANY })
     .catch((x: unknown) => x);
