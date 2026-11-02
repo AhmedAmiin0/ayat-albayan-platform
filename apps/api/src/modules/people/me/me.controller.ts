@@ -1,10 +1,10 @@
-import { Controller, Delete, HttpCode, Param, Put } from '@nestjs/common';
+import { Controller, Delete, HttpCode, Put } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { MeService } from './me.service';
 import { pushTokenBody, pushTokenSchema } from './push/push-tokens';
 
@@ -38,7 +38,10 @@ export class MeController {
   /** The client sends the token URL-encoded (the brackets); 204 even when it was not stored. */
   @Delete(':token')
   @HttpCode(204)
-  remove(@Param('token') token: string, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.me.removePushToken(user.id, parseOrThrow(pushTokenSchema, token));
+  remove(
+    @ZodParam('token', pushTokenSchema) token: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.me.removePushToken(user.id, token);
   }
 }

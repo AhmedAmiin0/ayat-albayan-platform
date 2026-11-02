@@ -9,8 +9,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -69,12 +68,12 @@ export class GuardiansController {
   @HttpCode(204)
   removePhone(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param('phone') phone: string,
+    @ZodParam('phone', phoneE164) phone: string,
     @CurrentUser() user: AuthUser,
   ) {
     return this.phones.removeSecond({
       guardianId: id,
-      phone: parseOrThrow(phoneE164, phone),
+      phone,
       actorId: user.id,
     });
   }
