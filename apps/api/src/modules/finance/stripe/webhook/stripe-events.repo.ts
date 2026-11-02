@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 /**
  * stripe_events: the webhook's idempotency by event.id (primary key). begin() inserts the event once and
@@ -7,7 +7,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
  * Stripe's retry, every step of it being idempotent itself.
  */
 @Injectable()
-export class StripeEventsQueries {
+export class StripeEventsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** true = already processed: skip it. */

@@ -1,13 +1,13 @@
 import type { PublicPaymentLink } from '@ab/shared';
 import { Controller, Get, Header, Ip, Param, Redirect, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
-import { notFound } from '../../../../common/http/errors';
+import { Public } from '@/common/auth/decorators';
+import { notFound } from '@/common/http/errors';
 import { stripeLiveAllowed } from '@/config/env/env.stripe';
-import { StripeEnabledGuard } from '../gate/stripe-gate';
-import { apiPublicOrigin } from '../links/link-views';
-import { toPublicLink } from '../links/payment-links.mapper';
-import { PaymentLinksQueries } from '../links/payment-links.queries';
+import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
+import { apiPublicOrigin } from '@/modules/finance/stripe/links/link-views';
+import { toPublicLink } from '@/modules/finance/stripe/links/payment-links.mapper';
+import { PaymentLinksRepo } from '@/modules/finance/stripe/links/payment-links.repo';
 import { CheckoutService } from './checkout.service';
 import { notFoundPageHtml, payPageHtml, resultPageHtml } from './pay-html';
 import { PayLimit } from './pay-limit';
@@ -28,7 +28,7 @@ import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from '.
 @Controller('pay')
 export class PayController {
   constructor(
-    private readonly links: PaymentLinksQueries,
+    private readonly links: PaymentLinksRepo,
     private readonly checkout: CheckoutService,
     private readonly limit: PayLimit,
   ) {}

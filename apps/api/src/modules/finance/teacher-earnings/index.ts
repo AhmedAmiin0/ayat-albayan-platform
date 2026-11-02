@@ -1,16 +1,16 @@
 export { TeacherEarningsModule } from './earnings.module';
 export {
   type EarningRow,
-  EarningsQueries,
+  EarningsRepo,
   type MoneyRow,
   type PaymentRow,
   type RecordResult,
   type SessionFilter,
   type SessionRow,
-} from './earnings.queries';
+} from './earnings.repo';
 export { EarningsReceipts } from './earnings.receipts';
 export {
-  CorrectionsQueries,
+  CorrectionsRepo,
   type PayPayoutInput,
   type SummaryRow,
-} from './summary/corrections.queries';
+} from './summary/corrections.repo';
