@@ -34,8 +34,12 @@ afterEach(() => vi.unstubAllEnvs());
 describe('TeacherAlert: the approval gate by the line\'s driver', () => {
   it('crm line, teacher_lesson_v2 approved, teacher_new_student not_submitted: one row, with its crm values', async () => {
     vi.stubEnv('WA_PROVIDER', 'crm');
-    const { alert, queries } = alertOver([OWN, V2]);
+    const { alert, queries, calls } = alertOver([OWN, V2]);
     await alert.afterBooking({ req: REQ, result: RESULT });
+    // The read does not filter teacher_new_student by its own status (the bug): the gate decides.
+    const reads = calls.filter((c) => c.table === 'message_templates');
+    expect(reads.find((c) => c.method === 'or')?.args).toEqual(['status.eq.approved,key.in.(teacher_new_student)']);
+    expect(reads.some((c) => c.method === 'eq')).toBe(false);
     expect(queries.queue).toHaveBeenCalledTimes(1);
     const rows = queries.queue.mock.calls[0]?.[0] ?? [];
     expect(rows).toHaveLength(1);
