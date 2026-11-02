@@ -20,6 +20,7 @@ import { PeopleEditRepo } from '@/modules/people/people-edit/people-edit.repo';
 import { PeopleEditService } from '@/modules/people/people-edit/people-edit.service';
 import { PeopleRoleController } from '@/modules/people/people-edit/people-role.controller';
 import { PeopleViewService } from '@/modules/people/people-edit/people-view.service';
+import { PeopleOwnership } from '@/modules/people/people-edit/access/people-ownership';
 import { RoleSwitchService } from '@/modules/people/people-edit/role-switch.service';
 import { StudentRecordsRepo } from '@/modules/people/people-edit/student-records.repo';
 
@@ -46,6 +47,7 @@ const resolver: PermissionResolver = async (user) => {
 export const mocks = {
   people: { editStudent: vi.fn(), editGuardian: vi.fn() },
   views: { view: vi.fn() },
+  owners: { student: vi.fn(), family: vi.fn() },
   phones: { removeSecond: vi.fn() },
   families: { families: vi.fn(), move: vi.fn() },
   roles: { setSelf: vi.fn(), guardianToStudent: vi.fn(), studentToGuardian: vi.fn() },
@@ -59,6 +61,7 @@ export async function peopleApp(): Promise<NestFastifyApplication> {
       { provide: PeopleEditService, useValue: mocks.people },
       { provide: GuardianPhonesService, useValue: mocks.phones },
       { provide: PeopleViewService, useValue: mocks.views },
+      { provide: PeopleOwnership, useValue: mocks.owners },
       { provide: FamilyMoveService, useValue: mocks.families },
       { provide: RoleSwitchService, useValue: mocks.roles },
     ],

@@ -17,6 +17,7 @@ import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { blanksToNull } from '@/modules/people/guardians';
 import { FamilyMoveService } from './family-move.service';
 import { RoleSwitchService } from './role-switch.service';
+import { PeopleOwnership } from './access/people-ownership';
 
 const moveBody = blanksToNull(familyMoveSchema);
 
@@ -32,6 +33,7 @@ export class PeopleRoleController {
   constructor(
     private readonly families: FamilyMoveService,
     private readonly roles: RoleSwitchService,
+    private readonly owners: PeopleOwnership,
   ) {}
 
   /** The guardian picker: ?search= a name, a number (main or second) or a child's code. */
@@ -47,11 +49,14 @@ export class PeopleRoleController {
   @Post('students/:id/guardian')
   @HttpCode(200)
   @Permissions('students.attach_guardian')
-  move(
+  async move(
     @ZodParam('id', peopleIdSchema) id: string,
     @ZodBody(moveBody) move: FamilyMove,
     @CurrentUser() user: AuthUser,
   ) {
+    await this.owners.student(user, id);
+    // An existing family must be hers too while the rule is on; a new one is hers by the move.
+    if (move.kind === 'existing') await this.owners.family(user, move.id);
     return this.families.move({ studentId: id, move, actorId: user.id });
   }
 
@@ -63,6 +68,7 @@ export class PeopleRoleController {
     @ZodBody(contactSelfSchema) body: ContactSelf,
     @CurrentUser() user: AuthUser,
   ) {
+    await this.owners.student(user, id);
     const value = body.contact_is_self;
     const row = await this.roles.setSelf({ studentId: id, value, actorId: user.id });
     return { id: row.id, contact_is_self: row.contact_is_self };
@@ -71,10 +77,11 @@ export class PeopleRoleController {
   /** «تحويل إلى طالب»: 201 { id, code }; 409 guardian_has_self / duplicate_student. */
   @Post('guardians/:id/to-student')
   @Permissions('people.switch_role')
-  toStudent(
+  async toStudent(
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ConvertedStudent> {
+    await this.owners.family(user, id);
     return this.roles.guardianToStudent(id, user.id);
   }
 
@@ -82,10 +89,11 @@ export class PeopleRoleController {
   @Post('students/:id/to-guardian')
   @HttpCode(200)
   @Permissions('people.switch_role')
-  toGuardian(
+  async toGuardian(
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<{ guardian_id: string }> {
+    await this.owners.student(user, id);
     return this.roles.studentToGuardian(id, user.id);
   }
 }

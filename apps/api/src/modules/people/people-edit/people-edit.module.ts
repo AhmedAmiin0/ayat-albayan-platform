@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { GuardiansModule } from '@/modules/people/guardians';
 import { StudentsModule } from '@/modules/people/students';
+import { SalesModule } from '@/modules/sales/sales';
+import { PeopleOwnership } from './access/people-ownership';
 import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditController } from './people-edit.controller';
@@ -18,9 +20,10 @@ import { StudentRecordsRepo } from './student-records.repo';
  * adds the narrower schemas, the checks and the audit rows.
  */
 @Module({
-  imports: [GuardiansModule, StudentsModule],
+  imports: [GuardiansModule, StudentsModule, SalesModule],
   controllers: [PeopleEditController, PeopleRoleController],
   providers: [
+    PeopleOwnership,
     PeopleEditRepo,
     StudentRecordsRepo,
     FamilySearchRepo,

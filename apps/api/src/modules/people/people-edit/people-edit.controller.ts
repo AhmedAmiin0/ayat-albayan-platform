@@ -15,6 +15,7 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
 import { PeopleViewService } from './people-view.service';
+import { PeopleOwnership } from './access/people-ownership';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
@@ -34,6 +35,7 @@ export class PeopleEditController {
     private readonly people: PeopleEditService,
     private readonly phones: GuardianPhonesService,
     private readonly views: PeopleViewService,
+    private readonly owners: PeopleOwnership,
   ) {}
 
   @Get('students/:id')
@@ -47,6 +49,7 @@ export class PeopleEditController {
     @ZodBody(studentBody) patch: PeopleStudentPatch,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
+    await this.owners.student(user, id);
     const row = await this.people.editStudent({ id, patch, actorId: user.id });
     return { id: row.id };
   }
@@ -57,6 +60,7 @@ export class PeopleEditController {
     @ZodBody(guardianBody) patch: PeopleGuardianPatch,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
+    await this.owners.family(user, id);
     const row = await this.people.editGuardian({ id, patch, actorId: user.id });
     return { id: row.id };
   }
@@ -67,11 +71,12 @@ export class PeopleEditController {
    */
   @Delete('guardians/:id/phones/:phone')
   @HttpCode(204)
-  removePhone(
+  async removePhone(
     @ZodParam('id', peopleIdSchema) id: string,
     @ZodParam('phone', phoneE164) phone: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    return this.phones.removeSecond({ guardianId: id, phone, actorId: user.id });
+    await this.owners.family(user, id);
+    await this.phones.removeSecond({ guardianId: id, phone, actorId: user.id });
   }
 }
