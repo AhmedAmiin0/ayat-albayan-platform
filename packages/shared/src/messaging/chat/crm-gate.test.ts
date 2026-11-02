@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { CRM_DEFAULT_NAMES, CRM_GATED_KEYS, gateApprovedKeys } from './crm-names.js';
 
-// docs/19 «crm driver»: on a crm line teacher_new_student is approved when the CRM template it goes
-// as (teacher_lesson_v2) is; every other key, and every key on a meta / kapso line, by its own row.
+// docs/19 «crm driver»: on a crm line teacher_new_student is approved by its own row OR the CRM
+// template it goes as (teacher_lesson_v2); any other key, and a meta / kapso line, by its own.
 
 interface Row {
   key: string;
@@ -24,9 +24,15 @@ describe('gateApprovedKeys', () => {
     expect(CRM_DEFAULT_NAMES.teacher_new_student).toBe('teacher_lesson_v2');
   });
 
-  it('crm line: teacher_new_student follows teacher_lesson_v2, not its own status', () => {
+  it('crm line: teacher_new_student approved by teacher_lesson_v2, whatever its own status', () => {
     expect(gateApprovedKeys([OWN, V2], crm)).toEqual(new Set(['teacher_new_student', 'teacher_lesson_v2']));
-    expect(gateApprovedKeys([{ ...OWN, status: 'approved' }, { ...V2, status: 'missing' }], crm)).toEqual(new Set());
+    expect(gateApprovedKeys([OWN, { ...V2, status: 'missing' }], crm)).toEqual(new Set());
+  });
+
+  it('crm line: a hand-approved teacher_new_student stays approved, read with or without v2', () => {
+    const own = { ...OWN, status: 'approved' };
+    expect(gateApprovedKeys([own, { ...V2, status: 'missing' }], crm).has('teacher_new_student')).toBe(true);
+    expect(gateApprovedKeys([own], crm).has('teacher_new_student')).toBe(true);
   });
 
   it('crm line: the CRM template found by meta_name too; an admin crm_name is followed', () => {

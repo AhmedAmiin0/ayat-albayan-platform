@@ -32,10 +32,9 @@ export interface CrmNamed {
 export const crmTemplateName = (t: CrmNamed): string => t.crm_name || CRM_DEFAULT_NAMES[t.key] || t.meta_name;
 
 /**
- * Keys whose approval on a crm line is that of the CRM template they go as (crmTemplateName),
- * not their own row's Meta status (owner 2026-11-02: the teacher's alert waited on
- * teacher_new_student while the CRM held teacher_lesson_v2 approved). The same-day reminders keep
- * their own, hand-set status.
+ * Keys that, on a crm line, are also approved by the CRM template they go as (crmTemplateName),
+ * not only by their own row (owner 2026-11-02: the teacher's alert waited on teacher_new_student
+ * while the CRM held teacher_lesson_v2 approved). The same-day reminders keep their own status.
  */
 export const CRM_GATED_KEYS: readonly string[] = ['teacher_new_student'];
 
@@ -44,21 +43,26 @@ export interface CrmGateRow extends CrmNamed {
   status: string;
 }
 
-/** Where a gated key's approval is read: its CRM template's row (key / meta_name), else its own. */
-function gateRow<R extends CrmGateRow>(row: R, rows: readonly R[]): R {
-  if (!CRM_GATED_KEYS.includes(row.key)) return row;
+const isApproved = (row: CrmGateRow): boolean => row.status === 'approved';
+
+/** A gated key's CRM template row (by key or meta_name) is approved; false for any other key. */
+function crmTemplateApproved<R extends CrmGateRow>(row: R, rows: readonly R[]): boolean {
+  if (!CRM_GATED_KEYS.includes(row.key)) return false;
   const name = crmTemplateName(row);
   const named = (r: R): boolean => r !== row && (r.key === name || r.meta_name === name);
-  return rows.find(named) ?? row;
+  return rows.filter(named).some(isApproved);
 }
 
-/** The keys a send may use: approved; a gated key on a crm line (`onCrm`) by its CRM template. */
+/**
+ * The keys a send may use: its own row approved, or (a gated key on a crm line, `onCrm`) the CRM
+ * template it goes as approved. Same answer whichever extra rows a read brought along.
+ */
 export function gateApprovedKeys<R extends CrmGateRow>(
   rows: readonly R[],
   onCrm: (row: R) => boolean,
 ): Set<string> {
   const approved = (row: R): boolean =>
-    (onCrm(row) ? gateRow(row, rows) : row).status === 'approved';
+    isApproved(row) || (onCrm(row) && crmTemplateApproved(row, rows));
   return new Set(rows.filter(approved).map((r) => r.key));
 }
 

@@ -129,7 +129,7 @@ overwrites it while the line stays on crm. Moving a template to a crm line reset
 any move does; set it by hand afterwards. **Switching a line to crm keeps every status from the last Meta
 sync**: an `approved` row starts going to the CRM as soon as `WA_PROVIDER` is saved (the
 `WA_ALLOWED_RECIPIENTS` guard covers steps 4–6 below), so review every row of that line (step 5).
-**Exception, `teacher_new_student` (owner 2026-11-02):** on a crm line its queue gate and send gate read the status of the CRM template it goes as (`teacher_lesson_v2`, by key or meta_name; `CRM_GATED_KEYS` + `gateApprovedKeys` in `crm-names.ts`, read by `template-gate.repo.ts` and module-mode routing), not its own row's (its own only when no such row exists); a meta / kapso line keeps its own status.
+**Exception, `teacher_new_student` (owner 2026-11-02):** on a crm line its queue gate and send gate also accept the CRM template it goes as (`teacher_lesson_v2` approved, by key or meta_name), besides its own hand-set status (`CRM_GATED_KEYS` + `gateApprovedKeys` in `crm-names.ts`, read by `template-gate.repo.ts` and module-mode routing); a meta / kapso line keeps its own status only.
 
 **«تحقق من القالب» (owner 2026-10-31).** Hand-set statuses go stale: a teacher reminder failed with Meta #132001
 while our row said approved. The CRM does not gate sends on its own template list (wacrm's `resolveTemplateRow`
