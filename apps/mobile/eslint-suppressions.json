@@ -2974,7 +2974,7 @@
       "count": 1
     }
   },
-  "src/earnings/components/EarningsHeader.tsx": {
+  "src/finance/teacher-earnings/components/EarningsHeader.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -2982,7 +2982,7 @@
       "count": 2
     }
   },
-  "src/earnings/components/EarningsList.tsx": {
+  "src/finance/teacher-earnings/components/EarningsList.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },
@@ -2993,7 +2993,7 @@
       "count": 1
     }
   },
-  "src/earnings/components/EarningsSummary.tsx": {
+  "src/finance/teacher-earnings/components/EarningsSummary.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3001,7 +3001,7 @@
       "count": 2
     }
   },
-  "src/earnings/components/PayForm.tsx": {
+  "src/finance/teacher-earnings/components/PayForm.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -3009,7 +3009,7 @@
       "count": 3
     }
   },
-  "src/earnings/components/PaymentItem.tsx": {
+  "src/finance/teacher-earnings/components/PaymentItem.tsx": {
     "max-len": {
       "count": 1
     },
@@ -3017,7 +3017,7 @@
       "count": 1
     }
   },
-  "src/earnings/components/SessionItem.tsx": {
+  "src/finance/teacher-earnings/components/SessionItem.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3028,7 +3028,7 @@
       "count": 2
     }
   },
-  "src/earnings/hooks/queries.ts": {
+  "src/finance/teacher-earnings/hooks/queries.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3039,12 +3039,12 @@
       "count": 1
     }
   },
-  "src/earnings/hooks/upload-receipt.ts": {
+  "src/finance/teacher-earnings/hooks/upload-receipt.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
-  "src/earnings/hooks/use-pay-teacher.test.tsx": {
+  "src/finance/teacher-earnings/hooks/use-pay-teacher.test.tsx": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -3052,7 +3052,7 @@
       "count": 2
     }
   },
-  "src/earnings/hooks/use-pay-teacher.ts": {
+  "src/finance/teacher-earnings/hooks/use-pay-teacher.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3063,7 +3063,7 @@
       "count": 1
     }
   },
-  "src/earnings/lib/earnings-errors.ts": {
+  "src/finance/teacher-earnings/lib/earnings-errors.ts": {
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -3074,17 +3074,17 @@
       "count": 1
     }
   },
-  "src/earnings/lib/format.test.ts": {
+  "src/finance/teacher-earnings/lib/format.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/earnings/lib/pay-draft.test.ts": {
+  "src/finance/teacher-earnings/lib/pay-draft.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/earnings/lib/pay-draft.ts": {
+  "src/finance/teacher-earnings/lib/pay-draft.ts": {
     "complexity": {
       "count": 1
     },
@@ -3092,12 +3092,12 @@
       "count": 4
     }
   },
-  "src/earnings/lib/scope.ts": {
+  "src/finance/teacher-earnings/lib/scope.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/earnings/screens/MyEarningsScreen.test.tsx": {
+  "src/finance/teacher-earnings/screens/MyEarningsScreen.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -3105,7 +3105,7 @@
       "count": 1
     }
   },
-  "src/earnings/screens/MyEarningsScreen.tsx": {
+  "src/finance/teacher-earnings/screens/MyEarningsScreen.tsx": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -3116,7 +3116,7 @@
       "count": 1
     }
   },
-  "src/earnings/screens/TeacherEarningsScreen.test.tsx": {
+  "src/finance/teacher-earnings/screens/TeacherEarningsScreen.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
@@ -3124,7 +3124,7 @@
       "count": 1
     }
   },
-  "src/earnings/screens/TeacherEarningsScreen.tsx": {
+  "src/finance/teacher-earnings/screens/TeacherEarningsScreen.tsx": {
     "@typescript-eslint/no-useless-default-assignment": {
       "count": 1
     },
@@ -3144,7 +3144,7 @@
       "count": 1
     }
   },
-  "src/earnings/testing/fixtures.ts": {
+  "src/finance/teacher-earnings/testing/fixtures.ts": {
     "max-len": {
       "count": 1
     }
@@ -7404,12 +7404,12 @@
       "count": 5
     }
   },
-  "src/money/attachments/AttachmentItem.tsx": {
+  "src/finance/money/attachments/AttachmentItem.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/money/attachments/AttachmentsViewer.tsx": {
+  "src/finance/money/attachments/AttachmentsViewer.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7417,7 +7417,7 @@
       "count": 2
     }
   },
-  "src/money/attachments/ReceiptViewer.tsx": {
+  "src/finance/money/attachments/ReceiptViewer.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7425,17 +7425,17 @@
       "count": 1
     }
   },
-  "src/money/attachments/attachments.ts": {
+  "src/finance/money/attachments/attachments.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/money/attachments/receipt-file.ts": {
+  "src/finance/money/attachments/receipt-file.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/money/payments/PaymentFilters.tsx": {
+  "src/finance/money/payments/PaymentFilters.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7446,7 +7446,7 @@
       "count": 1
     }
   },
-  "src/money/payments/PaymentItem.tsx": {
+  "src/finance/money/payments/PaymentItem.tsx": {
     "complexity": {
       "count": 1
     },
@@ -7457,12 +7457,12 @@
       "count": 1
     }
   },
-  "src/money/payments/PaymentTotals.tsx": {
+  "src/finance/money/payments/PaymentTotals.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/money/payments/PaymentsScreen.test.tsx": {
+  "src/finance/money/payments/PaymentsScreen.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
@@ -7470,7 +7470,7 @@
       "count": 1
     }
   },
-  "src/money/payments/PaymentsScreen.tsx": {
+  "src/finance/money/payments/PaymentsScreen.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7481,7 +7481,7 @@
       "count": 1
     }
   },
-  "src/money/payments/filters.ts": {
+  "src/finance/money/payments/filters.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7489,12 +7489,12 @@
       "count": 1
     }
   },
-  "src/money/receivables/ReceivableItem.tsx": {
+  "src/finance/money/receivables/ReceivableItem.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/money/receivables/ReceivablesScreen.tsx": {
+  "src/finance/money/receivables/ReceivablesScreen.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -7508,12 +7508,12 @@
       "count": 1
     }
   },
-  "src/money/receivables/receivables.test.ts": {
+  "src/finance/money/receivables/receivables.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/money/shared/queries.ts": {
+  "src/finance/money/shared/queries.ts": {
     "ab/no-shape-checks": {
       "count": 6
     },
@@ -7524,12 +7524,12 @@
       "count": 2
     }
   },
-  "src/money/subscriptions/SubscriptionItem.buttons.test.tsx": {
+  "src/finance/money/subscriptions/SubscriptionItem.buttons.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/money/subscriptions/SubscriptionItem.tsx": {
+  "src/finance/money/subscriptions/SubscriptionItem.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -7549,7 +7549,7 @@
       "count": 1
     }
   },
-  "src/money/subscriptions/SubscriptionsList.tsx": {
+  "src/finance/money/subscriptions/SubscriptionsList.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -7563,22 +7563,22 @@
       "count": 1
     }
   },
-  "src/money/subscriptions/SubscriptionsScreen.cancel.test.tsx": {
+  "src/finance/money/subscriptions/SubscriptionsScreen.cancel.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/money/subscriptions/SubscriptionsScreen.test.tsx": {
+  "src/finance/money/subscriptions/SubscriptionsScreen.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/money/subscriptions/SubscriptionsScreen.tsx": {
+  "src/finance/money/subscriptions/SubscriptionsScreen.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/money/tasks/TaskItem.tsx": {
+  "src/finance/money/tasks/TaskItem.tsx": {
     "max-len": {
       "count": 1
     },
@@ -7586,7 +7586,7 @@
       "count": 1
     }
   },
-  "src/money/tasks/TasksList.tsx": {
+  "src/finance/money/tasks/TasksList.tsx": {
     "max-len": {
       "count": 2
     },
@@ -7594,7 +7594,7 @@
       "count": 1
     }
   },
-  "src/money/tasks/tasks.ts": {
+  "src/finance/money/tasks/tasks.ts": {
     "max-len": {
       "count": 1
     }
@@ -10893,12 +10893,12 @@
       "count": 3
     }
   },
-  "src/subscribe/NoCommissionNote.tsx": {
+  "src/finance/subscriptions/NoCommissionNote.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/subscribe/PricingInputs.tsx": {
+  "src/finance/subscriptions/PricingInputs.tsx": {
     "ab/module-boundaries": {
       "count": 3
     },
@@ -10909,12 +10909,12 @@
       "count": 1
     }
   },
-  "src/subscribe/QuotePreview.tsx": {
+  "src/finance/subscriptions/QuotePreview.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/subscribe/SubscribeParts.tsx": {
+  "src/finance/subscriptions/SubscribeParts.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -10925,7 +10925,7 @@
       "count": 1
     }
   },
-  "src/subscribe/SubscribeScreen.tsx": {
+  "src/finance/subscriptions/SubscribeScreen.tsx": {
     "ab/forbidden-imports": {
       "count": 1
     },
@@ -10945,22 +10945,22 @@
       "count": 1
     }
   },
-  "src/subscribe/SubscribeScreen.used.test.tsx": {
+  "src/finance/subscriptions/SubscribeScreen.used.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/subscribe/UsedBeforeField.tsx": {
+  "src/finance/subscriptions/UsedBeforeField.tsx": {
     "max-len": {
       "count": 10
     }
   },
-  "src/subscribe/chat-subscribe.flow.test.tsx": {
+  "src/finance/subscriptions/chat-subscribe.flow.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
     }
   },
-  "src/subscribe/flow-backend.ts": {
+  "src/finance/subscriptions/flow-backend.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -10977,7 +10977,7 @@
       "count": 1
     }
   },
-  "src/subscribe/form-prefill.ts": {
+  "src/finance/subscriptions/form-prefill.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -10988,7 +10988,7 @@
       "count": 4
     }
   },
-  "src/subscribe/subscribe-form.ts": {
+  "src/finance/subscriptions/subscribe-form.ts": {
     "ab/module-boundaries": {
       "count": 3
     },
@@ -10999,12 +10999,12 @@
       "count": 2
     }
   },
-  "src/subscribe/use-subscribe.test.tsx": {
+  "src/finance/subscriptions/use-subscribe.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/subscribe/use-subscribe.ts": {
+  "src/finance/subscriptions/use-subscribe.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
     }

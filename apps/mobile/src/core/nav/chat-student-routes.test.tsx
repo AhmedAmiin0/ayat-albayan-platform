@@ -3,7 +3,7 @@ import { PaymentScreen } from '@/finance/payments';
 import { AttendanceLogScreen, SalesStudentScreen } from '@/sales/sales';
 import { AdminChannelScreen, StudentMoneyScreen, StudentRecordingsScreen } from '@/student-file';
 import { StudentScreen } from '@/students';
-import { SubscribeScreen } from '@/subscribe';
+import { SubscribeScreen } from '@/finance/subscriptions';
 import { TrialDateScreen } from '@/trial-date';
 import AdminAttendance from '../../../app/(admin-chat)/inbox/student/[id]/attendance';
 import AdminFile from '../../../app/(admin-chat)/inbox/student/[id]';

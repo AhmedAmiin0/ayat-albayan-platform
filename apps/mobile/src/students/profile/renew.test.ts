@@ -1,6 +1,6 @@
 import { quote, STUDENT_STATUSES, type QuoteOptions } from '@ab/shared';
 import { subscription } from '@/finance/payments/fixtures';
-import { formFrom } from '@/subscribe/form-prefill';
+import { formFrom } from '@/finance/subscriptions/form-prefill';
 import { renewHref } from './renew';
 
 const priced = (o: QuoteOptions) => ({ ...quote(o), fx: null });

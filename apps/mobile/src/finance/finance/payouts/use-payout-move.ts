@@ -2,7 +2,7 @@ import { uploadOnce } from '@ab/client-core';
 import type { PayoutView } from '@ab/shared';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { uploadTeacherReceipt } from '@/earnings/hooks/upload-receipt';
+import { uploadTeacherReceipt } from '@/finance/teacher-earnings/hooks/upload-receipt';
 import { apiSend } from '@/core/lib/http/api';
 import { payBody, type PayDraft } from './payout-actions';
 

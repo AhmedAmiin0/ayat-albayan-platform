@@ -1,1 +1,1 @@
-export { SubscriptionsScreen as default } from '@/money';
+export { SubscriptionsScreen as default } from '@/finance/money';

@@ -24,7 +24,7 @@ jest.mock('@/core/ui/form/ReceiptPicker', () => {
   };
 });
 const mockUpload = jest.fn();
-jest.mock('@/earnings/hooks/upload-receipt', () => ({ uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a) }));
+jest.mock('@/finance/teacher-earnings/hooks/upload-receipt', () => ({ uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a) }));
 
 let mockOpen: jest.SpyInstance;
 beforeEach(() => {

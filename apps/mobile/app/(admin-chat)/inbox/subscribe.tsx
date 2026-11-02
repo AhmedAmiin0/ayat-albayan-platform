@@ -1,1 +1,1 @@
-export { SubscribeScreen as default } from '@/subscribe';
+export { SubscribeScreen as default } from '@/finance/subscriptions';

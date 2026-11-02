@@ -1,0 +1,508 @@
+{
+  "id": "c19",
+  "seq": 231,
+  "moves": [
+    {
+      "from": "apps/mobile/src/money/attachments/",
+      "to": "apps/mobile/src/finance/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/index.ts",
+      "to": "apps/mobile/src/finance/money/"
+    },
+    {
+      "from": "apps/mobile/src/money/payments/",
+      "to": "apps/mobile/src/finance/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/receivables/",
+      "to": "apps/mobile/src/finance/money/receivables/"
+    },
+    {
+      "from": "apps/mobile/src/money/rows.permissions.test.tsx",
+      "to": "apps/mobile/src/finance/money/"
+    },
+    {
+      "from": "apps/mobile/src/money/shared/",
+      "to": "apps/mobile/src/finance/money/shared/"
+    },
+    {
+      "from": "apps/mobile/src/money/subscriptions/",
+      "to": "apps/mobile/src/finance/money/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/money/tasks/",
+      "to": "apps/mobile/src/finance/money/tasks/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/components/",
+      "to": "apps/mobile/src/finance/teacher-earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/hooks/",
+      "to": "apps/mobile/src/finance/teacher-earnings/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/index.ts",
+      "to": "apps/mobile/src/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/lib/",
+      "to": "apps/mobile/src/finance/teacher-earnings/lib/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/screens/",
+      "to": "apps/mobile/src/finance/teacher-earnings/screens/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/testing/",
+      "to": "apps/mobile/src/finance/teacher-earnings/testing/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/NoCommissionNote.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/NoCommissionNote.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/PricingInputs.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/QuotePreview.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/SubscribeParts.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/SubscribeScreen.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/SubscribeScreen.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/SubscribeScreen.used.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/UsedBeforeField.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/chat-subscribe.flow.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/fixtures.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/flow-backend.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/form-prefill.test.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/form-prefill.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/index.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/subscribe-form.golden.test.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/subscribe-form.test.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/subscribe-form.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/subscribe-route.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/use-subscribe.test.tsx",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/subscribe/use-subscribe.ts",
+      "to": "apps/mobile/src/finance/subscriptions/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/earnings/components/EarningsHeader.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/EarningsHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/components/EarningsList.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/EarningsList.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/components/EarningsSummary.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/EarningsSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/components/PayForm.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/PayForm.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/components/PaymentItem.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/PaymentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/components/SessionItem.tsx",
+      "apps/mobile/src/finance/teacher-earnings/components/SessionItem.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/hooks/queries.ts",
+      "apps/mobile/src/finance/teacher-earnings/hooks/queries.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/hooks/upload-receipt.test.ts",
+      "apps/mobile/src/finance/teacher-earnings/hooks/upload-receipt.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/hooks/upload-receipt.ts",
+      "apps/mobile/src/finance/teacher-earnings/hooks/upload-receipt.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/hooks/use-pay-teacher.test.tsx",
+      "apps/mobile/src/finance/teacher-earnings/hooks/use-pay-teacher.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/hooks/use-pay-teacher.ts",
+      "apps/mobile/src/finance/teacher-earnings/hooks/use-pay-teacher.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/index.ts",
+      "apps/mobile/src/finance/teacher-earnings/index.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/earnings-errors.test.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/earnings-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/earnings-errors.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/earnings-errors.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/format.test.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/format.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/format.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/format.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/pay-draft.test.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/pay-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/pay-draft.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/pay-draft.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/lib/scope.ts",
+      "apps/mobile/src/finance/teacher-earnings/lib/scope.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/screens/MyEarningsScreen.test.tsx",
+      "apps/mobile/src/finance/teacher-earnings/screens/MyEarningsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/screens/MyEarningsScreen.tsx",
+      "apps/mobile/src/finance/teacher-earnings/screens/MyEarningsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/screens/TeacherEarningsScreen.test.tsx",
+      "apps/mobile/src/finance/teacher-earnings/screens/TeacherEarningsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/screens/TeacherEarningsScreen.tsx",
+      "apps/mobile/src/finance/teacher-earnings/screens/TeacherEarningsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/testing/fixtures.ts",
+      "apps/mobile/src/finance/teacher-earnings/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments/AttachmentItem.tsx",
+      "apps/mobile/src/finance/money/attachments/AttachmentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/attachments/attachments.test.ts",
+      "apps/mobile/src/finance/money/attachments/attachments.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments/attachments.ts",
+      "apps/mobile/src/finance/money/attachments/attachments.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments/AttachmentsViewer.tsx",
+      "apps/mobile/src/finance/money/attachments/AttachmentsViewer.tsx"
+    ],
+    [
+      "apps/mobile/src/money/attachments/receipt-file.test.ts",
+      "apps/mobile/src/finance/money/attachments/receipt-file.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments/receipt-file.ts",
+      "apps/mobile/src/finance/money/attachments/receipt-file.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments/ReceiptViewer.tsx",
+      "apps/mobile/src/finance/money/attachments/ReceiptViewer.tsx"
+    ],
+    [
+      "apps/mobile/src/money/index.ts",
+      "apps/mobile/src/finance/money/index.ts"
+    ],
+    [
+      "apps/mobile/src/money/payments/filters.test.ts",
+      "apps/mobile/src/finance/money/payments/filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/payments/filters.ts",
+      "apps/mobile/src/finance/money/payments/filters.ts"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentFilters.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentFilters.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentItem.attachments.test.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentItem.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentItem.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentsScreen.en.test.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentsScreen.test.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentsScreen.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/payments/PaymentTotals.tsx",
+      "apps/mobile/src/finance/money/payments/PaymentTotals.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables/ReceivableItem.tsx",
+      "apps/mobile/src/finance/money/receivables/ReceivableItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables/receivables.en.test.ts",
+      "apps/mobile/src/finance/money/receivables/receivables.en.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/receivables/receivables.test.ts",
+      "apps/mobile/src/finance/money/receivables/receivables.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/receivables/receivables.ts",
+      "apps/mobile/src/finance/money/receivables/receivables.ts"
+    ],
+    [
+      "apps/mobile/src/money/receivables/ReceivablesScreen.en.test.tsx",
+      "apps/mobile/src/finance/money/receivables/ReceivablesScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables/ReceivablesScreen.test.tsx",
+      "apps/mobile/src/finance/money/receivables/ReceivablesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables/ReceivablesScreen.tsx",
+      "apps/mobile/src/finance/money/receivables/ReceivablesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables/ReceivablesSummary.tsx",
+      "apps/mobile/src/finance/money/receivables/ReceivablesSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/money/rows.permissions.test.tsx",
+      "apps/mobile/src/finance/money/rows.permissions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/shared/fixtures.ts",
+      "apps/mobile/src/finance/money/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/months.golden.test.ts",
+      "apps/mobile/src/finance/money/shared/months.golden.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/months.test.ts",
+      "apps/mobile/src/finance/money/shared/months.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/months.ts",
+      "apps/mobile/src/finance/money/shared/months.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/queries.test.ts",
+      "apps/mobile/src/finance/money/shared/queries.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/queries.ts",
+      "apps/mobile/src/finance/money/shared/queries.ts"
+    ],
+    [
+      "apps/mobile/src/money/shared/types.ts",
+      "apps/mobile/src/finance/money/shared/types.ts"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionItem.buttons.test.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionItem.buttons.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionItem.part-paid.test.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionItem.part-paid.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionItem.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionsList.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionsList.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.cancel.test.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionsScreen.cancel.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.en.test.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.test.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.tsx",
+      "apps/mobile/src/finance/money/subscriptions/SubscriptionsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/tasks/TaskItem.tsx",
+      "apps/mobile/src/finance/money/tasks/TaskItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/tasks/tasks.test.ts",
+      "apps/mobile/src/finance/money/tasks/tasks.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/tasks/tasks.ts",
+      "apps/mobile/src/finance/money/tasks/tasks.ts"
+    ],
+    [
+      "apps/mobile/src/money/tasks/TasksList.tsx",
+      "apps/mobile/src/finance/money/tasks/TasksList.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/chat-subscribe.flow.test.tsx",
+      "apps/mobile/src/finance/subscriptions/chat-subscribe.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/fixtures.ts",
+      "apps/mobile/src/finance/subscriptions/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/flow-backend.ts",
+      "apps/mobile/src/finance/subscriptions/flow-backend.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/form-prefill.test.ts",
+      "apps/mobile/src/finance/subscriptions/form-prefill.test.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/form-prefill.ts",
+      "apps/mobile/src/finance/subscriptions/form-prefill.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/index.ts",
+      "apps/mobile/src/finance/subscriptions/index.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/NoCommissionNote.test.tsx",
+      "apps/mobile/src/finance/subscriptions/NoCommissionNote.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/NoCommissionNote.tsx",
+      "apps/mobile/src/finance/subscriptions/NoCommissionNote.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/PricingInputs.tsx",
+      "apps/mobile/src/finance/subscriptions/PricingInputs.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/QuotePreview.tsx",
+      "apps/mobile/src/finance/subscriptions/QuotePreview.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/subscribe-form.golden.test.ts",
+      "apps/mobile/src/finance/subscriptions/subscribe-form.golden.test.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/subscribe-form.test.ts",
+      "apps/mobile/src/finance/subscriptions/subscribe-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/subscribe-form.ts",
+      "apps/mobile/src/finance/subscriptions/subscribe-form.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/subscribe-route.test.tsx",
+      "apps/mobile/src/finance/subscriptions/subscribe-route.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/SubscribeParts.tsx",
+      "apps/mobile/src/finance/subscriptions/SubscribeParts.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/SubscribeScreen.test.tsx",
+      "apps/mobile/src/finance/subscriptions/SubscribeScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/SubscribeScreen.tsx",
+      "apps/mobile/src/finance/subscriptions/SubscribeScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/SubscribeScreen.used.test.tsx",
+      "apps/mobile/src/finance/subscriptions/SubscribeScreen.used.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/use-subscribe.test.tsx",
+      "apps/mobile/src/finance/subscriptions/use-subscribe.test.tsx"
+    ],
+    [
+      "apps/mobile/src/subscribe/use-subscribe.ts",
+      "apps/mobile/src/finance/subscriptions/use-subscribe.ts"
+    ],
+    [
+      "apps/mobile/src/subscribe/UsedBeforeField.tsx",
+      "apps/mobile/src/finance/subscriptions/UsedBeforeField.tsx"
+    ]
+  ]
+}

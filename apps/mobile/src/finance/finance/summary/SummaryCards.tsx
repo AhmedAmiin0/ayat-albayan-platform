@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { useReceivables } from '@/money/shared/queries';
+import { useReceivables } from '@/finance/money/shared/queries';
 import { Note } from '@/core/ui/feedback/Note';
 import { KpiCard } from './KpiCard';
 import { useTeacherDues } from '@/finance/finance/shared/queries';
