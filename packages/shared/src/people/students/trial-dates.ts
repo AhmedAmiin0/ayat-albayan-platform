@@ -1,4 +1,4 @@
-import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '@ab/catalog';
+import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStatus, type Program, type StudentStatus } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow.js';
 
@@ -89,4 +89,18 @@ export function trialOutcome(input: TrialOutcomeInput): TrialOutcome {
 export function upcomingTrial<T extends { status: LessonStatus; starts_at: string }>(rows: readonly T[], now: Date): T | null {
   const ahead = rows.filter((r) => OPEN.includes(r.status) && Date.parse(r.starts_at) > now.getTime());
   return [...ahead].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))[0] ?? null;
+}
+
+/** A trial's length when the wizard has none of its own: the booking's 45 minutes. */
+export const TRIAL_DEFAULT_MINUTES: Duration = 45;
+
+/**
+ * «موعد تجريبي جديد» keeps the last trial's length (newest pick first) when it is one the slots
+ * offer (30/45/60/90), else 45; the wizard may change it (owner 2026-11-02).
+ */
+export function trialLength(history: Pick<TrialHistory, 'items'>): Duration {
+  const last = history.items[0];
+  const ms = last ? Date.parse(last.ends_at) - Date.parse(last.starts_at) : 0;
+  const min = Math.round(ms / 60_000);
+  return DURATIONS.find((d) => d === min) ?? TRIAL_DEFAULT_MINUTES;
 }

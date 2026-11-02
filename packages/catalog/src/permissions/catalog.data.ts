@@ -2,6 +2,7 @@
 // endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
 // it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
+import { PEOPLE_EDIT_ROWS } from './catalog.people-edit.js';
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = ['people', 'students', 'teachers', 'schedule', 'classroom', 'reports',
@@ -28,10 +29,7 @@ export const PERMISSION_ROWS = [
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
-  // Assistants edit people (owner 2026-11-02, /people/*), never delete or merge; granted by hand.
-  { key: 'people.edit', area: 'students', grants: ['sales'] },
-  { key: 'students.attach_guardian', area: 'students', grants: ['sales'] },
-  { key: 'people.switch_role', area: 'students', grants: ['sales'] },
+  ...PEOPLE_EDIT_ROWS,
   { key: 'assistants.read', area: 'students', grants: [] },
   { key: 'assistants.write', area: 'students', grants: [] },
   { key: 'teachers.read', area: 'teachers', grants: [] },
@@ -93,8 +91,12 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): an inline check of the sales subscribe, no route gate.
+  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
+  // «تعديل بيانات الباقة» (owner 2026-11-03): every change to an EXISTING package or payment
+  // (start date, «حلقات مستخدمة من الباقة», price, a payment's amount). Admin only; granted by
+  // hand to a trusted assistant's role, never to sales by default (migration 999: admin row).
+  { key: 'subscriptions.edit_terms', area: 'finance', grants: [] },
   // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
   { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },

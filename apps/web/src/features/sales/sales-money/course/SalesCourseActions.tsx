@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { CourseActions } from '@/features/teaching/course-actions';
 
 /**
- * The assistant's course actions on the student's running course (owner 2026-10-30): any
- * student, each behind its key, never over a clash; the result as a status line.
+ * The assistant's course actions on the student's running course (owner 2026-10-30): her
+ * students while the ownership rule holds (any otherwise, or with sales.renew_any), each behind
+ * its key, never over a clash; the result as a status line.
  */
 export function SalesCourseActions({
   studentId,

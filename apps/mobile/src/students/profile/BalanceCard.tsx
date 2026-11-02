@@ -6,6 +6,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
+import { UsedBeforeEdit } from '@/subscribe';
 import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
@@ -19,7 +20,7 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 /**
  * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when
  * the renewal alert is due), the current package and what is paid of it, «سجّل دفعة» («إلغاء الباقة» while
- * nothing is paid; owner 2026-10-28), then the
+ * nothing is paid; owner 2026-10-28), «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), then the
  * latest payments. Secondary button: the guardian card already holds the screen's one filled one.
  * Nothing while the balance is unknown; a student without a package says so.
  */
@@ -86,6 +87,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
                 stale={[['students', studentId], pathKey('/subscriptions')]}
               />
             ) : null}
+            <UsedBeforeEdit sub={current} stale={[['students', studentId], pathKey('/subscriptions')]} />
           </>
         ) : (
           <AppText style={small}>{t.subscriptions.empty}</AppText>

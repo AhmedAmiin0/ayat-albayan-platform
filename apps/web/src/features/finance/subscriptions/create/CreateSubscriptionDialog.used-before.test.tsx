@@ -66,10 +66,10 @@ describe('CreateSubscriptionDialog: lessons used before the platform', () => {
     expect(posts()[0]).not.toHaveProperty('lessonsUsedBefore');
   });
 
-  it('stops at one lesson left per course day (12 lessons, 3 days a week: 9)', () => {
+  it('stops at every lesson but one (12 lessons, 3 days a week: 11, owner 2026-11-02)', () => {
     const { dialog, day, more } = open();
     day(past);
-    const max = lessonsOf('standard') - 3;
+    const max = lessonsOf('standard') - 1;
     for (let i = 0; i < max + 3; i += 1) more();
     expect(dialog.getByRole('group', { name: t.salesMoney.usedBefore }).textContent).toContain(String(max));
     expect(dialog.getByRole('button', { name: t.salesMoney.usedBeforeMore }).hasAttribute('disabled')).toBe(true);

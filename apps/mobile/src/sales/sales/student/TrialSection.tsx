@@ -16,15 +16,16 @@ import { fill } from '@/sales/sales/lib/sales-text';
 
 type TrialStudent = Pick<SalesStudentDetails['student'], 'id' | 'name' | 'status' | 'program'>;
 
-/** The latest trial's outcomes that leave the family without a trial: a new date is offered. */
-const MISSED: readonly TrialOutcome[] = ['absent', 'cancelled'];
+/** The latest trial still ahead is changed (moved); otherwise a new date is booked. */
+const CHANGES: Partial<Record<TrialOutcome, true>> = { upcoming: true };
 
 /**
  * «الحلقة التجريبية» (owner 2026-10-28): one compact line per trial date, newest first — when (Riyadh),
  * the teacher and the outcome chip of «مواعيد الحلقة التجريبية» (حضر / غاب / أُلغيت / قادمة / نُقلت…).
- * An old cache without it shows nothing. When the latest one was missed (غاب) or cancelled, «موعد تجريبي
- * جديد» opens the chat's trial-date screen for her student (UX review #15; the chat pill's gate:
- * self.sales_money and no running subscription). `student`: hers, else null (no action).
+ * An old cache without it shows nothing. For her student without a running subscription (the
+ * chat pill's gate: self.sales_money) the chat's trial-date screen opens (owner 2026-11-02):
+ * «تعديل الموعد التجريبي» while the latest trial is still ahead (date, time, length, teacher,
+ * link), else «موعد تجريبي جديد». `student`: hers (the ownership rule), else null (no action).
  */
 export function TrialSection({ trial, student }: { trial: readonly SalesTrialLesson[] | undefined; student: TrialStudent | null }) {
   const { color } = useTheme();
@@ -33,8 +34,12 @@ export function TrialSection({ trial, student }: { trial: readonly SalesTrialLes
   const allowed = useHolds('self.sales_money');
   const base = useTreeBase();
   if (!trial) return null;
-  const again = allowed && student !== null && canPickTrialDate(student.status) && MISSED.includes(trial[0]?.outcome ?? 'upcoming');
+  const may = allowed && student !== null && canPickTrialDate(student.status);
   const s = t.sales.student.trial;
+  const changes = CHANGES[trial[0]?.outcome ?? 'moved'] === true;
+  const words = changes
+    ? { label: t.trialDate.editAction, a11y: s.edit }
+    : { label: t.trialDate.action, a11y: s.again };
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
   return (
     <View style={{ gap: 8 }}>
@@ -49,11 +54,11 @@ export function TrialSection({ trial, student }: { trial: readonly SalesTrialLes
           <StatusChip {...trialOutcomeStyle[l.outcome]} label={t.trialDate.outcome[l.outcome]} size="sm" />
         </View>
       ))}
-      {again && student ? (
+      {may && student ? (
         <Button
           variant="secondary"
-          label={t.trialDate.action}
-          accessibilityLabel={fill(s.again, { name: student.name })}
+          label={words.label}
+          accessibilityLabel={fill(words.a11y, { name: student.name })}
           onPress={() => router.push(inTree(base, chatTrialHref({ studentId: student.id, name: student.name, program: student.program })))}
         />
       ) : null}
