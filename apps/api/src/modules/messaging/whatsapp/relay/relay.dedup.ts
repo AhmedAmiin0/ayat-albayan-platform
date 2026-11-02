@@ -8,6 +8,10 @@ import type { RelayRequest } from './relay.schema';
 const RELAY_WINDOW_MS = 15 * 60_000;
 const RELAY_DEDUP_PREFIX = 'script-relay:';
 
+/** A row the script relay wrote (its dedup key is the relay's own). */
+export const isRelayDedupKey = (key: string | null): boolean =>
+  key?.startsWith(RELAY_DEDUP_PREFIX) ?? false;
+
 /** 'script-relay:' + sha256(to | type | the type's content | the 15-minute window). */
 export function relayDedupKey(req: RelayRequest, now: Date): string {
   const window = Math.floor(now.getTime() / RELAY_WINDOW_MS);

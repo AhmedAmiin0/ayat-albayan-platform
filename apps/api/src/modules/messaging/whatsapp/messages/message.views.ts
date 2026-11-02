@@ -8,6 +8,8 @@ import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/te
 import { templateButtons, templateDisplay, templateParams } from './wa-json';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { withHidden } from './hidden/hidden-view';
+import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
+import { asRelayTemplateRow, relayTemplateName } from './relay-view/relay-template-row';
 
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
@@ -20,11 +22,13 @@ export class MessageViews {
   constructor(
     private readonly templates: TemplatesRepo,
     private readonly storage: StorageService,
+    private readonly names: TemplateNames,
   ) {}
 
-  async view(row: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
-    if (row.hidden_at)
-      return withHidden(withMarks(toMessageView({ row, template: null }), row), row);
+  async view(stored: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
+    if (stored.hidden_at)
+      return withHidden(withMarks(toMessageView({ row: stored, template: null }), stored), stored);
+    const row = await this.relayed(stored);
     const template = row.template_key ? await this.templates.cached(row.template_key) : null;
     const params = templateParams(row.template_params);
     const documentUrl =
@@ -32,6 +36,14 @@ export class MessageViews {
     const block = template ? blockOf(row, template) : null;
     const shown = template ? renderable(template) : null;
     return withMarks(toMessageView({ row, template: shown, documentUrl, mediaUrl, block }), row);
+  }
+
+  /** A template the old script sent through the relay, as our own template row (display only). */
+  private async relayed(row: ThreadMessageRow): Promise<ThreadMessageRow> {
+    const name = relayTemplateName(row);
+    if (!name) return row;
+    const template = await this.names.find(name).catch(() => null);
+    return asRelayTemplateRow(row, template);
   }
 }
 
