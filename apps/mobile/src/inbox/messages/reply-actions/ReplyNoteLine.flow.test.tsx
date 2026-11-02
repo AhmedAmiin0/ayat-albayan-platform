@@ -4,7 +4,7 @@ import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { message, PHONE } from '../../shared/thread-fixtures';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const mockApiFetch = jest.fn();
@@ -25,7 +25,7 @@ function mockSheet(who: string) {
   };
 }
 jest.mock('@/teaching', () => ({ ...jest.requireActual('@/teaching'), RescheduleSheet: mockSheet('admin') }));
-jest.mock('@/sales', () => ({ ...jest.requireActual('@/sales'), SalesRescheduleSheet: mockSheet('sales') }));
+jest.mock('@/sales/sales', () => ({ ...jest.requireActual('@/sales/sales'), SalesRescheduleSheet: mockSheet('sales') }));
 
 const LESSON: ThreadLesson = {
   id: 'l-1',
