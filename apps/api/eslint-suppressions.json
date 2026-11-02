@@ -6515,9 +6515,6 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/graph.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

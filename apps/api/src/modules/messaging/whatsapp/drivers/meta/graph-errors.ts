@@ -23,17 +23,21 @@ const NO_STATUS = { status: 0, body: null, text: '' };
 const statusOf = (f: HttpFailure): Pick<Status, 'status' | 'body' | 'text'> =>
   f.kind === 'status' ? f : NO_STATUS;
 
+type MetaError = z.infer<typeof metaErrorSchema>['error'];
+
+/** Meta's own error: its message (else the fallback), code and details. */
+function fromMeta(e: MetaError, status: number): WaError {
+  const details = e.error_data?.details ?? e.error_user_msg;
+  const message = e.message ?? `WhatsApp HTTP ${status}`;
+  return new WaError(message, { code: e.code ?? null, status, details });
+}
+
 /** Meta's `{ error: { code, message, error_data.details } }`; anything else keeps code null. */
 export function waErrorFrom(f: HttpFailure): WaError {
   const { status, body, text } = statusOf(f);
   const meta = metaErrorSchema.safeParse(body);
-  const fallback = `WhatsApp HTTP ${status}`;
-  if (!meta.success) {
-    return new WaError(fallback, { code: null, status, details: text || undefined });
-  }
-  const e = meta.data.error;
-  const details = e.error_data?.details ?? e.error_user_msg;
-  return new WaError(e.message ?? fallback, { code: e.code ?? null, status, details });
+  if (meta.success) return fromMeta(meta.data.error, status);
+  return new WaError(`WhatsApp HTTP ${status}`, { code: null, status, details: text || undefined });
 }
 
 const KEY_REFUSED = new Set([401, 403]);
