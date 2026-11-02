@@ -4,8 +4,9 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// Owner 2026-10-31: after the 24 h window a Kapso chat line (try_after_window) lets staff type
-// a text (no files, no voice); the note says the chat is reopened on send (no template nudge).
+// Owner 2026-10-31 / 2026-11-01: after the 24 h window a Kapso chat line (try_after_window) lets
+// staff send as inside it (text, files: «do the same as the messages»); the note says the chat is
+// reopened on send (no template nudge).
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -30,11 +31,11 @@ async function open(th: typeof thread) {
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('a Kapso chat line after the window: the reopen note, the box, no paperclip', async () => {
+test('a Kapso chat line after the window: the reopen note, the box, the paperclip', async () => {
   await open({ ...CLOSED, try_after_window: true });
   expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
   expect(screen.getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.composer.attach })).toBeNull();
+  expect(screen.getByRole('button', { name: t.inbox.composer.attach })).toBeTruthy();
   expect(screen.queryByTestId('closed-row')).toBeNull();
 });
 

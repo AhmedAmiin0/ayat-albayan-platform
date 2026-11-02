@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { activatesStudent, StudentActivation } from './student-activation';
-import type { StudentStatusQueries } from './student-status.queries';
+import type { StudentStatusRepo } from './student-status.repo';
 
 function setup(o: { status?: string | null; moved?: boolean } = {}) {
   const status = o.status === undefined ? 'trial' : o.status;
@@ -8,7 +8,7 @@ function setup(o: { status?: string | null; moved?: boolean } = {}) {
     student: vi.fn(async () => (status === null ? null : { status, tz: 'Asia/Riyadh' })),
     move: vi.fn(async () => o.moved ?? true),
   };
-  return { statuses, activation: new StudentActivation(statuses as unknown as StudentStatusQueries) };
+  return { statuses, activation: new StudentActivation(statuses as unknown as StudentStatusRepo) };
 }
 
 describe('StudentActivation: a positive payment makes the student «مشترك» (owner 2026-10-15)', () => {

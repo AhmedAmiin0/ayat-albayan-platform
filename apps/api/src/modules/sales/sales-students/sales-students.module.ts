@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { LessonsModule } from '../../teaching/lessons';
-import { ReportsModule } from '../../reporting/reports';
-import { TrialDateQueries } from '../../teaching/booking';
-import { SalesModule } from '../sales';
+import { LessonsModule } from '@/modules/teaching/lessons';
+import { ReportsModule } from '@/modules/reporting/reports';
+import { TrialDateRepo } from '@/modules/teaching/booking';
+import { SalesModule } from '@/modules/sales/sales';
 import { SalesStudentAttendanceController, StudentAttendanceController } from './attendance/student-attendance.controller';
 import { StudentAttendanceQueries } from './attendance/student-attendance.queries';
 import { StudentAttendanceService } from './attendance/student-attendance.service';
@@ -27,7 +27,7 @@ import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.q
   imports: [SalesModule, LessonsModule, ReportsModule],
   controllers: [SalesStudentController, SalesLessonActionsController, SalesTeacherOverviewController, SalesStudentAttendanceController,
     StudentAttendanceController],
-  providers: [SalesStudentScope, SalesStudentQueries, TrialDateQueries, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
+  providers: [SalesStudentScope, SalesStudentQueries, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
     SalesTeacherOverviewQueries, SalesTeacherOverviewService, StudentAttendanceQueries, StudentAttendanceService],
 })
 export class SalesStudentsModule {}

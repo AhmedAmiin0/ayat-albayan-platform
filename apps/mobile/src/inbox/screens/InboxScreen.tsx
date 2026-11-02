@@ -1,14 +1,14 @@
 import { useState, type ReactNode } from 'react';
-import { canOpen } from '@/auth/route-permissions';
-import { usePermissions } from '@/auth/use-permissions';
+import { canOpen } from '@/core/auth/route-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
-import { LeadsList } from '../leads/list/LeadsList';
-import { ThreadsList } from '../threads-list/ThreadsList';
-import { CallsLog } from '../thread/calls/log/CallsLog';
-import { useCallsEnabled } from '../thread/calls/state/call-context';
+import { LeadsList } from '@/inbox/leads/list/LeadsList';
+import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
+import { CallsLog } from '@/inbox/thread/calls/log/CallsLog';
+import { useCallsEnabled } from '@/inbox/thread/calls/state/call-context';
 
 type View = 'threads' | 'leads' | 'calls';
 

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from '../booking.fakes';
-import type { BookingInvoices } from '../invoice/booking.invoice';
-import type { BookingQueries } from '../core/booking.queries';
-import { BookingService } from '../core/booking.service';
-import { BookingWriter } from '../core/booking.writer';
-import type { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
-import type { SalesCourse } from '../sales/course/sales-course.service';
-import { SalesBookingService } from '../sales/booking/sales-booking.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { BookingWriter } from '@/modules/teaching/booking/core/booking.writer';
+import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
+import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
+import { SalesBookingService } from '@/modules/teaching/booking/sales/booking/sales-booking.service';
 import { fakeTeacherAlert } from './teacher-alert.fakes';
 
 const TEACHER = { id: IDS.teacher, profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo' };
@@ -18,8 +18,8 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const fake = fakeTeacherAlert({ lessons: [{ id: 'L1', starts_at: RESULT.lessons[0]?.starts_at ?? '', teacher: TEACHER }] });
   const invoices = { resolve: vi.fn().mockResolvedValue(null) } as unknown as BookingInvoices;
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices, fake.after);
-  const booking = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
+  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices, fake.after);
+  const booking = new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo);
   return { ...fake, booking, bookingQueries: deps.queries };
 }
 

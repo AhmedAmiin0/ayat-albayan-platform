@@ -12,7 +12,7 @@ import type { MessageDraft } from '@/modules/teaching/booking/core/booking.messa
 import { FamilyMoveNotice, familyMove, type FamilyMove } from '@/modules/teaching/schedule-notices';
 import { trialHistory, trialLessonsOf } from './trial-date.history';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
-import { TrialDateQueries } from './trial-date.queries';
+import { TrialDateRepo } from './trial-date.repo';
 import { assertCanPick, targetOf, trialStudentId, type TrialTarget } from './trial-date.target';
 
 /** What a picked date sets in motion after its commit (one injectable, so constructors stay at ≤ 3 params). */
@@ -39,7 +39,7 @@ export class TrialDateDeps {
 @Injectable()
 export class TrialDates {
   constructor(
-    private readonly queries: TrialDateQueries,
+    private readonly queries: TrialDateRepo,
     private readonly planner: BookingPlanner,
     private readonly deps: TrialDateDeps,
   ) {}

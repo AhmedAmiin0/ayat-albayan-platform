@@ -1,7 +1,5 @@
-import { clockTime } from '@ab/shared';
+import { clockTime, dayInZone, weekdayOfDay } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
-import { localDay, weekdayOf } from '@/modules/people/teachers/availability/zoned-time';
-
 // Text helpers for the report template (R-REP-03). Every Arabic word comes from ar.json; LTR
 // values (codes, dates, times, phones) are isolated islands (docs/07 §14 rule 4).
 
@@ -38,12 +36,12 @@ export function ltr(value: string): string {
 
 /** YYYY-MM-DD of `at` in `tz`. */
 export function localDate(at: Date, tz: string): string {
-  return new Date(localDay(at.getTime(), tz)).toISOString().slice(0, 10);
+  return new Date(dayInZone(at.getTime(), tz)).toISOString().slice(0, 10);
 }
 
 /** «الثلاثاء» for `at` in `tz` (enums.weekday). */
 export function weekdayName(at: Date, tz: string): string {
-  const day = String(weekdayOf(localDay(at.getTime(), tz))) as keyof typeof ar.enums.weekday;
+  const day = String(weekdayOfDay(dayInZone(at.getTime(), tz))) as keyof typeof ar.enums.weekday;
   return ar.enums.weekday[day];
 }
 

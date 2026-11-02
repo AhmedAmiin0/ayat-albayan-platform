@@ -9,7 +9,7 @@ import { ResendSheet } from './ResendSheet';
 /**
  * Under Meta's 131060 bubble (a new number's first message whose content never reached us): «اطلب
  * إعادة الإرسال». Only where she may write now: the admin and sales chats (never a teacher's, nor her
- * own read-only chat) inside the 24 h window (ChatActions.canSend); the API still decides the send.
+ * own read-only chat) wherever a text goes (ChatActions.canSend); the API still decides the send.
  */
 export function ResendAsk({ message, phone }: { message: MessageView; phone: string }) {
   const { enabled, canSend } = useBubbleChatActions();

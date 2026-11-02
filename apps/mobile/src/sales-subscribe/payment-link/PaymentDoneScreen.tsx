@@ -1,7 +1,7 @@
 import { type Href, Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

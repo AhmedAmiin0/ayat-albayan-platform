@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
-import { SalesModule } from '../../sales/sales/sales.module';
-import { SchedulingModule } from '../scheduling/scheduling.module';
-import { SubscriptionsModule } from '../../finance/subscriptions/subscriptions.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
+import { SalesModule } from '@/modules/sales/sales/sales.module';
+import { SchedulingModule } from '@/modules/teaching/scheduling/scheduling.module';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
 import { BookingExtrasController } from './booking-extras.controller';
 import { BookingFollowUps } from './core/booking.follow-ups';
 import { BookingController } from './booking.controller';
 import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingParties } from './core/booking.parties';
 import { BookingPlanner } from './plan/booking.planner';
-import { BookingQueries } from './core/booking.queries';
+import { BookingRepo } from './core/booking.repo';
 import { BookingService } from './core/booking.service';
 import { BookingSettings } from './booking.settings';
 import { BookingWriter } from './core/booking.writer';
 import { ConflictContext } from './plan/conflict-context';
 import { CourseChangeController } from './course-change/course-change.controller';
-import { CourseLessonQueries } from './course-change/course-change.lessons';
+import { CourseLessonRepo } from './course-change/course-change.lessons';
 import { CourseChangeNotices } from './course-change/notices/course-change.notices';
 import { CourseChangePlanner } from './course-change/course-change.planner';
-import { CourseChangeQueries } from './course-change/course-change.queries';
+import { CourseChangeRepo } from './course-change/course-change.repo';
 import { CourseChange } from './course-change/course-change.service';
 import { CourseChangeViews } from './course-change/course-change.view';
 import { CourseChangeDeps, CourseChangeWriter } from './course-change/course-change.writer';
@@ -26,22 +26,22 @@ import { InstantController } from './instant/instant.controller';
 import { CourseTeacherController, CourseTimesController } from './profile/profile-course.controller';
 import { ProfileCourseRepo } from './profile/profile-course.repo';
 import { ProfileCourse } from './profile/profile-course.service';
-import { InstantQueries } from './instant/instant.queries';
+import { InstantRepo } from './instant/instant.repo';
 import { InstantLessonService } from './instant/instant.service';
 import { MakeupCandidates } from './makeup/makeup-candidates.service';
 import { SalesBookingController, SalesBookingOptionsController } from './sales/booking/sales-booking.controller';
 import { SalesBookingScope } from './sales/booking/sales-booking.ownership';
 import { SalesBookingOptions, SalesBookingService } from './sales/booking/sales-booking.service';
 import { SalesCourseController } from './sales/course/sales-course.controller';
-import { SalesCourseQueries } from './sales/course/sales-course.queries';
+import { SalesCourseRepo } from './sales/course/sales-course.repo';
 import { SalesCourse } from './sales/course/sales-course.service';
 import { SlotsService } from './plan/slots.service';
-import { TeacherAlertQueries } from './teacher/teacher-alert.queries';
+import { TeacherAlertRepo } from './teacher/teacher-alert.repo';
 import { TeacherAlert, TeacherAlertDeps } from './teacher/teacher-alert.service';
-import { TeacherOptionsQueries } from './teacher/teacher-options.queries';
+import { TeacherOptionsRepo } from './teacher/teacher-options.repo';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
 import { SalesTrialDateController, TrialDateController } from './trial-date/trial-date.controller';
-import { TrialDateQueries } from './trial-date/trial-date.queries';
+import { TrialDateRepo } from './trial-date/trial-date.repo';
 import { TrialDateDeps, TrialDates } from './trial-date/trial-date.service';
 import { SalesTrialDates } from './sales/course/sales-trial-date.service';
 import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
@@ -64,8 +64,8 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
   controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
   providers: [
     BookingSettings,
-    BookingQueries,
-    TeacherOptionsQueries,
+    BookingRepo,
+    TeacherOptionsRepo,
     ConflictContext,
     TeacherOptionsService,
     SlotsService,
@@ -76,10 +76,10 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     SalesBookingService,
     SalesBookingOptions,
     SalesCourse,
-    SalesCourseQueries,
+    SalesCourseRepo,
     CourseChange,
-    CourseChangeQueries,
-    CourseLessonQueries,
+    CourseChangeRepo,
+    CourseLessonRepo,
     CourseChangePlanner,
     CourseChangeViews,
     CourseChangeDeps,
@@ -91,12 +91,12 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     BookingFollowUps,
     TeacherAlert,
     TeacherAlertDeps,
-    TeacherAlertQueries,
+    TeacherAlertRepo,
     BookingInvoices,
     MakeupCandidates,
-    InstantQueries,
+    InstantRepo,
     InstantLessonService,
-    TrialDateQueries,
+    TrialDateRepo,
     TrialDates,
     TrialDateDeps,
     SalesTrialDates,

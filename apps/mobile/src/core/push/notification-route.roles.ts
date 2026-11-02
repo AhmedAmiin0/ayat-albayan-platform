@@ -1,6 +1,6 @@
 import type { PushKind } from '@ab/shared';
-import { canOpen } from '@/auth/route-permissions';
-import type { Can } from '@/auth/use-permissions';
+import { canOpen } from '@/core/auth/route-permissions';
+import type { Can } from '@/core/auth/use-permissions';
 import { pushKind, pushPhone } from './push-data';
 
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each

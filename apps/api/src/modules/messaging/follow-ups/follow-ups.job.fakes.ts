@@ -3,7 +3,6 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { FollowUpSlots } from './follow-up-slots';
-import { FollowUpsReads } from './follow-ups.deps';
 import { sampleLead } from './follow-ups.fakes';
 import { FollowUpsJob } from './follow-ups.job';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
@@ -52,7 +51,8 @@ export function setup(opts: JobSetup = {}) {
   const job = new FollowUpsJob(
     queries as unknown as FollowUpsRepo,
     slots as unknown as FollowUpSlots,
-    new FollowUpsReads(settings, fakePolicy(opts.rules)),
+    settings,
+    fakePolicy(opts.rules),
   );
   return { job, queries, slots, queued, advanced, keys };
 }

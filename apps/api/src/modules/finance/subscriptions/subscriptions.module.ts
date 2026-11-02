@@ -1,31 +1,31 @@
 import { Module } from '@nestjs/common';
-import { PricingModule } from '../pricing/pricing.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
-import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
+import { PricingModule } from '@/modules/finance/pricing/pricing.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
 import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { AdminTasksController } from './alerts/admin-tasks.controller';
-import { AdminTasksQueries } from './alerts/admin-tasks.queries';
+import { AdminTasksRepo } from './alerts/admin-tasks.repo';
 import { AlertsJob } from './alerts/alerts.job';
-import { AlertsQueries } from './alerts/alerts.queries';
+import { AlertsRepo } from './alerts/alerts.repo';
 import { AlertsEnv, SubscriptionAlertsService } from './alerts/alerts.service';
-import { BalanceQueries } from './money/balance.queries';
+import { BalanceRepo } from './money/balance.repo';
 import { CommissionBell } from './money/commission-bell';
 import { FollowUpEnv, MoneyFollowUps } from './money/money-follow-ups';
 import { MoneyWrites } from './money/money-writes';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentBalanceController, SubscriptionsController } from './subscriptions.controller';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsRepo } from './subscriptions.repo';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { SubscriptionCreator } from './subscription-creator';
 import { StudentActivation } from './student-lifecycle/student-activation';
 import { StudentDeactivation } from './student-lifecycle/student-deactivation';
 import { StudentRenewal } from './student-lifecycle/student-renewal';
-import { StudentStatusQueries } from './student-lifecycle/student-status.queries';
+import { StudentStatusRepo } from './student-lifecycle/student-status.repo';
 import { StudentExpiryJob } from './student-lifecycle/student-expiry.job';
-import { StudentExpiryQueries } from './student-lifecycle/student-expiry.queries';
+import { StudentExpiryRepo } from './student-lifecycle/student-expiry.repo';
 import { StudentTrialStatus } from './trial/student-trial-status';
-import { StudentTrialQueries } from './trial/student-trial.queries';
+import { StudentTrialRepo } from './trial/student-trial.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './alerts/unpaid-flags.service';
@@ -44,10 +44,10 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
   imports: [PricingModule, TeachersModule],
   controllers: [SubscriptionsController, StudentBalanceController, AdminTasksController],
   providers: [
-    AdminTasksQueries,
+    AdminTasksRepo,
     AlertsJob,
-    AlertsQueries,
-    BalanceQueries,
+    AlertsRepo,
+    BalanceRepo,
     CommissionBell,
     FollowUpEnv,
     LeadConversion,
@@ -58,23 +58,23 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     StudentActivation,
     StudentDeactivation,
     StudentRenewal,
-    StudentStatusQueries,
+    StudentStatusRepo,
     StudentExpiryJob,
-    StudentExpiryQueries,
-    StudentTrialQueries,
+    StudentExpiryRepo,
+    StudentTrialRepo,
     StudentTrialStatus,
     SubscriptionAlertsService,
     SubscriptionCancel,
-    SubscriptionCancelQueries,
+    SubscriptionCancelRepo,
     AlertsEnv,
-    SubscriptionsQueries,
+    SubscriptionsRepo,
     SubscriptionCreator,
     SubscriptionsService,
     SubscriptionsSettings,
     UnpaidFlags,
   ],
   exports: [
-    BalanceQueries,
+    BalanceRepo,
     CommissionBell,
     MoneyWrites,
     PackagesService,
@@ -82,7 +82,7 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     SubscriptionAlertsService,
     SubscriptionCancel,
     SubscriptionCreator,
-    SubscriptionsQueries,
+    SubscriptionsRepo,
     SubscriptionsService,
     UnpaidFlags,
   ],

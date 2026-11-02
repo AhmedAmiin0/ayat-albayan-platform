@@ -1,7 +1,7 @@
 import { STAFF_PRESENCE_PATH, staffPresenceKey } from '@ab/client-core';
 import type { StaffPresence, StaffPresenceRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { apiFetch } from '@/core/lib/http/api';
 import { usePresenceClock, usePresenceWatch } from '@/core/lib/presence';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';

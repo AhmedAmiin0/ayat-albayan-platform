@@ -1,27 +1,27 @@
 import { memo } from 'react';
-import { isChatViewMime, type MessageView } from '@ab/shared';
+import { isChatViewMime, type MessageView, pdfCaptionIsName } from '@ab/shared';
 import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { holdTop, useBubbleActions } from '../hooks/bubble-actions';
-import { ReactionPill } from '../reactions/ReactionPill';
-import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
-import { bubbleSide, stickerBubble } from '../hooks/bubble-side';
+import { holdTop, useBubbleActions } from '@/inbox/messages/hooks/bubble-actions';
+import { ReactionPill } from '@/inbox/messages/reactions/ReactionPill';
+import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { bubbleSide, stickerBubble } from '@/inbox/messages/hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
 import { FailReason, MessageMeta, useSmall } from './MessageMeta';
-import { mediaLine, templateLine } from '../hooks/message-text';
+import { mediaLine, templateLine } from '@/inbox/messages/hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
-import { LinkedText } from '../text/LinkedText';
-import { ResendAsk } from '../resend/ResendAsk';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
-import { ReplyNoteLine } from '../reply-actions';
-import { TappedLabel } from '../template/TappedLabel';
-import { TemplateButtons } from '../template/TemplateButtons';
-import { TemplateFrame } from '../template/TemplateFrame';
+import { LinkedText } from '@/inbox/messages/text/LinkedText';
+import { ResendAsk } from '@/inbox/messages/resend/ResendAsk';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { ReplyNoteLine } from '@/inbox/messages/reply-actions';
+import { TappedLabel } from '@/inbox/messages/template/TappedLabel';
+import { TemplateButtons } from '@/inbox/messages/template/TemplateButtons';
+import { TemplateFrame } from '@/inbox/messages/template/TemplateFrame';
 import { HiddenBody } from '@/inbox/messages/components/hide/HiddenBody';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
@@ -83,7 +83,9 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
   const asking = stuck && m.error_code === 'handed_off';
   // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
-  const a11yOn = m.body ? 'body' : m.template_key ? 'template' : null;
+  // A PDF's caption that is only its name stays off: its card shows it (owner 2026-11-01).
+  const caption = pdfCaptionIsName(m) ? null : m.body;
+  const a11yOn = caption ? 'body' : m.template_key ? 'template' : null;
   const side = bubbleSide(ours);
   const box: ViewStyle = {
     alignSelf: side.align,
@@ -114,7 +116,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
         {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} /> : null}
         {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
         <ResendAsk message={m} phone={phone} />
-        {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
+        {caption ? <LinkedText text={caption} touch={touch} a11y={a11yOn === 'body'} /> : null}
       </TemplateFrame>
       {/* What a quick reply did, or «تأكيد الحلقة» / «تغيير الموعد» for its lesson (owner 2026-10-28). */}
       <ReplyNoteLine message={m} />

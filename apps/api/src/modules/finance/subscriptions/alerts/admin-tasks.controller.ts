@@ -1,13 +1,13 @@
 import type { AdminTaskView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import { parseOrThrow, type Page } from '../../../../common/http/http';
-import { AdminTasksQueries } from './admin-tasks.queries';
-import { adminTaskListQuery } from '../subscriptions.dto';
+import { AuditService } from '@/common/audit/audit.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { parseOrThrow, type Page } from '@/common/http/http';
+import { AdminTasksRepo } from './admin-tasks.repo';
+import { adminTaskListQuery } from '@/modules/finance/subscriptions/subscriptions.dto';
 
 /** Admin tasks raised by the R-SUB-02 alerts: renewal due, package unpaid (S7, S8). */
 @ApiTags('admin-tasks')
@@ -16,7 +16,7 @@ import { adminTaskListQuery } from '../subscriptions.dto';
 @Controller('admin-tasks')
 export class AdminTasksController {
   constructor(
-    private readonly tasks: AdminTasksQueries,
+    private readonly tasks: AdminTasksRepo,
     private readonly audit: AuditService,
   ) {}
 

@@ -4,11 +4,12 @@ import {
   type CourseStopPreview,
   type CourseStopResult,
 } from '@ab/shared';
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseStop } from './course-stop.service';
 
 /**
@@ -30,22 +31,18 @@ export class CourseStopController {
   @Get()
   preview(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() query: unknown,
+    @ZodQuery(courseStopQuerySchema) query: z.output<typeof courseStopQuerySchema>,
   ): Promise<CourseStopPreview> {
-    return this.stops.preview(id, parseOrThrow(courseStopQuerySchema, query).subscriptionId);
+    return this.stops.preview(id, query.subscriptionId);
   }
 
   /** 201 CourseStopResult (a retry with the same clientRequestId answers the first stop). */
   @Post()
   stop(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(courseStopSchema) body: z.output<typeof courseStopSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseStopResult> {
-    return this.stops.stop({
-      studentId: id,
-      body: parseOrThrow(courseStopSchema, body),
-      actor: user,
-    });
+    return this.stops.stop({ studentId: id, body, actor: user });
   }
 }

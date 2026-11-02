@@ -111,4 +111,10 @@ describe('/chat-lists without inbox.lists, or with lists but no inbox.read', () 
     }
     expect(t.lists.all).not.toHaveBeenCalled();
   });
+
+  it('answers 403 lists_forbidden before the body is parsed (an invalid body is not a 400)', async () => {
+    const post = await t.call({ method: 'POST', url: '/chat-lists', token: 'teacher', body: {} });
+    const patch = await t.call({ method: 'PATCH', url: `/chat-lists/${ID}`, token: 'teacher', body: { name: '' } });
+    for (const res of [post, patch]) expect([res.statusCode, res.json().code]).toEqual([403, 'lists_forbidden']);
+  });
 });

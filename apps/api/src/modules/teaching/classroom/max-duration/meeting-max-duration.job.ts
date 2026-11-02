@@ -1,6 +1,6 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { Ticker } from '@/modules/messaging/reminders';
+import { Ticker } from '@/common/jobs';
 import {
   meetingTarget,
   roomNameOf,

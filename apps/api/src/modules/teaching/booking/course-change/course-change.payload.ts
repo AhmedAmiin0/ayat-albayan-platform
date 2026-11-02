@@ -1,12 +1,12 @@
 import type { Conflict, CourseChangeRequest } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
-import { confirmationMessages, forMessages, type Contact } from '../../lessons/status/confirmation-messages';
-import { planLessons } from '../../lessons/reschedule/rule-plan';
-import type { NewLesson, NewRule } from '../../scheduling/change-set';
-import { addDays } from '../../scheduling/occurrences/horizon';
-import type { Plan } from '../plan/booking.plan';
+import { confirmationMessages, forMessages, type Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
+import { planLessons } from '@/modules/teaching/lessons/reschedule/rule-plan';
+import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
+import { addDays } from '@/modules/teaching/scheduling/occurrences/horizon';
+import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import type { ChangePlan, ChangeRole } from './course-change.plan';
-import type { ChangeRule, OpenCourseLesson } from './course-change.queries';
+import type { ChangeRule, OpenCourseLesson } from './course-change.repo';
 
 // change_course's payload (migration 480): pure, so the whole write is unit-tested.
 

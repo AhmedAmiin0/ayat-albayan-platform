@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { AdminTaskView } from '@ab/shared';
 import { router } from 'expo-router';
-import { useTabOpen } from '@/auth/use-tab-open';
+import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/core/lib/money/format';
 import { ListRow } from '@/core/ui/layout/ListRow';

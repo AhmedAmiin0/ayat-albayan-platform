@@ -22,6 +22,8 @@ export interface InboundEvent {
   replyTo: string | null;
   mediaId: string | null;
   mediaMime: string | null;
+  /** A document's file name (messages.media_name); absent for any other message. */
+  mediaName?: string | null;
   /** messages.interactive_payload: everything but plain text, as Meta sent it. */
   payload: Json | null;
   /**

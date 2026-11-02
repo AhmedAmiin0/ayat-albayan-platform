@@ -49,11 +49,17 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 
 Owner: «try to send a request to the chat on message if last conversation was older than 24 hour», then «dont use templates just reopen the conversation with kapso on submit if the last message was older 24h».
 
-- **Kapso chat line only.** When no window is open and the chat line runs on kapso (legacy `WA_CHAT_PROVIDER`, or the default chat number in module mode), `POST /threads/:phone/text` no longer answers 409: `textLine` (`inbox/send/text-line.ts`) queues the text from the chat line (module mode stamps its default number). meta and crm chat lines, and a number that never wrote (no thread), keep the 409 `session_closed`. Only a staff member's own text is tried: forwards (text or file: the picker skips a closed chat, `forwardedFrom`), teacher mode (`scope`), file sends and reactions keep `sendLine` and its 409, with no Kapso call.
+- **Kapso chat line only.** When no window is open and the chat line runs on kapso (legacy `WA_CHAT_PROVIDER`, or the default chat number in module mode), `POST /threads/:phone/text` no longer answers 409: `textLine` (`inbox/send/text-line.ts`) queues the text from the chat line (module mode stamps its default number). meta and crm chat lines, and a number that never wrote (no thread), keep the 409 `session_closed`. Since 2026-11-01 every staff send is tried the same way (below); teacher mode (`scope`) and reactions keep `sendLine` and its 409, with no Kapso call.
 - **Kapso's record first.** Before the enqueue, `KapsoReopener` (the same one as «إعادة فتح المحادثة») lists the phone's Kapso conversations on that phone_number_id (`GET /platform/v1/whatsapp/conversations?phone_number=…&phone_number_id=…`, `X-API-Key`), takes the newest and PATCHes `{ whatsapp_conversation: { status: 'active' } }` only when that newest one is `ended` (already active: no PATCH, so a second reopen never wakes an older thread). Bounded to 5 s and never thrown: a failure is logged with the phone's last 4 digits only, and the text is still queued.
 - **Meta's rule still applies.** The PATCH changes Kapso's own inbox record only; it does not open WhatsApp's 24 h window. WhatsApp decides: a refused text fails at once with 131047 («مضى أكثر من 24 ساعة على آخر رسالة منه»), which is final (no retry, no «حاول مرة أخرى»). The row shows its failed text only: no template action under it (web bubble, mobile FailedSheet).
 - **The gates are unchanged:** `messaging_enabled`, `WA_ALLOWED_RECIPIENTS`, the rate limits and the dedup key (`admin:<phone>:<request id>` / `sales:<id>:<phone>:<request id>`).
-- **Composers.** `ThreadView.try_after_window` (true while the chat line is on kapso) lets staff (admin and sales; never teacher mode) type after the window, text only (no files, voice or saved replies), under the note «آخر رسالة منذ أكثر من 24 ساعة: سنعيد فتح المحادثة عند الإرسال» (`inbox.tryAfterWindow`). No template nudge: the note names no template, the web template toggle is not highlighted and the mobile pill's template icon is plain (`quietTemplate`).
+- **Composers.** `ThreadView.try_after_window` (true while the chat line is on kapso) lets staff (admin and sales; never teacher mode) type after the window, under the note «آخر رسالة منذ أكثر من 24 ساعة: سنعيد فتح المحادثة عند الإرسال» (`inbox.tryAfterWindow`). No template nudge: the note names no template, the web template toggle is not highlighted and the mobile pill's template icon is plain (`quietTemplate`).
+
+**Every staff send follows the text rule (owner 2026-11-01).** Owner: «also dont check do the same as the messages for the 24 h validation call kapso».
+
+- **Server.** One helper, `chatLine` (`inbox/send/text-line.ts`): `textLine` for staff, `sendLine` in teacher mode. It picks the line of a text, a reply («رد»), a forward (text or file), a file or receipt (`ThreadFileSender`: the upload URL picks the line without the Kapso call, the send reopens), a sticker (`StickersService` then `ForwardFiles.send`) and a GIF (`GifService`). Each still queues one row through the same `Outbox` and dedup key; WhatsApp's 131047 fails that row at once, as for a text. Reactions, templates, automatic notifications (reminders, report PDFs, invitations) and the notifications line keep their own rules.
+- **Payment links.** «إرسال في المحادثة» (web `CreatedLink`, mobile `LinkCreated`) puts the link's message into the chat's box, which sends it as any text: after the window too on a Kapso chat line, its refusal (131047) on its own bubble. There is no separate 24 h check and no «send a template first» note: only where no text can go at all (a meta or crm chat line after the window, or teacher mode) is the button off, with the composer's own `inbox.sessionClosed` note.
+- **Clients.** One predicate, `staffMaySend` (`@ab/client-core`), read by the web `useMaySend` / `useTriesAfterWindow` and the mobile `sendState` / `chatMaySend`: the composer (paperclip, saved replies, «رد» strip), «عرض سعر», the forward picker's hint, «رد» on a bubble and the payment link all use it.
 
 ## Keys
 
@@ -168,7 +174,42 @@ than 5 minutes from now = 401 (replay); unset secret = every POST 401. Deduped o
 per instance, 10 min; a duplicate elsewhere is harmless, statuses only move forward; a failed write answers
 500 and forgets the id). `message.status_updated` → the existing delivery-status path by `wa_message_id`
 (ticks; the CRM's conversation id is not stored). `message.received` / `conversation.created` → logged, 200.
-Never sends anything.
+Never sends anything. Checked against wacrm `98b5bd2` (`src/lib/webhooks/sign.ts`, `deliver.ts`): same header,
+same `t=…,v1=…` format, the HMAC key is the whole `whsec_…` string (never base64-decoded), 300 s tolerance,
+envelope `{id, event, occurred_at, account_id, data:{whatsapp_message_id, conversation_id, status}}`.
+
+**Delivery ticks: one click in «التكاملات»** (owner 2026-11-01). wacrm `98b5bd2` has no UI for outgoing
+webhooks (its public API only), and it shows an endpoint's signing secret once, at creation. So under
+«نظام CRM» an admin presses «ربط علامات التسليم من نظام CRM تلقائيًا» →
+`POST /settings/integrations/crm-webhook` (settings.write, like the secrets PUT). With the notifications line's
+own CRM key (needs scope `webhooks:manage` besides `messages:send`) the API:
+1. lists the CRM's webhooks (ids must be uuids, else nothing is done);
+2. creates one endpoint for `message.status_updated` at `<API_PUBLIC_URL>/webhooks/wacrm`;
+3. stores the returned secret (`whsec_` + base64url) as `WACRM_WEBHOOK_SECRET` through the «التكاملات» write
+   path (Vault, overlay reload, worker kick; audited as `secret_set:WACRM_WEBHOOK_SECRET` with the endpoint id);
+4. only then deletes the older endpoints aimed at the same url (they sign with secrets we no longer hold), best
+   effort: a 404 counts as deleted, a failure is logged by id and never fails the request.
+
+A failed create or store leaves the older endpoints as they were. The answer is `{data:{id, url, events,
+replaced}}`: the secret never reaches a response, log, error, audit row or the page. Refusals, by code (the page
+words them): 409 `crm_line_required` (notifications line not on crm, or base / key missing), 409
+`crm_base_insecure` (`WACRM_API_BASE` not https: the key is never sent in clear), 409 `public_url_required`
+(`API_PUBLIC_URL` unset, not https on a domain, or with a path: it must be the bare origin), 502
+`crm_key_refused` (401), `crm_scope_missing` (403: the key lacks `webhooks:manage`), `crm_failed`,
+`crm_bad_answer` (a 201 without a valid secret: the endpoint it made is deleted), 500 `secret_store_failed`
+(the new endpoint is deleted, best effort). **On `secret_store_failed` press again**: the store path cannot tell
+a failed Vault write from a failed reload, so the endpoint goes in both cases and a second press links cleanly.
+
+Before pressing, and after:
+- **The CRM must reach the API at a public address** (`api.<domain>`): wacrm's SSRF guard refuses private,
+  loopback, link-local or CGNAT targets at delivery, and auto-disables an endpoint after 15 consecutive failed
+  deliveries (press again once the address is fixed).
+- **Least privilege**: after linking, remove `webhooks:manage` from the CRM key (keep `messages:send`); add it
+  again only to re-link.
+- Removing `API_PUBLIC_URL` also disables this button (`public_url_required`); the endpoint already in the CRM
+  keeps delivering until it is deleted there.
+
+Code: `apps/api/src/modules/messaging/webhook/crm-register/`.
 
 **Lines check.** A crm line makes one call, `GET /me`: ok, key refused (`errors[0].credential = 'crm'`), or
 `crm_send_scope: false` (no `messages:send`); plus `crm_webhook_secret` (set or not, never the value). Never
@@ -240,7 +281,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 
 1. In the CRM: Settings → API keys → New key with scope **`messages:send`**; copy it (shown once).
 2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
-3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
+3. Give that key the scope **`webhooks:manage`** too, then press «ربط علامات التسليم من نظام CRM تلقائيًا» under «نظام CRM» (after step 4: it needs the notifications line on crm). It registers the delivery-ticks webhook and stores its secret as `WACRM_WEBHOOK_SECRET` («Delivery ticks: one click» above). Then remove `webhooks:manage` from the key again.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
 6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.

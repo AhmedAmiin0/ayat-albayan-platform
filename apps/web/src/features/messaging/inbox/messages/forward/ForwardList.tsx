@@ -2,6 +2,7 @@ import { formatPhone, type ThreadView } from '@ab/shared';
 import { useId } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
+import { useMaySend } from '@/features/messaging/inbox/shared/may-send';
 import { showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 
 export interface ForwardListProps {
@@ -13,10 +14,11 @@ export interface ForwardListProps {
   onToggle: (thread: ThreadView) => void;
 }
 
-/** One chat: its whole 44px row toggles the checkbox; outside the 24 h window a hint (the server decides). */
+/** One chat: its whole 44px row toggles the checkbox; where a text cannot go a hint (the server decides). */
 function Row({ thread: th, checked, disabled, onToggle }: { thread: ThreadView; checked: boolean; disabled: boolean; onToggle: () => void }) {
   const hintId = useId();
   const phone = showsPhone(useInboxMode());
+  const may = useMaySend(th);
   return (
     <li>
       <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 hover:bg-sunk has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
@@ -24,7 +26,7 @@ function Row({ thread: th, checked, disabled, onToggle }: { thread: ThreadView; 
           type="checkbox"
           checked={checked}
           disabled={disabled}
-          aria-describedby={th.session_open ? undefined : hintId}
+          aria-describedby={may ? undefined : hintId}
           onChange={onToggle}
           className="size-4 shrink-0 accent-[var(--lapis)]"
         />
@@ -35,7 +37,7 @@ function Row({ thread: th, checked, disabled, onToggle }: { thread: ThreadView; 
             </span>
             {phone && th.display_name && <Ltr className="shrink-0 text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
           </span>
-          {!th.session_open && (
+          {!may && (
             <span id={hintId} className="block text-2xs text-ink-2">
               {t.inbox.forward.skip.session_closed}
             </span>

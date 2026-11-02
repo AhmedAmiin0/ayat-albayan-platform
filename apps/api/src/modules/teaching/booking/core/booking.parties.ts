@@ -1,13 +1,13 @@
 import { normalizeArabic, type BookingRequest } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { detectDuplicates } from '../../../people/students/duplicate-detector';
-import { domainError } from '../booking.errors';
+import { detectDuplicates } from '@/modules/people/students/duplicate-detector';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { BookingPayload } from './booking.mapper';
 import type { BookedStudent } from './booking.messages';
 import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
-import { missedLesson } from '../makeup/booking.makeup';
-import { BookingQueries } from './booking.queries';
-import { BookingSettings } from '../booking.settings';
+import { missedLesson } from '@/modules/teaching/booking/makeup/booking.makeup';
+import { BookingRepo } from './booking.repo';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 /** Who is booked: existing rows (conflict-checked) and, on the lead path, the student to create. */
 export type Resolved = Pick<BookingPayload, 'student_ids' | 'new_guardian' | 'new_student'> & {
@@ -21,7 +21,7 @@ const notFound = (code: string) => domainError(HttpStatus.NOT_FOUND, code);
 @Injectable()
 export class BookingParties {
   constructor(
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
     private readonly settings: BookingSettings,
   ) {}
 

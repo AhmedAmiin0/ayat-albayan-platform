@@ -1,11 +1,11 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import type { SubscriptionUpdate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../common/http/errors';
-import type { Page } from '../../../common/http/http';
+import { conflict, notFound } from '@/common/http/errors';
+import type { Page } from '@/common/http/http';
 import { MoneyWrites } from './money/money-writes';
 import { PackagesService } from './money/packages.service';
-import { SubscriptionsQueries, type SubListQuery, type SubRow } from './subscriptions.queries';
+import { SubscriptionsRepo, type SubListQuery, type SubRow } from './subscriptions.repo';
 
 /**
  * Packages (S1, S3–S5, R-SUB-01). Every write is audited and recomputes the student's statuses
@@ -14,7 +14,7 @@ import { SubscriptionsQueries, type SubListQuery, type SubRow } from './subscrip
 @Injectable()
 export class SubscriptionsService {
   constructor(
-    private readonly subs: SubscriptionsQueries,
+    private readonly subs: SubscriptionsRepo,
     private readonly packages: PackagesService,
     private readonly writes: MoneyWrites,
   ) {}

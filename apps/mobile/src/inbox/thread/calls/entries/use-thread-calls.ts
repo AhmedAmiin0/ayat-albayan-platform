@@ -1,11 +1,11 @@
 import type { CallView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ThreadView } from '@ab/shared';
-import { useHolds } from '@/auth';
-import { isOwnThread, useThreadMode } from '../../hooks/thread-mode';
+import { useHolds } from '@/core/auth';
+import { isOwnThread, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { callerName } from './call-text';
-import { callListQuery } from '../api/calls-api';
-import { useCalls, useCallsEnabled } from '../state/call-context';
+import { callListQuery } from '@/inbox/thread/calls/api/calls-api';
+import { useCalls, useCallsEnabled } from '@/inbox/thread/calls/state/call-context';
 
 const NONE: readonly CallView[] = [];
 

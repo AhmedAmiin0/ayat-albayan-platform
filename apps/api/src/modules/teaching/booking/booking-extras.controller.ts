@@ -1,8 +1,15 @@
-import { invoiceUploadSchema, uploadMaxBytes, type MakeupCandidate, type SignedUpload } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import {
+  invoiceUploadSchema,
+  uploadMaxBytes,
+  type InvoiceUpload,
+  type MakeupCandidate,
+  type SignedUpload,
+} from '@ab/shared';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../../../common/auth/decorators';
-import { parseOrThrow } from '../../../common/http/http';
+import { z } from 'zod';
+import { Permissions } from '@/common/auth/decorators';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingSettings } from './booking.settings';
@@ -22,15 +29,18 @@ export class BookingExtrasController {
 
   /** R-SCH-10: the student's missed lessons that a «حجز تعويضي» can replace. */
   @Get('makeup-candidates')
-  makeupCandidates(@Query() query: unknown): Promise<MakeupCandidate[]> {
-    return this.makeup.list(parseOrThrow(makeupCandidatesQuery, query).studentId);
+  makeupCandidates(
+    @ZodQuery(makeupCandidatesQuery) query: z.output<typeof makeupCandidatesQuery>,
+  ): Promise<MakeupCandidate[]> {
+    return this.makeup.list(query.studentId);
   }
 
   /** R-PAY-03: a signed PUT for the invoice file; register its path in POST /booking `invoice`. */
   @Post('invoice-upload-url')
   @HttpCode(200)
-  async invoiceUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
-    const input = parseOrThrow(invoiceUploadSchema, body);
+  async invoiceUploadUrl(
+    @ZodBody(invoiceUploadSchema) input: InvoiceUpload,
+  ): Promise<SignedUpload> {
     return this.invoices.uploadUrl(input, uploadMaxBytes(await this.settings.read()));
   }
 }

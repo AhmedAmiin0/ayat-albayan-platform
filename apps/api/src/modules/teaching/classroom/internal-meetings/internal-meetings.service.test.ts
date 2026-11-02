@@ -6,6 +6,7 @@ import type { InternalMeetingsRepo } from './internal-meetings.repo';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 const ORIGIN = 'https://app.example.test';
@@ -27,7 +28,7 @@ describe('InternalMeetingsService', () => {
     expect(mq.end).toHaveBeenCalledWith(MEETING_ID, NOW.toISOString());
     const [url, init] = post.mock.calls[0] ?? [];
     expect(url).toBe('https://livekit.example.test/twirp/livekit.RoomService/DeleteRoom');
-    expect(JSON.parse(init?.body ?? '{}')).toEqual({ room: `meeting-${MEETING_ID}` });
+    expect(sentBody(init)).toEqual({ room: `meeting-${MEETING_ID}` });
     await service(null).end({ user: ADMIN, id: MEETING_ID }, NOW);
     expect(post).toHaveBeenCalledTimes(1);
   });

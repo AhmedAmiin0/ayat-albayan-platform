@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { AlertsQueries } from './alerts.queries';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
-import type { PackagesService, StudentState } from '../money/packages.service';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const STATE = { rows: [], ctx: { balances: new Map(), paid: new Map() } } as unknown as StudentState;
@@ -14,7 +14,7 @@ function setup(fail = false) {
   const settings = readerOf(SubscriptionsSettings);
   const renewal = { apply: vi.fn(async () => (fail ? Promise.reject(new Error('boom')) : null)) };
   const env = { settings, push: {}, renewal } as unknown as AlertsEnv;
-  const service = new SubscriptionAlertsService(packages as unknown as PackagesService, queries as unknown as AlertsQueries, env);
+  const service = new SubscriptionAlertsService(packages as unknown as PackagesService, queries as unknown as AlertsRepo, env);
   return { service, renewal };
 }
 

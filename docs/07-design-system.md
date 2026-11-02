@@ -2,7 +2,7 @@
 
 Implementation spec for `apps/web` (Tailwind v4 + shadcn/ui + TanStack Table), `apps/mobile` (Expo / React Native) and the lesson-report PDF worker.
 
-**Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/shared/src/catalog/theme/theme.ts`; `apps/web/src/styles/tokens.css` carries the same hex and a test diffs the two.
+**Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/catalog/src/theme/theme.ts`; `apps/web/src/styles/tokens.css` carries the same hex and a test diffs the two.
 `docs/design/ink-and-gold.html` and `docs/design/logo*.svg` predate this: their layout still applies, but their lapis/navy palette and rosette mark are superseded.
 
 **Copy language (owner, 2026-10-03).** UI copy is clear Modern Standard Arabic, not Egyptian dialect (CLAUDE.md rule 10). Arabic examples quoted in this document may still show the earlier Egyptian wording; `packages/shared/i18n/ar.json` is the source of truth for every string.
@@ -111,7 +111,7 @@ Rules:
 
 ### Brand palette
 
-The brand («Brand» Apps Script library, palette `T`) gives one light set. The tokens use it wherever it passes AA, and tune only where it does not; dark mode is the same family on a green-black «night Mushaf». Values are `packages/shared/src/catalog/theme/theme.ts` (RN key in brackets where it differs).
+The brand («Brand» Apps Script library, palette `T`) gives one light set. The tokens use it wherever it passes AA, and tune only where it does not; dark mode is the same family on a green-black «night Mushaf». Values are `packages/catalog/src/theme/theme.ts` (RN key in brackets where it differs).
 
 | Token | Role | Light | Dark | Brand source |
 |---|---|---|---|---|
@@ -346,7 +346,7 @@ Raw tokens switch per theme. Tailwind maps them with `@theme inline`, which reso
 }
 ```
 
-Measured contrast (WCAG 2.x, sRGB, both themes). CI checks every pair: `packages/shared/src/catalog/theme/theme.contrast.test.ts` runs each text token (ink, ink-2, ink-3, green, ok, saffron, cinnabar) on each surface (margin, page, raised, sunk), each tone on its wash, ink and ink-2 on every wash, the text on every fill and the binding pairs, all at 4.5:1, plus the 3:1 control edges. A selection:
+Measured contrast (WCAG 2.x, sRGB, both themes). CI checks every pair: `packages/catalog/src/theme/theme.contrast.test.ts` runs each text token (ink, ink-2, ink-3, green, ok, saffron, cinnabar) on each surface (margin, page, raised, sunk), each tone on its wash, ink and ink-2 on every wash, the text on every fill and the binding pairs, all at 4.5:1, plus the 3:1 control edges. A selection:
 
 | Pair | Light | Dark |
 |---|---|---|
@@ -375,7 +375,7 @@ Measured contrast (WCAG 2.x, sRGB, both themes). CI checks every pair: `packages
 
 `--cinnabar-solid` is a fill, never text: in dark it measures 4.69:1 on `--page`, 4.39 on `--raised` and 4.11 on `--cinnabar-wash`, so error labels would fail AA on raised surfaces. That is why `destructive` maps to `--cinnabar` (dark 7.84 / 7.33 / 6.86). In light the brand's `#9C3B2E` serves as both.
 
-`packages/shared/src/catalog/theme/theme.brand.test.ts` pins the light anchors to the brand values and keeps the one-meaning colours apart in OKLCH hue: saffron ≥ 20° from gold and from cinnabar, and the action inside the green range.
+`packages/catalog/src/theme/theme.brand.test.ts` pins the light anchors to the brand values and keeps the one-meaning colours apart in OKLCH hue: saffron ≥ 20° from gold and from cinnabar, and the action inside the green range.
 
 ---
 
@@ -584,7 +584,7 @@ export const lessonStatusStyle: Record<LessonStatus, StatusStyle> = {
   rescheduled: { tone: 'neutral', glyph: 'half' },
 };
 // ...same shape for lead, student, subscription, attendance, teacher, jobApplicant; grade → { tone, pips: 1..5 }
-// status-style.test.ts: for each of the 8 enum arrays in packages/shared/src/enums, assert every value has an entry.
+// status-style.test.ts: for each of the 8 enum arrays in packages/catalog/src/enums, assert every value has an entry.
 ```
 
 ### Package progress: one pure function (unit-tested, CLAUDE.md rule 4)
@@ -754,11 +754,11 @@ Put them in `packages/shared/assets/` and render them via an icon sprite (web) a
 ## 12. React Native (Expo) theme
 
 - RN has no oklch, so these are the same tokens as sRGB hex, read from the rendered page.
-- Keep **one** source: `packages/shared/src/catalog/theme/theme.ts` exports this object. `apps/web/src/styles/tokens.css` carries the same hex, and `tokens.test.ts` fails if any colour differs. CI runs the contrast matrix and the brand/hue checks against both themes (section 3).
+- Keep **one** source: `packages/catalog/src/theme/theme.ts` exports this object. `apps/web/src/styles/tokens.css` carries the same hex, and `tokens.test.ts` fails if any colour differs. CI runs the contrast matrix and the brand/hue checks against both themes (section 3).
 - Needs `react-native-svg` (Nuqta, rosette; the mark is the brand PNG, section 11) and `@expo-google-fonts/amiri` + `@expo-google-fonts/ibm-plex-sans-arabic`.
 
 ```ts
-// packages/shared/src/catalog/theme/theme.ts
+// packages/catalog/src/theme/theme.ts
 export const palette = {
   light: {
     margin: '#f5eddd', page: '#fdf8f0', raised: '#fffdf9', sunk: '#f7f0e1',

@@ -1,7 +1,7 @@
 import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
@@ -18,6 +18,7 @@ import { checkStart, type StartDraft } from '@/sales-subscribe/lib/start-date';
 import { StartDateField } from './StartDateField';
 import { SalesTeacherPills, useTeacherPick } from './SalesTeacherPills';
 import { useSalesCreateSubscription, useSalesQuote } from '@/sales-subscribe/hooks/use-sales-subscribe';
+import { CustomAmountPill } from '@/sales-subscribe/payment-link/CustomAmountPill';
 import { LinkCreated } from '@/sales-subscribe/payment-link/LinkCreated';
 import { linkErrorText } from '@/sales-subscribe/payment-link/link-text';
 import { OnlinePrice } from '@/sales-subscribe/payment-link/OnlinePrice';
@@ -100,7 +101,12 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   return (
     <>
       <ChildPills students={students} value={studentId} onChange={pick} />
-      <PricingInputs form={form} freeDiscount={false} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+      <PricingInputs
+        form={form}
+        freeDiscount={false}
+        onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+        discountExtra={online ? <CustomAmountPill pay={pay} /> : null}
+      />
       {canOnline ? <PayMethodPills value={method} onChange={setMethod} /> : null}
       {online ? <OnlinePrice pay={pay} /> : <SalesPriceSection quote={quote} />}
       <SalesTeacherPills hidden={studentId === ''} value={teacher.teacherId} onChange={teacher.setTeacher} />

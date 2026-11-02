@@ -1,10 +1,10 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
-import { BusyQueries } from './busy.queries';
+import { BusyRepo } from './busy.repo';
 import { findConflicts } from './conflicts';
 import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
-import { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
+import { RuleProjectionRepo } from '@/modules/teaching/scheduling/rules/rule-projection.repo';
 
 export type CheckInput = {
   teacherId: string;
@@ -24,9 +24,9 @@ export type CheckInput = {
 @Injectable()
 export class ConflictChecker {
   constructor(
-    private readonly busy: BusyQueries,
+    private readonly busy: BusyRepo,
     private readonly availability: AvailabilityRepo,
-    private readonly projection: RuleProjectionQueries,
+    private readonly projection: RuleProjectionRepo,
   ) {}
 
   async check(input: CheckInput): Promise<Conflict[]> {

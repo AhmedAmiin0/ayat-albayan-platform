@@ -1,13 +1,13 @@
 // Test-only fakes for the booking module: one in-memory academy, every DB touch a vi.fn.
 import { bookingRequestSchema, type AcademySettings, type BookingRequest } from '@ab/shared';
 import { vi } from 'vitest';
-import type { BusyQueries } from '@/modules/teaching/scheduling/conflicts/busy.queries';
+import type { BusyRepo } from '@/modules/teaching/scheduling/conflicts/busy.repo';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import type { RuleProjectionQueries } from '@/modules/teaching/scheduling/rules/rule-projection.queries';
+import type { RuleProjectionRepo } from '@/modules/teaching/scheduling/rules/rule-projection.repo';
 import type { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import { BookingParties } from './core/booking.parties';
 import { BookingPlanner } from './plan/booking.planner';
-import type { BookingQueries, BookingStudent } from './core/booking.queries';
+import type { BookingRepo, BookingStudent } from './core/booking.repo';
 import { BookingSettings } from './booking.settings';
 import { ConflictContext } from './plan/conflict-context';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
@@ -86,7 +86,7 @@ export function fakeContext() {
   const { busy } = fakeBusy();
   const context = new ConflictContext(
     availability as unknown as AvailabilityRepo,
-    busy as unknown as BusyQueries,
+    busy as unknown as BusyRepo,
   );
   return { queries, availability, busy, context };
 }
@@ -97,13 +97,13 @@ export function fakePlanner(over: Partial<AcademySettings> = {}) {
   const availability = fakeAvailability();
   const { busy, projection } = fakeBusy();
   const checker = new ConflictChecker(
-    busy as unknown as BusyQueries,
+    busy as unknown as BusyRepo,
     availability as unknown as AvailabilityRepo,
-    projection as unknown as RuleProjectionQueries,
+    projection as unknown as RuleProjectionRepo,
   );
   const settings = fakeSettings(over);
   const planner = new BookingPlanner(
-    new BookingParties(queries as unknown as BookingQueries, readerOf(BookingSettings)),
+    new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings)),
     checker,
     new BookingSettings(settings),
   );

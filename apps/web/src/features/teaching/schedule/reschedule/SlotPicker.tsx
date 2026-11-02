@@ -1,3 +1,4 @@
+import { addDays, weekStart, zonedPartsIn } from '@ab/shared';
 import type { SlotsResponse, SlotView } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { t } from '@/lib/i18n/i18n';
 import { slotsQuery } from '@/features/teaching/schedule/api';
 import { SlotGrid, type SlotGridProps } from '@/features/teaching/schedule/grid/SlotGrid';
 import { bookableWindow, currentWeekStart } from './slots';
-import { addDays, dayMonthLabel, weekStart, zonedParts } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@/features/teaching/schedule/tz';
 import { useViewerTz } from '@/lib/viewer-tz';
 
 export interface SlotPickerProps {
@@ -39,7 +40,7 @@ const cityOf = (tz: string) => tzCity(tz) ?? tz;
 function openingWeek(anchor: string | undefined, week0: { first: string; tz: string }): string {
   const { first, tz } = week0;
   if (!anchor) return first;
-  const week = weekStart(zonedParts(new Date(anchor), tz).date);
+  const week = weekStart(zonedPartsIn(new Date(anchor), tz).date);
   return week > first ? week : first;
 }
 

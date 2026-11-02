@@ -19,7 +19,7 @@ import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
 import { locale } from '@/core/lib/i18n/locale';
 import { StaffPhotoControl } from '@/account';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 
 /** The teacher's page and lists, and sales' «المعلمون»: where a new photo must show. */

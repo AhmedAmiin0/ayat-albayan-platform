@@ -1,8 +1,7 @@
+import { MINUTE_MS } from '@ab/shared';
 import type { ConflictKind, LessonStatus, PayoutStatus, TimeEditMode } from '@ab/shared';
-import { badRequest } from '../../../../common/http/errors';
-import { localDateOf } from '../../scheduling/occurrences/horizon';
-import { MINUTE } from '../../../people/teachers/availability/zoned-time';
-
+import { badRequest } from '@/common/http/errors';
+import { localDateOf } from '@/modules/teaching/scheduling/occurrences/horizon';
 // Pure decisions of «عدّل الوقت» (R-SCH-11, docs/10 §10): what a time edit may do to a lesson,
 // which side effects it sets in motion, and whether a payout month stands in its way.
 
@@ -34,7 +33,7 @@ export type TimeEditPlan = {
   ignoredConflicts: readonly ConflictKind[];
 };
 
-const durationOf = (start: Date, end: Date): number => Math.round((end.getTime() - start.getTime()) / MINUTE);
+const durationOf = (start: Date, end: Date): number => Math.round((end.getTime() - start.getTime()) / MINUTE_MS);
 
 /** The request already holds: a replay (or a no-op) writes nothing. */
 export const isSameTime = (current: TimeEditInput['current'], request: TimeEditInput['request']): boolean =>
@@ -62,7 +61,7 @@ function validate({ mode, now, current, request, zones }: TimeEditInput, planned
 export function planTimeEdit(input: TimeEditInput): TimeEditPlan {
   const { mode, current, request } = input;
   const start = request.startsAt;
-  const end = new Date(start.getTime() + request.durationMin * MINUTE);
+  const end = new Date(start.getTime() + request.durationMin * MINUTE_MS);
   const reason = request.reason?.trim() || null;
   validate(input, { end, reason });
   const startChanged = start.getTime() !== current.startsAt.getTime();

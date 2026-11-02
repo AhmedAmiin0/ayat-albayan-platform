@@ -1,13 +1,13 @@
+import { DAY_MS } from '@ab/shared';
 import type { Conflict, SlotsResponse, SlotView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { findConflicts } from '../../scheduling/conflicts/conflicts';
-import type { Occurrence } from '../../scheduling/occurrences/occurrences';
-import { freeSlots } from '../../../people/teachers/availability/free-slots';
-import { DAY } from '../../../people/teachers/availability/zoned-time';
-import type { SlotsQuery } from '../booking.dto';
-import { domainError } from '../booking.errors';
-import { BookingQueries } from '../core/booking.queries';
-import { BookingSettings } from '../booking.settings';
+import { findConflicts } from '@/modules/teaching/scheduling/conflicts/conflicts';
+import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { freeSlots } from '@/modules/people/teachers/availability/free-slots';
+import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';
 
 const MAX_SLOT_RANGE_DAYS = 14;
@@ -36,14 +36,14 @@ export function slotViews(candidates: readonly Occurrence[], conflicts: readonly
 @Injectable()
 export class SlotsService {
   constructor(
-    private readonly queries: BookingQueries,
+    private readonly queries: BookingRepo,
     private readonly context: ConflictContext,
     private readonly settings: BookingSettings,
   ) {}
 
   async slots(q: SlotsQuery): Promise<SlotsResponse> {
     const [from, to] = [new Date(q.from), new Date(q.to)];
-    if (to.getTime() - from.getTime() > MAX_SLOT_RANGE_DAYS * DAY) {
+    if (to.getTime() - from.getTime() > MAX_SLOT_RANGE_DAYS * DAY_MS) {
       throw domainError(HttpStatus.BAD_REQUEST, 'range_too_large', { maxDays: MAX_SLOT_RANGE_DAYS });
     }
     const teacher = await this.queries.teacher(q.teacherId);

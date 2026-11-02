@@ -1,13 +1,23 @@
-import { bookingRequestSchema, type BookingResult, type BookingTeacherOption, type Conflict, type SlotsResponse } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import type {
+  BookingRequest,
+  BookingResult,
+  BookingTeacherOption,
+  Conflict,
+  SlotsResponse,
+} from '@ab/shared';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../../common/http/http';
-import { clientRequest } from '../../core/booking.payload';
-import { slotsQuerySchema, teacherOptionsQuerySchema } from '../../booking.dto';
+import { z } from 'zod';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
+import {
+  slotsQuerySchema,
+  teacherOptionsQuerySchema,
+} from '@/modules/teaching/booking/booking.dto';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
-import { withPackageSize } from '../../plan/package-size';
+import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 
 /**
  * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads
@@ -25,15 +35,19 @@ export class SalesBookingController {
   /** 200 { conflicts } of the whole series, nothing written. */
   @Post('check')
   @HttpCode(200)
-  async check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ conflicts: Conflict[] }> {
-    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+  async check(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ conflicts: Conflict[] }> {
     return { conflicts: await this.booking.check(req, user) };
   }
 
   /** 201 BookingResult; 403 override_not_allowed | kind_not_allowed | meeting_link_not_allowed | invoice_not_allowed, and (sales_auto_assign ON only) not_your_lead | not_your_student | not_your_family. */
   @Post()
-  book(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BookingResult> {
-    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+  book(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<BookingResult> {
     return this.booking.book(clientRequest(req, user.role), user);
   }
 }
@@ -47,12 +61,18 @@ export class SalesBookingOptionsController {
   constructor(private readonly options: SalesBookingOptions) {}
 
   @Get('teachers')
-  teacherOptions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<BookingTeacherOption[]> {
-    return this.options.teacherOptions(parseOrThrow(teacherOptionsQuerySchema, query), user);
+  teacherOptions(
+    @ZodQuery(teacherOptionsQuerySchema) query: z.output<typeof teacherOptionsQuerySchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<BookingTeacherOption[]> {
+    return this.options.teacherOptions(query, user);
   }
 
   @Get('slots')
-  slots(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SlotsResponse> {
-    return this.options.slots(parseOrThrow(slotsQuerySchema, query), user);
+  slots(
+    @ZodQuery(slotsQuerySchema) query: z.output<typeof slotsQuerySchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SlotsResponse> {
+    return this.options.slots(query, user);
   }
 }

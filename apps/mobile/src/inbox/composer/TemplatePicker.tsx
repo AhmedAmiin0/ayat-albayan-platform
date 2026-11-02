@@ -2,7 +2,7 @@ import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } fr
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, Modal, View } from 'react-native';
-import { useSendsAllTemplates } from '@/auth/use-permissions';
+import { useSendsAllTemplates } from '@/core/auth/use-permissions';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

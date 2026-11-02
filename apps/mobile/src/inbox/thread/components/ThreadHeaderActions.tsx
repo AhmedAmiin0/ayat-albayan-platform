@@ -1,7 +1,7 @@
 import { canLinkFamily, type ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { IconButton } from '@/core/ui/primitives/IconButton';
