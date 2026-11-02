@@ -71,9 +71,7 @@ export class TemplateVerifier implements OnApplicationBootstrap, OnModuleDestroy
   async verifyAll(opts: { line?: WaLine; now?: Date } = {}): Promise<TemplateHealthView> {
     requireSync();
     const now = opts.now ?? new Date();
-    if (opts.line) requireLine(this.lines[opts.line], opts.line);
-    const targets = opts.line ? [opts.line] : this.configuredLines();
-    if (!targets.length) requireLine(this.lines.notifications, 'notifications');
+    const targets = this.targets(opts.line);
     const deps = { queries: this.queries, lines: this.lines, log: this.log };
     const results: TemplateLineSync[] = [];
     for (const line of targets) {
@@ -82,6 +80,17 @@ export class TemplateVerifier implements OnApplicationBootstrap, OnModuleDestroy
       results.push(result);
     }
     return { lines: results, templates: await this.catalog.list() };
+  }
+
+  /** The asked line (503 when it is not configured), else every configured line (503 when none). */
+  private targets(line?: WaLine): WaLine[] {
+    if (line) {
+      requireLine(this.lines[line], line);
+      return [line];
+    }
+    const all = this.configuredLines();
+    if (!all.length) requireLine(this.lines.notifications, 'notifications');
+    return all;
   }
 
   private configuredLines(): WaLine[] {
