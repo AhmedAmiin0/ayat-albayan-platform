@@ -80,16 +80,6 @@ interface MessageFileProps {
   onLongPress?: () => void;
 }
 
-/**
- * A bubble's photo, PDF, voice note or video (owner 2026-10-19 #1, W6), ours or theirs. A photo shows
- * its thumbnail as the bubble renders (PhotoPreview, owner 2026-10-26: supersedes W6's «signed only on
- * the tap» for photos), and so does every PDF its first page once on screen (PdfPreview, owner
- * 2026-10-29 / 2026-11-01, rendered in the ayat-pdf sandbox); HEIC keeps
- * «عرض صورة» (Android does not decode it reliably), which opens it in the phone's viewer; a voice note
- * and a video look as on WhatsApp (owner 2026-10-27: VoiceNote, VideoTile); «تنزيل» under each saves it
- * (DownloadLink). A teacher gets the label only: the API refuses the file (403 media_forbidden; a photo
- * may be a payment proof), so no request is made.
- */
 interface ViewProps extends MessageFileProps {
   kind: string;
 }
@@ -110,7 +100,10 @@ const MEDIA_VIEWS: readonly ((p: ViewProps) => ReactNode)[] = [
   (p) => (isGifMessage(p.message) ? <GifBubble {...p} kind={t.inbox.media.gif} /> : null),
   (p) => (isAudio(p.message.media_mime) ? <VoiceNote {...p} /> : null),
   (p) => (isPlayableMime(p.message.media_mime) ? <VideoTile {...p} /> : null),
-  (p) => (isPdfMime(p.message.media_mime) ? <PdfPreview {...p} fallback={<FileOpener {...p} />} /> : null),
+  (p) => {
+    const opener = <FileOpener {...p} />;
+    return isPdfMime(p.message.media_mime) ? <PdfPreview {...p} fallback={opener} /> : null;
+  },
 ];
 
 function MediaView(p: ViewProps) {
@@ -121,6 +114,16 @@ function MediaView(p: ViewProps) {
   return <FileOpener {...p} />;
 }
 
+/**
+ * A bubble's photo, PDF, voice note or video (owner 2026-10-19 #1, W6), ours or theirs. A photo shows
+ * its thumbnail as the bubble renders (PhotoPreview, owner 2026-10-26: supersedes W6's «signed only on
+ * the tap» for photos), and so does every PDF its first page once on screen (PdfPreview, owner
+ * 2026-10-29 / 2026-11-01, rendered in the ayat-pdf sandbox); HEIC keeps
+ * «عرض صورة» (Android does not decode it reliably), which opens it in the phone's viewer; a voice note
+ * and a video look as on WhatsApp (owner 2026-10-27: VoiceNote, VideoTile); «تنزيل» under each saves it
+ * (DownloadLink). A teacher gets the label only: the API refuses the file (403 media_forbidden; a photo
+ * may be a payment proof), so no request is made.
+ */
 export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps) {
   const teacher = useThreadMode().kind === 'teacher';
   const kind = t.inbox.media[mediaKind(m.media_mime)];

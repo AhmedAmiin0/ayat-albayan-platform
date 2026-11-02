@@ -12,13 +12,7 @@ import {
 import type { FollowUpsRepo } from './follow-ups.repo';
 
 export type Outcome =
-  | 'queued'
-  | 'waiting'
-  | 'advanced'
-  | 'notDue'
-  | 'waitingTemplate'
-  | 'noSlots'
-  | 'failed';
+  'queued' | 'waiting' | 'advanced' | 'notDue' | 'waitingTemplate' | 'noSlots' | 'failed';
 
 export interface Tick {
   lead: FollowUpLeadRow;

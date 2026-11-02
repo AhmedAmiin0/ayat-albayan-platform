@@ -32,5 +32,9 @@ export function machineEvent(e: CallWebhookEvent): CallEvent | null {
  * end it.
  */
 export function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
-  return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
+  return (
+    row.direction === 'outbound' &&
+    row.status === 'ended' &&
+    ['ringing', 'accepted', 'answer_sdp'].includes(event.type)
+  );
 }

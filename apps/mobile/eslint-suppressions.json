@@ -4613,7 +4613,7 @@
   },
   "src/inbox/messages/components/MessageFile.tsx": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/inbox/messages/components/MessageList.band.test.tsx": {

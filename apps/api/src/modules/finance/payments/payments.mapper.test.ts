@@ -7,7 +7,13 @@ describe('toPaymentWrite', () => {
   });
 
   it('maps each sent field to its column, a null receipt included', () => {
-    const patch = { amount: 80, method: 'cash', paidAt: '2026-11-01T10:00:00Z', receiptPath: null, note: 'n' } as const;
+    const patch = {
+      amount: 80,
+      method: 'cash',
+      paidAt: '2026-11-01T10:00:00Z',
+      receiptPath: null,
+      note: 'n',
+    } as const;
     expect(toPaymentWrite(patch)).toEqual({
       amount: 80,
       method: 'cash',

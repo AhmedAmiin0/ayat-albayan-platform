@@ -11,7 +11,11 @@ describe('editBody: one PATCH field per change', () => {
     ['locale', { locale: 'en' as const }, { locale: 'en' }],
     ['tz', { tz: 'Africa/Cairo' }, { tz: 'Africa/Cairo' }],
     ['a cleared phone', { phone: '  ' }, { phone_e164: null }],
-    ['the role (role_id goes with it)', { role: 'teacher' as const }, { role: 'teacher', role_id: null }],
+    [
+      'the role (role_id goes with it)',
+      { role: 'teacher' as const },
+      { role: 'teacher', role_id: null },
+    ],
   ])('%s', (_name, change, body) => {
     expect(editBody(d, { ...f, ...change }, [])).toEqual(body);
   });

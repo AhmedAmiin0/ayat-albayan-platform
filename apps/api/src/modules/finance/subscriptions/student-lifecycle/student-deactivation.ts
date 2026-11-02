@@ -55,7 +55,7 @@ export class StudentDeactivation {
     return student ? { last, student } : null;
   }
 
-  /** A recorded subscribed from wins; a not-subscribed one only when no other positive payment remains. */
+  /** A recorded subscribed from wins; a not-subscribed one only when no positive payment remains. */
   private async revertFlip(from: StudentStatus | null, ctx: Ctx): Promise<boolean> {
     if (from && !isNotSubscribed(from)) return this.revertTo(from, ctx);
     const otherPayment = await this.statuses.hasPositivePayment(ctx.ids.studentId);
@@ -68,7 +68,8 @@ export class StudentDeactivation {
     const facts = otherPayment ? NO_TRIAL : await this.trialFacts(o.ids.studentId);
     const to = revertTarget({ otherPayment, ended, facts });
     const move = { studentId: o.ids.studentId, from: o.current, to };
-    const audit = { actorId: o.ids.actorId, after: { via: 'payment_deleted', payment_id: o.payment.id } };
+    const after = { via: 'payment_deleted', payment_id: o.payment.id };
+    const audit = { actorId: o.ids.actorId, after };
     return to === o.current ? false : this.statuses.move(move, audit);
   }
 

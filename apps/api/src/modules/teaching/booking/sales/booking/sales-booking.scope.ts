@@ -65,7 +65,8 @@ const ALWAYS_REFUSED: readonly Rule<Asked>[] = [
  * here), or any with the grant 'any' (sales.renew_any).
  */
 function assertCourse(req: BookingRequest, own: BookingOwnership, grant: CourseGrant): void {
-  if (!forStudents(req) || req.studentIds.length !== 1 || req.leadId) throw forbidden('course_one_student');
+  const oneStudent = forStudents(req) && req.studentIds.length === 1 && !req.leadId;
+  if (!oneStudent) throw forbidden('course_one_student');
   if (grant === 'any') return;
   if (!own || !all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');
 }

@@ -30,7 +30,8 @@ function lineFor(e: CallWebhookEvent): CallingLine | null {
   return ours ? line : null;
 }
 
-const isInboundOffer = (e: CallWebhookEvent): boolean => e.kind === 'connect' && e.direction === 'inbound';
+const isInboundOffer = (e: CallWebhookEvent): boolean =>
+  e.kind === 'connect' && e.direction === 'inbound';
 
 /** Our outbound call, unless it already names another wacid. */
 const isOwnCall = (own: CallRow | null, e: CallWebhookEvent): own is CallRow =>
