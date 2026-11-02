@@ -7,6 +7,8 @@ import { Button } from '@/core/ui/primitives/Button';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { HistoryEntryCard } from '@/sales/sales/components/HistoryEntryCard';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { UsedBeforeEdit } from '@/used-before-edit';
 
 /** «الاشتراك»: the current one outlined (the history's card, no money); the past ones collapsed behind «الاشتراكات السابقة (n)». */
 export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 'subscriptions' | 'current_id'> }) {
@@ -18,6 +20,7 @@ export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 
     <View style={{ gap: 8 }}>
       <SectionLabel>{s.subscription}</SectionLabel>
       {current ? <HistoryEntryCard entry={current} current brief /> : <Note>{s.noSubscription}</Note>}
+      {current ? <UsedBeforeEdit sub={current} stale={[pathKey('/sales/students')]} /> : null}
       {past.length > 0 ? (
         <Button
           variant="secondary"

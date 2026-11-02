@@ -1,0 +1,44 @@
+import type { SubscriptionStatus } from '@ab/shared';
+import { useState } from 'react';
+import { Button } from '@/components/ui/form/button';
+import { Toast } from '@/components/ui/overlay/toast';
+import { usePermissions } from '@/features/people/auth';
+import { t } from '@/lib/i18n/i18n';
+import { EditUsedBeforeDialog, type UsedBeforePackage } from './EditUsedBeforeDialog';
+
+export interface EditUsedBeforeActionProps {
+  pkg: UsedBeforePackage & { status: SubscriptionStatus | null };
+  /** The sales history's query (the admin's money is always refreshed). */
+  staleKey?: readonly unknown[] | undefined;
+}
+
+/**
+ * The card's «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), for admins and assistants
+ * (subscriptions.set_start_date); never on a cancelled package.
+ */
+export function EditUsedBeforeAction({ pkg, staleKey }: EditUsedBeforeActionProps) {
+  const allowed = usePermissions().can('subscriptions.set_start_date');
+  const [open, setOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const saved = () => {
+    setOpen(false);
+    setToast(t.salesMoney.usedBeforeEdit.saved);
+  };
+  if (!allowed || pkg.status === 'cancelled') return null;
+  return (
+    <>
+      <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(true)}>
+        {t.salesMoney.usedBeforeEdit.action}
+      </Button>
+      {open && (
+        <EditUsedBeforeDialog
+          pkg={pkg}
+          staleKey={staleKey}
+          onClose={() => setOpen(false)}
+          onSaved={saved}
+        />
+      )}
+      {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
+    </>
+  );
+}

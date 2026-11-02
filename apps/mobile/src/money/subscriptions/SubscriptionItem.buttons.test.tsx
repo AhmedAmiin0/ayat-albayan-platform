@@ -1,8 +1,9 @@
 import { screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { subscription } from '@/payments/fixtures';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
 import { SubscriptionItem } from './SubscriptionItem';
 
@@ -19,7 +20,16 @@ test('docs/07 «الأزرار»: «إلغاء الباقة» is danger, full wi
   expect(StyleSheet.flatten(cancel?.props.style)).toMatchObject({ borderColor: palette.light.bad });
 });
 
-test('paid in full: no action box at all', async () => {
+test('paid in full: only «تعديل عدد الحلقات المستخدمة» (subscriptions.set_start_date)', async () => {
   await renderWithQuery(<SubscriptionItem sub={subscription({ status: 'active', price: 81, paid: 81 })} />);
+  const box = screen.getByTestId('subscription-actions');
+  expect(within(box).getByText(t.salesMoney.usedBeforeEdit.action)).toBeTruthy();
+  expect(within(box).queryByText(t.subscriptions.cancel.action)).toBeNull();
+});
+
+test('paid in full, without subscriptions.set_start_date: no action box at all', async () => {
+  const client = createTestQueryClient();
+  client.setQueryData(pathKey('/auth/me'), { role: 'admin', permissions: [] });
+  await renderWithQuery(<SubscriptionItem sub={subscription({ status: 'active', price: 81, paid: 81 })} />, client);
   expect(screen.queryByTestId('subscription-actions')).toBeNull();
 });

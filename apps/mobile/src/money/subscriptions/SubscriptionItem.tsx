@@ -2,10 +2,12 @@ import { memo } from 'react';
 import { cancelOffered, countsForMoney, isCancelled, packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
+import { useHolds } from '@/core/auth';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { CancelPackage } from '@/payments';
+import { UsedBeforeEdit } from '@/used-before-edit';
 import { t } from '@/core/lib/i18n/i18n';
 import { money, packageName, paidLine } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';
@@ -26,10 +28,12 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
 /** The status word; a status newer than this bundle (an old OTA) shows its code instead of nothing. */
 const statusLabel = (status: SubscriptionView['status']): string => t.enums.subscriptionStatus[status] ?? status;
 
-/** «سجّل دفعة» / «إلغاء الباقة», full width under the tags (docs/07 §6): never shrink-wrapped in the tag line. */
+/** «سجّل دفعة» / «إلغاء الباقة» / «تعديل عدد الحلقات المستخدمة», full width under the tags (docs/07 §6): never shrink-wrapped in the tag line. */
 function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean }) {
   const cancel = cancelOffered(sub);
-  if (!pay && !cancel) return null;
+  const stale = [pathKey('/subscriptions'), ['students', sub.student.id]];
+  const edit = useHolds('subscriptions.set_start_date') && !isCancelled(sub);
+  if (!pay && !cancel && !edit) return null;
   return (
     <View testID="subscription-actions" style={{ width: '100%', gap: 8 }}>
       {pay ? (
@@ -43,9 +47,10 @@ function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean
       {cancel ? (
         <CancelPackage
           cancel={(body) => apiSend('POST', `/subscriptions/${sub.id}/cancel`, body)}
-          stale={[pathKey('/subscriptions'), ['students', sub.student.id]]}
+          stale={stale}
         />
       ) : null}
+      <UsedBeforeEdit sub={{ ...sub, lessons_used: sub.balance.lessons_used }} stale={stale} />
     </View>
   );
 }

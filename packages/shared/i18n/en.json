@@ -4866,6 +4866,22 @@
     "usedBeforeHint": "Counted from the package; only the rest is booked",
     "usedBeforeLess": "One lesson fewer",
     "usedBeforeMore": "One lesson more",
+    "usedBeforeEdit": {
+      "action": "Edit lessons already used",
+      "title": "Edit lessons already used",
+      "hint": "Lessons the student attended outside the platform, counted from the package.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Lessons already used updated.",
+      "current": "Current: {n}",
+      "errors": {
+        "used_before_course_booked": "This package already has a booked course, so the lessons already used can no longer change.",
+        "used_before_too_many": "The number is higher than this package allows.",
+        "already_cancelled": "This package is cancelled.",
+        "used_before_changed": "The number changed before saving; reopen and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
     "noCommissionStarted": "No commission: the course started before it was recorded",
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",

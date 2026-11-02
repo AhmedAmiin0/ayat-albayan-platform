@@ -10,6 +10,7 @@ import { t } from '@/lib/i18n/i18n';
 import { cancelSubscription, studentBalanceQuery } from '@/features/finance/subscriptions/api';
 import { CancelPackageDialog } from '@/features/finance/subscriptions/cancel/CancelPackageDialog';
 import { BalanceDetails } from './BalanceDetails';
+import { EditUsedBeforeAction } from '@/features/finance/subscriptions/used-before/EditUsedBeforeAction';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { packageName, unpaidFlagged } from '@/features/finance/subscriptions/format';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
@@ -49,6 +50,11 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
             <Button type="button" variant="secondary" size="sm" onClick={() => setDialog('pay')}>
               {t.payments.record}
             </Button>
+          )}
+          {current && (
+            <EditUsedBeforeAction
+              pkg={{ ...current, lessons_used: current.balance.lessons_used }}
+            />
           )}
           {current && cancelOffered(current) && (
             <Button type="button" variant="ghost" size="sm" onClick={() => setDialog('cancel')}>

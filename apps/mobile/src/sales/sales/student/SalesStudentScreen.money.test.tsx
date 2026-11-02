@@ -88,3 +88,9 @@ test('not hers, without sales.renew_any: no money action and the family is never
   expect(mockApiFetch).not.toHaveBeenCalledWith(FAMILY);
   expect(screen.queryByText(m.renew)).toBeNull();
 });
+
+test('«تعديل عدد الحلقات المستخدمة» on the current package only with subscriptions.set_start_date', async () => {
+  serve(kid({}), ['self.sales', 'subscriptions.set_start_date']);
+  await open();
+  expect(await screen.findByRole('button', { name: t.salesMoney.usedBeforeEdit.action })).toBeTruthy();
+});

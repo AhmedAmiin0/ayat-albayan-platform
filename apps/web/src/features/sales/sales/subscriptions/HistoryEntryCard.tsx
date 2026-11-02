@@ -2,9 +2,11 @@ import type { SalesHistoryEntry } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { EditUsedBeforeAction } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
+const HISTORY_KEY = ['sales', 'subscriptions', 'history'] as const;
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');
 const fill = (text: string, values: Record<string, string>): string =>
@@ -18,7 +20,12 @@ export function HistoryEntryCard({ entry, current }: { entry: SalesHistoryEntry;
       <p className="flex flex-wrap items-baseline gap-x-3 font-semibold">
         <span>{entry.package ?? '—'}</span>
         <span className="text-ink-2">{status(entry.status)}</span>
-        {current && <span className="text-xs text-lapis">{h.current}</span>}
+        {current && (
+          <>
+            <span className="text-xs text-lapis">{h.current}</span>
+            <EditUsedBeforeAction pkg={entry} staleKey={HISTORY_KEY} />
+          </>
+        )}
       </p>
       <p className="flex flex-wrap gap-x-4 text-sm text-ink-2">
         <span>{fill(h.starts, { date: '' })}<Ltr className="tabular-nums">{entry.starts_on}</Ltr></span>

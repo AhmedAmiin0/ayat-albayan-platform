@@ -48,12 +48,15 @@ export function usedBeforeEditProblem(input: UsedBeforeEditInput): UsedBeforeEdi
   return CHECKS.find(([, refused]) => refused(input))?.[0] ?? null;
 }
 
-/** The edit's answer: the package's lessons only (never a price: assistants edit any student's). */
-export interface UsedBeforeEditResult {
-  subscription_id: string;
-  lessons_total: number;
-  lessons_used_before: number;
-  /** v_subscription_balance after the edit (lessons_used_before in). */
-  lessons_used: number;
-  remaining: number;
-}
+/**
+ * The edit's answer: the package's lessons only (never a price: assistants edit any student's);
+ * lessons_used / remaining are v_subscription_balance after the edit (lessons_used_before in).
+ */
+export const usedBeforeEditResultSchema = z.object({
+  subscription_id: z.string(),
+  lessons_total: z.int(),
+  lessons_used_before: z.int(),
+  lessons_used: z.int(),
+  remaining: z.int(),
+});
+export type UsedBeforeEditResult = z.infer<typeof usedBeforeEditResultSchema>;
