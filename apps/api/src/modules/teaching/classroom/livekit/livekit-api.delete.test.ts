@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { LivekitApi } from './livekit-api';
+import { sentBody, sentHeader } from './livekit.fakes';
 
 const NOW = new Date('2026-10-30T12:00:00.000Z');
 
@@ -11,8 +12,8 @@ describe('LivekitApi.deleteRoom', () => {
     expect(await new LivekitApi(CONFIG, h).deleteRoom('meeting-1', NOW)).toBe(true);
     const [url, init] = h.mock.calls[0] ?? [];
     expect(url).toBe('https://livekit.example.test/twirp/livekit.RoomService/DeleteRoom');
-    expect(JSON.parse(init?.body ?? '{}')).toEqual({ room: 'meeting-1' });
-    const auth = init?.headers.authorization ?? '';
+    expect(sentBody(init)).toEqual({ room: 'meeting-1' });
+    const auth = sentHeader(init, 'authorization');
     expect(decode(auth.replace('Bearer ', '')).video).toEqual({ roomCreate: true });
   });
 

@@ -7,6 +7,9 @@ import { kickConfigReload } from '@/config/role/worker-kick';
 import { IntegrationConfigRepo } from './integration-config.repo';
 import { integrationItems } from './integration-config.view';
 
+/** audit_log.entity_id of the integration config (one entity; key names go in action / after). */
+export const INTEGRATIONS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
+
 /** Injection token of the refresh period in ms (integrationRefreshMs; 0 = every second; null = off). */
 export const INTEGRATION_REFRESH_MS = Symbol('INTEGRATION_REFRESH_MS');
 const MIN_REFRESH_MS = 1_000;
