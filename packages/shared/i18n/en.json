@@ -2623,7 +2623,7 @@
     "noReceipt": "No receipt",
     "fromInvoice": "Receipt is the booking invoice",
     "receiptA11y": "Receipt for {student}'s payment",
-    "webOnlyEdit": "Editing or voiding a payment is available on the web dashboard."
+    "webOnlyEdit": "Editing the amount is available here; other edits and voiding a payment are on the web dashboard."
   },
   "inbox": {
     "dayToday": "Today",
