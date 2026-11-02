@@ -39,7 +39,7 @@ export function emptyBalance(sub: { id: string; lessons_total: number; lessons_u
  * teacher's or guardian's RLS the view would give partial numbers.
  */
 @Injectable()
-export class BalanceQueries {
+export class BalanceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async forSubscriptions(ids: readonly string[]): Promise<Map<string, BalanceRow>> {

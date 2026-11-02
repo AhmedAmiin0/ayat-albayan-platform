@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { StudentDeactivation } from './student-deactivation';
 import type { StudentRenewal } from './student-renewal';
-import type { StudentStatusQueries } from './student-status.queries';
-import type { TrialLessonRow } from '../trial/student-trial.plan';
-import type { StudentTrialQueries } from '../trial/student-trial.queries';
+import type { StudentStatusRepo } from './student-status.repo';
+import type { TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
+import type { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
 const FLIP_P1 = { after: { status: 'active', via: 'payment', payment_id: 'p1' }, at: '2026-10-01T09:00:00Z' };
 const PAYMENT = { id: 'p1', kind: 'payment', amount: 290 };
@@ -27,9 +27,9 @@ function setup(o: Opts = {}) {
   const renewal = { ended: vi.fn(async () => o.ended ?? false) };
   const trials = { lessonsOf: vi.fn(async () => o.lessons ?? []) };
   const d = new StudentDeactivation(
-    statuses as unknown as StudentStatusQueries,
+    statuses as unknown as StudentStatusRepo,
     renewal as unknown as StudentRenewal,
-    trials as unknown as StudentTrialQueries,
+    trials as unknown as StudentTrialRepo,
   );
   return { statuses, renewal, trials, d };
 }

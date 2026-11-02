@@ -1,15 +1,15 @@
 import type { ThreadPeople } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
-import type { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
-import type { PackagesService } from '../../../finance/subscriptions/money/packages.service';
-import { dbError } from '../../../../common/http/http';
+import type { Db } from '@/common/db/db.module';
+import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
+import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { dbError } from '@/common/http/http';
 import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 interface PeopleDeps {
   db: Db;
   packages: PackagesService;
-  balances: BalanceQueries;
+  balances: BalanceRepo;
 }
 
 const STUDENTS = 'id, code, name, status, teacher:teachers(display_name_ar)';

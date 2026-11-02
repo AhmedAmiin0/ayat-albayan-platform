@@ -8,7 +8,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
-import { BalanceQueries } from '@/modules/finance/subscriptions';
+import { BalanceRepo } from '@/modules/finance/subscriptions';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { ChatNumber } from './home/chat-number';
@@ -82,7 +82,7 @@ export async function portalApp() {
     .overrideProvider(PortalLessonsRepo).useValue(lessons)
     .overrideProvider(PortalReportsRepo).useValue(reports)
     .overrideProvider(PortalPackageRepo).useValue(packages)
-    .overrideProvider(BalanceQueries).useValue(balances)
+    .overrideProvider(BalanceRepo).useValue(balances)
     .overrideProvider(StudentLinkRepo).useValue(classroom)
     .overrideProvider(RoomAdmission).useValue(admission)
     .overrideProvider(StorageService).useValue(storage)
