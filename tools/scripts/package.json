@@ -8,7 +8,8 @@
     "typecheck": "tsgo -p tsconfig.json"
   },
   "dependencies": {
-    "@ab/shared": "workspace:*"
+    "@ab/shared": "workspace:*",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
