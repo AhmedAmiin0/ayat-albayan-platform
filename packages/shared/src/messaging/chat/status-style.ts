@@ -1,4 +1,4 @@
-import type { MessageStatus, TemplateStatus } from '../../enums/index.js';
+import type { MessageStatus, TemplateStatus } from '@ab/catalog';
 import type { StatusStyle } from '../../money/status-style/status-style.js';
 
 // Phase 4 status chips (docs/07 §6 grammar: act = the admin must do something, «دورك»).

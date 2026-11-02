@@ -1,8 +1,9 @@
 import { chatListPhone } from '@ab/shared';
+import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
 import { z } from 'zod';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest, forbidden, notFound } from '../../../common/http/errors';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, forbidden, notFound } from '@/common/http/errors';
 
 /**
  * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the
@@ -11,7 +12,17 @@ import { badRequest, forbidden, notFound } from '../../../common/http/errors';
  */
 export function assertListsUser(user: AuthUser): void {
   const staff = user.role === 'admin' || user.role === 'sales';
-  if (!staff || !can(user, 'inbox.read') || !can(user, 'inbox.lists')) throw forbidden('lists_forbidden');
+  if (!staff || !can(user, 'inbox.read') || !can(user, 'inbox.lists'))
+    throw forbidden('lists_forbidden');
+}
+
+/** `assertListsUser` as a guard: it runs before the body pipe, so a teacher still gets 403. */
+@Injectable()
+export class ListsUserGuard implements CanActivate {
+  canActivate(ctx: ExecutionContext): boolean {
+    assertListsUser(ctx.switchToHttp().getRequest<{ user: AuthUser }>().user);
+    return true;
+  }
 }
 
 /** May this caller see a chat's lists and filter by one (GET /threads, /threads/:phone)? */

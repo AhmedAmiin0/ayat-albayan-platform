@@ -1,4 +1,4 @@
-import type { UserRole } from '../../catalog/permissions/index.js';
+import type { UserRole } from '@ab/catalog';
 
 // Who may see whose online status and last seen (docs/33 §2, owner 2026-10-30). The API applies it
 // to every presence answer; migration 985's presence_can_watch is its twin at the Realtime socket.

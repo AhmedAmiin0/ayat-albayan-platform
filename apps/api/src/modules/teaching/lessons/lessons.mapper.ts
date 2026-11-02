@@ -14,9 +14,9 @@ import {
   type LessonView,
 } from '@ab/shared';
 import { z } from 'zod';
-import type { Role } from '../../../common/auth/verify-token';
+import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
-import type { SeqMap } from './lessons.queries';
+import type { SeqMap } from './lessons.repo';
 
 /** What a teacher may do to their own lesson (docs/10 §3 Guards); the rest is admin-only. */
 const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([

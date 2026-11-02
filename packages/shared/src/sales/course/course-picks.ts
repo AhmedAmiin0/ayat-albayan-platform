@@ -1,4 +1,4 @@
-import type { Weekday } from '../../enums/index.js';
+import type { Weekday } from '@ab/catalog';
 import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule } from '../../schedule/lessons/series/day-times.js';
 import type { BookedCourse, PrefilledPick } from './course-follow.js';
 import { prefillDays } from './course-follow.js';

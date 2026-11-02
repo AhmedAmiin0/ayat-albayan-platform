@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PushService } from '../../../common/push/push.service';
+import { PushService } from '@/common/push/push.service';
 import type { ChannelActor } from './channel-access';
-import { ChannelPeopleQueries } from './channel-people.queries';
-import type { ChannelMessageRow } from './channel.queries';
-import { ChannelQueries } from './channel.queries';
+import { ChannelPeopleRepo } from './channel-people.repo';
+import type { ChannelMessageRow } from './channel.repo';
+import { ChannelRepo } from './channel.repo';
 
 /** The push quotes this much of the message. */
 const PREVIEW = 80;
@@ -16,8 +16,8 @@ const PREVIEW = 80;
 @Injectable()
 export class ChannelNotify {
   constructor(
-    private readonly queries: ChannelQueries,
-    private readonly people: ChannelPeopleQueries,
+    private readonly queries: ChannelRepo,
+    private readonly people: ChannelPeopleRepo,
     private readonly push: PushService,
   ) {}
 

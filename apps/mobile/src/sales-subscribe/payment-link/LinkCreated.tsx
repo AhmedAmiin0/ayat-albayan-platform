@@ -8,7 +8,7 @@ import { appOpenUrl } from '@/core/lib/stripe-flag';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { appendComposerText, chatWindowOpen, ErrorLine } from '@/inbox';
+import { appendComposerText, chatMaySend, ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { instantDay } from '@/payments';
 import { fill } from '@/sales/sales';
@@ -29,7 +29,9 @@ const pl = t.paymentLinks;
 
 /**
  * The link made: the reference vs the agreed amount, the link, then «إرسال في المحادثة» (the text goes into
- * the chat's box for HER to send: never sent for her; within the 24 h window only, else the template note)
+ * the chat's box for HER to send: never sent for her; it leaves as any text, owner 2026-11-01: the box
+ * rule, chatMaySend: after the 24 h window too on a Kapso chat line, a refusal on its bubble; only
+ * where no text can go at all, the box's own closed note)
  * and «نسخ» (the clipboard, else the share sheet). «افتح الرابط» opens the page here, marked as from the app
  * (?from=<platform>): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
  */
@@ -37,13 +39,10 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const tz = useViewerTz();
   const { color } = useTheme();
   const client = useQueryClient();
-  const [closed, setClosed] = useState(false);
+  // Read at render, as the web dialog: the button is off (with the box's note) where no text goes.
+  const closed = !chatMaySend(client, phone, new Date());
   const [copy, setCopy] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const send = () => {
-    if (!chatWindowOpen(client, phone, new Date())) {
-      setClosed(true);
-      return;
-    }
     // After a reply she had half-written (drafts outlive the chat), never over it.
     appendComposerText(phone, linkMessage(link));
     onSent();
@@ -62,8 +61,8 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
       <AppText selectable style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.lapis }}>
         {ltr(link.url)}
       </AppText>
-      {closed ? <ErrorLine message={pl.templateNeeded} /> : null}
-      <Button label={pl.sendInChat} onPress={send} />
+      {closed ? <ErrorLine message={t.inbox.sessionClosed} /> : null}
+      <Button label={pl.sendInChat} onPress={send} disabled={closed} />
       <Button variant="secondary" label={pl.copy} onPress={() => void copyOrShare(link.url).then(setCopy)} />
       <Button variant="secondary" label={t.studentLists.openLink} onPress={open} />
       {copy === 'copied' ? <Note>{pl.copied}</Note> : null}

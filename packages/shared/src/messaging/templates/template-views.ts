@@ -1,4 +1,4 @@
-import type { TemplateCategory, TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateCategory, TemplateStatus, WaLine } from '@ab/catalog';
 import type { TemplateDisplay } from './template-block.js';
 import type { TemplateButton } from './templates.js';
 

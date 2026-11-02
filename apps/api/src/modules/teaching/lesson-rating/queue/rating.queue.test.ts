@@ -7,7 +7,7 @@ import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.
 import { LessonRatingSettings } from '@/modules/teaching/lesson-rating/lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from '@/modules/teaching/lesson-rating/rating.fakes';
 import { RatingJob } from './rating.job';
-import type { RatingQueries } from '@/modules/teaching/lesson-rating/rating.queries';
+import type { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingQueue } from './rating.queue';
 import { RatingReads } from '@/modules/teaching/lesson-rating/rating.reads';
 
@@ -20,12 +20,12 @@ let rules: FakePolicyInput = {};
 
 function setup() {
   const queue = new RatingQueue(
-    queries as unknown as RatingQueries,
+    queries as unknown as RatingRepo,
     new RatingReads(readerOf(LessonRatingSettings, settings), fakePolicy({ ...rules, settings: { feedback_mode: settings.feedback_mode } })),
     sender as unknown as MessageSender,
   );
   const events = new LessonEvents();
-  const job = new RatingJob(queue, queries as unknown as RatingQueries, events);
+  const job = new RatingJob(queue, queries as unknown as RatingRepo, events);
   job.onModuleInit();
   return { job, events };
 }

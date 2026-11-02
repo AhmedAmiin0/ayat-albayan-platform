@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
-import { PROGRAMS } from '../enums/index.js';
+import { PROGRAMS } from '@ab/catalog';
 import { messageExpired, TEMPLATE_KEYS } from '../messaging/index.js';
 
 // docs/13-forms-spec.md is the owner's wording for the three Google Forms; titles, options and the

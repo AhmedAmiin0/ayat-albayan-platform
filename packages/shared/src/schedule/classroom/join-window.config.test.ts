@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { makeupOffer } from '../lessons/makeup-offer.js';
 import type { LessonView } from '../lessons/views.js';
 import { makeupEligible } from '../schemas/booking-extras.js';
-import { SETTING_DEFAULTS } from '../../settings/registry.js';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from './join-window.js';
 import { pickStudentLesson } from './student-lesson.js';
 
