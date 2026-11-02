@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { APP_ENV, RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { SAMPLE_REPORT } from '@/modules/messaging/whatsapp/template-review';
-import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import { templateServices } from './template-services.fakes';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { RECORDED, scriptedFetch, STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
@@ -20,8 +20,8 @@ function submit(row: TemplateRow, env: typeof STUB_ENV, ...replies: Reply[]) {
   const f = scriptedFetch(...replies);
   const client = new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 });
   const lines = { notifications: client, chat: new HttpWhatsappClient(null) };
-  const registry = new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
-  const result = registry.submit(row.key, 'admin-1').then(
+  const registry = templateServices(queries, lines, audit);
+  const result = registry.admin.submit(row.key, 'admin-1').then(
     (view) => ({ view, error: null }),
     (e: { getStatus: () => number; getResponse: () => unknown }) => ({ view: null, error: [e.getStatus(), e.getResponse()] }),
   );

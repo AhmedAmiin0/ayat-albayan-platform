@@ -1,17 +1,17 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
-import { TemplateRegistry } from './template.registry';
+import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import type { TemplatesRepo } from './templates.repo';
 import { RENEWAL_DUE_SEED } from './seed-templates.fakes';
 import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
-import { type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const lines = { notifications: client, chat: chatClient } as unknown as WhatsappLines;
-const registry = () => new TemplateRegistry(queries as unknown as TemplatesRepo, lines, audit as unknown as AuditService);
+const registry = () => templateServices(queries, lines, audit);
 const status = (p: Promise<unknown>) =>
   p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
 const OFF = [409, { code: 'template_sync_off', message: 'template_sync_off' }];
@@ -30,7 +30,7 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
 
   it('boot: no timer, so no getTemplates call', async () => {
     vi.useFakeTimers();
-    registry().onApplicationBootstrap();
+    registry().verifier.onApplicationBootstrap();
     await vi.advanceTimersByTimeAsync(10_000);
     expect(client.getTemplates).not.toHaveBeenCalled();
     expect(vi.getTimerCount()).toBe(0);
@@ -39,9 +39,9 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
   it('verifyAll and submit answer 409 template_sync_off before ANY other check or client call', async () => {
     client.configured.mockReturnValue(false);
     queries.get.mockResolvedValue(null);
-    expect(await status(registry().verifyAll())).toEqual(OFF);
-    expect(await status(registry().submit('nope', ADMIN.id))).toEqual(OFF);
-    expect(await status(registry().moveLine({ key: 'nope', line: 'chat' }, ADMIN.id))).toEqual(OFF);
+    expect(await status(registry().verifier.verifyAll())).toEqual(OFF);
+    expect(await status(registry().admin.submit('nope', ADMIN.id))).toEqual(OFF);
+    expect(await status(registry().admin.moveLine({ key: 'nope', line: 'chat' }, ADMIN.id))).toEqual(OFF);
     expect(client.configured).not.toHaveBeenCalled();
     expect(queries.get).not.toHaveBeenCalled();
     expect(client.getTemplates).not.toHaveBeenCalled();
@@ -55,10 +55,10 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
     client.getTemplates.mockResolvedValue([]);
     queries.all.mockResolvedValue([]);
     vi.useFakeTimers();
-    registry().onApplicationBootstrap();
+    registry().verifier.onApplicationBootstrap();
     await vi.advanceTimersByTimeAsync(5_000);
     expect(client.getTemplates).toHaveBeenCalledTimes(1);
-    await expect(registry().verifyAll()).resolves.toMatchObject({ templates: [] });
+    await expect(registry().verifier.verifyAll()).resolves.toMatchObject({ templates: [] });
   });
 });
 
