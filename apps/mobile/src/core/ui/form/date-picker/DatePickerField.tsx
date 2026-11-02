@@ -39,7 +39,8 @@ export function DatePickerField({ label, day, range, onChange, error }: DatePick
       <Pressable
         testID="date-picker-open"
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${t.datePicker.change.replace('{date}', localDay(day))}`}
+        accessibilityLabel={`${label}: ${localDay(day)}`}
+        accessibilityHint={t.datePicker.title}
         onPress={() => setOpen(true)}
         style={{
           minHeight: shape.control.touch,

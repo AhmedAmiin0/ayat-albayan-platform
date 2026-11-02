@@ -40,7 +40,6 @@ export function CalendarMonth({ value, range, onPick }: CalendarMonthProps) {
               <CalendarDay
                 key={day}
                 day={day}
-                column={column}
                 state={{
                   selected: day === value,
                   allowed: dayAllowed(day, range),

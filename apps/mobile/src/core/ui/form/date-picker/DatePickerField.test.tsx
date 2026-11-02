@@ -42,13 +42,13 @@ test('days outside min/max are disabled and cannot be picked', async () => {
 
 test('month arrows walk the months and stop at the range’s first and last month', async () => {
   await openOn('2026-11-01');
-  expect(screen.getByRole('button', { name: d.nextMonth, disabled: true })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: d.prevMonth }));
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.next, disabled: true })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
   expect(screen.getByTestId('calendar-day-2026-10-31')).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: d.prevMonth }));
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
   expect(stateOf('2026-09-14')).toMatchObject({ disabled: true });
   expect(stateOf('2026-09-15')).toMatchObject({ disabled: false });
-  expect(screen.getByRole('button', { name: d.prevMonth, disabled: true })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.prev, disabled: true })).toBeTruthy();
 });
 
 test('a tap on the scrim closes without a change', async () => {
@@ -56,4 +56,12 @@ test('a tap on the scrim closes without a change', async () => {
   await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
   expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
   expect(onChange).not.toHaveBeenCalled();
+});
+
+test('each day says its weekday; the academy today also says «اليوم»', async () => {
+  await openOn('2026-10-20');
+  const label = (day: string) => screen.getByTestId(`calendar-day-${day}`).props.accessibilityLabel as string;
+  expect(label('2026-10-20')).toBe(`${t.enums.weekday['2']}، ${localDay('2026-10-20')}`);
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.next }));
+  expect(label('2026-11-02')).toBe(`${t.enums.weekday['1']}، ${localDay('2026-11-02')}، ${t.mobile.today}`);
 });

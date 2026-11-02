@@ -5,21 +5,19 @@ import { dayNumber, daySpoken } from './calendar-text';
 
 interface CalendarDayProps {
   day: string;
-  /** The week column, 0 = السبت (for the spoken weekday). */
-  column: number;
   state: { selected: boolean; allowed: boolean; today: boolean };
   onPick: (day: string) => void;
 }
 
 /** One day of the grid, 44pt: the picked day filled lapis, today ringed, out of range dimmed. */
-export function CalendarDay({ day, column, state, onPick }: CalendarDayProps) {
+export function CalendarDay({ day, state, onPick }: CalendarDayProps) {
   const { color } = useTheme();
   const { selected, allowed, today } = state;
   return (
     <Pressable
       testID={`calendar-day-${day}`}
       accessibilityRole="button"
-      accessibilityLabel={daySpoken(day, column)}
+      accessibilityLabel={daySpoken(day, today)}
       accessibilityState={{ selected, disabled: !allowed }}
       disabled={!allowed}
       onPress={() => onPick(day)}

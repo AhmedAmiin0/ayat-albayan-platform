@@ -75,9 +75,9 @@ test('a past day only with «بدأ الاشتراك سابقًا»: picked on t
   expect(screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2025-10-12')))).toBeTruthy();
 
   await fireEvent.press(screen.getByTestId('date-picker-open'));
-  expect(screen.getByRole('button', { name: t.datePicker.nextMonth, disabled: true })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.next, disabled: true })).toBeTruthy();
   expect(screen.getByTestId('calendar-day-2026-10-13').props.accessibilityState).toMatchObject({ disabled: true });
-  for (let i = 0; i < 11; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.datePicker.prevMonth }));
+  for (let i = 0; i < 11; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
   await fireEvent.press(screen.getByTestId('calendar-day-2025-11-13'));
   expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
   expect(screen.getByText(localDay('2025-11-13'))).toBeTruthy();
@@ -91,8 +91,8 @@ test('the calendar stops a year back: the month before is off and its earlier da
   await open();
   await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
   await fireEvent.press(screen.getByTestId('date-picker-open'));
-  for (let i = 0; i < 12; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.datePicker.prevMonth }));
-  expect(screen.getByRole('button', { name: t.datePicker.prevMonth, disabled: true })).toBeTruthy();
+  for (let i = 0; i < 12; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.prev, disabled: true })).toBeTruthy();
   expect(screen.getByTestId('calendar-day-2025-10-11').props.accessibilityState).toMatchObject({ disabled: true });
   expect(screen.getByTestId('calendar-day-2025-10-12').props.accessibilityState).toMatchObject({ disabled: false });
 });

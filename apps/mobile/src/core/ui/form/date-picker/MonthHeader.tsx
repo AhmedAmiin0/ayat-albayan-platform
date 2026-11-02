@@ -14,13 +14,13 @@ interface MonthHeaderProps {
 
 const STEP: Record<'prev' | 'next', -1 | 1> = { prev: -1, next: 1 };
 
-/** «نوفمبر 2026» between two 44pt arrows (as MonthPicker); an arrow past the range is dimmed. */
+/** «نوفمبر 2026» between two 44pt arrows (MonthPicker's too); past the range an arrow is dimmed. */
 export function MonthHeader({ month, can, onStep }: MonthHeaderProps) {
   const { color } = useTheme();
   const arrow = (dir: 'prev' | 'next') => (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={dir === 'prev' ? t.datePicker.prevMonth : t.datePicker.nextMonth}
+      accessibilityLabel={t.mobileFinance.month[dir]}
       accessibilityState={{ disabled: !can[dir] }}
       disabled={!can[dir]}
       onPress={() => onStep(STEP[dir])}

@@ -3592,11 +3592,6 @@
       "count": 1
     }
   },
-  "src/finance/shared/MonthPicker.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/finance/shared/StateNote.tsx": {
     "max-len": {
       "count": 2

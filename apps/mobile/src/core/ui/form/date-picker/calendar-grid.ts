@@ -12,7 +12,7 @@ export interface DayRange {
 /** One week row: a day of the month, or null for the blanks before the 1st and after the last. */
 type GridWeek = (string | null)[];
 
-/** The grid's columns, السبت first (the keys of t.datePicker.weekdays). */
+/** The grid's columns, السبت first (the keys of t.datePicker.weekdaysShort). */
 export const WEEK = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'] as const;
 
 /** The week starts on السبت (weekdayOfDate 6): its column index is (weekday + 1) % 7. */
