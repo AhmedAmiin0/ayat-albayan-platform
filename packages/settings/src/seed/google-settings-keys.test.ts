@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { isSettingKey, SETTING_KEYS } from '../settings/registry.js';
-import { GOOGLE_SETTING_KEYS, type GoogleSettingKey } from './settings-keys.js';
+import { isSettingKey, SETTING_KEYS } from '../registry.js';
+import { GOOGLE_SETTING_KEYS, type GoogleSettingKey } from '@ab/catalog';
 
 // Vite's raw import (vitest): the shared lib has no Node typings, so the migration is read this way.
 declare global {

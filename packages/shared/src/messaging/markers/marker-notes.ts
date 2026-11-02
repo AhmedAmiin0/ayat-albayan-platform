@@ -1,4 +1,4 @@
-import type { MessageDirection } from '../../enums/index.js';
+import type { MessageDirection } from '@ab/catalog';
 import { adWelcomeOf } from './chat-markers.js';
 import type { HiddenMark } from '../message-actions/hidden.js';
 import { payloadTypeOf } from '../payload/index.js';

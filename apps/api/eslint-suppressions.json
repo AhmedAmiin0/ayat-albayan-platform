@@ -3919,17 +3919,6 @@
   "src/modules/messaging/calls/http/call-permission.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 8
-    }
-  },
-  "src/modules/messaging/calls/http/calls.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/calls/http/calls.http.test.ts": {
@@ -4033,20 +4022,12 @@
       "count": 3
     }
   },
-  "src/modules/messaging/chat-lists/chat-lists.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/chat-lists/chat-lists.guard.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
   "src/modules/messaging/chat-lists/chat-lists.guard.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -4348,9 +4329,6 @@
   "src/modules/messaging/inbox/files/thread-file-send.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 9
     }
   },
   "src/modules/messaging/inbox/files/thread-file-send.http.test.ts": {
@@ -4443,11 +4421,8 @@
     }
   },
   "src/modules/messaging/inbox/files/thread-forward.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
-      "count": 8
+      "count": 2
     },
     "no-nested-ternary": {
       "count": 1
@@ -5117,11 +5092,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 9
-    },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/threads/threads.known.http.test.ts": {
@@ -5556,9 +5528,6 @@
     }
   },
   "src/modules/messaging/numbers/communications/communications.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -5744,11 +5713,8 @@
     }
   },
   "src/modules/messaging/numbers/numbers.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/messaging/numbers/numbers.effects.order.test.ts": {
@@ -6130,11 +6096,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/saved-replies/saved-replies.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/saved-replies/saved-replies.fakes.ts": {
     "complexity": {
       "count": 1
@@ -6160,9 +6121,6 @@
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.guard.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -7030,9 +6988,6 @@
   "src/modules/messaging/whatsapp/gate/gate.controller.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 3
@@ -7980,9 +7935,6 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 13
     }

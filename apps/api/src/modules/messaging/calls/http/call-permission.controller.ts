@@ -1,14 +1,17 @@
 import { callPermissionRequestSchema } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { recordSend } from '../../inbox/send/send-audit';
-import { phoneParam } from '../../inbox/threads/phone-param';
-import { CallAccess } from '../access/call-access';
-import { CallPermissions } from '../flow/call-permission.service';
+import { z } from 'zod';
+import { AuditService } from '@/common/audit/audit.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
+import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { CallAccess } from '@/modules/messaging/calls/access/call-access';
+import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.service';
+
+type RequestBody = z.output<typeof callPermissionRequestSchema>;
 
 /**
  * GET /calls/permission/:phone (may the academy call this number now?) and «اطلب إذن الاتصال»
@@ -32,10 +35,19 @@ export class CallPermissionController {
 
   @Post(':phone/request')
   @HttpCode(201)
-  async request(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const { clientRequestId } = parseOrThrow(callPermissionRequestSchema, body);
+  async request(
+    @Param('phone') raw: string,
+    @ZodBody(callPermissionRequestSchema) { clientRequestId }: RequestBody,
+    @CurrentUser() user: AuthUser,
+  ) {
     const actor = await this.access.actor(user);
     const sent = await this.permissions.request(actor, { phone: phoneParam(raw), clientRequestId });
-    return recordSend(this.audit, { sent, action: 'call_permission_request', user, scope: actor.teacher, sales: actor.sales });
+    return recordSend(this.audit, {
+      sent,
+      action: 'call_permission_request',
+      user,
+      scope: actor.teacher,
+      sales: actor.sales,
+    });
   }
 }

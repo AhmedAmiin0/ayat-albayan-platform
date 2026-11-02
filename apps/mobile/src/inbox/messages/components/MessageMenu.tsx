@@ -34,7 +34,7 @@ interface MessageMenuProps {
 /**
  * A long press on a bubble, at the bottom of the screen as the attach sheet, in WhatsApp's order: «رد»,
  * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
- * after the 24 h window (only a template can go then), with the reason under it.
+ * where no text can go (canSend: the text rule), with the reason under it.
  */
 export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();

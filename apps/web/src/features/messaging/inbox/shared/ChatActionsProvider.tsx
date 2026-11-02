@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { ChatActionsContext, type ChatActions } from './chat-actions';
+import { useMaySend } from './may-send';
 import { ForwardDialog } from '@/features/messaging/inbox/messages/forward/ForwardDialog';
 import { forwardSummary, type ForwardSummary } from '@/features/messaging/inbox/messages/forward/forward-summary';
 import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
@@ -17,8 +18,9 @@ export interface ChatActionsProviderProps {
 
 /**
  * The open chat's «رد» target, its forward dialog and their toasts (owner 2026-10-25). ThreadPane is
- * keyed by phone, so another chat starts with no target. While the window is closed «رد» is off with
- * the closed-window notice as its hint, and a target set before is not offered to the composer.
+ * keyed by phone, so another chat starts with no target. «رد» follows the text rule (useMaySend: tried
+ * after the window on a Kapso chat line); where a text cannot go it is off with the closed-window
+ * notice as its hint, and a target set before is not offered to the composer.
  */
 export function ChatActionsProvider({ thread, enabled, children }: ChatActionsProviderProps) {
   const [target, setTarget] = useState<MessageQuote | null>(null);
@@ -27,7 +29,7 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
   // Stable (the React Compiler memoizes it): the toast's timer restarts whenever onDismiss changes
   // (the chat polls every 10 s).
   const dismiss = () => setNotice(null);
-  const replyBlocked = thread.session_open ? null : t.inbox.sessionClosed;
+  const replyBlocked = useMaySend(thread) ? null : t.inbox.sessionClosed;
   const { display_name: name, phone_e164: phone } = thread;
   // «تفاعل» (owner 2026-10-27): a refused or failed reaction says so in the same toast.
   const { mutate: reactNow } = useReact(phone, (text) => setNotice({ text, tone: 'error' }));

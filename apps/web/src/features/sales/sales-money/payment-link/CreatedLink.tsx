@@ -1,4 +1,4 @@
-import type { PaymentLinkView, ThreadView } from '@ab/shared';
+import type { PaymentLinkView } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -12,18 +12,26 @@ import { fillComposer } from '@/features/messaging/inbox';
 
 const P = t.paymentLinks;
 
-type Props = { link: PaymentLinkView; thread: Pick<ThreadView, 'phone_e164' | 'session_open'>; onClose: () => void };
+type Props = {
+  link: PaymentLinkView;
+  /** The chat whose box gets the message. */
+  phone: string;
+  /** A text may go in this chat now (useMaySend): the same rule as the box itself. */
+  canSend: boolean;
+  onClose: () => void;
+};
 
 /**
- * Step 2: the link made. «إرسال في المحادثة» puts the message with the url into this chat's box (she sends
- * it herself; nothing leaves on its own); after the 24 h window a template must reopen the chat first, so
- * only «نسخ» works. The amount agreed sits beside the calculator price it came from.
+ * Step 2: the link made. «إرسال في المحادثة» puts the message with the url into this chat's
+ * box (she sends it herself; nothing leaves on its own) and it leaves as any text (owner
+ * 2026-11-01): after the 24 h window too on a Kapso chat line, WhatsApp's refusal (131047)
+ * shown on its bubble. Where no text can go at all only «نسخ» works (inbox.sessionClosed).
+ * The amount agreed sits beside the calculator price it came from.
  */
-export function CreatedLink({ link, thread, onClose }: Props) {
+export function CreatedLink({ link, phone, canSend, onClose }: Props) {
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
   const text = linkMessage(link);
   const insert = () => {
-    const phone = thread.phone_e164;
     setDraft(phone, { text: fillComposer(getDraft(phone).text, text), failed: null });
     onClose();
   };
@@ -40,7 +48,7 @@ export function CreatedLink({ link, thread, onClose }: Props) {
       <Button variant="secondary" onClick={() => void copy()}>
         {P.copy}
       </Button>
-      <Button disabled={!thread.session_open} onClick={insert}>
+      <Button disabled={!canSend} onClick={insert}>
         {P.sendInChat}
       </Button>
     </>
@@ -64,7 +72,7 @@ export function CreatedLink({ link, thread, onClose }: Props) {
         <p dir="ltr" className="break-all rounded-md border border-rule bg-sunk p-3 text-start text-sm">
           {link.url}
         </p>
-        {!thread.session_open && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{P.templateNeeded}</p>}
+        {!canSend && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{t.inbox.sessionClosed}</p>}
       </div>
       {copied && (
         <Toast
