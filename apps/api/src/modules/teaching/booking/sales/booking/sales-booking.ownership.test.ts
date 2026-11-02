@@ -7,15 +7,17 @@ import { NO_OWNERSHIP, type SalesOwnership } from '@/modules/sales/sales/sales-o
 import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { errorCode } from '@/common/http/errors';
 import type { BookingService } from '@/modules/teaching/booking/core/booking.service';
-import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import { SalesOwnershipRule } from '@/modules/sales/sales/rule/sales-ownership-rule';
+import { REQUIRE_ON, ruleWith } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
+import { SalesSettings } from '@/modules/sales/sales/sales.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
 import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
 import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
 
-// settings.sales_auto_assign OFF (owner 2026-10-12): /sales/booking checks no ownership (own = null);
-// the four trial-only rules still hold. ON keeps today's rules (sales-booking.scope.test.ts).
+// SalesOwnershipRule not enforcing (owner 2026-11-02: require assignee OFF, or auto-assign OFF): /sales/booking
+// checks no ownership (own = null); the four trial-only rules still hold. Enforced keeps the rules (sales-booking.scope.test.ts).
 
 const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 const OTHER_LEAD = 'b0000000-0000-4000-8000-000000000002';
@@ -38,7 +40,7 @@ const code = (fn: () => void): string | null => {
   }
 };
 
-describe('assertBookingScope with own = null (sales_auto_assign OFF)', () => {
+describe('assertBookingScope with own = null (the rule does not enforce)', () => {
   it('any lead, any typed guardian phone and any student pass', () => {
     expect(code(() => assertBookingScope(fresh(), null))).toBeNull();
     expect(code(() => assertBookingScope(existing(), null))).toBeNull();
@@ -73,27 +75,28 @@ describe('assertBookingScope with own = null (sales_auto_assign OFF)', () => {
 });
 
 const scopeWith = (on: boolean) => {
-  const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-  return { sales, scope: new SalesBookingScope(sales as unknown as SalesRepo, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateRepo) };
+  const { sales, rule } = ruleWith(OWN, on ? REQUIRE_ON : {});
+  return { sales, scope: new SalesBookingScope(rule, {} as unknown as TrialDateRepo) };
 };
 
-describe('SalesBookingScope.of: the switch decides', () => {
-  it('ON: her ownership (ownershipOf by her id)', async () => {
+describe('SalesBookingScope.of: SalesOwnershipRule decides', () => {
+  it('ON (require + auto): her ownership (ownershipOf by her id)', async () => {
     const { sales, scope } = scopeWith(true);
     expect(await scope.of(USER)).toEqual(OWN);
     expect(sales.ownership).toHaveBeenCalledWith(USER.id);
   });
 
-  it('OFF: null, and her ownership is never read', async () => {
+  it('OFF (the defaults: require off): null, and her ownership is never read', async () => {
     const { sales, scope } = scopeWith(false);
     expect(await scope.of(USER)).toBeNull();
     expect(sales.ownership).not.toHaveBeenCalled();
   });
 
   it('a failed settings read fails the call (no silent OFF)', async () => {
-    const settings = readerOf(BookingSettings);
+    const settings = readerOf(SalesSettings, REQUIRE_ON);
     vi.spyOn(settings, 'read').mockRejectedValue(new Error('settings down'));
-    const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesRepo, settings, {} as unknown as TrialDateRepo);
+    const rule = new SalesOwnershipRule(settings, { ownership: vi.fn() } as unknown as SalesRepo);
+    const scope = new SalesBookingScope(rule, {} as unknown as TrialDateRepo);
     await expect(scope.of(USER)).rejects.toThrow('settings down');
   });
 });

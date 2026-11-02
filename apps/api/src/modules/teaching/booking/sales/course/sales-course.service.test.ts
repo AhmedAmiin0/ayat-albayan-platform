@@ -33,7 +33,7 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     subscriptionBooked: vi.fn().mockResolvedValue(false),
     requested: vi.fn().mockResolvedValue(false),
   };
-  const scope = { owned: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
+  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
   const course = new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope);
   return { queries, scope, course };
 }

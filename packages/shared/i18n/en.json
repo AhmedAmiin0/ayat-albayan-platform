@@ -3097,6 +3097,18 @@
     "sticker": {
       "favourite": "Add to favourites",
       "unfavourite": "Remove from favourites"
+    },
+    "chatSearch": {
+      "open": "Search",
+      "label": "Search this chat",
+      "placeholder": "Search the chat…",
+      "older": "Older result",
+      "newer": "Newer result",
+      "close": "Close search",
+      "counter": "{n} of {m}",
+      "empty": "No results",
+      "searching": "Searching…",
+      "unreachable": "This message could not be reached in the chat"
     }
   },
   "mobileFinance": {
@@ -4583,7 +4595,9 @@
       "pick": "Pick an owner",
       "saved": "Assigned",
       "auto": "Auto-assign new leads",
-      "autoHint": "A new lead goes to the salesperson with the fewest leads, and only they can register it as a student. When off, new leads stay unassigned and any salesperson can register them.",
+      "autoHint": "A new lead goes to the salesperson with the fewest leads; when off, new leads stay unassigned. A salesperson is limited to their own leads and students only when «Require assignee» is on as well.",
+      "require": "Require assignee",
+      "requireHint": "When on, together with auto-assign, a salesperson works only on the leads and students assigned to them: bookings, subscriptions and renewals, transfers and package cancellation. When off, any salesperson works on any lead, family or student.",
       "assignAll": "Assign leads without an owner",
       "assignedN": "{n} leads assigned",
       "rowLabel": "Sales owner for {name}",
@@ -6841,6 +6855,10 @@
       "salesAutoAssign": {
         "on": "Turn on automatic assignment",
         "off": "Turn off automatic assignment"
+      },
+      "salesRequireAssignee": {
+        "on": "Turn on the assignee requirement",
+        "off": "Turn off the assignee requirement"
       }
     },
     "describe": {

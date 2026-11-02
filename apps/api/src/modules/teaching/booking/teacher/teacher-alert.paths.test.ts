@@ -36,7 +36,7 @@ describe('teacher alert on both booking paths (R-NOT-03)', () => {
 
   it('the assistant’s wizard (POST /sales/booking) alerts the teacher once', async () => {
     const { booking, push } = setup();
-    const scope = { forRequest: vi.fn(async () => null) } as unknown as SalesBookingScope;
+    const scope = { of: vi.fn(async () => null) } as unknown as SalesBookingScope;
     const user: AuthUser = { id: 'sales-1', email: null, role: 'sales' };
     await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(leadRequest(), user);
     expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }));

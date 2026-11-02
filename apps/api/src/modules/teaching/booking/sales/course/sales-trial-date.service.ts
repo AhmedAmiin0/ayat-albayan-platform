@@ -9,8 +9,8 @@ import type { TrialTarget } from '../../trial-date/trial-date.target';
 
 /**
  * «موعد تجريبي جديد» for an assistant (R-ASST-01, owner 2026-10-25): the same scope as her trial
- * booking (SalesBookingScope: her own families' students while settings.sales_auto_assign is ON, any
- * while it is OFF), never over a clash, never a custom link or an invoice, never a time already past.
+ * booking (SalesBookingScope: her own families' students while SalesOwnershipRule enforces it, any
+ * otherwise), never over a clash, never a custom link or an invoice, never a time already past.
  * A move books the trial's own students: each of them must be hers too. 403 not_your_student /
  * override_not_allowed / meeting_link_not_allowed; 400 date_in_past; the rest as TrialDates.
  */

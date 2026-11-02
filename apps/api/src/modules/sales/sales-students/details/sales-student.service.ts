@@ -29,7 +29,7 @@ export class SalesStudentService {
   ) {}
 
   async details(user: AuthUser, studentId: string, now = new Date()): Promise<SalesStudentDetails> {
-    const { own, mine } = await this.scope.access(user, studentId);
+    const { own, acts } = await this.scope.access(user, studentId);
     const student = await this.queries.student(studentId);
     if (!student) throw notFound('student_not_found');
     const [history, lessons, reports, rules, upcoming, trials, pkg] = await Promise.all([
@@ -47,7 +47,7 @@ export class SalesStudentService {
     // already, any student.
     const prices = can(user, 'self.sales_money') ? await this.queries.prices(studentId) : [];
     const trial = toTrialLessons(trials, now);
-    const parts = { student, history, lessons, reports, schedule, trial, mine, prices };
+    const parts = { student, history, lessons, reports, schedule, trial, mine: acts, prices };
     const view = toStudentDetails({ ...parts, package: pkg });
     const phone = chatPhone(user, view.student.guardian_phone);
     return { ...view, student: { ...view.student, guardian_phone: phone } };
