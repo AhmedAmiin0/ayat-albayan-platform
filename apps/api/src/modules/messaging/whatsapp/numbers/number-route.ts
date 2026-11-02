@@ -30,6 +30,8 @@ export interface RoutePass {
   approvals: Approvals;
   /** The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a per-number row. */
   crm?: ReadonlySet<string>;
+  /** The keys a crm number may send (gateApprovedKeys); absent = message_templates.status. */
+  crmApproved?: ReadonlySet<string>;
 }
 
 /**
@@ -61,6 +63,27 @@ export function ruleNumbers(numberOf: (entryKey: string) => string | null): Map<
   return out;
 }
 
+/** Some number holds this key approved (message_template_numbers). */
+const onSomeNumber = (approvals: Approvals, key: string): boolean =>
+  [...(approvals.get(key)?.values() ?? [])].includes('approved');
+
+/**
+ * A row RouteRepo.templates read that some number may send: approved on the registry or on a
+ * number, or by the crm gate (crmApproved). A CRM_GATED_KEYS row with none of these is dropped,
+ * so due() never reads its messages.
+ */
+export function sendableSomewhere(
+  pass: Pick<RoutePass, 'approvals' | 'crmApproved'>,
+  template: Pick<TemplateRow, 'key' | 'status'>,
+): boolean {
+  const byCrm = pass.crmApproved?.has(template.key) === true;
+  return template.status === 'approved' || byCrm || onSomeNumber(pass.approvals, template.key);
+}
+
+/** A crm number's approval: the crm gate's keys, else the hand-set message_templates.status. */
+const crmApproved = (pass: RoutePass, template: Pick<TemplateRow, 'key' | 'status'>): boolean =>
+  pass.crmApproved?.has(template.key) ?? template.status === 'approved';
+
 /**
  * Decision 4: approved on a number = its message_template_numbers row says approved; with no row yet,
  * the role's default number counts as approved when message_templates.status is approved. A crm number
@@ -70,7 +93,7 @@ export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 
   const rows = pass.approvals.get(template.key);
   const fallback = pass.numbers.find((n) => n.purpose === template.line && n.is_default)?.id;
   return (id) => {
-    if (pass.crm?.has(id)) return template.status === 'approved';
+    if (pass.crm?.has(id)) return crmApproved(pass, template);
     const status = rows?.get(id);
     if (status !== undefined) return status === 'approved';
     return id === fallback && template.status === 'approved';

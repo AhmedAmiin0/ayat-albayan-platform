@@ -31,6 +31,37 @@ export interface CrmNamed {
 /** The name the CRM resolves: the admin's crm_name, else the old script's name, else meta_name. Only on a crm line. */
 export const crmTemplateName = (t: CrmNamed): string => t.crm_name || CRM_DEFAULT_NAMES[t.key] || t.meta_name;
 
+/**
+ * Keys whose approval on a crm line is that of the CRM template they go as (crmTemplateName),
+ * not their own row's Meta status (owner 2026-11-02: the teacher's alert waited on
+ * teacher_new_student while the CRM held teacher_lesson_v2 approved). The same-day reminders keep
+ * their own, hand-set status.
+ */
+export const CRM_GATED_KEYS: readonly string[] = ['teacher_new_student'];
+
+/** A registry row as the approval gate reads it. */
+export interface CrmGateRow extends CrmNamed {
+  status: string;
+}
+
+/** Where a gated key's approval is read: its CRM template's row (key / meta_name), else its own. */
+function gateRow<R extends CrmGateRow>(row: R, rows: readonly R[]): R {
+  if (!CRM_GATED_KEYS.includes(row.key)) return row;
+  const name = crmTemplateName(row);
+  const named = (r: R): boolean => r !== row && (r.key === name || r.meta_name === name);
+  return rows.find(named) ?? row;
+}
+
+/** The keys a send may use: approved; a gated key on a crm line (`onCrm`) by its CRM template. */
+export function gateApprovedKeys<R extends CrmGateRow>(
+  rows: readonly R[],
+  onCrm: (row: R) => boolean,
+): Set<string> {
+  const approved = (row: R): boolean =>
+    (onCrm(row) ? gateRow(row, rows) : row).status === 'approved';
+  return new Set(rows.filter(approved).map((r) => r.key));
+}
+
 /** The CRM template's language: the admin's crm_language, else the template's own. */
 export const crmTemplateLanguage = (t: CrmNamed): string => t.crm_language || t.language;
 
