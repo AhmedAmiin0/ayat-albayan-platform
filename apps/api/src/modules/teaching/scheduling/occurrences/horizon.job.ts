@@ -4,7 +4,7 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import { addDays } from './horizon';
+import { addDays } from '@ab/shared';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';

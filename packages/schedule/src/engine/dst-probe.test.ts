@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { offsetChanges, probeOccurrences } from './dst-probe';
+import { offsetChanges, probeOccurrences } from './dst-probe.js';
 
 // Egypt leaves DST at the end of Thu 29 Oct 2026 and re-enters it on Fri 30 Apr 2027;
 // Riyadh has no DST. A Riyadh family's Sunday 18:00 rule booked with a Cairo teacher.

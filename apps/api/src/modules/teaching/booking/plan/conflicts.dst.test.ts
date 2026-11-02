@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findConflicts, type ConflictInput } from '../../scheduling/conflicts/conflicts';
-import { ruleOccurrences } from '../../scheduling/occurrences/occurrences';
-
+import { findConflicts, type ConflictInput, ruleOccurrences } from '@ab/shared';
 // The booking ConflictChecker over a whole series (R-SCH-04, R-SCH-01, issue B3). Egypt leaves DST
 // at the end of Thu 2026-10-29 (UTC+3 → UTC+2); Riyadh stays UTC+3. Sundays: Oct 18, 25, Nov 1, 8.
 const window = { from: new Date('2026-10-18T00:00:00Z'), to: new Date('2026-11-09T00:00:00Z') };

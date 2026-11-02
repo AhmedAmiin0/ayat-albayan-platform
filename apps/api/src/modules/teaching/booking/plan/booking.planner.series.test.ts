@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { probeOccurrences } from '../../scheduling/occurrences/dst-probe';
+import type * as Shared from '@ab/shared';
+import { probeOccurrences } from '@ab/shared';
 import { bookingRequest, fakePlanner, NOW } from '../booking.fakes';
 
-vi.mock('../../scheduling/occurrences/dst-probe', async (load) => {
-  const real = await load<typeof import('../../scheduling/occurrences/dst-probe')>();
+vi.mock('@ab/shared', async (load) => {
+  const real = await load<typeof Shared>();
   return { ...real, probeOccurrences: vi.fn(real.probeOccurrences) };
 });
 

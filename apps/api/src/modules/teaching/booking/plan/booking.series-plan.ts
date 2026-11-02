@@ -1,7 +1,6 @@
-import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups } from '@ab/shared';
+import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups, addDays, startOfLocalDay } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import type { Occurrence } from '@/modules/teaching/scheduling/occurrences/occurrences';
-import { addDays, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import type { Occurrence } from '@ab/shared';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
 

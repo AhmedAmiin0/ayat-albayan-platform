@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeIntervals, subtractIntervals } from './intervals';
+import { mergeIntervals, subtractIntervals } from './intervals.js';
 
 const i = (start: number, end: number) => ({ start, end });
 

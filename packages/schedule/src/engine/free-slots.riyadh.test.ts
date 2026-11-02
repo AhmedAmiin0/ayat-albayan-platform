@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { freeSlots, type FreeSlotsInput, type WeeklyRow } from './free-slots';
+import { freeSlots, type FreeSlotsInput, type WeeklyRow } from './free-slots.js';
 
 const starts = (input: FreeSlotsInput) => freeSlots(input).map((s) => s.start.toISOString());
 // 2026-07-15 is a Wednesday (weekday 3).

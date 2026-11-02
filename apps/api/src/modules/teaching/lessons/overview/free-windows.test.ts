@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { TimeRange, WeeklyRow } from '../../../people/teachers/availability/free-slots';
+import type { TimeRange, WeeklyRow } from '@ab/shared';
 import { teacherSpans } from './free-windows';
 
 const RIYADH = 'Asia/Riyadh';

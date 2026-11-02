@@ -74,6 +74,75 @@
       "count": 2
     }
   },
+  "src/engine/conflicts.always.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/engine/conflicts.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/engine/dst-probe.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.always.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.time-off.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/engine/horizon.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/engine/intervals.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/occurrences.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/lessons/chargeable.ts": {
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1

@@ -1,7 +1,7 @@
-import type { Conflict } from '@ab/shared';
-import { expandRow, type TimeRange, type WeeklyRow } from '../../../people/teachers/availability/free-slots';
-import { mergeIntervals, type Interval } from '../../../people/teachers/availability/intervals';
-import type { Occurrence } from '../occurrences/occurrences';
+import type { Conflict } from '../lessons/index.js';
+import { expandRow, type TimeRange, type WeeklyRow } from './free-slots.js';
+import { mergeIntervals, type Interval } from './intervals.js';
+import type { Occurrence } from './occurrences.js';
 
 /** An occupying lesson already booked (status in OCCUPYING_LESSON_STATUSES). */
 export type BusyLesson = { id: string; starts_at: Date; ends_at: Date };

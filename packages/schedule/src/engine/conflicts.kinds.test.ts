@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findConflicts, type ConflictInput } from './conflicts';
+import { findConflicts, type ConflictInput } from './conflicts.js';
 
 // Teacher free Sundays 16:00–20:00 Cairo; in October 2026 Cairo is UTC+3 → 13:00–17:00Z.
 const SUN_16_20 = { weekday: 0, start_time: '16:00:00', end_time: '20:00:00', tz: 'Africa/Cairo' };
