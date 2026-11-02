@@ -15,6 +15,7 @@ export function fakeCorrection(
     correctable: vi.fn(
       async (ids: readonly string[]) => new Set(ids.filter((id) => correctable.includes(id))),
     ),
+    paid: vi.fn(async () => false),
   };
   return {
     repo,

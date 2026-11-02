@@ -52,7 +52,7 @@ export function salesCancelRights(lesson: SalesScheduleLesson, input: CancelInpu
   const may = input.holds && hasStudents(lesson);
   return {
     cancelBy: may ? choicesFor(lesson, input) : [],
-    correct: may && !input.required && isHeld(lesson),
+    correct: may && isHeld(lesson),
   };
 }
 

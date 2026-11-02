@@ -891,7 +891,8 @@
       "lesson_ended": "This lesson has ended, so it cannot be rescheduled or cancelled",
       "not_your_student": "This lesson is not one of your students'",
       "lesson_not_found": "This lesson was not found; open the schedule again",
-      "not_auto_held": "This lesson's status can't be changed here: it was recorded by hand or has a report. Change it from the lesson report."
+      "not_auto_held": "This lesson's status can't be changed here: it was recorded by hand or has a report. Change it from the lesson report.",
+      "earning_paid": "The teacher has already been paid for this lesson, so its status can't be changed here. Contact the finance team."
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",

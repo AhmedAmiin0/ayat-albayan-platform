@@ -97,4 +97,17 @@ describe('correcting an auto-held lesson (owner 2026-11-02)', () => {
     ).rejects.toMatchObject({ response: { code: 'invalid_transition' } });
     expect(repo.correctable).not.toHaveBeenCalled();
   });
+
+  it('ended more than 14 days ago: 409 not_auto_held; its earning already paid: 409 earning_paid', async () => {
+    vi.setSystemTime(new Date('2026-10-19T15:00:00Z'));
+    const old = setup();
+    await expect(old.service.cancel({ lessonId: LESSON_ID, body: body('teacher'), actor: ADMIN }))
+      .rejects.toMatchObject({ response: { code: 'not_auto_held' } });
+    vi.setSystemTime(AFTER);
+    const paid = setup();
+    paid.repo.paid.mockResolvedValue(true);
+    await expect(paid.service.cancel({ lessonId: LESSON_ID, body: body('teacher'), actor: ADMIN }))
+      .rejects.toMatchObject({ response: { code: 'earning_paid' } });
+    expect(paid.writer.apply).not.toHaveBeenCalled();
+  });
 });

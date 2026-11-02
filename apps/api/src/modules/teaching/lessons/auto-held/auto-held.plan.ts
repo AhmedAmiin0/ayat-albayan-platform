@@ -21,6 +21,8 @@ export interface PackageRow {
   student_id: string;
   starts_on: string;
   status: SubscriptionStatus;
+  /** 'stopped' (course stopped, money kept: still on the balance) or 'unused' (a mistake). */
+  cancel_kind: string | null;
 }
 
 interface Who {
@@ -29,13 +31,25 @@ interface Who {
   at: Date;
 }
 
-/** When the student's current package (the latest started by `at`) began; null = none (a trial). */
+/** Never reached: a lesson of a student whose current package was stopped is never held. */
+const NEVER = new Date(8.64e15);
+
+/** On the balance as migration 991 reads it: not cancelled, or cancelled as a stopped course. */
+const onBalance = (r: PackageRow): boolean => r.status !== 'cancelled' || r.cancel_kind === 'stopped';
+
+const startOf = (r: PackageRow, tz: string): Date =>
+  r.status === 'cancelled' ? NEVER : startOfLocalDay(r.starts_on, tz);
+
+/**
+ * When the student's current package (the latest started by `at`) began; null = none (a trial).
+ * A stopped course (its capacity frozen at the stop): NEVER, so nothing is closed onto it.
+ */
 export function currentPackageStart(rows: readonly PackageRow[], who: Who): Date | null {
-  const starts = rows
-    .filter((r) => r.student_id === who.studentId && r.status !== 'cancelled')
-    .map((r) => startOfLocalDay(r.starts_on, who.tz))
-    .filter((d) => d.getTime() <= who.at.getTime());
-  return starts.reduce<Date | null>((latest, d) => (latest && latest > d ? latest : d), null);
+  const current = rows
+    .filter((r) => r.student_id === who.studentId && onBalance(r))
+    .filter((r) => startOfLocalDay(r.starts_on, who.tz).getTime() <= who.at.getTime())
+    .sort((a, b) => b.starts_on.localeCompare(a.starts_on))[0];
+  return current ? startOf(current, who.tz) : null;
 }
 
 /** The lessons to hold now, in the order read. */

@@ -12,6 +12,7 @@ const pkg = (starts_on: string, over: Partial<PackageRow> = {}): PackageRow => (
   student_id: 's1',
   starts_on,
   status: 'active',
+  cancel_kind: null,
   ...over,
 });
 const lesson = (
@@ -41,6 +42,18 @@ describe('currentPackageStart', () => {
       pkg('2026-11-10'),
       pkg('2026-10-30', { student_id: 's2' }),
     ];
+    expect(currentPackageStart(rows, who)).toEqual(new Date('2026-08-31T21:00:00Z'));
+  });
+
+  it('a stopped course as the current package: nothing is ever closed onto it', () => {
+    const rows = [pkg('2026-09-01'), pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'stopped' })];
+    expect(currentPackageStart(rows, who)?.getTime()).toBe(8.64e15);
+    const lessons = [lesson('2026-10-31T10:00:00Z')];
+    expect(dueLessons({ lessons, packages: rows, now: NOW })).toEqual([]);
+  });
+
+  it('an unused-cancelled package is ignored; the one before it is current', () => {
+    const rows = [pkg('2026-09-01'), pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'unused' })];
     expect(currentPackageStart(rows, who)).toEqual(new Date('2026-08-31T21:00:00Z'));
   });
 

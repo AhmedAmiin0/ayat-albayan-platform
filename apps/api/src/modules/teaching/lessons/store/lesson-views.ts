@@ -41,7 +41,7 @@ export class LessonViews {
       this.flagged(upcomingStudentIds(rows, now)),
       this.lessons.academyAuto(),
       role === 'teacher' ? new Map<string, string>() : this.photos.ofTeachers(rows.map((r) => r.teacher_id)),
-      this.correctable(completed),
+      role === 'teacher' ? new Set<string>() : this.correctable(completed),
     ]);
     const view = (row: LessonRow) => markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now);
     return rows.map((row) => withPhoto(withAutoHeld(view(row), held), photos));

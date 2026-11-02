@@ -2,8 +2,10 @@ import { AUTO_HELD_REASON, OPEN_LESSON_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';
+import { dbError } from '@/common/http/http';
 import type { OpenEndedLesson, PackageRow } from './auto-held.plan';
 
+const DAY_MS = 86_400_000;
 const OPEN_SELECT = 'id, status, ends_at, lesson_students(student_id, student:students(tz))';
 
 /** Reads of the auto-held job and of its correction (service role; the routes guard). */
@@ -18,6 +20,9 @@ export class AutoHeldRepo {
         .from('lessons')
         .select(OPEN_SELECT)
         .in('status', [...OPEN_LESSON_STATUSES])
+        // starts_at is indexed (ends_at is not): no lesson runs longer than a day.
+        .gte('starts_at', new Date(w.from.getTime() - DAY_MS).toISOString())
+        .lte('starts_at', w.until.toISOString())
         .gte('ends_at', w.from.toISOString())
         .lte('ends_at', w.until.toISOString())
         .order('ends_at')
@@ -29,7 +34,7 @@ export class AutoHeldRepo {
   /** Every package of these students (the plan keeps the current one). */
   packages(studentIds: readonly string[]): Promise<PackageRow[]> {
     return readChunked(studentIds, (chunk) =>
-      this.db.from('subscriptions').select('student_id, starts_on, status').in('student_id', chunk),
+      this.db.from('subscriptions').select('student_id, starts_on, status, cancel_kind').in('student_id', chunk),
     );
   }
 
@@ -69,5 +74,17 @@ export class AutoHeldRepo {
       this.reported(lessonIds),
     ]);
     return new Set([...held].filter((id) => !reported.has(id)));
+  }
+
+  /** The lesson's teacher earning has money paid out on it (a per-session payment). */
+  async paid(lessonId: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('teacher_session_earnings')
+      .select('paid_amount')
+      .eq('lesson_id', lessonId)
+      .gt('paid_amount', 0)
+      .limit(1);
+    if (error) throw dbError(error);
+    return data.length > 0;
   }
 }

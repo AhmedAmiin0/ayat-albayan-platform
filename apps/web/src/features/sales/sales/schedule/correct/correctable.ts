@@ -1,4 +1,3 @@
-import { canCorrectAutoHeld } from '@ab/client-core';
 import { isOpenLesson, type SalesScheduleLesson } from '@ab/shared';
 
 export interface CorrectableInput {
@@ -9,16 +8,17 @@ export interface CorrectableInput {
   holds: boolean;
 }
 
-type Lesson = Pick<SalesScheduleLesson, 'status' | 'ends_at'> & { auto_held?: boolean };
+type Lesson = Pick<SalesScheduleLesson, 'status' | 'ends_at'>;
 
-const endedOpen = (lesson: Lesson, now: Date): boolean =>
-  isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) <= now.getTime();
+/** Completed: the sales payload has no auto_held, so the API decides (409 not_auto_held). */
+export const isHeldLesson = (lesson: Lesson): boolean => lesson.status === 'completed';
 
 /**
  * «لم تنعقد؟» for sales (owner 2026-11-02, POST /sales/lessons/:id/cancel by teacher | student): a
- * lesson held automatically, or, while no confirmation is required, one that ended still open.
+ * completed lesson (held automatically, whatever the setting is now), or, while no confirmation is
+ * required, an open one before or after it ends. `now` is kept for the callers' signature.
  */
 export function canSalesCorrect(lesson: Lesson, input: CorrectableInput): boolean {
-  const due = canCorrectAutoHeld(lesson) || (!input.required && endedOpen(lesson, input.now));
+  const due = isHeldLesson(lesson) || (!input.required && isOpenLesson(lesson.status));
   return input.holds && due;
 }

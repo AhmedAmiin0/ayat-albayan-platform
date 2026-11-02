@@ -9,8 +9,15 @@ describe('AutoHeldRepo', () => {
     const until = new Date('2026-11-02T11:30:00Z');
     await new AutoHeldRepo(f.db).openEnded({ from, until });
     expect(f.argsOf('lessons', 'in')).toEqual(['status', ['scheduled', 'confirmed']]);
-    expect(f.argsOf('lessons', 'gte')).toEqual(['ends_at', from.toISOString()]);
-    expect(f.argsOf('lessons', 'lte')).toEqual(['ends_at', until.toISOString()]);
+    const args = (m: string) => f.calls.filter((c) => c.method === m).map((c) => c.args);
+    expect(args('gte')).toEqual([
+      ['starts_at', '2026-10-18T12:00:00.000Z'],
+      ['ends_at', from.toISOString()],
+    ]);
+    expect(args('lte')).toEqual([
+      ['starts_at', until.toISOString()],
+      ['ends_at', until.toISOString()],
+    ]);
   });
 
   it('correctable: auto-held by the job and no submitted report since', async () => {

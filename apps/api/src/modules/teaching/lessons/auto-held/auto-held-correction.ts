@@ -1,4 +1,4 @@
-import { AUTO_HELD_CORRECTION_REASON, type CancelBy } from '@ab/shared';
+import { AUTO_HELD_CORRECTION_REASON, AUTO_HELD_MAX_AGE_MS, type CancelBy } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';
@@ -32,8 +32,11 @@ export const isAutoHeldCorrection = (
  * الطالب» (excused, counted exactly per isChargeable / late_cancel_hours at the time of the
  * correction,
  * like any excuse). The only way out of `completed` outside a report; compare-and-set on completed,
- * audited (action cancel, after.correction auto_held_correction). Any other completed lesson: 409
- * not_auto_held (its outcome is the report's). The lesson is over: nobody is messaged.
+ * audited (action cancel, after.correction auto_held_correction). Any other completed lesson, or
+ * one that ended over 14 days ago: 409 not_auto_held (its outcome is the report's); its earning
+ * already paid per session: 409 earning_paid. The lesson is over: nobody is messaged.
+ * ponytail: the report check is read before the commit; a report filed in that instant keeps the
+ * correction (no migration here). Move the check into an RPC if that is ever seen.
  */
 @Injectable()
 export class AutoHeldCorrection {
@@ -44,7 +47,10 @@ export class AutoHeldCorrection {
   ) {}
 
   async correct({ lesson, body, actor }: CorrectionInput): Promise<string> {
-    if (!(await this.repo.correctable([lesson.id])).has(lesson.id)) throw conflict('not_auto_held');
+    const recent = Date.parse(lesson.ends_at) >= Date.now() - AUTO_HELD_MAX_AGE_MS;
+    const held = recent && (await this.repo.correctable([lesson.id])).has(lesson.id);
+    if (!held) throw conflict('not_auto_held');
+    if (await this.repo.paid(lesson.id)) throw conflict('earning_paid');
     const { late_cancel_hours: lateCancelHours } = await this.settings.read();
     const change = cancelChange(lesson, { ...body, now: new Date(), lateCancelHours });
     const input = { lesson, change, body, actorId: actor.id };

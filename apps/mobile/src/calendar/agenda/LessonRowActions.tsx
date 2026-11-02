@@ -49,10 +49,10 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
   const who = studentNames(lesson);
   const joinOpen = useJoinOpen(lesson);
   // «تأكيد» only while the academy requires a confirmation (settings.lesson_confirmation_required);
-  // without one, a lesson held automatically offers «لم تنعقد الحلقة؟» instead.
+  // a lesson held automatically offers «لم تنعقد الحلقة؟» (also after the setting is back ON).
   const { required } = useLessonStatusText();
   const confirmable = required && can('confirm');
-  const correctable = !required && canCorrectAutoHeld(lesson);
+  const correctable = canCorrectAutoHeld(lesson);
   const correct = (by: CorrectBy) =>
     action.cancel(lesson.id, { scope: 'one', by, reason: CORRECT_REASON[by] });
   const act = (label: string, variant: ButtonVariant, onPress: () => void) => (

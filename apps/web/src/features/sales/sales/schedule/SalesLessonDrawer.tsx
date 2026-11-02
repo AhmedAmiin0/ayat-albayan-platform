@@ -1,4 +1,3 @@
-import { canCorrectAutoHeld } from '@ab/client-core';
 import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -8,7 +7,7 @@ import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';
 import { usePublicConfig } from '@/lib/settings/public-config';
-import { canSalesCorrect } from './correct/correctable';
+import { canSalesCorrect, isHeldLesson } from './correct/correctable';
 import { SalesCorrectLesson } from './correct/SalesCorrectLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
 import { SalesLessonDetails } from './SalesLessonDetails';
@@ -31,8 +30,8 @@ interface StepsProps {
 
 /**
  * What sales may do: «تأكيد الحلقة» on a scheduled lesson not ended (lessons.confirm), only while
- * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on a lesson held automatically or,
- * without the confirmation, ended still open (owner 2026-11-02); else «للاطلاع فقط».
+ * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on a completed lesson or,
+ * without the confirmation, an open one before or after its end (owner 2026-11-02); else read-only.
  */
 function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: StepsProps) {
   const { can } = usePermissions();
@@ -49,7 +48,7 @@ function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: Step
         <p role="status" className="text-sm text-ink-2">{t.sales.lessonActions.confirmed}</p>
       )}
       {correctable && (
-        <SalesCorrectLesson lessonId={lesson.id} autoHeld={canCorrectAutoHeld(lesson)} />
+        <SalesCorrectLesson lessonId={lesson.id} autoHeld={isHeldLesson(lesson)} />
       )}
       {readOnly && <p className="text-xs text-ink-3">{t.lessons.sheet.readOnly}</p>}
     </>

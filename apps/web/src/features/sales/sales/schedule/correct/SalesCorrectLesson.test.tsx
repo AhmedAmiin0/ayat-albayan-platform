@@ -71,11 +71,11 @@ describe('sales «لم تنعقد؟» (owner 2026-11-02)', () => {
     expect(await within(drawer).findByText(t.lessons.error.not_auto_held)).toBeTruthy();
   });
 
-  it('no confirmation required: no «تأكيد الحلقة» on a scheduled lesson still to come', () => {
+  it('no confirmation required: a lesson still to come offers «لم تنعقد؟», never «تأكيد»', () => {
     renderWithQuery(<SalesLessonDrawer lesson={ENDED} now={new Date('2026-10-12T14:00:00.000Z')} onClose={vi.fn()} />);
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
     expect(within(drawer).queryByRole('button', { name: a.confirm })).toBeNull();
-    expect(within(drawer).queryByText(c.title)).toBeNull();
-    expect(within(drawer).getByText(t.lessons.sheet.readOnly)).toBeTruthy();
+    expect(within(drawer).getByText(c.title)).toBeTruthy();
+    expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
   });
 });
