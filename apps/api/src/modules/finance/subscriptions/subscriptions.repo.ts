@@ -14,7 +14,7 @@ export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
 
 /** All supabase access for `subscriptions` (service role; the controllers guard). R-SUB-01. */
 @Injectable()
-export class SubscriptionsQueries {
+export class SubscriptionsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(q: SubListQuery): Promise<Page<SubRow>> {

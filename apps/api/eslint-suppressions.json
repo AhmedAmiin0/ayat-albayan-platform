@@ -2768,22 +2768,9 @@
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/alerts/admin-tasks.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    }
-  },
-  "src/modules/finance/subscriptions/alerts/admin-tasks.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/alerts/admin-tasks.queries.ts": {
+  "src/modules/finance/subscriptions/alerts/admin-tasks.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 1
@@ -2794,12 +2781,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/alerts/alerts.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/modules/finance/subscriptions/alerts/alerts.queries.ts": {
+  "src/modules/finance/subscriptions/alerts/alerts.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 3
     },
@@ -2811,16 +2793,8 @@
     }
   },
   "src/modules/finance/subscriptions/alerts/alerts.service.renewal.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/alerts/alerts.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/finance/subscriptions/alerts/alerts.service.ts": {
@@ -2832,9 +2806,6 @@
     }
   },
   "src/modules/finance/subscriptions/alerts/unpaid-flags.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -2845,9 +2816,6 @@
     }
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.fifo.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 4
     }
@@ -2865,28 +2833,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.queries.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.recompute.http.test.ts": {
     "ab/no-parent-imports": {
       "count": 2
@@ -2895,10 +2841,23 @@
       "count": 5
     }
   },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
     },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
     "max-len": {
       "count": 9
     }
@@ -2918,12 +2877,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/list/subscriptions.sort.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/modules/finance/subscriptions/money/balance.queries.ts": {
+  "src/modules/finance/subscriptions/money/balance.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -2993,11 +2947,6 @@
       "count": 7
     }
   },
-  "src/modules/finance/subscriptions/money/money.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
   "src/modules/finance/subscriptions/money/packages.plan.cancelled.test.ts": {
     "max-len": {
       "count": 2
@@ -3017,17 +2966,11 @@
     }
   },
   "src/modules/finance/subscriptions/money/packages.service.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
   "src/modules/finance/subscriptions/money/packages.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     }
@@ -3068,11 +3011,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/student-activation.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/student-lifecycle/student-activation.ts": {
     "ab/no-shape-checks": {
       "count": 3
@@ -3085,18 +3023,12 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-deactivation.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/no-parent-imports": {
       "count": 2
     },
     "complexity": {
@@ -3107,9 +3039,6 @@
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.job.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 3
     }
@@ -3122,7 +3051,7 @@
       "count": 7
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts": {
+  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -3141,9 +3070,6 @@
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-renewal.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -3155,24 +3081,13 @@
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 11
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/student-status.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/student-lifecycle/student-status.queries.ts": {
+  "src/modules/finance/subscriptions/student-lifecycle/student-status.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 4
@@ -3181,9 +3096,6 @@
   "src/modules/finance/subscriptions/subscription-creator.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
     },
     "max-len": {
       "count": 4
@@ -3238,14 +3150,16 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/subscriptions.queries.ts": {
+  "src/modules/finance/subscriptions/subscriptions.replay.http.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/subscriptions.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -3256,15 +3170,7 @@
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/subscriptions.replay.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/subscriptions.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -3321,7 +3227,7 @@
       "count": 5
     }
   },
-  "src/modules/finance/subscriptions/trial/student-trial.queries.ts": {
+  "src/modules/finance/subscriptions/trial/student-trial.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -4280,9 +4186,6 @@
     }
   },
   "src/modules/messaging/inbox/people/thread-people.mapper.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 4
     }
@@ -4294,17 +4197,11 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 6
     }
   },
   "src/modules/messaging/inbox/people/thread-people.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 2
     }
@@ -4315,9 +4212,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "max-len": {
       "count": 3

@@ -2,7 +2,7 @@ import { ar } from '@/common/infra/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
-import { AlertsQueries } from './alerts.queries';
+import { AlertsRepo } from './alerts.repo';
 import { alertPlan, openTaskKeys, type AlertPlan } from '@/modules/finance/subscriptions/money/packages.plan';
 import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal, type RenewalCause } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
@@ -35,7 +35,7 @@ export class SubscriptionAlertsService {
 
   constructor(
     private readonly packages: PackagesService,
-    private readonly queries: AlertsQueries,
+    private readonly queries: AlertsRepo,
     private readonly env: AlertsEnv,
   ) {}
 
