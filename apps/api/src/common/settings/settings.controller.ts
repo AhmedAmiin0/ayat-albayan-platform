@@ -1,11 +1,17 @@
-import type { AcademySettings, SettingsPatchResult } from '@ab/shared';
-import { Body, Controller, Get, Optional, Patch } from '@nestjs/common';
+import {
+  settingsPatchBodySchema,
+  type AcademySettings,
+  type SettingsPatchBody,
+  type SettingsPatchResult,
+} from '@ab/shared';
+import { Controller, Get, Optional, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../audit/audit.service';
-import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
-import { CurrentUser, Permissions } from '../auth/decorators';
-import { can } from '../auth/permissions';
-import type { AuthUser } from '../auth/verify-token';
+import { AuditService } from '@/common/audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { splitPatchOrThrow } from './settings-patch';
 import { SettingsRulesPort } from './settings-rules.port';
 import { SettingsService } from './settings.service';
@@ -42,7 +48,10 @@ export class SettingsController {
    */
   @Patch()
   @Permissions('settings.write')
-  async update(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SettingsPatchResult> {
+  async update(
+    @ZodBody(settingsPatchBodySchema) body: SettingsPatchBody,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SettingsPatchResult> {
     const rules = this.rules !== undefined && can(user, 'notifications.manage');
     const { changes, saved, moved, invalid, followUpHours } = splitPatchOrThrow(body, { rules });
     const lists = { saved, moved, invalid };

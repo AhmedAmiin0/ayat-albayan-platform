@@ -40,6 +40,19 @@ export function settingZod(def: SettingDef): z.ZodType {
   return byType(SETTING_ZOD, def);
 }
 
+const isTrimmed = (v: string): boolean => v.trim() === v;
+
+/** The read side: a stored string must already be trimmed (the PATCH trims; it never re-trims). */
+const STORED_ZOD: SettingTypeTable<z.ZodType> = {
+  ...SETTING_ZOD,
+  string: (def) => z.string().min(def.minLength).max(def.maxLength).refine(isTrimmed),
+};
+
+/** One stored row's value schema (docs/36 z3): a row that fails it reads as the key's default. */
+export function storedSettingZod(def: SettingDef): z.ZodType {
+  return byType(STORED_ZOD, def);
+}
+
 const shape = Object.fromEntries(
   SETTING_KEYS.filter((k) => (SETTINGS_REGISTRY[k] as SettingDef).patch !== false).map((k) => [
     SETTING_FIELD_OF[k],
