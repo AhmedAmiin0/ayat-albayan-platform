@@ -1,17 +1,17 @@
-import { bookingRequestSchema, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { clientRequest } from '../core/booking.payload';
-import { withPackageSize } from '../plan/package-size';
-import { SalesTrialDates } from '../sales/course/sales-trial-date.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
+import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
+import { SalesTrialDates } from '@/modules/teaching/booking/sales/course/sales-trial-date.service';
 import { TrialDates } from './trial-date.service';
 
 const historyQuery = z.object({ studentId: z.uuid() });
-const bodyOf = (body: unknown) => parseOrThrow(bookingRequestSchema, withPackageSize(body));
+type HistoryQuery = z.output<typeof historyQuery>;
 
 /**
  * «موعد تجريبي جديد» from the student file (owner 2026-10-25): the booking wizard's trial body for ONE
@@ -28,20 +28,26 @@ export class TrialDateController {
 
   /** «مواعيد الحلقة التجريبية»: every trial time picked for the student, newest first. */
   @Get('trial-dates')
-  history(@Query() query: unknown): Promise<TrialHistory> {
-    return this.dates.history(parseOrThrow(historyQuery, query).studentId);
+  history(@ZodQuery(historyQuery) query: HistoryQuery): Promise<TrialHistory> {
+    return this.dates.history(query.studentId);
   }
 
   @Post('trial-date/check')
   @HttpCode(200)
-  async check(@Body() body: unknown): Promise<{ conflicts: Conflict[] }> {
-    return { conflicts: await this.dates.check(await this.dates.target(bodyOf(body))) };
+  async check(@ZodBody(bookingBodySchema) req: BookingRequest): Promise<{ conflicts: Conflict[] }> {
+    return { conflicts: await this.dates.check(await this.dates.target(req)) };
   }
 
   @Post('trial-date')
-  async pick(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TrialDateResult> {
-    const req = clientRequest(bodyOf(body), user.role);
-    return (await this.dates.replay(req, user.id)) ?? this.dates.pick(await this.dates.target(req), user.id);
+  async pick(
+    @ZodBody(bookingBodySchema) body: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TrialDateResult> {
+    const req = clientRequest(body, user.role);
+    return (
+      (await this.dates.replay(req, user.id)) ??
+      this.dates.pick(await this.dates.target(req), user.id)
+    );
   }
 }
 
@@ -54,19 +60,28 @@ export class SalesTrialDateController {
   constructor(private readonly dates: SalesTrialDates) {}
 
   @Get('trial-dates')
-  history(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<TrialHistory> {
-    return this.dates.history(parseOrThrow(historyQuery, query).studentId, user);
+  history(
+    @ZodQuery(historyQuery) query: HistoryQuery,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TrialHistory> {
+    return this.dates.history(query.studentId, user);
   }
 
   @Post('trial-date/check')
   @HttpCode(200)
-  async check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ conflicts: Conflict[] }> {
-    return { conflicts: await this.dates.check(bodyOf(body), user) };
+  async check(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ conflicts: Conflict[] }> {
+    return { conflicts: await this.dates.check(req, user) };
   }
 
   /** 403 not_your_student | override_not_allowed | meeting_link_not_allowed; 400 date_in_past. */
   @Post('trial-date')
-  pick(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TrialDateResult> {
-    return this.dates.pick(bodyOf(body), user);
+  pick(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TrialDateResult> {
+    return this.dates.pick(req, user);
   }
 }
