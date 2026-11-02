@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
@@ -25,6 +26,7 @@ describe('POST /sales/packages/:id/cancel', () => {
   beforeEach(() => {
     resetMocks(m);
     salesDefaults(m);
+    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // «اشتراط التعيين» OFF: any student
     m.subs.get.mockReset().mockResolvedValueOnce(subRow()).mockResolvedValue(cancelled);
     m.cancels.cancel.mockResolvedValue({ row: cancelled });
   });

@@ -14,7 +14,8 @@ import { AnyPackageCancel } from './any-package-cancel.service';
 
 /**
  * «إلغاء الباقة» in the assistant's «تفاصيل الطالب» (owner 2026-11-02), next to «إلغاء الاشتراك»:
- * subscriptions.stop (system admin and sales by default, migration 990), ANY student; never
+ * subscriptions.stop (system admin and sales by default, migration 990); ANY student unless
+ * «اشتراط التعيين» enforces her own (SalesOwnershipRule, 403 not_your_student); never
  * subscriptions.write (the admin's POST /subscriptions/:id/cancel). Teachers and families never.
  */
 @ApiTags('sales')
@@ -26,8 +27,11 @@ export class AnyPackageCancelController {
 
   /** Whether the button shows: the POST's 409 code, or null. 404 subscription_not_found. */
   @Get(':id/cancel')
-  check(@ZodParam('id', salesPackageIdSchema) id: string): Promise<SalesPackageCancelCheck> {
-    return this.cancels.check(id);
+  check(
+    @ZodParam('id', salesPackageIdSchema) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesPackageCancelCheck> {
+    return this.cancels.check(id, user);
   }
 
   /** 200 «ملغاة»; 409 already_cancelled / has_payments / has_lessons / has_commission. */

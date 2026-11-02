@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { SETTING_DEFAULTS, systemPermissionsOf } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -21,6 +21,7 @@ describe('GET /sales/packages/:id/cancel', () => {
   beforeEach(() => {
     resetMocks(m);
     salesDefaults(m);
+    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // «اشتراط التعيين» OFF: any student
   });
 
   it('an unused package: block null; nothing written', async () => {
