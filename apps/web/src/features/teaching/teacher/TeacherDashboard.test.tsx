@@ -40,7 +40,7 @@ function renderDash(me: TeacherMe | Error = ME, auto = false, lessons: LessonVie
     return Promise.resolve([]);
   });
   render(
-    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true, { meeting_link_auto: auto })}>
       <TeacherDashboard />
     </QueryClientProvider>,
   );
@@ -120,7 +120,6 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     const fixed = [TODAY, MONDAY].map((l) => ({ ...l, platform_classroom: false }));
     renderDash(ME, true, fixed);
     const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/settings/public'));
     expect(screen.getByRole('region', { name: t.teacherDash.joinLink })).toBeTruthy();
     expect(within(card).getByRole('link', { name: t.classroom.joinMeeting })).toBeTruthy();
   });

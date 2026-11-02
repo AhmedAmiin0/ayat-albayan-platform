@@ -8,11 +8,12 @@ const lesson = scheduleLesson({ starts_at: '2026-10-01T13:00:00.000Z', ends_at: 
 const on = { now: NOW, holds: true, required: true };
 const off = { ...on, required: false };
 
-test('required (as before): the academy only, and only until the end; no correction', () => {
+test('required (as before): the academy only, and only until the end; a completed lesson stays correctable', () => {
   expect(salesCancelRights(lesson, on)).toEqual({ cancelBy: ['admin'], correct: false });
   const after = salesCancelRights(lesson, { ...on, now: AFTER });
   expect(after).toEqual({ cancelBy: [], correct: false });
-  expect(salesCancelRights({ ...lesson, status: 'completed' }, on).correct).toBe(false);
+  // Held automatically before the setting went back ON: still fixable (the API checks auto_held).
+  expect(salesCancelRights({ ...lesson, status: 'completed' }, on).correct).toBe(true);
 });
 
 test('not required: the three before the end, the teacher or the student after it', () => {
