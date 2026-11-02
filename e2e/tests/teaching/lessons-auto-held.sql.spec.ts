@@ -85,7 +85,7 @@ test.describe('auto-held lessons: balance and teacher pay (owner 2026-11-02)', (
         .savepoint(() => apply(tx, autoHeld(s.lessonId)))
         .then(
           () => 'ok',
-          (e: Error) => e.message,
+          (e: unknown) => (e instanceof Error ? e.message : String(e)),
         );
       expect(again).toBe('invalid_transition');
       const audit = await tx`select actor_id from public.audit_log
