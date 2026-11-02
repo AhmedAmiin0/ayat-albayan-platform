@@ -74,6 +74,12 @@ describe('/config/custom (admin CRUD)', () => {
     expect(audit.record).not.toHaveBeenCalled();
   });
 
+  it('a bad key wins over a bad body (the key is checked first); DELETE checks it too', async () => {
+    const both = await call('PUT', '/config/custom/Bad-Key', { payload: {} });
+    expect([both.statusCode, both.json().issues[0].path]).toEqual([400, '']);
+    expect((await call('DELETE', '/config/custom/Bad-Key')).json().message).toBe('validation_failed');
+  });
+
   it('DELETE removes and audits; an unknown key is 404 and unaudited', async () => {
     custom.find.mockResolvedValue(VIEW);
     custom.remove.mockResolvedValue(true);

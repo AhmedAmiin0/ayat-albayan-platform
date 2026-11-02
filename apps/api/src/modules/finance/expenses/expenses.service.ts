@@ -1,16 +1,16 @@
 import type { ExpenseCreate, ExpenseUpdate, ExpenseView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import { notFound } from '../../../common/http/errors';
+import { AuditService } from '@/common/audit/audit.service';
+import { notFound } from '@/common/http/errors';
 import { expenseInsert, expensePatch } from './expense.write';
 import { ExpenseReceipts } from './expense-receipts';
-import { ExpensesQueries, toExpenseView, type ExpenseRow } from './expenses.queries';
+import { ExpensesRepo, toExpenseView, type ExpenseRow } from './expenses.repo';
 
 /** Expense writes (R-RPT-02, E4), each audited; the receipt path is checked before it is stored. */
 @Injectable()
 export class ExpensesService {
   constructor(
-    private readonly expenses: ExpensesQueries,
+    private readonly expenses: ExpensesRepo,
     private readonly audit: AuditService,
     readonly receipts: ExpenseReceipts,
   ) {}

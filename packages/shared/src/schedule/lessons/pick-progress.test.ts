@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
-import { pickProgress } from './pick-progress.js';
+import { pickProgress } from '@ab/schedule';
 
 const t = ar.booking;
 

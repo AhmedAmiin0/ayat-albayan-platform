@@ -1,7 +1,8 @@
 import { customConfigUpsertSchema, customKeySchema, type CustomConfigView } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -27,8 +28,11 @@ export class CustomConfigController {
   /** 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB. */
   @Put(':key')
   @Permissions('settings.write')
-  async put(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CustomConfigView> {
-    const key = parseOrThrow(customKeySchema, rawKey);
+  async put(
+    @ZodParam('key', customKeySchema) key: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CustomConfigView> {
     const input = parseOrThrow(customConfigUpsertSchema, body);
     const before = await this.custom.find(key);
     const after = await this.custom.upsert(key, input, user.id);
@@ -46,10 +50,13 @@ export class CustomConfigController {
   @Delete(':key')
   @Permissions('settings.write')
   @HttpCode(204)
-  async remove(@Param('key') rawKey: string, @CurrentUser() user: AuthUser): Promise<void> {
-    const key = parseOrThrow(customKeySchema, rawKey);
+  async remove(
+    @ZodParam('key', customKeySchema) key: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     const before = await this.custom.find(key);
-    if (!before || !(await this.custom.remove(key))) throw new NotFoundException({ code: 'not_found', message: 'not_found' });
+    if (!before || !(await this.custom.remove(key)))
+      throw new NotFoundException({ code: 'not_found', message: 'not_found' });
     await this.audit.record({
       actorId: user.id,
       entity: 'custom_config',

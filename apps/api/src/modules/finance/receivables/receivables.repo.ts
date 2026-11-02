@@ -14,7 +14,7 @@ const OWING_FILTER = `status.in.(${OWING.join(',')}),cancel_kind.eq.stopped`;
 
 /** Packages and their net paid for «مستحق على الطلاب» (service role; admin-only routes). */
 @Injectable()
-export class ReceivablesQueries {
+export class ReceivablesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async packages(): Promise<ReceivableIn[]> {

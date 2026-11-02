@@ -14,6 +14,8 @@ export const ROOTS = [
   'packages/time/src',
   'packages/catalog/src',
   'packages/settings/src',
+  'packages/money/src',
+  'packages/schedule/src',
   'packages/shared/src',
 ];
 const CODE = /\.[cm]?[jt]sx?$/;
