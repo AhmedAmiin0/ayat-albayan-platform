@@ -1,5 +1,5 @@
 import type { StudentStatus } from '@ab/catalog';
-import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '../money/pricing/index.js';
+import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '@ab/money';
 import { isPackageEnded } from '../people/students/index.js';
 
 // «جدّد الاشتراك» from the sales chat (owner 2026-10-26): which of her students is due for a renewal,

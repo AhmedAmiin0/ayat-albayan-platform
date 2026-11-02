@@ -1,22 +1,17 @@
 import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
-import { bookingExtras, refineBookingKind } from './booking-extras.js';
+import { bookingExtras } from './booking-extras.js';
 import { requiredText, timeOfDay, timeZone } from '@ab/core';
-import { dayTimesSchema, refineDayTimes } from './day-times.js';
-import { guardianCreateSchema, studentCreateSchema } from '../../people/schemas/index.js';
+import { dayTimesSchema } from './day-times.js';
 
-// Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; the nested
-// `newStudent` / `guardian` reuse the snake_case row schemas. Times are never free text (rule 6):
+// Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; POST /booking's
+// schema joins the people row schemas in @ab/shared (k5a). Times are never free text (rule 6):
 // wall-clock "HH:MM" + IANA tz, local dates "YYYY-MM-DD", instants ISO-8601 with offset.
 
 export const localDate = z.iso.date();
 export const instant = z.iso.datetime({ offset: true });
 export const lessonDuration = z.literal(DURATIONS);
-const uniqueIds = z
-  .array(z.uuid())
-  .min(1)
-  .refine((ids) => new Set(ids).size === ids.length, { message: 'duplicate_id' });
 
 /** 0 = الأحد … 6 = السبت, at least one, no repeats. */
 export const bydaySchema = z
@@ -37,7 +32,8 @@ export const weeklyRuleSchema = z.object({
   startsOn: localDate,
 });
 
-const bookingBase = weeklyRuleSchema.extend({
+/** A booking's fields without the students; @ab/shared's bookingRequestSchema adds them (k5a). */
+export const bookingBaseSchema = weeklyRuleSchema.extend({
   /** Absent only for a makeup (kind 'makeup'); refined below. */
   package: z.enum(PACKAGE_SIZES).optional(),
   ...bookingExtras,
@@ -50,25 +46,6 @@ const bookingBase = weeklyRuleSchema.extend({
   /** A package's weekdays with their own time (only those differing from startTimeLocal). */
   dayTimes: dayTimesSchema,
 });
-
-/**
- * POST /booking (R-SCH-06, R-LEAD-06, R-SCH-10): existing students, or a lead converted into a
- * guardian + new student. Exactly one of the two shapes; sending both is rejected. `kind` picks
- * trial / package / makeup (derived from `package` when omitted); a makeup is one existing student.
- */
-export const bookingRequestSchema = z
-  .xor([
-    bookingBase.extend({ studentIds: uniqueIds, leadId: z.uuid().optional() }),
-    bookingBase.extend({
-      leadId: z.uuid(),
-      newStudent: studentCreateSchema.omit({ guardian_id: true, teacher_id: true }),
-      guardian: guardianCreateSchema,
-      /** Create the student although the guardian has one with a similar name (R-STU-03). */
-      force: z.boolean().optional(),
-    }),
-  ])
-  .superRefine(refineBookingKind)
-  .superRefine(refineDayTimes);
 
 /** POST /lessons/:id/reschedule (R-SCH-07): one occurrence, or this rule from `startsOn` on. */
 export const rescheduleRequestSchema = z.discriminatedUnion('scope', [
@@ -122,7 +99,6 @@ export const lessonProposalRequestSchema = z.object({
 /** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
 export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
 
-export type BookingRequest = z.infer<typeof bookingRequestSchema>;
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;
 export type CancelRequest = z.infer<typeof cancelRequestSchema>;
 export type RuleCancelRequest = z.infer<typeof ruleCancelRequestSchema>;
