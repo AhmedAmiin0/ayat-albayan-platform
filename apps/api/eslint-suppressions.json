@@ -692,11 +692,8 @@
     }
   },
   "src/common/push/expo/expo-deliver.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/common/push/expo/expo-push.ts": {
@@ -5734,7 +5731,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 17
+      "count": 16
     }
   },
   "src/modules/messaging/reminders/reminders.legacy-parity.test.ts": {
@@ -11613,7 +11610,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.http.test.ts": {
@@ -14779,7 +14776,7 @@
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
@@ -14787,7 +14784,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lessons/status/lesson-status.group.test.ts": {
