@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Note } from '@/more';
 import { useIntegrations, useSaveIntegrationValues } from '@/ops/comms/use-line-drivers';
-import { STRIPE_FEATURE } from '@/sales-subscribe';
+import { STRIPE_FEATURE } from '@/sales/subscribe';
 import { type, useTheme } from '@/theme';
 import { stripeSwitch, switchNote, switchValues } from './stripe-switch';
 

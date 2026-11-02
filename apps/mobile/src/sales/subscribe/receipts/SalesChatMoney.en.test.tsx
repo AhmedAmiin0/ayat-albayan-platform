@@ -1,0 +1,38 @@
+import en from '@ab/shared/i18n/en.json';
+import { screen } from '@testing-library/react-native';
+import { t } from '@/core/lib/i18n/i18n';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { familyOf, familyThread, kid, openSub } from '@/sales/subscribe/testing/fixtures';
+import { SalesChatMoney } from './SalesChatMoney';
+
+jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
+  const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
+  const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
+  return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
+});
+const mockApiFetch = jest.fn();
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+}));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+
+test('an English run reads en.json for both chat buttons', async () => {
+  expect(t).toEqual(en);
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid({ open: [openSub()] })),
+  );
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByRole('button', { name: en.salesMoney.newSubscription })).toBeTruthy();
+  expect(screen.getByRole('button', { name: en.salesMoney.recordTransfer })).toBeTruthy();
+});
+
+test('a child due: the one money pill reads en.json «renew», with no child named', async () => {
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid(), kid({ id: 'k2', name: 'Salma', renew_due: true })),
+  );
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByRole('button', { name: en.students.renew })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /Salma/ })).toBeNull();
+  expect(screen.queryByRole('button', { name: en.salesMoney.newSubscription })).toBeNull();
+});

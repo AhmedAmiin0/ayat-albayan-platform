@@ -1,9 +1,9 @@
 import { screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { familyOf, familyThread, kid } from '@/sales-subscribe/testing/fixtures';
+import { familyOf, familyThread, kid } from '@/sales/subscribe/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
-import { thread } from '../../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 // The action strip shows only once a pill will: no empty band over a family chat (review of #112),
 // and none over a lead's chat (owner 2026-10-30: «تسجيل طالب جديد» moved into the header's «⋮»).

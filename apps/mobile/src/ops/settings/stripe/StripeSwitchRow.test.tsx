@@ -8,7 +8,7 @@ import { StripeSwitchRow } from './StripeSwitchRow';
 
 // The owner's hard rule (docs/30): «الدفع الإلكتروني» exists only in the Stripe test app.
 const mockFlag = { on: false };
-jest.mock('@/sales-subscribe/payment-link/flag', () => ({
+jest.mock('@/sales/subscribe/payment-link/flag', () => ({
   get STRIPE_FEATURE() {
     return mockFlag.on;
   },

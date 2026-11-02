@@ -8,7 +8,7 @@ import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { Button } from '@/core/ui/primitives/Button';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { ownStudents, useSalesFamily } from '@/sales-subscribe/lib/family';
+import { ownStudents, useSalesFamily } from '@/sales/subscribe/lib/family';
 import { chatTrialHref } from '@/trial-date/lib/trial-href';
 
 /** iOS shows one modal at a time: the trial-date screen waits for the sheet to close. */

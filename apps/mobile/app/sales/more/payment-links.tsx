@@ -1,1 +1,1 @@
-export { PaymentLinksScreen as default } from '@/sales-subscribe';
+export { PaymentLinksScreen as default } from '@/sales/subscribe';

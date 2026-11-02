@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
-import { PaymentLinksRow } from '@/sales-subscribe';
+import { PaymentLinksRow } from '@/sales/subscribe';
 import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';

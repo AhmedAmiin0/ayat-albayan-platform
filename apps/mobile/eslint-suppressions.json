@@ -4153,9 +4153,6 @@
     }
   },
   "src/inbox/leads/sales/SalesChatActions.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 4
     }
@@ -8710,504 +8707,6 @@
       "count": 2
     }
   },
-  "src/sales-subscribe/components/OpenPackagePicker.part-paid.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/OpenPackagePicker.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/components/PayMethodPills.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/components/SalesQuotePreview.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/SalesReceiptField.tsx": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/SalesSubscribeForm.tsx": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 11
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/SalesTeacherPills.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/sales-subscribe/components/StartDateField.tsx": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/sales-subscribe/components/TransferDone.buttons.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/components/TransferDone.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/TransferDone.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/components/TransferForm.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/sales-subscribe/hooks/upload-sales-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/hooks/use-sales-payment.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/hooks/use-sales-subscribe.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/sales-subscribe/hooks/use-sales-teachers.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/index.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/lib/family.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/lib/family.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/sales-subscribe/lib/sales-errors.ts": {
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/lib/start-date.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/lib/start-date.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/sales-subscribe/lib/transfer-form.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/lib/transfer-form.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/LinkCreated.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/LinkCreated.tsx": {
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/sales-subscribe/payment-link/LinkPriceSection.tsx": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/sales-subscribe/payment-link/OnlinePrice.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/PaymentDoneScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/PaymentDoneScreen.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/sales-subscribe/payment-link/flag.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/gate.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/link-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/sales-subscribe/payment-link/link-text.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/link-text.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/sales-subscribe/payment-link/list/PaymentLinkItem.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/list/PaymentLinkItem.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/payment-link/list/PaymentLinksScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/payment-link/list/PaymentLinksScreen.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
-  "src/sales-subscribe/payment-link/use-link-pay.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/use-stripe.ts": {
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/receipts/ChatReceiptList.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/receipts/ChatReceiptRow.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/receipts/ChatReceiptThumb.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/receipts/SalesChatMoney.en.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/receipts/SalesChatMoney.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 9
-    }
-  },
-  "src/sales-subscribe/receipts/SalesChatMoney.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/sales-subscribe/receipts/chat-receipts.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/sales-money.flow.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.course.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.en.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.method.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.online.test.tsx": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.renew-any.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.renew.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.riyadh.test.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.teacher.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    }
-  },
-  "src/sales-subscribe/screens/SalesSubscribeScreen.used.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.attachments.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.cancel.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.chat.test.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.en.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.renew-any.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.shortfall.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/sales-subscribe/screens/SalesTransferScreen.upload.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-subscribe/testing/fixtures.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/sales/app/lib/sales-tabs.test.ts": {
     "max-len": {
       "count": 1
@@ -9764,6 +9263,396 @@
     }
   },
   "src/sales/sales/testing/fixtures.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/OpenPackagePicker.part-paid.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/OpenPackagePicker.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/components/PayMethodPills.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/components/SalesQuotePreview.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/SalesReceiptField.tsx": {
+    "@typescript-eslint/no-confusing-void-expression": {
+      "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/SalesSubscribeForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 11
+    },
+    "max-lines-per-function": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/SalesTeacherPills.tsx": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/sales/subscribe/components/StartDateField.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/sales/subscribe/components/TransferDone.buttons.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/components/TransferDone.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/components/TransferForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/sales/subscribe/hooks/upload-sales-receipt.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/hooks/use-sales-payment.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/hooks/use-sales-subscribe.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/sales/subscribe/hooks/use-sales-teachers.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/index.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/lib/family.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/sales/subscribe/lib/sales-errors.ts": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/lib/start-date.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/lib/start-date.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/sales/subscribe/lib/transfer-form.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/LinkCreated.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/LinkCreated.tsx": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/sales/subscribe/payment-link/LinkPriceSection.tsx": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/sales/subscribe/payment-link/OnlinePrice.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/PaymentDoneScreen.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/PaymentDoneScreen.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/sales/subscribe/payment-link/flag.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/gate.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/link-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 5
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/sales/subscribe/payment-link/link-text.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/sales/subscribe/payment-link/list/PaymentLinkItem.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/list/PaymentLinkItem.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/payment-link/use-link-pay.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/payment-link/use-stripe.ts": {
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/receipts/ChatReceiptList.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/receipts/ChatReceiptRow.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/receipts/ChatReceiptThumb.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/receipts/SalesChatMoney.en.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/receipts/SalesChatMoney.test.tsx": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/sales/subscribe/receipts/SalesChatMoney.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/sales/subscribe/receipts/chat-receipts.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/no-untyped-api-calls": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/sales-money.flow.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.course.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.method.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.online.test.tsx": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.renew-any.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.renew.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.riyadh.test.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.teacher.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/sales/subscribe/screens/SalesSubscribeScreen.used.test.tsx": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.cancel.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.chat.test.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.renew-any.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.shortfall.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.tsx": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "ab/forbidden-imports": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/sales/subscribe/screens/SalesTransferScreen.upload.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/sales/subscribe/testing/fixtures.ts": {
     "max-len": {
       "count": 1
     }
