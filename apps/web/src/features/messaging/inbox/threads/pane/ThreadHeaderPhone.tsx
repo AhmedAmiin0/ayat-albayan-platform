@@ -15,6 +15,7 @@ import type { ThreadHeaderProps } from './ThreadHeader';
 import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
 import { CallButton } from '@/features/messaging/calls';
+import { ChatSearchBar, ChatSearchToggle } from '@/features/messaging/inbox/search';
 
 /**
  * The full-screen chat's header below 900px (owner 2026-10-05): one compact row (back to
@@ -46,10 +47,12 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
             <Ltr className="block truncate text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>
           )}
         </div>
+        <ChatSearchToggle />
         {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
         <CallButton phone={th.phone_e164} name={title} canSend={callable} />
         {action}
       </div>
+      <ChatSearchBar />
       <div className="-mx-1.5 mt-1 flex items-center gap-1.5 overflow-x-auto px-3 text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">
         {kind === 'lead' && th.lead_status ? (
           <StatusChip size="sm" {...leadChip(th.lead_status)} />
