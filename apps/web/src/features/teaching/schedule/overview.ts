@@ -1,8 +1,17 @@
-import { clockTime, type Gender, type Program, type LessonView, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
+import {
+  addDays,
+  clockTime,
+  type Gender,
+  type LessonView,
+  type OverviewTeacher,
+  type OverviewTimeOff,
+  type Program,
+  type Span,
+  wallInstant,
+} from '@ab/shared';
 import type { Range } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import { teacherRows } from './lesson/lessons';
-import { addDays, zonedToUtc } from './tz';
 import type { Clock } from '@/lib/clock';
 import { hhmmText } from '@/lib/clock-text';
 
@@ -55,7 +64,7 @@ export function boardRows(
 
 /** [from, to) of a day in `tz` (the viewer's), epoch ms. */
 export function dayBounds(day: string, tz: string): { from: number; to: number } {
-  const at = (d: string) => zonedToUtc(d, '00:00', tz).getTime();
+  const at = (d: string) => wallInstant(d, '00:00', tz).getTime();
   return { from: at(day), to: at(addDays(day, 1)) };
 }
 
