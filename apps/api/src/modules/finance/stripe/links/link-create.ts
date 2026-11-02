@@ -1,13 +1,13 @@
 import { linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict, notFound } from '../../../../common/http/errors';
-import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '../../../sales/sales-money';
-import { SubscriptionCreator } from '../../subscriptions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '@/modules/sales/sales-money';
+import { SubscriptionCreator } from '@/modules/finance/subscriptions';
 import { loadEnv } from '@/config/env/env';
 import { newLinkToken } from './link-ids';
 import { LinkCreateDeps, LinkDeps } from './link-deps';
-import type { LinkRow } from './payment-links.queries';
+import type { LinkRow } from './payment-links.repo';
 
 /**
  * «رابط دفع» (owner 2026-10-28, docs/30): ANY student (the 2026-10-28 any-student decision). The package is

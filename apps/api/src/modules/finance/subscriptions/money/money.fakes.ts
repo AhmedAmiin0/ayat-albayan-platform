@@ -2,7 +2,7 @@
 import { quote, type QuoteResponse } from '@ab/shared';
 import type { ExpenseRow } from '@/modules/finance/expenses/expenses.queries';
 import type { PaymentRow } from '@/modules/finance/payments/payments.queries';
-import type { PayoutRow } from '@/modules/finance/payouts/payouts.queries';
+import type { PayoutRow } from '@/modules/finance/payouts/payouts.repo';
 import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 export const STUDENT_ID = '5a000000-0000-4000-8000-000000000001';

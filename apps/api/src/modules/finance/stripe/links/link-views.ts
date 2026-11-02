@@ -1,7 +1,7 @@
 import type { PaymentLinkView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { toLinkView } from './payment-links.mapper';
-import type { LinkRow } from './payment-links.queries';
+import type { LinkRow } from './payment-links.repo';
 
 /**
  * The API's public base URL (env API_PUBLIC_URL, e.g. https://api.ayatalbayan.com; docs/09): the family's

@@ -1,10 +1,10 @@
 import { effectiveLinkStatus, paymentLinkUrl } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { StripeClients, type StripeApi } from '../gate/stripe-clients';
-import { LinkDeps } from '../links/link-deps';
-import { LinkPackages } from '../links/link-packages';
-import { statusOf } from '../links/payment-links.mapper';
-import type { LinkRow } from '../links/payment-links.queries';
+import { StripeClients, type StripeApi } from '@/modules/finance/stripe/gate/stripe-clients';
+import { LinkDeps } from '@/modules/finance/stripe/links/link-deps';
+import { LinkPackages } from '@/modules/finance/stripe/links/link-packages';
+import { statusOf } from '@/modules/finance/stripe/links/payment-links.mapper';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 import { checkoutParams } from './checkout-params';
 
 /**

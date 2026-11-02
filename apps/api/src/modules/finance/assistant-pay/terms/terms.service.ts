@@ -1,11 +1,11 @@
 import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { notFound } from '../../../../common/http/errors';
-import { CommissionBell } from '../../subscriptions';
-import { AssistantRpc } from '../shared/assistant-pay.rpc';
+import { AuditService } from '@/common/audit/audit.service';
+import { notFound } from '@/common/http/errors';
+import { CommissionBell } from '@/modules/finance/subscriptions';
+import { AssistantRpc } from '@/modules/finance/assistant-pay/shared/assistant-pay.rpc';
 import { termsColumns, toTermsView } from './terms.mapper';
-import { TermsQueries } from './terms.queries';
+import { TermsRepo } from './terms.repo';
 
 /** The audit and the commission bell (max-params). */
 @Injectable()
@@ -20,7 +20,7 @@ export class TermsEnv {
 @Injectable()
 export class TermsService {
   constructor(
-    private readonly queries: TermsQueries,
+    private readonly queries: TermsRepo,
     private readonly rpc: AssistantRpc,
     private readonly env: TermsEnv,
   ) {}
