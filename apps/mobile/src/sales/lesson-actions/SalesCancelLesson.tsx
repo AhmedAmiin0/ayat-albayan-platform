@@ -1,36 +1,34 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle } from '@/core/lib/clock';
 import { Note } from '@/more';
-import { Field } from '@/core/ui/form/Field';
-import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { rescheduleFailure } from '@/teaching';
+import { CancelLesson } from '@/today';
 import { useSalesCancel } from './lesson-actions-api';
 
+/** One lesson, never a series (POST /sales/lessons/:id/cancel is strict): no «كل اللي بعدها». */
+const ONE_LESSON = { rule_id: null };
+
 /**
- * Sales' «إلغاء الحلقة» (docs/16 row 37): this lesson only, the reason optional (none = stored null),
- * then «تأكيد الإلغاء». No «مين ألغى» and no series: the academy cancels it, as the admin's «الإدارة».
+ * Sales' «إلغاء الحلقة» (docs/16 row 37; owner 2026-11-02 «I want assistant to be able to
+ * cancel»): the admin's very form (CancelLesson): who cancelled (teacher / student / academy,
+ * which sets the status and whether the lesson counts, as for the admin) and the reason. This
+ * lesson only.
  */
 export function SalesCancelLesson({ lessonId, onClose }: { lessonId: string; onClose: () => void }) {
   const cycle = useClockCycle();
-  const [reason, setReason] = useState('');
   const cancel = useSalesCancel(lessonId);
-  const a = t.sales.lessonActions;
-  if (cancel.isSuccess) return <Note>{a.cancelled}</Note>;
+  if (cancel.isSuccess) return <Note>{t.sales.lessonActions.cancelled}</Note>;
   const failure = cancel.isError ? rescheduleFailure(cancel.error, cycle) : null;
   return (
     <View style={{ gap: 10 }}>
-      <Field label={a.reason} placeholder={a.reasonHint} value={reason} onChangeText={setReason} />
       {failure ? <ErrorLine message={failure.kind === 'error' ? failure.text : t.common.error} /> : null}
-      <InlineConfirm
-        tone="danger"
-        message={a.cancelTitle}
-        confirmLabel={cancel.isPending ? t.common.saving : a.confirmCancel}
-        cancelLabel={t.common.back}
-        onConfirm={() => (cancel.isPending ? undefined : cancel.mutate(reason.trim() ? { reason: reason.trim() } : {}))}
-        onCancel={onClose}
+      <CancelLesson
+        lesson={ONE_LESSON}
+        busy={cancel.isPending}
+        onSubmit={({ by, reason }) => cancel.mutate({ by, reason })}
+        onClose={onClose}
       />
     </View>
   );

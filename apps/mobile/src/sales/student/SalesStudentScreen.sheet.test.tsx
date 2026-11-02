@@ -67,8 +67,10 @@ test('cancel from the sheet reads «تفاصيل الطالب» again: the cance
   mockApiSend.mockResolvedValue({ id: 'u1', status: 'cancelled_by_admin' });
   await open(/2 أكتوبر 18:00$/);
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
-  await fireEvent.press(screen.getByRole('button', { name: a.confirmCancel }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/u1/cancel', {}));
+  await fireEvent.press(screen.getByRole('radio', { name: t.lessons.by.admin }));
+  await fireEvent.changeText(screen.getByLabelText(t.lessons.reason), 'ظرف');
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/u1/cancel', { by: 'admin', reason: 'ظرف' }));
   expect(await screen.findByText(a.cancelled)).toBeTruthy();
   await waitFor(() => expect(reads()).toBe(2));
   await fireEvent.press(screen.getByRole('button', { name: t.common.close }));

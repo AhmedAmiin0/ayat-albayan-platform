@@ -54,4 +54,5 @@ export {
   type ZonedParts,
   zonedToUtc,
 } from './tz';
+export { CancelForm, type CancelFormProps, type CancelRoute } from './reschedule/CancelForm';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';

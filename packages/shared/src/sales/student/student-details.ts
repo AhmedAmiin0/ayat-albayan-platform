@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enums/index.js';
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
+import { CANCEL_BY } from '../../schedule/lessons/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
 import type { TrialOutcome } from '../../people/students/index.js';
@@ -63,8 +64,15 @@ export interface SalesStudentDetails {
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
 export const salesRescheduleSchema = z.strictObject({ startsAt: instant });
-/** POST /sales/lessons/:id/cancel: one lesson only; the reason is optional for sales (null when absent). */
-export const salesCancelSchema = z.strictObject({ reason: z.string().trim().max(500).optional() });
+/**
+ * POST /sales/lessons/:id/cancel: one lesson only (no series). `by` = who cancelled, as the admin's
+ * (owner 2026-11-02: the assistant cancels as the admin does; it sets the status and whether the lesson
+ * counts); absent = the academy (an older app). The reason is optional here (null when absent).
+ */
+export const salesCancelSchema = z.strictObject({
+  by: z.enum(CANCEL_BY).optional(),
+  reason: z.string().trim().max(500).optional(),
+});
 export type SalesReschedule = z.infer<typeof salesRescheduleSchema>;
 export type SalesCancel = z.infer<typeof salesCancelSchema>;
 

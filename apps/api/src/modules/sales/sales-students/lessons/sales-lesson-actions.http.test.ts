@@ -39,6 +39,14 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
     expect(t.lessons.cancels.cancel).toHaveBeenLastCalledWith(expect.objectContaining({ body: { scope: 'one', by: 'admin', reason: 'سفر' } }));
   });
 
+  it('cancel says who cancelled, as the admin\'s (owner 2026-11-02): teacher and student reach the admin service', async () => {
+    for (const by of ['teacher', 'student', 'admin'] as const) {
+      const res = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: { by, reason: 'ظرف' } });
+      expect(res.statusCode).toBe(200);
+      expect(t.lessons.cancels.cancel).toHaveBeenLastCalledWith(expect.objectContaining({ body: { scope: 'one', by, reason: 'ظرف' } }));
+    }
+  });
+
   it('a lesson of another family moves and cancels like hers (owner 2026-10-28); an unknown or empty one 404', async () => {
     t.queries.lesson.mockImplementation(async (id: string) =>
       lessonFacts(id === LESSON ? { lesson_students: [{ student_id: OTHER }] } : { id, starts_at: AT, ends_at: '2026-11-02T15:30:00.000Z' }));
@@ -75,14 +83,14 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
     expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
   });
 
-  it('never a series, a substitute, an override or a «by»: 400 before any read', async () => {
+  it('never a series, a substitute, an override or an unknown «by»: 400 before any read', async () => {
     const bad = [
       ['reschedule', { startsAt: AT, scope: 'rule' }],
       ['reschedule', { startsAt: AT, teacherId: MINE }],
       ['reschedule', { startsAt: AT, override: { reason: 'احجز' } }],
       ['reschedule', {}],
       ['cancel', { scope: 'rule' }],
-      ['cancel', { by: 'student' }],
+      ['cancel', { by: 'guardian' }],
     ] as const;
     for (const [action, body] of bad) {
       expect([action, body, (await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body })).statusCode]).toEqual([action, body, 400]);

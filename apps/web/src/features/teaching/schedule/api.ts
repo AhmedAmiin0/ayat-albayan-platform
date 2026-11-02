@@ -37,7 +37,12 @@ export interface SlotsParams extends Window {
   excludeCourse?: string | undefined;
   /** «موعد تجريبي جديد»: the upcoming trial the new date moves, so it is not busy. */
   excludeLessonId?: string | undefined;
+  /** The assistant's «تغيير الموعد» of ANY lesson (/sales/booking/slots): the lesson she moves. */
+  lessonId?: string | undefined;
 }
+
+/** The optional slot params, sent as named when set. */
+const OPTIONAL_SLOT_PARAMS = ['excludeCourse', 'excludeLessonId', 'lessonId'] as const;
 
 /** GET /booking/slots (≤ 14 days; the assistant's mirror under /sales/booking): the teacher's candidate starts, each with its conflicts. */
 export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
@@ -48,8 +53,10 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
     durationMin: String(p.durationMin),
   });
   if (p.studentIds.length > 0) params.set('studentIds', p.studentIds.join(','));
-  if (p.excludeCourse) params.set('excludeCourse', p.excludeCourse);
-  if (p.excludeLessonId) params.set('excludeLessonId', p.excludeLessonId);
+  for (const key of OPTIONAL_SLOT_PARAMS) {
+    const value = p[key];
+    if (value) params.set(key, value);
+  }
   return queryOptions({
     queryKey: [...LESSONS_KEY, 'slots', mode, params.toString()],
     queryFn: () => apiFetch<SlotsResponse>(`${bookingBase(mode)}/slots?${params}`),

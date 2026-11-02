@@ -24,7 +24,8 @@ export class LessonServices {
  * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers:
  * owner 2026-10-28) through the admin's very services, with her as the actor: the same transaction,
  * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
- * override) and «إلغاء» (scope one, by the academy, the reason optional: null when absent).
+ * override) and «إلغاء» (scope one; who cancelled as the admin picks it, the academy when
+ * absent; the reason optional: null when absent).
  */
 @Injectable()
 export class SalesLessonActions {
@@ -47,7 +48,9 @@ export class SalesLessonActions {
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
     await this.scope.assertLesson({ lessonId, now });
     const reason = body.reason ? body.reason : null;
-    await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by: 'admin', reason }, actor });
+    // Who cancelled (owner 2026-11-02), as the admin picks it; absent = the academy (older app).
+    const cancel = { scope: 'one', by: body.by ?? 'admin', reason } as const;
+    await this.lessons.cancels.cancel({ lessonId, body: cancel, actor });
     const lesson = await this.queries.lesson(lessonId);
     return { id: lessonId, status: lesson?.status ?? 'cancelled_by_admin' };
   }

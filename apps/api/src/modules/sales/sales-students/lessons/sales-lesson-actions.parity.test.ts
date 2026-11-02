@@ -70,6 +70,16 @@ describe('sales move / cancel = the admin path (docs/16 row 37)', () => {
     expect(sales.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: SALES.id, action: 'cancel', after: expect.objectContaining({ reason: null }) }));
   });
 
+  it('cancel by the student: the admin\'s very change set and audit (status, whether it counts)', async () => {
+    const admin = rig();
+    await admin.cancels.cancel({ lessonId: LESSON_ID, body: { scope: 'one', by: 'student', reason: 'سفر' }, actor: ADMIN });
+    const sales = rig();
+    await sales.actions.cancel({ lessonId: LESSON_ID, body: { by: 'student', reason: 'سفر' }, actor: SALES });
+    expect(appliedChange(sales.writer)?.changes).toEqual(appliedChange(admin.writer)?.changes);
+    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({ to_status: 'excused' });
+    expect(sales.record.mock.calls[0]?.[0].after).toEqual(admin.record.mock.calls[0]?.[0].after);
+  });
+
   it('touches only the one lesson: no rule end, no other lesson', async () => {
     const sales = rig();
     await sales.actions.cancel({ lessonId: LESSON_ID, body: {}, actor: SALES });

@@ -12965,7 +12965,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.http.test.ts": {

@@ -60,36 +60,41 @@ test('another family\'s lesson (owner 2026-10-28): both actions, no «للاطل
   expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/students\//));
 });
 
-test('cancel without a reason posts {} to her route; the lesson reads cancelled', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
+test('cancel: the admin\'s form, who cancelled and why, posted to her route; the lesson reads cancelled', async () => {
+  mockApiSend.mockResolvedValue({ id: 'l2', status: 'excused' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
-  expect(screen.getByText(a.cancelTitle)).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: a.confirmCancel }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l2/cancel', {}));
+  // One lesson only: no «كل اللي بعدها».
+  expect(screen.queryByRole('radio', { name: t.lessons.scope.rule })).toBeNull();
+  for (const who of ['teacher', 'student', 'admin'] as const) expect(screen.getByRole('radio', { name: t.lessons.by[who] })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('radio', { name: t.lessons.by.student }));
+  await fireEvent.changeText(screen.getByLabelText(t.lessons.reason), '  سفر الأسرة ');
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l2/cancel', { by: 'student', reason: 'سفر الأسرة' }));
   expect(await screen.findByText(a.cancelled)).toBeTruthy();
 });
 
-test('while the cancel form is open «تأكيد الحلقة» is hidden: «تأكيد الإلغاء» is the one path until «رجوع»', async () => {
+test('cancel needs who cancelled and a reason, as the admin\'s: nothing is sent without them', async () => {
+  await open('سلمى');
+  await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
+  expect(screen.getByText(t.common.required)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('radio', { name: t.lessons.by.teacher }));
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
+  expect(mockApiSend).not.toHaveBeenCalled();
+});
+
+test('while the cancel form is open «تأكيد الحلقة» is hidden: «إلغاء الحلقة» is the one path until «رجوع»', async () => {
   await open('سلمى');
   expect(screen.getByRole('button', { name: a.confirm })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
-  expect(screen.getByRole('button', { name: a.confirmCancel })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.lessons.cancelSubmit })).toBeTruthy();
   expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();
   // The form's «رجوع» (the screen header's own comes first).
   const back = screen.getAllByRole('button', { name: t.common.back }).pop();
   if (!back) throw new Error('no «رجوع»');
   await fireEvent.press(back);
   expect(screen.getByRole('button', { name: a.confirm })).toBeTruthy();
-});
-
-test('a typed reason is sent trimmed', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
-  await open('سلمى');
-  await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
-  await fireEvent.changeText(screen.getByLabelText(a.reason), '  سفر الأسرة ');
-  await fireEvent.press(screen.getByRole('button', { name: a.confirmCancel }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l2/cancel', { reason: 'سفر الأسرة' }));
 });
 
 test('reschedule: her scoped slots, one lesson only, then the admin\'s success panel', async () => {

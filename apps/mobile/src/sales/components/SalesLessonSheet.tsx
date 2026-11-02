@@ -1,4 +1,4 @@
-import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import { canSalesChangeLesson, canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
@@ -6,7 +6,6 @@ import { useHolds, usePermissions } from '@/auth';
 import { Note } from '@/more';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
-import { canChangeLesson } from '../lesson-actions/lesson-actions-api';
 import { SalesLessonActions } from '../lesson-actions/SalesLessonActions';
 import { SalesRescheduleSheet } from '../lesson-actions/SalesRescheduleSheet';
 
@@ -32,7 +31,7 @@ export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonShee
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
   const justConfirmed = lesson !== null && lesson.id === confirmedId;
   const shown = lesson && justConfirmed ? { ...lesson, status: 'confirmed' as const } : lesson;
-  const changeable = shown ? canChangeLesson(shown, { now, can }) : null;
+  const changeable = shown ? canSalesChangeLesson(shown, { now, can }) : null;
   const confirmable = shown ? canSalesConfirm(shown, { now, holds: holdsConfirm }) : false;
   return (
     <LessonDetailsSheet

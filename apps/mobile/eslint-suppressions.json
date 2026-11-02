@@ -10424,7 +10424,7 @@
   },
   "src/sales/components/SalesLessonSheet.tsx": {
     "ab/no-parent-imports": {
-      "count": 3
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -10520,7 +10520,7 @@
   },
   "src/sales/lesson-actions/SalesCancelLesson.tsx": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/sales/lesson-actions/SalesConfirmLesson.flow.test.tsx": {
@@ -10561,17 +10561,9 @@
       "count": 1
     }
   },
-  "src/sales/lesson-actions/lesson-actions-api.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/sales/lesson-actions/lesson-actions-api.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/sales/lib/sales-api.ts": {

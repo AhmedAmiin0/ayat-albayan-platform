@@ -1,18 +1,7 @@
-import { isOpenLesson, type LessonStatus, type SalesCancel, type SalesLessonMoved, type SalesScheduleLesson } from '@ab/shared';
+import type { LessonStatus, SalesCancel, SalesLessonMoved, SalesScheduleLesson } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
-
-/**
- * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over and have a student,
- * and she must hold the key. ANY student's lesson, hers or another family's, a group for all its
- * students (owner 2026-10-28). The API checks every one of these again. «تأكيد الحلقة» (row 37b, also
- * any lesson) is `canSalesConfirm` from @ab/shared.
- */
-export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean }) {
-  const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0;
-  return { reschedule: ok && input.can('lessons.reschedule'), cancel: ok && input.can('lessons.cancel') };
-}
 
 /** «جدول الحلقات» and «اليوم» read the same day query, «تفاصيل الطالب» its «الجدول»: refetch both after a change. */
 const useRefreshSchedule = () => {

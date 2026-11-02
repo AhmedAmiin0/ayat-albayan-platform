@@ -1,4 +1,4 @@
-import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import { canSalesChangeLesson, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
@@ -7,7 +7,6 @@ import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import { canChangeLesson } from './lesson-actions-api';
 import { SalesCancelLesson } from './SalesCancelLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
 
@@ -32,7 +31,7 @@ export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesL
   const now = useNow();
   const joinLive = useJoinOpen(lesson) && isRunningLesson(lesson, now);
   const [cancelling, setCancelling] = useState(false);
-  const allowed = canChangeLesson(lesson, { now, can });
+  const allowed = canSalesChangeLesson(lesson, { now, can });
   const a = t.sales.lessonActions;
   const confirm = (secondary: boolean) =>
     onConfirmed ? <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} /> : null;

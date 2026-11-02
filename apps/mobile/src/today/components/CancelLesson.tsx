@@ -14,7 +14,10 @@ const scopePills = () => (['one', 'rule'] as const).map((s) => ({ value: s, labe
 const byPills = () => CANCEL_BY.map((b) => ({ value: b, label: t.lessons.by[b] }));
 
 interface CancelLessonProps {
-  lesson: LessonView;
+  /** Only its series matters: none (a sales cancel too) = no «كل اللي بعدها». */
+  lesson: Pick<LessonView, 'rule_id'>;
+  /** While the caller's request runs: «جارٍ الحفظ» and no second submit. */
+  busy?: boolean;
   onSubmit: (cancel: CancelRequest) => void;
   onClose: () => void;
 }
@@ -22,16 +25,17 @@ interface CancelLessonProps {
 /**
  * «إلغاء الحلقة» (R-SCH-07, docs/10 route 9): this lesson or the rest of its series, who cancelled
  * (a student's cancellation is an excuse), and the reason the API requires. No preset «مين»: it
- * decides the status and whether the lesson counts, so the admin picks it.
+ * decides the status and whether the lesson counts, so the admin (or sales: SalesCancelLesson)
+ * picks it.
  */
-export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
+export function CancelLesson({ lesson, busy = false, onSubmit, onClose }: CancelLessonProps) {
   const [scope, setScope] = useState<Scope>('one');
   const [by, setBy] = useState<CancelBy | ''>('');
   const [reason, setReason] = useState('');
   const [tried, setTried] = useState(false);
   const submit = () => {
     setTried(true);
-    if (by !== '' && reason.trim() !== '') onSubmit({ scope, by, reason: reason.trim() });
+    if (!busy && by !== '' && reason.trim() !== '') onSubmit({ scope, by, reason: reason.trim() });
   };
   return (
     <View style={{ gap: 10 }}>
@@ -68,7 +72,7 @@ export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
       <InlineConfirm
         tone="danger"
         message={t.lessons.cancelTitle}
-        confirmLabel={t.lessons.cancelSubmit}
+        confirmLabel={busy ? t.common.saving : t.lessons.cancelSubmit}
         cancelLabel={t.common.back}
         onConfirm={submit}
         onCancel={onClose}

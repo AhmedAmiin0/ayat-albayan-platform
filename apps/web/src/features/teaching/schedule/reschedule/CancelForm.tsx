@@ -1,5 +1,5 @@
-import { CANCEL_BY, type CancelBy, type LessonView } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@ab/shared';
+import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -10,26 +10,42 @@ import { t } from '@/lib/i18n/i18n';
 import { cancelLesson, lessonErrorText, LESSONS_KEY } from '../api';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 
+/** Where a cancel goes and what it refreshes: the admin's route or the assistant's. */
+export interface CancelRoute {
+  send: (body: CancelRequest) => Promise<unknown>;
+  refresh: QueryKey;
+}
+
 export interface CancelFormProps {
-  lesson: LessonView;
+  /** Its series decides «كل اللي بعدها» (none: this lesson only). */
+  lesson: Pick<LessonView, 'id' | 'rule_id'>;
   onBack: () => void;
   onDone: (message: string) => void;
+  /** Default the admin's POST /lessons/:id/cancel. */
+  route?: CancelRoute;
 }
+
+const adminRoute = (id: string): CancelRoute => ({
+  send: (body) => cancelLesson({ id, body }),
+  refresh: LESSONS_KEY,
+});
 
 /**
  * «إلغاء الحلقة» (R-SCH-07): this lesson or it and every later one of its rule, who cancelled and
- * why. Whether it consumes the package is the API's call (teacher/admin never; student per setting).
+ * why. Whether it consumes the package is the API's call (teacher/admin never; student per
+ * setting). The assistant's drawer sends it to her own route (owner 2026-11-02), one lesson only.
  */
-export function CancelForm({ lesson, onBack, onDone }: CancelFormProps) {
+export function CancelForm(props: CancelFormProps) {
+  const { lesson, onBack, onDone, route = adminRoute(lesson.id) } = props;
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
   const [by, setBy] = useState<CancelBy>('admin');
   const [reason, setReason] = useState('');
   const [missing, setMissing] = useState(false);
   const cancel = useMutation({
-    mutationFn: () => cancelLesson({ id: lesson.id, body: { scope, by, reason: reason.trim() } }),
+    mutationFn: () => route.send({ scope, by, reason: reason.trim() }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
+      await queryClient.invalidateQueries({ queryKey: route.refresh });
       onDone(scope === 'rule' ? t.lessons.seriesCancelled : t.lessons.cancelled);
     },
   });
