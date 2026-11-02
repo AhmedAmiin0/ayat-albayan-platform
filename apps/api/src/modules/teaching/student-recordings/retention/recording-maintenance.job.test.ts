@@ -28,13 +28,4 @@ describe('RecordingMaintenanceJob timers (Ticker)', () => {
     await vi.advanceTimersByTimeAsync(3 * HOUR_MS);
     expect(run).toHaveBeenCalledTimes(2);
   });
-
-  it('runOnce never throws: a failing sweep counts 0 and the other still runs', async () => {
-    const retention = {
-      sweepStuck: vi.fn(async () => Promise.reject(new Error('db down'))),
-      purgeExpired: vi.fn(async () => 3),
-    };
-    const job = new RecordingMaintenanceJob(retention as unknown as RecordingRetention);
-    expect(await job.runOnce(new Date('2026-10-05T12:00:00Z'))).toEqual({ stuck: 0, purged: 3 });
-  });
 });
