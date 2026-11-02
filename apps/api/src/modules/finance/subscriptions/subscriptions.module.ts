@@ -29,7 +29,6 @@ import { StudentTrialRepo } from './trial/student-trial.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './alerts/unpaid-flags.service';
-import { UsedBeforeEditController } from './used-before-edit/used-before-edit.controller';
 import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
 import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
@@ -49,7 +48,6 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsController,
     StudentBalanceController,
     AdminTasksController,
-    UsedBeforeEditController,
   ],
   providers: [
     AdminTasksRepo,
@@ -95,6 +93,7 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsRepo,
     SubscriptionsService,
     UnpaidFlags,
+    UsedBeforeEdit,
   ],
 })
 export class SubscriptionsModule {}

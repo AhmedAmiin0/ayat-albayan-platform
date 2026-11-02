@@ -25,16 +25,20 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
  * admin's (SubscriptionCreator, PaymentsService, ReceiptsService), the ownership is SalesQueries.ownership,
  * and the chat files are ThreadMediaService's (its deps are global: InboundMedia, StorageService).
  */
+import { UsedBeforeAccess } from './used-before/used-before-access';
+import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
 @Module({
   imports: [SubscriptionsModule, PaymentsModule, SalesModule],
   controllers: [
     ...[SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
     AnyPackageCancelController,
+    UsedBeforeEditController,
   ],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
     AnyPackageCancel,
+    UsedBeforeAccess,
   ],
   // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],

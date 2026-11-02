@@ -9,6 +9,7 @@ export { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
 export { SubscriptionCancel } from './cancel/subscription-cancel.service';
 export { SubscriptionCreator } from './subscription-creator';
 export { assertUsedBefore } from './used-before';
+export { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 export {
   studentRef,
   type SubContext,
