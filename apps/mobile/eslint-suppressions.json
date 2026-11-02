@@ -816,9 +816,6 @@
     }
   },
   "src/auth/verify-role.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -826,7 +823,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/booking/invoice/ChatMediaSheet.test.tsx": {
@@ -4283,7 +4280,7 @@
   },
   "src/inbox/composer/voice/voice-machine.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/composer/voice/voice-support.test.ts": {
@@ -9695,7 +9692,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 11
     },
     "max-lines-per-function": {
       "count": 1
@@ -9956,14 +9953,11 @@
     }
   },
   "src/sales-subscribe/payment-link/use-link-pay.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 1
     }
   },
   "src/sales-subscribe/payment-link/use-stripe.ts": {

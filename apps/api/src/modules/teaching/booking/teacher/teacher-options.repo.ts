@@ -1,8 +1,8 @@
 import type { Gender, Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { BookingSettings } from '../booking.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 type TeacherOptionRow = {
   id: string;
@@ -19,7 +19,7 @@ export type TeacherFilter = { program: Program; gender?: Gender };
 
 /** Reads behind GET /booking/teachers (R-SCH-06). */
 @Injectable()
-export class TeacherOptionsQueries {
+export class TeacherOptionsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: BookingSettings,

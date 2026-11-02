@@ -1,7 +1,7 @@
 // Test-only fakes for a makeup booking (R-SCH-10).
 import type { BookingRequest } from '@ab/shared';
-import { bookingRequest, IDS } from '../booking.fakes';
-import type { MakeupOriginalRow } from '../core/booking.queries';
+import { bookingRequest, IDS } from '@/modules/teaching/booking/booking.fakes';
+import type { MakeupOriginalRow } from '@/modules/teaching/booking/core/booking.repo';
 
 /** Sun 2026-09-27 (4 days before NOW): S1's no-show the package charged; S2 was not on it. */
 export function missedLessonRow(over: Partial<MakeupOriginalRow> = {}): MakeupOriginalRow {

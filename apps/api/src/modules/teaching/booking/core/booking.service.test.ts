@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
-import type { BookingInvoices } from '../invoice/booking.invoice';
+import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
+import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
 import type { InvoiceRow } from './booking.mapper';
-import type { BookingQueries } from './booking.queries';
+import type { BookingRepo } from './booking.repo';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
+import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const RESULT = {
@@ -29,8 +29,8 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { after, sender, trial } = fakeTeacherAlert();
   const invoices = { resolve: vi.fn().mockResolvedValue(INVOICE) };
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices as unknown as BookingInvoices, after);
-  const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
+  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices as unknown as BookingInvoices, after);
+  const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo);
   return { ...deps, service, sender, invoices, trial };
 }
 type Queries = ReturnType<typeof setup>['queries'];

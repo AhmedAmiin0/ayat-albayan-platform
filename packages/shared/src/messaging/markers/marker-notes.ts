@@ -1,6 +1,7 @@
 import type { MessageDirection } from '../../enums/index.js';
 import { adWelcomeOf } from './chat-markers.js';
 import type { HiddenMark } from '../message-actions/hidden.js';
+import { payloadTypeOf } from '../payload/index.js';
 
 // What a bubble (or the chats list's last line) shows instead of its own content (owner
 // 2026-10-30): a message deleted for everyone, the click-to-WhatsApp ad's automatic welcome
@@ -22,16 +23,13 @@ interface Noted {
   interactive_payload: unknown;
 }
 
-const typeOf = (p: unknown): unknown =>
-  typeof p === 'object' && p !== null ? (p as Record<string, unknown>).type : null;
-
 /**
  * The note of a row, null = its own content. An inbound `unsupported` is not one: it is Meta's
  * «content never arrived» (isUnsupportedMessage), worded and handled apart.
  */
 export function messageNote(m: Noted): MessageNote | null {
   if (m.deleted) return 'deleted';
-  const type = typeOf(m.interactive_payload);
+  const type = payloadTypeOf(m.interactive_payload);
   if (type === 'errors') return 'ad_welcome';
   return type === 'unsupported' && m.direction === 'outbound' ? 'unsupported' : null;
 }

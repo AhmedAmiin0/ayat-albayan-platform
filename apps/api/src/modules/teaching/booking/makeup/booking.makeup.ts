@@ -1,7 +1,7 @@
 import { makeupEligible } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { domainError } from '../booking.errors';
-import type { BookingQueries } from '../core/booking.queries';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 
 /** windowDays: settings.makeup_window_days. */
 type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays: number };
@@ -12,7 +12,7 @@ type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays
  * no_show / late-cancel excuse within the makeup window; never a trial, a cancel by the teacher or admin, a
  * move, or a makeup). Returns the lesson id for create_booking, which re-checks it in SQL.
  */
-export async function missedLesson(queries: Pick<BookingQueries, 'makeupOriginal'>, input: MakeupLookup): Promise<string> {
+export async function missedLesson(queries: Pick<BookingRepo, 'makeupOriginal'>, input: MakeupLookup): Promise<string> {
   const original = await queries.makeupOriginal(input.lessonId);
   if (!original) throw domainError(HttpStatus.NOT_FOUND, 'lesson_not_found');
   const mine = original.lesson_students.find((s) => s.student_id === input.studentId);

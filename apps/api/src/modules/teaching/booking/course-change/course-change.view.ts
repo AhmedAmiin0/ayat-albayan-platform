@@ -1,9 +1,9 @@
 import { wallParts, type CourseChangeView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { domainError } from '../booking.errors';
-import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
-import { studentCourses, type CourseRuleRow } from '../core/course-read';
-import { SalesCourseQueries } from '../sales/course/sales-course.queries';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
+import { studentCourses, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
 
 /** An open-ended rule without subscription_id (an import) still runs: it has no last day yet. */
 const OPEN_END = '9999-12-31';
@@ -25,8 +25,8 @@ const unlinkedRow = (sub: CourseSub, r: ChangeRule): CourseRuleRow => ({
 @Injectable()
 export class CourseChangeViews {
   constructor(
-    private readonly change: CourseChangeQueries,
-    private readonly course: SalesCourseQueries,
+    private readonly change: CourseChangeRepo,
+    private readonly course: SalesCourseRepo,
   ) {}
 
   /** 404 subscription_not_found / student_not_found / course_not_found. */

@@ -8,7 +8,7 @@ import { bookingRequest, fakePlanner, IDS } from '@/modules/teaching/booking/boo
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 import type { TrialLessonRead } from './trial-date.history';
 import type { TrialPick } from './trial-date.plan';
-import type { TrialDateQueries } from './trial-date.queries';
+import type { TrialDateRepo } from './trial-date.repo';
 import { TrialDateDeps, TrialDates } from './trial-date.service';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
@@ -72,7 +72,7 @@ export function fakeTrialDates(o: TrialSetup = {}) {
   const policy = fakePolicy({ settings: ruleSettingsOf({}) });
   const family = fakeFamilyMove();
   const service = new TrialDates(
-    queries as unknown as TrialDateQueries,
+    queries as unknown as TrialDateRepo,
     deps.planner,
     new TrialDateDeps(policy, alert.after, events as unknown as LessonEvents, family.move),
   );

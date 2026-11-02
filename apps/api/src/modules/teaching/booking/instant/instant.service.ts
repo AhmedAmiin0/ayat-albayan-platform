@@ -1,11 +1,11 @@
 import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
-import { domainError } from '../booking.errors';
-import { meetingLinkFor } from '../core/booking.mapper';
-import { BookingQueries } from '../core/booking.queries';
+import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { meetingLinkFor } from '@/modules/teaching/booking/core/booking.mapper';
+import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { instantPayload, instantPlan } from './instant.plan';
-import { InstantQueries } from './instant.queries';
+import { InstantRepo } from './instant.repo';
 
 type InstantInput = { req: InstantLessonRequest; actorId: string };
 
@@ -26,8 +26,8 @@ const firstLesson = (r: BookingResult): InstantLessonResult => {
 @Injectable()
 export class InstantLessonService {
   constructor(
-    private readonly booking: BookingQueries,
-    private readonly writes: InstantQueries,
+    private readonly booking: BookingRepo,
+    private readonly writes: InstantRepo,
     private readonly checker: ConflictChecker,
   ) {}
 

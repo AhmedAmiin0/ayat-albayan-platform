@@ -1,8 +1,8 @@
 import { bookingKindOf, canPickTrialDate, type BookingRequest } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { domainError } from '../booking.errors';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { MovedTrial } from './trial-date.plan';
-import type { TrialStudent } from './trial-date.queries';
+import type { TrialStudent } from './trial-date.repo';
 
 // Who «موعد تجريبي جديد» is for (owner 2026-10-25): ONE existing student, a trial, no invoice,
 // and no running subscription (new / trial / pending_subscription). Pure.

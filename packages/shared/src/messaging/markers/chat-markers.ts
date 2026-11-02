@@ -5,6 +5,9 @@
 // (message_markers_apply), now or when that message arrives. Pure and lenient: Meta's and
 // Kapso's shapes differ, so several paths are read.
 
+import { z } from 'zod';
+import { lenientText, parseOrNull } from '../payload/index.js';
+
 export const MARKER_TYPES = ['edit', 'revoke', 'reaction'] as const;
 export type MarkerType = (typeof MARKER_TYPES)[number];
 
@@ -18,47 +21,61 @@ export interface ChatMarker {
   emoji: string | null;
 }
 
-const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
-
-/** The value at a dotted path, else undefined. */
-function at(value: unknown, path: string): unknown {
-  let node = value;
-  for (const key of path.split('.')) node = isRecord(node) ? node[key] : undefined;
-  return node;
-}
-
-/** The first non-empty string among the paths. */
-function text(value: unknown, ...paths: string[]): string | null {
-  for (const p of paths) {
-    const v = at(value, p);
-    if (typeof v === 'string' && v !== '') return v;
-  }
-  return null;
-}
-
-export const isMarkerType = (type: unknown): type is MarkerType =>
+export const isMarkerType = (type: string | null | undefined): type is MarkerType =>
   (MARKER_TYPES as readonly unknown[]).includes(type);
 
+/** `{ text: { body } }` or a flat `{ text }`: Meta's edit and Kapso's differ. */
+const bodyPart = z.looseObject({ body: lenientText }).catch({});
+const textField = z
+  .union([
+    z.string().min(1).transform((flat) => ({ flat, body: undefined })),
+    bodyPart.transform(({ body }) => ({ flat: undefined, body })),
+  ])
+  .catch({ flat: undefined, body: undefined });
+
+const captionPart = z.looseObject({ caption: lenientText });
+
+/** The edited message: its text, else its media's caption ({type: 'image', image: {caption}}). */
+const editedMessage = z
+  .looseObject({ type: lenientText, text: bodyPart })
+  .catch({ text: {} })
+  .transform((m) => ({
+    body: m.text.body,
+    caption: m.type === undefined ? undefined : parseOrNull(captionPart, m[m.type])?.caption,
+  }));
+
+/** The marker's own part (message[type]): the message it names, the edited text, the emoji. */
+const markerPart = z
+  .looseObject({
+    original_message_id: lenientText,
+    message_id: lenientText,
+    id: lenientText,
+    emoji: lenientText,
+    body: lenientText,
+    text: textField,
+    message: editedMessage,
+  })
+  .catch({ text: textField.parse(undefined), message: editedMessage.parse(undefined) });
+
 /** Edited text: Meta's {edit: {message: {text | <media>.caption}}}, or a flat shape. */
-function editedText(part: unknown): string | null {
-  const msg = at(part, 'message');
-  const type = text(msg, 'type');
-  const caption = type ? text(msg, `${type}.caption`) : null;
-  return text(part, 'message.text.body', 'text.body', 'body', 'text') ?? caption;
-}
+const editedText = (p: z.infer<typeof markerPart>): string | null =>
+  p.message.body ?? p.text.body ?? p.body ?? p.text.flat ?? p.message.caption ?? null;
+
+const markerMessage = z.looseObject({
+  type: z.enum(MARKER_TYPES),
+  context: z.looseObject({ id: lenientText }).catch({}),
+});
 
 /** The marker of a Meta message (echo, history item or inbound); null for an ordinary message. */
 export function chatMarkerOf(message: unknown): ChatMarker | null {
-  const type = text(message, 'type');
-  if (!isMarkerType(type)) return null;
-  const part = at(message, type);
-  const target =
-    text(part, 'original_message_id', 'message_id', 'id') ?? text(message, 'context.id');
+  const m = parseOrNull(markerMessage, message);
+  if (m === null) return null;
+  const part = markerPart.parse(m[m.type]);
   return {
-    type,
-    target,
-    text: type === 'edit' ? editedText(part) : null,
-    emoji: type === 'reaction' ? text(part, 'emoji') : null,
+    type: m.type,
+    target: part.original_message_id ?? part.message_id ?? part.id ?? m.context.id ?? null,
+    text: m.type === 'edit' ? editedText(part) : null,
+    emoji: m.type === 'reaction' ? (part.emoji ?? null) : null,
   };
 }
 
@@ -77,13 +94,29 @@ export function markerPayload(m: ChatMarker): Record<string, unknown> {
 
 /** A stored marker (or reaction) row: never a bubble, never unread, never the preview. */
 export const isHiddenPayload = (payload: unknown): boolean =>
-  isRecord(payload) && isMarkerType(payload.type);
+  z.looseObject({ type: z.enum(MARKER_TYPES) }).safeParse(payload).success;
+
+const referral = z
+  .looseObject({ welcome_message: z.looseObject({ text: lenientText }).catch({}) })
+  .catch({ welcome_message: {} });
+
+const welcomeSchema = z
+  .looseObject({
+    referral,
+    kapso: z.looseObject({ referral }).catch({ referral: { welcome_message: {} } }),
+    welcome: lenientText,
+  })
+  .transform(
+    (m) =>
+      m.referral.welcome_message.text ??
+      m.kapso.referral.welcome_message.text ??
+      m.welcome ??
+      null,
+  );
 
 /**
  * The welcome text of a click-to-WhatsApp ad, when the payload carries it (Meta's
  * referral.welcome_message.text, at the top or inside Kapso's block); null otherwise.
  */
-export function adWelcomeOf(message: unknown): string | null {
-  const paths = ['referral.welcome_message.text', 'kapso.referral.welcome_message.text', 'welcome'];
-  return text(message, ...paths);
-}
+export const adWelcomeOf = (message: unknown): string | null =>
+  parseOrNull(welcomeSchema, message);

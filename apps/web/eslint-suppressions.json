@@ -742,7 +742,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -1078,7 +1078,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 9
@@ -6570,7 +6570,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -8210,11 +8210,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales-money/payment-link/OnlinePayFields.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales-money/payment-link/link.fixture.ts": {
     "max-len": {
       "count": 2
@@ -8229,9 +8224,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 6
     },
     "no-nested-ternary": {
       "count": 1
@@ -8294,7 +8286,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 17
+      "count": 16
     },
     "max-lines-per-function": {
       "count": 1
@@ -9480,7 +9472,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -9674,7 +9666,7 @@
       "count": 3
     },
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 1
@@ -10887,7 +10879,7 @@
   },
   "src/features/teaching/schedule/lesson/LessonActions.tsx": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 8

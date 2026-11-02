@@ -1,16 +1,16 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { fakeSettings } from '../../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../../common/settings/settings.service';
-import { SalesQueries } from '../../../../sales/sales/sales.queries';
-import { domainError } from '../../booking.errors';
-import { BookingService } from '../../core/booking.service';
-import { SalesCourseQueries } from './sales-course.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { SalesCourseRepo } from './sales-course.repo';
 
 // The assistant's course over HTTP (owner 2026-10-18): sales_auto_assign OFF here, so every 403
 // not_your_student below proves a course checks her ownership whatever the switch says.
@@ -56,7 +56,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
       .overrideProvider(SalesQueries).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
       .overrideProvider(BookingService).useValue(booking)
-      .overrideProvider(SalesCourseQueries).useValue(course)
+      .overrideProvider(SalesCourseRepo).useValue(course)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

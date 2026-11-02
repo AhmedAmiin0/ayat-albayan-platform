@@ -1,13 +1,13 @@
 import { vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { BookingSettings } from '../booking.settings';
-import type { CourseLessonQueries } from './course-change.lessons';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import type { CourseLessonRepo } from './course-change.lessons';
 import { CourseChangePlanner } from './course-change.planner';
-import type { ChangeRule, CourseChangeQueries, CourseSub } from './course-change.queries';
+import type { ChangeRule, CourseChangeRepo, CourseSub } from './course-change.repo';
 import { CourseChange, type ChangeActor } from './course-change.service';
 import type { CourseChangeDeps } from './course-change.writer';
-import type { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
+import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 
 // Fakes of «تغيير أيام الحلقات» (course-change.service.ts) for its unit tests.
 
@@ -68,13 +68,13 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     apply: vi.fn().mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' }),
   };
   const planner = new CourseChangePlanner(
-    lessons as unknown as CourseLessonQueries,
-    queries as unknown as CourseChangeQueries,
+    lessons as unknown as CourseLessonRepo,
+    queries as unknown as CourseChangeRepo,
     readerOf(BookingSettings), // the seeded 5-week horizon, meeting_link_auto off
   );
   const deps = { checker: { check: vi.fn().mockResolvedValue([]) }, planner, writer };
   const service = new CourseChange(
-    queries as unknown as CourseChangeQueries,
+    queries as unknown as CourseChangeRepo,
     scope as unknown as SalesBookingScope,
     deps as unknown as CourseChangeDeps,
   );

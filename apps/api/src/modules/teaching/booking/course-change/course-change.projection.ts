@@ -1,7 +1,7 @@
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
-import { ruleOccurrences } from '../../scheduling/occurrences/occurrences';
-import { generatedKey } from '../../scheduling/rules/rule-projection';
-import type { ChangeRule } from './course-change.queries';
+import { addDays, localDateOf, startOfLocalDay } from '@/modules/teaching/scheduling/occurrences/horizon';
+import { ruleOccurrences } from '@/modules/teaching/scheduling/occurrences/occurrences';
+import { generatedKey } from '@/modules/teaching/scheduling/rules/rule-projection';
+import type { ChangeRule } from './course-change.repo';
 
 // REMAINING's lessons that do not exist yet (review fix 2b): an old active rule stays active until the
 // day before the change point, so the nightly HorizonJob still generates its occurrences up to then. Pure.
