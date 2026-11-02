@@ -1,4 +1,4 @@
-import type { TeacherEarningsBalanceView, TeacherPaymentView } from '../money/ledger/earnings/earnings-views.js';
+import type { TeacherEarningsBalanceView, TeacherPaymentView } from '@ab/money';
 
 // Test-only teacher-earnings rows shared by the web and mobile tests (never imported by app code).
 

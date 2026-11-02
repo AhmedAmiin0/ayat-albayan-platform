@@ -1,6 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
-import type { Conflict } from '../../schedule/lessons/conflicts.js';
-import { CONSUMING_LESSON_STATUSES } from '../../money/ledger/usage/usage.js';
+import type { Conflict } from '@ab/schedule';
+import { CONSUMING_LESSON_STATUSES } from '@ab/money';
 import type { BookedCourse } from './course-follow.js';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): how many lessons of the course are left at the change

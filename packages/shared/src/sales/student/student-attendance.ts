@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus } from '@ab/catalog';
 import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/time';
-import { monthParam } from '../../money/ledger/index.js';
+import { monthParam } from '@ab/money';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
 // «سجل الحضور» (owner 2026-10-28): every past lesson of one student in a Riyadh month, as a table.

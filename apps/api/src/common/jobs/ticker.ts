@@ -4,7 +4,8 @@ import { Logger } from '@nestjs/common';
 interface TickerTiming {
   /** First run after boot: soon, not at once (every API test boots AppModule). */
   firstMs: number;
-  everyMs: number;
+  /** Absent: one run after boot, no interval (e.g. the template boot check). */
+  everyMs?: number;
 }
 
 interface TickerOptions extends TickerTiming {
@@ -38,10 +39,8 @@ export class Ticker {
   start(timing: TickerTiming = this.opts): void {
     const method = this.opts.timer ?? 'tick';
     const fire = () => void this[method]();
-    this.timers.push(
-      setTimeout(fire, timing.firstMs).unref(),
-      setInterval(fire, timing.everyMs).unref(),
-    );
+    const every = timing.everyMs === undefined ? [] : [setInterval(fire, timing.everyMs).unref()];
+    this.timers.push(setTimeout(fire, timing.firstMs).unref(), ...every);
   }
 
   stop(): void {

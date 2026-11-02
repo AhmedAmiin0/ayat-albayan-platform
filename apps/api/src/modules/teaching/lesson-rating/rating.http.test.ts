@@ -88,4 +88,13 @@ describe('POST /threads/:phone/rating', () => {
     expect((await call({ clientRequestId: REQ }, 'teacher')).statusCode).toBe(403);
     expect(m.outbox.send).not.toHaveBeenCalled();
   });
+
+  it('a bad :phone is 400 invalid_phone; a bad body still wins over it', async () => {
+    const at = (payload: object) =>
+      app.inject({ method: 'POST', url: '/threads/abc/rating', headers: { authorization: 'Bearer admin' }, payload });
+    const bad = await at({ clientRequestId: REQ });
+    expect([bad.statusCode, bad.json().code]).toEqual([400, 'invalid_phone']);
+    expect((await at({})).json().message).toBe('validation_failed');
+    expect(m.outbox.send).not.toHaveBeenCalled();
+  });
 });

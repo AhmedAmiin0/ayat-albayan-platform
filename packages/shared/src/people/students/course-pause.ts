@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { daysBetween } from '../../schedule/lessons/index.js';
+import { daysBetween } from '@ab/schedule';
 import { localDate } from '../../schemas/index.js';
 import { addDays } from '@ab/time';
 
