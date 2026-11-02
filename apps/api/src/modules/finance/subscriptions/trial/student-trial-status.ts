@@ -2,8 +2,8 @@ import { trialMove, type TrialFacts } from '@ab/shared';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { NO_TRIAL, trialFactsOf } from './student-trial.plan';
-import { StudentTrialQueries } from './student-trial.queries';
-import { StudentStatusQueries } from '@/modules/finance/subscriptions/student-lifecycle/student-status.queries';
+import { StudentTrialRepo } from './student-trial.repo';
+import { StudentStatusRepo } from '@/modules/finance/subscriptions/student-lifecycle/student-status.repo';
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
@@ -21,8 +21,8 @@ export class StudentTrialStatus implements OnModuleInit {
   private readonly log = new Logger(StudentTrialStatus.name);
 
   constructor(
-    private readonly statuses: StudentStatusQueries,
-    private readonly queries: StudentTrialQueries,
+    private readonly statuses: StudentStatusRepo,
+    private readonly queries: StudentTrialRepo,
     private readonly events: LessonEvents,
   ) {}
 

@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { activatesStudent } from './student-activation';
 import { isFlipBy, recordedFrom, revertTarget } from './student-renewal.plan';
 import { StudentRenewal } from './student-renewal';
-import { StudentStatusQueries } from './student-status.queries';
-import { NO_TRIAL, trialFactsOf } from '../trial/student-trial.plan';
-import { StudentTrialQueries } from '../trial/student-trial.queries';
+import { StudentStatusRepo } from './student-status.repo';
+import { NO_TRIAL, trialFactsOf } from '@/modules/finance/subscriptions/trial/student-trial.plan';
+import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
 export type DeletedPayment = { id: string; kind: string; amount: number | string };
 type Ctx = { payment: DeletedPayment; ids: { studentId: string; actorId: string }; current: StudentStatus };
@@ -22,9 +22,9 @@ type Ctx = { payment: DeletedPayment; ids: { studentId: string; actorId: string 
 @Injectable()
 export class StudentDeactivation {
   constructor(
-    private readonly statuses: StudentStatusQueries,
+    private readonly statuses: StudentStatusRepo,
     private readonly renewal: StudentRenewal,
-    private readonly trials: StudentTrialQueries,
+    private readonly trials: StudentTrialRepo,
   ) {}
 
   async afterDelete(payment: DeletedPayment, ids: { studentId: string; actorId: string }): Promise<boolean> {

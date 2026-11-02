@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { subscriptionListQuery } from '../subscriptions.dto';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { subscriptionListQuery } from '@/modules/finance/subscriptions/subscriptions.dto';
 import { listSelect } from './subscriptions.list-query';
-import { SubscriptionsQueries } from '../subscriptions.queries';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 const page = { page: 1, pageSize: 20 };
 const on = (calls: { method: string; args: unknown[] }[], method: string) =>
@@ -11,13 +11,13 @@ const on = (calls: { method: string; args: unknown[] }[], method: string) =>
 describe('GET /subscriptions sort + filters (R-NFR-08)', () => {
   it('no sort: newest first, then id', async () => {
     const { db, calls } = fakeDb({ subscriptions: [{ data: [], count: 0 }] });
-    await new SubscriptionsQueries(db).list(page);
+    await new SubscriptionsRepo(db).list(page);
     expect(on(calls, 'order')).toEqual([['created_at', { ascending: false }], ['id']]);
   });
 
   it('package sort puts a custom count last; package and name filters', async () => {
     const { db, calls } = fakeDb({ subscriptions: [{ data: [], count: 0 }] });
-    await new SubscriptionsQueries(db).list({ ...page, sort: 'package', student: 'سهيلة', package: '8' });
+    await new SubscriptionsRepo(db).list({ ...page, sort: 'package', student: 'سهيلة', package: '8' });
     expect(on(calls, 'order')[0]).toEqual(['package', { ascending: true, nullsFirst: false }]);
     expect(on(calls, 'ilike')).toEqual([['student.name', '%سهيلة%']]);
     expect(on(calls, 'eq')).toEqual([['package', '8']]);

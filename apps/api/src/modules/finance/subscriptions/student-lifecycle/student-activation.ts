@@ -1,6 +1,6 @@
 import { paymentMove } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { StudentStatusQueries } from './student-status.queries';
+import { StudentStatusRepo } from './student-status.repo';
 
 /** A recorded payment (not a refund) of more than zero: what turns a trial student into «مشترك». */
 export function activatesStudent(row: unknown): boolean {
@@ -22,7 +22,7 @@ export function activatesStudent(row: unknown): boolean {
  */
 @Injectable()
 export class StudentActivation {
-  constructor(private readonly statuses: StudentStatusQueries) {}
+  constructor(private readonly statuses: StudentStatusRepo) {}
 
   async afterPayment(studentId: string, actorId: string, paymentId: string): Promise<boolean> {
     const student = await this.statuses.student(studentId);

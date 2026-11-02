@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { BalanceQueries } from '../money/balance.queries';
-import { unpaidFlagged } from '../money/packages.plan';
-import { SubscriptionsQueries } from '../subscriptions.queries';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
+import { unpaidFlagged } from '@/modules/finance/subscriptions/money/packages.plan';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 
 /**
  * R-SUB-02 «flag future lessons when unpaid»: which of these students have their newest package
@@ -13,8 +13,8 @@ import { SubscriptionsSettings } from '../subscriptions.settings';
 @Injectable()
 export class UnpaidFlags {
   constructor(
-    private readonly subs: SubscriptionsQueries,
-    private readonly balances: BalanceQueries,
+    private readonly subs: SubscriptionsRepo,
+    private readonly balances: BalanceRepo,
     private readonly settings: SubscriptionsSettings,
   ) {}
 

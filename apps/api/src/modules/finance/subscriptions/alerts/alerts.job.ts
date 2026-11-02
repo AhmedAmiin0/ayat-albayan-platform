@@ -6,7 +6,7 @@ import {
   type OnModuleInit,
 } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { AlertsQueries } from './alerts.queries';
+import { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService } from './alerts.service';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -30,7 +30,7 @@ export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModule
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly queries: AlertsQueries,
+    private readonly queries: AlertsRepo,
     private readonly alerts: SubscriptionAlertsService,
     private readonly events: LessonEvents,
   ) {}

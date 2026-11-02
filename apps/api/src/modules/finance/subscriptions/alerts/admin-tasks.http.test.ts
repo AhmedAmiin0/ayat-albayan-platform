@@ -1,8 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { toTaskView } from './admin-tasks.queries';
-import { STUDENT_ID, SUB_ID } from '../money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../test-app';
+import { toTaskView } from './admin-tasks.repo';
+import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 const TASK_ID = '5a100000-0000-4000-8000-000000000001';
 const row = {
