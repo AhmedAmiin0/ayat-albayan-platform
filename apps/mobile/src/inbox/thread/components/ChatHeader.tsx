@@ -6,6 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
+import { ChatSearchBar, useChatSearch } from '@/inbox/thread/search';
 
 interface ChatHeaderProps {
   /** The name (or the number); one line, cut with an ellipsis. */
@@ -28,11 +29,14 @@ interface ChatHeaderProps {
  * 2026-10-18): «رجوع» as a chevron, the name in Amiri at h4 and the subtitle under it, both one
  * line, then the icon actions. As WhatsApp (owner 2026-10-27), a logical row that RN mirrors: the
  * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the
- * contact's initials and the name beside it, the icons at the end.
+ * contact's initials and the name beside it, the icons at the end. While «بحث» is open the row is
+ * the search field (ChatSearchBar), as WhatsApp.
  */
 export function ChatHeader(props: ChatHeaderProps) {
   const { title, subtitle, status, onBack, avatar, trailing, onTitlePress } = props;
   const { color } = useTheme();
+  const search = useChatSearch();
+  if (search?.state.open) return <ChatSearchBar search={search} />;
   return (
     <View
       testID="chat-header"

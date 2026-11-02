@@ -18,7 +18,10 @@ describe('the student profile course actions', () => {
       .sort();
 
   it('each key gates exactly its own routes', () => {
+    // «إلغاء الباقة» of the assistant (owner 2026-11-02) shares the stop's key.
     expect(gated('subscriptions.stop')).toEqual([
+      'AnyPackageCancelController.cancel',
+      'AnyPackageCancelController.check',
       'CourseStopController.preview',
       'CourseStopController.stop',
     ]);

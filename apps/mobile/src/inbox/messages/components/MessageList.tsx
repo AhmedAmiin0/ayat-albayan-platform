@@ -18,6 +18,7 @@ import { useTopDay } from '../days/use-top-day';
 import { threadMessages } from '../../thread/hooks/thread-cache';
 import { useJump } from '../../thread/hooks/use-jump';
 import type { useThread } from '../../thread/hooks/use-thread';
+import { useSearchJump } from '@/inbox/thread/search';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
@@ -66,8 +67,9 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
     if (ours) list.current?.scrollToOffset({ offset: 0, animated: true });
   }, [ours]);
   // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»), loading older pages if needed.
-  const { lit, jump, onScrollToIndexFailed } = useJump(list, rows, query);
+  const { lit, jump, cancel, onScrollToIndexFailed } = useJump(list, rows, query);
   const onJump = useStableHandler(jump);
+  useSearchJump(list, { jump, cancel });
   const callBackNow = useStableHandler((call: CallView) => callBack?.(call));
   const onCallBack = callBack ? callBackNow : undefined;
   // Rows get primitives and the cached message objects: memo MessageRow redraws only what changed.
