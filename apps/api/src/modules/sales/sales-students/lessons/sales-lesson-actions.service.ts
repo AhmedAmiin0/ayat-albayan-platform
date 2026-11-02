@@ -21,8 +21,8 @@ export class LessonServices {
 }
 
 /**
- * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers:
- * owner 2026-10-28) through the admin's very services, with her as the actor: the same transaction,
+ * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's while SalesOwnershipRule does not
+ * enforce, owner 2026-11-02) through the admin's very services, with her as the actor: the same transaction,
  * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
  * override) and «إلغاء» (scope one; who cancelled as the admin picks it, the academy when
  * absent; the reason optional: null when absent).
@@ -36,7 +36,7 @@ export class SalesLessonActions {
   ) {}
 
   async reschedule({ lessonId, body, actor }: Move, now = new Date()): Promise<SalesLessonMoved> {
-    await this.scope.assertLesson({ lessonId, now });
+    await this.scope.assertLesson({ lessonId, now, user: actor });
     // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
     if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
     const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
@@ -46,7 +46,7 @@ export class SalesLessonActions {
   }
 
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
-    await this.scope.assertLesson({ lessonId, now });
+    await this.scope.assertLesson({ lessonId, now, user: actor });
     const reason = body.reason ? body.reason : null;
     // Who cancelled (owner 2026-11-02), as the admin picks it; absent = the academy (older app).
     const cancel = { scope: 'one', by: body.by ?? 'admin', reason } as const;

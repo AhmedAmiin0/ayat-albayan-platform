@@ -6,10 +6,11 @@ const NOW = new Date('2026-10-27T10:00:00Z');
 const MOVED = '1e000000-0000-4000-8000-0000000000c2';
 const AT = '2026-11-02T15:00:00.000Z';
 
-describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () => {
+// «اشتراط التعيين» OFF (the default, owner 2026-11-02): ANY lesson; the rule ON: sales-lesson-actions.rule.
+describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule off', () => {
   let t: App;
   beforeAll(async () => {
-    t = await studentsApp();
+    t = await studentsApp({ sales_require_assignee: false });
   });
   afterAll(() => t.app.close());
   beforeEach(() => {
