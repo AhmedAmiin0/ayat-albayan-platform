@@ -1,5 +1,5 @@
 import type { ReactionResult, ThreadReaction } from '@ab/shared';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { MessageViews, waHttpError } from '@/modules/messaging/whatsapp';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { visibleToSales, withoutLinks } from '@/modules/messaging/inbox/sales-threads/sales-threads';
@@ -26,13 +26,12 @@ export const reactionKey = (r: ReactionRequest): string => `reaction:${r.message
  */
 @Injectable()
 export class ThreadReactionService {
-  /** The reacted message's view (property-injected: the constructor is at the 3-parameter limit). */
-  @Inject(MessageViews) private readonly views?: MessageViews;
-
   constructor(
     private readonly reactions: ReactionRepo,
     private readonly threads: ThreadsRepo,
     private readonly outbox: Outbox,
+    /** The reacted message's view. */
+    private readonly views: MessageViews,
   ) {}
 
   async react(r: ReactionRequest, now = new Date()): Promise<{ result: ReactionResult; sent: Sent }> {
@@ -67,7 +66,7 @@ export class ThreadReactionService {
 
   private async result(targetId: string, sent: Sent, sales: boolean): Promise<ReactionResult> {
     const row = await this.threads.get(targetId);
-    if (!row || !this.views) throw new Error('reacted message read failed');
+    if (!row) throw new Error('reacted message read failed');
     const { status, error_code, error_text } = sent.view;
     const view = await this.views.view(row);
     return { message: sales ? withoutLinks(view) : view, status, error_code, error_text };

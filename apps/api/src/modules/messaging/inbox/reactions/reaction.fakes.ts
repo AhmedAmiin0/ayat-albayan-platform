@@ -64,8 +64,12 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
       return { view, replayed };
     }),
   };
-  const service = new ThreadReactionService(reactions as unknown as ReactionRepo, threads as unknown as ThreadsRepo, outbox as unknown as Outbox);
   const views = { view: async (r: ThreadMessageRow) => toMessageView({ row: r, template: null }) };
-  Object.assign(service, { views: views as unknown as MessageViews });
+  const service = new ThreadReactionService(
+    reactions as unknown as ReactionRepo,
+    threads as unknown as ThreadsRepo,
+    outbox as unknown as Outbox,
+    views as unknown as MessageViews,
+  );
   return { service, reactions, threads, outbox, jobs, row };
 }
