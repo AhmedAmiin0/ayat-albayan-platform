@@ -7580,9 +7580,6 @@
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 8
     }
