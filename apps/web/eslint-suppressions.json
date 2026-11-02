@@ -3321,7 +3321,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/messaging/notification-rules/rule-timing.ts": {
@@ -6505,14 +6505,6 @@
       "count": 1
     }
   },
-  "src/features/platform/settings/values/editors/ValueEditor.tsx": {
-    "@typescript-eslint/switch-exhaustiveness-check": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/values/editors/editors.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 2
@@ -6601,17 +6593,6 @@
   "src/features/platform/settings/values/hooks/use-values-view.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/platform/settings/values/lib/value-format.ts": {
-    "@typescript-eslint/no-base-to-string": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     },
     "complexity": {
       "count": 1
