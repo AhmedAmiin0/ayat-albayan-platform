@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 
 // Lesson lifecycle (R-SCH-03, R-SCH-07, R-SCH-08; issue B2). Why each move exists:
 // - scheduled («يحتاج تأكيد», docs/01) is where booking and rule generation put every lesson.

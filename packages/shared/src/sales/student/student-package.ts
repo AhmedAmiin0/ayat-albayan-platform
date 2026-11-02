@@ -1,4 +1,4 @@
-import type { PackageSize, SubscriptionStatus } from '../../enums/index.js';
+import type { PackageSize, SubscriptionStatus } from '@ab/catalog';
 
 // The current package of ANY student for the assistant (owner 2026-10-30: «Why i cant see the
 // subscription lessons and status of this user»): «كل الطلاب»'s rows and «تفاصيل الطالب».

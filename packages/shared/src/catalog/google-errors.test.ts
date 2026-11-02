@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
-import { GOOGLE_ERROR_KEYS, googleErrorKey } from './errors.js';
+import { GOOGLE_ERROR_KEYS, googleErrorKey } from '@ab/catalog';
 
 describe('Google error codes', () => {
   it('maps known codes and sends everything else to «other»', () => {

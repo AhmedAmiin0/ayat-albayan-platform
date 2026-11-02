@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LessonStatus } from '../../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 import { consumesPackage, subscriptionBalances, type PackageLesson } from './usage.js';
 
 // Migration 190: a حلقة فورية (instant lesson) is ad hoc and never consumes a package unit, even

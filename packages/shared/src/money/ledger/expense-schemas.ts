@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAYMENT_METHODS } from '../../enums/index.js';
+import { PAYMENT_METHODS } from '@ab/catalog';
 import { optionalText } from '@ab/core';
 import { localDate } from '../../schedule/schemas/scheduling.js';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas.js';

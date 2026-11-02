@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MESSAGE_STATUSES } from '../../enums/index.js';
+import { MESSAGE_STATUSES } from '@ab/catalog';
 import { messageStatusStyle } from './status-style.js';
 import { messageTicks, TICK_PATHS, tickTone, tickWord } from './ticks.js';
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAYMENT_METHODS } from '../../../enums/index.js';
+import { PAYMENT_METHODS } from '@ab/catalog';
 import { listSortShape, optionalText } from '@ab/core';
 import { EARNING_STATUSES } from './earnings.js';
 import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts.js';

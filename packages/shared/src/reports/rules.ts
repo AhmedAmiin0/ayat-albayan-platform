@@ -1,6 +1,5 @@
-import type { Attendance, Grade, LessonStatus } from '../enums/index.js';
+import type { Attendance, Grade, LessonStatus, UserRole } from '@ab/catalog';
 import { isClosedLesson, type StatusRouteEvent } from '../schedule/lessons/state-machine.js';
-import type { UserRole } from '../catalog/permissions/roles.js';
 import { gradeStyle } from '../money/status-style/status-style.js';
 
 const HOUR = 3_600_000;
