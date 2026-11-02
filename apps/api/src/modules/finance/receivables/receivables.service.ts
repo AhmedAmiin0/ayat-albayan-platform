@@ -1,9 +1,9 @@
 import { receivablesOf, receivableTotals, type ReceivablesView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { convert, round2 } from '../../reporting/dashboard/work/conversion';
-import { riyadhDate } from '../../reporting/dashboard/range';
-import { FxConverter } from '../../reporting/dashboard/finance/fx-converter';
-import { ReceivablesQueries } from './receivables.queries';
+import { convert, round2 } from '@/modules/reporting/dashboard/work/conversion';
+import { riyadhDate } from '@/modules/reporting/dashboard/range';
+import { FxConverter } from '@/modules/reporting/dashboard/finance/fx-converter';
+import { ReceivablesRepo } from './receivables.repo';
 import { ReceivablesSettings } from './receivables.settings';
 
 /**
@@ -14,7 +14,7 @@ import { ReceivablesSettings } from './receivables.settings';
 @Injectable()
 export class ReceivablesService {
   constructor(
-    private readonly queries: ReceivablesQueries,
+    private readonly queries: ReceivablesRepo,
     private readonly fx: FxConverter,
     private readonly settings: ReceivablesSettings,
   ) {}

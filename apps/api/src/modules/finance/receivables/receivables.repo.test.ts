@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../common/db/db.module';
-import { ReceivablesQueries } from './receivables.queries';
+import type { Db } from '@/common/db/db.module';
+import { ReceivablesRepo } from './receivables.repo';
 
 // «مستحق على الطلاب»: an unused-cancelled package (owner 2026-10-28) is never owed, like a trial
 // one; a STOPPED one (owner 2026-10-30, migration 991) still is.
@@ -11,7 +11,7 @@ describe('receivables OWING', () => {
     for (const k of ['select', 'or', 'gt', 'order'] as const) q[k].mockReturnValue(q);
     q.range.mockResolvedValue({ data: [], error: null });
     const db = { from: vi.fn(() => q) } as unknown as Db;
-    await new ReceivablesQueries(db).packages();
+    await new ReceivablesRepo(db).packages();
     expect(q.or).toHaveBeenCalledWith('status.in.(unpaid,active,paused,expired),cancel_kind.eq.stopped');
   });
 });

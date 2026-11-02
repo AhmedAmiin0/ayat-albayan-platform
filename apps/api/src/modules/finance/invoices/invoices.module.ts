@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { InvoicesController } from './invoices.controller';
-import { InvoicesQueries } from './invoices.queries';
+import { InvoicesRepo } from './invoices.repo';
 import { InvoicesService } from './invoices.service';
 import { InvoicesSettings } from './invoices.settings';
 
 /** Invoice list and signed download for the admin (R-PAY-03); the files are written by booking. */
 @Module({
   controllers: [InvoicesController],
-  providers: [InvoicesQueries, InvoicesService, InvoicesSettings],
-  exports: [InvoicesQueries, InvoicesService],
+  providers: [InvoicesRepo, InvoicesService, InvoicesSettings],
+  exports: [InvoicesRepo, InvoicesService],
 })
 export class InvoicesModule {}
