@@ -3087,7 +3087,8 @@
       "close": "Close search",
       "counter": "{n} of {m}",
       "empty": "No results",
-      "searching": "Searching…"
+      "searching": "Searching…",
+      "unreachable": "This message could not be reached in the chat"
     }
   },
   "mobileFinance": {
