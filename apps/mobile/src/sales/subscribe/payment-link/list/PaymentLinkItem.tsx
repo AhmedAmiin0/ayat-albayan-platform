@@ -7,7 +7,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
-import { instantDay, money } from '@/payments';
+import { instantDay, money } from '@/finance/payments';
 import { fill } from '@/sales/sales';
 import { useCancelLink } from '@/sales/subscribe/payment-link/link-api';
 import { linkErrorText, linkStatusStyle } from '@/sales/subscribe/payment-link/link-text';

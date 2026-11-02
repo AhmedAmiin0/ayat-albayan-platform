@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { page, STUDENT, subscription } from '@/payments/fixtures';
+import { page, STUDENT, subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionsScreen } from './SubscriptionsScreen';
 

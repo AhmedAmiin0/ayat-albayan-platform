@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { subscription } from '@/payments/fixtures';
+import { subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
 import { SubscriptionItem } from './SubscriptionItem';

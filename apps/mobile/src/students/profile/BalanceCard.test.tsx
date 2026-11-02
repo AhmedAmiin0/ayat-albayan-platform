@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { balanceOf, page, payment, subscription } from '@/payments/fixtures';
+import { balanceOf, page, payment, subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
 import { BalanceCard } from './BalanceCard';

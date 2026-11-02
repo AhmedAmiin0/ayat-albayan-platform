@@ -9,7 +9,7 @@ import {
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { currencyName } from '@/payments';
+import { currencyName } from '@/finance/payments';
 import { fill } from '@/sales/sales';
 
 // «رابط دفع» words and checks (docs/30). Pure: the API re-checks every amount.

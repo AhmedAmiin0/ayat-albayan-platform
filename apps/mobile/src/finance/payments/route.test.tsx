@@ -1,8 +1,8 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import appJson from '../../app.json';
-import PaymentRoute from '../../app/(tabs)/students/payment/[id]';
+import appJson from '../../../app.json';
+import PaymentRoute from '../../../app/(tabs)/students/payment/[id]';
 import { PaymentScreen } from './screens/PaymentScreen';
 
 const stub = (label: string) => () => <Text>{label}</Text>;

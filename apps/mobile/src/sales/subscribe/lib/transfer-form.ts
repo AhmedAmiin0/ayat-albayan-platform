@@ -1,6 +1,6 @@
 import { parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import type { Attachment } from '@/payments/receipts/attachments';
+import type { Attachment } from '@/finance/payments/receipts/attachments';
 import { paidAtFor } from '@/core/lib/money/paid-day';
 
 // «سجّل تحويلًا بنكيًا» (R-ASST-04): what she entered, checked. Pure. The method is always the

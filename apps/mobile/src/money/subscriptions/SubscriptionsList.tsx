@@ -3,14 +3,14 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { useRenewalThreshold } from '@/payments/hooks/queries';
+import { useRenewalThreshold } from '@/finance/payments/hooks/queries';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { subscriptionParams, type SubscriptionFilter } from '../payments/filters';
+import { subscriptionParams, type SubscriptionFilter } from '@/money/payments/filters';
 import { SubscriptionItem } from './SubscriptionItem';
 
 const PILLS: FilterPill<SubscriptionFilter>[] = [

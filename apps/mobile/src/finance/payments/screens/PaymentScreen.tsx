@@ -8,8 +8,8 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { isOffline } from '@/core/lib/money/payment-errors';
-import { PaymentForm } from '@/payments/components/PaymentForm';
-import { useStudentBalance } from '@/payments/hooks/queries';
+import { PaymentForm } from '@/finance/payments/components/PaymentForm';
+import { useStudentBalance } from '@/finance/payments/hooks/queries';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
 

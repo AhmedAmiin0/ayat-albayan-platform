@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { CancelPackage } from '@/payments';
+import { CancelPackage } from '@/finance/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

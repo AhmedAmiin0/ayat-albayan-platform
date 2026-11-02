@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { AmountField, currencyName } from '@/payments';
+import { AmountField, currencyName } from '@/finance/payments';
 import { fill } from '@/sales/sales';
 import { LinkPriceSection } from './LinkPriceSection';
 import type { LinkPay } from './use-link-pay';

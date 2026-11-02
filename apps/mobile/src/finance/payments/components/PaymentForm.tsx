@@ -7,15 +7,15 @@ import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { AmountField } from './AmountField';
-import { AttachmentsField } from '@/payments/receipts/AttachmentsField';
+import { AttachmentsField } from '@/finance/payments/receipts/AttachmentsField';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PackagePicker } from './PackagePicker';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ShortfallNote } from './ShortfallNote';
 import { paymentErrorText } from '@/core/lib/money/payment-errors';
-import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from '@/payments/lib/payment-form';
+import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from '@/finance/payments/lib/payment-form';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
-import { useRecordPayment } from '@/payments/hooks/use-record-payment';
+import { useRecordPayment } from '@/finance/payments/hooks/use-record-payment';
 
 // '' = no method picked yet: the receipt says which one, so none is preselected.
 const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({

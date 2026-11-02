@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { balanceOf, subscription } from '@/payments/fixtures';
+import { balanceOf, subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { jana, lesson } from '@/today/testing/fixtures';
 import { LessonDetailsSheet } from './LessonDetailsSheet';

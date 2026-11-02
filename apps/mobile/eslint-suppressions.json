@@ -8534,7 +8534,7 @@
       "count": 1
     }
   },
-  "src/payments/components/AmountField.tsx": {
+  "src/finance/payments/components/AmountField.tsx": {
     "max-len": {
       "count": 3
     },
@@ -8542,7 +8542,7 @@
       "count": 1
     }
   },
-  "src/payments/components/CancelPackage.tsx": {
+  "src/finance/payments/components/CancelPackage.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8553,7 +8553,7 @@
       "count": 2
     }
   },
-  "src/payments/components/PaymentForm.tsx": {
+  "src/finance/payments/components/PaymentForm.tsx": {
     "complexity": {
       "count": 1
     },
@@ -8567,12 +8567,12 @@
       "count": 1
     }
   },
-  "src/payments/components/ShortfallNote.tsx": {
+  "src/finance/payments/components/ShortfallNote.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/hooks/queries.ts": {
+  "src/finance/payments/hooks/queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
     },
@@ -8580,12 +8580,12 @@
       "count": 1
     }
   },
-  "src/payments/hooks/use-record-payment.test.tsx": {
+  "src/finance/payments/hooks/use-record-payment.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/payments/hooks/use-record-payment.ts": {
+  "src/finance/payments/hooks/use-record-payment.ts": {
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -8596,22 +8596,22 @@
       "count": 1
     }
   },
-  "src/payments/index.ts": {
+  "src/finance/payments/index.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/payments/lib/optimistic.test.ts": {
+  "src/finance/payments/lib/optimistic.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/payments/lib/optimistic.ts": {
+  "src/finance/payments/lib/optimistic.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/lib/package-line.test.ts": {
+  "src/finance/payments/lib/package-line.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -8619,12 +8619,12 @@
       "count": 1
     }
   },
-  "src/payments/lib/payment-form.test.ts": {
+  "src/finance/payments/lib/payment-form.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/payments/lib/payment-form.ts": {
+  "src/finance/payments/lib/payment-form.ts": {
     "complexity": {
       "count": 1
     },
@@ -8632,32 +8632,32 @@
       "count": 1
     }
   },
-  "src/payments/receipts/AttachmentRow.tsx": {
+  "src/finance/payments/receipts/AttachmentRow.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/receipts/AttachmentsField.tsx": {
+  "src/finance/payments/receipts/AttachmentsField.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/receipts/attachments.ts": {
+  "src/finance/payments/receipts/attachments.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/payments/receipts/receipt-buttons.test.tsx": {
+  "src/finance/payments/receipts/receipt-buttons.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/payments/screens/PaymentScreen.attachments.test.tsx": {
+  "src/finance/payments/screens/PaymentScreen.attachments.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/payments/screens/PaymentScreen.shortfall.test.tsx": {
+  "src/finance/payments/screens/PaymentScreen.shortfall.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -8665,12 +8665,12 @@
       "count": 1
     }
   },
-  "src/payments/screens/PaymentScreen.states.test.tsx": {
+  "src/finance/payments/screens/PaymentScreen.states.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/payments/screens/PaymentScreen.submit.test.tsx": {
+  "src/finance/payments/screens/PaymentScreen.submit.test.tsx": {
     "@typescript-eslint/no-unsafe-enum-assignment": {
       "count": 1
     },
@@ -8678,7 +8678,7 @@
       "count": 1
     }
   },
-  "src/payments/screens/PaymentScreen.tsx": {
+  "src/finance/payments/screens/PaymentScreen.tsx": {
     "complexity": {
       "count": 1
     },
@@ -8689,7 +8689,7 @@
       "count": 2
     }
   },
-  "src/payments/student-payment.flow.test.tsx": {
+  "src/finance/payments/student-payment.flow.test.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -8697,7 +8697,7 @@
       "count": 4
     }
   },
-  "src/payments/testing/flow-backend.ts": {
+  "src/finance/payments/testing/flow-backend.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },

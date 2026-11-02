@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { partPaidLine, paidOf } from '@/core/lib/money/format';
-import { subscription } from '@/payments/fixtures';
+import { subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionItem } from './SubscriptionItem';
 

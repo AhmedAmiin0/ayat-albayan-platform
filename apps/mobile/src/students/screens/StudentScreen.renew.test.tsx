@@ -2,10 +2,10 @@ import { quote, type StudentStatus } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { balanceOf, subscription } from '@/payments/fixtures';
+import { balanceOf, subscription } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { StudentScreen } from './StudentScreen';
-import { profile } from '../shared/test-data';
+import { profile } from '@/students/shared/test-data';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/core/lib/money/format';
-import { payment } from '@/payments/fixtures';
+import { payment } from '@/finance/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { StudentMoneyScreen } from './StudentMoneyScreen';
 

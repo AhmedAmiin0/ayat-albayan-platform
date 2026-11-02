@@ -1,7 +1,7 @@
 import { DetailsLine } from './DetailsGroup';
 import { packageName, usedOf } from '@/core/lib/money/format';
-import { packageLine } from '@/payments/lib/package-line';
-import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
+import { packageLine } from '@/finance/payments/lib/package-line';
+import { useRenewalThreshold, useStudentBalance } from '@/finance/payments/hooks/queries';
 
 /**
  * The admin's «باقة 8 حلقات · 3 من 8 حلقة · فاضل 5» under a student (R-SUB-01), from GET

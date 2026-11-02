@@ -3,11 +3,11 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { localDay } from '@/payments';
+import { localDay } from '@/finance/payments';
 import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { NOW, pauseState, pauseView } from '../course-pause/fixtures';
-import { profile } from '../shared/test-data';
+import { NOW, pauseState, pauseView } from '@/students/course-pause/fixtures';
+import { profile } from '@/students/shared/test-data';
 import { StudentScreen } from './StudentScreen';
 
 const mockApiFetch = jest.fn();

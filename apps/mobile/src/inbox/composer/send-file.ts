@@ -4,10 +4,10 @@ import * as DocumentPicker from 'expo-document-picker';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
-import { ensureCameraPermission, pickReceipt } from '@/payments';
-import { sendError } from '../messages/hooks/message-text';
-import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
-import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
+import { ensureCameraPermission, pickReceipt } from '@/finance/payments';
+import { sendError } from '@/inbox/messages/hooks/message-text';
+import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h
 // window: the API signs an upload into wa-media, then queues the file as her message.

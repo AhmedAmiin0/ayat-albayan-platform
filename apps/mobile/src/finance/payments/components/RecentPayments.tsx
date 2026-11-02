@@ -5,8 +5,8 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { instantDay, money } from '@/core/lib/money/format';
-import { isPending } from '@/payments/lib/optimistic';
-import { useRecentPayments } from '@/payments/hooks/queries';
+import { isPending } from '@/finance/payments/lib/optimistic';
+import { useRecentPayments } from '@/finance/payments/hooks/queries';
 import { useViewerTz } from '@/core/lib/clock';
 
 function PaymentRow({ payment }: { payment: PaymentView }) {

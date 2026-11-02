@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { CancelPackage } from '@/payments';
+import { CancelPackage } from '@/finance/payments';
 import { t } from '@/core/lib/i18n/i18n';
 import { money, packageName, paidLine } from '@/core/lib/money/format';
 import { type, useTheme } from '@/theme';

@@ -1,0 +1,180 @@
+{
+  "id": "c18",
+  "seq": 230,
+  "moves": [
+    {
+      "from": "apps/mobile/src/payments/components/",
+      "to": "apps/mobile/src/finance/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/fixtures.ts",
+      "to": "apps/mobile/src/finance/payments/"
+    },
+    {
+      "from": "apps/mobile/src/payments/hooks/",
+      "to": "apps/mobile/src/finance/payments/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/payments/index.ts",
+      "to": "apps/mobile/src/finance/payments/"
+    },
+    {
+      "from": "apps/mobile/src/payments/lib/",
+      "to": "apps/mobile/src/finance/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/receipts/",
+      "to": "apps/mobile/src/finance/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/route.test.tsx",
+      "to": "apps/mobile/src/finance/payments/"
+    },
+    {
+      "from": "apps/mobile/src/payments/screens/",
+      "to": "apps/mobile/src/finance/payments/screens/"
+    },
+    {
+      "from": "apps/mobile/src/payments/student-payment.flow.test.tsx",
+      "to": "apps/mobile/src/finance/payments/"
+    },
+    {
+      "from": "apps/mobile/src/payments/testing/",
+      "to": "apps/mobile/src/finance/payments/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/payments/components/AmountField.en.test.tsx",
+      "apps/mobile/src/finance/payments/components/AmountField.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/AmountField.test.tsx",
+      "apps/mobile/src/finance/payments/components/AmountField.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/AmountField.tsx",
+      "apps/mobile/src/finance/payments/components/AmountField.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/CancelPackage.tsx",
+      "apps/mobile/src/finance/payments/components/CancelPackage.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/PackagePicker.tsx",
+      "apps/mobile/src/finance/payments/components/PackagePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/PaymentForm.tsx",
+      "apps/mobile/src/finance/payments/components/PaymentForm.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/RecentPayments.tsx",
+      "apps/mobile/src/finance/payments/components/RecentPayments.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/components/ShortfallNote.tsx",
+      "apps/mobile/src/finance/payments/components/ShortfallNote.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/fixtures.ts",
+      "apps/mobile/src/finance/payments/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/payments/hooks/queries.ts",
+      "apps/mobile/src/finance/payments/hooks/queries.ts"
+    ],
+    [
+      "apps/mobile/src/payments/hooks/use-record-payment.test.tsx",
+      "apps/mobile/src/finance/payments/hooks/use-record-payment.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/hooks/use-record-payment.ts",
+      "apps/mobile/src/finance/payments/hooks/use-record-payment.ts"
+    ],
+    [
+      "apps/mobile/src/payments/index.ts",
+      "apps/mobile/src/finance/payments/index.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/optimistic.test.ts",
+      "apps/mobile/src/finance/payments/lib/optimistic.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/optimistic.ts",
+      "apps/mobile/src/finance/payments/lib/optimistic.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/package-line.test.ts",
+      "apps/mobile/src/finance/payments/lib/package-line.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/package-line.ts",
+      "apps/mobile/src/finance/payments/lib/package-line.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/payment-form.test.ts",
+      "apps/mobile/src/finance/payments/lib/payment-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/lib/payment-form.ts",
+      "apps/mobile/src/finance/payments/lib/payment-form.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/AttachmentRow.tsx",
+      "apps/mobile/src/finance/payments/receipts/AttachmentRow.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/attachments.test.ts",
+      "apps/mobile/src/finance/payments/receipts/attachments.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/attachments.ts",
+      "apps/mobile/src/finance/payments/receipts/attachments.ts"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/AttachmentsField.tsx",
+      "apps/mobile/src/finance/payments/receipts/AttachmentsField.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/PhotoButtons.tsx",
+      "apps/mobile/src/finance/payments/receipts/PhotoButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/receipts/receipt-buttons.test.tsx",
+      "apps/mobile/src/finance/payments/receipts/receipt-buttons.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/route.test.tsx",
+      "apps/mobile/src/finance/payments/route.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/screens/PaymentScreen.attachments.test.tsx",
+      "apps/mobile/src/finance/payments/screens/PaymentScreen.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/screens/PaymentScreen.shortfall.test.tsx",
+      "apps/mobile/src/finance/payments/screens/PaymentScreen.shortfall.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/screens/PaymentScreen.states.test.tsx",
+      "apps/mobile/src/finance/payments/screens/PaymentScreen.states.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/screens/PaymentScreen.submit.test.tsx",
+      "apps/mobile/src/finance/payments/screens/PaymentScreen.submit.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/screens/PaymentScreen.tsx",
+      "apps/mobile/src/finance/payments/screens/PaymentScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/student-payment.flow.test.tsx",
+      "apps/mobile/src/finance/payments/student-payment.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/testing/flow-backend.ts",
+      "apps/mobile/src/finance/payments/testing/flow-backend.ts"
+    ]
+  ]
+}

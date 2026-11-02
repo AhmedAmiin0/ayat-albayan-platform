@@ -10,7 +10,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { appendComposerText, chatMaySend, ErrorLine } from '@/inbox';
 import { Note } from '@/more';
-import { instantDay } from '@/payments';
+import { instantDay } from '@/finance/payments';
 import { fill } from '@/sales/sales';
 import { type, useTheme } from '@/theme';
 import { STRIPE_FEATURE } from './flag';

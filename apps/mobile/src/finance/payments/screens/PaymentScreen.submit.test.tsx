@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { balanceOf, page, payment, SUB_ID, subscription } from '../fixtures';
+import { balanceOf, page, payment, SUB_ID, subscription } from '@/finance/payments/fixtures';
 import { PaymentScreen } from './PaymentScreen';
 
 const mockApiFetch = jest.fn();

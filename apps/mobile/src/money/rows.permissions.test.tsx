@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
-import { STUDENT, subscription } from '@/payments/fixtures';
+import { STUDENT, subscription } from '@/finance/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { adminTask, receivable } from './shared/fixtures';
 import { ReceivableItem } from './receivables/ReceivableItem';

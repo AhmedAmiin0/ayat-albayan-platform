@@ -53,7 +53,7 @@
   "apps/mobile/src/inbox/qualification/lib/queries.ts",
   "apps/mobile/src/money/shared/queries.ts",
   "apps/mobile/src/ops/dashboard/dashboard-queries.ts",
-  "apps/mobile/src/payments/hooks/queries.ts",
+  "apps/mobile/src/finance/payments/hooks/queries.ts",
   "apps/mobile/src/sales/course/change/change-queries.ts",
   "apps/mobile/src/sales/course/hooks/course-queries.ts",
   "apps/mobile/src/student-file/channel/channel-queries.ts",

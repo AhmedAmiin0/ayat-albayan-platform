@@ -1,5 +1,5 @@
 import { quote, STUDENT_STATUSES, type QuoteOptions } from '@ab/shared';
-import { subscription } from '@/payments/fixtures';
+import { subscription } from '@/finance/payments/fixtures';
 import { formFrom } from '@/subscribe/form-prefill';
 import { renewHref } from './renew';
 

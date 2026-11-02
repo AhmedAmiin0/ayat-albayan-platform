@@ -2,7 +2,7 @@ import type { PaymentAttachmentView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { payment } from '@/payments/fixtures';
+import { payment } from '@/finance/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { PaymentItem } from './PaymentItem';
 

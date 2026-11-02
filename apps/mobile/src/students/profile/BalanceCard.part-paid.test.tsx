@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
-import { balanceOf, page, subscription } from '@/payments/fixtures';
+import { balanceOf, page, subscription } from '@/finance/payments/fixtures';
 import { partPaidLine } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { BalanceCard } from './BalanceCard';

@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { StudentScreen } from './StudentScreen';
-import { balanceOf, subscription } from '@/payments/fixtures';
-import { profile } from '../shared/test-data';
+import { balanceOf, subscription } from '@/finance/payments/fixtures';
+import { profile } from '@/students/shared/test-data';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

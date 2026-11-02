@@ -1,8 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { balanceOf, page, payment, STUDENT, SUB_ID, subscription } from '@/payments/fixtures';
-import type { PaymentInput } from '@/payments/lib/optimistic';
+import { balanceOf, page, payment, STUDENT, SUB_ID, subscription } from '@/finance/payments/fixtures';
+import type { PaymentInput } from '@/finance/payments/lib/optimistic';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { useRecordPayment } from './use-record-payment';
 

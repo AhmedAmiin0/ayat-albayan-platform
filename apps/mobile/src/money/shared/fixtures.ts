@@ -1,5 +1,5 @@
 import type { AdminTaskView, ReceivableRow } from '@ab/shared';
-import { STUDENT } from '@/payments/fixtures';
+import { STUDENT } from '@/finance/payments/fixtures';
 
 // Test-only API answers for src/money/*.test.tsx (the packages and payments are payments/fixtures).
 

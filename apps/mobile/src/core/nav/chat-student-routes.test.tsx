@@ -1,5 +1,5 @@
 import { AdminReportScreen, AdminStudentReportsScreen } from '@/ops';
-import { PaymentScreen } from '@/payments';
+import { PaymentScreen } from '@/finance/payments';
 import { AttendanceLogScreen, SalesStudentScreen } from '@/sales/sales';
 import { AdminChannelScreen, StudentMoneyScreen, StudentRecordingsScreen } from '@/student-file';
 import { StudentScreen } from '@/students';

@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { localDay } from '@/payments';
+import { localDay } from '@/finance/payments';
 import { bannerLines, pauseErrorText, previewLine, resumedText } from './course-pause-text';
 import { pauseView, TODAY } from './fixtures';
 
