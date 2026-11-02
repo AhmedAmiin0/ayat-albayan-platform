@@ -3,6 +3,9 @@ import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import type { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { RelayLineNow } from './relay.line';
 import type { RelayIds, RelayRowInput } from './relay.repo';
+import { templateByName } from '@/modules/messaging/whatsapp/templates/names/template-match';
+import type { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Test-only (excluded from the build). The relay's notifications line on fake CRM answers
 // (crm.fakes.ts) and an in-memory messages table. Phones and ids invented; no network.
@@ -82,3 +85,7 @@ export const templateBody = (to = '966500000001') => ({
     params: { body: ['سارة', '17:00'], buttonParams: { '0': 'room-1' } },
   },
 });
+
+/** TemplateNames over an in-memory catalog (none by default: every relay row stays raw). */
+export const fakeNames = (rows: readonly TemplateRow[] = []): TemplateNames =>
+  ({ find: async (name: string) => templateByName(rows, name) }) as unknown as TemplateNames;

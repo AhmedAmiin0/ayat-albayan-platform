@@ -2,10 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { relayDedupKey } from './relay.dedup';
 import { relayError, relayFailure, sentWithoutId } from './relay.errors';
 import { RelayKeys } from './relay.keys';
-import { relayCrmBody, relayReadable } from './relay.kinds';
+import {
+  relayCrmBody,
+  relayReadable,
+  relayTemplateCall,
+  relayTemplateFields,
+  type RelayTemplateFields,
+} from './relay.kinds';
 import { RelayLine, type RelayLineNow } from './relay.line';
 import { RelayRepo, type RelayIds } from './relay.repo';
 import type { RelayRequest } from './relay.schema';
+import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 
 // The script relay (docs/19 «script relay»): the old Apps Script → this API → the notifications
 // line's crm driver → the CRM → Meta. The platform is only the pipe: no gate on automatic
@@ -36,6 +43,7 @@ export class RelayService {
   constructor(
     private readonly line: RelayLine,
     private readonly repo: RelayRepo,
+    private readonly names: TemplateNames,
   ) {}
 
   /** The line when the Bearer is a key of its CRM account (relay.keys.ts); else 503 / 401 / 502. */
@@ -58,6 +66,7 @@ export class RelayService {
       dedupKey,
       numberId: line.numberId,
       now,
+      template: await this.templateOf(req),
     });
     if (!row) return this.replay(dedupKey);
     try {
@@ -66,6 +75,14 @@ export class RelayService {
     } catch (e) {
       return this.failed(row.id, e, now);
     }
+  }
+
+  /** The catalog template it names, for the chat only; any doubt (or a failed read) = none. */
+  private async templateOf(req: RelayRequest): Promise<RelayTemplateFields | null> {
+    const call = relayTemplateCall(req);
+    if (!call) return null;
+    const template = await this.names.find(call.name).catch(() => null);
+    return relayTemplateFields(call, template);
   }
 
   private async replay(dedupKey: string): Promise<RelaySent> {

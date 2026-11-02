@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { CLAIM_LEASE_MS, SENDING, UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
+import type { RelayTemplateFields } from './relay.kinds';
 
 // The relay's messages rows (docs/19 «script relay»). Written claimed (error_code SENDING, a
 // lease) so the outbox worker never sends it itself; no lead, guardian or staff is linked
@@ -12,7 +13,12 @@ export interface RelayRowInput {
   dedupKey: string;
   numberId: string | undefined;
   now: Date;
+  /** The catalog template it names (chat display only); null = a raw row, as before. */
+  template: RelayTemplateFields | null;
 }
+
+const templateColumns = (t: RelayTemplateFields | null) =>
+  t ? { template_key: t.key, template_params: t.params } : {};
 
 /** A relay row's ids as the script gets them back. */
 export interface RelayIds {
@@ -42,6 +48,7 @@ export class RelayRepo {
         next_attempt_at: lease,
         error_code: SENDING,
         ...(input.numberId ? { number_id: input.numberId } : {}),
+        ...templateColumns(input.template),
       })
       .select('id')
       .single();

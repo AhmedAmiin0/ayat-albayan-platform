@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { RelayController } from './relay.controller';
-import { crmMe, fakeLine, fakeRepo, KEY, templateBody } from './relay.fakes';
+import { crmMe, fakeLine, fakeNames, fakeRepo, KEY, templateBody } from './relay.fakes';
+import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 import { RelayLine } from './relay.line';
 import { RelayRepo } from './relay.repo';
 import { RelayService } from './relay.service';
@@ -35,6 +36,7 @@ async function relayApp(input: {
       RelayService,
       { provide: RelayLine, useValue: line },
       { provide: RelayRepo, useValue: repo },
+      { provide: TemplateNames, useValue: fakeNames() },
     ],
   }).compile();
   app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

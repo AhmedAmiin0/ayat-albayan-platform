@@ -22,6 +22,7 @@ import { LinesController } from './lines/lines.controller';
 import { MessageDispatch } from './sender/message.dispatch';
 import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
+import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
@@ -99,6 +100,7 @@ function lines(): WhatsappLines {
     MessageSender,
     MessagesRepo,
     MessageViews,
+    TemplateNames,
     MessagesService,
     InboundMediaRepo,
     CrmMediaSettings,

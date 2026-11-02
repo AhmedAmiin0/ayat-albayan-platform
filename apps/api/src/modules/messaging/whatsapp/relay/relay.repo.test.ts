@@ -12,6 +12,7 @@ const row = {
   dedupKey: 'script-relay:k',
   numberId: undefined,
   now: NOW,
+  template: null,
 };
 
 describe('RelayRepo', () => {
@@ -37,6 +38,17 @@ describe('RelayRepo', () => {
     const { db, argsOf } = fakeDb({ [M]: [{ data: { id: 'm1' } }] });
     await new RelayRepo(db).insert({ ...row, numberId: 'n-1' });
     expect(argsOf(M, 'insert')?.[0]).toMatchObject({ number_id: 'n-1' });
+  });
+
+  it('insert: a catalog template adds its key and values (chat display only)', async () => {
+    const { db, argsOf } = fakeDb({ [M]: [{ data: { id: 'm1' } }] });
+    const template = { key: 'teacher_lesson_v2', params: { '1': 'نورة' } };
+    await new RelayRepo(db).insert({ ...row, template });
+    expect(argsOf(M, 'insert')?.[0]).toMatchObject({
+      body: 'نص',
+      template_key: 'teacher_lesson_v2',
+      template_params: { '1': 'نورة' },
+    });
   });
 
   it('insert: a taken dedup key is null (a retry); any other error throws', async () => {
