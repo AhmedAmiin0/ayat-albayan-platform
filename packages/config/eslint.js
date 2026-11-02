@@ -18,7 +18,7 @@ import { syntaxBlocks } from './eslint-syntax.js';
 // with no entry in any eslint-suppressions.json can move there (`pnpm guard:lint` checks it).
 const oxlintrc = JSON.parse(readFileSync(new URL('../../.oxlintrc.json', import.meta.url), 'utf8'));
 
-export { boundaries, forbiddenImports, noParentImports, TESTS } from './eslint-boundaries.js';
+export { boundaries, forbiddenImports, noParentImports, TESTS, zodInputs } from './eslint-boundaries.js';
 export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
 export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
