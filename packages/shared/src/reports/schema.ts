@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ATTENDANCES, GRADES, PROGRAMS } from '../enums/index.js';
+import { ATTENDANCES, GRADES, PROGRAMS } from '@ab/catalog';
 import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
 
 // Report commands (docs/11 §4). camelCase like every command; the identity (student, teacher,

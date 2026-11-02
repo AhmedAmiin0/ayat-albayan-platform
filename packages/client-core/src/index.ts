@@ -12,3 +12,4 @@ export * from './core/errors/index.js';
 export * from './messaging/channels/index.js';
 export * from './messaging/calls/index.js';
 export * from './messaging/inbox/index.js';
+export * from './messaging/chat-send/index.js';

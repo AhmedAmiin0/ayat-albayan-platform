@@ -1,4 +1,4 @@
-import type { AdminTaskKind, SubscriptionStatus } from '../../enums/index.js';
+import type { AdminTaskKind, SubscriptionStatus } from '@ab/catalog';
 
 // R-SUB-02: at `threshold` lessons left (settings.renewal_alert_remaining = 2) the guardian gets a
 // renewal reminder and an admin gets a task; at 0 the package is `unpaid` and the student's future

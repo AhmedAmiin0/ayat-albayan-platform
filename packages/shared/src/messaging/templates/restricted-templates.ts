@@ -1,4 +1,4 @@
-import type { Permission } from '../../catalog/permissions/catalog.js';
+import type { Permission } from '@ab/catalog';
 import type { TemplateView } from './template-views.js';
 
 // Owner 2026-10-12 («all roles except the ones allowed to have all templates»): every role without

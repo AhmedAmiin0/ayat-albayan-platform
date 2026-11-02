@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { OWNED_SETTING_KEYS, isOwnedSettingKey } from './ownership.js';
-import { SEED_ENTRIES } from './seed/seed-entries.js';
+import { OWNED_SETTING_KEYS, isOwnedSettingKey } from '../ownership.js';
+import { SEED_ENTRIES } from './seed-entries.js';
 
 declare global {
   interface ImportMeta {

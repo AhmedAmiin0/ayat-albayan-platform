@@ -1,4 +1,4 @@
-import type { Attendance, Grade, PdfStatus, ReportStatus } from '../enums/index.js';
+import type { Attendance, Grade, PdfStatus, ReportStatus } from '@ab/catalog';
 
 /**
  * GET /teachers/me/reports item (teacher mode, R-REP-02, R-TCH-03): one of my submitted reports,

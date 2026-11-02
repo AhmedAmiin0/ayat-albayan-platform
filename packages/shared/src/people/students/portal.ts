@@ -1,5 +1,5 @@
 import type { JoinWindow } from '../../schedule/classroom/index.js';
-import type { LessonStatus, PackageSize, SubscriptionStatus } from '../../enums/index.js';
+import type { LessonStatus, PackageSize, SubscriptionStatus } from '@ab/catalog';
 
 // The family portal (/portal, docs/31): what a guardian or student login reads. Whitelists only: no
 // teacher phone or email, no note or internal reason, no price, payment or invoice, no other family.

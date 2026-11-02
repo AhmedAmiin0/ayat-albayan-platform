@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../../../enums/index.js';
+import type { LessonStatus } from '@ab/catalog';
 
 // «عدّل الوقت» (R-SCH-11): edit ONE lesson's time in place (same row, report, payments), unlike
 // «غيّر الميعاد» which closes the row as `rescheduled` and creates a twin (docs/10 §10).

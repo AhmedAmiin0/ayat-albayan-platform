@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { SubscriptionStatus } from '../../../enums/index.js';
+import type { SubscriptionStatus } from '@ab/catalog';
 
 // «إلغاء الباقة» (owner 2026-10-28): a package made by mistake is cancelled, never deleted. Only one
 // nothing hangs on: no money kept (net paid 0) and no lesson booked on it. A cancelled package stays

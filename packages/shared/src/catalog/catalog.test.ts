@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../../../i18n/ar.json' with { type: 'json' };
-import en from '../../../i18n/en.json' with { type: 'json' };
+import ar from '../../i18n/ar.json' with { type: 'json' };
+import en from '../../i18n/en.json' with { type: 'json' };
 import {
   defaultGrantsOf,
   effectivePermissions,
@@ -12,7 +12,7 @@ import {
   permissionGroups,
   selfPermissionsOf,
   systemPermissionsOf,
-} from './catalog.js';
+} from '@ab/catalog';
 
 describe('permission catalog', () => {
   it('has unique resource.action keys', () => {
