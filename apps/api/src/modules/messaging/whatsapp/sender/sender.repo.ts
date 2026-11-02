@@ -8,7 +8,7 @@ import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
-import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/catalog/template-gate.repo';
+import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { DueMessage } from './sender.due';

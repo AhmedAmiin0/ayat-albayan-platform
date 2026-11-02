@@ -1,7 +1,7 @@
 import { CRM_GATED_KEYS, gateApprovedKeys } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { onCrm } from './template-env';
+import { onCrm } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 
 /**
  * The registry rows a send may use (docs/19 «crm driver»): approved ones, and a CRM_GATED_KEYS key
