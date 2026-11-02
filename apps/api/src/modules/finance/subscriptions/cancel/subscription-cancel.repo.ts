@@ -1,9 +1,9 @@
 import type { CancelBlock } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { SELECT } from '../list/subscriptions.list-query';
-import type { SubRow } from '../subscriptions.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
+import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 const CANCELLED_LESSONS = '(cancelled_by_teacher,cancelled_by_admin)';
 
@@ -15,7 +15,7 @@ type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 
 /** «إلغاء الباقة» reads and the one write (service role; the controllers guard). Owner 2026-10-28. */
 @Injectable()
-export class SubscriptionCancelQueries {
+export class SubscriptionCancelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

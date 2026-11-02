@@ -11,7 +11,7 @@ const PLATFORM_ROW = `student_id, attendance, chargeable, lesson:lessons!inner(s
 
 /** The reads of the trial transitions (owner 2026-10-15, docs/11 §7): which students, and their trial lessons. */
 @Injectable()
-export class StudentTrialQueries {
+export class StudentTrialRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The students of these lessons on a trial lesson (platform or imported, isTrialLesson), each once. */

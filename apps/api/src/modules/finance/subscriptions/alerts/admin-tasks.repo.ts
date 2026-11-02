@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
 import type { AdminTaskView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError, type Page, type PageQuery } from '../../../../common/http/http';
-import { studentRef } from '../subscriptions.mapper';
-import type { StudentRef } from '../subscriptions.queries';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError, type Page, type PageQuery } from '@/common/http/http';
+import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
+import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 type TaskRow = Tables<'admin_tasks'>;
 
@@ -25,7 +25,7 @@ export function toTaskView(row: TaskRow, students: ReadonlyMap<string, StudentRe
 
 /** admin_tasks raised by the alerts (S7, S8). Admin only. */
 @Injectable()
-export class AdminTasksQueries {
+export class AdminTasksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(q: PageQuery & { open: boolean }): Promise<Page<AdminTaskView>> {

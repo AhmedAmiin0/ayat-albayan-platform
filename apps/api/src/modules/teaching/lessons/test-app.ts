@@ -17,8 +17,8 @@ import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflic
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
 import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
-import { AlertsQueries } from '@/modules/finance/subscriptions/alerts/alerts.queries';
-import { StudentTrialQueries } from '@/modules/finance/subscriptions/trial/student-trial.queries';
+import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
+import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
@@ -89,9 +89,9 @@ export async function lessonsApp() {
     // The rules (legacy, no rows): no DB here.
     .overrideProvider(NotificationPolicy).useValue(fakePolicy())
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
-    .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
+    .overrideProvider(AlertsRepo).useValue({ studentsOfLessons: async () => [] })
     // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).
-    .overrideProvider(StudentTrialQueries).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
+    .overrideProvider(StudentTrialRepo).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .overrideProvider(StaffPhotos).useValue(m.photos)
     .overrideProvider(ScheduleNoticesRepo).useValue(m.notices)
