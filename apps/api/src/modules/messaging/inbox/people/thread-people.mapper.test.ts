@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceRow } from '../../../finance/subscriptions/money/balance.queries';
-import { STUDENT_ID, subRow } from '../../../finance/subscriptions/money/money.fakes';
-import { toStudentBalance, toSubscriptionView } from '../../../finance/subscriptions/subscriptions.mapper';
-import type { SubRow } from '../../../finance/subscriptions/subscriptions.queries';
+import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import { STUDENT_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { toStudentBalance, toSubscriptionView } from '@/modules/finance/subscriptions/subscriptions.mapper';
+import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 import { familyTags, toThreadStudent, type PeopleStudentRow } from './thread-people.mapper';
 
 const STUDENT: PeopleStudentRow = {

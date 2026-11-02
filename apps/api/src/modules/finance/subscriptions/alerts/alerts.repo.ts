@@ -20,8 +20,8 @@ export interface RenewalMessage {
 
 /** Reads and idempotent writes for the R-SUB-02 alerts (dedup keys, rule 8). */
 @Injectable()
-export class AlertsQueries {
-  private readonly log = new Logger(AlertsQueries.name);
+export class AlertsRepo {
+  private readonly log = new Logger(AlertsRepo.name);
 
   constructor(
     @Inject(DB) private readonly db: Db,

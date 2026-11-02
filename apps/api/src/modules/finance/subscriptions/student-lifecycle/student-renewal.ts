@@ -1,9 +1,9 @@
 import { livePackages, localDay, type StudentStatus } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { PackagesService, type StudentState } from '../money/packages.service';
+import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { manualWins, packageEnded, renewalTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
-import { StudentStatusQueries } from './student-status.queries';
-import { SubscriptionsQueries } from '../subscriptions.queries';
+import { StudentStatusRepo } from './student-status.repo';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 /** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };
@@ -31,9 +31,9 @@ function endPackages(state: StudentState): EndPackage[] {
 @Injectable()
 export class StudentRenewal {
   constructor(
-    private readonly statuses: StudentStatusQueries,
+    private readonly statuses: StudentStatusRepo,
     private readonly packages: PackagesService,
-    private readonly subs: SubscriptionsQueries,
+    private readonly subs: SubscriptionsRepo,
   ) {}
 
   async apply(input: RenewalInput): Promise<StudentStatus | null> {

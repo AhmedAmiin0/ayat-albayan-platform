@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import { StudentStatusQueries } from './student-status.queries';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { StudentStatusRepo } from './student-status.repo';
 
 function setup(results: Record<string, FakeResult[]>) {
   const t = fakeDb(results);
   const audit = { record: vi.fn() };
-  return { ...t, audit, q: new StudentStatusQueries(t.db, audit as unknown as AuditService) };
+  return { ...t, audit, q: new StudentStatusRepo(t.db, audit as unknown as AuditService) };
 }
 const eqs = (t: ReturnType<typeof setup>, table: string) =>
   t.calls.filter((c) => c.table === table && c.method === 'eq').map((c) => c.args);

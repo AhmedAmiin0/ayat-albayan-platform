@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { ThreadsRepo } from './threads.repo';
 
@@ -9,7 +9,7 @@ import { ThreadsRepo } from './threads.repo';
 
 const PHONE = '+201001234567';
 const queries = (db: ReturnType<typeof fakeDb>['db']) =>
-  new ThreadsRepo(db, {} as PackagesService, {} as BalanceQueries);
+  new ThreadsRepo(db, {} as PackagesService, {} as BalanceRepo);
 
 describe('ThreadsQueries and the calls number', () => {
   it('numberWindows: a calls window is dropped; chat and unstamped history stay', async () => {

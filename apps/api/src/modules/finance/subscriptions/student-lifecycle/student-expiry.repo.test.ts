@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { MAX_ROWS } from '@/common/db/read-all';
-import { StudentExpiryQueries } from './student-expiry.queries';
+import { StudentExpiryRepo } from './student-expiry.repo';
 
 function setup(results: Record<string, FakeResult[]>) {
   const t = fakeDb(results);
-  return { ...t, q: new StudentExpiryQueries(t.db) };
+  return { ...t, q: new StudentExpiryRepo(t.db) };
 }
 const calls = (t: ReturnType<typeof setup>, table: string) =>
   t.calls.filter((c) => c.table === table && c.method !== 'select').map((c) => [c.method, ...c.args]);
