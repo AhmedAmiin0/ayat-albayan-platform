@@ -1,8 +1,10 @@
 import { systemPermissionsOf, type UserRole } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { row } from './saved-replies.fakes';
-import { assertRepliesUser, managesShared, replyIdParam } from './saved-replies.guard';
+import { paramPipeOf } from '@/common/http/zod-inputs.test-util';
+import { SavedRepliesController } from './saved-replies.controller';
+import { assertRepliesUser, managesShared } from './saved-replies.guard';
 import { toSavedReply } from './saved-replies.mapper';
 import { movedOrder } from './saved-replies.order';
 import { isSavedReplyPathOf, savedReplyPath } from './saved-replies.paths';
@@ -28,8 +30,11 @@ describe('guard', () => {
     expect([managesShared(as('admin')), managesShared(as('sales'))]).toEqual([true, false]);
   });
 
-  it('a malformed id is 404', () => {
-    expect(status(() => replyIdParam('x'))).toBe(404);
+  it('a malformed id is 404', async () => {
+    for (const method of ['update', 'remove', 'move', 'stage'] as const) {
+      const pipe = paramPipeOf(SavedRepliesController, { method, name: 'id' });
+      await expect(pipe('x')).rejects.toMatchObject({ status: 404 });
+    }
   });
 });
 
