@@ -294,7 +294,15 @@
     "noPackage": "No package",
     "weeklyYes": "Has a weekly lesson",
     "weeklyNo": "No weekly lesson",
-    "renew": "Renew subscription"
+    "renew": "Renew subscription",
+    "family": {
+      "title": "Family",
+      "siblings": "Siblings",
+      "contactIsSelf": "The student owns the chat number",
+      "openChat": "Open the guardian's chat",
+      "openStudent": "Open {name}'s file",
+      "noGuardianName": "Guardian"
+    }
   },
   "guardians": {
     "title": "Guardians",

@@ -10,7 +10,7 @@ import { ThreadPane } from './ThreadPane';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const GUARDIAN = { guardian_id: 'g-1', lead_id: null, lead_status: null, display_name: 'أم سهيلة' } as const;
 const FAMILY: ThreadPeople = {
@@ -29,8 +29,8 @@ function renderThread(page: ThreadDetail) {
   renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
 }
 
-/** The tone of the chip whose word is `label` (docs/07 §6). */
-const tone = (label: string) => screen.getByText(label).closest('[data-tone]')?.getAttribute('data-tone');
+/** The tone of the first chip whose word is `label` (docs/07 §6): a child's status may share it. */
+const tone = (label: string) => screen.getAllByText(label)[0]?.closest('[data-tone]')?.getAttribute('data-tone');
 
 afterEach(() => {
   apiFetch.mockReset();
@@ -47,6 +47,14 @@ describe('subscription in the chat (R-SUB-01)', () => {
     expect(panel.getByRole('button', { name: `${t.subscriptions.new} — سهيلة` })).toBeTruthy();
     expect(panel.getByRole('button', { name: `${t.inbox.subscription.renew} — جود` })).toBeTruthy();
     expect(screen.queryByRole('link', { name: t.inbox.subscription.subscribe })).toBeNull();
+  });
+
+  it('«العائلة» (owner 2026-11-02): each child opens their file, with the status and teacher', async () => {
+    renderThread({ ...detail([], GUARDIAN), people: FAMILY });
+    const panel = within(await screen.findByRole('complementary', { name: t.inbox.subscription.title }));
+    const link = panel.getByRole('link', { name: t.students.family.openStudent.replace('{name}', 'جود') });
+    expect(link.getAttribute('href')).toBe('/admin/students/s-2');
+    expect(panel.getAllByText(t.enums.studentStatus[FAMILY.students[1]?.status ?? 'active']).length).toBeGreaterThan(0);
   });
 
   it('«جدّد الاشتراك» opens the create dialog for that child; saving refreshes the thread', async () => {
@@ -90,5 +98,13 @@ describe('subscription in the chat (R-SUB-01)', () => {
     for (const label of Object.values(t.inbox.subscription.badge)) expect(screen.queryByText(label)).toBeNull();
     expect(screen.queryByRole('button', { name: new RegExp(t.subscriptions.new) })).toBeNull();
     expect(screen.queryByRole('link', { name: t.inbox.subscription.subscribe })).toBeNull();
+  });
+
+  it('«العائلة» (owner 2026-11-02): each child opens their file, with the status and teacher', async () => {
+    renderThread({ ...detail([], GUARDIAN), people: FAMILY });
+    const panel = within(await screen.findByRole('complementary', { name: t.inbox.subscription.title }));
+    const link = panel.getByRole('link', { name: t.students.family.openStudent.replace('{name}', 'جود') });
+    expect(link.getAttribute('href')).toBe('/admin/students/s-2');
+    expect(panel.getAllByText(t.enums.studentStatus[FAMILY.students[1]?.status ?? 'active']).length).toBeGreaterThan(0);
   });
 });

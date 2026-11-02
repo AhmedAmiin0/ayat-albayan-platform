@@ -1,5 +1,8 @@
 import { clickToChatLink, formatPhone, secondPhoneOf } from '@ab/shared';
-import { Linking, View } from 'react-native';
+import { router } from 'expo-router';
+import { Linking, Pressable, View } from 'react-native';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
+import { threadHref } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { ButtonRow } from '@/core/ui/actions';
@@ -14,6 +17,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
  * ولي الأمر: name, LTR phone, then ONE ButtonRow (docs/07 §6 «الأزرار»): «اتصال» (tel:, outlined) |
  * «واتساب» (wa.me, the academy's channel: the screen's one filled button). Both on the main number; a family
  * with a second number (owner 2026-10-29) labels the two, the second under the buttons (SecondPhone).
+ * The name opens the family's chat in the app (owner 2026-11-02, «العائلة» from the profile).
  */
 export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'] }) {
   const { color } = useTheme();
@@ -30,16 +34,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       }}
     >
       <SectionLabel>{t.students.guardian}</SectionLabel>
-      <AppText
-        style={{
-          fontFamily: type.ui[600],
-          fontSize: type.size.body,
-          lineHeight: type.lineHeight(type.size.body),
-          color: color.ink,
-        }}
-      >
-        {guardian.name}
-      </AppText>
+      <GuardianName name={guardian.name} phone={phone} />
       {secondPhoneOf(guardian.phones) ? <SectionLabel>{t.guardians.mainPhone}</SectionLabel> : null}
       <Ltr
         style={{
@@ -57,5 +52,31 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       </ButtonRow>
       {guardian.phones ? <SecondPhone guardianId={guardian.id} phones={guardian.phones} /> : null}
     </View>
+  );
+}
+
+/** The guardian's name, a link to the family's chat in the app (owner 2026-11-02, «العائلة»). */
+function GuardianName({ name, phone }: { name: string; phone: string }) {
+  const { color } = useTheme();
+  const base = useTreeBase();
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityHint={t.students.family.openChat}
+      onPress={() => router.push(inTree(base, threadHref(phone)))}
+      hitSlop={{ top: 8, bottom: 8 }}
+      style={{ alignSelf: 'flex-start' }}
+    >
+      <AppText
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.body,
+          lineHeight: type.lineHeight(type.size.body),
+          color: color.lapis,
+        }}
+      >
+        {name}
+      </AppText>
+    </Pressable>
   );
 }

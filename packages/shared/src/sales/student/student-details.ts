@@ -6,6 +6,7 @@ import { isCancelledLesson } from '@ab/schedule';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesPackageSummary } from './student-package.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
+import type { SalesStudentFamily } from './student-family.js';
 import type { TrialOutcome } from '../../people/students/index.js';
 
 // «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28), its trial,
@@ -66,6 +67,8 @@ export interface SalesStudentDetails {
    * left; never a price or payment. null: none. Absent in an old cache.
    */
   package?: SalesPackageSummary | null;
+  /** «العائلة» (owner 2026-11-02): the guardian's name and the siblings. Absent in an old cache. */
+  family?: SalesStudentFamily;
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */

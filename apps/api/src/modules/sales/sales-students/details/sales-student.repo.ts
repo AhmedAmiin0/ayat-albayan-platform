@@ -6,11 +6,21 @@ import { dbError } from '@/common/http/http';
 import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 
-/** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
+/** A student of the same guardian (the student itself included; the mapper drops it). */
+export type FamilyStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
+
+/**
+ * Whitelisted: never notes, a balance or a meeting link; of the guardian the phone (owner
+ * 2026-10-27), the name and its students' name / code / status («العائلة», owner 2026-11-02).
+ */
 export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
+  contact_is_self?: boolean;
   teacher: { display_name_ar: string } | null;
-  guardian: { phone_e164: string } | null;
+  guardian: { phone_e164: string; name?: string; students?: FamilyStudentRow[] } | null;
 };
+
+const STUDENT_SELECT =
+  'id, code, name, status, program, tz, contact_is_self, teacher:teachers(display_name_ar), guardian:guardians(phone_e164, name, students(id, code, name, status))' as const;
 
 /** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
 export type PriceRow = Pick<Tables<'subscriptions'>, 'id' | 'price' | 'currency'>;
@@ -58,7 +68,7 @@ export class SalesStudentRepo {
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, status, program, tz, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
+      .select(STUDENT_SELECT)
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

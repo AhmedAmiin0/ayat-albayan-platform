@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { Linking, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
@@ -6,6 +7,8 @@ import { GuardianCard } from './GuardianCard';
 
 const guardian = { id: 'g1', name: 'أم يوسف', phone_e164: '+966552147730' };
 const styleOf = (name: string) => StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
+
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -24,4 +27,10 @@ test('«اتصال» dials the guardian', async () => {
   await render(<GuardianCard guardian={guardian} />);
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.call }));
   expect(open).toHaveBeenCalledWith('tel:+966552147730');
+});
+
+test('«العائلة» (owner 2026-11-02): the guardian name opens the family chat in the app', async () => {
+  await render(<GuardianCard guardian={guardian} />);
+  await fireEvent.press(screen.getByRole('link', { name: 'أم يوسف' }));
+  expect(router.push).toHaveBeenCalledWith(`/inbox/thread/${encodeURIComponent('+966552147730')}`);
 });
