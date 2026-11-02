@@ -1531,6 +1531,9 @@
     }
   },
   "src/modules/finance/assistant-pay/shared/assistant-pay.fakes.ts": {
+    "ab/no-parent-imports": {
+      "count": 4
+    },
     "max-len": {
       "count": 5
     }

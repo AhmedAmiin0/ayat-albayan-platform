@@ -1,19 +1,20 @@
 // Test fixtures and HTTP harness for the assistant-pay module (test-only, excluded from the build by *.fakes.ts).
-import { AssistantRpc } from './assistant-pay.rpc';
-import { A, ADMIN, B } from './rows.fakes';
-import { AppModule } from '@/app.module';
-import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
-import type { AuthUser } from '@/common/auth/verify-token';
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Test } from '@nestjs/testing';
+import { vi } from 'vitest';
+import { AppModule } from '../../../../app.module';
+import { AuditService } from '../../../../common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
+import type { AuthUser } from '../../../../common/auth/verify-token';
 import { CommissionBell } from '@/modules/finance/subscriptions';
 import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
+import { AssistantRpc } from './assistant-pay.rpc';
 import { CommissionsRepo } from '@/modules/finance/assistant-pay/commissions/commissions.repo';
 import { MyRepo } from '@/modules/finance/assistant-pay/my/my.repo';
 import { StatementsRepo } from '@/modules/finance/assistant-pay/statements/statements.repo';
 import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
-import { vi } from 'vitest';
+
+import { A, ADMIN, B } from './rows.fakes';
 
 export { A, ADMIN, B, ID, STUDENT, statementRow } from './rows.fakes';
 export const USERS: Record<string, AuthUser> = {
