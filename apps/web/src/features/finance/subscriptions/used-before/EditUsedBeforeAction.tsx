@@ -21,11 +21,11 @@ export interface EditUsedBeforeActionProps {
 
 /**
  * The card's «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), for admins and assistants
- * (subscriptions.set_start_date); never on a cancelled package, nor on one starting today or later
+ * (subscriptions.edit_terms); never on a cancelled package, nor on one starting today or later
  * with nothing to lower.
  */
 export function EditUsedBeforeAction({ pkg }: EditUsedBeforeActionProps) {
-  const allowed = usePermissions().can('subscriptions.set_start_date');
+  const allowed = usePermissions().can('subscriptions.edit_terms');
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const saved = () => {

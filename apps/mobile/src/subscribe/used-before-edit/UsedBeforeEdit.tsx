@@ -18,12 +18,12 @@ type Mode = 'closed' | 'open' | 'saved';
 
 /**
  * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02) on the student's current package, admins and
- * assistants (subscriptions.set_start_date); never on a cancelled package (editOffered). The
+ * assistants (subscriptions.edit_terms); never on a cancelled package (editOffered). The
  * editor reads the server's state (max, booked course) before offering anything.
  */
 export function UsedBeforeEdit({ sub, stale }: UsedBeforeEditProps) {
   const [mode, setMode] = useState<Mode>('closed');
-  const canEdit = useHolds('subscriptions.set_start_date') && editOffered(sub);
+  const canEdit = useHolds('subscriptions.edit_terms') && editOffered(sub);
   if (!canEdit) return null;
   const done = (saved: boolean) => setMode(saved ? 'saved' : 'closed');
   return mode === 'open' ? (

@@ -1,15 +1,14 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
-// GET /subscriptions/:id/lessons-used-before: what the editor offers (review 2026-11-02), and the
-// sales role with subscriptions.set_start_date switched off by the admin (an editable system role).
-const withoutKey = async (user: AuthUser) =>
-  (await systemResolver(user)).filter((p) => p !== 'subscriptions.set_start_date');
+// GET /subscriptions/:id/lessons-used-before: what the editor offers (review 2026-11-02), and a
+// normal assistant: the system sales role, which never holds subscriptions.edit_terms (2026-11-03),
+// even with subscriptions.set_start_date (the create's key).
+const normalSales = systemResolver;
 
 describe('GET /subscriptions/:id/lessons-used-before', () => {
   let app: NestFastifyApplication;
@@ -49,18 +48,21 @@ describe('GET /subscriptions/:id/lessons-used-before', () => {
   });
 });
 
-describe('the sales role without subscriptions.set_start_date', () => {
+describe('a normal assistant (system sales role, no subscriptions.edit_terms)', () => {
   let app: NestFastifyApplication;
   let call: Awaited<ReturnType<typeof editApp>>['call'];
 
   beforeAll(async () => {
-    ({ app, call } = await editApp(withoutKey));
+    ({ app, call } = await editApp(normalSales));
   });
   afterAll(async () => {
     await app.close();
   });
 
   it('GET and PATCH → 403', async () => {
+    expect(await normalSales({ id: 'x', email: null, role: 'sales' })).toContain(
+      'subscriptions.set_start_date',
+    );
     expect((await call({ method: 'GET', url: URL, token: 'salesA' })).statusCode).toBe(403);
     const body = { lessonsUsedBefore: 1 };
     expect((await call({ method: 'PATCH', url: URL, token: 'salesA', body })).statusCode).toBe(403);

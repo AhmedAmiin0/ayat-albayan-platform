@@ -25,7 +25,13 @@ export function balanceOf(used: number): Map<string, BalanceRow> {
   return new Map([[SUB_ID, row]]);
 }
 
-export async function editApp(resolver: PermissionResolver = systemResolver) {
+/** The special assistant: the system sales role plus subscriptions.edit_terms (owner 2026-11-03). */
+export const withEditTerms: PermissionResolver = async (user) => [
+  ...(await systemResolver(user)),
+  'subscriptions.edit_terms',
+];
+
+export async function editApp(resolver: PermissionResolver = withEditTerms) {
   const edits = { courseBooked: vi.fn(), setUsedBefore: vi.fn() };
   const withEdits = (b: TestingModuleBuilder) =>
     b.overrideProvider(UsedBeforeEditRepo).useValue(edits);

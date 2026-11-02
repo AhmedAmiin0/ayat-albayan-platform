@@ -8,14 +8,14 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { UsedBeforeEdit } from './used-before-edit.service';
 
 /**
- * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): subscriptions.set_start_date, the key
- * that already gates «حلقات مستخدمة من الباقة» on the create (system admin and sales by
- * default, migration 430), so no new key and no migration. ANY student; teachers and
- * families never.
+ * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): subscriptions.edit_terms «تعديل بيانات
+ * الباقة» (owner 2026-11-03), every change to an EXISTING package: the system admin, and an
+ * assistant only when her role holds it (never sales by default). The create keeps
+ * subscriptions.set_start_date. ANY student; teachers and families never.
  */
 @ApiTags('subscriptions')
 @ApiBearerAuth()
-@Permissions('subscriptions.set_start_date')
+@Permissions('subscriptions.edit_terms')
 @Controller('subscriptions/:id/lessons-used-before')
 export class UsedBeforeEditController {
   constructor(private readonly edits: UsedBeforeEdit) {}

@@ -89,8 +89,16 @@ test('not hers, without sales.renew_any: no money action and the family is never
   expect(screen.queryByText(m.renew)).toBeNull();
 });
 
-test('«تعديل عدد الحلقات المستخدمة» on the current package only with subscriptions.set_start_date', async () => {
-  serve(kid({}), ['self.sales', 'subscriptions.set_start_date']);
+test('«تعديل عدد الحلقات المستخدمة» on the current package only with subscriptions.edit_terms', async () => {
+  serve(kid({}), ['self.sales', 'subscriptions.edit_terms']);
   await open();
   expect(await screen.findByRole('button', { name: t.salesMoney.usedBeforeEdit.action })).toBeTruthy();
+});
+
+test('a normal assistant (subscriptions.set_start_date only): no «تعديل عدد الحلقات المستخدمة»', async () => {
+  serve(kid({}), ['self.sales', 'subscriptions.set_start_date']);
+  await open();
+  expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
+  expect(screen.queryByRole('button', { name: t.salesMoney.usedBeforeEdit.action })).toBeNull();
 });

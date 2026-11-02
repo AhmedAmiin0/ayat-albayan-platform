@@ -14,7 +14,7 @@ vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({
     permissions: [],
-    can: (p: string) => p === 'subscriptions.set_start_date',
+    can: (p: string) => p === 'subscriptions.edit_terms',
   }),
 }));
 

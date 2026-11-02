@@ -37,7 +37,7 @@ test('the current package offers the edit, which opens on the server state', asy
   expect(mockApiFetch).toHaveBeenCalledWith(STATE);
 });
 
-test('without subscriptions.set_start_date: not offered', async () => {
+test('without subscriptions.edit_terms: not offered', async () => {
   serve(ME);
   await renderWithQuery(<BalanceCard studentId="s1" />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.payments.mobile.record)).toBeTruthy();

@@ -14,8 +14,8 @@ const e = t.salesMoney.usedBeforeEdit;
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('without subscriptions.set_start_date: no action', async () => {
-  mockApiFetch.mockResolvedValue({ permissions: ['self.sales'] });
+test('a normal assistant (subscriptions.set_start_date, no edit_terms): no action', async () => {
+  mockApiFetch.mockResolvedValue({ permissions: ['self.sales', 'subscriptions.set_start_date'] });
   await show(SUB, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
   expect(screen.queryByRole('button', { name: e.action })).toBeNull();

@@ -6,10 +6,10 @@ import { t } from '@/lib/i18n/i18n';
 import { EditUsedBeforeAction } from './EditUsedBeforeAction';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins and assistants
-// (subscriptions.set_start_date); the dialog reads GET …/lessons-used-before first.
+// (subscriptions.edit_terms); the dialog reads GET …/lessons-used-before first.
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-const perms = vi.hoisted(() => ({ list: ['subscriptions.set_start_date'] }));
+const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
 vi.mock('@/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch,
@@ -50,13 +50,13 @@ describe('EditUsedBeforeAction', () => {
   beforeEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
-    perms.list = ['subscriptions.set_start_date'];
+    perms.list = ['subscriptions.edit_terms'];
   });
 
-  it('hidden without the key, on a cancelled package, and on a future one with nothing counted', () => {
-    perms.list = [];
-    renderAction();
+  it('hidden for a normal assistant (set_start_date only), cancelled or future packages', () => {
     perms.list = ['subscriptions.set_start_date'];
+    renderAction();
+    perms.list = ['subscriptions.edit_terms'];
     renderAction({ status: 'cancelled' });
     renderAction({ starts_on: '2999-01-01', lessons_used_before: 0 });
     expect(screen.queryByRole('button', { name: e.action })).toBeNull();
