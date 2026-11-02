@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingRequestSchema } from '../../schedule/schemas/scheduling.js';
+import { bookingRequestSchema } from '../../schemas/index.js';
 import { studentCreateSchema, studentUpdateSchema } from './people.js';
 
 // «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1): optional everywhere a student is described.

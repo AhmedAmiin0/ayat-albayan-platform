@@ -1,12 +1,12 @@
-import { threadRatingSchema, type MessageView } from '@ab/shared';
-import { Controller, HttpCode, Param, Post } from '@nestjs/common';
+import { phoneE164, threadRatingSchema, type MessageView } from '@ab/shared';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { RatingSendService } from './rating.send.service';
 
 /**
@@ -26,13 +26,13 @@ export class RatingController {
   @Post(':phone/rating')
   @HttpCode(201)
   async send(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(threadRatingSchema) body: z.output<typeof threadRatingSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const { clientRequestId } = body;
     const { view, replayed } = await this.sends.send({
-      phone: phoneParam(raw),
+      phone,
       actorId: user.id,
       clientRequestId,
     });

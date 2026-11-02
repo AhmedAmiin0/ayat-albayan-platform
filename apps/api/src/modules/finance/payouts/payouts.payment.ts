@@ -1,10 +1,10 @@
 import { canTransitionPayout, type PayoutPay, type PayoutView, type SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../common/http/errors';
-import { CorrectionsQueries } from '../teacher-earnings/summary/corrections.queries';
-import { EarningsReceipts } from '../teacher-earnings/earnings.receipts';
+import { conflict, notFound } from '@/common/http/errors';
+import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
+import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
 import { toPayoutView } from './payouts.mapper';
-import { PayoutsQueries, type PayoutRow } from './payouts.queries';
+import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
 /**
  * «تم الدفع» (Y4): the ledger settlement AND the payout's move to paid in ONE transaction
@@ -14,8 +14,8 @@ import { PayoutsQueries, type PayoutRow } from './payouts.queries';
 @Injectable()
 export class PayoutsPayment {
   constructor(
-    private readonly payouts: PayoutsQueries,
-    private readonly corrections: CorrectionsQueries,
+    private readonly payouts: PayoutsRepo,
+    private readonly corrections: CorrectionsRepo,
     private readonly receipts: EarningsReceipts,
   ) {}
 

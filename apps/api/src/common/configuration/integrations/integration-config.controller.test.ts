@@ -93,6 +93,8 @@ describe('/settings/integrations («التكاملات»)', () => {
     expect((await call({ method: 'PUT', url: '/settings/integrations/secrets/WA_WABA_ID', payload: { value: 'x' } })).statusCode).toBe(400);
     expect((await call({ method: 'PUT', url: '/settings/integrations/secrets/SUPABASE_SERVICE_ROLE_KEY', payload: { value: 'x' } })).statusCode).toBe(400);
     expect((await call({ method: 'PUT', url: '/settings/integrations/secrets/WA_APP_SECRET', payload: { value: ' ' } })).statusCode).toBe(400);
+    const both = await call({ method: 'PUT', url: '/settings/integrations/secrets/WA_WABA_ID', payload: {} });
+    expect([both.statusCode, both.json().issues[0].path]).toEqual([400, '']);
     expect(q.setSecret).not.toHaveBeenCalled();
   });
 

@@ -1,1 +1,1 @@
-export { AttendanceLogScreen as default } from '@/sales';
+export { AttendanceLogScreen as default } from '@/sales/sales';

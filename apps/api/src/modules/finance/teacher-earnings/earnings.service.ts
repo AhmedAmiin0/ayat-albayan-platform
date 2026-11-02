@@ -12,10 +12,10 @@ import {
   type TeacherPaymentView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '../../../common/http/errors';
-import type { Page } from '../../../common/http/http';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import type { Page } from '@/common/http/http';
 import { toEarningView, toPaymentView } from './earnings.mapper';
-import { EarningsQueries, type PaymentRow } from './earnings.queries';
+import { EarningsRepo, type PaymentRow } from './earnings.repo';
 import { EarningsReceipts } from './earnings.receipts';
 
 type Pay = { teacherId: string; actorId: string };
@@ -28,7 +28,7 @@ type Pay = { teacherId: string; actorId: string };
 @Injectable()
 export class EarningsService {
   constructor(
-    private readonly queries: EarningsQueries,
+    private readonly queries: EarningsRepo,
     private readonly receipts: EarningsReceipts,
   ) {}
 

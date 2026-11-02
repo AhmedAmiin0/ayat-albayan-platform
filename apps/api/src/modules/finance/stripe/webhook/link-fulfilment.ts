@@ -3,10 +3,10 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
 import { conflict, errorCode } from '@/common/http/errors';
 import { ar } from '@/common/infra/i18n/server-text';
-import { PaymentsQueries } from '@/modules/finance/payments';
+import { PaymentsRepo } from '@/modules/finance/payments';
 import { uuidFor } from '@/modules/finance/stripe/links/link-ids';
 import { LinkPackages } from '@/modules/finance/stripe/links/link-packages';
-import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.queries';
+import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 import { WebhookDeps } from './webhook-deps';
 
 export const idOf = (v: string | { id: string } | null): string | null => (typeof v === 'string' ? v : (v?.id ?? null));
@@ -29,7 +29,7 @@ export class LinkFulfilment {
   constructor(
     private readonly deps: WebhookDeps,
     private readonly packages: LinkPackages,
-    private readonly recorded: PaymentsQueries,
+    private readonly recorded: PaymentsRepo,
   ) {}
 
   linkOf(session: Pick<Stripe.Checkout.Session, 'client_reference_id' | 'metadata'>): Promise<LinkRow | null> {

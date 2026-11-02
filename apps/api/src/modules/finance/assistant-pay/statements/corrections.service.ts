@@ -1,10 +1,10 @@
 import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { CommissionBell } from '../../subscriptions';
-import type { CommissionsQuery } from '../shared/assistant-pay.dto';
-import { AssistantRpc } from '../shared/assistant-pay.rpc';
-import { toCommissionView } from '../commissions/commissions.mapper';
-import { CommissionsQueries } from '../commissions/commissions.queries';
+import { CommissionBell } from '@/modules/finance/subscriptions';
+import type { CommissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
+import { AssistantRpc } from '@/modules/finance/assistant-pay/shared/assistant-pay.rpc';
+import { toCommissionView } from '@/modules/finance/assistant-pay/commissions/commissions.mapper';
+import { CommissionsRepo } from '@/modules/finance/assistant-pay/commissions/commissions.repo';
 
 /**
  * The admin's hands on the money (R-ASST-02, R-ASST-05): the commission ledger, voiding a commission, a
@@ -13,7 +13,7 @@ import { CommissionsQueries } from '../commissions/commissions.queries';
 @Injectable()
 export class CorrectionsService {
   constructor(
-    private readonly queries: CommissionsQueries,
+    private readonly queries: CommissionsRepo,
     private readonly rpc: AssistantRpc,
     private readonly bell: CommissionBell,
   ) {}

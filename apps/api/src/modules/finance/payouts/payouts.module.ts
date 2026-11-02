@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
-import { TeachersModule } from '../../people/teachers/teachers.module';
+import { TeacherEarningsModule } from '@/modules/finance/teacher-earnings/earnings.module';
+import { TeachersModule } from '@/modules/people/teachers/teachers.module';
 import { PayoutPaymentController, PayoutsController, TeacherPayoutsController } from './payouts.controller';
 import { PayoutsGenerator } from './payouts.generate';
 import { PayoutsLedger } from './payouts.ledger';
 import { PayoutsPayment } from './payouts.payment';
-import { PayoutsQueries } from './payouts.queries';
+import { PayoutsRepo } from './payouts.repo';
 import { PayoutsService } from './payouts.service';
 import { PayoutsSettings } from './payouts.settings';
 
@@ -16,7 +16,7 @@ import { PayoutsSettings } from './payouts.settings';
 @Module({
   imports: [TeachersModule, TeacherEarningsModule],
   controllers: [PayoutsController, PayoutPaymentController, TeacherPayoutsController],
-  providers: [PayoutsSettings, PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsQueries, PayoutsService],
-  exports: [PayoutsQueries, PayoutsService],
+  providers: [PayoutsSettings, PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsRepo, PayoutsService],
+  exports: [PayoutsRepo, PayoutsService],
 })
 export class PayoutsModule {}

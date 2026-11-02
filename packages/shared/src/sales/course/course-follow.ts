@@ -1,5 +1,5 @@
 import type { Duration } from '@ab/catalog';
-import type { DayTime } from '../../schedule/lessons/series/day-times.js';
+import type { DayTime } from '@ab/schedule';
 import { addLocalDays, weekdayOfDate, zonedInstant } from '@ab/time';
 
 // A booked course of the assistant (owner 2026-10-18): its weekdays and times, so a renewal can

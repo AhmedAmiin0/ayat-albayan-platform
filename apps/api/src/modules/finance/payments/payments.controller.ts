@@ -10,11 +10,11 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow, sentOnly, type Page } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, sentOnly, type Page } from '@/common/http/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
-import type { PeriodTotal } from './payments.queries';
+import type { PeriodTotal } from './payments.repo';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';

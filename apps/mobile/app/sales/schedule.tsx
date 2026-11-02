@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { SalesScheduleScreen } from '@/sales';
+import { SalesScheduleScreen } from '@/sales/sales';
 
 /**
  * «جدول الحلقات» tab; a tap on a lesson opens «تفاصيل الحلقة», which holds every action («ادخل الحلقة»

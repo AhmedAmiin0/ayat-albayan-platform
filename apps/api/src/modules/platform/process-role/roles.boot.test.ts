@@ -21,7 +21,7 @@ const PER_COPY: Record<string, string> = {
 /** Jobs that start no timer in a test boot, and why (every other registered job must). */
 const NO_TIMERS = new Map([
   ['config-reload', 'its kick is all it does'],
-  ['template-boot-check', 'only with a configured line (template.registry tests)'],
+  ['template-boot-check', 'only with a configured line (template-verifier tests)'],
 ]);
 
 afterEach(() => {

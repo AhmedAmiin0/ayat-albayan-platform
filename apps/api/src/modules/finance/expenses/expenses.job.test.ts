@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { ExpensesJob, nextMonthStart } from './expenses.job';
-import type { ExpensesQueries } from './expenses.queries';
+import type { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';
 
 describe('ExpensesJob («تكرار شهري»)', () => {
@@ -13,7 +13,7 @@ describe('ExpensesJob («تكرار شهري»)', () => {
 
   it('pre-creates next month’s drafts; a DB error is logged, never thrown', async () => {
     const q = { createRecurringDrafts: vi.fn().mockResolvedValue(2) };
-    const job = new ExpensesJob(q as unknown as ExpensesQueries, readerOf(ExpensesSettings));
+    const job = new ExpensesJob(q as unknown as ExpensesRepo, readerOf(ExpensesSettings));
     expect(await job.runOnce(new Date('2026-10-05T09:00:00Z'))).toBe(2);
     expect(q.createRecurringDrafts).toHaveBeenCalledWith('2026-11-01');
     q.createRecurringDrafts.mockRejectedValue(new Error('boom'));
@@ -24,8 +24,8 @@ describe('ExpensesJob («تكرار شهري»)', () => {
     const q = { createRecurringDrafts: vi.fn().mockResolvedValue(0) };
     // 2026-10-31T21:30Z is already November in Riyadh, still October in Cairo.
     const at = new Date('2026-10-31T21:30:00Z');
-    await new ExpensesJob(q as unknown as ExpensesQueries, readerOf(ExpensesSettings)).runOnce(at);
-    await new ExpensesJob(q as unknown as ExpensesQueries, readerOf(ExpensesSettings, { academy_timezone: 'Africa/Cairo' })).runOnce(at);
+    await new ExpensesJob(q as unknown as ExpensesRepo, readerOf(ExpensesSettings)).runOnce(at);
+    await new ExpensesJob(q as unknown as ExpensesRepo, readerOf(ExpensesSettings, { academy_timezone: 'Africa/Cairo' })).runOnce(at);
     expect(q.createRecurringDrafts.mock.calls).toEqual([['2026-12-01'], ['2026-11-01']]);
   });
 });
