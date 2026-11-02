@@ -12,7 +12,7 @@ import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-d
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useHideRights } from '@/auth';
+import { useHideRights } from '@/core/auth';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 

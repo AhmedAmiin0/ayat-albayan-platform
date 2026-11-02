@@ -1,9 +1,9 @@
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { PhoneIcon } from '../screen/call-icons';
-import { useCalls } from '../state/call-context';
+import { PhoneIcon } from '@/inbox/thread/calls/screen/call-icons';
+import { useCalls } from '@/inbox/thread/calls/state/call-context';
 
 interface CallButtonProps {
   phone: string;

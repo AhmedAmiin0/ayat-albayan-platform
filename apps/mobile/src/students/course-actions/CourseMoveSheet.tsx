@@ -1,7 +1,7 @@
 import { courseMoveBase, courseMoveErrorCode, type CourseMoveKind } from '@ab/client-core';
 import { useState, type ReactNode } from 'react';
 import { Modal, ScrollView } from 'react-native';
-import { useIsAdmin } from '@/auth';
+import { useIsAdmin } from '@/core/auth';
 import { BookingModeProvider } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { Screen } from '@/core/ui/layout/Screen';

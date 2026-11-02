@@ -1,6 +1,6 @@
 import { riyadhToday, usedBeforeMax } from '@ab/shared';
 import { useState } from 'react';
-import { useHolds } from '@/auth';
+import { useHolds } from '@/core/auth';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Stepper } from '@/finance';

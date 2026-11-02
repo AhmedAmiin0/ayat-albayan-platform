@@ -1,4 +1,4 @@
-import { usePermissions } from '@/auth';
+import { usePermissions } from '@/core/auth';
 import { SalesMoreScreen } from '@/sales-app';
 
 export default function SalesMoreRoute() {
