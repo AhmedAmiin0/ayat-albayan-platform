@@ -9,6 +9,12 @@ import { WebhookConfigReload } from './lines/webhook.reload';
 import { WebhookController } from './webhook.controller';
 import { KapsoWebhookController } from './providers/webhook.kapso.controller';
 import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
+import { CrmWebhookController } from './crm-register/crm-webhook.controller';
+import {
+  CRM_WEBHOOK_SOURCE,
+  CrmWebhookRegistrar,
+  liveCrmWebhookSource,
+} from './crm-register/crm-webhook.service';
 import { InboundService } from './inbound/webhook.inbound.service';
 import { InboundStore } from './inbound/webhook.inbound.store';
 import { InboundReactions } from './inbound/webhook.reaction';
@@ -34,7 +40,12 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
  */
 @Module({
   imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule],
-  controllers: [WebhookController, KapsoWebhookController, WacrmWebhookController],
+  controllers: [
+    WebhookController,
+    KapsoWebhookController,
+    WacrmWebhookController,
+    CrmWebhookController,
+  ],
   providers: [
     {
       provide: WEBHOOK_CONFIG,
@@ -61,6 +72,9 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     InboundCatchUp,
     InboundGapAlert,
     InboundCatchUpJob,
+    // «التكاملات» › the CRM's delivery-ticks webhook in one click (docs/19 «crm driver»).
+    { provide: CRM_WEBHOOK_SOURCE, useFactory: liveCrmWebhookSource },
+    CrmWebhookRegistrar,
   ],
 })
 export class WebhookModule {}
