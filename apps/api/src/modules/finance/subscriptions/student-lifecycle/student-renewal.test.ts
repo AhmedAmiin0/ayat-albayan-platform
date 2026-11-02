@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { PackagesService, StudentState } from '../money/packages.service';
+import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal, type RenewalCause } from './student-renewal';
-import type { StudentStatusQueries } from './student-status.queries';
-import type { SubscriptionsQueries } from '../subscriptions.queries';
+import type { StudentStatusRepo } from './student-status.repo';
+import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 // 2026-10-12 21:30 UTC is already 2026-10-13 in Riyadh (UTC+3), still 2026-10-12 in New York.
 const NOW = new Date('2026-10-12T21:30:00Z');
@@ -21,7 +21,7 @@ function setup(o: { status?: string; tz?: string; last?: unknown; moved?: boolea
   };
   const packages = { context: vi.fn(async () => state().ctx) };
   const subs = { forStudent: vi.fn(async () => state().rows) };
-  const r = new StudentRenewal(statuses as unknown as StudentStatusQueries, packages as unknown as PackagesService, subs as unknown as SubscriptionsQueries);
+  const r = new StudentRenewal(statuses as unknown as StudentStatusRepo, packages as unknown as PackagesService, subs as unknown as SubscriptionsRepo);
   return { statuses, r };
 }
 const run = (t: ReturnType<typeof setup>, s: StudentState, cause: RenewalCause = { via: 'event' }) =>

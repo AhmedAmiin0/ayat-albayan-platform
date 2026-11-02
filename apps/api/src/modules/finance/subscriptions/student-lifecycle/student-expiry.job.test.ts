@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { StudentExpiryJob } from './student-expiry.job';
-import type { StudentExpiryQueries } from './student-expiry.queries';
-import type { StudentStatusQueries } from './student-status.queries';
-import { SubscriptionsSettings } from '../subscriptions.settings';
+import type { StudentExpiryRepo } from './student-expiry.repo';
+import type { StudentStatusRepo } from './student-status.repo';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 
 const NOW = new Date('2026-10-15T06:00:00Z');
 const PENDING = (at: string) => ({ after: { status: 'pending_renewal', via: 'subscription_ended' }, at });
@@ -18,7 +18,7 @@ function setup(o: { ids?: string[]; last?: unknown; paid?: boolean; days?: numbe
     move: vi.fn(async () => o.moved ?? true),
   };
   const settings = readerOf(SubscriptionsSettings, { subscription_expiry_days: o.days ?? 7 });
-  const job = new StudentExpiryJob(queries as unknown as StudentExpiryQueries, statuses as unknown as StudentStatusQueries, settings);
+  const job = new StudentExpiryJob(queries as unknown as StudentExpiryRepo, statuses as unknown as StudentStatusRepo, settings);
   return { job, queries, statuses };
 }
 const EXPIRED = [

@@ -1,8 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '../money/money.fakes';
-import type { BalanceRow } from '../money/balance.queries';
-import { moneyApp, resetMocks, type Mocks } from '../test-app';
+import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 // «إلغاء الباقة» review (owner 2026-10-28): lessons a package used FIFO (v_subscription_balance) block the
 // cancel even on rules without subscription_id; future lessons merely projected into it do not; nor may an

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { teacherListFilter } from './threads.list';
@@ -8,7 +8,7 @@ import { ThreadsRepo } from './threads.repo';
 // The academy's own numbers (owner 2026-10-27) leave the list in SQL, so total and pages agree. Example numbers.
 const OWN = ['+966500000009', '+966500000008'];
 const page = { page: 1, pageSize: 25 };
-const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsRepo(db, {} as PackagesService, {} as BalanceQueries);
+const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsRepo(db, {} as PackagesService, {} as BalanceRepo);
 
 describe('ThreadsQueries.list — hide', () => {
   it('one exact not-in on phone_e164 (v_threads and a chat list alike)', async () => {

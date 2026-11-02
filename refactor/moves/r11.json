@@ -1,0 +1,102 @@
+{
+  "id": "r11",
+  "seq": 224,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/alerts/alerts.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/alerts/alerts.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/money/balance.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/money/balance.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/subscriptions.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/subscriptions.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/trial/student-trial.queries.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/trial/student-trial.repo.ts"
+    }
+  ],
+  "renames": {
+    "AdminTasksQueries": "AdminTasksRepo",
+    "AlertsQueries": "AlertsRepo",
+    "SubscriptionCancelQueries": "SubscriptionCancelRepo",
+    "BalanceQueries": "BalanceRepo",
+    "StudentExpiryQueries": "StudentExpiryRepo",
+    "StudentStatusQueries": "StudentStatusRepo",
+    "SubscriptionsQueries": "SubscriptionsRepo",
+    "StudentTrialQueries": "StudentTrialRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/alerts/alerts.queries.test.ts",
+      "apps/api/src/modules/finance/subscriptions/alerts/alerts.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/alerts/alerts.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/alerts/alerts.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.queries.test.ts",
+      "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/cancel/subscription-cancel.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/money/balance.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/money/balance.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.test.ts",
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.queries.test.ts",
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/student-lifecycle/student-status.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/subscriptions.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/subscriptions.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/trial/student-trial.queries.test.ts",
+      "apps/api/src/modules/finance/subscriptions/trial/student-trial.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/trial/student-trial.queries.ts",
+      "apps/api/src/modules/finance/subscriptions/trial/student-trial.repo.ts"
+    ]
+  ]
+}

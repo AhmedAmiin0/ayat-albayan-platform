@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import type { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { isUnreadBadge, unreadThreadCount } from './threads-unread.repo';
 import { ThreadsRepo } from './threads.repo';
 
 const badge = { page: 1, pageSize: 1, unread: true };
 const queries = (f: ReturnType<typeof fakeDb>) =>
-  new ThreadsRepo(f.db, undefined as unknown as PackagesService, undefined as unknown as BalanceQueries);
+  new ThreadsRepo(f.db, undefined as unknown as PackagesService, undefined as unknown as BalanceRepo);
 
 describe('the unread badge fast path (GET /threads?unread=true&pageSize=1)', () => {
   it('only the bare badge request takes it: any list, status or search filter, or a real page, reads v_threads', () => {
