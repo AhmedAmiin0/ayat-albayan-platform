@@ -1,7 +1,17 @@
+import { z } from 'zod';
 import { ownedKeyOfField } from '../ownership.js';
 import { SETTING_KEY_OF, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingKey } from '../registry.js';
 import { settingZod } from './schema.js';
 import type { SettingDef } from '../defs.js';
+
+/**
+ * The raw PATCH /settings body (docs/36 z3): any JSON object; splitSettingsPatch then validates
+ * each field on its own. Anything else (null, an array, a string) is the 400 `expected_object`.
+ */
+export const settingsPatchBodySchema = z.record(z.string(), z.unknown(), {
+  error: 'expected_object',
+});
+export type SettingsPatchBody = z.infer<typeof settingsPatchBodySchema>;
 
 /** One rejected field, worded like parseOrThrow's 400 (path = the camelCase field, then the inner path). */
 export type SettingsPatchIssue = { path: string; message: string };

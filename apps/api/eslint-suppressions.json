@@ -931,14 +931,8 @@
     }
   },
   "src/common/settings/settings-patch.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/common/settings/settings-rules.port.ts": {
@@ -1008,12 +1002,6 @@
     }
   },
   "src/common/settings/settings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "ab/zod-inputs": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -2780,11 +2768,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/alerts/alerts.job.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/alerts/alerts.repo.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 3
@@ -3069,14 +3052,6 @@
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.job.test.ts": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.job.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.ts": {
@@ -6646,9 +6621,6 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/graph.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -14370,20 +14342,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/course-pause/course-pause.job.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/course-pause/course-pause.lessons-back.test.ts": {
     "max-len": {
       "count": 3
@@ -15444,11 +15402,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/scheduling/occurrences/horizon.job.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/scheduling/occurrences/horizon.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -15752,11 +15705,6 @@
   "src/modules/teaching/student-recordings/retention/recording-delete.service.test.ts": {
     "max-len": {
       "count": 5
-    }
-  },
-  "src/modules/teaching/student-recordings/retention/recording-maintenance.job.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/modules/teaching/student-recordings/retention/recording-retention.repo.ts": {
