@@ -1,4 +1,12 @@
-import { lessonsOf, PACKAGE_IDS, PACKAGE_SIZES, type PackageId, type PackageSize } from '@ab/shared';
+import {
+  bookingRequestSchema,
+  lessonsOf,
+  PACKAGE_IDS,
+  PACKAGE_SIZES,
+  type PackageId,
+  type PackageSize,
+} from '@ab/shared';
+import { z } from 'zod';
 
 const isPackageId = (v: unknown): v is PackageId => PACKAGE_IDS.some((id) => id === v);
 
@@ -15,3 +23,6 @@ export function withPackageSize(body: unknown): unknown {
   if (body === null || typeof body !== 'object' || !('package' in body)) return body;
   return isPackageId(body.package) ? { ...body, package: packageSizeOf(body.package) } : body;
 }
+
+/** The POST /booking (and trial-date) body: `withPackageSize`, then `bookingRequestSchema`. */
+export const bookingBodySchema = z.preprocess(withPackageSize, bookingRequestSchema);

@@ -88,6 +88,20 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
     expect((await call({ url: '/booking/trial-dates?studentId=nope', token: 'admin' })).statusCode).toBe(400);
   });
 
+  it('a bad body is the 400 envelope on both sides, before any service runs (z1d ZodBody)', async () => {
+    const routes = [
+      ['/booking/trial-date', 'admin'],
+      ['/sales/booking/trial-date/check', 'sales'],
+    ] as const;
+    for (const [url, token] of routes) {
+      const res = await post(url, token, { ...TRIAL, startTimeLocal: '5pm' });
+      expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
+    }
+    expect(dates.replay).not.toHaveBeenCalled();
+    expect(sales.ownership).not.toHaveBeenCalled();
+    expect(dates.check).not.toHaveBeenCalled();
+  });
+
   it('assistant: her own family’s student → 201 as her; anything else is refused like her trial booking', async () => {
     expect((await post('/sales/booking/trial-date', 'sales')).statusCode).toBe(201);
     expect(dates.pick).toHaveBeenCalledWith(TARGET, A);

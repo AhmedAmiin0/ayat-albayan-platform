@@ -1,19 +1,20 @@
-import {
-  bookingRequestSchema,
-  type BookingResult,
-  type BookingTeacherOption,
-  type Conflict,
-  type SlotsResponse,
+import type {
+  BookingRequest,
+  BookingResult,
+  BookingTeacherOption,
+  Conflict,
+  SlotsResponse,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from './core/booking.payload';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './core/booking.service';
-import { withPackageSize } from './plan/package-size';
+import { bookingBodySchema } from './plan/package-size';
 import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
 
@@ -30,20 +31,23 @@ export class BookingController {
   ) {}
 
   @Get('teachers')
-  teacherOptions(@Query() query: unknown): Promise<BookingTeacherOption[]> {
-    return this.teachers.list(parseOrThrow(teacherOptionsQuerySchema, query));
+  teacherOptions(
+    @ZodQuery(teacherOptionsQuerySchema) query: z.output<typeof teacherOptionsQuerySchema>,
+  ): Promise<BookingTeacherOption[]> {
+    return this.teachers.list(query);
   }
 
   @Get('slots')
-  slots(@Query() query: unknown): Promise<SlotsResponse> {
-    return this.slotsService.slots(parseOrThrow(slotsQuerySchema, query));
+  slots(
+    @ZodQuery(slotsQuerySchema) query: z.output<typeof slotsQuerySchema>,
+  ): Promise<SlotsResponse> {
+    return this.slotsService.slots(query);
   }
 
   /** The same body as POST /booking; 200 { conflicts } of the whole series, nothing written. */
   @Post('check')
   @HttpCode(200)
-  async check(@Body() body: unknown): Promise<{ conflicts: Conflict[] }> {
-    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+  async check(@ZodBody(bookingBodySchema) req: BookingRequest): Promise<{ conflicts: Conflict[] }> {
     return { conflicts: await this.booking.check(req) };
   }
 
@@ -52,8 +56,10 @@ export class BookingController {
    * invoice_required for any kind but trial without `invoice` (R-PAY-03).
    */
   @Post()
-  book(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BookingResult> {
-    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+  book(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<BookingResult> {
     return this.booking.book(clientRequest(req, user.role), user.id);
   }
 }

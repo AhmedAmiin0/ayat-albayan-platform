@@ -1,11 +1,12 @@
 import { threadRatingSchema, type MessageView } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
+import { Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../../common/audit/audit.service';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { phoneParam } from '../../messaging/inbox/threads/phone-param';
-import { parseOrThrow } from '../../../common/http/http';
+import { z } from 'zod';
+import { AuditService } from '@/common/audit/audit.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { RatingSendService } from './rating.send.service';
 
 /**
@@ -24,9 +25,17 @@ export class RatingController {
 
   @Post(':phone/rating')
   @HttpCode(201)
-  async send(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    const { clientRequestId } = parseOrThrow(threadRatingSchema, body);
-    const { view, replayed } = await this.sends.send({ phone: phoneParam(raw), actorId: user.id, clientRequestId });
+  async send(
+    @Param('phone') raw: string,
+    @ZodBody(threadRatingSchema) body: z.output<typeof threadRatingSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const { clientRequestId } = body;
+    const { view, replayed } = await this.sends.send({
+      phone: phoneParam(raw),
+      actorId: user.id,
+      clientRequestId,
+    });
     if (replayed) return view;
     await this.audit.record({
       actorId: user.id,
@@ -34,7 +43,12 @@ export class RatingController {
       entityId: view.id,
       action: 'thread_rating',
       before: null,
-      after: { phone: view.phone_e164, template_key: view.template_key, lesson_id: view.lesson_id, status: view.status },
+      after: {
+        phone: view.phone_e164,
+        template_key: view.template_key,
+        lesson_id: view.lesson_id,
+        status: view.status,
+      },
     });
     return view;
   }
