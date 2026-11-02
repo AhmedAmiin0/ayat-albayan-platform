@@ -56,14 +56,14 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
   });
 
   it('the whole package or more than one lesson per course day → 400 used_before_too_many', async () => {
-    for (const n of [4, 3 + 1]) {
+    for (const n of [4, 5]) {
       const res = await edit({ lessonsUsedBefore: n });
       expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_too_many']);
     }
     expect(edits.setUsedBefore).not.toHaveBeenCalled();
   });
 
-  it('never below the lessons the platform already counted: 2 taken of 4 → at most 2', async () => {
+  it('never more than the lessons still free: 2 taken of 4 → at most 2', async () => {
     m.balances.forSubscriptions.mockResolvedValue(balanceOf(2));
     const res = await edit({ lessonsUsedBefore: 3 });
     expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_too_many']);

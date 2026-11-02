@@ -1,5 +1,5 @@
-import { usedBeforeEditSchema, type UsedBeforeEditResult } from '@ab/shared';
-import { Controller, Patch } from '@nestjs/common';
+import { usedBeforeEditSchema, type UsedBeforeEditResult, type UsedBeforeState } from '@ab/shared';
+import { Controller, Get, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -20,6 +20,12 @@ import { UsedBeforeEdit } from './used-before-edit.service';
 export class UsedBeforeEditController {
   constructor(private readonly edits: UsedBeforeEdit) {}
 
+  /** 200 UsedBeforeState: the stored number, the stepper's max, a refusal (cancelled, course). */
+  @Get()
+  state(@ZodParam('id', z.uuid()) id: string): Promise<UsedBeforeState> {
+    return this.edits.state(id);
+  }
+
   /** 200 UsedBeforeEditResult; see UsedBeforeEdit for the refusals. */
   @Patch()
   edit(
@@ -27,6 +33,7 @@ export class UsedBeforeEditController {
     @ZodBody(usedBeforeEditSchema) body: z.output<typeof usedBeforeEditSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<UsedBeforeEditResult> {
-    return this.edits.edit({ id, lessonsUsedBefore: body.lessonsUsedBefore, actorId: user.id });
+    const input = { id, lessonsUsedBefore: body.lessonsUsedBefore, actorId: user.id };
+    return this.edits.edit({ ...input, now: new Date() });
   }
 }

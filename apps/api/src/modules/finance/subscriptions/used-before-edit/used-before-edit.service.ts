@@ -1,7 +1,10 @@
 import {
   riyadhToday,
   usedBeforeEditProblem,
+  usedBeforeState,
   type SubscriptionView,
+  type UsedBeforeEditInput as Facts,
+  type UsedBeforeState,
   type UsedBeforeEditProblem,
   type UsedBeforeEditResult,
 } from '@ab/shared';
@@ -25,7 +28,7 @@ interface UsedBeforeEditInput {
   id: string;
   lessonsUsedBefore: number;
   actorId: string;
-  now?: Date | undefined;
+  now: Date;
 }
 
 const resultOf = (view: SubscriptionView): UsedBeforeEditResult => ({
@@ -41,10 +44,10 @@ const resultOf = (view: SubscriptionView): UsedBeforeEditResult => ({
  * ownership rule of «sales_require_assignee», off by default: no owner check). Refusals:
  * usedBeforeEditProblem (404 subscription_not_found, 409 already_cancelled /
  * used_before_course_booked / used_before_changed, 400 used_before_needs_past_start /
- * used_before_too_many). The same number answers at once. Audited with the row before / after
- * through MoneyWrites, which recomputes the student's statuses and alerts from the new balance.
- * The course check and the write are two statements (no RPC, no migration): a course booked in
- * between is the accepted, narrow race.
+ * used_before_too_many), checked first: the same number then answers without a write.
+ * Audited with the row before / after through MoneyWrites, which recomputes the student's
+ * statuses and alerts from the new balance. The course check and the write are two statements
+ * (no RPC, no migration): a course booked in between is the accepted, narrow race.
  */
 @Injectable()
 export class UsedBeforeEdit {
@@ -55,11 +58,20 @@ export class UsedBeforeEdit {
     private readonly writes: MoneyWrites,
   ) {}
 
+  /** GET: what the editor may offer (the stored number, the max, an outright refusal). */
+  async state(id: string, now = new Date()): Promise<UsedBeforeState> {
+    const view = await this.subs.get(id);
+    const facts = await this.factsOf(view, now);
+    return usedBeforeState({ ...facts, id: view.id, current: view.lessons_used_before ?? 0 });
+  }
+
   async edit(input: UsedBeforeEditInput): Promise<UsedBeforeEditResult> {
     const view = await this.subs.get(input.id);
     const from = view.lessons_used_before ?? 0;
+    const facts = await this.factsOf(view, input.now);
+    const problem = usedBeforeEditProblem({ ...facts, next: input.lessonsUsedBefore });
+    if (problem) throw ERRORS[problem](problem);
     if (from === input.lessonsUsedBefore) return resultOf(view);
-    await this.assertEditable(view, input);
     const before = await this.rows.get(view.id);
     if (!before) throw notFound('subscription_not_found');
     const after = await this.repo.setUsedBefore({ id: view.id, from, to: input.lessonsUsedBefore });
@@ -76,15 +88,13 @@ export class UsedBeforeEdit {
     return resultOf(await this.subs.get(view.id));
   }
 
-  private async assertEditable(view: SubscriptionView, input: UsedBeforeEditInput): Promise<void> {
-    const problem = usedBeforeEditProblem({
-      next: input.lessonsUsedBefore,
+  private async factsOf(view: SubscriptionView, now: Date): Promise<Omit<Facts, 'next'>> {
+    return {
       lessonsTotal: view.lessons_total,
       platformUsed: view.balance.lessons_used - (view.lessons_used_before ?? 0),
       cancelled: view.status === 'cancelled',
       courseBooked: await this.repo.courseBooked(view.id),
-      pastStart: view.starts_on < riyadhToday(input.now ?? new Date()),
-    });
-    if (problem) throw ERRORS[problem](problem);
+      pastStart: view.starts_on < riyadhToday(now),
+    };
   }
 }
