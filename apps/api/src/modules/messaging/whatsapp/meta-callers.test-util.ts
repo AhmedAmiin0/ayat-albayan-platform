@@ -12,6 +12,8 @@ const WHITELIST = new Set([
   'config/env/whatsapp/env.whatsapp.ts',
   'modules/messaging/inbox/reads/read-receipts.ts',
   'modules/messaging/whatsapp/drivers/meta/graph.ts',
+  // The template sample's resumable upload (the 150-line cap took it out of whatsapp.client.ts).
+  'modules/messaging/whatsapp/drivers/meta/meta-upload.ts',
   'modules/messaging/whatsapp/messages/inbound-media.service.ts',
   'modules/messaging/whatsapp/drivers/kapso/kapso.ts',
   // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
@@ -19,7 +21,10 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/lines/lines.check.ts',
   'modules/messaging/whatsapp/sender/message.dispatch.ts',
   'modules/messaging/whatsapp/templates/catalog/template.registry.ts',
-  // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
+  // The registry's own parts (150-line cap, s3): the admin's edits, the Meta sync, one line's sync
+  // (read-only list), the explicit submit.
+  'modules/messaging/whatsapp/templates/catalog/template-admin.ts',
+  'modules/messaging/whatsapp/templates/sync/template-verifier.ts',
   'modules/messaging/whatsapp/templates/sync/template-line-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-submit.ts',
   // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.
@@ -49,7 +54,7 @@ const META_CALLS: readonly (readonly [string, RegExp])[] = [
   ['client method', new RegExp(`\\.\\s*(${METHODS})\\b`)],
   ['bracket method', new RegExp(`\\[\\s*['"\`](${METHODS})['"\`]\\s*\\]`)],
   ['destructured method', new RegExp(`\\{[^}]*\\b(${METHODS})\\b[^}]*\\}\\s*=`)],
-  ['graph helper', /\bgraph(Fetch|Json)\b/],
+  ['graph helper', /\bgraph(Fetch|Json|Http|Download)\b|\b(resumableUpload|fetchMedia)\b/],
   ['WA_API_BASE', /\bWA_API_BASE\b/],
   ['graph.facebook.com', /graph\.facebook\.com/],
   ['KAPSO_API_BASE', /\bKAPSO_API_BASE\b/],

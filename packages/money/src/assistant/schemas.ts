@@ -4,7 +4,7 @@ import { currencyIso, moneyAmount, monthParam, payoutPaySchema } from '../ledger
 import { voidReasonSchema } from '../ledger/corrections-schemas.js';
 import { ASSISTANT_COMMISSION_TYPES } from './commission.js';
 import { PAYOUT_STATUSES } from '@ab/catalog';
-import { instant, localDate } from '../../schedule/schemas/scheduling.js';
+import { instant, localDate } from '@ab/schedule';
 
 // Assistant (base role sales) pay commands (owner, 2026-10-06). camelCase like every command. The admin
 // sets the terms; nobody types a commission amount: it is computed from the terms (computeCommission).

@@ -1,6 +1,6 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import type { PermissionResolver } from '../../../common/auth/permissions';
+import type { PermissionResolver } from '@/common/auth/permissions';
 import { replyId, repliesApp, row } from './saved-replies.fakes';
 
 type App = Awaited<ReturnType<typeof repliesApp>>;
@@ -40,6 +40,15 @@ describe('an assistant without saved_replies.manage', () => {
   it('PATCH with a malformed :id is 404 before the body is parsed', async () => {
     const res = await t.call({ method: 'PATCH', url: '/saved-replies/nope', body: { title: 7 } });
     expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
+  });
+
+  it('move / stage / DELETE: a malformed :id is 404; a bad body still wins over it (400)', async () => {
+    for (const url of ['/saved-replies/nope/move', '/saved-replies/nope/stage']) {
+      const both = await t.call({ method: 'POST', url, body: {} });
+      expect([both.statusCode, both.json<{ message: string }>().message]).toEqual([400, 'validation_failed']);
+    }
+    const gone = await t.call({ method: 'DELETE', url: '/saved-replies/nope' });
+    expect([gone.statusCode, gone.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
   });
 
   it('even the admin cannot reach an assistant\'s personal reply', async () => {
