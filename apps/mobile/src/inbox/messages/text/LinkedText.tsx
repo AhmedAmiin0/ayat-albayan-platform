@@ -1,5 +1,5 @@
 import { splitLinks } from '@ab/shared';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { appOpenUrl, STRIPE_FEATURE } from '@/core/lib/stripe-flag';
@@ -9,6 +9,7 @@ import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { BubbleActions } from '../hooks/bubble-actions';
 import { useSmall } from '../components/MessageMeta';
 import { useHoldPress } from './use-hold-press';
+import { SearchMarks, useChatSearch } from '@/inbox/thread/search';
 
 interface LinkSpanProps {
   text: string;
@@ -64,6 +65,9 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const [failed, setFailed] = useState(false);
   const onHold = touch.has ? touch.openMenu : undefined;
   const parts = splitLinks(text);
+  // While «بحث» runs, the searched words are lit up (the links keep their own look).
+  const q = useChatSearch()?.q ?? '';
+  const draw = (s: string) => (q ? <SearchMarks text={s} q={q} /> : s);
   return (
     <>
       <ContentText
@@ -80,9 +84,9 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
       >
         {parts.some((part) => part.href)
           ? parts.map((part, i) =>
-              part.href ? <LinkSpan key={i} text={part.text} href={part.href} onHold={onHold} onFail={() => setFailed(true)} plain={!touch.has} /> : part.text,
+              part.href ? <LinkSpan key={i} text={part.text} href={part.href} onHold={onHold} onFail={() => setFailed(true)} plain={!touch.has} /> : <Fragment key={i}>{draw(part.text)}</Fragment>,
             )
-          : text}
+          : draw(text)}
       </ContentText>
       {failed ? <AppText accessibilityRole="alert" style={small}>{t.common.error}</AppText> : null}
     </>
