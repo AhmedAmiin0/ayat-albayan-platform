@@ -1,8 +1,9 @@
-import type { ThreadMediaItem } from '@ab/shared';
+import { phoneE164, type ThreadMediaItem } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../../../../common/auth/decorators';
-import { phoneParam } from '../threads/phone-param';
+import { Permissions } from '@/common/auth/decorators';
+import { ZodParam } from '@/common/http/zod-inputs';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { ThreadMediaService, type ThreadFile } from './thread-media.service';
 
 /**
@@ -18,13 +19,16 @@ export class ThreadMediaController {
 
   /** Inbound image / PDF messages of the last 30 days, newest first, at most 12; nothing is downloaded. */
   @Get(':phone/media')
-  list(@Param('phone') raw: string): Promise<ThreadMediaItem[]> {
-    return this.media.list(phoneParam(raw));
+  list(@ZodParam('phone', phoneE164, invalidPhone) phone: string): Promise<ThreadMediaItem[]> {
+    return this.media.list(phone);
   }
 
   /** The file as a signed URL (downloaded from WhatsApp on first use); 410 media_expired when it is gone. */
   @Get(':phone/media/:messageId')
-  file(@Param('phone') raw: string, @Param('messageId', ParseUUIDPipe) messageId: string): Promise<ThreadFile> {
-    return this.media.file({ phone: phoneParam(raw), messageId });
+  file(
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
+    @Param('messageId', ParseUUIDPipe) messageId: string,
+  ): Promise<ThreadFile> {
+    return this.media.file({ phone, messageId });
   }
 }

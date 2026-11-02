@@ -1,6 +1,6 @@
 import type { PaymentView } from '@ab/shared';
-import { studentRef } from '../subscriptions/subscriptions.mapper';
-import type { PaymentRow } from './payments.queries';
+import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
+import type { PaymentRow } from './payments.repo';
 
 /** payments row (+ its package's student) → PaymentView. */
 export function toPaymentView(row: PaymentRow, recorders: ReadonlyMap<string, string>): PaymentView {

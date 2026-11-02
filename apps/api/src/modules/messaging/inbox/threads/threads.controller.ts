@@ -1,5 +1,6 @@
 import {
   PENDING_IDS_MAX,
+  phoneE164,
   sendsAllTemplates,
   threadTemplateSchema,
   threadTextSchema,
@@ -14,8 +15,8 @@ import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
-import { phoneParam } from './phone-param';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { invalidPhone, phoneParam } from './phone-param';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
@@ -65,11 +66,10 @@ export class ThreadsController {
   /** A page (`before`), or with `after` only what changed since (ThreadDelta, ~2 reads). */
   @Get(':phone')
   detail(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @Query() query: Record<string, unknown> | undefined,
     @CurrentUser() user: AuthUser,
   ) {
-    const phone = phoneParam(raw);
     if (query?.['after'] !== undefined)
       return this.reads.delta({ phone, ...parseOrThrow(deltaQuery, query) }, user);
     return this.reads.detail({ phone, ...parseOrThrow(detailQuery, query) }, user);

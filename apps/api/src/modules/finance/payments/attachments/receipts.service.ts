@@ -1,10 +1,10 @@
 import { RECEIPT_MAX_BYTES, type ReceiptUpload, type SignedDownload, type SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { BUCKETS, isPathOf, receiptPath } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { badRequest, conflict, notFound } from '../../../../common/http/errors';
-import { PaymentAttachmentsQueries } from './payment-attachments.queries';
-import { PaymentsQueries, type PaymentSubscription } from '../payments.queries';
+import { BUCKETS, isPathOf, receiptPath } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { PaymentAttachmentsRepo } from './payment-attachments.repo';
+import { PaymentsRepo, type PaymentSubscription } from '@/modules/finance/payments/payments.repo';
 
 /**
  * Receipts in the private `receipts` bucket (R-PAY-01, R-MOB-02 camera): the client uploads to a
@@ -13,9 +13,9 @@ import { PaymentsQueries, type PaymentSubscription } from '../payments.queries';
 @Injectable()
 export class ReceiptsService {
   constructor(
-    private readonly payments: PaymentsQueries,
+    private readonly payments: PaymentsRepo,
     private readonly storage: StorageService,
-    private readonly files: PaymentAttachmentsQueries,
+    private readonly files: PaymentAttachmentsRepo,
   ) {}
 
   /** P6 (404 subscription_not_found; 400 receipt_too_large over maxBytes = settings.upload_max_mb). */

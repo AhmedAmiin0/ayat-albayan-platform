@@ -1,9 +1,10 @@
-import { Body, Query, type PipeTransform } from '@nestjs/common';
+import { Body, Param, Query, type HttpException, type PipeTransform } from '@nestjs/common';
 import { z } from 'zod';
 import { parseOrThrow, sentOnly } from './http';
 
 // docs/36 Z-1: a Nest input is parsed by its zod schema before the handler runs (400 = the one
-// `validation_failed` envelope). Built on @Body/@Query + a pipe, so Swagger and pipe order stay.
+// `validation_failed` envelope). Built on @Body/@Query/@Param + a pipe, so Swagger and pipe order
+// stay.
 
 /**
  * Before z1b the parse ran inside the handler, after every other param's pipe (ParseUUIDPipe…), so
@@ -55,4 +56,45 @@ export function ZodBody(
 /** `@ZodQuery(schema) query: z.output<typeof schema>` replaces `@Query()` + parse. */
 export function ZodQuery(schema: z.ZodType): ParameterDecorator {
   return Query(new ZodPipe(schema));
+}
+
+/** The route's own error for a bad param (404 list_not_found, 400 invalid_phone…). */
+type ParamFailure = () => HttpException;
+
+const failingWith =
+  (fail: ParamFailure) =>
+  <S extends z.ZodType>(schema: S, value: unknown): z.output<S> => {
+    const result = schema.safeParse(value);
+    if (result.success) return result.data;
+    throw fail();
+  };
+
+/**
+ * Before z2a a `:param` was checked inside the handler, after every pipe, ZodBody/ZodQuery
+ * included: two turns keep a bad body (or a bad ParseUUIDPipe id) winning over a bad param.
+ * Two ZodParams of one handler: the LAST parameter fails first (Nest resolves it first).
+ */
+class ZodParamPipe<S extends z.ZodType> implements PipeTransform<unknown, Promise<z.output<S>>> {
+  private readonly parse: typeof parseOrThrow;
+
+  constructor(
+    private readonly schema: S,
+    fail?: ParamFailure,
+  ) {
+    this.parse = fail === undefined ? parseOrThrow : failingWith(fail);
+  }
+
+  async transform(value: unknown): Promise<z.output<S>> {
+    await afterOtherParams();
+    await afterOtherParams();
+    return this.parse(this.schema, value);
+  }
+}
+
+/**
+ * `@ZodParam('phone', phoneE164) phone: string` replaces `@Param('phone') raw: string` + check.
+ * A failed parse is the 400 envelope, or `fail()` when the route had its own error.
+ */
+export function ZodParam(name: string, schema: z.ZodType, fail?: ParamFailure): ParameterDecorator {
+  return Param(name, new ZodParamPipe(schema, fail));
 }

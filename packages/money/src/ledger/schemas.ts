@@ -10,7 +10,7 @@ import {
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
 import { optionalText } from '@ab/core';
-import { instant, localDate } from '../../schedule/schemas/scheduling.js';
+import { instant, localDate } from '@ab/schedule';
 import { calendarDaysBetween } from '@ab/time';
 
 // Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:

@@ -38,6 +38,9 @@ import { TemplateNumbersController } from './templates/sync/template-numbers.con
 import { TemplateNumbers } from './templates/sync/template-numbers.service';
 import { TemplateStarters } from './templates/catalog/template-starters';
 import { TemplateRegistry } from './templates/catalog/template.registry';
+import { TemplateAdmin } from './templates/catalog/template-admin';
+import { TemplateEditsController } from './templates/catalog/template-edits.controller';
+import { TemplateVerifier } from './templates/sync/template-verifier';
 import { TemplatesController } from './templates/catalog/templates.controller';
 import { TemplatesRepo } from './templates/catalog/templates.repo';
 import { WaMediaRetentionJob } from './messages/wa-media.retention.job';
@@ -65,7 +68,10 @@ function lines(): WhatsappLines {
   // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
   // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
   imports: [IntegrationConfigModule, NumbersModule],
-  controllers: [TemplatesController, MessagesController, GateController, LinesController, TemplateNumbersController],
+  controllers: [
+    TemplatesController, TemplateEditsController, MessagesController, GateController,
+    LinesController, TemplateNumbersController,
+  ],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
@@ -73,6 +79,8 @@ function lines(): WhatsappLines {
     LineHealthStore,
     TemplatesRepo,
     TemplateRegistry,
+    TemplateVerifier,
+    TemplateAdmin,
     TemplateStarters,
     TemplateNumbers,
     TemplateCreator,
