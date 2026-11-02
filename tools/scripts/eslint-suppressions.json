@@ -575,9 +575,6 @@
   "seed/seed-test-account.auth.mjs": {
     "max-len": {
       "count": 1
-    },
-    "no-restricted-globals": {
-      "count": 1
     }
   },
   "seed/seed-test-account.data.mjs": {
