@@ -84,7 +84,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   };
   const pay = useLinkPay({ studentId: online ? studentId : '', pricing, onCreated: linked });
   const bind = chatBinding(students, { studentId, phone });
-  // A smaller package clamps «حلقات مستخدمة من الباقة» to one lesson left per course day.
+  // A smaller package clamps «حلقات مستخدمة من الباقة» to every lesson but one.
   const lessonsTotal = pricingLessons(pricing);
   const usedMax = usedBeforeMax(lessonsTotal);
   const startShown = { ...start, usedBefore: Math.min(start.usedBefore, usedMax) };

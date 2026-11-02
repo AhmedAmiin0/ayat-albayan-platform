@@ -12,7 +12,8 @@ type SeriesInput = {
   /**
    * The assistant's course (owner 2026-10-18 decision 1): every rule ends on this local day
    * (plannedCourseEnd), so exactly the plan's lesson count is generated, all of it planned and
-   * checked now whatever the horizon. Absent = open-ended.
+   * checked now whatever the horizon. A rule whose day falls after the last lesson (fewer lessons left
+   * than days a week, owner 2026-11-02) is dropped. Absent = open-ended.
    */
   endsOn?: string | null | undefined;
 };
@@ -54,20 +55,33 @@ function assertApart(plans: readonly Plan[]): void {
  * One plan per distinct start time (one schedule_rules row each, owner 2026-10-18: «اختر موعدًا لكل
  * يوم»), R-SCH-02 / R-SCH-06: planBooking per timeGroups(rule), sorted by their first lesson (plans[0]
  * is the booking's first rule: its first lesson is the confirmation's, and the picked slot pins it on a
- * DST fall-back). A course is planned through its last day and every picked day must have a lesson
- * (400 no_occurrences). An open-ended group with nothing inside the horizon stays, last and with no
- * lessons, so the daily top-up generates it. An old body without dayTimes is exactly one plan.
+ * DST fall-back). A course is planned through its last day (courseCut). An open-ended group with
+ * nothing inside the horizon stays, last and with no lessons, so the daily top-up generates it. An old body without dayTimes is exactly one plan.
  */
 export function planSeries(input: SeriesInput): Plan[] {
   const { rule, endsOn } = input;
   const horizonWeeks = endsOn ? courseWeeks(input, endsOn) : input.horizonWeeks;
-  const plans = groupsOf(rule)
-    .map((g) => planBooking({ ...input, horizonWeeks, rule: { ...rule, byday: g.byday, startTimeLocal: g.startTimeLocal } }))
-    .map((p) => (endsOn ? capped(p, endsOn) : p))
-    .sort((a, b) => firstStart(a) - firstStart(b));
-  if (endsOn && plans.some((p) => p.occurrences.length === 0)) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  const planned = groupsOf(rule).map((g) =>
+    planBooking({ ...input, horizonWeeks, rule: { ...rule, byday: g.byday, startTimeLocal: g.startTimeLocal } }),
+  );
+  const plans = (endsOn ? courseCut(planned, endsOn) : planned).sort((a, b) => firstStart(a) - firstStart(b));
   assertApart(plans);
   return plans;
+}
+
+const isEmpty = (p: Plan): boolean => p.occurrences.length === 0;
+
+/**
+ * A course's plans cut at endsOn. A picked day with no lesson over the whole course horizon is 400
+ * no_occurrences; a day whose first lesson falls after endsOn (fewer lessons left than days a week,
+ * e.g. 1 of 8 on 2 days, owner 2026-11-02) is dropped, so exactly the remaining lessons are booked on
+ * the next matching days. Nothing left at all is 400 no_occurrences.
+ */
+function courseCut(planned: readonly Plan[], endsOn: string): Plan[] {
+  if (planned.some(isEmpty)) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  const kept = planned.map((p) => capped(p, endsOn)).filter((p) => !isEmpty(p));
+  if (kept.length === 0) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  return kept;
 }
 
 const firstStart = (p: Plan): number => p.occurrences[0]?.starts_at.getTime() ?? Infinity;
