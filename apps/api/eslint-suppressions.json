@@ -3858,17 +3858,6 @@
       "count": 3
     }
   },
-  "src/modules/messaging/follow-ups/follow-ups.deps.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/follow-ups/follow-ups.job.ts": {
     "max-len": {
       "count": 7
@@ -5231,29 +5220,15 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/communications/communications.deps.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/numbers/communications/communications.service.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/numbers/communications/communications.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "max-len": {
       "count": 3
     }
@@ -5637,23 +5612,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/reminders/reminders.deps.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/reminders/reminders.fakes.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/reminders/reminders.job.mode.test.ts": {
@@ -5679,7 +5643,7 @@
   },
   "src/modules/messaging/reminders/reminders.module.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/reminders/reminders.repo.ts": {
@@ -6320,7 +6284,7 @@
   },
   "src/modules/messaging/whatsapp/direct/code-send.line.test.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/direct/code-send.test.ts": {
@@ -6330,7 +6294,7 @@
   },
   "src/modules/messaging/whatsapp/direct/code-send.ts": {
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-body.test.ts": {
@@ -7108,7 +7072,7 @@
   },
   "src/modules/messaging/whatsapp/sender/message.sender.numbers.test.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/sender/message.sender.test.ts": {
@@ -7118,7 +7082,7 @@
   },
   "src/modules/messaging/whatsapp/sender/message.sender.ts": {
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {

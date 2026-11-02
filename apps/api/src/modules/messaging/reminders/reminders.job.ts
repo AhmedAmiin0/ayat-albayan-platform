@@ -1,9 +1,10 @@
 import { joinWindowConfig, type TemplateKey } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { PushService } from '@/common/push/push.service';
 import { livekitEnv, loadEnv } from '@/config/env/env';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
-import { RemindersDeps } from './reminders.deps';
 import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './plan/reminders.links';
 import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './plan/reminders.plan';
 import { RemindersRepo } from './reminders.repo';
@@ -47,7 +48,8 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: RemindersRepo,
     private readonly settings: RemindersSettings,
-    private readonly deps: RemindersDeps,
+    private readonly push: PushService,
+    private readonly policy: NotificationPolicy,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -68,7 +70,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const summary: ReminderSummary = { lessons: 0, queued: 0, dropped: 0, pushed: 0 };
     try {
       const settings = await this.settings.read();
-      const snap = await this.deps.policy.snapshot();
+      const snap = await this.policy.snapshot();
       // Fail closed: rules unread (logged by the policy) = no reminder and no push this tick; the next retries.
       if (!snap) throw new Error('notification rules unread: nothing queued or pushed');
       const rules = reminderRules(snap);
@@ -133,7 +135,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const since = new Date(at.now.getTime() - PUSHED_SINCE_MS);
     const done = await this.queries.pushedSubjects('lesson_needs_confirmation', since);
     const fresh = due.filter((l) => !done.has(l.id));
-    for (const lesson of fresh) await this.deps.push.notifyAdmins('lesson_needs_confirmation', confirmationPush(lesson));
+    for (const lesson of fresh) await this.push.notifyAdmins('lesson_needs_confirmation', confirmationPush(lesson));
     return fresh.length;
   }
 }
