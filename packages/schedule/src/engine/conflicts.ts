@@ -2,6 +2,7 @@ import type { Conflict } from '../lessons/index.js';
 import { expandRow, type TimeRange, type WeeklyRow } from './free-slots.js';
 import { mergeIntervals, type Interval } from './intervals.js';
 import type { Occurrence } from './occurrences.js';
+import { spansOverlap } from './overlap.js';
 
 /** An occupying lesson already booked (status in OCCUPYING_LESSON_STATUSES). */
 export type BusyLesson = { id: string; starts_at: Date; ends_at: Date };
@@ -18,9 +19,6 @@ export type ConflictInput = {
   availability: readonly WeeklyRow[];
   timeOff: readonly TimeRange[];
 };
-
-type Span = { starts_at: Date; ends_at: Date };
-const overlaps = (a: Span, b: Span) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
 
 /**
  * Every clash of every proposed occurrence (R-SCH-04, issue B3). Pure; the caller loads the rows.
@@ -44,14 +42,14 @@ function conflictsAt(p: Occurrence, input: ConflictInput, windows: Interval[]): 
   if (!windows.some((w) => w.start <= s && e <= w.end)) {
     out.push({ kind: 'outside_availability', ...at });
   }
-  if (input.timeOff.some((t) => overlaps(p, { starts_at: t.start, ends_at: t.end }))) {
+  if (input.timeOff.some((t) => spansOverlap(p, { starts_at: t.start, ends_at: t.end }))) {
     out.push({ kind: 'time_off', ...at });
   }
   for (const l of input.teacherLessons) {
-    if (overlaps(p, l)) out.push({ kind: 'teacher_busy', ...at, lessonId: l.id });
+    if (spansOverlap(p, l)) out.push({ kind: 'teacher_busy', ...at, lessonId: l.id });
   }
   for (const l of input.studentLessons) {
-    if (overlaps(p, l)) {
+    if (spansOverlap(p, l)) {
       out.push({ kind: 'student_busy', ...at, lessonId: l.id, studentId: l.student_id });
     }
   }

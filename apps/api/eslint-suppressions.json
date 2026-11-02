@@ -12401,7 +12401,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/booking/plan/conflict-context.ts": {

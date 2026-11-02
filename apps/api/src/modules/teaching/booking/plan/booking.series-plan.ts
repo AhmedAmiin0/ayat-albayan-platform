@@ -1,6 +1,5 @@
-import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups, addDays, startOfLocalDay } from '@ab/shared';
+import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups, addDays, startOfLocalDay, spansOverlap } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import type { Occurrence } from '@ab/shared';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
 
@@ -38,13 +37,11 @@ function courseWeeks(input: SeriesInput, endsOn: string): number {
   return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY_MS));
 }
 
-const overlaps = (a: Occurrence, b: Occurrence) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
-
 /** 400 day_times_overlap when a lesson of one time runs into a lesson of another (e.g. across midnight). */
 function assertApart(plans: readonly Plan[]): void {
   plans.forEach((plan, i) => {
     const others = plans.slice(i + 1).flatMap((p) => p.occurrences);
-    if (plan.occurrences.some((o) => others.some((x) => overlaps(o, x)))) {
+    if (plan.occurrences.some((o) => others.some((x) => spansOverlap(o, x)))) {
       throw domainError(HttpStatus.BAD_REQUEST, 'day_times_overlap');
     }
   });

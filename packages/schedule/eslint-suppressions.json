@@ -81,7 +81,7 @@
   },
   "src/engine/conflicts.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 3
+      "count": 2
     },
     "complexity": {
       "count": 1

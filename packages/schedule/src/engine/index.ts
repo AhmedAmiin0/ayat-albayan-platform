@@ -6,3 +6,4 @@ export * from './free-slots.js';
 export * from './horizon.js';
 export * from './intervals.js';
 export * from './occurrences.js';
+export * from './overlap.js';
