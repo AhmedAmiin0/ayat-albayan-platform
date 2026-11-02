@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { SalesTeacherOverviewQueries } from './sales-teacher-overview.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { SalesTeacherOverviewRepo } from './sales-teacher-overview.repo';
 
 const SECRET = /meeting|link|subscription|price|rate|amount|payout|balance|\*/;
 
 describe('SalesTeacherOverviewQueries (whitelisted selects)', () => {
   it('rules: the teacher\'s active rules with the students\' names and codes; no link or money column', async () => {
     const f = fakeDb({ schedule_rules: [{ data: [] }] });
-    await new SalesTeacherOverviewQueries(f.db).rules('tc1');
+    await new SalesTeacherOverviewRepo(f.db).rules('tc1');
     expect(f.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['teacher_id', 'tc1'], ['status', 'active']]);
     const select = String(f.argsOf('schedule_rules', 'select')?.[0]);
     expect(select).toContain('students:schedule_rule_students(student:students(name, code))');
@@ -18,7 +18,7 @@ describe('SalesTeacherOverviewQueries (whitelisted selects)', () => {
     const f = fakeDb({ lessons: [{ data: [] }] });
     const from = new Date('2026-09-28T10:00:00Z');
     const to = new Date('2026-10-28T10:00:00Z');
-    await new SalesTeacherOverviewQueries(f.db).lessons('tc1', { from, to });
+    await new SalesTeacherOverviewRepo(f.db).lessons('tc1', { from, to });
     expect(f.argsOf('lessons', 'eq')).toEqual(['teacher_id', 'tc1']);
     expect(f.argsOf('lessons', 'gte')).toEqual(['starts_at', from.toISOString()]);
     expect(f.argsOf('lessons', 'lt')).toEqual(['starts_at', to.toISOString()]);
@@ -27,9 +27,9 @@ describe('SalesTeacherOverviewQueries (whitelisted selects)', () => {
   });
 
   it('exists: true for a teacher row, false without one; a database error becomes an error', async () => {
-    expect(await new SalesTeacherOverviewQueries(fakeDb({ teachers: [{ data: { id: 'tc1' } }] }).db).exists('tc1')).toBe(true);
-    expect(await new SalesTeacherOverviewQueries(fakeDb({ teachers: [{ data: null }] }).db).exists('tc1')).toBe(false);
+    expect(await new SalesTeacherOverviewRepo(fakeDb({ teachers: [{ data: { id: 'tc1' } }] }).db).exists('tc1')).toBe(true);
+    expect(await new SalesTeacherOverviewRepo(fakeDb({ teachers: [{ data: null }] }).db).exists('tc1')).toBe(false);
     const broken = fakeDb({ lessons: [{ error: { message: 'boom' } }] });
-    await expect(new SalesTeacherOverviewQueries(broken.db).lessons('tc1', { from: new Date(0), to: new Date(1) })).rejects.toThrow(/boom/);
+    await expect(new SalesTeacherOverviewRepo(broken.db).lessons('tc1', { from: new Date(0), to: new Date(1) })).rejects.toThrow(/boom/);
   });
 });

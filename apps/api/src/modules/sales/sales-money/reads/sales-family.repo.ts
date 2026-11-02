@@ -1,15 +1,15 @@
 import type { StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { familyOfPhone } from '../../../../common/db/family-of-phone';
-import { notFound } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { familyOfPhone } from '@/common/db/family-of-phone';
+import { notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
 
 export type FamilyStudentRow = { id: string; code: string | null; name: string; status: StudentStatus; teacher_id: string | null };
 
 /** The reads of the salesperson's money endpoints that the admin services do not answer (service role). */
 @Injectable()
-export class SalesFamilyQueries {
+export class SalesFamilyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

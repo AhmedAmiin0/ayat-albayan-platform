@@ -1,9 +1,9 @@
 import { REGISTRATION_CHECK_MAX, type RegistrationMatch } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { familyOfPhone } from '../../../common/db/family-of-phone';
-import { studentNameOrCodeFilter } from '../../people/students/students.mapper';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { familyOfPhone } from '@/common/db/family-of-phone';
+import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
+import { dbError } from '@/common/http/http';
 
 /** One more row than the answer lists, so `more` can be told without a count. */
 const READ = REGISTRATION_CHECK_MAX + 1;
@@ -19,7 +19,7 @@ export const toMatch = (r: Row): RegistrationMatch => ({ name: r.name, code: r.c
  * pending_renewal, churned, …), ordered by name, at most REGISTRATION_CHECK_MAX + 1 rows.
  */
 @Injectable()
-export class SalesRegistrationQueries {
+export class SalesRegistrationRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** The children of the family with this number, its main or its second one (familyOfPhone). */

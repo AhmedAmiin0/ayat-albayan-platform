@@ -1,8 +1,8 @@
 import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 
 /**
  * Whitelisted lesson columns for sales: never reasons, attendance, notes or money. The lesson's
@@ -44,7 +44,7 @@ interface DayRange {
  * Riyadh day of lessons and the next open lessons (for «الحلقة القادمة»). Each select is a whitelist.
  */
 @Injectable()
-export class SalesScheduleQueries {
+export class SalesScheduleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**

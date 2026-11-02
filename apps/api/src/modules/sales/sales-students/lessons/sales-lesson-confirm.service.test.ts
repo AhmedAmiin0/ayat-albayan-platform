@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { LessonStatusService } from '../../../teaching/lessons';
-import { appliedChange, fakeStore, LESSON_ID, lessonRow } from '../../../teaching/lessons/lessons.fakes';
-import { LessonsSettings } from '../../../teaching/lessons/lessons.settings';
-import type { SalesStudentQueries } from '../details/sales-student.queries';
-import type { SalesStudentScope } from '../sales-student-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { LessonStatusService } from '@/modules/teaching/lessons';
+import { appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
+import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
+import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
 
 // «تأكيد الحلقة» (owner 2026-10-28) through the teacher's real LessonStatusService over the fake store:
@@ -19,7 +19,7 @@ function rig(row: ReturnType<typeof lessonRow>) {
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
   const status = new LessonStatusService(deps.store, access as unknown as ConstructorParameters<typeof LessonStatusService>[1], settings);
   const facts = { id: row.id, starts_at: row.starts_at, ends_at: row.ends_at, status: row.status, lesson_students: [] };
-  const queries = { lesson: vi.fn(async () => facts) } as unknown as SalesStudentQueries;
+  const queries = { lesson: vi.fn(async () => facts) } as unknown as SalesStudentRepo;
   const actions = new SalesLessonActions({} as SalesStudentScope, queries, { status } as unknown as LessonServices);
   return { ...deps, actions };
 }

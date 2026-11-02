@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { conflict, notFound } from '../../../common/http/errors';
-import { SalesQueries, type SalesOwnership } from '../sales';
-import { type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict, notFound } from '@/common/http/errors';
+import { SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
+import { type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
 
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
@@ -14,8 +14,8 @@ import { type LessonFacts, SalesStudentQueries } from './details/sales-student.q
 @Injectable()
 export class SalesStudentScope {
   constructor(
-    private readonly sales: SalesQueries,
-    private readonly queries: SalesStudentQueries,
+    private readonly sales: SalesRepo,
+    private readonly queries: SalesStudentRepo,
   ) {}
 
   /** Her ownership and whether this student is hers (the money actions of «تفاصيل الطالب»). */

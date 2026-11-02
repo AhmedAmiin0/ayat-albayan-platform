@@ -2,22 +2,22 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../../common/auth/auth.guard';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { ReportFilesService, ReportHistoryQueries } from '../../reporting/reports';
-import { SalesHistoryQueries, SalesQueries, SalesRosterRepo } from '../sales';
-import { A, NONE, OWN_A } from '../sales/sales.fakes';
-import { bundle, verify } from '../sales/academy/sales-academy.fakes';
-import type { TrialLessonRead } from '../../teaching/booking';
-import { type AttendanceRow, type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { ReportFilesService, ReportHistoryQueries } from '@/modules/reporting/reports';
+import { SalesHistoryRepo, SalesRepo, SalesRosterRepo } from '@/modules/sales/sales';
+import { A, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
+import { bundle, verify } from '@/modules/sales/sales/academy/sales-academy.fakes';
+import type { TrialLessonRead } from '@/modules/teaching/booking';
+import { type AttendanceRow, type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
 import { ruleRow, upcomingRow } from './sales-students.schedule.fakes';
 import { resetAttendance } from './attendance/student-attendance.fakes';
-import { StudentAttendanceQueries } from './attendance/student-attendance.queries';
+import { StudentAttendanceRepo } from './attendance/student-attendance.repo';
 import { LessonServices } from './lessons/sales-lesson-actions.service';
 import { resetOverview } from './teachers/sales-teacher-overview.fakes';
-import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.queries';
+import { SalesTeacherOverviewRepo } from './teachers/sales-teacher-overview.repo';
 
 export { A };
 // The routes take uuids: A owns MINE here (OWN_A with its student id swapped), never OTHER.
@@ -76,14 +76,14 @@ export async function studentsApp() {
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesQueries).useValue(sales)
-    .overrideProvider(SalesStudentQueries).useValue(queries)
-    .overrideProvider(SalesHistoryQueries).useValue(history)
+    .overrideProvider(SalesRepo).useValue(sales)
+    .overrideProvider(SalesStudentRepo).useValue(queries)
+    .overrideProvider(SalesHistoryRepo).useValue(history)
     .overrideProvider(ReportHistoryQueries).useValue(reports)
     .overrideProvider(ReportFilesService).useValue(files)
     .overrideProvider(LessonServices).useValue(lessons)
-    .overrideProvider(SalesTeacherOverviewQueries).useValue(overview)
-    .overrideProvider(StudentAttendanceQueries).useValue(attendance)
+    .overrideProvider(SalesTeacherOverviewRepo).useValue(overview)
+    .overrideProvider(StudentAttendanceRepo).useValue(attendance)
     .overrideProvider(SalesRosterRepo).useValue(roster)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();

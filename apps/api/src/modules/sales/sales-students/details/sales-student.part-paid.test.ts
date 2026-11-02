@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { HistoryBundle } from '../../sales';
+import type { HistoryBundle } from '@/modules/sales/sales';
 import { toStudentDetails } from './sales-student.mapper';
-import type { DetailsStudentRow } from './sales-student.queries';
+import type { DetailsStudentRow } from './sales-student.repo';
 
 // «مدفوعة جزئيًا» (owner 2026-10-28): 81 SAR, 80 received → part_paid; only with prices (self.sales_money).
 const student = {

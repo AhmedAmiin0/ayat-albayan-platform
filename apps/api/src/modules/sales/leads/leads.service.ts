@@ -7,12 +7,12 @@ import {
   NotFoundException,
   Optional,
 } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import { SalesAssignService } from '../sales/assign/sales-assign.service';
-import { JobApplicantsQueries, type JobApplicantRow } from '../job-applicants/job-applicants.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { SalesAssignService } from '@/modules/sales/sales/assign/sales-assign.service';
+import { JobApplicantsRepo, type JobApplicantRow } from '@/modules/sales/job-applicants/job-applicants.repo';
 import type { Page } from './http';
 import { canTransitionLead } from './lead-state-machine';
-import { LeadsQueries, type LeadListFilter, type LeadRow } from './leads.queries';
+import { LeadsRepo, type LeadListFilter, type LeadRow } from './leads.repo';
 
 export interface InboundContact {
   /** Raw WhatsApp / typed phone; normalised to E.164 (rule 7). */
@@ -42,8 +42,8 @@ export class LeadsService {
   @Optional() @Inject(SalesAssignService) private readonly sales?: SalesAssignService;
 
   constructor(
-    private readonly leads: LeadsQueries,
-    private readonly applicants: JobApplicantsQueries,
+    private readonly leads: LeadsRepo,
+    private readonly applicants: JobApplicantsRepo,
     private readonly audit: AuditService,
   ) {}
 

@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
-import { LeadsQueries, type LeadListFilter } from './leads.queries';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { LeadsRepo, type LeadListFilter } from './leads.repo';
 
 const page = { page: 1, pageSize: 25 };
 const A = '11111111-1111-4111-8111-111111111111';
 
 async function list(f: LeadListFilter) {
   const fake = fakeDb({ leads: [{ data: [], count: 0 }] });
-  await new LeadsQueries(fake.db).list(f);
+  await new LeadsRepo(fake.db).list(f);
   return (method: string) => fake.calls.filter((c) => c.method === method).map((c) => c.args);
 }
 
