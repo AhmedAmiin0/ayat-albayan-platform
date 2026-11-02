@@ -661,9 +661,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -3388,11 +3385,6 @@
       "count": 1
     }
   },
-  "src/finance/finance/expenses/categories.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/finance/finance/expenses/categories.ts": {
     "complexity": {
       "count": 1
@@ -3407,11 +3399,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/finance/finance/expenses/expense-math.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/finance/finance/expenses/expense-math.ts": {
@@ -3448,24 +3435,11 @@
   "src/finance/finance/invoices/InvoicesScreen.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/finance/finance/invoices/InvoicesScreen.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/finance/finance/invoices/invoice-text.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/finance/finance/payouts/PayoutActionBar.buttons.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/finance/finance/payouts/PayoutActionBar.tsx": {
@@ -3484,11 +3458,6 @@
       "count": 1
     }
   },
-  "src/finance/finance/payouts/PayoutFacts.en.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
   "src/finance/finance/payouts/PayoutFacts.tsx": {
     "ab/module-boundaries": {
       "count": 1
@@ -3503,9 +3472,6 @@
     }
   },
   "src/finance/finance/payouts/PayoutRow.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -3524,11 +3490,6 @@
   "src/finance/finance/payouts/UnpayConfirm.tsx": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/finance/finance/payouts/payout-actions.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
     }
   },
   "src/finance/finance/payouts/payout-actions.ts": {
@@ -3620,9 +3581,6 @@
     }
   },
   "src/finance/finance/shared/queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 5
     },
@@ -3647,9 +3605,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -3668,9 +3623,6 @@
     }
   },
   "src/finance/finance/summary/SummaryScreen.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "no-nested-ternary": {
       "count": 1
     }
@@ -3681,9 +3633,6 @@
     }
   },
   "src/finance/finance/summary/summary-cards.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -3969,9 +3918,6 @@
     }
   },
   "src/inbox/composer/quote/QuoteButton.access.test.tsx": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 2
     },
@@ -3989,9 +3935,6 @@
   },
   "src/inbox/composer/quote/QuoteSheet.actions.test.tsx": {
     "@typescript-eslint/no-deprecated": {
-      "count": 1
-    },
-    "ab/no-parent-imports": {
       "count": 1
     },
     "max-len": {
@@ -4018,9 +3961,6 @@
     }
   },
   "src/inbox/composer/quote/use-quote-sheet.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 5
     }
