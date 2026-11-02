@@ -1,7 +1,7 @@
 import { onMessagingLine, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { BalanceQueries } from '@/modules/finance/subscriptions/money/balance.queries';
+import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { knownNumber, type KnownNumber } from './known-number';
 import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
@@ -26,7 +26,7 @@ export class ThreadsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly packages: PackagesService,
-    private readonly balances: BalanceQueries,
+    private readonly balances: BalanceRepo,
   ) {}
 
   /**

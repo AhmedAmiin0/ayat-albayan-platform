@@ -6,11 +6,12 @@ import {
   type CourseChangeResult,
   type CourseChangeView,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { z } from 'zod';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
 
@@ -30,20 +31,28 @@ export class CourseChangeController {
 
   /** 200 CourseChangeView; 404 subscription_not_found / course_not_found; 409 course_finished. */
   @Get('change')
-  view(@Query() query: unknown): Promise<CourseChangeView> {
-    return this.views.view(parseOrThrow(courseChangeQuerySchema, query).subscriptionId);
+  view(
+    @ZodQuery(courseChangeQuerySchema) query: z.output<typeof courseChangeQuerySchema>,
+  ): Promise<CourseChangeView> {
+    return this.views.view(query.subscriptionId);
   }
 
   /** 200 { conflicts, remaining, endsOn }, nothing written. */
   @Post('change/check')
   @HttpCode(200)
-  check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeCheck> {
-    return this.course.check(parseOrThrow(courseChangeCheckSchema, body), { user, role: 'admin' });
+  check(
+    @ZodBody(courseChangeCheckSchema) body: z.output<typeof courseChangeCheckSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CourseChangeCheck> {
+    return this.course.check(body, { user, role: 'admin' });
   }
 
   /** 201 CourseChangeResult; codes: CourseChange.change. */
   @Post('change')
-  change(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeResult> {
-    return this.course.change(parseOrThrow(courseChangeSchema, body), { user, role: 'admin' });
+  change(
+    @ZodBody(courseChangeSchema) body: z.output<typeof courseChangeSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CourseChangeResult> {
+    return this.course.change(body, { user, role: 'admin' });
   }
 }

@@ -1,6 +1,6 @@
 import { PACKAGE_IDS, PACKAGE_SIZES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { packageSizeOf, withPackageSize } from './package-size';
+import { bookingBodySchema, packageSizeOf, withPackageSize } from './package-size';
 
 describe('packageSizeOf (docs/08 catalog → package_size)', () => {
   it('maps every catalog package to its lesson count', () => {
@@ -30,5 +30,26 @@ describe('withPackageSize (POST /booking body)', () => {
     expect(withPackageSize({ teacherId: 'T' })).toEqual({ teacherId: 'T' });
     expect(withPackageSize(null)).toBeNull();
     expect(withPackageSize('x')).toBe('x');
+  });
+});
+
+describe('bookingBodySchema (the ZodBody of POST /booking, /check and the trial-date routes)', () => {
+  const body = {
+    teacherId: 'a0000000-0000-4000-8000-000000000001',
+    byday: [0],
+    startTimeLocal: '17:00',
+    tz: 'Asia/Riyadh',
+    durationMin: 30,
+    startsOn: '2099-10-11',
+    studentIds: ['c0000000-0000-4000-8000-000000000001'],
+  };
+
+  it('rewrites a catalog id before the booking schema reads it', () => {
+    expect(bookingBodySchema.parse({ ...body, package: 'bulk' }).package).toBe('28');
+  });
+
+  it('fails like bookingRequestSchema on an unknown package or a bad body', () => {
+    expect(bookingBodySchema.safeParse({ ...body, package: 'gold' }).success).toBe(false);
+    expect(bookingBodySchema.safeParse(null).success).toBe(false);
   });
 });

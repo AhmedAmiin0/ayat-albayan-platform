@@ -373,7 +373,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "ci-checks/pure-move-ci.test.mjs": {

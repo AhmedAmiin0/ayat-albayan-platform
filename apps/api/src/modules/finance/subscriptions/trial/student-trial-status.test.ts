@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { LessonEvents, LessonsChangedListener } from '@/common/infra/events/lesson-events';
-import type { StudentStatusQueries } from '@/modules/finance/subscriptions/student-lifecycle/student-status.queries';
+import type { StudentStatusRepo } from '@/modules/finance/subscriptions/student-lifecycle/student-status.repo';
 import { StudentTrialStatus } from './student-trial-status';
 import type { TrialLessonRow } from './student-trial.plan';
-import type { StudentTrialQueries } from './student-trial.queries';
+import type { StudentTrialRepo } from './student-trial.repo';
 
 const trialLesson = (student_id: string, status: 'scheduled' | 'completed' | 'no_show'): TrialLessonRow => ({
   student_id,
@@ -27,8 +27,8 @@ function setup(o: SetupOpts = {}) {
   const listeners: LessonsChangedListener[] = [];
   const events = { onChanged: vi.fn((l: LessonsChangedListener) => listeners.push(l)) };
   const s = new StudentTrialStatus(
-    statuses as unknown as StudentStatusQueries,
-    queries as unknown as StudentTrialQueries,
+    statuses as unknown as StudentStatusRepo,
+    queries as unknown as StudentTrialRepo,
     events as unknown as LessonEvents,
   );
   return { s, statuses, queries, listeners };

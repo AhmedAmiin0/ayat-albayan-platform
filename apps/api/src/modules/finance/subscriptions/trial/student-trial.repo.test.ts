@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { IN_CHUNK } from '@/common/db/read-all';
-import { StudentTrialQueries } from './student-trial.queries';
+import { StudentTrialRepo } from './student-trial.repo';
 
 function setup(results: Record<string, FakeResult[]>) {
   const t = fakeDb(results);
-  return { ...t, q: new StudentTrialQueries(t.db) };
+  return { ...t, q: new StudentTrialRepo(t.db) };
 }
 const ruled = { rule_id: 'r1', instant: false, makeup_of_id: null };
 const filters = (t: ReturnType<typeof setup>, table: string) =>
