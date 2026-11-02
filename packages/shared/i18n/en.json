@@ -4896,6 +4896,23 @@
     "usedBeforeHint": "Counted from the package; only the rest is booked",
     "usedBeforeLess": "One lesson fewer",
     "usedBeforeMore": "One lesson more",
+    "usedBeforeEdit": {
+      "action": "Edit lessons already used",
+      "title": "Edit lessons already used",
+      "hint": "Lessons the student attended outside the platform, counted from the package.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Lessons already used updated.",
+      "current": "Current: {n}",
+      "errors": {
+        "used_before_course_booked": "This package already has a booked course, so the lessons already used can no longer change.",
+        "used_before_too_many": "The number is higher than this package allows.",
+        "used_before_needs_past_start": "Lessons already used apply only to a package that started before today.",
+        "already_cancelled": "This package is cancelled.",
+        "used_before_changed": "The number changed before saving; refresh and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
     "noCommissionStarted": "No commission: the course started before it was recorded",
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",
@@ -5456,7 +5473,8 @@
       "self.assistant": "Classroom assistant's own pages",
       "self.portal": "Family portal pages",
       "students.check_registration": "Check a student's registration",
-      "subscriptions.set_start_date": "Set the subscription start date",
+      "subscriptions.set_start_date": "Set the package start date when creating it",
+      "subscriptions.edit_terms": "Edit package details",
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
       "saved_replies.manage": "Manage shared quick replies",
@@ -5470,7 +5488,8 @@
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
-      "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
+      "subscriptions.set_start_date": "Pick the package's start day when creating or renewing it, including a past date with the lessons already used for a student who started before the platform. Without it the package starts on the default day. Does not allow editing an existing package.",
+      "subscriptions.edit_terms": "Edit an existing package or a recorded payment of any student: its start date, lessons already used, price and the payment's amount. Always for the admin; grant it only to a trusted assistant.",
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",

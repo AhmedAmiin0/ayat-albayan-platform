@@ -110,7 +110,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/common/auth/parity/route-walk.test-util.ts": {
