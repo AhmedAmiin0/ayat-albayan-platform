@@ -79,12 +79,21 @@
     "@typescript-eslint/dot-notation": {
       "count": 2
     },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
   },
   "support/edit-time.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     }
   },
@@ -133,6 +142,9 @@
       "count": 3
     },
     "complexity": {
+      "count": 1
+    },
+    "max-depth": {
       "count": 1
     }
   },
@@ -249,6 +261,9 @@
     }
   },
   "support/people/family-sign-in.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 7
     }
@@ -293,6 +308,9 @@
     }
   },
   "support/reporting/feedback.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 6
     }
@@ -311,6 +329,9 @@
     }
   },
   "support/reporting/teacher-templates.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -380,6 +401,9 @@
       "count": 2
     },
     "ab/max-params": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -463,6 +487,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 10
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 8
     }
@@ -475,6 +502,9 @@
   "tests/finance/exports.spec.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
     },
     "max-len": {
       "count": 7
@@ -532,6 +562,9 @@
       "count": 1
     },
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -596,6 +629,9 @@
     }
   },
   "tests/messaging/inbound-new-lead.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -644,6 +680,9 @@
     }
   },
   "tests/messaging/message-reactions.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -700,6 +739,9 @@
     }
   },
   "tests/messaging/templates.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -753,6 +795,9 @@
     }
   },
   "tests/people/assistants-admin.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 6
     }
@@ -835,6 +880,9 @@
   },
   "tests/people/teacher-isolation.spec.ts": {
     "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
       "count": 1
     },
     "max-len": {
@@ -988,7 +1036,7 @@
   },
   "tests/platform/mobile-form-sheets.spec.ts": {
     "complexity": {
-      "count": 1
+      "count": 2
     }
   },
   "tests/platform/responsive-dashboard.spec.ts": {
@@ -1005,6 +1053,9 @@
     }
   },
   "tests/platform/responsive.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1062,6 +1113,9 @@
     }
   },
   "tests/reporting/report-outcome.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 3
     }
@@ -1073,6 +1127,9 @@
   },
   "tests/reporting/teacher-report-edit-window.spec.ts": {
     "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -1123,6 +1180,9 @@
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1162,6 +1222,9 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -1190,6 +1253,9 @@
   "tests/sales/sales-meetings.spec.ts": {
     "ab/no-unchecked-json": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
     },
     "max-len": {
       "count": 2
@@ -1270,6 +1336,9 @@
     }
   },
   "tests/teaching/edit-session-time.held.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
@@ -1331,6 +1400,9 @@
     }
   },
   "tests/teaching/schedule-overview.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 1
     }
@@ -1353,7 +1425,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
+      "count": 2
     },
     "max-len": {
       "count": 1
