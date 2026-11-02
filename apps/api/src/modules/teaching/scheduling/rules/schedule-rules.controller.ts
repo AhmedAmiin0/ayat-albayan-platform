@@ -1,10 +1,11 @@
 import { ruleExtendRequestSchema } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { HorizonJob, type RunSummary } from '../occurrences/horizon.job';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { HorizonJob, type RunSummary } from '@/modules/teaching/scheduling/occurrences/horizon.job';
 import { RuleExtendService, type ExtendResult } from './rule-extend.service';
 
 /** POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02) and /refresh. Admin only. */
@@ -32,10 +33,10 @@ export class ScheduleRulesController {
   @HttpCode(200)
   extend(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(ruleExtendRequestSchema, { orEmpty: true })
+    body: z.output<typeof ruleExtendRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<ExtendResult> {
-    const { weeks } = parseOrThrow(ruleExtendRequestSchema, body ?? {});
-    return this.extender.extend({ ruleId: id, weeks, actorId: user.id });
+    return this.extender.extend({ ruleId: id, weeks: body.weeks, actorId: user.id });
   }
 }

@@ -1,12 +1,13 @@
 import { cancelRequestSchema, lessonStatusRequestSchema, type LessonView } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonCancelService } from './lesson-cancel.service';
 import { LessonStatusService } from './lesson-status.service';
-import { LessonViews } from '../store/lesson-views';
+import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
 /**
  * Confirm, attendance outcome and cancel (docs/10 routes 6, 7, 9). R-SCH-03, R-SCH-07, R-SCH-08.
@@ -25,7 +26,10 @@ export class LessonActionsController {
 
   @Post(':id/confirm')
   @HttpCode(200)
-  async confirm(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonView> {
+  async confirm(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LessonView> {
     return this.views.one(await this.status.confirm({ lessonId: id, actor: user }), user.role);
   }
 
@@ -33,11 +37,11 @@ export class LessonActionsController {
   @HttpCode(200)
   async changeStatus(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(lessonStatusRequestSchema) req: z.output<typeof lessonStatusRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const req = parseOrThrow(lessonStatusRequestSchema, body);
-    return this.views.one(await this.status.changeStatus({ ...req, lessonId: id, actor: user }), user.role);
+    const lessonId = await this.status.changeStatus({ ...req, lessonId: id, actor: user });
+    return this.views.one(lessonId, user.role);
   }
 
   /** Every lesson cancelled (one, or this and the rest of its rule). */
@@ -46,10 +50,10 @@ export class LessonActionsController {
   @Permissions('lessons.write')
   async cancel(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(cancelRequestSchema) req: z.output<typeof cancelRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView[]> {
-    const req = parseOrThrow(cancelRequestSchema, body);
-    return this.views.many(await this.cancels.cancel({ lessonId: id, body: req, actor: user }), 'admin');
+    const ids = await this.cancels.cancel({ lessonId: id, body: req, actor: user });
+    return this.views.many(ids, 'admin');
   }
 }
