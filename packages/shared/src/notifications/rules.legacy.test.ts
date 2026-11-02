@@ -2,9 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from '../settings/index.js';
 import { NOTIFICATION_KEYS } from './catalogue/catalogue.js';
 import { defaultTiming } from './rules.effective.js';
-import { legacyParts, legacyValues, RULE_LEGACY_MAP, RULE_SETTING_KEYS, type RuleSettings } from './rules.legacy.js';
+import {
+  legacyParts,
+  legacyValues,
+  RULE_LEGACY_MAP,
+  RULE_SETTING_KEYS,
+  type RuleSettings,
+} from './rules.legacy.js';
 
-const defaults = Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
+const defaults = Object.fromEntries(
+  RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]]),
+) as RuleSettings;
 const custom: RuleSettings = {
   reminder_minutes_before: 45,
   reminder_24h_enabled: true,
@@ -18,9 +26,16 @@ const custom: RuleSettings = {
 
 describe('RULE_LEGACY_MAP', () => {
   it('maps every rule key exactly once, to catalogue rows; renewal_alert_remaining is not one', () => {
-    const mapped = Object.values(RULE_LEGACY_MAP).flatMap((m) => [...('enabled' in m ? m.enabled : []), ...('timing' in m ? m.timing : [])]);
+    const mapped = Object.values(RULE_LEGACY_MAP).flatMap((m) => [
+      ...('enabled' in m ? m.enabled : []),
+      ...('timing' in m ? m.timing : []),
+    ]);
     expect([...mapped].sort()).toEqual([...RULE_SETTING_KEYS].sort());
-    expect(Object.keys(RULE_LEGACY_MAP).every((k) => (NOTIFICATION_KEYS as readonly string[]).includes(k))).toBe(true);
+    expect(
+      Object.keys(RULE_LEGACY_MAP).every((k) =>
+        (NOTIFICATION_KEYS as readonly string[]).includes(k),
+      ),
+    ).toBe(true);
     expect(RULE_SETTING_KEYS as readonly string[]).not.toContain('renewal_alert_remaining');
   });
 
@@ -28,7 +43,10 @@ describe('RULE_LEGACY_MAP', () => {
     for (const s of [defaults, custom]) {
       const back = Object.keys(RULE_LEGACY_MAP).reduce<Partial<RuleSettings>>((acc, key) => {
         const parts = legacyParts(key, s);
-        const rule = { enabled: parts.enabled ?? true, timing: parts.timing ?? defaultTiming(key, s) };
+        const rule = {
+          enabled: parts.enabled ?? true,
+          timing: parts.timing ?? defaultTiming(key, s),
+        };
         return { ...acc, ...legacyValues(key, rule) };
       }, {});
       expect(back).toEqual(s);
@@ -40,4 +58,10 @@ describe('RULE_LEGACY_MAP', () => {
     expect(legacyValues('booking_confirmation', { enabled: false, timing: null })).toEqual({});
   });
 
+  it('a timing of the wrong shape writes no timing keys; prototype names are not rows', () => {
+    expect(legacyValues('lesson_reminder', { enabled: true, timing: null })).toEqual({});
+    expect(legacyValues('follow_up_slots', { enabled: true, timing: null })).toEqual({});
+    expect(legacyParts('constructor', custom)).toEqual({});
+    expect(legacyValues('toString', { enabled: true, timing: null })).toEqual({});
+  });
 });

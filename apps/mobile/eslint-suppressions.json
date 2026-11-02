@@ -8051,12 +8051,6 @@
   "src/ops/values/lib/value-draft.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/ops/values/lib/value-groups.ts": {
@@ -8065,11 +8059,8 @@
     }
   },
   "src/ops/values/lib/value-text.ts": {
-    "@typescript-eslint/no-base-to-string": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -8148,14 +8139,6 @@
     }
   },
   "src/ops/values/sheet/SheetQuestion.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/ops/values/sheet/ValueEditor.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 1
     }

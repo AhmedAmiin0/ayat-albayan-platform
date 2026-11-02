@@ -873,17 +873,9 @@
       "count": 8
     }
   },
-  "src/notifications/rules.legacy.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/notifications/rules.legacy.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/notifications/rules.types.ts": {
@@ -1605,7 +1597,7 @@
   },
   "src/settings/defs.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/settings/domains/activity.ts": {
@@ -1695,7 +1687,7 @@
   },
   "src/settings/index.ts": {
     "@typescript-eslint/consistent-type-exports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/settings/layout.test.ts": {
@@ -1827,11 +1819,8 @@
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/settings/validation/validate.test.ts": {
