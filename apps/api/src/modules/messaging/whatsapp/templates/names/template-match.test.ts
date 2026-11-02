@@ -18,14 +18,17 @@ const CUSTOM = templateRow({ key: 'custom_key', meta_name: 'custom_meta', crm_na
 const ROWS = [NEW_STUDENT, OLD_SCRIPT, CUSTOM];
 
 describe('templateByName', () => {
-  it('our key wins over a CRM default name that is the same word', () => {
+  it('our key first', () => {
     expect(templateByName(ROWS, 'teacher_lesson_v2')?.key).toBe('teacher_lesson_v2');
   });
 
-  it("then Meta's name, then the admin's or the default CRM name", () => {
+  it("then Meta's name, then the admin's CRM name", () => {
     expect(templateByName(ROWS, 'teacher_lesson_v2_meta')?.key).toBe('teacher_lesson_v2');
     expect(templateByName(ROWS, 'crm_alias')?.key).toBe('custom_key');
-    expect(templateByName([NEW_STUDENT], 'teacher_lesson_v2')?.key).toBe('teacher_new_student');
+  });
+
+  it('never a CRM default name: its body is not the script template\'s own', () => {
+    expect(templateByName([NEW_STUDENT], 'teacher_lesson_v2')).toBeNull();
   });
 
   it('an unknown name is null', () => {

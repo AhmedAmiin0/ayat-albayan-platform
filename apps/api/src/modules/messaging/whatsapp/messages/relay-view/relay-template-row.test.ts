@@ -24,12 +24,12 @@ describe('relayBody', () => {
 });
 
 describe('relayTemplateName', () => {
-  it("a relay row's stored key, else the name in its body", () => {
+  it('the name in a relay row\'s body', () => {
     expect(relayTemplateName(relay())).toBe('teacher_lesson_v2');
-    expect(relayTemplateName(relay({ template_key: 'lesson_reminder_meet' }))).toBe('lesson_reminder_meet');
   });
 
-  it('never for a row the relay did not write, or an inbound one', () => {
+  it('never for a row the relay did not write, an inbound one, or one with a key', () => {
+    expect(relayTemplateName(relay({ template_key: 'lesson_reminder_meet' }))).toBeNull();
     expect(relayTemplateName(relay({ dedup_key: 'reminder:abc' }))).toBeNull();
     expect(relayTemplateName(relay({ dedup_key: null }))).toBeNull();
     expect(relayTemplateName(relay({ direction: 'inbound' }))).toBeNull();
@@ -37,18 +37,12 @@ describe('relayTemplateName', () => {
 });
 
 describe('asRelayTemplateRow', () => {
-  it('an old row: the key, the values as «1»…«4», no body of its own', () => {
+  it('a relay row: the key, the values as «1»…«4», no body of its own', () => {
     expect(asRelayTemplateRow(relay(), V2)).toMatchObject({
       template_key: 'teacher_lesson_v2',
       template_params: { '1': 'سلمى', '2': 'هدى علي (AB-0001)', '3': 'الاثنين 2/11 — 4:00 م', '4': '45 دقيقة' },
       body: null,
     });
-  });
-
-  it('a newer row keeps its stored values (the button too)', () => {
-    const stored = { '1': 'سلمى', '2': 'ب', '3': 'ج', '4': 'د', button: 'room-1' };
-    const row = relay({ template_key: 'teacher_lesson_v2', template_params: stored });
-    expect(asRelayTemplateRow(row, V2)).toMatchObject({ template_params: stored, body: null });
   });
 
   it('stays raw: no template, a count mismatch, another row kind', () => {
@@ -57,7 +51,7 @@ describe('asRelayTemplateRow', () => {
     expect(asRelayTemplateRow(relay(), null)).toEqual(relay());
     const other = relay({ dedup_key: 'reminder:abc' });
     expect(asRelayTemplateRow(other, V2)).toBe(other);
-    const wrongKey = relay({ template_key: 'lesson_reminder_meet' });
-    expect(asRelayTemplateRow(wrongKey, V2)).toBe(wrongKey);
+    const keyed = relay({ template_key: 'lesson_reminder_meet' });
+    expect(asRelayTemplateRow(keyed, V2)).toBe(keyed);
   });
 });

@@ -36,7 +36,7 @@ const relayRow = (body: string, over: Parameters<typeof messageRow>[0] = {}) =>
   messageRow({ status: 'sent', template_key: null, template_params: null, body, dedup_key: 'script-relay:1', ...over });
 
 describe('MessageViews: relayed templates', () => {
-  it('an old teacher_lesson_v2 row renders the full Arabic text as a template', async () => {
+  it('a relayed teacher_lesson_v2 row renders the full Arabic text as a template', async () => {
     const body = '[teacher_lesson_v2]\nسلمى\nهدى علي (AB-0001)\nالاثنين 2/11 — 4:00 م\n45 دقيقة';
     const view = await views().view(relayRow(body));
     expect(view.template_key).toBe('teacher_lesson_v2');
@@ -52,14 +52,6 @@ describe('MessageViews: relayed templates', () => {
     expect(view.body).toBe('تذكير: حلقة يوسف اليوم 5:00 م');
     expect(view.template?.buttons).toEqual([{ type: 'url', text: 'ادخل الحلقة' }]);
     expect(view.forwardable).toBe(false);
-  });
-
-  it('a newer row with its stored key and button value opens the link', async () => {
-    const params = { '1': 'يوسف', '2': '5:00 م', button: 'abc-defg-hij' };
-    const row = relayRow('[lesson_reminder_meet]\nيوسف\n5:00 م', { template_key: 'lesson_reminder_meet', template_params: params });
-    const view = await views().view(row);
-    expect(view.body).toBe('تذكير: حلقة يوسف اليوم 5:00 م');
-    expect(view.template?.buttons[0]).toMatchObject({ url: 'https://meet.google.com/abc-defg-hij' });
   });
 
   it('a malformed body, a count mismatch or an unknown name stays raw', async () => {

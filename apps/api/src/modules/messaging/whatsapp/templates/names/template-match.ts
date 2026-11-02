@@ -1,4 +1,4 @@
-import { BODY_SLOTS, crmTemplateName } from '@ab/shared';
+import { BODY_SLOTS } from '@ab/shared';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // A template named outside the platform (the old Apps Script, through the script relay) → its
@@ -7,11 +7,14 @@ import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 type Matcher = (t: TemplateRow, name: string) => boolean;
 
-/** First kind that matches wins: our key, Meta's name, then the CRM's name (admin's or default). */
+/**
+ * First kind that matches wins: our key, Meta's name, then the admin's CRM name. Never the CRM
+ * default names (crmTemplateName): those stand for another body than the script's own template.
+ */
 const MATCHERS: readonly Matcher[] = [
   (t, name) => t.key === name,
   (t, name) => t.meta_name === name,
-  (t, name) => t.crm_name === name || crmTemplateName(t) === name,
+  (t, name) => t.crm_name === name,
 ];
 
 /** The catalog row a script's template name stands for; null when none. */

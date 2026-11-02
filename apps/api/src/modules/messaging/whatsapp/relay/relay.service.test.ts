@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { crmMe, fakeLine, fakeNames, fakeRepo, KEY, templateBody, TO } from './relay.fakes';
+import { crmMe, fakeLine, fakeRepo, KEY, templateBody, TO } from './relay.fakes';
 import type { RelayRepo } from './relay.repo';
 import { relayRequestSchema } from './relay.schema';
 import { RelayService } from './relay.service';
@@ -14,7 +14,7 @@ function setup(...replies: Parameters<typeof scriptedFetch>) {
   const f = scriptedFetch(...replies);
   const repo = fakeRepo();
   const line = fakeLine({ fetch: f });
-  const service = new RelayService(line, repo as unknown as RelayRepo, fakeNames());
+  const service = new RelayService(line, repo as unknown as RelayRepo);
   const now = line.current();
   if (!now) throw new Error('line');
   return { f, repo, service, now };
