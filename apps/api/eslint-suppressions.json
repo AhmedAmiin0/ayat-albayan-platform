@@ -1518,9 +1518,6 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 3
     }
@@ -1534,11 +1531,6 @@
     },
     "complexity": {
       "count": 1
-    }
-  },
-  "src/modules/finance/assistant-pay/commissions/commissions.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
     }
   },
   "src/modules/finance/assistant-pay/my/my.commissions.http.test.ts": {
@@ -1617,32 +1609,23 @@
       "count": 2
     }
   },
-  "src/modules/finance/assistant-pay/my/my.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/finance/assistant-pay/my/my.repo.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/assistant-pay/my/my.queries.ts": {
+  "src/modules/finance/assistant-pay/my/my.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 9
     }
   },
   "src/modules/finance/assistant-pay/my/my.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 3
     }
@@ -1665,7 +1648,7 @@
   },
   "src/modules/finance/assistant-pay/shared/assistant-pay.fakes.ts": {
     "ab/no-parent-imports": {
-      "count": 10
+      "count": 4
     },
     "max-len": {
       "count": 5
@@ -1718,9 +1701,6 @@
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 1
     }
@@ -1737,9 +1717,6 @@
     }
   },
   "src/modules/finance/assistant-pay/statements/corrections.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
     "max-len": {
       "count": 7
     }
@@ -1786,10 +1763,7 @@
       "count": 4
     }
   },
-  "src/modules/finance/assistant-pay/statements/statements.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
+  "src/modules/finance/assistant-pay/statements/statements.repo.ts": {
     "max-len": {
       "count": 1
     }
@@ -1797,9 +1771,6 @@
   "src/modules/finance/assistant-pay/statements/statements.service.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 4
     },
     "max-len": {
       "count": 8
@@ -1813,10 +1784,7 @@
       "count": 8
     }
   },
-  "src/modules/finance/assistant-pay/terms/terms.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
+  "src/modules/finance/assistant-pay/terms/terms.repo.ts": {
     "complexity": {
       "count": 1
     },
@@ -1825,9 +1793,6 @@
     }
   },
   "src/modules/finance/assistant-pay/terms/terms.service.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "max-len": {
       "count": 11
     }
@@ -2431,9 +2396,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -2451,9 +2413,6 @@
   "src/modules/finance/payouts/payouts.ledger.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 3
@@ -2480,9 +2439,6 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -2490,9 +2446,6 @@
   "src/modules/finance/payouts/payouts.payment.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "complexity": {
       "count": 1
@@ -2511,20 +2464,12 @@
       "count": 4
     }
   },
-  "src/modules/finance/payouts/payouts.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/payouts/payouts.queries.ts": {
+  "src/modules/finance/payouts/payouts.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 5
@@ -2669,9 +2614,6 @@
     }
   },
   "src/modules/finance/stripe/links/link-create.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
     "complexity": {
       "count": 1
     },
@@ -2680,9 +2622,6 @@
     }
   },
   "src/modules/finance/stripe/links/link-deps.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
       "count": 2
     }
@@ -2693,9 +2632,6 @@
     }
   },
   "src/modules/finance/stripe/links/link-packages.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -2745,7 +2681,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/links/payment-links.queries.ts": {
+  "src/modules/finance/stripe/links/payment-links.repo.ts": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
     },
@@ -2760,9 +2696,6 @@
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 1
     },
     "max-len": {
       "count": 8
@@ -2781,9 +2714,6 @@
   "src/modules/finance/stripe/pay/checkout.service.ts": {
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 5
     },
     "complexity": {
       "count": 2
@@ -2838,9 +2768,6 @@
     }
   },
   "src/modules/finance/stripe/pay/pay.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 6
-    },
     "ab/zod-inputs": {
       "count": 1
     },
@@ -2869,15 +2796,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/stripe.module.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    }
-  },
   "src/modules/finance/stripe/testing/stripe-app.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 7
-    },
     "max-len": {
       "count": 1
     }
@@ -2888,9 +2807,6 @@
     }
   },
   "src/modules/finance/stripe/testing/stripe-mocks.fakes.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "max-len": {
       "count": 8
     }
@@ -2916,10 +2832,7 @@
       "count": 11
     }
   },
-  "src/modules/finance/stripe/webhook/stripe-events.queries.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
+  "src/modules/finance/stripe/webhook/stripe-events.repo.ts": {
     "max-len": {
       "count": 2
     }
@@ -2955,19 +2868,11 @@
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/finance/stripe/webhook/webhook-deps.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
     }
   },
   "src/modules/finance/subscriptions/alerts/admin-tasks.controller.ts": {
@@ -3492,9 +3397,6 @@
     }
   },
   "src/modules/finance/teacher-earnings/earnings.controller.ts": {
-    "ab/no-parent-imports": {
-      "count": 3
-    },
     "ab/zod-inputs": {
       "count": 13
     },
@@ -3550,33 +3452,27 @@
   "src/modules/finance/teacher-earnings/earnings.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/teacher-earnings/earnings.queries.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/teacher-earnings/earnings.queries.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/no-deprecated": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/modules/finance/teacher-earnings/earnings.receipts.ts": {
     "ab/no-parent-imports": {
       "count": 3
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.repo.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.repo.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 2
     },
     "max-len": {
       "count": 3
@@ -3597,9 +3493,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -3607,12 +3500,9 @@
       "count": 2
     }
   },
-  "src/modules/finance/teacher-earnings/summary/corrections.queries.ts": {
+  "src/modules/finance/teacher-earnings/summary/corrections.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
-    },
-    "ab/no-parent-imports": {
-      "count": 3
     },
     "max-len": {
       "count": 1

@@ -15,10 +15,10 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow, type Page } from '../../../common/http/http';
-import { CorrectionsQueries } from './summary/corrections.queries';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, type Page } from '@/common/http/http';
+import { CorrectionsRepo } from './summary/corrections.repo';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
 import { toSummaryView } from './summary/earnings.summary';
@@ -32,7 +32,7 @@ export class TeacherEarningsController {
   constructor(
     private readonly earnings: EarningsService,
     private readonly receipts: EarningsReceipts,
-    private readonly corrections: CorrectionsQueries,
+    private readonly corrections: CorrectionsRepo,
   ) {}
 
   /** «مستحقات المعلمين»: earned / paid / owed per teacher (static segment, before `:teacherId`). */

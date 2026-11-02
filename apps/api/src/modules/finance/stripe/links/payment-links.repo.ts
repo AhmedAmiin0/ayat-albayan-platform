@@ -1,6 +1,6 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 export type LinkRow = Tables<'payment_links'> & { student: { id: string; code: string | null; name: string } | null };
 const SELECT = '*, student:students(id, code, name)';
@@ -9,7 +9,7 @@ const fail = (what: string, message: string): Error => new Error(`payment_links 
 
 /** payment_links with the service role (the API is its only writer; RLS keeps clients to their own rows). */
 @Injectable()
-export class PaymentLinksQueries {
+export class PaymentLinksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async insert(row: TablesInsert<'payment_links'>): Promise<LinkRow> {

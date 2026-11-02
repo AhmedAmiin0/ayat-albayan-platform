@@ -1,0 +1,111 @@
+{
+  "id": "r12",
+  "seq": 225,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/commissions/commissions.queries.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/commissions/commissions.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/my/my.queries.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/my/my.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/statements/statements.queries.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/statements/statements.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/terms/terms.queries.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/terms/terms.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/payouts/payouts.queries.ts",
+      "to": "apps/api/src/modules/finance/payouts/payouts.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/stripe/links/payment-links.queries.ts",
+      "to": "apps/api/src/modules/finance/stripe/links/payment-links.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/stripe/webhook/stripe-events.queries.ts",
+      "to": "apps/api/src/modules/finance/stripe/webhook/stripe-events.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/teacher-earnings/earnings.queries.ts",
+      "to": "apps/api/src/modules/finance/teacher-earnings/earnings.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/teacher-earnings/summary/corrections.queries.ts",
+      "to": "apps/api/src/modules/finance/teacher-earnings/summary/corrections.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/finance/assistant-pay/terms/terms.queries.share.test.ts",
+      "to": "apps/api/src/modules/finance/assistant-pay/terms/terms.repo.share.test.ts"
+    }
+  ],
+  "renames": {
+    "CommissionsQueries": "CommissionsRepo",
+    "CorrectionsQueries": "CorrectionsRepo",
+    "EarningsQueries": "EarningsRepo",
+    "MyQueries": "MyRepo",
+    "PaymentLinksQueries": "PaymentLinksRepo",
+    "PayoutsQueries": "PayoutsRepo",
+    "StatementsQueries": "StatementsRepo",
+    "StripeEventsQueries": "StripeEventsRepo",
+    "TermsQueries": "TermsRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/finance/assistant-pay/commissions/commissions.queries.ts",
+      "apps/api/src/modules/finance/assistant-pay/commissions/commissions.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/my/my.queries.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/my/my.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/my/my.queries.ts",
+      "apps/api/src/modules/finance/assistant-pay/my/my.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/statements/statements.queries.ts",
+      "apps/api/src/modules/finance/assistant-pay/statements/statements.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/terms/terms.queries.share.test.ts",
+      "apps/api/src/modules/finance/assistant-pay/terms/terms.repo.share.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/assistant-pay/terms/terms.queries.ts",
+      "apps/api/src/modules/finance/assistant-pay/terms/terms.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/payouts/payouts.queries.test.ts",
+      "apps/api/src/modules/finance/payouts/payouts.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/payouts/payouts.queries.ts",
+      "apps/api/src/modules/finance/payouts/payouts.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/stripe/links/payment-links.queries.ts",
+      "apps/api/src/modules/finance/stripe/links/payment-links.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/stripe/webhook/stripe-events.queries.ts",
+      "apps/api/src/modules/finance/stripe/webhook/stripe-events.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/teacher-earnings/earnings.queries.test.ts",
+      "apps/api/src/modules/finance/teacher-earnings/earnings.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/teacher-earnings/earnings.queries.ts",
+      "apps/api/src/modules/finance/teacher-earnings/earnings.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/teacher-earnings/summary/corrections.queries.ts",
+      "apps/api/src/modules/finance/teacher-earnings/summary/corrections.repo.ts"
+    ]
+  ]
+}

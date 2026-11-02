@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, PayoutLine, PayoutView } from '@ab/shared';
-import type { PayoutRow } from './payouts.queries';
+import type { PayoutRow } from './payouts.repo';
 
 type Breakdown = PayoutView['breakdown'];
 

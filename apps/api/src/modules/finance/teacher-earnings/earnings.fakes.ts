@@ -1,5 +1,5 @@
 // Test fixtures for the per-session ledger (test-only, excluded from the build).
-import type { EarningRow, PaymentRow, SessionRow } from './earnings.queries';
+import type { EarningRow, PaymentRow, SessionRow } from './earnings.repo';
 
 export const TEACHER = '5e000000-0000-4000-8000-000000000001';
 export const OTHER_TEACHER = '5e000000-0000-4000-8000-000000000002';

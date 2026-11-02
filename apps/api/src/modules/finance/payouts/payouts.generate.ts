@@ -1,10 +1,10 @@
 import type { Json } from '@ab/db';
 import { monthStart, payoutStatuses, type PayoutGenerateResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
+import { AuditService } from '@/common/audit/audit.service';
 import { toPayoutView } from './payouts.mapper';
 import { monthWindow, planPayout, type PayoutAction } from './payouts.plan';
-import { PayoutsQueries, type PayoutRow } from './payouts.queries';
+import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 import { PayoutsSettings } from './payouts.settings';
 
 type Ctx = { teacherId: string; month: string; actorId: string };
@@ -17,7 +17,7 @@ type Ctx = { teacherId: string; month: string; actorId: string };
 @Injectable()
 export class PayoutsGenerator {
   constructor(
-    private readonly payouts: PayoutsQueries,
+    private readonly payouts: PayoutsRepo,
     private readonly settings: PayoutsSettings,
     private readonly audit: AuditService,
   ) {}

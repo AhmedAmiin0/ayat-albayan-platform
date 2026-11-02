@@ -1,8 +1,8 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { ledgerError } from '../earnings.errors';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { ledgerError } from '@/modules/finance/teacher-earnings/earnings.errors';
 
 export type PayPayoutInput = {
   payoutId: string;
@@ -28,7 +28,7 @@ export type SummaryRow = {
  * the «مستحقات المعلمين» summary view (20261005000202). Service role; the controllers guard.
  */
 @Injectable()
-export class CorrectionsQueries {
+export class CorrectionsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async voidPayment(input: { paymentId: string; actorId: string; reason: string }): Promise<void> {

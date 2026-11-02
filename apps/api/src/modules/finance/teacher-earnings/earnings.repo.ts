@@ -29,7 +29,7 @@ const STATUSES = { unpaid: ['earned', 'partially_paid'] } as const;
 
 /** All supabase access for the per-session ledger (service role; the controllers guard). */
 @Injectable()
-export class EarningsQueries {
+export class EarningsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async teacher(id: string): Promise<{ id: string; display_name_ar: string } | null> {

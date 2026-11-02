@@ -1,7 +1,7 @@
 import { type DynamicModule, Module } from '@nestjs/common';
-import { SalesMoneyModule } from '../../sales/sales-money';
-import { PaymentsModule } from '../payments';
-import { SubscriptionsModule } from '../subscriptions';
+import { SalesMoneyModule } from '@/modules/sales/sales-money';
+import { PaymentsModule } from '@/modules/finance/payments';
+import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { STRIPE_FACTORY, StripeClients, stripeFactory } from './gate/stripe-clients';
 import { StripeFeatureController } from './gate/stripe-feature.controller';
 import { StripeEnabledGuard } from './gate/stripe-gate';
@@ -12,14 +12,14 @@ import { LinkCreateDeps, LinkDeps, LinkSalesDeps } from './links/link-deps';
 import { LinkPackages } from './links/link-packages';
 import { LinkViews } from './links/link-views';
 import { PaymentLinksController } from './links/payment-links.controller';
-import { PaymentLinksQueries } from './links/payment-links.queries';
+import { PaymentLinksRepo } from './links/payment-links.repo';
 import { CheckoutService } from './pay/checkout.service';
 import { PayController } from './pay/pay.controller';
 import { PayLimit } from './pay/pay-limit';
 import { LinkAlerts } from './webhook/link-alerts';
 import { LinkFulfilment } from './webhook/link-fulfilment';
 import { LinkRefunds } from './webhook/link-refunds';
-import { StripeEventsQueries } from './webhook/stripe-events.queries';
+import { StripeEventsRepo } from './webhook/stripe-events.repo';
 import { StripeWebhookController } from './webhook/stripe-webhook.controller';
 import { StripeWebhookService, WebhookHandlers } from './webhook/stripe-webhook.service';
 import { WebhookDeps } from './webhook/webhook-deps';
@@ -49,10 +49,10 @@ export class StripeTestModule {
       ],
       providers: [
         { provide: STRIPE_FACTORY, useValue: stripeFactory },
-        ...[StripeClients, StripeEnabledGuard, LinkViews, PaymentLinksQueries, LinkDeps],
+        ...[StripeClients, StripeEnabledGuard, LinkViews, PaymentLinksRepo, LinkDeps],
         ...[LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel, LinkSalesDeps],
         ...[CheckoutService, PayLimit, LinkAlerts, LinkFulfilment, LinkRefunds],
-        ...[StripeEventsQueries, StripeWebhookService],
+        ...[StripeEventsRepo, StripeWebhookService],
         ...[WebhookDeps, WebhookHandlers],
       ],
     };

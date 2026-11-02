@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
 import { ar } from '@/common/infra/i18n/server-text';
-import { badRequest } from '../../../../common/http/errors';
-import { StripeClients } from '../gate/stripe-clients';
+import { badRequest } from '@/common/http/errors';
+import { StripeClients } from '@/modules/finance/stripe/gate/stripe-clients';
 import { LinkAlerts } from './link-alerts';
 import { LinkFulfilment } from './link-fulfilment';
 import { LinkRefunds } from './link-refunds';
-import { StripeEventsQueries } from './stripe-events.queries';
+import { StripeEventsRepo } from './stripe-events.repo';
 
 /** The event handlers (rule 2: at most 3 constructor parameters). */
 @Injectable()
@@ -34,7 +34,7 @@ export class StripeWebhookService {
 
   constructor(
     private readonly clients: StripeClients,
-    private readonly events: StripeEventsQueries,
+    private readonly events: StripeEventsRepo,
     private readonly handlers: WebhookHandlers,
   ) {}
 
