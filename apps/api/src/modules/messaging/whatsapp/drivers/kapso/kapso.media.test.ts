@@ -61,12 +61,20 @@ describe('fetchMedia byte timeout (owner 2026-10-19 #1)', () => {
     for (const { env, body } of lookups) {
       vi.useFakeTimers();
       const media = fetchMedia({ env, fetch: hangingBytes(body), timeoutMs: CONN_MS }, 'm1');
-      expect(await after(CONN_MS, media)).toBe('pending');
-      const ended = await after(MEDIA_BYTES_TIMEOUT_MS - CONN_MS, media);
+      expect(await after(MEDIA_BYTES_TIMEOUT_MS - 1, media)).toBe('pending');
+      const ended = await after(1, media);
       expect(ended).toMatchObject({ e: expect.any(WaError) });
       expect((ended as { e: WaError }).e.info).toMatchObject({ status: 0, uncertain: true });
       vi.useRealTimers();
     }
+  });
+
+  it('the media lookup keeps the connection timeout', async () => {
+    vi.useFakeTimers();
+    const hang = (): Promise<Response> => new Promise<Response>(() => undefined);
+    const media = fetchMedia({ env: STUB_ENV, fetch: hang, timeoutMs: CONN_MS }, 'm1');
+    expect(await after(CONN_MS - 1, media)).toBe('pending');
+    expect(await after(1, media)).toMatchObject({ e: expect.any(WaError) });
   });
 
   it('a JSON call without its own timeout keeps the connection timeout', async () => {

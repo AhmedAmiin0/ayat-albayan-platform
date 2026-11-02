@@ -51,7 +51,7 @@ const META_CALLS: readonly (readonly [string, RegExp])[] = [
   ['client method', new RegExp(`\\.\\s*(${METHODS})\\b`)],
   ['bracket method', new RegExp(`\\[\\s*['"\`](${METHODS})['"\`]\\s*\\]`)],
   ['destructured method', new RegExp(`\\{[^}]*\\b(${METHODS})\\b[^}]*\\}\\s*=`)],
-  ['graph helper', /\bgraph(Fetch|Json|Http|Download)\b/],
+  ['graph helper', /\bgraph(Fetch|Json|Http|Download)\b|\b(resumableUpload|fetchMedia)\b/],
   ['WA_API_BASE', /\bWA_API_BASE\b/],
   ['graph.facebook.com', /graph\.facebook\.com/],
   ['KAPSO_API_BASE', /\bKAPSO_API_BASE\b/],
