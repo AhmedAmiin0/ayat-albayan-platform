@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { teacherUpdateSchema } from '../../people/schemas/people.js';
-import { meetingModeOf, TEACHER_MEETING_MODES, usesPlatform } from './meeting-mode.js';
+import { meetingModeOf, TEACHER_MEETING_MODES, usesPlatform } from '@ab/schedule';
 
 describe('usesPlatform', () => {
   it('follows the academy switch when the teacher has no mode', () => {

@@ -262,14 +262,6 @@
       "count": 1
     }
   },
-  "src/validation/validate.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/value-groups.registry.test.ts": {
     "max-len": {
       "count": 2

@@ -89,6 +89,9 @@ describe('thread media routes (R-MSG-06): admin only', () => {
   it('a bad phone is 400 invalid_phone; a bad message id is 400', async () => {
     expect((await call('/threads/abc/media')).json()).toMatchObject({ code: 'invalid_phone' });
     expect((await call(`/threads/${URL_PHONE}/media/not-a-uuid`)).statusCode).toBe(400);
+    expect((await call(`/threads/abc/media/${M1}`)).json()).toMatchObject({ code: 'invalid_phone' });
+    const both = await call('/threads/abc/media/not-a-uuid');
+    expect(both.json()).toMatchObject({ message: 'Validation failed (uuid is expected)' });
   });
 
   it('a file: downloaded on first use, cached, then a signed URL of our copy', async () => {

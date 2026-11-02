@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
-import { CONFLICT_KINDS } from './conflicts.js';
-import { CANCEL_BY, LESSON_EVENTS } from './state-machine.js';
+import { CANCEL_BY, CONFLICT_KINDS, LESSON_EVENTS } from '@ab/schedule';
 
 // Rule 10: every machine value the scheduling UI shows has an Arabic label.
 describe('scheduling labels in ar.json (R-SCH-04, R-SCH-07)', () => {

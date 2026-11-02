@@ -1,14 +1,18 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { KickService } from './kick.service';
-import { RecordingListService } from '../recordings/recording-list.service';
+import { RecordingListService } from '@/modules/teaching/classroom/recordings/recording-list.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
+const identitySchema = z.string().regex(IDENTITY);
+const participantNotFound = () => notFound('participant_not_found');
 
 /** Classroom moderation and recordings, staff side (the services decide who, per lesson). */
 @ApiTags('classroom')
@@ -29,17 +33,19 @@ export class ModerationController {
   @HttpCode(204)
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param('identity') identity: string,
+    @ZodParam('identity', identitySchema, participantNotFound) identity: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
     await this.kicks.remove({ user, lessonId: id, identity });
   }
 
   /** The lesson's recordings, newest first, with 1-hour links to the finished files. */
   @Get('recordings')
   @Permissions('recordings.read')
-  recordingsOf(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonRecordingView[]> {
+  recordingsOf(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LessonRecordingView[]> {
     return this.recordings.list({ user, lessonId: id });
   }
 }

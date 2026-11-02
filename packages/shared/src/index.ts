@@ -1,20 +1,15 @@
-// The facade the apps import (docs/32 D4): @ab/core, @ab/i18n (k3a), @ab/time (k3b), @ab/catalog
-// and @ab/settings (k4) are packages.
+// The facade the apps import (docs/32 D4): @ab/core, @ab/i18n (k3a), @ab/time (k3b), @ab/catalog,
+// @ab/settings (k4), @ab/money and @ab/schedule (k5a) are packages.
 export * from '@ab/core';
 export * from '@ab/i18n';
 export * from '@ab/time';
 export * from '@ab/catalog';
 export * from '@ab/settings';
-export * from './schedule/classroom/index.js';
-export * from './schedule/lessons/index.js';
+export * from '@ab/money';
+export * from '@ab/schedule';
 export * from './messaging/index.js';
-export * from './money/assistant/index.js';
-export * from './money/ledger/index.js';
-export * from './money/pricing/index.js';
 export * from './reports/index.js';
 export * from './schemas/index.js';
-export * from './money/status-style/status-style.js';
-export * from './money/status-style/commission-status-style.js';
 export * from './people/students/student-lists.js';
 export * from './people/students/index.js';
 export * from './sales/pick-sales.js';

@@ -8,6 +8,7 @@ import {
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService } from './alerts.service';
+import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 15 * 60_000;
@@ -17,17 +18,23 @@ const FIRST_RUN_MS = 5 * 60_000;
 /**
  * R-SUB-02 triggers: every lesson change (LessonEvents: attendance, cancel, move, a submitted
  * report) evaluates the lessons' students right away, awaited by the writer, so it stays one
- * balance read per student. The sweep (docs/11 §6) runs every 15 minutes over every student with
- * a package, so a missed event (a failed listener, a direct DB edit) still raises its alert.
- * The sweep also moves a student whose renewal date passed to «بانتظار التجديد» (StudentRenewal), leaving a
- * status the admin set by hand. Idempotent through the dedup keys and the compare-and-set.
- * ponytail: in-process timer on the single API instance, like HorizonJob; pg_cron when it scales.
+ * balance read per student. The sweep (docs/11 §6) runs every 15 minutes over every student with a
+ * package, so a missed event (a failed listener, a direct DB edit) still raises its alert. The
+ * sweep also moves a student whose renewal date passed to «بانتظار التجديد» (StudentRenewal),
+ * leaving a status the admin set by hand. Idempotent through the dedup keys and the
+ * compare-and-set. ponytail: in-process timer on the single API instance, like HorizonJob; pg_cron
+ * when it scales.
  */
 @BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
 export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(AlertsJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  private readonly ticker = new Ticker({
+    name: AlertsJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queries: AlertsRepo,
@@ -40,12 +47,11 @@ export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModule
   }
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, EVERY_MS).unref());
+    this.ticker.start();
   }
 
   onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+    this.ticker.stop();
   }
 
   /** Never throws. */

@@ -1,6 +1,6 @@
 import type { KapsoLineEnv } from '@/config/env/env';
 import {
-  graphJson,
+  graphHttp,
   type FetchLike,
   type GraphConn,
 } from '@/modules/messaging/whatsapp/drivers/meta/graph';
@@ -49,8 +49,7 @@ export class KapsoHistory {
   async message(env: KapsoLineEnv, waMessageId: string): Promise<KapsoMessage> {
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages/${encodeURIComponent(waMessageId)}`;
     const query = new URLSearchParams({ fields: KAPSO_FIELDS });
-    const body = await graphJson(this.conn(env), { path: `${path}?${query}` });
-    return messageSchema.parse(body);
+    return graphHttp(this.conn(env)).json({ path: `${path}?${query}`, schema: messageSchema });
   }
 
   /**
@@ -73,7 +72,7 @@ export class KapsoHistory {
     const params = new URLSearchParams({ direction, since, limit, fields });
     if (q.after) params.set('after', q.after);
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages?${params}`;
-    const page = historyPageSchema.parse(await graphJson(this.conn(env), { path }));
+    const page = await graphHttp(this.conn(env)).json({ path, schema: historyPageSchema });
     return { messages: page.data, after: nextOf(page.paging?.cursors.after, page.data.length) };
   }
 }

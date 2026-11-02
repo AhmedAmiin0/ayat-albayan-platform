@@ -4,7 +4,8 @@ import type { Http } from '@/common/infra/http/http.types';
 import type { KapsoLineEnv } from '@/config/env/env';
 
 // The Kapso profile for its Platform API (docs/36 h4): the line's X-API-Key, the body of an
-// error never kept (it may carry a family's number), redirects followed as before.
+// error never kept (it may carry a family's number). A redirect is never followed (h8b: undici
+// keeps `x-api-key` on a cross-origin redirect): a 3xx fails like a dropped connection.
 
 /** Per call; reopenKapsoConversation passes what is left of its shared budget. */
 const CALL_MS = 10_000;
@@ -32,7 +33,7 @@ export function kapsoPlatformHttp(env: KapsoLineEnv, fetch?: FetchLike): Http {
         'content-type': 'application/json',
       }),
     timeoutMs: CALL_MS,
-    redirect: 'follow',
+    redirect: 'error',
     errorBody: 'omit',
     errors: {
       shape: () => new Error('Kapso conversations: unexpected list body'),

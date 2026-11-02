@@ -1,11 +1,21 @@
-import { isWaAuthError } from '@ab/shared';
-import { z } from 'zod';
-import type { GraphEnv } from '../../../../../config/env/env';
-import { WaError } from '../../whatsapp.types';
+import type { ErrorTable } from '@/common/infra/http/errors';
+import type { FetchLike, HttpFailure } from '@/common/infra/http/failure';
+import { createHttp } from '@/common/infra/http/http';
+import type { Http } from '@/common/infra/http/http.types';
+import type { GraphEnv } from '@/config/env/env';
+import type { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { byDriver, metaErrorSchema, PLAIN, SENT_SHAPE, waErrorFrom } from './graph-errors';
 
-// One Graph API call: auth by provider, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
+// The Graph API profiles (docs/36 h8, h8b, docs/12 §3.2): auth by driver, JSON, one deadline per
+// call, and Meta's error body → WaError as a table (graph-errors.ts).
 
-export type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
+export type { FetchLike };
+export { byDriver };
+
+type Provider = NonNullable<GraphEnv['provider']>;
+
+/** provider absent = meta (MetaLineEnv's shape, unchanged). */
+export const providerOf = (env: GraphEnv): Provider => env.provider ?? 'meta';
 
 export interface GraphConn {
   env: GraphEnv;
@@ -13,117 +23,78 @@ export interface GraphConn {
   timeoutMs: number;
 }
 
-export interface GraphRequest {
-  /** Relative to {base}/{version}/, or an absolute URL (Meta's media download link). */
-  path: string;
-  method?: 'GET' | 'POST';
-  body?: unknown;
-  /** Raw bytes instead of a JSON body (the resumable upload). */
-  raw?: Uint8Array<ArrayBuffer>;
-  /** Override or add headers (the upload's `authorization: OAuth …` and `file_offset`). */
-  headers?: Record<string, string>;
-  /** false = no credential at all (Kapso's download_url carries its own token: never send ours there). */
-  auth?: false;
-  /** Overrides conn.timeoutMs for this call (the media byte download, up to 16 MB). */
-  timeoutMs?: number;
-}
-
 /** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
 export function authHeaders(env: GraphEnv): Record<string, string> {
-  return env.provider === 'kapso' ? { 'x-api-key': env.apiKey } : { authorization: `Bearer ${env.accessToken}` };
+  return env.provider === 'kapso'
+    ? { 'x-api-key': env.apiKey }
+    : { authorization: `Bearer ${env.accessToken}` };
 }
 
-const metaErrorSchema = z.object({
-  error: z.object({
-    message: z.string().optional(),
-    code: z.number().optional(),
-    error_user_msg: z.string().optional(),
-    error_data: z.object({ details: z.string().optional() }).optional(),
-  }),
-});
+type Redirect = NonNullable<RequestInit['redirect']>;
 
-function url(env: GraphEnv, path: string): string {
-  return /^https?:\/\//.test(path) ? path : `${env.base}/${env.version}/${path}`;
+/**
+ * docs/36 h8b (2): a keyed Kapso call never follows a redirect (undici strips `Authorization` on
+ * a cross-origin redirect but keeps `x-api-key`); a 3xx fails as a network error. Meta follows.
+ */
+const KEYED_REDIRECT = { kapso: 'error', meta: 'follow' } satisfies Record<Provider, Redirect>;
+
+type KeyEntries = (env: GraphEnv) => Partial<ErrorTable<WaError>>;
+
+/** Only a request that carried the key can have the key refused: byDriver on 401 / 403. */
+const refusedKey: KeyEntries = (env) => {
+  const refused = (f: HttpFailure): WaError => byDriver(env, waErrorFrom(f));
+  return { 401: refused, 403: refused };
+};
+
+const KEY_ENTRIES = {
+  kapso: refusedKey,
+  meta: () => ({}),
+} satisfies Record<Provider, KeyEntries>;
+
+interface Profile {
+  name: string;
+  headers: Record<string, string>;
+  redirect: Redirect;
+  errors: ErrorTable<WaError>;
 }
 
-function parse(text: string): unknown {
-  try {
-    return JSON.parse(text);
-  } catch {
-    return null;
-  }
+function profileHttp(conn: GraphConn, p: Profile): Http {
+  return createHttp({
+    name: p.name,
+    base: () => `${conn.env.base}/${conn.env.version}`,
+    headers: () => Promise.resolve(p.headers),
+    timeoutMs: conn.timeoutMs,
+    redirect: p.redirect,
+    errorBody: metaErrorSchema,
+    errors: p.errors,
+    fetch: conn.fetch,
+  });
 }
 
-/** Meta's `{ error: { code, message, error_data.details } }`; anything else keeps code null. */
-function waErrorFrom(status: number, text: string): WaError {
-  const r = metaErrorSchema.safeParse(parse(text));
-  if (!r.success) {
-    return new WaError(`WhatsApp HTTP ${status}`, { code: null, status, details: text.slice(0, 300) || undefined });
-  }
-  const e = r.data.error;
-  const details = e.error_data?.details ?? e.error_user_msg;
-  return new WaError(e.message ?? `WhatsApp HTTP ${status}`, { code: e.code ?? null, status, details });
+/** A keyed profile of the line: its credential, its driver's redirect and 401 / 403 entries. */
+function keyedHttp(conn: GraphConn, extra: Partial<ErrorTable<WaError>>): Http {
+  const name = providerOf(conn.env);
+  const errors = { ...PLAIN, ...KEY_ENTRIES[name](conn.env), ...extra };
+  const redirect = KEYED_REDIRECT[name];
+  return profileHttp(conn, { name, headers: authHeaders(conn.env), redirect, errors });
+}
+
+/** Every Graph call of a line but the message send. */
+export function graphHttp(conn: GraphConn): Http {
+  return keyedHttp(conn, {});
+}
+
+/** `POST {phone}/messages` only: a 2xx without a message id is `uncertain` (h8b). */
+export function graphSend(conn: GraphConn): Http {
+  return keyedHttp(conn, SENT_SHAPE);
 }
 
 /**
- * Kapso refusing its project key (HTTP 401 / 403 with no Meta code of its own) is a broken
- * credential: tagged `credential: 'kapso'` (never Meta's 190, whose words point at Business
- * Manager), so the sender holds the line's queue instead of failing every row and the admin is
- * told to fix KAPSO_API_KEY. Meta's own errors pass through unchanged.
+ * Kapso's download_url carries its own token: NO credential at all (never send ours there), and
+ * the plain table, so a 401 there is never `credential: 'kapso'` (the line is never held).
+ * Redirects are followed: it carries no header worth keeping.
  */
-export function byDriver(env: GraphEnv, error: WaError): WaError {
-  const { status, code } = error.info;
-  if (env.provider !== 'kapso' || (status !== 401 && status !== 403) || isWaAuthError(code)) return error;
-  if (code !== null && code !== status) return error;
-  return new WaError(`Kapso refused the API key: ${error.message}`, { ...error.info, credential: 'kapso' });
-}
-
-/** Connection errors raised before any byte left: the request never reached Meta, so a retry is safe. */
-const NEVER_SENT = new Set(['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'ENETUNREACH', 'EHOSTUNREACH', 'UND_ERR_CONNECT_TIMEOUT']);
-
-/**
- * Could this fetch error have happened after Meta got the request? A timeout or a dropped
- * connection can (Meta may have sent the message and only the answer was lost); a refused or
- * unresolvable connection cannot. Unknown errors count as uncertain: never resend blindly.
- */
-export function mayHaveReachedMeta(error: unknown): boolean {
-  const cause: unknown = error instanceof Error ? error.cause : undefined;
-  const code = cause && typeof cause === 'object' && 'code' in cause ? String(cause.code) : '';
-  return !NEVER_SENT.has(code);
-}
-
-const timeoutSignal = (conn: GraphConn, req: GraphRequest): AbortSignal => AbortSignal.timeout(req.timeoutMs ?? conn.timeoutMs);
-
-/**
- * Resolves on 2xx; throws WaError otherwise. A network error or timeout is code null, status 0,
- * flagged `uncertain` unless the connection was never made.
- */
-export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Response> {
-  const hasBody = req.body !== undefined;
-  let res: Response;
-  try {
-    res = await conn.fetch(url(conn.env, req.path), {
-      method: req.method ?? 'GET',
-      headers: {
-        ...(req.auth === false ? {} : authHeaders(conn.env)),
-        ...(hasBody ? { 'content-type': 'application/json' } : {}),
-        ...req.headers,
-      },
-      body: req.raw ?? (hasBody ? JSON.stringify(req.body) : undefined),
-      signal: timeoutSignal(conn, req),
-    });
-  } catch (e) {
-    const message = `WhatsApp request failed: ${e instanceof Error ? e.message : String(e)}`;
-    throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReachedMeta(e) });
-  }
-  if (res.ok) return res;
-  const error = waErrorFrom(res.status, await res.text().catch(() => ''));
-  // Only a request that carried the key can have the key refused (not Kapso's download_url).
-  throw req.auth === false ? error : byDriver(conn.env, error);
-}
-
-/** graphFetch + the JSON body. */
-export async function graphJson(conn: GraphConn, req: GraphRequest): Promise<unknown> {
-  const res = await graphFetch(conn, req);
-  return parse(await res.text());
+export function graphDownload(conn: GraphConn): Http {
+  const name = `${providerOf(conn.env)} download`;
+  return profileHttp(conn, { name, headers: {}, redirect: 'follow', errors: PLAIN });
 }

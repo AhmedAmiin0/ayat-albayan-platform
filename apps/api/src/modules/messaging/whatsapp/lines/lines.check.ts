@@ -1,10 +1,10 @@
 import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
-import { graphJson, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { crmConn, crmLineCheck } from './lines.check.crm';
 import { driverOf, type LineDriver } from './lines.check.driver';
-import { parsed, phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
+import { phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 type Phone = Pick<
@@ -51,7 +51,7 @@ async function attempt<T>(step: Step, call: () => Promise<T>): Promise<Outcome<T
 
 async function phoneOf(conn: GraphConn): Promise<Phone> {
   const path = `${encodeURIComponent(conn.env.phoneNumberId)}?fields=${PHONE_FIELDS}`;
-  const p = parsed(phoneNumberSchema, await graphJson(conn, { path }));
+  const p = await graphHttp(conn).json({ path, schema: phoneNumberSchema });
   return {
     display_phone_number: p.display_phone_number ?? null,
     verified_name: p.verified_name ?? null,
@@ -64,7 +64,7 @@ async function phoneOf(conn: GraphConn): Promise<Phone> {
 
 async function appsOf(conn: GraphConn): Promise<Apps> {
   const path = `${encodeURIComponent(conn.env.wabaId)}/subscribed_apps`;
-  const body = parsed(subscribedAppsSchema, await graphJson(conn, { path }));
+  const body = await graphHttp(conn).json({ path, schema: subscribedAppsSchema });
   return body.data.map(({ whatsapp_business_api_data: a, override_callback_uri: uri }) => ({
     id: a?.id ?? null,
     name: a?.name ?? null,
