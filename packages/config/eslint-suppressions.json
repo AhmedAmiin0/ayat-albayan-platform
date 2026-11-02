@@ -9,6 +9,11 @@
       "count": 5
     }
   },
+  "eslint-parent-imports.js": {
+    "complexity": {
+      "count": 1
+    }
+  },
   "eslint-react.js": {
     "max-len": {
       "count": 4

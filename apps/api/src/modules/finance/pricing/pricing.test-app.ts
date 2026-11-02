@@ -1,14 +1,14 @@
 // HTTP test harness for /pricing (test-only): real AppModule, fake auth, fake FX source and DB.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { fakeFx } from '../fx/fx.fakes';
-import { FX_FETCHER } from '../fx/fx.fetcher';
-import { FxQueries } from '../fx/fx.queries';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { fakeFx } from '@/modules/finance/fx/fx.fakes';
+import { FX_FETCHER } from '@/modules/finance/fx/fx.fetcher';
+import { FxRepo } from '@/modules/finance/fx/fx.repo';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'admin@x.com', role: 'admin' },
@@ -27,7 +27,7 @@ export async function pricingApp() {
     .useValue(verify)
     .overrideProvider(FX_FETCHER)
     .useValue(fx.fetcher)
-    .overrideProvider(FxQueries)
+    .overrideProvider(FxRepo)
     .useValue(fx.queries)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();

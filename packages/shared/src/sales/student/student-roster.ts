@@ -1,4 +1,4 @@
-import { wallParts } from '../../schedule/lessons/index.js';
+import { wallParts } from '@ab/schedule';
 import { inWeekOrder } from '../course/course-picks.js';
 import type { AttendanceKind } from './student-details.js';
 import type { SalesWeeklySlot } from './student-schedule.js';

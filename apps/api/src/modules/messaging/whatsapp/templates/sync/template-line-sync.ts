@@ -10,7 +10,7 @@ import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messag
 // only that line's rows, against only that line's WABA list, then that WABA's new templates imported.
 // A row is never matched against (nor marked missing from) the other WABA's list.
 
-type Warn = { warn: (message: string) => void };
+interface Warn { warn: (message: string) => void }
 
 export interface LineSyncDeps {
   queries: Pick<TemplatesRepo, 'all' | 'update' | 'insert'>;
@@ -52,4 +52,14 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
   const saved = await Promise.all(plan.rows.map((row) => deps.queries.insert(row)));
   const imported = saved.flatMap((row) => (row ? [row.key] : []));
   return { ...facts, ok: true, checked_at: now.toISOString(), meta_count: list.length, synced, imported, skipped: plan.skipped };
+}
+
+/** A line's sync result for lineViews(); a failed write only logs (the sync itself is done). */
+export async function rememberSync(
+  deps: { queries: Pick<TemplatesRepo, 'saveLineSync'>; log: Warn },
+  sync: TemplateLineSync,
+): Promise<void> {
+  await deps.queries.saveLineSync(sync).catch((e: unknown) => {
+    deps.log.warn(`template line sync not stored: ${e instanceof Error ? e.message : String(e)}`);
+  });
 }

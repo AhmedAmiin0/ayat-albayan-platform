@@ -6,7 +6,7 @@ import {
   STUDENT_STATUSES,
   TEACHER_STATUSES,
 } from '@ab/catalog';
-import { TEACHER_MEETING_MODES } from '../../schedule/classroom/meeting-mode.js';
+import { TEACHER_MEETING_MODES } from '@ab/schedule';
 import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
 import { username } from '../users/index.js';
 

@@ -21,7 +21,10 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/lines/lines.check.ts',
   'modules/messaging/whatsapp/sender/message.dispatch.ts',
   'modules/messaging/whatsapp/templates/catalog/template.registry.ts',
-  // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
+  // The registry's own parts (150-line cap, s3): the admin's edits, the Meta sync, one line's sync
+  // (read-only list), the explicit submit.
+  'modules/messaging/whatsapp/templates/catalog/template-admin.ts',
+  'modules/messaging/whatsapp/templates/sync/template-verifier.ts',
   'modules/messaging/whatsapp/templates/sync/template-line-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-submit.ts',
   // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.

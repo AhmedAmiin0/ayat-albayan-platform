@@ -1,1 +1,1 @@
-export { SalesScheduleScreen as default } from '@/sales';
+export { SalesScheduleScreen as default } from '@/sales/sales';

@@ -9,14 +9,14 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
-import { ExpensesQueries } from '@/modules/finance/expenses/expenses.queries';
+import { ExpensesRepo } from '@/modules/finance/expenses/expenses.repo';
 import { FxService } from '@/modules/finance/fx/fx.service';
-import { InvoicesQueries } from '@/modules/finance/invoices/invoices.queries';
-import { PaymentAttachmentsQueries } from '@/modules/finance/payments/attachments/payment-attachments.queries';
-import { PaymentsQueries } from '@/modules/finance/payments/payments.queries';
-import { PayoutsQueries } from '@/modules/finance/payouts/payouts.queries';
-import { CorrectionsQueries } from '@/modules/finance/teacher-earnings/summary/corrections.queries';
-import { EarningsQueries } from '@/modules/finance/teacher-earnings/earnings.queries';
+import { InvoicesRepo } from '@/modules/finance/invoices/invoices.repo';
+import { PaymentAttachmentsRepo } from '@/modules/finance/payments/attachments/payment-attachments.repo';
+import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
+import { PayoutsRepo } from '@/modules/finance/payouts/payouts.repo';
+import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
+import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { SalesQueries } from '@/modules/sales/sales/sales.queries';
 import { SalesFamilyQueries } from '@/modules/sales/sales-money/reads/sales-family.queries';
@@ -70,14 +70,14 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(StudentTrialRepo).useValue(m.trials)
     .overrideProvider(AlertsRepo).useValue(m.alerts)
     .overrideProvider(AdminTasksRepo).useValue(m.tasks)
-    .overrideProvider(PaymentsQueries).useValue(m.payments)
-    .overrideProvider(PaymentAttachmentsQueries).useValue(m.attachments)
-    .overrideProvider(PayoutsQueries).useValue(m.payouts)
-    .overrideProvider(EarningsQueries).useValue(m.earnings)
-    .overrideProvider(CorrectionsQueries).useValue(m.corrections)
-    .overrideProvider(ExpensesQueries).useValue(m.expenses)
+    .overrideProvider(PaymentsRepo).useValue(m.payments)
+    .overrideProvider(PaymentAttachmentsRepo).useValue(m.attachments)
+    .overrideProvider(PayoutsRepo).useValue(m.payouts)
+    .overrideProvider(EarningsRepo).useValue(m.earnings)
+    .overrideProvider(CorrectionsRepo).useValue(m.corrections)
+    .overrideProvider(ExpensesRepo).useValue(m.expenses)
     .overrideProvider(FxService).useValue(m.fx)
-    .overrideProvider(InvoicesQueries).useValue(m.invoices)
+    .overrideProvider(InvoicesRepo).useValue(m.invoices)
     .overrideProvider(TeachersRepo).useValue(m.teachers)
     .overrideProvider(StudentAccess).useValue(m.access)
     .overrideProvider(AuditService).useValue(m.audit)

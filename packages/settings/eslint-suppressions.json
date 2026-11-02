@@ -19,6 +19,11 @@
       "count": 2
     }
   },
+  "src/custom-config/schema.ts": {
+    "no-nested-ternary": {
+      "count": 2
+    }
+  },
   "src/defs.ts": {
     "max-len": {
       "count": 5
@@ -148,6 +153,9 @@
     },
     "max-len": {
       "count": 4
+    },
+    "no-nested-ternary": {
+      "count": 1
     }
   },
   "src/seed/config-describe.migration.test.ts": {
@@ -183,6 +191,9 @@
   "src/seed/seed-entries.test.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
     }
   },
   "src/seed/seed-entries.ts": {
@@ -199,11 +210,17 @@
     }
   },
   "src/seed/sql-defaults.migration.test.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 2
     }
   },
   "src/seed/sql-readers.ts": {
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
       "count": 5
     }
@@ -216,6 +233,9 @@
   "src/validation/patch.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
+    },
+    "complexity": {
+      "count": 1
     },
     "max-len": {
       "count": 4

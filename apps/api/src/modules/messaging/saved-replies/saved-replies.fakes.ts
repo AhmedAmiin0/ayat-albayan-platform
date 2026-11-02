@@ -26,7 +26,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 let seq = 0;
-/** A uuid-shaped id per row, so `:id` params pass replyIdParam. */
+/** A uuid-shaped id per row, so `:id` params pass the `replyIdSchema` ZodParam. */
 export const replyId = (n: number) => `5a000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 /** saved_replies in memory: the same reads and writes SavedRepliesQueries makes. */

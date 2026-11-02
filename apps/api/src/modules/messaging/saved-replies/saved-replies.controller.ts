@@ -11,16 +11,14 @@ import {
   type SavedReplyUpload,
   type SignedUpload,
 } from '@ab/shared';
-import {
-  Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { RepliesUserGuard, replyIdParam } from './saved-replies.guard';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { RepliesUserGuard, replyIdSchema, replyNotFound } from './saved-replies.guard';
 import { SavedRepliesService } from './saved-replies.service';
 
 type StageBody = z.output<typeof savedReplyStageSchema>;
@@ -65,40 +63,43 @@ export class SavedRepliesController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<SavedReply> {
-    // A bad :id (404) still wins over a bad body: parsed inline until z2a's ZodParam.
-    const reply = replyIdParam(id);
-    return this.replies.update(user, reply, parseOrThrow(savedReplyUpdateSchema, body));
+    // A bad :id (404) still wins over a bad body: the body is parsed in the handler, after every
+    // pipe (a ZodBody would run before the ZodParam).
+    return this.replies.update(user, id, parseOrThrow(savedReplyUpdateSchema, body));
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.replies.remove(user, replyIdParam(id));
+  async remove(
+    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    await this.replies.remove(user, id);
   }
 
   /** Answers both lists in their new order. */
   @Post(':id/move')
   @HttpCode(200)
   move(
-    @Param('id') id: string,
+    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
     @ZodBody(savedReplyMoveSchema) body: SavedReplyMove,
     @CurrentUser() user: AuthUser,
   ): Promise<SavedReply[]> {
-    return this.replies.move(user, replyIdParam(id), body.direction);
+    return this.replies.move(user, id, body.direction);
   }
 
   @Post(':id/stage')
   @HttpCode(201)
   @Permissions('inbox.send')
   stage(
-    @Param('id') id: string,
+    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
     @ZodBody(savedReplyStageSchema) body: StageBody,
     @CurrentUser() user: AuthUser,
   ): Promise<SavedReplyStaged> {
-    return this.replies.stage(user, replyIdParam(id), body.clientRequestId);
+    return this.replies.stage(user, id, body.clientRequestId);
   }
 }

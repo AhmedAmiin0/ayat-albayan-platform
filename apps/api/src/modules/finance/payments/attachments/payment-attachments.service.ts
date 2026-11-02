@@ -1,11 +1,11 @@
 import { RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { BUCKETS, isPathOf } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { SNIFF_BYTES, sniffMime } from '../../../teaching/booking/invoice/invoice-sniff';
-import { badRequest, conflict, notFound } from '../../../../common/http/errors';
-import { PaymentAttachmentsQueries } from './payment-attachments.queries';
-import { PaymentsQueries } from '../payments.queries';
+import { BUCKETS, isPathOf } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { SNIFF_BYTES, sniffMime } from '@/modules/teaching/booking/invoice/invoice-sniff';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { PaymentAttachmentsRepo } from './payment-attachments.repo';
+import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 
 /** A client-sent path that passed every check: the mime is the sniffed one, never the client's. */
 export type CheckedAttachment = { path: string; mime: string; size: number | null };
@@ -27,8 +27,8 @@ export class PaymentAttachments {
   private readonly log = new Logger(PaymentAttachments.name);
 
   constructor(
-    private readonly rows: PaymentAttachmentsQueries,
-    private readonly payments: PaymentsQueries,
+    private readonly rows: PaymentAttachmentsRepo,
+    private readonly payments: PaymentsRepo,
     private readonly storage: StorageService,
   ) {}
 

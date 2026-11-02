@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { SalesMoneyScope, SalesTeacherAssign } from '../../../sales/sales-money';
+import { AuditService } from '@/common/audit/audit.service';
+import { SalesMoneyScope, SalesTeacherAssign } from '@/modules/sales/sales-money';
 import { LinkPackages } from './link-packages';
 import { LinkViews } from './link-views';
-import { PaymentLinksQueries } from './payment-links.queries';
+import { PaymentLinksRepo } from './payment-links.repo';
 
 /** What every payment-link service needs (rule 2: at most 3 constructor parameters). */
 @Injectable()
 export class LinkDeps {
   constructor(
-    readonly links: PaymentLinksQueries,
+    readonly links: PaymentLinksRepo,
     readonly audit: AuditService,
     readonly views: LinkViews,
   ) {}
