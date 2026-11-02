@@ -91,3 +91,25 @@ describe('sales.renew_any', () => {
     expect((en.permissions.items as Record<string, string>)['sales.renew_any']?.trim()).toBeTruthy();
   });
 });
+
+// Owner 2026-11-03: «تعديل بيانات الباقة», edits of an EXISTING package; the admin's only.
+describe('subscriptions.edit_terms', () => {
+  it('is grantable and held by the admin only by default (sales keeps set_start_date)', () => {
+    expect(isGrantable('subscriptions.edit_terms')).toBe(true);
+    expect(systemPermissionsOf('admin')).toContain('subscriptions.edit_terms');
+    const others = ['sales', 'teacher', 'assistant', 'guardian', 'student'] as const;
+    for (const role of others) {
+      expect(systemPermissionsOf(role)).not.toContain('subscriptions.edit_terms');
+    }
+    expect(systemPermissionsOf('sales')).toContain('subscriptions.set_start_date');
+  });
+
+  it('has a label and a hint in Arabic and English', () => {
+    expect(ar.permissions.items['subscriptions.edit_terms']).toBe('تعديل بيانات الباقة');
+    for (const dict of [ar, en]) {
+      const hints = dict.permissions.hints as Record<string, string>;
+      expect(hints['subscriptions.edit_terms']?.trim()).toBeTruthy();
+      expect((dict.permissions.items as Record<string, string>)['subscriptions.edit_terms']?.trim()).toBeTruthy();
+    }
+  });
+});

@@ -20,6 +20,10 @@ type Props = {
   error?: string | null;
 };
 
+/** «12 نوفمبر 2026 · أول تاريخ مسموح: 2 نوفمبر 2026»: the day, then the input's min. */
+const startHint = (day: string, min: string): string =>
+  `${dateLabel(day)} · ${t.datePicker.earliest.replace('{date}', dateLabel(min))}`;
+
 /**
  * The package's first day (owner 2026-10-12, docs/16 row 24): without subscriptions.set_start_date only
  * «تبدأ الباقة اليوم»; with it a day from today on, or up to a year back with «بدأ الاشتراك سابقًا», then
@@ -30,7 +34,11 @@ export function SalesStartField({ canSet, today, value, usedMax, onChange, error
   const min = value.alreadyStarted ? daysBefore(today, SALES_START_BACK_DAYS) : today;
   return (
     <div className="grid gap-3">
-      <Field label={t.salesMoney.startsOn} hint={dateLabel(value.startsOn)} error={error ?? undefined}>
+      <Field
+        label={t.salesMoney.startsOn}
+        hint={startHint(value.startsOn, min)}
+        error={error ?? undefined}
+      >
         {(p) => (
           <Input
             {...p}

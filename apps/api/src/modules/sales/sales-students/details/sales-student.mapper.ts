@@ -65,6 +65,7 @@ function subscriptionsOf(history: HistoryBundle | null, prices: readonly PriceRo
       ended_at: s.ended_at,
       created_at: s.created_at,
       lessons_total: s.lessons_total,
+      lessons_used_before: s.lessons_used_before ?? 0,
       lessons_used: s.lessons_used,
       lessons_remaining: s.lessons_remaining,
     }))

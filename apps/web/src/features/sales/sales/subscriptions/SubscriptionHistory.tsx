@@ -1,7 +1,9 @@
+import { currentPackage, type SalesHistoryEntry } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { EditUsedBeforeAction } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { subscriptionHistoryQuery } from '@/features/sales/sales/academy-api';
 import { HistoryEntryCard } from './HistoryEntryCard';
@@ -13,6 +15,10 @@ export interface SubscriptionHistoryProps {
 }
 
 /** The history of one confirmed subscription: the student's subscriptions oldest first, the opened one marked. */
+/** The student's current package (newest active, else newest not cancelled): the editable one. */
+const currentOf = (oldestFirst: readonly SalesHistoryEntry[]): string | null =>
+  currentPackage([...oldestFirst].reverse())?.id ?? null;
+
 export function SubscriptionHistory({ id, onClose }: SubscriptionHistoryProps) {
   const history = useQuery(subscriptionHistoryQuery(id));
   const name = history.data?.student.name ?? '';
@@ -29,7 +35,16 @@ export function SubscriptionHistory({ id, onClose }: SubscriptionHistoryProps) {
       {history.data && (
         <ol className="grid gap-3">
           {history.data.subscriptions.map((s) => (
-            <HistoryEntryCard key={s.id} entry={s} current={s.id === history.data.subscription_id} />
+            <HistoryEntryCard
+              key={s.id}
+              entry={s}
+              current={s.id === history.data.subscription_id}
+              action={
+                s.id === currentOf(history.data.subscriptions) ? (
+                  <EditUsedBeforeAction pkg={s} />
+                ) : null
+              }
+            />
           ))}
         </ol>
       )}
