@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CommunicationsController } from './communications/communications.controller';
-import { CommunicationsDeps } from './communications/communications.deps';
 import { CommunicationsService } from './communications/communications.service';
 import { NumbersConfig } from './config/numbers.config';
 import { NumbersController } from './numbers.controller';
@@ -20,7 +19,7 @@ import { NumbersSettings } from './numbers.settings';
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],
-  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsDeps, CommunicationsService, NumbersHealth],
+  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsService, NumbersHealth],
   exports: [NumbersConfig, NumbersHealth],
 })
 export class NumbersModule {}
