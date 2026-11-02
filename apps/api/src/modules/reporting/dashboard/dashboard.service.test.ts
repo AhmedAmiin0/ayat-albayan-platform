@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
+import { readerOf } from '@/common/settings/settings.fakes';
 import type { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
+import { DashboardSettings } from './dashboard.settings';
 import type { FinanceService } from './finance/finance.service';
 import type { WorkQueries } from './work/work.queries';
 
@@ -11,7 +13,7 @@ const LEADS = [
   { id: 'l2', status: 'new', source: 'facebook_ad' },
 ];
 
-function service() {
+function service(required = true) {
   const counts = {
     leads: vi.fn().mockResolvedValue(LEADS),
     lessons: vi.fn().mockResolvedValue([{ id: 'x', status: 'completed', teacher_id: 't1' }]),
@@ -39,6 +41,7 @@ function service() {
     counts as unknown as DashboardQueries,
     work as unknown as WorkQueries,
     money as unknown as FinanceService,
+    readerOf(DashboardSettings, { reporting_currency: 'SAR', lesson_confirmation_required: required }),
   );
   return { svc, counts, work, money };
 }
@@ -67,5 +70,12 @@ describe('DashboardService.queue', () => {
     expect(q.pending_reports.total).toBe(1);
     expect(q.tasks.items[0]).toMatchObject({ student: SUHAILA, balance: { used: 2, total: 4 } });
     expect(q.unpaid).toEqual({ total: 0, items: [] });
+  });
+
+  it('«يحتاج تأكيد» is 0 and never counted while no confirmation is required (owner 2026-11-02)', async () => {
+    const { svc, counts } = service(false);
+    const s = await svc.summary({ from: '2026-09-01', to: '2026-10-02' }, NOW);
+    expect(s.needs_confirmation).toBe(0);
+    expect(counts.needsConfirmation).not.toHaveBeenCalled();
   });
 });

@@ -5,7 +5,14 @@ import { badRequest, conflict } from '@/common/http/errors';
 import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
-import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
+import { AutoHeldCorrection, isAutoHeldCorrection } from '@/modules/teaching/lessons/auto-held/auto-held-correction';
+import {
+  CANCEL_EVENT,
+  cancelChange,
+  cancelCommit,
+  invalidTransition,
+  type CancelContext,
+} from './transition';
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
@@ -34,12 +41,18 @@ export class LessonCancelService {
     private readonly store: LessonStore,
     private readonly rules: ScheduleRepo,
     private readonly settings: LessonsSettings,
+    private readonly correction: AutoHeldCorrection,
   ) {}
 
-  /** POST /lessons/:id/cancel. */
+  /**
+   * POST /lessons/:id/cancel. By the teacher / student on a completed lesson: the auto-held
+   * correction (AutoHeldCorrection; 409 not_auto_held unless the job closed it, no report since).
+   */
   async cancel({ lessonId, body, actor }: CancelInput): Promise<string[]> {
     const lesson = await this.store.get(lessonId);
     const event = CANCEL_EVENT[body.by];
+    const correcting = isAutoHeldCorrection(lesson, body);
+    if (correcting) return [await this.correction.correct({ lesson, body, actor })];
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, event);
     if (body.scope === 'rule') {
       const rule = lesson.rule_id ? await this.rules.rule(lesson.rule_id) : null;
@@ -49,15 +62,7 @@ export class LessonCancelService {
     }
     const change = cancelChange(lesson, await this.context(body));
     await this.store.commit({
-      change: { actor: actor.id, changes: [change] },
-      audit: {
-        entity: 'lessons',
-        entityId: lesson.id,
-        action: 'cancel',
-        before: { status: lesson.status },
-        after: { status: change.to_status, by: body.by, reason: body.reason, chargeable: change.chargeable },
-      },
-      transition: { from: lesson.status, event },
+      ...cancelCommit({ lesson, change, body, actorId: actor.id }),
       notice: { kind: 'lesson_cancelled', lessonId: lesson.id, actorId: actor.id },
     });
     return [lesson.id];

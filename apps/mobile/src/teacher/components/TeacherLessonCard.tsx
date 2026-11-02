@@ -1,4 +1,4 @@
-import { clockTime, lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
+import { clockTime, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn, useClockCycle } from '@/core/lib/clock';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -8,9 +8,9 @@ import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import type { ReportAction } from '@/teacher/lib/day';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { TeacherLessonActions } from './TeacherLessonActions';
 
 export interface TeacherLessonCardProps {
@@ -44,7 +44,7 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
   const { color } = useTheme();
   const { lesson } = p;
   const auto = usePlatformClassroom(lesson.platform_classroom);
-  const needsConfirm = lesson.status === 'scheduled';
+  const needsConfirm = useLessonStatusText().required && lesson.status === 'scheduled';
   return (
     <View
       style={{
@@ -66,7 +66,7 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         </AppText>
         <View style={{ alignItems: 'flex-end', gap: 4 }}>
           <LiveBadge lesson={lesson} />
-          <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
+          <LessonStatusChip status={lesson.status} size="sm" />
         </View>
       </View>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>

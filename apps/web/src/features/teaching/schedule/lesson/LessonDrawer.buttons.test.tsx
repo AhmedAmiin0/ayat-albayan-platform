@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
@@ -12,7 +13,7 @@ const PENDING = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note
 
 function renderDrawer(l: LessonView) {
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient(), true)}>
       <LessonDrawer lesson={l} onClose={vi.fn()} onDone={vi.fn()} />
     </QueryClientProvider>,
   );

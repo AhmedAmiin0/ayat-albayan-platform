@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { SUMMARY, WORK } from './dashboard-fixture';
 import { DashboardPage, previousMonth } from './DashboardPage';
 import type { DashboardSearch } from './search';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
@@ -24,7 +25,7 @@ function answer(path: string): unknown {
 
 function renderPage(search: DashboardSearch = {}) {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
       <DashboardPage search={search} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

@@ -3,7 +3,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { fakeNow } from '@/test/fake-now';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
@@ -53,7 +53,7 @@ afterEach(() => jest.useRealTimers());
 
 test('the teacher’s Riyadh week, السبت → الجمعة: lessons by day in time order, today marked', async () => {
   serve({ [THIS_WEEK]: [muscat, cancelled, pending, saturday, done] });
-  await renderWithQuery(<TeacherCalendarScreen />);
+  await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: 'أبرار' })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(THIS_WEEK);
   expect(screen.getByRole('header', { name: '26 سبتمبر – 2 أكتوبر' })).toBeTruthy();
@@ -74,7 +74,7 @@ test('the teacher’s Riyadh week, السبت → الجمعة: lessons by day i
 
 test('‹ › moves a week, an empty week says so, «اليوم» comes back', async () => {
   serve({ [THIS_WEEK]: [pending] });
-  await renderWithQuery(<TeacherCalendarScreen />);
+  await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   await screen.findByText('يوسف أحمد');
   expect(screen.queryByRole('button', { name: t.schedule.today })).toBeNull();
 
@@ -92,7 +92,7 @@ test('‹ › moves a week, an empty week says so, «اليوم» comes back', a
 
 test('a week still loading says so instead of a blank list', async () => {
   serve({ [THIS_WEEK]: [pending] });
-  await renderWithQuery(<TeacherCalendarScreen />);
+  await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   await screen.findByText('يوسف أحمد');
   mockApiFetch.mockImplementation(() => new Promise(() => undefined));
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextWeek }));
@@ -101,7 +101,7 @@ test('a week still loading says so instead of a blank list', async () => {
 
 test('a lesson’s «غيّر الموعد» is in view on its row (no hidden tap) and opens the sheet; a held lesson has none', async () => {
   serve({ [THIS_WEEK]: [done, pending] });
-  await renderWithQuery(<TeacherCalendarScreen />);
+  await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   const move = await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
   // One action: the held lesson (جودى) cannot move.
   expect(screen.getAllByRole('button', { name: new RegExp(t.lessons.rescheduleSubmit) })).toHaveLength(1);
@@ -111,7 +111,7 @@ test('a lesson’s «غيّر الموعد» is in view on its row (no hidden ta
 
 test('offline with a saved week: it stays, and the subtitle says how old it is', async () => {
   mockApiFetch.mockRejectedValue(new ApiError(503));
-  const client = createTestQueryClient();
+  const client = confirmingQueryClient();
   const params = { from: '2026-09-25T21:00:00.000Z', to: '2026-10-02T21:00:00.000Z', teacherId: 't1' };
   client.setQueryData(['lessons', 'list', params], [pending]);
   await renderWithQuery(<TeacherCalendarScreen />, client);
@@ -121,7 +121,7 @@ test('offline with a saved week: it stays, and the subtitle says how old it is',
 
 test('failed with nothing saved: error and retry; pull to refresh asks again', async () => {
   serve(new ApiError(500));
-  const { container } = await renderWithQuery(<TeacherCalendarScreen />);
+  const { container } = await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   const retry = await screen.findByRole('button', { name: t.mobile.retry });
   serve({ [THIS_WEEK]: [pending] });
   await fireEvent.press(retry);

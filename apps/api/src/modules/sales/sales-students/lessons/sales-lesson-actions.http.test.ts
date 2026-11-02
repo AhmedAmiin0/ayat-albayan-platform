@@ -75,14 +75,14 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
     expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
   });
 
-  it('never a series, a substitute, an override or a «by»: 400 before any read', async () => {
+  it('never a series, a substitute, an override or an unknown «by»: 400 before any read', async () => {
     const bad = [
       ['reschedule', { startsAt: AT, scope: 'rule' }],
       ['reschedule', { startsAt: AT, teacherId: MINE }],
       ['reschedule', { startsAt: AT, override: { reason: 'احجز' } }],
       ['reschedule', {}],
       ['cancel', { scope: 'rule' }],
-      ['cancel', { by: 'student' }],
+      ['cancel', { by: 'family' }],
     ] as const;
     for (const [action, body] of bad) {
       expect([action, body, (await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body })).statusCode]).toEqual([action, body, 400]);

@@ -2,6 +2,7 @@ import { GENDERS, LESSON_STATUSES, PROGRAMS, type OverviewTeacher } from '@ab/sh
 import { CheckboxFilterField, SelectFilterField } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { t } from '@/lib/i18n/i18n';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 import { CLEAR_SCHEDULE_FILTERS, scheduleChips } from './schedule-filters';
 import type { ScheduleSearch } from './search';
 import { TeacherPicker } from './TeacherPicker';
@@ -23,6 +24,8 @@ const all = (label: string) => ({ value: '', label });
  * (owner, 2026-10-05): one «تصفية» button with the set filters as chips under it, the same as the tables.
  */
 export function ScheduleFilters({ search, teachers, onSearch, resultCount }: ScheduleFiltersProps) {
+  // `scheduled` stays an option: «مجدولة» while no confirmation is required (owner 2026-11-02).
+  const statusLabel = useLessonStatusText().label;
   const fields = (
     <>
       <TeacherPicker inline teachers={teachers} value={search.teachers ?? []} onChange={(ids) => onSearch({ teachers: ids.length ? ids : undefined })} />
@@ -41,7 +44,7 @@ export function ScheduleFilters({ search, teachers, onSearch, resultCount }: Sch
       <SelectFilterField
         label={t.schedule.statusFilter}
         value={search.status}
-        options={[all(t.schedule.allStatuses), ...LESSON_STATUSES.map((s) => ({ value: s, label: t.enums.lessonStatus[s] }))]}
+        options={[all(t.schedule.allStatuses), ...LESSON_STATUSES.map((s) => ({ value: s, label: statusLabel(s) }))]}
         onChange={(v) => onSearch({ status: pick(LESSON_STATUSES, v) })}
       />
       <CheckboxFilterField label={t.schedule.showClosed} checked={search.closed === true} onChange={(on) => onSearch({ closed: on || undefined })} />
@@ -50,7 +53,7 @@ export function ScheduleFilters({ search, teachers, onSearch, resultCount }: Sch
   return (
     <TableToolbar
       fields={fields}
-      chips={scheduleChips({ search, teachers, onSearch })}
+      chips={scheduleChips({ search, teachers, onSearch, statusLabel })}
       onClearAll={() => onSearch(CLEAR_SCHEDULE_FILTERS)}
       resultCount={resultCount}
     />

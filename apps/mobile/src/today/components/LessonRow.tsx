@@ -1,9 +1,8 @@
-import { lessonStatusStyle } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '../lib/lesson-text';
@@ -25,7 +24,8 @@ interface LessonRowProps<L extends TodayLesson> {
  */
 export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
   const { color } = useTheme();
-  const tone = toneColors(color, lessonStatusStyle[lesson.status].tone).fg;
+  const statusText = useLessonStatusText();
+  const tone = toneColors(color, statusText.look(lesson.status).tone).fg;
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const time = lessonClock(lesson.starts_at, tz, cycle);
@@ -33,7 +33,7 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
   const hint = viewerDayHint(lesson.starts_at, tz);
   const subtitle = [hint, rowSubtitle(lesson)].filter(Boolean).join(' · ');
   const names = studentNames(lesson);
-  const status = statusWord(lesson.status);
+  const status = statusText.word(lesson.status);
   return (
     <Pressable
       accessibilityRole="button"

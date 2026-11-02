@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { jana, lesson, yusuf } from '@/today/testing/fixtures';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 test('my lessons today on my clock: the report for the started one, join + confirm for the next', async () => {
-  await renderWithQuery(<TeacherTodayScreen />);
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
   expect(screen.getByText('يوسف أحمد')).toBeTruthy();
   expect(screen.getByText(new RegExp(`^20:00 · ${t.enums.duration['45']} · ${t.teacherDash.studentTime.replace('{time}', '21:00')}`))).toBeTruthy();
@@ -65,7 +65,7 @@ test('my lessons today on my clock: the report for the started one, join + confi
 });
 
 test('docs/07 §6: the pending reports way is an outlined full-width button under the chip, not a ghost', async () => {
-  await renderWithQuery(<TeacherTodayScreen />);
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   const banner = await screen.findByTestId('pending-banner');
   const button = within(banner).getByRole('button', { name: t.reports.pending });
   expect(StyleSheet.flatten(button.props.style)).toMatchObject({ borderWidth: 1, minHeight: 48 });
@@ -73,7 +73,7 @@ test('docs/07 §6: the pending reports way is an outlined full-width button unde
 
 test('«تأكيد» shows confirmed at once and sends POST /lessons/:id/confirm', async () => {
   mockApiSend.mockResolvedValue({});
-  await renderWithQuery(<TeacherTodayScreen />);
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   // Both lessons wait for confirmation; the second card is the 20:00 one.
   const [, laterConfirm] = await screen.findAllByRole('button', { name: t.today.confirm });
   if (!laterConfirm) throw new Error('no «تأكيد» on the 20:00 lesson');
@@ -86,7 +86,7 @@ test('«تأكيد» shows confirmed at once and sends POST /lessons/:id/confirm
 
 test('a day without lessons says so', async () => {
   mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : []));
-  await renderWithQuery(<TeacherTodayScreen />);
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.teacherDash.noLessonsToday)).toBeTruthy();
   expect(screen.queryByText(t.reports.pending)).toBeNull();
 });
@@ -99,7 +99,7 @@ async function renderDay(platform: boolean, academyAuto: boolean) {
     if (p === '/teachers/me/pending-reports') return pending;
     return flagged;
   });
-  const client = createTestQueryClient();
+  const client = confirmingQueryClient();
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: academyAuto });
   await renderWithQuery(<TeacherTodayScreen />, client);
   await screen.findByText(counted(t.reports.pendingCount, 1));

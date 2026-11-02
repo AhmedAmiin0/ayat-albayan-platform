@@ -2855,7 +2855,7 @@
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/finance/subscriptions/list/subscription-row.test.ts": {

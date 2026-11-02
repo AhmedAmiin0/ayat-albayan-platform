@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from './DayScheduleScreen';
 import { OVERVIEW, THIS_WEEK } from '../overview/overview-fixtures';
 
@@ -35,7 +35,7 @@ const action = (label: string, who: string) =>
 test('«تأكيد» is in view on the row: «مؤكدة» at once, then the confirm is sent', async () => {
   let resolve: (v: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((r) => (resolve = r)));
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await action(t.today.confirm, 'يوسف أحمد'));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
   // يوسف's row says «مؤكدة» (with جنى's 17:00) before the server answers.
@@ -45,13 +45,13 @@ test('«تأكيد» is in view on the row: «مؤكدة» at once, then the con
 });
 
 test('«إلغاء» opens Today’s cancel form on the row', async () => {
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await action(t.today.cancel, 'يوسف أحمد'));
   expect(screen.getByText(t.lessons.cancelBy)).toBeTruthy();
 });
 
 test('«غيّر الموعد» opens the reschedule sheet over «الجدول»', async () => {
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await action(t.lessons.rescheduleSubmit, 'يوسف أحمد'));
   await waitFor(() =>
     expect(screen.getByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy(),
@@ -59,7 +59,7 @@ test('«غيّر الموعد» opens the reschedule sheet over «الجدول»
 });
 
 test('a held lesson has no confirm / cancel / reschedule, only «أرسل طلب الرأي»', async () => {
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await screen.findByText('جودى خالد');
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit]) {
     expect(screen.queryByRole('button', { name: `${label} — جودى خالد` })).toBeNull();

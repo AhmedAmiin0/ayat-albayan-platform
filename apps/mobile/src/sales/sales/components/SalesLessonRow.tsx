@@ -1,4 +1,4 @@
-import { isRunningLesson, lessonStatusStyle, wallParts } from '@ab/shared';
+import { isRunningLesson, wallParts } from '@ab/shared';
 import type { SalesScheduleLesson } from '@ab/shared';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { dayLabel } from '@/calendar';
@@ -10,7 +10,7 @@ import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 interface SalesLessonRowProps {
   lesson: SalesScheduleLesson;
@@ -42,6 +42,7 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const tz = useViewerTz();
   const now = useNow();
   const running = isRunningLesson(lesson, now);
+  const text = useLessonStatusText();
   const time = lessonClock(lesson.starts_at, tz, cycle);
   const who = studentNames(lesson);
   // A `?date` (Riyadh) day: another day for the viewer is named (dated rows already say it).
@@ -53,9 +54,9 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const status = !running || lesson.status !== 'confirmed';
   const words = [
     ...(running ? [{ word: t.lessons.sheet.live, tone: toneColors(color, 'ok').fg }] : []),
-    ...(status && !hideStatus ? [{ word: statusWord(lesson.status), tone: toneColors(color, lessonStatusStyle[lesson.status].tone).fg }] : []),
+    ...(status && !hideStatus ? [{ word: text.word(lesson.status), tone: toneColors(color, text.look(lesson.status).tone).fg }] : []),
   ];
-  const spoken = [...(running ? [t.lessons.sheet.live] : []), ...(status ? [t.enums.lessonStatus[lesson.status]] : [])].join(' · ');
+  const spoken = [...(running ? [t.lessons.sheet.live] : []), ...(status ? [text.label(lesson.status)] : [])].join(' · ');
   const lineStyle = { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, minHeight: 44 };
   const line = (
     <>

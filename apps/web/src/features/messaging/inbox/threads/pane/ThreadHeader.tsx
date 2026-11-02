@@ -16,6 +16,7 @@ import { SubscriptionChip } from '@/features/messaging/inbox/sales/SubscriptionC
 import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
 import { CallButton } from '@/features/messaging/calls';
+import { ChatSearchBar, ChatSearchToggle } from '@/features/messaging/inbox/search';
 
 export interface ThreadHeaderProps {
   thread: ThreadView;
@@ -60,6 +61,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
         </h2>
         {th.display_name && showsPhone(mode) && <Ltr className="shrink-0 text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
         <span className="ms-auto flex shrink-0 items-center gap-1">
+          <ChatSearchToggle />
           {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
           <CallButton phone={th.phone_e164} name={threadTitle(th, mode)} canSend={callable} />
           {action}
@@ -79,6 +81,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
         <ThreadListChips phone={th.phone_e164} lists={lists} listSearch={listSearch} />
         <span>{timesInText()}</span>
       </div>
+      <ChatSearchBar />
     </header>
   );
 }

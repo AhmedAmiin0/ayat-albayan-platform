@@ -1,4 +1,4 @@
-import type { OverviewTeacher } from '@ab/shared';
+import type { LessonStatus, OverviewTeacher } from '@ab/shared';
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { FilterChip } from '@/components/table-toolbar/types';
 import { t } from '@/lib/i18n/i18n';
@@ -10,6 +10,8 @@ export interface ScheduleChipsOptions {
   /** Every teacher of the overview, for the picked teachers' chip. */
   teachers: readonly OverviewTeacher[];
   onSearch: (patch: Partial<ScheduleSearch>) => void;
+  /** A status's words (useLessonStatusText: «مجدولة» when no confirmation is required). */
+  statusLabel?: (status: LessonStatus) => string;
 }
 
 /** «مسح الكل»: every schedule filter (the week / day navigation is not a filter). */
@@ -22,7 +24,9 @@ export const CLEAR_SCHEDULE_FILTERS: Partial<ScheduleSearch> = {
 };
 
 /** The set teachers, program, gender and status, and «إظهار الملغاة…», as removable chips. */
-export function scheduleChips({ search, teachers, onSearch }: ScheduleChipsOptions): FilterChip[] {
+export function scheduleChips(options: ScheduleChipsOptions): FilterChip[] {
+  const { search, teachers, onSearch } = options;
+  const statusLabel = options.statusLabel ?? ((s: LessonStatus) => t.enums.lessonStatus[s]);
   const picked = search.teachers ?? [];
   return [
     ...chipIfSet({
@@ -50,7 +54,7 @@ export function scheduleChips({ search, teachers, onSearch }: ScheduleChipsOptio
       id: 'status',
       label: t.schedule.statusFilter,
       value: search.status,
-      text: search.status && t.enums.lessonStatus[search.status],
+      text: search.status && statusLabel(search.status),
       onRemove: () => onSearch({ status: undefined }),
     }),
     ...chipIfSet({

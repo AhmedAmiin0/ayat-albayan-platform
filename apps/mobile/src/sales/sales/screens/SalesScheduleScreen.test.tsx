@@ -1,10 +1,13 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from './SalesScheduleScreen';
+
+// An academy that requires lesson confirmation (the pills and rows say «للتأكيد»).
+const statusWord = lessonStatusText(true).word;
 
 const mockApiFetch = jest.fn();
 let mockParams: Record<string, string> = {};
@@ -34,7 +37,7 @@ afterEach(() => jest.useRealTimers());
 
 test('today in Riyadh: one-line time, students over «kind · أ. teacher · length», ONE word per row, no button on a row', async () => {
   backend();
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText('سلمى')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12');
   // The time and the names never wrap («11:00 / AM», owner screenshot 2026-10-29).
@@ -56,14 +59,14 @@ test('today in Riyadh: one-line time, students over «kind · أ. teacher · len
 
 test("never shows a teacher's fixed link (docs/16 row 14)", async () => {
   backend();
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText('سلمى')).toBeTruthy();
   expect(screen.queryByText(/meet\.example\.org/)).toBeNull();
 });
 
 test('a teacher pill and the day arrows re-read the day', async () => {
   backend();
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('tab', { name: 'خالد' }));
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12&teacherId=t2');
   await fireEvent.press(screen.getByRole('button', { name: t.calendar.nextDay }));
@@ -73,7 +76,7 @@ test('a teacher pill and the day arrows re-read the day', async () => {
 test('opened on a teacher from «المعلمون»; an empty day says so', async () => {
   mockParams = { teacherId: 't1' };
   backend([]);
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.sales.academySchedule.emptyTeacher)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12&teacherId=t1');
 });
@@ -81,7 +84,7 @@ test('opened on a teacher from «المعلمون»; an empty day says so', asyn
 test('opened on a teacher further down the list: that pill comes right after «كل المعلمين», chosen', async () => {
   mockParams = { teacherId: 't2' };
   backend();
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   const khaled = await screen.findByRole('tab', { name: 'خالد' });
   expect(khaled.props.accessibilityState).toMatchObject({ selected: true });
   const tabs = within(screen.getByLabelText(t.schedule.teacherFilter)).getAllByRole('tab');
@@ -90,7 +93,7 @@ test('opened on a teacher further down the list: that pill comes right after «�
 
 test('under a status pill a running lesson still reads «جارية الآن»; the shared status word goes', async () => {
   backend();
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   const s = t.sales.academySchedule.status;
   await fireEvent.press(await screen.findByRole('tab', { name: `${s.confirmed} 1` }));
   expect(screen.getByText(t.lessons.sheet.live)).toBeTruthy();
@@ -101,7 +104,7 @@ test('under a status pill a running lesson still reads «جارية الآن»; 
 
 test('a running lesson still to confirm keeps «للتأكيد» under «جارية الآن» (screenshot 2026-10-29)', async () => {
   backend([scheduleLesson({ status: 'scheduled', trial: true })]);
-  await renderWithQuery(<SalesScheduleScreen />);
+  await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.lessons.sheet.live)).toBeTruthy();
   expect(screen.getByText(statusWord('scheduled'))).toBeTruthy();
   const row = screen.getByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد') });
