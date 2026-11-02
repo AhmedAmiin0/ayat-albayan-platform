@@ -7,7 +7,7 @@ import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/lessons';
-import type { SalesStudentQueries } from '@/modules/sales/sales-students/details/sales-student.queries';
+import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
 
@@ -26,7 +26,7 @@ function rig() {
   const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings);
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
   const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
-  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentQueries, { one, cancels } as LessonServices);
+  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);
   return { ...deps, one, cancels, actions };
 }
 

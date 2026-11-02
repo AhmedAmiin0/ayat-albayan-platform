@@ -1,17 +1,17 @@
 import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { chatPhone } from '../../../../common/auth/chat-phone';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
-import type { Page } from '../../../../common/http/http';
+import { chatPhone } from '@/common/auth/chat-phone';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { notFound } from '@/common/http/errors';
+import type { Page } from '@/common/http/http';
 import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
-import { SalesAcademyQueries } from './sales-academy.queries';
+import { SalesAcademyRepo } from './sales-academy.repo';
 import { packageSummaries } from './sales-package.mapper';
 import { packageStarts, rosterFrom, toRoster, type RosterFacts } from './sales-roster.mapper';
 import { SalesRosterRepo } from './sales-roster.repo';
-import { toSalesHistory } from '../history/sales-history.mapper';
-import { SalesHistoryQueries } from '../history/sales-history.queries';
-import { SalesQueries } from '../sales.queries';
+import { toSalesHistory } from '@/modules/sales/sales/history/sales-history.mapper';
+import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.repo';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 
 /**
  * The salesperson's assistant side and a subscription's history (docs/16). Read-only. Students and
@@ -21,9 +21,9 @@ import { SalesQueries } from '../sales.queries';
 @Injectable()
 export class SalesAcademyService {
   constructor(
-    private readonly academy: SalesAcademyQueries,
-    private readonly histories: SalesHistoryQueries,
-    private readonly sales: SalesQueries,
+    private readonly academy: SalesAcademyRepo,
+    private readonly histories: SalesHistoryRepo,
+    private readonly sales: SalesRepo,
     private readonly roster: SalesRosterRepo,
   ) {}
 

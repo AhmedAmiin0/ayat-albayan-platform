@@ -2,7 +2,7 @@ import { WA_ERROR } from '@ab/shared';
 import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
-import { graphHttp, type FetchLike, type GraphConn } from './drivers/meta/graph';
+import { graphHttp, graphSend, type FetchLike, type GraphConn } from './drivers/meta/graph';
 import { fetchMedia, nextTemplateCursor, templateEditPath } from './drivers/kapso/kapso';
 import {
   sentSchema,
@@ -132,13 +132,13 @@ export class HttpWhatsappClient implements WhatsappClient {
 
   /** The allow-list check runs BEFORE any request; only a bug can reach it (after the claim). */
   private async send(to: string, build: () => GraphBody): Promise<WaSent> {
-    const { env, http } = this.connection();
+    const { conn, env } = this.connection();
     if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
     const body = build();
     const path = `${env.phoneNumberId}/messages`;
-    const res = await http.json({ path, method: 'POST', json: body, schema: sentSchema });
+    const res = await graphSend(conn).json({ path, method: 'POST', json: body, schema: sentSchema });
     const id = res.messages[0]?.id;
-    if (!id) throw new WaError('WhatsApp answered without a message id', { code: null, status: 200 });
+    if (!id) throw new WaError('WhatsApp answered without a message id', { code: null, status: 200, uncertain: true });
     return { waMessageId: id };
   }
 

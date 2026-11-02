@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import type { SalesRegistrationQueries } from './sales-registration.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { SalesRegistrationRepo } from './sales-registration.repo';
 import { REGISTRATION_CHECKS_PER_WINDOW, SalesRegistrationService } from './sales-registration.service';
 
 const A: AuthUser = { id: 'a', email: null, role: 'sales' };
 const B: AuthUser = { id: 'b', email: null, role: 'sales' };
 const make = () => {
   const queries = { byPhone: vi.fn(async () => []), byName: vi.fn(async () => []) };
-  return { queries, svc: new SalesRegistrationService(queries as unknown as SalesRegistrationQueries) };
+  return { queries, svc: new SalesRegistrationService(queries as unknown as SalesRegistrationRepo) };
 };
 
 describe('SalesRegistrationService', () => {

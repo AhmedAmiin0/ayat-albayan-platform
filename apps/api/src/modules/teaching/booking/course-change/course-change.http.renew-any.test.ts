@@ -7,7 +7,7 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesQueries } from '@/modules/sales/sales/sales.queries';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { BODY, CLASH, RULE_A, RULE_B, S1, SUB, SUB_ID } from './course-change.fakes';
 import { CourseLessonRepo } from './course-change.lessons';
@@ -55,7 +55,7 @@ describe('POST /sales/booking/course/change[/check] with sales.renew_any', () =>
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SalesQueries).useValue(sales)
+      .overrideProvider(SalesRepo).useValue(sales)
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: true }))
       .overrideProvider(ConflictChecker).useValue(checker)
       .overrideProvider(CourseChangeRepo).useValue(queries)

@@ -1,5 +1,5 @@
 import { SUBSCRIPTION_STATUSES, type SalesHistoryEntry, type SalesSubscriptionHistory, type SubscriptionStatus } from '@ab/shared';
-import type { HistoryAuditRow, HistoryBundle, HistorySubscriptionRow } from './sales-history.queries';
+import type { HistoryAuditRow, HistoryBundle, HistorySubscriptionRow } from './sales-history.repo';
 
 const asStatus = (v: string | null): SubscriptionStatus | null => SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
 

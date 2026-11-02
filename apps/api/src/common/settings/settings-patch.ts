@@ -1,4 +1,9 @@
-import { parseSettingField, splitSettingsPatch, type SettingsPatchSplit } from '@ab/shared';
+import {
+  parseSettingField,
+  splitSettingsPatch,
+  type SettingsPatchBody,
+  type SettingsPatchSplit,
+} from '@ab/shared';
 import { BadRequestException } from '@nestjs/common';
 
 /** The alias split plus the followUpHours the caller may write through the follow-up rule (23-P4). */
@@ -26,18 +31,18 @@ function takeFollowUp(body: Readonly<Record<string, unknown>>, out: AliasPatchSp
 }
 
 /**
- * PATCH /settings raw body → its per-key split (docs/26 §2f). A non-object body is a 400. Only when a
- * registry field was invalid and nothing could be saved is the whole request a 400 (worded as
- * parseOrThrow: `{ message: 'validation_failed', issues }`, paths = the camelCase fields).
- * `rules: true` (the caller holds notifications.manage): followUpHours is taken, not moved.
+ * PATCH /settings body (an object already: `settingsPatchBodySchema`, docs/36 z3) → its per-key
+ * split (docs/26 §2f). Only when a registry field was invalid and nothing could be saved is the
+ * whole request a 400 (worded as parseOrThrow: `{ message: 'validation_failed', issues }`, paths =
+ * the camelCase fields). `rules: true` (the caller holds notifications.manage): followUpHours is
+ * taken, not moved.
  */
-export function splitPatchOrThrow(body: unknown, opts: { rules?: boolean } = {}): AliasPatchSplit {
-  if (body === null || typeof body !== 'object' || Array.isArray(body)) {
-    throw new BadRequestException({ message: 'validation_failed', issues: [{ path: '', message: 'expected_object' }] });
-  }
-  const record = body as Record<string, unknown>;
-  const split: AliasPatchSplit = { ...splitSettingsPatch(record), followUpHours: null };
-  if (opts.rules) takeFollowUp(record, split);
+export function splitPatchOrThrow(
+  body: SettingsPatchBody,
+  opts: { rules?: boolean } = {},
+): AliasPatchSplit {
+  const split: AliasPatchSplit = { ...splitSettingsPatch(body), followUpHours: null };
+  if (opts.rules) takeFollowUp(body, split);
   if (split.invalid.length > 0 && split.saved.length === 0) {
     throw new BadRequestException({ message: 'validation_failed', issues: split.issues });
   }

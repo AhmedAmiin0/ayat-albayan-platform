@@ -1,6 +1,6 @@
 import { countByKind, meetingModeOf, usesPlatform, type AssistantLessonView, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
-import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.queries';
-import type { TeacherDayFacts } from '../schedule/sales-schedule.mapper';
+import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.repo';
+import type { TeacherDayFacts } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 
 /** What the schedule adds to a teacher row: today's facts by teacher id, the next lesson by student id. */
 interface TeacherContext {

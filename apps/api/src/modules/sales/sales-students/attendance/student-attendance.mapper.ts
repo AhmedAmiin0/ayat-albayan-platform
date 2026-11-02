@@ -6,8 +6,8 @@ import {
   type AttendanceTableRow,
   type StudentAttendanceTable,
 } from '@ab/shared';
-import { isTrialLesson } from '../../../finance/subscriptions';
-import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.queries';
+import { isTrialLesson } from '@/modules/finance/subscriptions';
+import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.repo';
 
 const CANCELLED = new Set(['cancelled_by_teacher', 'cancelled_by_admin']);
 

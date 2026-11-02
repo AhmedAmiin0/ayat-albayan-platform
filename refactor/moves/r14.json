@@ -1,0 +1,158 @@
+{
+  "id": "r14",
+  "seq": 227,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/sales/job-applicants/job-applicants.queries.ts",
+      "to": "apps/api/src/modules/sales/job-applicants/job-applicants.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/leads/leads.queries.ts",
+      "to": "apps/api/src/modules/sales/leads/leads.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/reads/sales-family.queries.ts",
+      "to": "apps/api/src/modules/sales/sales-money/reads/sales-family.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-registration/sales-registration.queries.ts",
+      "to": "apps/api/src/modules/sales/sales-registration/sales-registration.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-students/attendance/student-attendance.queries.ts",
+      "to": "apps/api/src/modules/sales/sales-students/attendance/student-attendance.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-students/details/sales-student.queries.ts",
+      "to": "apps/api/src/modules/sales/sales-students/details/sales-student.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.queries.ts",
+      "to": "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales/academy/sales-academy.queries.ts",
+      "to": "apps/api/src/modules/sales/sales/academy/sales-academy.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales/assign/sales-assign.queries.ts",
+      "to": "apps/api/src/modules/sales/sales/assign/sales-assign.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales/history/sales-history.queries.ts",
+      "to": "apps/api/src/modules/sales/sales/history/sales-history.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales/sales.queries.ts",
+      "to": "apps/api/src/modules/sales/sales/sales.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales/schedule/sales-schedule.queries.ts",
+      "to": "apps/api/src/modules/sales/sales/schedule/sales-schedule.repo.ts"
+    }
+  ],
+  "renames": {
+    "JobApplicantsQueries": "JobApplicantsRepo",
+    "LeadsQueries": "LeadsRepo",
+    "SalesQueries": "SalesRepo",
+    "SalesAcademyQueries": "SalesAcademyRepo",
+    "SalesAssignQueries": "SalesAssignRepo",
+    "SalesFamilyQueries": "SalesFamilyRepo",
+    "SalesHistoryQueries": "SalesHistoryRepo",
+    "SalesRegistrationQueries": "SalesRegistrationRepo",
+    "SalesScheduleQueries": "SalesScheduleRepo",
+    "SalesStudentQueries": "SalesStudentRepo",
+    "SalesTeacherOverviewQueries": "SalesTeacherOverviewRepo",
+    "StudentAttendanceQueries": "StudentAttendanceRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/sales/job-applicants/job-applicants.queries.ts",
+      "apps/api/src/modules/sales/job-applicants/job-applicants.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/leads/leads.queries.test.ts",
+      "apps/api/src/modules/sales/leads/leads.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/leads/leads.queries.ts",
+      "apps/api/src/modules/sales/leads/leads.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/reads/sales-family.queries.test.ts",
+      "apps/api/src/modules/sales/sales-money/reads/sales-family.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/reads/sales-family.queries.ts",
+      "apps/api/src/modules/sales/sales-money/reads/sales-family.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-registration/sales-registration.queries.test.ts",
+      "apps/api/src/modules/sales/sales-registration/sales-registration.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-registration/sales-registration.queries.ts",
+      "apps/api/src/modules/sales/sales-registration/sales-registration.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/attendance/student-attendance.queries.test.ts",
+      "apps/api/src/modules/sales/sales-students/attendance/student-attendance.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/attendance/student-attendance.queries.ts",
+      "apps/api/src/modules/sales/sales-students/attendance/student-attendance.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/details/sales-student.queries.test.ts",
+      "apps/api/src/modules/sales/sales-students/details/sales-student.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/details/sales-student.queries.ts",
+      "apps/api/src/modules/sales/sales-students/details/sales-student.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.queries.test.ts",
+      "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.queries.ts",
+      "apps/api/src/modules/sales/sales-students/teachers/sales-teacher-overview.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/academy/sales-academy.queries.test.ts",
+      "apps/api/src/modules/sales/sales/academy/sales-academy.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/academy/sales-academy.queries.ts",
+      "apps/api/src/modules/sales/sales/academy/sales-academy.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/assign/sales-assign.queries.test.ts",
+      "apps/api/src/modules/sales/sales/assign/sales-assign.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/assign/sales-assign.queries.ts",
+      "apps/api/src/modules/sales/sales/assign/sales-assign.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/history/sales-history.queries.test.ts",
+      "apps/api/src/modules/sales/sales/history/sales-history.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/history/sales-history.queries.ts",
+      "apps/api/src/modules/sales/sales/history/sales-history.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/sales.queries.ts",
+      "apps/api/src/modules/sales/sales/sales.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/schedule/sales-schedule.queries.test.ts",
+      "apps/api/src/modules/sales/sales/schedule/sales-schedule.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales/schedule/sales-schedule.queries.ts",
+      "apps/api/src/modules/sales/sales/schedule/sales-schedule.repo.ts"
+    ]
+  ]
+}

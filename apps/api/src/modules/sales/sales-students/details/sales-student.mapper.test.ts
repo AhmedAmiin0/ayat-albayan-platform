@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { HistoryBundle } from '../../sales';
+import type { HistoryBundle } from '@/modules/sales/sales';
 import { toStudentDetails } from './sales-student.mapper';
-import type { DetailsStudentRow } from './sales-student.queries';
+import type { DetailsStudentRow } from './sales-student.repo';
 
 const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', program: 'quran', teacher: null, guardian: null } as DetailsStudentRow;
 const sub = (id: string, status: string, starts_on: string) => ({ id, package: '8', status, starts_on, renews_on: null, lessons_total: 8, created_at: `${starts_on}T00:00:00Z` });

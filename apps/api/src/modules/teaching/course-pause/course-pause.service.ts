@@ -3,6 +3,7 @@ import {
   coursePauseProblem,
   riyadhToday,
   RIYADH_TZ,
+  startOfLocalDay,
   type CoursePausePreview,
   type CoursePauseResult,
   type CoursePauseResume,
@@ -12,7 +13,6 @@ import {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { startOfLocalDay } from '@/modules/teaching/scheduling';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';

@@ -1,6 +1,4 @@
-import { DURATIONS, MINUTE_MS } from '@ab/shared';
-import { expandRow, type TimeRange, type WeeklyRow } from '@/modules/people/teachers/availability/free-slots';
-import { mergeIntervals, subtractIntervals, type Interval } from '@/modules/people/teachers/availability/intervals';
+import { DURATIONS, MINUTE_MS, expandRow, type TimeRange, type WeeklyRow, mergeIntervals, subtractIntervals, type Interval } from '@ab/shared';
 /** The shortest lesson: a shorter gap can never be booked, so it is not shown as free. */
 const MIN_GAP = Math.min(...DURATIONS) * MINUTE_MS;
 

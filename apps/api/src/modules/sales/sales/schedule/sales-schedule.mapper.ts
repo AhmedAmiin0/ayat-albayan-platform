@@ -9,7 +9,7 @@ import {
   type SalesScheduleLesson,
   usesPlatform,
 } from '@ab/shared';
-import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
+import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.repo';
 
 // Whitelists, not omit-lists: a column added to lessons later never reaches sales.
 

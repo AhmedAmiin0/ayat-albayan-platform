@@ -1,11 +1,5 @@
-import { DAY_MS, dayInZone, dayWallToUtc, offsetMs } from '@ab/shared';
+import { DAY_MS, dayInZone, dayWallToUtc, offsetMs, ruleOccurrences, type Occurrence, type OccurrenceTiming, type UtcWindow } from '@ab/shared';
 import type { BookingRequest } from '@ab/shared';
-import {
-  ruleOccurrences,
-  type Occurrence,
-  type RuleTiming,
-  type UtcWindow,
-} from '@/modules/teaching/scheduling/occurrences/occurrences';
 export type PlanRule = Pick<
   BookingRequest,
   'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'startsAt'
@@ -14,7 +8,7 @@ export type PlanRule = Pick<
   single: boolean;
 };
 export type PlanInput = { rule: PlanRule; now: Date; horizonWeeks: number };
-export type Plan = { timing: RuleTiming; occurrences: Occurrence[] };
+export type Plan = { timing: OccurrenceTiming; occurrences: Occurrence[] };
 
 /** [max(now, startsOn 00:00 in tz), now + horizon weeks) — docs/10 §3 (R-SCH-02). */
 export function horizonWindow(input: PlanInput): UtcWindow {
@@ -51,7 +45,7 @@ function pinFirst(all: Occurrence[], rule: PlanRule): Occurrence[] {
  */
 export function planBooking(input: PlanInput): Plan {
   const { rule } = input;
-  const timing: RuleTiming = {
+  const timing: OccurrenceTiming = {
     byday: rule.byday,
     start_time_local: rule.startTimeLocal,
     duration_min: rule.durationMin,

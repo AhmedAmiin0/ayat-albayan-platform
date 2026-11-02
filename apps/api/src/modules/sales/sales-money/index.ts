@@ -1,4 +1,4 @@
-export { type FamilyStudentRow, SalesFamilyQueries } from './reads/sales-family.queries';
+export { type FamilyStudentRow, SalesFamilyRepo } from './reads/sales-family.repo';
 export { toSalesQuote } from './sales-money.mapper';
 export { SalesMoneyModule } from './sales-money.module';
 export { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';

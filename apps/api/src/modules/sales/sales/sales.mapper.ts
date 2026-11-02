@@ -1,7 +1,7 @@
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { SalesLessonRow } from './schedule/sales-lessons';
-import type { SalesSubscriptionRow } from './sales.queries';
+import type { SalesSubscriptionRow } from './sales.repo';
 
 /** Pending = still to be confirmed or paid (trial | unpaid | paused); confirmed = active. */
 export const KIND_STATUSES = {
