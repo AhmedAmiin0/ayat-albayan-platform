@@ -3059,7 +3059,7 @@
       "pageOf": "Page {n} of {total}",
       "more": "The preview shows the first {n} pages. Download the file to see the rest.",
       "pageFailed": "Couldn't load the page. Tap to try again",
-      "tapToPreview": "Tap to preview",
+      "untitled": "PDF document",
       "zoomHint": "Tap a page to zoom in"
     },
     "hide": {
