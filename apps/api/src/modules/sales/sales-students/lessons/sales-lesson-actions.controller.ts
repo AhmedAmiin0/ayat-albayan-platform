@@ -11,7 +11,7 @@ import { SalesLessonActions } from './sales-lesson-actions.service';
  * has its own narrow key (lessons.reschedule, lessons.cancel, lessons.confirm; the admin's routes keep lessons.write
  * and lessons.status). All three: ANY lesson, hers or another family's (owner 2026-10-28; a group lesson moves or
  * cancels for all its students), before it ends (409 lesson_ended), 404 lesson_not_found; strict bodies: no series,
- * substitute teacher, clash override or «by».
+ * substitute teacher or clash override. A cancel's `by` teacher / student may come after the end (owner 2026-11-02).
  */
 @ApiTags('sales')
 @ApiBearerAuth()
@@ -27,7 +27,10 @@ export class SalesLessonActionsController {
     return this.actions.reschedule({ lessonId: id, body: parseOrThrow(salesRescheduleSchema, body ?? {}), actor: user });
   }
 
-  /** `{ reason? }`: the lesson becomes «ألغتها الإدارة»; 409 invalid_transition when it is closed already. */
+  /**
+   * `{ reason?, by? }`: «ألغتها الإدارة» (by admin, the default), «ألغاها المعلم/ة» or «اعتذر الطالب» (also after
+   * the end, and on a lesson held automatically: 409 not_auto_held for another completed one); 409 invalid_transition.
+   */
   @Post(':id/cancel')
   @HttpCode(200)
   @Permissions('lessons.cancel')

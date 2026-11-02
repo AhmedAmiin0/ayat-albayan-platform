@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '../../../common/settings/settings.fakes';
 import { DashboardSettings } from './dashboard.settings';
 
-/** What FinanceService read before the reader existed: the reader lists exactly these. */
-const BEFORE = ['reporting_currency'] as const;
+/** What FinanceService read before the reader existed, + DashboardService's «يحتاج تأكيد» switch. */
+const BEFORE = ['reporting_currency', 'lesson_confirmation_required'] as const;
 
 describe('DashboardSettings', () => {
   it('reads exactly its keys, with the registry defaults', async () => {
@@ -14,6 +14,7 @@ describe('DashboardSettings', () => {
   });
 
   it('answers the stored reporting currency', async () => {
-    expect(await readerOf(DashboardSettings, { reporting_currency: 'EGP' }).read()).toEqual({ reporting_currency: 'EGP' });
+    expect(await readerOf(DashboardSettings, { reporting_currency: 'EGP' }).read())
+      .toEqual({ reporting_currency: 'EGP', lesson_confirmation_required: false });
   });
 });

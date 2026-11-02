@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { countBy, teacherLoad } from './dashboard.mapper';
 import { DashboardQueries } from './dashboard.queries';
 import type { DashboardResponse, DashboardWork } from './dashboard.types';
+import { DashboardSettings } from './dashboard.settings';
 import { FinanceService } from './finance/finance.service';
 import { rangeWindow } from './range';
 import { pendingList, taskList, unpaidList } from './work/work.mapper';
@@ -15,7 +16,14 @@ export class DashboardService {
     private readonly counts: DashboardQueries,
     private readonly work: WorkQueries,
     private readonly money: FinanceService,
+    private readonly settings: DashboardSettings,
   ) {}
+
+  /** «يحتاج تأكيد» only while the academy requires a confirmation (owner 2026-11-02: 0 otherwise). */
+  private async needsConfirmation(now: Date): Promise<number> {
+    const { lesson_confirmation_required: required } = await this.settings.read();
+    return required ? this.counts.needsConfirmation(now) : 0;
+  }
 
   async summary(range: DateRangeQuery, now = new Date()): Promise<DashboardResponse> {
     const w = rangeWindow(range);
@@ -23,7 +31,7 @@ export class DashboardService {
       this.counts.leads(w),
       this.counts.lessons(w),
       this.counts.activeStudents(),
-      this.counts.needsConfirmation(now),
+      this.needsConfirmation(now),
       this.work.pendingReports(now),
       this.counts.unpaidSubscriptions(),
       this.counts.openTasks(),

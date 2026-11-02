@@ -7,6 +7,7 @@ import { LessonCancelService } from './lesson-cancel.service';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, RULE_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
+import { fakeCorrection } from '@/modules/teaching/lessons/auto-held/auto-held.fakes';
 
 const rules = { rule: vi.fn() };
 const NOW = new Date('2026-10-04T10:00:00Z'); // Sunday 13:00 Riyadh, 4 h before the lesson
@@ -14,7 +15,9 @@ const LATER = { id: 'l2', status: 'confirmed' as const, starts_at: '2026-10-06T1
 
 function setup(row: LessonRow | null = lessonRow(), lateCancelHours: number | null = null) {
   const deps = fakeStore(row);
-  const service = new LessonCancelService(deps.store, rules as unknown as ScheduleRepo, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }));
+  const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours });
+  const { correction } = fakeCorrection(deps.store, settings);
+  const service = new LessonCancelService(deps.store, rules as unknown as ScheduleRepo, settings, correction);
   return { ...deps, service };
 }
 const body = (over: object = {}) => ({ scope: 'one' as const, by: 'teacher' as const, reason: 'ظرف طارئ', ...over });

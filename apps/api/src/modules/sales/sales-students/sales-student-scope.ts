@@ -29,12 +29,13 @@ export class SalesStudentScope {
    * (owner 2026-10-28, the same scope as «تفاصيل الطالب»); a group lesson moves / cancels for every student
    * of it, as the admin's one-lesson action does. 404 lesson_not_found (a lesson with no student reads the
    * same: never a sales lesson), 409 lesson_ended once it is over (its outcome is the teacher's and the
-   * admin's, never hers). A closed status is the admin service's 409 invalid_transition.
+   * admin's, never hers), unless `afterEnd` (recording that the teacher cancelled it or the student
+   * excused, owner 2026-11-02). A closed status is the admin service's 409 invalid_transition.
    */
-  async assertLesson(input: { lessonId: string; now: Date }): Promise<LessonFacts> {
+  async assertLesson(input: { lessonId: string; now: Date; afterEnd?: boolean }): Promise<LessonFacts> {
     const lesson = await this.queries.lesson(input.lessonId);
     if (!lesson || lesson.lesson_students.length === 0) throw notFound('lesson_not_found');
-    if (Date.parse(lesson.ends_at) <= input.now.getTime()) throw conflict('lesson_ended');
+    if (!input.afterEnd && Date.parse(lesson.ends_at) <= input.now.getTime()) throw conflict('lesson_ended');
     return lesson;
   }
 }

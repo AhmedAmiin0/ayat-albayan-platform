@@ -29,4 +29,13 @@ export const SCHEDULING_SETTINGS = {
     type: 'bool', default: true,
     labelKey: 'settings.teachersAlwaysAvailable', hintKey: 'settings.hints.teachersAlwaysAvailable',
   },
+  /**
+   * Owner 2026-11-02: OFF (default) = a lesson needs no «يحتاج تأكيد»; one still scheduled / confirmed
+   * 30 min after its end counts as held (AutoHeldJob). ON = the family or staff confirm it (as before).
+   */
+  lesson_confirmation_required: {
+    module: 'scheduling', group: 'schedule',
+    type: 'bool', default: false, public: true,
+    labelKey: 'settings.lessonConfirmationRequired', hintKey: 'settings.hints.lessonConfirmationRequired',
+  },
 } as const satisfies Record<string, SettingDef>;

@@ -23,6 +23,8 @@ const CODES = [
   'lesson_ended',
   'not_your_student',
   'lesson_not_found',
+  // «لم تنعقد؟» on a completed lesson the auto-held job did not close (owner 2026-11-02).
+  'not_auto_held',
   ...TIME_EDIT_ERRORS,
 ];
 

@@ -40,7 +40,7 @@ describe('public settings', () => {
   it('only the public keys go out, with their defaults before the API answers', () => {
     expect([...PUBLIC_SETTING_KEYS].sort()).toEqual(
       [
-        'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min',
+        'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min', 'lesson_confirmation_required',
         'makeup_window_days', 'meeting_link_auto', 'meetings_in_app', 'recording_consent_notice', 'upload_max_mb',
       ].sort(),
     );
