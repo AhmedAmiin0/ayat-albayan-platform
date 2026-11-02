@@ -34,6 +34,15 @@ describe('feedback lists', () => {
       }
     });
 
+    it('a bad filter and a bad page: the filter’s issue is the one reported, on both lists', async () => {
+      const urls = ['/feedback', '/teachers/me/feedback'] as const;
+      for (const [url, token] of [[urls[0], undefined], [urls[1], 'teacher']] as const) {
+        const res = await h.call({ method: 'GET', url: `${url}?kind=other&pageSize=500`, token });
+        expect(res.statusCode).toBe(400);
+        expect(res.json().issues.map((i: { path: string }) => i.path)).toEqual(['kind']);
+      }
+    });
+
     it('admin only: a teacher, even asking for another teacher’s rows, gets 403', async () => {
       const other = `/feedback?teacher=${TEACHER_ID}`;
       expect((await h.call({ method: 'GET', url: other, token: 'teacher' })).statusCode).toBe(403);

@@ -1,10 +1,11 @@
 import { rescheduleRequestSchema, type LessonView } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { LessonViews } from '../store/lesson-views';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 
@@ -25,10 +26,9 @@ export class LessonRescheduleController {
   @HttpCode(200)
   async reschedule(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(rescheduleRequestSchema) req: z.output<typeof rescheduleRequestSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const req = parseOrThrow(rescheduleRequestSchema, body);
     const newId =
       req.scope === 'one'
         ? await this.one.reschedule({ lessonId: id, body: req, actor: user })

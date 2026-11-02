@@ -7,11 +7,12 @@ import {
   type CoursePauseResult,
   type CoursePauseState,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CoursePauseService } from './course-pause.service';
 
 /**
@@ -36,30 +37,48 @@ export class CoursePauseController {
   /** `?from=&until=`: how many lessons the pause would take the student out of. */
   @Get('preview')
   @Permissions('courses.pause')
-  preview(@Param('id', ParseUUIDPipe) id: string, @Query() query: unknown): Promise<CoursePausePreview> {
-    return this.pauses.preview(id, parseOrThrow(coursePausePreviewQuery, query ?? {}));
+  preview(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodQuery(coursePausePreviewQuery) query: z.output<typeof coursePausePreviewQuery>,
+  ): Promise<CoursePausePreview> {
+    return this.pauses.preview(id, query);
   }
 
   /** `{ fromDate?, untilDate?, reason? }` (Riyadh dates; from defaults to today, until null = until «استئناف»). */
   @Post()
   @HttpCode(201)
   @Permissions('courses.pause')
-  start(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CoursePauseResult> {
-    return this.pauses.start({ studentId: id, body: parseOrThrow(coursePauseStartSchema, body ?? {}), actor: user });
+  start(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(coursePauseStartSchema, { orEmpty: true })
+    body: z.output<typeof coursePauseStartSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CoursePauseResult> {
+    return this.pauses.start({ studentId: id, body, actor: user });
   }
 
   /** `{ untilDate }`: extend or shorten the open pause. */
   @Patch('until')
   @Permissions('courses.pause')
-  until(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CoursePauseResult> {
-    return this.pauses.setUntil({ studentId: id, body: parseOrThrow(coursePauseUntilSchema, body ?? {}), actor: user });
+  until(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(coursePauseUntilSchema, { orEmpty: true })
+    body: z.output<typeof coursePauseUntilSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CoursePauseResult> {
+    return this.pauses.setUntil({ studentId: id, body, actor: user });
   }
 
   /** «استئناف الدورة» now: lessons back from today, the package's dates moved by the paused days. `{ subscriptionId? }`. */
   @Post('resume')
   @HttpCode(200)
   @Permissions('courses.pause')
-  resume(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CoursePauseResult> {
-    return this.pauses.resume({ studentId: id, body: parseOrThrow(coursePauseResumeSchema, body ?? {}), actor: user });
+  resume(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(coursePauseResumeSchema, { orEmpty: true })
+    body: z.output<typeof coursePauseResumeSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CoursePauseResult> {
+    return this.pauses.resume({ studentId: id, body, actor: user });
   }
 }

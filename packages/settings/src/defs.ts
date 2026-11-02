@@ -114,4 +114,19 @@ export type SettingValue<D> = D extends { type: 'json'; nullable: true }
               : string;
 
 /** One typed object of a registry slice (a domain file's entries → their stored values). */
-export type SettingsOf<R extends Record<string, SettingDef>> = { -readonly [K in keyof R]: SettingValue<R[K]> };
+export type SettingsOf<R extends Record<string, SettingDef>> = {
+  -readonly [K in keyof R]: SettingValue<R[K]>;
+};
+
+/** A registry type ('int', 'json', …) and its own entry shape. */
+export type SettingType = SettingDef['type'];
+export type SettingDefOf<K extends SettingType> = Extract<SettingDef, { type: K }>;
+/** One handler per setting type, each given its own entry shape (docs/36 F-4: exhaustive). */
+export type SettingTypeTable<R> = { [K in SettingType]: (def: SettingDefOf<K>) => R };
+
+/** Runs the entry's own handler from a per-type table (no switch over def.type). */
+export function byType<R>(table: SettingTypeTable<R>, def: SettingDef): R {
+  // Safe: table[K] is only ever called with a def whose type is K (TS cannot correlate the two).
+  const handler = table[def.type] as (d: SettingDef) => R;
+  return handler(def);
+}

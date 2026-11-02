@@ -24,13 +24,12 @@ type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status:
  */
 @Injectable()
 export class CodeSend {
-  /** Property-injected (the constructor is at the 3-parameter limit); absent = module mode sends nothing. */
-  @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes;
-
   constructor(
     private readonly gate: SendGate,
     private readonly queries: SenderRepo,
     private readonly dispatch: MessageDispatch,
+    /** Absent = module mode sends nothing. */
+    @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes,
   ) {}
 
   /** Can a code go out now? The template approved, the gate open and a chat line / number that can send it. */

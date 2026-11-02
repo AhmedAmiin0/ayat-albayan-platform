@@ -2,8 +2,8 @@ import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
 import { Ticker } from '@/common/jobs';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
-import { FollowUpsReads } from './follow-ups.deps';
 import {
   followUpDedupKey,
   followUpRow,
@@ -13,6 +13,7 @@ import {
   sameInstant,
   type FollowUpLeadRow,
 } from './follow-ups.plan';
+import { FollowUpsSettings } from './follow-ups.settings';
 import { FollowUpsRepo } from './follow-ups.repo';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -33,11 +34,11 @@ interface Tick {
 
 /**
  * R-LEAD-05 follow-up scheduler (docs/12 §7): every 5 minutes, single flight. A lead in
- * interested_no_slot / no_reply, not paused, whose nextFollowUpAt (follow_up_hours[stage] after
- * its last message) has passed gets follow_up_slots with two real free slots, keyed by this
- * silence and stage (rule 8). The stage advances (compare-and-set) only once that row left, on a
- * later tick (followUpStep); after the last stage nothing more is sent. leads.next_follow_up_at
- * and follow_up_note are kept current for the lead panel.
+ * interested_no_slot / no_reply, not paused, whose nextFollowUpAt (follow_up_hours[stage] after its
+ * last message) has passed gets follow_up_slots with two real free slots, keyed by this silence and
+ * stage (rule 8). The stage advances (compare-and-set) only once that row left, on a later tick
+ * (followUpStep); after the last stage nothing more is sent. next_follow_up_at and follow_up_note
+ * stay current for the lead panel.
  * - follow_up_slots not approved → nothing queued, the stage stays (note waiting_template): the
  *   follow-up goes out on the first tick after approval.
  * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
@@ -59,7 +60,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: FollowUpsRepo,
     private readonly slots: FollowUpSlots,
-    private readonly reads: FollowUpsReads,
+    private readonly settings: FollowUpsSettings,
+    private readonly policy: NotificationPolicy,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -81,7 +83,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
       ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
     };
     try {
-      const { auto_messages_enabled: auto } = await this.reads.settings.read();
+      const { auto_messages_enabled: auto } = await this.settings.read();
       if (!auto) return summary; // automatic messages OFF (docs/09 cut-over): nothing queued or advanced
       const timing = await this.timing();
       if (!timing) return summary; // the follow_up_slots rule OFF or unread: nothing queued or advanced
@@ -101,7 +103,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the policy). */
   private async timing(): Promise<({ hours: readonly number[] } & SlotWindow) | null> {
-    const snap = await this.reads.policy.snapshot();
+    const snap = await this.policy.snapshot();
     const rule = snap && ruleOf(snap, 'follow_up_slots');
     if (!snap || !rule?.enabled) return null;
     const s = snap.settings; // a legacy value the rule schema refuses is still used as before
@@ -109,11 +111,10 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   }
 
   private async process(t: Tick): Promise<Outcome> {
-    const { lead } = t;
     try {
       return await this.step(t);
     } catch (e) {
-      this.log.warn(`follow-up for lead ${lead.id} failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`follow-up for lead ${t.lead.id} failed: ${e instanceof Error ? e.message : String(e)}`);
       return 'failed';
     }
   }
@@ -141,9 +142,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** Writes next_follow_up_at / follow_up_note only when they changed, then reports `outcome`. */
   private async note(t: Tick, s: { due: Date | null; note: FollowUpNote | null; outcome: Outcome }): Promise<Outcome> {
-    const { lead } = t;
-    if (!sameInstant(lead.next_follow_up_at, s.due) || lead.follow_up_note !== s.note) {
-      await this.queries.sync(lead.id, { next_follow_up_at: s.due?.toISOString() ?? null, follow_up_note: s.note });
+    if (!sameInstant(t.lead.next_follow_up_at, s.due) || t.lead.follow_up_note !== s.note) {
+      await this.queries.sync(t.lead.id, { next_follow_up_at: s.due?.toISOString() ?? null, follow_up_note: s.note });
     }
     return s.outcome;
   }

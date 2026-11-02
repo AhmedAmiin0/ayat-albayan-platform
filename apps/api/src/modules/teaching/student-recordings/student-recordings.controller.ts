@@ -3,11 +3,12 @@ import {
   studentRecordingsQuerySchema,
   type StudentRecordingsPage,
 } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
@@ -28,15 +29,18 @@ export class StudentRecordingsController {
   @Get('students/:id/recordings')
   list(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() query: unknown,
+    @ZodQuery(studentRecordingsQuerySchema) query: z.output<typeof studentRecordingsQuerySchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<StudentRecordingsPage> {
-    return this.recordings.list({ user, studentId: id, query: parseOrThrow(studentRecordingsQuerySchema, query) });
+    return this.recordings.list({ user, studentId: id, query });
   }
 
   /** Lesson ids with a finished recording, for the report history's links: no signed URLs. Same access as the list. */
   @Get('students/:id/recorded-lesson-ids')
-  recordedLessonIds(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<string[]> {
+  recordedLessonIds(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<string[]> {
     return this.recordings.recordedLessonIds({ user, studentId: id });
   }
 
@@ -45,17 +49,20 @@ export class StudentRecordingsController {
   @Permissions('recordings.manage')
   visibility(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @ZodBody(recordingVisibilitySchema) body: z.output<typeof recordingVisibilitySchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string; visible_to_student: boolean }> {
-    return this.toggles.setVisibility({ user, id, visible: parseOrThrow(recordingVisibilitySchema, body).visible });
+    return this.toggles.setVisibility({ user, id, visible: body.visible });
   }
 
   /** Admin only: removes the file, keeps the row as `deleted`, writes an audit row. */
   @Delete('recordings/:id')
   @Permissions('recordings.manage')
   @HttpCode(204)
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await this.deletion.remove({ user, id });
   }
 }

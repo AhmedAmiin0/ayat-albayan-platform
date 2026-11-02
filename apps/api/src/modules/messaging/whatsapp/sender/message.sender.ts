@@ -40,13 +40,13 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     run: () => this.runOnce(),
     timer: 'kick',
   });
-  /** Property-injected (the constructor is at the 3-parameter limit); absent = module mode sends nothing. */
-  @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes;
 
   constructor(
     private readonly gate: SendGate,
     private readonly queries: SenderRepo,
     private readonly worker: MessageWorker,
+    /** Absent = module mode sends nothing. */
+    @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes,
   ) {}
 
   onApplicationBootstrap(): void {
