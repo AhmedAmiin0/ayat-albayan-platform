@@ -1,7 +1,7 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { buildEarnings, frozenLines } from './my.earnings';
-import type { MyAdjustment, MyCommission } from './my.queries';
+import type { MyAdjustment, MyCommission } from './my.repo';
 
 const NOW = '2026-10-15T10:00:00Z';
 const TERMS = {

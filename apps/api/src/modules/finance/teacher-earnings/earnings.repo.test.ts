@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { earning, TEACHER } from './earnings.fakes';
-import { EarningsQueries } from './earnings.queries';
+import { EarningsRepo } from './earnings.repo';
 
 const V = 'v_teacher_countable_earnings';
 const err = (code: string, message: string) => ({ code, message });
@@ -9,7 +9,7 @@ const err = (code: string, message: string) => ({ code, message });
 describe('EarningsQueries', () => {
   it('sessions: the teacher’s rows, the unpaid alias is earned + partially_paid, newest first', async () => {
     const { db, calls } = fakeDb({ [V]: [{ data: [], count: 0 }] });
-    await new EarningsQueries(db).sessions(TEACHER, { status: 'unpaid', page: 2, pageSize: 10 });
+    await new EarningsRepo(db).sessions(TEACHER, { status: 'unpaid', page: 2, pageSize: 10 });
     const on = (m: string) => calls.filter((c) => c.method === m).map((c) => c.args);
     expect(on('eq')).toEqual([['teacher_id', TEACHER]]);
     expect(on('in')).toEqual([['status', ['earned', 'partially_paid']]]);
@@ -18,24 +18,24 @@ describe('EarningsQueries', () => {
 
   it('forPayment: ticked ids stay inside the teacher’s own rows; no ids → unpaid only', async () => {
     const a = fakeDb({ [V]: [{ data: [] }] });
-    await new EarningsQueries(a.db).forPayment(TEACHER, ['x']);
+    await new EarningsRepo(a.db).forPayment(TEACHER, ['x']);
     expect(a.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['teacher_id', TEACHER]]);
     expect(a.argsOf(V, 'in')).toEqual(['id', ['x']]);
     const b = fakeDb({ [V]: [{ data: [] }] });
-    await new EarningsQueries(b.db).forPayment(TEACHER, undefined);
+    await new EarningsRepo(b.db).forPayment(TEACHER, undefined);
     expect(b.argsOf(V, 'in')).toEqual(['status', ['earned', 'partially_paid']]);
   });
 
   it('money reads every page of 1000', async () => {
     const page = Array.from({ length: 1000 }, (_, i) => ({ id: String(i), amount: 1, paid_amount: 0 }));
     const { db } = fakeDb({ [V]: [{ data: page }, { data: [earning(1)] }] });
-    expect(await new EarningsQueries(db).money(TEACHER)).toHaveLength(1001);
+    expect(await new EarningsRepo(db).money(TEACHER)).toHaveLength(1001);
   });
 
   it('balance, sessions and allocation read only the countable view (subscribed students)', async () => {
     const t = 'teacher_session_earnings';
     const a = fakeDb({ [V]: [{ data: [] }, { data: [], count: 0 }, { data: [] }] });
-    const q = new EarningsQueries(a.db);
+    const q = new EarningsRepo(a.db);
     await q.money(TEACHER);
     await q.sessions(TEACHER, { page: 1, pageSize: 10 });
     await q.forPayment(TEACHER, undefined);
@@ -48,12 +48,12 @@ describe('EarningsQueries', () => {
       [V]: [{ data: [earning(1)], count: 1 }],
       lesson_students: [{ data: [{ lesson_id: earning(1).lesson_id, student: { name: 'سهيلة' } }] }],
     });
-    const page = await new EarningsQueries(db).sessions(TEACHER, { page: 1, pageSize: 10 });
+    const page = await new EarningsRepo(db).sessions(TEACHER, { page: 1, pageSize: 10 });
     expect(page.items[0]?.lesson?.lesson_students).toEqual([{ student: { name: 'سهيلة' } }]);
   });
 
   it('record maps the raised codes to HTTP errors', async () => {
-    const q = (e: ReturnType<typeof err>) => new EarningsQueries(fakeDb({ 'rpc:record_teacher_payment': [{ error: e }] }).db).record({});
+    const q = (e: ReturnType<typeof err>) => new EarningsRepo(fakeDb({ 'rpc:record_teacher_payment': [{ error: e }] }).db).record({});
     await expect(q(err('P0001', 'overpayment'))).rejects.toMatchObject({ status: 409 });
     await expect(q(err('P0001', 'allocation_mismatch'))).rejects.toMatchObject({ status: 400 });
     await expect(q(err('P0001', 'earning_not_found'))).rejects.toMatchObject({ status: 404 });
@@ -62,12 +62,12 @@ describe('EarningsQueries', () => {
 
   it('record returns the payment id and whether it was a replay', async () => {
     const { db } = fakeDb({ 'rpc:record_teacher_payment': [{ data: { payment_id: 'p', replayed: true } }] });
-    expect(await new EarningsQueries(db).record({})).toEqual({ payment_id: 'p', replayed: true });
+    expect(await new EarningsRepo(db).record({})).toEqual({ payment_id: 'p', replayed: true });
   });
 
   it('paidOnLessons sums in piasters, in chunks of 100 ids', async () => {
     const ids = Array.from({ length: 150 }, (_, i) => `l${i}`);
     const { db } = fakeDb({ teacher_session_earnings: [{ data: [{ paid_amount: 0.1 }] }, { data: [{ paid_amount: 0.2 }] }] });
-    expect(await new EarningsQueries(db).paidOnLessons(ids)).toBe(0.3);
+    expect(await new EarningsRepo(db).paidOnLessons(ids)).toBe(0.3);
   });
 });

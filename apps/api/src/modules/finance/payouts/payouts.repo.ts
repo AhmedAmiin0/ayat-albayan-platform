@@ -1,8 +1,8 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { REPORTABLE_STATUSES } from '../../reporting/reports/history/report-history.queries';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { REPORTABLE_STATUSES } from '@/modules/reporting/reports/history/report-history.queries';
+import { dbError } from '@/common/http/http';
 import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 
 export type PayoutRow = Tables<'teacher_payouts'> & {
@@ -16,7 +16,7 @@ const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
 
 /** All supabase access for `teacher_payouts` (service role; the controllers guard). R-PAY-02. */
 @Injectable()
-export class PayoutsQueries {
+export class PayoutsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Every teacher, whatever the status: one who left mid-month is still paid for that month. */

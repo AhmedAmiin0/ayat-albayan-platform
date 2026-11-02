@@ -1,13 +1,13 @@
 import { COUNTS_FOR_MONEY, renewalShareNow } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { AssistantPaySettings } from '../shared/assistant-pay.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { AssistantPaySettings } from '@/modules/finance/assistant-pay/shared/assistant-pay.settings';
 import type { TermsRow } from './terms.mapper';
 
 /** assistant_terms (one row per assistant) and the people those terms are for (service role; the controllers guard). */
 @Injectable()
-export class TermsQueries {
+export class TermsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: AssistantPaySettings,

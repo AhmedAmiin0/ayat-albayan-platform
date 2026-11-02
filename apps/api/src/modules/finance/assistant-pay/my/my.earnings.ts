@@ -9,7 +9,7 @@ import {
   type WalletLine,
 } from '@ab/shared';
 import type { StatementRow } from '@/modules/finance/assistant-pay/statements/statements.mapper';
-import type { MyAdjustment, MyCommission, StatementState } from './my.queries';
+import type { MyAdjustment, MyCommission, StatementState } from './my.repo';
 
 const frozen = (r: StatementState): boolean => r.statement?.status === 'approved' || r.statement?.status === 'paid';
 
