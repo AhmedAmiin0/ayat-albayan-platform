@@ -1,7 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
-import type { TemplatesRepo } from './templates.repo';
 import { RENEWAL_DUE_SEED } from './seed-templates.fakes';
 import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';

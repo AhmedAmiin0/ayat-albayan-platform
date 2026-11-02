@@ -1,13 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { toMetaTemplate } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
-import type { TemplatesRepo } from './templates.repo';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
 import { RECORDED, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };

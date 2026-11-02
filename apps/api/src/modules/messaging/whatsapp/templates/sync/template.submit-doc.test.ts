@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { APP_ENV, RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { SAMPLE_REPORT } from '@/modules/messaging/whatsapp/template-review';
 import { templateServices } from './template-services.fakes';
-import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { RECORDED, scriptedFetch, STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';

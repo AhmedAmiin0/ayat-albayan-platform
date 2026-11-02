@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { templateServices } from './template-services.fakes';
-import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 
 // docs/19: Kapso has no sample upload, so a document-header submit on a kapso notifications line

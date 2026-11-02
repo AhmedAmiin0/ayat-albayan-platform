@@ -1,12 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
 import { CRM_ENV, CRM_SENT } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { syncNumber } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import type { TemplateAdmin } from './template-admin';
-import type { TemplatesRepo } from './templates.repo';
 import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: a crm line's templates live in the CRM. No sync call, no row touched, no submit;

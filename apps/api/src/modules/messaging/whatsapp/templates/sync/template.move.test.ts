@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { templateServices } from './template-services.fakes';
-import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import type { MetaTemplate, TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «نقل إلى الرقم الآخر» (owner 2026-10-18): the row moves, its old WABA's state is dropped, and the new
 // line is synced at once, so the status follows the target WABA.

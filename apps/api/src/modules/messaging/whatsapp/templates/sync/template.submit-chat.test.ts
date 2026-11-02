@@ -1,13 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { templateServices } from './template-services.fakes';
-import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Owner 2026-10-18: a template is submitted to its OWN line's WABA, chat rows included, under that
 // line's driver: Meta directly, or Kapso (a rejected one edited through hsm_id; no sample upload).

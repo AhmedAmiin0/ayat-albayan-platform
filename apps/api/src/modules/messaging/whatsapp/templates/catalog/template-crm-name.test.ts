@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
 import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
-import type { TemplatesRepo } from './templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM name / language of a template, by hand, audited, only on a crm line.

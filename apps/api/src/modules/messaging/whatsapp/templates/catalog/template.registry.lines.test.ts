@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '@/common/audit/audit.service';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
-import type { TemplatesRepo } from './templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
