@@ -43,6 +43,19 @@ describe('NumberRoutes.pass', () => {
     expect([...(pass.crm ?? [])]).toEqual([N2]);
   });
 
+  it('a crm number: teacher_new_student by teacher_lesson_v2; without one, the gated row is dropped', async () => {
+    const own = templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'not_submitted' });
+    const v2 = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', status: 'approved' });
+    const q = queries();
+    q.templates.mockResolvedValue([own, v2]);
+    const crm = overlayNum({ id: N2, env: { provider: 'crm', base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' } });
+    const onCrm = await new NumberRoutes(q as unknown as RouteRepo).pass([crm]);
+    expect(onCrm.templates.map((t) => t.key)).toEqual(['teacher_new_student', 'teacher_lesson_v2']);
+    expect(onCrm.pass.crmApproved?.has('teacher_new_student')).toBe(true);
+    const metaOnly = await new NumberRoutes(q as unknown as RouteRepo).pass(THREE);
+    expect(metaOnly.templates.map((t) => t.key)).toEqual(['teacher_lesson_v2']);
+  });
+
   it('approvals unreadable → the pass throws (nothing sends)', async () => {
     const q = queries();
     q.approvals.mockRejectedValueOnce(new Error('down'));
