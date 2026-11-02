@@ -104,7 +104,7 @@ export class CallsNumberPermission {
       scope: actor.teacher,
       sales: actor.sales,
     };
-    return this.kit.threads.enqueue({
+    return this.kit.messages.enqueue({
       ...outboundBase(send, await this.kit.threads.thread(input.phone)),
       ...{
         direction: 'outbound',

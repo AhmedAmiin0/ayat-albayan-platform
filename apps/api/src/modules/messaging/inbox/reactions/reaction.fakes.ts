@@ -7,6 +7,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { ReactionRepo, ReactionTarget } from './reaction.repo';
 import { ThreadReactionService, type ReactionRequest } from './thread-reaction.service';
 
@@ -64,7 +65,12 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
       return { view, replayed };
     }),
   };
-  const service = new ThreadReactionService(reactions as unknown as ReactionRepo, threads as unknown as ThreadsRepo, outbox as unknown as Outbox);
+  const service = new ThreadReactionService(
+    reactions as unknown as ReactionRepo,
+    threads as unknown as ThreadsRepo,
+    outbox as unknown as Outbox,
+    threads as unknown as ThreadMessagesRepo,
+  );
   const views = { view: async (r: ThreadMessageRow) => toMessageView({ row: r, template: null }) };
   Object.assign(service, { views: views as unknown as MessageViews });
   return { service, reactions, threads, outbox, jobs, row };

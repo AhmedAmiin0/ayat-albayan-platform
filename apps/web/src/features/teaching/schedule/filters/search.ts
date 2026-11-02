@@ -1,6 +1,12 @@
-import { GENDERS, LESSON_STATUSES, PROGRAMS, type Gender, type LessonStatus, type Program } from '@ab/shared';
-import { weekStart } from '@/features/teaching/schedule/tz';
-
+import {
+  type Gender,
+  GENDERS,
+  LESSON_STATUSES,
+  type LessonStatus,
+  type Program,
+  PROGRAMS,
+  weekStart,
+} from '@ab/shared';
 /** /admin/schedule URL state; defaults (this week, everyone, open lessons) stay out of the URL. */
 export type ScheduleSearch = {
   /** The day board instead of the week grid. */

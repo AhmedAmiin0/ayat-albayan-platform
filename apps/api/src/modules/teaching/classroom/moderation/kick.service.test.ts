@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { KickService } from './kick.service';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
+import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http, moderation, participantRow, rolesOf } from './moderation.fakes';
 import type { ModerationRepo } from './moderation.repo';
 
@@ -30,7 +31,7 @@ describe('removing someone from the room', () => {
     });
     const [url, init] = h.mock.calls[0] ?? [];
     expect(url).toMatch(/\/twirp\/livekit\.RoomService\/RemoveParticipant$/);
-    expect(JSON.parse(init?.body ?? '{}')).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
+    expect(sentBody(init)).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
   });
 
   it('the lesson teacher removes an assistant: their login is blocked', async () => {

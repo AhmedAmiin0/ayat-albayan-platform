@@ -27,7 +27,7 @@ import { JoinLinkService } from './join/join-link.service';
 import { JoinLinkStaffService } from './join/join-link.staff.service';
 import { KickService } from './moderation/kick.service';
 import { LessonRoleService } from './join/lesson-role.service';
-import { LIVEKIT_HTTP, LivekitApi, type HttpPost } from './livekit/livekit-api';
+import { LIVEKIT_HTTP, LivekitApi } from './livekit/livekit-api';
 import { LivekitWebhookController } from './livekit/livekit-webhook.controller';
 import { LivekitWebhookService } from './livekit/livekit-webhook.service';
 import { ModerationController } from './moderation/moderation.controller';
@@ -86,7 +86,8 @@ import { StudentLinkService } from './student-link/student-link.service';
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfigSource => () => livekitEnv(loadEnv()) },
     { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => firstWebOrigin(loadEnv().WEB_ORIGIN) },
     { provide: RECORDING_CONFIG, useFactory: (): RecordingConfig => recordingEnv(loadEnv()) },
-    { provide: LIVEKIT_HTTP, useValue: ((url, init) => fetch(url, init)) satisfies HttpPost },
+    // null: the http core's global fetch (tests bind a double).
+    { provide: LIVEKIT_HTTP, useValue: null },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
     { provide: MuteLimit, useFactory: () => new MuteLimit() },
     ClassroomSettings,
