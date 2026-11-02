@@ -1,3 +1,4 @@
+import { CRM_GATED_KEYS } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { Approvals } from './number-route';
@@ -23,9 +24,13 @@ export class RouteRepo {
     return out;
   }
 
-  /** Registry rows approved on the role's WABA (message_templates.status) or on some number. */
+  /**
+   * Registry rows approved on the role's WABA (message_templates.status) or on some number, plus
+   * the CRM_GATED_KEYS rows (a crm number reads them by their CRM template: NumberRoutes.pass).
+   */
   async templates(approvals: Approvals): Promise<TemplateRow[]> {
-    const keys = [...approvals].filter(([key, by]) => KEY.test(key) && [...by.values()].includes('approved')).map(([key]) => key);
+    const onSome = [...approvals].filter(([key, by]) => KEY.test(key) && [...by.values()].includes('approved')).map(([key]) => key);
+    const keys = [...new Set([...onSome, ...CRM_GATED_KEYS])];
     const onNumber = keys.length ? `,key.in.(${keys.join(',')})` : '';
     const { data, error } = await this.db.from('message_templates').select('*').or(`status.eq.approved${onNumber}`);
     if (error) throw new Error(`templates read failed: ${error.message}`);

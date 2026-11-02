@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import { approvedOn, routeOf } from './number-route';
+import { approvedOn, routeOf, sendableSomewhere } from './number-route';
 import { N1, overlayNum, routePass } from './number-route.fakes';
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { syncNumber, type NumberSyncDeps } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
@@ -50,5 +50,22 @@ describe('syncNumber: a crm number on the same waba_id', () => {
     vi.unstubAllEnvs();
     expect(out.number_ids).toEqual(['meta']);
     expect(upsertApprovals.mock.calls[0]?.[0].every((r) => r.number_id === 'meta')).toBe(true);
+  });
+});
+
+describe('approvedOn: a crm number and the crm gate (teacher_new_student → teacher_lesson_v2)', () => {
+  const own = templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'not_submitted' });
+
+  it('the gate\'s keys decide on a crm number; a meta number still reads its own row', () => {
+    const pass = { ...crmPass({}), crmApproved: new Set(['teacher_new_student']) };
+    expect(approvedOn(pass, own)(N1)).toBe(true);
+    expect(approvedOn({ ...routePass({}), crmApproved: pass.crmApproved }, own)(N1)).toBe(false);
+  });
+
+  it('sendableSomewhere: a gated row nothing approves is dropped', () => {
+    expect(sendableSomewhere({ approvals: new Map(), crmApproved: new Set() }, own)).toBe(false);
+    expect(sendableSomewhere({ approvals: new Map(), crmApproved: new Set(['teacher_new_student']) }, own)).toBe(true);
+    const onNumber = new Map([['teacher_new_student', new Map([[N1, 'approved']])]]);
+    expect(sendableSomewhere({ approvals: onNumber }, own)).toBe(true);
   });
 });

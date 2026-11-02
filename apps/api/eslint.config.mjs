@@ -1,4 +1,4 @@
-import { boundaries, config, forbiddenImports, noParentImports, syntaxExempt } from '@ab/config/eslint';
+import { boundaries, config, forbiddenImports, noParentImports, syntaxExempt, zodInputs } from '@ab/config/eslint';
 
 export default config(
   import.meta.dirname,
@@ -12,6 +12,9 @@ export default config(
   noParentImports({ root: import.meta.dirname, files: ['src/**/*.ts'] }),
   // docs/36 H-1: the one outbound HTTP client of the api is the only place that calls fetch.
   syntaxExempt({ files: ['src/common/infra/http/**'], http: true }),
+  // docs/36 Z-1: Nest inputs through ZodBody/ZodQuery/ZodParam/ZodHeaders (existing raw ones:
+  // eslint-suppressions.json; lane Z converts them, z1b–z2b).
+  zodInputs({ files: ['src/**/*.ts'] }),
   // Modules read settings through their own typed reader (<module>.settings.ts), never the
   // store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
   {

@@ -94,10 +94,10 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     expect(String(read.calls.find((c) => c.method === 'select')?.args[0])).toContain('created_by'); // isAutomatic reads it
   });
 
-  it('approvedTemplates reads the approved registry rows', async () => {
+  it('approvedTemplates reads the approved registry rows and the crm-gated keys (template-gate.repo.ts)', async () => {
     const { db, argsOf } = fakeDb({ message_templates: [{ data: [] }] });
     await new SenderRepo(db).approvedTemplates();
-    expect(argsOf('message_templates', 'eq')).toEqual(['status', 'approved']);
+    expect(argsOf('message_templates', 'or')).toEqual(['status.eq.approved,key.in.(teacher_new_student)']);
   });
 });
 

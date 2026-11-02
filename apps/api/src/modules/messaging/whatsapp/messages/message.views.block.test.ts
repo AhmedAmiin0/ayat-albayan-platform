@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
 import { blockOf, MessageViews } from './message.views';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
@@ -10,7 +11,8 @@ import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp
 const views = (rows: Record<string, ReturnType<typeof templateRow>>) => {
   const cached = vi.fn(async (key: string) => rows[key] ?? null);
   const storage = { signedUrl: vi.fn(async () => 'https://storage.local/x') } as unknown as StorageService;
-  return { cached, views: new MessageViews({ cached } as unknown as TemplatesRepo, storage) };
+  const repo = { cached, all: async () => Object.values(rows) } as unknown as TemplatesRepo;
+  return { cached, views: new MessageViews(repo, storage, new TemplateNames(repo)) };
 };
 
 describe('blockOf', () => {

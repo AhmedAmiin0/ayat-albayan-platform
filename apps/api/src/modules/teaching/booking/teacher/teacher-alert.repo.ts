@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
+import { queueMessages } from '@/modules/messaging/reminders/reminders.repo';
+import { sendableTemplates } from '@/modules/messaging/whatsapp';
 import { dbError } from '@/common/http/http';
 import type { AlertLesson } from './teacher-alert.plan';
 
@@ -27,8 +28,12 @@ export class TeacherAlertRepo {
     return ids.flatMap((id) => data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name ?? '', code: s.code })));
   }
 
+  /**
+   * teacher_new_student sendable: approved, or on a crm line its CRM template teacher_lesson_v2 is
+   * (template-gate.repo.ts, the rule the sender reads too).
+   */
   async approved(): Promise<boolean> {
-    return (await approvedTemplates(this.db, ['teacher_new_student'])).has('teacher_new_student');
+    return (await sendableTemplates(this.db)).some((t) => t.key === 'teacher_new_student');
   }
 
   queue(rows: readonly QueuedMessage[]): Promise<number> {

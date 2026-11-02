@@ -8,6 +8,7 @@ import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
 import { noParentImportsRule } from './eslint-parent-imports.js';
 import { syntaxRules } from './eslint-syntax.js';
+import { zodInputsRule } from './eslint-zod-inputs.js';
 
 const INDEX = /^\/index(\.[cm]?[jt]sx?)?$/;
 
@@ -80,6 +81,7 @@ export const boundariesPlugin = {
     'max-params': maxParamsRule,
     'forbidden-imports': forbiddenImportsRule,
     'no-parent-imports': noParentImportsRule,
+    'zod-inputs': zodInputsRule,
     ...syntaxRules,
   },
 };
@@ -118,4 +120,10 @@ export function forbiddenImports({ files, ignores = [], bans }) {
 export function noParentImports({ root, files, dir = 'src', ignores = [] }) {
   const rules = { 'ab/no-parent-imports': ['error', { root, dir }] };
   return { files, ignores, plugins: { ab: boundariesPlugin }, rules };
+}
+
+/** Flat-config block: `ab/zod-inputs` (eslint-zod-inputs.js, docs/36 Z-1), tests excepted. */
+export function zodInputs({ files, ignores = [] }) {
+  const rules = { 'ab/zod-inputs': 'error' };
+  return { files, ignores: [...TESTS, ...ignores], plugins: { ab: boundariesPlugin }, rules };
 }
