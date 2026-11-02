@@ -29,6 +29,14 @@ export class HttpShapeError extends Error {
   }
 }
 
+/** No answer at all (DNS, refused, a malformed URL): fetch's own message is not kept. */
+export class HttpNetworkError extends Error {
+  constructor(where) {
+    super(`${where}: request failed`);
+    this.name = 'HttpNetworkError';
+  }
+}
+
 /** The error body's `error_code`, then `code` (Supabase Auth, GitHub); 'unknown' otherwise. */
 const errorCode = z
   .looseObject({ error_code: z.string().optional(), code: z.string().optional() })
@@ -43,17 +51,20 @@ function initOf(profile, call) {
 
 /**
  * profile: { name, headers, fetch? (test seam) } · call: { url, method?, json?, schema }.
- * Returns the schema's output; throws HttpStatusError or HttpShapeError.
+ * Returns the schema's output; throws HttpNetworkError, HttpStatusError or HttpShapeError.
  */
 export async function httpJson(profile, call) {
   const send = profile.fetch ?? fetch;
-  const res = await send(call.url, initOf(profile, call));
+  const where = whereOf(profile.name, call);
+  // fetch's own errors («Failed to parse URL from <url>») may name the host: never rethrown.
+  const res = await send(call.url, initOf(profile, call)).catch(() => {
+    throw new HttpNetworkError(where);
+  });
   // Not JSON (or empty, a DELETE's 204) → null: the schema decides.
   const body = await res.json().catch(() => null);
-  const where = whereOf(profile.name, call);
   const status = res.status;
   if (!res.ok) throw new HttpStatusError(where, { status, code: errorCode.parse(body) });
   const parsed = call.schema.safeParse(body);
-  if (!parsed.success) throw new HttpShapeError(where, res.status);
+  if (!parsed.success) throw new HttpShapeError(where, status);
   return parsed.data;
 }

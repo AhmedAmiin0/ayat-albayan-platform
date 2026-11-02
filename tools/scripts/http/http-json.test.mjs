@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { z } from 'zod';
-import { HttpShapeError, HttpStatusError, httpJson, whereOf } from './http-json.mjs';
+import { HttpNetworkError, HttpShapeError, HttpStatusError, httpJson, whereOf } from './http-json.mjs';
 
 const URL_ = 'https://secret-host.example/repos/o/r/runs?token=abc&per_page=1';
 
@@ -84,4 +84,13 @@ test('no message carries the host, the query, a header value or the body', async
   for (const leak of ['secret-host', 'token=abc', 'Bearer', 'family-phone']) {
     assert.ok(!err.message.includes(leak), leak);
   }
+});
+
+test('a failed fetch is HttpNetworkError without fetch\'s own message (it may hold the URL)', async () => {
+  const fetch = async (url) => {
+    throw new TypeError(`Failed to parse URL from ${url}`);
+  };
+  const err = await httpJson(profile(fetch), { url: URL_, schema: anything }).catch((e) => e);
+  assert.ok(err instanceof HttpNetworkError);
+  assert.equal(err.message, 'Svc GET /repos/o/r/runs: request failed');
 });
