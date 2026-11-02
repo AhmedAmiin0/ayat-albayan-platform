@@ -19,7 +19,7 @@ export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' 
   guardian: { phone_e164: string; name?: string; students?: FamilyStudentRow[] } | null;
 };
 
-const STUDENT_SELECT =
+const DETAILS_SELECT =
   'id, code, name, status, program, tz, contact_is_self, teacher:teachers(display_name_ar), guardian:guardians(phone_e164, name, students(id, code, name, status))' as const;
 
 /** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
@@ -68,7 +68,7 @@ export class SalesStudentRepo {
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db
       .from('students')
-      .select(STUDENT_SELECT)
+      .select(DETAILS_SELECT)
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
