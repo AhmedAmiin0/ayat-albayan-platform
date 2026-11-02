@@ -18,7 +18,8 @@ const messageOf = (e: unknown): string => (e instanceof Error ? e.message : Stri
 /**
  * «انعقدت» by default (owner 2026-11-02): while settings.lesson_confirmation_required is OFF, every
  * lesson still scheduled / confirmed 30 min after its end (14 days back at most, never before a
- * student's current package) moves to completed through apply_lesson_changes: compare-and-set on its
+ * student's current package) moves to completed through apply_lesson_changes: compare-and-set on
+ * its
  * status (the per-lesson dedup: a second pass, or a report / cancel meanwhile, finds it no longer
  * open and changes nothing), audited with actor null and after.reason auto_held. Attendance and
  * chargeable stay as they are (a report later fills attendance and re-derives the outcome).
@@ -45,11 +46,16 @@ export class AutoHeldService {
     return { due: due.length, held, skipped: null };
   }
 
-  /** True when this pass closed it; a lost compare-and-set (someone changed it meanwhile) is false. */
+  /**
+   * True when this pass closed it; a lost compare-and-set (someone changed it meanwhile) is false.
+   */
   private async hold(lesson: OpenEndedLesson): Promise<boolean> {
     try {
       await this.store.commit({
-        change: { actor: null, changes: [{ id: lesson.id, from_status: lesson.status, to_status: 'completed' }] },
+        change: {
+          actor: null,
+          changes: [{ id: lesson.id, from_status: lesson.status, to_status: 'completed' }],
+        },
         audit: {
           entity: 'lessons',
           entityId: lesson.id,
@@ -61,7 +67,8 @@ export class AutoHeldService {
       });
       return true;
     } catch (e) {
-      if (errorCode(e) !== 'invalid_transition') this.log.warn(`lesson ${lesson.id} not held: ${messageOf(e)}`);
+      if (errorCode(e) !== 'invalid_transition')
+        this.log.warn(`lesson ${lesson.id} not held: ${messageOf(e)}`);
       return false;
     }
   }

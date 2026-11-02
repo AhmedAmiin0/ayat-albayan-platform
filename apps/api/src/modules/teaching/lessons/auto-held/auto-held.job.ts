@@ -1,4 +1,9 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  type OnApplicationBootstrap,
+  type OnModuleDestroy,
+} from '@nestjs/common';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { AutoHeldService, type AutoHeldSummary } from './auto-held.service';

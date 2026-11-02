@@ -61,8 +61,8 @@ export function fakeJob(opts: JobOpts = {}) {
     pushedSubjects: vi.fn(async () => new Set(opts.pushed ?? [])),
     roomLinks: vi.fn(async (candidates: readonly RoomCandidate[]) => (candidates.length > 0 ? (opts.room ?? []) : [])),
   };
-  // Automatic messages ON unless a test says otherwise (the default is OFF, migration 162); a lesson needs a
-  // confirmation (the lesson_needs_confirmation push) unless a test turns it off (the default since 2026-11-02).
+  // Automatic messages ON unless a test says otherwise (default OFF, migration 162); a lesson
+  // needs a confirmation (the confirmation push) unless a test turns it off (default since 11-02).
   const on = { auto_messages_enabled: true, lesson_confirmation_required: true };
   const settings = readerOf(RemindersSettings, { ...on, ...opts.settings });
   const push = { notifyAdmins: vi.fn(async () => undefined) };

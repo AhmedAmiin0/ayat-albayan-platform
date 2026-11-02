@@ -103,7 +103,8 @@ describe('lesson_needs_confirmation push (R-MOB-01)', () => {
   });
 
   it('pushes nothing while no confirmation is required (owner 2026-11-02)', async () => {
-    const off = setup({ lessons: [scheduled], pushed: [], settings: { lesson_confirmation_required: false } });
+    const settings = { lesson_confirmation_required: false };
+    const off = setup({ lessons: [scheduled], pushed: [], settings });
     expect(await off.job.runOnce(at('2026-10-04T13:10:00Z'))).toMatchObject({ pushed: 0 });
     expect(off.push.notifyAdmins).not.toHaveBeenCalled();
   });

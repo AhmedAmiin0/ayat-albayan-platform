@@ -13,8 +13,12 @@ import { LessonCancelService, LessonStatusService, RescheduleOneService } from '
 import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 
-/** Who may be recorded once the lesson is over: what happened, never the academy's own cancellation. */
-const AFTER_END: Record<CancelBy, boolean> = { admin: false, teacher: true, student: true };
+/** Who may be recorded once the lesson is over: what happened, never the academy's own cancel. */
+const AFTER_END: Record<CancelBy, boolean> = {
+  admin: false,
+  teacher: true,
+  student: true,
+};
 
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
@@ -55,8 +59,8 @@ export class SalesLessonActions {
   }
 
   /**
-   * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on a lesson
-   * held automatically the admin service's correction (409 not_auto_held for any other completed one).
+   * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on
+   * a lesson held automatically the admin service's correction (409 not_auto_held otherwise).
    */
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
     const by = body.by ?? 'admin';

@@ -4,6 +4,12 @@ import { conflict, notFound } from '@/common/http/errors';
 import { SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
 import { type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
 
+
+interface LessonCheck {
+  lessonId: string;
+  now: Date;
+  afterEnd?: boolean;
+}
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
  * and its history (SalesQueries.ownership: her leads' families and the students she brought). «تفاصيل
@@ -29,13 +35,14 @@ export class SalesStudentScope {
    * (owner 2026-10-28, the same scope as «تفاصيل الطالب»); a group lesson moves / cancels for every student
    * of it, as the admin's one-lesson action does. 404 lesson_not_found (a lesson with no student reads the
    * same: never a sales lesson), 409 lesson_ended once it is over (its outcome is the teacher's and the
-   * admin's, never hers), unless `afterEnd` (recording that the teacher cancelled it or the student
-   * excused, owner 2026-11-02). A closed status is the admin service's 409 invalid_transition.
+   * admin's, never hers). A closed status is the admin service's 409 invalid_transition.
+   * `afterEnd`: recording that the teacher cancelled it or the student excused (owner 2026-11-02).
    */
-  async assertLesson(input: { lessonId: string; now: Date; afterEnd?: boolean }): Promise<LessonFacts> {
+  async assertLesson(input: LessonCheck): Promise<LessonFacts> {
     const lesson = await this.queries.lesson(input.lessonId);
     if (!lesson || lesson.lesson_students.length === 0) throw notFound('lesson_not_found');
-    if (!input.afterEnd && Date.parse(lesson.ends_at) <= input.now.getTime()) throw conflict('lesson_ended');
+    const ended = Date.parse(lesson.ends_at) <= input.now.getTime();
+    if (ended && !input.afterEnd) throw conflict('lesson_ended');
     return lesson;
   }
 }

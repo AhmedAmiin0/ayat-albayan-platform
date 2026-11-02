@@ -1,17 +1,25 @@
 import type { LessonStatus } from '@ab/catalog';
 import { isOpenLesson } from './state-machine.js';
 
-// Owner 2026-11-02 («the default is that lessons are not requiring confirmation»): while the setting
-// lesson_confirmation_required is OFF, a lesson still scheduled / confirmed AUTO_HELD_GRACE_MS after
-// its end counts as held (→ completed, audit reason AUTO_HELD_REASON, actor null). The job never looks
+// Owner 2026-11-02 («the default is that lessons are not requiring confirmation»): while the
+// setting
+// lesson_confirmation_required is OFF, a lesson still scheduled / confirmed AUTO_HELD_GRACE_MS
+// after
+// its end counts as held (→ completed, audit reason AUTO_HELD_REASON, actor null). The job never
+// looks
 // further back than AUTO_HELD_MAX_AGE_MS, nor before the start of a student's current package.
 
 const MINUTE = 60_000;
 export const AUTO_HELD_GRACE_MS = 30 * MINUTE;
 export const AUTO_HELD_MAX_AGE_MS = 14 * 24 * 60 * MINUTE;
-/** The audit row's `after.reason` of an automatic «انعقدت» (also what marks a lesson correctable). */
+/**
+ * The audit row's `after.reason` of an automatic «انعقدت» (also what marks a lesson correctable).
+ */
 export const AUTO_HELD_REASON = 'auto_held';
-/** A correction's audit `after.reason`: an auto-held lesson marked cancelled by the teacher / excused. */
+/**
+ * A correction's audit `after.reason`: an auto-held lesson marked cancelled by the teacher /
+ * excused.
+ */
 export const AUTO_HELD_CORRECTION_REASON = 'auto_held_correction';
 
 /** Lesson ends the job reads: [now − 14 days, now − 30 min]. */
@@ -34,8 +42,10 @@ const inWindow = (endsAt: number, now: Date): boolean => {
   return endsAt >= from.getTime() && endsAt <= until.getTime();
 };
 
-const afterPackageStart = (endsAt: number) => (start: Date | null): boolean =>
-  start === null || endsAt >= start.getTime();
+const afterPackageStart =
+  (endsAt: number) =>
+  (start: Date | null): boolean =>
+    start === null || endsAt >= start.getTime();
 
 /**
  * Due for «انعقدت تلقائيًا»: still open (scheduled | confirmed; any other status is never touched),
@@ -43,8 +53,11 @@ const afterPackageStart = (endsAt: number) => (start: Date | null): boolean =>
  */
 export function isAutoHeldDue(lesson: AutoHeldCandidate, now: Date): boolean {
   const endsAt = Date.parse(lesson.ends_at);
-  return isOpenLesson(lesson.status) && inWindow(endsAt, now)
-    && lesson.packageStarts.every(afterPackageStart(endsAt));
+  return (
+    isOpenLesson(lesson.status) &&
+    inWindow(endsAt, now) &&
+    lesson.packageStarts.every(afterPackageStart(endsAt))
+  );
 }
 
 /**

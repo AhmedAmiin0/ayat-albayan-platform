@@ -49,15 +49,25 @@ export class AutoHeldRepo {
   /** Of these lessons, the ids with a submitted تقرير الحلقة (its outcome is the report's). */
   async reported(lessonIds: readonly string[]): Promise<Set<string>> {
     const rows = await readChunked(lessonIds, (chunk) =>
-      this.db.from('lesson_reports').select('lesson_id').in('lesson_id', chunk).eq('status', 'submitted'),
+      this.db
+        .from('lesson_reports')
+        .select('lesson_id')
+        .in('lesson_id', chunk)
+        .eq('status', 'submitted'),
     );
     return new Set(rows.map((r) => r.lesson_id));
   }
 
-  /** Completed lessons the job closed and no report has spoken for since: «لم تنعقد؟» may correct them. */
+  /**
+   * Completed lessons the job closed and no report has spoken for since: «لم تنعقد؟» may correct
+   * them.
+   */
   async correctable(lessonIds: readonly string[]): Promise<Set<string>> {
     if (lessonIds.length === 0) return new Set();
-    const [held, reported] = await Promise.all([this.autoHeld(lessonIds), this.reported(lessonIds)]);
+    const [held, reported] = await Promise.all([
+      this.autoHeld(lessonIds),
+      this.reported(lessonIds),
+    ]);
     return new Set([...held].filter((id) => !reported.has(id)));
   }
 }

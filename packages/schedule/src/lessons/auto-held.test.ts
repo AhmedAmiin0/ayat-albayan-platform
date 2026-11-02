@@ -42,7 +42,9 @@ describe('isAutoHeldDue', () => {
   });
 
   it('only lessons that end after the start of every student’s current package', () => {
-    const starts = (iso: string | null) => ({ packageStarts: [iso === null ? null : new Date(iso)] });
+    const starts = (iso: string | null) => ({
+      packageStarts: [iso === null ? null : new Date(iso)],
+    });
     expect(isAutoHeldDue(lesson(starts('2026-11-01T00:00:00Z')), NOW)).toBe(true);
     expect(isAutoHeldDue(lesson(starts('2026-11-02T12:00:00Z')), NOW)).toBe(false);
     expect(isAutoHeldDue(lesson(starts(null)), NOW)).toBe(true);

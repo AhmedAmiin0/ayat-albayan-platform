@@ -8,7 +8,10 @@ import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { CANCEL_EVENT, cancelChange } from '@/modules/teaching/lessons/status/transition';
 import { AutoHeldRepo } from './auto-held.repo';
 
-/** body.by: its teacher (not counted) or the student (excused); isAutoHeldCorrection keeps out 'admin'. */
+/**
+ * body.by: its teacher (not counted) or the student (excused); isAutoHeldCorrection keeps out
+ * 'admin'.
+ */
 export interface CorrectionInput {
   lesson: LessonRow;
   body: { by: CancelBy; reason: string | null };
@@ -22,9 +25,12 @@ export const isAutoHeldCorrection = (
 ): boolean => lesson.status === 'completed' && body.by !== 'admin' && body.scope !== 'rule';
 
 /**
- * «لم تنعقد؟» (owner 2026-11-02): a lesson the auto-held job closed and no report has spoken for since
- * (AutoHeldRepo.correctable) becomes «ألغاها المعلم/ة» (cancelled_by_teacher, not counted) or «اعتذر
- * الطالب» (excused, counted exactly per isChargeable / late_cancel_hours at the time of the correction,
+ * «لم تنعقد؟» (owner 2026-11-02): a lesson the auto-held job closed and no report has spoken for
+ * since
+ * (AutoHeldRepo.correctable) becomes «ألغاها المعلم/ة» (cancelled_by_teacher, not counted) or
+ * «اعتذر
+ * الطالب» (excused, counted exactly per isChargeable / late_cancel_hours at the time of the
+ * correction,
  * like any excuse). The only way out of `completed` outside a report; compare-and-set on completed,
  * audited (action cancel, after.correction auto_held_correction). Any other completed lesson: 409
  * not_auto_held (its outcome is the report's). The lesson is over: nobody is messaged.

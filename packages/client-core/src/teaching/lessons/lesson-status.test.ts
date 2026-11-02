@@ -1,11 +1,23 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { canCorrectAutoHeld, lessonStatusLabel, lessonStatusLook, UPCOMING_LESSON_STYLE } from './lesson-status.js';
+import {
+  canCorrectAutoHeld,
+  lessonStatusLabel,
+  lessonStatusLook,
+  UPCOMING_LESSON_STYLE,
+} from './lesson-status.js';
 
 const words = {
   labels: {
-    scheduled: 'يحتاج تأكيد', confirmed: 'مؤكدة', completed: 'انعقدت', late: 'متأخر', excused: 'اعتذر',
-    no_show: 'غياب', cancelled_by_teacher: 'ألغاها المعلم', cancelled_by_admin: 'ألغتها الإدارة', rescheduled: 'نُقلت',
+    scheduled: 'يحتاج تأكيد',
+    confirmed: 'مؤكدة',
+    completed: 'انعقدت',
+    late: 'متأخر',
+    excused: 'اعتذر',
+    no_show: 'غياب',
+    cancelled_by_teacher: 'ألغاها المعلم',
+    cancelled_by_admin: 'ألغتها الإدارة',
+    rescheduled: 'نُقلت',
   },
   upcoming: 'مجدولة',
 };

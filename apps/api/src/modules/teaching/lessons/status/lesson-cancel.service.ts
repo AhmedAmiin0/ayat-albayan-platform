@@ -40,12 +40,13 @@ export class LessonCancelService {
 
   /**
    * POST /lessons/:id/cancel. By the teacher / student on a completed lesson: the auto-held
-   * correction (AutoHeldCorrection, 409 not_auto_held unless the job closed it with no report since).
+   * correction (AutoHeldCorrection; 409 not_auto_held unless the job closed it, no report since).
    */
   async cancel({ lessonId, body, actor }: CancelInput): Promise<string[]> {
     const lesson = await this.store.get(lessonId);
     const event = CANCEL_EVENT[body.by];
-    if (isAutoHeldCorrection(lesson, body)) return [await this.correction.correct({ lesson, body, actor })];
+    const correcting = isAutoHeldCorrection(lesson, body);
+    if (correcting) return [await this.correction.correct({ lesson, body, actor })];
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, event);
     if (body.scope === 'rule') {
       const rule = lesson.rule_id ? await this.rules.rule(lesson.rule_id) : null;

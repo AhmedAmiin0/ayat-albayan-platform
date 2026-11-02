@@ -42,8 +42,9 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
  * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees);
  * RescheduleOneService and LessonCancelService for sales' one-lesson move / cancel (docs/16 row 37).
  * GET /lessons/overview is the all-teachers calendar (R-SCH-09). PATCH /lessons/:id/time is
- * «عدّل الوقت» (R-SCH-11): one lesson edited in place. AutoHeldJob (owner 2026-11-02): with no confirmation
- * required, a lesson still open 30 min after its end counts as held; AutoHeldCorrection undoes it.
+ * «عدّل الوقت» (R-SCH-11): one lesson edited in place. AutoHeldJob (owner 2026-11-02): with
+ * no confirmation required, a lesson still open 30 min after its end counts as held;
+ * AutoHeldCorrection undoes it.
  */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule, TeachersModule, ScheduleNoticesModule],

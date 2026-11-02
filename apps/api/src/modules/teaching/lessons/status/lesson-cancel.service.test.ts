@@ -15,9 +15,11 @@ const LATER = { id: 'l2', status: 'confirmed' as const, starts_at: '2026-10-06T1
 
 function setup(row: LessonRow | null = lessonRow(), lateCancelHours: number | null = null) {
   const deps = fakeStore(row);
-  const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours });
+  const over = { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours };
+  const settings = readerOf(LessonsSettings, over);
   const { correction } = fakeCorrection(deps.store, settings);
-  const service = new LessonCancelService(deps.store, rules as unknown as ScheduleRepo, settings, correction);
+  const repo = rules as unknown as ScheduleRepo;
+  const service = new LessonCancelService(deps.store, repo, settings, correction);
   return { ...deps, service };
 }
 const body = (over: object = {}) => ({ scope: 'one' as const, by: 'teacher' as const, reason: 'ظرف طارئ', ...over });

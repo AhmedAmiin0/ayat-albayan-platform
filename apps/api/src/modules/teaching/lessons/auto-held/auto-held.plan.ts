@@ -1,7 +1,13 @@
-import { isAutoHeldDue, startOfLocalDay, type LessonStatus, type SubscriptionStatus } from '@ab/shared';
+import {
+  isAutoHeldDue,
+  startOfLocalDay,
+  type LessonStatus,
+  type SubscriptionStatus,
+} from '@ab/shared';
 
 // Which open lessons the auto-held job closes (owner 2026-11-02): isAutoHeldDue on each, with every
-// student's CURRENT package start (the latest one, not cancelled, that has started by now): a lesson
+// student's CURRENT package start (the latest one, not cancelled, that has started by now): a
+// lesson
 // left open on an earlier package is never closed onto the balance now.
 
 export interface OpenEndedLesson {
@@ -17,7 +23,11 @@ export interface PackageRow {
   status: SubscriptionStatus;
 }
 
-type Who = { studentId: string; tz: string; at: Date };
+interface Who {
+  studentId: string;
+  tz: string;
+  at: Date;
+}
 
 /** When the student's current package (the latest started by `at`) began; null = none (a trial). */
 export function currentPackageStart(rows: readonly PackageRow[], who: Who): Date | null {
@@ -29,7 +39,11 @@ export function currentPackageStart(rows: readonly PackageRow[], who: Who): Date
 }
 
 /** The lessons to hold now, in the order read. */
-type DueInput = { lessons: readonly OpenEndedLesson[]; packages: readonly PackageRow[]; now: Date };
+interface DueInput {
+  lessons: readonly OpenEndedLesson[];
+  packages: readonly PackageRow[];
+  now: Date;
+}
 
 export function dueLessons(input: DueInput): OpenEndedLesson[] {
   const { packages, now } = input;
@@ -43,5 +57,6 @@ export function dueLessons(input: DueInput): OpenEndedLesson[] {
 }
 
 /** Every student id on the lessons, each once. */
-export const studentIdsOf = (lessons: readonly OpenEndedLesson[]): string[] =>
-  [...new Set(lessons.flatMap((l) => l.lesson_students.map((ls) => ls.student_id)))];
+export const studentIdsOf = (lessons: readonly OpenEndedLesson[]): string[] => [
+  ...new Set(lessons.flatMap((l) => l.lesson_students.map((ls) => ls.student_id))),
+];
