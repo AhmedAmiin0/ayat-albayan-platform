@@ -1,12 +1,12 @@
 import type { ConfigEntry, SettingKey } from '@ab/shared';
 import { useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import { useIsAdmin, usePermissions } from '@/auth/use-permissions';
+import { useIsAdmin, usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { canDescribe, checkDescription, counterText, describeError, descriptionOf } from '../lib/description-text';
+import { canDescribe, checkDescription, counterText, describeError, descriptionOf } from '@/ops/values/lib/description-text';
 import { useConfigEntry, useSaveDescription } from './use-config-entries';
-import { hintOf } from '../lib/value-text';
+import { hintOf } from '@/ops/values/lib/value-text';
 
 export interface SheetDescription {
   entry: ConfigEntry | undefined;

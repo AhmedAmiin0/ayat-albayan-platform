@@ -1,0 +1,148 @@
+{
+  "id": "r9",
+  "seq": 222,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teaching/lessons/overview/overview.queries.ts",
+      "to": "apps/api/src/modules/teaching/lessons/overview/overview.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/time-edit/time-edit.queries.ts",
+      "to": "apps/api/src/modules/teaching/lessons/time-edit/time-edit.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/lessons.queries.ts",
+      "to": "apps/api/src/modules/teaching/lessons/lessons.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/proposals/lesson-proposals.queries.ts",
+      "to": "apps/api/src/modules/teaching/lessons/proposals/lesson-proposals.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.queries.ts",
+      "to": "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/scheduling/schedule.queries.ts",
+      "to": "apps/api/src/modules/teaching/scheduling/schedule.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/scheduling/rules/rule-projection.queries.ts",
+      "to": "apps/api/src/modules/teaching/scheduling/rules/rule-projection.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/scheduling/conflicts/busy.queries.ts",
+      "to": "apps/api/src/modules/teaching/scheduling/conflicts/busy.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/course-pause/course-pause.queries.ts",
+      "to": "apps/api/src/modules/teaching/course-pause/course-pause.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lesson-rating/rating.queries.ts",
+      "to": "apps/api/src/modules/teaching/lesson-rating/rating.repo.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/overview/overview.queries.always.test.ts",
+      "to": "apps/api/src/modules/teaching/lessons/overview/overview.repo.always.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lessons/lessons.queries.seq.test.ts",
+      "to": "apps/api/src/modules/teaching/lessons/lessons.repo.seq.test.ts"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/scheduling/scheduling.queries.test.ts",
+      "to": "apps/api/src/modules/teaching/scheduling/scheduling.repo.test.ts"
+    }
+  ],
+  "renames": {
+    "OverviewQueries": "OverviewRepo",
+    "TimeEditQueries": "TimeEditRepo",
+    "LessonsQueries": "LessonsRepo",
+    "LessonProposalQueries": "LessonProposalRepo",
+    "TeacherMeQueries": "TeacherMeRepo",
+    "ScheduleQueries": "ScheduleRepo",
+    "RuleProjectionQueries": "RuleProjectionRepo",
+    "BusyQueries": "BusyRepo",
+    "CoursePauseQueries": "CoursePauseRepo",
+    "RatingQueries": "RatingRepo"
+  },
+  "files": [
+    [
+      "apps/api/src/modules/teaching/course-pause/course-pause.queries.test.ts",
+      "apps/api/src/modules/teaching/course-pause/course-pause.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/course-pause/course-pause.queries.ts",
+      "apps/api/src/modules/teaching/course-pause/course-pause.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lesson-rating/rating.queries.test.ts",
+      "apps/api/src/modules/teaching/lesson-rating/rating.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lesson-rating/rating.queries.ts",
+      "apps/api/src/modules/teaching/lesson-rating/rating.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/lessons.queries.seq.test.ts",
+      "apps/api/src/modules/teaching/lessons/lessons.repo.seq.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/lessons.queries.test.ts",
+      "apps/api/src/modules/teaching/lessons/lessons.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/lessons.queries.ts",
+      "apps/api/src/modules/teaching/lessons/lessons.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/overview/overview.queries.always.test.ts",
+      "apps/api/src/modules/teaching/lessons/overview/overview.repo.always.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/overview/overview.queries.ts",
+      "apps/api/src/modules/teaching/lessons/overview/overview.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/proposals/lesson-proposals.queries.ts",
+      "apps/api/src/modules/teaching/lessons/proposals/lesson-proposals.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.queries.test.ts",
+      "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.queries.ts",
+      "apps/api/src/modules/teaching/lessons/teacher-me/teacher-me.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/time-edit/time-edit.queries.test.ts",
+      "apps/api/src/modules/teaching/lessons/time-edit/time-edit.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lessons/time-edit/time-edit.queries.ts",
+      "apps/api/src/modules/teaching/lessons/time-edit/time-edit.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/conflicts/busy.queries.ts",
+      "apps/api/src/modules/teaching/scheduling/conflicts/busy.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/rules/rule-projection.queries.test.ts",
+      "apps/api/src/modules/teaching/scheduling/rules/rule-projection.repo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/rules/rule-projection.queries.ts",
+      "apps/api/src/modules/teaching/scheduling/rules/rule-projection.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/schedule.queries.ts",
+      "apps/api/src/modules/teaching/scheduling/schedule.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/scheduling/scheduling.queries.test.ts",
+      "apps/api/src/modules/teaching/scheduling/scheduling.repo.test.ts"
+    ]
+  ]
+}

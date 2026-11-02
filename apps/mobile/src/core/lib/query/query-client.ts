@@ -4,10 +4,10 @@ import { focusManager, MutationCache, QueryCache, QueryClient } from '@tanstack/
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
-import { isAccountDisabled, setLoginNotice } from '@/auth/login-notice';
-import { isNetworkError } from '../connectivity/network-error';
-import { ApiError } from '../http/api';
-import { supabase } from '../http/supabase';
+import { isAccountDisabled, setLoginNotice } from '@/core/auth/login-notice';
+import { isNetworkError } from '@/core/lib/connectivity/network-error';
+import { ApiError } from '@/core/lib/http/api';
+import { supabase } from '@/core/lib/http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
 const DAY = 24 * 60 * 60 * 1000;

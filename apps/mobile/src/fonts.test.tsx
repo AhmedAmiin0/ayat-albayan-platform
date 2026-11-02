@@ -11,7 +11,7 @@ import RootLayout from '../app/_layout';
 const mockUseFonts = jest.fn();
 const mockGate = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: (map: object) => mockUseFonts(map) }));
-jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => mockGate() }));
+jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => mockGate() }));
 jest.mock('expo-router', () => {
   const { createElement, Fragment } = jest.requireActual('react');
   const { Text } = jest.requireActual('react-native');

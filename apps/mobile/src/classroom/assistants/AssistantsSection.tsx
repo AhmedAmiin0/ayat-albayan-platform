@@ -1,6 +1,6 @@
 import type { AssistantView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';

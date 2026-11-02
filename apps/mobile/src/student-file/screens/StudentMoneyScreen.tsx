@@ -1,14 +1,14 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { usePermissions } from '@/auth/use-permissions';
+import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { StudentInvoicesList } from '../money/StudentInvoicesList';
-import { StudentPaymentsList } from '../money/StudentPaymentsList';
+import { StudentInvoicesList } from '@/student-file/money/StudentInvoicesList';
+import { StudentPaymentsList } from '@/student-file/money/StudentPaymentsList';
 
 const M = t.mobileStudentFile.money;
 
