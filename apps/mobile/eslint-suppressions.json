@@ -3592,11 +3592,6 @@
       "count": 1
     }
   },
-  "src/finance/shared/MonthPicker.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/finance/shared/StateNote.tsx": {
     "max-len": {
       "count": 2
@@ -9426,7 +9421,7 @@
   },
   "src/sales-subscribe/components/StartDateField.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 9
@@ -9544,7 +9539,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/sales-subscribe/lib/transfer-form.test.ts": {
@@ -10125,11 +10120,6 @@
       "count": 1
     }
   },
-  "src/sales/sales/lesson-actions/SalesCancelLesson.tsx": {
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/sales/sales/lesson-actions/SalesConfirmLesson.tsx": {
     "max-len": {
       "count": 2
@@ -10145,7 +10135,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/sales/sales/lesson-actions/SalesRescheduleForm.tsx": {
@@ -10382,11 +10372,6 @@
       "count": 3
     }
   },
-  "src/sales/sales/screens/sales.en.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/sales/sales/student/AttendanceSection.tsx": {
     "max-len": {
       "count": 2
@@ -10463,7 +10448,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/sales/student/UpcomingLessons.tsx": {
@@ -12164,12 +12149,6 @@
   "src/today/hero/hero-primary.ts": {
     "ab/no-parent-imports": {
       "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/today/hero/hero-text.test.ts": {
@@ -12330,7 +12309,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/trial-date/components/TrialDateSection.test.tsx": {
@@ -12404,7 +12383,7 @@
   },
   "src/trial-date/lib/trial-date-body.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -12481,9 +12460,6 @@
     }
   },
   "src/trial-date/screens/TrialDateWizard.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },

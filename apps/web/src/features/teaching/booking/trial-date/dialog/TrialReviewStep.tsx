@@ -1,7 +1,9 @@
 import type { TrialDateResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
@@ -22,8 +24,9 @@ export interface TrialReviewStepProps {
 /**
  * The review of «موعد تجريبي جديد» (R-SCH-06, R-ASST-01): the booking's summary (time in Riyadh and
  * the family's zone, teacher), what happens to the upcoming trial, the warning from the 3rd date, then
- * POST {base}/trial-date with the draft's request id. A 409 lists the clashes; the admin may book over
- * them with a reason (as booking), the assistant never.
+ * POST {base}/trial-date with the draft's request id. «رابط الحلقة» is optional for the admin and
+ * the assistant alike (owner 2026-11-02; empty = the teacher's link; hers must be https). A 409
+ * lists the clashes; the admin may book over them with a reason (as booking), the assistant never.
  */
 export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialReviewStepProps) {
   const queryClient = useQueryClient();
@@ -48,6 +51,19 @@ export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialR
     <div className="grid gap-5">
       <ReviewSummary draft={draft} />
       {trial && <TrialDateNotes trial={trial} tz={draft.tz} />}
+      <div className="sm:max-w-[460px]">
+        <Field label={t.booking.meetingLink} hint={t.trialDate.meetingLinkHint}>
+          {(p) => (
+            <Input
+              {...p}
+              type="url"
+              dir="ltr"
+              value={draft.meetingLink}
+              onChange={(e) => onPatch({ meetingLink: e.target.value })}
+            />
+          )}
+        </Field>
+      </div>
       {conflicts ? (
         <ConflictNotice
           conflicts={conflicts}

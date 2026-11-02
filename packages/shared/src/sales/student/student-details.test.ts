@@ -44,10 +44,11 @@ describe('sales lesson bodies', () => {
     expect(salesRescheduleSchema.safeParse({ startsAt: '2026-11-01T15:00:00Z', override: { reason: 'x' } }).success).toBe(false);
   });
 
-  it('cancel needs no reason and refuses a series or a «by»', () => {
+  it('cancel needs no reason, takes an optional «by» and refuses a series or an unknown «by»', () => {
     expect(salesCancelSchema.parse({})).toEqual({});
     expect(salesCancelSchema.parse({ reason: '  family travel ' })).toEqual({ reason: 'family travel' });
     expect(salesCancelSchema.safeParse({ scope: 'rule' }).success).toBe(false);
-    expect(salesCancelSchema.safeParse({ by: 'student' }).success).toBe(false);
+    expect(salesCancelSchema.parse({ by: 'student' })).toEqual({ by: 'student' });
+    expect(salesCancelSchema.safeParse({ by: 'family' }).success).toBe(false);
   });
 });

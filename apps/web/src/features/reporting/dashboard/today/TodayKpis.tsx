@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { Skeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
+import { usePublicConfig } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 
 export interface TodayKpisProps {
@@ -36,9 +37,11 @@ function Tile({ value, label, act, live }: { value: number | undefined; label: s
 /**
  * The dashboard's first row (owner, 2026-10-05): four numbers the API already gives. Lessons today
  * and open now come from the day's lessons; «يحتاج تأكيد» and unpaid packages from the summary.
+ * «يحتاج تأكيد» only while a confirmation is required (owner 2026-11-02): else three tiles.
  * Each tile is a link to the work behind it. Saffron only where there is work waiting.
  */
 export function TodayKpis({ today, needsConfirmation, unpaid }: TodayKpisProps) {
+  const required = usePublicConfig().lesson_confirmation_required;
   return (
     <section aria-label={t.dashboard.home.today}>
       <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -52,11 +55,13 @@ export function TodayKpis({ today, needsConfirmation, unpaid }: TodayKpisProps) 
             <Tile value={today?.live} label={t.dashboard.home.openNow} live />
           </Link>
         </li>
-        <li>
-          <Link to="/admin/schedule" search={{ status: 'scheduled' }} className={tile}>
-            <Tile value={needsConfirmation} label={t.enums.lessonStatus.scheduled} act />
-          </Link>
-        </li>
+        {required && (
+          <li>
+            <Link to="/admin/schedule" search={{ status: 'scheduled' }} className={tile}>
+              <Tile value={needsConfirmation} label={t.enums.lessonStatus.scheduled} act />
+            </Link>
+          </li>
+        )}
         <li>
           <Link to="/admin" search={(prev) => ({ ...prev, work: 'unpaid' })} className={tile}>
             <Tile value={unpaid} label={t.dashboard.unpaidSubscriptions} act />

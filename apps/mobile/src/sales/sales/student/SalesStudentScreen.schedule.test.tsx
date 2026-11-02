@@ -3,7 +3,7 @@ import { I18nManager } from 'react-native';
 import { setClockPref } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { details, upcoming, weeklySlot } from './fixtures';
 import { SalesStudentScreen } from './SalesStudentScreen';
 
@@ -26,7 +26,7 @@ afterEach(() => {
 test('«الجدول» (RTL): an imported (Riyadh) rule in Riyadh with the Cairo student\'s clock, 24 h then 12 h on the setting', async () => {
   expect(I18nManager.isRTL).toBe(true);
   mockApiFetch.mockResolvedValue(details());
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: s.title })).toBeTruthy();
   expect(screen.getByRole('header', { name: s.upcoming })).toBeTruthy();
   expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.viewerTime}`)).toBeTruthy();
@@ -39,7 +39,7 @@ test('«الجدول» (RTL): an imported (Riyadh) rule in Riyadh with the Cairo
 
 test.each(['Asia/Riyadh', 'Asia/Kuwait'])('a student on Riyadh\'s clock (%s): no «عند الطالب» line, no zone label', async (tz) => {
   mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: tz, weekly: [weeklySlot], upcoming: [] } }));
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   expect(await screen.findByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
   expect(screen.queryByText(/^عند الطالب/)).toBeNull();
 });
@@ -47,7 +47,7 @@ test.each(['Asia/Riyadh', 'Asia/Kuwait'])('a student on Riyadh\'s clock (%s): no
 test('upcoming: one row per lesson under its day with the status chip; the next 5, then «عرض الكل»', async () => {
   const lessons = ['01', '03', '05', '08', '10', '12', '15'].map((d, i) => upcoming(`u${i}`, `2026-11-${d}T17:00:00.000Z`));
   mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [weeklySlot], upcoming: lessons } }));
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   expect(await screen.findByText(s.upcoming)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: openRow })).toHaveLength(5);
   expect(screen.getByText(/1 نوفمبر/)).toBeTruthy();
@@ -61,7 +61,7 @@ test('upcoming: one row per lesson under its day with the status chip; the next 
 
 test('a tap opens the sales lesson sheet with «تغيير الموعد» and «إلغاء الحلقة» on her student\'s lesson', async () => {
   mockApiFetch.mockResolvedValue(details());
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   const [first] = await screen.findAllByRole('button', { name: openRow });
   if (!first) throw new Error('no row');
   expect(within(first).getByText('20:00')).toBeTruthy();
@@ -72,7 +72,7 @@ test('a tap opens the sales lesson sheet with «تغيير الموعد» and «
 
 test('empty states: «لا جدول ثابت» and «لا حلقات قادمة»; an old cache without «الجدول» shows no section', async () => {
   mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } }));
-  const first = await renderWithQuery(<SalesStudentScreen />);
+  const first = await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   expect(await screen.findByText(s.noWeekly)).toBeTruthy();
   expect(screen.getByText(s.noUpcoming)).toBeTruthy();
   expect(screen.queryByRole('button', { name: /^عرض الكل/ })).toBeNull();
@@ -80,7 +80,7 @@ test('empty states: «لا جدول ثابت» and «لا حلقات قادمة�
   const old = details();
   delete old.schedule;
   mockApiFetch.mockResolvedValue(old);
-  await renderWithQuery(<SalesStudentScreen />);
+  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.sales.student.subscription)).toBeTruthy();
   expect(screen.queryByText(s.title)).toBeNull();
 });

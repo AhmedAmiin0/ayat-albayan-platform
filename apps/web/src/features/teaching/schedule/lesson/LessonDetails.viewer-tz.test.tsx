@@ -8,6 +8,7 @@ import { publicConfigQuery } from '@/lib/settings/public-config';
 import { ABRAR, JOUD, lesson } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDetails } from './LessonDetails';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 // docs/34: every time reads in the viewer's zone; a Riyadh family's clock is added only when it
 // reads differently at that instant (Cairo is UTC+2 in winter, UTC+3 in summer until 2026-10-29).
@@ -57,7 +58,9 @@ describe('LessonDetails in the viewer zone', () => {
 
 describe('LessonChip in the viewer zone', () => {
   const chip = (startsAt: string) =>
-    render(<LessonChip lesson={lesson({ starts_at: startsAt, students: [JOUD] })} />).container
+    render(<LessonChip lesson={lesson({ starts_at: startsAt, students: [JOUD] })} />, {
+      wrapper: configWrapper(),
+    }).container
       .textContent;
 
   it('Cairo viewer in winter: 17:00 with the family 18:00', () => {

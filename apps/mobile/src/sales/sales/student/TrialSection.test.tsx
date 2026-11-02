@@ -12,6 +12,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 
 const STUDENT: SalesStudentDetails['student'] = { ...details().student, status: 'trial' };
 const AGAIN = t.sales.student.trial.again.replace('{name}', STUDENT.name);
+const EDIT = t.sales.student.trial.edit.replace('{name}', STUDENT.name);
 // Newest first: the latest outcome decides, an older miss does not.
 const trials = (...outcomes: TrialOutcome[]) => outcomes.map((outcome, i) => ({ ...trialLesson, lesson_id: `tr${i}`, outcome }));
 
@@ -29,15 +30,17 @@ beforeEach(() => {
   jest.mocked(router.push).mockClear();
 });
 
-test.each<TrialOutcome>(['absent', 'cancelled'])('latest trial %s: «موعد تجريبي جديد» opens the trial-date screen for the student', async (outcome) => {
+test.each<TrialOutcome>(['absent', 'cancelled', 'attended', 'awaiting', 'moved'])('latest trial %s: «موعد تجريبي جديد» opens the trial-date screen for the student', async (outcome) => {
   await show([outcome, 'attended']);
   await fireEvent.press(await screen.findByRole('button', { name: AGAIN }));
   expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/trial-date', params: { studentId: 'st1', name: STUDENT.name, program: 'quran' } });
 });
 
-test.each<TrialOutcome>(['attended', 'upcoming', 'awaiting', 'moved'])('latest trial %s: no new-date action', async (outcome) => {
-  await show([outcome, 'absent']);
-  expect(screen.getByText(t.sales.student.trial.title)).toBeTruthy();
+test('latest trial still ahead: «تعديل الموعد التجريبي» opens the same screen (owner 2026-11-02)', async () => {
+  await show(['upcoming', 'absent']);
+  expect(screen.getByText(t.trialDate.editAction)).toBeTruthy();
+  await fireEvent.press(await screen.findByRole('button', { name: EDIT }));
+  expect(router.push).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/sales/inbox/trial-date' }));
   expect(screen.queryByRole('button', { name: AGAIN })).toBeNull();
 });
 
@@ -46,6 +49,7 @@ test('not hers, a subscriber, or without self.sales_money: no action', async () 
   for (const over of cases) {
     const view = await show(['absent'], over);
     expect(screen.queryByRole('button', { name: AGAIN })).toBeNull();
+    expect(screen.queryByRole('button', { name: EDIT })).toBeNull();
     await view.unmount();
   }
 });

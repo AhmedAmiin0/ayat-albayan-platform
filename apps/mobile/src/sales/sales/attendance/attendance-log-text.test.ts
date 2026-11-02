@@ -1,11 +1,13 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
+import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { attendancePath } from './attendance-log-api';
 import { cancelLine, dayDateOf, monthOf, rowChip, rowTags, totalsItems } from './attendance-log-text';
 import { logRow, logTable } from './fixtures';
 
 const w = t.sales.student.log;
+const on = lessonStatusText(true);
 
 test('the totals in the owner\'s order; both cancellations count as «ألغيت»', () => {
   const totals = { ...logTable().totals, cancelled_by_admin: 2, rescheduled: 1 };
@@ -15,12 +17,12 @@ test('the totals in the owner\'s order; both cancellations count as «ألغيت
 });
 
 test('the chip: the student\'s day as «الحضور» says it; a cancelled or moved lesson by its status', () => {
-  expect(rowChip(logRow())).toEqual({ ...ATTENDANCE_STYLE.present, label: t.sales.student.kind.present });
-  expect(rowChip(logRow({ kind: 'absent' }))).toEqual({ ...ATTENDANCE_STYLE.absent, label: t.sales.student.kind.absent });
-  expect(rowChip(logRow({ kind: 'cancelled', status: 'cancelled_by_admin' }))).toEqual({
+  expect(rowChip(logRow(), on)).toEqual({ ...ATTENDANCE_STYLE.present, label: t.sales.student.kind.present });
+  expect(rowChip(logRow({ kind: 'absent' }), on)).toEqual({ ...ATTENDANCE_STYLE.absent, label: t.sales.student.kind.absent });
+  expect(rowChip(logRow({ kind: 'cancelled', status: 'cancelled_by_admin' }), on)).toEqual({
     ...lessonStatusStyle.cancelled_by_admin, label: t.enums.lessonStatus.cancelled_by_admin,
   });
-  expect(rowChip(logRow({ kind: null, status: 'rescheduled' })).label).toBe(t.enums.lessonStatus.rescheduled);
+  expect(rowChip(logRow({ kind: null, status: 'rescheduled' }), on).label).toBe(t.enums.lessonStatus.rescheduled);
 });
 
 test('tags: trial, makeup, moved-in and late, only those that apply', () => {
@@ -42,4 +44,10 @@ test('the Riyadh day: 21:30 UTC on the 31st is already the 1st in Riyadh; months
 test('the API: sales\' route in the sales tree, the admin\'s student route elsewhere', () => {
   expect(attendancePath('/sales', 's1')).toBe('/sales/students/s1/attendance');
   expect(attendancePath('', 's1')).toBe('/students/s1/attendance');
+});
+
+test('a scheduled lesson with no confirmation required reads «مجدولة», never «يحتاج تأكيد»', () => {
+  const row = logRow({ kind: null, status: 'scheduled' });
+  expect(rowChip(row, lessonStatusText(false)).label).toBe(t.lessons.noConfirm.scheduled);
+  expect(rowChip(row, on).label).toBe(t.enums.lessonStatus.scheduled);
 });

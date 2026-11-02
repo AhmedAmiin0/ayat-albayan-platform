@@ -1,4 +1,4 @@
-import { lessonStatusStyle, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { whenText } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import type { Scope } from './reschedule-body';
 import { useViewerClock } from '@/core/lib/clock';
 
@@ -21,7 +21,8 @@ interface RescheduleDoneProps {
 
 /**
  * The move landed, said like the booking's success (BookedPanel): a fill nuqta and an Amiri title,
- * then the new time, the new lesson's status («يحتاج تأكيد» until the guardian answers) and that
+ * then the new time, the new lesson's status («يحتاج تأكيد» until the guardian answers, «مجدولة»
+ * when the academy requires no confirmation) and that
  * the WhatsApp confirmation is on its way (the API queued it with the move). No box.
  */
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
@@ -41,7 +42,7 @@ export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProp
         </AppText>
       </View>
       <AppText style={text}>{t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz, viewer))}</AppText>
-      <StatusChip {...lessonStatusStyle[moved.status]} label={t.enums.lessonStatus[moved.status]} />
+      <LessonStatusChip status={moved.status} full />
       <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>{t.reschedule.guardianNote}</AppText>
       <Button label={t.reschedule.done} onPress={onClose} />
     </View>

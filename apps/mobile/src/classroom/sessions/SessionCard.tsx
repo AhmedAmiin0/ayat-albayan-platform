@@ -1,4 +1,4 @@
-import { lessonStatusStyle, teacherName, type LessonView } from '@ab/shared';
+import { teacherName, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -10,13 +10,13 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { SessionActions } from './SessionActions';
 import type { SessionGroup } from './sessions';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 
 /** The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status. */
 function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   if (group === 'now') return <StatusChip tone="ok" glyph="fill" label={t.classroom.admin.live} size="sm" />;
   if (group === 'ended') return <StatusChip tone="neutral" glyph="struck" label={t.classroom.admin.ended} size="sm" />;
-  return <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />;
+  return <LessonStatusChip status={lesson.status} size="sm" />;
 }
 
 /** One session of the admin board: time range, status, students, teacher, then its actions. */

@@ -6,3 +6,4 @@ export { planText } from './QuotePreview';
 // «مبلغ مخصص» on the package price (owner 2026-11-02): the admin's and the assistant's subscribe.
 export { CustomPriceField } from './custom-price/CustomPriceField';
 export { useCustomPrice } from './custom-price/use-custom-price';
+export { UsedBeforeEdit } from './used-before-edit';

@@ -1,12 +1,10 @@
-import { lessonStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';
 import { pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 // Taps go into the Students tab: a role without it gets plain rows (a hidden tab goes nowhere).
 const openStudent = (id: string, open: boolean) => (open ? () => router.push(`/students/${id}`) : undefined);
@@ -21,13 +19,7 @@ export function PendingRow({ row }: { row: PendingReportRow }) {
       title={row.student.name}
       meta={row.student.code}
       subtitle={pendingSubtitle(row, cycle, tz)}
-      trailing={
-        <StatusChip
-          {...lessonStatusStyle[row.status]}
-          label={statusWord(row.status)}
-          size="sm"
-        />
-      }
+      trailing={<LessonStatusChip status={row.status} size="sm" />}
       onPress={toStudents ? () => router.push(`/students/reports/${row.student.id}`) : undefined}
     />
   );

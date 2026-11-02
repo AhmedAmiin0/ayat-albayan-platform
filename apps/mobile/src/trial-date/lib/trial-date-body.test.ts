@@ -1,6 +1,7 @@
+import { trialLength } from '@ab/shared';
 import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { historyOf, STUDENT, trialRow } from '../testing/fixtures';
-import { trialDateBody, trialDateDraft, trialLength } from './trial-date-body';
+import { trialDateBody, trialDateDraft } from './trial-date-body';
 
 test('the draft starts with the last trial’s teacher, the family’s zone and the last length', () => {
   const history = historyOf([trialRow({ ends_at: '2026-10-01T15:30:00.000Z' })], { family_tz: 'Africa/Cairo' });
@@ -10,6 +11,7 @@ test('the draft starts with the last trial’s teacher, the family’s zone and 
     durationMin: 30,
     teacher: { id: maryam.id, name: maryam.display_name_ar },
     startsAt: null,
+    meetingLink: '',
   });
 });
 
@@ -51,4 +53,11 @@ test('nothing to send until a teacher and a time are picked', () => {
 test('the draft takes the student’s own zone before the family’s (as the web draft)', () => {
   const history = historyOf([trialRow()], { family_tz: 'Africa/Cairo', student_tz: 'Europe/London' });
   expect(trialDateDraft(history).tz).toBe('Europe/London');
+});
+
+test('a typed meeting link goes trimmed into the body; blank = none (the teacher’s link)', () => {
+  const draft = { ...trialDateDraft(historyOf([trialRow()])), startsAt: SUN_17 };
+  const typed = trialDateBody({ ...draft, meetingLink: ' https://meet.jit.si/ab-x ' }, 'r');
+  expect(typed?.meetingLink).toBe('https://meet.jit.si/ab-x');
+  expect(trialDateBody({ ...draft, meetingLink: '   ' }, 'r')).not.toHaveProperty('meetingLink');
 });

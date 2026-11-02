@@ -65,25 +65,34 @@ test('with it: the day chips (today on, no past day), sent as startsOn without a
   expect(lastBody()).not.toHaveProperty('alreadyStarted');
 });
 
-test('a past day only with «بدأ الاشتراك سابقًا»: picked with steppers (never typed), then alreadyStarted is sent', async () => {
+test('a past day only with «بدأ الاشتراك سابقًا»: picked on the calendar (never typed), then alreadyStarted is sent', async () => {
   asSales('subscriptions.set_start_date');
   await open();
   await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
   expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
   expect(screen.getByText(m.startedOn)).toBeTruthy();
-  expect(screen.queryByLabelText(m.startedOn)).toBeNull();
   expect(screen.queryByDisplayValue('2026-10-12')).toBeNull();
-  expect(screen.queryByPlaceholderText('2026-10-12')).toBeNull();
-  expect(screen.getByRole('button', { name: t.payments.mobile.dayAfter, disabled: true })).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.mobileSalesMoney.monthAfter, disabled: true })).toBeTruthy();
+  expect(screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2025-10-12')))).toBeTruthy();
 
-  for (let i = 0; i < 14; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileSalesMoney.monthBefore }));
-  expect(screen.getByRole('button', { name: t.payments.mobile.dayBefore, disabled: true })).toBeTruthy();
-  expect(screen.getByText(localDay('2025-10-12'))).toBeTruthy();
-
-  await fireEvent.press(screen.getByRole('button', { name: t.mobileSalesMoney.monthAfter }));
-  await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.dayAfter }));
+  await fireEvent.press(screen.getByTestId('date-picker-open'));
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.next, disabled: true })).toBeTruthy();
+  expect(screen.getByTestId('calendar-day-2026-10-13').props.accessibilityState).toMatchObject({ disabled: true });
+  for (let i = 0; i < 11; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
+  await fireEvent.press(screen.getByTestId('calendar-day-2025-11-13'));
+  expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
+  expect(screen.getByText(localDay('2025-11-13'))).toBeTruthy();
   await save();
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2025-11-13', alreadyStarted: true }));
   expect(screen.queryByText(m.error.start_date_too_old)).toBeNull();
+});
+
+test('the calendar stops a year back: the month before is off and its earlier days cannot be picked', async () => {
+  asSales('subscriptions.set_start_date');
+  await open();
+  await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
+  await fireEvent.press(screen.getByTestId('date-picker-open'));
+  for (let i = 0; i < 12; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
+  expect(screen.getByRole('button', { name: t.mobileFinance.month.prev, disabled: true })).toBeTruthy();
+  expect(screen.getByTestId('calendar-day-2025-10-11').props.accessibilityState).toMatchObject({ disabled: true });
+  expect(screen.getByTestId('calendar-day-2025-10-12').props.accessibilityState).toMatchObject({ disabled: false });
 });

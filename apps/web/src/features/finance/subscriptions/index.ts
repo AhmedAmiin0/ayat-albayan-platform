@@ -32,6 +32,7 @@ export {
 } from './create/RenewSubscriptionButton';
 export { type PickedStudent, StudentPicker } from './create/StudentPicker';
 export { UsedBeforeField } from './create/UsedBeforeField';
+export { EditUsedBeforeAction } from './used-before/EditUsedBeforeAction';
 export { INITIAL_PRICING, pricingBody, type PricingForm, pricingLessons, todayIn } from './create/pricing-form';
 export {
   apiErrorText,

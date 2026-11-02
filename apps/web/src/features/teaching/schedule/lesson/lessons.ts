@@ -3,6 +3,7 @@ import {
   joinNames,
   type LessonStatus,
   type LessonView,
+  needsConfirmation,
   sameClockAt,
   zonedPartsIn,
 } from '@ab/shared';
@@ -83,9 +84,12 @@ export function studentTimes(lesson: Pick<LessonView, 'starts_at' | 'students'>,
   return zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
 }
 
-/** Count of lessons still waiting for a confirm («{n} يحتاج تأكيد», saffron = دورك). */
-export function needsConfirmCount(lessons: readonly LessonView[]): number {
-  return lessons.filter((l) => l.status === 'scheduled').length;
+/**
+ * Count of lessons still waiting for a confirm («{n} يحتاج تأكيد», saffron = دورك); always 0
+ * while the academy requires no confirmation (`required`, settings.lesson_confirmation_required).
+ */
+export function needsConfirmCount(lessons: readonly LessonView[], required: boolean): number {
+  return lessons.filter((l) => needsConfirmation(l.status, required)).length;
 }
 
 /** Minutes between start and end (the lesson's duration). */

@@ -8,6 +8,10 @@ import type { LessonRow } from './lesson-row';
 import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { LessonsRepo, type LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { markUnpaid, upcomingStudentIds } from '@/modules/teaching/lessons/status/unpaid-mark';
+import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
+
+const withAutoHeld = (view: LessonView, held: ReadonlySet<string>): LessonView =>
+  held.has(view.id) ? { ...view, auto_held: true } : view;
 
 const withPhoto = (view: LessonView, photos: ReadonlyMap<string, string>): LessonView =>
   photos.size ? { ...view, teacher: { ...view.teacher, avatar_url: photos.get(view.teacher.id) ?? null } } : view;
@@ -26,18 +30,31 @@ export class LessonViews {
     private readonly lessons: LessonsRepo,
     private readonly unpaid: UnpaidFlags,
     private readonly photos: StaffPhotos,
+    private readonly autoHeld: AutoHeldRepo,
   ) {}
 
   async map(rows: readonly LessonRow[], role: Role | null): Promise<LessonView[]> {
     const now = Date.now();
     const completed = rows.filter((r) => r.status === 'completed').map((r) => r.id);
-    const [seq, flagged, academyAuto, photos] = await Promise.all([
+    const [seq, flagged, academyAuto, photos, held] = await Promise.all([
       this.lessons.seq(completed),
       this.flagged(upcomingStudentIds(rows, now)),
       this.lessons.academyAuto(),
       role === 'teacher' ? new Map<string, string>() : this.photos.ofTeachers(rows.map((r) => r.teacher_id)),
+      role === 'teacher' ? new Set<string>() : this.correctable(completed),
     ]);
-    return rows.map((row) => withPhoto(markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now), photos));
+    const view = (row: LessonRow) => markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now);
+    return rows.map((row) => withPhoto(withAutoHeld(view(row), held), photos));
+  }
+
+  /** Also a hint: the correction route checks it again. */
+  private async correctable(completed: string[]): Promise<ReadonlySet<string>> {
+    try {
+      return await this.autoHeld.correctable(completed);
+    } catch (e) {
+      this.log.warn(`auto-held lookup failed: ${e instanceof Error ? e.message : String(e)}`);
+      return new Set();
+    }
   }
 
   /** The flag is a hint: a failed lookup must not take the schedule down with it. */
