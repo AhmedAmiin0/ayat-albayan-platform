@@ -47,7 +47,7 @@ export interface SalesTrialLesson {
 
 /** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
 export interface SalesStudentDetails {
-  /** Hers (SalesQueries.ownership): the money actions. Every student reads the same (owner 2026-10-30). Absent: old cache (= hers). */
+  /** Hers, or any while SalesOwnershipRule does not enforce (owner 2026-11-02): the money actions. Every student reads the same (owner 2026-10-30). Absent: old cache (= hers). */
   mine?: boolean;
   student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */

@@ -37,7 +37,8 @@ test('the header holds back, the call and «⋮» only; the menu lists «نسخ 
   expect(header().queryByRole('button', { name: t.inbox.lists.title })).toBeNull();
   expect(screen.queryByTestId('thread-menu')).toBeNull();
   await fireEvent.press(header().getByRole('button', { name: t.inbox.chatMenu }));
-  expect(words()).toEqual([t.inbox.copy.phone, t.inbox.lists.title, t.common.cancel]);
+  const all = [t.inbox.chatSearch.open, t.inbox.copy.phone, t.inbox.lists.title, t.common.cancel];
+  expect(words()).toEqual(all);
 });
 
 test('«نسخ الرقم» closes the menu, then shows the number in E.164 on the selectable copy sheet', async () => {
@@ -53,7 +54,7 @@ test('«نسخ الرقم» closes the menu, then shows the number in E.164 on t
 test('«إلغاء» closes the menu; without inbox.lists it has no «القوائم»', async () => {
   await open(withoutLists);
   await fireEvent.press(header().getByRole('button', { name: t.inbox.chatMenu }));
-  expect(words()).toEqual([t.inbox.copy.phone, t.common.cancel]);
+  expect(words()).toEqual([t.inbox.chatSearch.open, t.inbox.copy.phone, t.common.cancel]);
   await fireEvent.press(menu().getByRole('button', { name: t.common.cancel }));
   expect(screen.queryByTestId('thread-menu')).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/chat-lists');

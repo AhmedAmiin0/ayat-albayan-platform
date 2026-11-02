@@ -34,6 +34,7 @@ const LEGACY_PAGE_ORDER = [
   'presence_enabled',
   'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
+  'sales_require_assignee',
   'renewal_commission_enabled', 'renewal_commission_percent',
 ];
 

@@ -8,6 +8,7 @@ import { ForwardDialog } from '@/features/messaging/inbox/messages/forward/Forwa
 import { forwardSummary, type ForwardSummary } from '@/features/messaging/inbox/messages/forward/forward-summary';
 import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
 import { useReact } from '@/features/messaging/inbox/messages/reactions/use-react';
+import { ChatSearchProvider } from '@/features/messaging/inbox/search';
 
 export interface ChatActionsProviderProps {
   thread: ThreadView;
@@ -20,7 +21,7 @@ export interface ChatActionsProviderProps {
  * The open chat's «رد» target, its forward dialog and their toasts (owner 2026-10-25). ThreadPane is
  * keyed by phone, so another chat starts with no target. «رد» follows the text rule (useMaySend: tried
  * after the window on a Kapso chat line); where a text cannot go it is off with the closed-window
- * notice as its hint, and a target set before is not offered to the composer.
+ * notice as its hint, and a target set before is not offered to the composer. «بحث» lives here too.
  */
 export function ChatActionsProvider({ thread, enabled, children }: ChatActionsProviderProps) {
   const [target, setTarget] = useState<MessageQuote | null>(null);
@@ -48,7 +49,7 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
 
   return (
     <ChatActionsContext.Provider value={value}>
-      {children}
+      <ChatSearchProvider phone={phone}>{children}</ChatSearchProvider>
       {forwarding && (
         <ForwardDialog
           message={forwarding}

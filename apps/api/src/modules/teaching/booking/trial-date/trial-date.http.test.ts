@@ -45,7 +45,7 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON: her own families only
+      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_require_assignee: true })) // require + auto ON: her own families only
       .overrideProvider(TrialDates).useValue(dates)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(TrialDateRepo).useValue(lessons)

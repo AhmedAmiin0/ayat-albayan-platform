@@ -2855,7 +2855,7 @@
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/finance/subscriptions/list/subscription-row.test.ts": {
@@ -11339,14 +11339,9 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-money/sales-money.scope.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-money/sales-money.scope.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 8
@@ -12048,7 +12043,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/booking/core/booking.contact-is-self.test.ts": {
@@ -12393,7 +12388,7 @@
   },
   "src/modules/teaching/booking/course-change/course-change.service.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/teaching/booking/course-change/course-change.view.ts": {
@@ -12713,7 +12708,7 @@
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.course-scope.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.http.test.ts": {
@@ -12721,7 +12716,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.move-slots.test.ts": {
@@ -12731,15 +12726,12 @@
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.test.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "max-len": {
-      "count": 10
+      "count": 7
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.scope.test.ts": {
@@ -12770,10 +12762,10 @@
       "count": 7
     },
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
-      "count": 19
+      "count": 14
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.service.ts": {
@@ -12781,7 +12773,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 22
+      "count": 20
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
@@ -12840,9 +12832,6 @@
   "src/modules/teaching/booking/sales/course/sales-trial-date.service.ts": {
     "ab/no-parent-imports": {
       "count": 6
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/teaching/booking/teacher/teacher-alert.crm.test.ts": {

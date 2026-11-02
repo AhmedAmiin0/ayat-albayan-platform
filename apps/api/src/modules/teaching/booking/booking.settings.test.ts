@@ -3,14 +3,13 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
 import { BookingSettings, type BookingSettingsValues } from './booking.settings';
 
-/** Pinned by hand: every key the booking consumers read (BookingPlanner … SalesBookingScope). */
+/** Pinned by hand: every key the booking consumers read (BookingPlanner … BookingExtras). */
 const EXPECTED = [
   'booking_horizon_weeks',
   'makeup_window_days',
   'teachers_always_available',
   'meeting_link_auto',
   'upload_max_mb',
-  'sales_auto_assign',
 ] as const;
 
 describe('BookingSettings', () => {
@@ -22,7 +21,7 @@ describe('BookingSettings', () => {
   });
 
   it('an over value comes through, from one store read', async () => {
-    const over = { makeup_window_days: 10, sales_auto_assign: false } as const;
+    const over = { makeup_window_days: 10, upload_max_mb: 5 } as const;
     expect(await readerOf(BookingSettings, over).read()).toMatchObject(over);
     const store = fakeSettings();
     await new BookingSettings(store).read();

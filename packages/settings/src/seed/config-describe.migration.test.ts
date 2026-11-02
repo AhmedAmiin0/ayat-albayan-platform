@@ -23,7 +23,8 @@ const ownedAtCopy = (key: string): boolean => isOwnedSettingKey(key) && OWNED_SE
 const AFTER_COPY: readonly string[] = [
   'chat_reopen_template', 'crm_media_host', 'crm_media_copy_all', 'whatsapp_calls_enabled', 'calls_permission_template', 'renewal_commission_percent',
   'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts', 'report_form_v2', 'presence_enabled',
-  'meeting_max_minutes', 'meetings_in_app', 'renewal_commission_enabled', 'lesson_confirmation_required',
+  'meeting_max_minutes', 'meetings_in_app', 'renewal_commission_enabled', 'sales_require_assignee',
+  'lesson_confirmation_required',
 ];
 
 describe('migration config_describe', () => {

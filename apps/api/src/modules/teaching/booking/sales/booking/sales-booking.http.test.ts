@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -42,6 +43,7 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
   const booking = { book: vi.fn(), check: vi.fn() };
   const slots = { slots: vi.fn() };
   const teachers = { list: vi.fn() };
+  const settings = fakeSettings({ sales_require_assignee: true }); // require + auto ON: checked
   const call = (o: { method?: 'GET' | 'POST'; url: string; token: string; body?: object }) =>
     app.inject({ method: o.method ?? 'GET', url: o.url, payload: o.body, headers: { authorization: `Bearer ${o.token}` } });
 
@@ -49,7 +51,7 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON (the default): ownership is checked
+      .overrideProvider(SettingsService).useValue(settings)
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(TeacherOptionsService).useValue(teachers)
@@ -91,6 +93,13 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
       expect(res.statusCode).toBe(403);
     }
     expect(booking.book).not.toHaveBeenCalled();
+  });
+
+  it('require OFF (the default, docs/16 row 39): B (owns nothing) books A’s lead, as her', async () => {
+    vi.mocked(settings.all).mockResolvedValue({ ...SETTING_DEFAULTS });
+    const res = await call({ method: 'POST', url: '/sales/booking', token: 'salesB', body: NEW_FAMILY });
+    expect(res.statusCode).toBe(201);
+    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ leadId: LEAD }), B);
   });
 
   it('book: her own student passes, a foreign one, an override and a makeup are 403 with the code', async () => {

@@ -14,7 +14,7 @@ const ROUTES: InjectArgs[] = [
   { method: 'GET', url: `/sales/money/chat-receipts/${MSG}?studentId=${STUDENT_ID}` },
 ];
 
-describe('/sales money routes: self.sales_money, and only for her own students', () => {
+describe('/sales money routes: self.sales_money, and only for her own students while the rule enforces', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
@@ -48,10 +48,9 @@ describe('/sales money routes: self.sales_money, and only for her own students',
     nothingWritten();
   });
 
-  it('settings.sales_auto_assign OFF still blocks money for a student she does not own (docs/16 row 13 is booking-only)', async () => {
-    m.settings.all.mockResolvedValue(AUTO_ASSIGN_OFF);
-    for (const r of ROUTES) expect((await call({ ...r, token: 'salesB' })).json().code).toBe('not_your_student');
-    nothingWritten();
+  it('settings.sales_auto_assign OFF: the rule no longer enforces, no handler answers not_your_student (row 39)', async () => {
+    m.settings.all.mockResolvedValue({ ...AUTO_ASSIGN_OFF, sales_require_assignee: true });
+    for (const r of ROUTES) expect([r.url, (await call({ ...r, token: 'salesB' })).statusCode]).not.toEqual([r.url, 403]);
   });
 
   it('her family view never lists a child she does not own', async () => {

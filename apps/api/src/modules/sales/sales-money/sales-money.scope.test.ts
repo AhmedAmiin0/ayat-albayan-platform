@@ -1,22 +1,41 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { REQUIRE_ON, ruleWith } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import type { SalesFamilyRepo } from './reads/sales-family.repo';
 import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 
 const USER: AuthUser = { id: 'u1', email: null, role: 'sales' };
 const OWN = { leadIds: [], guardianIds: [], studentIds: ['s1'], phones: [] };
 
-function setup() {
-  const sales = { ownership: vi.fn().mockResolvedValue(OWN) };
+/** The rule enforcing by default here (require + auto ON); `over` switches it. */
+function setup(over: object = REQUIRE_ON) {
+  const { sales, rule } = ruleWith(OWN, over);
   const family = {
     familyPhone: vi.fn().mockResolvedValue('+966551110000'),
     phonesOf: vi.fn().mockResolvedValue(['+966551110000', '+966552220000']),
   };
-  return { sales, family, scope: new SalesMoneyScope(sales as unknown as SalesRepo, family as unknown as SalesFamilyRepo) };
+  return { sales, family, scope: new SalesMoneyScope(rule, family as unknown as SalesFamilyRepo) };
 }
 
-describe('SalesMoneyScope: ownershipOf(...).studentIds, never the booking switch', () => {
+describe('SalesMoneyScope: ANY student while the rule does not enforce (owner 2026-11-02)', () => {
+  it.each([
+    ['require off, auto on (the defaults)', { sales_require_assignee: false, sales_auto_assign: true }],
+    ['require on, auto off', { sales_require_assignee: true, sales_auto_assign: false }],
+  ])('%s: assertOwns / assertRenews pass for a student assigned to nobody, ownership never read', async (_l, over) => {
+    const t = setup(over);
+    await expect(t.scope.assertOwns(USER, 's2')).resolves.toBeUndefined();
+    await expect(t.scope.assertRenews(USER, 's2')).resolves.toBeUndefined();
+    expect(await t.scope.ownership(USER)).toBeNull();
+    expect(t.sales.ownership).not.toHaveBeenCalled();
+  });
+
+  it('require on and auto on: 403 not_your_student for the same student', async () => {
+    const t = setup();
+    await expect(t.scope.assertRenews(USER, 's2')).rejects.toMatchObject({ response: { code: 'not_your_student' } });
+  });
+});
+
+describe('SalesMoneyScope while enforced: ownershipOf(...).studentIds', () => {
   it('assertOwnStudent: her student passes, any other is 403 not_your_student', () => {
     expect(() => assertOwnStudent(OWN, 's1')).not.toThrow();
     expect(() => assertOwnStudent(OWN, 's2')).toThrow(expect.objectContaining({ response: expect.objectContaining({ code: 'not_your_student' }) }));
