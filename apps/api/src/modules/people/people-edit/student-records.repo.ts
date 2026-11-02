@@ -12,8 +12,9 @@ const head = { count: 'exact', head: true } as const;
 /**
  * Everything that makes a student row a learner with a history: lessons, packages, money, reports,
  * chat messages, attendance and assistants. «تحويل إلى ولي أمر» is refused while any of these holds
- * a row. The cascading ones (student_assistants, the channel's messages) are checked here because a
- * delete would take them along; the others are also protected by their foreign keys (23503).
+ * a row. The cascading ones (student_assistants, student_join_links, the channel's messages) and
+ * the ones with no foreign key (google_*) are checked here because a delete would take them along
+ * or leave them pointing nowhere; the others are also protected by their foreign keys (23503).
  */
 const RECORDS: Record<string, (db: Db, id: string) => Count> = {
   subscriptions: (db, id) => db.from('subscriptions').select('id', head).eq('student_id', id),
@@ -30,6 +31,16 @@ const RECORDS: Record<string, (db: Db, id: string) => Count> = {
   course_pauses: (db, id) => db.from('course_pauses').select('id', head).eq('student_id', id),
   student_assistants: (db, id) =>
     db.from('student_assistants').select('profile_id', head).eq('student_id', id),
+  student_join_links: (db, id) =>
+    db.from('student_join_links').select('student_id', head).eq('student_id', id),
+  lesson_join_links: (db, id) =>
+    db.from('lesson_join_links').select('id', head).eq('student_id', id),
+  meeting_invitees: (db, id) => db.from('meeting_invitees').select('id', head).eq('student_id', id),
+  student_merges: (db, id) => db.from('student_merges').select('id', head).eq('kept_id', id),
+  google_student_files: (db, id) =>
+    db.from('google_student_files').select('student_id', head).eq('student_id', id),
+  google_sync_items: (db, id) =>
+    db.from('google_sync_items').select('id', head).eq('student_id', id),
   channel_messages: (db, id) =>
     db
       .from('channel_messages')

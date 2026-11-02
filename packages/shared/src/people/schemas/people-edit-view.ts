@@ -26,6 +26,8 @@ export const peopleEditStudentSchema = z.object({
   teacher_gender_pref: gender,
   contact_is_self: z.boolean(),
   has_login: z.boolean(),
+  /** Lessons, packages, money, reports, messages…: «تحويل إلى ولي أمر» is refused. */
+  has_records: z.boolean(),
 });
 export type PeopleEditStudent = z.infer<typeof peopleEditStudentSchema>;
 
@@ -37,6 +39,8 @@ export const peopleEditFamilySchema = z.object({
   country: text,
   tz: z.string(),
   notes: text,
+  /** A family login (phone + WhatsApp code): its main number and its adult learner stay put. */
+  has_login: z.boolean(),
   phones: z.array(z.object({ phone_e164: z.string(), is_primary: z.boolean() })),
   students: z.array(
     z.object({ id: z.string(), code, name: z.string(), contact_is_self: z.boolean() }),

@@ -1,15 +1,15 @@
 import { z } from 'zod';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
-// «تعديل البيانات» by an assistant (owner 2026-11-02): the admin's PATCH fields minus the admin-only ones,
-// under people.edit, never students.write / guardians.write (those also delete and merge). Strict: an
-// admin-only field answers 400, it is never silently dropped.
+// «تعديل البيانات» by an assistant (owner 2026-11-02): the admin's PATCH fields minus the
+// admin-only ones, under people.edit, never students.write / guardians.write (those also delete and
+// merge). Strict: an admin-only field answers 400, it is never silently dropped.
 
 /**
- * The student fields an assistant edits. Admin-only (PATCH /students/:id): status and expected_status
- * (automatic moves), program (pricing), teacher_id (assignment) and meeting_link_override. guardian_id
- * and contact_is_self have their own audited actions below. No `.default()` here: a partial body never
- * resets a field it does not name.
+ * The student fields an assistant edits. Admin-only (PATCH /students/:id): status and
+ * expected_status (automatic moves), program (pricing), teacher_id (assignment) and
+ * meeting_link_override. guardian_id and contact_is_self have their own audited actions below. No
+ * `.default()` here: a partial body never resets a field it does not name.
  */
 export const peopleStudentPatchSchema = studentCreateSchema
   .pick({
@@ -66,9 +66,9 @@ export const peopleIdSchema = z.guid();
 
 /**
  * The 409 codes of the moves and conversions (404 student_not_found / guardian_not_found aside):
- * same_guardian, guardian_changed (a race), family_has_self (another child already holds the number),
- * guardian_has_self, student_has_records (lessons, packages, payments, reports or chat messages would
- * be orphaned), student_has_login, phone_taken, duplicate_student.
+ * same_guardian, guardian_changed (a race), family_has_self (another child already holds the
+ * number), guardian_has_self, student_has_records (lessons, packages, payments, reports or chat
+ * messages would be orphaned), student_has_login, phone_taken, duplicate_student.
  */
 export const PEOPLE_EDIT_ERRORS = [
   'same_guardian',
@@ -77,6 +77,8 @@ export const PEOPLE_EDIT_ERRORS = [
   'guardian_has_self',
   'student_has_records',
   'student_has_login',
+  'guardian_has_login',
+  'self_has_login',
   'phone_taken',
   'duplicate_student',
   'student_not_found',

@@ -1,5 +1,6 @@
 import {
   familySearchKey,
+  type MoveBody,
   peopleEditErrorText,
   peopleEditKey,
   peopleEditPaths as P,
@@ -45,9 +46,6 @@ export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) =>
   send('PATCH', P.guardian(input.id), input.patch);
 export const removeSecondPhone = (input: { guardianId: string; phone: string }) =>
   send('DELETE', P.secondPhone(input.guardianId, input.phone));
-
-export type MoveBody =
-  { guardian_id: string } | { guardian: { name: string; phone_e164: string; tz: string } };
 export const moveFamily = async (input: { studentId: string; body: MoveBody }) =>
   familyReplySchema.parse(await send('POST', P.move(input.studentId), input.body));
 export const setContactSelf = (input: { studentId: string; value: boolean }) =>
@@ -58,7 +56,7 @@ export const studentToGuardian = async (studentId: string) =>
   familyReplySchema.parse(await send('POST', P.toGuardian(studentId)));
 
 /** The API's refusal in MSA, the generic sentence for anything else. */
-export const peopleErrorText = (e: unknown): string => peopleEditErrorText(e, t.peopleEdit.errors);
+const peopleErrorText = (e: unknown): string => peopleEditErrorText(e, t.peopleEdit.errors);
 
 const ME = JSON.stringify(pathKey('/auth/me'));
 

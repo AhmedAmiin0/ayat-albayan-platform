@@ -1,3 +1,4 @@
+import { roleActions } from '@ab/client-core';
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -18,6 +19,7 @@ const E = t.peopleEdit;
  */
 export function AttachSheet({ view, onClose, onDone }: PeopleSheetProps) {
   const a = useAttach(view, onDone);
+  const canMove = roleActions(view).canMove;
   const { guardian } = view;
   const current = E.currentFamily
     .replace('{name}', guardian.name)
@@ -27,7 +29,7 @@ export function AttachSheet({ view, onClose, onDone }: PeopleSheetProps) {
       <Note>{current}</Note>
       <SearchField label={E.search} onSearch={a.setSearch} />
       {a.empty ? <Note>{E.noResults}</Note> : null}
-      {a.families.map((f) => (
+      {(a.results ?? []).map((f) => (
         <FamilyRow
           key={f.id}
           family={f}
@@ -37,12 +39,13 @@ export function AttachSheet({ view, onClose, onDone }: PeopleSheetProps) {
         />
       ))}
       <NewFamilyFields value={a.fresh} error={a.error} onChange={a.editFresh} onUse={a.takeFresh} />
+      {canMove ? null : <Note alert>{E.moveLogin}</Note>}
       {a.confirmText ? <Note>{a.confirmText}</Note> : null}
       {a.move.errorText ? <Note alert>{a.move.errorText}</Note> : null}
       <SheetActions
         label={E.confirm}
         busy={a.move.isPending}
-        onConfirm={a.submit}
+        onConfirm={canMove ? a.submit : () => undefined}
         onCancel={onClose}
       />
     </View>

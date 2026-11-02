@@ -75,11 +75,12 @@ export const allStudentColumns = col.columns([
     header: () => t.sales.allStudents.attendance,
     meta: { className: 'text-sm text-ink-2 max-sm:order-9 max-sm:basis-full' },
   }),
-  // Owner 2026-11-02: «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل», by the role's keys.
-  col.display({
-    id: 'people',
-    header: () => t.peopleEdit.editData,
-    cell: (c) => <PeopleEditActions studentId={c.row.original.id} />,
-    meta: { className: 'max-sm:order-10 max-sm:basis-full' },
-  }),
 ]);
+
+/** Owner 2026-11-02: «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل», with people.edit. */
+export const peopleEditColumn = col.display({
+  id: 'people',
+  header: () => t.peopleEdit.editData,
+  cell: (c) => <PeopleEditActions studentId={c.row.original.id} />,
+  meta: { className: 'max-sm:order-10 max-sm:basis-full' },
+});

@@ -14,13 +14,14 @@ import { AuditService } from '@/common/audit/audit.service';
 import { DB, DbModule } from '@/common/db/db.module';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { GuardianPhonesService } from '@/modules/people/guardians';
-import { FamilyMoveService } from './family-move.service';
-import { PeopleEditController } from './people-edit.controller';
-import { PeopleEditRepo } from './people-edit.repo';
-import { PeopleEditService } from './people-edit.service';
-import { PeopleRoleController } from './people-role.controller';
-import { RoleSwitchService } from './role-switch.service';
-import { StudentRecordsRepo } from './student-records.repo';
+import { FamilyMoveService } from '@/modules/people/people-edit/family-move.service';
+import { PeopleEditController } from '@/modules/people/people-edit/people-edit.controller';
+import { PeopleEditRepo } from '@/modules/people/people-edit/people-edit.repo';
+import { PeopleEditService } from '@/modules/people/people-edit/people-edit.service';
+import { PeopleRoleController } from '@/modules/people/people-edit/people-role.controller';
+import { PeopleViewService } from '@/modules/people/people-edit/people-view.service';
+import { RoleSwitchService } from '@/modules/people/people-edit/role-switch.service';
+import { StudentRecordsRepo } from '@/modules/people/people-edit/student-records.repo';
 
 // Test helper (not a test): the two /people controllers over mocked services. Tokens are base
 // roles; `sales-off` is a sales role whose admin switched the three people keys off.
@@ -43,7 +44,8 @@ const resolver: PermissionResolver = async (user) => {
 };
 
 export const mocks = {
-  people: { view: vi.fn(), editStudent: vi.fn(), editGuardian: vi.fn() },
+  people: { editStudent: vi.fn(), editGuardian: vi.fn() },
+  views: { view: vi.fn() },
   phones: { removeSecond: vi.fn() },
   families: { families: vi.fn(), move: vi.fn() },
   roles: { setSelf: vi.fn(), guardianToStudent: vi.fn(), studentToGuardian: vi.fn() },
@@ -56,6 +58,7 @@ export async function peopleApp(): Promise<NestFastifyApplication> {
     providers: [
       { provide: PeopleEditService, useValue: mocks.people },
       { provide: GuardianPhonesService, useValue: mocks.phones },
+      { provide: PeopleViewService, useValue: mocks.views },
       { provide: FamilyMoveService, useValue: mocks.families },
       { provide: RoleSwitchService, useValue: mocks.roles },
     ],
@@ -109,10 +112,17 @@ const RECORD_TABLES = [
   'assistant_commissions',
   'course_pauses',
   'student_assistants',
+  'student_join_links',
+  'lesson_join_links',
+  'meeting_invitees',
+  'student_merges',
+  'google_student_files',
+  'google_sync_items',
   'channel_messages',
 ];
+/** Every history table empty, for both checks (before the copy and before the delete). */
 export const none = (): Record<string, FakeResult[]> =>
-  Object.fromEntries(RECORD_TABLES.map((t) => [t, [{ count: 0 }]]));
+  Object.fromEntries(RECORD_TABLES.map((t) => [t, [{ count: 0 }, { count: 0 }]]));
 
 export function roleSetup(results: Record<string, FakeResult[]>) {
   const fake = fakeDb(results);

@@ -1,5 +1,6 @@
 import {
   familySearchKey,
+  type MoveBody,
   peopleEditErrorText,
   peopleEditKey,
   peopleEditPaths as P,
@@ -45,10 +46,6 @@ export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) =>
 
 export const removeSecondPhone = (input: { guardianId: string; phone: string }) =>
   apiSend('DELETE', P.secondPhone(input.guardianId, input.phone));
-
-/** { guardian_id } of an existing family, or { guardian } for a new one (found by phone first). */
-export type MoveBody =
-  { guardian_id: string } | { guardian: { name: string; phone_e164: string; tz: string } };
 
 export const moveFamily = async (input: { studentId: string; body: MoveBody }) =>
   familyReplySchema.parse(await send('POST', P.move(input.studentId), input.body));

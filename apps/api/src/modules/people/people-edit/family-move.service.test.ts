@@ -6,7 +6,7 @@ import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditRepo } from './people-edit.repo';
 
-const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: true };
+const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: false, profile_id: null };
 const FRESH = { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo', country: null };
 /** Tables a family move never touches: money, lessons and chats stay keyed as they are. */
 const UNTOUCHED = [
@@ -55,7 +55,7 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       entity: 'students',
       entity_id: 's1',
       action: 'guardian_change',
-      before: { guardian_id: 'g-old', contact_is_self: true },
+      before: { guardian_id: 'g-old', contact_is_self: false },
       after: { guardian_id: 'g-new', contact_is_self: false, guardian_created: false },
     });
     expect(t.trips.filter((table) => UNTOUCHED.includes(table))).toEqual([]);
@@ -91,9 +91,13 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       phone_e164: FRESH.phone_e164,
       created_by: 'u1',
     });
-    expect(created.argsOf('audit_log', 'insert')?.[0]).toMatchObject({
-      after: { guardian_id: 'g-made', guardian_created: true },
-    });
+    const rows = created.calls.filter((c) => c.table === 'audit_log').map((c) => c.args[0]);
+    expect(rows).toEqual([
+      expect.objectContaining({ entity: 'guardians', entity_id: 'g-made', action: 'create' }),
+      expect.objectContaining({
+        after: expect.objectContaining({ guardian_id: 'g-made', guardian_created: true }),
+      }),
+    ]);
   });
 
   it('refuses the same family, an unknown one, a moved student and a taken phone, writing nothing', async () => {

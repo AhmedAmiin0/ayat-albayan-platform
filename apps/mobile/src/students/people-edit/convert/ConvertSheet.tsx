@@ -1,4 +1,4 @@
-import { roleActions } from '@ab/client-core';
+import { roleActions, toGuardianHint } from '@ab/client-core';
 import { Switch, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
@@ -9,6 +9,7 @@ import type { PeopleSheetProps } from '@/students/people-edit/PeopleEditSection'
 import { useConvert } from './use-convert';
 
 const E = t.peopleEdit;
+
 
 /**
  * «تحويل إلى طالب / ولي أمر» (people.switch_role): «الطالب هو ولي الأمر», the guardian who is the
@@ -38,7 +39,7 @@ export function ConvertSheet({ view, onDone }: PeopleSheetProps) {
         disabled={!can.canGuardianToStudent}
         onPress={() => c.ask('toStudent')}
       />
-      <Note>{can.canStudentToGuardian ? E.toGuardianHint : E.toGuardianLogin}</Note>
+      <Note>{toGuardianHint(view.student, E)}</Note>
       <Button
         variant="secondary"
         label={E.toGuardian}

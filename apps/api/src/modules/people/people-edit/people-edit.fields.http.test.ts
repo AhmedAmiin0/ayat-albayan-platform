@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { call, mocks, peopleApp } from './people-edit.test-app';
+import { call, mocks, peopleApp } from '@/modules/people/people-edit/testing/people-edit.test-app';
 
 const S = '11111111-1111-4111-8111-111111111111';
 const G = '22222222-2222-4222-8222-222222222222';

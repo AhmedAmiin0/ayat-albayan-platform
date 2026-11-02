@@ -109,22 +109,18 @@ describe('PeopleEditService «تعديل البيانات»', () => {
     expect(taken.trips).not.toContain('audit_log');
   });
 
-  it('the edit view: the login as a yes / no, never the profile id; 404 for an unknown student', async () => {
-    const row = {
-      id: 's1',
-      code: 'AB-0183',
-      name: 'سهيلة',
-      profile_id: 'p1',
-      guardian: { id: 'g1', phones: [], students: [] },
-    };
-    const t = setup({ students: [{ data: row }, { data: null }] });
-    const view = await t.service.view('s1');
-    expect(view).toEqual({
-      student: { id: 's1', code: 'AB-0183', name: 'سهيلة', has_login: true },
-      guardian: row.guardian,
+  it('a family with a login keeps its main number (409 guardian_has_login); other fields still save', async () => {
+    const withLogin = { ...GUARDIAN, profile_id: 'p1' };
+    const t = setup({
+      guardians: [{ data: withLogin }, { data: withLogin }, { data: withLogin }],
+      audit_log: [{}],
     });
-    await expect(t.service.view('x')).rejects.toMatchObject({
-      response: { code: 'student_not_found' },
+    const phone = { id: 'g1', patch: { phone_e164: '+201000000009' }, actorId: 'u1' };
+    await expect(t.service.editGuardian(phone)).rejects.toMatchObject({
+      response: { code: 'guardian_has_login' },
     });
+    expect(t.argsOf('guardians', 'update')).toBeUndefined();
+    await t.service.editGuardian({ id: 'g1', patch: { notes: 'ملاحظة' }, actorId: 'u1' });
+    expect(t.argsOf('guardians', 'update')?.[0]).toMatchObject({ notes: 'ملاحظة' });
   });
 });

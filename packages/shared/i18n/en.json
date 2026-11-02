@@ -377,7 +377,7 @@
     "toGuardianLogin": "Not possible: the student has a login.",
     "errors": {
       "same_guardian": "The student is already in this family.",
-      "guardian_changed": "The student's family just changed. Reopen and try again.",
+      "guardian_changed": "The student's family just changed. Try again.",
       "family_has_self": "Another student of this family owns the number.",
       "guardian_has_self": "The guardian is already a student of their family.",
       "student_has_records": "Not possible: the student has lessons, packages, payments, reports or messages.",
@@ -388,8 +388,13 @@
       "guardian_not_found": "The guardian does not exist.",
       "phone_not_found": "This number is not the family's second number.",
       "validation_failed": "Check the details you entered.",
-      "generic": "Could not save. Try again."
-    }
+      "generic": "Could not save. Try again.",
+      "guardian_has_login": "The main number of a family with a login cannot be changed here: its sign-in codes go to it. The admin changes it.",
+      "self_has_login": "Cannot move: the student owns the family number and the family has a login. The admin unlinks it first."
+    },
+    "toGuardianRecords": "Not possible: the student has lessons, packages, payments, reports or messages.",
+    "moveLogin": "Cannot move: the student has a login, or owns the number of a family with a login. The admin unlinks it first.",
+    "backToStudents": "Back to students"
   },
   "teachers": {
     "title": "Teachers",
@@ -5527,8 +5532,8 @@
       "sales.renew_any": "Shows «Renew subscription», «New subscription», «Record a bank transfer» and «Lesson days» for every child of the family in its chat, and «Renew» and «Record transfer» in «Student details», for any student, even one that is not theirs or belongs to another assistant (e.g. families imported from the old sheet). They book and change the package's lesson days as for their own students, after checking the teacher's and the student's time and never over a clash. Commission keeps its rules. Renewing and recording a transfer send no message.",
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent.",
       "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
-      "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays.",
-      "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian."
+      "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
+      "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details»."
     },
     "page": {
       "title": "Roles and permissions",

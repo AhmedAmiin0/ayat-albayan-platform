@@ -31,7 +31,7 @@ export function FamilyResults({ families, currentId, picked, onPick }: FamilyRes
           </label>
           <Ltr className="text-sm text-ink-2">{formatPhone(f.phone_e164)}</Ltr>
           <span className="text-sm text-ink-3">
-            {E.children.replace('{names}', f.students.map((s) => s.name).join('، '))}
+            {E.children.replace('{names}', f.students.map((s) => s.name).join(t.common.listSeparator))}
           </span>
         </li>
       ))}

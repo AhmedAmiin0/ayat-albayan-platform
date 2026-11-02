@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { call, mocks, peopleApp } from './people-edit.test-app';
+import { call, mocks, peopleApp } from '@/modules/people/people-edit/testing/people-edit.test-app';
 
 const S = '11111111-1111-4111-8111-111111111111';
 const G = '22222222-2222-4222-8222-222222222222';
@@ -29,7 +29,7 @@ describe('/people/* (people.edit, students.attach_guardian, people.switch_role)'
   afterAll(() => app.close());
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.people.view.mockResolvedValue({ student: { id: S }, guardian: { id: G } });
+    mocks.views.view.mockResolvedValue({ student: { id: S }, guardian: { id: G } });
     mocks.people.editStudent.mockResolvedValue({ id: S });
     mocks.people.editGuardian.mockResolvedValue({ id: G });
     mocks.phones.removeSecond.mockResolvedValue(undefined);

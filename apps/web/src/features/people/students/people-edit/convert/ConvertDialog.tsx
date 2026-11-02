@@ -1,4 +1,4 @@
-import { roleActions } from '@ab/client-core';
+import { roleActions, toGuardianHint } from '@ab/client-core';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -10,6 +10,7 @@ import { SelfToggle } from './SelfToggle';
 import { useConvert } from './use-convert';
 
 const E = t.peopleEdit;
+
 
 /**
  * «تحويل إلى طالب / ولي أمر» (owner 2026-11-02, people.switch_role): «الطالب هو ولي الأمر», the
@@ -47,7 +48,7 @@ export function ConvertDialog({ view, onClose, onDone }: PeopleDialogProps) {
           onAsk={() => c.ask('toStudent')}
         />
         <ConvertRow
-          hint={can.canStudentToGuardian ? E.toGuardianHint : E.toGuardianLogin}
+          hint={toGuardianHint(view.student, E)}
           label={E.toGuardian}
           allowed={can.canStudentToGuardian}
           onAsk={() => c.ask('toGuardian')}

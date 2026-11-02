@@ -8,7 +8,7 @@ export type GuardianRow = Tables<'guardians'>;
 
 const VIEW = [
   'id, code, name, age, gender, level, memorized, goal, riwaya, tz, notes, teacher_gender_pref',
-  'contact_is_self, profile_id, guardian:guardians(id, name, phone_e164, country, tz, notes',
+  'contact_is_self, profile_id, guardian:guardians(id, name, phone_e164, country, tz, notes, profile_id',
   'phones:guardian_phones(phone_e164, is_primary), students(id, code, name, contact_is_self))',
 ].join(', ');
 
@@ -18,7 +18,10 @@ type Fields = Pick<
 >;
 type Sibling = Pick<StudentRow, 'id' | 'code' | 'name' | 'contact_is_self'>;
 type FamilyNumber = Pick<Tables<'guardian_phones'>, 'phone_e164' | 'is_primary'>;
-type Family = Pick<GuardianRow, 'id' | 'name' | 'phone_e164' | 'country' | 'tz' | 'notes'> & {
+type Family = Pick<
+  GuardianRow,
+  'id' | 'name' | 'phone_e164' | 'country' | 'tz' | 'notes' | 'profile_id'
+> & {
   phones: FamilyNumber[];
   students: Sibling[];
 };
@@ -27,7 +30,7 @@ export type ViewRow = Fields & Pick<StudentRow, Extra> & { guardian: Family | nu
 type Child = Pick<StudentRow, 'id' | 'code' | 'name' | 'contact_is_self' | 'brought_by'>;
 
 /** A family move: written only while the student is still in `from` (compare-and-set). */
-export interface MoveRow {
+interface MoveRow {
   id: string;
   from: string;
   to: string;

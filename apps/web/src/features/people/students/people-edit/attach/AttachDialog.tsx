@@ -1,3 +1,4 @@
+import { roleActions } from '@ab/client-core';
 import { formatPhone } from '@ab/shared';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { SearchInput } from '@/components/ui/form/search-input';
@@ -18,6 +19,7 @@ const E = t.peopleEdit;
  */
 export function AttachDialog({ view, onClose, onDone }: PeopleDialogProps) {
   const a = useAttach(view, onDone);
+  const canMove = roleActions(view).canMove;
   const { guardian } = view;
   const current = E.currentFamily
     .replace('{name}', guardian.name)
@@ -26,7 +28,7 @@ export function AttachDialog({ view, onClose, onDone }: PeopleDialogProps) {
     <DialogActions
       onCancel={onClose}
       label={E.confirm}
-      disabled={!a.choice || a.move.isPending}
+      disabled={!(canMove && a.ready)}
       onConfirm={a.submit}
     />
   );
@@ -53,6 +55,7 @@ export function AttachDialog({ view, onClose, onDone }: PeopleDialogProps) {
           onChange={a.editFresh}
           onUse={a.takeFresh}
         />
+        {!canMove && <FormAlert>{E.moveLogin}</FormAlert>}
         {a.confirmText && <p role="status">{a.confirmText}</p>}
         {a.move.errorText && <FormAlert>{a.move.errorText}</FormAlert>}
       </div>

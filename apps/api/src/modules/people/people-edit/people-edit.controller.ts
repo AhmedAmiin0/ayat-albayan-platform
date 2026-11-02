@@ -14,6 +14,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
+import { PeopleViewService } from './people-view.service';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
@@ -32,11 +33,12 @@ export class PeopleEditController {
   constructor(
     private readonly people: PeopleEditService,
     private readonly phones: GuardianPhonesService,
+    private readonly views: PeopleViewService,
   ) {}
 
   @Get('students/:id')
   view(@ZodParam('id', peopleIdSchema) id: string): Promise<PeopleEditView> {
-    return this.people.view(id);
+    return this.views.view(id);
   }
 
   @Patch('students/:id')

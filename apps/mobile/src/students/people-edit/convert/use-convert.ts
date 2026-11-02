@@ -1,3 +1,10 @@
+import {
+  convertDone,
+  convertModel,
+  type Conversion,
+  type ConvertModel,
+  type PeopleDone,
+} from '@ab/client-core';
 import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
@@ -8,34 +15,19 @@ import {
   usePeopleWrite,
 } from '@/students/people-edit/people-edit-api';
 
-const E = t.peopleEdit;
-export type Conversion = 'toStudent' | 'toGuardian';
-
-/** The writes of «تحويل» (the web's useConvert): the toggle and two confirmed conversions. */
-export function useConvert(view: PeopleEditView, onDone: (notice: string) => void) {
+/** The writes of «تحويل» (the web's useConvert): the state here, the logic in convertModel. */
+export function useConvert(view: PeopleEditView, onDone: PeopleDone): ConvertModel {
   const [asking, setAsking] = useState<Conversion | null>(null);
-  const self = usePeopleWrite(setContactSelf, () => onDone(E.saved));
-  const toStudent = usePeopleWrite(guardianToStudent, (r) =>
-    onDone(E.toStudentDone.replace('{code}', r.code ?? '')),
-  );
-  const toGuardian = usePeopleWrite(studentToGuardian, () =>
-    onDone(E.toGuardianDone.replace('{name}', view.student.name)),
-  );
-  const RUN: Record<Conversion, { text: string; run: () => void }> = {
-    toStudent: {
-      text: E.toStudentConfirm.replace('{name}', view.guardian.name),
-      run: () => toStudent.mutate(view.guardian.id),
-    },
-    toGuardian: {
-      text: E.toGuardianConfirm.replace('{name}', view.student.name),
-      run: () => toGuardian.mutate(view.student.id),
-    },
-  };
-  return {
-    self,
+  const handlers = convertDone(view, onDone, t.peopleEdit);
+  return convertModel({
+    view,
+    pending: asking,
     ask: setAsking,
-    confirm: asking ? RUN[asking] : null,
-    busy: toStudent.isPending || toGuardian.isPending,
-    error: self.errorText ?? toStudent.errorText ?? toGuardian.errorText,
-  };
+    writes: {
+      self: usePeopleWrite(setContactSelf, handlers.self),
+      toStudent: usePeopleWrite(guardianToStudent, handlers.toStudent),
+      toGuardian: usePeopleWrite(studentToGuardian, handlers.toGuardian),
+    },
+    text: t.peopleEdit,
+  });
 }

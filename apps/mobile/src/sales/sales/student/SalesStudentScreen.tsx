@@ -69,7 +69,7 @@ export function SalesStudentScreen() {
           {mine || renewsAny ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <CoursePauseSection studentId={data.student.id} />
           <CourseActionsSection studentId={data.student.id} subscriptionId={data.current_id} />
-          <PeopleEditSection studentId={data.student.id} />
+          <PeopleEditSection studentId={data.student.id} onRemoved={() => router.back()} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />

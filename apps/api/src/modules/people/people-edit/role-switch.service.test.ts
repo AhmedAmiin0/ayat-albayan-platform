@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { audits, GUARDIAN, none, roleSetup as setup, STUDENT } from './people-edit.test-app';
+import {
+  audits,
+  GUARDIAN,
+  roleSetup as setup,
+  STUDENT,
+} from '@/modules/people/people-edit/testing/people-edit.test-app';
 
 describe('«الطالب هو ولي الأمر» (contact_is_self)', () => {
   it('sets it and audits it; the same value writes nothing', async () => {
@@ -55,8 +60,9 @@ describe('«تحويل إلى طالب» (guardian → student of their own fami
       name: 'ولي أمر',
       tz: 'Africa/Cairo',
       contact_is_self: true,
-      created_by: 'u1',
     });
+    // A conversion is not a registration: no created_by, so no commission attribution.
+    expect(t.argsOf('students', 'insert')?.[0]).not.toHaveProperty('created_by');
     expect(
       t.calls.filter(
         (c) =>

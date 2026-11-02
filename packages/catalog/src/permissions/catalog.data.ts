@@ -28,7 +28,7 @@ export const PERMISSION_ROWS = [
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
-  // Assistants edit people (owner 2026-11-02, /people/*): never delete or merge. Granted in production by hand.
+  // Assistants edit people (owner 2026-11-02, /people/*), never delete or merge; granted by hand.
   { key: 'people.edit', area: 'students', grants: ['sales'] },
   { key: 'students.attach_guardian', area: 'students', grants: ['sales'] },
   { key: 'people.switch_role', area: 'students', grants: ['sales'] },

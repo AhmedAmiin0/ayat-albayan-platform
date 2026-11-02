@@ -13,6 +13,11 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 const E = t.peopleEdit;
+const firstOf = <T,>(list: T[]): T => {
+  const [first] = list;
+  if (first === undefined) throw new Error('none');
+  return first;
+};
 const OTHER = {
   id: 'g2',
   name: 'أبو خالد',
@@ -54,7 +59,7 @@ test('searches a code, picks the family, confirms: the student moves', async () 
 test('a new guardian by number, parsed to E.164', async () => {
   await open();
   const names = screen.getAllByLabelText(E.fields.name);
-  await fireEvent.changeText(names[names.length - 1], 'أبو سهيلة');
+  await fireEvent.changeText(firstOf(names.slice(-1)), 'أبو سهيلة');
   await fireEvent.changeText(screen.getByLabelText(E.fields.phone), '+20 100 000 0003');
   await fireEvent.press(screen.getByRole('button', { name: E.newFamily }));
   await fireEvent.press(screen.getByRole('button', { name: E.confirm }));

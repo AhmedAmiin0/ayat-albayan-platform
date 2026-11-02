@@ -1,4 +1,3 @@
-import type { PeopleEditView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
   ApiError,
@@ -11,35 +10,7 @@ import {
   studentFormOf,
   studentPatchOf,
 } from '../../index.js';
-
-const VIEW: PeopleEditView = {
-  student: {
-    id: 's1',
-    code: 'AB-0183',
-    name: 'سهيلة',
-    age: 12,
-    gender: 'female',
-    level: null,
-    memorized: null,
-    goal: null,
-    riwaya: null,
-    tz: 'Africa/Cairo',
-    notes: null,
-    teacher_gender_pref: null,
-    contact_is_self: false,
-    has_login: false,
-  },
-  guardian: {
-    id: 'g1',
-    name: 'أم سهيلة',
-    phone_e164: '+201000000001',
-    country: 'EG',
-    tz: 'Africa/Cairo',
-    notes: null,
-    phones: [{ phone_e164: '+201000000001', is_primary: true }],
-    students: [{ id: 's1', code: 'AB-0183', name: 'سهيلة', contact_is_self: false }],
-  },
-};
+import { VIEW } from './people-edit.fixtures.js';
 
 describe('people-edit forms', () => {
   it('sends only the changed student fields: blank → null, the age a number', () => {
@@ -104,6 +75,7 @@ describe('roleActions', () => {
       canSetSelf: true,
       canGuardianToStudent: true,
       canStudentToGuardian: true,
+      canMove: true,
     });
   });
 
@@ -118,7 +90,21 @@ describe('roleActions', () => {
       canSetSelf: false,
       canGuardianToStudent: false,
       canStudentToGuardian: false,
+      canMove: false,
     });
+  });
+
+  it('history blocks «تحويل إلى ولي أمر»; the adult learner of a family login cannot move', () => {
+    const records = { ...VIEW, student: { ...VIEW.student, has_records: true } };
+    expect(roleActions(records).canStudentToGuardian).toBe(false);
+    const self = {
+      student: { ...VIEW.student, contact_is_self: true },
+      guardian: { ...VIEW.guardian, has_login: true },
+    };
+    expect(roleActions(self).canMove).toBe(false);
+    expect(roleActions({ ...VIEW, guardian: { ...VIEW.guardian, has_login: true } }).canMove).toBe(
+      true,
+    );
   });
 });
 

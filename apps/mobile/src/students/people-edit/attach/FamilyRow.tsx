@@ -19,7 +19,7 @@ export function FamilyRow({ family, picked, current, onPick }: FamilyRowProps) {
   const { color } = useTheme();
   const children = t.peopleEdit.children.replace(
     '{names}',
-    family.students.map((s) => s.name).join('، '),
+    family.students.map((s) => s.name).join(t.common.listSeparator),
   );
   return (
     <Pressable

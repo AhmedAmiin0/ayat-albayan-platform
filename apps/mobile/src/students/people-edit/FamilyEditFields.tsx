@@ -3,10 +3,16 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { PeopleChoice } from './PeopleChoice';
-import { PeopleField } from './PeopleField';
+import { PeopleFields, type FieldSpec } from './PeopleFields';
 import { zoneItems } from './zone-items';
 
 const E = t.peopleEdit;
+const SPECS: FieldSpec<'name' | 'phone_e164' | 'country' | 'notes'>[] = [
+  { key: 'name', label: E.fields.name },
+  { key: 'phone_e164', label: E.fields.phone, phone: true },
+  { key: 'country', label: E.fields.country },
+  { key: 'notes', label: E.fields.notes },
+];
 
 interface FamilyEditFieldsProps {
   value: FamilyForm;
@@ -20,32 +26,7 @@ export function FamilyEditFields({ value, onChange, invalid }: FamilyEditFieldsP
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.familySection}</SectionLabel>
-      <PeopleField
-        label={E.fields.name}
-        value={value.name}
-        error={error('name')}
-        onChangeText={(name) => onChange({ name })}
-      />
-      <PeopleField
-        label={E.fields.phone}
-        value={value.phone_e164}
-        ltr
-        keyboardType="phone-pad"
-        error={error('phone_e164')}
-        onChangeText={(phone_e164) => onChange({ phone_e164 })}
-      />
-      <PeopleField
-        label={E.fields.country}
-        value={value.country}
-        error={error('country')}
-        onChangeText={(country) => onChange({ country })}
-      />
-      <PeopleField
-        label={E.fields.notes}
-        value={value.notes}
-        error={error('notes')}
-        onChangeText={(notes) => onChange({ notes })}
-      />
+      <PeopleFields specs={SPECS} value={value} error={error} onChange={onChange} />
       <PeopleChoice
         label={E.fields.tz}
         items={zoneItems(value.tz)}

@@ -14,6 +14,11 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 const E = t.peopleEdit;
+const firstOf = <T,>(list: T[]): T => {
+  const [first] = list;
+  if (first === undefined) throw new Error('none');
+  return first;
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(VIEW);
@@ -45,7 +50,7 @@ test('«تعديل البيانات» sends only the changed fields of each part
   await renderWithQuery(<PeopleEditSection studentId="s1" />, clientWith(PEOPLE_KEYS));
   await fireEvent.press(screen.getByRole('button', { name: E.editData }));
   await screen.findByDisplayValue('أم سهيلة');
-  await fireEvent.changeText(screen.getAllByLabelText(E.fields.name)[0], 'سهيلة أحمد');
+  await fireEvent.changeText(firstOf(screen.getAllByLabelText(E.fields.name)), 'سهيلة أحمد');
   await fireEvent.changeText(screen.getByLabelText(E.fields.country), 'SA');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   expect(await screen.findByText(E.saved)).toBeTruthy();

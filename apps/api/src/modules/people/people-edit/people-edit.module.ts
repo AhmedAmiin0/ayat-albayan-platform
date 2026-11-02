@@ -7,6 +7,7 @@ import { PeopleEditController } from './people-edit.controller';
 import { PeopleEditRepo } from './people-edit.repo';
 import { PeopleEditService } from './people-edit.service';
 import { PeopleRoleController } from './people-role.controller';
+import { PeopleViewService } from './people-view.service';
 import { RoleSwitchService } from './role-switch.service';
 import { StudentRecordsRepo } from './student-records.repo';
 
@@ -24,6 +25,7 @@ import { StudentRecordsRepo } from './student-records.repo';
     StudentRecordsRepo,
     FamilySearchRepo,
     PeopleEditService,
+    PeopleViewService,
     FamilyMoveService,
     RoleSwitchService,
   ],

@@ -89,7 +89,7 @@ export function StudentScreen() {
         <TrialDateSection student={student} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />
-        <PeopleEditSection studentId={student.id} />
+        <PeopleEditSection studentId={student.id} onRemoved={back} />
         <SiblingsList siblings={student.siblings} />
         <AssistantsSection studentId={student.id} />
       </ScrollView>

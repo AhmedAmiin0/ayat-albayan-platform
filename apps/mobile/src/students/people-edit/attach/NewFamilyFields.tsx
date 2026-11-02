@@ -5,10 +5,14 @@ import { Button } from '@/core/ui/primitives/Button';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { Note } from '@/more';
 import { PeopleChoice } from '@/students/people-edit/PeopleChoice';
-import { PeopleField } from '@/students/people-edit/PeopleField';
+import { PeopleFields, type FieldSpec } from '@/students/people-edit/PeopleFields';
 import { zoneItems } from '@/students/people-edit/zone-items';
 
 const E = t.peopleEdit;
+const SPECS: FieldSpec<'name' | 'phone_e164'>[] = [
+  { key: 'name', label: E.fields.name },
+  { key: 'phone_e164', label: E.fields.phone, phone: true },
+];
 
 interface NewFamilyFieldsProps {
   value: NewFamilyForm;
@@ -25,20 +29,7 @@ export function NewFamilyFields({ value, error, onChange, onUse }: NewFamilyFiel
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.newFamily}</SectionLabel>
       <Note>{E.newFamilyHint}</Note>
-      <PeopleField
-        label={E.fields.name}
-        value={value.name}
-        error={error('name')}
-        onChangeText={(name) => onChange({ name })}
-      />
-      <PeopleField
-        label={E.fields.phone}
-        value={value.phone_e164}
-        ltr
-        keyboardType="phone-pad"
-        error={error('phone_e164')}
-        onChangeText={(phone_e164) => onChange({ phone_e164 })}
-      />
+      <PeopleFields specs={SPECS} value={value} error={error} onChange={onChange} />
       <PeopleChoice
         label={E.fields.tz}
         items={zoneItems(value.tz)}
