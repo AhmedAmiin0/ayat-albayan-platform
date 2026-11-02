@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDrawer } from './LessonDrawer';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
@@ -44,7 +45,9 @@ afterEach(() => apiFetch.mockReset());
 
 describe('«تعويضية» tag (R-SCH-10)', () => {
   it('a makeup lesson wears the tag next to its status; a normal one does not', () => {
-    const { rerender } = render(<LessonChip lesson={makeup(lesson())} onOpen={vi.fn()} />);
+    const { rerender } = render(<LessonChip lesson={makeup(lesson())} onOpen={vi.fn()} />, {
+      wrapper: configWrapper(),
+    });
     expect(screen.getByText(t.booking.makeup.tag)).toBeTruthy();
     rerender(<LessonChip lesson={lesson()} onOpen={vi.fn()} />);
     expect(screen.queryByText(t.booking.makeup.tag)).toBeNull();

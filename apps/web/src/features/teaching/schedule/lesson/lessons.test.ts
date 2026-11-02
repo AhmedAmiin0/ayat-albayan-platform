@@ -91,8 +91,9 @@ describe('small helpers', () => {
     expect(studentNames(lesson({ students: [SUHAILA, JOUD] }))).toBe('سهيلة وجود');
   });
 
-  it('needsConfirmCount counts scheduled lessons only', () => {
-    expect(needsConfirmCount([A, B, MOVED])).toBe(1);
+  it('needsConfirmCount counts scheduled lessons only, and none while no confirmation is required', () => {
+    expect(needsConfirmCount([A, B, MOVED], true)).toBe(1);
+    expect(needsConfirmCount([A, B, MOVED], false)).toBe(0);
   });
 
   it('durationMin reads the lesson length', () => {

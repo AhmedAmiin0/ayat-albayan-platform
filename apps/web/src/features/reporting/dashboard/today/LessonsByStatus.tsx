@@ -1,7 +1,8 @@
-import { LESSON_STATUSES, lessonStatusStyle, type LessonStatus } from '@ab/shared';
+import { LESSON_STATUSES, type LessonStatus } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 /**
  * This week's lessons by status (R-RPT-01): one row per status that has lessons, the status chip
@@ -9,6 +10,7 @@ import { Bar } from '@/features/reporting/dashboard/shared/Bar';
  * its own accessible table view.
  */
 export function LessonsByStatus({ counts }: { counts: Record<LessonStatus, number> }) {
+  const status = useLessonStatusText();
   const rows = LESSON_STATUSES.filter((s) => counts[s] > 0);
   const max = Math.max(0, ...rows.map((s) => counts[s]));
   if (rows.length === 0) return <p className="text-sm text-ink-2">{t.dashboard.noLessons}</p>;
@@ -25,7 +27,7 @@ export function LessonsByStatus({ counts }: { counts: Record<LessonStatus, numbe
         {rows.map((s) => (
           <tr key={s} className="border-b border-rule last:border-b-0">
             <th scope="row" className="w-0 py-2 pe-3 text-start font-normal">
-              <StatusChip {...lessonStatusStyle[s]} label={t.enums.lessonStatus[s]} size="sm" />
+              <StatusChip {...status.chip(s)} size="sm" />
             </th>
             <td className="py-2">
               <span className="flex items-center gap-3">

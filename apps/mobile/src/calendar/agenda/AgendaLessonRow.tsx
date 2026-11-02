@@ -1,4 +1,4 @@
-import { lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
+import type { ClockCycle, LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { JoinAround } from '@/classroom';
@@ -8,16 +8,18 @@ import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
 import { durationLabel, lessonClock, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { useInset } from '@/core/ui/surface/inset';
 import { teacherClock } from './agenda';
 import { RowDefaultActions } from './RowDefaultActions';
 import { Tag } from './Tag';
-import { statusWord } from '@/core/ui/feedback/lesson-status';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 /** «45 دقيقة · عند المعلم/ة 15:00 بتوقيت القاهرة»: the row's second line for the viewer `tz`. */
 const lessonMeta = (lesson: LessonView, cycle: ClockCycle, tz: string): string =>
   [durationLabel(lesson), teacherClock(lesson, cycle, tz)].filter(Boolean).join(' · ');
+
+const lineStyle = { flexDirection: 'row', alignItems: 'flex-start', gap: 10, minHeight: 44 } as const;
 
 interface AgendaLessonRowProps {
   lesson: LessonView;
@@ -48,7 +50,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
   const who = studentNames(lesson);
-  const lineStyle = { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 10, minHeight: 44 };
+  const status = useLessonStatusText();
   const line = (
     <>
       <AppText style={{ ...body, width: cycle === '12' ? 72 : 48, fontVariant: ['tabular-nums'] }}>{lessonClock(lesson.starts_at, tz, cycle)}</AppText>
@@ -60,7 +62,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <LiveBadge lesson={lesson} />
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
+        <LessonStatusChip status={lesson.status} size="sm" />
         {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
         {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
       </View>
@@ -72,7 +74,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${lessonClock(lesson.starts_at, tz, cycle)} · ${t.enums.lessonStatus[lesson.status]}`}
+          accessibilityHint={`${lessonClock(lesson.starts_at, tz, cycle)} · ${status.label(lesson.status)}`}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >

@@ -55,6 +55,9 @@ export async function seedFxRate(): Promise<void> {
  * auto_messages_enabled (162) is on here: journey 3 asserts the job-queued renewal_due.
  * teachers_always_available (320) is off here: the journeys book inside the grids they set with
  * setAvailability; teachers-always-available.spec turns it on and back off itself.
+ * lesson_confirmation_required (owner 2026-11-02, code default false) is ON here: the journeys
+ * confirm lessons, and the auto-held job must not close lessons they seed in the past mid-run
+ * (the OFF path: unit tests + lessons-auto-held.sql.spec).
  */
 export async function seedSettings(): Promise<void> {
   const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
@@ -66,7 +69,8 @@ export async function seedSettings(): Promise<void> {
         ('report_teacher_edit_hours', '24'::jsonb), ('reporting_currency', '"SAR"'::jsonb),
         ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb),
         ('payout_count_trials', 'false'::jsonb),
-        ('auto_messages_enabled', 'true'::jsonb), ('teachers_always_available', 'false'::jsonb)
+        ('auto_messages_enabled', 'true'::jsonb), ('teachers_always_available', 'false'::jsonb),
+        ('lesson_confirmation_required', 'true'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {
     await sql.end();

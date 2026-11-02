@@ -4,6 +4,7 @@ import { JoinClassroomButton, useJoinOpen } from '@/classroom';
 import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import type { ReportAction } from '../lib/day';
 
 const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
@@ -46,7 +47,9 @@ export function cardPlan(p: { joinLive: boolean; link: boolean; canConfirm: bool
  */
 export function TeacherLessonActions({ lesson, auto, report, busy, onConfirm, onReport }: TeacherLessonActionsProps) {
   const joinLive = useJoinOpen(lesson) && auto;
-  const canConfirm = lesson.allowed_events.includes('confirm') && applyLessonEvent(lesson.status, 'confirm') !== null;
+  // «تأكيد» only while the academy requires a confirmation (settings.lesson_confirmation_required).
+  const offered = lesson.allowed_events.includes('confirm') && applyLessonEvent(lesson.status, 'confirm') !== null;
+  const canConfirm = useLessonStatusText().required && offered;
   const link = !auto && isOpenLesson(lesson.status) ? lesson.meeting_link : null;
   const plan = cardPlan({ joinLive, link: link !== null, canConfirm, report });
   const button = (act: Act, variant: ButtonVariant) => {

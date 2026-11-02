@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { SAT_17, SLOTS } from '@/teaching/reschedule/fixtures';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
@@ -18,6 +18,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
+// An academy that requires lesson confirmation (as before 2026-11-02; OFF: the no-confirm test).
 // «Now» Thursday 1 Oct 16:20 Riyadh. Hers: سلمى at 18:00 (mine). Another family's: يوسف at 19:00.
 const NOW = new Date('2026-10-01T13:20:00Z');
 const MINE = scheduleLesson({
@@ -36,7 +37,8 @@ afterEach(() => jest.useRealTimers());
 
 const open = async (who: string) => {
   // The sales tree (SalesTabs wraps its screens in TreeBaseProvider '/sales').
-  await renderWithQuery(<TreeBaseProvider value="/sales"><SalesScheduleScreen /></TreeBaseProvider>);
+  const client = confirmingQueryClient();
+  await renderWithQuery(<TreeBaseProvider value="/sales"><SalesScheduleScreen /></TreeBaseProvider>, client);
   await fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
   await screen.findByRole('header', { name: who });
 };

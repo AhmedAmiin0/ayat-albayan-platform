@@ -1,4 +1,4 @@
-import { DURATIONS, lessonStatusStyle } from '@ab/shared';
+import { DURATIONS, type LessonStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -13,6 +13,7 @@ import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 export interface MissedLessonStepProps {
   draft: Pick<BookingDraft, 'students' | 'missed' | 'tz' | 'teacher'>;
@@ -30,6 +31,11 @@ function pickPatch(c: MakeupCandidate, current: BookingDraft['teacher']) {
     ...(current && current.id !== c.teacher.id ? { teacher: null } : {}),
     startsAt: null,
   };
+}
+
+/** The missed lesson's status chip, in the academy's words. */
+function MissedStatus({ status }: { status: LessonStatus }) {
+  return <StatusChip {...useLessonStatusText().chip(status)} size="sm" />;
 }
 
 /**
@@ -78,7 +84,7 @@ export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonS
                 className="size-4 accent-[var(--lapis)]"
               />
               <span className="min-w-0 flex-1 text-sm font-semibold">{pickedText(c.starts_at, draft.tz, clock)}</span>
-              <StatusChip {...lessonStatusStyle[c.status]} label={t.enums.lessonStatus[c.status]} size="sm" />
+              <MissedStatus status={c.status} />
               <span className="basis-full ps-7 text-xs text-ink-3">{teacherLabel(c.teacher)}</span>
             </label>
           </li>

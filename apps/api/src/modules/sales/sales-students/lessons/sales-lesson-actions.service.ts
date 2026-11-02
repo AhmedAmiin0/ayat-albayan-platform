@@ -1,10 +1,24 @@
-import type { LessonStatus, SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
+import {
+  CANCEL_STATUS,
+  type CancelBy,
+  type LessonStatus,
+  type SalesCancel,
+  type SalesLessonMoved,
+  type SalesReschedule,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { LessonCancelService, LessonStatusService, RescheduleOneService } from '@/modules/teaching/lessons';
 import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
+
+/** Who may be recorded once the lesson is over: what happened, never the academy's own cancel. */
+const AFTER_END: Record<CancelBy, boolean> = {
+  admin: false,
+  teacher: true,
+  student: true,
+};
 
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
@@ -44,12 +58,17 @@ export class SalesLessonActions {
     return { id: moved.id, starts_at: new Date(moved.starts_at).toISOString(), status: moved.status };
   }
 
+  /**
+   * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on
+   * a lesson held automatically the admin service's correction (409 not_auto_held otherwise).
+   */
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
-    await this.scope.assertLesson({ lessonId, now });
+    const by = body.by ?? 'admin';
+    await this.scope.assertLesson({ lessonId, now, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;
-    await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by: 'admin', reason }, actor });
+    await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by, reason }, actor });
     const lesson = await this.queries.lesson(lessonId);
-    return { id: lessonId, status: lesson?.status ?? 'cancelled_by_admin' };
+    return { id: lessonId, status: lesson?.status ?? CANCEL_STATUS[by] };
   }
 
   /**

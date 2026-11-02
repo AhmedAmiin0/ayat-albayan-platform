@@ -1,6 +1,8 @@
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react-native';
 import type { ReactElement, ReactNode } from 'react';
+import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { seedFullAccess } from './staff-me';
 
 // Test-only helpers: a fresh client per test. No retries; gcTime Infinity so nothing is collected
@@ -33,4 +35,17 @@ export function queryWrapper(client: QueryClient) {
 export async function renderWithQuery(ui: ReactElement, client = createTestQueryClient()) {
   const result = await render(ui, { wrapper: queryWrapper(client) });
   return { ...result, client };
+}
+
+/** GET /settings/public as `patch` over the defaults (e.g. lesson_confirmation_required: true). */
+export function seedPublicConfig(client: QueryClient, patch: Partial<PublicSettings>): void {
+  const data = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, ...patch };
+  client.setQueryData(publicConfigQuery.queryKey, data);
+}
+
+/** A test client for an academy that requires lesson confirmation (the default is OFF). */
+export function confirmingQueryClient(options: TestClientOptions = {}): QueryClient {
+  const client = createTestQueryClient(options);
+  seedPublicConfig(client, { lesson_confirmation_required: true });
+  return client;
 }

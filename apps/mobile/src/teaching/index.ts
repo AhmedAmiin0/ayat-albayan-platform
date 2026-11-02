@@ -4,3 +4,4 @@ export { RescheduleHeading } from './reschedule/RescheduleForm';
 export { rescheduleFailure } from './reschedule/reschedule-errors';
 export { RescheduleFrame, RescheduleSheet } from './reschedule/RescheduleSheet';
 export { SlotPicker } from './reschedule/SlotPicker';
+export { CorrectAutoHeld, type CorrectBy } from './correct/CorrectAutoHeld';

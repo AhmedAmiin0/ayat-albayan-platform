@@ -8,6 +8,7 @@ import { FATMA, lesson } from '@/features/teaching/schedule/lesson/lesson-fixtur
 import { overview } from '@/features/teaching/schedule/overview-fixture';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { WeekSchedule } from './WeekSchedule';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
@@ -27,7 +28,7 @@ function renderWeek(search: ScheduleSearch = {}) {
   );
   const onSearch = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
       <WeekSchedule search={search} onSearch={onSearch} />
     </QueryClientProvider>,
   );

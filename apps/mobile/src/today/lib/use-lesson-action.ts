@@ -21,11 +21,18 @@ function request(change: LessonChange): StatusRequest {
 
 const NOTICE_MS = 5000;
 
+/** A refused change in words (docs/10 §3: clients switch on `code`). */
+const ERROR_TEXT: Record<string, string | undefined> = {
+  invalid_transition: t.lessons.invalidTransition,
+  // «لم تنعقد الحلقة؟» on a lesson that was not held automatically (owner 2026-11-02).
+  not_auto_held: t.lessons.error.not_auto_held,
+};
+
 function errorText(error: unknown): string {
   const code = error instanceof ApiError && typeof error.body === 'object' && error.body !== null
     ? (error.body as { code?: unknown }).code
     : undefined;
-  return code === 'invalid_transition' ? t.lessons.invalidTransition : t.common.error;
+  return (typeof code === 'string' && ERROR_TEXT[code]) || t.common.error;
 }
 
 /**

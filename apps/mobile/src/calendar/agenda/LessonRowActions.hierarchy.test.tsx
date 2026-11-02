@@ -1,9 +1,14 @@
-import { render, screen } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { OVERVIEW } from '../overview/overview-fixtures';
 import { LessonRowActions } from './LessonRowActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
+
+// An academy that requires lesson confirmation: «تأكيد» exists (OFF: LessonRowActions.no-confirm).
+const render = (ui: Parameters<typeof renderWithQuery>[0]) =>
+  renderWithQuery(ui, confirmingQueryClient());
 
 const action = { busyId: null, errorFor: () => null, confirm: jest.fn(), cancel: jest.fn() } as never;
 const pending = OVERVIEW.lessons.find((l) => l.id === 'l-pending');

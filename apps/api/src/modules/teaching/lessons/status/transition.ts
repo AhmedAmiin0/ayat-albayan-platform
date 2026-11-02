@@ -52,3 +52,30 @@ export function cancelChange(
     chargeable,
   };
 }
+
+interface CancelCommitInput {
+  lesson: { id: string; status: LessonStatus };
+  change: LessonChange;
+  body: { by: CancelBy; reason: string | null };
+  actorId: string;
+}
+
+/**
+ * LessonStore.commit input of one lesson's cancellation: the change, its audit row (`cancel`;
+ * `extra` joins its `after`, e.g. the auto-held correction) and the transition for a lost race.
+ */
+export function cancelCommit(input: CancelCommitInput, extra: object = {}) {
+  const { lesson, change, body, actorId } = input;
+  const { by, reason } = body;
+  return {
+    change: { actor: actorId, changes: [change] },
+    audit: {
+      entity: 'lessons',
+      entityId: lesson.id,
+      action: 'cancel',
+      before: { status: lesson.status },
+      after: { status: change.to_status, by, reason, chargeable: change.chargeable, ...extra },
+    },
+    transition: { from: lesson.status, event: CANCEL_EVENT[by] },
+  };
+}
