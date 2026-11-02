@@ -1,7 +1,7 @@
 import type { CourseStopPreview, ProfileCourseView } from '@ab/shared';
 import { MON_19, maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { ApiError } from '@/core/lib/http/api';
-import { runningCourse } from '@/sales-course/change/change-test-setup';
+import { runningCourse } from '@/sales/course/change/change-test-setup';
 
 // The student profile's course actions as the API answers them (tests only).
 

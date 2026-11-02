@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { pressEnabled } from '@/sales-course/testing/course-test-utils';
+import { pressEnabled } from '@/sales/course/testing/course-test-utils';
 import { maryam, noAvailability } from '@/booking/testing/fixtures';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { NOW } from '@/sales-course/change/change-test-setup';
+import { NOW } from '@/sales/course/change/change-test-setup';
 import { CourseActionsSection } from './CourseActionsSection';
 import { BASE, serve, SUB } from './fixtures';
 

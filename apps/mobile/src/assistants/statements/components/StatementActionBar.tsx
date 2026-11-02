@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { statementMonth } from '@/sales-money/lib/money-text';
+import { statementMonth } from '@/sales/money/lib/money-text';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from '@/assistants/api/errors';
 import { useStatementMove } from '@/assistants/api/mutations';

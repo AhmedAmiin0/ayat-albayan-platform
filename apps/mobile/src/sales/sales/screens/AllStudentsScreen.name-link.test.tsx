@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { myStudent } from '@/sales-money/testing/fixtures';
+import { myStudent } from '@/sales/money/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { type } from '@/theme';
 import { AllStudentsScreen } from './AllStudentsScreen';

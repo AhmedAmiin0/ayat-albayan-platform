@@ -8,7 +8,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
-import { CourseChangeFlow } from '@/sales-course';
+import { CourseChangeFlow } from '@/sales/course';
 import { useMoveView, type SubRef } from './course-actions-api';
 import { SheetLines } from './SheetLines';
 import { TeacherStep, type TeacherPick } from './TeacherStep';

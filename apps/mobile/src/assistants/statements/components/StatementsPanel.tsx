@@ -4,15 +4,15 @@ import { FlatList, ScrollView, View } from 'react-native';
 import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
 import { t } from '@/core/lib/i18n/i18n';
-import { LoadState } from '@/sales-money/components/LoadState';
-import { useStatements, type AssistantRow, type StatementFilter } from '../../api/api';
-import { AssistantPills } from '../../list/AssistantPills';
+import { LoadState } from '@/sales/money/components/LoadState';
+import { useStatements, type AssistantRow, type StatementFilter } from '@/assistants/api/api';
+import { AssistantPills } from '@/assistants/list/AssistantPills';
 import { GenerateBar } from './GenerateBar';
-import { generateTargets } from '../hooks/generate-targets';
+import { generateTargets } from '@/assistants/statements/hooks/generate-targets';
 import { PayStatementForm } from './PayStatementForm';
-import type { StatementCan } from '../hooks/statement-can';
+import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 import { StatementItem } from './StatementItem';
-import { StatusPills } from '../../list/StatusPills';
+import { StatusPills } from '@/assistants/list/StatusPills';
 
 interface StatementsPanelProps {
   assistants: readonly AssistantRow[];

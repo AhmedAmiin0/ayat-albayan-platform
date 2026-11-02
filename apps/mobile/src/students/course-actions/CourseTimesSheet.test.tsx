@@ -1,10 +1,10 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { pressEnabled } from '@/sales-course/testing/course-test-utils';
+import { pressEnabled } from '@/sales/course/testing/course-test-utils';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { fakeNow } from '@/test/fake-now';
 import { seedFullAccess } from '@/test/staff-me';
-import { changeBody, changeSundayToMonday, NOW } from '@/sales-course/change/change-test-setup';
+import { changeBody, changeSundayToMonday, NOW } from '@/sales/course/change/change-test-setup';
 import { CourseActionsSection } from './CourseActionsSection';
 import { BASE, serve, SUB } from './fixtures';
 

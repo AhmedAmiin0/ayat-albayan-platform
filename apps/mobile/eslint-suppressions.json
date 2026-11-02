@@ -8777,27 +8777,27 @@
       "count": 1
     }
   },
-  "src/registration-check/components/CheckRegistrationButton.tsx": {
+  "src/sales/registration-check/components/CheckRegistrationButton.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/registration-check/components/RegistrationForm.tsx": {
+  "src/sales/registration-check/components/RegistrationForm.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/registration-check/components/RegistrationResults.tsx": {
+  "src/sales/registration-check/components/RegistrationResults.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/registration-check/lib/link-family.test.ts": {
+  "src/sales/registration-check/lib/link-family.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/registration-check/lib/link-family.ts": {
+  "src/sales/registration-check/lib/link-family.ts": {
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -8808,7 +8808,7 @@
       "count": 3
     }
   },
-  "src/registration-check/lib/registration-check.ts": {
+  "src/sales/registration-check/lib/registration-check.ts": {
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
     },
@@ -8825,7 +8825,7 @@
       "count": 2
     }
   },
-  "src/registration-check/screens/LinkFamilyScreen.tsx": {
+  "src/sales/registration-check/screens/LinkFamilyScreen.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8845,12 +8845,12 @@
       "count": 3
     }
   },
-  "src/registration-check/screens/RegistrationCheckScreen.en.test.tsx": {
+  "src/sales/registration-check/screens/RegistrationCheckScreen.en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/registration-check/screens/RegistrationCheckScreen.tsx": {
+  "src/sales/registration-check/screens/RegistrationCheckScreen.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8873,7 +8873,7 @@
       "count": 2
     }
   },
-  "src/registration-check/screens/entry.test.tsx": {
+  "src/sales/registration-check/screens/entry.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
@@ -8884,17 +8884,17 @@
       "count": 1
     }
   },
-  "src/sales-course/change/CourseChange.clash.test.tsx": {
+  "src/sales/course/change/CourseChange.clash.test.tsx": {
     "ab/no-parent-imports": {
       "count": 2
     }
   },
-  "src/sales-course/change/CourseChange.flow.test.tsx": {
+  "src/sales/course/change/CourseChange.flow.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/change/CourseChange.refusals.test.tsx": {
+  "src/sales/course/change/CourseChange.refusals.test.tsx": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -8902,12 +8902,12 @@
       "count": 2
     }
   },
-  "src/sales-course/change/CourseChangeDone.tsx": {
+  "src/sales/course/change/CourseChangeDone.tsx": {
     "max-len": {
       "count": 4
     }
   },
-  "src/sales-course/change/CourseChangeFlow.tsx": {
+  "src/sales/course/change/CourseChangeFlow.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 3
     },
@@ -8921,7 +8921,7 @@
       "count": 1
     }
   },
-  "src/sales-course/change/CourseChangeReview.tsx": {
+  "src/sales/course/change/CourseChangeReview.tsx": {
     "complexity": {
       "count": 1
     },
@@ -8929,7 +8929,7 @@
       "count": 3
     }
   },
-  "src/sales-course/change/CurrentCourse.tsx": {
+  "src/sales/course/change/CurrentCourse.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -8937,22 +8937,22 @@
       "count": 2
     }
   },
-  "src/sales-course/change/OverrideField.tsx": {
+  "src/sales/course/change/OverrideField.tsx": {
     "complexity": {
       "count": 1
     }
   },
-  "src/sales-course/change/change-body.test.ts": {
+  "src/sales/course/change/change-body.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/change/change-body.ts": {
+  "src/sales/course/change/change-body.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/sales-course/change/change-queries.test.tsx": {
+  "src/sales/course/change/change-queries.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -8960,7 +8960,7 @@
       "count": 1
     }
   },
-  "src/sales-course/change/change-queries.ts": {
+  "src/sales/course/change/change-queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
     },
@@ -8968,7 +8968,7 @@
       "count": 3
     }
   },
-  "src/sales-course/change/change-test-setup.ts": {
+  "src/sales/course/change/change-test-setup.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -8979,12 +8979,12 @@
       "count": 3
     }
   },
-  "src/sales-course/components/CourseCheckNotice.test.tsx": {
+  "src/sales/course/components/CourseCheckNotice.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/components/CourseCheckNotice.tsx": {
+  "src/sales/course/components/CourseCheckNotice.tsx": {
     "complexity": {
       "count": 1
     },
@@ -8992,7 +8992,7 @@
       "count": 2
     }
   },
-  "src/sales-course/components/CourseConfirm.tsx": {
+  "src/sales/course/components/CourseConfirm.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -9003,7 +9003,7 @@
       "count": 8
     }
   },
-  "src/sales-course/components/CourseContinue.teacher.test.tsx": {
+  "src/sales/course/components/CourseContinue.teacher.test.tsx": {
     "ab/no-parent-imports": {
       "count": 4
     },
@@ -9011,17 +9011,17 @@
       "count": 1
     }
   },
-  "src/sales-course/components/CourseContinue.tsx": {
+  "src/sales/course/components/CourseContinue.tsx": {
     "max-len": {
       "count": 6
     }
   },
-  "src/sales-course/components/CourseDone.tsx": {
+  "src/sales/course/components/CourseDone.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/sales-course/components/CourseOpening.tsx": {
+  "src/sales/course/components/CourseOpening.tsx": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -9032,7 +9032,7 @@
       "count": 5
     }
   },
-  "src/sales-course/components/CourseTeacherStep.tsx": {
+  "src/sales/course/components/CourseTeacherStep.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -9040,17 +9040,17 @@
       "count": 1
     }
   },
-  "src/sales-course/components/CourseWizard.continue.test.tsx": {
+  "src/sales/course/components/CourseWizard.continue.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales-course/components/CourseWizard.renewal.test.tsx": {
+  "src/sales/course/components/CourseWizard.renewal.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/components/CourseWizard.tsx": {
+  "src/sales/course/components/CourseWizard.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -9070,7 +9070,7 @@
       "count": 1
     }
   },
-  "src/sales-course/hooks/course-queries.ts": {
+  "src/sales/course/hooks/course-queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
     },
@@ -9078,7 +9078,7 @@
       "count": 1
     }
   },
-  "src/sales-course/hooks/use-course-view.ts": {
+  "src/sales/course/hooks/use-course-view.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9089,7 +9089,7 @@
       "count": 1
     }
   },
-  "src/sales-course/hooks/use-known-teacher.ts": {
+  "src/sales/course/hooks/use-known-teacher.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -9100,7 +9100,7 @@
       "count": 3
     }
   },
-  "src/sales-course/lib/course-body.test.ts": {
+  "src/sales/course/lib/course-body.test.ts": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9108,17 +9108,17 @@
       "count": 6
     }
   },
-  "src/sales-course/lib/course-body.ts": {
+  "src/sales/course/lib/course-body.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/lib/course-days.test.ts": {
+  "src/sales/course/lib/course-days.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales-course/lib/course-days.ts": {
+  "src/sales/course/lib/course-days.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -9126,12 +9126,12 @@
       "count": 5
     }
   },
-  "src/sales-course/lib/course-steps.ts": {
+  "src/sales/course/lib/course-steps.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/lib/course-summary.ts": {
+  "src/sales/course/lib/course-summary.ts": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -9139,7 +9139,7 @@
       "count": 3
     }
   },
-  "src/sales-course/screens/CourseScreen.change.test.tsx": {
+  "src/sales/course/screens/CourseScreen.change.test.tsx": {
     "ab/no-parent-imports": {
       "count": 4
     },
@@ -9147,12 +9147,12 @@
       "count": 3
     }
   },
-  "src/sales-course/screens/CourseScreen.states.test.tsx": {
+  "src/sales/course/screens/CourseScreen.states.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/screens/CourseScreen.tsx": {
+  "src/sales/course/screens/CourseScreen.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -9166,27 +9166,27 @@
       "count": 8
     }
   },
-  "src/sales-course/testing/course-test-utils.ts": {
+  "src/sales/course/testing/course-test-utils.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-course/testing/fixtures.ts": {
+  "src/sales/course/testing/fixtures.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/components/CommissionChip.tsx": {
+  "src/sales/money/components/CommissionChip.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/components/CurrencyTotalsBlock.tsx": {
+  "src/sales/money/components/CurrencyTotalsBlock.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/sales-money/components/EarningsTermsCard.tsx": {
+  "src/sales/money/components/EarningsTermsCard.tsx": {
     "complexity": {
       "count": 1
     },
@@ -9194,32 +9194,32 @@
       "count": 2
     }
   },
-  "src/sales-money/components/LoadState.tsx": {
+  "src/sales/money/components/LoadState.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/components/MoneyCard.tsx": {
+  "src/sales/money/components/MoneyCard.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales-money/components/MyPaymentItem.attachments.test.tsx": {
+  "src/sales/money/components/MyPaymentItem.attachments.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/sales-money/components/MyPaymentItem.note.en.test.tsx": {
+  "src/sales/money/components/MyPaymentItem.note.en.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/sales-money/components/MyPaymentItem.note.test.tsx": {
+  "src/sales/money/components/MyPaymentItem.note.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/sales-money/components/MyPaymentItem.tsx": {
+  "src/sales/money/components/MyPaymentItem.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -9227,22 +9227,22 @@
       "count": 3
     }
   },
-  "src/sales-money/components/MyStatementCard.tsx": {
+  "src/sales/money/components/MyStatementCard.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/components/MyStudentItem.phone.test.tsx": {
+  "src/sales/money/components/MyStudentItem.phone.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/sales-money/components/MyStudentItem.tsx": {
+  "src/sales/money/components/MyStudentItem.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/components/StatementLines.tsx": {
+  "src/sales/money/components/StatementLines.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9250,7 +9250,7 @@
       "count": 2
     }
   },
-  "src/sales-money/lib/money-text.ts": {
+  "src/sales/money/lib/money-text.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -9261,17 +9261,17 @@
       "count": 4
     }
   },
-  "src/sales-money/lib/my-api.ts": {
+  "src/sales/money/lib/my-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
     }
   },
-  "src/sales-money/screens/MyEarningsView.tsx": {
+  "src/sales/money/screens/MyEarningsView.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales-money/screens/MyMoneyScreen.en.test.tsx": {
+  "src/sales/money/screens/MyMoneyScreen.en.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9279,12 +9279,12 @@
       "count": 1
     }
   },
-  "src/sales-money/screens/MyMoneyScreen.test.tsx": {
+  "src/sales/money/screens/MyMoneyScreen.test.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     }
   },
-  "src/sales-money/screens/MyMoneyScreen.tsx": {
+  "src/sales/money/screens/MyMoneyScreen.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9295,7 +9295,7 @@
       "count": 2
     }
   },
-  "src/sales-money/screens/MyPaymentsView.tsx": {
+  "src/sales/money/screens/MyPaymentsView.tsx": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -9303,7 +9303,7 @@
       "count": 2
     }
   },
-  "src/sales-money/screens/MyStudentsView.tsx": {
+  "src/sales/money/screens/MyStudentsView.tsx": {
     "ab/no-parent-imports": {
       "count": 3
     },
@@ -9311,12 +9311,12 @@
       "count": 1
     }
   },
-  "src/sales-money/testing/fixtures.ts": {
+  "src/sales/money/testing/fixtures.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales-money/wallet/CommissionEntry.tsx": {
+  "src/sales/money/wallet/CommissionEntry.tsx": {
     "ab/no-parent-imports": {
       "count": 1
     },
@@ -9327,7 +9327,7 @@
       "count": 1
     }
   },
-  "src/sales-money/wallet/MyWalletView.test.tsx": {
+  "src/sales/money/wallet/MyWalletView.test.tsx": {
     "ab/no-parent-imports": {
       "count": 2
     },
@@ -9338,7 +9338,7 @@
       "count": 4
     }
   },
-  "src/sales-money/wallet/MyWalletView.tsx": {
+  "src/sales/money/wallet/MyWalletView.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -9352,7 +9352,7 @@
       "count": 1
     }
   },
-  "src/sales-money/wallet/WalletCard.tsx": {
+  "src/sales/money/wallet/WalletCard.tsx": {
     "ab/no-parent-imports": {
       "count": 2
     },

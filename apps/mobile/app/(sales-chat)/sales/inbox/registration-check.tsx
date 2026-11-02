@@ -1,1 +1,1 @@
-export { RegistrationCheckScreen as default } from '@/registration-check';
+export { RegistrationCheckScreen as default } from '@/sales/registration-check';

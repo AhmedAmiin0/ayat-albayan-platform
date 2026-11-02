@@ -1,0 +1,80 @@
+import { counted, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
+import { View } from 'react-native';
+import { type BookFailure, ConflictNotice, whenText } from '@/booking';
+import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t } from '@/core/lib/i18n/i18n';
+import { localDay } from '@/core/lib/money/format';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { type, useTheme } from '@/theme';
+import { CourseCheckNotice } from '@/sales/course/components/CourseCheckNotice';
+import { daysText, requestDays } from '@/sales/course/lib/course-days';
+import { targetPath, type ChangeTarget } from './change-body';
+import { useCourseChangeCheck } from './change-queries';
+import { useOverride } from './OverrideField';
+import { useClockCycle, useViewerTz } from '@/core/lib/clock';
+
+interface CourseChangeReviewProps {
+  course: BookedCourse;
+  picks: readonly string[];
+  /** The request «احفظ الأيام الجديدة» sends; null until a day is picked. */
+  body: CourseChangeRequest | null;
+  /** reason: the admin's clash override (target.override), else none. */
+  saving: { busy: boolean; failure: BookFailure | null; submit: (reason?: string) => void };
+  onChangeSlot: () => void;
+  target?: ChangeTarget | undefined;
+}
+
+/**
+ * The change's review: «الأيام الحالية» and «الأيام الجديدة» together, how many lessons are left
+ * and the new last day (POST …/course/change/check), then the first lesson on the new days. A clash blocks the assistant (no override, owner
+ * 2026-10-18): its only way out is «اختر موعدًا آخر».
+ */
+export function CourseChangeReview(props: CourseChangeReviewProps) {
+  const { course, picks, body, saving, onChangeSlot, target } = props;
+  const cycle = useClockCycle();
+  const tz = useViewerTz();
+  const viewer = { tz, cycle };
+  const { color } = useTheme();
+  const check = useCourseChangeCheck(body, targetPath(target));
+  const need = course.perWeek ?? course.days.length;
+  const override = useOverride({ target, check });
+  const ready = body !== null && picks.length === need && !override.blocked;
+  const line = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
+  const texts = t.booking.courseChange;
+  return (
+    <View style={{ gap: 14 }}>
+      <View style={{ gap: 4 }}>
+        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}</AppText>
+        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, viewer))}</AppText> : null}
+      </View>
+      {check.isSuccess ? (
+        <View style={{ gap: 4 }}>
+          <AppText style={line}>{counted(texts.remaining, check.data.remaining)}</AppText>
+          <AppText style={line}>{texts.newEnd.replace('{date}', localDay(check.data.endsOn))}</AppText>
+        </View>
+      ) : null}
+      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz, viewer))}</AppText> : null}
+      {check.isPending ? (
+        <AppText style={{ ...line, color: color.ink2 }}>{texts.checking}</AppText>
+      ) : (
+        <CourseCheckNotice check={check} onChangeSlot={onChangeSlot} />
+      )}
+      {override.field}
+      <SaveError failure={saving.failure} onChangeSlot={onChangeSlot} />
+      <Button
+        label={saving.busy ? texts.submitting : texts.submit}
+        busy={saving.busy}
+        disabled={!ready}
+        onPress={() => saving.submit(override.reason)}
+      />
+    </View>
+  );
+}
+
+/** «احفظ» refused: a clash since the check (other times), or the API's line for its code. */
+function SaveError({ failure, onChangeSlot }: { failure: BookFailure | null; onChangeSlot: () => void }) {
+  if (!failure) return null;
+  if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
+  return <ErrorLine message={failure.kind === 'duplicate' ? t.common.error : failure.text} />;
+}

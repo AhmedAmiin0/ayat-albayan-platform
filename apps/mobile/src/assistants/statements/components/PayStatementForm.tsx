@@ -9,7 +9,7 @@ import { money } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
-import { statementMonth } from '@/sales-money/lib/money-text';
+import { statementMonth } from '@/sales/money/lib/money-text';
 import { useNow } from '@/core/lib/time/use-now';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';

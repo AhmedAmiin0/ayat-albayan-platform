@@ -23,7 +23,7 @@ function salesMoneyBackend() {
       student = kid({ open: [openSub()] });
       return openSub();
     })
-    .on('GET /sales/booking/course', () => jest.requireActual('@/sales-course/testing/fixtures').courseView())
+    .on('GET /sales/booking/course', () => jest.requireActual('@/sales/course/testing/fixtures').courseView())
     .on('GET /sales/booking/teachers', () => [])
     .on('GET /sales/money/chat-receipts', () => [chatImage])
     .on('GET /sales/money/chat-receipts/:id', () => ({ url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' }))

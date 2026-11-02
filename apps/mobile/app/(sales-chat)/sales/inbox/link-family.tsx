@@ -1,1 +1,1 @@
-export { LinkFamilyScreen as default } from '@/registration-check';
+export { LinkFamilyScreen as default } from '@/sales/registration-check';

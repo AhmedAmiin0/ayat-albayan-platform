@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { myStudent } from '@/sales-money/testing/fixtures';
+import { myStudent } from '@/sales/money/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { AllStudentsScreen } from './AllStudentsScreen';
 import { student } from '@/sales/sales/testing/fixtures';
