@@ -1,4 +1,9 @@
-import { familySearchKey, peopleEditErrorText, peopleEditKey, peopleEditPaths as P } from '@ab/client-core';
+import {
+  familySearchKey,
+  peopleEditErrorText,
+  peopleEditKey,
+  peopleEditPaths as P,
+} from '@ab/client-core';
 import {
   convertedStudentSchema,
   familyOptionsSchema,
@@ -15,7 +20,8 @@ import { pathKey } from '@/core/lib/query/query-keys';
 // /people/* (owner 2026-11-02), the web's api.ts: «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل»
 // for the assistant and the admin. Paths, keys and error words are @ab/client-core's.
 
-const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> => apiSend(method, path, body);
+const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> =>
+  apiSend(method, path, body);
 
 /** GET /people/students/:id, once a sheet is open. */
 export const usePeopleEditView = (studentId: string, enabled: boolean) =>
@@ -33,12 +39,15 @@ export const useFamilySearch = (search: string) =>
     enabled: search.length >= 2,
   });
 
-export const saveStudent = (input: { id: string; patch: PeopleStudentPatch }) => send('PATCH', P.student(input.id), input.patch);
-export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) => send('PATCH', P.guardian(input.id), input.patch);
+export const saveStudent = (input: { id: string; patch: PeopleStudentPatch }) =>
+  send('PATCH', P.student(input.id), input.patch);
+export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) =>
+  send('PATCH', P.guardian(input.id), input.patch);
 export const removeSecondPhone = (input: { guardianId: string; phone: string }) =>
   send('DELETE', P.secondPhone(input.guardianId, input.phone));
 
-export type MoveBody = { guardian_id: string } | { guardian: { name: string; phone_e164: string; tz: string } };
+export type MoveBody =
+  { guardian_id: string } | { guardian: { name: string; phone_e164: string; tz: string } };
 export const moveFamily = async (input: { studentId: string; body: MoveBody }) =>
   familyReplySchema.parse(await send('POST', P.move(input.studentId), input.body));
 export const setContactSelf = (input: { studentId: string; value: boolean }) =>

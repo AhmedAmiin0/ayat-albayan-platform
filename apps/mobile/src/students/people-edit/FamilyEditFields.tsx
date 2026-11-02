@@ -20,7 +20,12 @@ export function FamilyEditFields({ value, onChange, invalid }: FamilyEditFieldsP
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.familySection}</SectionLabel>
-      <PeopleField label={E.fields.name} value={value.name} error={error('name')} onChangeText={(name) => onChange({ name })} />
+      <PeopleField
+        label={E.fields.name}
+        value={value.name}
+        error={error('name')}
+        onChangeText={(name) => onChange({ name })}
+      />
       <PeopleField
         label={E.fields.phone}
         value={value.phone_e164}
@@ -29,9 +34,24 @@ export function FamilyEditFields({ value, onChange, invalid }: FamilyEditFieldsP
         error={error('phone_e164')}
         onChangeText={(phone_e164) => onChange({ phone_e164 })}
       />
-      <PeopleField label={E.fields.country} value={value.country} error={error('country')} onChangeText={(country) => onChange({ country })} />
-      <PeopleField label={E.fields.notes} value={value.notes} error={error('notes')} onChangeText={(notes) => onChange({ notes })} />
-      <PeopleChoice label={E.fields.tz} items={zoneItems(value.tz)} value={value.tz} onChange={(tz) => onChange({ tz })} />
+      <PeopleField
+        label={E.fields.country}
+        value={value.country}
+        error={error('country')}
+        onChangeText={(country) => onChange({ country })}
+      />
+      <PeopleField
+        label={E.fields.notes}
+        value={value.notes}
+        error={error('notes')}
+        onChangeText={(notes) => onChange({ notes })}
+      />
+      <PeopleChoice
+        label={E.fields.tz}
+        items={zoneItems(value.tz)}
+        value={value.tz}
+        onChange={(tz) => onChange({ tz })}
+      />
     </View>
   );
 }

@@ -1,16 +1,21 @@
-import { familyFormOf, familyPatchOf, studentFormOf, studentPatchOf, type FamilyForm, type StudentForm } from '@ab/client-core';
-import { formatPhone, type PeopleEditView } from '@ab/shared';
+import {
+  familyFormOf,
+  familyPatchOf,
+  studentFormOf,
+  studentPatchOf,
+  type FamilyForm,
+  type StudentForm,
+} from '@ab/client-core';
+import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Button } from '@/core/ui/primitives/Button';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { Note } from '@/more';
 import { SheetActions } from '@/students/course-pause/SheetActions';
 import { FamilyEditFields } from './FamilyEditFields';
-import { removeSecondPhone, saveFamily, saveStudent, usePeopleWrite } from './people-edit-api';
+import { saveFamily, saveStudent, usePeopleWrite } from './people-edit-api';
 import type { PeopleSheetProps } from './PeopleEditSection';
+import { SecondPhoneRow } from './SecondPhoneRow';
 import { StudentEditFields } from './StudentEditFields';
 
 const E = t.peopleEdit;
@@ -20,7 +25,8 @@ interface Forms {
   family: FamilyForm;
 }
 
-const hasChange = <P extends object>(patch: P | null): patch is P => patch !== null && Object.keys(patch).length > 0;
+const hasChange = <P extends object>(patch: P | null): patch is P =>
+  patch !== null && Object.keys(patch).length > 0;
 
 /** Both PATCHes, the student first; only a part with a change is sent (the web's saveBoth). */
 async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: Forms }) {
@@ -32,9 +38,15 @@ async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: 
 
 /** «تعديل البيانات»: the student's and the family's details, and the family's second number. */
 export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {
-  const [initial] = useState<Forms>(() => ({ student: studentFormOf(view.student), family: familyFormOf(view.guardian) }));
+  const [initial] = useState<Forms>(() => ({
+    student: studentFormOf(view.student),
+    family: familyFormOf(view.guardian),
+  }));
   const [current, setCurrent] = useState<Forms>(initial);
-  const [invalid, setInvalid] = useState<{ student: string[]; family: string[] }>({ student: [], family: [] });
+  const [invalid, setInvalid] = useState<{ student: string[]; family: string[] }>({
+    student: [],
+    family: [],
+  });
   const save = usePeopleWrite(saveBoth, () => onDone(E.saved));
   const submit = () => {
     const bad = {
@@ -46,32 +58,19 @@ export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {
   };
   return (
     <View style={{ gap: 20 }}>
-      <StudentEditFields value={current.student} invalid={invalid.student} onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))} />
-      <FamilyEditFields value={current.family} invalid={invalid.family} onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))} />
+      <StudentEditFields
+        value={current.student}
+        invalid={invalid.student}
+        onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))}
+      />
+      <FamilyEditFields
+        value={current.family}
+        invalid={invalid.family}
+        onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))}
+      />
       <SecondPhoneRow guardian={view.guardian} onDone={onDone} />
       {save.errorText ? <Note alert>{save.errorText}</Note> : null}
       <SheetActions label={E.save} busy={save.isPending} onConfirm={submit} onCancel={onClose} />
-    </View>
-  );
-}
-
-/** The family's second number with «حذف الرقم الثاني» behind an inline confirm; nothing without one. */
-function SecondPhoneRow({ guardian, onDone }: { guardian: PeopleEditView['guardian']; onDone: (notice: string) => void }) {
-  const [asking, setAsking] = useState(false);
-  const remove = usePeopleWrite(removeSecondPhone, () => onDone(E.saved));
-  const second = guardian.phones.find((p) => !p.is_primary);
-  if (!second) return null;
-  const phone = ltr(formatPhone(second.phone_e164));
-  const run = () => remove.mutate({ guardianId: guardian.id, phone: second.phone_e164 });
-  return (
-    <View style={{ gap: 8 }}>
-      <Note>{`${E.fields.secondPhone}: ${phone}`}</Note>
-      {asking ? (
-        <InlineConfirm message={E.removeSecondConfirm.replace('{phone}', phone)} confirmLabel={E.removeSecond} busy={remove.isPending} tone="danger" onConfirm={run} onCancel={() => setAsking(false)} />
-      ) : (
-        <Button variant="secondary" label={E.removeSecond} onPress={() => setAsking(true)} />
-      )}
-      {remove.errorText ? <Note alert>{remove.errorText}</Note> : null}
     </View>
   );
 }

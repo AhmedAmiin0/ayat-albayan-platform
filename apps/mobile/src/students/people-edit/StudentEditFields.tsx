@@ -23,17 +23,39 @@ export function StudentEditFields({ value, onChange, invalid }: StudentEditField
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.studentSection}</SectionLabel>
       {TEXTS.map((key) => (
-        <PeopleField key={key} label={E.fields[key]} value={value[key]} error={error(key)} onChangeText={(v) => onChange({ [key]: v })} />
+        <PeopleField
+          key={key}
+          label={E.fields[key]}
+          value={value[key]}
+          error={error(key)}
+          onChangeText={(v) => onChange({ [key]: v })}
+        />
       ))}
-      <PeopleField label={E.fields.age} value={value.age} keyboardType="number-pad" error={error('age')} onChangeText={(age) => onChange({ age })} />
-      <PeopleChoice label={E.fields.gender} items={genderItems(E.fields.noPreference)} value={value.gender} onChange={(gender) => onChange({ gender })} />
+      <PeopleField
+        label={E.fields.age}
+        value={value.age}
+        keyboardType="number-pad"
+        error={error('age')}
+        onChangeText={(age) => onChange({ age })}
+      />
+      <PeopleChoice
+        label={E.fields.gender}
+        items={genderItems(E.fields.noPreference)}
+        value={value.gender}
+        onChange={(gender) => onChange({ gender })}
+      />
       <PeopleChoice
         label={E.fields.teacherGenderPref}
         items={genderItems(E.fields.noPreference)}
         value={value.teacher_gender_pref}
         onChange={(teacher_gender_pref) => onChange({ teacher_gender_pref })}
       />
-      <PeopleChoice label={E.fields.tz} items={zoneItems(value.tz)} value={value.tz} onChange={(tz) => onChange({ tz })} />
+      <PeopleChoice
+        label={E.fields.tz}
+        items={zoneItems(value.tz)}
+        value={value.tz}
+        onChange={(tz) => onChange({ tz })}
+      />
     </View>
   );
 }

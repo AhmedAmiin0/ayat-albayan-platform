@@ -6,8 +6,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { Button } from '@/core/ui/primitives/Button';
 import { PauseSheetFrame } from '@/students/course-pause/PauseSheetFrame';
-import { AttachSheet } from './AttachSheet';
-import { ConvertSheet } from './ConvertSheet';
+import { AttachSheet } from './attach/AttachSheet';
+import { ConvertSheet } from './convert/ConvertSheet';
 import { EditDataSheet } from './EditDataSheet';
 import { usePeopleEditView } from './people-edit-api';
 
@@ -22,10 +22,25 @@ export interface PeopleSheetProps {
 }
 
 /** Each action, its label, its sheet and the keys it needs (the view itself is people.edit). */
-const ACTIONS: { kind: Kind; label: string; needs: Permission[]; Sheet: ComponentType<PeopleSheetProps> }[] = [
+const ACTIONS: {
+  kind: Kind;
+  label: string;
+  needs: Permission[];
+  Sheet: ComponentType<PeopleSheetProps>;
+}[] = [
   { kind: 'edit', label: E.editData, needs: ['people.edit'], Sheet: EditDataSheet },
-  { kind: 'attach', label: E.attach, needs: ['people.edit', 'students.attach_guardian'], Sheet: AttachSheet },
-  { kind: 'convert', label: E.convert, needs: ['people.edit', 'people.switch_role'], Sheet: ConvertSheet },
+  {
+    kind: 'attach',
+    label: E.attach,
+    needs: ['people.edit', 'students.attach_guardian'],
+    Sheet: AttachSheet,
+  },
+  {
+    kind: 'convert',
+    label: E.convert,
+    needs: ['people.edit', 'people.switch_role'],
+    Sheet: ConvertSheet,
+  },
 ];
 
 /**
@@ -53,7 +68,9 @@ export function PeopleEditSection({ studentId }: { studentId: string }) {
         <Button key={a.kind} variant="secondary" label={a.label} onPress={() => setOpen(a.kind)} />
       ))}
       <PauseSheetFrame open={active !== undefined} title={active?.label ?? ''} onClose={close}>
-        {active && view.data ? <active.Sheet view={view.data} onClose={close} onDone={done} /> : null}
+        {active && view.data ? (
+          <active.Sheet view={view.data} onClose={close} onDone={done} />
+        ) : null}
         {view.isError ? <Note alert>{E.errors.generic}</Note> : null}
       </PauseSheetFrame>
     </View>

@@ -10,11 +10,23 @@ interface PeopleChoiceProps<V extends string> {
 }
 
 /** A labelled single choice (gender, zone): every option in view, as radios. */
-export function PeopleChoice<V extends string>({ label, items, value, onChange }: PeopleChoiceProps<V>) {
+export function PeopleChoice<V extends string>({
+  label,
+  items,
+  value,
+  onChange,
+}: PeopleChoiceProps<V>) {
   return (
     <View style={{ gap: 6 }}>
       <FormLabel>{label}</FormLabel>
-      <FilterPills items={items} value={value} onChange={onChange} accessibilityLabel={label} role="radiogroup" wrap />
+      <FilterPills
+        items={items}
+        value={value}
+        onChange={onChange}
+        accessibilityLabel={label}
+        role="radiogroup"
+        wrap
+      />
     </View>
   );
 }
