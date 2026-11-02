@@ -18,9 +18,12 @@ vi.mock('@/features/people/auth', async (importOriginal) => ({
 const e = t.salesMoney.usedBeforeEdit;
 const RESULT = { subscription_id: 'sub-1', lessons_total: 8, lessons_used_before: 6, lessons_used: 6, remaining: 2 };
 // 8 lessons, 2 days a week: at most 6; 1 counted already (before the platform), 0 on the platform.
-const PKG = { id: 'sub-1', lessons_total: 8, lessons_used: 1, lessons_used_before: 1, status: 'unpaid' as const };
+const PKG = {
+  id: 'sub-1', lessons_total: 8, lessons_used: 1, lessons_used_before: 1, status: 'unpaid' as const,
+  starts_on: '2026-01-01',
+};
 
-function renderAction(pkg: Partial<typeof PKG> | { status: 'cancelled' } = {}) {
+function renderAction(pkg: Partial<Omit<typeof PKG, 'status'>> | { status: 'cancelled' } = {}) {
   render(
     <QueryClientProvider client={new QueryClient()}>
       <EditUsedBeforeAction pkg={{ ...PKG, ...pkg }} />
@@ -79,6 +82,11 @@ describe('EditUsedBeforeAction', () => {
     fireEvent.click(dialog.getByRole('button', { name: e.save }));
     expect(await dialog.findByText(e.errors.used_before_course_booked)).toBeTruthy();
     expect(screen.getByRole('dialog')).toBeTruthy();
+  });
+
+  it('a start in the future with nothing counted: not offered', () => {
+    renderAction({ starts_on: '2999-01-01', lessons_used_before: 0, lessons_used: 0 });
+    expect(screen.queryByRole('button', { name: e.action })).toBeNull();
   });
 
   it('the same number: «حفظ» stays off', () => {

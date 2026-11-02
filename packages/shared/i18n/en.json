@@ -4877,6 +4877,7 @@
       "errors": {
         "used_before_course_booked": "This package already has a booked course, so the lessons already used can no longer change.",
         "used_before_too_many": "The number is higher than this package allows.",
+        "used_before_needs_past_start": "Lessons already used apply only to a package that started before today.",
         "already_cancelled": "This package is cancelled.",
         "used_before_changed": "The number changed before saving; reopen and try again.",
         "generic": "Could not save, try again."

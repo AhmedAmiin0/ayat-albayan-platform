@@ -1,4 +1,4 @@
-import type { SubscriptionStatus } from '@ab/shared';
+import { riyadhToday, usedBeforeEditOffered, type SubscriptionStatus } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Toast } from '@/components/ui/overlay/toast';
@@ -14,7 +14,8 @@ export interface EditUsedBeforeActionProps {
 
 /**
  * The card's «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), for admins and assistants
- * (subscriptions.set_start_date); never on a cancelled package.
+ * (subscriptions.set_start_date); never on a cancelled package, nor on one starting today or later
+ * with nothing to lower.
  */
 export function EditUsedBeforeAction({ pkg, staleKey }: EditUsedBeforeActionProps) {
   const allowed = usePermissions().can('subscriptions.set_start_date');
@@ -24,7 +25,12 @@ export function EditUsedBeforeAction({ pkg, staleKey }: EditUsedBeforeActionProp
     setOpen(false);
     setToast(t.salesMoney.usedBeforeEdit.saved);
   };
-  if (!allowed || pkg.status === 'cancelled') return null;
+  const offered = usedBeforeEditOffered({
+    cancelled: pkg.status === 'cancelled',
+    pastStart: pkg.starts_on < riyadhToday(),
+    current: pkg.lessons_used_before ?? 0,
+  });
+  if (!allowed || !offered) return null;
   return (
     <>
       <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(true)}>

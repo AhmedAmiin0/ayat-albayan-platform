@@ -69,6 +69,13 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
     expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_too_many']);
   });
 
+  it('a start today or later → 400 used_before_needs_past_start (commission unchanged)', async () => {
+    m.subs.get.mockReset().mockResolvedValue(subRow({ starts_on: '2999-01-01' }));
+    const res = await edit({ lessonsUsedBefore: 1 });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_needs_past_start']);
+    expect(edits.setUsedBefore).not.toHaveBeenCalled();
+  });
+
   it('a booked course → 409 used_before_course_booked (the course keeps its lessons)', async () => {
     edits.courseBooked.mockResolvedValue(true);
     const res = await edit({ lessonsUsedBefore: 1 });

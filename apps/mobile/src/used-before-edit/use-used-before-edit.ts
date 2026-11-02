@@ -1,4 +1,4 @@
-import { usedBeforeEditMax } from '@ab/shared';
+import { riyadhToday, usedBeforeEditMax, usedBeforeEditOffered } from '@ab/shared';
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ApiError, apiSend } from '@/core/lib/http/api';
@@ -11,13 +11,26 @@ export interface EditablePackage {
   lessons_total: number;
   lessons_used: number;
   lessons_used_before?: number | undefined;
+  /** YYYY-MM-DD: a count > 0 only with a start before today (the create's rule). */
+  starts_on: string;
 }
+
+const pastStart = (sub: EditablePackage): boolean => sub.starts_on < riyadhToday();
+
+/** Not cancelled, and something to change (usedBeforeEditOffered). */
+export const editOffered = (sub: EditablePackage): boolean =>
+  usedBeforeEditOffered({
+    cancelled: sub.status === 'cancelled',
+    pastStart: pastStart(sub),
+    current: sub.lessons_used_before ?? 0,
+  });
 
 /** The stepper's last value (usedBeforeEditMax: the create's bound, never past free lessons). */
 export const editMax = (sub: EditablePackage): number =>
   usedBeforeEditMax({
     lessonsTotal: sub.lessons_total,
     platformUsed: sub.lessons_used - (sub.lessons_used_before ?? 0),
+    pastStart: pastStart(sub),
   });
 
 const errorBody = z.object({ code: z.string() });

@@ -16,7 +16,11 @@ export const usedBeforeEditSchema = z.strictObject({
 });
 export type UsedBeforeEdit = z.output<typeof usedBeforeEditSchema>;
 
-export type UsedBeforeEditProblem = 'already_cancelled' | 'used_before_course_booked' | 'used_before_too_many';
+export type UsedBeforeEditProblem =
+  | 'already_cancelled'
+  | 'used_before_course_booked'
+  | 'used_before_needs_past_start'
+  | 'used_before_too_many';
 
 export interface UsedBeforeEditInput {
   /** The number asked for. */
@@ -25,25 +29,44 @@ export interface UsedBeforeEditInput {
   /** Lessons the platform counted on it (balance lessons_used − lessons_used_before). */
   platformUsed: number;
   cancelled: boolean;
-  /** A course rule tied to the package (schedule_rules.subscription_id), any status. */
+  /** An assistant course rule tied to the package (schedule_rules.subscription_id), any status. */
   courseBooked: boolean;
+  /**
+   * starts_on before the academy's today: the create's rule (usedBeforeProblem). A count > 0 makes
+   * a package «already started» (no commission, migration 942); with a past start it already is,
+   * so the edit never changes who earns a commission.
+   */
+  pastStart: boolean;
 }
 
-type MaxInput = Pick<UsedBeforeEditInput, 'lessonsTotal' | 'platformUsed'>;
+type MaxInput = Pick<UsedBeforeEditInput, 'lessonsTotal' | 'platformUsed' | 'pastStart'>;
 
-/** The highest number the edit accepts: usedBeforeMax, never more than the lessons still free. */
+/** The highest number the edit accepts: usedBeforeMax, never past the free lessons; 0 unstarted. */
 export function usedBeforeEditMax(input: MaxInput): number {
   const free = input.lessonsTotal - Math.max(0, input.platformUsed);
-  return Math.max(0, Math.min(usedBeforeMax(input.lessonsTotal), free));
+  const max = Math.max(0, Math.min(usedBeforeMax(input.lessonsTotal), free));
+  return input.pastStart ? max : 0;
+}
+
+interface OfferInput {
+  cancelled: boolean;
+  pastStart: boolean;
+  current: number;
+}
+
+/** Whether a card offers the edit: not cancelled, and a past start or a count to lower. */
+export function usedBeforeEditOffered(pkg: OfferInput): boolean {
+  return !pkg.cancelled && (pkg.pastStart || pkg.current > 0);
 }
 
 const CHECKS: readonly [UsedBeforeEditProblem, (i: UsedBeforeEditInput) => boolean][] = [
   ['already_cancelled', (i) => i.cancelled],
   ['used_before_course_booked', (i) => i.courseBooked],
+  ['used_before_needs_past_start', (i) => i.next > 0 && !i.pastStart],
   ['used_before_too_many', (i) => i.next > usedBeforeEditMax(i)],
 ];
 
-/** Why the edit is refused (409 for the first two, 400 for too_many); null = accepted. */
+/** Why the edit is refused (409 for the first two, else 400); null = accepted. */
 export function usedBeforeEditProblem(input: UsedBeforeEditInput): UsedBeforeEditProblem | null {
   return CHECKS.find(([, refused]) => refused(input))?.[0] ?? null;
 }

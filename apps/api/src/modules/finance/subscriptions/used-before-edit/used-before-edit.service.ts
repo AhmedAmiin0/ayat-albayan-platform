@@ -1,4 +1,5 @@
 import {
+  riyadhToday,
   usedBeforeEditProblem,
   type SubscriptionView,
   type UsedBeforeEditProblem,
@@ -16,13 +17,15 @@ type HttpError = (code: string) => Error;
 const ERRORS: Record<UsedBeforeEditProblem, HttpError> = {
   already_cancelled: conflict,
   used_before_course_booked: conflict,
+  used_before_needs_past_start: badRequest,
   used_before_too_many: badRequest,
 };
 
-export interface UsedBeforeEditInput {
+interface UsedBeforeEditInput {
   id: string;
   lessonsUsedBefore: number;
   actorId: string;
+  now?: Date | undefined;
 }
 
 const resultOf = (view: SubscriptionView): UsedBeforeEditResult => ({
@@ -37,9 +40,11 @@ const resultOf = (view: SubscriptionView): UsedBeforeEditResult => ({
  * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins and assistants, ANY student (the sales
  * ownership rule of «sales_require_assignee», off by default: no owner check). Refusals:
  * usedBeforeEditProblem (404 subscription_not_found, 409 already_cancelled /
- * used_before_course_booked / used_before_changed, 400 used_before_too_many). Audited with
- * the row before / after through MoneyWrites, which recomputes the student's statuses and
- * alerts from the new balance.
+ * used_before_course_booked / used_before_changed, 400 used_before_needs_past_start /
+ * used_before_too_many). The same number answers at once. Audited with the row before / after
+ * through MoneyWrites, which recomputes the student's statuses and alerts from the new balance.
+ * The course check and the write are two statements (no RPC, no migration): a course booked in
+ * between is the accepted, narrow race.
  */
 @Injectable()
 export class UsedBeforeEdit {
@@ -53,15 +58,8 @@ export class UsedBeforeEdit {
   async edit(input: UsedBeforeEditInput): Promise<UsedBeforeEditResult> {
     const view = await this.subs.get(input.id);
     const from = view.lessons_used_before ?? 0;
-    const problem = usedBeforeEditProblem({
-      next: input.lessonsUsedBefore,
-      lessonsTotal: view.lessons_total,
-      platformUsed: view.balance.lessons_used - from,
-      cancelled: view.status === 'cancelled',
-      courseBooked: await this.repo.courseBooked(view.id),
-    });
-    if (problem) throw ERRORS[problem](problem);
     if (from === input.lessonsUsedBefore) return resultOf(view);
+    await this.assertEditable(view, input);
     const before = await this.rows.get(view.id);
     if (!before) throw notFound('subscription_not_found');
     const after = await this.repo.setUsedBefore({ id: view.id, from, to: input.lessonsUsedBefore });
@@ -76,5 +74,17 @@ export class UsedBeforeEdit {
     };
     await this.writes.done(audit, view.student.id);
     return resultOf(await this.subs.get(view.id));
+  }
+
+  private async assertEditable(view: SubscriptionView, input: UsedBeforeEditInput): Promise<void> {
+    const problem = usedBeforeEditProblem({
+      next: input.lessonsUsedBefore,
+      lessonsTotal: view.lessons_total,
+      platformUsed: view.balance.lessons_used - (view.lessons_used_before ?? 0),
+      cancelled: view.status === 'cancelled',
+      courseBooked: await this.repo.courseBooked(view.id),
+      pastStart: view.starts_on < riyadhToday(input.now ?? new Date()),
+    });
+    if (problem) throw ERRORS[problem](problem);
   }
 }

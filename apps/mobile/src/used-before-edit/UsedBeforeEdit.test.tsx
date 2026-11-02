@@ -17,7 +17,9 @@ jest.mock('@/core/lib/http/api', () => ({
 const e = t.salesMoney.usedBeforeEdit;
 const m = t.salesMoney;
 // 8 lessons, 2 a week: usedBeforeMax 6; 3 taken on the platform → at most 5.
-const SUB: EditablePackage = { id: 'sub1', status: 'active', lessons_total: 8, lessons_used: 4, lessons_used_before: 1 };
+const SUB: EditablePackage = {
+  id: 'sub1', status: 'active', lessons_total: 8, lessons_used: 4, lessons_used_before: 1, starts_on: '2026-01-01',
+};
 
 const show = (sub: EditablePackage = SUB, client = createTestQueryClient()) =>
   renderWithQuery(<UsedBeforeEdit sub={sub} stale={[['sales']]} />, client);
@@ -38,6 +40,11 @@ test('without subscriptions.set_start_date: no action', async () => {
 
 test('a cancelled package: no action', async () => {
   await show({ ...SUB, status: 'cancelled' });
+  expect(screen.queryByRole('button', { name: e.action })).toBeNull();
+});
+
+test('a start in the future with nothing counted: no action', async () => {
+  await show({ ...SUB, starts_on: '2999-01-01', lessons_used_before: 0, lessons_used: 0 });
   expect(screen.queryByRole('button', { name: e.action })).toBeNull();
 });
 

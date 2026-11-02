@@ -4,7 +4,7 @@ import { dbError } from '@/common/http/http';
 import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 
-export interface UsedBeforeWrite {
+interface UsedBeforeWrite {
   id: string;
   /** The number read before the checks: the update lands only while it is still stored. */
   from: number;

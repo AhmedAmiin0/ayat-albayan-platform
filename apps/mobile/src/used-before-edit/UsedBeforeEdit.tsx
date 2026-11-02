@@ -7,7 +7,13 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Button } from '@/core/ui/primitives/Button';
 import { Stepper } from '@/finance';
 import { Note } from '@/more';
-import { editErrorText, editMax, useUsedBeforeEdit, type EditablePackage } from './use-used-before-edit';
+import {
+  editErrorText,
+  editMax,
+  editOffered,
+  useUsedBeforeEdit,
+  type EditablePackage,
+} from './use-used-before-edit';
 
 interface UsedBeforeEditProps {
   sub: EditablePackage;
@@ -50,7 +56,7 @@ function Editor({ sub, stale, onDone }: UsedBeforeEditProps & { onDone: () => vo
  */
 export function UsedBeforeEdit({ sub, stale }: UsedBeforeEditProps) {
   const [open, setOpen] = useState(false);
-  const canEdit = useHolds('subscriptions.set_start_date') && sub.status !== 'cancelled';
+  const canEdit = useHolds('subscriptions.set_start_date') && editOffered(sub);
   if (!canEdit) return null;
   const close = () => setOpen(false);
   return open ? (

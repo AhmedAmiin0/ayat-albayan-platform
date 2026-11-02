@@ -1,4 +1,4 @@
-import { usedBeforeEditMax } from '@ab/shared';
+import { riyadhToday, usedBeforeEditMax } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -14,6 +14,8 @@ export interface UsedBeforePackage {
   lessons_total: number;
   lessons_used: number;
   lessons_used_before?: number | undefined;
+  /** YYYY-MM-DD: a count > 0 only with a start before today (the create's rule). */
+  starts_on: string;
 }
 
 interface Props {
@@ -34,7 +36,8 @@ export function EditUsedBeforeDialog({ pkg, staleKey, onClose, onSaved }: Props)
   const from = pkg.lessons_used_before ?? 0;
   const [value, setValue] = useState(from);
   const platformUsed = pkg.lessons_used - from;
-  const max = usedBeforeEditMax({ lessonsTotal: pkg.lessons_total, platformUsed });
+  const pastStart = pkg.starts_on < riyadhToday();
+  const max = usedBeforeEditMax({ lessonsTotal: pkg.lessons_total, platformUsed, pastStart });
   const run = useEditUsedBefore({ subscriptionId: pkg.id, staleKey, onSaved });
   const submit = (event: SubmitEvent) => {
     event.preventDefault();
