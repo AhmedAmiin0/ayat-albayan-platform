@@ -6,8 +6,8 @@ import {
   type ChannelSenderRole,
   type TeacherChannelRow,
 } from '@ab/shared';
-import type { ChannelStudent } from './channel-people.queries';
-import type { ChannelMessageRow, ChannelSummaryRow } from './channel.queries';
+import type { ChannelStudent } from './channel-people.repo';
+import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 
 const roleOf = (r: string | null): ChannelSenderRole =>
   CHANNEL_SENDER_ROLES.find((x) => x === r) ?? 'guardian';

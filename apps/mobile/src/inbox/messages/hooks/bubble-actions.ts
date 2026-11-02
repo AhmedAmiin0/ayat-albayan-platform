@@ -2,10 +2,10 @@ import type { MessageView } from '@ab/shared';
 import { useCallback } from 'react';
 import type { AccessibilityActionEvent, AccessibilityActionInfo, GestureResponderEvent } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
+import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { bubbleOffers, offersAny } from './bubble-offers';
-import { useHideRights } from '@/auth';
+import { useHideRights } from '@/core/auth';
 
 interface BubbleA11y {
   accessible?: boolean;

@@ -8,9 +8,9 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { StorageService } from '@/common/storage/storage.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { RecordingAdminQueries } from './recording-admin.queries';
+import { RecordingAdminRepo } from './recording-admin.repo';
 import { ADMIN, ASSISTANT, GUARDIAN, joinRow, OTHER_TEACHER, recording, REC_ID, SALES, STUDENT, studentQueries, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
-import { StudentRecordingQueries } from './student-recordings.queries';
+import { StudentRecordingRepo } from './student-recordings.repo';
 
 const READ_ONLY: AuthUser = { ...ADMIN, id: 'read-only-admin' };
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN, sales: SALES, readOnly: READ_ONLY };
@@ -37,8 +37,8 @@ describe('student recordings routes', () => {
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TeachersRepo).useValue(teachersFake())
-      .overrideProvider(StudentRecordingQueries).useValue(sq)
-      .overrideProvider(RecordingAdminQueries).useValue(admin)
+      .overrideProvider(StudentRecordingRepo).useValue(sq)
+      .overrideProvider(RecordingAdminRepo).useValue(admin)
       .overrideProvider(StorageService).useValue(storage)
       .overrideProvider(AuditService).useValue(audit)
       .compile();

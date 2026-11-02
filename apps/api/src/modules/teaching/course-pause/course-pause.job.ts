@@ -1,7 +1,7 @@
 import { riyadhToday } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { BackgroundJob } from '../../../config/role/background-job';
-import { CoursePauseQueries } from './course-pause.queries';
+import { BackgroundJob } from '@/config/role/background-job';
+import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
 
 const HOUR_MS = 3_600_000;
@@ -23,7 +23,7 @@ export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly timers: NodeJS.Timeout[] = [];
 
   constructor(
-    private readonly queries: CoursePauseQueries,
+    private readonly queries: CoursePauseRepo,
     private readonly pauses: CoursePauseService,
   ) {}
 

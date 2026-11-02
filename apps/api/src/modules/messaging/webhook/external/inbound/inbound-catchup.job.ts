@@ -5,7 +5,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { Ticker } from '@/modules/messaging/reminders';
+import { Ticker } from '@/common/jobs';
 import { EVERY_MS } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';
 import { InboundCatchUp, type InboundCounts } from './inbound-catchup.service';
