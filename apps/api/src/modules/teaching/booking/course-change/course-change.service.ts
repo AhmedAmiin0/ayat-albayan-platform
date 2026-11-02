@@ -81,11 +81,14 @@ export class CourseChange {
     return this.deps.writer.apply({ payload, subscriptionId: sub.id, told });
   }
 
-  /** 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers. */
+  /**
+   * 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers
+   * (only while SalesOwnershipRule enforces it).
+   */
   private async owned(subscriptionId: string, actor: ChangeActor): Promise<CourseSub> {
     const sub = await this.queries.subscription(subscriptionId);
     if (actor.role === 'sales' && actor.anyStudent !== true)
-      assertOwnStudents([sub.student_id], await this.scope.owned(actor.user));
+      assertOwnStudents([sub.student_id], await this.scope.of(actor.user));
     return sub;
   }
 

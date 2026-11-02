@@ -4,11 +4,13 @@ import { readSlice, type SettingsSlice } from '../../../common/settings/settings
 import { SettingsService } from '../../../common/settings/settings.service';
 
 /**
- * SalesAssignService (sales_auto_assign), SalesScheduleService (meeting mode) and SalesService
+ * SalesAssignService (sales_auto_assign), SalesOwnershipRule (sales_require_assignee with
+ * sales_auto_assign), SalesScheduleService (meeting mode) and SalesService
  * (the classroom window of a meeting).
  */
 const KEYS = [
   'sales_auto_assign',
+  'sales_require_assignee',
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',
