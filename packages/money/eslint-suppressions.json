@@ -1,0 +1,325 @@
+{
+  "src/assistant/commission.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/first-paid.sales.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/assistant/first-paid.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/first-paid.ts": {
+    "complexity": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 13
+    }
+  },
+  "src/assistant/kind.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/assistant/renewal.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/assistant/renewal.ts": {
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/schemas.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/assistant/started.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/started.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/assistant/statement.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/statement.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/terms-dates.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/assistant/views.ts": {
+    "max-len": {
+      "count": 9
+    }
+  },
+  "src/assistant/wallet.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 6
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/wallet.ts": {
+    "max-len": {
+      "count": 18
+    }
+  },
+  "src/ledger/alerts.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/alerts.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earning-sync.test.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/earning-sync.ts": {
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/ledger/earnings/earnings-pay.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-pay.ts": {
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/ledger/earnings/earnings-schemas.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-schemas.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-views.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/earnings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/pay-rule.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/payout.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/schemas.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 8
+    }
+  },
+  "src/ledger/usage/package-cancel.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 13
+    }
+  },
+  "src/ledger/usage/package-progress.ts": {
+    "max-len": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/payment-state.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/payment-state.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/ledger/usage/receivables.ts": {
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/tiers.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/usage.before.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/usage/usage.instant.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/usage/usage.makeup.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/usage.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/ledger/usage/usage.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/ledger/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/pricing/currency.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/price.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/quote.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/pricing/renewal.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/renewal.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/status-style/commission-status-style.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/status-style/commission-status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/status-style/status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  }
+}
