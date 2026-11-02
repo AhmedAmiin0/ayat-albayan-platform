@@ -1,17 +1,19 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID } from '../classroom.fakes';
-import { MEETING_ID } from '../internal-meetings/internal-meetings.fakes';
+import { LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { sentBody as bodyOf } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { http, participantRow } from './moderation.fakes';
-import { classroomApp } from '../test-app';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
 // «اطلب مشاركة الشاشة» → «سماح» / «إيقاف مشاركة» (owner, 2026-10-05): LiveKit UpdateParticipant.
 
 const lesson = (identity = 'guest-0123456789ab') => `/lessons/${LESSON_ID}/room/participants/${identity}/share`;
 const meeting = (identity = 'guest-0123456789ab') => `/meetings/${MEETING_ID}/participants/${identity}/share`;
-const sentBody = (h: { http: { mock: { calls: unknown[][] } } }) => {
-  const init = h.http.mock.calls.at(-1)?.[1] as { body: string } | undefined;
-  return JSON.parse(init?.body ?? '{}') as { permission: { can_publish_sources: string[]; can_subscribe: boolean } };
-};
+interface Permission {
+  permission: { can_publish_sources: string[]; can_subscribe: boolean };
+}
+const sentBody = (h: { http: { mock: { calls: [string, RequestInit][] } } }) =>
+  bodyOf(h.http.mock.calls.at(-1)?.[1]) as Permission;
 
 describe('screen share grant routes', () => {
   let h: Awaited<ReturnType<typeof classroomApp>>;
