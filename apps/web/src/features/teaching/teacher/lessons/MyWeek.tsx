@@ -1,4 +1,4 @@
-import { counted, type LessonView } from '@ab/shared';
+import { addDays, counted, type LessonView, weekWindowIn, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -12,7 +12,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
-import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule';
+import { dayMonthLabel } from '@/features/teaching/schedule';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
 import { t } from '@/lib/i18n/i18n';
 import { useFollowingDay } from '@/lib/time/use-following-day';
@@ -33,7 +33,7 @@ export function MyWeek() {
   const thisWeek = currentWeekStart(now, tz);
   const [week, setWeek] = useFollowingDay(thisWeek);
   const me = useQuery(teacherMeQuery);
-  const lessons = useQuery(myLessonsQuery(weekWindow(week, tz)));
+  const lessons = useQuery(myLessonsQuery(weekWindowIn(week, tz)));
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const open = lessons.data?.find((l) => l.id === openId);
@@ -61,7 +61,7 @@ export function MyWeek() {
         <span className="ms-1 text-sm font-semibold tabular-nums">{t.schedule.weekOf.replace('{date}', dayMonthLabel(week))}</span>
         <span className="text-xs text-ink-3">{t.schedule.viewerTime}</span>
       </div>
-      <Body lessons={lessons} week={week} today={zonedParts(now, tz).date} onOpen={(l) => setOpenId(l.id)} />
+      <Body lessons={lessons} week={week} today={zonedPartsIn(now, tz).date} onOpen={(l) => setOpenId(l.id)} />
       {open && (
         <Drawer title={studentNames(open)} onClose={() => setOpenId(null)}>
           <TeacherLessonCard
