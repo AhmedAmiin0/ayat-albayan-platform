@@ -3,7 +3,7 @@ import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/share
 import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
@@ -41,8 +41,9 @@ const YES = message({ id: 'm-y', direction: 'inbound', body: 'ايوة', guardia
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
 const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule', 'lessons.confirm'];
 
+// «ايوة» confirms only while the academy requires a confirmation (6fb2cab73: off by default).
 async function renderNote(m: typeof ASK, permissions?: Permission[]) {
-  const client = createTestQueryClient();
+  const client = confirmingQueryClient();
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   await renderWithQuery(
     <ReplyActionsProvider phone={PHONE} lessons={[LESSON]}>
