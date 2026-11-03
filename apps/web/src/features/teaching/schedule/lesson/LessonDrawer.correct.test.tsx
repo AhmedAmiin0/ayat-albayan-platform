@@ -12,7 +12,8 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 const c = t.lessons.correct;
-const AUTO_HELD: LessonView = { ...lesson({ id: 'l-7', status: 'completed' }), auto_held: true };
+const ENDED = '2000-01-01T10:00:00Z';
+const AUTO_HELD: LessonView = { ...lesson({ id: 'l-7', status: 'completed', ends_at: ENDED }), auto_held: true };
 
 function renderDrawer(l: LessonView, required = false) {
   const onDone = vi.fn();
@@ -26,7 +27,7 @@ function renderDrawer(l: LessonView, required = false) {
 
 afterEach(() => apiSend.mockReset());
 
-describe('LessonDrawer without a lesson confirmation (owner 2026-11-02)', () => {
+describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح الحالة» (11-03)', () => {
   it('a scheduled lesson reads «مجدولة» and offers no «تأكيد الحلقة»', () => {
     const { drawer } = renderDrawer(lesson());
     expect(within(drawer).getByText(t.lessons.noConfirm.scheduled)).toBeTruthy();
@@ -43,36 +44,32 @@ describe('LessonDrawer without a lesson confirmation (owner 2026-11-02)', () => 
     expect(within(drawer).getByRole('button', { name: t.lessons.event.confirm })).toBeTruthy();
   });
 
-  it('«لم تنعقد؟» only on a lesson held automatically', () => {
-    renderDrawer(lesson({ status: 'completed' }));
-    expect(screen.queryByText(c.title)).toBeNull();
+  it('a completed lesson recorded by hand offers no correction', () => {
+    renderDrawer(lesson({ status: 'completed', ends_at: ENDED }));
+    expect(screen.queryByText(c.outcomeTitle)).toBeNull();
   });
 
-  it.each([
-    ['teacher', c.byTeacher],
-    ['student', c.byStudent],
-  ] as const)('held automatically: «%s» opens the form for this lesson, by that party', async (by, label) => {
-    apiSend.mockResolvedValue([]);
-    const { onDone, drawer } = renderDrawer(AUTO_HELD);
-    expect(within(drawer).getByText(c.hint)).toBeTruthy();
-    fireEvent.click(within(drawer).getByRole('button', { name: label }));
-    const form = screen.getByRole('form', { name: c.title });
-    expect(within(form).queryByLabelText(t.lessons.scope.rule)).toBeNull();
-    expect(within(form).queryByLabelText(t.lessons.by.admin)).toBeNull();
-    fireEvent.submit(form);
-    expect(screen.getByText(t.common.required)).toBeTruthy();
-    fireEvent.change(screen.getByLabelText(t.lessons.reason), { target: { value: 'لم يحضر المعلم' } });
-    fireEvent.submit(form);
-    await waitFor(() => expect(onDone).toHaveBeenCalledWith(c.done));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/cancel', { scope: 'one', by, reason: 'لم يحضر المعلم' });
+  it('held automatically: the three other statuses; «غائب» posts { to } and says it is done', async () => {
+    apiSend.mockResolvedValue(AUTO_HELD);
+    const { drawer } = renderDrawer(AUTO_HELD);
+    expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
+    expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
+    fireEvent.click(within(drawer).getByRole('button', { name: c.to.no_show }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/correct', { to: 'no_show' }));
+    expect(await within(drawer).findByText(c.done)).toBeTruthy();
+  });
+
+  it('confirmation on (the default): an ended «يحتاج تأكيد» lesson offers all four', () => {
+    const { drawer } = renderDrawer(lesson({ ends_at: ENDED }), true);
+    for (const to of ['completed', 'no_show', 'excused', 'cancelled_by_teacher'] as const) {
+      expect(within(drawer).getByRole('button', { name: c.to[to] })).toBeTruthy();
+    }
   });
 
   it('a 409 not_auto_held reads in the lessons’ words', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
     renderDrawer(AUTO_HELD);
-    fireEvent.click(screen.getByRole('button', { name: c.byStudent }));
-    fireEvent.change(screen.getByLabelText(t.lessons.reason), { target: { value: 'سفر' } });
-    fireEvent.submit(screen.getByRole('form', { name: c.title }));
+    fireEvent.click(screen.getByRole('button', { name: c.to.excused }));
     expect(await screen.findByText(t.lessons.error.not_auto_held)).toBeTruthy();
   });
 });

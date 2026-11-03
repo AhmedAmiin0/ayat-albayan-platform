@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
 
@@ -17,7 +17,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
-// The academy default (owner 2026-11-02): no confirmation required. «Now» 1 Oct 16:20 Riyadh.
+// No confirmation required (OFF, owner 2026-11-02). «Now» 1 Oct 16:20 Riyadh.
 const NOW = new Date('2026-10-01T13:20:00Z');
 const student = (name: string) => [{ id: `s-${name}`, code: 'AB-0300', name, mine: true }];
 const LATER = scheduleLesson({
@@ -39,7 +39,7 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 const open = async (who: string) => {
-  await renderWithQuery(<TreeBaseProvider value="/sales"><SalesScheduleScreen /></TreeBaseProvider>);
+  await renderWithQuery(<TreeBaseProvider value="/sales"><SalesScheduleScreen /></TreeBaseProvider>, noConfirmQueryClient());
   await fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
   await screen.findByRole('header', { name: who });
 };
@@ -85,20 +85,20 @@ test('after the end: «إلغاء الحلقة» stays, the teacher or the stude
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l0/cancel', { by: 'teacher' }));
 });
 
-test('a held lesson: «لم تنعقد الحلقة؟» posts by teacher, then says it is done', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l9', status: 'cancelled_by_teacher' });
+test('a held lesson: «تصحيح حالة الحلقة» posts { to }, then says it is done', async () => {
+  mockApiSend.mockResolvedValue({ id: 'l9', status: 'no_show' });
   await open('هند');
-  expect(screen.getByText(c.title)).toBeTruthy();
-  expect(screen.getByText(c.hint)).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: c.byTeacher }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/cancel', { by: 'teacher' }));
+  expect(screen.getByText(c.outcomeTitle)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: c.to.completed })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: c.to.no_show }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/correct', { to: 'no_show' }));
   expect(await screen.findByText(c.done)).toBeTruthy();
 });
 
-test('by student; a lesson not held automatically answers 409 not_auto_held, said in words', async () => {
+test('a lesson not settled by the job answers 409 not_auto_held, said in words', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
   await open('هند');
-  await fireEvent.press(screen.getByRole('button', { name: c.byStudent }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/cancel', { by: 'student' }));
+  await fireEvent.press(screen.getByRole('button', { name: c.to.excused }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/correct', { to: 'excused' }));
   expect(await screen.findByText(t.lessons.error.not_auto_held)).toBeTruthy();
 });

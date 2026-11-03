@@ -12224,14 +12224,8 @@
     "ab/no-shape-checks": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 2
     }
   },
   "src/today/screens/TodayLayout.tsx": {

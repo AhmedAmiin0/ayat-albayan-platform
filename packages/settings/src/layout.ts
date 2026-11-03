@@ -41,7 +41,7 @@ export const SETTINGS_LAYOUT = {
     'calls_permission_template',
   ],
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
-    'lesson_confirmation_required'],
+    'lesson_confirmation_required', 'lesson_outcome_grace_minutes'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
   reports: ['report_teacher_edit_hours', 'report_form_v2'],

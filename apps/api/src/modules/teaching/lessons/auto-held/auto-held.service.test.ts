@@ -7,6 +7,9 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import type { OpenEndedLesson } from './auto-held.plan';
 import type { AutoHeldRepo } from './auto-held.repo';
 import { AutoHeldService } from './auto-held.service';
+import type { OutcomeSettleService } from './outcome-settle.service';
+
+const SETTLED = { held: 1, absent: 2, unresolved: 3, waiting: 0, skipped: 0, lost: 0 };
 
 const NOW = new Date('2026-11-02T12:00:00Z');
 const open = (id: string, over: Partial<OpenEndedLesson> = {}): OpenEndedLesson => ({
@@ -24,18 +27,21 @@ function setup(o: { required?: boolean; lessons?: OpenEndedLesson[] } = {}) {
     packages: vi.fn(async () => []),
   };
   const settings = readerOf(LessonsSettings, { lesson_confirmation_required: o.required ?? false });
-  const service = new AutoHeldService(repo as unknown as AutoHeldRepo, deps.store, settings);
-  return { ...deps, repo, service };
+  const settle = { runOnce: vi.fn(async () => SETTLED) };
+  const service = new AutoHeldService(
+    repo as unknown as AutoHeldRepo,
+    deps.store,
+    settings,
+    settle as unknown as OutcomeSettleService,
+  );
+  return { ...deps, repo, service, settle };
 }
 
 describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
-  it('confirmation required (ON): today’s behaviour, nothing read or written', async () => {
-    const { service, repo, writer } = setup({ required: true });
-    expect(await service.runOnce(NOW)).toEqual({
-      due: 0,
-      held: 0,
-      skipped: 'confirmation_required',
-    });
+  it('confirmation required (ON, owner 2026-11-03): OutcomeSettleService with the grace', async () => {
+    const { service, repo, writer, settle } = setup({ required: true });
+    expect(await service.runOnce(NOW)).toEqual({ mode: 'confirmation_required', ...SETTLED });
+    expect(settle.runOnce).toHaveBeenCalledWith({ now: NOW, graceMs: 30 * 60_000 });
     expect(repo.openEnded).not.toHaveBeenCalled();
     expect(writer.apply).not.toHaveBeenCalled();
   });
@@ -44,7 +50,7 @@ describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
     const { service, repo, writer, record } = setup({
       lessons: [open('l1'), open('l2', { status: 'confirmed' })],
     });
-    expect(await service.runOnce(NOW)).toEqual({ due: 2, held: 2, skipped: null });
+    expect(await service.runOnce(NOW)).toEqual({ mode: 'held_by_default', due: 2, held: 2, absent: 0 });
     expect(repo.openEnded).toHaveBeenCalledWith(autoHeldWindow(NOW));
     expect(appliedChange(writer)).toEqual({
       actor: null,
@@ -90,7 +96,7 @@ describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
     writer.apply
       .mockRejectedValueOnce(conflict('invalid_transition'))
       .mockRejectedValueOnce(new Error('db down'));
-    expect(await service.runOnce(NOW)).toEqual({ due: 2, held: 0, skipped: null });
+    expect(await service.runOnce(NOW)).toEqual({ mode: 'held_by_default', due: 2, held: 0, absent: 0 });
   });
 
   it('outside the 14-day window or before the 30-minute grace: not held', async () => {

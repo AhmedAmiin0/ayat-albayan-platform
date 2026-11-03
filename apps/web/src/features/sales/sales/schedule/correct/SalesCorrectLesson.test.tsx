@@ -18,7 +18,7 @@ const c = t.lessons.correct;
 const a = t.sales.lessonActions;
 // 15:00–15:30Z: ended an half hour before NOW.
 const ENDED = scheduleLesson({ id: 'l-9', status: 'scheduled' });
-const AUTO_HELD = { ...scheduleLesson({ id: 'l-9', status: 'completed' }), auto_held: true };
+const AUTO_HELD = scheduleLesson({ id: 'l-9', status: 'completed' });
 
 function open(lesson: SalesScheduleLesson, confirmation = false) {
   renderWithQuery(<SalesLessonDrawer lesson={lesson} now={NOW} onClose={vi.fn()} />, confirmation);
@@ -30,52 +30,44 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-describe('sales «لم تنعقد؟» (owner 2026-11-02)', () => {
-  it.each([
-    ['teacher', c.byTeacher],
-    ['student', c.byStudent],
-  ] as const)('held automatically: «%s», a reason, then POST …/cancel with that `by`', async (by, label) => {
-    apiSend.mockResolvedValue({ id: 'l-9', status: 'excused' });
+describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحلقة» (11-03)', () => {
+  it('a held lesson: the three other statuses; «غائب» posts { to }, then says it is done', async () => {
+    apiSend.mockResolvedValue({ id: 'l-9', status: 'no_show' });
     const drawer = open(AUTO_HELD);
-    expect(within(drawer).getByText(c.hint)).toBeTruthy();
+    expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
     expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
-    fireEvent.click(within(drawer).getByRole('button', { name: label }));
-    fireEvent.change(within(drawer).getByLabelText(a.reason), { target: { value: 'سفر' } });
-    fireEvent.click(within(drawer).getByRole('button', { name: a.confirmCancel }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/cancel', { by, reason: 'سفر' }));
+    expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
+    fireEvent.click(within(drawer).getByRole('button', { name: c.to.no_show }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/correct', { to: 'no_show' }));
     expect(await within(drawer).findByText(c.done)).toBeTruthy();
   });
 
-  it('no reason: only `by`; «رجوع» returns to the two choices', async () => {
-    apiSend.mockResolvedValue({ id: 'l-9', status: 'cancelled_by_teacher' });
-    const drawer = open(ENDED);
-    expect(within(drawer).queryByText(c.hint)).toBeNull();
-    fireEvent.click(within(drawer).getByRole('button', { name: c.byTeacher }));
-    fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.back }));
-    fireEvent.click(within(drawer).getByRole('button', { name: c.byTeacher }));
-    fireEvent.click(within(drawer).getByRole('button', { name: a.confirmCancel }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/cancel', { by: 'teacher' }));
-  });
-
-  it('with the confirmation on, an ended open lesson is read-only as before', () => {
+  it('with the confirmation on (the default), an ended open lesson offers all four, no «لم تنعقد؟»', () => {
     const drawer = open(ENDED, true);
     expect(within(drawer).queryByText(c.title)).toBeNull();
-    expect(within(drawer).getByText(t.lessons.sheet.readOnly)).toBeTruthy();
+    for (const to of ['completed', 'no_show', 'excused', 'cancelled_by_teacher'] as const) {
+      expect(within(drawer).getByRole('button', { name: c.to[to] })).toBeTruthy();
+    }
+    expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
   });
 
   it('a 409 not_auto_held reads in the lessons’ words', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
     const drawer = open(AUTO_HELD);
-    fireEvent.click(within(drawer).getByRole('button', { name: c.byStudent }));
-    fireEvent.click(within(drawer).getByRole('button', { name: a.confirmCancel }));
+    fireEvent.click(within(drawer).getByRole('button', { name: c.to.excused }));
     expect(await within(drawer).findByText(t.lessons.error.not_auto_held)).toBeTruthy();
   });
 
-  it('no confirmation required: a lesson still to come offers «لم تنعقد؟», never «تأكيد»', () => {
+  it('no confirmation required: a lesson still to come offers «لم تنعقد؟», never «تأكيد»', async () => {
+    apiSend.mockResolvedValue({ id: 'l-9', status: 'cancelled_by_teacher' });
     renderWithQuery(<SalesLessonDrawer lesson={ENDED} now={new Date('2026-10-12T14:00:00.000Z')} onClose={vi.fn()} />);
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
     expect(within(drawer).queryByRole('button', { name: a.confirm })).toBeNull();
     expect(within(drawer).getByText(c.title)).toBeTruthy();
-    expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
+    fireEvent.click(within(drawer).getByRole('button', { name: c.byTeacher }));
+    fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.back }));
+    fireEvent.click(within(drawer).getByRole('button', { name: c.byTeacher }));
+    fireEvent.click(within(drawer).getByRole('button', { name: a.confirmCancel }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/cancel', { by: 'teacher' }));
   });
 });

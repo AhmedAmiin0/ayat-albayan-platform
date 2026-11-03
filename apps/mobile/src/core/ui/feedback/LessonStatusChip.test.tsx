@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { confirmingQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { LessonStatusChip } from './LessonStatusChip';
 
-test('no confirmation required (the default): «قادمة» in a row, «مجدولة» in full', async () => {
-  await render(<LessonStatusChip status="scheduled" size="sm" />);
+test('no confirmation required (OFF): «قادمة» in a row, «مجدولة» in full', async () => {
+  await renderWithQuery(<LessonStatusChip status="scheduled" size="sm" />, noConfirmQueryClient());
   expect(screen.getByText(t.lessons.noConfirm.scheduledShort)).toBeTruthy();
-  await render(<LessonStatusChip status="scheduled" full />);
+  await renderWithQuery(<LessonStatusChip status="scheduled" full />, noConfirmQueryClient());
   expect(screen.getByText(t.lessons.noConfirm.scheduled)).toBeTruthy();
   expect(screen.queryByText(t.enums.lessonStatus.scheduled)).toBeNull();
 });

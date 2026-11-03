@@ -1,11 +1,15 @@
-import { AUTO_HELD_REASON, OPEN_LESSON_STATUSES } from '@ab/shared';
+import { AUTO_OUTCOME_REASONS, OPEN_LESSON_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 import type { OpenEndedLesson, PackageRow } from './auto-held.plan';
 
 const DAY_MS = 86_400_000;
+/** A family reminder the platform got out (owner 2026-11-03: sent, delivered or read). */
+const REMINDER_OUT = ['sent', 'delivered', 'read'] as const;
+const sinceSchema = z.iso.datetime({ offset: true });
 const OPEN_SELECT = 'id, status, ends_at, lesson_students(student_id, student:students(tz))';
 
 /** Reads of the auto-held job and of its correction (service role; the routes guard). */
@@ -38,7 +42,29 @@ export class AutoHeldRepo {
     );
   }
 
-  /** Of these lessons, the ids the job closed (an audit row with after.reason = auto_held). */
+  /** lesson_outcomes_since() (migration 999): the job never settles a lesson that ended before. */
+  async outcomesSince(): Promise<Date> {
+    const { data, error } = await this.db.rpc('lesson_outcomes_since');
+    if (error) throw dbError(error);
+    return new Date(sinceSchema.parse(data));
+  }
+
+  /** Of these lessons, the ids whose family reminder (lesson_reminder*) the platform sent. */
+  async reminded(lessonIds: readonly string[]): Promise<Set<string>> {
+    const rows = await readChunked(lessonIds, (chunk) =>
+      this.db
+        .from('messages')
+        .select('lesson_id')
+        .in('lesson_id', chunk)
+        .eq('direction', 'outbound')
+        .not('guardian_id', 'is', null)
+        .like('template_key', 'lesson_reminder%')
+        .in('status', [...REMINDER_OUT]),
+    );
+    return new Set(rows.flatMap((r) => (r.lesson_id === null ? [] : [r.lesson_id])));
+  }
+
+  /** Of these lessons, the ids the job settled (an audit after.reason auto_held | auto_no_show). */
   async autoHeld(lessonIds: readonly string[]): Promise<Set<string>> {
     const rows = await readChunked(lessonIds, (chunk) =>
       this.db
@@ -46,7 +72,7 @@ export class AutoHeldRepo {
         .select('entity_id')
         .eq('entity', 'lessons')
         .in('entity_id', chunk)
-        .eq('after->>reason', AUTO_HELD_REASON),
+        .in('after->>reason', [...AUTO_OUTCOME_REASONS]),
     );
     return new Set(rows.map((r) => r.entity_id));
   }

@@ -28,8 +28,8 @@ describe('AutoHeldRepo', () => {
     expect([...(await new AutoHeldRepo(f.db).correctable(['a', 'b', 'c']))]).toEqual(['a']);
     expect(f.argsOf('audit_log', 'eq')).toEqual(['entity', 'lessons']);
     expect(
-      f.calls.filter((c) => c.table === 'audit_log' && c.method === 'eq').map((c) => c.args),
-    ).toContainEqual(['after->>reason', 'auto_held']);
+      f.calls.filter((c) => c.table === 'audit_log' && c.method === 'in').map((c) => c.args),
+    ).toContainEqual(['after->>reason', ['auto_held', 'auto_no_show', 'outcome_correction']]);
     expect(
       f.calls.filter((c) => c.table === 'lesson_reports' && c.method === 'eq').map((c) => c.args),
     ).toContainEqual(['status', 'submitted']);

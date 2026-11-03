@@ -57,16 +57,19 @@ interface DueInput {
   lessons: readonly OpenEndedLesson[];
   packages: readonly PackageRow[];
   now: Date;
+  /** settings.lesson_outcome_grace_minutes in ms (default AUTO_HELD_GRACE_MS). */
+  graceMs?: number;
 }
 
 export function dueLessons(input: DueInput): OpenEndedLesson[] {
-  const { packages, now } = input;
+  const { packages, now, graceMs } = input;
   return input.lessons.filter((lesson) => {
     const packageStarts = lesson.lesson_students.map((ls) => {
       const tz = ls.student?.tz ?? 'UTC';
       return currentPackageStart(packages, { studentId: ls.student_id, tz, at: now });
     });
-    return isAutoHeldDue({ status: lesson.status, ends_at: lesson.ends_at, packageStarts }, now);
+    const candidate = { status: lesson.status, ends_at: lesson.ends_at, packageStarts };
+    return isAutoHeldDue(candidate, now, graceMs);
   });
 }
 
