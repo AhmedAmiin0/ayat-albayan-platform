@@ -16,7 +16,7 @@ export interface SettleSummary {
   lost: number;
 }
 
-export interface SettleInput {
+interface SettleInput {
   now: Date;
   graceMs: number;
 }

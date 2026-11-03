@@ -14,7 +14,7 @@ interface Lesson {
   status: LessonStatus;
   starts_at: string;
 }
-export interface ChangeContext {
+interface ChangeContext {
   now: Date;
   /** settings.late_cancel_hours: an excuse is counted per isChargeable, like any excuse. */
   lateCancelHours: number | null;

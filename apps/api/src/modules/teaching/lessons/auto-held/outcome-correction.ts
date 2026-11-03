@@ -9,7 +9,7 @@ import { invalidTransition } from '@/modules/teaching/lessons/status/transition'
 import { AutoHeldRepo } from './auto-held.repo';
 import { CORRECT_EVENT, correctionCommit } from './correction-change';
 
-export interface CorrectInput {
+interface CorrectInput {
   lessonId: string;
   to: CorrectTo;
   actor: AuthUser;

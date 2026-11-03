@@ -16,7 +16,7 @@ const AUTO: Record<AutoTo, { event: LessonEvent; reason: string }> = {
  * rule 8), audited status_change with after.reason auto_held | auto_no_show. Attendance and
  * chargeable stay as they are: a report later fills attendance and re-derives the outcome.
  */
-export function autoCommit(lesson: { id: string; status: LessonStatus }, to: AutoTo): Commit {
+function autoCommit(lesson: { id: string; status: LessonStatus }, to: AutoTo): Commit {
   const { event, reason } = AUTO[to];
   return {
     change: {
