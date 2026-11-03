@@ -14,3 +14,8 @@ export const GRANTED_BY_HAND: Record<'admin' | 'teacher' | 'assistant' | 'sales'
   assistant: [],
   sales: PEOPLE_EDIT,
 };
+
+const BY_ROLE: Record<string, readonly Permission[] | undefined> = GRANTED_BY_HAND;
+
+/** The keys granted by hand for a system role (none for any other key). */
+export const byHand = (role: string): readonly Permission[] => BY_ROLE[role] ?? [];

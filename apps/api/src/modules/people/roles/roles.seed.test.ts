@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { defaultGrantsOf, isGrantable } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
-import { GRANTED_BY_HAND } from './roles.by-hand.test-util';
+import { byHand } from './roles.by-hand.test-util';
 // The migrations seed the system roles' grants by hand; this keeps them equal to the catalog
 // (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table.
 const MIGRATIONS = MIGRATIONS_DIR;
@@ -41,13 +41,12 @@ function seeded(key: string): string[] {
 
 function addedLater(key: string): string[] {
   const inserts = LATER.matchAll(/select r\.id, '([a-z_.]+)' from public\.roles r where [^;]*?r\.key in \(([^)]*)\)/g);
-  return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
+  return [...[...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? ''), ...byHand(key)];
 }
 
 describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890, 936, 958, 970, 975, 990, 999)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
-    const rows = [...seeded(key), ...addedLater(key), ...GRANTED_BY_HAND[key]];
-    expect(rows.sort()).toEqual([...defaultGrantsOf(key)].sort());
+    expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
 
   it('seeds recordings.manage for the admin and the teacher only', () => {
