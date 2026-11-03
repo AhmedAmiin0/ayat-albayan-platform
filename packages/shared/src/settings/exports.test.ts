@@ -107,7 +107,7 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
   it('the public and custom-config types keep their shape', () => {
     expectTypeOf<PublicSettingKey>().toEqualTypeOf<
       | 'academy_contact' | 'academy_whatsapp_e164' | 'join_closes_after_min' | 'join_opens_before_min'
-      | 'makeup_window_days' | 'meeting_link_auto' | 'meetings_in_app' | 'recording_consent_notice'
+      | 'lesson_confirmation_required' | 'makeup_window_days' | 'meeting_link_auto' | 'meetings_in_app' | 'recording_consent_notice'
       | 'upload_max_mb'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();

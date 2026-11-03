@@ -3,7 +3,7 @@ import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/share
 import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, createTestQueryClient, renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
@@ -41,8 +41,12 @@ const YES = message({ id: 'm-y', direction: 'inbound', body: 'ايوة', guardia
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
 const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule', 'lessons.confirm'];
 
-async function renderNote(m: typeof ASK, permissions?: Permission[]) {
-  const client = createTestQueryClient();
+// The academy requires a confirmation unless a test passes its own client (the default is OFF).
+async function renderNote(
+  m: typeof ASK,
+  permissions?: Permission[],
+  client = confirmingQueryClient(),
+) {
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   await renderWithQuery(
     <ReplyActionsProvider phone={PHONE} lessons={[LESSON]}>
@@ -95,4 +99,9 @@ test('«ايوة» without the right to confirm: nothing at all', async () => {
   expect(screen.queryByRole('button')).toBeNull();
   expect(screen.queryByText(NO)).toBeNull();
   expect(screen.queryByText(t.inbox.replyAction.confirm)).toBeNull();
+});
+
+test('«ايوة» while the academy needs no confirmation: no «تأكيد الحلقة»', async () => {
+  await renderNote(YES, SALES, createTestQueryClient());
+  expect(screen.queryByRole('button', { name: /^تأكيد حلقة/ })).toBeNull();
 });
