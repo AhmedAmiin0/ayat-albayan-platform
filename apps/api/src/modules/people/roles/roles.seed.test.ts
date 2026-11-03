@@ -5,9 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The migrations seed the system roles' grants by hand; this keeps them equal to the catalog
-// (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table;
-// UNSEEDED keys are the system admin's only (allGrantable holds them, 2026-11-02): no row.
-const [MIGRATIONS, UNSEEDED] = [MIGRATIONS_DIR, ['subscriptions.refund']];
+// (packages/shared defaultGrantsOf), which the parity test proves equal to the old @Roles table.
+const [MIGRATIONS, UNSEEDED] = [MIGRATIONS_DIR, ['subscriptions.refund']]; // admin: allGrantable
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
 const LATER = [
