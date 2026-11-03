@@ -24,7 +24,8 @@ interface Pass {
  * settings.lesson_confirmation_required ON (owner 2026-11-03, the default): OutcomeSettleService
  * (confirmed → completed, reminded with no «نعم» → no_show, else left for the assistant).
  * OFF («انعقدت» by default, owner 2026-11-02): every lesson still scheduled / confirmed (14 days
- * back at most, never before a student's current package) moves to completed. Both write through
+ * back at most, never before lesson_outcomes_since() nor a student's current package) moves to
+ * completed. Both write through
  * apply_lesson_changes with a compare-and-set on the status (the per-lesson dedup: a second pass,
  * or a report / cancel meanwhile, changes nothing), audited with actor null. LessonEvents then
  * runs the balance alerts, the trial → «بانتظار الاشتراك» move and the rating.
@@ -51,7 +52,11 @@ export class AutoHeldService {
   }
 
   private async heldByDefault({ now, graceMs }: Pass): Promise<AutoHeldSummary> {
-    const open = await this.repo.openEnded(autoHeldWindow(now, graceMs));
+    // Never a lesson that ended before lesson_outcomes_since() (the deploy): no retro change.
+    const since = await this.repo.outcomesSince();
+    const window = autoHeldWindow(now, graceMs);
+    const from = window.from.getTime() >= since.getTime() ? window.from : since;
+    const open = await this.repo.openEnded({ ...window, from });
     const packages = await this.repo.packages(studentIdsOf(open));
     const due = dueLessons({ lessons: open, packages, now, graceMs });
     const w = { store: this.store, log: this.log };

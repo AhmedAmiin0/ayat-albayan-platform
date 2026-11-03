@@ -20,9 +20,10 @@ const open = (id: string, over: Partial<OpenEndedLesson> = {}): OpenEndedLesson 
   ...over,
 });
 
-function setup(o: { required?: boolean; lessons?: OpenEndedLesson[] } = {}) {
+function setup(o: { required?: boolean; lessons?: OpenEndedLesson[]; since?: Date } = {}) {
   const deps = fakeStore();
   const repo = {
+    outcomesSince: vi.fn(async () => o.since ?? new Date('2026-10-01T00:00:00Z')),
     openEnded: vi.fn(async () => o.lessons ?? [open('l1')]),
     packages: vi.fn(async () => []),
   };
@@ -107,5 +108,12 @@ describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
     const { service, writer } = setup({ lessons });
     expect(await service.runOnce(NOW)).toMatchObject({ due: 0, held: 0 });
     expect(writer.apply).not.toHaveBeenCalled();
+  });
+
+  it('OFF never reads before lesson_outcomes_since() (the deploy): no retro change', async () => {
+    const since = new Date('2026-11-01T12:00:00Z');
+    const { service, repo } = setup({ since });
+    await service.runOnce(NOW);
+    expect(repo.openEnded).toHaveBeenCalledWith({ ...autoHeldWindow(NOW), from: since });
   });
 });
