@@ -21,10 +21,10 @@ import { RELEASE_BATCH, WindowRepo } from './window.repo';
 import { WindowSettings } from './window.settings';
 
 /** What the hold returns to the worker: held, failed for good, expired, or not now. */
-export type HoldOutcome = 'waiting' | 'failed' | 'expired' | 'skipped';
+type HoldOutcome = 'waiting' | 'failed' | 'expired' | 'skipped';
 
 /** One row where the worker is: its line, and its number in module mode (absent under legacy). */
-export interface WindowAt {
+interface WindowAt {
   row: DueMessage;
   now: Date;
   line: WaLine;

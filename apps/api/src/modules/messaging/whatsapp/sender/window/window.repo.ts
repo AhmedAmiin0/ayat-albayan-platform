@@ -10,7 +10,7 @@ export const RELEASE_BATCH = 200;
 const REOPEN_PREFIX = 'reopen:%';
 
 /** A held row: from when it waits, until when (next_attempt_at = expires_at = the deadline). */
-export interface HoldWrite {
+interface HoldWrite {
   id: string;
   /** The error_code the row must still carry (compare-and-set): AWAITING_REPLY or SENDING. */
   from: string;

@@ -34,7 +34,7 @@ export function isWindowClosedError(error: unknown): boolean {
 }
 
 /** The row fields the hold reads. */
-export type HoldRow = Pick<
+type HoldRow = Pick<
   DueMessage,
   'template_key' | 'created_by' | 'sent_by_teacher_id' | 'interactive_payload'
 >;
@@ -69,7 +69,7 @@ export function reopenUsable(t: TemplateView | null): boolean {
 }
 
 /** What a due row marked AWAITING_REPLY needs: held now, failed (its 7 days are over), or none. */
-export type HeldStep = 'hold' | 'expire' | null;
+type HeldStep = 'hold' | 'expire' | null;
 
 type HeldDue = Pick<DueMessage, 'error_code' | 'expires_at'>;
 

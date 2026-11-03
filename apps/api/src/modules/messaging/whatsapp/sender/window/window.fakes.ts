@@ -41,7 +41,7 @@ const STARTER = {
   params: [],
   buttons: [],
 };
-export const WELCOME = toTemplateView(templateRow(STARTER));
+const WELCOME = toTemplateView(templateRow(STARTER));
 
 export function windowFakes() {
   const repo = {
