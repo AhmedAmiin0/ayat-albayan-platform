@@ -766,7 +766,8 @@
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
       "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
-      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first.",
+      "meeting_link_invalid": "The lesson link is not valid; it must start with https://"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -4745,7 +4746,8 @@
         "title": "Trial lesson",
         "none": "No trial lesson",
         "teacher": "with {name}",
-        "again": "New trial date for {name}"
+        "again": "New trial date for {name}",
+        "edit": "Change the trial lesson time for {name}"
       },
       "log": {
         "title": "Attendance log",
@@ -4899,13 +4901,30 @@
       "too_many_attachments": "At most 5 attachments.",
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson per weekly day must stay in the package.",
+      "used_before_too_many": "At least one lesson must stay in the package.",
       "teacher_not_found": "The chosen teacher is not available now. Choose another."
     },
     "usedBefore": "Lessons already used from the package",
     "usedBeforeHint": "Counted from the package; only the rest is booked",
     "usedBeforeLess": "One lesson fewer",
     "usedBeforeMore": "One lesson more",
+    "usedBeforeEdit": {
+      "action": "Edit lessons already used",
+      "title": "Edit lessons already used",
+      "hint": "Lessons the student attended outside the platform, counted from the package.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Lessons already used updated.",
+      "current": "Current: {n}",
+      "errors": {
+        "used_before_course_booked": "This package already has a booked course, so the lessons already used can no longer change.",
+        "used_before_too_many": "The number is higher than this package allows.",
+        "used_before_needs_past_start": "Lessons already used apply only to a package that started before today.",
+        "already_cancelled": "This package is cancelled.",
+        "used_before_changed": "The number changed before saving; refresh and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
     "noCommissionStarted": "No commission: the course started before it was recorded",
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",
@@ -5466,7 +5485,8 @@
       "self.assistant": "Classroom assistant's own pages",
       "self.portal": "Family portal pages",
       "students.check_registration": "Check a student's registration",
-      "subscriptions.set_start_date": "Set the subscription start date",
+      "subscriptions.set_start_date": "Set the package start date when creating it",
+      "subscriptions.edit_terms": "Edit package details",
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
       "saved_replies.manage": "Manage shared quick replies",
@@ -5480,7 +5500,8 @@
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
-      "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
+      "subscriptions.set_start_date": "Pick the package's start day when creating or renewing it, including a past date with the lessons already used for a student who started before the platform. Without it the package starts on the default day. Does not allow editing an existing package.",
+      "subscriptions.edit_terms": "Edit an existing package or a recorded payment of any student: its start date, lessons already used, price and the payment's amount. Always for the admin; grant it only to a trusted assistant.",
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
@@ -7157,6 +7178,8 @@
   "trialDate": {
     "action": "New trial date",
     "actionHint": "Pick a new trial lesson date for this student",
+    "editAction": "Change trial time",
+    "meetingLinkHint": "Optional: left empty, the student’s or the teacher’s usual link is used. The link must start with https://",
     "title": "New trial date for {name}",
     "historyTitle": "Trial lesson dates",
     "count": {
@@ -7418,7 +7441,7 @@
     "error": {
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+      "used_before_too_many": "At least one lesson must stay in the package."
     }
   },
   "paymentLinks": {
@@ -7678,5 +7701,18 @@
     "staffEmpty": "No team members yet",
     "off": "Online status is turned off in Values",
     "loadError": "Could not load the team status"
+  },
+  "datePicker": {
+    "title": "Choose a date",
+    "weekdaysShort": {
+      "sat": "Sa",
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr"
+    },
+    "earliest": "Earliest allowed date: {date}"
   }
 }
