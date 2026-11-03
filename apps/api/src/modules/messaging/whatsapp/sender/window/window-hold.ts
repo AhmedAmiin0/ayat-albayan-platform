@@ -1,10 +1,4 @@
-import {
-  HOLD_EXPIRED,
-  REOPEN_UNAVAILABLE,
-  reopenDedupKey,
-  type TemplateView,
-  type WaLine,
-} from '@ab/shared';
+import type { TemplateView, WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   MessageDispatch,
@@ -13,10 +7,17 @@ import {
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
-import { answered, heldStep, HOLD_MS, holdable, reopenUsable } from './window-rules';
+import {
+  answered,
+  heldStep,
+  HOLD_MS,
+  holdable,
+  reopenUsable,
+} from './window-rules';
 
 export { isWindowClosedError } from './window-rules';
-import { WindowRepo } from './window.repo';
+import { DAY_MS, expectedCode, EXPIRED, reopenRow, UNAVAILABLE } from './window-reopen';
+import { RELEASE_BATCH, WindowRepo } from './window.repo';
 import { WindowSettings } from './window.settings';
 
 /** What the hold returns to the worker: held, failed for good, expired, or not now. */
@@ -30,15 +31,10 @@ export interface WindowAt {
   route?: NumberRoute | null;
 }
 
-const DAY_MS = 24 * 60 * 60_000;
+/** At most this many pages per pass (RELEASE_BATCH each): the rest wait for the next tick. */
+const RELEASE_PAGES = 10;
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
-
-const UNAVAILABLE = {
-  code: REOPEN_UNAVAILABLE,
-  text: 'chat_reopen_template is not an approved chat-line starter template without variables',
-};
-const EXPIRED = { code: HOLD_EXPIRED, text: 'the family did not reply within 7 days' };
 
 /**
  * The 24 h window on the chat line (owner 2026-11-03, «not sent after 24h»). A staff text whose
@@ -62,7 +58,7 @@ export class WindowHold {
 
   private readonly steps: Record<'hold' | 'expire', (at: WindowAt) => Promise<HoldOutcome>> = {
     hold: (at) => this.hold(at),
-    expire: (at) => this.expire(at.row.id),
+    expire: (at) => this.expire(at.row),
   };
 
   /** A due AWAITING_REPLY row: held now, or expired at its deadline. null = not such a row. */
@@ -75,7 +71,9 @@ export class WindowHold {
   async closed(at: WindowAt): Promise<HoldOutcome | null> {
     if (!holdable(at.row, at.line)) return null;
     try {
-      return await this.hold(at);
+      const out = await this.hold(at);
+      // Not held (not ready now, or moved): fail it as planned, never left marked SENDING.
+      return out === 'skipped' ? null : out;
     } catch (e) {
       this.log.warn(`hold failed for ${last4(at.row.phone_e164)}: ${messageOf(e)}`);
       return null;
@@ -85,9 +83,7 @@ export class WindowHold {
   /** Every waiting row whose family has written on the chat line since: due now. Never throws. */
   async release(): Promise<number> {
     try {
-      const rows = await this.repo.waiting();
-      const last = await this.repo.lastChatInbound([...new Set(rows.map((r) => r.phone_e164))]);
-      const released = await this.repo.release(answered(rows, last));
+      const released = await this.releaseFrom(null, RELEASE_PAGES);
       if (released > 0) this.log.log(`released ${released} held message(s)`);
       return released;
     } catch (e) {
@@ -96,14 +92,24 @@ export class WindowHold {
     }
   }
 
+  /** One page (after `after`), then the next while pages are full: at most `pages` per pass. */
+  private async releaseFrom(after: string | null, pages: number): Promise<number> {
+    const rows = await this.repo.waiting(after);
+    const inbound = await this.repo.lastChatInbound([...new Set(rows.map((r) => r.phone_e164))]);
+    const released = await this.repo.release(answered(rows, inbound));
+    const next = rows.length === RELEASE_BATCH && pages > 1 ? rows.at(-1)?.created_at : undefined;
+    return next ? released + (await this.releaseFrom(next, pages - 1)) : released;
+  }
+
   private async hold(at: WindowAt): Promise<HoldOutcome> {
     if (!this.ready(at)) return 'skipped';
     const until = new Date(Date.parse(at.row.created_at ?? at.now.toISOString()) + HOLD_MS);
-    if (until <= at.now) return this.expire(at.row.id);
+    if (until <= at.now) return this.expire(at.row);
     const template = await this.reopenTemplate();
-    if (!template) return this.unavailable(at.row.id);
+    if (!template) return this.unavailable(at.row);
     await this.request(at, template.key);
-    const held = await this.repo.hold({ id: at.row.id, since: at.now, until });
+    const from = expectedCode(at.row);
+    const held = await this.repo.hold({ id: at.row.id, from, since: new Date(), until });
     return held ? 'waiting' : 'skipped';
   }
 
@@ -119,31 +125,21 @@ export class WindowHold {
     return reopenUsable(template) ? template : null;
   }
 
-  /** One reopen template per phone per 24 h (or while one is queued), deduped per Riyadh day. */
+  /** One reopen template per phone per 24 h (or while an older one is queued), deduped per day. */
   private async request(at: WindowAt, key: string): Promise<void> {
     const { row, now } = at;
     if (await this.repo.reopenSince(row.phone_e164, new Date(now.getTime() - DAY_MS))) return;
-    await this.repo.queueReopen({
-      direction: 'outbound',
-      status: 'queued',
-      phone_e164: row.phone_e164,
-      lead_id: row.lead_id,
-      guardian_id: row.guardian_id ?? null,
-      created_by: row.created_by,
-      template_key: key,
-      template_params: {},
-      dedup_key: reopenDedupKey(row.phone_e164, now),
-    });
+    await this.repo.queueReopen(reopenRow(row, key, now));
     this.log.log(`reopen template ${key} queued for ${last4(row.phone_e164)}`);
   }
 
-  private async unavailable(id: string): Promise<HoldOutcome> {
-    await this.repo.fail(id, UNAVAILABLE);
+  private async unavailable(row: DueMessage): Promise<HoldOutcome> {
+    await this.repo.fail(row.id, { ...UNAVAILABLE, from: expectedCode(row) });
     return 'failed';
   }
 
-  private async expire(id: string): Promise<HoldOutcome> {
-    await this.repo.fail(id, EXPIRED);
+  private async expire(row: DueMessage): Promise<HoldOutcome> {
+    await this.repo.fail(row.id, { ...EXPIRED, from: expectedCode(row) });
     return 'expired';
   }
 }

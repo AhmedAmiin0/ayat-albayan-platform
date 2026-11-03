@@ -114,6 +114,8 @@ const RETRY_POINTLESS = new Set<string>([
   'handed_off',
   // Outside the window on a row that is not held (a teacher's text): only a template reopens it.
   'window_closed',
+  // A held text the family never answered: its 7 days are over (a retry would expire at once).
+  'hold_expired',
   // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
   // (368), number not registered (131045, 133010), display name (131037).
   ...[E.paymentIssue, E.accountLocked, E.policyBlocked, E.certificateError].map(String),

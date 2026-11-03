@@ -4,14 +4,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { WaitingRow } from './window-rules';
 
-/** At most this many waiting rows are looked at per pass (oldest first). */
-const RELEASE_BATCH = 200;
+/** Waiting rows are read in pages of this many (oldest first, by created_at). */
+export const RELEASE_BATCH = 200;
 /** The reopen rows' dedup prefix: `reopen:<E.164>:<Riyadh day>` (reopenDedupKey, shared). */
 const REOPEN_PREFIX = 'reopen:%';
 
 /** A held row: from when it waits, until when (next_attempt_at = expires_at = the deadline). */
 export interface HoldWrite {
   id: string;
+  /** The error_code the row must still carry (compare-and-set): AWAITING_REPLY or SENDING. */
+  from: string;
   since: Date;
   until: Date;
 }
@@ -27,7 +29,7 @@ const fail = (what: string, message: string): Error => new Error(`${what} failed
 export class WindowRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Any reopen template of this phone since `since` (whatever its status), or one still queued. */
+  /** A reopen template of this phone since `since` (any status), or an older one still queued. */
   async reopenSince(phone: string, since: Date): Promise<boolean> {
     const { data, error } = await this.db
       .from('messages')
@@ -35,7 +37,7 @@ export class WindowRepo {
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .like('dedup_key', REOPEN_PREFIX)
-      .or(`created_at.gte.${since.toISOString()},status.eq.queued`)
+      .or(`created_at.gte.${since.toISOString()},and(status.eq.queued,expires_at.is.null)`)
       .limit(1);
     if (error) throw fail('reopen read', error.message);
     return data.length > 0;
@@ -63,13 +65,14 @@ export class WindowRepo {
       })
       .eq('id', h.id)
       .eq('status', 'queued')
+      .eq('error_code', h.from)
       .select('id');
     if (error) throw fail('message hold', error.message);
     return data.length > 0;
   }
 
   /** Failed for good, with no try counted (the hold's own refusals). */
-  async fail(id: string, why: { code: string; text: string }): Promise<void> {
+  async fail(id: string, why: { code: string; text: string; from: string }): Promise<void> {
     const { error } = await this.db
       .from('messages')
       .update({
@@ -79,18 +82,20 @@ export class WindowRepo {
         next_attempt_at: null,
       })
       .eq('id', id)
-      .eq('status', 'queued');
+      .eq('status', 'queued')
+      .eq('error_code', why.from);
     if (error) throw fail('message hold failure', error.message);
   }
 
-  /** Every queued AWAITING_REPLY row (held, or just queued by the inbox), oldest first. */
-  async waiting(): Promise<WaitingRow[]> {
-    const { data, error } = await this.db
+  /** One page of queued AWAITING_REPLY rows (held, or just queued), oldest first, after `after`. */
+  async waiting(after: string | null): Promise<WaitingRow[]> {
+    const query = this.db
       .from('messages')
       .select('id, phone_e164, created_at, scheduled_for')
       .eq('direction', 'outbound')
       .eq('status', 'queued')
-      .eq('error_code', AWAITING_REPLY)
+      .eq('error_code', AWAITING_REPLY);
+    const { data, error } = await (after ? query.gt('created_at', after) : query)
       .order('created_at', { ascending: true })
       .limit(RELEASE_BATCH);
     if (error) throw fail('held messages read', error.message);
@@ -111,12 +116,12 @@ export class WindowRepo {
     return new Map(pairs);
   }
 
-  /** Released: due now again, with its deadline kept (expires_at: never sent after it). */
+  /** Released: due now, in written order (scheduled_for cleared); its deadline is kept. */
   async release(ids: readonly string[]): Promise<number> {
     if (ids.length === 0) return 0;
     const { data, error } = await this.db
       .from('messages')
-      .update({ error_code: null, error_text: null, next_attempt_at: null })
+      .update({ error_code: null, error_text: null, next_attempt_at: null, scheduled_for: null })
       .in('id', [...ids])
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY)

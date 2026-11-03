@@ -1,5 +1,5 @@
 import type { GifList, ThreadGifSend } from '@ab/shared';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

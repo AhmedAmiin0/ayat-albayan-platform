@@ -25,8 +25,16 @@ describe('WindowHold.due — a text queued after the window', () => {
       template_key: 'welcome_greeting',
       template_params: {},
       dedup_key: `reopen:${PHONE}:2026-11-03`,
+      // A day to go out: a template paused meanwhile never goes late, never blocks the next one.
+      expires_at: '2026-11-04T08:00:00.000Z',
     });
-    expect(f.repo.hold).toHaveBeenCalledExactlyOnceWith({ id: staffText().id, since: NOW, until });
+    // Compare-and-set on the marker: a row another worker released meanwhile is not held again.
+    expect(f.repo.hold).toHaveBeenCalledExactlyOnceWith({
+      id: staffText().id,
+      from: 'awaiting_reply',
+      since: expect.any(Date),
+      until,
+    });
     const [queued] = f.repo.queueReopen.mock.invocationCallOrder;
     const [held] = f.repo.hold.mock.invocationCallOrder;
     expect(queued).toBeLessThan(held ?? 0);

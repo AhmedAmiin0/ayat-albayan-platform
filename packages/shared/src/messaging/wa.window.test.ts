@@ -14,6 +14,7 @@ describe('isWaWindowClosed', () => {
 
   it('a window_closed failure offers no «retry» (a template is needed)', () => {
     expect(canRetryCode('window_closed')).toBe(false);
+    expect(canRetryCode('hold_expired')).toBe(false);
     expect(canRetryCode('reopen_unavailable')).toBe(true);
   });
 });
