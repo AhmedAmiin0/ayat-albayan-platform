@@ -29,7 +29,7 @@ export const paymentLinkCreateSchema = z.strictObject({
   pricing: subscriptionPricingSchema,
   startsOn: localDate.optional(),
   alreadyStarted: z.boolean().optional(),
-  /** «حلقات مستخدمة من الباقة»: only with alreadyStarted (salesStartsOn), at most usedBeforeMax (the creator). */
+  /** «حلقات مستخدمة من الباقة»: only with alreadyStarted (salesStartsOn), at most usedBeforeMax: every lesson but one. */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   /** «المعلم/ة»: students.teacher_id once the link is made, as POST /sales/subscriptions. */
   teacherId: z.uuid().optional(),

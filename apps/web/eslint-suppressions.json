@@ -8220,7 +8220,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.online.test.tsx": {
@@ -8645,9 +8645,6 @@
   "src/features/sales/sales/schedule/SalesLessonDrawer.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/sales/sales/schedule/SalesSchedule.test.tsx": {
@@ -8725,7 +8722,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/sales/sales/subscriptions/SalesSubscriptions.en.test.tsx": {
@@ -8753,7 +8750,7 @@
   },
   "src/features/sales/sales/subscriptions/SubscriptionHistory.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/history-column.tsx": {
@@ -9498,7 +9495,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
