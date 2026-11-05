@@ -17,6 +17,7 @@ beforeEach(() => {
   mockFetch.mockReset();
   globalThis.fetch = mockFetch;
   jest.mocked(connectivity.reportFailure).mockClear();
+  jest.mocked(connectivity.probeNow).mockClear();
   getSession.mockReset();
 });
 afterEach(() => jest.useRealTimers());
@@ -31,8 +32,9 @@ async function expectNoAnswerAtDeadline(read: Promise<unknown>, failures: number
 
 test('getSession() never resolves: the GET fails at the deadline, the API is not blamed', async () => {
   getSession.mockImplementation(never);
-  // A hung token refresh: no «connecting» bar, whose reconnect refetch would hang on it again.
+  // A hung token refresh: one /health probe decides, no reconnect refetch to hang on it again.
   await expectNoAnswerAtDeadline(apiFetch('/threads'), 0);
+  expect(connectivity.probeNow).toHaveBeenCalledTimes(1);
   expect(mockFetch).not.toHaveBeenCalled();
 });
 
