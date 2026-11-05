@@ -26,7 +26,10 @@ interface GuardianEdit extends Edit<PeopleGuardianPatch> {
 const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
   patch.phone_e164 !== undefined && patch.phone_e164 !== before.phone_e164;
 
-type Logins = { family: GuardianRow; children: readonly Child[] };
+interface Logins {
+  family: GuardianRow;
+  children: readonly Child[];
+}
 /**
  * The logins whose sign-in codes go to the family's main number: the family's own, and every
  * child's (a student's reset and set codes go to guardians.phone_e164, PasswordTargets.student).

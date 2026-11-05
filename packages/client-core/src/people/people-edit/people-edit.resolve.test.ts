@@ -15,7 +15,7 @@ import { VIEW } from './people-edit.fixtures.js';
 const TEXT = { moveConfirm: 'نقل {student} إلى {family}؟', invalid: 'تحقق' };
 const PHONE = '+201000000003';
 const TYPED = { name: 'أبو سهيلة', phone_e164: PHONE, tz: 'Africa/Cairo' };
-const FRESH = { body: { guardian: TYPED }, name: TYPED.name, id: null };
+const FRESH = { body: { guardian: TYPED }, name: TYPED.name, id: null, phone: PHONE };
 const OTHER: FamilyOption = { id: 'g7', name: 'أم خالد', phone_e164: PHONE, students: [] };
 
 function attach(state: Partial<AttachState>, families: FamilyOption[] | undefined) {

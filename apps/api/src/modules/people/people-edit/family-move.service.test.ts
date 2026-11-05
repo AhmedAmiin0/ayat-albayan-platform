@@ -9,6 +9,7 @@ import { PeopleEditRepo } from './people-edit.repo';
 const allowed = () => Promise.resolve();
 const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: false, profile_id: null };
 const FRESH = { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo', country: null };
+const NEW = { kind: 'new', guardian: FRESH } as const;
 /** Tables a family move never touches: money, lessons and chats stay keyed as they are. */
 const UNTOUCHED = [
   'subscriptions',
@@ -74,12 +75,8 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       guardians: [{ data: { id: 'g-phone' } }],
       audit_log: [{}],
     });
-    await found.service.move({
-      studentId: 's1',
-      move: { kind: 'new', guardian: FRESH },
-      actorId: 'u1',
-      allowed,
-    });
+    const fresh = { studentId: 's1', move: NEW, actorId: 'u1', allowed };
+    await found.service.move(fresh);
     expect(found.argsOf('guardians', 'insert')).toBeUndefined();
     expect(found.argsOf('students', 'update')?.[0]).toMatchObject({ guardian_id: 'g-phone' });
 
@@ -88,12 +85,7 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       guardians: [{ data: null }, { data: { id: 'g-made' } }],
       audit_log: [{}],
     });
-    await created.service.move({
-      studentId: 's1',
-      move: { kind: 'new', guardian: FRESH },
-      actorId: 'u1',
-      allowed,
-    });
+    await created.service.move(fresh);
     expect(created.argsOf('guardians', 'insert')?.[0]).toMatchObject({
       name: FRESH.name,
       phone_e164: FRESH.phone_e164,

@@ -86,6 +86,7 @@ describe('attachModel', () => {
       body: { guardian: { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo' } },
       name: 'أبو سهيلة',
       id: null,
+      phone: '+201000000003',
     });
     expect(attach({ search: 'zz' }, []).model.empty).toBe(true);
   });

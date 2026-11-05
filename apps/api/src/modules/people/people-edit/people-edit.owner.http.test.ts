@@ -30,7 +30,7 @@ describe('/people/* writes and the ownership rule', () => {
     {
       method: 'PATCH',
       url: `/people/guardians/${G}`,
-      payload: { notes: 'x' },
+      payload: { name: 'x' },
       code: 'not_your_family',
     },
     {
