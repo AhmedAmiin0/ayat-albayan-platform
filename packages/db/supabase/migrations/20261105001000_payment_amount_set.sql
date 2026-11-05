@@ -1,6 +1,7 @@
 -- «تعديل المبلغ» (owner 2026-11-02; review 2026-11-05): a recorded payment's new amount, checked and
--- written in one transaction so two edits (or an edit and another one on the same package) cannot
--- both pass the net check. The package row is locked first (every amount edit of that package waits
+-- written in one transaction so two amount edits on the same package (the same payment or two of
+-- its payments) cannot both pass the net check. A new refund is not serialized with it (its own
+-- check runs in the API before the insert). The package row is locked first (every amount edit of that package waits
 -- its turn), then the payment row; the package's net paid (payments − refunds, this one at its new
 -- amount) may not go below 0 (P0001 refund_exceeds_paid). p_expected is the amount the API read: a
 -- concurrent edit changed it → P0001 payment_amount_changed (the API answers 409, the user reloads).

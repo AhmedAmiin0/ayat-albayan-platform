@@ -27,17 +27,17 @@ export async function amountChange(
 }
 
 /**
- * The amount first (one locked transaction, migration 20261105001000: two edits can never
- * both pass the net check; a converted transfer's original amount and rate go, the audit keeps
- * them), then the other fields. The row after, or `before` when nothing changed.
+ * The other fields first, then the amount last (one locked transaction, migration
+ * 20261105001000: two edits can never both pass the net check; a converted transfer's original
+ * amount and rate go, the audit keeps them). The row after, or `before` when nothing changed.
  */
 export async function writePayment(
   payments: Pick<PaymentsRepo, 'setAmount' | 'update'>,
   before: PaymentRow,
   change: { amount: number | null; write: TablesUpdate<'payments'> },
 ): Promise<PaymentRow> {
-  const amount = { amount: change.amount ?? before.amount, expected: before.amount };
-  const set = change.amount === null ? before : await payments.setAmount(before.id, amount);
   const rest = Object.keys(change.write).length > 0;
-  return rest ? payments.update(before.id, change.write) : set;
+  const updated = rest ? await payments.update(before.id, change.write) : before;
+  const amount = { amount: change.amount ?? before.amount, expected: before.amount };
+  return change.amount === null ? updated : payments.setAmount(before.id, amount);
 }
