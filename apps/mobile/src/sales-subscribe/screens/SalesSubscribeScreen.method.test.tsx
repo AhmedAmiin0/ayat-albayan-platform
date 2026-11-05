@@ -48,7 +48,8 @@ test('her own child: two methods, «تحويل بنكي» first and picked; savi
 test('«دفع إلكتروني»: the amount to transfer gives way to the reference and «مبلغ مخصص»; the button makes the link', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByText(m.price)).toBeTruthy();
-  expect(screen.queryByRole('checkbox', { name: t.paymentLinks.customAmount })).toBeNull();
+  // «تحويل بنكي» has its own «مبلغ مخصص» (the package price, owner 2026-11-02), off.
+  expect(screen.getByRole('checkbox', { name: t.paymentLinks.customAmount, checked: false })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('radio', { name: m.payOnline }));
   await fireEvent.press(await screen.findByRole('checkbox', { name: t.paymentLinks.customAmount }));
   expect(await screen.findByLabelText(new RegExp(t.paymentLinks.agreedAmount.split(' (')[0] ?? ''))).toBeTruthy();

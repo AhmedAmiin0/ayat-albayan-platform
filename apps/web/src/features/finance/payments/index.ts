@@ -25,6 +25,12 @@ export {
   type Uploader,
   useUploadOnce,
 } from './attachments/attachments';
+export {
+  amountEditable,
+  type AmountTarget,
+  salesAmountEditable,
+} from './amount/amount-check';
+export { EditAmountDialog } from './amount/EditAmountDialog';
 export { ConfirmDialog } from './record/ConfirmDialog';
 export { PaymentFields, type PaymentForm } from './record/PaymentFields';
 export { RecordPaymentDialog } from './record/RecordPaymentDialog';

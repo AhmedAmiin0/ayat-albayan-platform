@@ -18,6 +18,7 @@ import { AnyPackageCancelController } from './package-cancel/any-package-cancel.
 import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { SalesPaymentAmount } from './payment-edit';
 import { UsedBeforeAccess } from './used-before/used-before-access';
 import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
 
@@ -37,6 +38,7 @@ import { UsedBeforeEditController } from './used-before/used-before-edit.control
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
+    SalesPaymentAmount,
     AnyPackageCancel,
     UsedBeforeAccess,
   ],

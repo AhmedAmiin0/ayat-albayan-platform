@@ -14,6 +14,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { CustomAmountPill } from '@/payments';
+import { CustomPriceField } from './custom-price/CustomPriceField';
+import { useCustomPrice } from './custom-price/use-custom-price';
 import { NoCommissionNote } from './NoCommissionNote';
 import { PricingInputs } from './PricingInputs';
 import { formFrom, type FormPrefill } from './form-prefill';
@@ -69,6 +72,8 @@ export function SubscribeScreen() {
   const save = useCreateSubscription();
   const priced = quote.isSuccess && !quote.isPlaceholderData;
   const used = usePastUsedBefore({ startsOn, quote: quote.data, now, today });
+  // «مبلغ مخصص» (owner 2026-11-02): off sends today's body, on the typed package price.
+  const custom = useCustomPrice(quote.data);
 
   return (
     <Screen>
@@ -84,8 +89,13 @@ export function SubscribeScreen() {
         />
         {profile.isError ? <ErrorState onRetry={() => void profile.refetch()} /> : null}
         <StudentPills family={family} value={studentId} onChange={setStudentId} />
-        <PricingInputs form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+        <PricingInputs
+          form={form}
+          onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          discountExtra={<CustomAmountPill on={custom.on} onChange={custom.setOn} />}
+        />
         <PriceSection quote={quote} />
+        <CustomPriceField price={custom} />
         <StartDayPills
           days={startDays(now, tz, params.startsOn)}
           today={today}
@@ -101,8 +111,10 @@ export function SubscribeScreen() {
           <Button
             label={save.isPending ? t.common.saving : t.inbox.subscription.make}
             busy={save.isPending}
-            disabled={!priced}
-            onPress={() => save.mutate({ studentId, pricing, startsOn, ...used.body })}
+            disabled={!priced || !custom.ok}
+            onPress={() =>
+              save.mutate({ studentId, pricing, startsOn, ...used.body, ...custom.body })
+            }
           />
         )}
       </ScrollView>

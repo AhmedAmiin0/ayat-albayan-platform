@@ -1,26 +1,27 @@
 import { chatBinding, DISCOUNTS, usedBeforeMax, type PaymentLinkView, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useRef, useState, type SubmitEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { usePermissions } from '@/features/people/auth/use-permissions';
-import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from '@/features/finance/subscriptions/create/pricing-form';
-import { pricingLessons } from '@/features/finance/subscriptions';
+import { INITIAL_PRICING, todayIn, type PricingForm } from '@/features/finance/subscriptions/create/pricing-form';
+import { CustomPriceField, pricingLessons, usePricingBody } from '@/features/finance/subscriptions';
 import { PricingFields } from '@/features/finance/subscriptions/create/PricingFields';
 import { useStripeFeature } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '@/features/sales/sales-money/api';
 import { ChildPicker } from './ChildPicker';
 import { linkStepErrorText, salesErrorText } from '@/features/sales/sales-money/errors';
-import { CustomAmountToggle } from '@/features/sales/sales-money/payment-link/CustomAmountToggle';
+import { CustomAmountToggle, useBodyRequestId } from '@/features/finance/subscriptions';
 import { OnlinePayFields } from '@/features/sales/sales-money/payment-link/OnlinePayFields';
 import { useLinkPay } from '@/features/sales/sales-money/payment-link/use-link-pay';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { SalesStartField, type StartValue } from './SalesStartField';
 import { SalesTeacherField, useTeacherPick } from './SalesTeacherField';
 import { startBody } from './start-body';
+import { useSalesCustomPrice } from './use-sales-quote';
 
 type Props = {
   students: SalesFamilyStudent[];
@@ -70,9 +71,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
   // One object per form (useLinkPay's debounce settles on it): kept in state, not useMemo.
-  const [priced, setPriced] = useState(() => ({ form, pricing: pricingBody(form) }));
-  if (priced.form !== form) setPriced({ form, pricing: pricingBody(form) });
-  const pricing = priced.form === form ? priced.pricing : pricingBody(form);
+  const pricing = usePricingBody(form);
   const child = students.find((s) => s.id === studentId);
   const stripe = useStripeFeature();
   const canOnline = stripe && child !== undefined && child.mine !== false;
@@ -84,11 +83,12 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   };
   const pay = useLinkPay({ studentId: online ? studentId : '', pricing, onCreated: linked });
   const bind = chatBinding(students, { studentId, phone });
+  const price = useSalesCustomPrice({ studentId: online ? '' : studentId, pricing, bind });
   // A smaller package clamps «حلقات مستخدمة من الباقة» to every lesson but one.
   const lessonsTotal = pricingLessons(pricing);
   const usedMax = usedBeforeMax(lessonsTotal);
   const startShown = { ...start, usedBefore: Math.min(start.usedBefore, usedMax) };
-  const request = useRef<{ body: string; id: string } | null>(null);
+  const requestId = useBodyRequestId();
 
   const save = useMutation({
     mutationFn: createSalesSubscription,
@@ -102,13 +102,12 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     if (!studentId || save.isPending) return;
     const checked = startBody(startShown, { canSet, today, lessonsTotal });
     setStartError(checked.ok ? null : t.salesMoney.error[checked.code]);
-    if (!checked.ok) return;
+    const custom = price.check();
+    if (!checked.ok || !custom) return;
     // The link never carries the chat's phone: online is for her own children only.
     if (online) return pay.submit({ ...checked.body, ...teacher.body });
-    const body = { studentId, pricing, ...checked.body, ...teacher.body, ...bind };
-    const key = JSON.stringify(body);
-    if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
-    save.mutate({ ...body, clientRequestId: request.current.id });
+    const body = { studentId, pricing, ...custom, ...checked.body, ...teacher.body, ...bind };
+    save.mutate({ ...body, clientRequestId: requestId(body) });
   };
   const bankLabel = save.isPending ? t.salesMoney.saving : t.salesMoney.saveSubscription;
   const onlineLabel = pay.create.isPending ? t.paymentLinks.creating : t.paymentLinks.create;
@@ -134,10 +133,11 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
           form={form}
           discounts={DISCOUNTS}
           set={(patch) => setForm((f) => ({ ...f, ...patch }))}
-          discountExtra={online ? <CustomAmountToggle pay={pay} /> : undefined}
+          discountExtra={<CustomAmountToggle {...(online ? pay.toggle : price.toggle)} />}
         />
         {canOnline && <SegmentedControl label={t.payments.method} options={METHODS} value={method} onChange={setMethod} />}
         {studentId && (online ? <OnlinePayFields pay={pay} /> : <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />)}
+        <CustomPriceField price={price} />
         {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}
         <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
         {!online && save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}

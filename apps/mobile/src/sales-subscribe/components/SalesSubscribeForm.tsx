@@ -5,7 +5,8 @@ import { useHolds } from '@/core/auth/use-permissions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { quoteLessons, renewalForm } from '@/subscribe';
+import { CustomAmountPill } from '@/payments';
+import { CustomPriceField, quoteLessons, renewalForm, useCustomPrice } from '@/subscribe';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
 import { localDate } from '@/today';
@@ -18,7 +19,6 @@ import { checkStart, type StartDraft } from '@/sales-subscribe/lib/start-date';
 import { StartDateField } from './StartDateField';
 import { SalesTeacherPills, useTeacherPick } from './SalesTeacherPills';
 import { useSalesCreateSubscription, useSalesQuote } from '@/sales-subscribe/hooks/use-sales-subscribe';
-import { CustomAmountPill } from '@/sales-subscribe/payment-link/CustomAmountPill';
 import { LinkCreated } from '@/sales-subscribe/payment-link/LinkCreated';
 import { linkErrorText } from '@/sales-subscribe/payment-link/link-text';
 import { OnlinePrice } from '@/sales-subscribe/payment-link/OnlinePrice';
@@ -80,6 +80,11 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   const [method, setMethod] = useState<PayMethod>('bank');
   const online = canOnline && method === 'online';
   const pay = useLinkPay({ studentId: online ? studentId : '', pricing, phone });
+  // «مبلغ مخصص» (owner 2026-11-02): the package price of «تحويل بنكي»; the link has its own.
+  const custom = useCustomPrice(quote.data);
+  const pill = online
+    ? { on: pay.custom, onChange: pay.setCustom }
+    : { on: custom.on, onChange: custom.setOn };
   if (pay.link) return <LinkCreated link={pay.link} phone={phone} onSent={onDone} />;
   const submit = () => {
     setTried(true);
@@ -87,7 +92,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
     // The link never carries the chat's phone: online is for her own children only.
     if (online) pay.submit({ ...starts.body, ...teacher.body });
     else save.mutate(
-      { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
+      { studentId, pricing, ...starts.body, ...teacher.body, ...bind, ...custom.body },
       {
         // Its weekly days next, then the transfer; a child not hers too (owner 2026-11-01).
         onSuccess: (sub) =>
@@ -105,10 +110,17 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
         form={form}
         freeDiscount={false}
         onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
-        discountExtra={online ? <CustomAmountPill pay={pay} /> : null}
+        discountExtra={<CustomAmountPill {...pill} />}
       />
       {canOnline ? <PayMethodPills value={method} onChange={setMethod} /> : null}
-      {online ? <OnlinePrice pay={pay} /> : <SalesPriceSection quote={quote} />}
+      {online ? (
+        <OnlinePrice pay={pay} />
+      ) : (
+        <>
+          <SalesPriceSection quote={quote} />
+          <CustomPriceField price={custom} />
+        </>
+      )}
       <SalesTeacherPills hidden={studentId === ''} value={teacher.teacherId} onChange={teacher.setTeacher} />
       <StartDateField
         canSet={canSet}
@@ -123,7 +135,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
       <Button
         label={online ? (busy ? pl.creating : pl.create) : busy ? t.salesMoney.saving : t.salesMoney.saveSubscription}
         busy={busy || (!online && save.isSuccess)}
-        disabled={online ? !pay.priced : !priced}
+        disabled={online ? !pay.priced : !priced || !custom.ok}
         onPress={submit}
       />
     </>

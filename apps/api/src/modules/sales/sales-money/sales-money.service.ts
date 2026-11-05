@@ -1,4 +1,6 @@
 import {
+  linkAmountProblem,
+  minLinkAmount,
   type SalesFamilyView,
   type SalesMoneySubscriptionView,
   type SalesPaymentCreate,
@@ -17,6 +19,7 @@ import { assertSalesDiscount, renewsAny, SalesMoneyScope } from './sales-money.s
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneyReads } from './reads/sales-money.reads';
 import { salesStartsOn } from './sales-start';
+import { loadEnv } from '@/config/env/env';
 
 /**
  * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one
@@ -45,12 +48,27 @@ export class SalesMoney {
     await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
     const startsOn = salesStartsOn(input, user, now);
-    const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input; // alreadyStarted is not a column
+    // alreadyStarted is not a column
+    const { studentId, pricing, clientRequestId, lessonsUsedBefore, customPrice } = input;
+    if (customPrice !== undefined) await this.assertCustomPrice(input, customPrice);
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
-    const view = await this.services.creator.create(create, user.id);
+    const priced = customPrice === undefined ? create : { ...create, customPrice };
+    const view = await this.services.creator.create(priced, user.id);
     // A clientRequestId already used for another student replays that package: never show it here.
     if (view.student.id !== input.studentId) throw conflict('client_request_reused');
     return toSalesSubscription(view);
+  }
+
+  /**
+   * «مبلغ مخصص» (owner 2026-11-02): free (> 0) like the payment link's agreed amount, unless the
+   * admin set STRIPE_MAX_DISCOUNT_PCT («التكاملات»): then not below that share of the quote (400).
+   */
+  private async assertCustomPrice(input: SalesSubscriptionCreate, amount: number): Promise<void> {
+    const quote = await this.services.creator.quote(input);
+    const maxDiscountPct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
+    const problem = linkAmountProblem({ amount, reference: quote.afterDiscount, maxDiscountPct });
+    const min = minLinkAmount(quote.afterDiscount, maxDiscountPct);
+    if (problem) throw badRequest(problem, { min, currency: quote.currency });
   }
 
   /**
