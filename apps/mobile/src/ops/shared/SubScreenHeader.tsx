@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
 import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 

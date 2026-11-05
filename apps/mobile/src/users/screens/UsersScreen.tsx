@@ -1,7 +1,7 @@
 import type { UserView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import type { Can } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
