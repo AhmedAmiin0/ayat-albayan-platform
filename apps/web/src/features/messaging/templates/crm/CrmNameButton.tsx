@@ -4,7 +4,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { templateName } from '@/features/messaging/templates/template-cells';
 
-/** A crm line's row (docs/19): the name the CRM gets (crm_name, else the default) and the button that edits it. */
+/** A crm or meta line's row (docs/19): the WABA name it goes as (crm_name, else the default) and its edit button. */
 export function CrmNameButton({ tpl, onEdit }: { tpl: TemplateView; onEdit: (tpl: TemplateView) => void }) {
   const s = t.templates.crmName;
   const [before, after = ''] = s.current.split('{crm}');

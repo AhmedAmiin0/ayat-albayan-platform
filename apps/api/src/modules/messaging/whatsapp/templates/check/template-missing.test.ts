@@ -5,7 +5,7 @@ import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { absentOnCrm, TemplateMissing } from './template-missing';
+import { absentOnCrm, absentOnWaba, TemplateMissing } from './template-missing';
 
 // «تحقق من القالب» (owner 2026-10-31): Meta #132001 through the CRM marks the template missing.
 
@@ -50,6 +50,20 @@ describe('absentOnCrm', () => {
   });
 });
 
+describe('absentOnWaba (docs/19 «CRM → Meta»)', () => {
+  it('the CRM’s meta_error #132001, and Meta’s own 132001 on a meta line', () => {
+    expect(absentOnWaba(absent)).toBe(absent);
+    const meta = new WaError('Template name does not exist', { code: 132001, status: 404 });
+    expect(absentOnWaba(meta)).toBe(meta);
+  });
+
+  it('nothing else: another Meta code, a CRM code carrying 132001 in another kind, a plain error', () => {
+    expect(absentOnWaba(new WaError('paused', { code: 132015, status: 400 }))).toBeNull();
+    expect(absentOnWaba(crm(500, 'template_malformed', '132001'))).toBeNull();
+    expect(absentOnWaba(new Error(META_132001))).toBeNull();
+  });
+});
+
 describe('TemplateMissing.check', () => {
   it('an approved row of that line → missing (compare-and-set), the CRM’s words kept, audited as the system', async () => {
     await marker().check(send());
@@ -64,6 +78,12 @@ describe('TemplateMissing.check', () => {
       before: expect.objectContaining({ status: 'approved', line: 'notifications' }),
       after: expect.objectContaining({ status: 'missing', error: META_132001 }),
     }));
+  });
+
+  it('a meta line: Meta’s own #132001 for the key’s WABA name → missing', async () => {
+    const info = { code: 132001, status: 404, template: 'teacher_lesson_v2' };
+    await marker().check(send({ error: new WaError('(#132001) Template name does not exist', info) }));
+    expect(queries.update).toHaveBeenCalledWith('teacher_new_student', expect.objectContaining({ status: 'missing' }), 'approved');
   });
 
   it('reads nothing for a session message or any other failure', async () => {

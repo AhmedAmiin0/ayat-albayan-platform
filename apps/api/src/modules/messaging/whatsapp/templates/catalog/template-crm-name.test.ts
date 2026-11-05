@@ -32,18 +32,16 @@ describe('setCrmName', () => {
     }));
   });
 
-  it('409 not_crm_line on a meta line; 404 for an unknown key; nothing written', async () => {
+  it('a meta line too (docs/19 «CRM → Meta»: the WABA name every driver sends); 404 for an unknown key', async () => {
     vi.stubEnv('WA_PROVIDER', 'meta');
     queries.get.mockResolvedValue(templateRow());
-    expect(await rejected(registry().admin.setCrmName({ key: 'booking_confirmation', crm_name: 'x', crm_language: null }, 'a'))).toEqual([
-      409, expect.objectContaining({ code: 'not_crm_line' }),
-    ]);
+    await registry().admin.setCrmName({ key: 'booking_confirmation', crm_name: 'booking_v3', crm_language: null }, 'a');
+    expect(queries.update).toHaveBeenCalledWith('booking_confirmation', { crm_name: 'booking_v3', crm_language: null });
     queries.get.mockResolvedValue(null);
     expect(await rejected(registry().admin.setCrmName({ key: 'nope', crm_name: null, crm_language: null }, 'a'))).toEqual([
       404, expect.objectContaining({ code: 'template_not_found' }),
     ]);
-    expect(queries.update).not.toHaveBeenCalled();
-    expect(audit.record).not.toHaveBeenCalled();
+    expect(queries.update).toHaveBeenCalledTimes(1);
   });
 
   it('back to the default works on a meta line too (a name left from its crm days), audited', async () => {

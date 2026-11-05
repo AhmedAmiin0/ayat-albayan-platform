@@ -80,8 +80,8 @@ export class TemplateEditsController {
   }
 
   /**
-   * A crm line's template (docs/19): its name / language in the CRM; blank = the default;
-   * 409 not_crm_line; audited.
+   * «اسم القالب في واتساب» (docs/19): the WABA name / language every driver sends; blank = the
+   * default; any line; audited.
    */
   @Put(':key/crm-name')
   @HttpCode(200)

@@ -10,15 +10,12 @@ export interface CorrectableInput {
 
 type Lesson = Pick<SalesScheduleLesson, 'status' | 'ends_at'>;
 
-/** Completed: the sales payload has no auto_held, so the API decides (409 not_auto_held). */
-export const isHeldLesson = (lesson: Lesson): boolean => lesson.status === 'completed';
-
 /**
- * «لم تنعقد؟» for sales (owner 2026-11-02, POST /sales/lessons/:id/cancel by teacher | student): a
- * completed lesson (held automatically, whatever the setting is now), or, while no confirmation is
- * required, an open one before or after it ends. `now` is kept for the callers' signature.
+ * «لم تنعقد؟» for sales (owner 2026-11-02, POST /sales/lessons/:id/cancel by teacher | student):
+ * while no confirmation is required, an open lesson before it ends. After the end, and on a held /
+ * absent lesson, «تصحيح حالة الحلقة» takes over (CorrectOutcome, owner 2026-11-03).
  */
 export function canSalesCorrect(lesson: Lesson, input: CorrectableInput): boolean {
-  const due = isHeldLesson(lesson) || (!input.required && isOpenLesson(lesson.status));
-  return input.holds && due;
+  const upcoming = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime();
+  return input.holds && !input.required && upcoming;
 }
