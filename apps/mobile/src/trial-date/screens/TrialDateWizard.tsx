@@ -6,7 +6,7 @@ import { bookFailure } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTrialDate } from '@/trial-date/lib/queries';
 import { trialDateBody, trialDateDraft, type TrialDateDraft } from '@/trial-date/lib/trial-date-body';
@@ -56,7 +56,7 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
       <ScreenHeader
         title={title}
         subtitle={book.isSuccess ? undefined : `${position} · ${stepName(step)}`}
-        trailing={<Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />}
+        leading={<BackButton busy={book.isPending} onPress={back} />}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         {book.isSuccess ? (

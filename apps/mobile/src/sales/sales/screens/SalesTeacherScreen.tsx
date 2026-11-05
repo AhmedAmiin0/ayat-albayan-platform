@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { KIND_EMPTY } from '@/students/list/student-kinds';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ListRow } from '@/core/ui/layout/ListRow';
@@ -41,7 +41,7 @@ export function SalesTeacherScreen() {
   const [tab, setTab] = useState<TeacherTab>('students');
   const base = useTreeBase();
   const teacher = list.data?.find((tc) => tc.id === id);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   const rows = teacher ? splitByStatus(teacher.students, kind) : [];
   const row = useCallback(
     ({ item }: ListRenderItemInfo<SalesTeacherView['students'][number]>) => (
@@ -62,7 +62,7 @@ export function SalesTeacherScreen() {
   if (!teacher) {
     return (
       <Screen>
-        <ScreenHeader title={t.sales.teachers.title} trailing={back} />
+        <ScreenHeader title={t.sales.teachers.title} leading={back} />
         {list.isError ? (
           <ErrorState message={t.sales.loadFailed} onRetry={() => void list.refetch()} />
         ) : list.data ? (
@@ -76,7 +76,7 @@ export function SalesTeacherScreen() {
   const name = teacherLabel(teacher);
   return (
     <Screen>
-      <ScreenHeader title={t.sales.teachers.detailTitle.replace('{name}', name)} subtitle={teacherSubtitle(teacher)} trailing={back} />
+      <ScreenHeader title={t.sales.teachers.detailTitle.replace('{name}', name)} subtitle={teacherSubtitle(teacher)} leading={back} />
       <FilterPills
         items={TABS.map((value) => ({ value, label: t.sales.teachers.tabs[value] }))}
         value={tab}

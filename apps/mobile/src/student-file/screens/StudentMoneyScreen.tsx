@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useStudentName } from '@/ops/reports/use-student-name';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -29,7 +29,7 @@ export function StudentMoneyScreen() {
   const back = () => (router.canGoBack() ? router.back() : router.replace(`/students/${id}`));
   return (
     <Screen>
-      <ScreenHeader title={M.title} subtitle={name} trailing={<Button variant="ghost" label={t.common.back} onPress={back} />} />
+      <ScreenHeader title={M.title} subtitle={name} leading={<BackButton onPress={back} />} />
       {tabs.length > 1 ? <FilterPills items={tabs} value={shown ?? 'payments'} onChange={setTab} accessibilityLabel={M.tabsLabel} /> : null}
       {shown === 'payments' ? <StudentPaymentsList studentId={id} /> : null}
       {shown === 'invoices' ? <StudentInvoicesList studentId={id} /> : null}

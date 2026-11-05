@@ -6,7 +6,7 @@ import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { type, useTheme } from '@/theme';
 import { daysText } from '@/sales-course/lib/course-days';
@@ -101,7 +101,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
       <ScreenHeader
         title={target?.title ?? t.booking.courseChange.changeDays}
         subtitle={`${student.name} · ${student.code}`}
-        trailing={<Button variant="ghost" label={t.common.back} busy={change.isPending} onPress={back} />}
+        leading={<BackButton busy={change.isPending} onPress={back} />}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         {content()}

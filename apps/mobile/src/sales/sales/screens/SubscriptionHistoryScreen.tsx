@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -16,7 +16,7 @@ import { useSubscriptionHistory } from '@/sales/sales/lib/sales-api';
 export function SubscriptionHistoryScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const history = useSubscriptionHistory(id);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   const data = history.data;
   if (!data) return <SalesLoadScreen title={t.sales.history.open} query={history} notFound={t.common.notFound} />;
   return (
@@ -24,7 +24,7 @@ export function SubscriptionHistoryScreen() {
       <ScreenHeader
         title={t.sales.history.title.replace('{name}', data.student.name)}
         subtitle={ltr(data.student.code)}
-        trailing={back}
+        leading={back}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 12 }}>

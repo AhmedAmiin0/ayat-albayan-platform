@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ButtonRow } from '@/core/ui/actions';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -24,11 +25,9 @@ import { useCachedLead } from '@/inbox/leads/detail/use-cached-lead';
 export function LeadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const lead = useCachedLead(id);
-  const back = (
-    <View style={{ alignSelf: 'flex-start', marginStart: -20 }}>
-      <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />
-    </View>
-  );
+  const backIcon = <BackButton onPress={() => router.back()} />;
+  // No header while it loads: the icon alone, its 44pt box at the screen's start edge.
+  const back = <View style={{ alignSelf: 'flex-start', marginStart: -10 }}>{backIcon}</View>;
   if (!lead.data) {
     return (
       <Screen>
@@ -49,8 +48,7 @@ export function LeadDetailScreen() {
         contentContainerStyle={{ gap: 16, paddingBottom: 24 }}
         keyboardShouldPersistTaps="handled"
       >
-        {back}
-        <ScreenHeader title={name ?? ltr(formatPhone(phone))} />
+        <ScreenHeader title={name ?? ltr(formatPhone(phone))} leading={backIcon} />
         <LeadFacts lead={lead.data} />
         <LeadStatusChanger lead={lead.data} />
         <LeadAssign lead={lead.data} />
