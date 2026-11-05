@@ -68,7 +68,8 @@ export class MessageWorker {
     } catch (error) {
       return this.refused({ row, error, attempts, now, line, route });
     }
-    const record = () => this.queries.sent({ row, waMessageId: sent.waMessageId, at: new Date() });
+    const { waMessageId, asText } = sent;
+    const record = () => this.queries.sent({ row, waMessageId, at: new Date(), ...(asText ? { asText } : {}) });
     if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
       this.log.log(`message ${row.id} was marked sent by hand while it was sending`);
     }

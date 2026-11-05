@@ -2743,6 +2743,7 @@ export type Database = {
           reply_to_wa_id: string | null;
           scheduled_for: string | null;
           sent_at: string | null;
+          sent_as_text: boolean;
           sent_by_teacher_id: string | null;
           sent_manually_at: string | null;
           status: Database['public']['Enums']['message_status'];
@@ -2793,6 +2794,7 @@ export type Database = {
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_as_text?: boolean;
           sent_by_teacher_id?: string | null;
           sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
@@ -2843,6 +2845,7 @@ export type Database = {
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_as_text?: boolean;
           sent_by_teacher_id?: string | null;
           sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
@@ -4937,6 +4940,10 @@ export type Database = {
           created_at: string;
           display_phone_e164: string | null;
           enabled: boolean;
+          evolution_auto_sends: boolean;
+          evolution_mode: string | null;
+          evolution_state: string | null;
+          evolution_state_at: string | null;
           fallback_rank: number;
           health: Json | null;
           id: string;
@@ -4955,6 +4962,10 @@ export type Database = {
           created_at?: string;
           display_phone_e164?: string | null;
           enabled?: boolean;
+          evolution_auto_sends?: boolean;
+          evolution_mode?: string | null;
+          evolution_state?: string | null;
+          evolution_state_at?: string | null;
           fallback_rank?: number;
           health?: Json | null;
           id?: string;
@@ -4973,6 +4984,10 @@ export type Database = {
           created_at?: string;
           display_phone_e164?: string | null;
           enabled?: boolean;
+          evolution_auto_sends?: boolean;
+          evolution_mode?: string | null;
+          evolution_state?: string | null;
+          evolution_state_at?: string | null;
           fallback_rank?: number;
           health?: Json | null;
           id?: string;

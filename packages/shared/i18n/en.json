@@ -5743,7 +5743,8 @@
       "fx": "Exchange rates",
       "google": "Google (Calendar, Drive and Sheets)",
       "giphy": "Chat GIFs (GIPHY)",
-      "stripe": "Online payments (Stripe)"
+      "stripe": "Online payments (Stripe)",
+      "evolution": "Evolution API (self-hosted WhatsApp server)"
     },
     "source": {
       "db": "From settings",
@@ -5786,7 +5787,8 @@
       "kapso": "Kapso",
       "crm": "CRM",
       "true": "On",
-      "false": "Off"
+      "false": "Off",
+      "evolution": "Evolution"
     },
     "enumDefault": "Default: {value}",
     "enumServer": "Server value: {value}",
@@ -5964,6 +5966,18 @@
       "GIPHY_API_KEY": {
         "label": "GIPHY API key",
         "hint": "Turns on the GIF tab of the chat’s emoji panel. Create it at developers.giphy.com; it is secret and kept in the vault."
+      },
+      "EVOLUTION_API_BASE": {
+        "label": "Evolution server URL",
+        "hint": "https, or http on localhost only. Each number sets its instance name and token under «Numbers»."
+      },
+      "EVOLUTION_API_KEY": {
+        "label": "Evolution global API key",
+        "hint": "Used for the connection check and the QR when no instance token is saved. Never shown once saved."
+      },
+      "EVOLUTION_SEND_GAP_MS": {
+        "label": "Gap between Baileys sends (ms)",
+        "hint": "Minimum gap between two sends of one Baileys number to different recipients (ban risk). Default 3000. Messages wait their turn; none is dropped."
       }
     },
     "developer": "For developers",
@@ -6651,7 +6665,8 @@
     "provider": {
       "meta": "Meta directly",
       "kapso": "Kapso",
-      "crm": "CRM"
+      "crm": "CRM",
+      "evolution": "Evolution"
     },
     "fields": {
       "label": "Number name",
@@ -6665,7 +6680,8 @@
       "configured": "Ready to send",
       "api_base": "Server address",
       "api_version": "API version",
-      "webhook_phone_number_id": "Number whose messages are received"
+      "webhook_phone_number_id": "Number whose messages are received",
+      "evolution_token": "Instance token"
     },
     "chips": {
       "enabled": "On",
@@ -6798,6 +6814,34 @@
       "save": "Save order",
       "saved": "Fallback order saved.",
       "value": "Fallback order: {{rank}}"
+    },
+    "evolution": {
+      "instance": "Evolution instance name",
+      "instanceHint": "The instance name as created in Evolution (Latin letters, digits, _ and -).",
+      "modeLabel": "Connection type",
+      "mode": {
+        "baileys": "Baileys (WhatsApp Web)",
+        "cloud": "Meta Cloud API"
+      },
+      "autoSends": "Allow automatic notifications and templates from this number",
+      "banRisk": "Warning: Baileys is an unofficial WhatsApp Web connection and WhatsApp may ban the number. Use it for a separate secondary number only and keep automatic notifications off: staff chat messages only. No 24 h window applies.",
+      "cloudHint": "Cloud mode follows Meta's rules, including the 24 h window and approved templates.",
+      "check": "Check connection",
+      "qr": "QR code",
+      "qrTitle": "Link the number by scanning",
+      "qrHint": "On the phone open WhatsApp: Linked devices → Link a device, then scan.",
+      "qrNone": "No code now: the number is connected or Evolution has not produced one yet.",
+      "pairingCode": "Pairing code: {{code}}",
+      "stateLabel": "Connection state",
+      "state": {
+        "open": "Connected",
+        "connecting": "Connecting",
+        "close": "Disconnected",
+        "refused": "Refused",
+        "unknown": "Unknown"
+      },
+      "stateAt": "Updated: {{at}}",
+      "failed": "Could not reach Evolution. Check the URL and the instance token."
     }
   },
   "settingsHub": {

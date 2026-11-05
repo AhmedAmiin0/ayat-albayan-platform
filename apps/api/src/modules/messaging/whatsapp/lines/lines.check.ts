@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
 import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { crmConn, crmLineCheck } from './lines.check.crm';
+import { evolutionLineCheck } from './lines.check.evolution';
 import { driverOf, type LineDriver } from './lines.check.driver';
 import { withMetaReady } from './lines.check.meta';
 import { phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
@@ -108,6 +109,9 @@ export class LinesCheck {
     // A crm line: GET /me only (docs/19); the number is the CRM's, so no Graph call at all.
     if (env.provider === 'crm')
       return crmLineCheck({ line, conn: crmConn(env, this), checkedAt, driver: input.driver });
+    // An Evolution line: its instance's connectionState only (docs/19 «Evolution driver»).
+    if (env.provider === 'evolution')
+      return evolutionLineCheck({ line, call: { env, fetch: this.fetch }, checkedAt, driver: input.driver });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
     // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
     // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).

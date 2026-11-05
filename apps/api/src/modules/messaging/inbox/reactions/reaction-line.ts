@@ -1,6 +1,7 @@
 import type { WaLine } from '@ab/shared';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
-import { lineProvider, loadEnv } from '@/config/env/env';
+import { lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
+import { capsOf } from '@/modules/messaging/whatsapp';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
@@ -13,8 +14,11 @@ type ReactFrom = { line?: WaLine; number_id?: string };
  * No line key = the single (notifications) line.
  */
 export function sendsOnCrm(from: ReactFrom): boolean {
-  if (from.number_id) return overlayNumbers()?.find((n) => n.id === from.number_id)?.env?.provider === 'crm';
-  return lineProvider(loadEnv(), from.line ?? 'notifications') === 'crm';
+  const number = from.number_id ? overlayNumbers()?.find((n) => n.id === from.number_id) : null;
+  if (from.number_id) return !capsOf(number?.env).reactions;
+  const line = from.line ?? 'notifications';
+  // An Evolution line has no reaction call of ours either (docs/19 «Evolution driver»).
+  return lineProvider(loadEnv(), line) === 'crm' || !capsOf(lineEnvs(loadEnv())[line]).reactions;
 }
 
 /**

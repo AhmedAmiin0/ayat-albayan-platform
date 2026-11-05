@@ -1,10 +1,21 @@
-import { WA_PROVIDERS, type LineCheckView, type NumberHealth, type NumberView, type WaProvider } from '@ab/shared';
+import {
+  EVOLUTION_MODES, evolutionStateOf, WA_PROVIDERS, type LineCheckView, type NumberEvolutionView,
+  type NumberHealth, type NumberView, type WaProvider,
+} from '@ab/shared';
 import type { Json } from '@ab/db';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.repo';
 import type { SecretStatus } from './config/numbers.secrets';
 
 const providerOf = (p: string): WaProvider => WA_PROVIDERS.find((k) => k === p) ?? 'meta';
+
+/** An Evolution number's engine, switch and last state (docs/19); null on any other provider. */
+function evolutionOf(row: NumberRow): NumberEvolutionView | null {
+  const mode = EVOLUTION_MODES.find((m) => m === row.evolution_mode);
+  if (row.provider !== 'evolution' || !mode) return null;
+  const state = evolutionStateOf(row.evolution_state);
+  return { mode, auto_sends: row.evolution_auto_sends, state, state_at: row.evolution_state_at };
+}
 
 const isRecord = (v: Json | null): v is Record<string, Json | undefined> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const str = (v: Json | undefined): string | null => (typeof v === 'string' ? v : null);
@@ -41,7 +52,12 @@ export function numberView(row: NumberRow, status: SecretStatus): NumberView {
     health: healthOf(row.health),
     checked_at: row.checked_at,
     updated_at: row.updated_at,
-    secrets: { access_token: state(s.access_token), app_secret: state(s.app_secret) },
+    secrets: {
+      access_token: state(s.access_token),
+      app_secret: state(s.app_secret),
+      evolution_token: state(s.evolution_token),
+    },
+    evolution: evolutionOf(row),
   };
 }
 

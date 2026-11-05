@@ -2,7 +2,7 @@ import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
 import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
-import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { CRM_MANAGED, EVOLUTION_NO_TEMPLATES } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -39,6 +39,7 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
 export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Promise<TemplateLineSync> {
   const facts = lineFacts(line, deps.lines[line]);
   if (facts.provider === 'crm') return { ...empty(facts, now), ok: false, error: CRM_MANAGED };
+  if (facts.provider === 'evolution') return { ...empty(facts, now), ok: false, error: EVOLUTION_NO_TEMPLATES };
   if (!facts.configured) return { ...empty(facts, now), ok: false, error: 'not_configured' };
   const list = await readList(deps, line);
   if (!Array.isArray(list)) return { ...empty(facts, now), ok: false, ...list };

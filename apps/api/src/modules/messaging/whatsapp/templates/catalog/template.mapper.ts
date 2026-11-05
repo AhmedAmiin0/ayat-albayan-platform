@@ -1,7 +1,7 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
-import { CRM_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { ApprovalRow } from './templates.repo';
 import type { TemplateRow, WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -58,13 +58,28 @@ export function waHttpError(code: string, status: number, details: Record<string
 /** The 409 of a template action on a crm line: its templates live in the CRM (docs/19). */
 export const CRM_MANAGED = 'crm_managed';
 
+/** Evolution has no template list or submit of ours (docs/19 «Evolution driver»). */
+export const EVOLUTION_NO_TEMPLATES = 'evolution_no_templates';
+
+const UNSUPPORTED_CODE: Record<NonNullable<WaError['info']['unsupported']>, string> = {
+  crm: CRM_MANAGED,
+  evolution: EVOLUTION_NO_TEMPLATES,
+};
+
+const CREDENTIAL_CODE: Record<NonNullable<WaError['info']['credential']>, string> = {
+  kapso: KAPSO_AUTH,
+  crm: CRM_AUTH,
+  evolution: EVOLUTION_AUTH,
+};
+
 /**
  * A driver failure → 502: kapso_auth / crm_auth when Kapso / the CRM refused its key (docs/19), else
  * meta_error with Meta's code and message; a call the crm driver does not support → 409 crm_managed.
  */
 export function graphHttpError(e: WaError): HttpException {
-  if (e.info.unsupported === 'crm') return waHttpError(CRM_MANAGED, 409);
-  if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, 502);
-  if (e.info.credential === 'crm') return waHttpError(CRM_AUTH, 502);
+  const unsupported = e.info.unsupported ? UNSUPPORTED_CODE[e.info.unsupported] : undefined;
+  if (unsupported) return waHttpError(unsupported, 409);
+  const credential = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;
+  if (credential) return waHttpError(credential, 502);
   return waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
 }

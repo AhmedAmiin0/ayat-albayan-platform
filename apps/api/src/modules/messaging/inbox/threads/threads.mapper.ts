@@ -12,7 +12,7 @@ import {
 } from '@ab/shared';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { orSafe } from '@/modules/people/guardians/http';
-import { looksCrmHistory } from '@/modules/messaging/whatsapp';
+import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
 export type ThreadRow = Tables<'v_threads'>;
@@ -62,7 +62,8 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     guardian_tz: row.guardian_tz,
     teacher_id: row.teacher_id,
     teacher_name: row.teacher_name,
-    session_open: messagingWindowOpen(row, now),
+    // An Evolution Baileys chat line has no 24 h window: free text at any time (docs/19).
+    session_open: messagingWindowOpen(row, now) || windowless(chat),
     ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
 }

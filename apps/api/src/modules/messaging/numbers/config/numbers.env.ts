@@ -1,12 +1,14 @@
-import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
+import { EVOLUTION_MODES, isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
 import type { CallsNumber } from '@/common/configuration/integrations/calls-number';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import {
   validOverlay,
   type Env,
+  type EvolutionLineEnv,
   type KapsoLineEnv,
   type WhatsappEnv,
 } from '@/config/env/env';
+import { evolutionBaseOf } from '@/config/env/whatsapp/env.evolution';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
@@ -50,8 +52,9 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const v = source.row.enabled ? checked(source, line) : null;
   if (!v) return null;
   const k = ROLE_KEYS[line];
-  // crm: the CRM's base + key (env.crm.ts crmLine); the row's ids only name it, they are never sent.
-  if (v[k.provider] === 'crm') return crmEnv(env);
+  // crm: the CRM's base + key; evolution: the instance (docs/19). Neither sends a Meta id.
+  const own = OWN_ENV[v[k.provider] ?? ''];
+  if (own) return own(source, env);
   const phoneNumberId = v[k.phone_number_id];
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
@@ -60,6 +63,26 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
 }
 
 type Ids = { phoneNumberId: string; wabaId: string };
+
+/**
+ * Evolution (docs/19 «Evolution driver»): EVOLUTION_API_BASE, the instance named by the row's
+ * phone_number_id, ITS token (Vault, never the global key) and engine; null while one is missing.
+ */
+function evolutionEnv({ row, secrets }: NumberSource, env: Env): EvolutionLineEnv | null {
+  const base = evolutionBaseOf(env.EVOLUTION_API_BASE);
+  const mode = EVOLUTION_MODES.find((m) => m === row.evolution_mode);
+  const token = secrets.evolution_token;
+  if (!base || !mode || !token) return null;
+  const gapMs = env.EVOLUTION_SEND_GAP_MS;
+  const autoSends = row.evolution_auto_sends;
+  return { provider: 'evolution', base, instance: row.phone_number_id, token, mode, autoSends, gapMs };
+}
+
+/** The drivers whose number config is not Graph ids + a credential. */
+const OWN_ENV: Partial<Record<string, (s: NumberSource, env: Env) => WhatsappEnv | null>> = {
+  crm: (_s, env) => crmEnv(env),
+  evolution: evolutionEnv,
+};
 
 /** Kapso: its base and version, the project key; never a Meta token or app id. */
 function kapsoEnv(ids: Ids, env: Env): KapsoLineEnv | null {

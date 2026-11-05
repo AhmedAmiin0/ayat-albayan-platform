@@ -29,6 +29,8 @@ export const templateRow = <T extends { line: NumberPurpose }>(
 export interface WaSent {
   /** Meta's wamid; stored in messages.wa_message_id. */
   waMessageId: string;
+  /** The Evolution driver sent a template as plain text (a Baileys number has no templates). */
+  asText?: true;
 }
 
 /** A template as Meta lists it (GET /{waba}/message_templates). Statuses are Meta's spelling. */
@@ -132,13 +134,15 @@ export class WaError extends Error {
       /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
       uncertain?: boolean;
       /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
-      credential?: 'kapso' | 'crm';
+      credential?: 'kapso' | 'crm' | 'evolution';
       /** The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails at once, never retried. */
       crmCode?: string;
       /** The CRM's rate limit (429): try again after this long, the try not counted. */
       retryAfterMs?: number;
       /** The call is not supported by this line's driver (the crm driver: template list / submit / samples / media). */
-      unsupported?: 'crm';
+      unsupported?: 'crm' | 'evolution';
+      /** Refused by the line's own safety rule before any call (Baileys with automatic sends off). */
+      blocked?: 'evolution_auto_off';
       /** The crm driver: the template name sent (a 132001 marks only the key's own name). */
       template?: string;
     },

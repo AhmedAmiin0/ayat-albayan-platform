@@ -4,3 +4,4 @@ export * from './recipients.js';
 export * from './views.js';
 export * from './driver-keys.js';
 export * from './wa-errors.js';
+export * from './evolution.js';

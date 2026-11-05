@@ -41,6 +41,6 @@ export interface LineCheckView {
    * One entry per failed call (phone first, then subscribed_apps; a crm line's only call is crm_me = GET /me);
    * `credential: 'kapso'` = Kapso refused its key, `'crm'` = the CRM refused its key.
    */
-  errors: { step: 'phone' | 'subscribed_apps' | 'crm_me'; code: number | null; message: string; credential?: 'kapso' | 'crm' }[];
+  errors: { step: 'phone' | 'subscribed_apps' | 'crm_me'; code: number | null; message: string; credential?: 'kapso' | 'crm' | 'evolution' }[];
   checked_at: string;
 }

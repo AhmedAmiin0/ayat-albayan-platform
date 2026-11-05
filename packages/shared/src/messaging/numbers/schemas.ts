@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { NUMBER_PURPOSES, WA_PROVIDERS } from '@ab/catalog';
 import { COMMS_SOURCES } from '@ab/settings';
+import { evolutionFieldsSchema } from './evolution.js';
 import { NUMBER_SECRET_NAMES } from './views.js';
 
 /** A Meta id (phone number, WABA, app): letters, digits, _ and -, at most 64 (wa_numbers checks). */
@@ -25,6 +26,7 @@ export const numberCreateSchema = z
     waba_id: metaId.nullable().optional(),
     app_id: metaId.nullable().optional(),
     enabled: z.boolean().default(false),
+    ...evolutionFieldsSchema.partial().shape,
   })
   .refine((v) => !callsNeedKapso(v), { message: 'calls_need_kapso', path: ['provider'] });
 export type NumberCreate = z.infer<typeof numberCreateSchema>;
@@ -41,6 +43,7 @@ export const numberUpdateSchema = z
     enabled: z.boolean(),
     is_default: z.boolean(),
     fallback_rank: z.number().int().min(0).max(999),
+    ...evolutionFieldsSchema.shape,
   })
   .partial()
   .refine((v) => Object.keys(v).length > 0, 'empty');

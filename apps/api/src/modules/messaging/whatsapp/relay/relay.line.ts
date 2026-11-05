@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import {
   allowedRecipients,
+  isGraphEnv,
   lineEnvs,
   loadEnv,
   type CrmLineEnv,
@@ -35,10 +36,13 @@ export interface RelayLineNow {
 }
 
 /** The line's own driver: the CRM's POST /messages, or Graph's (the same body as Meta's shapes). */
-export function relaySender(line: WhatsappEnv, allowed: readonly string[] | null): RelaySender {
-  return line.provider === 'crm'
-    ? new CrmWhatsappClient(line, { allowed })
-    : new HttpWhatsappClient(line, { allowed });
+export function relaySender(
+  line: WhatsappEnv,
+  allowed: readonly string[] | null,
+): RelaySender | null {
+  if (line.provider === 'crm') return new CrmWhatsappClient(line, { allowed });
+  // An Evolution line takes no CRM-shaped body (the relay is the notifications line's, docs/19).
+  return isGraphEnv(line) ? new HttpWhatsappClient(line, { allowed }) : null;
 }
 
 @Injectable()
@@ -48,8 +52,8 @@ export class RelayLine {
     const env = loadEnv();
     const line = lineEnvs(env).notifications;
     const crm = crmLine(env, 'notifications');
-    if (!line || !crm) return null;
-    const client = relaySender(line, allowedRecipients(env));
+    const client = line ? relaySender(line, allowedRecipients(env)) : null;
+    if (!client || !crm) return null;
     return { env: crm, client, numberId: activeNumberId('notifications'), fetch: crmFetch };
   }
 }

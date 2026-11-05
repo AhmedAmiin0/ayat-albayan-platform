@@ -1,6 +1,7 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/shared';
 import type { Env } from './env';
 import { bothOnCrm, crmGaps } from './whatsapp/env.crm';
+import { evolutionGaps } from './whatsapp/env.evolution';
 import { duplicateChatPhone, kapsoGaps } from './whatsapp/env.kapso';
 import { chatKeyGaps, hasChatKeys, lineProvider } from './whatsapp/env.whatsapp';
 
@@ -18,14 +19,20 @@ function metaChatGaps(env: Env): string[] {
   return env.WA_API_BASE === undefined ? ['WA_API_BASE', ...keys] : keys;
 }
 
+/** The drivers with their own gap rule; meta's is below. */
+const DRIVER_GAPS: Partial<Record<WaProvider, (env: Env, line: WaLine) => string[]>> = {
+  crm: (env) => crmGaps(env),
+  kapso: kapsoGaps,
+  evolution: evolutionGaps,
+};
+
 /**
  * NAMES (never values) of what a line still lacks to send under its provider: crm → crmGaps; kapso → kapsoGaps;
  * meta chat → metaChatGaps; meta notifications → whichever of its four required keys is unset.
  */
 export function lineGaps(env: Env, line: WaLine): string[] {
-  const provider = lineProvider(env, line);
-  if (provider === 'crm') return crmGaps(env);
-  if (provider === 'kapso') return kapsoGaps(env, line);
+  const own = DRIVER_GAPS[lineProvider(env, line)];
+  if (own) return own(env, line);
   if (line === 'chat') return metaChatGaps(env);
   return META_NOTIFICATION_KEYS.filter((k) => env[k] === undefined);
 }

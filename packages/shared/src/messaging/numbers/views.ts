@@ -1,10 +1,12 @@
 import type { IntegrationSource, NumberPurpose, WaLine, WaProvider } from '@ab/catalog';
 import type { CommsSource } from '@ab/settings';
+import type { NumberEvolutionView } from './evolution.js';
 
 // «الأرقام» (docs/23 §3 phase 3): a WhatsApp number as a record. Ids and labels only: no view here ever
 // carries a token or secret value (secrets are «set / not set» with a date).
 
-export const NUMBER_SECRET_NAMES = ['access_token', 'app_secret'] as const;
+/** evolution_token: an Evolution number's instance token (docs/19 «Evolution driver»). */
+export const NUMBER_SECRET_NAMES = ['access_token', 'app_secret', 'evolution_token'] as const;
 export type NumberSecretName = (typeof NUMBER_SECRET_NAMES)[number];
 
 /** The last line check of the number's phone_number_id (never a token). */
@@ -46,6 +48,8 @@ export interface NumberView {
   checked_at: string | null;
   updated_at: string;
   secrets: Record<NumberSecretName, NumberSecretState>;
+  /** An Evolution number's engine, switch and last state; null on any other provider. */
+  evolution: NumberEvolutionView | null;
 }
 
 /** The import's fields: plain ids show their value, secrets never do. */

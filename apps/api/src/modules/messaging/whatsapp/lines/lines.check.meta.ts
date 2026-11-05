@@ -61,6 +61,7 @@ const READY: Record<WaProvider, WithReady> = {
   meta: onMeta,
   crm: async (view, ctx) => ({ ...view, meta_ready: ready(ctx, await preflight(ctx)) }),
   kapso: (view) => Promise.resolve(view),
+  evolution: (view) => Promise.resolve(view),
 };
 
 /** An unconfigured line shows nothing more (every field null). */

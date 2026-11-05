@@ -26,6 +26,18 @@ export const AUTH_HOLD_MS = 15 * 60_000;
 export const KAPSO_AUTH = 'kapso_auth';
 /** messages.error_code when the CRM refused its API key or it lacks messages:send (docs/19): held the same way. */
 export const CRM_AUTH = 'crm_auth';
+/** messages.error_code when Evolution refused the instance token or the instance is down (docs/19). */
+export const EVOLUTION_AUTH = 'evolution_auth';
+/** messages.error_code of a template refused on a Baileys number with automatic sends off. */
+export const EVOLUTION_AUTO_OFF = 'evolution_auto_off';
+
+/** A driver's own refused credential, or its own safety refusal, in its own words. */
+const DRIVER_CODE: Readonly<Record<string, string>> = {
+  kapso: KAPSO_AUTH,
+  crm: CRM_AUTH,
+  evolution: EVOLUTION_AUTH,
+  evolution_auto_off: EVOLUTION_AUTO_OFF,
+};
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 
@@ -44,8 +56,8 @@ interface PlanInput { error: unknown; attempts: number; now: Date; row?: HoldRow
 /** messages.error_code: Meta's code («131026»), else what kind of failure it was. */
 export function errorCode(error: unknown): string {
   if (!(error instanceof WaError)) return 'internal';
-  if (error.info.credential === 'kapso') return KAPSO_AUTH;
-  if (error.info.credential === 'crm') return CRM_AUTH;
+  const own = error.info.credential ?? error.info.blocked;
+  if (own) return DRIVER_CODE[own] ?? own;
   if (error.info.crmCode) return `crm_${error.info.crmCode}`;
   if (error.info.code !== null) return String(error.info.code);
   return error.info.status ? `http_${error.info.status}` : 'network';

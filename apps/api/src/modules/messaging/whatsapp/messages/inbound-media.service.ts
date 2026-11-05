@@ -7,7 +7,7 @@ import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { InboundMediaRepo, type MediaMessage } from './inbound-media.repo';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
-import { KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -141,7 +141,10 @@ export class InboundMedia {
 function mediaHttpError(e: WaError): Error {
   // The crm driver cannot fetch Meta media: that number's files are in the CRM (docs/19).
   if (e.info.unsupported === 'crm') return waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
+  // An Evolution Cloud instance cannot download by id alone (docs/19 «Evolution driver»).
+  if (e.info.unsupported === 'evolution') return waHttpError('evolution_no_media', HttpStatus.CONFLICT);
   if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, HttpStatus.BAD_GATEWAY);
+  if (e.info.credential === 'evolution') return waHttpError(EVOLUTION_AUTH, HttpStatus.BAD_GATEWAY);
   if (isWaAuthError(e.info.code)) return waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
   if (e.info.status >= 400 && e.info.status < 500) return waHttpError('media_expired', HttpStatus.GONE);
   return e;
