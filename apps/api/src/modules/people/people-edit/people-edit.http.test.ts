@@ -8,7 +8,7 @@ const G = '22222222-2222-4222-8222-222222222222';
 const ROUTES = [
   { method: 'GET', url: `/people/students/${S}` },
   { method: 'PATCH', url: `/people/students/${S}`, payload: { name: 'سهيلة' } },
-  { method: 'PATCH', url: `/people/guardians/${G}`, payload: { notes: 'ملاحظة' } },
+  { method: 'PATCH', url: `/people/guardians/${G}`, payload: { name: 'أم سهيلة' } },
   { method: 'DELETE', url: `/people/guardians/${G}/phones/%2B201000000002` },
   { method: 'GET', url: '/people/guardians?search=AB-0183' },
   { method: 'POST', url: `/people/students/${S}/guardian`, payload: { guardian_id: G } },
@@ -70,11 +70,11 @@ describe('/people/* (people.edit, students.attach_guardian, people.switch_role)'
       method: 'PATCH',
       url: `/people/students/${S}`,
       token: 'sales',
-      payload: { name: ' سهيلة ', notes: '' },
+      payload: { name: ' سهيلة ', goal: '' },
     });
     expect(mocks.people.editStudent).toHaveBeenCalledWith({
       id: S,
-      patch: { name: 'سهيلة', notes: null },
+      patch: { name: 'سهيلة', goal: null },
       actorId: 'sales-1',
     });
     await call(app, {
@@ -87,6 +87,7 @@ describe('/people/* (people.edit, students.attach_guardian, people.switch_role)'
       studentId: S,
       move: { kind: 'existing', id: G },
       actorId: 'sales-1',
+      owns: expect.any(Function),
     });
     const res = await call(app, {
       method: 'DELETE',

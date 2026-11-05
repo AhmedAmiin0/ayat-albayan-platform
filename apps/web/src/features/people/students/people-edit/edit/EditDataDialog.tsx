@@ -1,8 +1,10 @@
 import {
   familyFormOf,
   familyPatchOf,
+  hasNotes,
   studentFormOf,
   studentPatchOf,
+  studentTextKeys,
   type FamilyForm,
   type StudentForm,
 } from '@ab/client-core';
@@ -73,12 +75,14 @@ export function EditDataDialog({ view, onClose, onDone }: PeopleDialogProps) {
         <StudentFields
           value={current.student}
           invalid={of('student')}
+          texts={studentTextKeys(view)}
           onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))}
         />
         <div className="grid content-start gap-4">
           <FamilyFields
             value={current.family}
             invalid={of('family')}
+            notes={hasNotes(view)}
             onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))}
           />
           <SecondPhone guardian={view.guardian} onDone={onDone} />

@@ -6,6 +6,8 @@ import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditRepo } from './people-edit.repo';
 
+/** The ownership rule off: every family is hers. */
+const owns = (): Promise<void> => Promise.resolve();
 const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: false, profile_id: null };
 
 function setup(results: Record<string, FakeResult[]>) {
@@ -24,7 +26,7 @@ describe('FamilyMoveService and logins (review a #6, #8)', () => {
     const login = setup({ students: [{ data: { ...STUDENT, profile_id: 'p1' } }] });
     const move = { kind: 'existing', id: 'g-new' } as const;
     await expect(
-      login.service.move({ studentId: 's1', move, actorId: 'u1' }),
+      login.service.move({ studentId: 's1', move, actorId: 'u1', owns }),
     ).rejects.toMatchObject({
       response: { code: 'student_has_login' },
     });
@@ -32,11 +34,11 @@ describe('FamilyMoveService and logins (review a #6, #8)', () => {
       students: [{ data: { ...STUDENT, contact_is_self: true } }],
       guardians: [{ data: { id: 'g-old', profile_id: 'p9' } }],
     });
-    await expect(self.service.move({ studentId: 's1', move, actorId: 'u1' })).rejects.toMatchObject(
-      {
-        response: { code: 'self_has_login' },
-      },
-    );
+    await expect(
+      self.service.move({ studentId: 's1', move, actorId: 'u1', owns }),
+    ).rejects.toMatchObject({
+      response: { code: 'self_has_login' },
+    });
     for (const t of [login, self]) expect(t.argsOf('students', 'update')).toBeUndefined();
   });
 });

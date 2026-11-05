@@ -34,7 +34,7 @@ function attach(
   };
   const move = write();
   return {
-    model: attachModel({ view: VIEW, state: full, set, families, move, text: TEXT }),
+    model: attachModel({ view: VIEW, state: full, set, families, matches: [], move, text: TEXT }),
     set,
     move,
   };

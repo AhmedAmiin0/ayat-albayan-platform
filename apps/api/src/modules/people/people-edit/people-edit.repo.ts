@@ -71,6 +71,17 @@ export class PeopleEditRepo {
     return data;
   }
 
+  /** Whether any child of the family has a login of its own (its codes go to the family). */
+  async childHasLogin(guardianId: string): Promise<boolean> {
+    const { count, error } = await this.db
+      .from('students')
+      .select('id', { count: 'exact', head: true })
+      .eq('guardian_id', guardianId)
+      .not('profile_id', 'is', null);
+    if (error) throw dbError(error);
+    return (count ?? 0) > 0;
+  }
+
   /** contact_is_self is cleared. null = moved meanwhile (or gone): nothing written. */
   async move(row: MoveRow): Promise<StudentRow | null> {
     const { data, error } = await this.db

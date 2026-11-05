@@ -15,6 +15,7 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
 import { PeopleViewService } from './people-view.service';
+import { guardianPatchFor, isAdmin, studentPatchFor, viewFor } from './access/people-roles';
 import { PeopleOwnership } from './access/people-ownership';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
@@ -24,7 +25,8 @@ const guardianBody = blanksToNull(peopleGuardianPatchSchema);
  * «تعديل البيانات» of a student and their family (owner 2026-11-02), the assistant's and the
  * admin's: people.edit, never students.write / guardians.write (those also create, delete and
  * merge). Any student or family. 400 for an admin-only field (status, program, teacher, meeting
- * link, source), 404 student_not_found / guardian_not_found, 409 phone_taken.
+ * link, source; notes for the sales role), 404 student_not_found / guardian_not_found, 409
+ * phone_taken.
  */
 @ApiTags('people')
 @ApiBearerAuth()
@@ -39,8 +41,11 @@ export class PeopleEditController {
   ) {}
 
   @Get('students/:id')
-  view(@ZodParam('id', peopleIdSchema) id: string): Promise<PeopleEditView> {
-    return this.views.view(id);
+  async view(
+    @ZodParam('id', peopleIdSchema) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PeopleEditView> {
+    return viewFor(user, await this.views.view(id));
   }
 
   @Patch('students/:id')
@@ -50,7 +55,8 @@ export class PeopleEditController {
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
     await this.owners.student(user, id);
-    const row = await this.people.editStudent({ id, patch, actorId: user.id });
+    const sent = studentPatchFor(user, patch);
+    const row = await this.people.editStudent({ id, patch: sent, actorId: user.id });
     return { id: row.id };
   }
 
@@ -61,7 +67,9 @@ export class PeopleEditController {
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
     await this.owners.family(user, id);
-    const row = await this.people.editGuardian({ id, patch, actorId: user.id });
+    const sent = guardianPatchFor(user, patch);
+    const edit = { id, patch: sent, actorId: user.id, admin: isAdmin(user) };
+    const row = await this.people.editGuardian(edit);
     return { id: row.id };
   }
 

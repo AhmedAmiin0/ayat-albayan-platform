@@ -35,6 +35,13 @@ export const peopleGuardianPatchSchema = guardianCreateSchema
   .strict();
 export type PeopleGuardianPatch = z.output<typeof peopleGuardianPatchSchema>;
 
+/**
+ * The sales role's edits (owner 2026-10-27: sales never read or write notes): the same fields
+ * minus the student's and the family's notes, strict, so a `notes` key answers 400.
+ */
+export const salesStudentPatchSchema = peopleStudentPatchSchema.omit({ notes: true }).strict();
+export const salesGuardianPatchSchema = peopleGuardianPatchSchema.omit({ notes: true }).strict();
+
 /** A new family for «ربط بولي أمر آخر»: found by its main phone first, created only when new. */
 export const newFamilySchema = guardianCreateSchema.pick({
   name: true,
@@ -67,8 +74,9 @@ export const peopleIdSchema = z.guid();
 /**
  * The 409 codes of the moves and conversions (404 student_not_found / guardian_not_found aside):
  * same_guardian, guardian_changed (a race), family_has_self (another child already holds the
- * number), guardian_has_self, student_has_records (lessons, packages, payments, reports or chat
- * messages would be orphaned), student_has_login, phone_taken, duplicate_student.
+ * number), guardian_has_self, guardian_has_login / family_has_login (a login of the family or a
+ * child gets its codes on the main number), student_has_records (lessons, packages, payments,
+ * reports or chat messages would be orphaned), student_has_login, phone_taken, duplicate_student.
  */
 export const PEOPLE_EDIT_ERRORS = [
   'same_guardian',
@@ -79,6 +87,7 @@ export const PEOPLE_EDIT_ERRORS = [
   'student_has_login',
   'guardian_has_login',
   'self_has_login',
+  'family_has_login',
   'phone_taken',
   'duplicate_student',
   'student_not_found',

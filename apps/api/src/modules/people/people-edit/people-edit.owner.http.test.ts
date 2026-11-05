@@ -30,7 +30,7 @@ describe('/people/* writes and the ownership rule', () => {
     {
       method: 'PATCH',
       url: `/people/guardians/${G}`,
-      payload: { notes: 'x' },
+      payload: { name: 'x' },
       code: 'not_your_family',
     },
     {
@@ -48,16 +48,17 @@ describe('/people/* writes and the ownership rule', () => {
     expect(writes.filter((fn) => fn.mock.calls.length > 0)).toEqual([]);
   });
 
-  it('a move to an existing family checks that family too', async () => {
+  it('a move checks the family it resolves to (picked, or a «new» number that exists)', async () => {
     mocks.owners.student.mockResolvedValue(undefined);
+    type Owns = { owns: (id: string) => Promise<void> };
+    mocks.families.move.mockImplementation(({ owns }: Owns) => owns(G));
     const res = await call(app, {
       method: 'POST',
       url: `/people/students/${S}/guardian`,
       token: 'sales',
-      payload: { guardian_id: G },
+      payload: { guardian: { name: 'اسم', phone_e164: '+201000000003', tz: 'Africa/Cairo' } },
     });
-    expect(res.statusCode).toBe(403);
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([403, 'not_your_family']);
     expect(mocks.owners.family).toHaveBeenCalledWith(expect.objectContaining({ id: 'sales-1' }), G);
-    expect(mocks.families.move).not.toHaveBeenCalled();
   });
 });

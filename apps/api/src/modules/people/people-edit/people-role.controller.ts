@@ -55,9 +55,10 @@ export class PeopleRoleController {
     @CurrentUser() user: AuthUser,
   ) {
     await this.owners.student(user, id);
-    // An existing family must be hers too while the rule is on; a new one is hers by the move.
-    if (move.kind === 'existing') await this.owners.family(user, move.id);
-    return this.families.move({ studentId: id, move, actorId: user.id });
+    // The resolved family must be hers too while the rule is on (a picked one, or a «new» number
+    // that already exists); one this move creates is hers by the move.
+    const owns = (guardianId: string) => this.owners.family(user, guardianId);
+    return this.families.move({ studentId: id, move, actorId: user.id, owns });
   }
 
   /** «الطالب هو ولي الأمر»; 409 family_has_self. */

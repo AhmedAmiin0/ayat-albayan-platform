@@ -10,6 +10,11 @@ interface MoveInput {
   studentId: string;
   move: FamilyMove;
   actorId: string;
+  /**
+   * The ownership check of a family the move did not create (PeopleOwnership.family): a «new»
+   * guardian whose number exists is that existing family, so it is checked as a picked one.
+   */
+  owns: (guardianId: string) => Promise<void>;
 }
 
 /** The family a move goes to: its id, and whether this move created it. */
@@ -44,11 +49,12 @@ export class FamilyMoveService {
     return this.search.search(term);
   }
 
-  async move({ studentId, move, actorId }: MoveInput) {
+  async move({ studentId, move, actorId, owns }: MoveInput) {
     const student = await this.repo.student(studentId);
     if (!student) throw notFound('student_not_found');
     await this.assertMovable(student);
     const target = await this.target(move, actorId);
+    if (!target.created) await owns(target.id);
     if (target.id === student.guardian_id) throw conflict('same_guardian');
     const row = { id: studentId, from: student.guardian_id, to: target.id };
     const moved = await this.repo.move(row);

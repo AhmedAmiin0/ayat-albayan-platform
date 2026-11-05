@@ -9,13 +9,16 @@ export { roleActions, toGuardianHint, type RoleActions } from './people-edit-act
 export {
   familyFormOf,
   familyPatchOf,
+  hasNotes,
   newFamilyOf,
   studentFormOf,
   studentPatchOf,
+  studentTextKeys,
   type FamilyForm,
   type NewFamilyForm,
   type PatchResult,
   type StudentForm,
+  type StudentTextKey,
 } from './people-edit-form.js';
 export {
   allowedPeopleActions,
@@ -27,6 +30,7 @@ export {
 export {
   attachModel,
   emptyFamily,
+  freshPhoneOf,
   type AttachModel,
   type AttachState,
   type MoveBody,

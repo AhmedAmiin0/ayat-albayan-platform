@@ -1,4 +1,10 @@
-import { attachModel, emptyFamily, type AttachModel, type MoveChoice } from '@ab/client-core';
+import {
+  attachModel,
+  emptyFamily,
+  freshPhoneOf,
+  type AttachModel,
+  type MoveChoice,
+} from '@ab/client-core';
 import type { PeopleEditView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -13,8 +19,18 @@ export function useAttach(view: PeopleEditView, onDone: (notice: string) => void
   const [fresh, setFresh] = useState(() => emptyFamily(view.guardian.tz));
   const [invalid, setInvalid] = useState<string[]>([]);
   const families = useQuery(familySearchQuery(search.trim()));
+  // A «new» number that already exists is that family: the confirm names it.
+  const matches = useQuery(familySearchQuery(freshPhoneOf(choice)));
   const move = usePeopleWrite(moveFamily, () => onDone(t.peopleEdit.moved));
   const set = { search: setSearch, choice: setChoice, fresh: setFresh, invalid: setInvalid };
   const state = { search, choice, fresh, invalid };
-  return attachModel({ view, state, set, families: families.data, move, text: t.peopleEdit });
+  return attachModel({
+    view,
+    state,
+    set,
+    families: families.data,
+    matches: matches.data,
+    move,
+    text: t.peopleEdit,
+  });
 }

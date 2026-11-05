@@ -1,4 +1,4 @@
-import type { StudentForm } from '@ab/client-core';
+import type { StudentForm, StudentTextKey } from '@ab/client-core';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
@@ -7,22 +7,23 @@ import { PeopleField } from './PeopleField';
 import { genderItems, zoneItems } from './zone-items';
 
 const E = t.peopleEdit;
-const TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
 
 interface StudentEditFieldsProps {
   value: StudentForm;
   onChange: (patch: Partial<StudentForm>) => void;
   /** Keys the last save refused. */
   invalid: readonly string[];
+  /** The free-text fields shown (studentTextKeys: no notes for sales). */
+  texts: readonly StudentTextKey[];
 }
 
 /** «بيانات الطالب»: what an assistant may edit (never status, program, teacher or link). */
-export function StudentEditFields({ value, onChange, invalid }: StudentEditFieldsProps) {
+export function StudentEditFields({ value, onChange, invalid, texts }: StudentEditFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? E.invalid : null);
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.studentSection}</SectionLabel>
-      {TEXTS.map((key) => (
+      {texts.map((key) => (
         <PeopleField
           key={key}
           label={E.fields[key]}

@@ -1,4 +1,4 @@
-import type { StudentForm } from '@ab/client-core';
+import type { StudentForm, StudentTextKey } from '@ab/client-core';
 import { GENDERS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
@@ -7,17 +7,18 @@ import { t } from '@/lib/i18n/i18n';
 import { TextField } from '@/features/people/students/people-edit/TextField';
 
 const F = t.peopleEdit.fields;
-const TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
 
 export interface StudentFieldsProps {
   value: StudentForm;
   onChange: (patch: Partial<StudentForm>) => void;
   /** Keys the last save refused. */
   invalid: readonly string[];
+  /** The free-text fields shown (studentTextKeys: no notes for sales). */
+  texts: readonly StudentTextKey[];
 }
 
 /** «بيانات الطالب»: the fields an assistant may edit (never status, program, teacher or link). */
-export function StudentFields({ value, onChange, invalid }: StudentFieldsProps) {
+export function StudentFields({ value, onChange, invalid, texts }: StudentFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? t.peopleEdit.invalid : undefined);
   const gender = (key: 'gender' | 'teacher_gender_pref', label: string, none: string) => (
     <Field label={label}>
@@ -36,7 +37,7 @@ export function StudentFields({ value, onChange, invalid }: StudentFieldsProps) 
   return (
     <fieldset className="grid gap-3">
       <legend className="mb-2 font-semibold">{t.peopleEdit.studentSection}</legend>
-      {TEXTS.map((key) => (
+      {texts.map((key) => (
         <TextField
           key={key}
           label={F[key]}

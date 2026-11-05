@@ -34,6 +34,8 @@ interface AttachInput {
     invalid: Set<string[]>;
   };
   families: readonly FamilyOption[] | undefined;
+  /** The picker's answers for a «new» guardian's number (freshPhoneOf); undefined = loading. */
+  matches: readonly FamilyOption[] | undefined;
   move: PeopleWrite<{ studentId: string; body: MoveBody }>;
   /** t.peopleEdit: moveConfirm («{student}», «{family}») and invalid. */
   text: { moveConfirm: string; invalid: string };
@@ -69,12 +71,33 @@ function freshChoice(fresh: NewFamilyForm): { choice: MoveChoice | null; invalid
   return { choice, invalid: parsed.invalid };
 }
 
+const phoneOf = (body: MoveBody | undefined): string =>
+  body && 'guardian' in body ? body.guardian.phone_e164 : '';
+
+/** A «new» guardian's number ('' for a picked family): the hooks look it up (familySearchKey). */
+export const freshPhoneOf = (choice: MoveChoice | null): string => phoneOf(choice?.body);
+
+/**
+ * A «new» number that is already a family's main number moves the student to THAT family (the API
+ * finds it by phone): the confirm names it, never the typed name.
+ */
+const resolvedOf = (choice: MoveChoice | null, matches: AttachInput['matches']) =>
+  choice && {
+    ...choice,
+    name: matches?.find((f) => f.phone_e164 === phoneOf(choice.body))?.name ?? choice.name,
+  };
+
+/** A «new» number is confirmed only once its lookup answered. */
+const looked = (choice: MoveChoice | null, matches: AttachInput['matches']): boolean =>
+  freshPhoneOf(choice) === '' || matches !== undefined;
+
 /** «نقل {student} إلى عائلة {family}؟» once a family is chosen. */
 const confirmOf = (view: PeopleEditView, choice: MoveChoice | null, template: string) =>
   choice && template.replace('{student}', view.student.name).replace('{family}', choice.name);
 
 /** What both apps' attach screens read: results, pick / new guardian, confirm text and submit. */
-export function attachModel({ view, state, set, families, move, text }: AttachInput): AttachModel {
+export function attachModel(input: AttachInput): AttachModel {
+  const { view, state, set, families, move, text } = input;
   const searching = state.search.trim().length >= 2;
   const takeFresh = () => {
     const { choice, invalid } = freshChoice(state.fresh);
@@ -94,8 +117,8 @@ export function attachModel({ view, state, set, families, move, text }: AttachIn
     submit: () => {
       if (state.choice) move.mutate({ studentId: view.student.id, body: state.choice.body });
     },
-    confirmText: confirmOf(view, state.choice, text.moveConfirm),
-    ready: state.choice !== null && !move.isPending,
+    confirmText: confirmOf(view, resolvedOf(state.choice, input.matches), text.moveConfirm),
+    ready: state.choice !== null && !move.isPending && looked(state.choice, input.matches),
     move,
   };
 }

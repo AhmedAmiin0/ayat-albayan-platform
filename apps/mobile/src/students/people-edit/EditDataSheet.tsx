@@ -1,8 +1,10 @@
 import {
   familyFormOf,
   familyPatchOf,
+  hasNotes,
   studentFormOf,
   studentPatchOf,
+  studentTextKeys,
   type FamilyForm,
   type StudentForm,
 } from '@ab/client-core';
@@ -61,11 +63,13 @@ export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {
       <StudentEditFields
         value={current.student}
         invalid={invalid.student}
+        texts={studentTextKeys(view)}
         onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))}
       />
       <FamilyEditFields
         value={current.family}
         invalid={invalid.family}
+        notes={hasNotes(view)}
         onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))}
       />
       <SecondPhoneRow guardian={view.guardian} onDone={onDone} />

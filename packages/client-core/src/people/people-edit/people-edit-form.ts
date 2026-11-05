@@ -29,7 +29,18 @@ export type FamilyForm = Record<'name' | 'phone_e164' | 'country' | 'tz' | 'note
 /** The parsed patch, or the fields that failed (their keys, for the field errors). */
 export type PatchResult<P> = { patch: P; invalid: [] } | { patch: null; invalid: string[] };
 
-const text = (v: string | number | null): string => (v === null ? '' : String(v));
+const text = (v: string | number | null | undefined): string => String(v ?? '');
+
+/** The sales role's view has no notes (owner 2026-10-27): the forms leave the fields out. */
+export const hasNotes = (view: PeopleEditView): boolean => view.student.notes !== undefined;
+
+const STUDENT_TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
+export type StudentTextKey = (typeof STUDENT_TEXTS)[number];
+const notNotes = (key: StudentTextKey): boolean => key !== 'notes';
+
+/** The student's free-text fields this view may edit, notes only when the view has them. */
+export const studentTextKeys = (view: PeopleEditView): readonly StudentTextKey[] =>
+  hasNotes(view) ? STUDENT_TEXTS : STUDENT_TEXTS.filter(notNotes);
 
 export function studentFormOf(s: PeopleEditView['student']): StudentForm {
   return {

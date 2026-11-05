@@ -1,4 +1,10 @@
-import { attachModel, emptyFamily, type AttachModel, type MoveChoice } from '@ab/client-core';
+import {
+  attachModel,
+  emptyFamily,
+  freshPhoneOf,
+  type AttachModel,
+  type MoveChoice,
+} from '@ab/client-core';
 import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
@@ -15,12 +21,15 @@ export function useAttach(view: PeopleEditView, onDone: (notice: string) => void
   const [fresh, setFresh] = useState(() => emptyFamily(view.guardian.tz));
   const [invalid, setInvalid] = useState<string[]>([]);
   const found = useFamilySearch(search.trim()).data;
+  // A «new» number that already exists is that family: the confirm names it.
+  const matches = useFamilySearch(freshPhoneOf(choice)).data;
   const move = usePeopleWrite(moveFamily, () => onDone(t.peopleEdit.moved));
   return attachModel({
     view,
     state: { search, choice, fresh, invalid },
     set: { search: setSearch, choice: setChoice, fresh: setFresh, invalid: setInvalid },
     families: found,
+    matches,
     move,
     text: t.peopleEdit,
   });
