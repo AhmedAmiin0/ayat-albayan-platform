@@ -4915,6 +4915,23 @@
         "generic": "Could not save, try again."
       }
     },
+    "startDateEdit": {
+      "action": "Edit start date",
+      "title": "Edit the package start date",
+      "label": "Start date",
+      "hint": "Only the start date changes; payments and the renewal date stay as they are, and the lessons counted from the package may follow the new date.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Start date updated.",
+      "current": "Current date: {date}",
+      "errors": {
+        "already_cancelled": "This package is cancelled.",
+        "start_date_too_old": "The start date cannot be more than a year before today.",
+        "used_before_needs_past_start": "This package counts lessons used before the platform, so it must start before today.",
+        "start_date_changed": "The start date changed before saving; refresh and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
     "noCommissionStarted": "No commission: the course started before it was recorded",
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",
