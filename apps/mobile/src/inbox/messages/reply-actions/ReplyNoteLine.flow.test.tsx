@@ -3,7 +3,7 @@ import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/share
 import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { confirmingQueryClient, createTestQueryClient, renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
@@ -41,9 +41,10 @@ const YES = message({ id: 'm-y', direction: 'inbound', body: 'ايوة', guardia
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
 const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule', 'lessons.confirm'];
 
-// Confirmation required (the confirm action exists only then, owner 2026-11-02) unless `off`.
-async function renderNote(m: typeof ASK, permissions?: Permission[], off = false) {
-  const client = off ? createTestQueryClient() : confirmingQueryClient();
+/** `required`: settings.lesson_confirmation_required (default OFF since owner 2026-11-02). */
+async function renderNote(m: typeof ASK, permissions?: Permission[], required = true) {
+  const client = createTestQueryClient();
+  seedPublicConfig(client, { lesson_confirmation_required: required });
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   await renderWithQuery(
     <ReplyActionsProvider phone={PHONE} lessons={[LESSON]}>
@@ -98,7 +99,8 @@ test('«ايوة» without the right to confirm: nothing at all', async () => {
   expect(screen.queryByText(t.inbox.replyAction.confirm)).toBeNull();
 });
 
-test('no confirmation required: «ايوة» offers no «تأكيد الحلقة» (owner 2026-11-02)', async () => {
-  await renderNote(YES, SALES, true);
+test('«ايوة» while no confirmation is required (the default): no «تأكيد الحلقة»', async () => {
+  await renderNote(YES, SALES, false);
   expect(screen.queryByRole('button', { name: /^تأكيد حلقة/ })).toBeNull();
+  expect(screen.queryByText(t.inbox.replyAction.confirm)).toBeNull();
 });

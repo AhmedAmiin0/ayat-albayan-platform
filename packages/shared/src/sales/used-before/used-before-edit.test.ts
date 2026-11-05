@@ -12,8 +12,7 @@ const base = {
 };
 
 describe('usedBeforeEditMax', () => {
-  // usedBeforeMax = lessons − 1 since #610 (owner: no cap beyond one lesson left).
-  it('is usedBeforeMax for an untouched package (8 lessons: 7)', () => {
+  it('is usedBeforeMax for an untouched package (every lesson but one: 8 → 7)', () => {
     expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(7);
     expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(11);
   });
@@ -36,6 +35,7 @@ describe('usedBeforeEditProblem', () => {
 
   it('refuses more than the max: never the whole package', () => {
     expect(usedBeforeEditProblem({ ...base, next: 8 })).toBe('used_before_too_many');
+    expect(usedBeforeEditProblem({ ...base, next: 9 })).toBe('used_before_too_many');
     expect(usedBeforeEditProblem({ ...base, next: 4, platformUsed: 5, pastStart: true })).toBe('used_before_too_many');
   });
 
