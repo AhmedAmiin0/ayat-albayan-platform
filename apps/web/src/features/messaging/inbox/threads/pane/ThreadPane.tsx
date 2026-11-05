@@ -27,6 +27,7 @@ import { ThreadPaneWide } from './ThreadPaneWide';
 import { ThreadSideSheet } from './ThreadSideSheet';
 import { useChatAccess } from '@/features/messaging/inbox/shared/use-chat-access';
 import { useWindowFocus } from './use-window-focus';
+import { useThreadLog } from './anchor';
 
 export interface ThreadPaneProps {
   phone: string;
@@ -50,6 +51,8 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const mode = useInboxMode();
   const access = useChatAccess(mode);
   const detail = useLiveThread(phone);
+  // The live pages, or the window around a search hit (docs/37): what the log shows.
+  const chat = useThreadLog(phone, detail);
   // Back to this window: fetch now, which also re-arms the focus-gated poll (W13).
   useWindowFocus(detail.refetch, phone);
   const templates = useQuery({ ...templatesQuery, enabled: access.templates });
@@ -72,7 +75,6 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   if (detail.isError && !detail.data) return <FormAlert>{readErrorText(detail.error)}</FormAlert>;
   const first = detail.data.pages[0];
   if (!th) return <NewThread phone={phone} lessons={first?.lessons ?? []} />;
-  const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
   const context = { studentName: lead.data?.qualification.student_name ?? null, firstStudentName: first?.people.students[0]?.name ?? null, teacherName: th.teacher_name, lessons: first?.lessons ?? [] };
   // Sales keeps the children for its header line; their packages arrive nulled, so no badge (admin only).
@@ -96,17 +98,14 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <>
-      {detail.isError && (
+      {(detail.isError || chat.lost) && (
         <p role="status" className="shrink-0 px-3 py-1 text-xs text-danger shell:px-0">
-          {t.common.error}
+          {chat.lost ? t.inbox.chatSearch.unreachable : t.common.error}
         </p>
       )}
       <MessageLog
         phone={phone}
-        messages={messages}
-        hasMore={detail.hasNextPage}
-        loadingOlder={detail.isFetchingNextPage}
-        onOlder={() => void detail.fetchNextPage()}
+        {...chat}
         waitingKeys={waiting}
         fill={fill}
         canCall={!readOnly} lessons={context.lessons}

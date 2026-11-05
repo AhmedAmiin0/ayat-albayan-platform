@@ -50,4 +50,12 @@ describe('parseInboxSearch', () => {
     expect(parseInboxSearch({ calls: 'true' }).calls).toBe(true);
     expect(parseInboxSearch({ calls: 'no' }).calls).toBeUndefined();
   });
+
+  it('keeps a search hit (msg, docs/37) only as an id inside an open chat', () => {
+    const msg = '0c000000-0000-4000-8000-000000000002';
+    const phone = '+966501234567';
+    expect(parseInboxSearch({ phone, msg })).toEqual({ phone, msg, page: 1 });
+    expect(parseInboxSearch({ msg })).toEqual({ page: 1 });
+    expect(parseInboxSearch({ phone, msg: 'x' })).toEqual({ phone, page: 1 });
+  });
 });

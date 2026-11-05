@@ -11,6 +11,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
+import { SearchFromProfile } from '@/features/messaging/inbox/search';
 import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscription';
 
 /**
@@ -37,6 +38,7 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
       aria-label={t.inbox.subscription.title}
       className={cn('grid content-start gap-3', railXl)}
     >
+      <SearchFromProfile />
       <h3 className="text-sm font-semibold">{t.inbox.subscription.title}</h3>
       {people.students.length === 0 && (
         <p className="text-sm text-ink-3">{t.subscriptions.emptyList}</p>

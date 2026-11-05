@@ -19,7 +19,7 @@ function SalesInboxRoute() {
     <InboxModeContext.Provider value="sales">
       <InboxPage
         search={search}
-        onSearch={(next) => void navigate({ search: next })}
+        onSearch={(next, how) => void navigate({ search: next, ...how })}
         head={<SalesLiveStrip enabled={can('self.sales_academy')} compact />}
       />
     </InboxModeContext.Provider>

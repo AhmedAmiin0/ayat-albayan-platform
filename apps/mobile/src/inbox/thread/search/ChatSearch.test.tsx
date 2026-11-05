@@ -2,7 +2,7 @@ import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { BackHandler, FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { chat, found, page, stub } from './search.fixture';
+import { chat, found, stub } from './search.fixture';
 import { MID, NEW, OLD } from './search.data';
 
 const mockApiFetch = jest.fn();
