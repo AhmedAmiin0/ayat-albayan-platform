@@ -7,12 +7,12 @@ import { reopenKapsoConversation } from '@/modules/messaging/whatsapp/drivers/ka
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 
 /** Kapso gets this long, list and PATCH together (the reopener's budget, owner 2026-10-27). */
-export const KAPSO_HOLD_MS = 5_000;
+const KAPSO_HOLD_MS = 5_000;
 /** error_text keeps this much of Kapso's failure (never a key: the http core's message only). */
 const MAX_TEXT = 200;
 
 /** Where a held row leaves from: its line (legacy) or its number (module mode). */
-export interface KapsoHoldAt {
+interface KapsoHoldAt {
   phone: string;
   line: WaLine;
   route?: NumberRoute | null;
@@ -31,7 +31,7 @@ function envOf(at: KapsoHoldAt): WhatsappEnv | null {
 }
 
 /** Kapso's PATCH failed: what the held row's error_text says (the text itself still waits). */
-export const kapsoFailText = (message: string): string =>
+const kapsoFailText = (message: string): string =>
   `kapso conversation reopen failed: ${message}`.slice(0, MAX_TEXT);
 
 /**
