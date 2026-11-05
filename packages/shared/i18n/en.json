@@ -3438,7 +3438,8 @@
       "slot_2": "Sunday 4 October 19:00",
       "tz_city": "Riyadh",
       "lesson_kind": "Trial",
-      "contact_name": "Ahmed"
+      "contact_name": "Ahmed",
+      "feedback_link": "https://example.com/r/Ab12Cd34Ef"
     },
     "teacherLessonMinutes": "{n} minutes",
     "teacherReminderCrm": "{when} · {students} · Lesson link: {join} · Lesson report: {report}",

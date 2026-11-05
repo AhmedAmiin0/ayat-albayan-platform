@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
+import { templateProblem } from '@/modules/messaging/whatsapp/template-review';
 
 // Migrations 20261105000300 / 301, read as text: no database here (docs/19 «Short links», «Report
 // flow»).
@@ -44,4 +45,10 @@ describe('migration 301: report_ready → session_report_pdf', () => {
     const bounds = [...report.matchAll(/\{\d+,(\d+)\}/g)].map((m) => Number(m[1]));
     expect(bounds.every((n) => n <= 255)).toBe(true);
   });
+
+  it('the body passes the submit check (no variable at its start or end)', () => {
+    const body = /body_ar = '([\s\S]*?)',\n/.exec(report)?.[1] ?? '';
+    expect(templateProblem({ body_ar: body, params: ['a', 'b', 'c', 'd'] })).toBeNull();
+  });
 });
+

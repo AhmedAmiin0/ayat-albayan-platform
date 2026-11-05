@@ -3438,7 +3438,8 @@
       "slot_2": "الأحد 4 أكتوبر 19:00",
       "tz_city": "الرياض",
       "lesson_kind": "تجريبية",
-      "contact_name": "أحمد"
+      "contact_name": "أحمد",
+      "feedback_link": "https://example.com/r/Ab12Cd34Ef"
     },
     "teacherLessonMinutes": "{n} دقيقة",
     "teacherReminderCrm": "{when} · {students} · رابط الحلقة: {join} · تقرير الحلقة: {report}",
