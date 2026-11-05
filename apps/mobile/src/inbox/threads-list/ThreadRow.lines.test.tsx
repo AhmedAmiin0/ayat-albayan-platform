@@ -64,6 +64,11 @@ test('the preview draws WhatsApp markup without its asterisks', async () => {
   expect(screen.queryByText(/\*/)).toBeNull();
 });
 
+test('a message of several lines previews as one line, its breaks folded into spaces', async () => {
+  await draw({ last_direction: 'inbound', last_body: 'السلام عليكم\n\nموعد الحلقة  اليوم\n' });
+  expect(screen.getByText('السلام عليكم موعد الحلقة اليوم')).toBeTruthy();
+});
+
 test('the time sits on line 1, the unread count on line 2', async () => {
   await draw({ last_direction: 'inbound', unread_count: 3, last_message_at: NOW.toISOString() });
   const [first, second] = lines();

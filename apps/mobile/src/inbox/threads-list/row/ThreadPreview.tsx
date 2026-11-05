@@ -6,13 +6,16 @@ import { DeliveryTicks } from '@/inbox/messages/components/DeliveryTicks';
 import { threadPreview } from '@/inbox/messages/hooks/message-text';
 import { WaText } from './WaText';
 
+/** One line as WhatsApp's list: line breaks and runs of spaces fold into one space. */
+const oneLine = (s: string): string => s.replace(/\s+/g, ' ').trim();
+
 /**
  * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
  * failed is the row's «لم تُرسل» chip already.
  */
 function ticksWord(th: ThreadView): string | undefined {
   if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
-  return `${t.enums.messageStatus[th.last_status]} · ${stripWaMarkup(threadPreview(th))}`;
+  return `${t.enums.messageStatus[th.last_status]} · ${stripWaMarkup(oneLine(threadPreview(th)))}`;
 }
 
 /** «مسوّدة:» in the act colour before the unsent text, as WhatsApp's «Draft:» (review 10-29 #4). */
@@ -58,7 +61,7 @@ function PreviewText({ text, label }: { text: string; label: string | undefined 
 /** The second line: her unsent text when the chat has one, else the last message with its ticks. */
 export function ThreadPreview({ thread: th, draft }: { thread: ThreadView; draft: string }) {
   if (draft) {
-    const text = draft.replace(/\s+/g, ' ').trim();
+    const text = oneLine(draft);
     return (
       <>
         <DraftWord />
@@ -70,7 +73,7 @@ export function ThreadPreview({ thread: th, draft }: { thread: ThreadView; draft
   return (
     <>
       {ours ? <DeliveryTicks status={th.last_status} inList /> : null}
-      <PreviewText text={threadPreview(th)} label={ticksWord(th)} />
+      <PreviewText text={oneLine(threadPreview(th))} label={ticksWord(th)} />
     </>
   );
 }
