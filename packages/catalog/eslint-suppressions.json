@@ -82,7 +82,7 @@
   },
   "src/permissions/catalog.data.ts": {
     "max-len": {
-      "count": 24
+      "count": 23
     }
   },
   "src/permissions/catalog.ts": {
