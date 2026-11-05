@@ -37,4 +37,11 @@ describe('migration 301: report_ready → session_report_pdf', () => {
     expect([...report.matchAll(/\{\{(\d)\}\}/g)].map((m) => m[1])).toEqual(['1', '2', '3', '4']);
     expect(report).not.toMatch(/report_session|delete from|insert into/i);
   });
+
+  it('fixes the crm_name check: no regex bound over 255 (Postgres refuses it at the first write)', () => {
+    expect(report).toContain('char_length(crm_name) between 1 and 512');
+    expect(report).toContain("crm_name ~ '^[a-z0-9_]+$'");
+    const bounds = [...report.matchAll(/\{\d+,(\d+)\}/g)].map((m) => Number(m[1]));
+    expect(bounds.every((n) => n <= 255)).toBe(true);
+  });
 });

@@ -7,7 +7,18 @@
 -- change has two values and is refused, never sent with the wrong ones). Status approved: the template
 -- is approved on the WABA. Only the report_ready row is touched. Idempotent.
 -- MANUAL ROLLBACK: update public.message_templates set crm_name = null, crm_language = null,
---   status = 'missing' where key = 'report_ready';
+--   status = 'missing' where key = 'report_ready';  (the constraint fix below stays)
+
+-- Fix of migration 680's crm_name check: '{1,512}' is over Postgres's regex repetition limit (255), so
+-- the check failed («invalid repetition count(s)») for ANY non-null crm_name, an admin's
+-- «عدّل اسمه في نظام CRM» included. Same rule (Meta's name characters, 1-512 long), length counted
+-- apart. No row changes; every existing crm_name is null.
+set local lock_timeout = '5s';
+alter table public.message_templates drop constraint if exists message_templates_crm_name_check;
+alter table public.message_templates add constraint message_templates_crm_name_check
+  check (crm_name is null or (char_length(crm_name) between 1 and 512 and crm_name ~ '^[a-z0-9_]+$'))
+  not valid;
+alter table public.message_templates validate constraint message_templates_crm_name_check;
 
 update public.message_templates
    set crm_name = 'session_report_pdf',
