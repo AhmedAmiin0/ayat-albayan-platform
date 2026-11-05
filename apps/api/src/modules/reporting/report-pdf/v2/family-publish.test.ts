@@ -18,7 +18,8 @@ function publisher(source: ReportSource) {
   const renderer = { render: vi.fn<(html: string) => Promise<Uint8Array>>(async () => new Uint8Array([37])), close: vi.fn() };
   const storage = { upload: vi.fn(async () => undefined) };
   const p = new ReportPdfPublisher({ load: async () => source } as unknown as ReportPdfSource, renderer as unknown as PdfRenderer, storage as unknown as StorageService);
-  Object.assign(p, { settings: new ReportPdfSettings(fakeSettings()) });
+  const feedback = { url: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
+  Object.assign(p, { settings: new ReportPdfSettings(fakeSettings()), feedback });
   return { p, renderer, storage };
 }
 

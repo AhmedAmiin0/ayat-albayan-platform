@@ -13,6 +13,7 @@ export function mocks() {
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
     commissionBell: { notify: vi.fn() }, // «عمولة جديدة» after every money write
+    received: { adminIds: vi.fn(), ownerIds: vi.fn() }, // «تم استلام دفعة»: who is told
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
@@ -66,6 +67,8 @@ export const ENFORCED_SETTINGS = { ...SETTING_DEFAULTS, sales_require_assignee: 
 export function resetMocks(m: Mocks): void {
   for (const group of Object.values(m)) for (const fn of Object.values(group)) fn.mockReset();
   m.subs.forStudent.mockResolvedValue([]);
+  m.received.adminIds.mockResolvedValue([]);
+  m.received.ownerIds.mockResolvedValue([]);
   m.subs.forStudents.mockResolvedValue([]);
   m.family.linkPackages.mockResolvedValue([]);
   m.subs.paid.mockResolvedValue(new Map());

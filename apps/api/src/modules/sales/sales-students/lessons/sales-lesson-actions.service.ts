@@ -61,7 +61,7 @@ export class SalesLessonActions {
   ) {}
 
   async reschedule({ lessonId, body, actor }: Move, now = new Date()): Promise<SalesLessonMoved> {
-    await this.scope.assertLesson({ lessonId, now });
+    await this.scope.assertLesson({ lessonId, now, user: actor });
     // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
     if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
     const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
@@ -76,7 +76,7 @@ export class SalesLessonActions {
    */
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
     const by = body.by ?? 'admin';
-    await this.scope.assertLesson({ lessonId, now, afterEnd: AFTER_END[by] });
+    await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;
     await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by, reason }, actor });
     const lesson = await this.queries.lesson(lessonId);
@@ -97,12 +97,15 @@ export class SalesLessonActions {
     return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
   }
 
-  /** «تصحيح الحالة» (owner 2026-11-03): ANY lesson, after its end; the admin OutcomeCorrection. */
+  /**
+   * «تصحيح الحالة» (owner 2026-11-03): after its end, the admin OutcomeCorrection; ANY lesson while
+   * SalesOwnershipRule is off, only hers while it enforces (as cancel, its after-end case).
+   */
   async correct(
     { lessonId, body, actor }: Correct,
     now = new Date(),
   ): Promise<{ id: string; status: LessonStatus }> {
-    await this.scope.assertLesson({ lessonId, now, afterEnd: true });
+    await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: true });
     await this.lessons.corrections.correct({ lessonId, to: body.to, actor });
     return { id: lessonId, status: body.to };
   }

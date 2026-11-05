@@ -19,6 +19,13 @@ import { ReportLessonQueries } from './report-lesson.queries';
 import { ReportPdfQueue } from './submit/report-pdf.queue';
 import { ReportsQueries } from './reports.queries';
 import { TeacherReportsQueries } from './teacher/teacher-reports.queries';
+import { AuditService } from '@/common/audit/audit.service';
+import { TEACHER_LINK_CONFIG } from './teacher-link/teacher-link.config';
+import { TeacherLinkLimit } from './teacher-link/teacher-link.limit';
+import { TeacherLinkRepo } from './teacher-link/teacher-link.repo';
+
+/** The teacher report link's secret in the harness (docs/19). */
+export const LINK_SECRET = 'l'.repeat(40);
 import { ADMIN, GUARDIAN, lessonRow, OTHER_TEACHER, reportRow, TEACHER, TEACHER_ID } from './reports.fakes';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };
@@ -28,7 +35,8 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-type Token = keyof typeof USERS;
+/** A key of USERS, or 'none': no Authorization header (the public routes). */
+type Token = string;
 export type InjectArgs = { method: 'GET' | 'POST' | 'PUT' | 'DELETE'; url: string; token?: Token; body?: object };
 
 function mocks() {
@@ -47,10 +55,13 @@ function mocks() {
     events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
     pdf: { enqueue: vi.fn() },
     push: { notifyAdmins: vi.fn() },
+    link: { profileOf: vi.fn(), canActivate: vi.fn(), record: vi.fn() },
   };
 }
 
-/** Boots AppModule with the mocks; `reset()` restores the happy-path defaults (call in beforeEach). */
+/**
+ * Boots AppModule with the mocks; `reset()` restores the happy-path defaults (call in beforeEach).
+ */
 export async function reportsApp() {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
@@ -66,12 +77,16 @@ export async function reportsApp() {
     .overrideProvider(LessonEvents).useValue(m.events)
     .overrideProvider(ReportPdfQueue).useValue(m.pdf)
     .overrideProvider(PushService).useValue(m.push)
+    .overrideProvider(TEACHER_LINK_CONFIG).useValue({ secret: LINK_SECRET })
+    .overrideProvider(TeacherLinkRepo).useValue(m.link)
+    .overrideGuard(TeacherLinkLimit).useValue(m.link)
+    .overrideProvider(AuditService).useValue(m.link)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = ({ method, url, token = 'teacher', body }: InjectArgs) =>
-    app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
+    app.inject({ method, url, headers: token === 'none' ? {} : { authorization: `Bearer ${token}` }, payload: body });
   const reset = () => {
     vi.resetAllMocks();
     m.reports.get.mockResolvedValue(reportRow());
@@ -89,6 +104,9 @@ export async function reportsApp() {
     m.history.pending.mockResolvedValue([]);
     m.mine.page.mockResolvedValue({ rows: [], total: 0 });
     m.mine.students.mockResolvedValue([]);
+    m.link.profileOf.mockResolvedValue(null);
+    m.link.canActivate.mockResolvedValue(true);
+    m.link.record.mockResolvedValue(undefined);
   };
   return { ...m, app, call, reset };
 }

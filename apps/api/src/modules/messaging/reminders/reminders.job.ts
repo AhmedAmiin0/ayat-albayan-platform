@@ -1,5 +1,5 @@
 import { joinWindowConfig, type TemplateKey } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { livekitEnv, loadEnv } from '@/config/env/env';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
@@ -10,6 +10,7 @@ import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson
 import { RemindersRepo } from './reminders.repo';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
+import { ReminderTeacherLinks } from './reminders.teacher-links';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -51,6 +52,9 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly push: PushService,
     private readonly policy: NotificationPolicy,
   ) {}
+
+  /** The teacher reminder's short links (property injection keeps the constructor at four). */
+  @Inject(ReminderTeacherLinks) private readonly teacherLinks!: ReminderTeacherLinks;
 
   onApplicationBootstrap(): void {
     this.ticker.start();
@@ -104,8 +108,12 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const ctx: RoomContext = { auto: settings.meeting_link_auto, livekit, joinOk: approved.has('lesson_join_link'), origin: firstWebOrigin(env.WEB_ORIGIN) };
     const { minutesBefore, sameDay, dayBeforeAt, teacherMinutesBefore } = rules;
     const plan = { minutesBefore, sameDay, dayBeforeAt, teacherReminders: rules.teacher, teacherMinutesBefore, origin: ctx.origin };
-    const rows = planReminders({ ...plan, lessons: sentLinks(lessons, ctx), dayBefore: approved.has('lesson_reminder_24h'), now });
-    const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win: joinWindowConfig(settings) });
+    const sent = sentLinks(lessons, ctx);
+    const win = joinWindowConfig(settings);
+    const at = { minutesBefore, teacherMinutesBefore, now, origin: ctx.origin, win };
+    const teacherLinks = rules.teacher ? await this.teacherLinks.build(sent, at) : undefined;
+    const rows = planReminders({ ...plan, lessons: sent, teacherLinks, dayBefore: approved.has('lesson_reminder_24h'), now });
+    const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win });
     return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
   }
 

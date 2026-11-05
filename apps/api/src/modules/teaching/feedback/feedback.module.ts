@@ -13,6 +13,7 @@ import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
 import { FeedbackSender } from './request/feedback.sender';
 import { FeedbackSettings } from './feedback.settings';
+import { FeedbackLinksModule } from './links/feedback-links.module';
 
 /**
  * «رأيك يهمّنا» (docs/13-forms-spec.md form 3): the admin's «ابعت طلب الرأي» (an approved WhatsApp
@@ -20,7 +21,8 @@ import { FeedbackSettings } from './feedback.settings';
  * and teacher lists. TemplateRegistry comes from the global WhatsappModule.
  */
 @Module({
-  imports: [InboxModule, TeachersModule],
+  // FeedbackLinksModule is global: it provides FamilyFeedbackLinks to the report PDF module.
+  imports: [InboxModule, TeachersModule, FeedbackLinksModule],
   controllers: [FeedbackController, FeedbackPublicController],
   providers: [
     { provide: FEEDBACK_CONFIG, useFactory: (): FeedbackConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null }) },

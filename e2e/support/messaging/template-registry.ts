@@ -16,13 +16,15 @@ export interface TemplateRow {
   body_ar: string;
   footer_ar: string | null;
   buttons: unknown;
+  crm_name: string | null;
+  crm_language: string | null;
 }
 
 /** Every registry column a health check or a submit rewrites. */
 export async function snapshotTemplates(): Promise<TemplateRow[]> {
   return withSql((sql) => sql<TemplateRow[]>`
     select key, status, quality, meta_id, last_checked_at, last_error, submitted_at, body_ar,
-      footer_ar, buttons from public.message_templates`);
+      footer_ar, buttons, crm_name, crm_language from public.message_templates`);
 }
 
 export async function restoreTemplates(rows: TemplateRow[]): Promise<void> {
@@ -31,10 +33,21 @@ export async function restoreTemplates(rows: TemplateRow[]): Promise<void> {
       await sql`update public.message_templates set status = ${r.status}::public.template_status,
         quality = ${r.quality}, meta_id = ${r.meta_id}, last_checked_at = ${r.last_checked_at},
         last_error = ${r.last_error}, submitted_at = ${r.submitted_at}, body_ar = ${r.body_ar},
-        footer_ar = ${r.footer_ar}, buttons = ${sql.json(r.buttons as never)}
+        footer_ar = ${r.footer_ar}, buttons = ${sql.json(r.buttons as never)},
+        crm_name = ${r.crm_name}, crm_language = ${r.crm_language}
         where key = ${r.key}`;
     }
   });
+}
+
+/**
+ * report_ready as the platform's own template (no WABA name): since migration
+ * 20261105000301 it goes as session_report_pdf; specs of the platform's own submit / send
+ * path clear that (restore after).
+ */
+export async function unmapTemplate(key: string): Promise<void> {
+  await withSql((sql) => sql`
+    update public.message_templates set crm_name = null, crm_language = null where key = ${key}`);
 }
 
 /** Forces a registry row's status (e.g. «approved» for a template the stub does not have). */

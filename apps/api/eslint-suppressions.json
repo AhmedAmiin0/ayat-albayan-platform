@@ -2202,9 +2202,6 @@
   "src/modules/finance/payments/payments.module.ts": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/modules/finance/payments/payments.repo.ts": {
@@ -2513,11 +2510,6 @@
   },
   "src/modules/finance/stripe/links/link-views.test.ts": {
     "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/stripe/links/link-views.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -5629,9 +5621,6 @@
     "ab/no-parent-imports": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 11
     }
@@ -5711,17 +5700,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 16
+      "count": 15
     }
   },
   "src/modules/messaging/reminders/reminders.legacy-parity.test.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/messaging/reminders/reminders.module.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/reminders/reminders.repo.ts": {
@@ -10324,7 +10308,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/reporting/report-pdf/report-pdf.publisher.ts": {
@@ -10332,7 +10316,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/modules/reporting/report-pdf/report-pdf.queries.test.ts": {
@@ -10391,7 +10375,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/reporting/report-pdf/template/template.body.ts": {
@@ -10666,9 +10650,6 @@
     },
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/reporting/reports/reports.queries.program.test.ts": {
@@ -10681,7 +10662,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/reporting/reports/reports.service.ts": {
@@ -10689,10 +10670,10 @@
       "count": 1
     },
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/reporting/reports/reports.settings.test.ts": {
@@ -10762,10 +10743,10 @@
   },
   "src/modules/reporting/reports/submit/report-gate.ts": {
     "ab/no-parent-imports": {
-      "count": 7
+      "count": 6
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/reporting/reports/submit/report-pdf.queue.test.ts": {
@@ -10825,7 +10806,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/reporting/reports/submit/submit-plan.test.ts": {
@@ -10850,7 +10831,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/reporting/reports/teacher/teacher-reports.http.test.ts": {
@@ -10912,7 +10893,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "no-nested-ternary": {
       "count": 1
@@ -10963,7 +10944,7 @@
       "count": 6
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/reporting/reports/v2/report-v2.submit.http.test.ts": {
@@ -11547,7 +11528,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/sales/sales-students/details/sales-student.part-paid.test.ts": {
@@ -14225,9 +14206,6 @@
     }
   },
   "src/modules/teaching/feedback/public/feedback.token.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -14280,9 +14258,6 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

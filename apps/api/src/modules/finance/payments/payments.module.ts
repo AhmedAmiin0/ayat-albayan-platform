@@ -11,17 +11,28 @@ import { PaymentsRepo } from './payments.repo';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';
+import { PaymentReceived } from './received/payment-received';
+import { PaymentReceivedRepo } from './received/payment-received.repo';
 
 /**
- * Payments CRUD + receipt upload URL + «المرفقات» (payment_attachments); subscription status recomputed after a payment.
+ * Payments CRUD + receipt upload URL + «المرفقات» (payment_attachments); subscription status
+ * recomputed after a payment, and «تم استلام دفعة» (PaymentReceived).
  * R-PAY-01, R-MOB-02 (camera receipt). Routes P1–P7 (docs/11 §7).
  */
 @Module({
   imports: [SubscriptionsModule, FxModule, InvoicesModule],
   controllers: [PaymentsController],
-  providers: [PaymentInputs, PaymentsRepo, PaymentsService, PaymentsSettings, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsRepo],
-  // The salesperson's bank transfer from the chat reuses them (sales-money); her own files (/sales/me, assistant-pay);
-  // the Stripe module's webhook reads a session's own payment (PaymentsQueries.byRequest).
-  exports: [PaymentsService, ReceiptsService, PaymentAttachments, PaymentsRepo],
+  providers: [
+    ...[PaymentInputs, PaymentsRepo, PaymentsService, PaymentsSettings, ReceiptsService],
+    ...[PaymentFiles, PaymentAttachments, PaymentAttachmentsRepo],
+    ...[PaymentReceived, PaymentReceivedRepo],
+  ],
+  // The salesperson's bank transfer from the chat reuses them (sales-money); her own files
+  // (/sales/me, assistant-pay); the Stripe module's webhook reads a session's own payment
+  // (PaymentsRepo.byRequest) and tells of it (PaymentReceived).
+  exports: [
+    ...[PaymentsService, ReceiptsService, PaymentAttachments, PaymentsRepo],
+    PaymentReceived,
+  ],
 })
 export class PaymentsModule {}

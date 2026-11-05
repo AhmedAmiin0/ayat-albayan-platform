@@ -13,6 +13,7 @@ beforeEach(() => {
   mockFetch.mockReset().mockImplementation(never);
   globalThis.fetch = mockFetch;
   jest.mocked(connectivity.reportFailure).mockClear();
+  jest.mocked(connectivity.probeNow).mockClear();
 });
 afterEach(() => jest.useRealTimers());
 
@@ -20,7 +21,9 @@ async function settlesAt(call: Promise<Response>, ms: number) {
   const settled = expect(call).rejects.toBeInstanceOf(TypeError);
   await jest.advanceTimersByTimeAsync(ms);
   await settled;
-  expect(connectivity.reportFailure).toHaveBeenCalledTimes(1);
+  // A hung session read is the token stage: a /health probe decides, the API is not blamed.
+  expect(connectivity.reportFailure).not.toHaveBeenCalled();
+  expect(connectivity.probeNow).toHaveBeenCalledTimes(1);
 }
 
 async function stillWaiting(call: Promise<Response>) {

@@ -12,7 +12,8 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { REPORTS_KEY, submitReport } from '@/features/reporting/reports/api';
+import { REPORTS_KEY } from '@/features/reporting/reports/api';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useAutosave } from './use-autosave';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
@@ -25,11 +26,12 @@ const entryValuesOf = reportEntryValues;
  */
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
+  const api = useReportApi();
   const [report, setReport] = useState(initial);
   const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
-    mutationFn: submitReport,
+    mutationFn: api.submitReport,
     onSuccess: async (view) => {
       setReport(view);
       setValues(entryValuesOf(view, studentProgram));

@@ -1893,6 +1893,16 @@
     "submittedAtCol": "Sent on",
     "gradeCol": "Grade",
     "actionsCol": "Action",
+    "teacherLink": {
+      "subtitle": "This page is for this lesson's report only; no sign-in is needed.",
+      "invalid": "This link is not valid. Open the full link as you received it, or ask the academy for a new one.",
+      "expired": "This report link has expired. Ask the academy for a new one.",
+      "notOpen": "The report opens when the lesson starts. Open the link again after its start time.",
+      "tooMany": "Too many tries in a short time. Wait a little, then try again.",
+      "loadFailed": "The report could not be loaded. Check your connection, then try again.",
+      "retry": "Try again",
+      "loading": "Loading the report…"
+    },
     "v2": {
       "formTitle": "Lesson report",
       "autoFilled": "Lesson details are filled in automatically from the schedule.",
@@ -3533,7 +3543,8 @@
       "slot_2": "Sunday 4 October 19:00",
       "tz_city": "Riyadh",
       "lesson_kind": "Trial",
-      "contact_name": "Ahmed"
+      "contact_name": "Ahmed",
+      "feedback_link": "https://example.com/r/Ab12Cd34Ef"
     },
     "teacherLessonMinutes": "{n} minutes",
     "teacherReminderCrm": "{when} · {students} · Lesson link: {join} · Lesson report: {report}",
@@ -3863,6 +3874,10 @@
     "course_resumed": {
       "title": "Lessons resumed",
       "body": "{student}’s lessons resume; first lesson {when}"
+    },
+    "payment_received": {
+      "title": "Payment received",
+      "body": "{student}: {amount}"
     }
   },
   "bell": {
@@ -4091,7 +4106,8 @@
       "lesson_rescheduled": "Lesson time changed",
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
-      "course_resumed": "Lessons resumed"
+      "course_resumed": "Lessons resumed",
+      "payment_received": "Payment received"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4172,7 +4188,8 @@
       "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
       "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
       "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
-      "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes."
+      "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
+      "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4203,7 +4220,8 @@
     "reportFormV2": "New lesson report form",
     "presenceEnabled": "Show online status and last seen",
     "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
-    "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)"
+    "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
+    "shortLinkBase": "Short links base"
   },
   "language": {
     "label": "Language",
@@ -6456,6 +6474,10 @@
       "course_resumed": {
         "name": "Lessons resumed",
         "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
+      },
+      "payment_received": {
+        "name": "Payment received",
+        "trigger": "When an incoming payment is recorded for a student, to the administration and the student's assistant"
       }
     }
   },
@@ -7670,7 +7692,6 @@
       "backToApp": "Back to the app"
     },
     "bell": {
-      "paidTitle": "Paid through a payment link",
       "refusedTitle": "A card payment was not recorded in the platform",
       "disputeTitle": "A card payment was disputed",
       "disputeBody": "Needs review in the Stripe dashboard"
@@ -7857,5 +7878,8 @@
       "fri": "Fr"
     },
     "earliest": "Earliest allowed date: {date}"
+  },
+  "shortLinks": {
+    "notFound": "This link is not valid or has expired."
   }
 }

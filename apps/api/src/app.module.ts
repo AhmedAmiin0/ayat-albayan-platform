@@ -27,6 +27,7 @@ import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
 import { HealthController } from './modules/platform/health/health.controller';
 import { ProcessRoleModule } from './modules/platform/process-role';
+import { ShortLinksModule } from './modules/platform/short-links';
 import { InboxModule } from './modules/messaging/inbox/inbox.module';
 import { SavedRepliesModule } from './modules/messaging/saved-replies/saved-replies.module';
 import { InvoicesModule } from './modules/finance/invoices/invoices.module';
@@ -142,6 +143,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     MessagingJobsModule,
     WebhookModule,
     ScriptRelayModule,
+    ShortLinksModule,
   ],
   controllers: [HealthController],
 })

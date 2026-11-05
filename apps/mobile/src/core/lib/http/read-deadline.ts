@@ -7,10 +7,14 @@ export const READ_TIMEOUT_MS = 20_000;
 
 /**
  * Reads the API answers slowly by design: a chat file (signed, `?download=1` too) or a PDF page,
- * which the API may first fetch from Meta or the CRM, then render (the renderer alone allows 45 s).
+ * which the API may first fetch from Meta or the CRM, then render (the renderer alone allows 45 s),
+ * and a booking/invoice file (`/media/:messageId`), downloaded from WhatsApp on its first ask.
  */
 export const SLOW_READ_TIMEOUT_MS = 120_000;
-const SLOW_READS = [/^\/threads\/[^/?]+\/messages\/[^/?]+\/(file|pdf\/\d+)(\?|$)/];
+const SLOW_READS = [
+  /^\/threads\/[^/?]+\/messages\/[^/?]+\/(file|pdf\/\d+)(\?|$)/,
+  /^\/threads\/[^/?]+\/media\/[^/?]+(\?|$)/,
+];
 
 /** The deadline for a read of this API path. */
 export const readTimeoutFor = (path: string): number =>
