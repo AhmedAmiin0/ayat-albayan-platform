@@ -51,6 +51,10 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
   it.each([
     ['without the key', [], TRIAL],
     ['on an ended lesson', ['lessons.reschedule'], { ...TRIAL, ends_at: '2026-10-12T13:00:00.000Z' }],
+    // A running lesson stays read-only with «ادخل الحلقة» only (e2e sales-double-role).
+    ['on a running lesson', ['lessons.reschedule'], {
+      ...TRIAL, starts_at: '2026-10-12T13:45:00.000Z', ends_at: '2026-10-12T14:30:00.000Z',
+    }],
   ])('hidden %s', (_case, keys, lesson) => {
     granted.keys = keys;
     const drawer = open(lesson);
