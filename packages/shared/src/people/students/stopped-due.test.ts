@@ -16,4 +16,10 @@ describe('stoppedCharge (what a stopped course is still owed for)', () => {
   it('never above the package (attended capped at its lessons)', () => {
     expect(stoppedCharge({ ...pkg, attended: 12 }, 100)).toBe(1000);
   });
+
+  it('a rate above 100 % never owes more than the price', () => {
+    expect(stoppedCharge({ ...pkg, attended: 8 }, 150)).toBe(1000);
+    expect(stoppedCharge({ ...pkg, attended: 10 }, 300)).toBe(1000);
+    expect(stoppedCharge(pkg, 150)).toBe(450);
+  });
 });

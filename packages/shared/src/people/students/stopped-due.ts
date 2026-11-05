@@ -13,6 +13,9 @@ export interface StoppedPackage {
   attended: number;
 }
 
-/** attended × (price / lessonsTotal) × rate %, in the package currency's minor unit. */
+/**
+ * attended × (price / lessonsTotal) × rate %, in the package currency's minor unit; never above
+ * the price (a rate above 100 % only lowers a refund, it never makes a debt beyond the package).
+ */
 export const stoppedCharge = (pkg: StoppedPackage, ratePercent: number): number =>
-  stopRefund({ ...pkg, paid: 0, ratePercent }).charged;
+  Math.min(stopRefund({ ...pkg, paid: 0, ratePercent }).charged, Math.max(pkg.price, 0));

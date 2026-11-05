@@ -30,10 +30,14 @@ export class StopRefundGate {
     private readonly rule: SalesOwnershipRule,
   ) {}
 
-  /** The sheet's refund lines, null for whom may not refund this student. */
+  /**
+   * The sheet's refund lines, null for whom may not refund this student. Null too when they cannot
+   * be read (Stripe unconfigured or down for a card payment): «إلغاء فقط» never waits on Stripe,
+   * and the stop's own plan answers the 503.
+   */
   async preview(user: AuthUser, sub: RefundSub): Promise<StopRefund | null> {
     const allowed = can(user, 'subscriptions.refund') && (await this.owns(user, sub.studentId));
-    return allowed ? this.refunds.preview(sub) : null;
+    return allowed ? this.refunds.preview(sub).catch(() => null) : null;
   }
 
   /** Checked BEFORE the stop: nothing is stopped when it refuses. */

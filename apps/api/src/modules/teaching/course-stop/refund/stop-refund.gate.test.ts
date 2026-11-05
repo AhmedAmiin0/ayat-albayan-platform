@@ -54,6 +54,12 @@ describe('StopRefundGate: the rule off', () => {
     expect(await g.preview(sales, OTHER)).toEqual({ refund: 10 });
   });
 
+  it('Stripe unreadable: no refund lines, the sheet still opens', async () => {
+    const { g, refunds } = gate(false);
+    refunds.preview.mockRejectedValue(new Error('stripe_not_configured'));
+    expect(await g.preview(admin, SUB)).toBeNull();
+  });
+
   it('without subscriptions.refund: 403 refund_not_allowed, no lines', async () => {
     const { g } = gate(false);
     const plain = { ...sales, permissions: ['subscriptions.stop'] as Permission[] };
