@@ -1,4 +1,5 @@
 import type { SettingKey } from './registry.js';
+import { VALUE_GROUPS } from './value-groups.js';
 
 // Where each setting shows on /admin/settings, kept apart from who owns it (domains/*.ts). The
 // page renders a section's registry fields in this order; the sections come in SETTINGS_SECTIONS order.
@@ -40,11 +41,10 @@ export const SETTINGS_LAYOUT = {
     'whatsapp_calls_enabled',
     'calls_permission_template',
   ],
-  schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
-    'lesson_confirmation_required', 'lesson_outcome_grace_minutes'],
-  classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
-    'meeting_link_auto', 'meetings_in_app'],
-  reports: ['report_teacher_edit_hours', 'report_form_v2'],
+  // The same rows, in the same order, as «القيم».
+  schedule: VALUE_GROUPS.schedule,
+  classroom: VALUE_GROUPS.classroom,
+  reports: VALUE_GROUPS.reports,
   accounts: [
     'reporting_currency',
     'renewal_alert_remaining',
