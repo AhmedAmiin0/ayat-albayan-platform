@@ -17,9 +17,12 @@ export class LinkAlerts {
     private readonly received: PaymentReceived,
   ) {}
 
-  /** The payment recorded from the link: nobody recorded it by hand, so nobody is left out. */
-  async paid(link: LinkRow, payment: { id: string; amount: number; currency: string }): Promise<void> {
-    await this.received.notify({
+  /**
+   * The payment recorded from the link (not awaited: off the webhook's path). Nobody recorded it
+   * by hand, so nobody is left out: PaymentsService's own notice skips the link's assistant.
+   */
+  paid(link: LinkRow, payment: { id: string; amount: number; currency: string }): void {
+    this.received.fire({
       payment: {
         ...payment,
         kind: 'payment',

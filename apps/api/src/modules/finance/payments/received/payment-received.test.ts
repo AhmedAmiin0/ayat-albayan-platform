@@ -83,8 +83,11 @@ describe('PaymentReceived («تم استلام دفعة», payment_received)', (
   it('never throws: a failed read is logged, `fire` returns at once', async () => {
     const s = setup();
     s.repo.adminIds.mockRejectedValue(new Error('db down'));
-    await expect(s.received.notify({ payment: PAYMENT, recorderId: null })).resolves.toBeUndefined();
-    expect(s.received.fire({ payment: PAYMENT, recorderId: null })).toBeUndefined();
+    const notice = { payment: PAYMENT, recorderId: null };
+    await expect(s.received.notify(notice)).resolves.toBeUndefined();
+    expect(() => {
+      s.received.fire(notice);
+    }).not.toThrow();
     await flushPushes();
     expect(s.rows()).toEqual([]);
   });

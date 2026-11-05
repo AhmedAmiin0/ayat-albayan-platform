@@ -33,6 +33,6 @@ export const PUSH_ENTRIES = [
   { ...STAFF, key: 'channel_message', audience: 'teacher', pushKind: 'channel_message' },
   // «محفظتي» (owner 2026-10-29): a commission earned, to the assistant who brought the student; the bell only.
   { ...STAFF, channels: ['bell'], key: 'commission_earned', audience: 'staff', pushKind: 'commission_earned' },
-  // Owner 2026-11-05: a payment came in → the admins and the student's assistant (not who recorded it).
+  // Owner 2026-11-05: a payment came in → the admins and the student's assistant.
   { ...STAFF, key: 'payment_received', audience: 'staff', pushKind: 'payment_received' },
 ] as const satisfies readonly NotificationEntry[];

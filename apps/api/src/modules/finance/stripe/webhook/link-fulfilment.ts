@@ -57,7 +57,7 @@ export class LinkFulfilment {
       return `refused:${errorCode(e) ?? e.getStatus()}`;
     }
     await this.deps.links.markPaid(link.id, { paymentId: payment.id, paidAt: payment.paid_at, paymentIntent: idOf(session.payment_intent) });
-    await this.deps.alerts.paid(link, { id: payment.id, amount, currency });
+    this.deps.alerts.paid(link, { id: payment.id, amount, currency });
     return 'paid';
   }
 

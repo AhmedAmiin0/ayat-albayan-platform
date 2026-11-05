@@ -65,7 +65,7 @@ export class PaymentsService {
     if (!row) return this.raced(input, actorId);
     await this.files.saveBooked(row.id, files, actorId); // never throws: before the follow-ups, so none can drop them
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
-    this.received.fire({ payment: receivedOf(row), recorderId: actorId }); // «تم استلام دفعة», off the request path
+    this.received.fire({ payment: receivedOf(row), recorderId: actorId }); // off the request path
     return this.get(row.id);
   }
 
@@ -108,6 +108,7 @@ export class PaymentsService {
   /** A replay re-runs the follow-ups first, then saves (best effort) the form's files a failure lost. */
   private async replayed(view: PaymentView, input: PaymentWrite, actorId: string): Promise<PaymentView> {
     const row = await this.row(view.id);
+    this.received.fire({ payment: receivedOf(row), recorderId: actorId }); // lost before? once
     await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
     await this.files.saveLate(row, input, actorId);
     return view;

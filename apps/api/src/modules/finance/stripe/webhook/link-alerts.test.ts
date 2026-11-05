@@ -5,7 +5,7 @@ import { PaymentReceived, type PaymentReceivedRepo } from '@/modules/finance/pay
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 import { LinkAlerts } from './link-alerts';
 
-// A paid link is «تم استلام دفعة» (payment_received, bell + push); the admins' alerts stay payment_due.
+// A paid link is «تم استلام دفعة» (payment_received, bell + push); admins' alerts stay payment_due.
 
 const LINK = {
   id: 'l1',
@@ -34,7 +34,8 @@ function setup(owners: string[] = []) {
 describe('LinkAlerts', () => {
   it('paid: the admins, the student’s assistant and the link’s assistant, row + device push', async () => {
     const s = setup(['s2']);
-    await s.alerts.paid(LINK, { id: 'p1', amount: 50, currency: 'USD' });
+    s.alerts.paid(LINK, { id: 'p1', amount: 50, currency: 'USD' });
+    await flushPushes();
     await flushPushes();
     const told = s.rows().map((r) => `${String(r.profile_id)} ${String(r.kind)}`);
     expect(told.sort()).toEqual(['a1 payment_received', 's1 payment_received', 's2 payment_received']);

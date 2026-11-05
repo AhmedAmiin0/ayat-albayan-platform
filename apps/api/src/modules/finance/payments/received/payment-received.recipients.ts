@@ -1,5 +1,5 @@
 /** Who hears of an incoming payment (owner 2026-11-05). */
-export interface RecipientsInput {
+interface RecipientsInput {
   /** Every enabled admin. */
   admins: readonly string[];
   /** The student's following assistant(s); none → the admins only. */

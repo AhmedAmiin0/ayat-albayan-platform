@@ -2,7 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-const present = (ids: readonly (string | null)[]): string[] => ids.flatMap((id) => (id ? [id] : []));
+const present = (ids: readonly (string | null)[]): string[] =>
+  ids.flatMap((id) => (id ? [id] : []));
 
 /** The reads of «تم استلام دفعة»: who is told (service role; never a write). */
 @Injectable()
@@ -32,7 +33,8 @@ export class PaymentReceivedRepo {
       .eq('id', studentId)
       .maybeSingle();
     if (error) throw dbError(error);
-    return data ? [...present([data.brought_by]), ...(await this.leadOwners(data.guardian_id))] : [];
+    if (!data) return [];
+    return [...present([data.brought_by]), ...(await this.leadOwners(data.guardian_id))];
   }
 
   private async leadOwners(guardianId: string): Promise<string[]> {

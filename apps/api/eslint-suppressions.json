@@ -2202,9 +2202,6 @@
   "src/modules/finance/payments/payments.module.ts": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/modules/finance/payments/payments.repo.ts": {

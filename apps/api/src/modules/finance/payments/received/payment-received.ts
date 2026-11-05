@@ -15,7 +15,7 @@ export interface ReceivedPayment {
   student: string;
 }
 
-export interface ReceivedNotice {
+interface ReceivedNotice {
   payment: ReceivedPayment;
   /** Who recorded it by hand (not told); null = nobody did (a Stripe payment). */
   recorderId: string | null;
@@ -29,9 +29,12 @@ export const receivedOf = (row: PaymentRow): ReceivedPayment => ({
   kind: row.kind,
   amount: row.original_amount ?? row.amount,
   currency: row.original_currency ?? row.currency,
-  studentId: row.subscription?.student_id ?? null,
-  student: row.subscription?.student?.name ?? '',
+  ...studentOf(row.subscription),
 });
+
+function studentOf(sub: PaymentRow['subscription']): Pick<ReceivedPayment, 'studentId' | 'student'> {
+  return { studentId: sub?.student_id ?? null, student: sub?.student?.name ?? '' };
+}
 
 const isIncoming = (p: ReceivedPayment): boolean => p.kind === 'payment';
 
