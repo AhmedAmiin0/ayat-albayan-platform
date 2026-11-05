@@ -51,17 +51,15 @@ test.describe('sales double role', () => {
     await expect(day).toContainText(names.mine);
     await expect(day).toContainText(ar.sales.academySchedule.liveNow);
     await expect(day.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
-    // The only buttons are the lesson chips: one opens the lesson drawer (no admin action).
+    // The only buttons are the lesson chips: one opens the read-only lesson drawer (no admin action).
     const board = page.getByRole('region', { name: ar.schedule.dayBoard });
     await expect(board.getByRole('button', { disabled: false })).toHaveCount(1);
     await board.getByRole('button', { name: new RegExp(names.mine) }).click();
     const details = page.getByRole('dialog', { name: names.mine });
+    await expect(details).toContainText(ar.lessons.sheet.readOnly);
     await expect(details.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
-    // lessons.reschedule (sales' system role): «تغيير الموعد» on the open lesson (owner 2026-11-02),
-    // so not «للاطلاع فقط»; besides «إغلاق» nothing else: no confirm, edit, invoice or report.
-    await expect(details.getByRole('button', { name: ar.sales.lessonActions.reschedule })).toBeVisible();
-    await expect(details).not.toContainText(ar.lessons.sheet.readOnly);
-    await expect(details.getByRole('button')).toHaveCount(2);
+    // «إغلاق» is its only button: no confirm, cancel, move, edit, invoice or report.
+    await expect(details.getByRole('button')).toHaveCount(1);
     await details.getByRole('button', { name: ar.common.close }).click();
     await expect(details).toBeHidden();
 
