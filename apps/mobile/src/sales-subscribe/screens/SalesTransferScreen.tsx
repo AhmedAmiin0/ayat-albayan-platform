@@ -6,7 +6,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -50,7 +50,7 @@ export function SalesTransferScreen() {
         <ScreenHeader
           title={t.salesMoney.stepTransfer}
           {...(sub ? { subtitle: `${sub.student.name} · ${ltr(sub.student.code)}` } : {})}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+          leading={<BackButton onPress={back} />}
         />
         {done ? (
           <TransferDone payment={done} onDone={back} />

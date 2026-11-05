@@ -5,7 +5,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';
 import { useMyFeedback } from '@/feedback/queries';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -22,7 +22,7 @@ export function MyFeedbackScreen() {
     <Screen>
       <ScreenHeader
         title={t.mobile.feedback.title}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <FlatList
         style={{ flex: 1 }}

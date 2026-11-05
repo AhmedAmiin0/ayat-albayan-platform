@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -35,7 +35,7 @@ export function AssistantsScreen() {
   };
   return (
     <Screen>
-      <ScreenHeader title={t.assistants.title} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
+      <ScreenHeader title={t.assistants.title} leading={<BackButton onPress={() => router.back()} />} />
       <FilterPills items={TABS()} value={tab} onChange={show} accessibilityLabel={t.assistants.tabs.label} />
       {notice ? <Note>{notice}</Note> : null}
       {tab === 'list' ? <AssistantsList /> : null}

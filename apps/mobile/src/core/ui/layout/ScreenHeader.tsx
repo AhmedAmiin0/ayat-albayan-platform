@@ -23,6 +23,8 @@ interface ScreenHeaderProps {
   count?: number;
   /** At the inline-end; defaults to the small gold mark. */
   trailing?: ReactNode;
+  /** Before the title at the inline-start (the right in Arabic): the screen's BackButton. */
+  leading?: ReactNode;
   /** h1 for a screen (the reconnecting bar shows under it); a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
   size?: 'h1' | 'h2';
   /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
@@ -36,6 +38,7 @@ export function ScreenHeader({
   subtitle,
   count,
   trailing = <Mark size={28} />,
+  leading,
   size = 'h1',
   titleRef,
   connecting = size === 'h1',
@@ -51,6 +54,8 @@ export function ScreenHeader({
           gap: 12,
         }}
       >
+        {/* The chevron's 44pt box reaches the screen's start edge and hugs the title, as ChatHeader. */}
+        {leading ? <View style={{ marginStart: -10, marginEnd: -8 }}>{leading}</View> : null}
         <AppText
           ref={titleRef}
           accessibilityRole="header"
@@ -60,6 +65,8 @@ export function ScreenHeader({
           minimumFontScale={0.7}
           style={{
             flexShrink: 1,
+            // With a leading back the title takes the middle, so the trailing stays at the end.
+            flexGrow: leading ? 1 : 0,
             fontFamily: type.display,
             fontSize: TITLE,
             lineHeight: type.lineHeight(TITLE, true),

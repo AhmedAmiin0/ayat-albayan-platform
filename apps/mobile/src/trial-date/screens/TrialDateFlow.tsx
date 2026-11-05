@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTrialHistory } from '../lib/queries';
 import { TrialDateWizard } from './TrialDateWizard';
@@ -32,7 +32,7 @@ export function TrialDateFlow({ studentId, name, program, fallback }: TrialDateF
   const back = () => (router.canGoBack() ? router.back() : fallback());
   return (
     <>
-      <ScreenHeader title={title} trailing={<Button variant="ghost" label={t.common.back} onPress={back} />} />
+      <ScreenHeader title={title} leading={<BackButton onPress={back} />} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         {history.data ? (
           <AppText

@@ -6,7 +6,7 @@ import type { Can } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -41,11 +41,11 @@ export function UsersScreen({ can }: { can: Can }) {
         size="h2"
         connecting
         count={list.data ? list.total : undefined}
+        leading={<BackButton onPress={backToMore} />}
         trailing={
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            {can('users.write') ? <PillButton label={t.users.new} onPress={() => router.push('/more/users/new')} /> : null}
-            <Button variant="ghost" label={t.common.back} onPress={backToMore} />
-          </View>
+          can('users.write') ? (
+            <PillButton label={t.users.new} onPress={() => router.push('/more/users/new')} />
+          ) : undefined
         }
       />
       <SearchField compact label={t.users.searchPlaceholder} onSearch={(q) => setView((v) => ({ ...v, q }))} />

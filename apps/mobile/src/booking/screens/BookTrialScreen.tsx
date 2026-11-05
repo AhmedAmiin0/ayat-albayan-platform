@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCachedLead } from '@/inbox/leads/detail/use-cached-lead';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -50,8 +50,8 @@ export function BookTrialScreen() {
         <>
           <ScreenHeader
             title={subscribe ? t.subscriptions.new : t.booking.trialTitle}
-            trailing={
-              <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />
+            leading={
+              <BackButton onPress={() => router.back()} />
             }
           />
           {cached.isError ? (
