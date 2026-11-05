@@ -9,6 +9,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -55,7 +56,7 @@ export function CourseScreen() {
         <ScreenHeader
           title={t.booking.courseDays}
           {...(view ? { subtitle: `${view.student.name} · ${view.student.code}` } : {})}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={leave} />}
+          leading={<BackButton onPress={leave} />}
         />
         <CourseStatus course={course} block={refusal} missing={!params.studentId} />
         {change ? <CurrentCourse course={change.course} onChange={change.open} secondary={!!transfer} /> : null}

@@ -7,7 +7,7 @@ import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorLine } from '@/inbox';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -73,7 +73,7 @@ export function AttendanceLogScreen() {
       <ScreenHeader
         title={title}
         subtitle={monthOf(data.month)}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <AttendanceLogHead data={data} month={month ?? data.month} onMonth={pick} />
       {error ? <ErrorLine message={error} /> : null}

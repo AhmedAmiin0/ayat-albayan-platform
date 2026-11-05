@@ -7,7 +7,7 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
 import { MyStudentsView } from '@/sales-money/screens/MyStudentsView';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
@@ -49,12 +49,9 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
         size="h2"
         connecting
         count={all && list.data ? list.total : undefined}
+        leading={asTab ? undefined : <BackButton onPress={() => router.back()} />}
         trailing={
-          asTab ? (
-            <CheckRegistrationButton icon href="/sales/students/registration-check" />
-          ) : (
-            <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />
-          )
+          asTab ? <CheckRegistrationButton icon href="/sales/students/registration-check" /> : undefined
         }
       />
       <FilterPills items={VIEWS()} value={view} onChange={(v) => {

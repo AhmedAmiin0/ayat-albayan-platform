@@ -73,10 +73,10 @@ test('a refusal shows inbox.error.<code> under the row', async () => {
   expect(await screen.findByText(t.inbox.error.files_forbidden)).toBeTruthy();
 });
 
-test('cancel closes the choice and sends nothing', async () => {
+test('a tap outside closes the choice and sends nothing', async () => {
   await show(OPEN);
   await fireEvent.press(paperclip());
-  await fireEvent.press(screen.getByText(t.common.cancel));
+  await fireEvent.press(screen.getByTestId('attach-scrim'));
   expect(screen.queryByRole('button', { name: t.inbox.composer.document })).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });

@@ -5,7 +5,7 @@ import { clockAt } from '@/inbox/shared/format';
 import { weekLabel } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/core/ui/surface/Section';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -43,7 +43,7 @@ export function DashboardScreen() {
       <ScreenHeader
         title={t.mobileAdmin.dashboard.title}
         subtitle={subtitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {!summary.data && summary.isError ? <ErrorState onRetry={refresh} /> : null}
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>

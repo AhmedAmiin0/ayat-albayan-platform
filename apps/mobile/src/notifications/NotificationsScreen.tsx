@@ -6,7 +6,7 @@ import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { routeIn, type PushTree } from '@/core/push/notification-route';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -50,10 +50,10 @@ export function NotificationsScreen({ tree }: NotificationsScreenProps) {
     [open],
   );
   const cells = useInsetRows(renderRow, items.length);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   return (
     <Screen>
-      <ScreenHeader title={bell.screenTitle} size="h2" connecting trailing={back} />
+      <ScreenHeader title={bell.screenTitle} size="h2" connecting leading={back} />
       {unread > 0 ? (
         <View style={{ alignItems: 'flex-start' }}>
           <PillButton label={bell.markAll} onPress={() => mutate(undefined)} />

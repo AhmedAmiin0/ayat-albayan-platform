@@ -31,3 +31,10 @@ test('the title never wraps: one line that shrinks to fit (owner 2026-10-27)', a
   expect(title.props.adjustsFontSizeToFit).toBe(true);
   expect(title.props.minimumFontScale).toBe(0.7);
 });
+
+test('leading sits before the title (the inline-start), the mark stays at the end', async () => {
+  await render(<ScreenHeader title="الاجتماعات" leading={<Text>back</Text>} />);
+  const [first] = screen.getAllByText(/back|الاجتماعات/);
+  expect(first?.props.children).toBe('back');
+  expect(screen.getByTestId('mark-small', { includeHiddenElements: true })).toBeTruthy();
+});

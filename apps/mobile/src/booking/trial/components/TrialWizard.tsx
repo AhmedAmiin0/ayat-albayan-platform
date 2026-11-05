@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from '@/booking/shared/BookedPanel';
 import { bookFailure } from '@/booking/shared/booking-errors';
@@ -78,9 +78,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
       <ScreenHeader
         title={title}
         subtitle={book.isSuccess ? undefined : `${position} · ${stepNames()[step]}`}
-        trailing={
-          <Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />
-        }
+        leading={<BackButton busy={book.isPending} onPress={back} />}
       />
       <ScrollView
         style={{ flex: 1 }}

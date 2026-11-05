@@ -9,6 +9,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -31,7 +32,7 @@ export function AdminReportScreen() {
       <ScreenHeader
         title={t.mobileAdmin.reports.detailTitle}
         subtitle={report ? t.reports.version.replace('{n}', String(report.version)) : undefined}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {!report && query.isError ? <ErrorState onRetry={() => void query.refetch()} /> : null}
       {report ? (

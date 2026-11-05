@@ -7,6 +7,7 @@ import {
   localDateIn,
   previewNote,
   SESSION_WINDOW_MS,
+  stripWaMarkup,
   type MessageView,
   type NoteWords,
   type ThreadView,
@@ -82,9 +83,13 @@ function lastText(th: ThreadView): string {
   return t.inbox.media.other; // an inbound type we can't show (location, contacts, …)
 }
 
-/** One line under the name: the last message, «إنت:» before ours, media and templates named. */
+/**
+ * One line under the name: the last message, «أنت:» before ours, media and templates named; its
+ * WhatsApp markers (*bold*, _italic_, ~strike~, ```mono```) dropped, as WhatsApp's own list does.
+ */
 export function previewText(th: ThreadView): string {
-  return th.last_direction === 'outbound' ? `${t.inbox.you} ${lastText(th)}` : lastText(th);
+  const text = stripWaMarkup(lastText(th));
+  return th.last_direction === 'outbound' ? `${t.inbox.you} ${text}` : text;
 }
 
 /** «رسالتين جداد», «3 رسايل جديدة». */
