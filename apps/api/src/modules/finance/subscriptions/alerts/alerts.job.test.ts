@@ -3,6 +3,7 @@ import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { AlertsJob } from './alerts.job';
 import type { AlertsRepo } from './alerts.repo';
 import type { SubscriptionAlertsService } from './alerts.service';
+import type { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due';
 
 const SWEEP_MS = 15 * 60_000;
 
@@ -12,7 +13,7 @@ describe('AlertsJob sweep timers (Ticker)', () => {
   it('sweeps 5 minutes after boot, then every 15 minutes, and stops on shutdown', async () => {
     vi.useFakeTimers();
     const alerts = {} as SubscriptionAlertsService;
-    const job = new AlertsJob({} as AlertsRepo, alerts, new LessonEvents());
+    const job = new AlertsJob({} as AlertsRepo, alerts, new LessonEvents(), {} as CourseDue);
     const sweep = vi.spyOn(job, 'runOnce').mockResolvedValue({ students: 0, failed: 0 });
     job.onApplicationBootstrap();
     expect(sweep).not.toHaveBeenCalled();

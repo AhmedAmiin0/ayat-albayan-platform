@@ -1,5 +1,6 @@
 import { HOME_BY_ROLE, PUSH_KINDS, type PushKind, type UserRole } from '@ab/catalog';
 import { E164_RE } from '@ab/core';
+import { OPEN_COURSE } from './course-notice.js';
 
 // Where a bell row opens on the web (R-NOT-01). `data` is PushService's { kind, ...event.data }:
 // untrusted JSON, so every field is checked (E.164 phone, uuid ids) and anything else falls back
@@ -78,6 +79,16 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   payment_received: student,
 };
 
+/** «احجز أيام الحلقات» (owner 2026-11-06): the family chat, wizard open; else the student. */
+function coursePath(area: Area, data: Data): string {
+  const id = uuid(data, 'studentId');
+  const p = phone(data);
+  const chat = area === 'sales' && id && p;
+  return chat ? `/sales/inbox?phone=${encodeURIComponent(p)}&course=${id}` : student(area, data);
+}
+
+const opensCourse = (data: Data): boolean => field(data, 'open') === OPEN_COURSE;
+
 const isArea = (role: UserRole | null): role is Area =>
   role === 'admin' || role === 'teacher' || role === 'sales' || role === 'assistant';
 
@@ -96,5 +107,6 @@ export function notificationKind(data: Data): PushKind | null {
 export function webNotificationPath(data: Data, role: UserRole | null): string {
   if (!isArea(role)) return role ? HOME_BY_ROLE[role] : '/';
   const kind = notificationKind(data);
-  return kind ? ROUTES[kind](role, data) : HOME_BY_ROLE[role];
+  if (!kind) return HOME_BY_ROLE[role];
+  return opensCourse(data) ? coursePath(role, data) : ROUTES[kind](role, data);
 }

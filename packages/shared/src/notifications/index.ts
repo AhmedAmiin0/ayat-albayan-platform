@@ -1,4 +1,5 @@
 export * from './views.js';
+export * from './course-notice.js';
 export * from './web-path.js';
 export * from './kind-permissions.js';
 export * from './catalogue/catalogue.js';

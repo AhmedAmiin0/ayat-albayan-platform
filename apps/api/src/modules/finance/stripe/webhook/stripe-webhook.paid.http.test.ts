@@ -58,6 +58,21 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(s.events.done).toHaveBeenCalledWith('evt_1', 'paid');
   });
 
+  it('paid with no weekly course yet: the link’s assistant reads «تم الدفع: احجز أيام الحلقات» (owner 2026-11-06)', async () => {
+    const pkg = { subscriptionId: SUB_ID, studentId: STUDENT_ID, student: 'سهيلة', phone: null, soldBy: SALES_A.id };
+    m.courseDue.unbooked.mockResolvedValue(pkg);
+    expect((await post(sessionEvent('checkout.session.completed'))).statusCode).toBe(200);
+    await vi.waitFor(() =>
+      expect(s.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({
+        kind: 'payment_received',
+        profileIds: [SALES_A.id],
+        title: 'تم الدفع: احجز أيام الحلقات',
+        data: { studentId: STUDENT_ID, open: 'course' },
+      })),
+    );
+    expect(m.courseDue.unbooked).toHaveBeenCalledWith(SUB_ID);
+  });
+
   it('a duplicate event is ignored; the same session again (another event id) replays the payment, never a second one', async () => {
     s.events.begin.mockResolvedValue(true);
     expect((await post(sessionEvent('checkout.session.completed'))).statusCode).toBe(200);

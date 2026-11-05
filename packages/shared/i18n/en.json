@@ -7901,5 +7901,10 @@
   },
   "shortLinks": {
     "notFound": "This link is not valid or has expired."
+  },
+  "courseDue": {
+    "paidTitle": "Paid: book the lesson days",
+    "unbookedTitle": "Lesson days not booked",
+    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
   }
 }

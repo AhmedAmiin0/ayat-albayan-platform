@@ -21,6 +21,15 @@ interface ReceivedNotice {
   recorderId: string | null;
   /** Told as well, e.g. the payment link's assistant. */
   also?: readonly string[];
+  /** One recipient told with her own title and tap target (owner 2026-11-06). */
+  book?: BookNotice | undefined;
+}
+
+/** The paid link's assistant, while the package has no weekly course (CourseDue.paidNotice). */
+interface BookNotice {
+  profileId: string;
+  title: string;
+  data: Record<string, string>;
 }
 
 /** What the family paid: the original amount and currency when it was converted. */
@@ -36,6 +45,14 @@ function studentOf(sub: PaymentRow['subscription']): Pick<ReceivedPayment, 'stud
   return { studentId: sub?.student_id ?? null, student: sub?.student?.name ?? '' };
 }
 
+/** «تم استلام دفعة»'s push: one subject per payment, the student it is about. */
+const eventOf = (p: ReceivedPayment) => ({
+  kind: 'payment_received' as const,
+  subject: `payment:${p.id}`,
+  vars: { student: p.student, amount: amountText(p) },
+  ...(p.studentId ? { data: { studentId: p.studentId } } : {}),
+});
+
 const isIncoming = (p: ReceivedPayment): boolean => p.kind === 'payment';
 
 /**
@@ -47,8 +64,9 @@ const amountText = (p: ReceivedPayment): string => `${formatAmount(p.amount)} ${
 /**
  * «تم استلام دفعة» (owner 2026-11-05): an incoming payment → every admin and the student's
  * following assistant, minus who recorded it; a bell row and a device push (payment_received, its
- * own rule). Once per payment (subject `payment:<id>`, PushService's dedup key); a refund tells
- * nobody. Never throws, and `fire` keeps it off the request path.
+ * own rule); `book`'s one profile gets its own title and tap target instead. Once per payment
+ * (subject `payment:<id>`, PushService's dedup key); a refund tells nobody. Never throws, and
+ * `fire` keeps it off the request path.
  */
 @Injectable()
 export class PaymentReceived {
@@ -64,17 +82,15 @@ export class PaymentReceived {
     void this.notify(notice);
   }
 
-  async notify({ payment, recorderId, also = [] }: ReceivedNotice): Promise<void> {
+  async notify({ payment, recorderId, also = [], book }: ReceivedNotice): Promise<void> {
     if (!isIncoming(payment)) return;
     try {
       const [admins, owners] = await Promise.all([this.repo.adminIds(), this.owners(payment)]);
-      await this.push.notifyProfiles({
-        kind: 'payment_received',
-        profileIds: receivedRecipients({ admins, owners: [...owners, ...also], recorderId }),
-        subject: `payment:${payment.id}`,
-        vars: { student: payment.student, amount: amountText(payment) },
-        ...(payment.studentId ? { data: { studentId: payment.studentId } } : {}),
-      });
+      const all = receivedRecipients({ admins, owners: [...owners, ...also], recorderId });
+      const event = eventOf(payment);
+      const rest = all.filter((id) => id !== book?.profileId);
+      await this.push.notifyProfiles({ ...event, profileIds: rest });
+      if (book) await this.push.notifyProfiles({ ...event, ...book, profileIds: [book.profileId] });
     } catch (e) {
       this.log.warn(`payment_received ${payment.id}: ${e instanceof Error ? e.message : String(e)}`);
     }

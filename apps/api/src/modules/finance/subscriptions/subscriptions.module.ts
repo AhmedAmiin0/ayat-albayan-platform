@@ -10,6 +10,8 @@ import { AlertsRepo } from './alerts/alerts.repo';
 import { AlertsEnv, SubscriptionAlertsService } from './alerts/alerts.service';
 import { BalanceRepo } from './money/balance.repo';
 import { CommissionBell } from './money/commission-bell';
+import { CourseDue } from './course-due/course-due';
+import { CourseDueRepo } from './course-due/course-due.repo';
 import { FollowUpEnv, MoneyFollowUps } from './money/money-follow-ups';
 import { MoneyWrites } from './money/money-writes';
 import { PackagesService } from './money/packages.service';
@@ -59,6 +61,8 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     AlertsRepo,
     BalanceRepo,
     CommissionBell,
+    CourseDue,
+    CourseDueRepo,
     FollowUpEnv,
     LeadConversion,
     MoneyFollowUps,
@@ -90,6 +94,7 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
   exports: [
     BalanceRepo,
     CommissionBell,
+    CourseDue,
     MoneyWrites,
     PackagesService,
     StudentTrialStatus,
