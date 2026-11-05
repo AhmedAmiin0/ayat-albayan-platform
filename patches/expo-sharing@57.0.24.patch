@@ -1,0 +1,14 @@
+diff --git a/android/src/main/java/expo/modules/sharing/dataParsers/ResolvingShareIntentDataParser.kt b/android/src/main/java/expo/modules/sharing/dataParsers/ResolvingShareIntentDataParser.kt
+index 5f4d9423acc2999c1f1209181c95c37138155b5d..1d9e48834c2a291bb721153d4105084284246aef 100644
+--- a/android/src/main/java/expo/modules/sharing/dataParsers/ResolvingShareIntentDataParser.kt
++++ b/android/src/main/java/expo/modules/sharing/dataParsers/ResolvingShareIntentDataParser.kt
+@@ -62,7 +62,8 @@ class ResolvingShareIntentDataParser {
+       val type = ShareType.fromMimeType(specificMimeType)
+ 
+       // Copy to cache dir to ensure access
+-      val file = File(context.cacheDir, fileName)
++      // Patched (docs/38): a provider's DISPLAY_NAME may hold "../" or repeat; keep only its last segment, unique.
++      val file = File(context.cacheDir, "share-${java.util.UUID.randomUUID()}-${File(fileName).name}")
+       try {
+         contentResolver.openInputStream(uri)?.use { input ->
+           FileOutputStream(file).use { output ->

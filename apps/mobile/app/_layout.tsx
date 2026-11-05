@@ -132,6 +132,8 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
               </Stack.Protected>
               <Stack.Protected guard={signedIn}>
                 <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
+                {/* An Android share (docs/38): replaced at once by the tree's own chooser. */}
+                <Stack.Screen name="share" />
               </Stack.Protected>
               <Stack.Protected guard={gate === 'out'}>
                 <Stack.Screen name="login" />

@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`the generated MainActivity.kt (snapshot: review any change against docs/38 corrections 2 and 3) 1`] = `
+"package com.example.app
+
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import expo.modules.sharing.SharingSingleton
+
+import android.os.Build
+import android.os.Bundle
+
+import com.facebook.react.ReactActivity
+
+class MainActivity : ReactActivity() {
+  // plugins/share-intent (docs/38): a share reaches expo-sharing before React's delegate may drop it.
+  override fun onNewIntent(intent: Intent) {
+    abTakeShare(this, intent)
+    super.onNewIntent(intent)
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    abDropStaleShare(this, savedInstanceState)
+    setTheme(R.style.AppTheme);
+    super.onCreate(null)
+  }
+
+  override fun getMainComponentName(): String = "main"
+}
+
+// plugins/share-intent (docs/38): SEND / SEND_MULTIPLE with a type, as expo-sharing's isShareIntent.
+private fun abIsShare(intent: Intent?): Boolean =
+  intent != null && intent.type != null && (intent.action == Intent.ACTION_SEND || intent.action == Intent.ACTION_SEND_MULTIPLE)
+
+// Restored (savedInstanceState) or launched from history: the share it was created with is old.
+private fun abDropStaleShare(activity: Activity, savedInstanceState: Bundle?) {
+  val fromHistory = (activity.intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+  if (!abIsShare(activity.intent) || (savedInstanceState == null && !fromHistory)) return
+  activity.intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setPackage(activity.packageName)
+}
+
+// The share for getSharedPayloads, and the activity's intent as the URL expo-router routes to /share.
+private fun abTakeShare(activity: Activity, intent: Intent) {
+  if (!abIsShare(intent)) return
+  SharingSingleton.intent = Intent(intent)
+  intent.action = Intent.ACTION_VIEW
+  intent.data = Uri.parse("ayatalbayan://expo-sharing")
+  activity.intent = intent
+}
+"
+`;

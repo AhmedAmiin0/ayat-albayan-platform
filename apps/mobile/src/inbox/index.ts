@@ -2,6 +2,10 @@ export { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 export { InboxScreen } from './screens/InboxScreen';
 export { LeadDetailScreen } from './screens/LeadDetailScreen';
 export { ThreadScreen } from './screens/ThreadScreen';
+// docs/38: an Android share. The root /share gate hands it to its tree's chooser in the chat group.
+export { ShareGate } from './share/screen/ShareGate';
+export { ShareScreen } from './share/screen/ShareScreen';
+export { shareRedirect } from './share/share-redirect';
 export { threadHref } from './thread/hooks/thread-cache';
 export { clockAt } from './shared/format';
 export { StaffCalls } from './thread/calls/state/StaffCalls';

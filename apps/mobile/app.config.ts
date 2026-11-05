@@ -3,6 +3,12 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 /** The eas.json `stripe-test` profile's APP_VARIANT: a separate app installable beside the normal one. */
 const STRIPE_TEST = 'stripetest';
 
+type Plugins = NonNullable<ExpoConfig['plugins']>;
+
+/** The test app is no share target (docs/38): one «آيات» in the share sheet, the normal app. */
+const noShareTarget = (plugins: Plugins = []): Plugins =>
+  plugins.map((p) => (Array.isArray(p) && p[0] === 'expo-sharing' ? ['expo-sharing', { android: { enabled: false } }] : p));
+
 /**
  * The Stripe test variant (owner 2026-10-28, docs/30): its own package / bundle id and name, and NO
  * android.googleServicesFile: Firebase knows only the normal package, so the test app has no FCM push
@@ -17,6 +23,7 @@ function stripeTestVariant(config: ExpoConfig): ExpoConfig {
     name: 'Ayat – Stripe test',
     ...(config.ios ? { ios: { ...config.ios, bundleIdentifier: suffix(config.ios.bundleIdentifier) } } : {}),
     android,
+    plugins: noShareTarget(config.plugins),
   };
 }
 
