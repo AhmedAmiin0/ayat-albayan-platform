@@ -47,7 +47,7 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
     starts_on: sub.starts_on,
     status: sub.status,
     cancel_kind: sub.cancel_kind,
-    stop_owed_amount: sub.stop_owed_amount === null ? null : Number(sub.stop_owed_amount),
+    stop_owed_amount: sub.stop_owed_amount,
     renews_on: sub.renews_on,
     notes: sub.notes,
     paid: ctx.paid.get(sub.id) ?? 0,

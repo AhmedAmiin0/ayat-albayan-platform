@@ -66,6 +66,7 @@ const STOP_CODES = [
   'refund_not_allowed',
   'not_your_student',
   'owed_exceeds_price',
+  'stop_mismatch',
   'stripe_not_configured',
 ] as const;
 export type CourseStopErrorCode = (typeof STOP_CODES)[number] | 'generic';

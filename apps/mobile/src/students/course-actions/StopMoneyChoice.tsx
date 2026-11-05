@@ -27,7 +27,9 @@ export function useStopMoney(preview: CourseStopPreview | undefined) {
   const breakdown = offeredRefund(useHolds('subscriptions.refund'), preview?.refund);
   const result = preview ? stopMoney({ state, preview, breakdown }) : null;
   const set: Set = (patch) => setState((s) => ({ ...s, ...patch }));
-  return { state, set, breakdown, result };
+  const ready = result?.valid === true;
+  const problem = result?.problem ?? null;
+  return { state, set, breakdown, result, ready, ask: result?.ask ?? {}, problem };
 }
 type MoneyView = ReturnType<typeof useStopMoney>;
 
@@ -66,7 +68,15 @@ function RefundPart({ view, calc, fmt }: { view: MoneyView; calc: StopRefund; fm
   );
 }
 
-function OwePart({ view, preview, fmt }: { view: MoneyView; preview: CourseStopPreview; fmt: Fmt }) {
+function OwePart({
+  view,
+  preview,
+  fmt,
+}: {
+  view: MoneyView;
+  preview: CourseStopPreview;
+  fmt: Fmt;
+}) {
   const s = t.courseActions.stop;
   const custom = view.state.oweChoice === 'custom';
   return (
@@ -90,7 +100,13 @@ const MODES = ['cancel', 'refund'] as const;
  * «إلغاء فقط» (what the family still owes) / «إلغاء مع استرداد» (the refund amount), then one
  * summary line: the refund and what remains owed (owner 2026-11-06, as on web).
  */
-export function StopMoneyChoice({ preview, view }: { preview: CourseStopPreview; view: MoneyView }) {
+export function StopMoneyChoice({
+  preview,
+  view,
+}: {
+  preview: CourseStopPreview;
+  view: MoneyView;
+}) {
   const s = t.courseActions.stop;
   const fmt = (n: number) => money(n, preview.currency);
   const calc = view.breakdown;

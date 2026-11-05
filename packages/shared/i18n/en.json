@@ -7813,7 +7813,8 @@
       "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded",
       "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet",
       "not_your_student": "This student is not one of yours, so you cannot refund them",
-      "owed_exceeds_price": "The amount still owed must be between 0 and the package price"
+      "owed_exceeds_price": "The amount still owed must be between 0 and the package price",
+      "stop_mismatch": "This attempt differs from the stop already recorded for the same request; reopen the sheet"
     }
   },
   "coursePause": {

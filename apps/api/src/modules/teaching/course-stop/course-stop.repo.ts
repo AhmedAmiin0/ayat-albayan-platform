@@ -30,7 +30,12 @@ interface StopCall {
 
 const SUB = 'id, student_id, status, currency, cancelled_at, cancelled_by, cancel_reason';
 /** stop_course's raised codes (P0001) and the 409s among them; the rest is 404. */
-const RAISED = new Set(['subscription_not_found', 'already_cancelled', 'course_unattributed']);
+const RAISED = new Set([
+  'subscription_not_found',
+  'already_cancelled',
+  'course_unattributed',
+  'stop_mismatch',
+]);
 
 /** stop_course / the guard's errors → HTTP. */
 function stopError(error: PostgrestError): Error {

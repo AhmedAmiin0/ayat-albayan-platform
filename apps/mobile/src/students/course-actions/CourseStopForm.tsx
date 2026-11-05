@@ -32,7 +32,6 @@ export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
   const preview = useStopPreview(sub);
   const stop = useStopCourse(sub.studentId);
   const view = useStopMoney(preview.data);
-  const valid = view.result?.valid ?? false;
   const s = t.courseActions.stop;
   if (!preview.data) {
     if (preview.isError) return <ErrorLine message={stopErrorText(preview.error)} />;
@@ -41,20 +40,18 @@ export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
   const { stopped, currency } = preview.data;
   if (stopped) return <SheetLines lines={stoppedLines(stopped)} />;
   const submit = () => {
-    if (reason.trim().length < 2 || !view.result?.valid) return;
+    if (reason.trim().length < 2 || !view.ready) return;
     const input = { subscriptionId: sub.subscriptionId, reason, clientRequestId: requestId };
     const onSuccess = (result: CourseStopResult) => onDone(doneText(result, currency));
-    stop.mutate(courseStopBody({ ...input, ask: view.result.ask }), { onSuccess });
+    stop.mutate(courseStopBody({ ...input, ask: view.ask }), { onSuccess });
   };
   const keeps = view.state.mode !== 'refund';
-  const refunding = view.state.mode === 'refund' && view.breakdown !== null;
-  const invalid = refunding ? 'refund_exceeds_allowed' : 'owed_exceeds_price';
   return (
     <View style={{ gap: 12 }}>
       <SheetLines lines={[s.intro, ...stopLines(preview.data, keeps)]} />
       <StopMoneyChoice preview={preview.data} view={view} />
       <Field label={s.reason} placeholder={s.reasonHint} value={reason} onChangeText={setReason} />
-      {valid ? null : <ErrorLine message={t.courseActions.errors[invalid]} />}
+      {view.problem ? <ErrorLine message={t.courseActions.errors[view.problem]} /> : null}
       {stop.isError ? <ErrorLine message={stopErrorText(stop.error)} /> : null}
       <SheetActions label={s.confirm} busy={stop.isPending} onConfirm={submit} onCancel={onClose} />
     </View>

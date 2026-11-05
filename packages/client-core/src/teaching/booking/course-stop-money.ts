@@ -34,23 +34,32 @@ export const STOP_MONEY_START: StopMoneyState = {
   text: '',
 };
 
-type Ask<C extends string> = { choice: C; amount?: number };
+interface Ask<C extends string> {
+  choice: C;
+  amount?: number;
+}
 export type StopMoneyAsk = Pick<CourseStopRequest, 'refund' | 'owe'>;
 
 export interface StopMoney {
   ask: StopMoneyAsk;
   summary: { refund: number; due: number };
   valid: boolean;
+  /** Why it is not valid (the amount out of its range); null when valid. */
+  problem: 'refund_exceeds_allowed' | 'owed_exceeds_price' | null;
 }
 
 type Preview = Pick<CourseStopPreview, 'paid' | 'owe' | 'currency'>;
 
 /** «إلغاء مع استرداد» is offered with subscriptions.refund and something paid to give back. */
-export function offeredRefund(holds: boolean, refund: StopRefund | null | undefined): StopRefund | null {
+export function offeredRefund(
+  holds: boolean,
+  refund: StopRefund | null | undefined,
+): StopRefund | null {
   return holds && refund && refund.paid > 0 ? refund : null;
 }
 
-const typed = (text: string): number | null => (text.trim() === '' ? null : parseAmountFromZero(text));
+const typed = (text: string): number | null =>
+  text.trim() === '' ? null : parseAmountFromZero(text);
 const isCustom = (choice: string): boolean => choice === 'custom';
 /** A custom choice needs an amount typed; a computed one never does. */
 const customMissing = (choice: string, custom: number | null): boolean =>
@@ -58,12 +67,16 @@ const customMissing = (choice: string, custom: number | null): boolean =>
 const askOf = <C extends string>(choice: C, custom: number | null): Ask<C> =>
   isCustom(choice) && custom !== null ? { choice, amount: custom } : { choice };
 
+const REFUND_PROBLEM = 'refund_exceeds_allowed';
+const OWE_PROBLEM = 'owed_exceeds_price';
+
 function refundMoney(state: StopMoneyState, calc: StopRefund, currency: string): StopMoney {
   const custom = typed(state.text);
   const refund = refundByChoice(state.refundChoice, calc, custom ?? 0);
   const problem = refundAmountProblem(refund, calc.paid, currency);
   const valid = !customMissing(state.refundChoice, custom) && problem === null;
-  return { ask: { refund: askOf(state.refundChoice, custom) }, summary: { refund, due: 0 }, valid };
+  const ask = { refund: askOf(state.refundChoice, custom) };
+  return { ask, summary: { refund, due: 0 }, valid, problem: valid ? null : REFUND_PROBLEM };
 }
 
 function oweMoney(state: StopMoneyState, preview: Preview): StopMoney {
@@ -74,7 +87,8 @@ function oweMoney(state: StopMoneyState, preview: Preview): StopMoney {
   const valid = !customMissing(state.oweChoice, custom) && problem === null;
   const dueMinor = Math.max(0, toMinor(owed, currency) - toMinor(preview.paid, currency));
   const summary = { refund: 0, due: fromMinor(dueMinor, currency) };
-  return { ask: { owe: askOf(state.oweChoice, custom) }, summary, valid };
+  const ask = { owe: askOf(state.oweChoice, custom) };
+  return { ask, summary, valid, problem: valid ? null : OWE_PROBLEM };
 }
 
 /** The refund path only when it is offered (`breakdown`) and chosen; else «إلغاء فقط». */

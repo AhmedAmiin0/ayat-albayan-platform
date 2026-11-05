@@ -13,7 +13,9 @@ export const listed = (data: object[]) => ({ autoPagingToArray: () => Promise.re
 export const REQ = 'e0000000-0000-4000-8000-0000000000e1';
 export const SUB = { id: 'sub1', studentId: 'st1', currency: 'SAR' };
 /** A custom refund amount (the sheet's «مبلغ مخصص»). */
-export const custom = (amount: number) => ({ choice: 'custom' as const, amount });
+const custom = (amount: number) => ({ choice: 'custom' as const, amount });
+/** StopRefunds.plan's input for a custom amount on SUB with the stop key REQ. */
+export const planOf = (amount: number) => ({ sub: SUB, requestId: REQ, ask: custom(amount) });
 
 export const row = (over: Partial<MoneyRow> = {}): MoneyRow => ({
   id: 'p-bank',

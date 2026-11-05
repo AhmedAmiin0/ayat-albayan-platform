@@ -42,8 +42,7 @@ function partPaidOf(history: HistoryBundle, prices: readonly PriceRow[]): Map<st
   return new Map(
     prices.flatMap((p) => {
       const paid = netPaid(history.payments.filter((x) => x.subscription_id === p.id).map((x) => ({ amount: Number(x.amount), kind: x.kind })));
-      const owed = p.stop_owed_amount === null ? null : Number(p.stop_owed_amount);
-      const part = owedPartPaid({ ...p, price: Number(p.price), stop_owed_amount: owed, paid });
+      const part = owedPartPaid({ ...p, price: Number(p.price), paid });
       return part ? [[p.id, { ...part, currency: p.currency }] as const] : [];
     }),
   );

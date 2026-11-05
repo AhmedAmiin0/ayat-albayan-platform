@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
 import { courseStopPreviewQuery, useStopCourse } from './api';
-import { useStopMoney, type StopMoneyView } from './refund/use-stop-money';
+import { useStopMoney } from './refund/use-stop-money';
 import { StopBody } from './StopSummary';
 
 export interface CourseActionDialogProps {
@@ -16,10 +16,6 @@ export interface CourseActionDialogProps {
   /** After the write and the re-read: the caller's toast. */
   onDone: (message: string) => void;
 }
-
-/** Why the confirm is off: the amount is outside the refund's or the price's range. */
-const invalidCode = (money: StopMoneyView) =>
-  money.state.mode === 'refund' && money.breakdown ? 'refund_exceeds_allowed' : 'owed_exceeds_price';
 
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): stop the course, keep the money. The sheet says what
@@ -35,6 +31,7 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
   const currency = preview.data?.currency ?? '';
   const money = useStopMoney(preview.data);
   const valid = money.money?.valid ?? false;
+  const problem = money.money?.problem ?? null;
   const ask = money.money?.ask ?? {};
   const stop = useStopCourse({ ...props, reason, ask, currency });
   const live = preview.data?.stopped === null;
@@ -61,7 +58,7 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
         {preview.data && (
           <StopBody preview={preview.data} reason={reason} onReason={setReason} money={money} />
         )}
-        {live && !valid && <FormAlert>{t.courseActions.errors[invalidCode(money)]}</FormAlert>}
+        {problem && <FormAlert>{t.courseActions.errors[problem]}</FormAlert>}
         {error && <FormAlert>{t.courseActions.errors[courseStopErrorCode(error)]}</FormAlert>}
       </form>
     </Dialog>

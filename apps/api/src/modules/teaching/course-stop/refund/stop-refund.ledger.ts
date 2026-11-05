@@ -10,7 +10,7 @@ import { manualRefundKey, type RefundPlan } from './stop-refund.plan';
 const METHODS = ['bank', 'wallet', 'cash', 'other', 'card'] as const;
 type Method = (typeof METHODS)[number];
 
-/** A manual refund is never stamped 'card': only a Stripe refund is (its webhook writes that row). */
+/** A manual refund is never stamped 'card': only a Stripe refund is (its webhook writes it). */
 const isManualMethod = (r: MoneyRow): boolean => r.method !== 'card';
 
 /**

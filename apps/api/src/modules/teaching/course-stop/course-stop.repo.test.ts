@@ -84,6 +84,7 @@ describe('CourseStopRepo', () => {
     { message: 'subscription_not_found', code: 'P0001', expected: 'subscription_not_found', status: 404 },
     { message: 'already_cancelled', code: 'P0001', expected: 'already_cancelled', status: 409 },
     { message: 'course_unattributed', code: 'P0001', expected: 'course_unattributed', status: 409 },
+    { message: 'stop_mismatch', code: 'P0001', expected: 'stop_mismatch', status: 409 },
     { message: 'has_future_lessons: s1', code: '23514', expected: 'has_future_lessons', status: 409 },
   ])('stop: $message → $status', async ({ message, code, expected, status }) => {
     const err = await repoOf(chain({}), failing({ code, message }))

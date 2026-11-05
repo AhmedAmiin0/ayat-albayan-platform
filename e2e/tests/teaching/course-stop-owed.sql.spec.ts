@@ -1,11 +1,12 @@
+import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
-import { assistant, commissionOf, pay } from '../../support/sales/assistant';
+import { assistant, code, commissionOf, pay } from '../../support/sales/assistant';
 import { importedCourse, stop } from '../../support/teaching/course-stop';
 
-// The stop sheet's money choice (owner 2026-11-06, migrations 20261106000100 / 101): the stop stores
-// what the course is still owed for; a stop's refund never touches the assistant's commission, while a
-// refund on a running package voids it as before. Rolled back.
+// The stop sheet's money choice (owner 2026-11-06, migrations 20261106000100 / 101): the stop
+// stores what the course is still owed for; a stop's refund never touches the assistant's
+// commission, while a refund on a running package voids it as before. Rolled back.
 
 const PERCENT = {
   commission_type: 'percent',
@@ -14,11 +15,17 @@ const PERCENT = {
 } as const;
 
 const owedOf = async (tx: Tx, sub: string) =>
-  (await tx<{ amount: string | null; choice: string | null }[]>`select stop_owed_amount::text as amount,
-    stop_owed_choice as choice from public.subscriptions where id = ${sub}`)[0];
+  (
+    await tx<
+      { amount: string | null; choice: string | null }[]
+    >`select stop_owed_amount::text as amount,
+    stop_owed_choice as choice from public.subscriptions where id = ${sub}`
+  )[0];
 
 test.describe('stop owed amount and commission (20261106000100 / 101)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(() =>
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
+  );
 
   test('the stop stores the chosen owed amount; an old caller stores the price', async () => {
     await rolledBack(async (tx) => {
@@ -29,6 +36,19 @@ test.describe('stop owed amount and commission (20261106000100 / 101)', () => {
       const old = await importedCourse(tx, { phone: '+966500000922', price: 300 });
       await stop(tx, { ...old, actor: a });
       expect(await owedOf(tx, old.sub)).toEqual({ amount: '300.00', choice: 'price' });
+    });
+  });
+
+  test('a retry of the same stop with another decision is refused; the same one replays', async () => {
+    await rolledBack(async (tx) => {
+      const a = await assistant(tx, 'owed-replay', PERCENT);
+      const c = await importedCourse(tx, { phone: '+966500000925' });
+      const first = { ...c, actor: a, requestId: randomUUID() };
+      await stop(tx, { ...first, owed: { amount: 75, choice: 'attended' } });
+      const same = await stop(tx, { ...first, owed: { amount: 75, choice: 'attended' } });
+      expect(same.replayed).toBe(true);
+      const other = () => stop(tx, { ...first, owed: { amount: 0, choice: 'nothing' } });
+      expect(await code(tx, other)).toBe('stop_mismatch');
     });
   });
 

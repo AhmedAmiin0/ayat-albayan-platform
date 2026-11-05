@@ -167,6 +167,7 @@
         "sales/chat-subscribe.spec.ts",
         "teaching/course-change-unlinked.sql.spec.ts",
         "teaching/course-stop-money.sql.spec.ts",
+        "teaching/course-stop-owed.sql.spec.ts",
         "teaching/course-stop-rules.sql.spec.ts",
         "teaching/edit-session-time.held.spec.ts",
         "teaching/edit-session-time.spec.ts",

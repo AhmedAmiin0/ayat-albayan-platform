@@ -42,16 +42,14 @@ export interface RefundChoiceAsk {
 }
 
 /**
- * «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06): the person picks the unattended
- * lessons (net paid − attended × (price / lessons) × the rate setting, floored at 0: stopRefund),
- * everything paid, or a custom amount; every choice at most the net paid (pending Stripe refunds
- * off). After it the course owes the net paid left (plan.owed: nothing more is due). Card payments of a payment
- * link are refunded through Stripe first (the webhook records their rows), the rest is one manual
- * refund row plus an admin bell «حوّل … للعائلة». Every leg is idempotent on the stop's
- * clientRequestId: this stop's own refunds are left out of «net paid» (other refunds still
- * pending in Stripe are taken off it), so a replay plans the same split and creates nothing twice;
- * a replay asking another split is 409 refund_mismatch. A converted or 3-decimal card payment is
- * refunded by hand (the manual leg).
+ * «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06): the unattended lessons (net paid −
+ * attended × price / lessons × rate, floored at 0: stopRefund), everything paid, or a custom
+ * amount; each at most the net paid (pending Stripe refunds off); then the course owes the net
+ * paid left (plan.owed). Payment-link card payments go back through Stripe first (the webhook
+ * records their rows), the rest is one manual refund row and an admin bell «حوّل … للعائلة».
+ * Idempotent on the stop's clientRequestId: its own refunds are left out of «net paid», so a
+ * replay plans the same split (another split: 409 refund_mismatch). A converted or 3-decimal
+ * card payment is refunded by hand (the manual leg).
  */
 @Injectable()
 export class StopRefunds {
@@ -71,7 +69,11 @@ export class StopRefunds {
   }
 
   /** 409 refund_exceeds_allowed above the net paid; 503 stripe_not_configured with cards. */
-  async plan(input: { sub: RefundSub; requestId: string; ask: RefundChoiceAsk }): Promise<RefundPlan> {
+  async plan(input: {
+    sub: RefundSub;
+    requestId: string;
+    ask: RefundChoiceAsk;
+  }): Promise<RefundPlan> {
     const { sub, requestId, ask } = input;
     const { currency } = sub;
     const { pkg, rows, cards, calc } = await this.allowed(sub, requestId);

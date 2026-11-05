@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 // Migrations 20261106000100 / 101 (owner 2026-11-06): what the SQL spec
-// (e2e/tests/teaching/course-stop-owed.sql.spec.ts) proves against the database, pinned on the files.
+// (e2e/tests/teaching/course-stop-owed.sql.spec.ts) proves against the database, pinned here.
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const read = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const owed = read('20261106000100_stop_owed_amount.sql');
@@ -19,7 +19,7 @@ describe('20261106000100: the stop stores what it is owed for', () => {
   });
 
   it('a stop already followed by a refund owes the net paid after it, never the refund', () => {
-    expect(backfill).toMatch(/r\.kind = 'refund' and r\.paid_at >= s\.cancelled_at/);
+    expect(backfill).toMatch(/r\.paid_at >= date_trunc\('second', s\.cancelled_at\)/);
     expect(backfill).toMatch(/greatest\(0, coalesce\(\(select sum\(case when p\.kind = 'refund' then -p\.amount/);
   });
 
@@ -28,6 +28,8 @@ describe('20261106000100: the stop stores what it is owed for', () => {
     expect(fn).toMatch(/stop_owed_amount = coalesce\(v_owed, s\.price\), stop_owed_choice = /);
     expect(fn).toMatch(/'owed_amount', coalesce\(v_owed, s\.price\)/);
     expect(fn).toMatch(/if v_owed < 0 then/);
+    // A retry with another decision never runs against the stored one.
+    expect(fn).toMatch(/raise exception 'stop_mismatch'/);
     expect(owed).toContain('revoke execute on function public.stop_course(jsonb) from public, anon, authenticated');
   });
 

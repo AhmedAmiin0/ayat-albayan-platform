@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
 import { cardRefundKey } from './stop-refund.cards';
-import { cardRow, custom, kit, listed, REQ, row, SUB } from './stop-refund.fakes';
+import { cardRow, kit, listed, planOf, REQ, row, SUB } from './stop-refund.fakes';
 import { manualRefundKey } from './stop-refund.plan';
 
 // «إلغاء مع استرداد» (owner 2026-11-02): card first through Stripe (the webhook records the row),
@@ -17,15 +17,13 @@ describe('StopRefunds.plan', () => {
     [8, 100, 0],
   ])('%i attended at %i %%: %d refundable', async (attended, rate, refund) => {
     const { service } = kit({ attended, rate });
-    const plan = await service
-      .plan({ sub: SUB, requestId: REQ, ask: custom(Math.max(refund, 0.01)) })
-      .catch(() => null);
+    const plan = await service.plan(planOf(Math.max(refund, 0.01))).catch(() => null);
     expect(plan?.calc.refund ?? 0).toBe(refund);
   });
 
   it('above the net paid (the allowed maximum): 409 refund_exceeds_allowed', async () => {
     const { service } = kit({ attended: 3 });
-    await expect(service.plan({ sub: SUB, requestId: REQ, ask: custom(290.01) })).rejects.toMatchObject({
+    await expect(service.plan(planOf(290.01))).rejects.toMatchObject({
       status: 409,
     });
   });
@@ -33,16 +31,14 @@ describe('StopRefunds.plan', () => {
   it('Stripe not configured with a card payment: the 503 comes before anything is done', async () => {
     const { service, clients } = kit();
     clients.client.mockRejectedValue(new Error('stripe_not_configured'));
-    await expect(service.plan({ sub: SUB, requestId: REQ, ask: custom(10) })).rejects.toThrow(
-      'stripe_not_configured',
-    );
+    await expect(service.plan(planOf(10))).rejects.toThrow('stripe_not_configured');
   });
 });
 
 describe('StopRefunds.execute', () => {
   it('mixed: the card first (one partial Stripe refund with the stop key), then the manual rest', async () => {
     const { service, stripe, ledger } = kit();
-    const plan = await service.plan({ sub: SUB, requestId: REQ, ask: custom(250) });
+    const plan = await service.plan(planOf(250));
     expect(await service.execute({ plan, actor })).toEqual({ amount: 250, card: 200, manual: 50 });
     expect(stripe.refunds.create).toHaveBeenCalledTimes(1);
     expect(stripe.refunds.create).toHaveBeenCalledWith(
@@ -60,7 +56,7 @@ describe('StopRefunds.execute', () => {
 
   it('within the card: a partial Stripe refund, no manual money', async () => {
     const { service, stripe, ledger } = kit({ attended: 3 });
-    const plan = await service.plan({ sub: SUB, requestId: REQ, ask: custom(120.5) });
+    const plan = await service.plan(planOf(120.5));
     expect(await service.execute({ plan, actor })).toEqual({
       amount: 120.5,
       card: 120.5,
@@ -82,7 +78,7 @@ describe('StopRefunds.execute', () => {
     repo.money.mockResolvedValue([cardRow(), row(), old]);
     const refunded = { id: 're_old', amount: 5000, status: 'succeeded', metadata: {} };
     stripe.refunds.list.mockReturnValue(listed([refunded]));
-    const plan = await service.plan({ sub: SUB, requestId: REQ, ask: custom(240) });
+    const plan = await service.plan(planOf(240));
     expect(await service.execute({ plan, actor })).toEqual({ amount: 240, card: 150, manual: 90 });
     expect(stripe.refunds.create.mock.calls[0]?.[0]).toMatchObject({ amount: 15000 });
   });
@@ -110,7 +106,7 @@ describe('StopRefunds.execute', () => {
       client_request_id: manualRefundKey(REQ),
     });
     repo.money.mockResolvedValue([cardRow(), row(), recorded, manual]);
-    const plan = await service.plan({ sub: SUB, requestId: REQ, ask: custom(250) });
+    const plan = await service.plan(planOf(250));
     expect(plan.calc.paid).toBe(290);
     expect(await service.execute({ plan, actor })).toEqual({ amount: 250, card: 200, manual: 50 });
     expect(stripe.refunds.create).not.toHaveBeenCalled();
@@ -121,7 +117,7 @@ describe('StopRefunds.execute', () => {
   it('no card payment: Stripe is never called', async () => {
     const { service, clients, repo } = kit();
     repo.intents.mockResolvedValue(new Map());
-    const plan = await service.plan({ sub: SUB, requestId: REQ, ask: custom(290) });
+    const plan = await service.plan(planOf(290));
     expect(await service.execute({ plan, actor })).toEqual({ amount: 290, card: 0, manual: 290 });
     expect(clients.client).not.toHaveBeenCalled();
   });

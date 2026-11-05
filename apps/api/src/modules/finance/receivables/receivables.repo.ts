@@ -41,7 +41,7 @@ export class ReceivablesRepo {
               starts_on: r.starts_on,
               status: r.status,
               cancel_kind: r.cancel_kind,
-              stop_owed_amount: r.stop_owed_amount === null ? null : Number(r.stop_owed_amount),
+              stop_owed_amount: r.stop_owed_amount,
             },
           ]
         : [],

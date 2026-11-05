@@ -10,7 +10,9 @@
 -- without them (SQL, an old API) stores the price, as before.
 -- BACKFILL: every existing stop keeps the behaviour from before PR #623 (owes its price), so no debt changes on
 -- deploy; a stop already followed by a refund row (a «إلغاء مع استرداد» made since #623) owes the net paid after
--- it (nothing more), never the refunded amount. RLS unchanged: the table's policies cover the columns; only the
+-- it (nothing more), never the refunded amount (second precision: a Stripe refund row's paid_at is cut to whole
+-- seconds). A stop whose Stripe refund is still pending at deploy (no row yet) keeps the price: check those by hand.
+-- A retry of the same stop with another decision is 409 stop_mismatch (the stored one stays). RLS unchanged: the table's policies cover the columns; only the
 -- service role writes them (through stop_course).
 -- SQL test plan: e2e/tests/teaching/course-stop-owed.sql.spec.ts.
 -- Rollback: re-run 991's stop_course; drop columns subscriptions.stop_owed_amount, stop_owed_choice. Idempotent.
@@ -34,7 +36,8 @@ update public.subscriptions s
    set stop_owed_choice = 'legacy',
        stop_owed_amount = case
          when exists (select 1 from public.payments r
-                       where r.subscription_id = s.id and r.kind = 'refund' and r.paid_at >= s.cancelled_at)
+                       where r.subscription_id = s.id and r.kind = 'refund'
+                         and r.paid_at >= date_trunc('second', s.cancelled_at))
          then greatest(0, coalesce((select sum(case when p.kind = 'refund' then -p.amount else p.amount end)
                                       from public.payments p where p.subscription_id = s.id), 0))
          else s.price end
@@ -73,6 +76,12 @@ begin
   if s.status = 'cancelled' then
     if s.stop_request_id is distinct from v_request then
       raise exception 'already_cancelled' using errcode = 'P0001';
+    end if;
+    -- A retry of the same stop asking another money decision (the sheet changed after an error) is refused:
+    -- the stored decision stays the first one, so a refund or owe must never run against it.
+    if v_owed is not null and coalesce(s.stop_owed_choice, 'legacy') <> 'legacy'
+       and (s.stop_owed_amount is distinct from v_owed or s.stop_owed_choice is distinct from coalesce(v_choice, 'price')) then
+      raise exception 'stop_mismatch' using errcode = 'P0001';
     end if;
     select a.after into v_after from public.audit_log a
      where a.entity = 'subscriptions' and a.entity_id = v_sub and a.action = 'cancel'

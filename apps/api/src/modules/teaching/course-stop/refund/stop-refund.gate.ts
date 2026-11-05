@@ -19,7 +19,7 @@ interface RefundAsk {
 }
 
 /** The sheet's refund lines; `unavailable` when the person may refund but they cannot be read. */
-export interface RefundPreview {
+interface RefundPreview {
   refund: StopRefund | null;
   unavailable: boolean;
 }

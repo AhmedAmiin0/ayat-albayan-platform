@@ -72,7 +72,9 @@ describe('StopCourseDialog: the money choices', () => {
 
   it('«إلغاء فقط» by default, attended × rate owed (shown), the summary says 0 back / 0 due', async () => {
     const { dialog } = await open(KEYS);
-    expect(dialog.getByRole<HTMLInputElement>('radio', { name: words.cancelOnly }).checked).toBe(true);
+    expect(dialog.getByRole<HTMLInputElement>('radio', { name: words.cancelOnly }).checked).toBe(
+      true,
+    );
     const attended = words.oweAttended.replace('{amount}', money(150));
     expect(dialog.getByRole<HTMLInputElement>('radio', { name: attended }).checked).toBe(true);
     expect(dialog.getByText(summary(0, 0))).toBeTruthy();
@@ -82,7 +84,9 @@ describe('StopCourseDialog: the money choices', () => {
 
   it('«إلغاء فقط» with the full price: the summary shows what remains owed', async () => {
     const { dialog } = await open(KEYS);
-    fireEvent.click(dialog.getByRole('radio', { name: words.owePrice.replace('{amount}', money(400)) }));
+    fireEvent.click(
+      dialog.getByRole('radio', { name: words.owePrice.replace('{amount}', money(400)) }),
+    );
     expect(dialog.getByText(summary(0, 110))).toBeTruthy();
     fireEvent.click(confirm());
     await sent({ owe: { choice: 'price' } });
@@ -94,12 +98,19 @@ describe('StopCourseDialog: the money choices', () => {
     const unattended = words.refundUnattended.replace('{amount}', money(140));
     expect(dialog.getByRole<HTMLInputElement>('radio', { name: unattended }).checked).toBe(true);
     expect(dialog.getByText(summary(140, 0))).toBeTruthy();
-    fireEvent.click(dialog.getByRole('radio', { name: words.refundAll.replace('{amount}', money(290)) }));
+    fireEvent.click(
+      dialog.getByRole('radio', { name: words.refundAll.replace('{amount}', money(290)) }),
+    );
     expect(dialog.getByText(summary(290, 0))).toBeTruthy();
-    apiSend.mockResolvedValue({ subscriptionId: SUB, refund: { amount: 290, card: 0, manual: 290 } });
+    apiSend.mockResolvedValue({
+      subscriptionId: SUB,
+      refund: { amount: 290, card: 0, manual: 290 },
+    });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290))));
+    await vi.waitFor(() =>
+      expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290))),
+    );
   });
 
   it('a custom refund: 0 .. net paid; above it the confirm is off', async () => {
