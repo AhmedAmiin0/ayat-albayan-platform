@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
-import type * as Api from '@/core/lib/http/api';
+import type * as Token from '@/core/lib/http/access-token';
+import type * as Within from '@/core/lib/http/read-within';
 import { queryClient } from '@/core/lib/query/query-client';
 import { pathKey } from '@/core/lib/query/query-keys';
 import type { NavState } from '@/core/nav/chat-groups';
@@ -24,13 +25,14 @@ jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   // The real read deadline and token read around the fake answer (owner 2026-11-05: stuck reads).
   apiFetch: (url: string, init?: RequestInit) => {
-    const api = jest.requireActual<typeof Api>('@/core/lib/http/api');
+    const token = jest.requireActual<typeof Token>('@/core/lib/http/access-token');
+    const within = jest.requireActual<typeof Within>('@/core/lib/http/read-within');
     const backend = () => jest.requireActual<typeof Backend>('./fake-backend');
     const read = async () => {
-      await api.accessToken();
+      await token.accessToken();
       return backend().currentBackend().fetch(url);
     };
-    return api.withReadDeadline(read, init);
+    return within.withReadDeadline(read, init);
   },
   apiSend: (method: string, url: string, body?: unknown) =>
     jest.requireActual('./fake-backend').currentBackend().send(method, url, body),

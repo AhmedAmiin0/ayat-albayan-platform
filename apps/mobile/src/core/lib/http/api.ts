@@ -3,16 +3,9 @@ import { connectivity } from '../connectivity/connectivity';
 import { isNetworkError } from '../connectivity/network-error';
 import { mobileClientTag } from './client-tag';
 import { env } from './env';
-import {
-  isRead,
-  markSending,
-  noAnswer,
-  READ_TIMEOUT_MS,
-  readTimeoutFor,
-  withDeadline,
-} from './read-deadline';
-import { reportStall } from './stall-report';
-import { supabase } from './supabase';
+import { accessToken } from './access-token';
+import { markSending, readTimeoutFor } from './read-deadline';
+import { withReadDeadline } from './read-within';
 
 // The one client lives in @ab/client-core (docs/27 E1); this module injects mobile's env, session and tag.
 export { ApiError, toQueryString, type SendMethod } from '@ab/client-core';
@@ -30,38 +23,12 @@ async function reach(url: string, init: RequestInit): Promise<Response> {
   }
 }
 
-/**
- * The session's token, or null when signed out. A refresh that failed (no network at resume) leaves
- * an error and no session: that is no answer, not a sign-out (a request without a token would get a
- * 401, and signOutOnAuthError would sign the user out over a network stall).
- */
-export async function accessToken(): Promise<string | null> {
-  const { data, error } = await supabase.auth.getSession();
-  if (error) throw noAnswer();
-  return data.session?.access_token ?? null;
-}
-
 const client = createApiClient({
   baseUrl: () => env.apiUrl,
   accessToken,
   clientTag: mobileClientTag,
   fetch: reach,
 });
-
-/**
- * The read deadline around a transport: a read (GET) that has not settled within
- * READ_TIMEOUT_MS, token included, rejects as no answer (`TypeError`) and tells the connection
- * state once; writes and uploads keep no deadline. The flow tests' fake backend uses it too.
- */
-export function withReadDeadline<T>(
-  send: (init: RequestInit) => Promise<T>,
-  init: RequestInit = {},
-  timeoutMs = READ_TIMEOUT_MS,
-): Promise<T> {
-  if (!isRead(init)) return send(init);
-  const read = (signal: AbortSignal) => send({ ...init, signal });
-  return withDeadline(read, { signal: init.signal, onTimeout: reportStall, timeoutMs });
-}
 
 /** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
 export const apiFetch = <T>(path: string, init?: RequestInit): Promise<T> =>
