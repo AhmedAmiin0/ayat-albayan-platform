@@ -22,7 +22,10 @@ export function InvoicesScreen() {
   const list = useInvoices();
   return (
     <Screen>
-      <ScreenHeader title={t.mobileFinance.rows.invoices} leading={<BackButton onPress={() => router.back()} />} />
+      <ScreenHeader
+        title={t.mobileFinance.rows.invoices}
+        leading={<BackButton onPress={() => router.back()} />}
+      />
       <StaleNote isError={list.isError} hasData={list.items.length > 0} />
       <LazyList
         paged={list}

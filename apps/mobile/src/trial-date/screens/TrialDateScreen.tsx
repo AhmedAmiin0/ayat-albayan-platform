@@ -24,7 +24,10 @@ export function TrialDateScreen() {
   if (!studentId) {
     return (
       <Screen>
-        <ScreenHeader title={t.trialDate.action} leading={<BackButton onPress={() => router.back()} />} />
+        <ScreenHeader
+          title={t.trialDate.action}
+          leading={<BackButton onPress={() => router.back()} />}
+        />
         <EmptyState title={t.common.notFound} />
       </Screen>
     );

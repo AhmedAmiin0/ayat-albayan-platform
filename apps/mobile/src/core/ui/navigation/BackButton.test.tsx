@@ -19,7 +19,7 @@ test('an icon button named «رجوع», 44pt, that calls onPress', async () => 
   const button = screen.getByRole('button', { name: t.common.back });
   expect(button).toHaveStyle({ width: 44, height: 44 });
   expect(screen.queryByText(t.common.back)).toBeNull();
-  fireEvent.press(button);
+  await fireEvent.press(button);
   expect(onPress).toHaveBeenCalledTimes(1);
 });
 
@@ -27,7 +27,7 @@ test('RTL: the chevron points right (the inline-start); LTR: left', async () => 
   Object.defineProperty(I18nManager, 'isRTL', { value: true, configurable: true });
   const first = await render(<BackButton onPress={jest.fn()} />);
   expect(chevronScale()).toBe(-1);
-  first.unmount();
+  await first.unmount();
   Object.defineProperty(I18nManager, 'isRTL', { value: false, configurable: true });
   await render(<BackButton onPress={jest.fn()} />);
   expect(chevronScale()).toBe(1);
@@ -38,6 +38,6 @@ test('busy or disabled: not pressable', async () => {
   await render(<BackButton onPress={onPress} busy />);
   const button = screen.getByRole('button', { name: t.common.back });
   expect(button.props.accessibilityState).toMatchObject({ disabled: true });
-  fireEvent.press(button);
+  await fireEvent.press(button);
   expect(onPress).not.toHaveBeenCalled();
 });

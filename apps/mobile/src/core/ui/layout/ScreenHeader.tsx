@@ -54,8 +54,7 @@ export function ScreenHeader({
           gap: 12,
         }}
       >
-        {/* The chevron's 44pt box reaches the screen's start edge and hugs the title, as ChatHeader. */}
-        {leading ? <View style={{ marginStart: -10, marginEnd: -8 }}>{leading}</View> : null}
+        <HeaderLeading node={leading} />
         <AppText
           ref={titleRef}
           accessibilityRole="header"
@@ -65,8 +64,8 @@ export function ScreenHeader({
           minimumFontScale={0.7}
           style={{
             flexShrink: 1,
-            // With a leading back the title takes the middle, so the trailing stays at the end.
-            flexGrow: leading ? 1 : 0,
+            // Takes the middle: a leading back hugs it, the trailing stays at the end.
+            flexGrow: 1,
             fontFamily: type.display,
             fontSize: TITLE,
             lineHeight: type.lineHeight(TITLE, true),
@@ -98,4 +97,9 @@ export function ScreenHeader({
       {connecting ? <HeaderConnectingBar /> : null}
     </View>
   );
+}
+
+/** The chevron's 44pt box reaches the screen's start edge and hugs the title, as ChatHeader. */
+function HeaderLeading({ node }: { node: ReactNode }) {
+  return node ? <View style={{ marginStart: -10, marginEnd: -8 }}>{node}</View> : null;
 }

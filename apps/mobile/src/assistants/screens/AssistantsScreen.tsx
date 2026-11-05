@@ -35,7 +35,10 @@ export function AssistantsScreen() {
   };
   return (
     <Screen>
-      <ScreenHeader title={t.assistants.title} leading={<BackButton onPress={() => router.back()} />} />
+      <ScreenHeader
+        title={t.assistants.title}
+        leading={<BackButton onPress={() => router.back()} />}
+      />
       <FilterPills items={TABS()} value={tab} onChange={show} accessibilityLabel={t.assistants.tabs.label} />
       {notice ? <Note>{notice}</Note> : null}
       {tab === 'list' ? <AssistantsList /> : null}

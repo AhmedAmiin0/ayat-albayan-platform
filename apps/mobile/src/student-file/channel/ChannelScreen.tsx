@@ -20,7 +20,11 @@ function ChannelScreen({ audience }: { audience: ChannelAudience }) {
   const title = audience === 'teacher' ? t.studentChannel.title : t.studentChannel.monitorTitle;
   return (
     <Screen chat>
-      <ScreenHeader title={title} subtitle={name} leading={<BackButton onPress={() => router.back()} />} />
+      <ScreenHeader
+        title={title}
+        subtitle={name}
+        leading={<BackButton onPress={() => router.back()} />}
+      />
       <ChannelPresenceLine refs={{ audience, studentId }} />
       <ChannelThread refs={{ audience, studentId }} />
     </Screen>

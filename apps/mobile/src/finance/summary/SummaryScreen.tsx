@@ -25,7 +25,10 @@ export function SummaryScreen() {
   const finance = summary.data?.finance;
   return (
     <Screen>
-      <ScreenHeader title={t.mobileFinance.rows.summary} leading={<BackButton onPress={() => router.back()} />} />
+      <ScreenHeader
+        title={t.mobileFinance.rows.summary}
+        leading={<BackButton onPress={() => router.back()} />}
+      />
       <FilterPills accessibilityLabel={t.finance.year} items={years.map((y) => ({ value: y, label: y }))} value={year} onChange={setYear} />
       <StaleNote isError={summary.isError} hasData={!!finance} />
       <ScrollView
