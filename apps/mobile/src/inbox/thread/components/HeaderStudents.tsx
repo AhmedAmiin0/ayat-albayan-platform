@@ -13,16 +13,20 @@ import { ThreadMenu, type ThreadMenuItem } from './ThreadMenu';
 const detailsHref = (base: TreeBase, id: string): Href | null =>
   base === '/assistant' ? null : inTree(base, `/inbox/student/${id}` as Href);
 
+/** «مريم · AB-0200 · نشط · أبرار»: who, which code, the status and the teacher (owner 2026-11-02). */
+export const studentLine = (s: ThreadStudentView): string =>
+  [s.name, s.code, t.enums.studentStatus[s.status], ...(s.teacher_name ? [s.teacher_name] : [])].join(' · ');
+
 /**
  * Tapping the chat's name or number opens the student's details, as WhatsApp opens the contact
- * (owner 2026-10-29): one student at once, several from a sheet of «name · AB-nnnn». No student: no tap.
+ * (owner 2026-10-29): one student at once, several from a sheet of studentLine. No student: no tap.
  */
 export function useHeaderStudents(students: readonly ThreadStudentView[]) {
   const base = useTreeBase();
   const [open, setOpen] = useState(false);
   const items = students.flatMap((s): ThreadMenuItem[] => {
     const href = detailsHref(base, s.id);
-    return href ? [{ label: `${s.name} · ${s.code}`, onPress: () => router.push(href) }] : [];
+    return href ? [{ label: studentLine(s), onPress: () => router.push(href) }] : [];
   });
   const [first] = items;
   const onPress = !first ? undefined : items.length === 1 ? first.onPress : () => setOpen(true);

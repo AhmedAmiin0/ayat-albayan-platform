@@ -41,6 +41,15 @@ describe('SalesStudentQueries «الجدول» (whitelisted selects)', () => {
     expect(String(f.argsOf('students', 'select')?.[0])).toMatch(/^id, code, name, status, program, tz, /);
   });
 
+  it('student: «العائلة» reads the guardian name and its students\' name / code / status only', async () => {
+    const f = fakeDb({ students: [{ data: null }] });
+    await queriesOf(f.db).student('s1');
+    const select = String(f.argsOf('students', 'select')?.[0]);
+    expect(select).toContain('contact_is_self');
+    expect(select).toContain('guardians(phone_e164, name, students(id, code, name, status))');
+    expect(select).not.toMatch(/notes|phones|\*/);
+  });
+
   it('a database error becomes an error', async () => {
     const f = fakeDb({ lessons: [{ error: { message: 'boom' } }] });
     await expect(queriesOf(f.db).upcoming('s1', { from: FROM, to: TO, limit: 20 })).rejects.toThrow(/boom/);

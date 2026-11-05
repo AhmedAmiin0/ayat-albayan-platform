@@ -1,4 +1,5 @@
-import type { ThreadPeople } from '@ab/shared';
+import { studentStatusStyle, type ThreadPeople } from '@ab/shared';
+import { Link } from '@tanstack/react-router';
 import { railXl } from '@/components/ui/layout/rail';
 import { cn } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -15,7 +16,8 @@ import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscr
 /**
  * The guardian's children beside the chat (R-SUB-01): each one's package line («8 حلقات في الشهر —
  * فاضل 3 حلقات», «عليه 290 ر.س») and «اشتراك جديد» / «جدّد الاشتراك» for that child. The rows are
- * the picker: a family with several children gets one button per child.
+ * the picker: a family with several children gets one button per child. Each name opens the
+ * child's file, beside the code, the status and the teacher (owner 2026-11-02, «العائلة»).
  */
 export function SubscribePanel({ people }: { people: ThreadPeople }) {
   const queryClient = useQueryClient();
@@ -48,9 +50,18 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
               key={s.id}
               className="grid justify-items-start gap-1.5 border-b border-rule pb-3 text-sm"
             >
-              <span className="flex flex-wrap items-baseline gap-x-2">
-                <span className="font-semibold text-ink">{s.name}</span>
+              <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <Link
+                  to="/admin/students/$studentId"
+                  params={{ studentId: s.id }}
+                  aria-label={t.students.family.openStudent.replace('{name}', s.name)}
+                  className="font-semibold text-lapis underline underline-offset-4"
+                >
+                  {s.name}
+                </Link>
                 <Ltr className="text-xs text-ink-3">{s.code}</Ltr>
+                <StatusChip size="sm" {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} />
+                {s.teacher_name && <span className="text-xs text-ink-3">{s.teacher_name}</span>}
               </span>
               {sub ? (
                 <>

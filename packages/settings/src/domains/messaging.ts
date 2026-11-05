@@ -55,12 +55,14 @@ export const MESSAGING_SETTINGS = {
     labelKey: 'settings.quickReplyWindowHours', hintKey: 'settings.hints.quickReplyWindowHours',
   },
   /**
-   * The template a closed chat's open queues (POST /threads/:phone/reopen; owner 2026-10-26: v2, and
-   * no fallback while it is not approved: Kapso's reopen only, answer template_unavailable).
+   * The template sent once per 24 h before a staff text to a family whose chat window is closed
+   * (owner 2026-11-03: welcome_greeting). Only an approved chat-line template allowed for
+   * restricted roles (sales_starter) with no variables is ever sent; anything else sends nothing
+   * and the held text fails with that reason (whatsapp/sender/window). Also the thread-open reopen.
    */
   chat_reopen_template: {
     module: 'messaging', group: 'messaging', reachesFamilies: true,
-    type: 'string', default: 'inquiry_followup_ar_v2', minLength: 1, maxLength: 512,
+    type: 'string', default: 'welcome_greeting', minLength: 0, maxLength: 512,
     labelKey: 'settings.chatReopenTemplate', hintKey: 'settings.hints.chatReopenTemplate',
   },
   /**

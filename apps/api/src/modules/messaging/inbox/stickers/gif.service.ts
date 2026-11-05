@@ -1,5 +1,5 @@
 import type { GifList, ThreadGifSend } from '@ab/shared';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -13,7 +13,6 @@ import {
   type ThreadSend,
 } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { Giphy } from './giphy';
 
 const GIF_MIME = 'video/mp4';
@@ -35,8 +34,6 @@ export class GifService {
   fetch?: FetchLike;
   /** GIPHY_API_KEY of «التكاملات» (env the fallback); tests swap it. */
   key = (): string | undefined => loadEnv().GIPHY_API_KEY;
-  /** Kapso's conversation record, for a GIF tried after the window as a text is (chatLine). */
-  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
 
   constructor(
     private readonly threads: ThreadsRepo,
@@ -55,7 +52,7 @@ export class GifService {
     const key = dedupKey(s);
     const thread = await this.threads.thread(s.phone);
     const windows = () => this.threads.numberWindows(s.phone);
-    const at = { now, windows, phone: s.phone, kapso: this.kapso, teacher: !!s.scope };
+    const at = { now, windows, teacher: !!s.scope };
     const line = await chatLine(thread, at);
     const giphy = this.giphy();
     if (!giphy) throw waHttpError('giphy_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
