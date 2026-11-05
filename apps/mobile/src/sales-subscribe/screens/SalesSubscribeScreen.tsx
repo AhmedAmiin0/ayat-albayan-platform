@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
+import { useSalesCourse } from '@/sales-course';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -28,8 +29,9 @@ function childOf(students: readonly SalesFamilyStudent[], ids: { picked: string 
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
  * the salesperson, for one of HER students only (GET /sales/money/family), the child picked here (owner
  * 2026-10-29: no names on the chat's pills). Priced and saved through the sales endpoints; then the
- * package's weekly days and its transfer, or a payment link (a Stripe build). A preselected child
- * also offers «أيام الحلقات» straight away (a package already sold, its days not booked yet).
+ * package's weekly days and its transfer, or a payment link (a Stripe build). The resolved child
+ * (picked, preselected or the only one) also offers «أيام الحلقات» while its package may be booked
+ * (GET /sales/booking/course: blocked null; owner 2026-11-06: a link sale left unbooked).
  */
 export function SalesSubscribeScreen() {
   const params = useLocalSearchParams<Params>();
@@ -38,7 +40,6 @@ export function SalesSubscribeScreen() {
   const students = family.data?.students ?? [];
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
-  const own = students.find((s) => s.id === params.studentId);
   const renew = params.renew === '1';
   const [picked, setPicked] = useState<string>();
   const studentId = childOf(students, { picked, route: params.studentId });
@@ -46,9 +47,9 @@ export function SalesSubscribeScreen() {
   // «جدّد الاشتراك» only while the picked child is due (owner 2026-10-29: one pill; a sibling not due is a new package).
   const renewing = renew && (child ? child.renew_due : true);
   // «أيام الحلقات» for a child listed through sales.renew_any (`mine: false`) too (owner 2026-11-01).
-  const courseDays = own
-    ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
-    : undefined;
+  const bookable = useSalesCourse(studentId).data?.blocked === null;
+  const wizard = inTree(base, { pathname: '/inbox/sales-course', params: { studentId } });
+  const courseDays = bookable ? () => router.push(wizard) : undefined;
   return (
     <Screen>
       <ScrollView

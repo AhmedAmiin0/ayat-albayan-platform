@@ -14,7 +14,7 @@ describe('SalesCourseQueries', () => {
   });
 
   it('subscription: the newest unpaid or active one of the student', async () => {
-    const t = fakeDb({ subscriptions: [{ data: SUB }, { data: null }] });
+    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [] }] }, { data: [] }] });
     const q = new SalesCourseRepo(t.db);
     expect(await q.subscription('s1')).toEqual(SUB);
     expect(t.argsOf('subscriptions', 'in')).toEqual(['status', ['unpaid', 'active']]);
@@ -22,8 +22,20 @@ describe('SalesCourseQueries', () => {
     expect(await q.subscription('s2')).toBeNull();
   });
 
+  it('subscription: the newest one WITHOUT a course (two active packages, the older one unbooked)', async () => {
+    const older = { ...SUB, id: 'sub0', rules: [] };
+    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }] });
+    expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual({ ...SUB, id: 'sub0' });
+  });
+
+  it('subscription: every package booked → the newest (course_exists, the view shows its course)', async () => {
+    const booked = [{ ...SUB, rules: [{ id: 'r1' }] }, { ...SUB, id: 'sub0', rules: [{ id: 'r0' }] }];
+    const t = fakeDb({ subscriptions: [{ data: booked }] });
+    expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
+  });
+
   it('subscription: a duration outside 30/45/60/90 is a broken row (throws)', async () => {
-    const t = fakeDb({ subscriptions: [{ data: { ...SUB, duration: 50 } }] });
+    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, duration: 50, rules: [] }] }] });
     await expect(new SalesCourseRepo(t.db).subscription('s1')).rejects.toThrow('duration 50');
   });
 
