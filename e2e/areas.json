@@ -29,6 +29,7 @@
         "messaging/inbound-new-lead.spec.ts",
         "messaging/inbound-quick-reply.spec.ts",
         "messaging/inbound-stop.spec.ts",
+        "messaging/message-search.spec.ts",
         "messaging/inbox-failures.spec.ts",
         "messaging/inbox-media.spec.ts",
         "messaging/inbox-push-owner.spec.ts",
