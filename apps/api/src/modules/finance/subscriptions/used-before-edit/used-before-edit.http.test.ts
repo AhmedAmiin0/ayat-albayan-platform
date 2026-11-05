@@ -55,7 +55,7 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
     expect(edits.setUsedBefore).not.toHaveBeenCalled();
   });
 
-  it('the whole package or more than one lesson per course day → 400 used_before_too_many', async () => {
+  it('the whole package or more (4 lessons: at most 3) → 400 used_before_too_many', async () => {
     for (const n of [4, 5]) {
       const res = await edit({ lessonsUsedBefore: n });
       expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_too_many']);
