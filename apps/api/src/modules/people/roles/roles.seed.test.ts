@@ -33,7 +33,6 @@ const LATER = [
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
-
 function seeded(key: string): string[] {
   const block = SQL.match(new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`));
   return block?.[1] ? [...block[1].matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? '') : [];
