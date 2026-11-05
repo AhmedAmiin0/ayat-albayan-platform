@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { logWarning } from '@/core/lib/log';
 import { putPushToken, TOKEN_KEY } from './device-key';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
@@ -56,7 +57,7 @@ export async function registerPush(): Promise<void> {
     // (an Android build without android.googleServicesFile never gets a token). A 403 is a role
     // without notifications.push (sales, a classroom assistant): expected, so not even a warning.
     if (error instanceof ApiError && error.status === 403) return;
-    if (__DEV__) console.warn('registerPush', error);
+    if (__DEV__) logWarning('registerPush', error);
   }
 }
 

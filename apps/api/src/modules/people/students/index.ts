@@ -12,3 +12,4 @@ export {
   toStudentPatch,
 } from './students.mapper';
 export { StudentsModule } from './students.module';
+export { StudentsService } from './students.service';

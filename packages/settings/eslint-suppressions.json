@@ -51,7 +51,7 @@
   },
   "src/domains/messaging.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/domains/notifications.test.ts": {

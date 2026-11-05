@@ -8,6 +8,7 @@ import { packageSummaries, SalesRosterRepo } from '@/modules/sales/sales';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { scheduleWindow, toStudentSchedule } from './sales-student-schedule.mapper';
 import { toTrialLessons } from './sales-student-trial.mapper';
+import { toStudentFamily } from './sales-student-family.mapper';
 import { toStudentDetails } from './sales-student.mapper';
 import { SalesStudentRepo } from './sales-student.repo';
 import { SalesStudentReads } from './sales-student.reads';
@@ -50,7 +51,8 @@ export class SalesStudentService {
     const parts = { student, history, lessons, reports, schedule, trial, mine: acts, prices };
     const view = toStudentDetails({ ...parts, package: pkg });
     const phone = chatPhone(user, view.student.guardian_phone);
-    return { ...view, student: { ...view.student, guardian_phone: phone } };
+    const family = toStudentFamily(student, can(user, 'inbox.read'));
+    return { ...view, student: { ...view.student, guardian_phone: phone }, family };
   }
 
   /** The current package of ANY student (owner 2026-10-30): no price, payment or commission. */

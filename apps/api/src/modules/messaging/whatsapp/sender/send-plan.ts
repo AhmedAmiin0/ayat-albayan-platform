@@ -1,17 +1,12 @@
 import type { Json } from '@ab/db';
 import {
-  backoff,
-  waSendKind,
-  isRetryableWaError,
-  isWaAuthFailure,
-  MAX_SEND_ATTEMPTS,
-  quickReplyPayload,
-  type TemplateButton,
-  type TemplateParams,
+  backoff, waSendKind, isRetryableWaError, isWaAuthFailure, MAX_SEND_ATTEMPTS, quickReplyPayload,
+  WINDOW_CLOSED, type TemplateButton, type TemplateParams,
 } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
+import { isWindowClosedError } from './window/window-rules';
 import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
 import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -64,9 +59,10 @@ function errorText(error: unknown): string {
 
 /**
  * Throttling, Meta outages and connection errors retry with backoff (1 min, 5 min, …) until
- * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
- * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
- * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
+ * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, the window
+ * closed: Meta 131047 / Kapso 422 = window_closed, bad parameters) fails at once. A timeout /
+ * dropped connection (`uncertain`: Meta may have sent it) fails at once too, for the admin to
+ * check instead of a blind resend. An auth
  * error (190 / 10 / 200, or Kapso / the CRM refusing its key) holds the row, uncounted: the credential is broken.
  * Meta's 131042 (no payment method on the WABA; meta, kapso) holds it too (hold/payment-hold).
  * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
@@ -77,6 +73,9 @@ export function failurePlan(input: PlanInput): FailurePlan {
   const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
   const error_text = errorText(input.error);
   if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
+  // Never retried: the worker holds a staff chat text behind the reopen template (window/).
+  const closed = isWindowClosedError(input.error);
+  if (closed) return { ...plain(input.error, error_text), error_code: WINDOW_CLOSED };
   const held = accountHold({ ...input, info, error_text });
   if (held) return held;
   const crm = crmPlan({ info, attempts: input.attempts, now: input.now, error_text, error_code: errorCode(input.error) });

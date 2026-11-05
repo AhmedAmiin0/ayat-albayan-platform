@@ -2,6 +2,7 @@
 // endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
 // it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
+import { PEOPLE_EDIT_ROWS } from './catalog.people-edit.js';
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = ['people', 'students', 'teachers', 'schedule', 'classroom', 'reports',
@@ -28,6 +29,7 @@ export const PERMISSION_ROWS = [
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
+  ...PEOPLE_EDIT_ROWS,
   { key: 'assistants.read', area: 'students', grants: [] },
   { key: 'assistants.write', area: 'students', grants: [] },
   { key: 'teachers.read', area: 'teachers', grants: [] },
@@ -87,8 +89,7 @@ export const PERMISSION_ROWS = [
   { key: 'student_channels.monitor', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
-  // «تعديل المبلغ» (owner 2026-11-02): PATCH /sales/payments/:id/amount only, never payments.write.
-  { key: 'payments.edit_amount', area: 'finance', grants: [] },
+  { key: 'payments.edit_amount', area: 'finance', grants: [] }, // «تعديل المبلغ» only
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
   // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.
@@ -144,7 +145,6 @@ export const PERMISSION_ROWS = [
   // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
-  // The family portal (/portal/*, docs/31): a guardian login (their students) or a student login (itself).
-  // A scope, never a grant: the portal roles hold no matrix permission (migration 433).
+  // The family portal (/portal/*, docs/31): guardian or student login; a scope, not a grant (433).
   { key: 'self.portal', area: 'self', grants: ['guardian', 'student'] },
 ] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];
