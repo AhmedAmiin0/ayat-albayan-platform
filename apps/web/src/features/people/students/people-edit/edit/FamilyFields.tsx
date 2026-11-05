@@ -10,10 +10,12 @@ export interface FamilyFieldsProps {
   value: FamilyForm;
   onChange: (patch: Partial<FamilyForm>) => void;
   invalid: readonly string[];
+  /** Notes are the admin's only (owner 2026-10-27). */
+  notes: boolean;
 }
 
-/** «بيانات العائلة»: the guardian's name, main number (E.164), country, zone and notes. */
-export function FamilyFields({ value, onChange, invalid }: FamilyFieldsProps) {
+/** «بيانات العائلة»: the guardian's name, main number (E.164), country, zone and (admin) notes. */
+export function FamilyFields({ value, onChange, invalid, notes }: FamilyFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? t.peopleEdit.invalid : undefined);
   return (
     <fieldset className="grid gap-3">
@@ -37,12 +39,14 @@ export function FamilyFields({ value, onChange, invalid }: FamilyFieldsProps) {
         error={error('country')}
         onValue={(country) => onChange({ country })}
       />
-      <TextField
-        label={F.notes}
-        value={value.notes}
-        error={error('notes')}
-        onValue={(notes) => onChange({ notes })}
-      />
+      {notes ? (
+        <TextField
+          label={F.notes}
+          value={value.notes}
+          error={error('notes')}
+          onValue={(v) => onChange({ notes: v })}
+        />
+      ) : null}
       <Field label={F.tz}>
         {(p) => <TimeZoneSelect {...p} value={value.tz} onValue={(tz) => onChange({ tz })} />}
       </Field>

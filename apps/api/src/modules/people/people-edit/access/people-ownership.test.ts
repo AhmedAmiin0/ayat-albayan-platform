@@ -28,6 +28,17 @@ describe('PeopleOwnership (SalesOwnershipRule, #612)', () => {
     });
   });
 
+  it('a move target (#621 review): a found family is checked, a created one is hers', async () => {
+    const on = guard(OWN).ownership;
+    await expect(on.target(user('sales'), { id: 'g9', created: false })).rejects.toMatchObject({
+      response: { code: 'not_your_family' },
+    });
+    await expect(on.target(user('sales'), { id: 'g1', created: false })).resolves.toBeUndefined();
+    await expect(on.target(user('sales'), { id: 'g9', created: true })).resolves.toBeUndefined();
+    const off = guard(null).ownership;
+    await expect(off.target(user('sales'), { id: 'g9', created: false })).resolves.toBeUndefined();
+  });
+
   it('the admin is never bound and never reads the rule', async () => {
     const { ownership, scope } = guard(OWN);
     await ownership.student(user('admin'), 's9');

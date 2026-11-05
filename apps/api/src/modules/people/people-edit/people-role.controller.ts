@@ -15,7 +15,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { blanksToNull } from '@/modules/people/guardians';
-import { FamilyMoveService } from './family-move.service';
+import { FamilyMoveService, type MoveTarget } from './family-move.service';
 import { RoleSwitchService } from './role-switch.service';
 import { PeopleOwnership } from './access/people-ownership';
 
@@ -55,9 +55,9 @@ export class PeopleRoleController {
     @CurrentUser() user: AuthUser,
   ) {
     await this.owners.student(user, id);
-    // An existing family must be hers too while the rule is on; a new one is hers by the move.
-    if (move.kind === 'existing') await this.owners.family(user, move.id);
-    return this.families.move({ studentId: id, move, actorId: user.id });
+    // The resolved family must be hers too while the rule is on, unless this move created it.
+    const allowed = (target: MoveTarget) => this.owners.target(user, target);
+    return this.families.move({ studentId: id, move, actorId: user.id, allowed });
   }
 
   /** «الطالب هو ولي الأمر»; 409 family_has_self. */
