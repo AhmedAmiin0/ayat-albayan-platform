@@ -31,8 +31,8 @@ type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; les
  * lesson_reminder_24h is approved; nothing while settings.auto_messages_enabled is OFF. The link is
  * chosen here per lesson (its teacher's meeting_mode, else settings.meeting_link_auto; reminders.links.ts): our classroom adds one
  * lesson_join_link per student. Drops queued reminders of lessons cancelled since, and pushes
- * lesson_needs_confirmation (R-MOB-01) once per lesson (also when OFF). Only queues: the sender owns
- * the send gate.
+ * lesson_needs_confirmation (R-MOB-01) once per lesson (also when OFF), only while
+ * settings.lesson_confirmation_required is ON. Only queues: the sender owns the send gate.
  */
 @BackgroundJob({ name: 'reminders' })
 @Injectable()
@@ -80,7 +80,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
       summary.lessons = lessons.length;
       // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
       if (settings.auto_messages_enabled) summary.queued = await this.queue({ settings, rules, lessons, now });
-      if (rules.confirmPush) summary.pushed = await this.confirmations(lessons, { now, minutesBefore: rules.minutesBefore });
+      if (rules.confirmPush && settings.lesson_confirmation_required) summary.pushed = await this.confirmations(lessons, { now, minutesBefore: rules.minutesBefore });
     } catch (e) {
       this.log.error(`reminders run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }

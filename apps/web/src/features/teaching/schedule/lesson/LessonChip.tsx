@@ -1,4 +1,4 @@
-import { clockOf, lessonStatusStyle, type LessonView, subscriptionStatusStyle, type Tone } from '@ab/shared';
+import { clockOf, type LessonView, subscriptionStatusStyle, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
@@ -10,6 +10,7 @@ import { zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { clockDir } from '@/lib/clock-text';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 // Literal class strings so Tailwind's scanner sees them (docs/07 §6 status chip tones).
 const EDGE: Record<Tone, string> = {
@@ -62,7 +63,7 @@ export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonVi
  * makeup (R-SCH-10) «تعويضية».
  */
 export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
-  const style = lessonStatusStyle[lesson.status];
+  const style = useLessonStatusText().chip(lesson.status);
   const viewer = useViewerTz();
   const tz = lesson.students[0]?.tz ?? viewer;
   const clock = useClock();
@@ -87,7 +88,7 @@ export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher =
       <span className={cn('flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5', INK[style.tone])}>
         <span className="flex min-w-0 items-center gap-1">
           <NuqtaGlyph shape={style.glyph} />
-          <span className="truncate">{t.enums.lessonStatus[lesson.status]}</span>
+          <span className="truncate">{style.label}</span>
         </span>
         <LessonTags lesson={lesson} />
       </span>

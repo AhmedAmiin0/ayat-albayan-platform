@@ -1,12 +1,12 @@
 import {
   dateText,
-  lessonStatusStyle,
   type AttendanceTableRow,
   type AttendanceTotalKind,
   type StatusStyle,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
+import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { fill } from '@/sales/sales/lib/sales-text';
 
@@ -40,10 +40,14 @@ export function totalsItems(totals: Record<AttendanceTotalKind, number>): { key:
 
 /**
  * The status chip: the student's own day as «الحضور» says it (حضر / غاب / اعتذر / لم يُسجَّل); a cancelled
- * or moved lesson by its status (who cancelled it, «تغيّر موعدها»).
+ * or moved lesson by its status (who cancelled it, «تغيّر موعدها»; `status` follows the academy's
+ * lesson_confirmation_required, useLessonStatusText).
  */
-export function rowChip(row: Pick<AttendanceTableRow, 'kind' | 'status'>): StatusStyle & { label: string } {
-  if (row.kind === null || row.kind === 'cancelled') return { ...lessonStatusStyle[row.status], label: t.enums.lessonStatus[row.status] };
+export function rowChip(
+  row: Pick<AttendanceTableRow, 'kind' | 'status'>,
+  status: Pick<LessonStatusText, 'look' | 'label'>,
+): StatusStyle & { label: string } {
+  if (row.kind === null || row.kind === 'cancelled') return { ...status.look(row.status), label: status.label(row.status) };
   return { ...ATTENDANCE_STYLE[row.kind], label: t.sales.student.kind[row.kind] };
 }
 

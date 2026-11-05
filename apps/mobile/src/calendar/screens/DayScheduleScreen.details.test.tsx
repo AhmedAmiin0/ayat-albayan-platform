@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from './DayScheduleScreen';
 import { OVERVIEW, THIS_WEEK } from '../overview/overview-fixtures';
 
@@ -30,7 +30,7 @@ const openRow = (who: string) => screen.findByRole('button', { name: t.lessons.s
 const sheetOpen = () => screen.queryByText(t.lessons.sheet.about) !== null;
 
 test('a tap on the row opens «تفاصيل الحلقة» with the admin’s actions for that lesson', async () => {
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('يوسف أحمد'));
   expect(screen.getByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   expect(screen.getByText(t.lessons.sheet.about)).toBeTruthy();
@@ -43,7 +43,7 @@ test('a tap on the row opens «تفاصيل الحلقة» with the admin’s ac
 
 test('a row’s own button fires its action and does not open the sheet', async () => {
   mockApiSend.mockResolvedValue({});
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('button', { name: `${t.today.confirm} — يوسف أحمد` }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
   expect(sheetOpen()).toBe(false);
@@ -54,7 +54,7 @@ test('a row’s own button fires its action and does not open the sheet', async 
 
 test('«تأكيد» inside the sheet confirms, and the sheet shows the new status at once', async () => {
   mockApiSend.mockReturnValue(new Promise(() => undefined));
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('يوسف أحمد'));
   const [, inSheet] = screen.getAllByRole('button', { name: `${t.today.confirm} — يوسف أحمد` });
   if (!inSheet) throw new Error('no sheet confirm');
@@ -70,7 +70,7 @@ test('«غيّر الميعاد» from the sheet opens the reschedule sheet over
     if (path.startsWith('/booking/slots')) return { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] };
     throw new ApiError(404);
   });
-  await renderWithQuery(<DayScheduleScreen />);
+  await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('يوسف أحمد'));
   const [, inSheet] = screen.getAllByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
   if (!inSheet) throw new Error('no sheet reschedule');

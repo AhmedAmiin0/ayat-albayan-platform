@@ -8,6 +8,7 @@ import { FunnelChart } from './funnel/FunnelChart';
 import { LessonsByStatus } from './today/LessonsByStatus';
 import { SourceTable } from './funnel/SourceTable';
 import { loadLabel, TeacherLoad } from './today/TeacherLoad';
+import { configWrapper } from '@/lib/settings/confirmation-testing';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
@@ -29,7 +30,8 @@ describe('dashboard charts (one bar system, each a labelled table)', () => {
   });
 
   it('lessons by status: only statuses with lessons, each with its chip word', () => {
-    render(<LessonsByStatus counts={SUMMARY.lessons_by_status} />);
+    const wrapper = configWrapper(true);
+    render(<LessonsByStatus counts={SUMMARY.lessons_by_status} />, { wrapper });
     const table = screen.getByRole('table', { name: t.dashboard.lessonsByStatus });
     expect(within(table).getAllByRole('rowheader').map((h) => h.textContent)).toEqual([
       t.enums.lessonStatus.scheduled,
@@ -40,7 +42,8 @@ describe('dashboard charts (one bar system, each a labelled table)', () => {
   });
 
   it('no lessons: one plain line', () => {
-    render(<LessonsByStatus counts={{ ...SUMMARY.lessons_by_status, scheduled: 0, completed: 0, no_show: 0 }} />);
+    const counts = { ...SUMMARY.lessons_by_status, scheduled: 0, completed: 0, no_show: 0 };
+    render(<LessonsByStatus counts={counts} />, { wrapper: configWrapper() });
     expect(screen.getByText(t.dashboard.noLessons)).toBeTruthy();
   });
 

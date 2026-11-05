@@ -62,6 +62,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   follow_up_slots_from_hours: 12, follow_up_slots_to_days: 7, quick_reply_window_hours: 48, whatsapp_calls_enabled: false, calls_permission_template: '',
   chat_reopen_template: 'inquiry_followup_ar_v2', crm_media_host: '', crm_media_copy_all: false,
   booking_horizon_weeks: 5, late_cancel_hours: null, makeup_window_days: 60, teachers_always_available: true,
+  lesson_confirmation_required: false,
   join_opens_before_min: 15, join_closes_after_min: 120, default_meeting_title: 'اجتماع', meeting_link_auto: false,
   meetings_in_app: true, meeting_max_minutes: 120,
   report_teacher_edit_hours: 24, report_form_v2: false, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
@@ -81,9 +82,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 55 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(55);
-    expect(root.SETTING_KEYS).toHaveLength(55);
+  it('SETTING_DEFAULTS holds the 56 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(56);
+    expect(root.SETTING_KEYS).toHaveLength(56);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
@@ -106,8 +107,8 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
   it('the public and custom-config types keep their shape', () => {
     expectTypeOf<PublicSettingKey>().toEqualTypeOf<
       | 'academy_contact' | 'academy_whatsapp_e164' | 'join_closes_after_min' | 'join_opens_before_min'
-      | 'makeup_window_days' | 'meeting_link_auto' | 'meetings_in_app' | 'recording_consent_notice'
-      | 'upload_max_mb'
+      | 'lesson_confirmation_required' | 'makeup_window_days' | 'meeting_link_auto' | 'meetings_in_app'
+      | 'recording_consent_notice' | 'upload_max_mb'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();

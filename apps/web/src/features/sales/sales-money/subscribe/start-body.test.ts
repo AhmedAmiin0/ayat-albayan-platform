@@ -31,11 +31,11 @@ describe('startBody: the start fields sent with POST /sales/subscriptions', () =
     expect(startBody(value, { ...opts, canSet: false })).toEqual({ ok: true, body: {} });
   });
 
-  it('the same bounds as the API: a past day, and one lesson left per course day', () => {
+  it('the same bounds as the API: a past day, and every lesson but one (owner 2026-11-02)', () => {
     expect(startBody({ startsOn: today, alreadyStarted: true, usedBefore: 1 }, opts)).toEqual({ ok: false, code: 'used_before_needs_past_start' });
     expect(startBody({ startsOn: '2026-09-01', alreadyStarted: true, usedBefore: 8 }, opts)).toEqual({ ok: false, code: 'used_before_too_many' });
-    // 8 lessons, 2 days a week: 7 used leaves 1 lesson for 2 days.
-    expect(startBody({ startsOn: '2026-09-01', alreadyStarted: true, usedBefore: 7 }, opts)).toEqual({ ok: false, code: 'used_before_too_many' });
+    // 8 lessons, 2 days a week: 7 used leaves 1 lesson, booked on the next matching day.
+    expect(startBody({ startsOn: '2026-09-01', alreadyStarted: true, usedBefore: 7 }, opts)).toMatchObject({ ok: true });
     expect(startBody({ startsOn: '2026-09-01', alreadyStarted: true, usedBefore: 6 }, opts)).toMatchObject({ ok: true });
   });
 });

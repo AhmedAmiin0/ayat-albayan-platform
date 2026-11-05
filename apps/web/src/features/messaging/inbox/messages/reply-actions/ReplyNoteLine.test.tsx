@@ -8,6 +8,7 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
+import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -36,6 +37,7 @@ const ADMIN: Permission[] = ['lessons.reschedule', 'lessons.write', 'lessons.rea
 
 function renderNote(m: typeof ASK, opts: { mode: InboxMode; permissions: Permission[]; lessons?: ThreadLesson[] }) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  setConfirmationRequired(client, true);
   client.setQueryData(pathKey('/auth/me'), { id: 'u', email: null, role: 'admin', permissions: opts.permissions });
   render(
     <QueryClientProvider client={client}>

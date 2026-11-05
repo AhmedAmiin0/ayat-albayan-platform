@@ -19,7 +19,8 @@ const a = t.sales.lessonActions;
 const LESSON = scheduleLesson({ id: 'l-9', status: 'scheduled' });
 
 function open(lesson = LESSON) {
-  renderWithQuery(<SalesLessonDrawer lesson={lesson} now={NOW} onClose={vi.fn()} />);
+  // «تأكيد الحلقة» exists only while the academy requires a confirmation (owner 2026-11-02).
+  renderWithQuery(<SalesLessonDrawer lesson={lesson} now={NOW} onClose={vi.fn()} />, true);
   return screen.getByRole('dialog', { name: 'سهيلة' });
 }
 

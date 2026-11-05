@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { kpisOf, type Kpi } from './kpis';
 import type { WorkTab } from '@/features/reporting/dashboard/search';
 import type { DashboardData } from '@/features/reporting/dashboard/types';
+import { usePublicConfig } from '@/lib/settings/public-config';
 
 export interface KpiStripProps {
   /** undefined while loading: the tiles show a dash, never a made-up number. */
@@ -36,7 +37,7 @@ function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
  */
 export function KpiStrip({ summary, work }: KpiStripProps) {
   const counts = summary ?? { needs_confirmation: 0, pending_reports: 0, unpaid_subscriptions: 0, open_tasks: 0 };
-  const kpis = kpisOf(counts);
+  const kpis = kpisOf(counts, usePublicConfig().lesson_confirmation_required);
   return (
     <nav aria-label={t.dashboard.kpiStrip} className="border-y border-rule py-1.5">
       <ul className="grid grid-cols-2 gap-1">

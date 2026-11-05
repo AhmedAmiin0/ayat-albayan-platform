@@ -766,7 +766,8 @@
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
       "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
-      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first."
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first.",
+      "meeting_link_invalid": "The lesson link is not valid; it must start with https://"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -890,7 +891,9 @@
       "reason_required": "Write the reason for the correction",
       "lesson_ended": "This lesson has ended, so it cannot be rescheduled or cancelled",
       "not_your_student": "This lesson is not one of your students'",
-      "lesson_not_found": "This lesson was not found; open the schedule again"
+      "lesson_not_found": "This lesson was not found; open the schedule again",
+      "not_auto_held": "This lesson's status can't be changed here: it was recorded by hand or has a report. Change it from the lesson report.",
+      "earning_paid": "The teacher has already been paid for this lesson, so its status can't be changed here. Contact the finance team."
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",
@@ -1000,6 +1003,18 @@
         "none": "No report written yet"
       },
       "readOnly": "View only: no edit or cancel from here"
+    },
+    "noConfirm": {
+      "scheduled": "Scheduled",
+      "scheduledShort": "Upcoming"
+    },
+    "correct": {
+      "title": "Did the lesson not take place?",
+      "hint": "This lesson was recorded as held automatically after it ended. If it did not take place, pick the reason.",
+      "byTeacher": "Cancelled by teacher",
+      "byStudent": "Student excused",
+      "done": "Lesson status updated",
+      "autoHeld": "Recorded as held automatically"
     }
   },
   "teacherDash": {
@@ -3077,6 +3092,18 @@
     "sticker": {
       "favourite": "Add to favourites",
       "unfavourite": "Remove from favourites"
+    },
+    "chatSearch": {
+      "open": "Search",
+      "label": "Search this chat",
+      "placeholder": "Search the chat…",
+      "older": "Older result",
+      "newer": "Newer result",
+      "close": "Close search",
+      "counter": "{n} of {m}",
+      "empty": "No results",
+      "searching": "Searching…",
+      "unreachable": "This message could not be reached in the chat"
     }
   },
   "mobileFinance": {
@@ -4017,7 +4044,8 @@
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
       "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
-      "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown."
+      "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
+      "lessonConfirmationRequired": "When off (the default) no lesson shows \"Needs confirmation\", and a lesson counts as held 30 minutes after its end unless another status was recorded, so it is deducted from the package. If the teacher cancelled it or the student excused themself, an assistant or the admin team records that before or after the lesson. A family's \"Yes\" reply still works. When on, a lesson shows \"Needs confirmation\" until the family or the admin team confirms it."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4046,7 +4074,8 @@
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
     "commsSource": "Where the number setup comes from",
     "reportFormV2": "New lesson report form",
-    "presenceEnabled": "Show online status and last seen"
+    "presenceEnabled": "Show online status and last seen",
+    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson"
   },
   "language": {
     "label": "Language",
@@ -4707,7 +4736,8 @@
         "title": "Trial lesson",
         "none": "No trial lesson",
         "teacher": "with {name}",
-        "again": "New trial date for {name}"
+        "again": "New trial date for {name}",
+        "edit": "Change the trial lesson time for {name}"
       },
       "log": {
         "title": "Attendance log",
@@ -4861,7 +4891,7 @@
       "too_many_attachments": "At most 5 attachments.",
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson per weekly day must stay in the package.",
+      "used_before_too_many": "At least one lesson must stay in the package.",
       "teacher_not_found": "The chosen teacher is not available now. Choose another."
     },
     "usedBefore": "Lessons already used from the package",
@@ -7155,6 +7185,8 @@
   "trialDate": {
     "action": "New trial date",
     "actionHint": "Pick a new trial lesson date for this student",
+    "editAction": "Change trial time",
+    "meetingLinkHint": "Optional: left empty, the student’s or the teacher’s usual link is used. The link must start with https://",
     "title": "New trial date for {name}",
     "historyTitle": "Trial lesson dates",
     "count": {
@@ -7416,7 +7448,7 @@
     "error": {
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+      "used_before_too_many": "At least one lesson must stay in the package."
     }
   },
   "paymentLinks": {
@@ -7676,5 +7708,18 @@
     "staffEmpty": "No team members yet",
     "off": "Online status is turned off in Values",
     "loadError": "Could not load the team status"
+  },
+  "datePicker": {
+    "title": "Choose a date",
+    "weekdaysShort": {
+      "sat": "Sa",
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr"
+    },
+    "earliest": "Earliest allowed date: {date}"
   }
 }

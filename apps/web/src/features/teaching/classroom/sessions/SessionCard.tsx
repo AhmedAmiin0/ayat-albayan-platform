@@ -12,6 +12,7 @@ import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinBut
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';
 import { clockDir, viewerZone } from '@/lib/clock-text';
+import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 
 /**
  * One session on /admin/classrooms: time range, students, teacher, a status chip and a live dot
@@ -20,7 +21,7 @@ import { clockDir, viewerZone } from '@/lib/clock-text';
  */
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const [more, setMore] = useState(false);
-  const chip = sessionChip(lesson, group);
+  const chip = sessionChip(lesson, group, useLessonStatusText().required);
   // Times in the viewer's own zone (the browser's), 12 or 24 h as chosen, Western digits.
   const clock = { ...useClock(), tz: viewerZone() };
   const time = t.classroom.admin.time

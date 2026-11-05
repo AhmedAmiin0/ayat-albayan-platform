@@ -7,6 +7,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { fill } from '@/sales/sales/lib/sales-text';
+import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { cancelLine, dayDateOf, rowChip, rowTags } from './attendance-log-text';
 
 /** The table's columns (the header uses the same): date · time · teacher · status · report. */
@@ -33,6 +34,7 @@ interface AttendanceLogRowProps {
 export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen }: AttendanceLogRowProps) {
   const { color } = useTheme();
   const tz = useViewerTz();
+  const status = useLessonStatusText();
   const w = t.sales.student.log;
   const cell = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink };
   const note = { ...cell, fontFamily: type.ui[400], color: color.ink3 };
@@ -48,7 +50,7 @@ export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, c
         <AppText style={[cell, COLUMNS.time]}>{time}</AppText>
         <AppText style={[cell, COLUMNS.teacher]} numberOfLines={1}>{row.teacher_name ?? '—'}</AppText>
         <View style={COLUMNS.status}>
-          <StatusChip {...rowChip(row)} size="sm" />
+          <StatusChip {...rowChip(row, status)} size="sm" />
         </View>
         <AppText style={[cell, COLUMNS.report, { color: sent ? color.lapis : color.ink3 }]}>{sent ? w.sent : w.notSent}</AppText>
       </View>

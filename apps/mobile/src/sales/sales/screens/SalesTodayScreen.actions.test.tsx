@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
 import { SalesTodayScreen } from './SalesTodayScreen';
 
@@ -39,7 +39,7 @@ afterEach(() => jest.useRealTimers());
 
 test('a running lesson awaiting confirmation: the hero offers «ادخل الحلقة», never «تأكيد الحلقة»', async () => {
   day(running, soon);
-  await renderWithQuery(<SalesTodayScreen />);
+  await renderWithQuery(<SalesTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.today.running)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.classroom.enter })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.today.details })).toBeTruthy();
@@ -48,7 +48,7 @@ test('a running lesson awaiting confirmation: the hero offers «ادخل الح�
 
 test('the next lesson, ten minutes away: no «ادخل الحلقة» yet (only once it runs), no confirm', async () => {
   day(soon);
-  await renderWithQuery(<SalesTodayScreen />);
+  await renderWithQuery(<SalesTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText('الحلقة التالية · بعد 10 دقائق')).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
   noAdminAction();
@@ -56,7 +56,7 @@ test('the next lesson, ten minutes away: no «ادخل الحلقة» yet (only 
 
 test('the hero opens «تفاصيل الحلقة»: her move / cancel / confirm, no «للاطلاع فقط», no admin action, join while it runs', async () => {
   day(running, soon);
-  await renderWithQuery(<SalesTodayScreen />);
+  await renderWithQuery(<SalesTodayScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
@@ -66,7 +66,7 @@ test('the hero opens «تفاصيل الحلقة»: her move / cancel / confirm,
 
 test('a row opens the same sheet; a lesson not yet running has no «ادخل الحلقة» there', async () => {
   day(running, soon);
-  await renderWithQuery(<SalesTodayScreen />);
+  await renderWithQuery(<SalesTodayScreen />, confirmingQueryClient());
   await screen.findByText(t.today.running);
   const enterBefore = screen.getAllByRole('button', { name: t.classroom.enter }).length;
   await fireEvent.press(screen.getByRole('button', { name: /سلمى/ }));

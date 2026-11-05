@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
 import { cancelled, done, muscat, pending } from './testing/fixtures';
 
@@ -39,7 +39,7 @@ afterEach(() => jest.useRealTimers());
 
 test('the greeting by the Riyadh clock is the header (no «اليوم» title), the date line, and today in Riyadh is what it asks for', async () => {
   mockApiFetch.mockResolvedValue([]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(screen.getByRole('header', { name: t.today.greeting.afternoon })).toBeTruthy(); // 16:20 Riyadh
   expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getByText('الخميس 1 أكتوبر · بتوقيت الرياض')).toBeTruthy();
@@ -50,7 +50,7 @@ test('the greeting by the Riyadh clock is the header (no «اليوم» title), 
 
 test('the summary counts the shown day; a column filters the list, a second tap and «الكل» reset it', async () => {
   mockApiFetch.mockResolvedValue([done, pending, muscat, cancelled]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('button', column('all', 3))).toBeTruthy();
   expect(screen.getByRole('button', column('completed', 1))).toBeTruthy();
   expect(screen.getByRole('button', row('جنى وليد'))).toBeTruthy();
@@ -77,7 +77,7 @@ test('the summary counts the shown day; a column filters the list, a second tap 
 
 test('the hero is the lesson under way; the rest are quiet rows with no buttons of their own', async () => {
   mockApiFetch.mockResolvedValue([muscat, cancelled, pending, done]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByText(t.today.running)).toBeTruthy();
   expect(screen.getByText('16:00')).toBeTruthy();
   expect(screen.getByText(`مع أ. أبرار · ${t.enums.duration['45']}`)).toBeTruthy();
@@ -90,7 +90,7 @@ test('the hero is the lesson under way; the rest are quiet rows with no buttons 
 
 test('a row opens «تفاصيل الحلقة» with the student codes; ended lessons fold and unfold', async () => {
   mockApiFetch.mockResolvedValue([done, pending, muscat]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   const fold = await screen.findByRole('button', { name: 'انتهت حلقة واحدة اليوم' });
   expect(screen.queryByText('جودى خالد')).toBeNull();
   await fireEvent.press(fold);
@@ -109,7 +109,7 @@ test('a quiet day: «انتهت حلقات اليوم», tomorrow’s first less
   mockApiFetch.mockImplementation(async (path: string) =>
     path.includes('2026-10-02') ? [tomorrow, { ...tomorrow, id: 'tm2' }] : [done, pending],
   );
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.quietTitle })).toBeTruthy();
   expect(await screen.findByText('غدًا حلقتان، أولها الساعة 08:00.')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.today.tomorrowSchedule })).toBeTruthy();
@@ -118,18 +118,18 @@ test('a quiet day: «انتهت حلقات اليوم», tomorrow’s first less
 
 test('no lessons today: the Today empty state; an empty column says so', async () => {
   mockApiFetch.mockResolvedValue([done, muscat]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('button', column('scheduled', 0)));
   expect(within(screen.getByTestId('screen-body')).getByRole('header', { name: t.today.emptyFilter })).toBeTruthy();
 
   mockApiFetch.mockResolvedValue([]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.empty })).toBeTruthy();
 });
 
 test('failed with nothing saved: error and retry', async () => {
   mockApiFetch.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue([pending]);
-  await renderWithQuery(<TodayRoute />);
+  await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('alert')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();

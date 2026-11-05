@@ -10,6 +10,7 @@ const BEFORE = [
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',
+  'lesson_confirmation_required',
 ] as const;
 
 describe('RemindersSettings', () => {

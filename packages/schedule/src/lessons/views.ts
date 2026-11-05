@@ -47,6 +47,11 @@ export interface LessonView {
   starts_at: string;
   ends_at: string;
   status: LessonStatus;
+  /**
+   * Completed by the auto-held job (owner 2026-11-02), no submitted report since: staff may
+   * still record «ألغاها المعلم/ة» / «اعتذر الطالب» (POST cancel, by teacher / student).
+   */
+  auto_held?: boolean;
   /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
   meeting_link: string | null;
   /**
