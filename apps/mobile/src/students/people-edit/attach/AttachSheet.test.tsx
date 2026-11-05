@@ -62,6 +62,9 @@ test('a new guardian by number, parsed to E.164', async () => {
   await fireEvent.changeText(firstOf(names.slice(-1)), 'أبو سهيلة');
   await fireEvent.changeText(screen.getByLabelText(E.fields.phone), '+20 100 000 0003');
   await fireEvent.press(screen.getByRole('button', { name: E.newFamily }));
+  // The number is looked up first: an existing family with it would replace the typed one.
+  jest.advanceTimersByTime(400);
+  await waitFor(() => expect(screen.getByRole('button', { name: E.confirm })).toBeEnabled());
   await fireEvent.press(screen.getByRole('button', { name: E.confirm }));
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', '/people/students/s1/guardian', {
