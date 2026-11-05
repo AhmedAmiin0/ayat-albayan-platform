@@ -1,15 +1,15 @@
 import { reportBlock, type ReportDraft, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
 import { conflict, notFound } from '../../../common/http/errors';
 import { formResponse } from './submit/report-form.mapper';
 import { ReportGate } from './submit/report-gate';
 import { assertForm } from './submit/report-submit.service';
+import { callerActor, type ReportCaller } from './report-access';
 import { ReportLessonQueries } from './report-lesson.queries';
 import { formColumns, reportView } from './report.mapper';
 import { ReportsQueries } from './reports.queries';
 
-type DraftInput = { id: string; form: Partial<ReportDraft>; user: AuthUser };
+type DraftInput = { id: string; form: Partial<ReportDraft>; user: ReportCaller };
 
 /** Report form, read and autosave (docs/11 §4 R1, R2, R4; R-REP-01/02/04, issues A7, D1). */
 @Injectable()
@@ -22,9 +22,10 @@ export class ReportsService {
 
   /**
    * R1: the lesson's identity (read-only) and one report per student, creating the drafts on first
-   * open; v2 entries carry the student's memorization history. A cancelled or moved lesson has no report → 409 lesson_cancelled, nothing created.
+   * open; v2 entries carry the student's memorization history. A cancelled or moved lesson has no
+   * report → 409 lesson_cancelled, nothing created.
    */
-  async form(lessonId: string, user: AuthUser): Promise<ReportFormResponse> {
+  async form(lessonId: string, user: ReportCaller): Promise<ReportFormResponse> {
     const lesson = await this.queries.lesson(lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     await this.gate.access.assertTeacherOf(user, lesson);
@@ -33,7 +34,7 @@ export class ReportsService {
     if (block === 'lesson_cancelled') throw conflict(block);
     // report_form_v2: new drafts (and drafts nobody has touched) use the current form.
     const formVersion = ctx.formV2 ? 2 : 1;
-    await this.queries.ensureDrafts(lesson, { actorId: user.id, formVersion });
+    await this.queries.ensureDrafts(lesson, { actorId: callerActor(user), formVersion });
     await this.queries.alignUntouched(lesson.id, formVersion);
     const ids = lesson.lesson_students.map((s) => s.student_id);
     const [reports, numbers, packages] = await Promise.all([
@@ -47,7 +48,7 @@ export class ReportsService {
   }
 
   /** R4. */
-  async get(id: string, user: AuthUser): Promise<ReportView> {
+  async get(id: string, user: ReportCaller): Promise<ReportView> {
     const row = await this.gate.load(id, user);
     return reportView(row, await this.gate.context(user));
   }

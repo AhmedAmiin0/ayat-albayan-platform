@@ -8,5 +8,6 @@ import { StudentsService } from './students.service';
   imports: [GuardiansModule],
   controllers: [StudentsController],
   providers: [StudentsService, MergeService],
+  exports: [StudentsService],
 })
 export class StudentsModule {}

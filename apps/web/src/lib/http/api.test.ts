@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiFetch, apiSend } from './api';
+import { ApiError, apiFetch, apiSend, publicApiSend } from './api';
 
 vi.mock('./supabase', () => ({
   supabase: {
@@ -55,5 +55,13 @@ describe('apiSend / apiFetch', () => {
     const err = await apiFetch('/students').catch((e: unknown) => e);
     expect(err).toBeInstanceOf(ApiError);
     expect(err).toMatchObject({ status: 409, body });
+  });
+
+  it('the signed-link client never sends the session token', async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ id: 'r1' }), { status: 200 }));
+    await publicApiSend('PUT', '/public/x', { a: 1 });
+    const headers = new Headers(lastCall()[1].headers);
+    expect(headers.get('Authorization')).toBeNull();
+    expect(headers.get('X-AB-Client')).toBe('web/dev');
   });
 });

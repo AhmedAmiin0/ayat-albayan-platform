@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { conflict, notFound } from '@/common/http/errors';
+import { conflict, forbidden, notFound } from '@/common/http/errors';
 import { SalesOwnershipRule, SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
 import { type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
 
@@ -13,8 +13,17 @@ interface StudentAccess {
 interface LessonCheck {
   lessonId: string;
   now: Date;
+  /** The assistant acting: SalesOwnershipRule binds her (an admin never). */
+  user: AuthUser;
   afterEnd?: boolean;
 }
+
+/** Who the assistant ownership rule binds: the sales base role; the admin never. */
+const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
+
+/** Every student of the lesson is hers (a group lesson moves / cancels for all of them). */
+const ownsEvery = (own: SalesOwnership, lesson: LessonFacts): boolean =>
+  lesson.lesson_students.every((s) => own.studentIds.includes(s.student_id));
 
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
@@ -56,6 +65,16 @@ export class SalesStudentScope {
     if (!lesson || lesson.lesson_students.length === 0) throw notFound('lesson_not_found');
     const ended = Date.parse(lesson.ends_at) <= input.now.getTime();
     if (ended && !input.afterEnd) throw conflict('lesson_ended');
+    await this.assertOwnsLesson(input.user, lesson);
     return lesson;
+  }
+
+  /**
+   * SalesOwnershipRule (owner 2026-11-02): while «اشتراط التعيين» enforces, only a lesson whose
+   * every student is hers (403 not_your_student); off (the default), ANY lesson.
+   */
+  private async assertOwnsLesson(user: AuthUser, lesson: LessonFacts): Promise<void> {
+    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    if (own && !ownsEvery(own, lesson)) throw forbidden('not_your_student');
   }
 }

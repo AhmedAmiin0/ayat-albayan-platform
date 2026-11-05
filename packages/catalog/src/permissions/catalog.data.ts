@@ -2,6 +2,7 @@
 // endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
 // it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
+import { PEOPLE_EDIT_ROWS } from './catalog.people-edit.js';
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = ['people', 'students', 'teachers', 'schedule', 'classroom', 'reports',
@@ -28,6 +29,7 @@ export const PERMISSION_ROWS = [
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
+  ...PEOPLE_EDIT_ROWS,
   { key: 'assistants.read', area: 'students', grants: [] },
   { key: 'assistants.write', area: 'students', grants: [] },
   { key: 'teachers.read', area: 'teachers', grants: [] },

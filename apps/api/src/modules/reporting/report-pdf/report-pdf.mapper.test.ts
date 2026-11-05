@@ -4,6 +4,8 @@ import { sampleSource } from './report-pdf.fakes';
 
 const NOW = new Date('2026-09-29T15:12:00Z');
 
+const AT = { pdfPath: 's1/l1.pdf', feedbackUrl: 'https://api.example/r/Ab12Cd34Ef' };
+
 describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
   it('maps the report, lesson, student and teacher into the template model', () => {
     const model = toModel(sampleSource(), NOW);
@@ -63,7 +65,7 @@ describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
   });
 
   it('builds the report_ready message for the stored path', () => {
-    const msg = toMessage(sampleSource(), 's1/l1.pdf', NOW);
+    const msg = toMessage(sampleSource(), AT, NOW);
     expect(msg).toMatchObject({
       guardian_id: 'g1',
       lesson_id: 'l1',
@@ -71,6 +73,7 @@ describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
       dedup_key: 'report_ready:r1',
       template_params: {
         '1': 'سلمى عبد الرحمن',
+        '4': 'https://api.example/r/Ab12Cd34Ef',
         document: { bucket: 'reports', path: 's1/l1.pdf', filename: 'AB-0183_2026-09-29_تقرير-الحلقة.pdf' },
       },
     });
@@ -80,7 +83,7 @@ describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
 describe('toMessage: the crm report kind (docs/19)', () => {
   it('a trial lesson → crm.report trial; a regular one (or unknown) → regular', () => {
     const trial = { ...sampleSource(), lesson: { ...sampleSource().lesson, trial: true } };
-    expect(toMessage(trial, 's1/l1.pdf', NOW).template_params.crm).toEqual({ report: 'trial' });
-    expect(toMessage(sampleSource(), 's1/l1.pdf', NOW).template_params.crm).toEqual({ report: 'regular' });
+    expect(toMessage(trial, AT, NOW).template_params.crm).toEqual({ report: 'trial' });
+    expect(toMessage(sampleSource(), AT, NOW).template_params.crm).toEqual({ report: 'regular' });
   });
 });

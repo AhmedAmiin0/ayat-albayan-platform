@@ -27,6 +27,7 @@ import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
 import { HealthController } from './modules/platform/health/health.controller';
 import { ProcessRoleModule } from './modules/platform/process-role';
+import { ShortLinksModule } from './modules/platform/short-links';
 import { InboxModule } from './modules/messaging/inbox/inbox.module';
 import { SavedRepliesModule } from './modules/messaging/saved-replies/saved-replies.module';
 import { InvoicesModule } from './modules/finance/invoices/invoices.module';
@@ -54,6 +55,7 @@ import { RolesModule } from './modules/people/roles/roles.module';
 import { SalesModule } from './modules/sales/sales/sales.module';
 import { SalesRegistrationModule } from './modules/sales/sales-registration/sales-registration.module';
 import { SalesStudentsModule } from './modules/sales/sales-students';
+import { PeopleEditModule } from './modules/people/people-edit';
 import { SignInModule } from './modules/people/sign-in';
 import { SchedulingModule } from './modules/teaching/scheduling/scheduling.module';
 import { StudentChannelsModule } from './modules/teaching/student-channels';
@@ -90,6 +92,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     PushModule,
     GuardiansModule,
     StudentsModule,
+    PeopleEditModule,
     TeachersModule,
     TeacherStudentsModule,
     LeadsModule,
@@ -140,6 +143,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     MessagingJobsModule,
     WebhookModule,
     ScriptRelayModule,
+    ShortLinksModule,
   ],
   controllers: [HealthController],
 })

@@ -44,3 +44,22 @@ export function isRunningLesson(lesson: Pick<SalesScheduleLesson, 'status' | 'st
 export function canSalesConfirm(lesson: Pick<SalesScheduleLesson, 'status' | 'ends_at'>, input: { now: Date; holds: boolean }): boolean {
   return input.holds && lesson.status === 'scheduled' && Date.parse(lesson.ends_at) > input.now.getTime();
 }
+
+type ChangeKey = 'lessons.reschedule' | 'lessons.cancel';
+
+/**
+ * May sales move or cancel this lesson (docs/16 row 37)? Open, not over and with a student, ANY
+ * student's (owner 2026-10-28), each action behind its own key. Web and mobile alike; the API
+ * checks again.
+ */
+export function canSalesChangeLesson(
+  lesson: Pick<SalesScheduleLesson, 'status' | 'ends_at' | 'students'>,
+  input: { now: Date; can: (key: ChangeKey) => boolean },
+): { reschedule: boolean; cancel: boolean } {
+  const notOver = Date.parse(lesson.ends_at) > input.now.getTime();
+  const ok = isOpenLesson(lesson.status) && notOver && lesson.students.length > 0;
+  return {
+    reschedule: ok && input.can('lessons.reschedule'),
+    cancel: ok && input.can('lessons.cancel'),
+  };
+}

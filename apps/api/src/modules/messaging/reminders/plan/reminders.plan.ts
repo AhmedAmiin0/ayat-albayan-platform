@@ -12,8 +12,9 @@ import {
 } from '@ab/shared';
 import type { PushEvent } from '../../../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../queued-row';
-import { staffReachable, type StaffOnRecord } from './staff-reachable';
-import { teacherReminderCrm } from './teacher-lesson.crm';
+import type { StaffOnRecord } from './staff-reachable';
+import { teacherReminderDue } from './teacher-due';
+import { teacherReminderCrm, type TeacherLinks } from './teacher-lesson.crm';
 
 // R-MSG-02 reminder planning (docs/12 §7). Pure: the job calls it every tick; the dedup keys
 // (docs/12 §2.2, one per lesson + recipient + type) make a repeated tick a no-op (rule 8).
@@ -52,6 +53,8 @@ export interface ReminderPlanInput {
   teacherMinutesBefore?: number;
   /** The web origin (firstWebOrigin): the teacher's CRM reminder links are absolute. */
   origin: string;
+  /** Per lesson: the teacher's short report and classroom links (the job makes them). */
+  teacherLinks?: ReadonlyMap<string, TeacherLinks>;
   now: Date;
 }
 
@@ -95,16 +98,14 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
 
 function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMessage[] {
   const { teacher } = lesson;
-  if (!teacher?.phone_e164 || !staffReachable(teacher)) return [];
+  if (!teacher?.phone_e164 || !teacherReminderDue(lesson, input)) return [];
   const startsAt = new Date(lesson.starts_at);
-  const minutesBefore = input.teacherMinutesBefore ?? input.minutesBefore;
-  const due = reminderDue({ kind: 'same_day', startsAt, tz: teacher.tz, minutesBefore, now: input.now });
-  if (!due) return [];
   const names = lesson.students.map((s) => s.name);
   const message = { names, startsAt, tz: teacher.tz, meetingLink: lesson.meeting_link };
   const meta = teacherReminderMessage({ ...message, teacherName: teacher.display_name_ar });
   // The CRM's own teacher_lesson_reminder values beside Meta's (docs/19); null: Meta's only.
-  const crm = teacherReminderCrm({ teacher, lesson, origin: input.origin });
+  const links = input.teacherLinks?.get(lesson.id);
+  const crm = teacherReminderCrm({ teacher, lesson, origin: input.origin, links });
   const template: OutboundTemplate = crm ? { ...meta, params: { ...meta.params, crm } } : meta;
   const dedupKey = `teacher_lesson_reminder:${lesson.id}:${teacher.id}`;
   const to = { phone: teacher.phone_e164, lessonId: lesson.id, now: input.now, expiresAt: startsAt };

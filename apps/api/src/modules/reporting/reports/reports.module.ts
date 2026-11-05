@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { loadEnv } from '@/config/env/env';
+import { RateLimitRepo } from '@/common/http/rate-limit.repo';
+import { ShortLinksModule } from '@/modules/platform/short-links';
 import { ReportPdfModule } from '../report-pdf/report-pdf.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
 import { ReportAccess } from './report-access';
@@ -21,15 +24,34 @@ import { TeacherReportsQueries } from './teacher/teacher-reports.queries';
 import { TeacherReportsService } from './teacher/teacher-reports.service';
 import { ReportV2Controller } from './v2/report-v2.controller';
 import { ReportV2Service } from './v2/report-v2.service';
+import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link/teacher-link.config';
+import { TeacherLinkAccess } from './teacher-link/teacher-link.access';
+import { TeacherLinkController } from './teacher-link/teacher-link.controller';
+import { TeacherReportLinks } from './teacher-link/teacher-link.issuer';
+import { TeacherLinkLimit } from './teacher-link/teacher-link.limit';
+import { TeacherLinkReports } from './teacher-link/teacher-link.reports';
+import { TeacherLinkRepo } from './teacher-link/teacher-link.repo';
+
+/** The teacher link's secret: the existing public-link secret (FEEDBACK_TOKEN_SECRET). */
+const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null });
 
 /**
  * Lesson reports: form prefill, drafts, submit (versions + lesson outcome), attachments, history
  * + grade series, teacher pending and submitted reports. R-REP-01/02/04/05, R-TCH-03 (docs/11 §4).
- * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03). v2/: the new form (report_form_v2).
+ * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03). v2/: the new form
+ * (report_form_v2).
+ * teacher-link/: the teacher's no-login report link for one lesson (docs/19), and its issuer for
+ * the reminders.
  */
 @Module({
-  imports: [TeachersModule, ReportPdfModule],
-  controllers: [ReportsController, ReportAttachmentsController, ReportEntryController, ReportV2Controller],
+  imports: [TeachersModule, ReportPdfModule, ShortLinksModule],
+  controllers: [
+    ReportsController,
+    ReportAttachmentsController,
+    ReportEntryController,
+    ReportV2Controller,
+    TeacherLinkController,
+  ],
   providers: [
     ReportAccess,
     ReportAttachmentsQueries,
@@ -47,7 +69,20 @@ import { ReportV2Service } from './v2/report-v2.service';
     TeacherReportsQueries,
     TeacherReportsService,
     { provide: ReportPdfQueue, useClass: PendingPdfQueue },
+    { provide: TEACHER_LINK_CONFIG, useFactory: linkConfig },
+    RateLimitRepo,
+    TeacherLinkRepo,
+    TeacherLinkAccess,
+    TeacherLinkLimit,
+    TeacherLinkReports,
+    TeacherReportLinks,
   ],
-  exports: [ReportFilesService, ReportHistoryQueries, ReportPdfQueue, ReportsQueries],
+  exports: [
+    ReportFilesService,
+    ReportHistoryQueries,
+    ReportPdfQueue,
+    ReportsQueries,
+    TeacherReportLinks,
+  ],
 })
 export class ReportsModule {}

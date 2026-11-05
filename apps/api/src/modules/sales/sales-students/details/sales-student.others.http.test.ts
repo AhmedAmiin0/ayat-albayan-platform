@@ -39,16 +39,17 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
     expect((await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json().trial).toEqual([]);
   });
 
-  it('the report PDF opens for another\'s student; moving or cancelling another\'s lesson is allowed', async () => {
+  it('the report PDF opens for another\'s student; the rule ON refuses moving / cancelling another\'s lesson', async () => {
     vi.useFakeTimers({ now: new Date('2026-10-27T10:00:00Z'), toFake: ['Date'] }); // before the lesson ends
     const pdf = await t.call('GET', `/sales/students/${MINE}/reports/${REPORT}/pdf`, { token: 'salesB' });
     expect(pdf.statusCode).toBe(200);
     expect(t.files.studentPdfUrl).toHaveBeenCalledWith({ id: REPORT, studentId: MINE });
     const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesB', body: { startsAt: '2099-01-01T10:00:00.000Z' } });
     const cancel = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} });
-    expect([move.statusCode, cancel.statusCode]).toEqual([200, 200]);
-    expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, actor: expect.objectContaining({ role: 'sales' }) }));
-    expect(t.lessons.cancels.cancel).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON }));
+    expect([move.statusCode, cancel.statusCode]).toEqual([403, 403]);
+    expect([move.json().code, cancel.json().code]).toEqual(['not_your_student', 'not_your_student']);
+    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
+    expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
   });
 });
 

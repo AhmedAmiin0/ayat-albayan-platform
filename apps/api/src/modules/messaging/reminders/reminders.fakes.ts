@@ -8,6 +8,7 @@ import type { QueuedMessage } from './queued-row';
 import { RemindersJob } from './reminders.job';
 import type { RoomCandidate } from './plan/reminders.links';
 import type { ReminderLesson } from './plan/reminders.plan';
+import type { TeacherLinks } from './plan/teacher-lesson.crm';
 import type { RemindersRepo } from './reminders.repo';
 import { RemindersSettings } from './reminders.settings';
 
@@ -46,8 +47,12 @@ type JobOpts = {
   lessons?: ReminderLesson[];
   /** What RoomLinks returns for a non-empty candidate list (the family links it minted). */
   room?: QueuedMessage[];
-  /** The notification rules (mode, rows, fail); the 8 rule keys in `settings` go to the policy's legacy settings. */
+  /**
+   * The notification rules (mode, rows, fail); the 8 rule keys in `settings` go to the policy's
+   * legacy settings.
+   */
   rules?: Omit<FakePolicyInput, 'settings'>;
+  teacherLinks?: Map<string, TeacherLinks>;
 };
 
 /** A RemindersJob over mocked queries, settings and push; `queued` collects every queued row. */
@@ -72,5 +77,8 @@ export function fakeJob(opts: JobOpts = {}) {
     push as unknown as PushService,
     fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) }),
   );
-  return { job, queries, queued, push };
+  // The property-injected short links: none made unless a test gives some (the long pages go).
+  const teacherLinks = { build: vi.fn(async () => opts.teacherLinks ?? new Map<string, TeacherLinks>()) };
+  Object.assign(job, { teacherLinks });
+  return { job, queries, queued, push, teacherLinks };
 }

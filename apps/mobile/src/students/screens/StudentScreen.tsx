@@ -15,6 +15,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CoursePauseSection } from '../course-pause/CoursePauseSection';
 import { CourseActionsSection } from '@/students/course-actions/CourseActionsSection';
+import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';
 import { BalanceCard } from '../profile/BalanceCard';
 import { GuardianCard } from '../profile/GuardianCard';
 import { RenewButton } from '../profile/RenewButton';
@@ -88,6 +89,7 @@ export function StudentScreen() {
         <TrialDateSection student={student} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />
+        <PeopleEditSection studentId={student.id} onRemoved={back} />
         <SiblingsList siblings={student.siblings} />
         <AssistantsSection studentId={student.id} />
       </ScrollView>
