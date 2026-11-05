@@ -1,6 +1,7 @@
 import {
   familyFormOf,
   familyPatchOf,
+  notesShown,
   studentFormOf,
   studentPatchOf,
   type FamilyForm,
@@ -60,11 +61,13 @@ export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {
     <View style={{ gap: 20 }}>
       <StudentEditFields
         value={current.student}
+        notes={notesShown(view)}
         invalid={invalid.student}
         onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))}
       />
       <FamilyEditFields
         value={current.family}
+        notes={notesShown(view)}
         invalid={invalid.family}
         onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))}
       />

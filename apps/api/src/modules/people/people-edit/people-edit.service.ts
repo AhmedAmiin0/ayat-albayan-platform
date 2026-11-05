@@ -1,11 +1,11 @@
-import type { PeopleGuardianPatch, PeopleStudentPatch } from '@ab/shared';
+import type { PeopleEditError, PeopleGuardianPatch, PeopleStudentPatch } from '@ab/shared';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { conflict, notFound } from '@/common/http/errors';
 import { GuardiansService } from '@/modules/people/guardians';
 import { StudentsService } from '@/modules/people/students';
 import { changedFields } from './people-edit.mapper';
-import { type GuardianRow, PeopleEditRepo, type StudentRow } from './people-edit.repo';
+import { type Child, type GuardianRow, PeopleEditRepo, type StudentRow } from './people-edit.repo';
 
 /** One edit: the record, the narrowed body, the actor. */
 interface Edit<P> {
@@ -18,14 +18,23 @@ interface Edit<P> {
 const phoneAware = (e: unknown): unknown =>
   e instanceof ConflictException ? conflict('phone_taken') : e;
 
+/** A guardian edit also names whether the actor is the admin (who may move a login's number). */
+interface GuardianEdit extends Edit<PeopleGuardianPatch> {
+  admin: boolean;
+}
+
+const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
+  patch.phone_e164 !== undefined && patch.phone_e164 !== before.phone_e164;
+
+type Logins = { family: GuardianRow; children: readonly Child[] };
 /**
- * A new main number for a family with a login: its sign-in codes would go to that number, so the
- * change stays the admin's (PATCH /guardians/:id); 409 guardian_has_login here.
+ * The logins whose sign-in codes go to the family's main number: the family's own, and every
+ * child's (a student's reset and set codes go to guardians.phone_e164, PasswordTargets.student).
  */
-const movesLoginPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
-  Boolean(before.profile_id) &&
-  patch.phone_e164 !== undefined &&
-  patch.phone_e164 !== before.phone_e164;
+const LOGINS: readonly [PeopleEditError, (l: Logins) => boolean][] = [
+  ['guardian_has_login', (l) => Boolean(l.family.profile_id)],
+  ['student_has_login', (l) => l.children.some((c) => Boolean(c.profile_id))],
+];
 
 /**
  * «تعديل البيانات» (owner 2026-11-02): the admin's writes (StudentsService.update,
@@ -58,10 +67,10 @@ export class PeopleEditService {
     return after;
   }
 
-  async editGuardian({ id, patch, actorId }: Edit<PeopleGuardianPatch>): Promise<GuardianRow> {
+  async editGuardian({ id, patch, actorId, admin }: GuardianEdit): Promise<GuardianRow> {
     const before = await this.repo.guardian(id);
     if (!before) throw notFound('guardian_not_found');
-    if (movesLoginPhone(before, patch)) throw conflict('guardian_has_login');
+    if (!admin && movesPhone(before, patch)) await this.assertNoLogin(before);
     if (Object.keys(patch).length === 0) return before;
     const after = await this.guardians.update(id, patch).catch((e: unknown) => {
       throw phoneAware(e);
@@ -75,5 +84,16 @@ export class PeopleEditService {
       ...change,
     });
     return after;
+  }
+
+  /**
+   * A new main number for a family with a login (its own or a child's) would hand that login to
+   * the new number: the assistant gets 409 guardian_has_login / student_has_login; the admin may
+   * (audited as any edit).
+   */
+  private async assertNoLogin(family: GuardianRow): Promise<void> {
+    const children = await this.repo.children(family.id);
+    const code = LOGINS.find(([, has]) => has({ family, children }))?.[0];
+    if (code) throw conflict(code);
   }
 }

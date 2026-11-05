@@ -41,7 +41,7 @@ export function studentFormOf(s: PeopleEditView['student']): StudentForm {
     goal: text(s.goal),
     riwaya: text(s.riwaya),
     tz: s.tz,
-    notes: text(s.notes),
+    notes: text(s.notes ?? null),
     teacher_gender_pref: text(s.teacher_gender_pref),
   };
 }
@@ -52,9 +52,18 @@ export function familyFormOf(g: PeopleEditView['guardian']): FamilyForm {
     phone_e164: g.phone_e164,
     country: text(g.country),
     tz: g.tz,
-    notes: text(g.notes),
+    notes: text(g.notes ?? null),
   };
 }
+
+/** Notes are the admin's (owner 2026-10-27): the API leaves them out of anyone else's view. */
+export const notesShown = (view: PeopleEditView): boolean => view.student.notes !== undefined;
+
+/** A field-key filter: `notes` only while it is shown. */
+export const notesFilter =
+  (shown: boolean) =>
+  (key: string): boolean =>
+    shown || key !== 'notes';
 
 const blank = (v: string): string | null => (v.trim() === '' ? null : v);
 /** Per-field conversions; any other field is its text, blank = null. */

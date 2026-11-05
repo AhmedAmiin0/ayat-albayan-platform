@@ -1,4 +1,5 @@
 import {
+  notesFreeSchema,
   peopleGuardianPatchSchema,
   peopleStudentPatchSchema,
   peopleIdSchema,
@@ -9,8 +10,10 @@ import {
 } from '@ab/shared';
 import { Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
@@ -19,12 +22,16 @@ import { PeopleOwnership } from './access/people-ownership';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
+const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
+/** Notes stay the admin's (owner 2026-10-27): anyone else's `notes` key answers 400. */
+const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
 /**
  * «تعديل البيانات» of a student and their family (owner 2026-11-02), the assistant's and the
  * admin's: people.edit, never students.write / guardians.write (those also create, delete and
  * merge). Any student or family. 400 for an admin-only field (status, program, teacher, meeting
- * link, source), 404 student_not_found / guardian_not_found, 409 phone_taken.
+ * link, source) and for notes from anyone but the admin, 404 student_not_found /
+ * guardian_not_found, 409 phone_taken.
  */
 @ApiTags('people')
 @ApiBearerAuth()
@@ -39,8 +46,11 @@ export class PeopleEditController {
   ) {}
 
   @Get('students/:id')
-  view(@ZodParam('id', peopleIdSchema) id: string): Promise<PeopleEditView> {
-    return this.views.view(id);
+  view(
+    @ZodParam('id', peopleIdSchema) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PeopleEditView> {
+    return this.views.view(id, isAdmin(user));
   }
 
   @Patch('students/:id')
@@ -49,6 +59,7 @@ export class PeopleEditController {
     @ZodBody(studentBody) patch: PeopleStudentPatch,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
+    parseOrThrow(notesRule(user), patch);
     await this.owners.student(user, id);
     const row = await this.people.editStudent({ id, patch, actorId: user.id });
     return { id: row.id };
@@ -60,8 +71,10 @@ export class PeopleEditController {
     @ZodBody(guardianBody) patch: PeopleGuardianPatch,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
+    parseOrThrow(notesRule(user), patch);
     await this.owners.family(user, id);
-    const row = await this.people.editGuardian({ id, patch, actorId: user.id });
+    const edit = { id, patch, actorId: user.id, admin: isAdmin(user) };
+    const row = await this.people.editGuardian(edit);
     return { id: row.id };
   }
 

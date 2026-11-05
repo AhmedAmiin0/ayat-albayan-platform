@@ -6,16 +6,21 @@ import { GuardiansService } from '@/modules/people/guardians';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditRepo, type StudentRow } from './people-edit.repo';
 
+/** The family a move goes to: its id, and whether this move created it. */
+export interface MoveTarget {
+  id: string;
+  created: boolean;
+}
+
 interface MoveInput {
   studentId: string;
   move: FamilyMove;
   actorId: string;
-}
-
-/** The family a move goes to: its id, and whether this move created it. */
-interface Target {
-  id: string;
-  created: boolean;
+  /**
+   * Runs once the target is resolved, before anything is written: a «new» family whose number
+   * already exists is that existing family, so the caller's ownership check sees its real id.
+   */
+  allowed: (target: MoveTarget) => Promise<void>;
 }
 
 type Existing = Extract<FamilyMove, { kind: 'existing' }>;
@@ -44,12 +49,13 @@ export class FamilyMoveService {
     return this.search.search(term);
   }
 
-  async move({ studentId, move, actorId }: MoveInput) {
+  async move({ studentId, move, actorId, allowed }: MoveInput) {
     const student = await this.repo.student(studentId);
     if (!student) throw notFound('student_not_found');
     await this.assertMovable(student);
     const target = await this.target(move, actorId);
     if (target.id === student.guardian_id) throw conflict('same_guardian');
+    await allowed(target);
     const row = { id: studentId, from: student.guardian_id, to: target.id };
     const moved = await this.repo.move(row);
     if (!moved) throw conflict('guardian_changed');
@@ -76,17 +82,17 @@ export class FamilyMoveService {
     if (family?.profile_id) throw conflict('self_has_login');
   }
 
-  private target(move: FamilyMove, actorId: string): Promise<Target> {
+  private target(move: FamilyMove, actorId: string): Promise<MoveTarget> {
     return move.kind === 'existing' ? this.existing(move) : this.findOrCreate(move, actorId);
   }
 
-  private async existing(move: Existing): Promise<Target> {
+  private async existing(move: Existing): Promise<MoveTarget> {
     const row = await this.repo.guardian(move.id);
     if (!row) throw notFound('guardian_not_found');
     return { id: row.id, created: false };
   }
 
-  private async findOrCreate({ guardian }: Fresh, actorId: string): Promise<Target> {
+  private async findOrCreate({ guardian }: Fresh, actorId: string): Promise<MoveTarget> {
     const found = await this.guardians.findByPhone(guardian.phone_e164);
     if (found) return { id: found.id, created: false };
     const dto = { ...guardian, notes: null, source: null };

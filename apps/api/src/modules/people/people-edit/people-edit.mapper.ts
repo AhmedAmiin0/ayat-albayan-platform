@@ -4,17 +4,24 @@ import type { GuardianRow, ViewRow } from './people-edit.repo';
 
 type Family = NonNullable<ViewRow['guardian']>;
 
+/** A row without its notes, unless they are shown (the admin's only, owner 2026-10-27). */
+const notesIf = <R extends { notes: string | null }>(row: R, show: boolean) => {
+  const { notes, ...rest } = row;
+  return show ? { ...rest, notes } : rest;
+};
+
 /** GET /people/students/:id: the edit forms' data; the logins and the history as yes / no. */
 export function toEditView(
   row: ViewRow,
-  facts: { family: Family; hasRecords: boolean },
+  facts: { family: Family; hasRecords: boolean; notes: boolean },
 ): PeopleEditView {
   // `guardian` is replaced by the checked family; dropped by the rest spread.
   const { profile_id, guardian, ...student } = row;
   const { profile_id: familyLogin, ...family } = facts.family;
+  const shown = { has_login: profile_id !== null, has_records: facts.hasRecords };
   return {
-    student: { ...student, has_login: profile_id !== null, has_records: facts.hasRecords },
-    guardian: { ...family, has_login: familyLogin !== null },
+    student: { ...notesIf(student, facts.notes), ...shown },
+    guardian: { ...notesIf(family, facts.notes), has_login: familyLogin !== null },
   };
 }
 

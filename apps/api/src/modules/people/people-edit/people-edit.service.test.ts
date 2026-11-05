@@ -78,11 +78,16 @@ describe('PeopleEditService «تعديل البيانات»', () => {
 
   it('writes the family and audits it; a taken phone → 409 { code: phone_taken }, no audit', async () => {
     const after = { ...GUARDIAN, phone_e164: '+201000000009' };
-    const t = setup({ guardians: [{ data: GUARDIAN }, { data: after }], audit_log: [{}] });
+    const t = setup({
+      guardians: [{ data: GUARDIAN }, { data: after }],
+      students: [{ data: [] }],
+      audit_log: [{}],
+    });
     await t.service.editGuardian({
       id: 'g1',
       patch: { phone_e164: '+201000000009' },
       actorId: 'u1',
+      admin: false,
     });
     expect(t.argsOf('audit_log', 'insert')?.[0]).toMatchObject({
       entity: 'guardians',
@@ -95,32 +100,19 @@ describe('PeopleEditService «تعديل البيانات»', () => {
         { data: GUARDIAN },
         { error: { code: '23505', message: 'guardian_phones_pkey' } },
       ],
+      students: [{ data: [] }],
     });
     await expect(
       taken.service.editGuardian({
         id: 'g1',
         patch: { phone_e164: '+201000000009' },
         actorId: 'u1',
+        admin: false,
       }),
     ).rejects.toMatchObject({
       status: 409,
       response: { code: 'phone_taken' },
     });
     expect(taken.trips).not.toContain('audit_log');
-  });
-
-  it('a family with a login keeps its main number (409 guardian_has_login); other fields still save', async () => {
-    const withLogin = { ...GUARDIAN, profile_id: 'p1' };
-    const t = setup({
-      guardians: [{ data: withLogin }, { data: withLogin }, { data: withLogin }],
-      audit_log: [{}],
-    });
-    const phone = { id: 'g1', patch: { phone_e164: '+201000000009' }, actorId: 'u1' };
-    await expect(t.service.editGuardian(phone)).rejects.toMatchObject({
-      response: { code: 'guardian_has_login' },
-    });
-    expect(t.argsOf('guardians', 'update')).toBeUndefined();
-    await t.service.editGuardian({ id: 'g1', patch: { notes: 'ملاحظة' }, actorId: 'u1' });
-    expect(t.argsOf('guardians', 'update')?.[0]).toMatchObject({ notes: 'ملاحظة' });
   });
 });

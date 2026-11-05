@@ -27,7 +27,10 @@ type Family = Pick<
 };
 type Extra = 'tz' | 'notes' | 'teacher_gender_pref' | 'contact_is_self' | 'profile_id';
 export type ViewRow = Fields & Pick<StudentRow, Extra> & { guardian: Family | null };
-type Child = Pick<StudentRow, 'id' | 'code' | 'name' | 'contact_is_self' | 'brought_by'>;
+export type Child = Pick<
+  StudentRow,
+  'id' | 'code' | 'name' | 'contact_is_self' | 'brought_by' | 'profile_id'
+>;
 
 /** A family move: written only while the student is still in `from` (compare-and-set). */
 interface MoveRow {
@@ -60,11 +63,11 @@ export class PeopleEditRepo {
     return data;
   }
 
-  /** The family's children: duplicate names and «الطالب هو ولي الأمر». */
+  /** The family's children: duplicate names, «الطالب هو ولي الأمر» and their logins. */
   async children(guardianId: string): Promise<Child[]> {
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, contact_is_self, brought_by')
+      .select('id, code, name, contact_is_self, brought_by, profile_id')
       .eq('guardian_id', guardianId)
       .order('created_at');
     if (error) throw dbError(error);

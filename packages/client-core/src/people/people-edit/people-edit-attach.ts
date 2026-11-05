@@ -59,14 +59,29 @@ export interface AttachModel extends AttachState {
 }
 
 /** A new guardian as a move choice, or null with the fields that failed. */
-function freshChoice(fresh: NewFamilyForm): { choice: MoveChoice | null; invalid: string[] } {
+function freshChoice(fresh: NewFamilyForm): {
+  choice: MoveChoice | null;
+  invalid: string[];
+  phone: string | null;
+} {
   const parsed = newFamilyOf(fresh);
   const choice = parsed.patch && {
     body: { guardian: parsed.patch },
     name: parsed.patch.name,
     id: null,
   };
-  return { choice, invalid: parsed.invalid };
+  return { choice, invalid: parsed.invalid, phone: parsed.patch?.phone_e164 ?? null };
+}
+
+/**
+ * A «new» family whose main number already exists IS that family (the API finds it by its phone
+ * first, #621 review): the choice becomes it, so the confirm names the real family and the move
+ * goes by its id (and the ownership check).
+ */
+function resolved(choice: MoveChoice | null, families: readonly FamilyOption[] | undefined) {
+  const phone = choice && 'guardian' in choice.body ? choice.body.guardian.phone_e164 : null;
+  const found = families?.find((f) => f.phone_e164 === phone);
+  return found ? { body: { guardian_id: found.id }, name: found.name, id: found.id } : choice;
 }
 
 /** «نقل {student} إلى عائلة {family}؟» once a family is chosen. */
@@ -77,11 +92,16 @@ const confirmOf = (view: PeopleEditView, choice: MoveChoice | null, template: st
 export function attachModel({ view, state, set, families, move, text }: AttachInput): AttachModel {
   const searching = state.search.trim().length >= 2;
   const takeFresh = () => {
-    const { choice, invalid } = freshChoice(state.fresh);
+    const { choice, invalid, phone } = freshChoice(state.fresh);
     set.invalid(invalid);
     set.choice(choice);
+    // The picker then looks the number up: an existing family with it replaces the typed name.
+    if (phone) set.search(phone);
   };
   const shown = searching ? (families ?? null) : null;
+  const choice = resolved(state.choice, shown ?? undefined);
+  /** A typed family waits for the number's lookup before it can be confirmed. */
+  const looked = choice?.id !== null || shown !== null;
   return {
     ...state,
     setSearch: set.search,
@@ -92,10 +112,10 @@ export function attachModel({ view, state, set, families, move, text }: AttachIn
     error: (key: string): string | null => (state.invalid.includes(key) ? text.invalid : null),
     takeFresh,
     submit: () => {
-      if (state.choice) move.mutate({ studentId: view.student.id, body: state.choice.body });
+      if (choice) move.mutate({ studentId: view.student.id, body: choice.body });
     },
-    confirmText: confirmOf(view, state.choice, text.moveConfirm),
-    ready: state.choice !== null && !move.isPending,
+    confirmText: confirmOf(view, choice, text.moveConfirm),
+    ready: choice !== null && looked && !move.isPending,
     move,
   };
 }

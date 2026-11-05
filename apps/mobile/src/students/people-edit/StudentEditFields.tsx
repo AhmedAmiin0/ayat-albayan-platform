@@ -1,4 +1,4 @@
-import type { StudentForm } from '@ab/client-core';
+import { notesFilter, type StudentForm } from '@ab/client-core';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
@@ -14,15 +14,18 @@ interface StudentEditFieldsProps {
   onChange: (patch: Partial<StudentForm>) => void;
   /** Keys the last save refused. */
   invalid: readonly string[];
+  /** Notes are the admin's only (owner 2026-10-27). */
+  notes: boolean;
 }
 
 /** «بيانات الطالب»: what an assistant may edit (never status, program, teacher or link). */
-export function StudentEditFields({ value, onChange, invalid }: StudentEditFieldsProps) {
+export function StudentEditFields(props: StudentEditFieldsProps) {
+  const { value, onChange, invalid, notes } = props;
   const error = (key: string) => (invalid.includes(key) ? E.invalid : null);
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.studentSection}</SectionLabel>
-      {TEXTS.map((key) => (
+      {TEXTS.filter(notesFilter(notes)).map((key) => (
         <PeopleField
           key={key}
           label={E.fields[key]}
