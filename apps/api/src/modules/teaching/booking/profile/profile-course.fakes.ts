@@ -1,10 +1,12 @@
 // HTTP harness of the profile course actions (test-only, excluded from the build by *.fakes.ts).
+import type { AcademySettings } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
+import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { ConflictChecker } from '@/modules/teaching/scheduling';
 import {
   BODY,
@@ -26,6 +28,8 @@ export const T_OLD = 't1';
 export const T_NEW = '00000000-0000-4000-8000-0000000000e2';
 export const ADMIN = ROLE_ADMIN;
 export const SALES = ROLE_SALES;
+/** An assistant who owns no student (the rule, when enforced, refuses her). */
+const NOT_MINE = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
 export const RESULT = { subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' };
 
 function mocks() {
@@ -51,6 +55,7 @@ function mocks() {
     },
     views: { view: vi.fn() },
     options: { list: vi.fn() },
+    sales: { ownership: vi.fn() },
   };
 }
 
@@ -73,6 +78,7 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.lessons.ofCourse.mockResolvedValue([]);
   m.lessons.openFrom.mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]);
   m.lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
+  m.sales.ownership.mockResolvedValue(NOT_MINE);
   m.repo.currentSubscription.mockResolvedValue(SUB_ID);
   m.repo.studentTeacher.mockResolvedValue(T_OLD);
   m.repo.teacher.mockResolvedValue({ id: T_NEW, status: 'active' });
@@ -84,11 +90,16 @@ function reset(m: ReturnType<typeof mocks>): void {
   });
 }
 
-export async function profileApp() {
+/** `settings`: the academy switches (default: the ownership rule off, any student). */
+export async function profileApp(
+  settings: Partial<AcademySettings> = { sales_auto_assign: false },
+) {
   const m = mocks();
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(SettingsService)
-    .useValue(fakeSettings({ sales_auto_assign: false }))
+    .useValue(fakeSettings(settings))
+    .overrideProvider(SalesRepo)
+    .useValue(m.sales)
     .overrideProvider(ConflictChecker)
     .useValue(m.checker)
     .overrideProvider(CourseChangeRepo)
