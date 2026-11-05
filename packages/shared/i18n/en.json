@@ -3853,6 +3853,10 @@
     "course_resumed": {
       "title": "Lessons resumed",
       "body": "{student}’s lessons resume; first lesson {when}"
+    },
+    "payment_received": {
+      "title": "Payment received",
+      "body": "{student}: {amount}"
     }
   },
   "bell": {
@@ -4081,7 +4085,8 @@
       "lesson_rescheduled": "Lesson time changed",
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
-      "course_resumed": "Lessons resumed"
+      "course_resumed": "Lessons resumed",
+      "payment_received": "Payment received"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -6446,6 +6451,10 @@
       "course_resumed": {
         "name": "Lessons resumed",
         "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
+      },
+      "payment_received": {
+        "name": "Payment received",
+        "trigger": "When an incoming payment is recorded for a student, to the administration and the student's assistant"
       }
     }
   },
@@ -7660,7 +7669,6 @@
       "backToApp": "Back to the app"
     },
     "bell": {
-      "paidTitle": "Paid through a payment link",
       "refusedTitle": "A card payment was not recorded in the platform",
       "disputeTitle": "A card payment was disputed",
       "disputeBody": "Needs review in the Stripe dashboard"

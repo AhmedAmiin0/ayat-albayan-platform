@@ -34,6 +34,7 @@ export const TEMPLATE_CATEGORIES = [
  * and google_sync_alert (docs/24: the Google link expired or a teacher has no calendar; bell only, admins),
  * channel_message (docs/31 §2: a family's message in a student channel, to the current teacher) and
  * commission_earned (owner 2026-10-29: «عمولة جديدة» to the assistant who brought the student; bell only).
+ * payment_received (owner 2026-11-05): a payment came in; the admins and the student's assistant.
  */
 export const PUSH_KINDS = [
   'new_lead',
@@ -51,6 +52,7 @@ export const PUSH_KINDS = [
   'lesson_cancelled',
   'course_paused',
   'course_resumed',
+  'payment_received',
 ] as const satisfies readonly Enums<'push_kind'>[];
 /** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
 export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];

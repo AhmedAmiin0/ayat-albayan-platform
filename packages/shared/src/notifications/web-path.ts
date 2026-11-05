@@ -74,6 +74,8 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   lesson_cancelled: lessonPath,
   course_paused: lessonPath,
   course_resumed: lessonPath,
+  // A payment came in (owner 2026-11-05): the student (their balance).
+  payment_received: student,
 };
 
 const isArea = (role: UserRole | null): role is Area =>

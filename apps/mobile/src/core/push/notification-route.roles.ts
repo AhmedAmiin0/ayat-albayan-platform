@@ -49,6 +49,8 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   lesson_cancelled: toSalesStudents,
   course_paused: toSalesStudents,
   course_resumed: toSalesStudents,
+  // Owner 2026-11-05: a payment for her student → «الطلاب».
+  payment_received: toSalesStudents,
 };
 
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */
