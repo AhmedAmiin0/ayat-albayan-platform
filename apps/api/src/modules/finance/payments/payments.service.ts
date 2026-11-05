@@ -8,7 +8,7 @@ import { toPaymentView } from './payments.mapper';
 import { PaymentsRepo, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.repo';
 import { PaymentInputs } from './payment-inputs';
 import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
-import { amountWrite } from './payment-amount-edit';
+import { amountChange, writePayment } from './payment-amount-edit';
 import { PaymentReceived, receivedOf } from './received/payment-received';
 
 /**
@@ -73,12 +73,13 @@ export class PaymentsService {
   async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
     const before = notCancelled(await this.row(id));
     await this.files.checkPatch(before, patch);
-    const write: TablesUpdate<'payments'> = await amountWrite(this.payments, before, patch);
+    const amount = await amountChange(this.payments, before, patch);
+    const write: TablesUpdate<'payments'> = {};
     if (patch.method !== undefined) write.method = patch.method;
     if (patch.paidAt !== undefined) write.paid_at = patch.paidAt;
     if (patch.receiptPath !== undefined) write.receipt_path = patch.receiptPath;
     if (patch.note !== undefined) write.note = patch.note;
-    const after = Object.keys(write).length > 0 ? await this.payments.update(id, write) : before;
+    const after = await writePayment(this.payments, before, { amount, write });
     const audit = { actorId, entity: 'payments', entityId: id, action: 'update', before, after };
     await this.writes.done(audit, studentOf(before));
     if (patch.receiptPath !== undefined && before.receipt_path !== patch.receiptPath)

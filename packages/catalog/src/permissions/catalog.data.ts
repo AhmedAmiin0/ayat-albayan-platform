@@ -90,7 +90,6 @@ export const PERMISSION_ROWS = [
   { key: 'student_channels.monitor', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
-  { key: 'payments.edit_amount', area: 'finance', grants: [] }, // «تعديل المبلغ» only
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
   // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.

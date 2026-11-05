@@ -1,11 +1,11 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { netPaid, type PaymentKind, type SubscriptionStatus } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort } from '@/common/db/list-sort';
 import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
-import { badRequest } from '@/common/http/errors';
+import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { dbError, type Page } from '@/common/http/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 
@@ -16,6 +16,13 @@ export type PaymentRow = Tables<'payments'> & {
 };
 export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
 export type PaymentSubscription = { id: string; student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null };
+
+/** payment_amount_set's refusals (P0001): net below 0, a concurrent edit won, or deleted since. */
+const AMOUNT_REFUSALS: Record<string, (code: string) => HttpException> = {
+  refund_exceeds_paid: conflict,
+  payment_amount_changed: conflict,
+  payment_not_found: notFound,
+};
 
 const SELECT = '*, subscription:subscriptions!inner(student_id, currency, status, cancel_kind, student:students(id, code, name))';
 
@@ -96,6 +103,18 @@ export class PaymentsRepo {
     if (error?.code === '23514' && error.message.includes('attachments')) throw badRequest('attachments_not_allowed');
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** «تعديل المبلغ» checked and written under a lock (payment_amount_set): 409 on a lost race. */
+  async setAmount(id: string, change: { amount: number; expected: number }): Promise<PaymentRow> {
+    const args = { p_payment: id, p_amount: change.amount, p_expected: change.expected };
+    const { error } = await this.db.rpc('payment_amount_set', args);
+    const refusal = Object.entries(AMOUNT_REFUSALS).find(([c]) => error?.message.includes(c));
+    if (refusal) throw refusal[1](refusal[0]);
+    if (error) throw dbError(error);
+    const read = await this.db.from('payments').select(SELECT).eq('id', id).single();
+    if (read.error) throw dbError(read.error);
+    return read.data;
   }
 
   async remove(id: string): Promise<void> {

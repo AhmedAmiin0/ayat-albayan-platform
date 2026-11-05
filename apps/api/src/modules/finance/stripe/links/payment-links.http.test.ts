@@ -10,7 +10,7 @@ vi.hoisted(() => {
   process.env.API_PUBLIC_URL = 'https://api.test.example';
 });
 
-const BODY = { studentId: STUDENT_ID, kind: 'new', pricing: { tier: 'weekly' }, amount: 120, currency: 'SAR', clientRequestId: REQ };
+const BODY = { studentId: STUDENT_ID, kind: 'new', pricing: { tier: 'weekly' }, amount: 125, currency: 'SAR', clientRequestId: REQ };
 
 describe('POST /sales/payment-links: the package as «اشتراك جديد» makes it, priced at the agreed amount', () => {
   let app: NestFastifyApplication;
@@ -32,8 +32,8 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
   it('any student (not only hers): an unpaid package at 120 (catalog 145), the link with the reference, audited', async () => {
     const res = await call({ method: 'POST', url: '/sales/payment-links', token: 'salesA', body: BODY });
     expect(res.statusCode).toBe(201);
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ student_id: STUDENT_ID, price: 120, status: 'unpaid', created_by: SALES_A.id, client_request_id: REQ }));
-    expect(s.links.insert).toHaveBeenCalledWith(expect.objectContaining({ subscription_id: SUB_ID, amount: 120, reference_price: 145, currency: 'SAR', created_by: SALES_A.id, kind: 'new' }));
+    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ student_id: STUDENT_ID, price: 125, status: 'unpaid', created_by: SALES_A.id, client_request_id: REQ }));
+    expect(s.links.insert).toHaveBeenCalledWith(expect.objectContaining({ subscription_id: SUB_ID, amount: 125, reference_price: 145, currency: 'SAR', created_by: SALES_A.id, kind: 'new' }));
     expect(s.links.insert.mock.calls[0]?.[0].token).toMatch(/^[A-Za-z0-9_-]{43}$/);
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'payment_links', action: 'create' }));
     expect(res.json()).toMatchObject({ url: `https://api.test.example/pay/${linkRow().token}`, amount: 120, reference_price: 145, status: 'open' });
@@ -45,6 +45,15 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     const res = await call({ method: 'POST', url: '/sales/payment-links', token: 'salesA', body: { ...BODY, amount: 130 } });
     expect([res.statusCode, res.json().code, res.json().min]).toEqual([400, 'discount_too_large', 130.5]);
     expect(m.subs.insert).not.toHaveBeenCalled();
+  });
+
+  it('the pills’ floor without any cap: below 123 (145 × 0.85) is 403, 123 makes the link', async () => {
+    const url = '/sales/payment-links';
+    const low = await call({ method: 'POST', url, token: 'salesA', body: { ...BODY, amount: 1 } });
+    expect([low.statusCode, low.json().code, low.json().min]).toEqual([403, 'discount_not_allowed', 123]);
+    expect(m.subs.insert).not.toHaveBeenCalled();
+    const ok = await call({ method: 'POST', url, token: 'salesA', body: { ...BODY, amount: 123 } });
+    expect(ok.statusCode).toBe(201);
   });
 
   it('a renewal needs an earlier priced package; the currency must be the package currency; pills only', async () => {

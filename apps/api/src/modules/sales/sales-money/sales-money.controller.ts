@@ -82,7 +82,8 @@ export class SalesSubscribeController {
 /**
  * «سجّل التحويل البنكي» (owner 2026-10-12, R-ASST-04): the family's bank transfer with its receipt, recorded
  * by her and counted at once (a trial student becomes «مشترك»). No delete, no refund;
- * «تعديل المبلغ» only with payments.edit_amount (owner 2026-11-02); the admin corrects the rest.
+ * «تعديل المبلغ» only with subscriptions.edit_terms (owner 2026-11-03, admin-granted); the admin
+ * corrects the rest.
  */
 @ApiTags('sales')
 @ApiBearerAuth()
@@ -117,9 +118,9 @@ export class SalesPaymentsController {
     return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
   }
 
-  /** «تعديل المبلغ» (owner 2026-11-02): its own key, never payments.write. */
+  /** «تعديل المبلغ»: subscriptions.edit_terms (owner 2026-11-03), never payments.write. */
   @Patch(':id/amount')
-  @Permissions('payments.edit_amount')
+  @Permissions('subscriptions.edit_terms')
   editAmount(
     @ZodParam('id', z.uuid()) id: string,
     @ZodBody(paymentAmountSchema) body: PaymentAmount,

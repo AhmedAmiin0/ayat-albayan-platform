@@ -1,8 +1,13 @@
-import { linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
+import { linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView, type QuoteResponse } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '@/modules/sales/sales-money';
+import {
+  assertSalesDiscount,
+  assertSalesPrice,
+  salesStartsOn,
+  toSalesQuote,
+} from '@/modules/sales/sales-money';
 import { SubscriptionCreator } from '@/modules/finance/subscriptions';
 import { loadEnv } from '@/config/env/env';
 import { newLinkToken } from './link-ids';
@@ -28,8 +33,7 @@ export class LinkCreate {
   ) {}
 
   async quote(input: PaymentLinkQuote): Promise<PaymentLinkQuoteView> {
-    assertSalesDiscount(input.pricing);
-    const quote = await this.creator.quote(input);
+    const quote = await this.quoted(input);
     const max_discount_pct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
     return { quote: toSalesQuote(quote), max_discount_pct, min_amount: minLinkAmount(quote.afterDiscount, max_discount_pct) };
   }
@@ -44,11 +48,15 @@ export class LinkCreate {
     const student = await this.deps.links.student(input.studentId);
     if (!student) throw notFound('student_not_found');
     if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
-    const { quote, min_amount, max_discount_pct: maxDiscountPct } = await this.quote(input);
+    const quote = await this.quoted(input);
+    const maxDiscountPct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
+    const min_amount = minLinkAmount(quote.afterDiscount, maxDiscountPct);
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct });
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
+    // The pills' floor (review 2026-11-05): never a 1 SAR package she then marks paid herself.
+    assertSalesPrice({ amount: input.amount, total: quote.total, currency: quote.currency });
     const { studentId, pricing, clientRequestId, lessonsUsedBefore, teacherId } = input;
     if (teacherId) await this.extra.sales.teachers.ensureActive(teacherId);
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
@@ -74,6 +82,12 @@ export class LinkCreate {
     await this.deps.audit.record({ actorId: user.id, entity: 'payment_links', entityId: row.id, action: 'create', after });
     await this.assign(input, user);
     return this.deps.views.one(row, now);
+  }
+
+  /** The catalog quote, the site's discount pills only (403 discount_not_allowed). */
+  private async quoted(input: PaymentLinkQuote): Promise<QuoteResponse> {
+    assertSalesDiscount(input.pricing);
+    return this.creator.quote(input);
   }
 
   /**

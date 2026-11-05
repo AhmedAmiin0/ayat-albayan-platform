@@ -29,7 +29,7 @@ export function useAdminAmountEdit(payment: { id: string; student: { id: string 
 }
 
 /**
- * Hers (payments.edit_amount): PATCH /sales/payments/:id/amount { amount }. Her payments, her
+ * Hers (subscriptions.edit_terms): PATCH /sales/payments/:id/amount { amount }. Her payments, her
  * earnings (the commission follows) and the family's open packages refetch.
  */
 export function useSalesAmountEdit(paymentId: string) {

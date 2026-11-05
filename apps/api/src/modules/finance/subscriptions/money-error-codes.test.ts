@@ -23,6 +23,7 @@ const CODES: Record<string, { table: Record<string, string>; codes: string[] }> 
       'stripe_method_locked',
       'refund_exceeds_paid',
       'refund_not_allowed',
+      'payment_amount_changed',
     ],
   },
   payouts: {

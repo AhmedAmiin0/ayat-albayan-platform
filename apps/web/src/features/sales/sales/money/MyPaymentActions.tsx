@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 
 export interface MyPaymentHandlers {
   onAttachments: (p: MyPaymentRow) => void;
-  /** «تعديل المبلغ» (payments.edit_amount); null without the permission. */
+  /** «تعديل المبلغ» (subscriptions.edit_terms); null without the permission. */
   onEditAmount: ((p: MyPaymentRow) => void) | null;
 }
 
