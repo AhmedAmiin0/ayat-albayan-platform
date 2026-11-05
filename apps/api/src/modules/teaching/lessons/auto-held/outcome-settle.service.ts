@@ -40,7 +40,7 @@ const editedAt = (l: OpenEndedLesson): number =>
   l.time_edited_at ? Date.parse(l.time_edited_at) : Number.NEGATIVE_INFINITY;
 
 /** Reminded about THIS time: the latest family reminder was made after the last time edit. */
-export const remindedFor = (l: OpenEndedLesson, sent: ReadonlyMap<string, number>): boolean =>
+const remindedFor = (l: OpenEndedLesson, sent: ReadonlyMap<string, number>): boolean =>
   (sent.get(l.id) ?? Number.NEGATIVE_INFINITY) > editedAt(l);
 
 const latest = (a: Date, b: Date): Date => (a.getTime() >= b.getTime() ? a : b);
