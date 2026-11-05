@@ -18,10 +18,18 @@ export interface RefundPlan {
   cards: CardState[];
   rows: MoneyRow[];
   requestId: string;
-  /** The amount asked (at most calc.refund). */
+  /** The amount the choice asks (at most calc.paid). */
   amount: number;
   /** Card first (Stripe), the rest manual. */
   split: RefundSplit;
+  /** What the stopped course is owed for after it: the net paid left (stop_owed_amount). */
+  owed: OwedDecision;
+}
+
+/** The stop's stored decision (subscriptions.stop_owed_amount / stop_owed_choice). */
+export interface OwedDecision {
+  amount: number;
+  choice: string;
 }
 
 /** The manual refund row's client_request_id: one per stop (rule 8). */

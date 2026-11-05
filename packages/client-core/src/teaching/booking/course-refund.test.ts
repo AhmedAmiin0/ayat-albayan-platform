@@ -1,12 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import {
-  courseStopBody,
-  refundAmountOf,
-  refundOffer,
-  stopRefundLines,
-  stopRefundOf,
-} from './course-refund.js';
+import { oweOptions, refundOptions, stopRefundLines, stopSummaryText } from './course-refund.js';
 
 const money = (n: number) => `${n} ر.س`;
 const refund = {
@@ -17,83 +11,38 @@ const refund = {
   charged: 225,
   refund: 175,
 };
+const words = ar.courseActions.stop;
 
 describe('stopRefundLines (MSA)', () => {
-  it('paid, attended × price × rate, refund', () => {
-    expect(stopRefundLines(ar.courseActions.stop, refund, money)).toEqual([
+  it('paid, attended × price × rate', () => {
+    expect(stopRefundLines(words, refund, money)).toEqual([
       'المدفوع: 400 ر.س',
       'الحلقات المحضورة: 3 × 50 ر.س × 150٪ = 225 ر.س',
-      'المبلغ المستحق للاسترداد: 175 ر.س',
     ]);
   });
 });
 
-describe('refundAmountOf', () => {
-  const max = { max: 175, currency: 'SAR' };
-  it('empty = the computed refund; lower amounts pass', () => {
-    expect(refundAmountOf('', max)).toBe(175);
-    expect(refundAmountOf(' 100.5 ', max)).toBe(100.5);
-    expect(refundAmountOf('١٢٠٫٥', max)).toBe(120.5);
+describe('the options carry their computed amounts', () => {
+  it('refund: unattended (default) and everything paid show the amount; custom does not', () => {
+    expect(refundOptions(words, refund, money)).toEqual([
+      { value: 'unattended', label: 'الحلقات غير المحضورة فقط: 175 ر.س' },
+      { value: 'paid', label: 'المبلغ المدفوع كاملًا: 400 ر.س' },
+      { value: 'custom', label: 'مبلغ مخصص' },
+    ]);
   });
 
-  it('above the refund, zero or not a number: null', () => {
-    expect(refundAmountOf('175.01', max)).toBeNull();
-    expect(refundAmountOf('0', max)).toBeNull();
-    expect(refundAmountOf('abc', max)).toBeNull();
-    expect(refundAmountOf('-5', max)).toBeNull();
-    expect(refundAmountOf('1,500', { max: 2000, currency: 'SAR' })).toBeNull();
-    expect(refundAmountOf('0.001', max)).toBeNull();
-  });
-});
-
-describe('courseStopBody', () => {
-  const base = { subscriptionId: 'p1', reason: '  سفر ', clientRequestId: 'r1' };
-  it('«إلغاء فقط» sends no refund; «إلغاء مع استرداد» sends its amount', () => {
-    expect(courseStopBody({ ...base, refund: null })).toEqual({
-      subscriptionId: 'p1',
-      reason: 'سفر',
-      clientRequestId: 'r1',
-    });
-    expect(courseStopBody({ ...base, refund: 80 })).toEqual({
-      subscriptionId: 'p1',
-      reason: 'سفر',
-      clientRequestId: 'r1',
-      refund: { amount: 80 },
-    });
-  });
-});
-
-describe('stopRefundOf', () => {
-  const refund = { max: 175, currency: 'SAR' };
-  it('«إلغاء فقط» is always valid and refunds nothing', () => {
-    expect(stopRefundOf({ choice: 'cancel', text: '999', refund })).toEqual({
-      refund: null,
-      valid: true,
-    });
+  it('owe: attended (default), the price, nothing, custom', () => {
+    expect(oweOptions(words, { charged: 225, price: 400 }, money).map((o) => o.label)).toEqual([
+      'الحلقات المحضورة: 225 ر.س',
+      'سعر الباقة كاملًا: 400 ر.س',
+      'لا شيء',
+      'مبلغ مخصص',
+    ]);
   });
 
-  it('«إلغاء مع استرداد»: the typed amount, invalid above the cap', () => {
-    expect(stopRefundOf({ choice: 'refund', text: '', refund })).toEqual({
-      refund: 175,
-      valid: true,
-    });
-    expect(stopRefundOf({ choice: 'refund', text: '200', refund })).toEqual({
-      refund: null,
-      valid: false,
-    });
-  });
-});
-
-describe('refundOffer', () => {
-  const base = { holds: true, refund, currency: 'SAR', choice: 'refund' as const, text: '' };
-  it('offered with the key and something to refund', () => {
-    expect(refundOffer(base)).toEqual({ breakdown: refund, asked: { refund: 175, valid: true } });
-  });
-
-  it('never without the key, without lines, or with 0 to refund', () => {
-    const cancel = { breakdown: null, asked: { refund: null, valid: true } };
-    expect(refundOffer({ ...base, holds: false })).toEqual(cancel);
-    expect(refundOffer({ ...base, refund: null })).toEqual(cancel);
-    expect(refundOffer({ ...base, refund: { ...refund, refund: 0 } })).toEqual(cancel);
+  it('the summary line says the refund and what stays owed', () => {
+    expect(stopSummaryText(words, { refund: 175, due: 0 }, money)).toBe(
+      'الاسترداد: 175 ر.س · المتبقي على الأسرة: 0 ر.س',
+    );
   });
 });

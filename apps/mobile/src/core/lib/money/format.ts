@@ -1,4 +1,12 @@
-import { counted, dateText, formatAmount, partPaid, receiptShortfall, type SubscriptionView } from '@ab/shared';
+import {
+  counted,
+  dateText,
+  formatAmount,
+  partPaidOf,
+  receiptShortfall,
+  type OwedPackage,
+  type SubscriptionView,
+} from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -61,8 +69,8 @@ const amount = (n: number) => ltr(formatAmount(n));
  * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» while 0 < paid < price (owner 2026-10-28: why a package of
  * 81 with 80 received is still «غير مدفوعة»), else null. The rule stays: only net paid ≥ price is paid.
  */
-export function partPaidLine(sub: { paid: number; price: number; currency: string }): string | null {
-  const part = partPaid(sub);
+export function partPaidLine(sub: OwedPackage & { paid: number; currency: string }): string | null {
+  const part = partPaidOf(sub);
   if (!part) return null;
   return t.packagePayment.partPaid
     .replace('{paid}', amount(part.paid))
@@ -72,7 +80,9 @@ export function partPaidLine(sub: { paid: number; price: number; currency: strin
 }
 
 /** The part-paid line, else «دُفع 72.5 من 145 ر.س». */
-export const paidLine = (sub: Pick<SubscriptionView, 'paid' | 'price' | 'currency'>): string => partPaidLine(sub) ?? paidOf(sub);
+export const paidLine = (
+  sub: Pick<SubscriptionView, 'paid' | 'price' | 'currency' | 'cancel_kind' | 'stop_owed_amount'>,
+): string => partPaidLine(sub) ?? paidOf(sub);
 
 /** Before saving a receipt smaller than what is still due: «المبلغ أقل من المستحق بـ 1 ر.س، …», else null. */
 export function shortfallLine(input: { amount: number | null; due: number; currency: string }): string | null {

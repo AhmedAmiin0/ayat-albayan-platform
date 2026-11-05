@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { HistoryBundle } from '@/modules/sales/sales';
 import { toStudentDetails } from './sales-student.mapper';
-import type { DetailsStudentRow } from './sales-student.repo';
+import type { DetailsStudentRow, PriceRow } from './sales-student.repo';
 
 // «مدفوعة جزئيًا» (owner 2026-10-28): 81 SAR, 80 received → part_paid; only with prices (self.sales_money).
 const student = {
@@ -38,10 +38,15 @@ const history = (payments: ReturnType<typeof pay>[]) =>
     payments,
     audit: [],
   }) as unknown as HistoryBundle;
-const details = (
-  payments: ReturnType<typeof pay>[],
-  prices = [{ id: 'a', price: 81, currency: 'SAR' }],
-) =>
+const price = (over: Partial<PriceRow> = {}): PriceRow => ({
+  id: 'a',
+  price: 81,
+  currency: 'SAR',
+  cancel_kind: null,
+  stop_owed_amount: null,
+  ...over,
+});
+const details = (payments: ReturnType<typeof pay>[], prices = [price()]) =>
   toStudentDetails({
     student,
     history: history(payments),
@@ -73,6 +78,17 @@ describe('toStudentDetails part_paid', () => {
   it('nothing or everything paid → no key', () => {
     expect(details([]).subscriptions[0]).not.toHaveProperty('part_paid');
     expect(details([pay(81)]).subscriptions[0]).not.toHaveProperty('part_paid');
+  });
+
+  it('a stopped course: against its stored owed amount (owedFor), never the price', () => {
+    const stopped = [price({ cancel_kind: 'stopped', stop_owed_amount: 50 })];
+    expect(details([pay(30)], stopped).subscriptions[0]?.part_paid).toMatchObject({
+      paid: 30,
+      price: 50,
+      due: 20,
+    });
+    const refunded = [price({ cancel_kind: 'stopped', stop_owed_amount: 30 })];
+    expect(details([pay(30)], refunded).subscriptions[0]).not.toHaveProperty('part_paid');
   });
 
   it('without prices (no self.sales_money) → never a price', () => {

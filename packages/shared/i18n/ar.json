@@ -7735,13 +7735,23 @@
       "withRefund": "إلغاء مع استرداد",
       "refundPaid": "المدفوع: {amount}",
       "refundCharged": "الحلقات المحضورة: {n} × {price} × {rate}٪ = {amount}",
-      "refundTotal": "المبلغ المستحق للاسترداد: {amount}",
-      "refundAmount": "مبلغ الاسترداد",
-      "refundAmountHint": "يمكنك تخفيضه، ولا يتجاوز {amount}",
       "refundWhere": "يُردّ إلى البطاقة ما دُفع برابط الدفع، ويُسجَّل الباقي استردادًا يدويًا يحوّله المسؤول للأسرة",
       "doneRefund": "أُلغي الاشتراك وسُجّل استرداد {amount}",
       "refundNote": "إلغاء مع استرداد: {reason}",
-      "refundBell": "حوّل {amount} للأسرة (إلغاء مع استرداد)"
+      "refundBell": "حوّل {amount} للأسرة (إلغاء مع استرداد)",
+      "refundChoice": "مبلغ الاسترداد",
+      "refundUnattended": "الحلقات غير المحضورة فقط: {amount}",
+      "refundAll": "المبلغ المدفوع كاملًا: {amount}",
+      "refundCustom": "مبلغ مخصص",
+      "oweChoice": "ما يبقى على الأسرة",
+      "oweAttended": "الحلقات المحضورة: {amount}",
+      "owePrice": "سعر الباقة كاملًا: {amount}",
+      "oweNothing": "لا شيء",
+      "oweCustom": "مبلغ مخصص",
+      "customAmount": "المبلغ",
+      "customHint": "من 0 إلى {amount}",
+      "summary": "الاسترداد: {refund} · المتبقي على الأسرة: {due}",
+      "refundUnavailable": "تعذّر حساب الاسترداد الآن، فلا يظهر خيار «إلغاء مع استرداد». أعد فتح النافذة بعد قليل."
     },
     "teacher": {
       "action": "تغيير المعلم",
@@ -7801,7 +7811,9 @@
       "refund_exceeds_allowed": "المبلغ أكبر من المبلغ المستحق للاسترداد",
       "refund_not_allowed": "لا تملك صلاحية الاسترداد",
       "stripe_not_configured": "الدفع الإلكتروني غير مهيأ، فلا يمكن الاسترداد إلى البطاقة",
-      "refund_mismatch": "تختلف هذه المحاولة عن استرداد سابق للطلب نفسه، فأعد فتح النافذة"
+      "refund_mismatch": "تختلف هذه المحاولة عن استرداد سابق للطلب نفسه، فأعد فتح النافذة",
+      "not_your_student": "هذا الطالب ليس من طلابك، فلا يمكنك الاسترداد له",
+      "owed_exceeds_price": "المبلغ المتبقي يجب أن يكون بين 0 وسعر الباقة"
     }
   },
   "coursePause": {

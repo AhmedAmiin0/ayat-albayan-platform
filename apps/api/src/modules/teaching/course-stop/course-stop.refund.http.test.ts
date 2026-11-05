@@ -53,27 +53,32 @@ describe('POST /students/:id/course-stop with a refund (manual payments)', () =>
     );
   });
 
-  it('above the computed refund: 409 refund_exceeds_allowed, nothing stopped or refunded', async () => {
+  it('above the net paid (the allowed maximum): 409, nothing stopped or refunded', async () => {
     const res = await t.call({
       method: 'POST',
       url: URL,
       token: 'admin',
-      body: withRefund(140.01),
+      body: withRefund(290.01),
     });
     expect([res.statusCode, res.json().code]).toEqual([409, 'refund_exceeds_allowed']);
     expect(t.m.repo.stop).not.toHaveBeenCalled();
     expect(t.m.payments.create).not.toHaveBeenCalled();
   });
 
-  it('every lesson attended: nothing to refund, 409', async () => {
+  it('every lesson attended: «unattended» refunds 0 and the course owes what stays paid', async () => {
     t.m.refunds.pkg.mockResolvedValue({
       price: 400,
       lessonsTotal: 8,
       attended: 8,
       studentName: 'ط',
     });
-    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: withRefund(1) });
-    expect([res.statusCode, res.json().code]).toEqual([409, 'refund_exceeds_allowed']);
+    const body = { ...BODY, refund: { choice: 'unattended' } };
+    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body });
+    expect([res.statusCode, res.json().refund]).toEqual([201, { amount: 0, card: 0, manual: 0 }]);
+    expect(t.m.repo.stop).toHaveBeenCalledWith(
+      expect.objectContaining({ owed: { amount: 290, choice: 'refund_unattended' } }),
+    );
+    expect(t.m.payments.create).not.toHaveBeenCalled();
   });
 
   it('sales without subscriptions.refund: 403 refund_not_allowed before the stop', async () => {
@@ -82,7 +87,7 @@ describe('POST /students/:id/course-stop with a refund (manual payments)', () =>
     expect(t.m.repo.stop).not.toHaveBeenCalled();
   });
 
-  it('«إلغاء فقط» (no refund) never reads or writes money', async () => {
+  it('«إلغاء فقط» (no refund) never reads or writes payments', async () => {
     const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: BODY });
     expect([res.statusCode, res.json().refund]).toEqual([201, null]);
     expect(t.m.refunds.money).not.toHaveBeenCalled();

@@ -24,6 +24,8 @@ const PREVIEW = {
   paid: 290,
   currency: 'SAR',
   refund: { paid: 290, perLesson: 50, attended: 3, ratePercent: 100, charged: 150, refund: 140 },
+  refundUnavailable: false,
+  owe: { charged: 150, price: 400 },
 };
 
 function open(stopped: unknown = null) {
@@ -64,6 +66,7 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
       subscriptionId: SUB,
       reason: 'سفر الأسرة',
       clientRequestId: expect.any(String),
+      owe: { choice: 'attended' },
     });
   });
 

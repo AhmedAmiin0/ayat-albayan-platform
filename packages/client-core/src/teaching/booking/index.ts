@@ -29,14 +29,23 @@ export {
   type StopWords,
 } from './course-actions.js';
 export {
-  courseStopBody,
+  oweOptions,
   type RefundChoice,
-  refundAmountOf,
-  refundOffer,
+  refundOptions,
   stopRefundLines,
-  stopRefundOf,
+  type StopChoiceWords,
   type StopRefundWords,
+  stopSummaryText,
 } from './course-refund.js';
+export {
+  courseStopBody,
+  offeredRefund,
+  STOP_MONEY_START,
+  stopMoney,
+  type StopMoney,
+  type StopMoneyAsk,
+  type StopMoneyState,
+} from './course-stop-money.js';
 export {
   packageCancelOffered,
   parsePackageCancelCheck,

@@ -1,4 +1,4 @@
-import { countsForMoney } from '@ab/shared';
+import { countsForMoney, dueOf } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field } from '@/components/ui/form/field';
@@ -15,7 +15,7 @@ type Props = {
   onPick: (s: SubscriptionView | null) => void;
 };
 
-const owed = (s: SubscriptionView) => Math.max(0, s.price - s.paid);
+const owed = (s: SubscriptionView) => dueOf(s, s.paid);
 const optionText = (s: SubscriptionView) =>
   `${packageName(s)} · ${t.enums.subscriptionStatus[s.status]} · ${t.payments.paidOf
     .replace('{paid}', moneyText(s.paid, s.currency))

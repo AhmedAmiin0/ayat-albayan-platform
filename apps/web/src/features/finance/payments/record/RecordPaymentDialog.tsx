@@ -1,4 +1,4 @@
-import { CURRENCY_ISOS, parseAmount, type PaymentKind } from '@ab/shared';
+import { CURRENCY_ISOS, dueOf, owedFor, parseAmount, type PaymentKind } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -30,10 +30,10 @@ type Props = {
   onSaved: () => void;
 };
 
-const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind === 'refund' ? s.paid : Math.max(0, s.price - s.paid) || s.price);
+const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind === 'refund' ? s.paid : dueOf(s, s.paid) || owedFor(s));
 /** What a payment in `currency` still owes (owner 2026-10-28: less stays unpaid); null for a refund or another currency. */
 const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
-  s && opts.kind === 'payment' && opts.currency === s.currency ? Math.max(0, s.price - s.paid) : null;
+  s && opts.kind === 'payment' && opts.currency === s.currency ? dueOf(s, s.paid) : null;
 
 /** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt, and «المرفقات» for a bank payment. */
 export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment', student: preset, onClose, onSaved }: Props) {

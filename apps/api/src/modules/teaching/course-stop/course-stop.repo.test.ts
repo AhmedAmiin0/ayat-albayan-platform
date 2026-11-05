@@ -14,7 +14,14 @@ function chain(result: unknown) {
 const repoOf = (q: ReturnType<typeof chain>, rpc = vi.fn()) =>
   new CourseStopRepo({ from: vi.fn(() => q), rpc } as unknown as Db);
 const NOW = new Date('2026-10-30T09:00:00Z');
-const CALL = { subscriptionId: 's1', studentId: 'st1', requestId: 'req', actorId: 'a1', reason: 'سفر' };
+const CALL = {
+  subscriptionId: 's1',
+  studentId: 'st1',
+  requestId: 'req',
+  actorId: 'a1',
+  reason: 'سفر',
+  owed: { amount: 75, choice: 'attended' },
+};
 const ROW = {
   cancelled_lessons: ['l1'],
   ended_rules: ['r1'],
@@ -61,7 +68,15 @@ describe('CourseStopRepo', () => {
       replayed: false,
     });
     expect(rpc).toHaveBeenCalledWith('stop_course', {
-      p: { subscription_id: 's1', student_id: 'st1', client_request_id: 'req', actor: 'a1', reason: 'سفر' },
+      p: {
+        subscription_id: 's1',
+        student_id: 'st1',
+        client_request_id: 'req',
+        actor: 'a1',
+        reason: 'سفر',
+        owed_amount: 75,
+        owed_choice: 'attended',
+      },
     });
   });
 

@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
 import { courseStopPreviewQuery, useStopCourse } from './api';
-import { useRefundOffer } from './refund/use-refund-offer';
+import { useStopMoney, type StopMoneyView } from './refund/use-stop-money';
 import { StopBody } from './StopSummary';
 
 export interface CourseActionDialogProps {
@@ -17,11 +17,15 @@ export interface CourseActionDialogProps {
   onDone: (message: string) => void;
 }
 
+/** Why the confirm is off: the amount is outside the refund's or the price's range. */
+const invalidCode = (money: StopMoneyView) =>
+  money.state.mode === 'refund' && money.breakdown ? 'refund_exceeds_allowed' : 'owed_exceeds_price';
+
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): stop the course, keep the money. The sheet says what
  * happens, asks a short reason, then ONE «تأكيد الإلغاء»; one idempotency key per opening.
- * With subscriptions.refund and something to refund (owner 2026-11-02) it asks «إلغاء فقط» or
- * «إلغاء مع استرداد» first (never automatic; «إلغاء فقط» is the default).
+ * The money is the person's choice (owner 2026-11-06): «إلغاء فقط» with what the family still
+ * owes, or (subscriptions.refund, something paid) «إلغاء مع استرداد» with the refund amount.
  */
 export function StopCourseDialog(props: CourseActionDialogProps) {
   const { studentId, subscriptionId, onClose } = props;
@@ -29,10 +33,12 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
   const [reason, setReason] = useState('');
   const preview = useQuery(courseStopPreviewQuery({ studentId, subscriptionId }));
   const currency = preview.data?.currency ?? '';
-  const { asked, refund } = useRefundOffer(preview.data);
-  const stop = useStopCourse({ ...props, reason, refund: asked.refund, currency });
+  const money = useStopMoney(preview.data);
+  const valid = money.money?.valid ?? false;
+  const ask = money.money?.ask ?? {};
+  const stop = useStopCourse({ ...props, reason, ask, currency });
   const live = preview.data?.stopped === null;
-  const blocked = !live || reason.trim().length < 2 || !asked.valid || stop.isPending;
+  const blocked = !live || reason.trim().length < 2 || !valid || stop.isPending;
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!blocked) stop.mutate();
@@ -53,9 +59,9 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         {preview.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
         {preview.data && (
-          <StopBody preview={preview.data} reason={reason} onReason={setReason} refund={refund} />
+          <StopBody preview={preview.data} reason={reason} onReason={setReason} money={money} />
         )}
-        {!asked.valid && <FormAlert>{t.courseActions.errors.refund_exceeds_allowed}</FormAlert>}
+        {live && !valid && <FormAlert>{t.courseActions.errors[invalidCode(money)]}</FormAlert>}
         {error && <FormAlert>{t.courseActions.errors[courseStopErrorCode(error)]}</FormAlert>}
       </form>
     </Dialog>

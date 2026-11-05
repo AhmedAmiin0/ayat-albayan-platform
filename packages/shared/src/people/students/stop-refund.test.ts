@@ -35,8 +35,8 @@ describe('stopRefund', () => {
     [0, 0, 400],
     [100, 150, 250],
     [150, 225, 175],
-    [300, 450, 0],
-  ])('rate %i %%: charged %d, refund %d (floored at 0)', (ratePercent, charged, refund) => {
+    [300, 400, 0],
+  ])('rate %i %%: charged %d (never above the price), refund %d (floored at 0)', (ratePercent, charged, refund) => {
     expect(stopRefund({ ...base, ratePercent })).toMatchObject({ charged, refund });
   });
 

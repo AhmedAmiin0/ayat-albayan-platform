@@ -4156,6 +4156,8 @@ export type Database = {
           renews_on: string | null;
           starts_on: string;
           status: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount: number | null;
+          stop_owed_choice: string | null;
           stop_request_id: string | null;
           student_id: string;
           updated_at: string;
@@ -4183,6 +4185,8 @@ export type Database = {
           renews_on?: string | null;
           starts_on: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount?: number | null;
+          stop_owed_choice?: string | null;
           stop_request_id?: string | null;
           student_id: string;
           updated_at?: string;
@@ -4210,6 +4214,8 @@ export type Database = {
           renews_on?: string | null;
           starts_on?: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount?: number | null;
+          stop_owed_choice?: string | null;
           stop_request_id?: string | null;
           student_id?: string;
           updated_at?: string;

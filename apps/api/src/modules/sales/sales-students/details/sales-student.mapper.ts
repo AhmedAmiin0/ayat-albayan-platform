@@ -3,7 +3,7 @@ import {
   attendanceTotals,
   currentPackage,
   netPaid,
-  partPaid,
+  partPaidOf as owedPartPaid,
   type SalesPackageSummary,
   type SalesPartPaid,
   type ReportSummaryView,
@@ -34,12 +34,16 @@ interface DetailsParts {
 
 const iso = (at: string): string => new Date(at).toISOString();
 
-/** «مدفوعة جزئيًا» per package (owner 2026-10-28): net paid against the price, only when 0 < paid < price. */
+/**
+ * «مدفوعة جزئيًا» per package (owner 2026-10-28): net paid against what it is owed for (owedFor: the
+ * price, a stopped course's stored decision), only when 0 < paid < owed.
+ */
 function partPaidOf(history: HistoryBundle, prices: readonly PriceRow[]): Map<string, SalesPartPaid> {
   return new Map(
     prices.flatMap((p) => {
       const paid = netPaid(history.payments.filter((x) => x.subscription_id === p.id).map((x) => ({ amount: Number(x.amount), kind: x.kind })));
-      const part = partPaid({ paid, price: Number(p.price) });
+      const owed = p.stop_owed_amount === null ? null : Number(p.stop_owed_amount);
+      const part = owedPartPaid({ ...p, price: Number(p.price), stop_owed_amount: owed, paid });
       return part ? [[p.id, { ...part, currency: p.currency }] as const] : [];
     }),
   );

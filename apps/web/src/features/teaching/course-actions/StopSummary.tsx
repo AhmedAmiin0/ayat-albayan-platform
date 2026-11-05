@@ -1,11 +1,12 @@
-import { courseStopLessonsText, type RefundChoice } from '@ab/client-core';
-import { COURSE_STOP_REASON_MAX, type CourseStopPreview, type StopRefund } from '@ab/shared';
+import { courseStopLessonsText } from '@ab/client-core';
+import { COURSE_STOP_REASON_MAX, type CourseStopPreview } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Amount } from '@/features/finance/subscriptions';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
-import { StopRefundChoice } from './refund/StopRefundChoice';
+import { StopMoneyChoice } from './refund/StopMoneyChoice';
+import type { StopMoneyView } from './refund/use-stop-money';
 
 /** What a stop does: N future lessons cancelled, the schedule ends, the money and history kept. */
 function StopSummary({ preview, keeps }: { preview: CourseStopPreview; keeps: boolean }) {
@@ -46,30 +47,22 @@ function StoppedLine({ stopped }: { stopped: NonNullable<CourseStopPreview['stop
   );
 }
 
-/** The refund part: null = no «إلغاء مع استرداد» (no subscriptions.refund, nothing to refund). */
-export interface RefundState {
-  breakdown: StopRefund;
-  choice: RefundChoice;
-  onChoice: (choice: RefundChoice) => void;
-  amount: string;
-  onAmount: (text: string) => void;
-}
-
 interface BodyProps {
   preview: CourseStopPreview;
   reason: string;
   onReason: (v: string) => void;
-  refund: RefundState | null;
+  /** The money choice (owner 2026-11-06). */
+  money: StopMoneyView;
 }
 
 /** The preview, or «أُلغي الاشتراك في …» when it is already cancelled; then the reason. */
-export function StopBody({ preview, reason, onReason, refund }: BodyProps) {
+export function StopBody({ preview, reason, onReason, money }: BodyProps) {
   const words = t.courseActions.stop;
   if (preview.stopped) return <StoppedLine stopped={preview.stopped} />;
   return (
     <>
-      <StopSummary preview={preview} keeps={refund?.choice !== 'refund'} />
-      {refund && <StopRefundChoice preview={preview} {...refund} />}
+      <StopSummary preview={preview} keeps={money.state.mode !== 'refund'} />
+      {money.money && <StopMoneyChoice preview={preview} view={money} money={money.money} />}
       <Field label={words.reason} hint={words.reasonHint}>
         {(p) => (
           <Input

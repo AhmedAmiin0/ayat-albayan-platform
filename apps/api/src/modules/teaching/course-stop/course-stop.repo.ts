@@ -17,13 +17,15 @@ export interface StopSub {
   cancel_reason: string | null;
 }
 
-/** stop_course's input (migration 991). */
+/** stop_course's input (migration 991, the owed amount 20261106000100). */
 interface StopCall {
   subscriptionId: string;
   studentId: string;
   requestId: string;
   actorId: string;
   reason: string;
+  /** What the stopped course is owed for, as chosen (stored with the stamp). */
+  owed: { amount: number; choice: string };
 }
 
 const SUB = 'id, student_id, status, currency, cancelled_at, cancelled_by, cancel_reason';
@@ -102,6 +104,8 @@ export class CourseStopRepo {
       client_request_id: c.requestId,
       actor: c.actorId,
       reason: c.reason,
+      owed_amount: c.owed.amount,
+      owed_choice: c.owed.choice,
     };
     const { data, error } = await this.db.rpc('stop_course', { p });
     if (error) throw stopError(error);

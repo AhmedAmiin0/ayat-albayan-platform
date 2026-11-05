@@ -10,10 +10,16 @@ import { manualRefundKey, type RefundPlan } from './stop-refund.plan';
 const METHODS = ['bank', 'wallet', 'cash', 'other', 'card'] as const;
 type Method = (typeof METHODS)[number];
 
-/** The method of the newest payment no payment link recorded; bank when there is none. */
+/** A manual refund is never stamped 'card': only a Stripe refund is (its webhook writes that row). */
+const isManualMethod = (r: MoneyRow): boolean => r.method !== 'card';
+
+/**
+ * The method of the newest payment no payment link recorded and not stamped card (a card payment
+ * recorded by hand is refunded by transfer); bank when there is none.
+ */
 function manualMethod(rows: readonly MoneyRow[], cardIds: ReadonlySet<string>): Method {
   const manual = rows.filter((r) => r.kind === 'payment' && !cardIds.has(r.id));
-  return manual.at(-1)?.method ?? 'bank';
+  return manual.filter(isManualMethod).at(-1)?.method ?? 'bank';
 }
 
 /**

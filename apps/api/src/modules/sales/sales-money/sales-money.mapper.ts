@@ -1,6 +1,6 @@
 import {
   countsForMoney,
-  round2,
+  dueOf,
   type PaymentView,
   type QuoteResponse,
   type SalesMoneySubscriptionView,
@@ -38,8 +38,9 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    // An unused cancel is never owed (owner 2026-10-28); a stopped package still is (2026-10-30).
-    due: countsForMoney(s) ? Math.max(0, round2(s.price - s.paid)) : 0,
+    // An unused cancel is never owed (owner 2026-10-28); a stopped package owes its stored
+    // decision (owedFor, owner 2026-11-06), never price − paid.
+    due: countsForMoney(s) ? dueOf(s, s.paid) : 0,
   };
 }
 

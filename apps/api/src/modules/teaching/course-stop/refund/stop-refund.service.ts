@@ -1,9 +1,12 @@
 import {
+  owedAfterRefund,
   refundAmountProblem,
+  refundByChoice,
   splitRefund,
   stopRefund,
   type CourseStopRefunded,
   type StopRefund,
+  type StopRefundChoice,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
@@ -32,9 +35,17 @@ interface Allowed {
 const net = (rows: readonly MoneyRow[]): number =>
   rows.reduce((sum, r) => sum + (r.kind === 'refund' ? -r.amount : r.amount), 0);
 
+/** The refund the person chose in the sheet (owner 2026-11-06); custom carries its amount. */
+export interface RefundChoiceAsk {
+  choice: StopRefundChoice;
+  amount?: number | undefined;
+}
+
 /**
- * «إلغاء مع استرداد» (owner 2026-11-02): refund = net paid − attended × (price / lessons) × the
- * rate setting, floored at 0 (stopRefund). The person may lower it. Card payments of a payment
+ * «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06): the person picks the unattended
+ * lessons (net paid − attended × (price / lessons) × the rate setting, floored at 0: stopRefund),
+ * everything paid, or a custom amount; every choice at most the net paid (pending Stripe refunds
+ * off). After it the course owes the net paid left (plan.owed: nothing more is due). Card payments of a payment
  * link are refunded through Stripe first (the webhook records their rows), the rest is one manual
  * refund row plus an admin bell «حوّل … للعائلة». Every leg is idempotent on the stop's
  * clientRequestId: this stop's own refunds are left out of «net paid» (other refunds still
@@ -59,19 +70,20 @@ export class StopRefunds {
     return (await this.allowed(sub, PREVIEW_REQUEST)).calc;
   }
 
-  /** 409 refund_exceeds_allowed above the computed refund; 503 stripe_not_configured with cards. */
-  async plan(input: { sub: RefundSub; requestId: string; amount: number }): Promise<RefundPlan> {
-    const { sub, requestId } = input;
+  /** 409 refund_exceeds_allowed above the net paid; 503 stripe_not_configured with cards. */
+  async plan(input: { sub: RefundSub; requestId: string; ask: RefundChoiceAsk }): Promise<RefundPlan> {
+    const { sub, requestId, ask } = input;
     const { currency } = sub;
     const { pkg, rows, cards, calc } = await this.allowed(sub, requestId);
-    if (refundAmountProblem(input.amount, calc.refund, currency))
-      throw conflict('refund_exceeds_allowed');
+    const amount = refundByChoice(ask.choice, calc, ask.amount ?? 0);
+    if (refundAmountProblem(amount, calc.paid, currency)) throw conflict('refund_exceeds_allowed');
     const manualKey = manualRefundKey(requestId);
     const legs = cards.map((c) => ({ id: c.paymentId, refundable: c.refundable }));
-    const split = splitRefund({ amount: input.amount, cards: legs, currency });
+    const split = splitRefund({ amount, cards: legs, currency });
     const manualRow = rows.find((r) => r.client_request_id === manualKey)?.amount ?? null;
     if (replayMismatch({ cards, split, manualRow, currency })) throw conflict('refund_mismatch');
-    return { sub, pkg, calc, cards, rows, requestId, amount: input.amount, split };
+    const owed = { amount: owedAfterRefund(calc, amount, currency), choice: `refund_${ask.choice}` };
+    return { sub, pkg, calc, cards, rows, requestId, amount, split, owed };
   }
 
   /** After the stop committed (again on a replay): card legs, then the manual leg, audited. */

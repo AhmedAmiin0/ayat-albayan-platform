@@ -1,4 +1,4 @@
-import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, owesMore, subscriptionStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -32,7 +32,7 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
   if (balance.isError) return <FormAlert className="mb-6">{t.common.error}</FormAlert>;
   const view = balance.data;
   const current = view?.current ?? null;
-  const owes = current !== null && current.paid < current.price;
+  const owes = current !== null && owesMore(current);
 
   return (
     <section aria-labelledby="balance-title" className="mb-6 grid gap-2 border-b border-rule pb-5">

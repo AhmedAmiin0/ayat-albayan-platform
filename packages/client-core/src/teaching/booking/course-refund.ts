@@ -1,26 +1,37 @@
-import {
-  parseAmount,
-  refundAmountProblem,
-  type CourseStopRequest,
-  type StopRefund,
-} from '@ab/shared';
+import type { StopOwe, StopOweChoice, StopRefund, StopRefundChoice } from '@ab/shared';
 
-// «إلغاء فقط» / «إلغاء مع استرداد» (owner 2026-11-02) for web and mobile: the sheet's refund lines,
-// the amount typed (lowered, never above the computed refund) and the POST body. Words and the
-// money format are injected (each app's `t.courseActions.stop`, its own money()).
+// «إلغاء فقط» / «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06) for web and mobile: the
+// sheet's lines and option labels with their computed amounts. Words and the money format are
+// injected (each app's `t.courseActions.stop`, its own money()).
 
+/** The sheet's mode: «إلغاء فقط» or «إلغاء مع استرداد». */
 export type RefundChoice = 'cancel' | 'refund';
 
 /** `t.courseActions.stop`'s refund lines. */
 export interface StopRefundWords {
   refundPaid: string;
   refundCharged: string;
-  refundTotal: string;
+}
+
+/** `t.courseActions.stop`'s option labels and the summary line. */
+export interface StopChoiceWords {
+  refundUnattended: string;
+  refundAll: string;
+  refundCustom: string;
+  oweAttended: string;
+  owePrice: string;
+  oweNothing: string;
+  oweCustom: string;
+  summary: string;
 }
 
 type Money = (amount: number) => string;
+interface Option<V extends string> {
+  value: V;
+  label: string;
+}
 
-/** «المدفوع», «الحلقات المحضورة: n × السعر × النسبة = …», «المبلغ المستحق للاسترداد». */
+/** «المدفوع», «الحلقات المحضورة: n × السعر × النسبة = …». */
 export function stopRefundLines(
   words: StopRefundWords,
   refund: StopRefund,
@@ -31,69 +42,45 @@ export function stopRefundLines(
     .replace('{price}', money(refund.perLesson))
     .replace('{rate}', String(refund.ratePercent))
     .replace('{amount}', money(refund.charged));
+  return [words.refundPaid.replace('{amount}', money(refund.paid)), charged];
+}
+
+const withAmount = (word: string, amount: string): string => word.replace('{amount}', amount);
+
+/** The refund options, the computed amount next to the first two (unattended is the default). */
+export function refundOptions(
+  words: StopChoiceWords,
+  calc: StopRefund,
+  money: Money,
+): Option<StopRefundChoice>[] {
   return [
-    words.refundPaid.replace('{amount}', money(refund.paid)),
-    charged,
-    words.refundTotal.replace('{amount}', money(refund.refund)),
+    { value: 'unattended', label: withAmount(words.refundUnattended, money(calc.refund)) },
+    { value: 'paid', label: withAmount(words.refundAll, money(calc.paid)) },
+    { value: 'custom', label: words.refundCustom },
   ];
 }
 
-/**
- * The amount the field holds (parseAmount: Arabic-Indic digits, «٫», at most 2 decimals, «1,500»
- * refused); empty = the computed refund. null = not a positive amount up to the computed refund.
- */
-export function refundAmountOf(
-  text: string,
-  input: { max: number; currency: string },
-): number | null {
-  const amount = text.trim() === '' ? input.max : parseAmount(text);
-  const bad = amount === null || refundAmountProblem(amount, input.max, input.currency) !== null;
-  return bad ? null : amount;
+/** What a plain stop leaves owed (attended × rate is the default), amounts shown. */
+export function oweOptions(
+  words: StopChoiceWords,
+  owe: StopOwe,
+  money: Money,
+): Option<StopOweChoice>[] {
+  return [
+    { value: 'attended', label: withAmount(words.oweAttended, money(owe.charged)) },
+    { value: 'price', label: withAmount(words.owePrice, money(owe.price)) },
+    { value: 'nothing', label: words.oweNothing },
+    { value: 'custom', label: words.oweCustom },
+  ];
 }
 
-/** The sheet's state: «إلغاء فقط» = no refund (valid); «إلغاء مع استرداد» = the typed amount. */
-export function stopRefundOf(input: {
-  choice: RefundChoice;
-  text: string;
-  refund: { max: number; currency: string };
-}): { refund: number | null; valid: boolean } {
-  const amount = input.choice === 'refund' ? refundAmountOf(input.text, input.refund) : null;
-  return { refund: amount, valid: input.choice === 'cancel' || amount !== null };
-}
-
-/** The refund lines when «إلغاء مع استرداد» is offered: the key and something to refund. */
-function offeredRefund(holds: boolean, refund: StopRefund | null | undefined): StopRefund | null {
-  return holds && refund && refund.refund > 0 ? refund : null;
-}
-
-/** What the sheet offers and asks: «إلغاء فقط» whenever the refund is not offered. */
-export function refundOffer(input: {
-  holds: boolean;
-  refund: StopRefund | null | undefined;
-  currency: string;
-  choice: RefundChoice;
-  text: string;
-}): { breakdown: StopRefund | null; asked: { refund: number | null; valid: boolean } } {
-  const breakdown = offeredRefund(input.holds, input.refund);
-  const max = { max: breakdown?.refund ?? 0, currency: input.currency };
-  const choice = breakdown ? input.choice : 'cancel';
-  return { breakdown, asked: stopRefundOf({ choice, text: input.text, refund: max }) };
-}
-
-interface BodyInput {
-  subscriptionId: string;
-  reason: string;
-  clientRequestId: string;
-  /** null = «إلغاء فقط». */
-  refund: number | null;
-}
-
-/** POST …/course-stop's body: `refund` only with «إلغاء مع استرداد». */
-export function courseStopBody(input: BodyInput): CourseStopRequest {
-  const body = {
-    subscriptionId: input.subscriptionId,
-    reason: input.reason.trim(),
-    clientRequestId: input.clientRequestId,
-  };
-  return input.refund === null ? body : { ...body, refund: { amount: input.refund } };
+/** «الاسترداد: … · المتبقي على الأسرة: …» before the confirm. */
+export function stopSummaryText(
+  words: Pick<StopChoiceWords, 'summary'>,
+  summary: { refund: number; due: number },
+  money: Money,
+): string {
+  return words.summary
+    .replace('{refund}', money(summary.refund))
+    .replace('{due}', money(summary.due));
 }
