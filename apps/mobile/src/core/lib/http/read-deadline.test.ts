@@ -88,14 +88,12 @@ test('only GET and HEAD are reads', () => {
   ]);
 });
 
-test('chat files and PDF pages get the slow deadline; every other read the normal one', () => {
+test('chat files, PDF pages and booking media: the slow deadline; other reads: normal', () => {
   const chat = '/threads/%2B9665/messages/m1';
+  const media = '/threads/%2B9665/media/m1';
   expect(
-    [`${chat}/file`, `${chat}/file?download=1`, `${chat}/pdf/2`].map(readTimeoutFor),
-  ).toEqual([SLOW_READ_TIMEOUT_MS, SLOW_READ_TIMEOUT_MS, SLOW_READ_TIMEOUT_MS]);
-  expect(['/threads?page=1', '/threads/%2B9665', `${chat}/files`].map(readTimeoutFor)).toEqual([
-    READ_TIMEOUT_MS,
-    READ_TIMEOUT_MS,
-    READ_TIMEOUT_MS,
-  ]);
+    [`${chat}/file`, `${chat}/file?download=1`, `${chat}/pdf/2`, media].map(readTimeoutFor),
+  ).toEqual(Array<number>(4).fill(SLOW_READ_TIMEOUT_MS));
+  const normal = ['/threads?page=1', '/threads/%2B9665', `${chat}/files`, `${media}/x`];
+  expect(normal.map(readTimeoutFor)).toEqual(Array<number>(4).fill(READ_TIMEOUT_MS));
 });
