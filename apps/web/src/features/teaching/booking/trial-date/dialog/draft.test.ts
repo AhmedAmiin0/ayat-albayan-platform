@@ -23,8 +23,14 @@ describe('trialDateDraft (owner 2026-10-25, R-SCH-06)', () => {
     expect(upcomingRow(h)).toBeNull();
   });
 
-  it('walks the reduced flow teacher → slot → review', () => {
-    expect(stepsOf(trialDateDraft({ student, history: history() }))).toEqual(['teacher', 'slot', 'review']);
+  it('walks teacher → length → slot → review (owner 2026-11-02: the length may change)', () => {
+    const steps = ['teacher', 'package', 'slot', 'review'];
+    expect(stepsOf(trialDateDraft({ student, history: history() }))).toEqual(steps);
+  });
+
+  it('keeps the last trial’s length', () => {
+    const hour = row({ starts_at: '2026-10-05T14:00:00.000Z', ends_at: '2026-10-05T15:00:00.000Z' });
+    expect(trialDateDraft({ student, history: history({ items: [hour] }) }).durationMin).toBe(60);
   });
 });
 

@@ -14,6 +14,10 @@ test('required (the default): the academy until the end; after it, «تصحيح 
   expect(salesCancelRights(lesson, { ...on, now: AFTER })).toEqual({ cancelBy: [], correct: ALL });
 });
 
+test('the correction stays offered once the setting is back ON (#619; the API decides)', () => {
+  expect(salesCancelRights({ ...lesson, status: 'completed' }, on).correct).not.toHaveLength(0);
+});
+
 test('not required: the three before the end, the teacher or the student after it', () => {
   expect(salesCancelRights(lesson, off).cancelBy).toEqual(['admin', 'teacher', 'student']);
   expect(salesCancelRights(lesson, { ...off, now: AFTER }).cancelBy).toEqual(['teacher', 'student']);

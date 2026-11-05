@@ -1,5 +1,4 @@
-import { DURATIONS, type Duration, type TrialHistory } from '@ab/shared';
-import { DEFAULT_MINUTES } from '@/booking/trial/lib/package-choice';
+import { trialLength, type Duration, type TrialHistory } from '@ab/shared';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
 /** What the trial-date wizard holds: the student, the family's zone, the length, the picks. */
@@ -11,6 +10,8 @@ export interface TrialDateDraft {
   /** Pre-selected as the last trial's teacher (history.items[0]); changeable. */
   teacher: { id: string; name: string } | null;
   startsAt: string | null;
+  /** «رابط الحلقة» (owner 2026-11-02): typed on the review; empty = the teacher's own link. */
+  meetingLink: string;
 }
 
 /** POST {base}/trial-date (and /check): a normal one-lesson trial booking of the one student. */
@@ -26,25 +27,25 @@ export interface TrialDateBody {
   startsOn: string;
   startsAt: string;
   clientRequestId: string;
-}
-
-/** The last trial's length when the slots API offers it (30/45/60/90), else the booking's 45. */
-export function trialLength(history: TrialHistory): Duration {
-  const last = history.items[0];
-  if (!last) return DEFAULT_MINUTES;
-  const min = Math.round((Date.parse(last.ends_at) - Date.parse(last.starts_at)) / 60_000);
-  return DURATIONS.find((d) => d === min) ?? DEFAULT_MINUTES;
+  meetingLink?: string;
 }
 
 export function trialDateDraft(history: TrialHistory): TrialDateDraft {
   return {
     studentId: history.student_id,
     tz: history.student_tz ?? history.family_tz, // as the web draft: the student's own zone first
-    durationMin: trialLength(history),
+    durationMin: trialLength(history), // the last trial's (shared), changeable on the slot step
     teacher: history.items[0]?.teacher ?? null,
     startsAt: null,
+    meetingLink: '',
   };
 }
+
+/** The typed link, trimmed; nothing when empty (the teacher's link then). */
+const linkOf = (link: string): { meetingLink?: string } => {
+  const meetingLink = link.trim();
+  return meetingLink ? { meetingLink } : {};
+};
 
 /** The body once a teacher and a time are picked: one lesson on the slot's local day (invariant 4). */
 export function trialDateBody(d: TrialDateDraft, requestId: string): TrialDateBody | null {
@@ -62,5 +63,6 @@ export function trialDateBody(d: TrialDateDraft, requestId: string): TrialDateBo
     startsOn: rule.startsOn,
     startsAt: d.startsAt,
     clientRequestId: requestId,
+    ...linkOf(d.meetingLink),
   };
 }
