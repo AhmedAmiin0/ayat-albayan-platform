@@ -11531,7 +11531,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/sales/sales-students/details/sales-student.part-paid.test.ts": {
