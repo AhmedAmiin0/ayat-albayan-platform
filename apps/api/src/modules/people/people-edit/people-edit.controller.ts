@@ -45,6 +45,8 @@ export class PeopleEditController {
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<PeopleEditView> {
+    // While the ownership rule is on, sales read only their own students (as the writes).
+    await this.owners.student(user, id);
     return viewFor(user, await this.views.view(id));
   }
 

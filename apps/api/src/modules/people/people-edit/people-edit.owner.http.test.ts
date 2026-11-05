@@ -21,6 +21,7 @@ describe('/people/* writes and the ownership rule', () => {
   });
 
   it.each([
+    { method: 'GET', url: `/people/students/${S}`, code: 'not_your_student' },
     {
       method: 'PATCH',
       url: `/people/students/${S}`,
@@ -44,14 +45,16 @@ describe('/people/* writes and the ownership rule', () => {
   ] as const)('$method $url → 403 $code, nothing written', async (route) => {
     const res = await call(app, { ...route, token: 'sales' });
     expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([403, route.code]);
-    const writes = [mocks.people, mocks.families, mocks.roles].flatMap((m) => Object.values(m));
+    const writes = [mocks.people, mocks.families, mocks.roles, mocks.views].flatMap((m) =>
+      Object.values(m),
+    );
     expect(writes.filter((fn) => fn.mock.calls.length > 0)).toEqual([]);
   });
 
   it('a move checks the family it resolves to (picked, or a «new» number that exists)', async () => {
     mocks.owners.student.mockResolvedValue(undefined);
-    type Owns = { owns: (id: string) => Promise<void> };
-    mocks.families.move.mockImplementation(({ owns }: Owns) => owns(G));
+    const owns = ({ owns: check }: { owns: (id: string) => Promise<void> }) => check(G);
+    mocks.families.move.mockImplementation(owns);
     const res = await call(app, {
       method: 'POST',
       url: `/people/students/${S}/guardian`,

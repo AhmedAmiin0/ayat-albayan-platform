@@ -1,4 +1,5 @@
 import type { FamilyOption, PeopleEditView } from '@ab/shared';
+import { z } from 'zod';
 import { newFamilyOf, type NewFamilyForm } from './people-edit-form.js';
 import type { PeopleWrite } from './people-edit-write.js';
 
@@ -71,8 +72,10 @@ function freshChoice(fresh: NewFamilyForm): { choice: MoveChoice | null; invalid
   return { choice, invalid: parsed.invalid };
 }
 
+/** A move body naming a «new» guardian (a picked family's body has no phone). */
+const freshBody = z.object({ guardian: z.object({ phone_e164: z.string() }) });
 const phoneOf = (body: MoveBody | undefined): string =>
-  body && 'guardian' in body ? body.guardian.phone_e164 : '';
+  freshBody.safeParse(body).data?.guardian.phone_e164 ?? '';
 
 /** A «new» guardian's number ('' for a picked family): the hooks look it up (familySearchKey). */
 export const freshPhoneOf = (choice: MoveChoice | null): string => phoneOf(choice?.body);

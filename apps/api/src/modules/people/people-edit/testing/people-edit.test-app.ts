@@ -25,7 +25,8 @@ import { RoleSwitchService } from '@/modules/people/people-edit/role-switch.serv
 import { StudentRecordsRepo } from '@/modules/people/people-edit/student-records.repo';
 
 // Test helper (not a test): the two /people controllers over mocked services. Tokens are base
-// roles; `sales-off` is a sales role whose admin switched the three people keys off.
+// roles; `sales-off` is a sales role whose admin switched the three people keys off; `admin-lite`
+// a custom role on the admin base without guardians.write.
 
 const OFF: readonly Permission[] = [
   'people.edit',
@@ -34,14 +35,20 @@ const OFF: readonly Permission[] = [
 ];
 type Role = 'admin' | 'sales' | 'teacher' | 'assistant' | 'guardian' | 'student';
 
+const CUSTOM: Record<string, { base: Role; off: readonly Permission[] } | undefined> = {
+  'sales-off': { base: 'sales', off: OFF },
+  'admin-lite': { base: 'admin', off: ['guardians.write'] },
+};
+
 const verify: TokenVerifier = async (token) => {
   await Promise.resolve();
-  const role: Role = token === 'sales-off' ? 'sales' : (token as Role);
+  const role: Role = CUSTOM[token]?.base ?? (token as Role);
   return { id: `${token}-1`, email: null, role };
 };
 const resolver: PermissionResolver = async (user) => {
   const all = await systemResolver(user);
-  return user.id === 'sales-off-1' ? all.filter((p) => !OFF.includes(p)) : all;
+  const off = CUSTOM[user.id.replace(/-1$/, '')]?.off ?? [];
+  return all.filter((p) => !off.includes(p));
 };
 
 export const mocks = {

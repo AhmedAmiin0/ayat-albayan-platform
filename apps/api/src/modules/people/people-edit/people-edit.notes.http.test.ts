@@ -56,8 +56,12 @@ describe('/people/* notes and the sales role', () => {
   it('a family edit names whether the actor is the admin (the main-number rule)', async () => {
     await send('sales', `/people/guardians/${G}`, { phone_e164: '+201000000009' });
     await send('admin', `/people/guardians/${G}`, { phone_e164: '+201000000009' });
-    expect(
-      mocks.people.editGuardian.mock.calls.map(([e]: [{ admin: boolean }]) => e.admin),
-    ).toEqual([false, true]);
+    // A custom role on the admin base without guardians.write stays bound by the rule.
+    await send('admin-lite', `/people/guardians/${G}`, { phone_e164: '+201000000009' });
+    expect(mocks.people.editGuardian.mock.calls).toEqual([
+      [expect.objectContaining({ admin: false })],
+      [expect.objectContaining({ admin: true })],
+      [expect.objectContaining({ admin: false })],
+    ]);
   });
 });

@@ -11,8 +11,13 @@ import { parseOrThrow } from '@/common/http/http';
 /** The sales base role never reads or writes notes (owner 2026-10-27 whitelist); others do. */
 const seesNotes = (user: AuthUser): boolean => user.role !== 'sales';
 
-/** The admin edits a family's main number whatever logins hang on it (audited). */
-export const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
+/**
+ * Who edits a family's main number whatever logins hang on it (audited): the holder of the admin's
+ * own guardians.write (PATCH /guardians/:id), resolved from the role actually held, never the
+ * base-role claim (a custom role on the admin base without it stays bound).
+ */
+export const isAdmin = (user: AuthUser): boolean =>
+  user.permissions?.includes('guardians.write') ?? false;
 
 function withoutNotes(view: PeopleEditView): PeopleEditView {
   // `notes` is dropped by the rest spreads.

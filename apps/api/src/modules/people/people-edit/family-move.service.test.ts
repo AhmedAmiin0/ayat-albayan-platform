@@ -6,7 +6,7 @@ import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditRepo } from './people-edit.repo';
 
-/** The ownership rule off: every family is hers. */
+type Move = Parameters<FamilyMoveService['move']>[0]['move'];
 const owns = (): Promise<void> => Promise.resolve();
 const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: false, profile_id: null };
 const FRESH = { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo', country: null };
@@ -110,11 +110,7 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
   });
 
   it('refuses the same family, an unknown one, a moved student and a taken phone, writing nothing', async () => {
-    const cases: [
-      Record<string, FakeResult[]>,
-      Parameters<FamilyMoveService['move']>[0]['move'],
-      string,
-    ][] = [
+    const cases: [Record<string, FakeResult[]>, Move, string][] = [
       [
         { students: [{ data: STUDENT }], guardians: [{ data: { id: 'g-old' } }] },
         { kind: 'existing', id: 'g-old' },
@@ -145,11 +141,8 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
     ];
     for (const [results, move, code] of cases) {
       const t = setup(results);
-      await expect(
-        t.service.move({ studentId: 's1', move, actorId: 'u1', owns }),
-      ).rejects.toMatchObject({
-        response: { code },
-      });
+      const input = { studentId: 's1', move, actorId: 'u1', owns };
+      await expect(t.service.move(input)).rejects.toMatchObject({ response: { code } });
       expect(t.trips).not.toContain('audit_log');
     }
   });
