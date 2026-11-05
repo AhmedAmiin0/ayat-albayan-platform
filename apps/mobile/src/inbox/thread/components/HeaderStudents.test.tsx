@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type TreeBase, TreeBaseProvider } from '@/core/nav/tree-base';
 import { child, CHILD_ID } from '../../subscription/people-fixtures';
 import { ChatHeader } from './ChatHeader';
-import { useHeaderStudents } from './HeaderStudents';
+import { studentLine, useHeaderStudents } from './HeaderStudents';
 
 // Owner 2026-10-29: tapping the chat's name or number opens the student's details, as WhatsApp's contact.
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
@@ -44,10 +44,14 @@ test('in the admin tree it opens the student file above the chat', async () => {
   expect(router.push).toHaveBeenCalledWith(`/inbox/student/${CHILD_ID}`);
 });
 
-test('several students: a sheet of «name · code», each opens its own', async () => {
-  await show([child(), child({ id: 's-2', name: 'مريم', code: 'AB-0200' })]);
+test('several students: a sheet of «name · code · status · teacher», each opens its own', async () => {
+  const second = child({ id: 's-2', name: 'مريم', code: 'AB-0200', status: 'paused', teacher_name: null });
+  await show([child(), second]);
   await fireEvent.press(names());
-  await fireEvent.press(within(screen.getByTestId('thread-menu')).getByRole('button', { name: 'مريم · AB-0200' }));
+  const label = `مريم · AB-0200 · ${t.enums.studentStatus.paused}`;
+  expect(studentLine(second)).toBe(label);
+  expect(studentLine(child())).toBe(`${child().name} · ${child().code} · ${t.enums.studentStatus.active} · مريم المعلمة`);
+  await fireEvent.press(within(screen.getByTestId('thread-menu')).getByRole('button', { name: label }));
   await waitFor(() => expect(router.push).toHaveBeenCalledWith('/sales/inbox/student/s-2'));
 });
 

@@ -34,7 +34,10 @@ type Token = 'salesA' | 'salesB' | 'admin' | 'teacher' | 'assistant';
 const studentRow = () => ({
   id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', tz: 'Africa/Cairo', notes: 'سر', meeting_link_override: 'https://x/secret',
   teacher: { display_name_ar: 'أبرار', phone_e164: '+201001234567' },
-  guardian: { phone_e164: '+966551110000', name: 'سر', email: 'secret@example.org' },
+  guardian: { phone_e164: '+966551110000', name: 'أم ياسمين', email: 'secret@example.org', students: [
+    { id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', notes: 'سر' },
+    { id: OTHER, code: 'AB-0102', name: 'مريم', status: 'paused', notes: 'سر' },
+  ] },
 });
 
 const pastLessons = (): AttendanceRow[] => [

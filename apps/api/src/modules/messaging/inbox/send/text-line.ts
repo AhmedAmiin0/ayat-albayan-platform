@@ -1,8 +1,7 @@
-import type { WaLine } from '@ab/shared';
+import { AWAITING_REPLY, type WaLine } from '@ab/shared';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { waHttpError } from '@/modules/messaging/whatsapp';
-import type { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { pickSend, type ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
@@ -10,6 +9,8 @@ import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper
 interface SendFromLine {
   line?: WaLine;
   number_id?: string;
+  /** AWAITING_REPLY: the window is closed, the sender holds it behind the reopen template. */
+  error_code?: typeof AWAITING_REPLY;
 }
 
 interface LineAt {
@@ -18,13 +19,10 @@ interface LineAt {
   windows: () => Promise<readonly ThreadWindow[]>;
 }
 
-interface TextLineAt extends LineAt {
-  phone: string;
-  /** Kapso's own conversation record (absent in a bare test: no reopen). */
-  kapso: Pick<KapsoReopener, 'reopen'> | undefined;
-}
-
-/** The chat line runs on the kapso driver (legacy: WA_CHAT_*; module mode: its default number). */
+/**
+ * The chat line runs on the kapso driver (legacy: WA_CHAT_*; module mode: its default number). A
+ * meta or crm chat line keeps 409 (its composer offers templates only after the window).
+ */
 const chatOnKapso = (): boolean => lineEnvs(loadEnv()).chat?.provider === 'kapso';
 
 const lineError = (code: SendLineCode) =>
@@ -42,23 +40,22 @@ export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<Se
 }
 
 /**
- * A free text's line (owner 2026-10-31, «try to send if the last conversation is older than 24
- * hours»): sendLine, except that with every window closed on a chat line that runs on Kapso it
- * is still tried from the chat line (its default number in module mode, as the claim stamps it).
- * First Kapso's own conversation record goes back to `active` (KapsoReopener: bounded, never
- * throws, logs the last 4 digits only); then WhatsApp decides: 131047 fails the row at once.
- * No thread (a number that never wrote), meta and crm chat lines: 409 as before.
+ * A free text's line (owner 2026-11-03, «not sent after 24h»): sendLine, except that with every
+ * window closed on a Kapso chat line (chatOnKapso) the row is queued from the chat line (its
+ * default number in module mode, as the claim stamps it) marked AWAITING_REPLY: the sender
+ * sends the reopen template first and holds the text until the family answers
+ * (whatsapp/sender/window). Never sent as free text. Kapso's conversation PATCH is gone:
+ * it never reopened WhatsApp's window. No thread (a number that never wrote), meta and crm: 409.
  */
-export async function textLine(thread: ThreadRow | null, at: TextLineAt): Promise<SendFromLine> {
+export async function textLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
   const picked = await pickSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;
   if (picked.code !== 'session_closed' || !chatOnKapso()) throw lineError(picked.code);
-  await at.kapso?.reopen(at.phone);
   const numberId = activeNumberId('chat');
-  return { line: 'chat', ...(numberId ? { number_id: numberId } : {}) };
+  return { line: 'chat', ...(numberId ? { number_id: numberId } : {}), error_code: AWAITING_REPLY };
 }
 
-interface ChatLineAt extends TextLineAt {
+interface ChatLineAt extends LineAt {
   /** Teacher mode (docs/19): the window still refuses (409), as for a teacher's text. */
   teacher: boolean;
 }
@@ -66,8 +63,8 @@ interface ChatLineAt extends TextLineAt {
 /**
  * The line of every staff send from a chat (owner 2026-11-01, «do the same as the messages»): a
  * text, a reply, a payment link typed into the box, a file or receipt, a sticker, a GIF and a
- * forward all leave as a text does: textLine (tried after the window on a Kapso chat line), and
- * sendLine in teacher mode. Templates and automatic notifications never come here.
+ * forward all leave as a text does: textLine (held behind the reopen template after the
+ * window), and sendLine in teacher mode. Templates and automatic notifications never come here.
  */
 export function chatLine(thread: ThreadRow | null, at: ChatLineAt): Promise<SendFromLine> {
   return at.teacher ? sendLine(thread, at) : textLine(thread, at);

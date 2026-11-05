@@ -12,7 +12,8 @@ type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/reopen`;
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const STALE = '2026-01-01T00:00:00Z';
-const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: ['contact_name'], buttons: [], body_ar: 'أهلًا {{1}}' });
+// Owner 2026-11-03: the reopen template is an approved chat-line starter with no variables.
+const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: [], buttons: [], body_ar: 'أهلًا', sales_starter: true });
 const reopen = (token = 'admin') => t.call({ method: 'POST', url: URL, token });
 let t: App;
 
@@ -28,7 +29,7 @@ describe('POST /threads/:phone/reopen', () => {
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);
     t.templates.get.mockResolvedValue(REOPEN);
-    t.reopens.requestedSince.mockResolvedValue(false);
+    t.reopens.nextKey.mockResolvedValue(reopenDedupKey(PHONE, new Date()));
     t.kapso.reopen.mockResolvedValue(true);
   });
 
@@ -47,16 +48,27 @@ describe('POST /threads/:phone/reopen', () => {
     expect(t.queries.enqueue).toHaveBeenCalledTimes(1);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       direction: 'outbound', status: 'queued', phone_e164: PHONE, created_by: ADMIN.id,
-      template_key: 'inquiry_followup_ar_v2', template_params: { '1': 'أم ياسمين' },
+      template_key: 'inquiry_followup_ar_v2', template_params: {},
       dedup_key: reopenDedupKey(PHONE, new Date()),
     }));
+    // It never goes out late: 24 h, as the sender's own reopen row (merge-gate review 2026-11-05).
+    const [[queued]] = t.queries.enqueue.mock.calls as [[{ expires_at?: string }]];
+    expect(Date.parse(queued.expires_at ?? '') - Date.now()).toBeGreaterThan(23 * 3_600_000);
     // The sender (and its gate) decides whether it goes out, as for any send; audited like the composer's.
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: ADMIN.id, action: 'thread_reopen_template', entityId: 'm9' }));
   });
 
-  it('a reopen row in the last 24 h: nothing queued', async () => {
-    t.reopens.requestedSince.mockResolvedValue(true);
+  it("today's first try failed: the next try's own key, so the dedup never swallows it", async () => {
+    t.reopens.nextKey.mockResolvedValue(`${reopenDedupKey(PHONE, new Date())}:2`);
+    expect((await reopen()).json().template).toBe('template_queued');
+    expect(t.queries.enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({ dedup_key: `${reopenDedupKey(PHONE, new Date())}:2` }),
+    );
+  });
+
+  it('a reopen pending or sent in the last 24 h (or no try left today): nothing queued', async () => {
+    t.reopens.nextKey.mockResolvedValue(null);
     const res = await reopen();
     expect(res.json()).toEqual({ kapso_reopened: true, template: 'already_requested_today' });
     expect(t.queries.enqueue).not.toHaveBeenCalled();
@@ -90,9 +102,11 @@ describe('POST /threads/:phone/reopen', () => {
     expect([res.statusCode, res.json()]).toEqual([200, { kapso_reopened: false, template: 'template_queued' }]);
   });
 
-  it('a variable it cannot fill: not_sent, nothing queued', async () => {
+  it('a template with a variable, or not a starter: template_unavailable, nothing queued', async () => {
     t.templates.get.mockResolvedValue({ ...REOPEN, params: ['var_1'] });
-    expect((await reopen()).json().template).toBe('not_sent');
+    expect((await reopen()).json().template).toBe('template_unavailable');
+    t.templates.get.mockResolvedValue({ ...REOPEN, sales_starter: false });
+    expect((await reopen()).json().template).toBe('template_unavailable');
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 

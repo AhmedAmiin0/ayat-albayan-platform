@@ -22,7 +22,7 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
     expect(failurePlan({ error: meta(130429), attempts: 3, now: NOW })).toMatchObject({ status: 'failed', next_attempt_at: null });
   });
 
-  it.each([131026, 132001, 131047, 132000, 132015, 100])('Meta %i fails at once, with code and text stored', (code) => {
+  it.each([131026, 132001, 132000, 132015, 100])('Meta %i fails at once, with code and text stored', (code) => {
     expect(failurePlan({ error: meta(code), attempts: 1, now: NOW })).toEqual({
       status: 'failed',
       next_attempt_at: null,

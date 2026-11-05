@@ -3887,7 +3887,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-client.test.ts": {
@@ -4049,7 +4049,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/modules/messaging/inbox/files/thread-file-send.voice.test.ts": {
@@ -4427,12 +4427,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen.repo.ts": {
-    "max-len": {
-      "count": 3
+      "count": 6
     }
   },
   "src/modules/messaging/inbox/reopen/reopen.settings.ts": {
@@ -4440,7 +4435,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/reopen/thread-reopen.calls.http.test.ts": {
@@ -4496,7 +4491,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/sales-threads/sales-threads.test.ts": {
@@ -4933,7 +4928,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/inbox/threads/threads.teacher-send.http.test.ts": {
@@ -7302,7 +7297,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 9
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
@@ -11570,7 +11565,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.repo.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/sales/sales-students/details/sales-student.service.ts": {

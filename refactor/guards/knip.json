@@ -103,7 +103,6 @@
   "apps/api/src/modules/teaching/lessons/status/lesson-status.service.ts types ConfirmInput",
   "apps/api/src/modules/teaching/lessons/status/lesson-status.service.ts types StatusInput",
   "apps/api/src/modules/teaching/lessons/status/outcomes.ts exports ATTENDANCE",
-  "apps/api/src/modules/teaching/lessons/store/lesson-store.ts types Commit",
   "apps/api/src/modules/teaching/lessons/test-app.ts types InjectArgs",
   "apps/api/src/modules/teaching/lessons/time-edit/time-edit.fakes.ts exports ADMIN",
   "apps/api/src/modules/teaching/scheduling/conflicts/conflict-checker.ts types CheckInput",
