@@ -32,7 +32,6 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
 import { StartDateEditController } from './start-date-edit/start-date-edit.controller';
 import { StartDateEditRepo } from './start-date-edit/start-date-edit.repo';
 import { StartDateEdit } from './start-date-edit/start-date-edit.service';
-import { UsedBeforeEditController } from './used-before-edit/used-before-edit.controller';
 import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
 import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
@@ -52,7 +51,6 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsController,
     StudentBalanceController,
     AdminTasksController,
-    UsedBeforeEditController,
     StartDateEditController,
   ],
   providers: [
@@ -101,6 +99,7 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsRepo,
     SubscriptionsService,
     UnpaidFlags,
+    UsedBeforeEdit,
   ],
 })
 export class SubscriptionsModule {}
