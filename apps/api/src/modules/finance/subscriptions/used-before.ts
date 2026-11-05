@@ -26,8 +26,8 @@ export function assertUsedBefore(input: UsedBeforeCheck, user: AuthUser, now = n
 }
 
 /**
- * Never the whole package (the subscriptions check, migration 932), and one lesson left per course day
- * (usedBeforeMax: 8 lessons, 2 days a week, at most 6), else the course cannot book its days.
+ * Never the whole package (the subscriptions check, migration 932): every lesson but one (usedBeforeMax,
+ * owner 2026-11-02: 8 lessons, at most 7, whatever the days a week).
  */
 export function assertUsedBeforeFits(lessonsUsedBefore: number | undefined, lessonsTotal: number): void {
   const n = lessonsUsedBefore ?? 0;

@@ -24,12 +24,13 @@ export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin'
  * same body as the booking check; keyed without its idempotency key and meeting link.
  */
 export const trialDateCheckQuery = (body: BookingBody, mode: BookingMode = 'admin') => {
-  const key: Partial<BookingBody> = { ...body };
+  const probe: Partial<BookingBody> = { ...body };
+  delete probe.meetingLink; // never sent: the link is validated on the booking itself
+  const key = { ...probe };
   delete key.clientRequestId;
-  delete key.meetingLink;
   return queryOptions({
     queryKey: ['booking', mode, 'trial-date-check', JSON.stringify(key)],
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/trial-date/check`, body),
+    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/trial-date/check`, probe),
     retry: false,
   });
 };

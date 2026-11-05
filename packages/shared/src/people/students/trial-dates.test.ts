@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { STUDENT_STATUSES } from '@ab/catalog';
-import { canPickTrialDate, trialOutcome, upcomingTrial, warnsTrialDate } from './trial-dates.js';
+import { canPickTrialDate, trialLength, trialOutcome, upcomingTrial, warnsTrialDate } from './trial-dates.js';
 
 const NOW = new Date('2026-10-25T12:00:00Z');
 const AHEAD = '2026-10-26T15:00:00Z';
@@ -57,5 +57,18 @@ describe('who may get a new date and when the form warns', () => {
     expect(warnsTrialDate(1)).toBe(false);
     expect(warnsTrialDate(2)).toBe(true);
     expect(warnsTrialDate(7)).toBe(true);
+  });
+});
+
+describe('trialLength: the last trial’s length for the new date', () => {
+  const base = { lesson_id: 'l', teacher: null, outcome: 'upcoming' as const, picked_by: null };
+  const row = (starts_at: string, ends_at: string) =>
+    ({ ...base, starts_at, ends_at, picked_at: starts_at, moved_from_id: null });
+  it('the newest pick’s minutes when the slots offer them, else 45', () => {
+    const hour = row('2026-10-01T15:00:00Z', '2026-10-01T16:00:00Z');
+    const half = row('2026-09-01T15:00:00Z', '2026-09-01T15:30:00Z');
+    expect(trialLength({ items: [hour, half] })).toBe(60);
+    expect(trialLength({ items: [row('2026-10-01T15:00:00Z', '2026-10-01T15:20:00Z')] })).toBe(45);
+    expect(trialLength({ items: [] })).toBe(45);
   });
 });
