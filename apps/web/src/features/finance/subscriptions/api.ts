@@ -1,3 +1,4 @@
+import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
 import type {
   AdminTaskView,
   QuoteResponse,
@@ -74,5 +75,21 @@ export const createSubscription = (body: CreateSubscriptionBody) =>
 /** «إلغاء الباقة» (owner 2026-10-28): 409 has_payments / has_lessons / already_cancelled. */
 export const cancelSubscription = (id: string, body: { reason?: string }) =>
   apiSend<SubscriptionView>('POST', `/subscriptions/${id}/cancel`, body);
+
+/** «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins, assistants; 409 with a course. */
+export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
+  apiSend('PATCH', `/subscriptions/${id}/lessons-used-before`, { lessonsUsedBefore }).then(
+    (raw: unknown) => usedBeforeEditResultSchema.parse(raw),
+  );
+
+/** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
+export const usedBeforeStateQuery = (id: string) =>
+  queryOptions({
+    queryKey: [...MONEY_KEY, 'used-before', id],
+    queryFn: () =>
+      apiFetch(`/subscriptions/${id}/lessons-used-before`).then((raw: unknown) =>
+        usedBeforeStateSchema.parse(raw),
+      ),
+  });
 
 export const completeTask = (id: string) => apiSend<AdminTaskView>('POST', `/admin-tasks/${id}/done`);

@@ -28,13 +28,15 @@ export function useTrialHistory(studentId: string, enabled = true) {
 
 /**
  * POST {base}/trial-date/check on the review: the clashes of the picked time ([] = free), asked
- * again whenever the picked time or teacher changes (the request id is not part of the key).
+ * again whenever the picked time, length or teacher changes (neither the request id nor the typed
+ * meeting link is part of the key or the probe: typing the link never re-checks).
  */
 export function useTrialDateCheck(body: TrialDateBody | null) {
   const path = bookingPath(useBookingMode(), '/trial-date/check');
+  const probe = body ? { ...body, meetingLink: undefined } : null;
   return useQuery({
-    queryKey: [...pathKey(path), body ? { ...body, clientRequestId: undefined } : null],
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', path, body),
+    queryKey: [...pathKey(path), probe ? { ...probe, clientRequestId: undefined } : null],
+    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', path, probe),
     enabled: body !== null,
     gcTime: 0,
   });

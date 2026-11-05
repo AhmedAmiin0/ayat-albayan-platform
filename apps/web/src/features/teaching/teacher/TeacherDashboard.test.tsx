@@ -6,7 +6,6 @@ import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixt
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherDashboard } from './TeacherDashboard';
-import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -35,12 +34,17 @@ const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 
 function renderDash(me: TeacherMe | Error = ME, auto = false, lessons: LessonView[] = [TODAY, MONDAY]) {
   apiFetch.mockImplementation((path: string) => {
     if (path === '/teachers/me') return me instanceof Error ? Promise.reject(me) : Promise.resolve(me);
-    if (path === '/settings/public') return Promise.resolve({ ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+    // An academy that still requires lesson confirmation (the confirm button is asserted below).
+    const config = {
+      ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto, lesson_confirmation_required: true,
+    };
+    if (path === '/settings/public') return Promise.resolve(config);
     if (path.startsWith('/teachers/me/lessons')) return Promise.resolve(lessons);
     return Promise.resolve([]);
   });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
-    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
+    <QueryClientProvider client={client}>
       <TeacherDashboard />
     </QueryClientProvider>,
   );
