@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
-import { cardRow, kit, listed, planOf, REQ, row, SUB } from './stop-refund.fakes';
+import { cardRow, kit, listed, planOf, REQ, row } from './stop-refund.fakes';
 
 // Reviewed money cases (owner 2026-11-02): pending refunds, converted / 3-decimal cards, replays.
 const actor = { id: 'a1', reason: 'سفر' };

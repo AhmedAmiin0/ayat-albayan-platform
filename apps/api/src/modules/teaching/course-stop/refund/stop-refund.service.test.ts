@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
 import { cardRefundKey } from './stop-refund.cards';
-import { cardRow, kit, listed, planOf, REQ, row, SUB } from './stop-refund.fakes';
+import { cardRow, kit, listed, planOf, REQ, row } from './stop-refund.fakes';
 import { manualRefundKey } from './stop-refund.plan';
 
 // «إلغاء مع استرداد» (owner 2026-11-02): card first through Stripe (the webhook records the row),
