@@ -8,10 +8,10 @@ import { ShareScreen } from './ShareScreen';
 // The share chooser's tests: two families' chats and the teacher's own academy chat (test numbers).
 
 export const FAMILY = '+201000000001';
-export const OTHER = '+201000000002';
-export const OWN = '+201000000009';
+const OTHER = '+201000000002';
+const OWN = '+201000000009';
 
-export const chats: ThreadView[] = [
+const chats: ThreadView[] = [
   { ...thread, phone_e164: FAMILY, display_name: 'أم سارة', lead_id: null },
   { ...thread, phone_e164: OTHER, display_name: 'أبو خالد', lead_id: null },
   { ...thread, phone_e164: OWN, display_name: 'المعلمة نور', teacher_id: 't-1', lead_id: null },

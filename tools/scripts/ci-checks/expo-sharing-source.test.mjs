@@ -1,5 +1,5 @@
-// docs/38 «Review corrections» 1 (BLOCKING): expo-sharing ships a prebuilt AAR (local-maven-repo) and
-// Gradle links it unless autolinking lists the package in buildFromSource; the pnpm patch to
+// docs/38 «Review corrections» 1 (BLOCKING): expo-sharing ships a prebuilt AAR (local-maven-repo)
+// and Gradle links it unless autolinking lists the package in buildFromSource; the pnpm patch to
 // ResolvingShareIntentDataParser.kt (a "../" display name, same-named files) would then never be
 // compiled. This asks the autolinking resolver itself, as the Gradle settings plugin does on EAS
 // (SettingsManager: shouldUsePublication = !buildFromSourceRegex.matches(project.name) && …).

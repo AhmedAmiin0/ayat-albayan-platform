@@ -15,7 +15,7 @@ export interface ShareStep {
 }
 
 /** What is left after a send: the chat it went to and the files it could not send. */
-export interface ShareOutcome {
+interface ShareOutcome {
   phone: string;
   failed: FailedShare[];
 }
