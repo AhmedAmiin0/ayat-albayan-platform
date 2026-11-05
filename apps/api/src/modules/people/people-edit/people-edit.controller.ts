@@ -22,7 +22,11 @@ import { PeopleOwnership } from './access/people-ownership';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
-const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
+/**
+ * The admin as the role actually held: the admin's own guardians.write (PATCH /guardians/:id),
+ * never the base-role claim, so a custom role on the admin base without it stays bound.
+ */
+const isAdmin = (user: AuthUser): boolean => user.permissions?.includes('guardians.write') ?? false;
 /** Notes stay the admin's (owner 2026-10-27): anyone else's `notes` key answers 400. */
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
@@ -46,10 +50,12 @@ export class PeopleEditController {
   ) {}
 
   @Get('students/:id')
-  view(
+  async view(
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<PeopleEditView> {
+    // While the ownership rule is on, sales read only their own students (as the writes).
+    await this.owners.student(user, id);
     return this.views.view(id, isAdmin(user));
   }
 

@@ -21,6 +21,7 @@ describe('/people/* writes and the ownership rule', () => {
   });
 
   it.each([
+    { method: 'GET', url: `/people/students/${S}`, code: 'not_your_student' },
     {
       method: 'PATCH',
       url: `/people/students/${S}`,
@@ -44,7 +45,9 @@ describe('/people/* writes and the ownership rule', () => {
   ] as const)('$method $url → 403 $code, nothing written', async (route) => {
     const res = await call(app, { ...route, token: 'sales' });
     expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([403, route.code]);
-    const writes = [mocks.people, mocks.families, mocks.roles].flatMap((m) => Object.values(m));
+    const writes = [mocks.people, mocks.families, mocks.roles, mocks.views].flatMap((m) =>
+      Object.values(m),
+    );
     expect(writes.filter((fn) => fn.mock.calls.length > 0)).toEqual([]);
   });
 

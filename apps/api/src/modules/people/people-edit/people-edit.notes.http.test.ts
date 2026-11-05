@@ -51,4 +51,14 @@ describe('/people/* and notes', () => {
       [S, true],
     ]);
   });
+
+  it('a custom role on the admin base without guardians.write is not the admin', async () => {
+    expect((await patch('admin-lite', STUDENT)).statusCode).toBe(400);
+    await patch('admin-lite', { url: FAMILY.url, payload: { phone_e164: '+201000000009' } });
+    expect(mocks.people.editGuardian).toHaveBeenLastCalledWith(
+      expect.objectContaining({ admin: false }),
+    );
+    await call(app, { method: 'GET', url: `/people/students/${S}`, token: 'admin-lite' });
+    expect(mocks.views.view).toHaveBeenLastCalledWith(S, false);
+  });
 });
