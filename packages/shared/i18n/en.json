@@ -3740,7 +3740,7 @@
     },
     "payment_received": {
       "title": "Payment received",
-      "body": "{student}: {amount} {currency}"
+      "body": "{student}: {amount}"
     }
   },
   "bell": {

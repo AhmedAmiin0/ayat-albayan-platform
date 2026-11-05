@@ -3740,7 +3740,7 @@
     },
     "payment_received": {
       "title": "تم استلام دفعة",
-      "body": "{student}: {amount} {currency}"
+      "body": "{student}: {amount}"
     }
   },
   "bell": {

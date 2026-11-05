@@ -49,7 +49,7 @@ describe('every recorded payment → «تم استلام دفعة», after the r
       kind: 'payment_received',
       profileIds: [OTHER_ADMIN, SALES_A.id],
       subject: `payment:${PAYMENT_ID}`,
-      vars: { student: 'سهيلة', amount: 145, currency: 'SAR' },
+      vars: { student: 'سهيلة', amount: '145 SAR' },
       data: { studentId: STUDENT_ID },
     }));
   });

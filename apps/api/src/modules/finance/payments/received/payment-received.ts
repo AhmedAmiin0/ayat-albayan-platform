@@ -1,4 +1,4 @@
-import type { PaymentKind } from '@ab/shared';
+import { formatAmount, type PaymentKind } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import type { PaymentRow } from '@/modules/finance/payments/payments.repo';
@@ -39,6 +39,12 @@ function studentOf(sub: PaymentRow['subscription']): Pick<ReceivedPayment, 'stud
 const isIncoming = (p: ReceivedPayment): boolean => p.kind === 'payment';
 
 /**
+ * ONE var, sum and currency together («1,200 EGP»), as payment_due's {left}: the lock screen masks
+ * it (owner 2026-10-25: no money on a lock screen); the bell row keeps it.
+ */
+const amountText = (p: ReceivedPayment): string => `${formatAmount(p.amount)} ${p.currency}`;
+
+/**
  * «تم استلام دفعة» (owner 2026-11-05): an incoming payment → every admin and the student's
  * following assistant, minus who recorded it; a bell row and a device push (payment_received, its
  * own rule). Once per payment (subject `payment:<id>`, PushService's dedup key); a refund tells
@@ -66,7 +72,7 @@ export class PaymentReceived {
         kind: 'payment_received',
         profileIds: receivedRecipients({ admins, owners: [...owners, ...also], recorderId }),
         subject: `payment:${payment.id}`,
-        vars: { student: payment.student, amount: payment.amount, currency: payment.currency },
+        vars: { student: payment.student, amount: amountText(payment) },
         ...(payment.studentId ? { data: { studentId: payment.studentId } } : {}),
       });
     } catch (e) {

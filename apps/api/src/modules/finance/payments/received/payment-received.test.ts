@@ -49,6 +49,8 @@ describe('PaymentReceived («تم استلام دفعة», payment_received)', (
     });
     expect(s.transport).toHaveBeenCalledWith([expect.objectContaining({ to: 'ExponentPushToken[a1]' })]);
     expect(s.transport).toHaveBeenCalledWith([expect.objectContaining({ to: 'ExponentPushToken[s1]' })]);
+    // The lock screen: the sum masked, no digit of it (owner 2026-10-25).
+    expect(s.transport).toHaveBeenCalledWith([expect.objectContaining({ body: 'سهيلة: •••' })]);
   });
 
   it('who recorded it is not told; a disabled admin never is', async () => {
