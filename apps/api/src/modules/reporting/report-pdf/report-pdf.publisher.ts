@@ -10,6 +10,7 @@ import { toMessage, toModel } from './report-pdf.mapper';
 import { ReportPdfSource } from './report-pdf.source';
 import type { ReportReadyMessage } from './report-ready';
 import { ReportPdfSettings } from './report-pdf.settings';
+import { ReportFeedbackLink } from './report-feedback-link';
 import { reportHtml } from './template/template';
 import { toFamilyModel } from './v2/family-model';
 import { familyHtml } from './v2/family-template';
@@ -30,10 +31,17 @@ export class ReportPdfPublisher {
 
   private readonly log = new Logger(ReportPdfPublisher.name);
 
-  /** Property injection keeps the constructor at three parameters; required (a missing provider fails at boot). */
+  /**
+   * Property injection keeps the constructor at three parameters; required (a missing provider
+   * fails at boot).
+   */
   @Inject(ReportPdfSettings) private readonly settings!: ReportPdfSettings;
+  @Inject(ReportFeedbackLink) private readonly feedback!: ReportFeedbackLink;
 
-  /** Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). Same path and message for v1 and v2. */
+  /**
+   * Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). Same path and
+   * message for v1 and v2.
+   */
   async publish(reportId: string, now: Date): Promise<Published> {
     const source = await this.source.load(reportId, now);
     if (!source) throw new Error('report not found');
@@ -45,10 +53,14 @@ export class ReportPdfPublisher {
     const { student_id: studentId, lesson_id: lessonId } = source.report;
     const path = reportPdfPath({ studentId, lessonId });
     await this.storage.upload({ bucket: BUCKETS.reports, path, body, contentType: 'application/pdf' });
-    return { path, message: toMessage(source, path, now) };
+    const feedbackUrl = await this.feedback.url({ lessonId, studentId }, now);
+    return { path, message: toMessage(source, { pdfPath: path, feedbackUrl }, now) };
   }
 
-  /** The footer's contact from settings; a failed read is logged and the built-in contact is printed. */
+  /**
+   * The footer's contact from settings; a failed read is logged and the built-in contact is
+   * printed.
+   */
   private async contact(): Promise<PdfContact | undefined> {
     try {
       return pdfContact(await this.settings.read());

@@ -33,8 +33,15 @@ export function toModel(source: ReportSource, now: Date): ReportPdfModel {
   };
 }
 
-/** The report_ready message for the PDF stored at `pdfPath`. */
-export function toMessage(source: ReportSource, pdfPath: string, now: Date): ReportReadyMessage {
+/**
+ * The report_ready message for the PDF stored at `pdfPath`, with the family's feedback link
+ * ({{4}}).
+ */
+export function toMessage(
+  source: ReportSource,
+  at: { pdfPath: string; feedbackUrl: string },
+  now: Date,
+): ReportReadyMessage {
   return reportReadyMessage(
     {
       reportId: source.report.id,
@@ -43,7 +50,9 @@ export function toMessage(source: ReportSource, pdfPath: string, now: Date): Rep
       studentCode: source.student.code,
       startsAt: new Date(source.lesson.starts_at),
       guardian: source.guardian,
-      pdfPath,
+      pdfPath: at.pdfPath,
+      teacherName: source.teacher.display_name_ar,
+      feedbackUrl: at.feedbackUrl,
       trial: source.lesson.trial === true,
     },
     now,

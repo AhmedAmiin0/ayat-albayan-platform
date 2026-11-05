@@ -2,7 +2,8 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { syncNumber } from '../../support/messaging/template-numbers';
 import {
-  restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, type TemplateRow,
+  restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, unmapTemplate,
+  type TemplateRow,
 } from '../../support/messaging/template-registry';
 import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
@@ -33,6 +34,9 @@ test.describe('templates — health check and submit', () => {
     saved = await snapshotTemplates();
     await stubReset(); // the 8 default templates approved, the other 5 absent
     await setTemplateStatus({ key: 'lesson_reminder', status: 'approved' });
+    // The platform's own report_ready (not the WABA's session_report_pdf), as before migration 301.
+    await unmapTemplate('report_ready');
+    await setTemplateStatus({ key: 'report_ready', status: 'not_submitted' });
   });
   test.afterEach(async () => {
     await restoreTemplates(saved);

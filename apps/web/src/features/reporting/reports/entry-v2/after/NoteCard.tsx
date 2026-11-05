@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { AttachmentsField } from '@/features/reporting/reports/entry/AttachmentsField';
 import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
 import { ToggleChips } from '@/features/reporting/reports/entry-v2/ToggleChips';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 import { CARD, CARD_TITLE, OPTIONAL } from '@/features/reporting/reports/entry-v2/v2-classes';
 
 export interface NoteCardProps {
@@ -19,6 +20,7 @@ const toggled = (list: readonly QuickNote[], q: QuickNote) => (list.includes(q) 
 export function NoteCard({ s, report }: NoteCardProps) {
   const v2 = t.reports.v2;
   const id = useId();
+  const { attachments } = useReportApi();
   const options = QUICK_NOTES.map((q) => ({ value: q, label: v2.quick[q] }));
   return (
     <section aria-label={v2.note} className={CARD}>
@@ -40,7 +42,10 @@ export function NoteCard({ s, report }: NoteCardProps) {
         onChange={(e) => s.set('notes', e.target.value)}
         className={cn(controlClass, 'field-sizing-content min-h-20 py-2 leading-relaxed')}
       />
-      <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={report.can_edit} addLabel={t.reports.v2.attach} />
+      {attachments && (
+        <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments}
+          editable={report.can_edit} addLabel={t.reports.v2.attach} />
+      )}
     </section>
   );
 }

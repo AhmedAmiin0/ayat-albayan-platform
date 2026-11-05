@@ -50,7 +50,7 @@ export class ReportsQueries {
    * One draft per student on the lesson, created on first open (R-REP-04: unique (lesson_id,
    * student_id), `do nothing` → idempotent). Attendance already marked on the lesson is prefilled.
    */
-  async ensureDrafts(lesson: ReportLessonRow, opts: { actorId: string; formVersion: 1 | 2 }): Promise<void> {
+  async ensureDrafts(lesson: ReportLessonRow, opts: { actorId: string | null; formVersion: 1 | 2 }): Promise<void> {
     const { actorId, formVersion } = opts;
     const rows = lesson.lesson_students.map((s) => ({
       lesson_id: lesson.id,
@@ -98,7 +98,9 @@ export class ReportsQueries {
     return data;
   }
 
-  /** submit_report (migration 130): 409 version_conflict / lesson_cancelled / invalid_transition. */
+  /**
+   * submit_report (migration 130): 409 version_conflict / lesson_cancelled / invalid_transition.
+   */
   submit(payload: SubmitPayload): Promise<void> {
     return callSubmitReport(this.db, payload);
   }

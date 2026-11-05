@@ -477,5 +477,11 @@
   "WebPushController.subscribe": ["admin","assistant","sales","teacher"],
   "WebPushController.unsubscribe": ["admin","assistant","sales","teacher"],
   "WebhookController.challenge": "public",
-  "WebhookController.receive": "public"
+  "WebhookController.receive": "public",
+  "TeacherLinkController.form": "public",
+  "TeacherLinkController.draft": "public",
+  "TeacherLinkController.submit": "public",
+  "TeacherLinkController.draftV2": "public",
+  "TeacherLinkController.submitV2": "public",
+  "ShortLinksController.go": "public"
 }

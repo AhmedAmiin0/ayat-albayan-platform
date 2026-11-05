@@ -231,8 +231,8 @@ Meta values, never the producer's CRM values.
 |---|---|---|
 | `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
 | `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
-| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons |
-| `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
+| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons; `<report>` is the teacher's short no-login report link («Teacher report link» below) |
+| `report_ready` | `session_report_pdf` (since 2026-11-05: `crm_name` set by migration `20261105000301`) | ONE template call: header DOCUMENT = the report PDF (7-day signed URL); body [student, the lesson date `dd/MM/yyyy` in the guardian's tz, the teacher's display name, the family's «رأيك يهمّنا» short link]; trial lessons too («Report flow» below). The old two-call flow (`report_session` / `report_trial_session`) is still in the code but those templates are PENDING_DELETION on Meta: never set them |
 
 The teacher alert's CRM values are built by `teacherLessonCrm`, the teacher reminder's by `teacherReminderCrm`
 (both `reminders/plan/teacher-lesson.crm.ts`; the reminder read adds `students.code`), into `template_params.crm`
@@ -240,12 +240,64 @@ beside the Meta values (the alert's {{1}}–{{3}}, the reminder's {{1}}–{{2}} 
 unchanged). The reminder's line is one line for Meta (no newline, no tab, never 4 spaces in a row); its texts are
 `templates.teacherReminderCrm` / `teacherReminderCrmStudent` in ar.json; `<join>` is the lesson's own link as the
 reminders send it (Meet, the teacher's fixed link, our classroom when LiveKit runs it), else our classroom, and
-`<report>` the teacher's report form, both absolute (`<WEB_ORIGIN>/classroom/<id>`, `<WEB_ORIGIN>/teacher/report/<id>`,
-login required); an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
+`<report>` the teacher's no-login report link for that lesson, shortened (`<API>/r/<code>`, «Teacher report link»);
+our own classroom page is shortened too (a Meet or a teacher's fixed link is sent as it is). Without the secret or
+the web origin, or when a short link fails, the long pages go (`<WEB_ORIGIN>/classroom/<id>`,
+`<WEB_ORIGIN>/teacher/report/<id>`, login required). The same one-line {{2}} goes on the crm driver and on the
+meta driver's WABA path (#622), since both send `params.crm.body` for `teacher_lesson_reminder`; an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
 name carries the CRM values even when it equals `meta_name` (`teacher_lesson_reminder`). A row without its `crm`
 part (queued before this change, or a value missing: no teacher name, a student without a name or code, no web
 origin, the alert's end time) goes as before, `meta_name` with the Meta values (`crmRowName`): a `_meet` row then
 asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's crm_name is always sent as set.
+
+### Short links (owner 2026-11-05: «make an in-house URL shortener instead of Vercel»)
+
+The platform makes its own short links and **no longer uses the old Vercel redirector**
+(`vercelayat-r.vercel.app`). Table `short_links` (migration `20261105000300`: `code` ≥ 8 base62 characters from
+crypto random, `target_url`, `kind`, `subject`, `created_at`, `expires_at` null = never; `unique (kind, subject)`;
+RLS on with no client policy: service role only). `GET <API>/r/<code>` (public, rate-limited 60 a minute per IP
+and 20 per IP and code, shared through `rate_limit_take`) answers 302 to the target, unknown or expired 404 with
+a short Arabic text (`shortLinks.notFound`), never cached. **No open redirect**: only the server writes targets,
+and `ShortLinks.forTarget({ kind, subject, url, expiresAt })` refuses any target that is not https on our own
+origins (every `WEB_ORIGIN`, `API_PUBLIC_URL`) or `meet.google.com` (no other host, no http, no `javascript:`, no
+user:password, no other port). Idempotent: the same kind + subject keeps its code, its target and expiry
+refreshed. The base is the setting `short_link_base` («القيم» → التقارير; empty = `API_PUBLIC_URL` + `/r/`), so
+a short domain later is that one value (it must serve `/r/<code>` from the API). Kinds: `teacher_report`
+(subject = lesson id), `classroom` (lesson id), `feedback` (`<lesson id>:<student id>`). Code:
+`apps/api/src/modules/platform/short-links/`.
+
+### Teacher report link (owner 2026-11-05: «activate reports from teacher»)
+
+9 of 11 teachers have no platform account, so the reminder's report link needs no login. The token is
+`base64url(lessonId | teacherId | exp).signature` (71 characters, `common/http/pair-token.ts`), an HMAC with the
+existing `FEEDBACK_TOKEN_SECRET` under its own context (a family's feedback token never opens a report and the
+reverse). It grants ONLY that lesson's report for that lesson's teacher: `GET /public/teacher-report/:token` (the
+form, drafts made on first open), `PUT …/reports/:id/draft`, `POST …/reports/:id/submit` and the v2 pair
+(`…/reports/:id/v2/draft|submit`). Every call checks again: the signature and its expiry, the lesson still taught
+by that teacher (404 `link_not_found`), from the lesson's start (409 `link_not_open`) until its end +
+`report_teacher_edit_hours` (410 `link_expired`), the report one of that lesson (404). The writes run the SAME
+services as the signed-in routes (`ReportsService`, `ReportSubmitService`, `ReportV2Service` with a `LinkCaller`),
+so drafts, versions, the lesson outcome, the PDF and report_ready behave exactly the same; the edit window after a
+submit is the teacher's (`canEditReport`). Actor = the teacher's auth user when they have one, else none; a
+submit also writes an audit row `teacher_link_submit` naming the teacher and the lesson. Rate-limited (120 a
+minute per IP, 60 per IP and link). No attachments on the link (they need a session). Web page: `/teacher-report/<token>`
+(no sign-in); signed-in teachers keep `/teacher/report/<id>`. The reminder carries it as `<API>/r/<code>` (kind
+`teacher_report`, expiring with the token). Code: `apps/api/src/modules/reporting/reports/teacher-link/`.
+
+### Report flow: report_ready → session_report_pdf (owner 2026-11-05)
+
+`report_ready` goes as the WABA's approved `session_report_pdf` (ar, Utility) on the notifications line, the same
+name on the crm driver and on Meta direct (#622): migration `20261105000301` sets only the report_ready row
+(`crm_name` / `crm_language`, `header_format` document, its four-value body, status approved). Values
+(`report-ready.ts`): header = the PDF; {{1}} the student's name, {{2}} the lesson date `dd/MM/yyyy` in the
+guardian's tz, {{3}} the teacher's display name, {{4}} the family's «رأيك يهمّنا» link for that lesson and student
+(`FeedbackLinks`: the live link the admin's request would send, else a new 14-day one; answered = the page says
+so), shortened (kind `feedback`); without a feedback link the academy's web address goes (logged). Trial lessons
+use the same template. ONE template call, so the PDF can never go twice; dedup stays `report_ready:{report id}`.
+A row queued before this change carries two values and is refused before any call (Meta's 132000), never sent
+with the wrong ones. The CRM's `report_session` / `report_trial_session` are PENDING_DELETION on Meta: never use
+them. Fallback, not needed today (the crm driver sends a document header as `headerMediaUrl`):
+`session_report_link` (no header; {{1}} student, {{2}} date, {{3}} teacher, {{4}} report URL, {{5}} feedback URL).
 
 **teacher_lesson_v2's real buttons (read from the old script, 2026-10-31).** «ادخل الحلقة» is
 `https://meet.google.com/{{1}}` and «تقرير الحلقة» is `https://vercelayat-r.vercel.app/r/{{1}}`, a redirector to the
@@ -253,8 +305,10 @@ asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's
 note here said so, never verified). So `teacher_new_student`'s two suffixes on a crm line open a broken Meet URL
 (`meet.google.com/classroom/<id>`) and the old form: **owner decision pending** (send a Meet code and the old form's
 values, a new CRM template with platform buttons, or a crm_name to a template without buttons); not changed yet.
+These two base URLs are fixed inside the Meta template, so the platform cannot point them at its own short links:
+the only template that still opens the Vercel redirector is this one (owner follow-up, 2026-11-05).
 
-The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+**The old script's report flow (superseded 2026-11-05 by «Report flow» above; kept for the record).** The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
 fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
 twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's

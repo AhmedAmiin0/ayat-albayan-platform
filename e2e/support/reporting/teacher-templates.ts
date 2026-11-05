@@ -7,7 +7,8 @@ import { stubSent, stubTemplateStatus, type StubSent } from '../core/wa-stub';
 // them (tools/wa-stub defaultTemplates), so nothing can be sent. approveTemplates walks the real
 // way: the admin's POST /messaging/templates/:key/submit → Meta (the stub) reviews → approved.
 // Call it after stubReset() (which forgets the stub's templates); the returned function puts the
-// registry rows back as they were.
+// registry rows back as they were. It submits the platform's own templates: a WABA name
+// (report_ready → session_report_pdf, migration 20261105000301) is cleared, then restored.
 
 interface Saved {
   key: string;
@@ -15,14 +16,18 @@ interface Saved {
   meta_id: string | null;
   submitted_at: Date | null;
   last_error: string | null;
+  crm_name: string | null;
+  crm_language: string | null;
 }
 
 export async function approveTemplates(admin: Page, keys: string[]): Promise<() => Promise<void>> {
   const saved = await withSql((sql) => sql<Saved[]>`
-    select key, status, meta_id, submitted_at, last_error from public.message_templates where key in ${sql(keys)}`);
+    select key, status, meta_id, submitted_at, last_error, crm_name, crm_language
+    from public.message_templates where key in ${sql(keys)}`);
   expect(saved).toHaveLength(keys.length);
   await withSql((sql) => sql`
-    update public.message_templates set status = 'not_submitted', meta_id = null, submitted_at = null, last_error = null
+    update public.message_templates set status = 'not_submitted', meta_id = null, submitted_at = null,
+      last_error = null, crm_name = null, crm_language = null
     where key in ${sql(keys)}`);
   for (const key of keys) {
     const res = await admin.request.post(`${API}/messaging/templates/${key}/submit`, { headers: await bearer(admin) });
@@ -36,7 +41,8 @@ export async function approveTemplates(admin: Page, keys: string[]): Promise<() 
     for (const row of saved) {
       await withSql((sql) => sql`
         update public.message_templates set status = ${row.status}::public.template_status, meta_id = ${row.meta_id},
-          submitted_at = ${row.submitted_at}, last_error = ${row.last_error} where key = ${row.key}`);
+          submitted_at = ${row.submitted_at}, last_error = ${row.last_error},
+          crm_name = ${row.crm_name}, crm_language = ${row.crm_language} where key = ${row.key}`);
     }
   };
 }

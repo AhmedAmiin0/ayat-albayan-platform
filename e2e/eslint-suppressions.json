@@ -743,7 +743,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/messaging/thread-summaries.race.sql.spec.ts": {
