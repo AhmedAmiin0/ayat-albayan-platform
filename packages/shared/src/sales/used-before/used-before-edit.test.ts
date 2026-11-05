@@ -12,8 +12,7 @@ const base = {
 };
 
 describe('usedBeforeEditMax', () => {
-  // usedBeforeMax is every lesson but one since #610 (owner 2026-11-02, «no cap»).
-  it('is usedBeforeMax for an untouched package (8 lessons: 7)', () => {
+  it('is usedBeforeMax for an untouched package (every lesson but one: 8 → 7)', () => {
     expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(7);
     expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(11);
   });

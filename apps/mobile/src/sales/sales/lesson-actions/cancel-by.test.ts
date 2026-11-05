@@ -12,7 +12,9 @@ test('required (as before): the academy only, and only until the end', () => {
   expect(salesCancelRights(lesson, on)).toEqual({ cancelBy: ['admin'], correct: false });
   const after = salesCancelRights(lesson, { ...on, now: AFTER });
   expect(after).toEqual({ cancelBy: [], correct: false });
-  // A lesson held automatically stays correctable whatever the setting is now (6fb2cab73, web too).
+});
+
+test('the correction stays offered once the setting is back ON (#619; the API decides)', () => {
   expect(salesCancelRights({ ...lesson, status: 'completed' }, on).correct).toBe(true);
 });
 
