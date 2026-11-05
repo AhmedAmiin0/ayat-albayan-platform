@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp, NO_PEOPLE } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp, NO_PEOPLE } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const HIT = 'b0000000-0000-4000-8000-000000000042';
@@ -31,7 +31,8 @@ describe('GET /threads/:phone?around=', () => {
       const res = await t.call({ method: 'GET', url: `${URL}?around=${HIT}`, token });
       expect(res.statusCode).toBe(200);
       expect(res.json().messages.map((m: { id: string }) => m.id)).toEqual([HIT]);
-      expect(t.queries.messages).toHaveBeenCalledWith(expect.objectContaining({ around: HIT, limit: 50 }));
+      const read = expect.objectContaining({ around: HIT, limit: 50 });
+      expect(t.queries.messages).toHaveBeenCalledWith(read);
       expect(t.queries.markInboundRead).not.toHaveBeenCalled();
       expect(t.teacher.stampRead).not.toHaveBeenCalled();
       expect(t.queries.people).not.toHaveBeenCalled();
@@ -43,7 +44,9 @@ describe('GET /threads/:phone?around=', () => {
   it('around beside before / after, or before_id without before, is 400 with no read', async () => {
     const at = '2026-10-02T08:00:00Z';
     const bad = [`around=${HIT}&before=${at}`, `before_id=${HIT}`, `around=${HIT}&after=${at}`];
-    for (const q of bad) expect((await t.call({ method: 'GET', url: `${URL}?${q}` })).statusCode).toBe(400);
+    for (const q of bad) {
+      expect((await t.call({ method: 'GET', url: `${URL}?${q}` })).statusCode).toBe(400);
+    }
     expect(t.queries.messages).not.toHaveBeenCalled();
   });
 

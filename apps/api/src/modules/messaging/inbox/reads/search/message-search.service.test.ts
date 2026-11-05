@@ -51,7 +51,8 @@ describe('MessageSearchService scopes (same as reading each chat)', () => {
     const scope = { teacherId: 't', teacherName: 'x', phones: new Set([FAMILY]), ownPhone: null };
     t.reads.scope.mockResolvedValueOnce(scope as never);
     await t.service.search({ q: 'درس' }, user('teacher'));
-    expect(t.repo.search).toHaveBeenCalledWith(expect.objectContaining({ phones: [FAMILY], skipTemplates: [] }));
+    const mine = expect.objectContaining({ phones: [FAMILY], skipTemplates: [] });
+    expect(t.repo.search).toHaveBeenCalledWith(mine);
     t.repo.search.mockClear();
     t.reads.scope.mockResolvedValueOnce({ ...scope, phones: new Set() } as never);
     expect(await t.service.search({ q: 'درس' }, user('teacher'))).toEqual({ items: [], next_cursor: null });

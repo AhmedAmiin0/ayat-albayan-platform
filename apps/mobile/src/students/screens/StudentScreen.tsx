@@ -6,6 +6,7 @@ import { ApiError, apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { useStudentHref } from '@/core/nav/tree-base';
+import { MessageSearchRow } from '@/inbox';
 import { StudentFileSections } from '@/student-file/components/StudentFileSections';
 import { TrialDateSection } from '@/trial-date/components/TrialDateSection';
 import { Button } from '@/core/ui/primitives/Button';
@@ -70,6 +71,7 @@ export function StudentScreen() {
         trailing={backButton}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
+        <MessageSearchRow />
         <StatusChanger student={student} />
         <CoursePauseSection studentId={student.id} />
         <CourseActionsSection studentId={student.id} />

@@ -5373,7 +5373,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
@@ -6297,7 +6297,7 @@
   },
   "src/inbox/thread/calls/entries/log-rows.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/calls/entries/use-thread-calls.ts": {
@@ -6842,7 +6842,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/thread/live/inbox-live.test.tsx": {

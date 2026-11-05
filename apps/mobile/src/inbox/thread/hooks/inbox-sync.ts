@@ -1,3 +1,4 @@
+import { anchoredThreadPrefix } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
@@ -30,7 +31,16 @@ export function refreshInbox(client: QueryClient, phone?: string): Promise<void>
     return client.invalidateQueries({ queryKey: pathKey('/threads') });
   }
   refreshLists(client);
-  return client.invalidateQueries({ queryKey: threadKey(phone) });
+  return refreshChat(client, phone);
+}
+
+/**
+ * The open chat re-reads: the live pages and any window around an old search hit (docs/37), so a
+ * bubble action (hide, retry, a reply action) shows inside the window too.
+ */
+export async function refreshChat(client: QueryClient, phone: string): Promise<void> {
+  const keys = [threadKey(phone), anchoredThreadPrefix(phone)];
+  await Promise.all(keys.map((queryKey) => client.invalidateQueries({ queryKey })));
 }
 
 /**

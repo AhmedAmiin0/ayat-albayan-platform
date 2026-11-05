@@ -4,6 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
+import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';
 import { sendError } from '../messages/hooks/message-text';
 import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
@@ -108,6 +109,7 @@ export function useSendFile(phone: string) {
   const queryKey = threadKey(phone);
   return useMutation({
     mutationFn: sendChatFile,
+    onMutate: () => markOwnSend(phone),
     onSuccess: async (row) => {
       client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row));
       await touchInbox(client, row);

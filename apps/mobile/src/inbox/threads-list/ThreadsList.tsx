@@ -16,6 +16,7 @@ import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
 import { useThreadRow } from './ThreadRow';
+import { MessageHits, useMessageHits } from './message-hits';
 import { useChoiceRows, useThreadList } from './use-thread-list';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { useToday } from '@/core/lib/time/use-today';
@@ -29,6 +30,8 @@ import { useToday } from '@/core/lib/time/use-today';
  * the academy's chat lists «القوائم» (docs/22); a teacher gets none of them.
  * The top is compact as WhatsApp's (owner 2026-10-27, «This topbar takes alot of space»): a one-line
  * h2 title with its icon actions, a pill search, ONE chip row (All · Unread · Waiting · stages · lists · ＋), 8pt apart.
+ * «الرسائل» under the chats (docs/37): the messages holding the words, from 3 characters; no
+ * «no chats» line while message hits show.
  */
 const keyOf = (th: ThreadView) => th.phone_e164;
 
@@ -41,12 +44,16 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const [choice, setChoice] = useState<ChatChoice>('all');
   const list = useThreadList({ search, ...choiceQuery(choice), live: true });
   const { rows, seeking } = useChoiceRows(list, choice === 'waiting');
+  const found = useMessageHits(search);
+  const quiet = list.isPending || seeking || found.hits.length > 0;
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle, tz)) : undefined;
   const admin = mode.kind === 'admin';
   // One clock for the whole list (not a timer per row), new only at midnight.
-  const renderItem = useThreadRow(mode, base, useToday());
+  const today = useToday();
+  const renderItem = useThreadRow(mode, base, today);
+  const hits = <MessageHits q={search} found={found} mode={mode} base={base} now={today} />;
 
   return (
     <View testID="chats-list" style={{ flex: 1, gap: 8 }}>
@@ -67,8 +74,9 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         keyExtractor={keyOf}
         renderItem={renderItem}
         endSpace={admin ? FAB + 16 : 0}
+        ListFooterComponent={hits}
         ListEmptyComponent={
-          list.isPending || seeking ? null : loaded ? (
+          quiet ? null : loaded ? (
             <EmptyState title={threadsEmptyTitle(choice, search)} />
           ) : (
             <ErrorState onRetry={list.refresh} />

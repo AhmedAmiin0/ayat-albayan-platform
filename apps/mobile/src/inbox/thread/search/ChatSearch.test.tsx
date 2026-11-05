@@ -11,6 +11,17 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (path: string) => mockApiFetch(path),
 }));
 
+// docs/37: a hit outside the shown rows re-anchors (`?msg=`, one request); a close leaves it.
+const mockAnchorAt = jest.fn();
+const mockLeave = jest.fn();
+const mockMsg = jest.fn((): string | undefined => undefined);
+jest.mock('@/inbox/thread/anchor', () => ({
+  ...jest.requireActual('@/inbox/thread/anchor'),
+  anchorAt: (id: string) => mockAnchorAt(id),
+  leaveAnchor: () => mockLeave(),
+  useAnchorParam: () => mockMsg(),
+}));
+
 const words = t.inbox.chatSearch;
 const centred = (index: number) => ({ index, animated: true, viewPosition: 0.5 });
 const counter = (n: number, m: number) =>
@@ -43,19 +54,18 @@ test('«بحث» turns the header into the field; typing asks once settled and j
   expect(marks).toEqual(['إسلام']);
 });
 
-test('↑ goes to an older hit: older pages load, the list goes to it once it renders; ↓ back', async () => {
+test('↑ to an older hit not loaded: the window around it, one request, no page-by-page seek', async () => {
   mockApiFetch.mockImplementation(answer(found([NEW, OLD])));
-  const more = jest.fn().mockResolvedValue(page([[MID, NEW], [OLD]], false));
-  const view = await openAndType(more, 'اسلام');
+  const more = jest.fn();
+  await openAndType(more, 'اسلام');
   await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
   await fireEvent.press(screen.getByRole('button', { name: words.older }));
   expect(screen.getByText(counter(2, 2))).toBeTruthy();
-  expect(more).toHaveBeenCalledWith({ cancelRefetch: false });
-  await view.rerender(chat(stub([[MID, NEW], [OLD]], more, false)));
-  expect(FlatList.prototype.scrollToIndex).toHaveBeenLastCalledWith(centred(2));
-  expect(screen.getByRole('button', { name: words.older })).toBeDisabled();
+  expect(mockAnchorAt).toHaveBeenCalledWith(OLD.id);
+  expect(more).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: words.newer }));
   expect(screen.getByText(counter(1, 2))).toBeTruthy();
+  expect(FlatList.prototype.scrollToIndex).toHaveBeenLastCalledWith(centred(1));
 });
 
 test('Android back closes it: the header returns, the list goes to the newest message', async () => {
@@ -83,18 +93,15 @@ test('no hit: «لا توجد نتائج», both arrows off', async () => {
   }
 });
 
-test('closing while an older hit is still loading: it never scrolls there afterwards', async () => {
+test('closing while the chat shows the window around a hit: back to the live chat', async () => {
   const listen = jest.spyOn(BackHandler, 'addEventListener');
   mockApiFetch.mockImplementation(answer(found([NEW, OLD])));
-  let resolve: (v: unknown) => void = () => undefined;
-  const more = jest.fn(() => new Promise((r) => (resolve = r)));
-  const view = await openAndType(more, 'اسلام');
+  mockMsg.mockReturnValue(OLD.id);
+  await openAndType(jest.fn(), 'اسلام');
   await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
-  await fireEvent.press(screen.getByRole('button', { name: words.older }));
   await act(async () => {
     listen.mock.calls.at(-1)?.[1]?.(undefined as never);
   });
-  await act(async () => resolve(page([[MID, NEW], [OLD]], false)));
-  await view.rerender(chat(stub([[MID, NEW], [OLD]], more, false)));
-  expect(FlatList.prototype.scrollToIndex).not.toHaveBeenCalledWith(centred(2));
+  expect(mockLeave).toHaveBeenCalledTimes(1);
+  mockMsg.mockReturnValue(undefined);
 });

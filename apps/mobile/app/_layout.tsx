@@ -17,7 +17,7 @@ import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/q
 import { pathKey } from '@/core/lib/query/query-keys';
 import { TopConnectingBar } from '@/core/ui/connecting/TopConnectingBar';
 import { StartupOverlay } from '@/core/ui/startup/StartupOverlay';
-import { clearComposerDrafts, StaffCalls } from '@/inbox';
+import { clearChatMemory, StaffCalls } from '@/inbox';
 import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
 
@@ -60,9 +60,9 @@ export default function RootLayout() {
   useEffect(() => {
     void restoreAppearance();
   }, []);
-  // Signed out: the chats' unsent drafts go with the session (kept until then, review 2026-10-29 #4).
+  // Signed out: the chats' unsent drafts (and a pending search ask) go with the session (kept until then, review 2026-10-29 #4).
   useEffect(() => {
-    if (gate === 'out') clearComposerDrafts();
+    if (gate === 'out') clearChatMemory();
   }, [gate]);
   // On a font error fall through: the system Arabic font is better than a blank app.
   const ready = (loaded || error) && localeReady && overridesReady && gate !== 'booting';
